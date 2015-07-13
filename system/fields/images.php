@@ -75,14 +75,14 @@ class fieldImages extends cmsFormField {
 			$old_value = cmsModel::yamlToArray($old_value);
 		}
 		
-		foreach($old_value as $image){
-			if (!is_array($value) || !in_array($image, $value)){
-				foreach($image as $size => $image_url){
-					$image_path = $config->upload_path . $image_url;
+        foreach($old_value as $image){
+            if (!is_array($value) || !in_array($image, $value)){
+                foreach($image as $size => $image_url){
+                    $image_path = $config->upload_path . $image_url;
                     @unlink($image_path);
                 }
-			}
-		}
+            }
+        }
 		
         $result = null;
 
