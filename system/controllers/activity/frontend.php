@@ -86,6 +86,8 @@ class activity extends cmsFrontend{
             $this->model->filterPrivacy();
         }
 
+		$this->model->filterEqual('is_pub', 1);
+		
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 

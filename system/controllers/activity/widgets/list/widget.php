@@ -26,6 +26,7 @@ class widgetActivityList extends cmsWidget {
         $items = $model->
                     filterPrivacy()->
                     filterHiddenParents()->
+					filterEqual('is_pub', 1)->
                     limit($limit)->
                     getEntries();
 

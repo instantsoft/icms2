@@ -12,7 +12,8 @@ class onActivityContentAfterUpdateApprove extends cmsAction {
             'subject_title' => $item['title'],
             'subject_id' => $item['id'],
             'subject_url' => href_to($ctype_name, $item['slug'] . '.html'),
-            'is_private' => isset($item['is_private']) ? $item['is_private'] : 0
+            'is_private' => isset($item['is_private']) ? $item['is_private'] : 0,
+			'is_pub' => $item['is_pub']
         ));
 
         return $data;
