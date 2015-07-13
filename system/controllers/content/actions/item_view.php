@@ -56,7 +56,7 @@ class actionContentItemView extends cmsAction {
 
         // Проверяем ограничения доступа из других контроллеров
         if ($item['is_parent_hidden']){
-            $is_parent_viewable_result = cmsEventsManager::hook("content_view_hidden", array('viewable'=>true, 'item'=>$item));
+            $is_parent_viewable_result = cmsEventsManager::hook("content_view_hidden", array('viewable'=>true, 'item'=>$item, 'is_moderator'=>$is_moderator));
             if (!$is_parent_viewable_result['viewable']){
                 cmsUser::goLogin();
             }
