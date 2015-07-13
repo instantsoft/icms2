@@ -117,21 +117,6 @@ icms.images = (function ($) {
         var count = 0;
         var current = false;
 
-        $('.data input').each(function(){
-
-            if (current === false){
-                current = $(this).attr('rel');
-            } else {
-                if ($(this).attr('rel') != current) {
-                    count++;
-                    current = $(this).attr('rel');
-                }
-            }
-
-            $(this).attr('rel', count);
-
-        });
-
         if (typeof(icms.images.removeCallback) == 'function'){
             icms.images.removeCallback(field_name, idx);
         }
