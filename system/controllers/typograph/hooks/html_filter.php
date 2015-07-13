@@ -24,7 +24,7 @@ class onTypographHtmlFilter extends cmsAction {
 
     private function getJevix($is_auto_br){
 
-        cmsCore::loadLib('jevix.class');
+        cmsCore::loadLib('jevix.class', 'Jevix');
 
         $jevix = new Jevix();
 

@@ -17,6 +17,8 @@ class cmsCore {
 	public $request;
 
     public $db;
+    
+    private static $includedFiles = array();
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -92,16 +94,23 @@ class cmsCore {
      */
     public static function includeFile($file) {
 
-        $config = cmsConfig::getInstance();
+        $file = cmsConfig::get('root_path') . $file;
+        
+        if (isset(self::$includedFiles[$file])){
+            return self::$includedFiles[$file];
+        }
+        
+        if (!file_exists($file)){ 
+            self::$includedFiles[$file] = false;
+            return false;             
+        }
 
-        $file = $config->root_path . $file;
-
-        if (!file_exists($file)){ return false; }
-
-        $result = include_once $file;
-
+        $result = include_once $file;        
+        
         if (is_null($result)) { $result = true; }
 
+        self::$includedFiles[$file] = $result;
+        
         return $result;
 
     }
@@ -114,7 +123,7 @@ class cmsCore {
 
         if (!file_exists($file)){ return false; }
 
-        $result = require $file;
+        $result = require $file;        
 
         if (is_null($result)) { $result = true; }
 
@@ -138,10 +147,13 @@ class cmsCore {
     /**
      * Загружает внешнюю библиотеку из папки /system/libs
      *
-     * @param string $library
+     * @param string $library Название библиотеки в /system/libs (без расширения)
+     * @param string $class Название загружаемого класса (для предотвращения повторной загрузки)
      */
-     public static function loadLib($library){
+     public static function loadLib($library, $class=false){
 
+        if ($class && class_exists($class, false)){ return true; }
+         
         $config = cmsConfig::getInstance();
 
         $lib_file = $config->root_path.'system/libs/'.$library.'.php';
@@ -261,15 +273,19 @@ class cmsCore {
             $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
         }
 
-        include_once($ctrl_file);
+        if (!class_exists($controller_name)) {
+            include_once($ctrl_file);        
+        }
 
         $custom_file = $config->root_path . 'system/controllers/'.$controller_name.'/custom.php';
 
         if(!file_exists($custom_file)){
             $controller_class = $controller_name;
         } else {
-            include_once($custom_file);
             $controller_class = $controller_name . '_custom';
+            if (!class_exists($controller_class)){
+                include_once($custom_file);
+            }            
         }
 
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
@@ -918,7 +934,10 @@ class cmsCore {
 
         foreach ($files as $file) {
 
-            if ($is_include) { include_once $file; }
+            if ($is_include && !isset(self::$includedFiles[$file])) { 
+                include_once $file; 
+                self::$includedFiles[$file] = true;
+            }
 
             $file = basename($file);
 

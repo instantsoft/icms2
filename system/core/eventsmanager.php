@@ -1,6 +1,8 @@
 <?php
 class cmsEventsManager {
 
+    private static $structure;
+    
     /**
      * Оповещает слушателей о произошедшем событии
      * Входящие данные $data передаются каждому слушателю по очереди,
@@ -90,9 +92,13 @@ class cmsEventsManager {
 
         $listeners = array();
 
-        $structure = self::getAllListeners();
+        if (self::$structure === null){ 
+            self::$structure = self::getAllListeners();
+        }
 
-        if (isset($structure[ $event_name ])){ $listeners = $structure[ $event_name ]; }
+        if (isset(self::$structure[ $event_name ])){ 
+            $listeners = self::$structure[ $event_name ];             
+        }
 
         return $listeners;
 

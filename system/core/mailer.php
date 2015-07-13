@@ -8,8 +8,8 @@ class cmsMailer {
 
         $config = cmsConfig::getInstance();
 
-        cmsCore::loadLib('phpmailer/class.phpmailer');
-
+        cmsCore::loadLib('phpmailer/class.phpmailer', 'PHPMailer');        
+        
         $this->mailer = new PHPMailer();
         $this->mailer->CharSet = 'UTF-8';
 

@@ -3,6 +3,7 @@
 class cmsConfig {
 
     private static $instance;
+    private static $mapping;
 
     private $data = array();
     private $dynamic = array();
@@ -20,6 +21,10 @@ class cmsConfig {
 
     public static function getControllersMapping(){
 
+        if (self::$mapping !== null) { return self::$mapping; }
+        
+        self::$mapping = array();
+        
         $map_file = 'system/config/remap.php';
         $map_function = 'remap_controllers';
 
@@ -27,11 +32,11 @@ class cmsConfig {
 
         if (!function_exists($map_function)){ return false; }
 
-        $mapping = call_user_func($map_function);
+        self::$mapping = call_user_func($map_function);
 
-        if (!is_array($mapping)){ return false; }
+        if (!is_array(self::$mapping)){ return false; }
 
-        return $mapping;
+        return self::$mapping;
 
     }
 

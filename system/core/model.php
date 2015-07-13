@@ -1470,7 +1470,7 @@ class cmsModel{
      */
     static public function arrayToYaml($array) {
 
-        cmsCore::loadLib('spyc.class');
+        cmsCore::loadLib('spyc.class', 'Spyc');
 
         $yaml = Spyc::YAMLDump($array,2,40);
 
