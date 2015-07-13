@@ -392,8 +392,6 @@ class modelContent extends cmsModel{
 
         $this->orderBy('ordering');
 
-        cmsForm::loadFormFields();
-
         return $this->get($table_name, function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -401,9 +399,6 @@ class modelContent extends cmsModel{
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['default'] = $item['values'];
-
-            $fields_types = cmsForm::getAvailableFormFields(false);
-            $field_class = "field" . string_to_camel('_', $item['type']);
 
             $rules = array();
             if ($item['options']['is_required']) {  $rules[] = array('required'); }
@@ -422,8 +417,15 @@ class modelContent extends cmsModel{
 
             $item['rules'] = $rules;
 
-            $item['handler_title'] = $fields_types[$item['type']];
-            $item['handler'] = new $field_class($item['name'], $item);
+            $field_class = "field" . string_to_camel('_', $item['type']);
+            
+            $handler = new $field_class($item['name']);
+            
+            $item['handler_title'] = $handler->getTitle();
+            
+            $handler->setOptions($item);
+            
+            $item['handler'] = $handler;
 
             return $item;
 
@@ -465,11 +467,15 @@ class modelContent extends cmsModel{
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
 
-            $fields_types = cmsForm::getAvailableFormFields(false);
             $field_class = "field" . string_to_camel('_', $item['type']);
 
-            $item['parser_title'] = $fields_types[$item['type']];
-            $item['parser'] = new $field_class($item['name'], $item);
+            $handler = new $field_class($item['name']);
+            
+            $item['parser_title'] = $handler->getTitle();
+            
+            $handler->setOptions($item);
+            
+            $item['parser'] = $handler;
 
             return $item;
 

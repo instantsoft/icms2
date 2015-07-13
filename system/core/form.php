@@ -526,15 +526,6 @@ class cmsForm {
 //============================================================================//
 
     /**
-     * Загружает файлы с классами всех типов полей для генерации форм
-     */
-    public static function loadFormFields(){
-
-        return cmsCore::getFilesList('system/fields', '*.php', false, true);
-
-    }
-
-    /**
      * Возвращает список всех имеющихся типов полей
      * @return array
      */
@@ -562,8 +553,6 @@ class cmsForm {
     public static function getForm($form_file, $form_name, $params=false){
 
         if (!file_exists($form_file)){ return false; }
-
-        cmsForm::loadFormFields();
 
         include_once $form_file;
 

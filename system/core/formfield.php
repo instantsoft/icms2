@@ -22,19 +22,14 @@ class cmsFormField {
 
     public $rules = array();
 
-	function __construct($name, $options=null){
+	function __construct($name, $options=false){
 
         $this->setName($name);
 
         $this->class = substr(mb_strtolower(get_called_class()), 5);
 
-        if (is_array($options)){
-            foreach($options as $option=>$value){
-                $this->{$option} = $value;
-            }
-            if (isset($options['title'])){
-                $this->element_title = $options['title'];
-            }
+        if ($options){
+            $this->setOptions($options);
         }
 
         $this->id = str_replace(':', '_', $name);
@@ -65,6 +60,17 @@ class cmsFormField {
 
     }
 
+    public function setOptions($options){
+        if (is_array($options)){
+            foreach($options as $option=>$value){
+                $this->{$option} = $value;
+            }
+            if (isset($options['title'])){
+                $this->element_title = $options['title'];
+            }
+        }        
+    }
+    
     public function setOption($key, $value) { $this->options[$key] = $value; }
 
     public function getTitle(){ return $this->title; }

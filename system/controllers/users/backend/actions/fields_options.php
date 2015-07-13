@@ -9,8 +9,6 @@ class actionUsersFieldsOptions extends cmsAction {
         $field_id   = $this->request->get('field_id');
         $field_type = $this->request->get('type');
 
-        cmsForm::loadFormFields();
-
         $field_class = 'field' . string_to_camel('_',  $field_type );
 
         $base_field = new $field_class(null, null);
