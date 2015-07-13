@@ -1,0 +1,373 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="../style/editor.css" rel="stylesheet" type="text/css">
+    <script>
+        var sLangDir = parent.oUtil.langDir;
+        document.write("<scr" + "ipt src='language/" + sLangDir + "/websource.js'></scr" + "ipt>");
+    </script>
+    <script>writeTitle()</script>
+
+    <script src="jquery-1.7.min.js" type="text/javascript"></script>
+
+    <script src="common.js" type="text/javascript"></script>
+
+    <!-- Code Editor-->
+    <link href="codemirror/lib/codemirror.css" rel="stylesheet" type="text/css" />
+    <script src="codemirror/lib/codemirror.js" type="text/javascript"></script>
+    <script src="codemirror/mode/xml/xml.js" type="text/javascript"></script>
+    <script src="codemirror/mode/javascript/javascript.js" type="text/javascript"></script>
+    <script src="codemirror/mode/css/css.js" type="text/javascript"></script>
+    <script src="codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript"></script>
+    <link href="codemirror/theme/default.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        .CodeMirror {background:#fff;width:700px;border:#e7e7e7 1px solid;}
+        body {margin:0px;overflow:hidden}
+    </style>
+
+    <script language="javascript" type="text/javascript">
+        var isiPad = navigator.userAgent.match(/iPad/i) != null;
+
+        var oEditor = parent.oUtil.oEditor;
+
+        var sBodyHeader;
+        var sBodyFooter;
+        var sBodyTag;
+        var editor;
+
+        function bodyOnLoad() {
+
+            loadTxt(); /* language */
+            parent.oUtil.obj.setFocus();
+            var obj = parent.oUtil.obj;
+            obj.saveForUndo();
+
+            if (!isiPad) {
+
+                if (obj.mode == "XHTMLBody") {
+                    document.getElementById("txtEditor").value = $.trim(obj.getXHTMLBody(true));
+                }
+                else {
+                    document.getElementById("txtEditor").value = $.trim(obj.getXHTML(true));
+                }
+
+                editor = CodeMirror.fromTextArea(document.getElementById("txtEditor"), {
+                    mode: "text/html",
+                    lineWrapping: true,
+                    lineNumbers: true,
+                    tabMode: "indent",
+                    onKeyEvent: function () {
+                        if (obj.mode == "XHTMLBody") {
+                            parent.oUtil.oEditor.document.body.innerHTML = /*obj.docType +*/ editor.getValue();
+                        }
+                        else {
+                            obj.putHTML(obj.docType + editor.getValue()); //tdk menggunakan loadHTML() krn loadHTML() hanya utk first load.
+                        }
+                        obj.onRender();
+                    },
+                    onChange: function () {
+
+                        if (obj.mode == "XHTMLBody") {
+                            parent.oUtil.oEditor.document.body.innerHTML = /*obj.docType +*/ editor.getValue();
+                        }
+                        else {
+                            obj.putHTML(obj.docType + editor.getValue()); //tdk menggunakan loadHTML() krn loadHTML() hanya utk first load.
+                        }
+                        obj.onRender();
+                    }
+                });
+            }
+            else {
+
+                if (obj.mode == "XHTMLBody") {
+                    document.getElementById("txtEditor").value = $.trim(obj.getXHTMLBody(true));
+                }
+                else {
+                    document.getElementById("txtEditor").value = $.trim(obj.getXHTML(true));
+                }
+                document.getElementById("txtEditor").style.cssText = "width:697px;height:448px;border:none;";
+
+                $('#txtEditor').bind('keyup', function () {
+                    if (obj.mode == "XHTMLBody") {
+                        parent.oUtil.oEditor.document.body.innerHTML = obj.docType + document.getElementById("txtEditor").value;
+                    }
+                    else {
+                        obj.putHTML(obj.docType + document.getElementById("txtEditor").value); //tdk menggunakan loadHTML() krn loadHTML() hanya utk first load.
+                    }
+                    obj.onRender();
+                });
+            }
+        }
+
+
+        /************************
+        HTML to XHTML (formatted)
+        ************************/
+        function lineBreak2(tag) //[0]<TAG>[1]text[2]</TAG>
+        {
+            arrReturn = ["<br>", "", ""];
+            if (tag == "A" || tag == "B" || tag == "CITE" || tag == "CODE" || tag == "EM" ||
+        tag == "FONT" || tag == "I" || tag == "SMALL" || tag == "STRIKE" || tag == "BIG" ||
+        tag == "STRONG" || tag == "SUB" || tag == "SUP" || tag == "U" || tag == "SAMP" ||
+        tag == "S" || tag == "VAR" || tag == "BASEFONT" || tag == "KBD" || tag == "TT" || tag == "SPAN" || tag == "IMG")
+                arrReturn = ["", "", ""];
+
+            if (tag == "TEXTAREA" || tag == "TABLE" || tag == "THEAD" || tag == "TBODY" ||
+        tag == "TR" || tag == "OL" || tag == "UL" || tag == "DIR" || tag == "MENU" ||
+        tag == "FORM" || tag == "SELECT" || tag == "MAP" || tag == "DL" || tag == "HEAD" ||
+        tag == "BODY" || tag == "HTML")
+                arrReturn = ["<br>", "", "<br>"];
+
+            if (tag == "STYLE" || tag == "SCRIPT")
+                arrReturn = ["<br>", "", ""];
+
+            if (tag == "BR" || tag == "HR")
+                arrReturn = ["", "<br>", ""];
+
+            return arrReturn;
+        }
+        function fixAttr(s) {
+            s = String(s).replace(/&/g, "&amp;amp;"); //harus di awal
+            s = String(s).replace(/</g, "&amp;lt;");
+            //s = String(s).replace(/>/g, "&amp;gt;");//tdk apa2
+            s = String(s).replace(/"/g, "&amp;quot;");
+            //s = String(s).replace(/'/g, "&amp;apos;");//tdk apa2
+            return s;
+        }
+        function fixVal(s) {
+            s = String(s).replace(/&/g, "&amp;amp;"); //harus di awal
+            s = String(s).replace(/</g, "&amp;lt;");
+            var x = escape(s);
+            x = unescape(x.replace(/\%A0/gi, "-*REPL*-"));
+            s = x.replace(/-\*REPL\*-/gi, "&nbsp;");
+
+            return s;
+        }
+        function recur(oEl, sTab) {
+            var sHTML = "";
+            for (var i = 0; i < oEl.childNodes.length; i++) {
+                var oNode = oEl.childNodes[i];
+
+                if (oNode.parentNode != oEl) continue;
+
+                if (oNode.nodeType == 1)//tag
+                {
+                    var sTagName = oNode.nodeName;
+
+                    if (sTagName == "BR" && oNode.className == "innova") continue;
+                    if (sTagName == "LINK" && oNode.id == "tmp_xxinnova") continue;
+
+                    var bDoNotProcess = false;
+                    if (sTagName.substring(0, 1) == "/") {
+                        bDoNotProcess = true; //do not process
+                    }
+                    else {
+                        /*** tabs ***/
+                        var sT = sTab;
+                        sHTML += lineBreak2(sTagName)[0];
+                        if (lineBreak2(sTagName)[0] != "") sHTML += sT; //If new line, use base Tabs
+                        /************/
+                    }
+
+                    if (bDoNotProcess) {
+                        ; //do not process
+                    }
+                    else if (sTagName == "OBJECT" || sTagName == "EMBED") {
+                        s = parent.getOuterHTML(oNode);
+
+                        s = s.replace(/\"[^\"]*\"/ig, function (x) {
+                            x = x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&apos;").replace(/\s+/ig, "#_#").replace(/&amp;amp;/gi, "&amp;");
+                            return x
+                        });
+                        s = s.replace(/<([^ >]*)/ig, function (x) { return x.toLowerCase() })
+                        s = s.replace(/ ([^=]+)=([^"' >]+)/ig, " $1=\"$2\""); //new
+
+                        s = s.replace(/ ([^=]+)=/ig, function (x) { return x.toLowerCase() });
+                        s = s.replace(/#_#/ig, " ");
+
+                        s = s.replace(/<param([^>]*)>/ig, "\n<param$1 />").replace(/\/ \/>$/ig, " \/>"); //no closing tag
+
+                        if (sTagName == "EMBED")
+                            if (oNode.innerHTML == "")
+                                s = s.replace(/>$/ig, " \/>").replace(/\/ \/>$/ig, "\/>"); //no closing tag
+
+                        s = s.replace(/<param name=\"Play\" value=\"0\" \/>/, "<param name=\"Play\" value=\"-1\" \/>")
+
+                        s = s.replace(/</gi, "&lt;");
+
+                        /*** format ***/ //selThis
+                        sHTML += "<span style='color:#555555;background:#f7f7f7'><pre style='font-family:tahoma;margin-top:0px;margin-bottom:0px;'>" + s + "</pre></span>";
+
+                        /**************/
+                    }
+                    else if (sTagName == "TITLE") {
+                        //s="<title>"+oNode.innerHTML+"</title>";
+
+                        /*** format ***/
+                        sHTML += "<font color='#0000cc'>&lt;<\/font><font color='#8b4513'>title</font>" +
+              "<font color='#0000cc'>&gt;<\/font>" + oNode.innerHTML +
+              "<font color='#0000cc'>&lt;/</font><font color='#8b4513'>title</font>" +
+              "<font color='#0000cc'>&gt;</font>";
+                        /**************/
+                    }
+                    else {
+                        if (sTagName == "AREA") {
+                            var sCoords = oNode.coords;
+                            var sShape = oNode.shape;
+                        }
+
+                        var oNode2 = oNode.cloneNode(false);
+                        s = parent.getOuterHTML(oNode2).replace(/<\/[^>]*>/, "");
+
+                        if (sTagName == "STYLE") {
+                            var arrTmp = s.match(/<[^>]*>/ig);
+                            s = arrTmp[0];
+                        }
+
+                        s = s.replace(/\"[^\"]*\"/ig, function (x) {
+                            //x=x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&apos;").replace(/\s+/ig,"#_#");
+                            x = x.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\s+/ig, "#_#");
+                            return x
+                        });
+                        s = s.replace(/<([^ >]*)/ig, function (x) { return x.toLowerCase() })
+                        s = s.replace(/ ([^=]+)=([^" >]+)/ig, " $1=\"$2\"");
+                        s = s.replace(/ ([^=]+)=/ig, function (x) { return x.toLowerCase() });
+                        s = s.replace(/#_#/ig, " ");
+
+                        //single attribute
+                        s = s.replace(/(<hr[^>]*)(noshade="")/ig, "$1noshade=\"noshade\"");
+                        s = s.replace(/(<input[^>]*)(checked="")/ig, "$1checked=\"checked\"");
+                        s = s.replace(/(<select[^>]*)(multiple="")/ig, "$1multiple=\"multiple\"");
+                        s = s.replace(/(<option[^>]*)(selected="")/ig, "$1selected=\"true\"");
+                        s = s.replace(/(<input[^>]*)(readonly="")/ig, "$1readonly=\"readonly\"");
+                        s = s.replace(/(<input[^>]*)(disabled="")/ig, "$1disabled=\"disabled\"");
+                        s = s.replace(/(<td[^>]*)(nowrap="" )/ig, "$1nowrap=\"nowrap\" ");
+                        s = s.replace(/(<td[^>]*)(nowrap=""\>)/ig, "$1nowrap=\"nowrap\"\>");
+
+                        s = s.replace(/ contenteditable=\"true\"/ig, "");
+
+                        if (sTagName == "AREA") {
+                            s = s.replace(/ coords=\"0,0,0,0\"/ig, " coords=\"" + sCoords + "\"");
+                            s = s.replace(/ shape=\"RECT\"/ig, " shape=\"" + sShape + "\"");
+                        }
+
+                        var bClosingTag = true;
+                        if (sTagName == "IMG" || sTagName == "BR" ||
+              sTagName == "AREA" || sTagName == "HR" ||
+              sTagName == "INPUT" || sTagName == "BASE" ||
+              sTagName == "LINK" || sTagName == "META")//no closing tag
+                        {
+                            s = s.replace(/>$/ig, " \/>").replace(/\/ \/>$/ig, "\/>"); //no closing tag
+                            bClosingTag = false;
+                        }
+
+                        //sSelThis="";//selThis
+                        //if(oElement==oNode)sSelThis=" selThis='selThis'"
+
+                        /*** format ***/  //selThis
+                        //sA1="<span"+sSelThis+"><font color='#0000cc'>&lt;<\/font><font color='#8b4513'>"
+                        sA1 = "<span><font color='#0000cc'>&lt;<\/font><font color='#8b4513'>"
+                        sA2 = "<\/font>"
+                        sA3 = "<font color='#0000cc'>&gt;<\/font>"
+                        sA4 = "<font color='#0000cc'>/&gt;<\/font>"
+                        s = s.replace(/<([^ >]*)([^ \/>]*)/ig, sA1 + "$1" + sA2 + "$2");
+                        //s=s.replace(/\/>$/ig,sA4);//if there is no closing tag
+                        s = s.replace(/>$/ig, sA3);
+                        /**************/
+
+                        sHTML += s;
+                        if (!bClosingTag) sHTML += "</span>"; //selThis
+
+                        /*** tabs ***/
+                        if (sTagName != "TEXTAREA") sHTML += lineBreak2(sTagName)[1];
+                        if (sTagName != "TEXTAREA") if (lineBreak2(sTagName)[1] != "") sHTML += sT; //If new line, use base Tabs
+                        /************/
+
+                        if (bClosingTag) {
+                            /*** CONTENT ***/
+                            s = parent.getOuterHTML(oNode);
+                            if (sTagName == "SCRIPT") {
+                                s = s.replace(/<script([^>]*)>[\n+\s+\t+]*/ig, "<script$1>"); //clean spaces
+                                s = s.replace(/[\n+\s+\t+]*<\/script>/ig, "<\/script>"); //clean spaces
+                                s = s.replace(/<script([^>]*)>\/\/<!\[CDATA\[/ig, "");
+                                s = s.replace(/\/\/\]\]><\/script>/ig, "");
+                                s = s.replace(/<script([^>]*)>/ig, "");
+                                s = s.replace(/<\/script>/ig, "");
+                                s = s.replace(/^\s+/, '').replace(/\s+$/, '');
+                                /*** format ***/
+                                sHTML += "<div><span style='color:#828282;'>//&lt;![CDATA[<pre style='font-family:tahoma;margin-top:0px;margin-bottom:0px;'>" + s.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</pre>//]]&gt;</span></div>";
+                                /**************/
+                            }
+                            if (sTagName == "STYLE") {
+                                s = s.replace(/<style([^>]*)>[\n+\s+\t+]*/ig, "<style$1>"); //clean spaces
+                                s = s.replace(/[\n+\s+\t+]*<\/style>/ig, "<\/style>"); //clean spaces
+                                s = s.replace(/<style([^>]*)><!--/ig, "");
+                                s = s.replace(/--><\/style>/ig, "");
+                                s = s.replace(/<style([^>]*)>/ig, "");
+                                s = s.replace(/<\/style>/ig, "");
+                                s = s.replace(/^\s+/, "").replace(/\s+$/, "");
+                                /*** format ***/
+                                sHTML += "<div><span style='color:#828282;'>&lt;!--<pre style='font-family:tahoma;margin-top:0px;margin-bottom:0px;'>" + s + "</pre>--&gt;</span></div>";
+                                /**************/
+                            }
+                            if (sTagName == "DIV" || sTagName == "P") {
+                                if (oNode.innerHTML == "" || oNode.innerHTML == "&nbsp;") {
+                                    sHTML += "&amp;nbsp;";
+                                }
+                                else sHTML += recur(oNode, sT + "&nbsp;&nbsp;");
+                            }
+                            else
+                                if (sTagName == "STYLE" || sTagName == "SCRIPT") {
+                                    //do nothing
+                                }
+                                else {
+                                    sHTML += recur(oNode, sT + "&nbsp;&nbsp;");
+                                }
+
+                            /*** tabs ***/
+                            if (sTagName != "TEXTAREA") sHTML += lineBreak2(sTagName)[2];
+                            if (sTagName != "TEXTAREA") if (lineBreak2(sTagName)[2] != "") sHTML += sT; //If new line, use base Tabs
+                            /************/
+
+                            /*** format ***/ //selThis
+                            sHTML += "<font color='#0000cc'>&lt;/</font><font color='#8b4513'>" + sTagName.toLowerCase() + "</font><font color='#0000cc'>&gt;</font></span>";
+                            /**************/
+                        }
+                    }
+                }
+                else if (oNode.nodeType == 3)//text
+                {
+                    sHTML += fixVal(oNode.nodeValue).replace(/^[\t\r\n\v\f]*/, "").replace(/[\t\r\n\v\f]*$/, "");
+                }
+                else if (oNode.nodeType == 8) {
+                    if (parent.getOuterHTML(oNode).substring(0, 2) == "<" + "%") {//server side script
+                        sTmp = (parent.getOuterHTML(oNode).substring(2))
+                        sTmp = sTmp.substring(0, sTmp.length - 2)
+                        sTmp = sTmp.replace(/^\s+/, "").replace(/\s+$/, "");
+                        sHTML += "<div><span style='background:yellow'>&lt;%<pre style='font-family:tahoma;margin-top:0px;margin-bottom:0px;'>" + sTmp + "</pre>%&gt;</span></div>";
+                    }
+                    else {//comments
+                        sTmp = oNode.nodeValue;
+                        sTmp = sTmp.replace(/^\s+/, "").replace(/\s+$/, "");
+                        sHTML += "<div><span style='color:#828282;'>&lt;!--<pre style='font-family:tahoma;margin-top:0px;margin-bottom:0px;'>" + sTmp.replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</pre>--&gt;</span></div>";
+                    }
+                }
+                else {
+                    ; //Not Processed
+                }
+
+            }
+            return sHTML;
+        }
+    </script>
+
+</head>
+<body onload="bodyOnLoad()">
+
+<textarea id="txtEditor" style="width:100%;" rows="10"></textarea>
+
+</body>
+</html>

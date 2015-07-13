@@ -1,0 +1,15 @@
+[subject:New comment - {site}]
+
+Hello, {nickname}.
+
+Page "<a href="{page_url}">{page_title}</a>" has a new comment:
+
+<a href="{author_url}">{author_nickname}</a>:
+<blockquote>{comment}</blockquote>
+
+To reply to this comment follow the link:
+<a href="{page_url}">{page_url}</a>
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

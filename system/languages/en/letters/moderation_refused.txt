@@ -1,0 +1,12 @@
+[subject:Your page is refused - {site}]
+
+Hello, {nickname}.
+
+Moderator refused of publication of your page.
+
+Title: {page_title}
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>
+

@@ -1,0 +1,25 @@
+# InstantCMS rewriting rules
+
+# Initialization
+AddDefaultCharset utf-8
+Options -Indexes
+RewriteEngine on
+RewriteBase /
+
+# Hide text files
+RewriteRule ^.htaccess$ - [F]
+RewriteRule ^credits.txt$ - [F]
+RewriteRule ^readme.txt$ - [F]
+RewriteRule ^license.(.*).txt$ - [F]
+
+# Remove trailing slash from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$  /$1 [R=301,L]
+
+# Sitemaps
+RewriteRule ^sitemap(.*).xml$ /cache/static/sitemaps/sitemap$1.xml [L]
+
+# Engine routing
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php [L]

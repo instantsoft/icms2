@@ -1,0 +1,16 @@
+[subject:Confirmation of registration - {site}]
+
+Hello, {nickname}.
+
+To confirm your registration follow the link:
+
+<a href="{page_url}">{page_url}</a>
+
+You should do that until {valid_until}.
+
+After that date your registration will be canceled.
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

@@ -1,0 +1,18 @@
+[subject:Ответ на ваш комментарий - {site}]
+
+Здравствуйте, {nickname}.
+
+На странице "<a href="{page_url}">{page_title}</a>" добавлен ответ на ваш комментарий.
+
+Вы написали:
+<blockquote>{original}</blockquote>
+
+<a href="{author_url}">{author_nickname}</a> отвечает:
+<blockquote>{comment}</blockquote>
+
+Вы можете ответить на этот комментарий перейдя по ссылке:
+<a href="{page_url}">{page_url}</a>
+
+--
+ C уважением, {site}
+ <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>

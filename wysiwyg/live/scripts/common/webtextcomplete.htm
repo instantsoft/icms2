@@ -1,0 +1,646 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="../style/editor.css" rel="stylesheet" type="text/css">
+    <script>
+        var sLangDir = parent.oUtil.langDir;
+        document.write("<scr" + "ipt src='language/" + sLangDir + "/webtextcomplete.js'></scr" + "ipt>");
+    </script>
+    <script>writeTitle()</script>
+
+    <script src="jquery-1.7.min.js" type="text/javascript"></script>
+
+    <!--Slider-->
+    <link href="fd-slider/css/skin.css" rel="stylesheet" type="text/css" />
+    <script src="fd-slider/js/fd-slider.js" type="text/javascript"></script>
+
+    <!--Spectrum-->
+    <script src="spectrum/spectrum.js" type="text/javascript"></script>
+    <link href="spectrum/spectrum.css" rel="stylesheet" type="text/css" />
+
+    <!--MiniColors-->
+    <script src="minicolors/jquery.miniColors.min.js" type="text/javascript"></script>
+    <link href="minicolors/jquery.miniColors.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+
+    .item {width:180px;min-height:99px;display:-moz-inline-stack;display:inline-block;vertical-align:top;zoom:1; *display: inline; _height: 100px;
+    background:#fff;border:#fff 7px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    margin-left:-5px;margin-right:25px;margin-top:10px;margin-bottom:10px;
+    border:#fff 1px solid;padding:5px;
+    }
+
+    .itemsize {background:#fff;border:#fff 1px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);margin-left:-5px;margin-right:15px;margin-bottom:13px}
+
+    .item-l {width:200px;min-height:40px;display:-moz-inline-stack;display:inline-block;vertical-align:top;zoom:1; *display: inline; _height: 40px;
+    background:#fff;border:#fff 7px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    margin-left:-4px;margin-bottom:20px;
+    border:#fff 1px solid;padding:5px 0px;
+
+    	-moz-box-shadow:0 3px 5px #999;
+	-webkit-box-shadow:0 3px 5px #999;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+    }
+    .item-c {width:200px;min-height:100px;display:-moz-inline-stack;display:inline-block;vertical-align:top;zoom:1; *display: inline; _height: 100px;
+    background:#fff;border:#fff 7px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    margin-left:-4px;margin-bottom:20px;
+    border:#fff 1px solid;padding:5px 0px;
+    	-moz-box-shadow:0 3px 5px #999;
+	-webkit-box-shadow:0 3px 5px #999;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+    }
+    .item-r {width:200px;min-height:100px;display:-moz-inline-stack;display:inline-block;vertical-align:top;zoom:1; *display: inline; _height: 100px;
+    background:#fff;border:#fff 7px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    margin-left:-4px;margin-right:25px;margin-bottom:20px;
+    border:#fff 1px solid;padding:5px 0px;
+    	-moz-box-shadow:0 3px 5px #999;
+	-webkit-box-shadow:0 3px 5px #999;
+	-moz-border-radius:0px;
+	-webkit-border-radius:0px;
+    }
+    </style>
+
+    <script src="common.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        var arrFonts = ['Abel','Abril Fatface','Aclonica','Actor','Aldrich','Alike','Alice','Allan','Allerta','Allerta Stencil','Amaranth','Andika','Anonymous Pro','Antic','Anton','Architects Daughter','Arimo','Artifika',
+        'Arvo','Asset','Astloch','Aubrey','Bangers','Bentham','Bevan','Bigshot One','Black Ops One','Bowlby One','Bowlby One SC','Brawler','Cabin','Cabin Sketch','Calligraffitti','Candal',
+        'Cantarell','Cardo','Carme','Carter One','Changa One','Cedarville Cursive','Cherry Cream Soda','Chewy','Coda','Comfortaa','Coming Soon','Copse','Corben','Cousine','Coustard',
+        'Covered By Your Grace','Crafty Girls','Crimson Text','Crushed','Cuprum','Damion','Days One','Delius','Delius Swash Caps','Delius Unicase','Didact Gothic','Dorsa','Droid Sans',
+        'Droid Sans Mono','Droid Serif','EB Garamond','Expletus Sans','Fanwood Text','Federo','Fontdiner Swanky','Forum','Francois One','Goblin One','Gentium Basic','Gentium Book Basic',
+        'Geo','Geostar','Geostar Fill','Give You Glory','Gloria Hallelujah','Goudy Bookletter 1911','Gravitas One','Gruppo','Hammersmith One','Holtwood One SC','Homemade Apple',
+        'IM Fell DW Pica','IM Fell DW Pica SC','IM Fell Double Pica','IM Fell Double Pica SC','IM Fell English','IM Fell English SC','IM Fell French Canon',
+        'IM Fell French Canon SC','IM Fell Great Primer','IM Fell Great Primer SC','Inconsolata','Indie Flower','Istok Web','Irish Grover','Josefin Sans','Josefin Slab','Judson',
+        'Just Another Hand','Just Me Again Down Here','Kameron','Kelly Slab','Kenia','Kranky','Kreon','Kristi','La Belle Aurore','Lato','League Script','Leckerli One','Lekton','Limelight',
+        'Lobster','Lobster Two','Lora','Loved by the King','Love Ya Like A Sister','Luckiest Guy','Maiden Orange','Mako','Marvel','Maven Pro','Meddon','MedievalSharp','Megrim',
+        'Merriweather','Metrophobic','Michroma','Miltonian','Miltonian Tattoo','Modern Antiqua','Molengo','Monofett','Monoton','Montez','Mountains of Christmas','Muli','Neucha','Neuton',
+        'News Cycle','Nixie One','Nobile','Nothing You Could Do','Nova Cut','Nova Flat','Nova Mono','Nova Oval','Nova Round','Nova Script','Nova Slim','Numans','Nunito',
+        'OFL Sorts Mill Goudy TT','Old Standard TT','Open Sans','Open Sans Condensed','Orbitron','Oswald','Ovo','Pacifico','Passero One','Paytone One','Patrick Hand','Permanent Marker',
+        'Philosopher','Play','Playfair Display','Podkova','Pompiere','Prociono','PT Sans','PT Sans Caption','PT Sans Narrow','PT Serif','Puritan','Quattrocento','Quattrocento Sans',
+        'Questrial','Radley','Raleway','Rationale','Redressed','Reenie Beanie','Rochester','Rock Salt','Rokkitt','Rosario','Schoolbell','Shadows Into Light','Shanti','Short Stack','Sigmar One',
+        'Six Caps','Slackey','Smokum','Smythe','Sniglet','Snippet','Special Elite','Stardos Stencil','Sunshiney','Syncopate','Tangerine','Tenor Sans','Terminal Dosis Light','Tienne','Tinos',
+        'Tulpen One','Ubuntu','Ultra','UnifrakturCook','UnifrakturMaguntia','Unkempt','Unna','Varela','Varela Round','Vibur','Vidaloka','Volkhov','Vollkorn','Voltaire','VT323','Waiting for the Sunrise',
+        'Wallpoet', 'Walter Turncoat', 'Wire One', 'Yanone Kaffeesatz', 'Yellowtail', 'Yeseva One', 'Zeyada']
+
+        var sHTML='';
+        for (var i = 0, len = arrFonts.length; i < len; i++) {
+            /*sURL = parent.oUtil.protocol + "//fonts.googleapis.com/css?family=" + arrFonts[i];
+            var objL = document.createElement("LINK");
+            objL.href = sURL;
+            objL.rel = "StyleSheet";
+            document.documentElement.childNodes[0].appendChild(objL);*/
+            var sz=28;
+            if (arrFonts[i] == 'Syncopate' || arrFonts[i] == 'UnifrakturMaguntia') sz = 24;
+            sHTML += '<div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyFont(\'' + arrFonts[i] + '\')" style="cursor:pointer;font-family:' + arrFonts[i] + ';font-size:' + sz  + 'px;">' +
+                arrFonts[i] + '<div style="font-size:14px;border-top:#000 1px dotted;margin-top:5px;padding-top:5px">' +
+                'Lorem ipsum fierent. Tale modus iuvaret.' +
+                '</div></div>';
+            //'Regular, <span style="font-weight:bold">Bold</span>, <span style="font-style:italic">Italic</span>, <span style="text-transform:uppercase">Upercase</span>, <span style="text-transform:lowercase">Lowercase</span>' +
+        }
+
+        //var arrSysFonts = ['Arial', 'Arial Black', 'Bookman Old Style', 'Courier', 'Courier New', 'Garamond', 'Georgia', 'Helvetica', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
+        var arrSysFonts = ["Impact, Charcoal, sans-serif", "Palatino Linotype, Book Antiqua, Palatino, serif", "Tahoma, Geneva, sans-serif",
+        "Century Gothic, sans-serif", "Lucida Sans Unicode, Lucida Grande, sans-serif", "Times New Roman, Times, serif",
+        "Arial Narrow, sans-serif", "Verdana, Geneva, sans-serif", "Copperplate Gothic Light, sans-serif",
+        "Lucida Console, Monaco, monospace", "Gill Sans MT, sans-serif", "Trebuchet MS, Helvetica, sans-serif", "Courier New, Courier, monospace",
+        "Arial, Helvetica, sans-serif", "Georgia, Serif", "Garamond, Serif"];
+
+        function init() {
+            for (var i = 0, len = arrFonts.length; i < len; i++) {
+                sURL = parent.oUtil.protocol + "//fonts.googleapis.com/css?family=" + arrFonts[i];
+                var objL = document.createElement("LINK");
+                objL.href = sURL;
+                objL.rel = "StyleSheet";
+                document.documentElement.childNodes[0].appendChild(objL);
+            }
+        };
+
+        var sHTML2 = '';
+        for (var i = 0, len = arrSysFonts.length; i < len; i++) {
+            sHTML2 += '<div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyFont(\'' + arrSysFonts[i] + '\',true)" style="cursor:pointer;font-family:' + arrSysFonts[i] + ';font-size:28px;">' +
+                arrSysFonts[i].split(",")[0] + '<div style="font-size:14px;border-top:#000 1px dotted;margin-top:5px;padding-top:5px">' +
+                'Lorem ipsum fierent. Tale modus iuvaret.' +
+                '</div></div>';
+        }
+
+        sHTML = sHTML2 + "<div style='margin-top:15px;margin-bottom:15px;padding-top:5px;border-top:#cccccc 1px solid;width:397px;font-family:Arvo'>" + getTxt("Google Font") + "</div>" + sHTML;
+
+
+        var sHTML3 = '';
+
+        var arrParagraphs = [[getTxt("Heading 1"), "H1"], [getTxt("Heading 2"), "H2"], [getTxt("Heading 3"), "H3"], [getTxt("Heading 4"), "H4"], [getTxt("Heading 5"), "H5"], [getTxt("Heading 6"), "H6"], [getTxt("Preformatted"), "PRE"], [getTxt("Normal"), "P"]];
+        //,["Heading 5", "H5"],["Heading 6", "H6"],["Normal (DIV)", "DIV"]
+
+        for (var i = 0, len = arrParagraphs.length; i < len; i++) {
+            sHTML3 += '<div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyHeading(\'' + arrParagraphs[i][1] + '\')" style="text-align:center;margin-left:-2px;margin-right:20px;cursor:pointer;font-family:\'Arvo\';font-size:13px;white-space:nowrap">' +
+                '<' + arrParagraphs[i][1] + '>' + arrParagraphs[i][0] + '</' + arrParagraphs[i][1] + '>' +
+                '</div>';
+        }
+
+        var sHTML4 = '';
+        sHTML4 += '<div onmouseover="over(this)" onmouseout="out(this)" class="itemsize" onclick="I_FormatText(\'font-size\',\'\')" style="text-align:center;margin-top:10px;margin-left:-2px;width:398px;padding-top:10px;padding-bottom:10px;cursor:pointer;font-family:\'Arvo\';font-size:14px;background:#ddd;">' +
+                getTxt('DEFAULT SIZE') +
+                '</div>';
+
+        sHTML4 += '<table><tr>';
+        var arrSizes = [7, 8, 9, 10, 11, 12, 14];
+        for (var i = 0, len = arrSizes.length; i < len; i++) {
+            sHTML4 += '<td valign="bottom">';
+            sHTML4 += '<table class="itemsize" onmouseover="over(this)" onmouseout="out(this)" onclick="I_Size(' + arrSizes[i] + ')" style="width:45px;text-align:center;cursor:pointer;">' +
+                '<tr><td valign="bottom" style="font-family:\'Arvo\';font-size:' + arrSizes[i] + 'px;">ab<div style="font-size:12px">' + arrSizes[i] + '</div>' +
+                '</td></tr></table>';
+            sHTML4 += '</td>'
+        }
+        sHTML4 += '</tr></table>';
+
+        sHTML4 += '<table><tr>';
+        var arrSizes = [16, 18, 21, 24, 36, 40];
+        for (var i = 0, len = arrSizes.length; i < len; i++) {
+            sHTML4 += '<td valign="bottom">';
+            sHTML4 += '<table class="itemsize" onmouseover="over(this)" onmouseout="out(this)" onclick="I_Size(' + arrSizes[i] + ')" style="width:55px;text-align:center;cursor:pointer;">' +
+                '<tr><td valign="bottom" style="font-family:\'Arvo\';font-size:' + arrSizes[i] + 'px;">ab<div style="font-size:12px">' + arrSizes[i] + '</div>' +
+                '</td></tr></table>';
+            sHTML4 += '</td>'
+        }
+        sHTML4 += '</tr></table>';
+
+        sHTML4 += '<table><tr>';
+        var arrSizes = [48, 60, 72];
+        for (var i = 0, len = arrSizes.length; i < len; i++) {
+            sHTML4 += '<td valign="bottom">';
+            sHTML4 += '<table class="itemsize" onmouseover="over(this)" onmouseout="out(this)" onclick="I_Size(' + arrSizes[i] + ')" style="width:124px;text-align:center;cursor:pointer;">' +
+                '<tr><td valign="bottom" style="font-family:\'Arvo\';font-size:' + arrSizes[i] + 'px;">ab<div style="font-size:12px">' + arrSizes[i] + '</div>' +
+                '</td></tr></table>';
+            sHTML4 += '</td>'
+        }
+        sHTML4 += '</tr></table>';
+
+        sHTML4 += '<table><tr>';
+        var arrSizes = [90, 100, 115];
+        for (var i = 0, len = arrSizes.length; i < len; i++) {
+            sHTML4 += '<td valign="bottom">';
+            sHTML4 += '<table class="itemsize" onmouseover="over(this)" onmouseout="out(this)" onclick="I_Size(' + arrSizes[i] + ')" style="width:105px;text-align:center;cursor:pointer;">' +
+                '<tr><td valign="bottom" style="font-family:\'Arvo\';font-size:' + arrSizes[i] + 'px;">ab<div style="font-size:12px">' + arrSizes[i] + '</div>' +
+                '</td></tr></table>';
+            sHTML4 += '</td>'
+        }
+        sHTML4 += '</tr></table>';
+
+        jQuery(document).ready(function ($) {
+
+            $('#divFonts').html(sHTML);
+            $('#divBasic').html(sHTML2);
+
+            $('#divHeadings').html(sHTML3);
+            $('#divSizes').html(sHTML4);
+
+            loadTxt(); /* language */
+
+            if (!isiPad) {
+                $("#txtColor").miniColors({ change: function (hex, rgb) {
+                    I_ApplyForeColor(hex)
+                }
+                });
+
+                $("#txtBgColor").miniColors({ change: function (hex, rgb) {
+                    I_ApplyBgColor(hex)
+                }
+                });
+            };
+
+        });
+
+        var storeBgColor, storeColor;
+        function over(me,hover) {
+            storeBgColor = me.style.backgroundColor;
+            if (!hover) me.style.backgroundColor = '#c90000';
+            else me.style.backgroundColor = hover;
+            storeColor = me.style.color;
+            me.style.color = '#fff';
+        }
+        function out(me) {
+            me.style.backgroundColor = storeBgColor;
+            me.style.color = storeColor;
+        }
+
+        function tabClick(n) {
+            $("#div0").css("display", "none");
+            $("#tab0").css("background", "#ccc");
+            $("#div1").css("display", "none");
+            $("#tab1").css("background", "#ccc");
+            $("#div2").css("display", "none");
+            $("#tab2").css("background", "#ccc");
+            $("#div3").css("display", "none");
+            $("#tab3").css("background", "#ccc");
+            $("#div4").css("display", "none");
+            $("#tab4").css("background", "#ccc");
+            $("#div5").css("display", "none");
+            $("#tab5").css("background", "#ccc");
+
+            $("#div"+n).css("display", "block");
+            $("#tab"+n).css("background", "#fcfcfc");
+        }
+    </script>
+
+</head>
+<body style="margin-top:12px;margin-left:10px" onload="init()">
+
+
+<div id="tab0" onclick="tabClick(0)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:65px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#fcfcfc;margin-left:22px;margin-top:7px">
+    FONTS
+</div>
+<div id="tab1" onclick="tabClick(1)" style="display:none;float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:110px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    BASIC FONTS
+</div>
+<div id="tab2" onclick="tabClick(2)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:45px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    SIZE
+</div>
+<div id="tab3" onclick="tabClick(3)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:75px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    SHADOWS
+</div>
+<div id="tab4" onclick="tabClick(4)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:105px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    PARAGRAPHS
+</div>
+<div id="tab5" onclick="tabClick(5)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:80px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    LISTINGS
+</div>
+<div style="clear:left"></div>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:7px;">
+<tr>
+<td>
+
+    <div id="div0" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc">
+        <div id="divFonts"></div>
+    </div>
+
+    <div id="div1" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+        <div id="divBasic"></div>
+    </div>
+
+    <div id="div2" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+        <div id="divSizes"></div>
+    </div>
+
+    <div id="div3" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+        <p id="lblNote">This feature is not currently supported in IE.</p>
+
+        <div onmouseover="over(this,'#eee')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(-1)" style="cursor:pointer;text-align:center;background:#fafafa;width:395px;">
+        <div style="font-family:'Arvo', cursive;font-size:30px;color:#222;line-height:90px;margin-top:5px;" id="divShadowClear">CLEAR</div>
+        </div>
+
+        <div onmouseover="over(this,'#333')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(0)" style="cursor:pointer;text-align:center;background:#474747;">
+        <div style="font-family:'Leckerli One', cursive;font-size:55px;color:#222;text-shadow: 0px 2px 3px #666;line-height:38px;margin-top:5px;"><div style="font-size:18px">LETER</div>Press</div>
+        </div>
+        <div onmouseover="over(this,'#eee')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(1)" style="cursor:pointer;text-align:center;background:#fafafa;">
+        <div style="font-family:'Leckerli One', cursive;font-size:40px;color:#9c1414;font-weight: bold;text-shadow:4px 4px 0px rgba(255,255,255,.8), 10px 10px 0px rgba(187,187,187,0.5);margin-top:10px">Retro</div>
+        </div>
+        <div onmouseover="over(this,'#eb1257')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(2)" style="cursor:pointer;text-align:center;background:#ff2e70;">
+        <div style="font-family:'Days One', sans-serif;font-size:70px;color:#fff;text-shadow:0 1px 0 #ccc,0 2px 0 #c9c9c9,0 3px 0 #bbb,0 4px 0 #b9b9b9,0 5px 0 #aaa,0 6px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 3px 5px rgba(0,0,0,.2),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2),0 20px 20px rgba(0,0,0,.15);">3D</div>
+        </div>
+
+        <div onmouseover="over(this,'#d9e3cc')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(7)" style="cursor:pointer;text-align:center;background:#e1e6da;">
+        <span style="font-family:'Bevan';font-size:30px;color:#fff;text-shadow:0px 3px 0px #b2a98f,0px 14px 10px rgba(0,0,0,0.15),0px 24px 2px rgba(0,0,0,0.1),0px 34px 30px rgba(0,0,0,0.1);line-height:30px"><div style="font-size:25px">DOWN &</div> Distant</span>
+        </div>
+
+        <div onmouseover="over(this,'#eee')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(4)" style="cursor:pointer;text-align:center;background:#fff;">
+        <div style="font-family:'Raleway';font-size:50px;color:#de0d0d;text-shadow:2px 4px 3px rgba(0,0,0,0.3);margin-top:20px">Basic</div>
+        </div>
+        <div onmouseover="over(this,'#eee')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(5)" style="cursor:pointer;text-align:center;background:#f7f7f7;">
+        <span style="font-family:'Chewy';font-size:45px;color:#04cfcf;text-shadow:2px 8px 6px rgba(0,0,0,0.2),0px -5px 35px rgba(255,255,255,0.3);line-height:45px">Soft Emboss</span>
+        </div>
+        <div onmouseover="over(this,'#eee')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(6)" style="cursor:pointer;text-align:center;background:#f7f7f7;">
+        <span style="font-family:'Carter One';font-size:40px;color:#007bd9;text-shadow:0px 15px 5px rgba(0,0,0,0.1),10px 20px 5px rgba(0,0,0,0.05),-10px 20px 5px rgba(0,0,0,0.05);line-height:45px">Multi Light</span>
+        </div>
+
+        <div onmouseover="over(this,'#9cbab0')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(3)" style="cursor:pointer;text-align:center;background:#b1cbc2;">
+        <div style="font-family:'Pacifico', cursive;font-size:35px;color:#A4536A;text-shadow:-4px -2px 0 #fff;line-height:45px;"><div style="font-size:18px">HARD</div>Shadow</div>
+        </div>
+
+        <div onmouseover="over(this,'#ddd')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(8)" style="cursor:pointer;text-align:center;background:#cfcfcf;padding-top:-40px;">
+        <div style="font-family:'Pacifico', cursive;font-size:35px;color:#111;text-shadow:6px 6px 0px rgba(0,0,0,0.2);line-height:45px;"><div style="font-size:18px">HARD</div>Shadow</div>
+        </div>
+        <div onmouseover="over(this,'#333')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(11)" style="cursor:pointer;text-align:center;background:#474747;">
+        <div style="font-family:'Leckerli One', cursive;font-size:55px;color:#222;text-shadow:rgba(0,0,0,0.5) -1px 0, rgba(0,0,0,0.3) 0 -1px, rgba(255,255,255,0.5) 0 1px, rgba(0,0,0,0.3) -1px -2px;line-height:38px;margin-top:5px;"><div style="font-size:18px">LETER</div>Press</div>
+        </div>
+        <div onmouseover="over(this,'#aaa')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(10)" style="cursor:pointer;text-align:center;background:#c4c4c4;">
+        <div style="font-family:'Arvo';font-size:45px;color:#bf0000;text-shadow:1px 1px 1px rgba(255,255,255,0.6);margin-top:15px">Basic</div>
+        </div>
+        <div onmouseover="over(this,'#f3f3f3')" onmouseout="out(this)" class="item" onclick="I_ApplyShadow(9)" style="cursor:pointer;text-align:center;background:#fff;">
+        <div style="font-family:'Lobster';font-size:45px;color:#111;text-shadow:0px 4px 3px rgba(0,0,0,0.4),0px 8px 13px rgba(0,0,0,0.1),0px 18px 23px rgba(0,0,0,0.1);margin-top:15px">Heavy</div>
+        </div>
+    </div>
+
+    <div id="div4" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+        <div id="divHeadings"></div>
+    </div>
+
+    <div id="div5" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+
+        <!--
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/arrow.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/arrow.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/bookmark.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/bookmark.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/calendar.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/calendar.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/document.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/document.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/flag.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/flag.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/heart.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/heart.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/light-bulb.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/light-bulb.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/paper-plane.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/paper-plane.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/tick.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/tick.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square','common/images/user.png')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;list-style-image:url('images/user.png')" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+        -->
+
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('disc')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;" type="disc">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('circle')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;" type="circle">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyUnOrderedList('square')" style="cursor:pointer;">
+            <ul style="font-family:Century Gothic, sans-serif;font-size:14px;" type="square">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ul>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyOrderedList('A')" style="cursor:pointer;">
+            <ol style="font-family:Century Gothic, sans-serif;font-size:14px;" type="A">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ol>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyOrderedList('a')" style="cursor:pointer;">
+            <ol style="font-family:Century Gothic, sans-serif;font-size:14px;" type="a">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ol>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyOrderedList('I')" style="cursor:pointer;">
+            <ol style="font-family:Century Gothic, sans-serif;font-size:14px;" type="I">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ol>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyOrderedList('i')" style="cursor:pointer;">
+            <ol style="font-family:Century Gothic, sans-serif;font-size:14px;" type="i">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ol>
+        </div>
+
+        <div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyOrderedList('1')" style="cursor:pointer;">
+            <ol style="font-family:Century Gothic, sans-serif;font-size:14px;" type="1">
+            <li>Lorem ipsum fierent.</li>
+            <li>Tale modus iuvaret.</li>
+            </ol>
+        </div>
+
+    </div>
+
+
+</td>
+<td style="padding-left:20px">
+
+       <div style="margin-top:15px">
+            <div id="divBold" onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-l" onclick="I_DoCmd('Bold')" style="background:url('images/edit-bold.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-c" onclick="I_DoCmd('Italic')" style="background:url('images/edit-italic.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-c" onclick="I_DoCmd('Underline')" style="background:url('images/edit-underline.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-r" onclick="I_DoCmd('Strikethrough')" style="background:url('images/edit-strike.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-l" onclick="I_DoCmd('Subscript')" style="background:url('images/edit-subscript.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-c" onclick="I_DoCmd('Superscript')" style="background:url('images/edit-superscript.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-c" onclick="I_SmallCaps()" style="background:url('images/edit-all-caps.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-c" onclick="I_TextTransform('uppercase')" style="background:url('images/edit-uppercase.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+            </div>
+            <div onmouseover="over(this,'#cddb4c')" onmouseout="out(this)" class="item-r" onclick="I_TextTransform('lowercase')" style="background:url('images/edit-lowercase.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;margin-right:0px">
+            </div>
+        </div>
+
+        <table cellpadding="0" cellspacing="0" style="margin-top:30px;">
+        <tr>
+        <td style="padding-bottom:12px;font-size:10px;letter-spacing:1px" id="lblColor">COLOR:</td>
+        <td style="padding-bottom:12px;">
+            <span style="font-family:Arial;cursor:pointer" onclick="$('#txtColor').val('');I_ApplyForeColor('')">[x]</span> &nbsp;&nbsp;
+        </td>
+        <td style="padding-bottom:12px;white-space:nowrap">
+            <input type="text" id="txtColor" class="basic" style="width:55px;height:21px" value="" />
+            <script>
+                if (isiPad) $("#txtColor").spectrum({
+                    color: '#ffffff',
+                    change: function (color) {
+                        var hsv = color.toHsv();
+                        var rgb = color.toRgbString();
+                        var hex = color.toHexString();
+                        I_ApplyForeColor(hex);
+                    },
+                    show: function () {
+
+                    },
+                    hide: function () {
+
+                    }
+                });
+            </script>
+        </td>
+        </tr>
+        <tr>
+        <td style="padding-bottom:12px;font-size:10px;letter-spacing:1px;padding-right:7px" id="lblHighlight">HIGHLIGHT:</td>
+        <td style="padding-bottom:12px;">
+            <span style="font-family:Arial;cursor:pointer"  onclick="$('#txtBgColor').val('');I_ApplyBgColor('')">[x]</span> &nbsp;&nbsp;
+        </td>
+        <td style="padding-bottom:12px;white-space:nowrap">
+            <input type="text" id="txtBgColor" class="basic" style="width:55px;height:21px" value="" />
+            <script>
+                if (isiPad) $("#txtBgColor").spectrum({
+                    color: '#ffffff',
+                    change: function (color) {
+                        var hsv = color.toHsv();
+                        var rgb = color.toRgbString();
+                        var hex = color.toHexString();
+                        I_ApplyBgColor(hex);
+                    },
+                    show: function () {
+
+                    },
+                    hide: function () {
+
+                    }
+                });
+            </script>
+        </td>
+        </tr>
+        </table>
+
+        <div style="border-top:#fff 1px solid;border-bottom:#ccc 1px solid;margin-top:10px;margin-bottom:20px;margin-left:0px;width:250px"></div>
+
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-l" onclick="I_DoCmd('JustifyLeft')" style="background:url('images/edit-alignment.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-c" onclick="I_DoCmd('JustifyCenter')" style="background:url('images/edit-alignment-center.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-c" onclick="I_DoCmd('JustifyRight')" style="background:url('images/edit-alignment-right.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-r" onclick="I_DoCmd('JustifyFull')" style="background:url('images/edit-alignment-justify.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-l" onclick="I_DoCmd('InsertUnOrderedList')" style="background:url('images/edit-list.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-r" onclick="I_DoCmd('InsertOrderedList')" style="background:url('images/edit-list-order.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-l" onclick="I_DoCmd('Indent')" style="background:url('images/edit-indent.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+        <div onmouseover="over(this,'#e9ed03')" onmouseout="out(this)" class="item-r" onclick="I_DoCmd('Outdent')" style="background:url('images/edit-outdent.png') #f7f7f7 5px 5px no-repeat;cursor:pointer;width:28px;min-height:15px;text-align:center;margin-bottom:0px;">
+        </div>
+
+
+        <table cellpadding="0" cellspacing="0" style="width:100%;margin-top:25px;">
+        <tr>
+        <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
+            <span id="lblLineHeight">LINE HEIGHT:</span> <span id="valLineHeight"></span><br />
+            <input name="inpLineHeight" id="inpLineHeight" type="range" min="0" max="100" step="1" title="Range: 0 to 100 in steps of 1" value="14" />
+	        <script language="javascript">
+	            var i1 = 0;
+	            /*fdSlider.createSlider({
+	            inp: document.getElementById("inpLineHeight"),
+	            step: "1",
+	            maxStep: 1,
+	            min: 0,
+	            max: 100,
+	            animation: "timed"
+	            });*/
+
+	            fdSlider.addEvent(document.getElementById("inpLineHeight"), "change", function (e) {
+	                if (i1 == 2) { I_FormatText('line-height', $("#inpLineHeight").val() + 'px'); $("#valLineHeight").html($("#inpLineHeight").val() + 'px') }
+	                if (i1 != 2) i1 += 1;
+	            });
+   	        </script>
+        </td>
+        </tr>
+        <tr>
+        <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
+            <span id="lblLetterSpacing">LETTER SPACING:</span> <span id="valLetterSpacing"></span><br />
+            <input name="inpCharSpacing" id="inpCharSpacing" type="range" min="0" max="100" step="1" title="Range: 0 to 100 in steps of 1" value="0" />
+	        <script language="javascript">
+	            var i2 = 0;
+	            fdSlider.addEvent(document.getElementById("inpCharSpacing"), "change", function (e) {
+	                if (i2 == 2) { I_FormatText('letter-spacing', $("#inpCharSpacing").val() + 'px'); $("#valLetterSpacing").html($("#inpCharSpacing").val() + 'px') }
+	                if (i2 != 2) i2 += 1;
+	            });
+   	        </script>
+        </td>
+        </tr>
+        <tr>
+        <td style="padding-bottom:7px;font-size:10px;letter-spacing:1px">
+            <span id="lblWordSpacing">WORD SPACING:</span> <span id="valWordSpacing"></span><br />
+            <input name="inpWordSpacing" id="inpWordSpacing" type="range" min="0" max="30" step="1" title="Range: 0 to 30 in steps of 1" value="0" />
+	        <script language="javascript">
+	            var i3 = 0;
+	            fdSlider.addEvent(document.getElementById("inpWordSpacing"), "change", function (e) {
+	                if (i3 == 2) { I_FormatText('word-spacing', $("#inpWordSpacing").val() + 'px'); $("#valWordSpacing").html($("#inpWordSpacing").val() + 'px') }
+	                if (i3 != 2) i3 += 1;
+	            });
+   	        </script>
+        </td>
+        </tr>
+        </table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

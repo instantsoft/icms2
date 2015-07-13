@@ -1,0 +1,40 @@
+/*  Super Awesome Buttons with CSS3 and RGBA
+    Source: http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba
+*/
+.awesome, .awesome:visited {
+	        background: #222 url(alert-overlay.png) repeat-x !important; 
+	        display: inline-block !important; 
+	        padding: 5px 10px 6px !important; 
+	        color: #fff !important; 
+	        text-decoration: none !important;
+			font-weight: bold !important;
+			line-height: 1 !important;
+	        -moz-border-radius: 5px !important; 
+	        -webkit-border-radius: 5px !important;
+	        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+	        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+	        text-shadow: 0 -1px 1px rgba(0,0,0,0.25) !important;
+	        border-bottom: 1px solid rgba(0,0,0,0.25) !important;
+	        position: relative !important;
+	        cursor: pointer !important;
+            }
+
+.awesome:hover							{ background-color: #111 !important;}
+.awesome:active							{ top: 1px !important; }
+.small.awesome, .small.awesome:visited 			{ font-size: 11px !important;}
+.awesome, .awesome:visited,
+.medium.awesome, .medium.awesome:visited 		{ font-size: 13px !important;}
+.large.awesome, .large.awesome:visited 			{ font-size: 14px !important; padding: 8px 14px 9px !important;}
+	
+.green.awesome, .green.awesome:visited		{ background-color: #91bd09 !important;}
+.green.awesome:hover						{ background-color: #749a02 !important;}
+.blue.awesome, .blue.awesome:visited		{ background-color: #2daebf !important;}
+.blue.awesome:hover							{ background-color: #007d9a !important;}
+.red.awesome, .red.awesome:visited			{ background-color: #e33100 !important;}
+.red.awesome:hover							{ background-color: #872300 !important;}
+.magenta.awesome, .magenta.awesome:visited		{ background-color: #a9014b !important;}
+.magenta.awesome:hover							{ background-color: #630030 !important;}
+.orange.awesome, .orange.awesome:visited		{ background-color: #ff5c00 !important;}
+.orange.awesome:hover							{ background-color: #d45500 !important;}
+.yellow.awesome, .yellow.awesome:visited		{ background-color: #ffb515 !important;}
+.yellow.awesome:hover							{ background-color: #fc9200 !important;}

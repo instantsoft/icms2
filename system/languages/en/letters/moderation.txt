@@ -1,0 +1,17 @@
+[subject:Your approval required - {site}]
+
+Hello, {moderator}.
+
+A new page on the site awaits your approval:
+
+Title: {page_title}
+URL: <a href="{page_url}">{page_url}</a>
+
+Author: <a href="{author_url}">{author}</a>
+Date: {date}
+
+You must be logged in to view this page.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

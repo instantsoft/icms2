@@ -1,0 +1,18 @@
+[subject:Password recovery - {site}]
+
+Hello, {nickname}.
+
+You, or someone else, started procedure of password recovery on the "{site}"
+
+To change your password follow the link:
+<a href="{page_url}">{page_url}</a>
+
+If you will not do that until {valid_until} your recovery request will be deleted.
+
+You should do that until {valid_until}.
+
+If you didn't request for password recovery - please ignore this message.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

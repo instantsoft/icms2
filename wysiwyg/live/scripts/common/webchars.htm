@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="../style/editor.css" rel="stylesheet" type="text/css">
+    <script>
+        var sLangDir = parent.oUtil.langDir;
+        document.write("<scr" + "ipt src='language/" + sLangDir + "/webchars.js'></scr" + "ipt>");
+    </script>
+    <script>writeTitle()</script>
+
+    <style type="text/css">
+        td{border:#777777 1px solid;padding:5px 2px 5px 2px;text-align:center;}
+    </style>
+
+    <script language="javascript" type="text/javascript">
+        function insertHTML(data) {
+            var obj = parent.oUtil.obj;
+            obj.saveForUndo();
+            obj.insertHTML(data);
+            obj.setFocus();
+        }
+    </script>
+
+</head>
+<body onload="loadTxt()" style="margin:12px;">
+
+  <table id="chardiv" width="100%" border=0 cellspacing=0 cellpadding=2 style="cursor:pointer;border-collapse:collapse">
+  <tr bgcolor="white">
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&nbsp;')">&nbsp;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&quot;')">&quot;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&iexcl;')">&iexcl;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&cent;')">&cent;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&pound;')">&pound;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&curren;')">&curren;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&yen;')">&yen;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&brvbar;')">&brvbar;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&sect;')">&sect;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&uml;')">&uml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&copy;')">&copy;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ordf;')">&ordf;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&laquo;')">&laquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&not;')">&not</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&shy;')">&shy;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&reg;')">&reg;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&macr;')">&macr;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&deg;')">&deg;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&plusmn;')">&plusmn;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&sup2;')">&sup2;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&sup3;')">&sup3;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&acute;')">&acute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&micro;')">&micro;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&para;')">&para;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&middot;')">&middot;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&cedil;')">&cedil;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&sup1;')">&sup1;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ordm;')">&ordm;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&raquo;')">&raquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&frac14;')">&frac14;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&frac12;')">&frac12;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&frac34;')">&frac34;</td>
+  </tr>
+  <tr>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&iquest;')">&iquest;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&times;')">&times;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Oslash;')">&Oslash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&divide;')">&divide;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&oslash;')">&oslash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&fnof;')">&fnof;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&circ;')">&circ;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&tilde;')">&tilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ndash;')">&ndash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&mdash;')">&mdash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&lsquo;')">&lsquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&rsquo;')">&rsquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&sbquo;')">&sbquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ldquo;')">&ldquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&rdquo;')">&rdquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&bdquo;')">&bdquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&dagger;')">&dagger;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Dagger;')">&Dagger;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&bull;')">&bull;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&hellip;')">&hellip;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&permil;')">&permil;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&lsaquo;')">&lsaquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&rsaquo;')">&rsaquo;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&euro;')">&euro;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&trade;')">&trade;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Agrave;')">&Agrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Aacute;')">&Aacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Acirc;')">&Acirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Atilde;')">&Atilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Auml;')">&Auml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Aring;')">&Aring;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&AElig;')">&AElig;</td>
+  </tr>
+  <tr bgcolor="white">
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ccedil;')">&Ccedil;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Egrave;')">&Egrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Eacute;')">&Eacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ecirc;')">&Ecirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Euml;')">&Euml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Igrave;')">&Igrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Iacute;')">&Iacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Icirc;')">&Icirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Iuml;')">&Iuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ETH;')">&ETH;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ntilde;')">&Ntilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ograve;')">&Ograve;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Oacute;')">&Oacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ocirc;')">&Ocirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Otilde;')">&Otilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ouml;')">&Ouml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&times;')">&times;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Oslash;')">&Oslash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ugrave;')">&Ugrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Uacute;')">&Uacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Ucirc;')">&Ucirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Uuml;')">&Uuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Yacute;')">&Yacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&THORN;')">&THORN;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&szlig;')">&szlig;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&agrave;')">&agrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&aacute;')">&aacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&acirc;')">&acirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&atilde;')">&atilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&auml;')">&auml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&aring;')">&aring;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&aelig;')">&aelig;</td>
+  </tr>
+  <tr>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ccedil;')">&ccedil;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&egrave;')">&egrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&eacute;')">&eacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ecirc;')">&ecirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&euml;')">&euml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&igrave;')">&igrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&iacute;')">&iacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&icirc;')">&icirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&iuml;')">&iuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&eth;')">&eth;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ntilde;')">&ntilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ograve;')">&ograve;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&oacute;')">&oacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ocirc;')">&ocirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&otilde;')">&otilde;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ouml;')">&ouml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&divide;')">&divide;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&oslash;')">&oslash;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ugrave;')">&ugrave;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&uacute;')">&uacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&ucirc;')">&ucirc;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&uuml;')">&uuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&yacute;')">&yacute;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&thorn;')">&thorn;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&yuml;')">&yuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&OElig;')">&OElig;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&oelig;')">&oelig;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Scaron;')">&Scaron;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&scaron;')">&scaron;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&Yuml;')">&Yuml;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&cent;')">&cent;</td>
+        <td onmouseover="this.style.color='#ffffff';this.style.background='#c90000'" onmouseout="this.style.color='#000000';this.style.background=''" onclick="insertHTML('&#064;')">&#064;</td>
+  </tr>
+  </table>
+
+</body>
+</html>

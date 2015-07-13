@@ -1,0 +1,44 @@
+<h1><?php echo LANG_CONTENT_TYPE; ?>: <span><?php echo $ctype['title']; ?></span></h1>
+
+<?php
+
+    $this->setPageTitle(LANG_CP_CTYPE_PERMISSIONS, $ctype['title']);
+
+    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
+
+    $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+    $this->addBreadcrumb(LANG_CP_CTYPE_PERMISSIONS);
+
+    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('perms', $ctype['id']));
+
+    $this->addToolButton(array(
+        'class' => 'save',
+        'title' => LANG_SAVE,
+        'href'  => null,
+        'onclick' => "icms.forms.submit()"
+    ));
+    $this->addToolButton(array(
+        'class' => 'cancel',
+        'title' => LANG_CANCEL,
+        'href'  => $this->href_to('ctypes')
+    ));
+	$this->addToolButton(array(
+		'class' => 'help',
+		'title' => LANG_HELP,
+		'target' => '_blank',
+		'href'  => LANG_HELP_URL_CTYPES_PERMS
+	));
+
+?>
+
+<div class="pills-menu">
+    <?php $this->menu('ctype'); ?>
+</div>
+
+<?php
+
+    $submit_url = $this->href_to('ctypes', array('perms_save', $ctype['name']));
+
+    echo $this->renderPermissionsGrid($rules, $groups, $values, $submit_url);
+
+?>

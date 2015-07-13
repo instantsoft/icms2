@@ -1,0 +1,142 @@
+.groups-list .title{
+    font-size:18px;
+}
+
+/* ========================================================================== */
+
+#group_profile {
+    overflow:hidden;
+    clear:both;
+}
+
+#group_profile_title {
+    height:38px;
+    line-height:38px;
+    overflow:hidden;
+    font-size:21px;
+}
+#group_profile_title .logo {
+    float:left;
+    overflow:hidden;
+    padding:2px;
+    border:solid 1px #B3C2C9;
+    margin-right: 10px;
+}
+
+#group_profile_title .logo img { display:block; }
+
+#group_profile_tabs { margin-top:15px; }
+#group_content_pills { margin-bottom: 20px; }
+
+#group_content_list .filter-panel{
+    margin:15px 0;
+    margin-top:0px;
+    border:solid 1px #EDEDED;
+    border-bottom:solid 1px #FFF;
+}
+
+/* ========================================================================== */
+
+#group_profile #left_column {
+    float:left;
+}
+#group_profile #right_column {
+    overflow: auto;
+}
+
+#group_profile #left_column .block{
+    border:solid 1px #B3C2C9;
+    border-bottom: none;
+    margin-right: 15px;
+    min-width: 200px;
+    padding:10px;
+}
+
+#group_profile #left_column .block:last-child{
+    border-bottom:solid 1px #B3C2C9;
+}
+
+#group_profile #logo {
+    padding-bottom:5px;
+    text-align: center;
+}
+
+#group_profile .block .details,
+#group_profile .block .details li {
+    margin:0;
+    padding:0;
+    list-style: none;
+    color:#68809B;
+    font-size:12px;
+}
+
+#group_profile .block .details strong {
+    color:#34495e;
+    font-weight:normal;
+}
+
+/* ========================================================================== */
+
+#group_profile .block .content_counts,
+#group_profile .block .content_counts li {
+    list-style: none; margin:0; padding:0;
+}
+
+#group_profile .block .content_counts {
+    margin:-10px;
+}
+
+#group_profile .block .content_counts li {
+    border-bottom: solid 1px #B3C2C9;
+}
+
+#group_profile .block .content_counts li:last-child {
+    border:none;
+}
+
+#group_profile .block .content_counts a {
+    color: #68809B;
+    text-decoration:none;
+    display:block;
+    overflow:hidden;
+    height:24px;
+    line-height:24px;
+    padding:4px 10px;
+}
+
+#group_profile .block .content_counts a:hover {
+    background:#E1EBEF;
+}
+
+#group_profile .block .content_counts a .counter {
+    display:block;
+    overflow:hidden;
+    height:24px;
+    line-height:24px;
+    color:#34495E;
+    float:right;
+    padding:0 6px;
+    font-size:12px;
+}
+
+/* ========================================================================== */
+
+#group_staff_add{
+    margin-bottom: 0;
+}
+
+#group_staff_add .hint{
+    margin-top:-5px;
+    margin-bottom: 5px;
+    color:#B3C2C9;
+}
+
+#group_staff_add .field .input{
+    margin-bottom: 5px;
+}
+
+/* ========================================================================== */
+
+#groups_invite_window { padding:15px; }
+#groups_invite_window h3 { margin-top:0; }
+#groups_invite_window .list { margin-bottom: 10px; }

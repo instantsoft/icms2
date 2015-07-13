@@ -1,0 +1,75 @@
+Список сторонних библиотек и ресурсов, используемых в InstantCMS:
+
+Third-party plugins, libraries and resources included in InstantCMS:
+
+    FatCow Free Icons
+        by FatCow Team
+        http://www.fatcow.com/free-icons
+
+    jQuery
+        by The jQuery Foundation
+        http://jquery.com/
+
+    jQuery UI
+        by The jQuery Foundation
+        http://jqueryui.com/
+
+    Cookie plug-in for JQuery
+        by Klaus Hartl
+        https://github.com/carhartl/jquery-cookie
+
+    TableDnD plug-in for JQuery
+        by Denis Howlett
+        http://www.isocra.com/2008/02/table-drag-and-drop-jquery-plugin/
+
+    DynaTree plug-in for JQuery
+        by Martin Wendt
+        http://dynatree.googlecode.com/
+
+    jPaginate plug-in for JQuery
+        by Cody
+        http://tympanus.net/codrops/2009/11/17/jpaginate-a-fancy-jquery-pagination-plugin/
+
+    jQuery.ScrollTo
+        by Ariel Flesler
+        http://flesler.blogspot.com/2007/10/jqueryscrollto.html
+
+    Ajax Multiple file upload component
+        by Andrew Valums
+        http://valums.com/ajax-upload/
+
+    nyroModal plug-in for jQuery
+        by Cédric Nirousset @ nyroDev
+        http://nyromodal.nyrodev.com/
+
+    CCelkoNastedSet class
+        by Setec Astronomy
+        http://www.phpclasses.org/package/1374-PHP-Manage-tree-database-structure-with-Celko-approach.html
+
+    reCAPTCHA Library
+        by Mike Crawford, Ben Maurer
+        http://www.recaptcha.net
+
+    Imperavi WYSIWYG Editor
+        by Imperavi Team
+        http://imperavi.com/redactor/
+
+    markItUp! Universal MarkUp Engine, JQuery plugin
+        by Jay Salvat
+        http://markitup.jaysalvat.com/
+
+    real_date_diff function
+        by Oleg Savvateev
+        http://savvateev.org/blog/37/
+
+    PHPMailer - PHP email class
+        by Andy Prevost, Marcus Bointon, Jim Jagielski
+        https://code.google.com/a/apache-extras.org/p/phpmailer/
+
+    Spyc - A Simple PHP YAML Class
+        by Vlad Andersen
+        http://code.google.com/p/spyc/
+
+    Jevix - HTML filtration tool
+        by ur001
+        http://code.google.com/p/jevix/

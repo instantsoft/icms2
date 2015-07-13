@@ -1,0 +1,227 @@
+/*lightbox container*/
+.box_container {
+    z-index:100000;
+    border:#000000 1px solid;
+    text-align:left;
+}
+
+/*box content area*/
+.content_area {font-family:Arial;line-height:12pt;font-size:11pt;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background-color:#ffffff;color:#000;
+    width:100%;
+    height:100%;
+    overflow:auto; 
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+.content_area a, .content_area a:link, .content_area a:visited {color:#000}
+
+.content_area2 {font-family:Arial;line-height:12pt;
+    position:absolute;
+    top:0px;
+    left:0px;
+    background-color:#fff;color:#000;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+.content_area2 a, .content_area2 a:link, .content_area2 a:visited {color:#000}
+
+/*box content*/
+.box_content {
+    /* width:100%; */   
+}
+
+/*box title area*/
+.box_title {line-height:12pt;cursor:move;
+    position:absolute;
+    left:-1px;
+    top:-30px;
+    overflow:hidden;
+    z-index:1000;
+    width:100%;
+    height:30px;
+    background-image:url(images/barbg3.png);
+    background-position:bottom center;
+    border:#000000 1px solid;
+    border-bottom:none;    
+}
+
+/*title text*/
+.title_text {
+    font-family:verdana,arial;
+    font-weight:bold;
+    font-size:8pt;    
+    color:#ffffff;
+    margin:8px 20px 1px 10px;    
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+
+/*AJAX loading style*/
+.box_loading {
+    background-image:url(images/animated_progress.gif);
+    background-position:center center;
+    background-repeat:no-repeat;
+    z-index:1005;
+    top:0px; left:0px;
+    width:100%;height:100%;
+}
+
+/*close button*/
+.box_close {
+    position:absolute;
+    background:transparent url(images/closebox.png) no-repeat 0 0;           
+    width:30px;
+    height:30px;
+    top:-43px;
+    right:-15px;
+    cursor:pointer;
+    z-index:1001;
+}
+
+a.box_prev, a.box_next {
+    position: absolute; 
+    background-image: url(images/blank.gif);
+    width: 40%; 
+    height: 100%; 
+    bottom: 0px; 
+    cursor: pointer;
+    z-index: 1002; 
+    outline:none;
+}
+
+a.box_prev {
+    left: 0px;
+}
+
+a.box_next {
+    right: 0px;
+}
+
+
+a.box_prev:hover {
+    background-image:url(images/prev.gif);
+    background-repeat:no-repeat;
+    background-position:0% 100%;
+}
+
+a.box_next:hover {
+    background-image:url(images/next.gif);
+    background-repeat:no-repeat;
+    background-position:100% 100%;    
+}
+
+
+/*-------------*/
+/*   borders   */
+/*-------------*/
+
+/*corner border*/
+.b_tlc, .b_trc, .b_blc, .b_brc {
+    position:absolute;    
+    background-repeat: no-repeat;
+}
+
+/*top left corner*/
+.b_tlc {
+    background-image:url(images/tlc.png);
+    top:-48px;
+    left:-13px;
+    width:13px;
+    height:48px;
+    }
+
+/*top right corner*/
+.b_trc {
+    background-image:url(images/trc.png);
+    top:-48px;
+    right:-13px;
+    width:13px;
+    height:48px;
+    }
+
+/*bottom left corner*/ 
+.b_blc {
+    background-image:url(images/blc.png);
+    left:-13px;
+    bottom:-18px;
+    width:13px;
+    height:18px;
+    }
+
+/*bottom right corner*/
+.b_brc {
+    background-image:url(images/brc.png);
+    right:-13px;
+    bottom:-18px;
+    width:13px;
+    height:18px;
+    }
+
+/*top and bottom border common style*/
+.b_top, .b_bottom {
+    position:absolute;    
+    background-repeat: repeat-x;
+    }
+
+/*top border*/
+.b_top {
+    background-image:url(images/tb.png);
+    width:100%;
+    height:18px;
+    top:-48px;
+    left:0px;
+}
+
+/*bottom border*/
+.b_bottom {
+    background-image:url(images/bb.png);
+    width:100%;
+    height:18px;
+    bottom:-18px;
+}
+
+.b_right, .b_left {
+    position:absolute;
+    background-repeat: repeat-y;
+}
+
+/*right border*/    
+.b_right {
+    background-image:url(images/r.png);
+    width:13px;
+    height:100%;
+    top:0px;
+    right:-13px;    
+}
+
+/*left border*/
+.b_left {
+    background-image:url(images/l.png);
+    width:13px;
+    height:100%;
+    top:0px;
+    left:-13px; 
+}
+
+/*-------------*/
+/*   overlay   */
+/*-------------*/
+
+.box_overlay {
+    position:absolute;
+    background-color:#333333;
+    z-index:900;
+    filter: alpha(opacity = 25);
+    -moz-opacity:0.25;
+    opacity:0.25;
+    top:0px;
+    left:0px; 
+}
+
+

@@ -1,0 +1,17 @@
+[subject:{nickname} invites you - {site}]
+
+Hello.
+
+User {nickname} invites you to register on the site {site}.
+
+<blockquote>Invitation code: {code}</blockquote>
+
+A link to the registration page:
+
+<a href="{page_url}">{page_url}</a>
+
+If you are not interested - just ignore this letter.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

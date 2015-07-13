@@ -1,0 +1,16 @@
+[subject:New entry on your wall - {site}]
+
+Hello, {nickname}.
+
+Your <a href="{profile_url}">profile</a> has a new entry on the wall.
+
+<a href="{author_url}">{author_nickname}</a> wrote:
+<blockquote>{content}</blockquote>
+
+To reply to this entry follow the link:
+<a href="{profile_url}">{profile_url}</a>
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>
+

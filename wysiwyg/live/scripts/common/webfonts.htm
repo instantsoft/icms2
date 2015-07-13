@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="../style/editor.css" rel="stylesheet" type="text/css">
+    <script>
+        var sLangDir = parent.oUtil.langDir;
+        document.write("<scr" + "ipt src='language/" + sLangDir + "/webfonts.js'></scr" + "ipt>");
+    </script>
+    <script>writeTitle()</script>
+
+    <script src="jquery-1.7.min.js" type="text/javascript"></script>
+
+    <style type="text/css">
+
+    .item {width:180px;min-height:100px;display:-moz-inline-stack;display:inline-block;vertical-align:top;zoom:1; *display: inline; _height: 100px;
+    background:#fff;border:#fff 7px solid;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -moz-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    -webkit-box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.24);
+    margin-left:-5px;margin-right:25px;margin-top:10px;margin-bottom:10px;
+    border:#fff 1px solid;padding:5px;
+    }
+
+    </style>
+
+    <script src="common.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        var arrFonts = ['Abel','Abril Fatface','Aclonica','Actor','Aldrich','Alike','Alice','Allan','Allerta','Allerta Stencil','Amaranth','Andika','Anonymous Pro','Antic','Anton','Architects Daughter','Arimo','Artifika',
+        'Arvo','Asset','Astloch','Aubrey','Bangers','Bentham','Bevan','Bigshot One','Black Ops One','Bowlby One','Bowlby One SC','Brawler','Cabin','Cabin Sketch','Calligraffitti','Candal',
+        'Cantarell','Cardo','Carme','Carter One','Changa One','Cedarville Cursive','Cherry Cream Soda','Chewy','Coda','Comfortaa','Coming Soon','Copse','Corben','Cousine','Coustard',
+        'Covered By Your Grace','Crafty Girls','Crimson Text','Crushed','Cuprum','Damion','Days One','Delius','Delius Swash Caps','Delius Unicase','Didact Gothic','Dorsa','Droid Sans',
+        'Droid Sans Mono','Droid Serif','EB Garamond','Expletus Sans','Fanwood Text','Federo','Fontdiner Swanky','Forum','Francois One','Goblin One','Gentium Basic','Gentium Book Basic',
+        'Geo','Geostar','Geostar Fill','Give You Glory','Gloria Hallelujah','Goudy Bookletter 1911','Gravitas One','Gruppo','Hammersmith One','Holtwood One SC','Homemade Apple',
+        'IM Fell DW Pica','IM Fell DW Pica SC','IM Fell Double Pica','IM Fell Double Pica SC','IM Fell English','IM Fell English SC','IM Fell French Canon',
+        'IM Fell French Canon SC','IM Fell Great Primer','IM Fell Great Primer SC','Inconsolata','Indie Flower','Istok Web','Irish Grover','Josefin Sans','Josefin Slab','Judson',
+        'Just Another Hand','Just Me Again Down Here','Kameron','Kelly Slab','Kenia','Kranky','Kreon','Kristi','La Belle Aurore','Lato','League Script','Leckerli One','Lekton','Limelight',
+        'Lobster','Lobster Two','Lora','Loved by the King','Love Ya Like A Sister','Luckiest Guy','Maiden Orange','Mako','Marvel','Maven Pro','Meddon','MedievalSharp','Megrim',
+        'Merriweather','Metrophobic','Michroma','Miltonian','Miltonian Tattoo','Modern Antiqua','Molengo','Monofett','Monoton','Montez','Mountains of Christmas','Muli','Neucha','Neuton',
+        'News Cycle','Nixie One','Nobile','Nothing You Could Do','Nova Cut','Nova Flat','Nova Mono','Nova Oval','Nova Round','Nova Script','Nova Slim','Numans','Nunito',
+        'OFL Sorts Mill Goudy TT','Old Standard TT','Open Sans','Open Sans Condensed','Orbitron','Oswald','Ovo','Pacifico','Passero One','Paytone One','Patrick Hand','Permanent Marker',
+        'Philosopher','Play','Playfair Display','Podkova','Pompiere','Prociono','PT Sans','PT Sans Caption','PT Sans Narrow','PT Serif','Puritan','Quattrocento','Quattrocento Sans',
+        'Questrial','Radley','Raleway','Rationale','Redressed','Reenie Beanie','Rochester','Rock Salt','Rokkitt','Rosario','Schoolbell','Shadows Into Light','Shanti','Short Stack','Sigmar One',
+        'Six Caps','Slackey','Smokum','Smythe','Sniglet','Snippet','Special Elite','Stardos Stencil','Sunshiney','Syncopate','Tangerine','Tenor Sans','Terminal Dosis Light','Tienne','Tinos',
+        'Tulpen One','Ubuntu','Ultra','UnifrakturCook','UnifrakturMaguntia','Unkempt','Unna','Varela','Varela Round','Vibur','Vidaloka','Volkhov','Vollkorn','Voltaire','VT323','Waiting for the Sunrise',
+        'Wallpoet', 'Walter Turncoat', 'Wire One', 'Yanone Kaffeesatz', 'Yellowtail', 'Yeseva One', 'Zeyada']
+
+        var sHTML='';
+        for (var i = 0, len = arrFonts.length; i < len; i++) {
+            sURL = parent.oUtil.protocol + "//fonts.googleapis.com/css?family=" + arrFonts[i];
+            var objL = document.createElement("LINK");
+            objL.href = sURL;
+            objL.rel = "StyleSheet";
+            document.documentElement.childNodes[0].appendChild(objL);
+            var sz=28;
+            if (arrFonts[i] == 'Syncopate' || arrFonts[i] == 'UnifrakturMaguntia') sz = 24;
+            sHTML += '<div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyFont(\'' + arrFonts[i] + '\')" style="cursor:pointer;font-family:' + arrFonts[i] + ';font-size:' + sz  + 'px;">' +
+                arrFonts[i] + '<div style="font-size:14px;border-top:#000 1px dotted;margin-top:5px;padding-top:5px">' +
+                'Lorem ipsum fierent. Tale modus iuvaret.' +
+                '</div></div>';
+            //'Regular, <span style="font-weight:bold">Bold</span>, <span style="font-style:italic">Italic</span>, <span style="text-transform:uppercase">Upercase</span>, <span style="text-transform:lowercase">Lowercase</span>' +
+        }
+
+        //var arrSysFonts = ['Arial', 'Arial Black', 'Bookman Old Style', 'Courier', 'Courier New', 'Garamond', 'Georgia', 'Helvetica', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
+        var arrSysFonts = ["Impact, Charcoal, sans-serif", "Palatino Linotype, Book Antiqua, Palatino, serif", "Tahoma, Geneva, sans-serif",
+        "Century Gothic, sans-serif", "Lucida Sans Unicode, Lucida Grande, sans-serif", "Times New Roman, Times, serif",
+        "Arial Narrow, sans-serif", "Verdana, Geneva, sans-serif", "Copperplate Gothic Light, sans-serif",
+        "Lucida Console, Monaco, monospace", "Gill Sans MT, sans-serif", "Trebuchet MS, Helvetica, sans-serif", "Courier New, Courier, monospace",
+        "Arial, Helvetica, sans-serif", "Georgia, Serif", "Garamond, Serif"];
+
+
+        var sHTML2 = '';
+        for (var i = 0, len = arrSysFonts.length; i < len; i++) {
+            sHTML2 += '<div onmouseover="over(this)" onmouseout="out(this)" class="item" onclick="I_ApplyFont(\'' + arrSysFonts[i] + '\',true)" style="cursor:pointer;font-family:' + arrSysFonts[i] + ';font-size:28px;">' +
+                arrSysFonts[i].split(",")[0] + '<div style="font-size:14px;border-top:#000 1px dotted;margin-top:5px;padding-top:5px">' +
+                'Lorem ipsum fierent. Tale modus iuvaret.' +
+                '</div></div>';
+        }
+
+
+        jQuery(document).ready(function ($) {
+
+            $('#divFonts').html(sHTML);
+            $('#divBasic').html(sHTML2);
+            loadTxt(); /* language */
+
+        });
+
+        var storeBgColor, storeColor;
+        function over(me,hover) {
+            storeBgColor = me.style.backgroundColor;
+            if (!hover) me.style.backgroundColor = '#c90000';
+            else me.style.backgroundColor = hover;
+            storeColor = me.style.color;
+            me.style.color = '#fff';
+        }
+        function out(me) {
+            me.style.backgroundColor = storeBgColor;
+            me.style.color = storeColor;
+        }
+
+        function tabClick(n) {
+            if (n == 0) {
+                $("#div0").css("display", "block");
+                $("#tab0").css("background", "#fcfcfc");
+                $("#div1").css("display", "none");
+                $("#tab1").css("background", "#ccc");
+            }
+            if (n == 1) {
+                $("#div0").css("display", "none");
+                $("#tab0").css("background", "#ccc");
+                $("#div1").css("display", "block");
+                $("#tab1").css("background", "#fcfcfc");
+            }
+        }
+    </script>
+
+</head>
+<body style="margin-top:12px;margin-left:10px">
+
+
+<div id="tab0" onclick="tabClick(0)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:140px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#fcfcfc;margin-left:22px;margin-top:7px">
+    GOOGLE FONTS
+</div>
+<div id="tab1" onclick="tabClick(1)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;width:140px;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px">
+    BASIC FONTS
+</div>
+<div style="clear:left"></div>
+
+<table cellpadding="0" cellspacing="0" style="margin-left:7px;">
+<tr>
+<td>
+
+    <div id="div0" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc">
+        <div id="divFonts"></div>
+    </div>
+
+    <div id="div1" style="color:#000;padding:7px 20px;padding-right:0px;width:445px;height:395px;overflow:auto;border-top:none;background:#fcfcfc;display:none;">
+        <div id="divBasic"></div>
+    </div>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

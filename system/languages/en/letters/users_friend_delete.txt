@@ -1,0 +1,10 @@
+[subject:{friend_nickname} is not your friend anymore - {site}]
+
+Hello.
+
+<a href="{friend_url}">{friend_nickname}</a> is not your friend anymore.
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

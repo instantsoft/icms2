@@ -1,0 +1,62 @@
+<?php
+
+class formWidgetUsersListOptions extends cmsForm {
+
+    public function init() {
+
+        cmsCore::loadControllerLanguage('users');
+
+        return array(
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_OPTIONS,
+                'childs' => array(
+
+                    new fieldList('options:show', array(
+                        'title' => LANG_WD_USERS_LIST_SHOW,
+                        'items' => array(
+                            'all' => LANG_WD_USERS_LIST_SHOW_ALL,
+                            'friends' => LANG_WD_USERS_LIST_SHOW_FRIENDS,
+                            'friends_online' => LANG_WD_USERS_LIST_SHOW_FRIENDS_ONLINE,
+                        )
+                    )),
+
+                    new fieldList('options:dataset', array(
+                        'title' => LANG_WD_USERS_LIST_DATASET,
+                        'items' => array(
+                            'latest' => LANG_USERS_DS_LATEST,
+                            'rating' => LANG_USERS_DS_RATED,
+                            'popular' => LANG_USERS_DS_POPULAR,
+                            'date_log' => LANG_USERS_DS_DATE_LOG,
+                        )
+                    )),
+
+                    new fieldList('options:style', array(
+                        'title' => LANG_WD_USERS_LIST_STYLE,
+                        'items' => array(
+                            'list' => LANG_WD_USERS_LIST_STYLE_LIST,
+                            'tiles' => LANG_WD_USERS_LIST_STYLE_TILES,
+                        )
+                    )),
+
+                    new fieldListGroups('options:groups', array(
+                        'title' => LANG_WD_USERS_LIST_GROUPS,
+                    )),
+
+                    new fieldNumber('options:limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 10,
+                        'rules' => array(
+                            array('required')
+                        )
+                    )),
+
+                )
+            ),
+
+        );
+
+    }
+
+}

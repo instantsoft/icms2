@@ -1,0 +1,76 @@
+html, body{
+    margin:0; padding:0;
+    font-family: 'Trebuchet MS', sans-serif;
+    height:100%;
+}
+
+a, a.ajaxlink { color: #2980b9; }
+a:hover, a.ajaxlink:hover { color: #d35400; }
+
+#error404{
+    width:300px;
+    height:270px;
+    background:#EDEDED;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+}
+
+#error404 h1,
+#error404 h2{
+    margin:0;
+    padding: 0;
+}
+
+#error404 h1{
+    font-size:150px;
+    color:#bbb;
+}
+
+#error404 h2{
+    color:#666;
+}
+
+#error404 a {
+    color:#777;
+}
+#error404 a:hover {
+    color:#333;
+}
+
+#error-maintenance{
+    height:90px;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    text-align: center;
+    padding-top:160px;
+    background: url("../images/errors/maintenance.png") no-repeat center 20px #FAFAFA;
+}
+
+#error-maintenance h1{ margin:0; }
+#error-maintenance p{ margin:5px; font-size:21px; }
+
+#error-maintenance-footer {
+    width:100%;
+    height:50px;
+    line-height: 50px;
+    position: absolute;
+    bottom:0;
+    text-align: center;
+}
+
+#error-maintenance-footer span {
+    padding-left:20px;
+    background: url("../images/icons/key.png") no-repeat left center;
+}
+
+#error-maintenance-footer a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #2980b9; }
+#error-maintenance-footer a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #d35400; }

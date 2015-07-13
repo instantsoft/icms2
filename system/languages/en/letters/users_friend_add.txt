@@ -1,0 +1,11 @@
+[subject:{friend_nickname} offers friendship - {site}]
+
+Hello.
+
+<a href="{friend_url}">{friend_nickname}</a> invites you to become friends.
+
+To accept or reject the offer you need to login to the site.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

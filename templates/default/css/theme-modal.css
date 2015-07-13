@@ -1,0 +1,113 @@
+.nyroModalBg {
+	position: fixed;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: #000;
+	opacity: 0.7;
+    z-index: 100;
+}
+.nmReposition {
+	position: absolute;
+}
+.nyroModalCloseButton {
+	top: -16px;
+	right: -16px;
+	width: 16px;
+	height: 16px;
+	text-indent: -9999em;
+	background: url("../images/modal/close.png");
+    z-index: 101;
+}
+.nyroModalTitle {
+	top: -36px;
+	left: -4px;
+	margin: 0;
+    font-size: 1.1em;
+	color: #e1ebef;
+    text-shadow: 0 1px 1px #34495e;
+    z-index: 100;
+    background:#2C3E50;
+    padding:5px 14px;
+    padding-bottom:11px;
+    border-radius:6px 6px 0 0 ;
+}
+.nyroModalCont {
+	position: absolute;
+	border: 4px solid #2c3e50;
+    box-shadow:0 0 30px #000;
+	margin: 25px;
+    padding:0;
+	background: #fff;
+    z-index: 101;
+}
+.nyroModalCont .notice{
+    padding:20px;
+    color:#BDC3C7;
+}
+.nyroModalError {
+	border: 4px solid red;
+	color: red;
+	width: 250px;
+	height: 250px;
+}
+.nyroModalError div {
+	min-width: 0;
+	min-height: 0;
+	padding: 10px;
+}
+.nyroModalLink, .nyroModalDom, .nyroModalForm, .nyroModalFormFile {
+	position: relative;
+	max-width: 1000px;
+}
+.nyroModalImage, .nyroModalSwf, .nyroModalIframe, .nyroModalIframeForm {
+	position: relative;
+	overflow: hidden;
+}
+.nyroModalImage img {
+    vertical-align: top;
+}
+.nyroModalHidden {
+	left: -9999em;
+	top: -9999em;
+}
+.nyroModalLoad {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	background: #fff url(../images/modal/ajaxLoader.gif) no-repeat center;
+	padding: 0;
+}
+.nyroModalPrev, .nyroModalNext {
+	outline: none;
+	position: absolute;
+	top: 0;
+	height: 60%;
+	width: 150px;
+	min-height: 50px;
+	max-height: 300px;
+	cursor: pointer;
+	text-indent: -9999em;
+	background: transparent url('data:image/gif;base64,AAAA') left 20% no-repeat;
+}
+.nyroModalImage .nyroModalPrev, .nyroModalImage .nyroModalNext {
+	height: 100%;
+	width: 40%;
+	max-height: none;
+}
+.nyroModalPrev {
+	left: 0;
+}
+.nyroModalPrev:hover {
+	background-image: url(../images/modal/prev.gif);
+}
+.nyroModalNext {
+	right: 0;
+	background-position: right 20%;
+}
+.nyroModalNext:hover {
+	background-position: right 20%;
+	background-image: url(../images/modal/next.gif);
+}

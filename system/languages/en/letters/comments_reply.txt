@@ -1,0 +1,18 @@
+[subject:New reply to your comment - {site}]
+
+Hello, {nickname}.
+
+Page "<a href="{page_url}">{page_title}</a>" has a new reply to your comment.
+
+Your comment:
+<blockquote>{original}</blockquote>
+
+<a href="{author_url}">{author_nickname}</a> replied:
+<blockquote>{comment}</blockquote>
+
+To reply to this comment follow the link:
+<a href="{page_url}">{page_url}</a>
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

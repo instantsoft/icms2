@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="../style/editor.css" rel="stylesheet" type="text/css">
+    
+    <script language="javascript" type="text/javascript">
+        var sLangDir = parent.oUtil.langDir;
+        document.write("<scr" + "ipt src='language/" + sLangDir + "/webvideo.js'></scr" + "ipt>");
+    </script>
+    <script language="javascript" type="text/javascript">
+        try {
+            writeTitle()
+        } catch (e) { }
+    </script>
+    <script src="jquery-1.7.min.js" type="text/javascript"></script>
+
+    <link href="http://fonts.googleapis.com/css?family=Arvo" rel="stylesheet" type="text/css">
+
+    <style type="text/css">
+        body {font-family:Arvo;font-size:12px;letter-spacing:1px}
+        #inpPreview, #inpMP4, #inpOgg, #inpWebM {
+	        border:1px inset #ddd;
+	        font-size:12px;
+	        -moz-border-radius:3px; 
+	        -webkit-border-radius:3px; 
+	        padding-left:7px;
+            }
+        }
+    </style>
+
+    <script src="common.js" type="text/javascript"></script>
+
+    <script language="javascript" type="text/javascript">
+
+        jQuery(document).ready(function ($) {
+
+            /*  ASSET MANAGER HERE */
+            if (parent.oUtil.obj.fileBrowser != "") {
+                $("#frameFiles").attr("src", parent.oUtil.obj.fileBrowser);
+            }
+            else {
+                $("#frameFiles").css("display", "none");
+                $("#divChoose").css("display", "none");
+            }
+
+            try {
+                loadTxt()/* language */
+            } catch (e) { }
+        });
+
+        function fileclick(src) {
+            if ($("#div0").css("display") == "block") $("#inpImage").val(src);
+            if ($("#div1").css("display") == "block") $("#inpMP4").val(src);
+            if ($("#div2").css("display") == "block") $("#inpOgg").val(src);
+            if ($("#div3").css("display") == "block") $("#inpWebM").val(src);
+        }
+
+        function InsertVideo() {
+            var sHTML = "<video width='" + $("#inpWidth").val() + "' height='" + $("#inpHeight").val() + "' poster='" + $("#inpImage").val() + "' controls='controls' preload='none'>";
+            sHTML += "<source src='" + $("#inpMP4").val() + "' type='video/mp4'/>";
+            if ($("#inpOgg").val() != "") sHTML += "<source src='" + $("#inpOgg").val() + "' type='video/webm'/>";
+            if ($("#inpWebM").val() != "") sHTML += "<source src='" + $("#inpWebM").val() + "' type='video/ogg' />";
+            sHTML += "</video>";
+            I_InsertHTML(sHTML)
+        }
+
+        function tabClick(n) {
+            $("#div0").css("display", "none");
+            $("#tab0").css("background", "#ccc");
+            $("#div1").css("display", "none");
+            $("#tab1").css("background", "#ccc");
+            $("#div2").css("display", "none");
+            $("#tab2").css("background", "#ccc");
+            $("#div3").css("display", "none");
+            $("#tab3").css("background", "#ccc");
+
+            $("#div" + n).css("display", "block");
+            $("#tab" + n).css("background", "#fcfcfc");
+        }
+    </script>
+
+</head>
+<body style="margin-top:17px;margin-left:15px;margin-right:17px;">
+<p id="divNote1">
+For info on HTML5 video see: <a href="http://www.w3schools.com/html5/html5_video.asp" target="_blank">www.w3schools.com/html5/html5_video.asp</a>.
+There are 3 supported video sources: MP4, WebM (e.g. for MSIE 9+), and Ogg (e.g. for FireFox). The browser will use the first recognized format.
+Also, you will need a preview or "poster" image.
+</p>
+<p id="divNote2">
+To convert a video into HTML5 video (MP4, WebM & Ogg) you can use: <a href="http://www.mirovideoconverter.com/" target="_blank">www.mirovideoconverter.com</a>
+</p>
+
+<div id="tab0" onclick="tabClick(0)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#fcfcfc;margin-left:22px;margin-top:7px;padding-left:12px;padding-right:12px;">
+    POSTER
+</div> 
+<div id="tab1" onclick="tabClick(1)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px;padding-left:12px;padding-right:12px;">
+    MPEG4 VIDEO
+</div>
+<div id="tab2" onclick="tabClick(2)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px;padding-left:12px;padding-right:12px;">
+    Ogg VIDEO
+</div>
+<div id="tab3" onclick="tabClick(3)" style="float:left;font-family:Arvo;font-size:11px;text-shadow:1px 1px 1px rgba(255,255,255,0.6);color:#000;letter-spacing:1px;cursor:pointer;min-height:15px;text-align:center;margin-bottom:0px;padding:3px;background:#ccc;margin-left:5px;margin-top:7px;padding-left:12px;padding-right:12px;">
+    WebM VIDEO
+</div>
+<div style="clear:left"></div>
+
+<table cellpadding="0" cellspacing="0" style="width:100%">
+<tr>
+<td style="width:645px;">
+
+    <div id="div0" style="color:#000;padding:16px;padding-right:0px;border-top:none;background:#fcfcfc;">
+        <label id="lbImage" for="inpImage">Poster/preview image (.png or .jpg):</label><br />
+        <input id="inpImage" type="text" style="width:350px;height:23px;"/>
+    </div>
+
+    <div id="div1" style="color:#000;padding:16px;padding-right:0px;border-top:none;background:#fcfcfc;display:none;">
+        <label id="lblMP4" for="inpMP4">MPEG4 video (.mp4):</label><br />
+        <input id="inpMP4" type="text" style="width:350px;height:23px;"/>
+    </div>
+
+    <div id="div2" style="color:#000;padding:16px;padding-right:0px;border-top:none;background:#fcfcfc;display:none;">
+         <!--e.g. for FireFox-->
+        <label id="lblOgg" for="inpOgg">Ogg video (.ogv):</label><br />
+        <input id="inpOgg" type="text" style="width:350px;height:23px;"/>
+    </div>
+
+    <div id="div3" style="color:#000;padding:16px;padding-right:0px;border-top:none;background:#fcfcfc;display:none;">
+         <!--e.g. for MSIE 9+-->
+        <label id="lblWebM" for="inpWebM">WebM video (.webm):</label><br />
+        <input id="inpWebM" type="text" style="width:350px;height:23px;"/>
+    </div>
+    <div id="divChoose" style="color:#000;padding:16px;padding-top:0px;padding-bottom:0px;border-top:none;background:#fcfcfc;">
+    <b>Choose File:</b>
+    </div>
+    <iframe id="frameFiles" frameBorder="0" src="" style="width:100%;height:300px;margin-bottom:0px;"></iframe>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;padding-top:15px;">
+    <label id="lblDimension" for="inpWidth">Enter video size (width x height):</label>
+    <input id="inpWidth" type="text" style="width:50px;height:23px;text-align:center" value="640"/> x 
+    <input id="inpHeight" type="text" style="width:50px;height:23px;text-align:center" value="360"/> pixels
+    <br /><br />
+    <input type="button" id="btnCancel" value="cancel" onclick="I_Close()" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'" style="width:120px;height:33px">
+    <input type="button" id="btnInsert" value="insert" onclick="InsertVideo();I_Close()" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'" style="width:120px;height:33px">
+</td>
+</tr>
+</table>
+
+</body>
+</html>

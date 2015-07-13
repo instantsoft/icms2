@@ -1,0 +1,10 @@
+[subject:{user_nickname} invites you - {site}]
+
+Hello.
+
+<a href="{user_url}">{user_nickname}</a> invites you to join the group <a href="{group_url}">{group_title}</a>.
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

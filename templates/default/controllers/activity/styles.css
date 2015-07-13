@@ -1,0 +1,57 @@
+.activity-list h3 {
+    border-bottom: dashed 1px #EDEDED;
+    margin-bottom:0px;
+    padding-bottom: 15px;
+}
+
+.activity-list .item a.author{ color:#376499; }
+.activity-list .item a.author:hover{ color:#d35400; }
+.activity-list .item .details { font-size:11px; }
+.activity-list .item .details .date { color:#999; }
+.activity-list .item .details .reply {
+    padding-left: 5px;
+}
+.activity-list .item .details .reply a {
+    padding-left: 20px;
+    background:url("../../images/icons/comment-small.png") no-repeat left center;
+    color:#BDC3C7;
+}
+.activity-list .item .details .reply a:hover {
+    color:#d35400;
+}
+
+.activity-list .item .images { overflow: hidden; margin:10px 0; }
+.activity-list .item .images .image {
+    float:left; margin-right:2px;
+    display:block; overflow: hidden;
+}
+.activity-list .item .images .image.more {
+    background: #ecf0f1;
+    text-align: center;
+    line-height: 64px;
+    font-size:18px;
+}
+.activity-list .item .images .image.more a {
+    display:block; width: 64px; height:64px; overflow: hidden;
+    color:#7f8c8d;
+    text-decoration: none;
+}
+.activity-list .item .images .image.more a:hover {
+    color:#2c3e50;
+}
+
+.activity-list .item .actions {
+    float:right;
+    visibility: hidden;
+}
+
+.activity-list .item:hover .actions {
+    visibility: visible;
+}
+
+.activity-list .actions .delete{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background:url("../../images/icons/delete.png") no-repeat center;
+}

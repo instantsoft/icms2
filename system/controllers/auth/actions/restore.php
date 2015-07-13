@@ -1,0 +1,65 @@
+<?php
+class actionAuthRestore extends cmsAction {
+
+    public function run(){
+
+        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+
+        $users_model = cmsCore::getModel('users');
+        $form = $this->getForm('restore');
+
+        $data = array();
+
+        $is_submitted = $this->request->has('submit');
+
+        if ($is_submitted){
+
+            $data = $form->parse($this->request, $is_submitted);
+
+            $errors = $form->validate($this,  $data);
+
+            if ($errors){
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+            }
+
+            if (!$errors){
+
+                $user = $users_model->getUserByEmail($data['email']);
+
+                if (!$user){
+
+                    cmsUser::addSessionMessage(LANG_EMAIL_NOT_FOUND, 'error');
+
+                } else {
+
+                    $pass_token = string_random(32, $user['email']);
+
+                    $users_model->updateUserPassToken($user['id'], $pass_token);
+
+                    $messenger = cmsCore::getController('messages');
+                    $to = array('email' => $user['email'], 'name' => $user['nickname']);
+                    $letter = array('name' => 'reg_restore');
+
+                    $messenger->sendEmail($to, $letter, array(
+                        'nickname' => $user['nickname'],
+                        'page_url' => href_to_abs('auth', 'reset', $pass_token),
+                        'valid_until' => html_date(date('d.m.Y H:i', time() + (24 * 3600)), true),
+                    ));
+
+                    cmsUser::addSessionMessage(LANG_TOKEN_SENDED, 'success');
+
+                }
+
+            }
+
+        }
+
+        return cmsTemplate::getInstance()->render('restore', array(
+            'data' => $data,
+            'form' => $form,
+            'errors' => isset($errors) ? $errors : false
+        ));
+
+    }
+
+}

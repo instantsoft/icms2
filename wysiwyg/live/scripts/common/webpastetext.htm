@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style/editor.css" rel="stylesheet" type="text/css">
+
+<script>
+  var sLangDir=parent.oUtil.langDir;
+  document.write("<scr" + "ipt src='language/" + sLangDir + "/webpastetext.js'></scr" + "ipt>");
+</script>
+
+<script src="common.js" type="text/javascript"></script>
+
+<script>writeTitle()</script>
+<script>
+function doCmd(sCmd,sOption)
+    {
+    var idSource = document.getElementById("idSource").contentWindow;
+    idSource.document.execCommand(sCmd, false, sOption);
+    }
+
+function bodyOnLoad()
+    {
+    loadTxt();
+
+    var idSource = document.getElementById("idSource").contentWindow;
+    var sourceDocBody = idSource.document.body;
+    sourceDocBody.innerHTML = "";
+    sourceDocBody.style.cssText="overflow-x:scroll;overflow-y:scroll;white-space:nowrap;background-color:#ffffff;";
+    sourceDocBody.clearAttributes;
+
+    idSource.document.designMode="on";
+    idSource.focus();
+    }
+
+function doInsert()
+    {
+    var idSource = document.getElementById("idSource").contentWindow;
+
+    var sHTML = idSource.document.body.innerHTML;
+    sHTML = sHTML.replace(/>\s+</gi, "><"); //replace space between tag
+    sHTML = sHTML.replace(/\r/gi, ""); //replace space between tag
+    sHTML = sHTML.replace(/(<br>)\s+/gi, "$1"); //replace space between BR and text
+
+    sHTML = sHTML.replace(/(<br>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/tr>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/div>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h1>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h2>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h3>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h4>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h5>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<\/h6>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    sHTML = sHTML.replace(/(<p>)/gi, "$1&lt;REPBR&gt;"); //replace space between BR and text
+    idSource.document.body.innerHTML = sHTML;
+
+    var range = idSource.document.body.ownerDocument.createRange();
+    range.selectNodeContents(idSource.document.body);
+    var sText = range.toString();
+
+    sText = sText.replace(/<REPBR>/gi, "<br>")
+
+    var obj = parent.oUtil.obj;
+    obj.insertHTML(sText)
+    }
+
+</script>
+</head>
+<body onload="bodyOnLoad()" style="margin:12px;overflow:hidden;">
+
+<table width="100%" height="265px" align="center" cellpadding="0" cellspacing="0" ID="Table1">
+<tr>
+<td nowrap style="padding:5px;">&nbsp;<span id=txtLang name=txtLang>Paste text content here</span>:
+</td>
+</tr>
+<tr>
+<tr>
+<td style="height:100%;">
+    <iframe style="width:100%;height:100%;" frameborder="no" name="idSource" id="idSource"></iframe>
+</td>
+</tr>
+<tr>
+<td class="dialogFooter" align="right" style="padding-top:10px;">
+  <table cellpadding=0 cellspacing=0>
+  <tr>
+  <td>
+    <input type="button" name=btnCancel id=btnCancel value="cancel" onclick="I_Close()" class="inpBtn" style="width:120px;height:33px" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+  </td>
+  <td>
+    <input type="button" name=btnOk id=btnOk value=" ok " onclick="doInsert();I_Close()" class="inpBtn" style="width:120px;height:33px" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+  </td>
+  </tr>
+  </table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

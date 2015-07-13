@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style/editor.css" rel="stylesheet" type="text/css">
+<script>
+  var sLangDir=parent.oUtil.langDir;
+  document.write("<scr" + "ipt src='language/" + sLangDir + "/webpreview.js'></scr" + "ipt>");
+</script>
+
+<script src="common.js" type="text/javascript"></script>
+
+<script>writeTitle()</script>
+
+<script>
+
+function bodyOnLoad()
+    {
+
+	var h = window.innerHeight;
+	if(!h) h = window.document.documentElement.clientHeight;
+    document.getElementById("previewArea").style.height = (h-60)+"px";
+
+    loadTxt();
+    var sHTML=parent.oUtil.obj.getXHTML();
+    var frmPreview = document.getElementById("idPreview").contentWindow;
+    frmPreview.document.open("text/html", "replace");
+    frmPreview.document.write(sHTML);
+    frmPreview.document.close();
+    }
+</script>
+
+<style type="text/css">
+	html, body {height:100%;}
+</style>
+
+</head>
+<body style="overflow:hidden;" onload="bodyOnLoad();">
+
+<table style="height:100%;width:100%;background-color:#ffffff;margin-top:5px;" align="center" cellpadding="0" cellspacing="0">
+<td style="height:100%" id="previewArea">
+    <iframe style="width:100%;height:100%;overflow:auto;border:0px" frameborder="0" name="idPreview" id="idPreview"></iframe>
+</td>
+</tr>
+<tr>
+<td class="dialogFooter" style="padding-top:10px;" align="right">
+    <input type="button" id="btnClose" name="btnClose" value="close" onclick="I_Close()" style="width:120px;height:33px" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+</td>
+</tr>
+</table>
+
+</body>
+</html>

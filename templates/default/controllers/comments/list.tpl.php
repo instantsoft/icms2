@@ -1,0 +1,115 @@
+<?php // Шаблон списка комментариев и формы добавления // ?>
+
+<?php $this->addJS('templates/default/js/jquery-scroll.js'); ?>
+<?php $this->addJS('templates/default/js/comments.js'); ?>
+<?php $is_guests_allowed =  !empty($this->controller->options['is_guests']); ?>
+
+<div id="comments_widget">
+
+    <div class="title">
+        <a name="comments"></a>
+        <h2><?php echo $comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS; ?></h2>
+        <?php if ($user->is_logged){ ?>
+            <div class="track">
+                <input type="checkbox" id="is_track" name="is_track" value="1" <?php if($is_tracking){ ?>checked="checked"<?php } ?> />
+                <label for="is_track"><?php echo LANG_COMMENTS_TRACK; ?></label>
+            </div>
+        <?php } ?>
+    </div>
+
+    <?php if ($user->is_logged || $is_guests_allowed){ ?>
+        <div id="comments_refresh_panel">
+            <a href="#refresh" class="refresh_btn" onclick="icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
+        </div>
+    <?php } ?>
+
+    <div id="comments_list">
+
+        <?php if (!$comments){ ?>
+
+            <div class="no_comments">
+				<?php echo LANG_COMMENTS_NONE; ?>
+			</div>
+
+			<?php if (!$user->is_logged && !$is_guests_allowed) { ?>
+				<div class="login_to_comment">
+					<?php 
+						$reg_url = href_to('auth', 'register');
+						$log_url = href_to('auth', 'login');
+						printf(LANG_COMMENTS_LOGIN, $log_url, $reg_url); 
+					?>
+				</div>						
+			<?php } ?>
+			
+        <?php } ?>
+
+        <?php if ($comments){ ?>
+
+            <?php echo $this->renderChild('comment', array('comments'=>$comments, 'user'=>$user, 'is_highlight_new'=>$is_highlight_new, 'is_can_rate' => $is_can_rate)); ?>
+
+        <?php } ?>
+
+    </div>
+
+    <div id="comments_urls" style="display: none"
+            data-get-url="<?php echo $this->href_to('get'); ?>"
+            data-delete-url="<?php echo $this->href_to('delete'); ?>"
+            data-refresh-url="<?php echo $this->href_to('refresh'); ?>"
+            data-track-url="<?php echo $this->href_to('track'); ?>"
+            data-rate-url="<?php echo $this->href_to('rate'); ?>"
+    ></div>
+
+    <?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
+        <div id="comments_add_link">
+            <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
+        </div>
+
+        <div id="comments_add_form">
+			<?php $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma); ?>
+            <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
+                <div class="preview_box"></div>
+                <form action="<?php echo $this->href_to('submit'); ?>" method="post">
+                    <?php echo html_csrf_token($csrf_token_seed); ?>
+                    <?php echo html_input('hidden', 'action', 'add'); ?>
+                    <?php echo html_input('hidden', 'id', 0); ?>
+                    <?php echo html_input('hidden', 'parent_id', 0); ?>
+                    <?php echo html_input('hidden', 'tc', $target_controller); ?>
+                    <?php echo html_input('hidden', 'ts', $target_subject); ?>
+                    <?php echo html_input('hidden', 'ti', $target_id); ?>
+                    <?php echo html_input('hidden', 'timestamp', time()); ?>
+					<?php if (!$user->is_logged) { ?>
+                        <?php 
+                            $this->addJS('templates/default/js/jquery-cookie.js'); 
+                            $name = cmsUser::getCookie('comments_guest_name');
+                            $email = cmsUser::getCookie('comments_guest_email');
+                        ?>
+						<div class="author_data">
+							<div class="name field">
+								<label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $name); ?>
+							</div>
+							<div class="email field">
+								<label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $email); ?>
+							</div>
+						</div>
+					<?php } ?>
+                    <?php echo $user->is_logged ? html_editor('content') : html_textarea('content'); ?>
+                    <div class="buttons">
+						<?php echo html_button(LANG_PREVIEW, 'preview', 'icms.comments.preview()'); ?>
+                        <?php echo html_button(LANG_SEND, 'submit', 'icms.comments.submit()'); ?>
+                    </div>
+                    <div class="loading">
+                        <?php echo LANG_LOADING; ?>
+                    </div>
+                </form>
+            <?php } else { ?>
+                <p><?php printf(LANG_COMMENTS_LOW_KARMA, cmsUser::getPermissionValue('comments', 'karma')); ?></p>
+            <?php } ?>
+        </div>
+    <?php } ?>
+
+    <script>
+        <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM'); ?>
+        <?php if ($is_highlight_new){ ?>icms.commments.showFirstSelected();<?php } ?>
+    </script>
+
+</div>

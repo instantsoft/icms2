@@ -1,0 +1,15 @@
+[subject:Новая запись на стене - {site}]
+
+Здравствуйте, {nickname}.
+
+На странице вашего <a href="{profile_url}">профиля</a> добавлена новая запись на стене.
+
+<a href="{author_url}">{author_nickname}</a> пишет:
+<blockquote>{content}</blockquote>
+
+Вы можете ответить на эту запись перейдя по ссылке:
+<a href="{profile_url}">{profile_url}</a>
+
+--
+ C уважением, {site}
+ <small>Письмо отправлено автоматически, пожалуйста, не отвечайте на него.</small>

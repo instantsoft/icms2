@@ -1,0 +1,13 @@
+[subject:Your page is approved - {site}]
+
+Hello, {nickname}.
+
+Moderator approved publication of your page.
+
+Title: {page_title}
+URL: <a href="{page_url}">{page_url}</a>
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>
+

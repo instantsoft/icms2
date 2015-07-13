@@ -1,0 +1,2 @@
+Options -Indexes
+php_flag engine 0

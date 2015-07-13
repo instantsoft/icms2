@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="../style/editor.css" rel="stylesheet" type="text/css">
+
+<script>
+  var sLangDir=parent.oUtil.langDir;
+  document.write("<scr" + "ipt src='language/" + sLangDir + "/webbookmark.js'></scr" + "ipt>");
+</script>
+
+<script src="common.js" type="text/javascript"></script>
+
+<script>writeTitle()</script>
+<script>
+
+/*** COMMON ***/
+
+var isIE = (navigator.appName.indexOf('Microsoft') != -1);
+
+function GetElement(oElement,sMatchTag)
+    {
+    while (oElement!=null&&oElement.tagName!=sMatchTag)
+        {
+        if(oElement.tagName=="BODY")return null;
+        oElement=oElement.parentNode;
+        }
+    return oElement;
+    }
+
+/*** REALTIME + PREVIEW ***/
+function doWindowFocus()
+    {
+    parent.oUtil.onSelectionChanged=new Function("realTime()");
+    updateList();
+    }
+
+function bodyOnLoad()
+    {
+    loadTxt();
+
+    window.onfocus=doWindowFocus;
+    parent.oUtil.onSelectionChanged=new Function("realTime()");
+    updateList();
+    realTime();
+    }
+
+function bodyOnUnload() {
+  parent.oUtil.onSelectionChanged=null;
+}
+
+function updateList()
+    {
+    var oEditor=parent.oUtil.oEditor;
+
+    var lstBookmark = document.getElementsByName("lstBookmark")[0];
+
+    while(lstBookmark.options.length!=0) lstBookmark.options[0] = null;
+
+    var aNode = oEditor.document.getElementsByTagName("A");
+    for(var i=0;i<aNode.length;i++)
+        {
+        if (aNode[i].name != "")
+            {
+            var op = document.createElement("OPTION");
+            op.text=aNode[i].name;
+            op.value=aNode[i].name;
+            lstBookmark.options[lstBookmark.options.length] = op;
+            }
+        }
+    }
+
+function selectBookmark(sName)
+    {
+
+    if(isIE) {selectBookmarkIE(sName); selectBookmarkIE(sName); return; }
+
+    var lstBookmark = document.getElementById("lstBookmark");
+    var sel = lstBookmark.selectedIndex;
+    var oEditor=parent.oUtil.oEditor;
+
+    var aNode = oEditor.document.getElementsByName(sName);
+    if (aNode.length > 0) {
+        var range = oEditor.document.createRange();
+        range.selectNode(aNode[0]);
+        oSel = oEditor.getSelection();
+        oSel.removeAllRanges();
+        oSel.addRange(range);
+    }
+    realTime();
+    parent.realTime(parent.oUtil.obj);
+    parent.oUtil.obj.selectElement(0);
+    window.focus();
+    lstBookmark.focus();
+    lstBookmark.selectedIndex = sel;
+    }
+
+function selectBookmarkIE(sName)
+  {
+
+  parent.oUtil.obj.setFocus();
+  if(!parent.oUtil.obj.checkFocus()){return;}//Focus stuff
+  var oEditor=parent.oUtil.oEditor;
+  var oSel=oEditor.document.selection.createRange();
+  var sType=oEditor.document.selection.type;
+
+  oSel.execCommand("Unselect");
+
+  for(var i=0;i<oEditor.document.anchors.length;i++)
+    {
+    if(oEditor.document.anchors[i].name==sName)
+      {
+      if(oSel.parentElement)
+        {
+        var oSelRange = oEditor.document.body.createTextRange()
+        oSelRange.moveToElementText(oEditor.document.anchors[i])
+        oSel.setEndPoint("StartToStart",oSelRange);
+        oSel.setEndPoint("EndToEnd",oSelRange);
+        oSel.select();
+        }
+      }
+    }
+  realTime();
+  parent.realTime(parent.oUtil.oName);
+  parent.oUtil.obj.selectElement(0);
+  parent.oUtil.obj.bookmarkSelection();
+  }
+
+function realTime()
+    {
+	if(isIE) {realTimeIE(); return};
+
+    var btnInsert = document.getElementById("btnInsert");
+    var btnApply = document.getElementById("btnApply");
+    var inpName = document.getElementById("inpName");
+
+    var oEditor=parent.oUtil.oEditor;
+
+    var oSel=oEditor.getSelection();
+    var oEl = parent.getSelectedElement(oSel);
+
+    if (oEl.nodeName == "A")
+        {
+
+        var range =oEditor.document.createRange();
+        range.selectNode(oEl);
+        oSel.removeAllRanges();
+        oSel.addRange(range);
+
+        btnInsert.style.display="none";
+        btnApply.style.display="block";
+
+        if(oEl.NAME)inpName.value=oEl.NAME;
+        if(oEl.name)inpName.value=oEl.name;
+        }
+    else
+        {
+        btnInsert.style.display="block";
+        btnApply.style.display="none";
+
+        inpName.value="";
+        }
+    }
+
+function realTimeIE()
+  {
+  if(!parent.oUtil.obj.checkFocus())return;//Focus stuff
+  var oEditor=parent.oUtil.oEditor;
+  var oSel=oEditor.document.selection.createRange();
+  var sType=oEditor.document.selection.type;
+
+  //If text or control is selected, Get A element if any
+  if (oSel.parentElement) oEl=GetElement(oSel.parentElement(),"A");
+  else oEl=GetElement(oSel.item(0),"A");
+
+  if (oEl)
+    {
+    btnInsert.style.display="none";
+    btnApply.style.display="block";
+
+    if(sType!="Control")
+      {
+      var oEditor=parent.oUtil.oEditor;
+      var oSelRange = oEditor.document.body.createTextRange()
+      oSelRange.moveToElementText(oEl)
+      oSel.setEndPoint("StartToStart",oSelRange);
+      oSel.setEndPoint("EndToEnd",oSelRange);
+      oSel.select();
+      }
+
+    if(oEl.NAME)inpName.value=oEl.NAME;
+    if(oEl.name)inpName.value=oEl.name;
+    }
+  else
+    {
+    btnInsert.style.display="block";
+    btnApply.style.display="none";
+
+    inpName.value="";
+    }
+  }
+
+function doApply()
+    {
+
+	if(isIE)
+		{
+		doApplyIE(); return;
+		}
+
+    var inpName = document.getElementById("inpName");
+
+    var oEditor=parent.oUtil.oEditor;
+
+    parent.oUtil.obj.saveForUndo();
+
+    var oSel = oEditor.getSelection();
+    var range = oSel.getRangeAt(0);
+
+    if(inpName.value!="") {
+        var emptySel = false;
+        if (range.toString() == "") {
+            emptySel = true;
+            var node = oEditor.document.createTextNode("#");
+            range.insertNode(node);
+
+            range = oEditor.document.createRange();
+            range.setStart(node, 0);
+            range.setEnd(node, "#".length);
+
+            oSel = oEditor.getSelection();
+            oSel.removeAllRanges();
+            oSel.addRange(range);
+        }
+
+        oEditor.document.execCommand("CreateLink", false, "#");
+
+        oSel = oEditor.getSelection();
+
+        var oEl = parent.getSelectedElement(oSel);
+        if(oEl) {
+          oEl.removeAttribute("HREF");
+          oEl.setAttribute("NAME", inpName.value);
+        }
+
+    } else {
+        oSel = oEditor.getSelection();
+        var oEl = parent.getSelectedElement(oSel);
+        if(oEl) {
+          oEl.setAttribute("HREF", "dummy");
+        }
+        oEditor.document.execCommand("unlink", false, null);//unlink
+    }
+
+    updateList();
+    realTime();
+
+    //~~~~~~~~ Focus stuff
+    var oEditor=parent.oUtil.oEditor;
+    oEditor.focus()
+
+    parent.realTime(parent.oUtil.obj);
+
+    if (inpName.value!="")
+        {
+            parent.oUtil.obj.selectElement(0);
+        } else {
+            parent.oUtil.activeElement=null;
+        }
+
+    window.setTimeout("window.focus()", 10);
+    }
+
+function doApplyIE()
+  {
+  parent.oUtil.obj.setFocus();
+  if(!parent.oUtil.obj.checkFocus())return;//Focus stuff
+  var oEditor=parent.oUtil.oEditor;
+  var oSel=oEditor.document.selection.createRange();
+  var sType=oEditor.document.selection.type;
+
+  parent.oUtil.obj.saveForUndo();
+
+  if(inpName.value!="")
+    oSel.execCommand("CreateBookmark",false,inpName.value);
+  else
+    oSel.execCommand("UnBookmark");
+
+  updateList();
+  realTime();
+
+  //~~~~~~~~ Focus stuff
+  var oEditor=parent.oUtil.oEditor;
+  oEditor.focus()
+
+  //*** RUNTIME STYLES ***
+  var obj=parent.oUtil.obj;
+  obj.runtimeStyles();
+  //***********************
+
+  parent.realTime(parent.oUtil.oName);
+  parent.oUtil.obj.selectElement(0);
+  parent.oUtil.obj.bookmarkSelection();
+  }
+
+</script>
+</head>
+<body onload="bodyOnLoad()" style="overflow:hidden;">
+
+<table width=100% height="240px" align=center cellpadding=0 cellspacing=0>
+<tr>
+<td valign=top style="padding:5px;height:100%">
+
+    <div id="txtBookmark" name="txtBookmark">Bookmarks</div>
+    <select name="lstBookmark" id="lstBookmark" style="width:330px;height:90px" size="5" onchange="selectBookmark(this.value)" class="inpSel">
+    </select>
+	<br /><br />
+	<div id="txtName" name="txtName">Name:</div>
+    <input type="text" ID="inpName" NAME="inpName" style="width:330px;height:23px;" class="inpTxt" />
+
+</td>
+</tr>
+<tr>
+<td class="dialogFooter" align="right">
+    <table cellpadding=0 cellspacing=0>
+    <tr>
+    <td>
+    <input type=button name="btnCancel" id="btnCancel" value="cancel" onclick="I_Close()" style="width:120px;height:33px" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+    </td>
+    <td>
+    <input type=button name="btnInsert" id="btnInsert" value="insert" onclick="doApply()" style="width:120px;height:33px" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+    </td>
+    <td>
+    <input type=button name="btnApply" id="btnApply" value="apply" style="display:none;width:120px;height:33px" onclick="doApply()" class="inpBtn" onmouseover="this.className='inpBtnOver';" onmouseout="this.className='inpBtnOut'">
+    </td>
+    </tr>
+    </table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>
