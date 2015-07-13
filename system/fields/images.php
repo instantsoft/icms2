@@ -69,6 +69,21 @@ class fieldImages extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
+		$config = cmsConfig::getInstance();
+		
+		if (!is_array($old_value)){
+			$old_value = cmsModel::yamlToArray($old_value);
+		}
+		
+		foreach($old_value as $image){
+			if (!is_array($value) || !in_array($image, $value)){
+				foreach($image as $size => $image_url){
+					$image_path = $config->upload_path . $image_url;
+                    @unlink($image_path);
+                }
+			}
+		}
+		
         $result = null;
 
         if (is_array($value)){
@@ -80,8 +95,6 @@ class fieldImages extends cmsFormField {
 
         if (empty($sizes) || empty($result)) { return $result; }
 
-        $config = cmsConfig::getInstance();
-
         foreach($result as $image){
             foreach($image as $size => $image_url){
                 if (!in_array($size, $sizes)){
@@ -90,6 +103,7 @@ class fieldImages extends cmsFormField {
                 }
             }
         }
+		
         return $result;
 
     }
