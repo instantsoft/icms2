@@ -131,7 +131,7 @@ icms.forms = (function ($) {
 
             if (result.errors == false){
                 if ("callback" in result){
-                    window[result.callback](form_data);
+                    window[result.callback](form_data, result);
                 }
                 return;
             }
