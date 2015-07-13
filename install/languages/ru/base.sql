@@ -13,13 +13,15 @@ CREATE TABLE `{#}activity` (
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
+  `is_pub` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   KEY `user_id` (`user_id`),
   KEY `date_pub` (`date_pub`),
   KEY `is_private` (`is_private`),
   KEY `group_id` (`group_id`),
-  KEY `is_parent_hidden` (`is_parent_hidden`)
+  KEY `is_parent_hidden` (`is_parent_hidden`),
+  KEY `is_pub` (`is_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
