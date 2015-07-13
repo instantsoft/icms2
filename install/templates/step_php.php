@@ -11,6 +11,23 @@
     </tr>
 </table>
 
+<h2><?php echo LANG_PHP_VARIABLES; ?></h2>
+<p><?php echo LANG_PHP_VARIABLES_HINT; ?></p>
+
+<table class="grid">
+    <?php foreach($info['vars'] as $name=>$var) { ?>
+    <tr>
+        <td><?php echo $name; ?></td>		
+        <td class="value" style="width:160px">
+			<?php echo $var['req'] ? LANG_PHP_VARIABLES_ON : LANG_PHP_VARIABLES_OFF; ?>
+		</td>
+        <td class="value">
+			<?php echo html_bool_span($var['set'] ? LANG_PHP_VARIABLES_ON : LANG_PHP_VARIABLES_OFF, $var['set']==$var['req']); ?>
+        </td>
+    </tr>
+    <?php } ?>
+</table>
+
 <h2><?php echo LANG_PHP_EXTENSIONS; ?></h2>
 <p><?php echo LANG_PHP_EXTENSIONS_REQ ?></p>
 

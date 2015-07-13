@@ -193,10 +193,10 @@ body {
     color:#666;
 }
 
-#layout #body .grid td{ padding:10px 0; }
-#layout #body .grid .value { width:100px; text-align: center; background: #F9F9F9; }
+#layout #body .grid td,
+#layout #body .grid th { padding:10px 0; border-bottom: solid 1px #ECECEC; }
 
-#layout #body .grid td{ border-bottom: solid 1px #ECECEC; }
+#layout #body .grid .value { width:100px; text-align: center; background: #F9F9F9; }
 
 /*============================================================================*/
 /*============================================================================*/

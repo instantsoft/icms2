@@ -17,6 +17,7 @@ function step($is_submit){
 function check_requirements(){
 
     $min_php_version = '5.3.0';
+	$vars = array('magic_quotes_gpc' => 0, 'register_globals' => 0);
     $extensions = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session');
     $extensions_extra = array('ftp', 'memcache', 'zip', 'curl');
 
@@ -34,6 +35,15 @@ function check_requirements(){
 
     $info['valid'] = $info['valid'] && $info['php']['valid'];
 
+	foreach($vars as $var=>$req){
+		$set = ini_get($var);
+		$info['vars'][$var] = array(
+			'req' => $req,
+			'set' => $set
+		);
+		$info['valid'] = $info['valid'] && ($req == $set);
+	}
+	
     foreach($extensions as $ext){
         $loaded = extension_loaded($ext);
         $info['ext'][$ext] = $loaded;

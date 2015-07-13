@@ -6,8 +6,6 @@
 
     define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank">Инструкция по установке</a>');
 
-    define('LANG_BETA_WARNING',             'Данная сборка является релиз-кандидатом и предназначена только для тестирования.');
-
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');
 
@@ -25,7 +23,7 @@
 
     define('LANG_STEP_START_1',             'Мастер установки InstantCMS проверит удовлетворяет ли ваш сервер системным требованиям.');
     define('LANG_STEP_START_2',             'В процессе работы мастер задаст несколько вопросов, необходимых для корректной установки и настройки InstantCMS.');
-    define('LANG_STEP_START_3',             'Перед началом установки необходимо создать чистую базу данных MySQL в кодировке <b>utf8_general_ci</b>');
+    define('LANG_STEP_START_3',             'Перед началом установки необходимо иметь базу данных MySQL в кодировке <b>utf8_general_ci</b>');
 
     define('LANG_LICENSE_AGREE',            'Я согласен с условиями лицензии');
     define('LANG_LICENSE_ERROR',            'Вы должны согласиться с условиями лицензии');
@@ -36,14 +34,18 @@
     define('LANG_PHP_VERSION',              'Версия интерпретатора');
     define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.3 или выше');
     define('LANG_PHP_VERSION_DESC',         'Установленная версия');
+	define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
+	define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');
+	define('LANG_PHP_VARIABLES_ON',			'Вкл');
+	define('LANG_PHP_VARIABLES_OFF',		'Выкл');
     define('LANG_PHP_EXTENSIONS',           'Требуемые расширения');
     define('LANG_PHP_EXTENSIONS_REQ',       'Данные расширения необходимы для работы InstantCMS');
     define('LANG_PHP_EXTENSIONS_EXTRA',     'Рекомендуемые расширения');
-    define('LANG_PHP_EXTENSIONS_EXTRA_REQ', 'Данные расширения не являются необходимыми, но без них будет недоступна часть функционала');
+    define('LANG_PHP_EXTENSIONS_EXTRA_REQ', 'Данные расширения не являются необходимыми, но без них<br>может быть недоступна часть функционала по обновлению и кешированию');
     define('LANG_PHP_EXT_INSTALLED',        'Установлено');
     define('LANG_PHP_EXT_NOT_INSTALLED',    'Не найдено');
     define('LANG_PHP_CHECK_ERROR',          'Вы не сможете продолжить установку до тех пор, пока условия отмеченные красным не будут исправлены.');
-    define('LANG_PHP_CHECK_ERROR_HINT',     'Обратитесь в службу поддержки вашего хостинга с просьбой обеспечить необходимые условия');
+    define('LANG_PHP_CHECK_ERROR_HINT',     'Обратитесь в службу поддержки вашего хостинга с просьбой обеспечить необходимые условия. Затем перезапустите установку.');
 
     define('LANG_PATHS_ROOT_INFO',          'Все пути указываются относительно:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'изменить');

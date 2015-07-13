@@ -272,7 +272,9 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (14, 'Теги', 'tags', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (16, 'Генератор карты сайта', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(18, 'Фотоальбомы', 'photos', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -306,6 +308,7 @@ CREATE TABLE `{#}con_albums` (
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `cover_image` text,
   `photos_count` int(11) NOT NULL DEFAULT '0',
+  `is_public` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `date_pub` (`date_pub`),
   KEY `user_id` (`user_id`),
@@ -322,15 +325,15 @@ CREATE TABLE `{#}con_albums` (
   KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`) VALUES
-(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', '2013-11-13 16:48:18', '2013-11-13 16:48:18', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4),
-(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 0, NULL, NULL, 0, NULL, 0);
+INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
+(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', '2013-11-13 16:48:18', '2013-11-13 16:48:18', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4, NULL),
+(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
 CREATE TABLE `{#}con_albums_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -353,6 +356,18 @@ CREATE TABLE `{#}con_albums_cats` (
 
 INSERT INTO `{#}con_albums_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_albums_cats_bind`;
+CREATE TABLE `{#}con_albums_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
+(16, 1),
+(14, 1);
 
 DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
@@ -391,7 +406,8 @@ INSERT INTO `{#}con_albums_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `
 (2, 7, 'date_pub', 'Дата публикации', NULL, 2, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nshow_time: true\n', NULL, NULL),
 (3, 7, 'user', 'Автор', NULL, 3, NULL, 'user', 1, 1, 0, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\n', NULL, NULL),
 (4, 7, 'content', 'Описание альбома', NULL, 4, NULL, 'text', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 2048\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 7, 'cover_image', 'Обложка альбома', NULL, 5, NULL, 'image', 1, NULL, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n');
+(5, 7, 'cover_image', 'Обложка альбома', NULL, 5, NULL, 'image', 1, NULL, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
+(6, 7, 'is_public', 'Общий фотоальбом', 'Другие пользователи тоже смогут добавлять фото в этот альбом', 6, NULL, 'checkbox', 0, 0, NULL, NULL, 1, NULL, NULL, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\n', NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}con_albums_props`;
 CREATE TABLE `{#}con_albums_props` (
@@ -494,7 +510,7 @@ DROP TABLE IF EXISTS `{#}con_articles_cats`;
 CREATE TABLE `{#}con_articles_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -525,6 +541,20 @@ INSERT INTO `{#}con_articles_cats` (`id`, `parent_id`, `title`, `slug`, `slug_ke
 (7, 6, 'Отечественная', 'literatura/otechestvennaja', NULL, NULL, NULL, NULL, 1, 11, 12, 2, '', 0),
 (8, 6, 'Зарубежная', 'literatura/zarubezhnaja', NULL, NULL, NULL, NULL, 2, 13, 14, 2, '', 0),
 (9, 1, 'Маркетинг', 'marketing', NULL, NULL, NULL, NULL, 4, 16, 17, 1, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_articles_cats_bind`;
+CREATE TABLE `{#}con_articles_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_articles_cats_bind` (`item_id`, `category_id`) VALUES
+(1, 2),
+(4, 1),
+(11, 9),
+(10, 6);
 
 DROP TABLE IF EXISTS `{#}con_articles_fields`;
 CREATE TABLE `{#}con_articles_fields` (
@@ -562,8 +592,8 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 (1, 5, 'title', 'Заголовок', NULL, 1, NULL, 'caption', 1, 1, 1, NULL, 1, 1, 0, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\nmin_length: 3\nmax_length: 100\nis_required: true\n', NULL, NULL),
 (2, 5, 'date_pub', 'Дата публикации', NULL, 2, NULL, 'date', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
 (3, 5, 'user', 'Автор', NULL, 3, NULL, 'user', 1, 1, 0, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\n', NULL, NULL),
-(4, 5, 'content', 'Текст статьи', 'Введите полный текст статьи', 7, 'Содержание', 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 5, 'teaser', 'Анонс статьи', 'Краткая аннотация к статье, будет показана в общем списке статей', 6, 'Содержание', 'html', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
+(4, 5, 'content', 'Текст статьи', 'Введите полный текст статьи', 7, 'Содержание', 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(5, 5, 'teaser', 'Анонс статьи', 'Краткая аннотация к статье, будет показана в общем списке статей', 6, 'Содержание', 'html', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (6, 5, 'kind', 'Тип статьи', NULL, 4, 'Информация о статье', 'list', NULL, 1, 1, NULL, NULL, NULL, NULL, '1 | Авторская\r\n2 | Рецензия\r\n3 | Перевод', '---\nfilter_multiple: 1\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
 (7, 5, 'notice', 'Комментарий редакции', 'Поле доступно только для администраторов и модераторов', 9, 'Служебное', 'text', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 2048\nis_html_filter: null\nlabel_in_list: top\nlabel_in_item: top\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 5\n- 6\n'),
 (8, 5, 'source', 'Источник', 'Укажите ссылку на источник текста', 5, 'Информация о статье', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
@@ -667,7 +697,7 @@ DROP TABLE IF EXISTS `{#}con_board_cats`;
 CREATE TABLE `{#}con_board_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -701,6 +731,17 @@ INSERT INTO `{#}con_board_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`,
 (12, 5, 'Ford', 'avtomobili/ford', NULL, NULL, NULL, NULL, 2, 11, 12, 2, '', 0),
 (13, 5, 'Renault', 'avtomobili/renault', NULL, NULL, NULL, NULL, 3, 13, 14, 2, '', 0),
 (14, 5, 'Kia', 'avtomobili/kia', NULL, NULL, NULL, NULL, 4, 15, 16, 2, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_board_cats_bind`;
+CREATE TABLE `{#}con_board_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_board_cats_bind` (`item_id`, `category_id`) VALUES
+(7, 3);
 
 DROP TABLE IF EXISTS `{#}con_board_fields`;
 CREATE TABLE `{#}con_board_fields` (
@@ -961,7 +1002,7 @@ DROP TABLE IF EXISTS `{#}con_news_cats`;
 CREATE TABLE `{#}con_news_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -990,6 +1031,25 @@ INSERT INTO `{#}con_news_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, 
 (5, 1, 'Происшествия', 'proisshestvija', NULL, NULL, NULL, NULL, 4, 8, 9, 1, '', 0),
 (6, 1, 'В мире', 'v-mire', NULL, NULL, NULL, NULL, 5, 10, 11, 1, '', 0),
 (7, 1, 'Спорт', 'sport', NULL, NULL, NULL, NULL, 6, 12, 13, 1, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_news_cats_bind`;
+CREATE TABLE `{#}con_news_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_news_cats_bind` (`item_id`, `category_id`) VALUES
+(1, 5),
+(2, 6),
+(3, 3),
+(4, 2),
+(5, 3),
+(6, 2),
+(7, 5),
+(8, 3),
+(9, 7);
 
 DROP TABLE IF EXISTS `{#}con_news_fields`;
 CREATE TABLE `{#}con_news_fields` (
@@ -1027,8 +1087,8 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 (1, 10, 'title', 'Заголовок новости', NULL, 1, NULL, 'caption', 1, 1, 1, NULL, 1, 1, 0, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
 (2, 10, 'date_pub', 'Дата публикации', NULL, 6, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nshow_time: true\n', NULL, NULL),
 (3, 10, 'user', 'Автор', NULL, 5, NULL, 'user', 1, 1, 0, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\n', NULL, NULL),
-(4, 10, 'content', 'Текст новости', NULL, 4, NULL, 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 10, 'teaser', 'Краткое описание новости', 'Выводится в списке новостей', 3, NULL, 'string', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n'),
+(4, 10, 'content', 'Текст новости', NULL, 4, NULL, 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(5, 10, 'teaser', 'Краткое описание новости', 'Выводится в списке новостей', 3, NULL, 'string', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (6, 10, 'photo', 'Фотография', NULL, 2, NULL, 'image', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nsize_teaser: small\nsize_full: normal\nsizes:\n  - micro\n  - small\n  - normal\n  - big\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n');
 
 DROP TABLE IF EXISTS `{#}con_news_props`;
@@ -1123,7 +1183,7 @@ DROP TABLE IF EXISTS `{#}con_pages_cats`;
 CREATE TABLE `{#}con_pages_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -1146,6 +1206,18 @@ CREATE TABLE `{#}con_pages_cats` (
 
 INSERT INTO `{#}con_pages_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_pages_cats_bind`;
+CREATE TABLE `{#}con_pages_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_pages_cats_bind` (`item_id`, `category_id`) VALUES
+(1, 1),
+(2, 1);
 
 DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
@@ -1280,7 +1352,7 @@ DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -1303,6 +1375,17 @@ CREATE TABLE `{#}con_posts_cats` (
 
 INSERT INTO `{#}con_posts_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_posts_cats_bind`;
+CREATE TABLE `{#}con_posts_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_posts_cats_bind` (`item_id`, `category_id`) VALUES
+(5, 1);
 
 DROP TABLE IF EXISTS `{#}con_posts_fields`;
 CREATE TABLE `{#}con_posts_fields` (
@@ -13500,6 +13583,35 @@ CREATE TABLE `{#}groups_members` (
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
 (1, 1, 1, 2, '2013-07-24 11:48:28');
 
+DROP TABLE IF EXISTS `{#}images_presets`;
+CREATE TABLE `{#}images_presets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `title` varchar(128) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `is_square` tinyint(1) DEFAULT NULL,
+  `is_watermark` tinyint(1) DEFAULT NULL,
+  `wm_image` text,
+  `wm_origin` varchar(16) DEFAULT NULL,
+  `wm_margin` int(11) DEFAULT NULL,
+  `is_internal` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `is_square` (`is_square`),
+  KEY `is_watermark` (`is_watermark`),
+  KEY `is_internal` (`is_internal`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`) VALUES
+(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL),
+(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL),
+(3, 'normal', 'Средний', 256, 256, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'big', 'Большой', 640, 480, NULL, 1, NULL, 'bottom-right', NULL, NULL),
+(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1),
+(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1),
+(7, 'wysiwyg_live', 'Редактор: Live', 640, 640, NULL, NULL, NULL, 'top-left', NULL, 1);
+
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -13892,6 +14004,7 @@ CREATE TABLE `{#}sessions_online` (
   KEY `date_created` (`date_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -14019,7 +14132,7 @@ CREATE TABLE `{#}users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_online`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', 'f07631346216b6ffa6e367c3549e7d06', '33917ba51e106a55', 1, 'admin', '2013-02-02 14:40:35', '2014-07-30 13:10:14', '2013-02-02 14:40:35', '127.0.0.1', 1, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+(1, '---\n- 6\n', 'admin@example.com', '814b7dbc3d1da7a405b1bf9d3fb9da33', 'ed0c56776caf89d8', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 11:56:29', '2013-02-02 14:40:35', '127.0.0.1', 0, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -14309,7 +14422,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (12, NULL, 'auth', 'Авторизация', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
+(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
+(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
@@ -14318,15 +14432,19 @@ CREATE TABLE `{#}widgets_bind` (
   `title` varchar(128) NOT NULL COMMENT 'Заголовок',
   `links` text,
   `class` varchar(64) DEFAULT NULL COMMENT 'CSS класс',
+  `class_title` varchar(64) DEFAULT NULL,
+  `class_wrap` varchar(64) DEFAULT NULL,
   `is_title` tinyint(1) DEFAULT '1' COMMENT 'Показывать заголовок',
   `is_enabled` tinyint(1) DEFAULT NULL COMMENT 'Включен?',
   `is_tab_prev` tinyint(1) DEFAULT NULL COMMENT 'Объединять с предыдущим?',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Не показывать группам',
-  `options` text NOT NULL COMMENT 'Опции',
+  `options` text DEFAULT NULL COMMENT 'Опции',
   `page_id` int(11) DEFAULT NULL COMMENT 'ID страницы для вывода',
   `position` varchar(32) DEFAULT NULL COMMENT 'Имя позиции',
   `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
+  `tpl_body` varchar(128) DEFAULT NULL,
+  `tpl_wrap` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `is_enabled` (`is_enabled`),
   KEY `page_id` (`page_id`),
@@ -14335,25 +14453,25 @@ CREATE TABLE `{#}widgets_bind` (
   KEY `widget_id` (`widget_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Виджеты сайта';
 
-INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`) VALUES
-(1, 3, 'Главное меню', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1),
-(2, 3, 'Верхнее меню', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1),
-(3, 9, 'Аватар пользователя', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'right-center', 2),
-(5, 3, 'Меню действий', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\nis_detect: null\nmax_items: 0\n', 0, 'right-center', 3),
-(6, 8, 'Сейчас онлайн', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1),
-(8, 10, 'Облако тегов', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4),
-(9, 6, 'Активность', 'Вся | activity\r\n{Моих друзей | activity/index/friends}\r\n{Моя | activity/index/my}', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4),
-(10, 4, 'Статьи', 'Все статьи | articles\r\n{Добавить статью | articles/add}', 'columns-2', 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2),
-(11, 7, 'Комментарии', 'Все | comments\r\n{Моих друзей | comments/index/friends}\r\n{Мои | comments/index/my}', NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5),
-(12, 5, 'Категории', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1),
-(13, 4, 'Фотоальбомы', 'Все альбомы | albums\r\n{Загрузить фото | photos/upload}', NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3),
-(14, 2, 'Новые пользователи', 'Все | users', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2),
-(15, 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1),
-(16, 4, 'Новости', 'Все новости | news\r\nОбсуждаемые | news-discussed', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1),
-(17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1),
-(18, 4, 'Новые объявления', 'Все | board', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3),
-(20, 12, 'Войти на сайт', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1),
-(21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1);
+INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
+(1, 3, 'Главное меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1, NULL, NULL),
+(2, 3, 'Верхнее меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
+(3, 9, 'Аватар пользователя', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'right-center', 2, NULL, NULL),
+(5, 3, 'Меню действий', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\nis_detect: null\nmax_items: 0\n', 0, 'right-center', 3, NULL, NULL),
+(6, 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
+(8, 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
+(9, 6, 'Активность', 'Вся | activity\r\n{Моих друзей | activity/index/friends}\r\n{Моя | activity/index/my}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
+(10, 4, 'Статьи', 'Все статьи | articles\r\n{Добавить статью | articles/add}', 'columns-2', NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
+(11, 7, 'Комментарии', 'Все | comments\r\n{Моих друзей | comments/index/friends}\r\n{Мои | comments/index/my}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
+(12, 5, 'Категории', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
+(13, 4, 'Фотоальбомы', 'Все альбомы | albums\r\n{Загрузить фото | photos/upload}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
+(14, 2, 'Новые пользователи', 'Все | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
+(15, 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
+(16, 4, 'Новости', 'Все новости | news\r\nОбсуждаемые | news-discussed', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
+(17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(18, 4, 'Новые объявления', 'Все | board', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3, NULL, NULL),
+(20, 12, 'Войти на сайт', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
+(21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (

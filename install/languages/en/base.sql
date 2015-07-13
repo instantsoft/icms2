@@ -265,7 +265,9 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (16, 'Sitemap generator', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(18, 'Photos', 'photos', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(19, 'Images Uploading', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -299,6 +301,7 @@ CREATE TABLE `{#}con_albums` (
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `cover_image` text,
   `photos_count` int(11) NOT NULL DEFAULT '0',
+  `is_public` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `date_pub` (`date_pub`),
   KEY `user_id` (`user_id`),
@@ -315,15 +318,15 @@ CREATE TABLE `{#}con_albums` (
   KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`) VALUES
-(16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-krasota-okruzhayuschei-prirody', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4),
-(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 0, NULL, NULL, 0, NULL, 0);
+INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
+(16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-krasota-okruzhayuschei-prirody', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4, NULL),
+(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
 CREATE TABLE `{#}con_albums_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -346,6 +349,18 @@ CREATE TABLE `{#}con_albums_cats` (
 
 INSERT INTO `{#}con_albums_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_albums_cats_bind`;
+CREATE TABLE `{#}con_albums_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
+(16, 1),
+(14, 1);
 
 DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
@@ -384,7 +399,8 @@ INSERT INTO `{#}con_albums_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `
 (2, 7, 'date_pub', 'Date of publication', NULL, 2, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (3, 7, 'user', 'Author', NULL, 3, NULL, 'user', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (4, 7, 'content', 'Album description', NULL, 4, NULL, 'text', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 2048\nis_html_filter: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 7, 'cover_image', 'Album cover image', NULL, 5, NULL, 'image', 1, NULL, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n');
+(5, 7, 'cover_image', 'Album cover image', NULL, 5, NULL, 'image', 1, NULL, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(6, 7, 'is_public', 'This is a public album', 'Other users will be able to upload photos in this album', 6, NULL, 'checkbox', 0, 0, NULL, NULL, 1, NULL, NULL, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\n', NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}con_albums_props`;
 CREATE TABLE `{#}con_albums_props` (
@@ -487,7 +503,7 @@ DROP TABLE IF EXISTS `{#}con_articles_cats`;
 CREATE TABLE `{#}con_articles_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -518,6 +534,20 @@ INSERT INTO `{#}con_articles_cats` (`id`, `parent_id`, `title`, `slug`, `slug_ke
 (7, 6, 'Patriotic', 'literature/patriotic', NULL, NULL, NULL, NULL, 1, 11, 12, 2, '', 0),
 (8, 6, 'Foreign', 'literature/foreign', NULL, NULL, NULL, NULL, 2, 13, 14, 2, '', 0),
 (9, 1, 'Marketing', 'marketing', NULL, NULL, NULL, NULL, 4, 16, 17, 1, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_articles_cats_bind`;
+CREATE TABLE `{#}con_articles_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_articles_cats_bind` (`item_id`, `category_id`) VALUES
+(1, 2),
+(4, 5),
+(11, 9),
+(10, 6);
 
 DROP TABLE IF EXISTS `{#}con_articles_fields`;
 CREATE TABLE `{#}con_articles_fields` (
@@ -665,7 +695,7 @@ DROP TABLE IF EXISTS `{#}con_news_cats`;
 CREATE TABLE `{#}con_news_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -694,6 +724,24 @@ INSERT INTO `{#}con_news_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, 
 (5, 1, 'Incidents', 'incidents', NULL, NULL, NULL, NULL, 4, 8, 9, 1, '', 0),
 (6, 1, 'In the world', 'in-the-world', NULL, NULL, NULL, NULL, 5, 10, 11, 1, '', 0),
 (7, 1, 'Sport', 'sport', NULL, NULL, NULL, NULL, 6, 12, 13, 1, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_news_cats_bind`;
+CREATE TABLE `{#}con_news_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_news_cats_bind` (`item_id`, `category_id`) VALUES
+(2, 6),
+(3, 3),
+(4, 2),
+(5, 3),
+(6, 2),
+(7, 5),
+(8, 3),
+(9, 7);
 
 DROP TABLE IF EXISTS `{#}con_news_fields`;
 CREATE TABLE `{#}con_news_fields` (
@@ -827,7 +875,7 @@ DROP TABLE IF EXISTS `{#}con_pages_cats`;
 CREATE TABLE `{#}con_pages_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -850,6 +898,18 @@ CREATE TABLE `{#}con_pages_cats` (
 
 INSERT INTO `{#}con_pages_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_pages_cats_bind`;
+CREATE TABLE `{#}con_pages_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_pages_cats_bind` (`item_id`, `category_id`) VALUES
+(1, 1),
+(2, 1);
 
 DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
@@ -984,7 +1044,7 @@ DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) DEFAULT NULL,
-  `title` varchar(200) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
   `seo_keys` text,
@@ -1007,6 +1067,17 @@ CREATE TABLE `{#}con_posts_cats` (
 
 INSERT INTO `{#}con_posts_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
 (1, 0, '---', NULL, NULL, NULL, NULL, NULL, 1, 1, 2, 0, '', 0);
+
+DROP TABLE IF EXISTS `{#}con_posts_cats_bind`;
+CREATE TABLE `{#}con_posts_cats_bind` (
+  `item_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  KEY `item_id` (`item_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}con_posts_cats_bind` (`item_id`, `category_id`) VALUES
+(5, 1);
 
 DROP TABLE IF EXISTS `{#}con_posts_fields`;
 CREATE TABLE `{#}con_posts_fields` (
@@ -44888,6 +44959,35 @@ CREATE TABLE `{#}groups_members` (
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
 (1, 1, 1, 2, '2013-07-24 11:48:28');
 
+DROP TABLE IF EXISTS `{#}images_presets`;
+CREATE TABLE `{#}images_presets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `title` varchar(128) DEFAULT NULL,
+  `width` int(11) DEFAULT NULL,
+  `height` int(11) DEFAULT NULL,
+  `is_square` tinyint(1) DEFAULT NULL,
+  `is_watermark` tinyint(1) DEFAULT NULL,
+  `wm_image` text,
+  `wm_origin` varchar(16) DEFAULT NULL,
+  `wm_margin` int(11) DEFAULT NULL,
+  `is_internal` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`),
+  KEY `is_square` (`is_square`),
+  KEY `is_watermark` (`is_watermark`),
+  KEY `is_internal` (`is_internal`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`) VALUES
+(1, 'micro', 'Micro', 32, 32, 1, NULL, NULL, 'top-left', NULL, NULL),
+(2, 'small', 'Small', 64, 64, 1, NULL, NULL, 'top-left', NULL, NULL),
+(3, 'normal', 'Medium', 256, 256, NULL, NULL, NULL, 'top-left', NULL, NULL),
+(4, 'big', 'Big', 640, 480, NULL, 1, NULL, 'bottom-right', NULL, NULL),
+(5, 'wysiwyg_markitup', 'Editor: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1),
+(6, 'wysiwyg_redactor', 'Editor: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1),
+(7, 'wysiwyg_live', 'Editor: Live', 640, 640, NULL, NULL, NULL, 'top-left', NULL, 1);
+
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -45266,6 +45366,7 @@ CREATE TABLE `{#}sessions_online` (
   KEY `date_created` (`date_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -45389,7 +45490,7 @@ CREATE TABLE `{#}users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_online`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '34fca9dfb8e5d04bf4dd2013d495c08d', 'ec5afc373e3f492a', 1, 'admin', '2013-02-02 14:40:35', '2014-07-30 14:01:32', '2013-02-02 14:40:35', '127.0.0.1', 1, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 468, 2, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+(1, '---\n- 6\n', 'admin@example.com', '6fb0f0dda618e56f721bdd2a27355a7c', '40e1b1f395be54c1', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 12:08:19', '2013-02-02 14:40:35', '127.0.0.1', 0, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 468, 2, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -45679,7 +45780,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (11, 'content', 'slider', 'Content slider', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (12, NULL, 'auth', 'Authorization', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (13, 'search', 'search', 'Search', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
+(14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
+(15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
@@ -45688,15 +45790,19 @@ CREATE TABLE `{#}widgets_bind` (
   `title` varchar(128) NOT NULL COMMENT 'Заголовок',
   `links` text,
   `class` varchar(64) DEFAULT NULL COMMENT 'CSS класс',
+  `class_title` varchar(64) DEFAULT NULL,
+  `class_wrap` varchar(64) DEFAULT NULL,
   `is_title` tinyint(1) DEFAULT '1' COMMENT 'Показывать заголовок',
   `is_enabled` tinyint(1) DEFAULT NULL COMMENT 'Включен?',
   `is_tab_prev` tinyint(1) DEFAULT NULL COMMENT 'Объединять с предыдущим?',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Не показывать группам',
-  `options` text NOT NULL COMMENT 'Опции',
+  `options` text DEFAULT NULL COMMENT 'Опции',
   `page_id` int(11) DEFAULT NULL COMMENT 'ID страницы для вывода',
   `position` varchar(32) DEFAULT NULL COMMENT 'Имя позиции',
   `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
+  `tpl_body` varchar(128) DEFAULT NULL,
+  `tpl_wrap` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `is_enabled` (`is_enabled`),
   KEY `page_id` (`page_id`),
@@ -45705,24 +45811,24 @@ CREATE TABLE `{#}widgets_bind` (
   KEY `widget_id` (`widget_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Виджеты сайта';
 
-INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`) VALUES
-(1, 3, 'Main menu', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1),
-(2, 3, 'Header menu', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1),
-(3, 9, 'Member menu', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'right-center', 2),
-(5, 3, 'Actions menu', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\nis_detect: null\nmax_items: 0\n', 0, 'right-center', 3),
-(6, 8, 'Members online', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1),
-(8, 10, 'Tags cloud', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4),
-(9, 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4),
-(10, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2),
-(11, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5),
-(12, 5, 'Категории', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1),
-(13, 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3),
-(14, 2, 'New members', 'All | users', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2),
-(15, 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1),
-(16, 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1),
-(17, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1),
-(20, 12, 'Login', NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1),
-(21, 13, 'Search', NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1);
+INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
+(1, 3, 'Main menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1, NULL, NULL),
+(2, 3, 'Header menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
+(3, 9, 'Member menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'right-center', 2, NULL, NULL),
+(5, 3, 'Actions menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\nis_detect: null\nmax_items: 0\n', 0, 'right-center', 3, NULL, NULL),
+(6, 8, 'Members online', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
+(8, 10, 'Tags cloud', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
+(9, 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
+(10, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
+(11, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
+(12, 5, 'Категории', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
+(13, 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
+(14, 2, 'New members', 'All | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
+(15, 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
+(16, 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
+(17, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(20, 12, 'Login', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
+(21, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (
@@ -45759,3 +45865,4 @@ INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `titl
 (164, 'content', 'news.list', 'LANG_WP_CONTENT_LIST', 'News', NULL, 'news\nnews-*\nnews/*', 'news/*.html\nnews/add\nnews/edit/*'),
 (165, 'content', 'news.item', 'LANG_WP_CONTENT_ITEM', 'News', NULL, 'news/*.html', NULL),
 (166, 'content', 'news.edit', 'LANG_WP_CONTENT_ITEM_EDIT', 'News', NULL, 'news/add\nnews/edit/*', NULL);
+

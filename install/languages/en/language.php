@@ -33,13 +33,17 @@
     define('LANG_PHP_VERSION',              'PHP version');
     define('LANG_PHP_VERSION_REQ',          'PHP 5.3 or higher is required');
     define('LANG_PHP_VERSION_DESC',         'Installed version');
+	define('LANG_PHP_VARIABLES',            'PHP configuration');
+	define('LANG_PHP_VARIABLES_HINT',       'Required values shown in gray');
+	define('LANG_PHP_VARIABLES_ON',			'On');
+	define('LANG_PHP_VARIABLES_OFF',		'Off');	
     define('LANG_PHP_EXTENSIONS',           'Required extensions');
-    define('LANG_PHP_EXTENSIONS_REQ',       'These extensions are required for InstantCMS to work');
+    define('LANG_PHP_EXTENSIONS_REQ',       'These extensions are required for InstantCMS to operate');
     define('LANG_PHP_EXTENSIONS_EXTRA',     'Recommended extensions');
-    define('LANG_PHP_EXTENSIONS_EXTRA_REQ', 'These extensions are optional, but without them some functionality will be disabled');
+    define('LANG_PHP_EXTENSIONS_EXTRA_REQ', 'These extensions are optional, but without them some functionality may be inaccessible');
     define('LANG_PHP_EXT_INSTALLED',        'Installed');
     define('LANG_PHP_EXT_NOT_INSTALLED',    'Not found');
-    define('LANG_PHP_CHECK_ERROR',          'You have to fix conditions marked with red to continue');
+    define('LANG_PHP_CHECK_ERROR',          "You can't continue until all red values will be fixed.");
     define('LANG_PHP_CHECK_ERROR_HINT',     'Contact technical support of your hosting provider with the request to provide the required conditions');
 
     define('LANG_PATHS_ROOT_INFO',          'All paths are relative to: <br/><span class="root-path">%s</span>');
