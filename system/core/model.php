@@ -55,7 +55,7 @@ class cmsModel{
             'title'                 => array('type' => 'varchar', 'size' => 100),
             'content'               => array('type' => 'text'),
             'photo'                 => array('type' => 'text'),
-            'slug'                  => array('type' => 'varchar', 'size' => 100),
+            'slug'                  => array('type' => 'varchar', 'index'=>true, 'size' => 100),
             'seo_keys'              => array('type' => 'text'),
             'seo_desc'              => array('type' => 'text'),
             'seo_title'             => array('type' => 'varchar', 'size' => 256),
