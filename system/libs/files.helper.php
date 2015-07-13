@@ -175,7 +175,9 @@ function files_format_bytes($bytes) {
  * @return string
  */
 function files_sanitize_name($filename){
-
+	
+	$path_parts = pathinfo($filename);	
+    $filename = lang_slug($path_parts['filename']) . '.' . $path_parts['extension'];	
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
     $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
@@ -183,8 +185,8 @@ function files_sanitize_name($filename){
     $filename = str_replace('\'', '', $filename);
     $filename = preg_replace('/[^\w\-\.]+/', '', $filename);
     $filename = preg_replace('/[\-]+/', '-', $filename);
-
-    return $filename;
+	
+	return $filename;
 
 }
 
