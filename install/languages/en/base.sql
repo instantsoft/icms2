@@ -317,7 +317,8 @@ CREATE TABLE `{#}con_albums` (
   KEY `photos_count` (`photos_count`),
   KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
+  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
+  KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
@@ -492,7 +493,8 @@ CREATE TABLE `{#}con_articles` (
   KEY `date_approved` (`date_approved`),
   KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
+  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
+  KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `kind`, `notice`, `source`, `featured`) VALUES
@@ -680,7 +682,8 @@ CREATE TABLE `{#}con_news` (
   KEY `date_approved` (`date_approved`),
   KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
+  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
+  KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `photo`) VALUES
@@ -866,7 +869,8 @@ CREATE TABLE `{#}con_pages` (
   KEY `is_private` (`is_private`),
   KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
+  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
+  KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_pages` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `attach`) VALUES
@@ -1036,7 +1040,8 @@ CREATE TABLE `{#}con_posts` (
   KEY `date_approved` (`date_approved`),
   KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`)
+  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
+  KEY `slug` (`slug`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `picture`) VALUES
