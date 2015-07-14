@@ -89,29 +89,42 @@ class actionAdminInstallFtp extends cmsAction {
 
     }
 	
-	private function checkDestination($connection, $account){
-		
-		$list = ftp_nlist($connection, $account['path']);
-		
-		$ftp_path = 'ftp://' . $account['host'] . rtrim($account['path'], '/');
-		
-		if ($list === false) { 
-			cmsUser::addSessionMessage(sprintf(LANG_CP_FTP_NO_ROOT, $ftp_path), 'error');
-			return false; 			
-		}
-		
-		$check_dirs = array('system', 'templates');
-		
-		foreach($check_dirs as $dir){			
-			if (!in_array($account['path'] . $dir, $list)){
-				cmsUser::addSessionMessage(sprintf(LANG_CP_FTP_BAD_ROOT, $ftp_path), 'error');
-				return false;
-			}			
-		}
-						
-		return true;
-		
-	}
+    private function checkDestination($connection, $account) {
+
+        $ftp_path = 'ftp://' . $account['host'] . $account['path'];
+        
+        $check_dirs = array(
+            'system/core' => 'core.php', 
+            'system/config' => 'config.php'
+        );
+        
+        if (!ftp_nlist($connection, $account['path'])){
+            cmsUser::addSessionMessage(sprintf(LANG_CP_FTP_NO_ROOT, $ftp_path), 'error');
+            return false;
+        }        
+        
+        $files_list = array();
+        
+        foreach ($check_dirs as $dir => $file) {
+
+            $contents = ftp_nlist($connection, $account['path'] . $dir);
+            
+            if (is_array($contents)){
+                foreach ($contents as $item) {
+                    $files_list[] = basename($item);
+                }
+            }
+
+            if (!$files_list || !in_array($file, $files_list)) {
+                cmsUser::addSessionMessage(sprintf(LANG_CP_FTP_BAD_ROOT, $ftp_path), 'error');
+                return false;
+            }
+
+        }
+        
+        return true;
+
+    } 
 
     private function uploadDirectoryToFTP($conn_id, $src_dir, $dst_dir) {
 
