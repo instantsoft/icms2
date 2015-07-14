@@ -26,5 +26,6 @@ var mySettings = {
 		{name:'Фото из Интернета', replaceWith:'<img src="[![Адрес фото:!:http://]!]" alt="[![Описание]!]" />', className: 'btnImg'},
 		{name:'Фото с компьютера', className: 'btnImgUpload', beforeInsert: function(markItUp) { InlineUpload.display(markItUp) }},
 		{name:'Видео YouTube', openWith:'<youtube>[![Ссылка на ролик YouTube]!]', closeWith:'</youtube>', className: 'btnVideoYoutube'},
+        {name:'Код', openWith:'<code>', closeWith:'</code>', className: 'btnCode'}
 	]
 }

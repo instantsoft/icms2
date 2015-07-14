@@ -17,15 +17,29 @@ h1 a:hover { color:#d35400; }h1, h2, h3, h4, h5, h6 { color:#34495e; font-weight
 
 p { line-height:20px; }
 
-pre, code {
+pre {
     display:block;
     overflow: auto;
     border: 1px solid #CCCCCC;
     border-radius: 2px;
     box-shadow: inset 0 0 .5em #CCCCCC;
-    padding: 10px 15px;
+    padding: 10px;
     margin:0;
 }
+
+code pre {
+    display:block;
+    overflow: auto;
+    border: 1px solid #CCCCCC;    
+    border-radius: 2px;
+    background: #F8F8F8;
+    padding: 5px 15px;
+    box-shadow: none;
+    margin:0;
+    font-size:12px;
+    line-height:20px;
+}
+
 
 blockquote {
     padding:6px 10px;

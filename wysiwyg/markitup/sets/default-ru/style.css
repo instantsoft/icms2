@@ -35,6 +35,9 @@
 .markItUp .btnVideoYoutube a {
 	background-image:url(images/youtube.png);
 }
+.markItUp .btnCode a {
+	background-image:url(images/code.png);
+}
 
 .markItUpInlineUpload
 {
