@@ -62,7 +62,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.
         $jevix->cfgAllowTagParams('a', array('href', 'name' => '#text'));
-        $jevix->cfgAllowTagParams('img', array('src', 'style', 'alt' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int'));
+        $jevix->cfgAllowTagParams('img', array('src', 'style', 'alt' => '#text', 'title' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int'));
         $jevix->cfgAllowTagParams('span', array('style'));
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
         $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
