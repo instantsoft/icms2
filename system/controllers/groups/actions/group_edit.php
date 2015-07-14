@@ -8,7 +8,7 @@ class actionGroupsGroupEdit extends cmsAction {
 
         $user = cmsUser::getInstance();
 
-        $is_owner = $group['owner_id'] == $user->id;
+        $is_owner = $group['owner_id'] == $user->id || $user->is_admin;
 
         $membership = $this->model->getMembership($group['id'], $user->id);
         $is_member = ($membership !== false);
