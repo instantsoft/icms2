@@ -627,9 +627,10 @@ class content extends cmsFrontend {
         if ($is_dates){
 			if ($is_pub_start_date){
 				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
+                $m = date('i');
 				$form->addField($pub_fieldset_id, new fieldDate('date_pub', array(
 					'title' => LANG_CONTENT_DATE_PUB,
-					'default' => date('Y-m-d'),
+					'default' => date('Y-m-d H:') . ($m - ($m % 5)),
 					'options' => array(
 						'show_time' => true
 					), 
