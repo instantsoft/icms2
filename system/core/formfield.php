@@ -63,6 +63,7 @@ class cmsFormField {
     public function setOptions($options){
         if (is_array($options)){
             foreach($options as $option=>$value){
+				if ($option == 'id') { continue; }
                 $this->{$option} = $value;
             }
             if (isset($options['title'])){
