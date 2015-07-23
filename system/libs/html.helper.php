@@ -505,7 +505,7 @@ function html_select($name, $items, $selected='', $attributes=array()){
                 continue;
             }
 
-            if ($selected == $value) { $sel = 'selected'; } else { $sel = ''; }
+            $sel = ((string)$selected == (string)$value) ? 'selected' : '';
             $html .= "\t" . '<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>' . "\n";
 
         }
