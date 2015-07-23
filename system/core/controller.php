@@ -57,6 +57,8 @@ class cmsController {
         $options = self::loadOptions($this->name);
 
         $form = $this->getForm('options', false, 'backend/');
+        
+        if (!$form) { return array(); }
 
         $options = $form->parse(new cmsRequest($options));
 
