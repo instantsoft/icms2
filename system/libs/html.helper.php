@@ -490,7 +490,8 @@ function html_editor($field_id, $content='', $options=array()){
 function html_select($name, $items, $selected='', $attributes=array()){
 
     $attr_str = html_attr_str($attributes);
-	$html = '<select name="'.$name.'" '.$attr_str.'>'."\n";
+    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
+    $html = '<select name="'.$name.'" '.$attr_str.$class.'>'."\n";
 
     $optgroup = false;
 
