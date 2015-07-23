@@ -55,10 +55,10 @@
         $('#fset_type div[id!=f_type]').remove();
 
         $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
-            <?php if ($do=='edit') { ?>
-                ctype_name: '<?php echo $ctype['name']; ?>',
+            <?php if ($do=='edit') { ?>                
                 field_id: '<?php echo $field['id']; ?>',
             <?php } ?>
+            ctype_name: '<?php echo $ctype['name']; ?>',
             type: field_type
         }, function( html ){
             if (!html) { return; }
