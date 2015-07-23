@@ -51,7 +51,7 @@ class cmsTemplate {
 		$this->title = $config->sitename;
 
 		$is_no_def_meta = isset($config->is_no_meta) ? $config->is_no_meta : false;
-		
+
 		if (!$is_no_def_meta){
 			$this->metakeys = $config->metakeys;
 			$this->metadesc = $config->metadesc;
@@ -258,7 +258,7 @@ class cmsTemplate {
             }
 
         }
-		
+
 		if (!$is_allow_multiple_active && (count($active_ids)>1)){
 			$active_ids = array($active_ids[count($active_ids)-1]);
 		}
@@ -341,7 +341,7 @@ class cmsTemplate {
         $this->title = $pagetitle;
 		$this->title .= ' - '.$config->sitename;
 	}
-	
+
 	public function setFrontPageTitle($pagetitle){
 		$this->title = $pagetitle;
 	}
@@ -391,7 +391,8 @@ class cmsTemplate {
                 'target' => isset($button['target']) ? $button['target'] : '',
                 'onclick' => isset($button['onclick']) ? $button['onclick'] : null,
                 'confirm' => isset($button['confirm']) ? $button['confirm'] : null,
-            )
+            ),
+            'data' => isset($button['data']) ? $button['data'] : '',
         );
 
         $this->addMenuItem('toolbar', $item);
@@ -890,11 +891,11 @@ class cmsTemplate {
     }
 
     public function renderInternal($controller, $tpl_file, $data=array()){
-	
+
         $this->setContext($controller);
 
         $result = $this->render($tpl_file, $data, new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
-		
+
         $this->restoreContext($result);
 
         return $result;
@@ -911,8 +912,8 @@ class cmsTemplate {
         $css_file = $this->getStylesFileName();
 
         if ($css_file){ $this->addCSS($css_file); }
-		
-        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);	
+
+        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 
         return $this->processRender($tpl_file, $data, $request);
 
@@ -980,21 +981,21 @@ class cmsTemplate {
         extract($data); include($tpl_file);
 
     }
-	
+
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов текущего компонента) 
+     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов текущего компонента)
 	 * и возвращает полученный html-код в виде строки
      * @param string $tpl_file
      * @param array $data
-     */	
+     */
 	public function getRenderedChild($tpl_file, $data=array()){
-		
+
 		$tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
-		
+
 		extract($data); ob_start(); include($tpl_file);
-		
+
 		return ob_get_clean();
-		
+
 	}
 
     /**
@@ -1060,31 +1061,31 @@ class cmsTemplate {
                     if (!$value) { $value = ''; }
 
                     if (isset($column['flag']) && $column['flag']){
-						
+
 						if (isset($column['flag_on'])){
 							$is_flag_on = $value == $column['flag_on'];
 						} else {
 							$is_flag_on = (bool)$value;
 						}
-						
+
                         $flag_class = $column['flag']===true ? 'flag' : $column['flag'];
-						
+
 						$flag_toggle_url = isset($column['flag_toggle']) ? $column['flag_toggle'] : false;
-						
+
 						if ($flag_toggle_url){
 							$flag_toggle_url = string_replace_keys_values($flag_toggle_url, $row);
 						}
-						
+
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
-						
+
                         $value = '<div class="flag_trigger '.($is_flag_on ? "{$flag_class}_on" : "{$flag_class}_off").'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
-						
+
                     }
 
                     if (isset($column['handler'])){
                         $value = $column['handler']($value, $row);
-                    }                    
-                    
+                    }
+
                     // если из значения нужно сделать ссылку, то парсим шаблон
                     // адреса, заменяя значения полей
                     if (isset($column['href'])){
@@ -1368,7 +1369,7 @@ class cmsTemplate {
     }
 
     public function getOptions(){
-		
+
 		if (!$this->hasOptions()){ return false; }
 
         $options = $this->loadOptions();

@@ -83,14 +83,19 @@
             $onclick = isset($item['options']['onclick']) ? $item['options']['onclick'] : false;
             $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : $onclick;
             $target = isset($item['options']['target']) ? $item['options']['target'] : false;
+            $data_attr = '';
+            if (!empty($item['data'])) {
+                foreach ($item['data'] as $key=>$val) {
+                    $data_attr .= 'data-'.$key.'="'.$val.'" ';
+                }
+            }
         ?>
 
         <li <?php if ($css_classes) { ?>class="<?php echo $css_classes; ?>"<?php } ?>>
-
             <?php if ($is_disabled) {?>
                 <span class="item<?php if ($is_disabled) { ?> disabled<?php } ?>"><?php html($item['title']); ?></span>
             <?php } else { ?>
-                <a class="item" href="<?php echo !empty($item['url']) ? $item['url'] : 'javascript:void(0)'; ?>" <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?> <?php if ($target) { ?>target="<?php echo $target; ?>"<?php } ?>>
+                <a class="item" <?php if ($data_attr) { echo $data_attr; }?> href="<?php echo !empty($item['url']) ? $item['url'] : 'javascript:void(0)'; ?>" <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?> <?php if ($target) { ?>target="<?php echo $target; ?>"<?php } ?>>
                     <span class="wrap">
                         <?php if (!empty($item['title'])) { html($item['title']); } ?>
                         <?php if (isset($item['counter']) && $item['counter']){ ?>
