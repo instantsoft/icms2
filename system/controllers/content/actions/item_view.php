@@ -73,6 +73,7 @@ class actionContentItemView extends cmsAction {
 
         // Парсим значения полей
         foreach($fields as $name=>$field){
+            $field['handler']->setItem($item);
             $fields[ $name ]['html'] = $field['handler']->parse( $item[$name] );
         }
 
