@@ -105,6 +105,7 @@
 
                         $('.cp_toolbar .delete_filter a').hide();
                         current_ctype = 0;
+                        is_loaded = false;
 
                         $("#datatree").dynatree({
 
@@ -112,15 +113,16 @@
 
                             onPostInit: function(isReloading, isError){
                                 var path = $.cookie('icms[content_tree_path]');
-                                if (!path) { path = '1.1'; }
+                                if (!path) { 
+                                    $('a', "#datatree").eq(0).trigger('click');
+                                }
                                 if (path) {
                                     $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
                                         if(status == "loaded") {
                                             node.expand();
                                         }else if(status == "ok") {
                                             node.activate();
-                                            node.expand();
-                                            icms.datagrid.init();
+                                            node.expand();                                            
                                         }
                                     });
                                 }
@@ -146,10 +148,19 @@
                                 } else {
                                     $('.cp_toolbar .edit_folder a').show();
                                     $('.cp_toolbar .delete_folder a').show();
+                                }                                
+                                if (!is_loaded){
+                                    is_loaded = true;
+                                    current_ctype = key[0];
+                                    icms.datagrid.init();
+                                    return;
                                 }
-                                if (key[0] != current_ctype){ contentCancelFilter(); }
+                                if (key[0] != current_ctype && is_loaded && is_filter){ 
+                                    contentCancelFilter(); 
+                                } else {
+                                    icms.datagrid.loadRows();
+                                }
                                 current_ctype = key[0];
-                                icms.datagrid.loadRows();
                             },
 
                             onLazyRead: function(node){
@@ -169,7 +180,7 @@
         </td>
         <td class="main" valign="top">
 
-            <?php $this->renderGrid($this->href_to('content', array('items_ajax', 1, 0)), $grid); ?>
+            <?php $this->renderGrid(false, $grid); ?>
 
         </td>
     </tr>
