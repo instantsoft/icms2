@@ -21,6 +21,8 @@ class cmsFormField {
     public $is_hidden = false;
 
     public $rules = array();
+    
+    public $data = array(); // массив для данных в шаблоне
 
 	function __construct($name, $options=false){
 
