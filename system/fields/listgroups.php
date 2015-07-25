@@ -6,7 +6,6 @@ class fieldListGroups extends cmsFormField {
     public $is_public = false;
     public $sql   = 'text NULL DEFAULT NULL';
     public $allow_index = false;
-    public $dat = array();
 
     public function getOptions(){
         return array(
@@ -34,7 +33,7 @@ class fieldListGroups extends cmsFormField {
             $items[$group['id']] = $group['title'];
         }
 
-        $this->dat['groups'] = $items;
+        $this->data['groups'] = $items;
 
         return parent::getInput($value?:array(0));
 
