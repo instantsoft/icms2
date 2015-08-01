@@ -1,7 +1,7 @@
 <?php
 
     // Определяем корень
-    define('PATH', dirname(__FILE__));
+    define('PATH', __DIR__);
 	define('ROOT', $_SERVER['DOCUMENT_ROOT']);
 
     // Устанавливаем кодировку
