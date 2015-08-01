@@ -1,32 +1,22 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <?php
 
-    $items = $field->getListItems();
-    
-    $is_multiple = $field->getProperty('is_multiple');
-    $is_tree = $field->getProperty('is_tree');
-	$parent = $field->getProperty('parent');
-	
-	$dom_attr = array();	
-	$dom_attr['id'] = $field->id;
-	
-    if (!$is_multiple){
-    
-        echo html_select($field->element_name, $items, $value, $dom_attr);
-        
-    } else {
-        
-        echo html_select_multiple($field->element_name, $items, $value, $dom_attr, $is_tree);
-        
+    if($field->data['is_multiple']){
+
+        echo html_select_multiple($field->element_name, $field->data['items'], $value, $field->data['dom_attr'], $field->data['is_tree']);
+
+    }else{
+
+        echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']);
+
     }
 
 ?>
 
-<?php if ($parent){ ?>
-	<?php $p_id = str_replace(':', '_', $parent['list']); ?>
+<?php if($field->data['parent']){ ?>
 	<script>
-		$('#<?php echo $p_id; ?>').on('change', function(){
-			icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $parent['url']; ?>', $(this).val()); 
+		$('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
+			icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val());
 		});
 	</script>
 <?php } ?>

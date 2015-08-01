@@ -79,13 +79,21 @@ class fieldNumber extends cmsFormField {
         return $model;
 
     }
-    
+
     public function store($value, $is_submitted, $old_value=null){
 
         $value = str_replace(',', '.', trim($value));
 
         return $value;
 
-    }    
+    }
+
+    public function getInput($value){
+
+        $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
+
+        return parent::getInput($value);
+
+    }
 
 }

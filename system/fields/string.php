@@ -45,4 +45,13 @@ class fieldString extends cmsFormField {
         return strip_tags($value);
     }
 
+    public function getInput($value){
+
+        $this->data['type']         = $this->getProperty('is_password') ? 'password' : 'text';
+        $this->data['autocomplete'] = $this->getProperty('autocomplete');
+
+        return parent::getInput($value);
+
+    }
+
 }

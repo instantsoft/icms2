@@ -9,10 +9,10 @@ class fieldImage extends cmsFormField {
     private $teaser_url = '';
 
     public function getOptions(){
-		
+
 		$presets = cmsCore::getModel('images')->getPresetsList();
 		$presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-		
+
         return array(
             new fieldList('size_teaser', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_TEASER,
@@ -66,9 +66,9 @@ class fieldImage extends cmsFormField {
         if (!$paths){ return; }
 
 		$src = isset($paths[ $this->getOption('size_full') ]) ? $paths[ $this->getOption('size_full') ] : false;
-		
+
 		if (!$src) { return; }
-		
+
         return '<img src="'.$config->upload_host . '/' . $src.'" border="0" />';
 
     }
@@ -104,22 +104,22 @@ class fieldImage extends cmsFormField {
         return $value;
 
     }
-    
+
     public function delete($value){
-        
+
         if (empty($value)) { return true; }
-        
+
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
-        
+
         $config = cmsConfig::getInstance();
-        
+
         foreach($value as $image_url){
             $image_path = $config->upload_path . $image_url;
             @unlink($image_path);
         }
-        
+
         return true;
-        
+
     }
 
     public function parseDefaultPaths(){
@@ -146,6 +146,20 @@ class fieldImage extends cmsFormField {
         return $model->filterNotNull($this->name);
     }
 
+    public function getInput($value){
 
+	$this->data['paths'] = false;
+
+        if($value){
+            $this->data['paths'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
+        }
+
+	$this->data['sizes'] = $this->getOption('sizes');
+
+        $this->data['images_controller'] = cmsCore::getController('images');
+
+        return parent::getInput($value);
+
+    }
 
 }

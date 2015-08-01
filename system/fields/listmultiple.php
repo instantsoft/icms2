@@ -15,5 +15,13 @@ class fieldListMultiple extends cmsFormField {
             )),
         );
     }
-    
+
+    public function getInput($value){
+
+        $this->data['items'] = ( $this->getProperty('show_all') ? array(0 => LANG_ALL) : array() ) + $this->getProperty('items');
+
+        return parent::getInput($value?:array(0));
+
+    }
+
 }

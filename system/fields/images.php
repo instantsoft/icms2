@@ -137,4 +137,20 @@ class fieldImages extends cmsFormField {
         return $model->filterNotNull($this->name);
     }
 
+    public function getInput($value){
+
+	$this->data['images'] = false;
+
+        if($value){
+            $this->data['images'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
+        }
+
+	$this->data['sizes'] = $this->getOption('sizes');
+
+        $this->data['images_controller'] = cmsCore::getController('images');
+
+        return parent::getInput($value);
+
+    }
+
 }
