@@ -7,6 +7,11 @@
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
 
+    // Подключаем автозагрузчик классов и пакетов composer
+    if (file_exists(PATH . '/vendor/autoload.php')) {
+        require_once PATH . '/vendor/autoload.php';
+    }
+
 	// Подключаем автозагрузчик классов
 	require_once PATH . '/system/config/autoload.php';
 
