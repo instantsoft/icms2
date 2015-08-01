@@ -1,2 +1,3 @@
-/system/config/config.php
-/upload/
+system/config/config.php
+upload
+cache

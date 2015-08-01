@@ -1,0 +1,22 @@
+{
+  "name": "instantsoft/icms2",
+  "description": "InstantCMS 2.x Is A PHP CMS",
+  "keywords": [
+    "instantsoft",
+    "instantcms",
+    "social",
+    "cms",
+    "blog",
+    "login",
+    "Vladimir Obukhov"
+  ],
+  "license": "GPL-2.0",
+  "authors": [
+    {
+      "name": "Vladimir E. Obukhov",
+      "email": "support@instantsoft.ru"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
