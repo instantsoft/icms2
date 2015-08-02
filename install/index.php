@@ -3,7 +3,7 @@
 session_start();
 
 define('DS', DIRECTORY_SEPARATOR);
-define('PATH', dirname(__FILE__).DS);
+define('PATH', __DIR__.DS);
 define('DOC_ROOT', str_replace(DS, '/', realpath($_SERVER['DOCUMENT_ROOT'])));
 
 header("Content-type:text/html; charset=utf-8");

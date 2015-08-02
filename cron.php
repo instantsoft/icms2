@@ -1,6 +1,6 @@
 <?php
 
-	$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__);
+	$_SERVER['DOCUMENT_ROOT'] = __DIR__;
 
     // Инициализация
     require_once "bootstrap.php";
