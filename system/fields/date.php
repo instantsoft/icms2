@@ -90,4 +90,23 @@ class fieldDate extends cmsFormField {
 
     }
 
+    public function getInput($value){
+
+        $this->data['show_time'] = $this->getOption('show_time');
+
+        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+
+        if($this->data['show_time']){
+            list($this->data['hours'], $this->data['mins']) = explode(':', date('H:i', strtotime($value)));
+            $this->data['fname_date']   = $this->element_name.'[date]';
+            $this->data['fname_hours']  = $this->element_name.'[hour]';
+            $this->data['fname_mins']   = $this->element_name.'[min]';
+        }else{
+            $this->data['fname_date']   = $this->element_name;
+        }
+
+        return parent::getInput($value);
+
+    }
+
 }
