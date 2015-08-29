@@ -103,11 +103,9 @@ class cmsRequest {
      */
     public function get($var, $default=false){
 
-        $is_array = strstr($var, ':');
-
         //если значение не определено, возвращаем умолчание
 
-        if (!$is_array){
+        if (strpos($var, ':') === false){
             if (!$this->has($var)) { return $default; }
             $value = $this->data[$var];
         } else {
@@ -127,7 +125,7 @@ class cmsRequest {
      */
     public function getAll(){ return $this->data; }
     public function getData(){ return $this->getAll(); }
-	
+
 	public function setData($data){ $this->data = $data; }
 
     public function getQuery(){

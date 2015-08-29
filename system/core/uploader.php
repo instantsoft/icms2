@@ -21,7 +21,7 @@ class cmsUploader {
 
     public function isUploaded($name){
         if (!isset($_FILES[$name])) { return false; }
-        if (!$_FILES[$name]['size']) { return false; }
+        if (empty($_FILES[$name]['size'])) { return false; }
         return true;
     }
 
@@ -326,7 +326,13 @@ class cmsUploader {
         $dir_num_file   = sprintf('%03d', intval($user->files_count/100));
         $dest_dir       = $cfg->upload_path . "{$dir_num_user}/u{$user->id}/{$dir_num_file}";
 
-        @mkdir($dest_dir, 0777, true);
+        if(!is_dir($dest_dir)){
+
+            @mkdir($dest_dir, 0777, true);
+            @chmod($dest_dir, 0777);
+            @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
+
+        }
 
         return $dest_dir;
 
@@ -339,7 +345,7 @@ class cmsUploader {
 
         $size = getimagesize($src);
 
-        if ($size === false) return false;
+        if ($size === false) { return false ; }
 
         return true;
 
@@ -350,15 +356,15 @@ class cmsUploader {
 
     public function imageCopyResized($src, $dest, $maxwidth, $maxheight, $is_square=false, $quality=100){
 
-        if (!file_exists($src)) return false;
+        if (!file_exists($src)) { return false; }
 
         $upload_dir = dirname($dest);
 
-        if (!is_writable($upload_dir)) { @chmod($dest, 0755); }
+        if (!is_writable($upload_dir)) { @chmod($dest, 0777); }
 
         $size = getimagesize($src);
 
-        if ($size === false) return false;
+        if ($size === false) { return false; }
 
         $new_width = $size[0];
         $new_height = $size[1];
@@ -370,7 +376,7 @@ class cmsUploader {
 
         $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
         $icfunc = "imagecreatefrom" . $format;
-        if (!function_exists($icfunc)) return false;
+        if (!function_exists($icfunc)) { return false; }
 
         $isrc = $icfunc($src);
 

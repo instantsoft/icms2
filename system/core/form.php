@@ -163,13 +163,13 @@ class cmsForm {
     }
 
 	public function getLastFieldsetId(){
-		
+
 		$ids = array_keys($this->structure);
-		
+
 		return $ids[count($ids)-1];
-		
+
 	}
-	
+
     /**
      * Добавляет поле в указанный набор полей формы
      * @param string $fieldset_id ID набора полей
@@ -303,7 +303,7 @@ class cmsForm {
                 // если поле отключено, пропускаем поле
                 if (in_array($name, $this->disabled_fields)){ continue; }
 
-                $is_array = strstr($name, ':');
+                $is_array = strpos($name, ':');
 
                 $value = $request->get($name, null);
 
@@ -317,11 +317,11 @@ class cmsForm {
 
                 if ($value === false) { continue; }
 
-                if (!$is_array){
+                if ($is_array === false){
                     $result[$name] = $value;
                 }
 
-                if ($is_array){
+                if ($is_array !== false){
                     $name_parts = explode(':', $name);
                     $result[$name_parts[0]][$name_parts[1]] = $value;
                 }
@@ -377,16 +377,16 @@ class cmsForm {
                 if (!$field->getRules()){ continue; }
 
                 // проверяем является ли поле элементом массива
-                $is_array = strstr($name, ':');
+                $is_array = strpos($name, ':');
 
                 //
                 // получаем значение поля из массива данных
                 //
-                if (!$is_array){
+                if ($is_array === false){
                     $value = isset($data[$name]) ? $data[$name] : '';
                 }
 
-                if ($is_array){
+                if ($is_array !== false){
                     $name_parts = explode(':', $name);
                     $value = isset($data[$name_parts[0]][$name_parts[1]]) ? $data[$name_parts[0]][$name_parts[1]] : '';
                 }

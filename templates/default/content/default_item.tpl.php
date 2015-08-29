@@ -71,7 +71,7 @@
                                     <tr>
                                         <td class="title"><?php html($prop['title']); ?></td>
                                         <td class="value">
-                                            <?php echo $prop_field->parse($props_values[$prop['id']]); ?>
+                                            <?php echo $prop_field->setItem($item)->parse($props_values[$prop['id']]); ?>
                                         </td>
                                     </tr>
                                 <?php } ?>

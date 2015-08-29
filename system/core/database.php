@@ -24,19 +24,41 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	function __construct(){
+	public function __construct(){
+
+        $this->connect();
+
+		$this->nestedSets = new cmsNestedsets($this);
+
+	}
+
+    private function connect() {
 
 		$config = cmsConfig::getInstance();
 
         $this->mysqli = new mysqli($config->db_host, $config->db_user, $config->db_pass, $config->db_base);
 
-        $this->mysqli->set_charset("utf8");
+        $this->mysqli->set_charset('utf8');
 
         $this->setTimezone();
 
 		$this->prefix = $config->db_prefix;
 
-		$this->nestedSets = new cmsNestedsets($this);
+        return $this;
+
+    }
+
+	public function reconnect(){
+
+        if (!$this->mysqli->ping()){
+
+            $this->mysqli->close();
+
+            $this->connect();
+
+        }
+
+		return $this;
 
 	}
 
@@ -75,9 +97,11 @@ class cmsDatabase {
 
         $config = cmsConfig::getInstance();
 
-        $sql    = str_replace('{#}{users}', $config->db_users_table, $sql);
-        $sql    = str_replace('{users}', $config->db_users_table, $sql);
-        $sql    = str_replace('{#}', $this->prefix, $sql);
+        $sql = str_replace(array(
+            '{#}{users}', '{users}', '{#}'
+        ), array(
+            $config->db_users_table, $config->db_users_table, $config->db_users_table
+        ), $sql);
 
         if ($params){
 
@@ -87,12 +111,16 @@ class cmsDatabase {
 
             foreach($params as $index=>$param){
                 if (!is_numeric($param)){
-                    $params[$index] = $this->escape( $param );
+                    $params[$index] = $this->escape($param);
                 }
             }
 
             $sql = vsprintf($sql, $params);
 
+        }
+
+        if(PHP_SAPI == 'cli'){
+            $this->reconnect();
         }
 
         $result = $this->mysqli->query($sql);
@@ -154,8 +182,6 @@ class cmsDatabase {
 
 	/**
 	 * Возвращает ID последней вставленной записи из таблицы
-	 *
-	 * @param string $table Имя таблицы с префиксом
 	 * @return int
 	 */
 	public function lastId(){
@@ -178,9 +204,9 @@ class cmsDatabase {
         if (is_array($value)){ $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'"; } else
 
         // если это поле даты публикации и оно не установлено,
-        // то используем текущее время			
-		if (mb_strpos($field, 'date_')===0 && ($value === false)) { $value = "NULL"; }  else
-        if (mb_strpos($field, 'date_')===0 && ($value == '' || is_null($value))) { $value = "CURRENT_TIMESTAMP"; }  else			        
+        // то используем текущее время
+		if (strpos($field, 'date_')===0 && ($value === false)) { $value = "NULL"; }  else
+        if (strpos($field, 'date_')===0 && ($value == '' || is_null($value))) { $value = "CURRENT_TIMESTAMP"; }  else
 
         // если это поле булево,
         // то преобразуем его в число
@@ -342,11 +368,14 @@ class cmsDatabase {
 		}
 	}
 
-	/**
-	 * Возвращает массив с одной строкой из базы
-	 *
-	 * @param string $sql
-	 */
+    /**
+     * Возвращает массив с одной строкой из базы
+     * @param string $table
+     * @param string $where
+     * @param string $fields
+     * @param string $order
+     * @return boolean|array
+     */
 	public function getRow($table, $where='1', $fields='*', $order=''){
 		$sql = "SELECT {$fields} FROM {#}{$table} WHERE {$where}";
         if ($order){ $sql .= " ORDER BY {$order}"; }
@@ -370,6 +399,7 @@ class cmsDatabase {
 	 * @param string $table
 	 * @param string $where
 	 * @param string $field
+	 * @param string $order
 	 * @return mixed
 	 */
 	public function getField($table, $where, $field, $order=''){
@@ -385,12 +415,13 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	/**
-	 * Возвращает количество строк выведенных запросом
-	 *
-	 * @param string $sql
-	 * @return int
-	 */
+    /**
+     * Возвращает количество строк выведенных запросом
+     * @param string $table
+     * @param string $where
+     * @param int $limit
+     * @return boolean|int
+     */
 	public function getRowsCount($table, $where='1', $limit=false){
 		$sql = "SELECT COUNT(1) FROM {#}$table WHERE $where";
         if ($limit) { $sql .= " LIMIT {$limit}"; }
@@ -602,9 +633,9 @@ class cmsDatabase {
     public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false){
 
 		$where = "({$field_name} = '{$value}')";
-		
+
 		if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }
-		
+
         return !(bool)$this->getRowsCount($table_name, $where, 1);
 
     }
