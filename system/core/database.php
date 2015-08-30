@@ -100,7 +100,7 @@ class cmsDatabase {
         $sql = str_replace(array(
             '{#}{users}', '{users}', '{#}'
         ), array(
-            $config->db_users_table, $config->db_users_table, $config->db_users_table
+            $config->db_users_table, $config->db_users_table, $this->prefix
         ), $sql);
 
         if ($params){
