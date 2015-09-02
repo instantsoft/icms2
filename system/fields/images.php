@@ -7,10 +7,10 @@ class fieldImages extends cmsFormField {
 	public $allow_index = false;
 
     public function getOptions(){
-		
+
 		$presets = cmsCore::getModel('images')->getPresetsList();
 		$presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-		
+
         return array(
             new fieldList('size_teaser', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_TEASER,
@@ -28,7 +28,7 @@ class fieldImages extends cmsFormField {
                 'items' => $presets
             )),
         );
-		
+
     }
 
     public function parseTeaser($value){
@@ -39,8 +39,8 @@ class fieldImages extends cmsFormField {
 
         $html = '';
 
-        foreach($images as $paths){
-            $html .= '<a href="'.$config->upload_host . '/' . $paths[$this->getOption('size_full')].'"><img src="'.$config->upload_host . '/' . $paths['small'].'" border="0" /></a>';
+        foreach($images as $key=>$paths){
+            $html .= '<a href="'.$config->upload_host . '/' . $paths[$this->getOption('size_full')].'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars($this->item['title'].' '.$key).'" /></a>';
             break;
         }
 
@@ -56,9 +56,9 @@ class fieldImages extends cmsFormField {
 
         $html = '';
 
-        foreach($images as $paths){
+        foreach($images as $key=>$paths){
 			$full = isset($paths[$this->getOption('size_full')]) ? $paths[$this->getOption('size_full')] : '';
-            $html .= '<a class="img-'.$this->getName().'" href="'.$config->upload_host . '/' . $full.'"><img src="'.$config->upload_host . '/' . $paths['small'].'" border="0" /></a>';
+            $html .= '<a class="img-'.$this->getName().'" href="'.$config->upload_host . '/' . $full.'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars($this->item['title'].' '.$key).'" /></a>';
         }
 
         $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
@@ -70,11 +70,11 @@ class fieldImages extends cmsFormField {
     public function store($value, $is_submitted, $old_value=null){
 
 		$config = cmsConfig::getInstance();
-		
+
 		if (!is_array($old_value)){
 			$old_value = cmsModel::yamlToArray($old_value);
 		}
-		
+
         foreach($old_value as $image){
             if (!is_array($value) || !in_array($image, $value)){
                 foreach($image as $size => $image_url){
@@ -83,7 +83,7 @@ class fieldImages extends cmsFormField {
                 }
             }
         }
-		
+
         $result = null;
 
         if (is_array($value)){
@@ -103,28 +103,28 @@ class fieldImages extends cmsFormField {
                 }
             }
         }
-		
+
         return $result;
 
     }
-    
+
     public function delete($value){
-        
+
         if (empty($value)) { return true; }
-        
+
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
-        
+
         $config = cmsConfig::getInstance();
-        
+
         foreach($value as $images){
             foreach($images as $image_url){
                 $image_path = $config->upload_path . $image_url;
                 @unlink($image_path);
             }
         }
-        
+
         return true;
-        
+
     }
 
     public function getFilterInput($value=false) {

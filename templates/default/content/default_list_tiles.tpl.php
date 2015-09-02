@@ -32,7 +32,7 @@
                             </div>
                         <?php } ?>
                         <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-                            <?php echo html_image($item['photo'], 'normal'); ?>
+                            <?php echo html_image($item['photo'], 'normal', $item['title']); ?>
                             <?php unset($item['photo']); ?>
                         </a>
                     </div>

@@ -11,7 +11,7 @@
             <?php if ($photos){ ?>
                 <?php foreach($photos as $photo){ ?>
                     <div class="preview block" rel="<?php echo $photo['id']; ?>">
-                        <div class="thumb"><?php echo html_image($photo['image']); ?></div>
+                        <div class="thumb"><?php echo html_image($photo['image'], 'small', $photo['title']); ?></div>
                         <div class="info">
                             <div class="title">
                                 <?php echo html_input('text', 'photos['.$photo['id'].']', $photo['title']); ?>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="preview_template block" style="display:none">
-            <div class="thumb"><img src="" border="0" /></div>
+            <div class="thumb"><img src="" /></div>
             <div class="info">
                 <div class="title">
                     <?php echo html_input('text', '', '', array('placeholder'=>LANG_PHOTOS_PHOTO_TITLE)); ?>

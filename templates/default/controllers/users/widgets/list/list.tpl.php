@@ -9,7 +9,7 @@
 
             <div class="item">
                 <div class="image">
-                    <a href="<?php echo $url; ?>" title="<?php html($profile['nickname']); ?>"><?php echo html_avatar_image($profile['avatar'], $size); ?></a>
+                    <a href="<?php echo $url; ?>" title="<?php html($profile['nickname']); ?>"><?php echo html_avatar_image($profile['avatar'], $size, $profile['nickname']); ?></a>
                 </div>
                 <?php if ($style=='list'){ ?>
                     <div class="info">

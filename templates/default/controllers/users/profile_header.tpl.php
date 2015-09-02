@@ -3,7 +3,7 @@
 <h1 id="user_profile_title">
 
     <div class="avatar">
-        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro'); ?></a>
+        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
     </div>
 
     <div id="user_profile_rates" class="rates"
@@ -82,7 +82,7 @@
     <?php if (empty($tabs)){ $tabs = $this->controller->getProfileMenu($profile); } ?>
 
 	<?php if (count($tabs)>1){ ?>
-	
+
 		<?php $this->addMenuItems('profile_tabs', $tabs); ?>
 
 		<div id="user_profile_tabs">
@@ -92,9 +92,9 @@
 		</div>
 
 	<?php } ?>
-	
+
 	<?php if (count($tabs)==1){ ?>
 		<br>
 	<?php } ?>
-	
+
 <?php } ?>

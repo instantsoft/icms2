@@ -468,8 +468,12 @@ class cmsTemplate {
 	 * Добавляет тег в головной раздел страницы
 	 * @param string $tag
 	 */
-	public function addHead($tag){
-        $hash = md5($tag);
+	public function addHead($tag, $is_uniq=true){
+        if($is_uniq){
+        	$hash = md5($tag);
+        } else {
+            $hash = md5(uniqid());
+        }
 		$this->head[$hash] = $tag;
 	}
 

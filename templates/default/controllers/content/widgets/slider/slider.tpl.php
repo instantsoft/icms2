@@ -14,7 +14,7 @@
             <td class="slide">
                 <a href="<?php echo $first_url; ?>">
                     <?php foreach($items as $id=>$item) { ?>
-                        <img src="<?php echo html_image_src($item[$image_field], 'big', true); ?>" class="slide-<?php echo $id; ?>">
+                        <img alt="<?php html($item['title']); ?>" src="<?php echo html_image_src($item[$image_field], 'big', true); ?>" class="slide-<?php echo $id; ?>">
                     <?php } ?>
                     <div class="heading" style="position:absolute; left:0; bottom:0; z-index:2">
                         <h2><?php echo $first_item['title']; ?></h2><br>
@@ -37,7 +37,7 @@
 
                     <div class="item<?php if ($is_first) {?> active<?php } ?>" data-id="<?php echo $id; ?>">
                         <div class="image">
-                            <?php echo html_image($item[$image_field], 'micro'); ?>
+                            <?php echo html_image($item[$image_field], 'micro', $item['title']); ?>
                         </div>
                         <div class="title">
                             <?php html($item['title']); ?>
@@ -58,7 +58,7 @@
             </td>
 
 		</tr></table>
-			
-	</div>        
+
+	</div>
 
 <?php } ?>
