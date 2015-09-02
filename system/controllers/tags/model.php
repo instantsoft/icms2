@@ -89,7 +89,7 @@ class modelTags extends cmsModel{
         
         $this->lockFilters();
         
-        $tags_ids = $this->get('favorites_tags_bind', function($item, $model){
+        $tags_ids = $this->get('tags_bind', function($item, $model){
             return $item['tag_id'];
         });
         
