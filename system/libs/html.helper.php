@@ -437,9 +437,10 @@ function html_image($image, $size_preset='small', $alt=''){
  * @param array|yaml $image Все размеры заданного изображения
  * @param string $size_preset Название пресета
  * @param bool $is_add_host Возвращать путь отностительно директории хранения или полный путь
+ * @param bool $is_relative Возвращать относительный путь или всегда с полным url
  * @return boolean|string
  */
-function html_image_src($image, $size_preset='small', $is_add_host=false){
+function html_image_src($image, $size_preset='small', $is_add_host=false, $is_relative=true){
 
     $config = cmsConfig::getInstance();
 
@@ -461,7 +462,11 @@ function html_image_src($image, $size_preset='small', $is_add_host=false){
 	}
 
     if ($is_add_host && !strstr($src, $config->upload_host)){
-        $src = $config->upload_host . '/' . $src;
+        if($is_relative){
+            $src = $config->upload_host . '/' . $src;
+        } else {
+            $src = $config->upload_host_abs . '/' . $src;
+        }
     }
 
     return $src;

@@ -32,3 +32,6 @@
 
     // Подключаем базу
     $core->connectDB();
+
+    // Запускаем кеш
+    cmsCache::getInstance()->start();
