@@ -464,15 +464,16 @@ class cmsTemplate {
 // ========================================================================== //
 // ========================================================================== //
 
-	/**
-	 * Добавляет тег в головной раздел страницы
-	 * @param string $tag
-	 */
-	public function addHead($tag, $is_uniq=true){
-        if($is_uniq){
+    /**
+     * Добавляет тег в головной раздел страницы
+     * @param string $tag
+     * @param bool $is_include_once
+     */
+	public function addHead($tag, $is_include_once=true){
+        if($is_include_once){
         	$hash = md5($tag);
         } else {
-            $hash = md5(uniqid());
+            $hash = count($this->head);
         }
 		$this->head[$hash] = $tag;
 	}

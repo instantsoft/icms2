@@ -51,7 +51,7 @@ class fieldImage extends cmsFormField {
                 $this->teaser_url :
                 href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
 
-        return '<a href="'.$url.'"><img src="'.$config->upload_host . '/' . $paths[ $this->getOption('size_teaser') ].'" alt="'.htmlspecialchars($this->item['title']).'"></a>';
+        return '<a href="'.$url.'"><img src="'.$config->upload_host . '/' . $paths[ $this->getOption('size_teaser') ].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title']).'"></a>';
 
     }
 
@@ -69,7 +69,7 @@ class fieldImage extends cmsFormField {
 
 		if (!$src) { return; }
 
-        return '<img src="'.$config->upload_host . '/' . $src.'" alt="'.htmlspecialchars($this->item['title']).'" />';
+        return '<img src="'.$config->upload_host . '/' . $src.'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title']).'" />';
 
     }
 

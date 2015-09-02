@@ -40,7 +40,7 @@ class fieldImages extends cmsFormField {
         $html = '';
 
         foreach($images as $key=>$paths){
-            $html .= '<a href="'.$config->upload_host . '/' . $paths[$this->getOption('size_full')].'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars($this->item['title'].' '.$key).'" /></a>';
+            $html .= '<a href="'.$config->upload_host . '/' . $paths[$this->getOption('size_full')].'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title'].' '.$key).'" /></a>';
             break;
         }
 
@@ -58,7 +58,7 @@ class fieldImages extends cmsFormField {
 
         foreach($images as $key=>$paths){
 			$full = isset($paths[$this->getOption('size_full')]) ? $paths[$this->getOption('size_full')] : '';
-            $html .= '<a class="img-'.$this->getName().'" href="'.$config->upload_host . '/' . $full.'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars($this->item['title'].' '.$key).'" /></a>';
+            $html .= '<a class="img-'.$this->getName().'" href="'.$config->upload_host . '/' . $full.'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title'].' '.$key).'" /></a>';
         }
 
         $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
@@ -139,13 +139,13 @@ class fieldImages extends cmsFormField {
 
     public function getInput($value){
 
-	$this->data['images'] = false;
+        $this->data['images'] = false;
 
         if($value){
             $this->data['images'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
-	$this->data['sizes'] = $this->getOption('sizes');
+        $this->data['sizes'] = $this->getOption('sizes');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 
