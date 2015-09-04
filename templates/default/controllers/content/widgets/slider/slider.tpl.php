@@ -20,7 +20,7 @@
                         <h2><?php echo $first_item['title']; ?></h2><br>
                         <div class="teaser">
                             <?php if ($teaser_field && !empty($first_item[$teaser_field])) { ?>
-                                <?php echo $first_item[$teaser_field]; ?>
+                                <span><?php echo $first_item[$teaser_field]; ?></span>
                             <?php } ?>
                             <span class="date"><?php html(string_date_age_max($item['date_pub'], true)); ?></span>
                         </div>
@@ -46,7 +46,7 @@
                             <div class="url"><?php echo $url; ?></div>
                             <div class="teaser">
                                 <?php if ($teaser_field && !empty($item[$teaser_field])) { ?>
-                                    <?php echo $item[$teaser_field]; ?>
+                                    <span><?php echo $item[$teaser_field]; ?></span>
                                 <?php } ?>
                                 <span class="date"><?php html(string_date_age_max($item['date_pub'], true)); ?></span>
                             </div>

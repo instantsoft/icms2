@@ -12,6 +12,8 @@ class cmsDatabase {
 
 	public $nestedSets;
 
+    private $table_fields;
+
     private $mysqli;
 
     public static function getInstance() {
@@ -188,6 +190,29 @@ class cmsDatabase {
 		return $this->mysqli->insert_id;
 	}
 
+    /**
+     * Возвращает все названия полей для таблицы
+     * @param string $table
+     * @return array
+     */
+    public function getTableFields($table) {
+
+        if(isset($this->table_fields[$table])){
+            return $this->table_fields[$table];
+        }
+
+		$result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
+
+        while($data = $this->fetchAssoc($result)){
+            $fields[] = $data['Field'];
+        }
+
+        $this->table_fields[$table] = $fields;
+
+        return $fields;
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -229,11 +254,24 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Выполняет запрос UPDATE
+     *
+     * @param string $table Таблица
+     * @param string $where Критерии запроса
+	 * @param array $data Массив[Название поля] = значение поля
+     * @return boolean
+     */
 	public function update($table, $where, $data){
 
-		$set = array();
+		if(empty($data)){ return false; }
+
+        $table_fields = $this->getTableFields($table);
 
 		foreach ($data as $field=>$value) {
+            if(!in_array($field, $table_fields)){
+                continue;
+            }
             $value = $this->prepareValue($field, $value);
 			$set[] = "`{$field}` = {$value}";
 		}
@@ -246,9 +284,6 @@ class cmsDatabase {
 
 	}
 
-//============================================================================//
-//============================================================================//
-
 	/**
 	 * Выполняет запрос INSERT
 	 *
@@ -258,27 +293,27 @@ class cmsDatabase {
 	 */
 	public function insert($table, $data){
 
-        $fields = array();
-		$values = array();
+        if(empty($data) || !is_array($data)) { return false; }
 
-        if (is_array($data)){
+        $table_fields = $this->getTableFields($table);
 
-			foreach ($data as $field => $value){
+        foreach ($data as $field => $value){
 
-                $value = $this->prepareValue($field, $value);
+            if(!in_array($field, $table_fields)){
+                continue;
+            }
 
-                $fields[] = "`$field`";
-                $values[] = $value;
+            $fields[] = "`$field`";
+            $values[] = $this->prepareValue($field, $value);
 
-			}
+        }
 
-            $fields = implode(', ', $fields);
-            $values = implode(', ', $values);
+        $fields = implode(', ', $fields);
+        $values = implode(', ', $values);
 
-			$sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
-			if ($this->query($sql)) { return $this->lastId(); }
+        $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
-		}
+        if ($this->query($sql)) { return $this->lastId(); }
 
 		return false;
 
@@ -296,8 +331,8 @@ class cmsDatabase {
 	public function insertOrUpdate($table, $data, $update_data=false){
 
         $fields = array();
-		$values = array();
-        $set = array();
+        $values = array();
+        $set    = array();
 
         if (!$update_data) { $update_data = $data; }
 
@@ -337,9 +372,12 @@ class cmsDatabase {
 
 	}
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Выполняет запрос DELETE
+     * @param string $table_name Таблица
+     * @param string $where Критерии запроса
+     * @return type
+     */
 	public function delete($table_name, $where){
         $where = str_replace('i.', '', $where);
         return $this->query("DELETE FROM {#}{$table_name} WHERE {$where}");
@@ -573,6 +611,7 @@ class cmsDatabase {
                   `ns_differ` varchar(32) NOT NULL DEFAULT '',
                   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
                   PRIMARY KEY (`id`),
+                  KEY `slug` (`slug`),
                   KEY `parent_id` (`parent_id`),
                   KEY `ns_left` (`ns_left`),
                   KEY `ns_right` (`ns_right`),

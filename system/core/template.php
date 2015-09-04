@@ -1099,9 +1099,10 @@ class cmsTemplate {
                 if ($grid['actions']){
 
                     $actions_html = '<div class="actions">';
-                    $confirm_attr = '';
 
                     foreach($grid['actions'] as $action){
+
+                        $confirm_attr = '';
 
                         if (isset($action['handler'])){
                             $is_active = $action['handler']($row);
