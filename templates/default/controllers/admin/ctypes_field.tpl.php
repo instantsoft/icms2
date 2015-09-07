@@ -63,6 +63,7 @@
         }, function( html ){
             if (!html) { return; }
             $('#f_type').after( html );
+            icms.events.run('loadfieldtypeoptions', html);
         }, "html")
 
     }

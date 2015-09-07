@@ -6,42 +6,42 @@ icms.content = (function ($) {
     this.item_id = 0;
 
     this.onDocumentReady = function() {
-	
+
 		var is_multi_cats = $('#fset_multi_cats').length > 0;
-		
+
 		if (!is_multi_cats) { return; }
-		
+
 		$('.content_multi_cats_form').show().appendTo('#fset_multi_cats');
-		
+
 		$('.content_multi_cats_form .add_button a').on("click", function(){
 			icms.content.addCat();
 		});
-		
+
 		for(var c=0; c<add_cats.length; c++){
 			var dom = this.addCat();
 			$('select', dom).val(add_cats[c]);
 		}
-	
+
 	}
 
     //=====================================================================//
 
 	this.addCat = function(){
-		
+
 		var input = $('<select>').attr("name", "add_cats[]").html($('select#category_id').html());
-		
+
 		var removeLink = $('<a>').attr('href', 'javascript:').attr('title', LANG_DELETE);
-		
+
 		var dom = $('<div>').addClass('field').addClass('cat_selector').prepend(input.val(0)).append(removeLink);
 
 		$('a', dom).on("click", function(e){
 			$(e.target).parent('div').remove();
 		})
-		
+
 		$('.content_multi_cats_form .list').append(dom);
-		
+
 		return dom;
-		
+
 	}
 
     //=====================================================================//
@@ -82,6 +82,8 @@ icms.content = (function ($) {
         container.show().html('<div class="loading">'+LANG_LOADING+'</div>');
 
         $.post(url, {item_id: this.item_id}, function(result){
+
+            icms.events.run('icms_content_changepropscat', result);
 
             if (!result.success) { container.html(''); container.hide(); return; }
 
