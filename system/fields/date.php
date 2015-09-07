@@ -78,7 +78,7 @@ class fieldDate extends cmsFormField {
 
         if ($value){
             if (is_array($value)){
-                $value = "{$value['date']} {$value['hour']}:{$value['min']}";
+                $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
                 return date('Y-m-d H:i', strtotime($value));
             } else {
                 return date('Y-m-d', strtotime($value));
