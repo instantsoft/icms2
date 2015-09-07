@@ -4,20 +4,20 @@ class cmsCore {
 
     private static $instance;
 
-	public $uri = "";
-	public $uri_absolute = "";
-	public $uri_controller = "";
-	public $uri_action = "";
-	public $uri_params = array();
-	public $uri_query = array();
+	public $uri            = '';
+    public $uri_absolute   = '';
+    public $uri_controller = '';
+    public $uri_action     = '';
+    public $uri_params     = array();
+    public $uri_query      = array();
 
-    public $controller = "";
+    public $controller = '';
 
 	public $link;
 	public $request;
 
     public $db;
-    
+
     private static $includedFiles = array();
 
     public static function getInstance() {
@@ -61,9 +61,7 @@ class cmsCore {
      */
     public static function getVersionArray(){
 
-        $config = cmsConfig::getInstance();
-
-        $file = $config->root_path . 'system/config/version.ini';
+        $file = cmsConfig::get('root_path') . 'system/config/version.ini';
 
         if (!file_exists($file)){ die('version.ini not found'); }
 
@@ -89,41 +87,39 @@ class cmsCore {
 
     /**
      * Подключает файл
-     * @param string $file
+     * @param string $file Путь относительно корня сайта без начального слеша
      * @return boolean
      */
     public static function includeFile($file) {
 
         $file = cmsConfig::get('root_path') . $file;
-        
+
         if (isset(self::$includedFiles[$file])){
             return self::$includedFiles[$file];
         }
-        
-        if (!file_exists($file)){ 
+
+        if (!file_exists($file)){
             self::$includedFiles[$file] = false;
-            return false;             
+            return false;
         }
 
-        $result = include_once $file;        
-        
+        $result = include_once $file;
+
         if (is_null($result)) { $result = true; }
 
         self::$includedFiles[$file] = $result;
-        
+
         return $result;
 
     }
 
     public static function requireFile($file) {
 
-        $config = cmsConfig::getInstance();
-
-        $file = $config->root_path . $file;
+        $file = cmsConfig::get('root_path') . $file;
 
         if (!file_exists($file)){ return false; }
 
-        $result = require $file;        
+        $result = require $file;
 
         if (is_null($result)) { $result = true; }
 
@@ -153,7 +149,7 @@ class cmsCore {
      public static function loadLib($library, $class=false){
 
         if ($class && class_exists($class, false)){ return true; }
-         
+
         $config = cmsConfig::getInstance();
 
         $lib_file = $config->root_path.'system/libs/'.$library.'.php';
@@ -171,13 +167,11 @@ class cmsCore {
 
     /**
      * Загружает класс ядра из папки /system/core
-     * @param string $library
+     * @param string $class
      */
     public static function loadCoreClass($class){
 
-        $config = cmsConfig::getInstance();
-
-        $class_file = $config->root_path . 'system/core/'.$class.'.class.php';
+        $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
 
         if (!file_exists($class_file)){
             self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
@@ -194,14 +188,12 @@ class cmsCore {
 
     /**
      * Проверяет существование модели
-     * @param str $model
+     * @param str $controller Название контроллера
      * @return bool
      */
     public static function isModelExists($controller){
 
-        $config = cmsConfig::getInstance();
-
-        $model_file = $config->root_path.'system/controllers/'.$controller.'/model.php';
+        $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
         return file_exists($model_file);
 
@@ -214,14 +206,11 @@ class cmsCore {
      */
     public static function getModel($controller, $delimitter='_'){
 
-        $config = cmsConfig::getInstance();
-        $self   = self::getInstance();
-
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
         if (!class_exists($model_class)) {
 
-            $model_file = $config->root_path.'system/controllers/'.$controller.'/model.php';
+            $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
             if (file_exists($model_file)){
                 include_once($model_file);
@@ -247,9 +236,7 @@ class cmsCore {
      */
     public static function isControllerExists($controller_name){
 
-        $config = cmsConfig::getInstance();
-
-        $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name;
+        $ctrl_file = cmsConfig::get('root_path') . 'system/controllers/'.$controller_name;
 
         return file_exists($ctrl_file);
 
@@ -274,7 +261,7 @@ class cmsCore {
         }
 
         if (!class_exists($controller_name)) {
-            include_once($ctrl_file);        
+            include_once($ctrl_file);
         }
 
         $custom_file = $config->root_path . 'system/controllers/'.$controller_name.'/custom.php';
@@ -285,7 +272,7 @@ class cmsCore {
             $controller_class = $controller_name . '_custom';
             if (!class_exists($controller_class)){
                 include_once($custom_file);
-            }            
+            }
         }
 
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
@@ -361,11 +348,9 @@ class cmsCore {
 
     public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false){
 
-        $config = cmsConfig::getInstance();
-
 		$widget_path = self::getWidgetPath($widget_name, $controller_name);
-		
-        $path = $config->system_path . $widget_path;
+
+        $path = cmsConfig::get('system_path') . $widget_path;
 
         $form_file = $path . '/options.form.php';
 
@@ -380,30 +365,30 @@ class cmsCore {
 		//
 		// Опции внешнего вида
 		//
-		$design_fieldset_id = $form->addFieldset(LANG_DESIGN);			
-		
+		$design_fieldset_id = $form->addFieldset(LANG_DESIGN);
+
             $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
                 'title' => LANG_CSS_CLASS_WRAP,
-            )));		
-		
+            )));
+
             $form->addField($design_fieldset_id, new fieldString('class_title', array(
                 'title' => LANG_CSS_CLASS_TITLE,
-            )));		
-		
+            )));
+
             $form->addField($design_fieldset_id, new fieldString('class', array(
                 'title' => LANG_CSS_CLASS_BODY,
-            )));		
-			
+            )));
+
             $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
-            )));		
-			
+            )));
+
             $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
-            )));		
-			
+            )));
+
         //
         // Опции доступа
         //
@@ -576,24 +561,23 @@ class cmsCore {
 
 		$config = cmsConfig::getInstance();
 
-        $uri = trim($uri);
+        $uri = trim(urldecode($uri));
 		$uri = mb_substr($uri, mb_strlen( $config->root ));
 
         if (!$uri) { return; }
 
-        $uri = urldecode($uri);
-
         // если в URL присутствует знак вопроса, значит есть
         // в нем есть GET-параметры которые нужно распарсить
         // и добавить в массив $_REQUEST
-        if (strstr($uri, "?")){
+        $pos_que  = mb_strpos($uri, '?');
+        if ($pos_que !== false){
 
             // получаем строку запроса
             $query_data = array();
-            $query_str  = mb_substr($uri, mb_strpos($uri, "?")+1);
+            $query_str  = mb_substr($uri, $pos_que+1);
 
             // удаляем строку запроса из URL
-            $uri = mb_substr($uri, 0, mb_strpos($uri, "?"));
+            $uri = mb_substr($uri, 0, $pos_que);
 
             // парсим строку запроса
             parse_str($query_str, $query_data);
@@ -806,7 +790,7 @@ class cmsCore {
     public static function error404(){
 
 		cmsEventsManager::hook('error_404', self::getInstance()->uri);
-		
+
         header("HTTP/1.0 404 Not Found");
         header("HTTP/1.1 404 Not Found");
         header("Status: 404 Not Found");
@@ -890,9 +874,7 @@ class cmsCore {
      */
     public static function getDirsList($root_dir){
 
-        $config = cmsConfig::getInstance();
-
-        $dir = $config->root_path . $root_dir;
+        $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
 
         $list = array();
@@ -934,8 +916,8 @@ class cmsCore {
 
         foreach ($files as $file) {
 
-            if ($is_include && !isset(self::$includedFiles[$file])) { 
-                include_once $file; 
+            if ($is_include && !isset(self::$includedFiles[$file])) {
+                include_once $file;
                 self::$includedFiles[$file] = true;
             }
 

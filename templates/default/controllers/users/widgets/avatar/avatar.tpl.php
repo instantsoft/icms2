@@ -4,7 +4,7 @@
 
         <div class="avatar">
             <a href="<?php echo href_to('users', $user->id); ?>">
-                <?php echo html_avatar_image($user->avatar, 'micro'); ?>
+                <?php echo html_avatar_image($user->avatar, 'micro', $user->nickname); ?>
             </a>
         </div>
 

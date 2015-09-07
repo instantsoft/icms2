@@ -7,11 +7,12 @@ class cmsUser {
 
     private static $instance;
 
-    public $id;
+    public $id = 0;
     public $email;
     public $password;
     public $nickname;
-    public $is_admin;
+    public $is_admin = 0;
+    public $is_logged = false;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -32,9 +33,8 @@ class cmsUser {
 
         $config = cmsConfig::getInstance();
 
-        $this->is_logged = false;
         $this->groups = array(GUEST_GROUP_ID);
-        $this->ip = self::getIp();
+        $this->ip     = self::getIp();
 
         self::deleteOldSessions();
 
@@ -48,12 +48,6 @@ class cmsUser {
             // пробуем авторизовать по кукису
             $this->id  = self::autoLogin(self::getCookie('auth'));
 
-        } else {
-
-            // не авторизован
-            $this->groups = array(GUEST_GROUP_ID);
-            $this->id = 0;
-
         }
 
         //
@@ -64,7 +58,7 @@ class cmsUser {
             $model = cmsCore::getModel('users');
 
             $user = $model->getUser($this->id);
-			
+
 			if (!$user){
 				self::logout();
 				return;
@@ -119,7 +113,7 @@ class cmsUser {
      */
     public static function autoLogin($auth_token){
 
-        if (!preg_match("/^([a-zA-Z0-9]{32})$/i", $auth_token)){ return false; }
+        if (!preg_match('/^[0-9a-f]{32}$/i', $auth_token)){ return 0; }
 
         $model = cmsCore::getModel('users');
 
@@ -127,7 +121,7 @@ class cmsUser {
 
         $user = $model->getUser();
 
-        if (!$user){ return false; }
+        if (!$user){ return 0; }
 
         $model->update('{users}', $user['id'], array(
             'pass_token' => null,
@@ -152,12 +146,13 @@ class cmsUser {
      * Авторизует пользователя
      * @param string $email
      * @param string $password
-     * @return bool
+     * @param bool $remember
+     * @return int
      */
     public static function login($email, $password, $remember=false) {
 
         if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){
-            return false;
+            return 0;
         }
 
         $model = cmsCore::getModel('users');
@@ -171,7 +166,7 @@ class cmsUser {
             $user = cmsEventsManager::hook('user_auth_error', array('email'=>$email,'password'=>$password));
         }
 
-        if (empty($user['id'])) { return false; } 
+        if (empty($user['id'])) { return 0; }
 
         $user = cmsEventsManager::hook('user_login', $user);
 
@@ -202,7 +197,6 @@ class cmsUser {
 
     /**
      * Выход пользователя
-     *
      */
     public static function logout() {
 
@@ -311,7 +305,7 @@ class cmsUser {
 
     public static function sessionSet($key, $value){
 
-        if (!strstr($key, ':')){
+        if (strpos($key, ':') === false){
             $_SESSION[$key] = $value;
         } else {
             list($key, $subkey) = explode(':', $key);
@@ -328,7 +322,7 @@ class cmsUser {
 
         if (!self::isSessionSet($key)){ return false; }
 
-        if (!strstr($key, ':')){
+        if (strpos($key, ':') === false){
             $value = $_SESSION[$key];
         } else {
             list($key, $subkey) = explode(':', $key);
@@ -342,7 +336,7 @@ class cmsUser {
     }
 
     public static function isSessionSet($key){
-        if (!strstr($key, ':')){
+        if (strpos($key, ':') === false){
             return isset($_SESSION[$key]);
         } else {
             list($key, $subkey) = explode(':', $key);
@@ -351,7 +345,7 @@ class cmsUser {
     }
 
     public static function sessionUnset($key){
-        if (!strstr($key, ':')){
+        if (strpos($key, ':') === false){
             unset($_SESSION[$key]);
         } else {
             list($key, $subkey) = explode(':', $key);
@@ -361,13 +355,11 @@ class cmsUser {
 
     /**
      * Устанавливает куки
-     *
-     * @param str $name Имя кукиса
-     * @param str $value Значение
+     * @param string $key Имя кукиса
+     * @param string $value Значение
      * @param int $time Время жизни, в секундах
-     * @param str $path Путь на сервере
-     * @param str $domain Разрешенный домен
-     *
+     * @param string $path Путь на сервере
+     * @param bool $http_only Куки недоступны для скриптов
      * */
     public static function setCookie($key, $value, $time=3600, $path='/', $http_only=true){
         setcookie('icms['.$key.']', $value, time()+$time, $path, null, false, $http_only);
@@ -386,7 +378,7 @@ class cmsUser {
     /**
      * Проверяет наличие кукиса и возвращает его значение
      *
-     * @param str $name Имя кукиса
+     * @param str $key Имя кукиса
      * @return str или false
      */
     public static function getCookie($key){
@@ -466,16 +458,16 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitReached($subject, $permission, $current_value=0){		
-		
+    public static function isPermittedLimitReached($subject, $permission, $current_value=0){
+
         $user = self::getInstance();
-		
+
         if ($user->is_admin){ return false; }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }
         if ((int)$current_value >= $user->perms[$subject][$permission]) { return true; }
-		
+
         return false;
 
     }

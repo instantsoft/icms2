@@ -464,12 +464,17 @@ class cmsTemplate {
 // ========================================================================== //
 // ========================================================================== //
 
-	/**
-	 * Добавляет тег в головной раздел страницы
-	 * @param string $tag
-	 */
-	public function addHead($tag){
-        $hash = md5($tag);
+    /**
+     * Добавляет тег в головной раздел страницы
+     * @param string $tag
+     * @param bool $is_include_once
+     */
+	public function addHead($tag, $is_include_once=true){
+        if($is_include_once){
+        	$hash = md5($tag);
+        } else {
+            $hash = count($this->head);
+        }
 		$this->head[$hash] = $tag;
 	}
 
@@ -479,7 +484,7 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = strstr($file, 'http://') ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
     }
 
@@ -489,7 +494,7 @@ class cmsTemplate {
      * @return string
      */
     public function getJSTag($file, $comment=''){
-        $file = strstr($file, 'http://') ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
     }
@@ -543,22 +548,16 @@ class cmsTemplate {
 
 	public function insertJS($file, $comment=''){
 
-		$config = cmsConfig::getInstance();
-        $file = strstr($file, 'http://') ? $file : $config->root . $file;
+        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
-        $tag = '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
-
-        echo $tag;
+        echo '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
 
 	}
 
     public function insertCSS($file){
 
-		$config = cmsConfig::getInstance();
-        $file = strstr($file, 'http://') ? $file : $config->root . $file;
-		$tag = '<link rel="stylesheet" type="text/css" href="'.$file.'">';
-
-        echo $tag;
+        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
+		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
 
     }
 
@@ -758,9 +757,7 @@ class cmsTemplate {
 
         if (!file_exists($scheme_file)) { return false; }
 
-        $scheme_html = file_get_contents($scheme_file);
-
-        return $scheme_html;
+        return file_get_contents($scheme_file);
 
     }
 
@@ -927,9 +924,7 @@ class cmsTemplate {
 
         extract($data); include($tpl_file);
 
-        $html = ob_get_clean();
-
-        echo $html;
+        echo ob_get_clean();
 
         $this->controller->halt();
 
@@ -1104,9 +1099,10 @@ class cmsTemplate {
                 if ($grid['actions']){
 
                     $actions_html = '<div class="actions">';
-                    $confirm_attr = '';
 
                     foreach($grid['actions'] as $action){
+
+                        $confirm_attr = '';
 
                         if (isset($action['handler'])){
                             $is_active = $action['handler']($row);
@@ -1205,9 +1201,7 @@ class cmsTemplate {
 
         extract($data); include($tpl_file);
 
-        $html = ob_get_clean();
-
-        return $html;
+        return ob_get_clean();
 
     }
 
@@ -1376,9 +1370,7 @@ class cmsTemplate {
 
         $form = $this->getOptionsForm();
 
-        $options = $form->parse(new cmsRequest($options));
-
-        return $options;
+        return $form->parse(new cmsRequest($options));
 
     }
 
@@ -1386,25 +1378,19 @@ class cmsTemplate {
 
         if (!$this->hasOptions()){ return false; }
 
-        $config = cmsConfig::getInstance();
-
-        $options_file = $config->root_path . "system/config/theme_{$this->name}.yml";
+        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
         if (!file_exists($options_file)){ return array(); }
 
         $options_yaml = @file_get_contents($options_file);
 
-        $options = cmsModel::yamlToArray($options_yaml);
-
-        return $options;
+        return cmsModel::yamlToArray($options_yaml);
 
     }
 
     public function saveOptions($options){
 
-        $config = cmsConfig::getInstance();
-
-        $options_file = $config->root_path . "system/config/theme_{$this->name}.yml";
+        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
         $options_yaml = cmsModel::arrayToYaml($options);
 

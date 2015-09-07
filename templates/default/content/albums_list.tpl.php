@@ -26,14 +26,14 @@
 
                 <div class="photo">
                     <div class="note">
-                        <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?> 
+                        <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?>
 						<?php if ($item['is_public']) { ?>
 							/ <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
 						<?php } ?>
                     </div>
                     <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
                         <?php if (!empty($item['cover_image'])){ ?>
-                            <?php echo html_image($item['cover_image'], 'normal'); ?>
+                            <?php echo html_image($item['cover_image'], 'normal', $item['title']); ?>
                             <?php unset($item['cover_image']); ?>
                         <?php } ?>
                     </a>

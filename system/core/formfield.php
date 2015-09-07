@@ -21,7 +21,7 @@ class cmsFormField {
     public $is_hidden = false;
 
     public $rules = array();
-    
+
     public $data = array(); // массив для данных в шаблоне
 
 	function __construct($name, $options=false){
@@ -71,19 +71,19 @@ class cmsFormField {
             if (isset($options['title'])){
                 $this->element_title = $options['title'];
             }
-        }        
+        }
     }
-    
+
     public function setOption($key, $value) { $this->options[$key] = $value; }
 
     public function getTitle(){ return $this->title; }
 
     public function getName() { return $this->name; }
-    
+
     public function setName($name) {
         $this->name = $name;
 
-        if (strstr($name, ':')){
+        if (strpos($name, ':') !== false){
             list($key, $subkey) = explode(':', $name);
             $this->element_name = "{$key}[{$subkey}]";
         } else {
@@ -100,7 +100,7 @@ class cmsFormField {
     public function getRules(){ return $this->rules; }
 
     public function hasDefaultValue() { return isset($this->default); }
-    
+
     public function getDefaultValue() { return $this->hasDefaultValue() ? $this->default : null; }
 
     public function getInput($value) {
@@ -117,9 +117,9 @@ class cmsFormField {
     }
 
     public function parse($value){ return false; }
-    
+
     public function parseTeaser($value){ return $this->parse($value); }
-    
+
     public function getStringValue($value){ return $this->parse($value); }
 
     public function applyFilter($model, $value) { return true; }
@@ -127,7 +127,7 @@ class cmsFormField {
     public function store($value, $is_submitted, $old_value=null){
        return $value;
     }
-    
+
     public function delete($value){
         return true;
     }

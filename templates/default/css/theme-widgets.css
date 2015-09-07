@@ -260,6 +260,7 @@ aside .widget_tabbed > .tabs .links a {
     padding:10px;
     background:rgba(0,0,0,0.85);
     width:100%;
+    box-sizing: border-box;
 }
 
 .widget_content_slider .slide .heading h2,
@@ -281,6 +282,8 @@ aside .widget_tabbed > .tabs .links a {
 
 .widget_content_slider .slide .heading .teaser .date{
     color: #7f8c8d;
+}
+.widget_content_slider .slide .heading .teaser > span + span.date{
     padding-left: 10px;
 }
 
@@ -565,7 +568,7 @@ aside .widget_tabbed > .tabs .links a {
 }
 
 .widget_content_filter .input {
-	width:95%;	
+	width:95%;
 }
 
 .widget_content_filter .ft_date .value,
@@ -582,11 +585,11 @@ aside .widget_tabbed > .tabs .links a {
 	width:60px !important;
 }
 
-.widget_content_filter .buttons { 
+.widget_content_filter .buttons {
 	margin-top:20px;
 	font-size:12px;
 }
 
-.widget_content_filter .buttons input { 
-	margin-right: 10px; 
+.widget_content_filter .buttons input {
+	margin-right: 10px;
 }

@@ -21,12 +21,12 @@
     }
 
 	$is_can_edit =  (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
-					(cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $user->id) || 
+					(cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $user->id) ||
 					($photo['user_id'] == $user->id));
 	$is_can_delete =	(cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
-						(cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $album['user_id'] == $user->id) || 
+						(cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $album['user_id'] == $user->id) ||
 						($photo['user_id'] == $user->id));
-	
+
 	if ($is_can_edit){
         $this->addToolButton(array(
             'class' => 'edit',
@@ -39,7 +39,7 @@
         $this->addToolButton(array(
             'class' => 'delete',
             'title' => LANG_PHOTOS_DELETE_PHOTO,
-            'href'  => 'javascript:icms.photos.delete()',		
+            'href'  => 'javascript:icms.photos.delete()',
             'onclick' => "if(!confirm('".LANG_PHOTOS_DELETE_PHOTO_CONFIRM."')){ return false; }"
         ));
    }
@@ -68,7 +68,7 @@
             <?php echo html_image($photo['image'], 'big', $photo['title']); ?>
         </a>
     </div>
-	
+
 	<div class="image-nav">
 		<?php if ($is_origs && isset($photo['image']['original'])) { ?>
 			<a href="<?php echo html_image_src($photo['image'], 'original', true); ?>" target="_blank" class="ajax-modal ajaxlink"><?php echo LANG_PHOTOS_SHOW_ORIG; ?></a>
@@ -83,7 +83,7 @@
                 <?php foreach($photos as $thumb) { ?>
                     <li <?php if ($thumb['id'] == $photo['id']) { ?>class="active"<?php } ?>>
                         <a href="<?php echo $this->href_to('view', $thumb['id']); ?>" title="<?php echo $thumb['title']; ?>">
-                            <?php echo html_image($thumb['image'], 'small'); ?>
+                            <?php echo html_image($thumb['image'], 'small', $thumb['title']); ?>
                         </a>
                     </li>
                     <?php if ($thumb['id'] == $photo['id']) { $active_index = $index; } else { $index++; } ?>
@@ -125,11 +125,11 @@
 <?php } ?>
 
 <script>
-	<?php if ($is_can_edit){ ?> 
+	<?php if ($is_can_edit){ ?>
 		<?php echo $this->getLangJS('LANG_PHOTOS_RENAME_PHOTO'); ?>
 		var rename_url = '<?php echo $this->href_to('rename'); ?>';
 	<?php } ?>
-	<?php if ($is_can_delete){ ?> 
+	<?php if ($is_can_delete){ ?>
 		var delete_url = '<?php echo $this->href_to('delete'); ?>';
 	<?php } ?>
     var li_w = 78;

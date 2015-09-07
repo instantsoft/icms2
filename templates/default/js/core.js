@@ -96,29 +96,31 @@ icms.forms = (function ($) {
     }
 
     //====================================================================//
-	
+
 	this.updateChildList = function (child_id, url, value){
-				
+
 		var child_list = $('#'+child_id);
-		
+
 		if ($('#f_'+child_id+' .loading').length==0){
 			child_list.after('<div class="loading"></div>');
 		}
-		
+
 		child_list.html('');
-		
+
 		$.post(url, {value: value}, function(result){
-			
+
 			for(var k in result){
 				child_list.append('<option value="'+k+'">'+result[k]+'</option>');
 			}
-			
+
 			$('#f_'+child_id+' .loading').remove();
-				
+
+            icms.events.run('icms_forms_updatechildlist', result);
+
 		}, 'json');
-		
+
 	}
-	
+
     //====================================================================//
 
     this.submitAjax = function(form){
@@ -147,6 +149,8 @@ icms.forms = (function ($) {
                     $('#f_'+id, form).prepend('<div class="error_text">' + result.errors[field_id] + '</div>');
                 }
 
+                icms.events.run('icms_forms_submitajax', result);
+
                 icms.modal.resize();
 
                 return;
@@ -162,6 +166,31 @@ icms.forms = (function ($) {
 	return this;
 
 }).call(icms.forms || {},jQuery);
+
+icms.events = (function ($) {
+
+    this.listeners = {};
+
+    this.on = function(name, callback){
+        if (typeof(this.listeners[name]) == 'object'){
+            this.listeners[name].push(callback);
+        } else {
+            this.listeners[name] = [callback];
+        }
+    };
+
+    this.run = function(name, params){
+        params = params || {};
+        for(event_name in this.listeners[name]){
+            if (typeof(this.listeners[name][event_name]) == 'function') {
+                this.listeners[name][event_name](params);
+            }
+        }
+    };
+
+	return this;
+
+}).call(icms.events || {},jQuery);
 
 function toggleFilter(){
     var filter = $('.filter-panel');

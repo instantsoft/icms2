@@ -1,6 +1,6 @@
 <?php if ($items){ ?>
 
-    <?php		
+    <?php
         $last_date = '';
         $today_date = date('j F Y');
         $yesterday_date = date('j F Y', time()-3600*24);
@@ -35,7 +35,7 @@
                     </div>
                 <?php } ?>
                 <div class="icon">
-                    <a href="<?php echo $url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro'); ?></a>
+                    <a href="<?php echo $url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?></a>
                 </div>
                 <div class="title-multiline">
                     <a class="author" href="<?php echo $url; ?>"><?php html($item['user']['nickname']); ?></a>

@@ -79,7 +79,7 @@
     <div id="left_column" class="column">
 
         <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal'); ?>
+            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
         </div>
 
         <?php if ($content_counts) { ?>
@@ -107,7 +107,7 @@
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
                         <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro'); ?></span>
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?></span>
                         </a>
                     <?php } ?>
                 </div>

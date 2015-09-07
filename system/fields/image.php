@@ -51,7 +51,7 @@ class fieldImage extends cmsFormField {
                 $this->teaser_url :
                 href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
 
-        return '<a href="'.$url.'"><img src="'.$config->upload_host . '/' . $paths[ $this->getOption('size_teaser') ].'" border="0"></a>';
+        return '<a href="'.$url.'"><img src="'.$config->upload_host . '/' . $paths[ $this->getOption('size_teaser') ].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title']).'"></a>';
 
     }
 
@@ -69,7 +69,7 @@ class fieldImage extends cmsFormField {
 
 		if (!$src) { return; }
 
-        return '<img src="'.$config->upload_host . '/' . $src.'" border="0" />';
+        return '<img src="'.$config->upload_host . '/' . $src.'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title']).'" />';
 
     }
 
@@ -148,13 +148,13 @@ class fieldImage extends cmsFormField {
 
     public function getInput($value){
 
-	$this->data['paths'] = false;
+        $this->data['paths'] = false;
 
         if($value){
             $this->data['paths'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
-	$this->data['sizes'] = $this->getOption('sizes');
+        $this->data['sizes'] = $this->getOption('sizes');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

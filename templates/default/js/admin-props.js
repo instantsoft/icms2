@@ -1,7 +1,5 @@
 function filterPropsList(){
 
-    console.log('bbbb');
-
     if ($('select[name=props_list]').length == 0) { return; }
 
     var full_list = $('select[name=props_list]');

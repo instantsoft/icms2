@@ -54,7 +54,7 @@
     <div id="left_column" class="column">
 
         <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal'); ?>
+            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
         </div>
 
         <div class="block">

@@ -24,7 +24,7 @@
 
                 <div class="icon">
                     <?php
-                        echo html_image($group['logo']);
+                        echo html_image($group['logo'], 'small', $group['title']);
                     ?>
                 </div>
 

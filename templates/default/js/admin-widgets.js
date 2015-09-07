@@ -154,6 +154,8 @@ function widgetsLoad(page_id){
 
         }
 
+        icms.events.run('admin_widgets_load', result);
+
     }, 'json');
 
 
@@ -209,6 +211,8 @@ function widgetsAdd(id, position, widget_dom){
         widgetsSavePositionOrderings(position);
 
         widgetEdit(result.id);
+
+        icms.events.run('admin_widgets_add', result);
 
     }, 'json');
 

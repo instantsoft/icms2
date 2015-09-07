@@ -17,7 +17,7 @@
 
 		<?php if ($group['logo']) { ?>
 			<div id="logo" class="block">
-				<?php echo html_image($group['logo'], 'normal'); ?>
+				<?php echo html_image($group['logo'], 'normal', $group['title']); ?>
 			</div>
 		<?php } ?>
 

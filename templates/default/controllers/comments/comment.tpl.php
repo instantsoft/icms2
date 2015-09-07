@@ -83,7 +83,7 @@
     <div class="body">
         <div class="avatar">
             <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
-                <?php echo html_avatar_image($entry['user']['avatar'], 'micro'); ?>
+                <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
             </a>
         </div>
         <div class="content">
