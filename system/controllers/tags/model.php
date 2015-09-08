@@ -215,14 +215,8 @@ class modelTags extends cmsModel{
     }
 
     public function deleteTags($controller, $subject, $id){
-
-        $tags_ids = $this->getTagsIDsForTarget($controller, $subject, $id);
-		
-		if (!$tags_ids) { return; }
 		
 	$this->filterTarget($controller, $subject, $id);
-		
-        $this->filterIn('tag_id', $tags_ids);
 
         $this->deleteFiltered('tags_bind');
 		
