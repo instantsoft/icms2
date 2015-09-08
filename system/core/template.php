@@ -545,6 +545,19 @@ class cmsTemplate {
         }
         return true;
 	}
+	
+    public function addControllerJS($path, $cname = false, $comment='', $allow_merge = true){
+        if(!$cname){$cname = $this->controller->name;}
+        $path = "/controllers/{$cname}/js/{$path}";
+        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
+        return $this->addJS($path, $comment, $allow_merge);
+    }
+    public function addControllerCSS($path, $cname = false){
+        if(!$cname){$cname = $this->controller->name;}
+        $path = "/controllers/{$cname}/css/{$path}";
+        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
+        return $this->addCSS($path);
+    }
 
 	public function insertJS($file, $comment=''){
 
