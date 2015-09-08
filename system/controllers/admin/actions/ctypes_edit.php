@@ -8,19 +8,19 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $content_model = cmsCore::getModel('content');
 
-        $form = $this->getForm('ctypes_basic', array('edit'));
-
-        $form = cmsEventsManager::hook("ctype_basic_form", $form);
-
-        $form->hideField('titles', 'name');
-
         $is_submitted = $this->request->has('submit');
 
         $ctype = $content_model->getContentType($id);
-
         if (!$ctype) { cmsCore::error404(); }
 
-        $ctype = cmsEventsManager::hook("ctype_before_edit", $ctype);
+        $form = $this->getForm('ctypes_basic', array('edit'));
+
+        $form = cmsEventsManager::hook('ctype_basic_form', $form);
+        $form = cmsEventsManager::hook('ctype_basic_'.$ctype['name'].'_form', $form);
+
+        $form->hideField('titles', 'name');
+
+        $ctype = cmsEventsManager::hook('ctype_before_edit', $ctype);
 
         $template = cmsTemplate::getInstance();
 

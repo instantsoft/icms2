@@ -181,9 +181,12 @@ icms.events = (function ($) {
 
     this.run = function(name, params){
         params = params || {};
-        for(event_name in this.listeners[name]){
-            if (typeof(this.listeners[name][event_name]) == 'function') {
-                this.listeners[name][event_name](params);
+
+        for(event_name in this.listeners[name]) {
+            if(this.listeners[name].hasOwnProperty(event_name)){
+                if (typeof(this.listeners[name][event_name]) == 'function') {
+                    this.listeners[name][event_name](params);
+                }
             }
         }
     };
