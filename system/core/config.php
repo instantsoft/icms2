@@ -111,7 +111,7 @@ class cmsConfig {
 
         $cfg_file = PATH . '/system/config/' . $cfg_file;
 
-        $data = include $cfg_file;
+        (@$data = include $cfg_file) OR die("Could not find configuration file!");
 
         return $data;
 
