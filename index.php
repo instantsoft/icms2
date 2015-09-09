@@ -1,6 +1,8 @@
 <?php
-
-	session_start();
+    
+    $_SERVER['DOCUMENT_ROOT'] = PATH;
+	
+    session_start();
 
 	define('VALID_RUN', true);
 

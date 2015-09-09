@@ -1,5 +1,7 @@
 <?php
 
+$_SERVER['DOCUMENT_ROOT'] = dirname(PATH);
+
 session_start();
 
 define('DS', DIRECTORY_SEPARATOR);
