@@ -216,17 +216,22 @@ class modelTags extends cmsModel{
 
     public function deleteTags($controller, $subject, $id){
     	
-    	$tags_ids = $this->getTagsIDsForTarget($controller, $subject, $id);
+    	$this->lockFilters();
+    	
+    	$tags_ids = $this->filterTarget($controller, $subject, $id)->
+                get('tags_bind', function($item, $model){
+                    return $item['tag_id'];
+                });
+                
+        $this->unlockFilters();
 		
-		if (!$tags_ids) { return; }
-		
-	$this->filterTarget($controller, $subject, $id);
+	if (!$tags_ids) { return; }
 
         $this->deleteFiltered('tags_bind');
 		
         cmsCache::getInstance()->clean("tags.tags");
 
-        $this->recountTagsFrequency($tags_ids);
+        $this->recountTagsFrequency(array_unique($tags_ids));
 
         return true;
 
