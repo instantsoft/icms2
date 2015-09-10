@@ -23,9 +23,16 @@
     date_default_timezone_set( $config->time_zone );
 
     // Подключаем все необходимые классы и библиотеки
-	cmsCore::loadLib('html.helper');
-	cmsCore::loadLib('strings.helper');
-	cmsCore::loadLib('files.helper');
+	$files = @glob(ROOT . '/system/libs/*.helper.php');
+
+    if ($files) {
+
+        foreach ($files as $file) {
+
+            include_once $file;
+
+        }
+    }
 
     // Инициализируем ядро
     $core = cmsCore::getInstance();
