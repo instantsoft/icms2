@@ -224,8 +224,6 @@ class modelTags extends cmsModel{
 	if (!$tags_ids) { return; }
 
         $this->filterIn('id', array_keys($tags_ids))->deleteFiltered('tags_bind');
-		
-        cmsCache::getInstance()->clean("tags.tags");
 
         $this->recountTagsFrequency(array_unique($tags_ids));
 
