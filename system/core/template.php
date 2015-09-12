@@ -39,7 +39,7 @@ class cmsTemplate {
 // ========================================================================== //
 // ========================================================================== //
 
-	function __construct($name=false){
+	function __construct($name=''){
 
 		$config = cmsConfig::getInstance();
 
@@ -151,7 +151,7 @@ class cmsTemplate {
      * @param string $wrapper Название шаблона обертки
      * @return boolean
      */
-	public function widgets($position, $is_titles=true, $wrapper=false){
+	public function widgets($position, $is_titles=true, $wrapper=''){
 
         if (!$this->hasWidgetsOn($position)){ return false; }
 
@@ -545,6 +545,19 @@ class cmsTemplate {
         }
         return true;
 	}
+	
+    public function addControllerJS($path, $cname = '', $comment='', $allow_merge = true){
+        if(!$cname){$cname = $this->controller->name;}
+        $path = "/controllers/{$cname}/js/{$path}.js";
+        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
+        return $this->addJS($path, $comment, $allow_merge);
+    }
+    public function addControllerCSS($path, $cname = ''){
+        if(!$cname){$cname = $this->controller->name;}
+        $path = "/controllers/{$cname}/css/{$path}.css";
+        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
+        return $this->addCSS($path);
+    }
 
 	public function insertJS($file, $comment=''){
 
@@ -832,7 +845,7 @@ class cmsTemplate {
      * @param string $subfolder Подпапка в папке шаблонов контроллера
      * @return string
      */
-    public function getStylesFileName($controller_name=false, $subfolder=false) {
+    public function getStylesFileName($controller_name='', $subfolder='') {
 
         $config = cmsConfig::getInstance();
 
