@@ -618,7 +618,7 @@ class cmsDatabase {
                   KEY `ordering` (`ordering`),
                   KEY `ns_differ` (`ns_differ`),
                   KEY `ns_ignore` (`ns_ignore`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+                ) DEFAULT CHARSET=utf8";
 
         $this->query($sql);
 
@@ -636,7 +636,7 @@ class cmsDatabase {
 				  `category_id` int(11) DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+				) DEFAULT CHARSET=utf8";
 
         $this->query($sql);
 

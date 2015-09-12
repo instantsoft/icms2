@@ -921,7 +921,11 @@ class cmsModel{
     }
 
     public function orderBy($field, $direction=''){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        if(strpos($field, '(') !== false){ return $this; } // в названии поля не может быть функции
+        if($direction){
+            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+        }
+        if (strpos($field, '.') === false){ $field = 'i.'.$field; }
         $this->order_by = "{$field} {$direction}";
         return $this;
     }
@@ -931,37 +935,47 @@ class cmsModel{
 		$this->order_by = '';
 
 		if (is_array($list)){
+
 			foreach($list as $o){
-				$field = $o['by'];
-				$direction = $o['to'];
-				if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+
+                if(strpos($o['by'], '(') !== false){ continue; }
+
+				$field     = $o['by'];
+                $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
+
+                if (strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
 				$this->order_by .= "{$field} {$direction}";
+
 			}
+
 		}
 
 		return $this;
 
     }
 
-    public function limit($from, $howmany='') {
+    public function limit($from, $howmany=0) {
         $this->limit = (int)$from;
+        $howmany     = (int)$howmany;
         if ($this->limit < 0) { $this->limit = 0; }
         if ($howmany){
-            if ((int)$howmany <= 0){ $howmany = 15; }
-            $this->limit .= ', '. (int)$howmany;
+            if ($howmany <= 0){ $howmany = 15; }
+            $this->limit .= ', '. $howmany;
         }
         return $this;
     }
 
-    public function limitPage($page, $perpage=false) {
-        if (!$perpage) { $perpage = $this->perpage; }
+    public function limitPage($page, $perpage=0) {
+        $page    = (int) $page;
+        $perpage = (int) $perpage;
+        if ($perpage <= 0) { $perpage = $this->perpage; }
         $this->limit(($page-1)*$perpage, $perpage);
         return $this;
     }
 
     public function setPerPage($perpage){
-        $this->perpage = $perpage;
+        $this->perpage = (int)$perpage;
         return $this;
     }
 

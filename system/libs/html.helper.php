@@ -377,13 +377,12 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
 }
 
 /**
- * Возвращает тег <img> аватара пользователя
+ * Возвращает ссылку на аватар пользователя
  * @param array|yaml $avatars Все изображения аватара
  * @param string $size_preset Название пресета
- * @param string $alt Замещающий текст изображения
  * @return string
  */
-function html_avatar_image($avatars, $size_preset='small', $alt=''){
+function html_avatar_image_src($avatars, $size_preset='small'){
 
     $config = cmsConfig::getInstance();
 
@@ -406,6 +405,21 @@ function html_avatar_image($avatars, $size_preset='small', $alt=''){
 	if (strpos($src, $config->upload_host) === false){
         $src = $config->upload_host . '/' . $src;
     }
+
+    return $src;
+
+}
+
+/**
+ * Возвращает тег <img> аватара пользователя
+ * @param array|yaml $avatars Все изображения аватара
+ * @param string $size_preset Название пресета
+ * @param string $alt Замещающий текст изображения
+ * @return string
+ */
+function html_avatar_image($avatars, $size_preset='small', $alt=''){
+
+    $src = html_avatar_image_src($avatars, $size_preset);
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
