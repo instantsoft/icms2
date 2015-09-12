@@ -6,6 +6,7 @@ icms.datagrid = (function ($) {
     this.selected_rows = [];
     this.is_loading = true;
     this.callback = false;
+    this.was_init = false;
 
     //====================================================================//
 
@@ -16,6 +17,8 @@ icms.datagrid = (function ($) {
     //====================================================================//
 
     this.init = function(){
+        if(this.was_init){return false;}
+        this.was_init = true;
 
         if (this.options.is_sortable){
             $('.datagrid th.sortable').click(function(){
@@ -51,11 +54,34 @@ icms.datagrid = (function ($) {
         }
 
         if (this.options.is_selectable){
-            $(document).on('click', '#datagrid tr[class!=filter] td', function(){
-                $(this).parent('tr').toggleClass('selected');
+            var ctrl = false, shift = false;
+            var tbody = $('#datagrid > tbody');
+            var last = tbody.find('> tr:not(.filter):first');
+            $(document).keydown(function(event) {
+                if(event.keyCode === 16){shift = true;$('#datagrid').disableSelection();}
+                if(event.keyCode === 17){ctrl = true;$('#datagrid').disableSelection();}
+                }).keyup(function(event){
+                if(event.keyCode === 16){shift = false;$('#datagrid').enableSelection();}
+                if(event.keyCode === 17){ctrl = false;$('#datagrid').enableSelection();}
+            });
+            $(document).on('click', '#datagrid > tbody > tr:not(.filter) > td', function(){
+                var tr = $(this).parent();
+                if(shift){
+                    if(!last.size()){last = tbody.find('> tr:not(.filter):first').toggleClass('selected');}
+                    var in1 = tbody.find('> tr:not(.filter)#'+tr.attr('id')).index();
+                    var in2 = tbody.find('> tr:not(.filter)#'+last.attr('id')).index();
+                    if(in1 === in2){
+                        tr.toggleClass('selected');
+                    }else{
+                        tbody.find('> tr:not(.filter):gt('+((in1<in2 ? in1-2 : in2-1))+'):not(:gt('+((in1>in2 ? (in1-in2) : (in2-in1))-1)+'))').toggleClass('selected');
+                    }
+                }else{
+                    tr.toggleClass('selected');
+                }
+                last = tr;
             });
         }
-	
+
         this.setOrdering();
         this.loadRows();
 
@@ -184,6 +210,7 @@ icms.datagrid = (function ($) {
     //====================================================================//
 
     this.loadRows = function (callback){
+        if(!this.was_init){return false;}
 
         this.is_loading = true;
 
@@ -272,31 +299,31 @@ icms.datagrid = (function ($) {
         icms.datagrid.options.pages_count = result.pages_count;
 
 		$('.datagrid .flag_trigger a').on('click', function(){
-		
+
 			var url = $(this).attr('href');
 			var link = $(this);
 
 			link.parent('.flag_trigger').addClass('loading');
-			
+
 			$.post(url, {}, function(result){
-				
+
 				var flag = link.parent('.flag_trigger').removeClass('loading');
 				if (result.error){ return; }
 
 				var flag_class = flag.data('class');
 				var flag_class_on = flag_class + '_on';
 				var flag_class_off = flag_class + '_off';
-				
+
 				if (result.is_on){
 					flag.removeClass(flag_class_off).addClass(flag_class_on);
 				} else {
 					flag.removeClass(flag_class_on).addClass(flag_class_off);
 				}
-				
+
 			}, 'json');
-			
+
 			return false;
-			
+
 		});
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
@@ -329,7 +356,7 @@ icms.datagrid = (function ($) {
     this.hideLoadIndicator = function(){
         $('.datagrid_loading').hide();
     }
-	
+
 	this.escapeHtml = function(text) {
 		return text
 			.replace(/&/g, "&amp;")
