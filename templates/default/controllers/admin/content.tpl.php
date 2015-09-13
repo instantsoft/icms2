@@ -147,9 +147,12 @@
                                     $('.cp_toolbar .edit_folder a').show();
                                     $('.cp_toolbar .delete_folder a').show();
                                 }
-                                if (key[0] != current_ctype){ contentCancelFilter(); }
-                                current_ctype = key[0];
-                                icms.datagrid.loadRows();
+                                if(key[0] !== current_ctype){
+                                    current_ctype = key[0];
+                                    contentCancelFilter();
+                                }else{
+                                    icms.datagrid.loadRows();
+                                }
                             },
 
                             onLazyRead: function(node){
