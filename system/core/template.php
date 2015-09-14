@@ -1157,36 +1157,11 @@ class cmsTemplate {
                 $row_index++;
             }
         }
-		
-        $columns = array();
-        if($grid['options']['load_columns']){
-                foreach($grid['columns'] as $name=>$column){
-                    if ($name==='id' && !$grid['options']['show_id']){continue;}
-                    $columns[] = array(
-                        'sortable'  => $grid['options']['is_sortable'],
-                        'width'     => isset($column['width']) ? $column['width'] : '',
-                        'title'     => $column['title'],
-                        'name'      => $name,
-                        'filter'    => (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false) ?
-                        html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)) : ''
-                    );
-                }
-                if($grid['actions']){
-                    $columns[] = array(
-                        'sortable'  => false,
-                        'width'     => sizeof($grid['actions']) * 30,
-                        'title'     => LANG_CP_ACTIONS,
-                        'name'      => 'dg_actions',
-                        'filter'    => ''
-                    );
-                }
-        }
 
         $result = array(
             'rows' => $rows,
             'pages_count' => $pages_count,
-            'total' => $total,
-            'columns' => $columns
+            'total' => $total
         );
 
         echo json_encode($result);
