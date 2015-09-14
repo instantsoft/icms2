@@ -26,7 +26,7 @@
     <div class="body">
         <div class="avatar">
             <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
-                <?php echo html_avatar_image($entry['user']['avatar'], $entry['parent_id'] ? 'micro' : 'micro'); ?>
+                <?php echo html_avatar_image($entry['user']['avatar'], ($entry['parent_id'] ? 'micro' : 'micro'), $entry['user']['nickname']); ?>
             </a>
         </div>
         <div class="content">

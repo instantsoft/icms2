@@ -23,7 +23,7 @@
                 <div class="item">
 
                     <div class="icon">
-                        <?php echo html_avatar_image($entry['user']['avatar'], 'micro'); ?>
+                        <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
                     </div>
 
                     <div class="value <?php echo html_signed_class($entry['points']); ?>">

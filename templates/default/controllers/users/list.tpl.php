@@ -34,7 +34,7 @@
                 <?php } ?>
 
                 <div class="icon">
-					<a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro'); ?></a>
+					<a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
                 </div>
 
                 <div class="title">

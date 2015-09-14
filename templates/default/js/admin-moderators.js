@@ -33,6 +33,8 @@ icms.adminModerators = (function ($) {
             $('#ctype_moderators_list #datagrid tr').removeClass('odd');
             $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
 
+            icms.events.run('admin_moderators_add', result);
+
         }, 'json');
 
         return false;
@@ -63,6 +65,7 @@ icms.adminModerators = (function ($) {
                 if (!$('#ctype_moderators_list #datagrid tbody tr').length){
                     $('#ctype_moderators_list').hide();
                 }
+                icms.events.run('admin_moderators_cancel', result);
             });
 
         }, 'json');

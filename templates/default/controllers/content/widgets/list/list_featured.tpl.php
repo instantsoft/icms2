@@ -15,7 +15,7 @@
                         </div>
                     <?php } else { ?>
                         <div class="image">
-                            <a href="<?php echo $url; ?>"><?php echo html_image($item[$image_field], $size); ?></a>
+                            <a href="<?php echo $url; ?>"><?php echo html_image($item[$image_field], $size, $item['title']); ?></a>
                         </div>
                     <?php } ?>
                 <?php } ?>

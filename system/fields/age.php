@@ -100,4 +100,12 @@ class fieldAge extends cmsFormField {
 
     }
 
+    public function getInput($value){
+
+        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+
+        return parent::getInput($value);
+
+    }
+
 }

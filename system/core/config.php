@@ -46,6 +46,10 @@ class cmsConfig {
 	public function __construct($cfg_file='config.php'){
 
         $this->data = $this->load($cfg_file);
+        
+        if(!$this->data){
+            die('Configuration file not found');
+        }
 
         $this->set('cfg_time_zone', $this->data['time_zone']);
 
@@ -111,9 +115,11 @@ class cmsConfig {
 
         $cfg_file = PATH . '/system/config/' . $cfg_file;
 
-        $data = include $cfg_file;
+        if(!file_exists($cfg_file)){
+            return false;
+        }
 
-        return $data;
+        return include $cfg_file;
 
     }
 

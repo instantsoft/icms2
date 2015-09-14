@@ -1143,8 +1143,7 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype['name'];
 
-        $user = cmsUser::getInstance();
-        $item['user_id'] = $user->id;
+        $item['user_id'] = empty($item['user_id']) ? cmsUser::getInstance()->id : $item['user_id'];
 
         if (!empty($item['props'])){
             $props_values = $item['props'];
@@ -1162,7 +1161,7 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_id = $this->addContentFolder($ctype['id'], $user->id, $item['new_folder']);
+            $folder_id = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
             $item['folder_id'] = $folder_id;
         }
 
@@ -1204,8 +1203,6 @@ class modelContent extends cmsModel{
 
     public function updateContentItem($ctype, $id, $item, $fields){
 
-        $user = cmsUser::getInstance();
-
         $table_name = $this->table_prefix . $ctype['name'];
 
         if (!$ctype['is_fixed_url']){
@@ -1231,7 +1228,7 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_id = $this->addContentFolder($ctype['id'], $user->id, $item['new_folder']);
+            $folder_id = $this->addContentFolder($ctype['id'], (empty($item['user_id']) ? cmsUser::getInstance()->id : $item['user_id']), $item['new_folder']);
             $item['folder_id'] = $folder_id;
         }
 

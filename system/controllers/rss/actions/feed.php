@@ -41,6 +41,8 @@ class actionRssFeed extends cmsAction {
 
         $feed['items'] = $content_model->getContentItems($ctype_name);
 
+        $feed = cmsEventsManager::hook('before_render_'.$ctype_name.'_feed_list', $feed);
+
 		header('Content-type: application/rss+xml; charset=utf-8');
 		
         return cmsTemplate::getInstance()->renderPlain('feed', array(

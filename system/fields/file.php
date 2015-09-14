@@ -120,4 +120,19 @@ class fieldFile extends cmsFormField {
         return $model->filterNotNull($this->name);
     }
 
+    public function getInput($value){
+
+        $this->data['allowed_extensions']   = $this->getOption('extensions');
+        $this->data['max_size_mb']          = $this->getOption('max_size_mb');
+
+        if($this->data['max_size_mb']){
+            $this->data['max_size_mb'] *= 1048576;
+        }else{
+            $this->data['max_size_mb'] = files_convert_bytes(ini_get('post_max_size'));
+        }
+
+        return parent::getInput($value);
+
+    }
+
 }

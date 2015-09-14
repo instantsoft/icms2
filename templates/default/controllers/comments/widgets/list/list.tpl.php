@@ -9,7 +9,7 @@
             <div class="item">
                 <?php if ($show_avatars){ ?>
                 <div class="image">
-                    <a href="<?php echo $author_url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro'); ?></a>
+                    <a href="<?php echo $author_url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?></a>
                 </div>
                 <?php } ?>
                 <div class="info">

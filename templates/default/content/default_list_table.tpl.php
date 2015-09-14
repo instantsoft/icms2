@@ -50,7 +50,7 @@
                             <td class="photo">
                                 <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
                                     <?php if (!empty($item['photo'])){ ?>
-                                        <?php echo html_image($item['photo'], $fields['photo']['options']['size_teaser']); ?>
+                                        <?php echo html_image($item['photo'], $fields['photo']['options']['size_teaser'], $item['title']); ?>
                                         <?php unset($item['photo']); ?>
                                     <?php } ?>
                                 </a>

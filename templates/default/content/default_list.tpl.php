@@ -25,7 +25,7 @@
                 <?php if (isset($fields['photo']) && $fields['photo']['is_in_list'] && !empty($item['photo'])){ ?>
                     <div class="photo">
                         <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-                            <?php echo html_image($item['photo'], $fields['photo']['options']['size_teaser']); ?>
+                            <?php echo html_image($item['photo'], $fields['photo']['options']['size_teaser'], $item['title']); ?>
                             <?php unset($item['photo']); ?>
                         </a>
                     </div>

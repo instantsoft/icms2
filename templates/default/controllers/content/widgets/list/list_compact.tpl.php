@@ -8,7 +8,7 @@
             <div class="item">
                 <?php if ($image_field && !empty($item[$image_field])) { ?>
                     <div class="image">
-                        <a href="<?php echo $url; ?>"><?php echo html_image($item[$image_field], 'micro'); ?></a>
+                        <a href="<?php echo $url; ?>"><?php echo html_image($item[$image_field], 'micro', $item['title']); ?></a>
                     </div>
                 <?php } ?>
                 <div class="info">

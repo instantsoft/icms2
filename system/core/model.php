@@ -26,11 +26,9 @@ class cmsModel{
 
     public function __construct(){
 
-        $core = cmsCore::getInstance();
-
         $this->name = str_replace('model_', '', get_called_class());
 
-        $this->db = $core->db;
+        $this->db = cmsCore::getInstance()->db;
 
 	}
 
@@ -315,13 +313,13 @@ class cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
-        $category_old = $this->getCategory($ctype_name, $id);		        
+        $category_old = $this->getCategory($ctype_name, $id);
 
-        if ($category_old['parent_id'] != $category['parent_id']){			
+        if ($category_old['parent_id'] != $category['parent_id']){
             $this->db->nestedSets->setTable($table_name);
-            $this->db->nestedSets->moveNode($id, $category['parent_id']);			
+            $this->db->nestedSets->moveNode($id, $category['parent_id']);
         }
-		
+
 		$this->update($table_name, $id, $category);
 
         $category['id'] = $id;
@@ -372,7 +370,7 @@ class cmsModel{
     public function updateCategoryTreeNode($ctype_name, $tree){
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
-		
+
         foreach($tree as $node){
 
             $this->update($table_name, $node['key'], array(
@@ -387,7 +385,7 @@ class cmsModel{
             }
 
         }
-		
+
         return true;
 
     }
@@ -395,9 +393,9 @@ class cmsModel{
     public function updateCategoryTreeNodeSlugs($ctype_name, $tree){
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
-		
+
         foreach($tree as $node){
-			
+
             $path = $this->getCategoryPath($ctype_name, array(
                 'id' => $node['key'],
                 'parent_id' => $node['parent_key'],
@@ -420,7 +418,7 @@ class cmsModel{
             }
 
         }
-		
+
         return true;
 
     }
@@ -501,14 +499,14 @@ class cmsModel{
 
     public function resetFilters(){
 
-        $this->select       = array('i.*');        
+        $this->select       = array('i.*');
         $this->group_by     = '';
         $this->order_by     = '';
         $this->limit        = '';
         $this->join         = '';
-        
+
 		if ($this->keep_filters) { return; }
-		
+
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
@@ -554,19 +552,19 @@ class cmsModel{
     }
 
     public function filterNotNull($field){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $this->filter("$field IS NOT NULL");
         return $this;
     }
 
     public function filterIsNull($field){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $this->filter("$field IS NULL");
         return $this;
     }
 
     public function filterEqual($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
             $this->filter("$field IS NULL");
         } else {
@@ -577,13 +575,13 @@ class cmsModel{
     }
 
     public function filterFunc($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $this->filter("$field = $value");
         return $this;
     }
 
     public function filterNotEqual($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
             $this->filter("$field NOT IS NULL");
         } else {
@@ -594,42 +592,42 @@ class cmsModel{
     }
 
     public function filterGt($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $this->filter("$field > '$value'");
         return $this;
     }
 
     public function filterLt($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $this->filter("$field < '$value'");
         return $this;
     }
 
     public function filterGtEqual($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $this->filter("$field >= '$value'");
         return $this;
     }
 
     public function filterLtEqual($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $this->filter("$field <= '$value'");
         return $this;
     }
 
     public function filterLike($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $this->filter("$field LIKE '$value'");
         return $this;
     }
 
     public function filterBetween($field, $start, $end){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $start = $this->db->escape($start);
         $end = $this->db->escape($end);
         $this->filter("$field BETWEEN '$start' AND '$end'");
@@ -637,7 +635,7 @@ class cmsModel{
     }
 
     public function filterDateYounger($field, $value, $interval='DAY'){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $interval = $this->db->escape($interval);
         $this->filter("$field >= DATE_SUB(NOW(), INTERVAL {$value} {$interval})");
@@ -645,7 +643,7 @@ class cmsModel{
     }
 
     public function filterDateOlder($field, $value, $interval='DAY'){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
         $interval = $this->db->escape($interval);
         $this->filter("$field < DATE_SUB(NOW(), INTERVAL {$value} {$interval})");
@@ -653,7 +651,7 @@ class cmsModel{
     }
 
     public function filterTimestampGt($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $field = "UNIX_TIMESTAMP({$field})";
         $value = $this->db->escape($value);
         $this->filter("{$field} > '{$value}'");
@@ -661,7 +659,7 @@ class cmsModel{
     }
 
     public function filterTimestampLt($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $field = "UNIX_TIMESTAMP({$field})";
         $value = $this->db->escape($value);
         $this->filter("{$field} < '{$value}'");
@@ -669,7 +667,7 @@ class cmsModel{
     }
 
     public function filterIn($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
             foreach($value as $k=>$v){
                 $v = $this->db->escape($v);
@@ -685,7 +683,7 @@ class cmsModel{
     }
 
     public function filterNotIn($field, $value){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_array($value)){
             foreach($value as $k=>$v){
                 $v = $this->db->escape($v);
@@ -704,7 +702,7 @@ class cmsModel{
 
 		$table_name = $this->table_prefix . $ctype_name . '_cats';
 		$bind_table_name = $table_name . '_bind';
-		
+
         if (!$is_recursive){
 
             $this->join($bind_table_name, 'b', "b.item_id = i.id AND b.category_id = '{$category['id']}'");
@@ -715,26 +713,24 @@ class cmsModel{
             $this->join($table_name, 'c', "c.id = b.category_id AND c.ns_left >= '{$category['ns_left']}' AND c.ns_right <= '{$category['ns_right']}'");
 
         }
-		
-//		dump($this->getSQL());
-		
+
         return $this;
 
     }
-	
+
 	public function filterCategoryId($ctype_name, $category_id, $is_recursive=false){
-		
+
 		if (!$is_recursive){
-			
+
 			return $this->filterCategory($ctype_name, array('id'=>$category_id));
-			
+
 		} else {
-			
+
 			$category = $this->getCategory($ctype_name, $category_id);
 			return $this->filterCategory($ctype_name, $category, true);
-			
+
 		}
-		
+
 	}
 
     public function disablePrivacyFilter(){
@@ -891,25 +887,25 @@ class cmsModel{
         }
 
 		switch ($join_direction){
-			
-			case 'left': 
-				$this->joinLeft('{users}', 'u', "u.id = i.{$on_field}"); 
+
+			case 'left':
+				$this->joinLeft('{users}', 'u', "u.id = i.{$on_field}");
 				break;
-			
-			case 'right': 
-				$this->joinRight('{users}', 'u', "u.id = i.{$on_field}"); 
+
+			case 'right':
+				$this->joinRight('{users}', 'u', "u.id = i.{$on_field}");
 				break;
-			
-			default: 
-				$this->join('{users}', 'u', "u.id = i.{$on_field}"); 
+
+			default:
+				$this->join('{users}', 'u', "u.id = i.{$on_field}");
 				break;
-			
+
 		}
-		
+
         return $this;
 
     }
-	
+
 	public function joinUserLeft($on_field='user_id', $user_fields=array()){
 		return $this->joinUser($on_field, $user_fields, 'left');
 	}
@@ -919,53 +915,67 @@ class cmsModel{
 	}
 
     public function groupBy($field){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $this->group_by = $field;
         return $this;
     }
 
     public function orderBy($field, $direction=''){
-        if (!strstr($field, '.')){ $field = 'i.' . $field; }
+        if(strpos($field, '(') !== false){ return $this; } // в названии поля не может быть функции
+        if($direction){
+            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+        }
+        if (strpos($field, '.') === false){ $field = 'i.'.$field; }
         $this->order_by = "{$field} {$direction}";
         return $this;
     }
 
     public function orderByList($list){
-		
+
 		$this->order_by = '';
-		
-		if (is_array($list)){		
+
+		if (is_array($list)){
+
 			foreach($list as $o){
-				$field = $o['by'];
-				$direction = $o['to'];
-				if (!strstr($field, '.')){ $field = 'i.' . $field; }
+
+                if(strpos($o['by'], '(') !== false){ continue; }
+
+				$field     = $o['by'];
+                $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
+
+                if (strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
-				$this->order_by .= "{$field} {$direction}";							
-			}		
+				$this->order_by .= "{$field} {$direction}";
+
+			}
+
 		}
-		
+
 		return $this;
-		
+
     }
 
-    public function limit($from, $howmany='') {
+    public function limit($from, $howmany=0) {
         $this->limit = (int)$from;
+        $howmany     = (int)$howmany;
         if ($this->limit < 0) { $this->limit = 0; }
         if ($howmany){
-            if ((int)$howmany <= 0){ $howmany = 15; }
-            $this->limit .= ', '. (int)$howmany;
+            if ($howmany <= 0){ $howmany = 15; }
+            $this->limit .= ', '. $howmany;
         }
         return $this;
     }
 
-    public function limitPage($page, $perpage=false) {
-        if (!$perpage) { $perpage = $this->perpage; }
+    public function limitPage($page, $perpage=0) {
+        $page    = (int) $page;
+        $perpage = (int) $perpage;
+        if ($perpage <= 0) { $perpage = $this->perpage; }
         $this->limit(($page-1)*$perpage, $perpage);
         return $this;
     }
 
     public function setPerPage($perpage){
-        $this->perpage = $perpage;
+        $this->perpage = (int)$perpage;
         return $this;
     }
 
@@ -1017,9 +1027,9 @@ class cmsModel{
         if ($this->join){ $sql .= $this->join; }
 
 		if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
-		
+
 		if ($this->order_by){ $sql .= "ORDER BY {$this->order_by}\n"; }
-		
+
         $sql .= "LIMIT 1";
 
         $this->resetFilters();
@@ -1397,7 +1407,7 @@ class cmsModel{
                     switch ($column['filter']){
                         case 'exact': $this->filterEqual($filter_field, $filter[$field]); break;
                         case 'like': $this->filterLike($filter_field, "%{$filter[$field]}%"); break;
-                        case 'date': 
+                        case 'date':
 							$date = date('Y-m-d', strtotime($filter[$field]));
 							$this->filterLike($filter_field, "%{$date}%"); break;
                     }
@@ -1407,7 +1417,7 @@ class cmsModel{
             }
         }
 
-        return;
+        return $this;
 
     }
 
@@ -1468,13 +1478,22 @@ class cmsModel{
      * @param array $array
      * @return string
      */
-    static public function arrayToYaml($array) {
+    static public function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
         cmsCore::loadLib('spyc.class', 'Spyc');
 
-        $yaml = Spyc::YAMLDump($array,2,40);
+        if(!empty($input_array)){
 
-        return $yaml;
+            foreach ($input_array as $key => $value) {
+                $_k = str_replace(array('[',']'), '', $key); // был фатальный баг, если в ключах эти символы
+                $array[$_k] = $value;
+            }
+
+        } else {
+            $array = array();
+        }
+
+        return Spyc::YAMLDump($array, $indent, $word_wrap);
 
     }
 
@@ -1487,9 +1506,7 @@ class cmsModel{
 
         cmsCore::loadLib('spyc.class');
 
-        $array = Spyc::YAMLLoadString($yaml);
-
-        return $array;
+        return Spyc::YAMLLoadString($yaml);
 
     }
 

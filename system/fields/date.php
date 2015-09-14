@@ -21,7 +21,7 @@ class fieldDate extends cmsFormField {
     }
 
     public function parse($value){
-        return html_date($value, $this->getOption('show_time'));
+        return $value ? html_date($value, $this->getOption('show_time')) : null;
     }
 
     public function getFilterInput($value) {
@@ -76,17 +76,41 @@ class fieldDate extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-        if ($value){
-            if (is_array($value)){
-                $value = "{$value['date']} {$value['hour']}:{$value['min']}";
-                return date('Y-m-d H:i', strtotime($value));
-            } else {
+        if($value){
+            if(is_array($value)){
+                if($value['date']){
+                    $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+                    return date('Y-m-d H:i', strtotime($value));
+                }
+            }else{
                 return date('Y-m-d', strtotime($value));
             }
 
-        } else {
-            return null;
         }
+
+    }
+
+    public function getInput($value){
+
+        $this->data['show_time'] = $this->getOption('show_time');
+
+        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+
+        if($this->data['show_time']){
+            if(!$value){
+                $this->data['hours'] = 0;
+                $this->data['mins'] = 0;
+            }else{
+                list($this->data['hours'], $this->data['mins']) = explode(':', date('H:i', strtotime($value)));
+            }
+            $this->data['fname_date']   = $this->element_name.'[date]';
+            $this->data['fname_hours']  = $this->element_name.'[hours]';
+            $this->data['fname_mins']   = $this->element_name.'[mins]';
+        }else{
+            $this->data['fname_date']   = $this->element_name;
+        }
+
+        return parent::getInput($value);
 
     }
 
