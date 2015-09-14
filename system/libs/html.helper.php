@@ -377,13 +377,12 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
 }
 
 /**
- * Возвращает тег <img> аватара пользователя
+ * Возвращает ссылку на аватар пользователя
  * @param array|yaml $avatars Все изображения аватара
  * @param string $size_preset Название пресета
- * @param string $alt Замещающий текст изображения
  * @return string
  */
-function html_avatar_image($avatars, $size_preset='small', $alt=''){
+function html_avatar_image_src($avatars, $size_preset='small'){
 
     $config = cmsConfig::getInstance();
 
@@ -406,6 +405,21 @@ function html_avatar_image($avatars, $size_preset='small', $alt=''){
 	if (strpos($src, $config->upload_host) === false){
         $src = $config->upload_host . '/' . $src;
     }
+
+    return $src;
+
+}
+
+/**
+ * Возвращает тег <img> аватара пользователя
+ * @param array|yaml $avatars Все изображения аватара
+ * @param string $size_preset Название пресета
+ * @param string $alt Замещающий текст изображения
+ * @return string
+ */
+function html_avatar_image($avatars, $size_preset='small', $alt=''){
+
+    $src = html_avatar_image_src($avatars, $size_preset);
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
@@ -517,33 +531,39 @@ function html_editor($field_id, $content='', $options=array()){
  * @param array $attributes Массив аттрибутов тега
  * @return html
  */
-function html_select($name, $items, $selected='', $attributes=array()){
+function html_select($name, $items, $selected = '', $attributes = array()){
 
     $attr_str = html_attr_str($attributes);
-	$html = '<select name="'.$name.'" '.$attr_str.'>'."\n";
+    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
+    $html = '<select name="'.$name.'" '.$attr_str.$class.'>'."\n";
 
     $optgroup = false;
 
-    if ($items && is_array($items)){
-        foreach ($items as $value=>$title){
+    if($items && is_array($items)){
+        foreach($items as $value => $title){
 
-            if (is_array($title)){
-                if ($optgroup !== false){
-                    $html  .= "\t" . '</optgroup>';
+            if(is_array($title)){
+                if($optgroup !== false){
+                    $html .= "\t".'</optgroup>'."\n";
+                    $optgroup = false;
                 }
-                $html  .= "\t" . '<optgroup label="'.$title[0].'">';
+                $optgroup = true;
+                $html .= "\t".'<optgroup label="'.$title[0].'">'."\n";
                 continue;
             }
 
-            if ($selected == $value) { $sel = 'selected'; } else { $sel = ''; }
-            $html .= "\t" . '<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>' . "\n";
-
+            $sel = ((string) $selected === (string) $value) ? 'selected' : '';
+            $html .= "\t".'<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
         }
     }
 
-	$html .= '</select>'."\n";
-	return $html;
-
+    if($optgroup !== false){
+        $html .= "\t".'</optgroup>'."\n";
+    }
+    
+    $html .= '</select>'."\n";
+    return $html;
+    
 }
 
 function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){

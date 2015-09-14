@@ -285,18 +285,15 @@ class modelUsers extends cmsModel{
 
     public function deleteUser($id){
 
-        $this->delete('{users}_friends', $id, 'user_id');
-        $this->delete('{users}_friends', $id, 'friend_id');
-        $this->delete('{users}_groups_members', $id, 'user_id');
-        $this->delete('{users}_karma', $id, 'user_id');
-        $this->delete('{users}_statuses', $id, 'user_id');
-        $this->delete('{users}_personal_settings', $id, 'user_id');
+        $this->delete('{users}_friends', $id, "user_id");
+        $this->delete('{users}_friends', $id, "friend_id");
+        $this->delete('{users}_groups_members', $id, "user_id");
+        $this->delete('{users}_karma', $id, "user_id");
+        $this->delete('{users}_statuses', $id, "user_id");
         $this->delete('{users}', $id);
 
-        $inCache = cmsCache::getInstance();
-        $inCache->clean('users.list');
-        $inCache->clean('users.ups');
-        $inCache->clean('users.user.'.$id);
+        cmsCache::getInstance()->clean("users.list");
+        cmsCache::getInstance()->clean("users.user.{$id}");
 
     }
 
@@ -917,55 +914,5 @@ class modelUsers extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function setUPS($key, $data, $user_id){
-        if(is_array($data)){
-            $data = self::arrayToYaml($data);
-        }
-        $insert = array(
-            'user_id' => $user_id,
-            'skey' => $key,
-            'settings' => $data
-        );
-        $update = array(
-            'settings' => $data
-        );
-
-        $ret = $this->insertOrUpdate('{users}_personal_settings', $insert, $update);
-        cmsCache::getInstance()->clean('users.ups');
-
-        return $ret;
-    }
-
-    public function getUPS($key, $user_id){
-        $this->useCache('users.ups');
-
-        $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
-
-        return $this->getItem('{users}_personal_settings', function($item, $model){
-            if(strpos($item['settings'], '---') === 0){
-                $item['settings'] = cmsModel::yamlToArray($item['settings']);
-            }
-            return $item['settings'];
-        });
-    }
-
-    public function deleteUPS($key, $user_id){
-        if($user_id && $key){
-            $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
-        }elseif($user_id){
-            $this->filterEqual('user_id', $user_id);
-        }elseif($key){
-            $this->filterEqual('skey', $key);
-        }else{
-            return false;
-        }
-        $ret = $this->deleteFiltered('{users}_personal_settings');
-        cmsCache::getInstance()->clean('users.ups');
-
-        return $ret;
-    }
-
-//============================================================================//
-//============================================================================//
 
 }
