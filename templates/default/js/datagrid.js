@@ -16,34 +16,41 @@ icms.datagrid = (function ($) {
 
     //====================================================================//
 
+    this.bind_sortable = function(){
+        $('.datagrid th.sortable').click(function(){
+            icms.datagrid.clickHeader($(this).attr('rel'));
+        });
+    };
+    this.bind_filter = function(){
+        $('.datagrid .filter .input').keypress(function(event){
+
+            if (event.which == 13) {
+
+                event.preventDefault();
+
+                $('.datagrid .filter .input').each(function(){
+                    var filter = $(this).attr('rel');
+                    $('#datagrid_filter input[name='+filter+']').val($(this).val());
+                });
+
+                icms.datagrid.setPage(1);
+                icms.datagrid.loadRows();
+
+            }
+
+        });
+    };
+
     this.init = function(){
         if(this.was_init){return false;}
         this.was_init = true;
 
         if (this.options.is_sortable){
-            $('.datagrid th.sortable').click(function(){
-                icms.datagrid.clickHeader($(this).attr('rel'));
-            });
+            this.bind_sortable();
         }
 
         if (this.options.is_filter){
-            $('.datagrid .filter .input').keypress(function(event){
-
-                if (event.which == 13) {
-
-                    event.preventDefault();
-
-                    $('.datagrid .filter .input').each(function(){
-                        var filter = $(this).attr('rel');
-                        $('#datagrid_filter input[name='+filter+']').val($(this).val());
-                    });
-
-                    icms.datagrid.setPage(1);
-                    icms.datagrid.loadRows();
-
-                }
-
-            });
+            this.bind_filter();
         }
 
         if (this.options.is_pagination){
@@ -218,7 +225,12 @@ icms.datagrid = (function ($) {
 
         var filter_query = $('#datagrid_filter').serialize();
 
-        $.post(this.options.url, {filter: filter_query}, function(result){
+        var heads = [];
+        $('#datagrid thead th[rel]').each(function(){
+            heads.push($(this).attr('rel'));
+        });
+
+        $.post(this.options.url, {filter: filter_query, heads: heads}, function(result){
             icms.datagrid.rowsLoaded(result);
             if (typeof(callback) != 'undefined'){
                 callback();
@@ -235,8 +247,21 @@ icms.datagrid = (function ($) {
 
         icms.datagrid.hideLoadIndicator();
 
-        $('.datagrid tbody tr[class!=filter]').remove();
-        $(".datagrid_pagination").hide();
+        $('.datagrid tbody tr:not(.filter)').remove();
+        $('.datagrid_pagination').hide();
+
+        if(result.columns.length){
+            var htr = $('.datagrid > thead > tr:first');
+            var ftr = $('.datagrid > tbody > tr.filter');
+            htr.find('> th').remove();
+            ftr.find('> td').remove();
+            for(var key in result.columns)if(result.columns.hasOwnProperty(key)){
+                htr.append('<th width="'+result.columns[key]['width']+'" rel="'+result.columns[key]['name']+'"'+(result.columns[key]['sortable'] ? ' class="sortable"' : '')+'>'+result.columns[key]['title']+'</th>');
+                ftr.append('<td>'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
+            }
+            icms.datagrid.bind_sortable();
+            icms.datagrid.bind_filter();
+        }
 
         if(!result.rows.length){
             var columns_count = $('.datagrid thead th').length;
@@ -270,10 +295,10 @@ icms.datagrid = (function ($) {
         }
 
         if (icms.datagrid.options.is_pagination && result.pages_count > 1) {
-            $(".datagrid_pagination").show();
+            $('.datagrid_pagination').show();
             if (result.pages_count != icms.datagrid.options.pages_count){
 
-                $(".datagrid_pagination").paginate({
+                $('.datagrid_pagination').paginate({
                             count 		: result.pages_count,
                             start 		: 1,
                             display     : 7,

@@ -410,14 +410,6 @@ class cmsController {
             $grid['options'] = array_merge($default_options, $grid['options']);
         }
 
-        $grid = call_user_func_array('grid_'.$grid_name, $args);
-
-        if (!isset($grid['options'])) {
-            $grid['options'] = $default_options;
-        } else {
-            $grid['options'] = array_merge($default_options, $grid['options']);
-        }
-
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
 
         if($this->request->isAjax() && $this->request->has('heads')){
