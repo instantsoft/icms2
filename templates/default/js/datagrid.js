@@ -6,6 +6,7 @@ icms.datagrid = (function ($) {
     this.selected_rows = [];
     this.is_loading = true;
     this.callback = false;
+	this.was_init = false;
 
     //====================================================================//
 
@@ -14,39 +15,51 @@ icms.datagrid = (function ($) {
     }
 
     //====================================================================//
+	
+    this.bind_sortable = function(){
+        $('.datagrid th.sortable').click(function(){
+			console.log('click');
+            icms.datagrid.clickHeader($(this).attr('rel'));
+        });
+    };
+    this.bind_filter = function(){
+        $('.datagrid .filter .input').keypress(function(event){
+
+            if (event.which == 13) {
+
+                event.preventDefault();
+
+                $('.datagrid .filter .input').each(function(){
+                    var filter = $(this).attr('rel');
+                    $('#datagrid_filter input[name='+filter+']').val($(this).val());
+                });
+
+                icms.datagrid.setPage(1);
+                icms.datagrid.loadRows();
+
+            }
+
+        });
+    };
+	
+    //====================================================================//
 
     this.init = function(){
-
+		
+        if(this.was_init){return false;}
+        this.was_init = true;
+		
         console.log('init');
 
         if (this.options.is_sortable){
             console.log('sortable');
-            $('.datagrid th.sortable').click(function(){
-                console.log('click');
-                icms.datagrid.clickHeader($(this).attr('rel'));
-            });
+			this.bind_sortable();
         } else {
             console.log('not sortable');
         }
 
         if (this.options.is_filter){
-            $('.datagrid .filter .input').keypress(function(event){
-
-                if (event.which == 13) {
-
-                    event.preventDefault();
-
-                    $('.datagrid .filter .input').each(function(){
-                        var filter = $(this).attr('rel');
-                        $('#datagrid_filter input[name='+filter+']').val($(this).val());
-                    });
-
-                    icms.datagrid.setPage(1);
-                    icms.datagrid.loadRows();
-
-                }
-
-            });
+            this.bind_filter();
         }
 
         if (this.options.is_pagination){
@@ -57,8 +70,31 @@ icms.datagrid = (function ($) {
         }
 
         if (this.options.is_selectable){
-            $(document).on('click', '#datagrid tr[class!=filter] td', function(){
-                $(this).parent('tr').toggleClass('selected');
+            var ctrl = false, shift = false;
+            var tbody = $('#datagrid > tbody');
+            var last = tbody.find('> tr:not(.filter):first');
+            $(document).keydown(function(event) {
+                if(event.keyCode === 16){shift = true;$('#datagrid').disableSelection();}
+                if(event.keyCode === 17){ctrl = true;$('#datagrid').disableSelection();}
+                }).keyup(function(event){
+                if(event.keyCode === 16){shift = false;$('#datagrid').enableSelection();}
+                if(event.keyCode === 17){ctrl = false;$('#datagrid').enableSelection();}
+            });
+            $(document).on('click', '#datagrid > tbody > tr:not(.filter) > td', function(){
+                var tr = $(this).parent();
+                if(shift){
+                    if(!last.size()){last = tbody.find('> tr:not(.filter):first').toggleClass('selected');}
+                    var in1 = tbody.find('> tr:not(.filter)#'+tr.attr('id')).index();
+                    var in2 = tbody.find('> tr:not(.filter)#'+last.attr('id')).index();
+                    if(in1 === in2){
+                        tr.toggleClass('selected');
+                    }else{
+                        tbody.find('> tr:not(.filter):gt('+((in1<in2 ? in1-2 : in2-1))+'):not(:gt('+((in1>in2 ? (in1-in2) : (in2-in1))-1)+'))').toggleClass('selected');
+                    }
+                }else{
+                    tr.toggleClass('selected');
+                }
+                last = tr;
             });
         }
 	
@@ -193,6 +229,7 @@ icms.datagrid = (function ($) {
     //====================================================================//
 
     this.loadRows = function (callback){
+		if(!this.was_init){return false;}
 
         this.is_loading = true;
 
@@ -200,7 +237,12 @@ icms.datagrid = (function ($) {
 
         var filter_query = $('#datagrid_filter').serialize();
 
-        $.post(this.options.url, {filter: filter_query}, function(result){
+        var heads = [];
+        $('#datagrid thead th[rel]').each(function(){
+            heads.push($(this).attr('rel'));
+        });
+
+        $.post(this.options.url, {filter: filter_query, heads: heads}, function(result){
             icms.datagrid.rowsLoaded(result);
             if (typeof(callback) != 'undefined'){
                 callback();
@@ -217,8 +259,26 @@ icms.datagrid = (function ($) {
 
         icms.datagrid.hideLoadIndicator();
 
-        $('.datagrid tbody tr[class!=filter]').remove();
-        $(".datagrid_pagination").hide();
+        $('.datagrid > tbody > tr:not(.filter)').remove();
+        $('.datagrid_pagination').hide();
+
+        if(result.columns.length){
+            var htr = $('.datagrid > thead > tr:first');
+            var ftr = $('.datagrid > tbody > tr.filter');
+            htr.find('> th').remove();
+            ftr.find('> td').remove();
+            for(var key in result.columns)if(result.columns.hasOwnProperty(key)){
+                htr.append('<th width="'+result.columns[key]['width']+'" rel="'+result.columns[key]['name']+'"'+(result.columns[key]['sortable'] ? ' class="sortable"' : '')+'>'+result.columns[key]['title']+'</th>');
+                ftr.append('<td>'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
+
+                $('#datagrid_filter input[name="'+result.columns[key]['name']+'"]').remove();
+                if(result.columns[key]['filter']){
+                    $('#datagrid_filter').append('<input type="hidden" value="'+($(result.columns[key]['filter']).val()||'')+'" name="'+result.columns[key]['name']+'" />');
+                }
+            }
+            icms.datagrid.bind_sortable();
+            icms.datagrid.bind_filter();
+        }
 
         if(!result.rows.length){
             var columns_count = $('.datagrid thead th').length;
@@ -252,10 +312,10 @@ icms.datagrid = (function ($) {
         }
 
         if (icms.datagrid.options.is_pagination && result.pages_count > 1) {
-            $(".datagrid_pagination").show();
+            $('.datagrid_pagination').show();
             if (result.pages_count != icms.datagrid.options.pages_count){
 
-                $(".datagrid_pagination").paginate({
+                $('.datagrid_pagination').paginate({
                             count 		: result.pages_count,
                             start 		: 1,
                             display     : 7,
