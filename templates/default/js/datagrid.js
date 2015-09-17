@@ -17,10 +17,16 @@ icms.datagrid = (function ($) {
 
     this.init = function(){
 
+        console.log('init');
+
         if (this.options.is_sortable){
+            console.log('sortable');
             $('.datagrid th.sortable').click(function(){
+                console.log('click');
                 icms.datagrid.clickHeader($(this).attr('rel'));
             });
+        } else {
+            console.log('not sortable');
         }
 
         if (this.options.is_filter){
@@ -57,7 +63,10 @@ icms.datagrid = (function ($) {
         }
 	
         this.setOrdering();
-        this.loadRows();
+        
+        if (this.options.url){
+            this.loadRows();
+        }
 
     }
 
