@@ -16,6 +16,18 @@ class actionAdminContent extends cmsAction {
 
         $grid = $this->loadDataGrid('content_items');
 
+        $tree_path = cmsUser::getCookie('content_tree_path');
+        if($tree_path && ($tree_path = explode('/', $tree_path)) && !empty($tree_path[1]) && ($ctype_id = (int)$tree_path[1])){
+            $ctype = $content_model->getContentType($ctype_id);
+            if($ctype){
+                $filter_str = cmsUser::getUPS('admin.filter_str.'.$ctype['name']);
+                if($filter_str){
+                    parse_str($filter_str, $filter);
+                    $grid['filter'] = $filter;
+                }
+            }
+        }
+
         return cmsTemplate::getInstance()->render('content', array(
             'ctypes' => $ctypes,
             'grid' => $grid

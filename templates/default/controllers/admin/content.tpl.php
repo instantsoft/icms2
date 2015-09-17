@@ -149,18 +149,25 @@
                                     $('.cp_toolbar .edit_folder a').show();
                                     $('.cp_toolbar .delete_folder a').show();
                                 }                                
-                                if (!is_loaded){
-                                    is_loaded = true;
+                                // if (!is_loaded){
+                                    // is_loaded = true;
+                                    // current_ctype = key[0];
+                                    // icms.datagrid.init();
+                                    // return;
+                                // }
+                                // if (key[0] != current_ctype && is_loaded && is_filter){ 
+                                    // contentCancelFilter(); 
+                                // } else {
+                                    // icms.datagrid.loadRows();
+                                // }
+                                // current_ctype = key[0];
+								// у меня сейчас вот так абсолютно нормально везде работает, плюс в datagrid.js есть проверка дополнительная
+                                if(key[0] !== current_ctype){
                                     current_ctype = key[0];
-                                    icms.datagrid.init();
-                                    return;
-                                }
-                                if (key[0] != current_ctype && is_loaded && is_filter){ 
-                                    contentCancelFilter(); 
-                                } else {
+                                    contentCancelFilter();
+                                }else{
                                     icms.datagrid.loadRows();
                                 }
-                                current_ctype = key[0];
                             },
 
                             onLazyRead: function(node){
