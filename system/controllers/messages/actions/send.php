@@ -4,14 +4,12 @@ class actionMessagesSend extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
         $template = cmsTemplate::getInstance();
-        $config = cmsConfig::getInstance();
-        $user = cmsUser::getInstance();
+        $config   = cmsConfig::getInstance();
+        $user     = cmsUser::getInstance();
 
         $contact_id = $this->request->get('contact_id') or cmsCore::error404();
-        $content = $this->request->get('content') or cmsCore::error404();
+        $content    = $this->request->get('content') or cmsCore::error404();
         $csrf_token = $this->request->get('csrf_token');
 
         // Проверяем валидность
@@ -53,15 +51,15 @@ class actionMessagesSend extends cmsAction {
         // Отправляем сообщение
         //
         $content_html = cmsEventsManager::hook('html_filter', $content);
-		
-		if (!$content_html) { 
+
+		if (!$content_html) {
 			$template->renderJSON(array(
 	            'error' => false,
 	            'date'  => false,
 	            'message' => false
 	        ));
 		}
-		
+
         $this->setSender($user->id);
         $this->addRecipient($contact_id);
         $message_id = $this->sendMessage($content_html);

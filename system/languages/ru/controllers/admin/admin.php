@@ -57,7 +57,7 @@
     define('LANG_CP_CATEGORIES_CHANGE',         'Разрешить изменение категории после создания записи');
     define('LANG_CP_CATEGORIES_OPEN_ROOT',      'Разрешить добавлять записи в корневую категорию');
     define('LANG_CP_CATEGORIES_ONLY_LAST',      'Разрешить добавлять записи только в категории последнего уровня вложенности');
-    define('LANG_CP_CATEGORIES_SHOW',           'Показывать список категорий над списком записей');	
+    define('LANG_CP_CATEGORIES_SHOW',           'Показывать список категорий над списком записей');
     define('LANG_CP_CTYPE_CATEGORIES_OFF',      'Для данного типа контента показ категорий отключен в <a href="%s">настройках</a>. Они не будут отображаться на сайте');
     define('LANG_CP_FOLDERS',                   'Личные папки');
     define('LANG_CP_FOLDERS_ON',                'Включить личные папки');
@@ -244,7 +244,7 @@
 
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
-    define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');	
+    define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
     define('LANG_CP_SETTINGS_SITENAME',         'Название сайта');
     define('LANG_CP_SETTINGS_HOMETITLE',        'Заголовок главной страницы');
     define('LANG_CP_SETTINGS_METAKEYS',         'Ключевые слова');
@@ -270,6 +270,7 @@
     define('LANG_CP_SETTINGS_DATE_FORMAT_JS',   'Формат даты JavaScript');
     define('LANG_CP_SETTINGS_MAIL_TRANSPORT',   'Почтовый транспорт');
     define('LANG_CP_SETTINGS_MAIL_FROM',        'Адрес отправителя');
+    define('LANG_CP_SETTINGS_MAIL_FROM_NAME',   'Название отправителя');
     define('LANG_CP_SETTINGS_MAIL_SMTP',        'Настройки SMTP');
     define('LANG_CP_SETTINGS_MAIL_SMTP_HOST',   'SMTP Сервер');
     define('LANG_CP_SETTINGS_MAIL_SMTP_PORT',   'SMTP Порт');

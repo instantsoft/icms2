@@ -258,7 +258,7 @@
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Folder <b>%s</b> is succesfully cleared');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Unable to clear the folder <b>%s</b>. Check permissions or clean it manually');
 	define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content type');
-	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Pages URLs of that content type will not contain type\'s system name');	
+	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Pages URLs of that content type will not contain type\'s system name');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Show on the homepage');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Only widgets');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'User profile or authorization form');
@@ -268,6 +268,7 @@
     define('LANG_CP_SETTINGS_DATE_FORMAT_JS',   'JavaScript date format');
     define('LANG_CP_SETTINGS_MAIL_TRANSPORT',   'Mail transport');
     define('LANG_CP_SETTINGS_MAIL_FROM',        'Mail from');
+    define('LANG_CP_SETTINGS_MAIL_FROM_NAME',   'Mail from name');
     define('LANG_CP_SETTINGS_MAIL_SMTP',        'SMTP settings');
     define('LANG_CP_SETTINGS_MAIL_SMTP_HOST',   'SMTP server');
     define('LANG_CP_SETTINGS_MAIL_SMTP_PORT',   'SMTP port');
@@ -277,7 +278,7 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC',    'SMTP Encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'None');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
-    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');	
+    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');

@@ -323,8 +323,8 @@ function html_date($date=false, $is_time=false){
     return $date;
 }
 
-function html_time($date){
-    $timestamp = strtotime($date);
+function html_time($date=false){
+    $timestamp = $date ? strtotime($date) : time();
     return date('H:i', $timestamp);
 }
 
