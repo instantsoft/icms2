@@ -220,9 +220,7 @@ class cmsCore {
 
         }
 
-        $model = new $model_class();
-
-        return $model;
+        return new $model_class();
 
     }
 
@@ -230,15 +228,13 @@ class cmsCore {
 //============================================================================//
 
     /**
-     * Проверяет существования компонента
-     * @param type $controller_name
-     * @return type
+     * Проверяет существования контроллера
+     * @param string $controller_name
+     * @return bool
      */
     public static function isControllerExists($controller_name){
 
-        $ctrl_file = cmsConfig::get('root_path') . 'system/controllers/'.$controller_name;
-
-        return file_exists($ctrl_file);
+        return is_dir(cmsConfig::get('root_path').'system/controllers/'.$controller_name);
 
     }
 
@@ -253,12 +249,6 @@ class cmsCore {
         $config = cmsConfig::getInstance();
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
-
-        if(!file_exists($ctrl_file)){
-            $controller_name = $config->ct_default;
-            self::getInstance()->controller = $config->ct_default;
-            $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
-        }
 
         if (!class_exists($controller_name)) {
             include_once($ctrl_file);
@@ -277,9 +267,7 @@ class cmsCore {
 
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
 
-        $controller = new $controller_class($request);
-
-        return $controller;
+        return new $controller_class($request);
 
     }
 
@@ -624,6 +612,11 @@ class cmsCore {
         // контроллер и экшен по-умолчанию
         if (!$this->uri_controller){ $this->uri_controller = $config->ct_autoload;	}
         if (!$this->uri_action) { $this->uri_action = 'index'; }
+
+        if (!self::isControllerExists($this->uri_controller)) {
+            $this->uri_action     = $this->uri_controller;
+            $this->uri_controller = $config->ct_default;
+        }
 
         // проверяем ремаппинг контроллера
         $remap_to = self::getControllerNameByAlias($this->uri_controller);

@@ -201,10 +201,7 @@ class formAdminSettings extends cmsForm {
                     )),
 
                     new fieldString('mail_from_name', array(
-                        'title' => LANG_CP_SETTINGS_MAIL_FROM_NAME,
-                        'rules' => array(
-                            array('required'),
-                        )
+                        'title' => LANG_CP_SETTINGS_MAIL_FROM_NAME
                     )),
 
                     new fieldString('mail_smtp_server', array(
