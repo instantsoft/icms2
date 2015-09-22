@@ -1,18 +1,15 @@
-<?php 
-	
+<?php
 	$this->addJS( $this->getJavascriptFileName('fileuploader') );
 	$this->addJS( $this->getJavascriptFileName('images-upload') );
-	
-	$config = cmsConfig::getInstance();
 
-	$is_image_exists = isset($paths['small']); 
-	
+    $is_image_exists = !empty($paths);
+
 	$upload_url = $this->href_to('upload', $name);
-	
-	if (is_array($sizes)) { 
+
+	if (is_array($sizes)) {
 		$upload_url .= '?sizes=' . implode(',', $sizes);
 	}
-	
+
 ?>
 <div id="widget_image_<?php echo $name; ?>" class="widget_image_single">
 
@@ -25,7 +22,7 @@
     </div>
 
     <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?>>
-        <img src="<?php if ($is_image_exists) { echo $config->upload_host . '/' . $paths['small']; } ?>" border="0" />
+        <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . $path; } ?>" />
         <a href="javascript:" onclick="icms.images.remove('<?php echo $name; ?>')"><?php echo LANG_DELETE; ?></a>
     </div>
 

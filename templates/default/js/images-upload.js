@@ -32,15 +32,18 @@ icms.images = (function ($) {
                     return;
                 }
 
-                $('.preview img', widget).attr('src', result.paths.small.url);
-                $('.preview', widget).show();
-                $('.loading', widget).hide();
+                preview_img_src = null;
 
                 $('.data', widget).html('');
 
                 for(var path in result.paths){
+                    preview_img_src = result.paths[path].url;
                     $('.data', widget).append('<input type="hidden" name="'+field_name+'['+path+']" value="'+result.paths[path].path+'" />');
                 }
+
+                $('.preview img', widget).attr('src', preview_img_src);
+                $('.preview', widget).show();
+                $('.loading', widget).hide();
 
                 if (typeof(icms.images.uploadCallback) == 'function'){
                     icms.images.uploadCallback(field_name, result);
