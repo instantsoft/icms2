@@ -1,20 +1,21 @@
 <?php
+
 class widgetContentSlider extends cmsWidget {
 
     public function run(){
 
-        $ctype_id = $this->getOption('ctype_id');
-        $dataset = $this->getOption('dataset');
-        $image_field = $this->getOption('image_field');
-        $teaser_fields = $this->getOption('teaser_field');
-        $style = $this->getOption('style', 'basic');
-        $limit = $this->getOption('limit', 10);
-        $delay = $this->getOption('delay', 5);
+        $ctype_id         = $this->getOption('ctype_id');
+        $dataset          = $this->getOption('dataset');
+        $image_field      = $this->getOption('image_field');
+        $big_image_field  = $this->getOption('big_image_field');
+        $big_image_preset = $this->getOption('big_image_preset');
+        $teaser_fields    = $this->getOption('teaser_field');
+        $limit            = $this->getOption('limit', 10);
+        $delay            = $this->getOption('delay', 5);
 
         $model = cmsCore::getModel('content');
 
         $ctype = $model->getContentType($ctype_id);
-
         if (!$ctype) { return false; }
 
         if ($dataset){
@@ -41,19 +42,17 @@ class widgetContentSlider extends cmsWidget {
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
         $model->filterHiddenParents();
 
-        $items = $model->
-                    limit($limit)->
-                    getContentItems($ctype['name']);
-
+        $items = $model->limit($limit)->getContentItems($ctype['name']);
         if (!$items) { return false; }
 
         return array(
-            'ctype' => $ctype,
-            'delay' => $delay,
-            'image_field' => $image_field,
-            'teaser_field' => $teaser_fields,
-            'style' => $style,
-            'items' => $items
+            'ctype'            => $ctype,
+            'delay'            => $delay,
+            'image_field'      => $image_field,
+            'big_image_field'  => $big_image_field,
+            'big_image_preset' => $big_image_preset,
+            'teaser_field'     => $teaser_fields,
+            'items'            => $items
         );
 
     }

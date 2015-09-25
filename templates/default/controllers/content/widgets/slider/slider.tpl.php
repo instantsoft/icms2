@@ -14,7 +14,7 @@
             <td class="slide">
                 <a href="<?php echo $first_url; ?>">
                     <?php foreach($items as $id=>$item) { ?>
-                        <img alt="<?php html($item['title']); ?>" src="<?php echo html_image_src($item[$image_field], 'big', true); ?>" class="slide-<?php echo $id; ?>">
+                        <img alt="<?php html($item['title']); ?>" src="<?php echo html_image_src($item[(!empty($big_image_field) ? $big_image_field : $image_field)], ($big_image_preset ? $big_image_preset : 'big'), true); ?>" class="slide-<?php echo $id; ?>">
                     <?php } ?>
                     <div class="heading" style="position:absolute; left:0; bottom:0; z-index:2">
                         <h2><?php echo $first_item['title']; ?></h2><br>

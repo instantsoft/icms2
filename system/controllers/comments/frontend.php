@@ -4,7 +4,7 @@ class comments extends cmsFrontend {
 
     protected $target_controller;
     protected $target_subject;
-	
+
 	protected $useOptions = true;
 
 	public function __construct($request){
@@ -30,6 +30,8 @@ class comments extends cmsFrontend {
                             filterEqual('target_subject', $this->target_subject)->
                             filterEqual('target_id', $this->target_id)->
                             getComments();
+
+        $comments = cmsEventsManager::hook('comments_before_list', $comments);
 
         $is_tracking = $this->model->getTracking($user->id);
 
@@ -105,9 +107,9 @@ class comments extends cmsFrontend {
 
 		$is_guest_parent = !$parent_comment['user_id'] && $parent_comment['author_email'];
 		$is_guest_comment = !$comment['user_id'];
-		
+
 		$page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
-		
+
 		$letter_data = array(
             'page_url' => $page_url,
             'page_title' => $comment['target_title'],
@@ -116,12 +118,12 @@ class comments extends cmsFrontend {
             'comment' => $comment['content'],
             'original' => $parent_comment['content'],
         );
-		
+
 		if (!$is_guest_parent){
 			$messenger->addRecipient($parent_comment['user_id']);
 			$messenger->sendNoticeEmail('comments_reply', $letter_data);
 		}
-		
+
 		if ($is_guest_parent){
 			$letter_data['nickname'] = $parent_comment['author_name'];
 			$to = array('name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']);
