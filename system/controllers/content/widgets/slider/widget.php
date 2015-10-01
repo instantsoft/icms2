@@ -20,10 +20,10 @@ class widgetContentSlider extends cmsWidget {
 
         if ($dataset){
 
-            $datasets = $model->getContentDatasets($ctype['id']);
+            $datasets = $model->getContentDataset($ctype['id']);
 
-            if (isset($datasets[ $dataset ])){
-                $model->applyDatasetFilters($datasets[ $dataset ]);
+            if (isset($datasets)){
+                $model->applyDatasetFilters($datasets);
             } else {
                 $dataset = false;
             }
