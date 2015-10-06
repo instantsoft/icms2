@@ -20,6 +20,8 @@ class actionTagsEdit extends cmsAction {
 
             $tag = $form->parse($this->request, $is_submitted);
             $errors = $form->validate($this,  $tag);
+            
+            if ($original_tag == $tag['tag']) { $this->redirectToAction(); }
 
             if (!$errors){
 
