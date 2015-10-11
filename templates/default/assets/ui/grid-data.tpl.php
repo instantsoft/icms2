@@ -1,5 +1,5 @@
 <?php
-    $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : ((int)cmsUser::getUPS('admin.datagrid_perpage'))?:admin::perpage;
+    $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage;
 ?>
 <form id="datagrid_filter">
     <?php if ($options['is_pagination']) { ?>

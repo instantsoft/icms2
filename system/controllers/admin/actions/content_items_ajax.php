@@ -18,15 +18,8 @@ class actionAdminContentItemsAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter');
 
-        $u_filter_str = cmsUser::getUPS('admin.filter_str.'.$ctype['name']);
-
-        if($filter_str){
-            if($filter_str !== $u_filter_str){
-                cmsUser::setUPS('admin.filter_str.'.$ctype['name'], $filter_str);
-            }
-        }else{
-            $filter_str = $u_filter_str;
-        }
+        // Для сохранения настроек грида необходимо добавить такую строку со своим ключом
+        $filter_str = cmsUser::getUPSActual('admin.filter_str.'.$ctype['name'], $filter_str);
 
         if($filter_str){
 
@@ -48,6 +41,7 @@ class actionAdminContentItemsAjax extends cmsAction {
             
             $content_model->applyGridFilter($grid, $filter);
 
+			// В случае обновления 'columns' грида для заполнения полей фильтров
             $grid['filter'] = $filter;
 
         }
@@ -59,11 +53,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $total = $content_model->getContentItemsCount($ctype['name']);
 
-        $perpage = intval(isset($filter['perpage']) ? $filter['perpage'] : admin::perpage);
-
-        if($perpage !== (int)cmsUser::getUPS('admin.datagrid_perpage', $perpage)){ // просто чтобы везде одинаково было на страницу
-            cmsUser::setUPS('admin.datagrid_perpage', $perpage);
-        }
+        $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
 
         $pages = ceil($total / $perpage);
 

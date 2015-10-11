@@ -416,6 +416,19 @@ class cmsUser {
 
         return cmsCore::getModel('users')->getUPS($key, $user_id);
     }
+    public function getUPSActual($key, $data, $user_id = null){
+        if(!$key || (!$user_id && !($user_id = self::getInstance()->id))){return false;}
+
+        $umodel = cmsCore::getModel('users');
+        $old = $umodel->getUPS($key, $user_id);
+        if(!$data){
+            return $old;
+        }
+        if($old !== $data){
+            $umodel->setUPS($key, $data, $user_id);
+        }
+        return $data;
+    }
     public static function deleteUPS($key, $user_id = null){
         if(!$key || (!$user_id && !($user_id = self::getInstance()->id))){return false;}
 
