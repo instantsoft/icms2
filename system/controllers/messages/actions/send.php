@@ -65,6 +65,15 @@ class actionMessagesSend extends cmsAction {
         $message_id = $this->sendMessage($content_html);
 
         //
+        // Отправляем уведомление на почту
+        //
+        $user_to = cmsCore::getModel('users')->getUser($contact_id);
+
+        if (!$user_to['is_online']) {
+            $this->sendNoticeEmail('messages_new');
+        }
+
+        //
         // Получаем и рендерим добавленное сообщение
         //
         $message = $this->model->getMessage($message_id);
