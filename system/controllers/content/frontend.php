@@ -553,6 +553,7 @@ class content extends cmsFrontend {
             $form->addField($fieldset_id, new fieldList('is_private', array(
                 'items' => array(
                     0 => LANG_PRIVACY_PUBLIC,
+                    2 => LANG_PRIVACY_REGISTERED,
                     1 => LANG_PRIVACY_PRIVATE,
                 ),
                 'rules' => array( array('number') )
