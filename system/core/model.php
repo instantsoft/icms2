@@ -754,7 +754,7 @@ class cmsModel{
         // используем флаг чтобы фильтр не применился дважды
         $this->privacy_filtered = true;
 
-        return $this->filter("(i.is_private = 0 OR i.user_id = '{$user->id}' OR (i.is_private = 1 AND EXISTS (SELECT id FROM {users}_friends WHERE user_id='{$user->id}' AND friend_id=i.user_id AND is_mutual=1)))");
+        return $this->filter("(i.is_private = 0 OR i.user_id = '{$user->id}' OR (i.is_private = 2 AND '{$user->is_logged}') OR (i.is_private = 1 AND EXISTS (SELECT id FROM {users}_friends WHERE user_id='{$user->id}' AND friend_id=i.user_id AND is_mutual=1)))");
 
     }
 
