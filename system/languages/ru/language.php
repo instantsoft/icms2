@@ -389,6 +389,7 @@
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
+    define('LANG_PRIVACY_REGISTERED',        'Показывать только зарегистрированным');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
     define('LANG_ON_FRONT',				 	 'На главной');
     define('LANG_SHOWED',					 'Показано');
