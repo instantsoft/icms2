@@ -175,7 +175,7 @@ class cmsMailer {
     public function parseAttachments($letter_text){
 
         // Парсим вложения
-        if(preg_match_all('/\[attachment:(.+)\]/iu', $letter_text, $matches)){
+        if(preg_match_all('/\[attachment:(.+?)\]/iu', $letter_text, $matches)){
 
             $config = cmsConfig::getInstance();
 
