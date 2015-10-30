@@ -26,23 +26,23 @@ class content extends cmsFrontend {
         if (!$action_name) { cmsCore::error404(); }
 
         $this->runAction($action_name);
-		
+
     }
 
 	public function parseRoute($uri){
-		
+
 		$config = cmsConfig::getInstance();
-		
+
 		$action_name = parent::parseRoute($uri);
-		
+
 		if (!$action_name && $config->ctype_default){
 			$action_name = parent::parseRoute($config->ctype_default . '/' . $uri);
 		}
-		
+
 		return $action_name;
-		
+
 	}
-	
+
 //============================================================================//
 //============================================================================//
 
@@ -173,7 +173,7 @@ class content extends cmsFrontend {
 
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
-		
+
 		list($ctype, $this->model) = cmsEventsManager::hook("content_list_filter", array($ctype, $this->model));
 		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
 
@@ -182,7 +182,7 @@ class content extends cmsFrontend {
         $items = $this->model->getContentItems($ctype['name']);
 
         // Рейтинг
-        if ($ctype['is_rating'] && $total){
+        if ($ctype['is_rating'] && $items){
 
             $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
                 'target_controller' => $this->name,
@@ -206,7 +206,7 @@ class content extends cmsFrontend {
         $template->setContext($this);
 
         $html = $template->renderContentList($ctype, array(
-			'category_id' => $category_id, 
+			'category_id' => $category_id,
             'page_url' => $page_url,
             'ctype' => $ctype,
             'fields' => $fields,
@@ -350,18 +350,18 @@ class content extends cmsFrontend {
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
         if (!empty($ctype['options']['is_cats_title']) || $ctype['options']['is_cats_keys'] || $ctype['options']['is_cats_desc']){
             $fieldset_id = $form->addFieldset( LANG_SEO );
-            if ($ctype['options']['is_cats_title']){
+            if (!empty($ctype['options']['is_cats_title'])){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
                 )));
             }
-            if ($ctype['options']['is_cats_keys']){
+            if (!empty($ctype['options']['is_cats_keys'])){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
                 )));
             }
-            if ($ctype['options']['is_cats_desc']){
+            if (!empty($ctype['options']['is_cats_desc'])){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
@@ -370,7 +370,7 @@ class content extends cmsFrontend {
         }
 
         // Если ручной ввод SLUG, то добавляем поле для этого
-        if (!$ctype['options']['is_cats_auto_url']){
+        if (empty($ctype['options']['is_cats_auto_url'])){
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug_key', array(
@@ -407,7 +407,7 @@ class content extends cmsFrontend {
                             array('required')
                         ),
                         'generator' => function($item){
-				
+
                             $content_model = cmsCore::getModel('content');
                             $ctype = $content_model->getContentTypeByName($item['ctype_name']);
                             $tree = $content_model->getCategoriesTree($item['ctype_name']);
@@ -423,7 +423,7 @@ class content extends cmsFrontend {
                                         if ($c['ns_right']-$c['ns_left'] == 1){
                                             if ($last_header_id !== false && $last_header_id != $c['parent_id']){
                                                 $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
-                                            }											
+                                            }
                                             $items[$c['id']] = $dash_pad . $c['title'];
                                         } else if ($c['parent_id']>0) {
                                             $items['opt'.$c['id']] = array($dash_pad.$c['title']);
@@ -453,13 +453,13 @@ class content extends cmsFrontend {
                     'title' => LANG_ADD_CATEGORY_QUICK
                 )));
             }
-			
+
 			if (!empty($ctype['options']['is_cats_multi'])){
-								
+
 				$fieldset_id = $form->addFieldset(LANG_ADDITIONAL_CATEGORIES, 'multi_cats', array(
 					'is_empty' => true
 				));
-				
+
 			}
 
         }
@@ -533,10 +533,10 @@ class content extends cmsFrontend {
         if (!$ctype['is_auto_url']){
 
 			$slug_field_rules = array( array('required') );
-			
-			if ($action == 'add'){ $slug_field_rules[] = array('unique', $this->model->table_prefix . $ctype['name'], 'slug'); }			
+
+			if ($action == 'add'){ $slug_field_rules[] = array('unique', $this->model->table_prefix . $ctype['name'], 'slug'); }
 			if ($action == 'edit'){ $slug_field_rules[] = array('unique_exclude', $this->model->table_prefix . $ctype['name'], 'slug', $item_id); }
-			
+
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
                 'prefix' => '/'.$ctype['name'].'/',
@@ -608,22 +608,22 @@ class content extends cmsFrontend {
 		$is_pub_end_days = cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
 		$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 		$is_pub_ext = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
-		$pub_max_days = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));		
-		
+		$pub_max_days = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
+
 		if ($user->is_admin){ $is_pub_end_days = false; }
 
 		if ($is_pub_control){
 			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
 			$form->addField($pub_fieldset_id, new fieldList('is_pub', array(
 				'title' => sprintf(LANG_CONTENT_IS_PUB, $ctype['labels']['create']),
-				'default' => 1, 
+				'default' => 1,
 				'items' => array(
 					1 => LANG_YES,
 					0 => LANG_NO
 				)
 			)));
 		}
-		
+
         if ($is_dates){
 			if ($is_pub_start_date){
 				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
@@ -633,7 +633,7 @@ class content extends cmsFrontend {
 					'default' => date('Y-m-d H:') . ($m - ($m % 5)),
 					'options' => array(
 						'show_time' => true
-					), 
+					),
 					'rules' => array(
 						array('required')
 					)
@@ -650,22 +650,22 @@ class content extends cmsFrontend {
 				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
 				$title = $action=='add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
 				$hint = $action=='add'? false : sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end']));
-				if ($pub_max_days){					
-					$days = array(); 
+				if ($pub_max_days){
+					$days = array();
                     $rules = array();
                     if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
                     if ($action == 'edit'){ $min = 0; }
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
-                    $rules[] = array('max', $pub_max_days);                    
+                    $rules[] = array('max', $pub_max_days);
                     if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
                     if ($action == 'edit'){ $min = 0; }
                     for($d=$min; $d<=$pub_max_days; $d++) { $days[$d] = $d; }
 					$form->addField($pub_fieldset_id, new fieldList('pub_days', array(
 						'title' => $title,
-						'hint' => $hint, 
+						'hint' => $hint,
 						'items' => $days,
-						'rules' => $rules						
+						'rules' => $rules
 					)));
 				} else {
                     $rules = array();

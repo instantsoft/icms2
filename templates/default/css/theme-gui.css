@@ -203,7 +203,7 @@
     clear:both;
 }
 
-.tabs-menu li {
+.tabs-menu .tabbed li {
     float:left;
     font-size:15px;
     margin-right: 3px;

@@ -5,7 +5,7 @@ class widgetContentSlider extends cmsWidget {
     public function run(){
 
         $ctype_id         = $this->getOption('ctype_id');
-        $dataset          = $this->getOption('dataset');
+        $dataset_id       = $this->getOption('dataset');
         $image_field      = $this->getOption('image_field');
         $big_image_field  = $this->getOption('big_image_field');
         $big_image_preset = $this->getOption('big_image_preset');
@@ -18,19 +18,19 @@ class widgetContentSlider extends cmsWidget {
         $ctype = $model->getContentType($ctype_id);
         if (!$ctype) { return false; }
 
-        if ($dataset){
+        if ($dataset_id){
 
-            $datasets = $model->getContentDatasets($ctype['id']);
+            $dataset = $model->getContentDataset($dataset_id);
 
-            if (isset($datasets[ $dataset ])){
-                $model->applyDatasetFilters($datasets[ $dataset ]);
+            if ($dataset){
+                $model->applyDatasetFilters($dataset);
             } else {
-                $dataset = false;
+                $dataset_id = false;
             }
 
         }
 
-        if (!$dataset){
+        if (!$dataset_id){
             $model->orderBy('date_pub', 'desc');
         }
 
