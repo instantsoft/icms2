@@ -98,9 +98,7 @@ class modelUsers extends cmsModel{
 
     public function getUserByEmail($email){
 
-        $user = $this->filterEqual('email', $email)->getUser();
-
-        return $user;
+        return $this->filterEqual('email', $email)->getUser();
 
     }
 
@@ -109,9 +107,7 @@ class modelUsers extends cmsModel{
 
     public function getUserByPassToken($pass_token){
 
-        $user = $this->filterEqual('pass_token', $pass_token)->getUser();
-
-        return $user;
+        return $this->filterEqual('pass_token', $pass_token)->getUser();
 
     }
 
@@ -155,17 +151,13 @@ class modelUsers extends cmsModel{
 
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
-        unset($user['password1']);
-        unset($user['password2']);
-        unset($user['group_id']);
-
         $user = array_merge($user, array(
             'groups' => $groups,
             'password' => $password_hash,
             'password_salt' => $password_salt,
             'date_reg' => $date_reg,
             'date_log' => $date_log,
-			'time_zone' => cmsConfig::get('time_zone')		
+			'time_zone' => cmsConfig::get('time_zone')
         ));
 
         $id = $this->insert('{users}', $user);
@@ -174,7 +166,7 @@ class modelUsers extends cmsModel{
 
             $this->saveUserGroupsMembership($id, $groups);
 
-            cmsCore::getController('activity')->addEntry('users', "signup", array(
+            cmsCore::getController('activity')->addEntry('users', 'signup', array(
                 'user_id' => $id
             ));
 
@@ -229,18 +221,10 @@ class modelUsers extends cmsModel{
         }
 
         if (!$errors){
-			
+
             $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
             if (isset($user['city_id']) && !isset($user['city'])){ $user['city'] = $user['city_id']; }
-
-            unset($user['password1']);
-            unset($user['password2']);
-            unset($user['city_id']);
-            unset($user['city_name']);
-            unset($user['status']);
-            unset($user['is_can_vote_karma']);
-            unset($user['inviter_nickname']);
 
             $success = $this->update('{users}', $id, $user);
 
@@ -262,20 +246,20 @@ class modelUsers extends cmsModel{
     public function updateUserTheme($id, $theme){
 
 		$user = cmsUser::getInstance();
-		
+
 		$old_bg_img = isset($user->theme['bg_img']) ? $user->theme['bg_img'] : array();
 		$new_bg_img = isset($theme['bg_img']) ? $theme['bg_img'] : array();
-		
+
 		if (($old_bg_img != $new_bg_img) && isset($old_bg_img['original'])){
-			
+
 			$config = cmsConfig::getInstance();
 
             foreach($old_bg_img as $path){
                 @unlink($config->upload_path . $path);
             }
-			
+
 		}
-		
+
         return $this->update('{users}', $id, array('theme'=>$theme));
 
     }
@@ -424,7 +408,7 @@ class modelUsers extends cmsModel{
 
     public function getGroups($is_guests = false){
 
-        if (!$is_guests) { $this->filterNotEqual('id', 1); }
+        if (!$is_guests) { $this->filterNotEqual('id', GUEST_GROUP_ID); }
 
         return $this->get('{users}_groups');
 
@@ -432,7 +416,7 @@ class modelUsers extends cmsModel{
 
     public function getPublicGroups(){
 
-        return $this->filterNotEqual('id', 1)->
+        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
                         filterEqual('is_public', 1)->
                         get('{users}_groups');
 
@@ -440,7 +424,7 @@ class modelUsers extends cmsModel{
 
     public function getFilteredGroups(){
 
-        return $this->filterNotEqual('id', 1)->
+        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
                         filterEqual('is_filter', 1)->
                         get('{users}_groups');
 
@@ -859,7 +843,7 @@ class modelUsers extends cmsModel{
     public function updateUserRating($user_id, $score){
 
         $this->filterEqual('id', $user_id);
-				
+
 		if ($score > 0){
             $this->increment('{users}', 'rating', abs($score));
 		}

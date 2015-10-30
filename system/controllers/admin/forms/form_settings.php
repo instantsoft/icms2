@@ -68,9 +68,9 @@ class formAdminSettings extends cmsForm {
                             $ctypes = cmsCore::getModel('content')->getContentTypes();
 
 							$items[''] = '';
-							
+
                             if ($ctypes) {
-                                foreach ($ctypes as $ctype) {                                    
+                                foreach ($ctypes as $ctype) {
                                     $items[$ctype['name']] = $ctype['title'];
                                 }
                             }
@@ -198,6 +198,10 @@ class formAdminSettings extends cmsForm {
                         'rules' => array(
                             array('required'),
                         )
+                    )),
+
+                    new fieldString('mail_from_name', array(
+                        'title' => LANG_CP_SETTINGS_MAIL_FROM_NAME
                     )),
 
                     new fieldString('mail_smtp_server', array(

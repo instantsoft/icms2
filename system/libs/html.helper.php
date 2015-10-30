@@ -323,8 +323,8 @@ function html_date($date=false, $is_time=false){
     return $date;
 }
 
-function html_time($date){
-    $timestamp = strtotime($date);
+function html_time($date=false){
+    $timestamp = $date ? strtotime($date) : time();
     return date('H:i', $timestamp);
 }
 
@@ -531,33 +531,39 @@ function html_editor($field_id, $content='', $options=array()){
  * @param array $attributes Массив аттрибутов тега
  * @return html
  */
-function html_select($name, $items, $selected='', $attributes=array()){
+function html_select($name, $items, $selected = '', $attributes = array()){
 
     $attr_str = html_attr_str($attributes);
-	$html = '<select name="'.$name.'" '.$attr_str.'>'."\n";
+    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
+    $html = '<select name="'.$name.'" '.$attr_str.$class.'>'."\n";
 
     $optgroup = false;
 
-    if ($items && is_array($items)){
-        foreach ($items as $value=>$title){
+    if($items && is_array($items)){
+        foreach($items as $value => $title){
 
-            if (is_array($title)){
-                if ($optgroup !== false){
-                    $html  .= "\t" . '</optgroup>';
+            if(is_array($title)){
+                if($optgroup !== false){
+                    $html .= "\t".'</optgroup>'."\n";
+                    $optgroup = false;
                 }
-                $html  .= "\t" . '<optgroup label="'.$title[0].'">';
+                $optgroup = true;
+                $html .= "\t".'<optgroup label="'.$title[0].'">'."\n";
                 continue;
             }
 
-            if ($selected == $value) { $sel = 'selected'; } else { $sel = ''; }
-            $html .= "\t" . '<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>' . "\n";
-
+            $sel = ((string) $selected === (string) $value) ? 'selected' : '';
+            $html .= "\t".'<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
         }
     }
 
-	$html .= '</select>'."\n";
-	return $html;
-
+    if($optgroup !== false){
+        $html .= "\t".'</optgroup>'."\n";
+    }
+    
+    $html .= '</select>'."\n";
+    return $html;
+    
 }
 
 function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){

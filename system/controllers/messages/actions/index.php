@@ -4,8 +4,6 @@ class actionMessagesIndex extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
         $user = cmsUser::getInstance();
 
         $is_allowed = $user->isInGroups( $this->options['groups_allowed'] );

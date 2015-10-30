@@ -26,11 +26,11 @@
 }
 
 .widget_image_single .preview img,
-.widget_image_single .preview a { float:left; }
+.widget_image_single .preview a { float:left; width: 64px; height: 64px; }
 .widget_image_single .preview a { margin: 0 15px; }
 
 .widget_image_multi .preview img,
-.widget_image_multi .preview a { float:left; }
+.widget_image_multi .preview a { float:left; width: 64px; height: 64px; }
 .widget_image_multi .preview a { margin: 0 15px; }
 
 .widget_image_multi .previews_list{

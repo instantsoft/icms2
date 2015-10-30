@@ -36,7 +36,7 @@
     <div id="form-tabs" <?php if($form->is_tabbed){ ?>class="tabs-menu"<?php } ?>>
 
         <?php if($form->is_tabbed){ ?>
-            <ul>
+            <ul class="tabbed">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                     <?php if (!isset($fieldset['childs']) || !sizeof($fieldset['childs'])) { continue; } ?>
                     <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
@@ -95,16 +95,16 @@
                                 $value = $default;
                             }
                         }
-                        
+
                         $classes = array(
-                            'field', 
+                            'field',
                             'ft_' . mb_strtolower(mb_substr(get_class($field), 5))
                         );
-                        
-                        if ($error){ 
+
+                        if ($error){
                             $classes[] = 'field_error';
                         }
-                        
+
                         if (!empty($field->groups_edit)){
                             if (!in_array(0, $field->groups_edit)){
                                 $classes[] = 'groups-limit';
@@ -113,19 +113,19 @@
                                 }
                             }
                         }
-                        
+
                         $styles = array();
-                        
+
                         if (isset($field->is_visible)){
                             if (!$field->is_visible){
                                 $styles[] = 'display:none';
                             }
                         }
-                        
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
                         $id = "f_{$field->id}";
-                        
+
                     ?>
 
                     <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>" <?php if ($rel) { ?>rel="<?php echo $rel; ?>"<?php } ?> <?php if ($styles) { ?>style="<?php echo $styles; ?>"<?php } ?>>

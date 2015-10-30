@@ -13,15 +13,12 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('content_items', $ctype['name']);
 
-        $content_model->setPerPage(admin::perpage);
-
         $filter     = array();
         $filter_str = $this->request->get('filter');
 
         if ($filter_str){
 
-            parse_str($filter_str, $filter);
-            $content_model->applyGridFilter($grid, $filter);
+            parse_str($filter_str, $filter);            
 
             if (!empty($filter['advanced_filter'])){
 
@@ -36,6 +33,8 @@ class actionAdminContentItemsAjax extends cmsAction {
                 $content_model->applyDatasetFilters($dataset_filters);
 
             }
+            
+            $content_model->applyGridFilter($grid, $filter);
 
         }
 
@@ -49,8 +48,10 @@ class actionAdminContentItemsAjax extends cmsAction {
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
         $pages = ceil($total / $perpage);
 
+        $content_model->setPerPage($perpage);
+        
         $items = $content_model->getContentItems($ctype['name']);
-
+        
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total, $pages);
 
         $this->halt();

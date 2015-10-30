@@ -58,6 +58,8 @@ class cmsController {
 
         $form = $this->getForm('options', false, 'backend/');
 
+        if (!$form) { return array(); }
+
         $options = $form->parse(new cmsRequest($options));
 
         return $options;
@@ -217,7 +219,7 @@ class cmsController {
                     $max_params = $rf->getNumberOfParameters();
                     if ($max_params < count($this->current_params)) { cmsCore::error404(); }
                 }
-                
+
                 // если есть нужный экшен, то вызываем его
                 $result = call_user_func_array(array($this, $method_name), $this->current_params);
 
@@ -244,7 +246,7 @@ class cmsController {
         }
 
         $this->after($action_name);
-				
+
         return $result;
 
     }
@@ -262,7 +264,7 @@ class cmsController {
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
-        include($action_file);
+        include_once $action_file;
 
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){
@@ -270,9 +272,9 @@ class cmsController {
             $max_params = $rf->getNumberOfParameters();
             if ($max_params < count($params)) { cmsCore::error404(); }
         }
-        
+
         $action_object = new $class_name($this, $params);
-        
+
         $result = call_user_func_array(array($action_object, 'run'), $params);
 
         return $result;
@@ -411,7 +413,7 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
-		
+
         return $grid;
 
     }
@@ -589,7 +591,7 @@ class cmsController {
 			if (is_array($params)) { $location .= '/' . implode('/', $params); }
 			else { $location .= '/' . $params; }
 		}
-		
+
         if ($query){ $location .= '?' . http_build_query($query); }
 
         $this->redirect(href_to($location));
@@ -739,7 +741,7 @@ class cmsController {
         $table_name = $content_model->table_prefix . $ctype_name;
         $result = !$core->db->isFieldExists($table_name, $value);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
-        return true;        
+        return true;
     }
 
     public function validate_unique_ctype_dataset($ctype_id, $value){

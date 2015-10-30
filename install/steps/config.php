@@ -71,6 +71,7 @@ function create_config($path, $file){
         'merge_js'				=> 0,
         'mail_transport'		=> 'mail',
         'mail_from'				=> 'noreply@example.com',
+        'mail_from_name'		=> '',
         'mail_smtp_server'		=> 'smtp.example.com',
         'mail_smtp_port'		=> 25,
         'mail_smtp_auth'		=> 1,

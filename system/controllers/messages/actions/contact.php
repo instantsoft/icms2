@@ -4,8 +4,6 @@ class actionMessagesContact extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
         $user = cmsUser::getInstance();
 
         $contact_id = $this->request->get('contact_id') or cmsCore::error404();

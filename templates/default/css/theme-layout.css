@@ -297,7 +297,7 @@ nav select { display: none; }
 
 /* Breadcrumbs ============================================================== */
 
-#breadcrumbs { margin:-20px; margin-bottom: 20px; background:#ecf0f1; padding:0 10px; }
+#breadcrumbs { margin:-20px; margin-bottom: 20px; background:#ecf0f1; padding:0 10px; position: relative; }
 
 #breadcrumbs ul, #breadcrumbs li { margin:0; padding:0; list-style: none; }
 

@@ -391,14 +391,15 @@ function string_replace_user_properties($string){
  */
 function string_replace_keys_values($string, $data){
 
-    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
-    $values = $data;
+    if(strpos($string, '{') === false){ return $string; }
 
-	foreach($values as $k=>$v){
-		if (is_array($v) || is_object($v)) { unset($values[$k]); }
+	foreach($data as $k=>$v){
+		if (is_array($v) || is_object($v)) { unset($data[$k]); }
 	}
-	
-    return str_replace($keys, $values, $string);
+
+    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
+
+    return str_replace($keys, array_values($data), $string);
 
 }
 

@@ -4,11 +4,9 @@ class actionMessagesRefresh extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
         $contact_id = $this->request->get('contact_id') or cmsCore::error404();
 
-        $user = cmsUser::getInstance();
+        $user     = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
 
         $contact = $this->model->getContact($user->id, $contact_id);

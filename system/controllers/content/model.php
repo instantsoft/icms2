@@ -40,7 +40,7 @@ class modelContent extends cmsModel{
         $this->db->createTable("{$table_name}_fields", $fields_table_struct, 'InnoDB');
         $this->db->createCategoriesTable("{$table_name}_cats");
 		$this->db->createCategoriesBindsTable("{$table_name}_cats_bind");
-		
+
         $this->db->createTable("{$table_name}_props", $props_table_struct, 'InnoDB');
         $this->db->createTable("{$table_name}_props_bind", $props_bind_table_struct, 'InnoDB');
         $this->db->createTable("{$table_name}_props_values", $props_values_table_struct, 'InnoDB');
@@ -163,7 +163,7 @@ class modelContent extends cmsModel{
         $ctype = $this->getContentType($id);
 
         if ($ctype['is_fixed']) { return false; }
-		
+
 		$items = $this->getContentItems($ctype['name']);
 		if ($items){
 			foreach($items as $item){
@@ -171,8 +171,8 @@ class modelContent extends cmsModel{
 			}
 		}
 
-		cmsCore::getModel('tags')->recountTagsFrequency();		
-		
+		cmsCore::getModel('tags')->recountTagsFrequency();
+
         $this->delete('content_types', $id);
         $this->delete('content_datasets', $id, 'ctype_id');
 
@@ -406,25 +406,25 @@ class modelContent extends cmsModel{
             if ($item['options']['is_number']) {  $rules[] = array('number'); }
             if ($item['options']['is_alphanumeric']) {  $rules[] = array('alphanumeric'); }
             if ($item['options']['is_email']) {  $rules[] = array('email'); }
-            
-            if ($item['options']['is_unique']) {  
+
+            if ($item['options']['is_unique']) {
                 if (!$model->item_id){
-                    $rules[] = array('unique', $model->table_prefix . $model->ctype_name, $item['name']);                 
+                    $rules[] = array('unique', $model->table_prefix . $model->ctype_name, $item['name']);
                 } else {
-                    $rules[] = array('unique_exclude', $model->table_prefix . $model->ctype_name, $item['name'], $model->item_id);                 
+                    $rules[] = array('unique_exclude', $model->table_prefix . $model->ctype_name, $item['name'], $model->item_id);
                 }
             }
 
             $item['rules'] = $rules;
 
             $field_class = "field" . string_to_camel('_', $item['type']);
-            
+
             $handler = new $field_class($item['name']);
-            
+
             $item['handler_title'] = $handler->getTitle();
-            
+
             $handler->setOptions($item);
-            
+
             $item['handler'] = $handler;
 
             return $item;
@@ -470,11 +470,11 @@ class modelContent extends cmsModel{
             $field_class = "field" . string_to_camel('_', $item['type']);
 
             $handler = new $field_class($item['name']);
-            
+
             $item['parser_title'] = $handler->getTitle();
-            
+
             $handler->setOptions($item);
-            
+
             $item['parser'] = $handler;
 
             return $item;
@@ -526,15 +526,15 @@ class modelContent extends cmsModel{
 //============================================================================//
 
 	public function toggleContentFieldVisibility($ctype_name, $id, $mode, $is_visible){
-		
+
 		$fields_table_name = $this->table_prefix . $ctype_name . '_fields';
-		
+
 		return $this->update($fields_table_name, $id, array(
 			$mode => $is_visible
 		));
-		
+
 	}
-	
+
 //============================================================================//
 //============================================================================//
 
@@ -707,15 +707,15 @@ class modelContent extends cmsModel{
     }
 
 	public function toggleContentPropFilter($ctype_name, $id, $is_in_filter){
-		
+
 		$table_name = $this->table_prefix . $ctype_name . '_props';
-		
+
 		return $this->update($table_name, $id, array(
 			'is_in_filter' => $is_in_filter
 		));
-		
-	}	
-	
+
+	}
+
 
     public function deleteContentProp($ctype_name_or_id, $prop_id){
 
@@ -895,8 +895,6 @@ class modelContent extends cmsModel{
 
     public function getContentDatasets($ctype_id=false, $only_visible=false){
 
-        $table_name = 'content_datasets';
-
         if ($ctype_id) { $this->filterEqual('ctype_id', $ctype_id); }
 
         if ($only_visible) { $this->filterEqual('is_visible', 1); }
@@ -905,7 +903,7 @@ class modelContent extends cmsModel{
 
         $this->useCache('content.datasets');
 
-        $datasets = $this->get($table_name, function($item, $model){
+        $datasets = $this->get('content_datasets', function($item, $model){
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
@@ -931,9 +929,7 @@ class modelContent extends cmsModel{
 
     public function getContentDataset($id){
 
-        $table_name = 'content_datasets';
-
-        return $this->getItemById($table_name, $id, function($item, $model){
+        return $this->getItemById('content_datasets', $id, function($item, $model){
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
@@ -985,15 +981,15 @@ class modelContent extends cmsModel{
     }
 
 	public function toggleContentDatasetVisibility($id, $is_visible){
-		
+
 		$table_name = 'content_datasets';
-		
+
 		return $this->update($table_name, $id, array(
 			'is_visible' => $is_visible
 		));
-		
+
 	}
-	
+
 //============================================================================//
 //============================================================================//
 
@@ -1064,15 +1060,15 @@ class modelContent extends cmsModel{
         return $this->filterEqual('is_approved', 1);
 
     }
-	
+
 	public function filterPublishedOnly(){
-		
+
 		if ($this->pub_filtered) { return $this; }
-		
+
         $this->pub_filtered = true;
 
         return $this->filterEqual('is_pub', 1);
-		
+
 	}
 
     public function filterByModeratorTask($moderator_id, $ctype_name){
@@ -1168,14 +1164,14 @@ class modelContent extends cmsModel{
         unset($item['new_folder']);
 
 		$add_cats = array();
-		
+
 		if (isset($item['add_cats'])){
 			$add_cats = $item['add_cats'];
 			unset($item['add_cats']);
-		}		
-		
+		}
+
         $item['id'] = $this->insert($table_name, $item);
-		
+
 		$this->updateContentItemCategories($ctype['name'], $item['id'], $item['category_id'], $add_cats);
 
         if (isset($props_values)){
@@ -1191,7 +1187,7 @@ class modelContent extends cmsModel{
             'slug' => $item['slug'],
             'date_last_modified' => null
         ));
-		
+
         cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
 
         return $item;
@@ -1240,7 +1236,7 @@ class modelContent extends cmsModel{
         $update_item = $item; unset($update_item['slug']);
 
         if (!empty($update_item['props'])){
-            $this->updatePropsValues($ctype['name'], $id, $update_item['props']);            
+            $this->updatePropsValues($ctype['name'], $id, $update_item['props']);
         }
 
 		unset($update_item['props']);
@@ -1248,18 +1244,18 @@ class modelContent extends cmsModel{
         unset($update_item['user_nickname']);
 
 		$add_cats = array();
-		
+
 		if (isset($update_item['add_cats'])){
 			$add_cats = $update_item['add_cats'];
 			unset($update_item['add_cats']);
 		}
-		
+
         $update_item['date_last_modified'] = null;
 
         $this->update($table_name, $id, $update_item);
 
 		$this->updateContentItemCategories($ctype['name'], $id, $item['category_id'], $add_cats);
-		
+
         cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
         cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
 
@@ -1276,7 +1272,7 @@ class modelContent extends cmsModel{
         ));
 
     }
-	
+
 //============================================================================//
 //============================================================================//
 
@@ -1321,54 +1317,54 @@ class modelContent extends cmsModel{
 //============================================================================//
 
 	public function getContentItemCategories($ctype_name, $id){
-		
+
 		$table_name = $this->table_prefix . $ctype_name . "_cats_bind";
-		
+
 		return $this->filterEqual('item_id', $id)->get($table_name, function($item, $model){
 			return $item['category_id'];
 		}, false);
-		
+
 	}
-	
+
     public function moveContentItemsToCategory($ctype, $category_id, $items_ids, $fields){
 
         $table_name = $this->table_prefix . $ctype['name'];
         $binds_table_name = $this->table_prefix . $ctype['name'] . "_cats_bind";
 
 		$items = $this->filterIn('id', $items_ids)->get($table_name);
-		
+
 		foreach($items as $item){
 
 			$this->
 				filterEqual("item_id", $item['id'])->
 				filterEqual("category_id", $item['category_id'])->
 				deleteFiltered($binds_table_name);
-			
+
 			$is_bind_exists = $this->
 								filterEqual("item_id", $item['id'])->
 								filterEqual("category_id", $category_id)->
 								getCount($binds_table_name, 'item_id');
-			
+
 			$this->resetFilters();
-			
+
 			if (!$is_bind_exists){
-				
+
 				$this->insert($binds_table_name, array(
 					'item_id' => $item['id'],
 					'category_id' => $category_id
 				));
-				
+
 			}
-			
+
 			$item['category_id'] = $category_id;
-			
+
 			if (!$ctype['is_fixed_url'] && $ctype['is_auto_url']){
 				$item['slug'] = $this->getItemSlug($ctype, $item, $fields);
 				$this->update($table_name, $item['id'], array( 'slug' => $item['slug'] ));
-			}			
-			
+			}
+
 		}
-		
+
         $this->filterIn('id', $items_ids)->updateFiltered($table_name, array(
             'category_id' => $category_id
         ));
@@ -1379,25 +1375,25 @@ class modelContent extends cmsModel{
         return true;
 
     }
-	
+
 	public function updateContentItemCategories($ctype_name, $id, $category_id, $add_cats){
-		
+
 		$table_name = $this->table_prefix . $ctype_name . "_cats_bind";
-		
+
 		$new_cats = empty($add_cats) ? array() : $add_cats;
-		
+
 		if (!$category_id) { $category_id = 1; }
-		
+
 		if (!in_array($category_id, $new_cats)){
 			$new_cats[] = $category_id;
 		}
-		
+
 		$current_cats = $this->
 							filterEqual("item_id", $id)->
 							get($table_name, function($item, $model){
 								return $item['category_id'];
-							}, false); 
-		
+							}, false);
+
 		if ($current_cats){
 			foreach($current_cats as $current_cat_id){
 
@@ -1410,17 +1406,17 @@ class modelContent extends cmsModel{
 
 			}
 		}
-		
+
 		foreach($new_cats as $new_cat_id){
-			if (!$current_cats || !in_array($new_cat_id, $current_cats)){				
+			if (!$current_cats || !in_array($new_cat_id, $current_cats)){
 				$this->insert($table_name, array(
 					'item_id' => $id,
 					'category_id' => $new_cat_id
-				));				
+				));
 			}
 		}
-		
-	}	
+
+	}
 
 //============================================================================//
 //============================================================================//
@@ -1428,14 +1424,14 @@ class modelContent extends cmsModel{
     public function deleteContentItem($ctype_name, $id){
 
         $table_name = $this->table_prefix . $ctype_name;
-        
+
         $item = $this->getContentItem($ctype_name, $id);
         $fields = $this->getContentFields($ctype_name, $id);
 
         foreach($fields as $field){
             $field['handler']->delete($item[$field['name']]);
         }
-        
+
         cmsCore::getController('activity')->deleteEntry('content', "add.{$ctype_name}", $id);
 
         cmsCore::getModel('comments')->deleteComments('content', $ctype_name, $id);
@@ -1521,7 +1517,7 @@ class modelContent extends cmsModel{
         });
 
     }
-	
+
 //============================================================================//
 //============================================================================//
 
@@ -1562,7 +1558,7 @@ class modelContent extends cmsModel{
     public function getUserContentItemsCount($ctype_name, $user_id, $is_only_approved = true){
 
         $this->filterEqual('user_id', $user_id);
-		
+
 		if (!$is_only_approved) { $this->approved_filter_disabled = true; }
 
         $count = $this->getContentItemsCount( $ctype_name );
@@ -1588,8 +1584,8 @@ class modelContent extends cmsModel{
         if (!$is_filter_hidden){
             $this->disableApprovedFilter();
 			$this->disablePubFilter();
-        }				
-		
+        }
+
         foreach($ctypes as $ctype){
 
             $count = $this->getContentItemsCount( $ctype['name'] );
@@ -1616,22 +1612,22 @@ class modelContent extends cmsModel{
 //============================================================================//
 
 	public function publishDelayedContentItems($ctype_name){
-		
+
 		$table_name = $this->table_prefix . $ctype_name;
-		
+
 		return $this->
 					filterNotEqual('is_pub', 1)->
 					filter('i.date_pub <= NOW()')->
 					updateFiltered($table_name, array(
 						'is_pub' => 1
 					));
-		
-	}	
+
+	}
 
 	public function hideExpiredContentItems($ctype_name){
-		
+
 		$table_name = $this->table_prefix . $ctype_name;
-	
+
 		return $this->
 					filterEqual('is_pub', 1)->
 					filterNotNull('date_pub_end')->
@@ -1639,27 +1635,27 @@ class modelContent extends cmsModel{
 					updateFiltered($table_name, array(
 						'is_pub' => 0
 					));
-		
+
 	}
-	
+
 	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
-		
+
 		$table_name = $this->table_prefix . $ctype_name;
-		
+
 		return $this->update($table_name, $id, array(
 			'is_pub' => $is_pub
 		));
-		
+
 	}
-	
+
 	public function incrementHitsCounter($ctype_name, $id){
-		
+
 		$table_name = $this->table_prefix . $ctype_name;
-		
+
 		$this->filterEqual('id', $id)->increment($table_name, 'hits_count');
-		
+
 	}
-	
+
 //============================================================================//
 //============================================================================//
 

@@ -27,8 +27,10 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Получаем список подкатегорий для текущей
-        $current_cat_id = $category['id'] ? $category['id'] : 1;
-        $subcats = $this->model->getSubCategories($ctype_name, $current_cat_id);
+        if ($ctype['is_cats']) {
+            $current_cat_id = $category['id'] ? $category['id'] : 1;
+            $subcats = $this->model->getSubCategories($ctype_name, $current_cat_id);
+        }
 
         // Получаем список наборов
         $datasets = $this->model->getContentDatasets($ctype['id'], true);
@@ -80,14 +82,14 @@ class actionContentCategoryView extends cmsAction {
 
         list($ctype, $category) = cmsEventsManager::hook("content_before_category", array($ctype, $category));
 		list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_before_category", array($ctype, $category));
-		
-		
+
+
 		$items_list_html = '';
 		$is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
 
 		// Получаем HTML списка записей
 		if (!$is_hide_items){
-			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);			
+			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
 		}
 
         return cmsTemplate::getInstance()->render('category_view', array(

@@ -203,7 +203,7 @@
     clear:both;
 }
 
-.tabs-menu li {
+.tabs-menu .tabbed li {
     float:left;
     font-size:15px;
     margin-right: 3px;
@@ -215,7 +215,7 @@
     display:inline-block;
     padding:0 10px;
     border: solid 1px #FFF;
-    border-bottom: solid 1px #B3C2C9;
+    border-bottom: transparent;
     height:32px;
     line-height:32px;
 }
@@ -234,8 +234,9 @@
     cursor:default;
     color:#34495e;
     border: solid 1px #B3C2C9;
-    border-bottom: solid 1px #fff;
+    border-bottom: none;
     background-color:#FFF;
+    margin: 1px 0 0 0;
 }
 
 .tabs-menu li a .counter {
@@ -353,17 +354,17 @@
 
 .filter-panel select { padding:3px 4px; }
 
-.filter-panel .fields .field{	
+.filter-panel .fields .field{
     min-height:50px;
     width:48%;
     margin-bottom: 15px;
 }
 
 .filter-panel .fields .field:nth-child(even){
-	float:right;	
+	float:right;
 }
 
-.filter-panel .fields .field:nth-child(odd){        
+.filter-panel .fields .field:nth-child(odd){
 	float:left;
 }
 
@@ -468,7 +469,7 @@
 .pagebar_nav .disabled{
 	color:#BDC3C7;
 }
-.pagebar_nav .pagebar_page:first-child { 
+.pagebar_nav .pagebar_page:first-child {
 	margin-left: 0;
 	margin-right: 5px;
 }
@@ -921,7 +922,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 #comments_widget #comments_add_form .author_data .field label {
 	float:left;
-	width:140px;	
+	width:140px;
 	height:20px;
 	line-height:20px;
 }
@@ -1651,5 +1652,5 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 	width:16px;
 	height:16px;
 	margin-left:5px;
-	background:url("../images/icons/delete.png") no-repeat center;	
+	background:url("../images/icons/delete.png") no-repeat center;
 }
