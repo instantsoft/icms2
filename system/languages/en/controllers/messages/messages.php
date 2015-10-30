@@ -22,3 +22,4 @@
     define('LANG_PM_LIMIT',                 'The number of messages displayed at once');
 
     define('LANG_PM_PRIVACY_CONTACT',       'Who can write you a private message?');
+    define('LANG_PM_NOTIFY_NEW',            'Notify about new messages');

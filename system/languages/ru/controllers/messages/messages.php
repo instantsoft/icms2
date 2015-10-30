@@ -22,3 +22,4 @@
     define('LANG_PM_LIMIT',                 'Выводить сообщений за раз');
 
     define('LANG_PM_PRIVACY_CONTACT',       'Кто может писать вам личные сообщения?');
+    define('LANG_PM_NOTIFY_NEW',            'Уведомлять о новых сообщениях');
