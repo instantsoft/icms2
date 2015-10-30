@@ -108,7 +108,7 @@ icms.messages = (function ($) {
             return;
         }
 
-		if (result.message){			
+		if (result.message){
 			$('#pm_contact .chat').append(result.message);
 			this.scrollChat();
 		}
@@ -330,7 +330,7 @@ icms.messages = (function ($) {
 
         }, "json");
 
-        return true;
+        return false;
 
     }
 

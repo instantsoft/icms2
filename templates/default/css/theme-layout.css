@@ -516,6 +516,17 @@ aside .menu .item{
     color:#999;
     margin-bottom:4px;
 }
+#sql_queries .query_time {
+    color: #999;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+#sql_queries .red_query {
+    color: #c0392b;
+}
+#sql_queries .green_query {
+    color: #27ae60;
+}
 
 /* Footer Navigation ======================================================== */
 

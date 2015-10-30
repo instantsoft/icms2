@@ -84,7 +84,7 @@
 
     <div id="group_profile_tabs">
         <div class="tabs-menu">
-            <?php $this->menu('group_tabs'); ?>
+            <?php $this->menu('group_tabs', true, 'tabbed'); ?>
         </div>
     </div>
 

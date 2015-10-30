@@ -103,6 +103,7 @@
                         <div class="query">
                             <div class="src"><?php echo $sql['src']; ?></div>
                             <?php echo nl2br($sql['sql']); ?>
+                            <div class="query_time"><?php echo LANG_DEBUG_QUERY_TIME; ?> <span class="<?php echo (($sql['time']>=0.1) ? 'red_query' : 'green_query'); ?>"><?php echo number_format($sql['time'], 5); ?></span> <?php echo LANG_SECOND10 ?></div>
                         </div>
                     <?php } ?>
                 </div>

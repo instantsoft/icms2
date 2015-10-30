@@ -3,7 +3,7 @@
 class fieldHtml extends cmsFormField {
 
     public $title = LANG_PARSER_HTML;
-    public $sql   = 'longtext';
+    public $sql   = 'mediumtext';
     public $filter_type = 'str';
 	public $allow_index = false;
 

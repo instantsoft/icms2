@@ -87,7 +87,7 @@
 
 		<div id="user_profile_tabs">
 			<div class="tabs-menu">
-				<?php $this->menu('profile_tabs', true, '', $this->controller->options['max_tabs']); ?>
+				<?php $this->menu('profile_tabs', true, 'tabbed', $this->controller->options['max_tabs']); ?>
 			</div>
 		</div>
 

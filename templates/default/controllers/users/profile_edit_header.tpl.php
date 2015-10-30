@@ -8,6 +8,6 @@
 
 <div id="user_profile_tabs">
     <div class="tabs-menu">
-        <?php $this->menu('profile_tabs', true, '', 5); ?>
+        <?php $this->menu('profile_tabs', true, 'tabbed', 5); ?>
     </div>
 </div>

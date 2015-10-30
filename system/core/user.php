@@ -241,7 +241,7 @@ class cmsUser {
         if ($user_id){
 
             $model->filterEqual('id', $user_id)->
-                    updateFiltered('{users}', array('is_online' => 1));
+                    updateFiltered('{users}', array('is_online' => 1), true);
 
         }
 
@@ -255,7 +255,7 @@ class cmsUser {
                 deleteFiltered('sessions_online');
 
         $model->filterEqual('id', $user_id)->
-                updateFiltered('{users}', array('is_online' => 0));
+                updateFiltered('{users}', array('is_online' => 0), true);
 
     }
 
@@ -274,7 +274,7 @@ class cmsUser {
         if ($users){
 
             $model->filterIn('id', $users)->
-                    updateFiltered('{users}', array('is_online' => 0));
+                    updateFiltered('{users}', array('is_online' => 0), true);
 
             $model->filterDateOlder('date_created', 3, 'MINUTE')->
                     deleteFiltered('sessions_online');

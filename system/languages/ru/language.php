@@ -468,4 +468,4 @@
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-
+    define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');

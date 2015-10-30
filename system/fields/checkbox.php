@@ -3,7 +3,7 @@
 class fieldCheckbox extends cmsFormField {
 
     public $title       = LANG_PARSER_CHECKBOX;
-    public $sql         = 'tinyint(1) NULL DEFAULT NULL';
+    public $sql         = 'TINYINT(1) UNSIGNED NULL DEFAULT NULL';
     public $filter_type = 'int';
 
     public function parse($value){
@@ -13,7 +13,6 @@ class fieldCheckbox extends cmsFormField {
 
     public function applyFilter($model, $value) {
         return $model->filterEqual($this->name, 1);
-    }    
+    }
 
 }
-

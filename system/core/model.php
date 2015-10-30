@@ -61,21 +61,21 @@ class cmsModel{
             'date_pub'              => array('type' => 'timestamp', 'default_current' => true),
             'date_last_modified'    => array('type' => 'timestamp'),
             'date_pub_end'			=> array('type' => 'timestamp'),
-            'is_pub'				=> array('type' => 'bool', 'index'=>true, 'default' => 1),
-            'hits_count'            => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'user_id'               => array('type' => 'int', 'index'=>true),
-            'parent_id'             => array('type' => 'int', 'index'=>true),
+            'is_pub'				=> array('type' => 'bool', 'index'=>true, 'default' => 1, 'unsigned' => true),
+            'hits_count'            => array('type' => 'int', 'index'=>true, 'default' => 0, 'unsigned' => true),
+            'user_id'               => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'parent_id'             => array('type' => 'int', 'index'=>true, 'unsigned' => true),
             'parent_type'           => array('type' => 'varchar', 'size'=>32, 'index'=>true),
             'parent_title'          => array('type' => 'varchar', 'size' => 100),
             'parent_url'            => array('type' => 'varchar', 'size' => 255),
             'is_parent_hidden'      => array('type' => 'bool', 'index'=>true),
-            'category_id'           => array('type' => 'int', 'index'=>true, 'default' => 1),
-            'folder_id'             => array('type' => 'int', 'index'=>true),
+            'category_id'           => array('type' => 'int', 'index'=>true, 'default' => 1, 'unsigned' => true),
+            'folder_id'             => array('type' => 'int', 'index'=>true, 'unsigned' => true),
             'is_comments_on'        => array('type' => 'bool'),
-            'comments'              => array('type' => 'int', 'index'=>true, 'default' => 0),
+            'comments'              => array('type' => 'int', 'index'=>true, 'default' => 0, 'unsigned' => true),
             'rating'                => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'is_approved'           => array('type' => 'tinyint', 'index'=>true, 'default' => 1),
-            'approved_by'           => array('type' => 'int', 'index'=>true),
+            'is_approved'           => array('type' => 'tinyint', 'index'=>true, 'default' => 1, 'unsigned' => true),
+            'approved_by'           => array('type' => 'int', 'index'=>true, 'unsigned' => true),
             'date_approved'         => array('type' => 'timestamp'),
             'is_private'            => array('type' => 'bool', 'index'=>true, 'default' => 0),
         );
@@ -86,11 +86,11 @@ class cmsModel{
 
         return array(
             'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int'),
+            'ctype_id'      => array('type' => 'int', 'unsigned' => true),
             'name'          => array('type' => 'varchar', 'size' => 20),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
-            'ordering'      => array('type' => 'int', 'index'=>true),
+            'ordering'      => array('type' => 'int', 'index'=>true, 'unsigned' => true),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),
@@ -112,7 +112,7 @@ class cmsModel{
 
         return array(
             'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int'),
+            'ctype_id'      => array('type' => 'int', 'unsigned' => true),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
@@ -127,9 +127,9 @@ class cmsModel{
 
         return array(
             'id'        => array('type' => 'primary'),
-            'prop_id'   => array('type' => 'int', 'index'=>true),
-            'cat_id'    => array('type' => 'int', 'index'=>true),
-            'ordering'  => array('type' => 'int', 'index'=>true),
+            'prop_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'cat_id'    => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'ordering'  => array('type' => 'int', 'index'=>true, 'unsigned' => true),
         );
 
     }
@@ -137,8 +137,8 @@ class cmsModel{
     public function getPropsValuesTableStruct(){
 
         return array(
-            'prop_id'   => array('type' => 'int', 'index'=>true),
-            'item_id'   => array('type' => 'int', 'index'=>true),
+            'prop_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'item_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
             'value'     => array('type' => 'varchar', 'size' => 255),
         );
 
@@ -467,10 +467,10 @@ class cmsModel{
         return $this->updateFiltered($table_name, $data);
     }
 
-    public function updateFiltered($table_name, $data){
+    public function updateFiltered($table_name, $data, $skip_check_fields = false){
         $where = $this->where;
         $this->resetFilters();
-        return $this->db->update($table_name, $where, $data);
+        return $this->db->update($table_name, $where, $data, $skip_check_fields);
     }
 
 //============================================================================//

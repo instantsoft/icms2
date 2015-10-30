@@ -89,13 +89,16 @@ class cmsDatabase {
 		return @$this->mysqli->real_escape_string($string);
 	}
 
-	/**
-	 * Выполняет запрос в базе
-	 *
-	 * @param string $sql
-	 * @return mysql result
-	 */
+    /**
+     * Выполняет запрос в базе
+     * @param string $sql Строка запроса
+     * @param array|string $params Аргументы запроса, которые будут переданы в vsprintf
+     * @param bool $quiet В случае ошибки запроса отдавать false, а не "умирать"
+     * @return boolean
+     */
 	public function query($sql, $params=false, $quiet=false){
+
+        $start_time = microtime(true);
 
         $config = cmsConfig::getInstance();
 
@@ -140,7 +143,7 @@ class cmsDatabase {
                 $src = '';
             }
 
-            $this->query_list[] = array('sql'=>$sql, 'src'=>$src);
+            $this->query_list[] = array('sql'=>$sql, 'src'=>$src, 'time'=>(microtime(true) - $start_time));
 
         }
 
@@ -260,16 +263,19 @@ class cmsDatabase {
      * @param string $table Таблица
      * @param string $where Критерии запроса
 	 * @param array $data Массив[Название поля] = значение поля
+	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
      * @return boolean
      */
-	public function update($table, $where, $data){
+	public function update($table, $where, $data, $skip_check_fields = false){
 
 		if(empty($data)){ return false; }
 
-        $table_fields = $this->getTableFields($table);
+        if(!$skip_check_fields){
+            $table_fields = $this->getTableFields($table);
+        }
 
 		foreach ($data as $field=>$value) {
-            if(!in_array($field, $table_fields)){
+            if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
             }
             $value = $this->prepareValue($field, $value);
@@ -520,7 +526,8 @@ class cmsDatabase {
             $fcount++;
             $sep = ($fcount == $ftotal) ? "\n" : ",\n";
 
-            $default = (!isset($field['default']) ? 'NULL' : "NOT NULL DEFAULT '{$field['default']}'");
+            $default  = (!isset($field['default']) ? 'NULL' : "NOT NULL DEFAULT '{$field['default']}'");
+            $unsigned = (!isset($field['unsigned']) ? '' : 'UNSIGNED');
 
             if (isset($field['index'])) { $indexes[] = $name; }
             if (isset($field['unique'])) { $unique[] = $name; }
@@ -528,7 +535,7 @@ class cmsDatabase {
             switch ($field['type']){
 
                 case 'primary':
-                    $sql .= "\t`{$name}` INT NOT NULL AUTO_INCREMENT PRIMARY KEY{$sep}";
+                    $sql .= "\t`{$name}` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY{$sep}";
                 break;
 
                 case 'bool':
@@ -543,12 +550,12 @@ class cmsDatabase {
                 break;
 
                 case 'tinyint':
-                    $sql .= "\t`{$name}` TINYINT {$default}{$sep}";
+                    $sql .= "\t`{$name}` TINYINT {$unsigned} {$default}{$sep}";
                     if (!isset($field['index'])) { $indexes[] = $name; }
                 break;
 
                 case 'int':
-                    $sql .= "\t`{$name}` INT {$default}{$sep}";
+                    $sql .= "\t`{$name}` INT {$unsigned} {$default}{$sep}";
                 break;
 
                 case 'varchar':
@@ -596,8 +603,8 @@ class cmsDatabase {
     public function createCategoriesTable($table_name) {
 
         $sql = "CREATE TABLE `{#}{$table_name}` (
-                  `id` int(11) NOT NULL AUTO_INCREMENT,
-                  `parent_id` int(11) DEFAULT NULL,
+                  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                  `parent_id` int(11) UNSIGNED DEFAULT NULL,
                   `title` varchar(200) NULL DEFAULT NULL,
                   `slug` varchar(255) NULL DEFAULT NULL,
                   `slug_key` varchar(255) NULL DEFAULT NULL,
@@ -632,8 +639,8 @@ class cmsDatabase {
     public function createCategoriesBindsTable($table_name) {
 
         $sql = "CREATE TABLE `{#}{$table_name}` (
-				  `item_id` int(11) DEFAULT NULL,
-				  `category_id` int(11) DEFAULT NULL,
+				  `item_id` int(11) UNSIGNED DEFAULT NULL,
+				  `category_id` int(11) UNSIGNED DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
 				) DEFAULT CHARSET=utf8";

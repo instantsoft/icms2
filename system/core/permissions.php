@@ -112,7 +112,7 @@ class cmsPermissions {
         $model->select('r.type', 'rule_type');
         $model->select('r.options', 'rule_options');
 
-        $model->join('perms_rules', 'r', 'r.id = i.rule_id');
+        $model->joinInner('perms_rules', 'r FORCE INDEX (PRIMARY ) ', 'r.id = i.rule_id');
 
         $items = $model->get('perms_users', false, false);
 
