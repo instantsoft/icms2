@@ -272,7 +272,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -285,14 +285,14 @@ CREATE TABLE `{#}con_albums` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -326,8 +326,8 @@ INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
 CREATE TABLE `{#}con_albums_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -346,7 +346,8 @@ CREATE TABLE `{#}con_albums_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_albums_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -366,7 +367,7 @@ INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -406,7 +407,7 @@ INSERT INTO `{#}con_albums_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `
 
 DROP TABLE IF EXISTS `{#}con_albums_props`;
 CREATE TABLE `{#}con_albums_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -421,7 +422,7 @@ CREATE TABLE `{#}con_albums_props` (
 
 DROP TABLE IF EXISTS `{#}con_albums_props_bind`;
 CREATE TABLE `{#}con_albums_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -444,7 +445,7 @@ CREATE TABLE `{#}con_albums_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -457,14 +458,14 @@ CREATE TABLE `{#}con_articles` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -504,8 +505,8 @@ INSERT INTO `{#}con_articles` (`id`, `title`, `content`, `slug`, `seo_keys`, `se
 
 DROP TABLE IF EXISTS `{#}con_articles_cats`;
 CREATE TABLE `{#}con_articles_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -524,7 +525,8 @@ CREATE TABLE `{#}con_articles_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -554,7 +556,7 @@ INSERT INTO `{#}con_articles_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_articles_fields`;
 CREATE TABLE `{#}con_articles_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -597,7 +599,7 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 
 DROP TABLE IF EXISTS `{#}con_articles_props`;
 CREATE TABLE `{#}con_articles_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -612,7 +614,7 @@ CREATE TABLE `{#}con_articles_props` (
 
 DROP TABLE IF EXISTS `{#}con_articles_props_bind`;
 CREATE TABLE `{#}con_articles_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -635,7 +637,7 @@ CREATE TABLE `{#}con_articles_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_board`;
 CREATE TABLE `{#}con_board` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -648,14 +650,14 @@ CREATE TABLE `{#}con_board` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -692,8 +694,8 @@ INSERT INTO `{#}con_board` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_d
 
 DROP TABLE IF EXISTS `{#}con_board_cats`;
 CREATE TABLE `{#}con_board_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -712,7 +714,8 @@ CREATE TABLE `{#}con_board_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_board_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -742,7 +745,7 @@ INSERT INTO `{#}con_board_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_board_fields`;
 CREATE TABLE `{#}con_board_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -784,7 +787,7 @@ INSERT INTO `{#}con_board_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 
 DROP TABLE IF EXISTS `{#}con_board_props`;
 CREATE TABLE `{#}con_board_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -824,7 +827,7 @@ INSERT INTO `{#}con_board_props` (`id`, `ctype_id`, `title`, `fieldset`, `type`,
 
 DROP TABLE IF EXISTS `{#}con_board_props_bind`;
 CREATE TABLE `{#}con_board_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -935,7 +938,7 @@ INSERT INTO `{#}con_board_props_values` (`prop_id`, `item_id`, `value`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_news`;
 CREATE TABLE `{#}con_news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -948,14 +951,14 @@ CREATE TABLE `{#}con_news` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -998,8 +1001,8 @@ INSERT INTO `{#}con_news` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_de
 
 DROP TABLE IF EXISTS `{#}con_news_cats`;
 CREATE TABLE `{#}con_news_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -1018,7 +1021,8 @@ CREATE TABLE `{#}con_news_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -1051,7 +1055,7 @@ INSERT INTO `{#}con_news_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_news_fields`;
 CREATE TABLE `{#}con_news_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -1091,7 +1095,7 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 
 DROP TABLE IF EXISTS `{#}con_news_props`;
 CREATE TABLE `{#}con_news_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -1106,7 +1110,7 @@ CREATE TABLE `{#}con_news_props` (
 
 DROP TABLE IF EXISTS `{#}con_news_props_bind`;
 CREATE TABLE `{#}con_news_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -1129,7 +1133,7 @@ CREATE TABLE `{#}con_news_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_pages`;
 CREATE TABLE `{#}con_pages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -1142,14 +1146,14 @@ CREATE TABLE `{#}con_pages` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -1180,8 +1184,8 @@ INSERT INTO `{#}con_pages` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_d
 
 DROP TABLE IF EXISTS `{#}con_pages_cats`;
 CREATE TABLE `{#}con_pages_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -1200,7 +1204,8 @@ CREATE TABLE `{#}con_pages_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_pages_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -1220,7 +1225,7 @@ INSERT INTO `{#}con_pages_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -1259,7 +1264,7 @@ INSERT INTO `{#}con_pages_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 
 DROP TABLE IF EXISTS `{#}con_pages_props`;
 CREATE TABLE `{#}con_pages_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -1274,7 +1279,7 @@ CREATE TABLE `{#}con_pages_props` (
 
 DROP TABLE IF EXISTS `{#}con_pages_props_bind`;
 CREATE TABLE `{#}con_pages_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -1297,7 +1302,7 @@ CREATE TABLE `{#}con_pages_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_posts`;
 CREATE TABLE `{#}con_posts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -1310,14 +1315,14 @@ CREATE TABLE `{#}con_posts` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -1350,8 +1355,8 @@ INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_d
 
 DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -1370,7 +1375,8 @@ CREATE TABLE `{#}con_posts_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -1389,7 +1395,7 @@ INSERT INTO `{#}con_posts_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_posts_fields`;
 CREATE TABLE `{#}con_posts_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -1428,7 +1434,7 @@ INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 
 DROP TABLE IF EXISTS `{#}con_posts_props`;
 CREATE TABLE `{#}con_posts_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -1443,7 +1449,7 @@ CREATE TABLE `{#}con_posts_props` (
 
 DROP TABLE IF EXISTS `{#}con_posts_props_bind`;
 CREATE TABLE `{#}con_posts_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -1466,7 +1472,7 @@ CREATE TABLE `{#}con_posts_props_values` (
 
 DROP TABLE IF EXISTS `{#}events`;
 CREATE TABLE `{#}events` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `event` varchar(32) NOT NULL COMMENT 'Событие',
   `listener` varchar(32) NOT NULL COMMENT 'Слушатель (компонент)',
   `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
@@ -13556,7 +13562,7 @@ INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(11) unsigned DEFAULT NULL COMMENT 'ID группы',
   `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пригласившего',
   `invited_id` int(11) unsigned DEFAULT NULL COMMENT 'ID приглашенного',
@@ -14078,7 +14084,6 @@ CREATE TABLE `{#}users` (
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
-  `is_online` tinyint(1) unsigned DEFAULT NULL COMMENT 'Пользователь онлайн?',
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',
@@ -14118,7 +14123,6 @@ CREATE TABLE `{#}users` (
   KEY `friends_count` (`friends_count`),
   KEY `karma` (`karma`),
   KEY `rating` (`rating`),
-  KEY `is_online` (`is_online`),
   KEY `is_locked` (`is_locked`),
   KEY `date_reg` (`date_reg`),
   KEY `date_log` (`date_log`),
@@ -14128,8 +14132,8 @@ CREATE TABLE `{#}users` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_online`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '814b7dbc3d1da7a405b1bf9d3fb9da33', 'ed0c56776caf89d8', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 11:56:29', '2013-02-02 14:40:35', '127.0.0.1', 0, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
+(1, '---\n- 6\n', 'admin@example.com', '814b7dbc3d1da7a405b1bf9d3fb9da33', 'ed0c56776caf89d8', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 11:56:29', '2013-02-02 14:40:35', '127.0.0.1', NULL, NULL, NULL, NULL, NULL, '2013-04-24 15:01:17', 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (

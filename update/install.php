@@ -16,4 +16,8 @@ function install_package(){
 
 	}
 
+    if($core->db->isFieldExists('{users}', 'is_online')){
+        $core->db->query("ALTER TABLE `{users}` DROP `is_online`;");
+    }
+
 }

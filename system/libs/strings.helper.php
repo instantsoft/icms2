@@ -187,7 +187,7 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . rand(0, 99999)) . '$' . $seed);
+    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . uniqid()) . '$' . $seed);
 
     if ($length < 32) { $string = mb_substr($string, 0, $length); }
 

@@ -26,7 +26,7 @@ class formWidgetContentSliderOptions extends cmsForm {
 			}
 
 			$datasets = $content_model->getContentDatasets($options['ctype_id']);
-			if ($datasets){ $datasets_list = array(''=>'') + array_collection_to_list($datasets, 'id', 'title'); }
+			if ($datasets){ $datasets_list = array(0=>'') + array_collection_to_list($datasets, 'id', 'title'); }
 
 			$fields = $content_model->getContentFields($ctype['name']);
 			if ($fields){ $fields_list = array(''=>'') + array_collection_to_list($fields, 'name', 'title'); }

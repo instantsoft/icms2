@@ -39,8 +39,9 @@ class modelUsers extends cmsModel{
 
         return $this->get('{users}', function($user){
 
-            $user['groups'] = cmsModel::yamlToArray($user['groups']);
-            $user['theme'] = cmsModel::yamlToArray($user['theme']);
+            $user['groups']    = cmsModel::yamlToArray($user['groups']);
+            $user['theme']     = cmsModel::yamlToArray($user['theme']);
+            $user['is_online'] = cmsUser::userIsOnline($user['id']);
 
             $user['city'] = $user['city_id'] ? array(
                 'id' => $user['city_id'],
@@ -91,6 +92,8 @@ class modelUsers extends cmsModel{
             'id' => $user['city_id'],
             'name' => $user['city_name'],
         ) : false;
+
+        $user['is_online'] = cmsUser::userIsOnline($user['id']);
 
         return $user;
 

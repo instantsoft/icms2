@@ -132,7 +132,6 @@ CHANGE  `counter`  `counter` INT( 11 ) UNSIGNED NOT NULL DEFAULT  '0';
 
 ALTER TABLE  `{#}users` CHANGE  `id`  `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 CHANGE  `is_admin`  `is_admin` TINYINT( 1 ) UNSIGNED NULL DEFAULT NULL COMMENT  'Администратор?',
-CHANGE  `is_online`  `is_online` TINYINT( 1 ) UNSIGNED NULL DEFAULT NULL COMMENT  'Пользователь онлайн?',
 CHANGE  `is_locked`  `is_locked` TINYINT( 1 ) UNSIGNED NULL DEFAULT NULL COMMENT  'Заблокирован',
 CHANGE  `files_count`  `files_count` INT( 11 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  'Кол-во загруженных файлов',
 CHANGE  `friends_count`  `friends_count` INT( 11 ) UNSIGNED NOT NULL DEFAULT  '0' COMMENT  'Кол-во друзей',

@@ -14,6 +14,9 @@ class cmsUser {
     public $is_admin = 0;
     public $is_logged = false;
 
+    private static $online_users = array();
+    private static $online_interval = 180;
+
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self;
@@ -35,6 +38,8 @@ class cmsUser {
 
         $this->groups = array(GUEST_GROUP_ID);
         $this->ip     = self::getIp();
+
+        self::loadOnlineUsersIds();
 
         self::deleteOldSessions();
 
@@ -223,6 +228,18 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    private static function loadOnlineUsersIds() {
+
+        $model = new cmsModel();
+
+        $users = $model->get('sessions_online', false, 'user_id');
+
+        if($users){
+            self::$online_users = $users;
+        }
+
+    }
+
     public static function createSession($user_id){
 
         $model = new cmsModel();
@@ -238,13 +255,6 @@ class cmsUser {
 
         $model->insertOrUpdate('sessions_online', $insert_data, $update_data);
 
-        if ($user_id){
-
-            $model->filterEqual('id', $user_id)->
-                    updateFiltered('{users}', array('is_online' => 1), true);
-
-        }
-
     }
 
     public static function deleteSession($user_id){
@@ -254,29 +264,25 @@ class cmsUser {
         $model->filterEqual('user_id', $user_id)->
                 deleteFiltered('sessions_online');
 
-        $model->filterEqual('id', $user_id)->
-                updateFiltered('{users}', array('is_online' => 0), true);
-
     }
 
     public static function deleteOldSessions(){
 
-        $model = new cmsModel();
+        $expired_users = array();
 
-        $model->filterDateOlder('date_created', 3, 'MINUTE');
+        if(self::$online_users){
+            foreach (self::$online_users as $user) {
+                if((time()-self::$online_interval) >= strtotime($user['date_created'])){
+                    $expired_users[] = $user['user_id'];
+                }
+            }
+        }
 
-        $users = $model->get('sessions_online', function($item, $model){
+        if ($expired_users){
 
-            return $item['user_id'] ? $item['user_id'] : false;
+            $model = new cmsModel();
 
-        }, false);
-
-        if ($users){
-
-            $model->filterIn('id', $users)->
-                    updateFiltered('{users}', array('is_online' => 0), true);
-
-            $model->filterDateOlder('date_created', 3, 'MINUTE')->
+            $model->filterIn('user_id', $expired_users)->
                     deleteFiltered('sessions_online');
 
         }
@@ -285,6 +291,18 @@ class cmsUser {
 
 //============================================================================//
 //============================================================================//
+
+    public static function userIsOnline($user_id) {
+        $online = false;
+        if(self::$online_users){
+            foreach (self::$online_users as $user) {
+                if($user['user_id'] == $user_id){
+                    $online = true; break;
+                }
+            }
+        }
+        return $online;
+    }
 
     public static function isLogged(){
         return self::getInstance()->is_logged;

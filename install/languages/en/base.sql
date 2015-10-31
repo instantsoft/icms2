@@ -1,19 +1,19 @@
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `group_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `group_id` int(11) unsigned DEFAULT NULL,
   `subject_title` varchar(140) DEFAULT NULL,
-  `subject_id` int(11) DEFAULT NULL,
+  `subject_id` int(11) unsigned DEFAULT NULL,
   `subject_url` varchar(250) DEFAULT NULL,
   `reply_url` varchar(250) DEFAULT NULL,
   `images` text,
-  `images_count` int(11) DEFAULT NULL,
+  `images_count` int(11) unsigned DEFAULT NULL,
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_private` tinyint(1) NOT NULL DEFAULT '0',
-  `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `is_pub` tinyint(1) DEFAULT '1',
+  `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `is_parent_hidden` tinyint(1) unsigned DEFAULT NULL,
+  `is_pub` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   KEY `user_id` (`user_id`),
@@ -43,8 +43,8 @@ INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_titl
 
 DROP TABLE IF EXISTS `{#}activity_types`;
 CREATE TABLE `{#}activity_types` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `is_enabled` tinyint(1) unsigned DEFAULT '1',
   `controller` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL,
   `title` varchar(100) NOT NULL,
@@ -71,15 +71,15 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL COMMENT 'ID родительского комментария',
-  `level` tinyint(4) DEFAULT NULL COMMENT 'Уровень вложенности',
-  `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер в дереве',
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID автора',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL COMMENT 'ID родительского комментария',
+  `level` tinyint(4) unsigned DEFAULT NULL COMMENT 'Уровень вложенности',
+  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер в дереве',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID автора',
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер комментируемого контента',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Объект комментирования',
-  `target_id` int(11) DEFAULT NULL COMMENT 'ID объекта комментирования',
+  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID объекта комментирования',
   `target_url` varchar(250) DEFAULT NULL COMMENT 'URL объекта комментирования',
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Заголовок объекта комментирования',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Имя автора (гостя)',
@@ -87,19 +87,14 @@ CREATE TABLE `{#}comments` (
   `author_url` varchar(255) DEFAULT NULL COMMENT 'Сайт автора (гостя)',
   `content` text COMMENT 'Текст комментария',
   `content_html` text COMMENT 'Текст после типографа',
-  `is_deleted` tinyint(1) DEFAULT NULL COMMENT 'Комментарий удален?',
-  `is_private` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Только для друзей?',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарий удален?',
+  `is_private` tinyint(1) unsigned DEFAULT '0' COMMENT 'Только для друзей?',
   `rating` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `target_controller` (`target_controller`),
-  KEY `target_type` (`target_subject`),
-  KEY `target_id` (`target_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `ordering` (`ordering`),
   KEY `is_private` (`is_private`),
   KEY `rating` (`rating`),
-  KEY `author_url` (`author_url`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_url`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
@@ -108,9 +103,9 @@ INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `d
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
 CREATE TABLE `{#}comments_rating` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `comment_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `comment_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `score` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `comment_id` (`comment_id`),
@@ -120,38 +115,36 @@ CREATE TABLE `{#}comments_rating` (
 
 DROP TABLE IF EXISTS `{#}comments_tracks`;
 CREATE TABLE `{#}comments_tracks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `target_controller` varchar(32) DEFAULT NULL,
   `target_subject` varchar(32) DEFAULT NULL,
-  `target_id` int(11) DEFAULT NULL,
+  `target_id` int(11) unsigned DEFAULT NULL,
   `target_url` varchar(250) DEFAULT NULL,
   `target_title` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `target_controller` (`target_controller`),
-  KEY `target_subject` (`target_subject`),
-  KEY `target_id` (`target_id`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Подписки пользователей на новые комментарии';
 
 
 DROP TABLE IF EXISTS `{#}content_datasets`;
 CREATE TABLE `{#}content_datasets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL COMMENT 'ID типа контента',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL COMMENT 'ID типа контента',
   `name` varchar(32) NOT NULL COMMENT 'Название набора',
   `title` varchar(100) NOT NULL COMMENT 'Заголовок набора',
-  `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
-  `is_visible` tinyint(1) DEFAULT NULL COMMENT 'Отображать набор на сайте?',
+  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
+  `is_visible` tinyint(1) unsigned DEFAULT NULL COMMENT 'Отображать набор на сайте?',
   `filters` text NOT NULL COMMENT 'Массив фильтров набора',
   `sorting` text NOT NULL COMMENT 'Массив правил сортировки',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Скрывать от групп',
   PRIMARY KEY (`id`),
-  KEY `ctype_id` (`ctype_id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),
-  KEY `is_visible` (`is_visible`)
+  KEY `is_visible` (`is_visible`),
+  KEY `ctype_id` (`ctype_id`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Наборы для типов контента';
 
 INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `groups_view`, `groups_hide`) VALUES
@@ -170,9 +163,9 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 
 DROP TABLE IF EXISTS `{#}content_folders`;
 CREATE TABLE `{#}content_folders` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ctype_id` (`ctype_id`),
@@ -184,27 +177,27 @@ INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 
 DROP TABLE IF EXISTS `{#}content_types`;
 CREATE TABLE `{#}content_types` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `description` varchar(255) DEFAULT NULL COMMENT 'Описание',
-  `is_date_range` tinyint(1) DEFAULT NULL,
-  `is_premod_add` tinyint(1) DEFAULT NULL COMMENT 'Модерация при создании?',
-  `is_premod_edit` tinyint(1) DEFAULT NULL COMMENT 'Модерация при редактировании',
-  `is_cats` tinyint(1) DEFAULT NULL COMMENT 'Категории включены?',
-  `is_cats_recursive` tinyint(1) DEFAULT NULL COMMENT 'Сквозной просмотр категорий?',
-  `is_folders` tinyint(1) DEFAULT NULL,
-  `is_in_groups` tinyint(1) DEFAULT NULL COMMENT 'Создание в группах',
-  `is_in_groups_only` tinyint(1) DEFAULT NULL COMMENT 'Создание только в группах',
-  `is_comments` tinyint(1) DEFAULT NULL COMMENT 'Комментарии включены?',
-  `is_comments_tree` tinyint(1) DEFAULT NULL,
-  `is_rating` tinyint(1) DEFAULT NULL COMMENT 'Разрешить рейтинг?',
-  `is_rating_pos` tinyint(1) DEFAULT NULL,
-  `is_tags` tinyint(1) DEFAULT NULL,
-  `is_auto_keys` tinyint(1) DEFAULT NULL COMMENT 'Автоматическая генерация ключевых слов?',
-  `is_auto_desc` tinyint(1) DEFAULT NULL COMMENT 'Автоматическая генерация описания?',
-  `is_auto_url` tinyint(1) DEFAULT NULL COMMENT 'Генерировать URL из заголовка?',
-  `is_fixed_url` tinyint(1) DEFAULT NULL COMMENT 'Не изменять URL при изменении записи?',
+  `is_date_range` tinyint(1) unsigned DEFAULT NULL,
+  `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при создании?',
+  `is_premod_edit` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при редактировании',
+  `is_cats` tinyint(1) unsigned DEFAULT NULL COMMENT 'Категории включены?',
+  `is_cats_recursive` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сквозной просмотр категорий?',
+  `is_folders` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_groups` tinyint(1) unsigned DEFAULT NULL COMMENT 'Создание в группах',
+  `is_in_groups_only` tinyint(1) unsigned DEFAULT NULL COMMENT 'Создание только в группах',
+  `is_comments` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарии включены?',
+  `is_comments_tree` tinyint(1) unsigned DEFAULT NULL,
+  `is_rating` tinyint(1) unsigned DEFAULT NULL COMMENT 'Разрешить рейтинг?',
+  `is_rating_pos` tinyint(1) unsigned DEFAULT NULL,
+  `is_tags` tinyint(1) unsigned DEFAULT NULL,
+  `is_auto_keys` tinyint(1) unsigned DEFAULT NULL COMMENT 'Автоматическая генерация ключевых слов?',
+  `is_auto_desc` tinyint(1) unsigned DEFAULT NULL COMMENT 'Автоматическая генерация описания?',
+  `is_auto_url` tinyint(1) unsigned DEFAULT NULL COMMENT 'Генерировать URL из заголовка?',
+  `is_fixed_url` tinyint(1) unsigned DEFAULT NULL COMMENT 'Не изменять URL при изменении записи?',
   `url_pattern` varchar(255) DEFAULT '{id}-{title}',
   `options` text COMMENT 'Массив опций',
   `labels` text COMMENT 'Массив заголовков',
@@ -212,7 +205,7 @@ CREATE TABLE `{#}content_types` (
   `seo_desc` text COMMENT 'Описание',
   `seo_title` varchar(255) DEFAULT NULL,
   `item_append_html` text,
-  `is_fixed` tinyint(1) DEFAULT NULL,
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `is_cats` (`is_cats`),
@@ -235,15 +228,15 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
-  `is_enabled` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Включен?',
+  `is_enabled` tinyint(1) unsigned DEFAULT '1' COMMENT 'Включен?',
   `options` text COMMENT 'Массив настроек',
   `author` varchar(128) NOT NULL COMMENT 'Имя автора',
   `url` varchar(250) DEFAULT NULL COMMENT 'Сайт автора',
   `version` varchar(8) NOT NULL COMMENT 'Версия',
-  `is_backend` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Есть админка?',
+  `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Есть админка?',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `enabled` (`is_enabled`),
@@ -273,7 +266,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -286,14 +279,14 @@ CREATE TABLE `{#}con_albums` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -327,8 +320,8 @@ INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
 CREATE TABLE `{#}con_albums_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -347,7 +340,8 @@ CREATE TABLE `{#}con_albums_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_albums_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -367,7 +361,7 @@ INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -407,7 +401,7 @@ INSERT INTO `{#}con_albums_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `
 
 DROP TABLE IF EXISTS `{#}con_albums_props`;
 CREATE TABLE `{#}con_albums_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -422,7 +416,7 @@ CREATE TABLE `{#}con_albums_props` (
 
 DROP TABLE IF EXISTS `{#}con_albums_props_bind`;
 CREATE TABLE `{#}con_albums_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -445,7 +439,7 @@ CREATE TABLE `{#}con_albums_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -458,14 +452,14 @@ CREATE TABLE `{#}con_articles` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -505,8 +499,8 @@ INSERT INTO `{#}con_articles` (`id`, `title`, `content`, `slug`, `seo_keys`, `se
 
 DROP TABLE IF EXISTS `{#}con_articles_cats`;
 CREATE TABLE `{#}con_articles_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -525,7 +519,8 @@ CREATE TABLE `{#}con_articles_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -555,7 +550,7 @@ INSERT INTO `{#}con_articles_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_articles_fields`;
 CREATE TABLE `{#}con_articles_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -598,7 +593,7 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 
 DROP TABLE IF EXISTS `{#}con_articles_props`;
 CREATE TABLE `{#}con_articles_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -613,7 +608,7 @@ CREATE TABLE `{#}con_articles_props` (
 
 DROP TABLE IF EXISTS `{#}con_articles_props_bind`;
 CREATE TABLE `{#}con_articles_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -636,7 +631,7 @@ CREATE TABLE `{#}con_articles_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_news`;
 CREATE TABLE `{#}con_news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -649,14 +644,14 @@ CREATE TABLE `{#}con_news` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -698,8 +693,8 @@ INSERT INTO `{#}con_news` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_de
 
 DROP TABLE IF EXISTS `{#}con_news_cats`;
 CREATE TABLE `{#}con_news_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -718,7 +713,8 @@ CREATE TABLE `{#}con_news_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -750,7 +746,7 @@ INSERT INTO `{#}con_news_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_news_fields`;
 CREATE TABLE `{#}con_news_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -790,7 +786,7 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 
 DROP TABLE IF EXISTS `{#}con_news_props`;
 CREATE TABLE `{#}con_news_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -805,7 +801,7 @@ CREATE TABLE `{#}con_news_props` (
 
 DROP TABLE IF EXISTS `{#}con_news_props_bind`;
 CREATE TABLE `{#}con_news_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -828,7 +824,7 @@ CREATE TABLE `{#}con_news_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_pages`;
 CREATE TABLE `{#}con_pages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -841,14 +837,14 @@ CREATE TABLE `{#}con_pages` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -879,8 +875,8 @@ INSERT INTO `{#}con_pages` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_d
 
 DROP TABLE IF EXISTS `{#}con_pages_cats`;
 CREATE TABLE `{#}con_pages_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -899,7 +895,8 @@ CREATE TABLE `{#}con_pages_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_pages_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -919,7 +916,7 @@ INSERT INTO `{#}con_pages_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -958,7 +955,7 @@ INSERT INTO `{#}con_pages_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 
 DROP TABLE IF EXISTS `{#}con_pages_props`;
 CREATE TABLE `{#}con_pages_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -973,7 +970,7 @@ CREATE TABLE `{#}con_pages_props` (
 
 DROP TABLE IF EXISTS `{#}con_pages_props_bind`;
 CREATE TABLE `{#}con_pages_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -996,7 +993,7 @@ CREATE TABLE `{#}con_pages_props_values` (
 
 DROP TABLE IF EXISTS `{#}con_posts`;
 CREATE TABLE `{#}con_posts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
@@ -1009,14 +1006,14 @@ CREATE TABLE `{#}con_posts` (
   `date_pub_end` timestamp NULL DEFAULT NULL,
   `is_pub` tinyint(1) DEFAULT '1',
   `hits_count` int(11) DEFAULT '0',
-  `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `parent_type` varchar(32) DEFAULT NULL,
   `parent_title` varchar(100) DEFAULT NULL,
   `parent_url` varchar(255) DEFAULT NULL,
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
-  `category_id` int(11) NOT NULL DEFAULT '1',
-  `folder_id` int(11) DEFAULT NULL,
+  `category_id` int(11) unsigned NOT NULL DEFAULT '1',
+  `folder_id` int(11) unsigned DEFAULT NULL,
   `is_comments_on` tinyint(1) DEFAULT NULL,
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
@@ -1049,8 +1046,8 @@ INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_d
 
 DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
@@ -1069,7 +1066,8 @@ CREATE TABLE `{#}con_posts_cats` (
   KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
   KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`)
+  KEY `ns_ignore` (`ns_ignore`),
+  KEY `slug` (`slug`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -1088,7 +1086,7 @@ INSERT INTO `{#}con_posts_cats_bind` (`item_id`, `category_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}con_posts_fields`;
 CREATE TABLE `{#}con_posts_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
@@ -1127,7 +1125,7 @@ INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 
 DROP TABLE IF EXISTS `{#}con_posts_props`;
 CREATE TABLE `{#}con_posts_props` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
@@ -1142,7 +1140,7 @@ CREATE TABLE `{#}con_posts_props` (
 
 DROP TABLE IF EXISTS `{#}con_posts_props_bind`;
 CREATE TABLE `{#}con_posts_props_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `prop_id` int(11) DEFAULT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -1165,7 +1163,7 @@ CREATE TABLE `{#}con_posts_props_values` (
 
 DROP TABLE IF EXISTS `{#}events`;
 CREATE TABLE `{#}events` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `event` varchar(32) NOT NULL COMMENT 'Событие',
   `listener` varchar(32) NOT NULL COMMENT 'Слушатель (компонент)',
   `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
@@ -44913,18 +44911,18 @@ INSERT INTO `{#}geo_regions` (`id`, `country_id`, `name`) VALUES
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) DEFAULT NULL COMMENT 'Создатель',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `owner_id` int(11) unsigned DEFAULT NULL COMMENT 'Создатель',
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
   `title` varchar(128) NOT NULL COMMENT 'Название',
   `description` text COMMENT 'Описание',
   `logo` text COMMENT 'Логотип группы',
   `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Рейтинг',
-  `members_count` int(11) NOT NULL DEFAULT '0' COMMENT 'Кол-во членов',
-  `join_policy` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Политика вступления',
-  `edit_policy` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Политика редактирования',
-  `wall_policy` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Политика стены',
-  `is_closed` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Закрытая?',
+  `members_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во членов',
+  `join_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика вступления',
+  `edit_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика редактирования',
+  `wall_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика стены',
+  `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Закрытая?',
   PRIMARY KEY (`id`),
   KEY `owner_id` (`owner_id`),
   KEY `date_pub` (`date_pub`),
@@ -44939,10 +44937,10 @@ INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) DEFAULT NULL COMMENT 'ID группы',
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID пригласившего',
-  `invited_id` int(11) DEFAULT NULL COMMENT 'ID приглашенного',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) unsigned DEFAULT NULL COMMENT 'ID группы',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пригласившего',
+  `invited_id` int(11) unsigned DEFAULT NULL COMMENT 'ID приглашенного',
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
   KEY `user_id` (`user_id`),
@@ -44952,10 +44950,10 @@ CREATE TABLE `{#}groups_invites` (
 
 DROP TABLE IF EXISTS `{#}groups_members`;
 CREATE TABLE `{#}groups_members` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `role` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'Роль пользователя в группе',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `role` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Роль пользователя в группе',
   `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата обновления роли',
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
@@ -44968,17 +44966,17 @@ INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_upda
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
-  `width` int(11) DEFAULT NULL,
-  `height` int(11) DEFAULT NULL,
-  `is_square` tinyint(1) DEFAULT NULL,
-  `is_watermark` tinyint(1) DEFAULT NULL,
+  `width` int(11) unsigned DEFAULT NULL,
+  `height` int(11) unsigned DEFAULT NULL,
+  `is_square` tinyint(1) unsigned DEFAULT NULL,
+  `is_watermark` tinyint(1) unsigned DEFAULT NULL,
   `wm_image` text,
   `wm_origin` varchar(16) DEFAULT NULL,
-  `wm_margin` int(11) DEFAULT NULL,
-  `is_internal` tinyint(1) DEFAULT NULL,
+  `wm_margin` int(11) unsigned DEFAULT NULL,
+  `is_internal` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `is_square` (`is_square`),
@@ -44997,10 +44995,10 @@ INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_s
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `title` varchar(64) DEFAULT NULL COMMENT 'Название меню',
-  `is_fixed` tinyint(1) DEFAULT NULL COMMENT 'Запрещено удалять?',
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL COMMENT 'Запрещено удалять?',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Меню сайта';
@@ -45014,12 +45012,12 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 
 DROP TABLE IF EXISTS `{#}menu_items`;
 CREATE TABLE `{#}menu_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `menu_id` int(11) DEFAULT NULL COMMENT 'ID меню',
-  `parent_id` int(11) DEFAULT '0' COMMENT 'ID родительского пункта',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `menu_id` int(11) unsigned DEFAULT NULL COMMENT 'ID меню',
+  `parent_id` int(11) unsigned DEFAULT '0' COMMENT 'ID родительского пункта',
   `title` varchar(64) DEFAULT NULL COMMENT 'Заголовок пункта',
   `url` varchar(255) DEFAULT NULL COMMENT 'Ссылка',
-  `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
+  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
   `options` text COMMENT 'Массив опций',
   `groups_view` text COMMENT 'Массив разрешенных групп пользователей',
   `groups_hide` text COMMENT 'Массив запрещенных групп пользователей',
@@ -45060,13 +45058,13 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 
 DROP TABLE IF EXISTS `{#}moderators`;
 CREATE TABLE `{#}moderators` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `date_assigned` timestamp NULL DEFAULT NULL,
   `ctype_name` varchar(32) DEFAULT NULL,
-  `count_approved` int(11) NOT NULL DEFAULT '0',
-  `count_deleted` int(11) NOT NULL DEFAULT '0',
-  `count_idle` int(11) NOT NULL DEFAULT '0',
+  `count_approved` int(11) unsigned NOT NULL DEFAULT '0',
+  `count_deleted` int(11) unsigned NOT NULL DEFAULT '0',
+  `count_idle` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `ctype_name` (`ctype_name`),
@@ -45078,15 +45076,15 @@ INSERT INTO `{#}moderators` (`id`, `user_id`, `date_assigned`, `ctype_name`, `co
 
 DROP TABLE IF EXISTS `{#}moderators_tasks`;
 CREATE TABLE `{#}moderators_tasks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `moderator_id` int(11) DEFAULT NULL,
-  `author_id` int(11) DEFAULT NULL,
-  `item_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `moderator_id` int(11) unsigned DEFAULT NULL,
+  `author_id` int(11) unsigned DEFAULT NULL,
+  `item_id` int(11) unsigned DEFAULT NULL,
   `ctype_name` varchar(32) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `url` varchar(256) DEFAULT NULL,
   `date_pub` timestamp NULL DEFAULT NULL,
-  `is_new_item` tinyint(1) NOT NULL DEFAULT '1',
+  `is_new_item` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `moderator_id` (`moderator_id`),
   KEY `author_id` (`author_id`),
@@ -45099,7 +45097,7 @@ CREATE TABLE `{#}moderators_tasks` (
 
 DROP TABLE IF EXISTS `{#}perms_rules`;
 CREATE TABLE `{#}perms_rules` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент (владелец)',
   `name` varchar(32) NOT NULL COMMENT 'Название правила',
   `type` enum('flag','list','number') NOT NULL DEFAULT 'flag' COMMENT 'Тип выбора (flag,list...)',
@@ -45140,8 +45138,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
-  `rule_id` int(11) NOT NULL COMMENT 'ID правила',
-  `group_id` int(11) DEFAULT NULL COMMENT 'ID группы',
+  `rule_id` int(11) unsigned DEFAULT NULL COMMENT 'ID правила',
+  `group_id` int(11) unsigned DEFAULT NULL COMMENT 'ID группы',
   `subject` varchar(32) DEFAULT NULL COMMENT 'Субъект действия правила',
   `value` varchar(16) NOT NULL COMMENT 'Значение правила',
   KEY `rule_id` (`rule_id`),
@@ -45272,14 +45270,14 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 
 DROP TABLE IF EXISTS `{#}photos`;
 CREATE TABLE `{#}photos` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `album_id` int(11) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `album_id` int(11) unsigned DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `title` varchar(128) NOT NULL,
   `image` text NOT NULL,
   `rating` int(11) NOT NULL DEFAULT '0',
-  `comments` int(11) NOT NULL DEFAULT '0',
+  `comments` int(11) unsigned DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `album_id` (`album_id`),
   KEY `user_id` (`user_id`),
@@ -45296,33 +45294,31 @@ INSERT INTO `{#}photos` (`id`, `album_id`, `user_id`, `date_pub`, `title`, `imag
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID пользователя',
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пользователя',
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Компонент (владелец оцениваемого контента)',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект (тип оцениваемого контента)',
-  `target_id` int(11) DEFAULT NULL COMMENT 'ID субъекта (записи оцениваемого контента)',
-  `score` tinyint(4) DEFAULT NULL COMMENT 'Значение оценки',
+  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта (записи оцениваемого контента)',
+  `score` tinyint(3) DEFAULT NULL COMMENT 'Значение оценки',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `target_controller` (`target_controller`),
-  KEY `target_type` (`target_subject`),
-  KEY `target_id` (`target_id`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Оценки рейтинга';
 
 
 DROP TABLE IF EXISTS `{#}rss_feeds`;
 CREATE TABLE `{#}rss_feeds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL,
   `ctype_name` varchar(32) DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   `description` text,
   `image` text,
   `mapping` text,
-  `limit` int(11) NOT NULL DEFAULT '15',
-  `is_enabled` tinyint(1) DEFAULT NULL,
-  `is_cache` tinyint(1) DEFAULT NULL,
-  `cache_interval` int(11) DEFAULT '60',
+  `limit` int(11) unsigned NOT NULL DEFAULT '15',
+  `is_enabled` tinyint(1) unsigned DEFAULT NULL,
+  `is_cache` tinyint(1) unsigned DEFAULT NULL,
+  `cache_interval` int(11) unsigned DEFAULT '60',
   `date_cached` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ctype_id` (`ctype_id`),
@@ -45341,14 +45337,14 @@ INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `descriptio
 
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
 CREATE TABLE `{#}scheduler_tasks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(250) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `hook` varchar(32) DEFAULT NULL,
-  `period` int(11) DEFAULT NULL,
+  `period` int(11) unsigned DEFAULT NULL,
   `date_last_run` timestamp NULL DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT NULL,
-  `is_new` tinyint(1) NOT NULL DEFAULT '1',
+  `is_active` tinyint(1) unsigned DEFAULT NULL,
+  `is_new` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
@@ -45365,7 +45361,7 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (
   `session_id` varchar(32) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `session_id` (`session_id`),
   KEY `user_id` (`user_id`),
@@ -45375,9 +45371,9 @@ CREATE TABLE `{#}sessions_online` (
 
 DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(32) NOT NULL,
-  `frequency` int(11) NOT NULL DEFAULT '1',
+  `frequency` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список тегов';
@@ -45393,12 +45389,13 @@ INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
 
 DROP TABLE IF EXISTS `{#}tags_bind`;
 CREATE TABLE `{#}tags_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `tag_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tag_id` int(11) unsigned DEFAULT NULL,
   `target_controller` varchar(32) DEFAULT NULL,
   `target_subject` varchar(32) DEFAULT NULL,
-  `target_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `target_id` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка тегов к материалам';
 
 INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject`, `target_id`) VALUES
@@ -45421,11 +45418,11 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `url_key` varchar(32) DEFAULT NULL,
   `path` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `counter` int(11) NOT NULL DEFAULT '0',
+  `counter` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `url_key` (`url_key`),
   KEY `counter` (`counter`)
@@ -45434,39 +45431,38 @@ CREATE TABLE `{#}uploaded_files` (
 
 DROP TABLE IF EXISTS `{#}users`;
 CREATE TABLE `{#}users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groups` text COMMENT 'Массив групп пользователя',
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL COMMENT 'Хэш пароля',
   `password_salt` varchar(16) DEFAULT NULL COMMENT 'Соль пароля',
-  `is_admin` tinyint(1) DEFAULT NULL COMMENT 'Администратор?',
+  `is_admin` tinyint(1) unsigned DEFAULT NULL COMMENT 'Администратор?',
   `nickname` varchar(100) NOT NULL COMMENT 'Имя',
   `date_reg` timestamp NULL DEFAULT NULL COMMENT 'Дата регистрации',
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
-  `is_online` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Пользователь онлайн?',
-  `is_locked` tinyint(1) DEFAULT NULL COMMENT 'Заблокирован',
+  `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',
   `auth_token` varchar(32) DEFAULT NULL COMMENT 'Ключ для автологина',
   `pass_token` varchar(32) DEFAULT NULL COMMENT 'Ключ для восстановления пароля',
   `date_token` timestamp NULL DEFAULT NULL COMMENT 'Дата создания ключа восстановления пароля',
-  `files_count` int(11) NOT NULL DEFAULT '0' COMMENT 'Кол-во загруженных файлов',
-  `friends_count` int(11) NOT NULL DEFAULT '0' COMMENT 'Кол-во друзей',
+  `files_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во загруженных файлов',
+  `friends_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во друзей',
   `time_zone` varchar(32) DEFAULT NULL COMMENT 'Часовой пояс',
   `karma` int(11) NOT NULL DEFAULT '0' COMMENT 'Репутация',
   `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Рейтинг',
   `theme` text COMMENT 'Настройки темы профиля',
   `notify_options` text COMMENT 'Настройки уведомлений',
   `privacy_options` text COMMENT 'Настройки приватности',
-  `status_id` int(11) DEFAULT NULL COMMENT 'Текстовый статус',
+  `status_id` int(11) unsigned DEFAULT NULL COMMENT 'Текстовый статус',
   `status_text` varchar(140) DEFAULT NULL COMMENT 'Текст статуса',
-  `inviter_id` int(11) DEFAULT NULL,
-  `invites_count` int(11) NOT NULL DEFAULT '0',
+  `inviter_id` int(11) unsigned DEFAULT NULL,
+  `invites_count` int(11) unsigned NOT NULL DEFAULT '0',
   `date_invites` timestamp NULL DEFAULT NULL,
   `birth_date` datetime DEFAULT NULL,
-  `city` int(11) DEFAULT NULL,
+  `city` int(11) unsigned DEFAULT NULL,
   `hobby` text,
   `avatar` text,
   `icq` varchar(255) DEFAULT NULL,
@@ -45485,7 +45481,6 @@ CREATE TABLE `{#}users` (
   KEY `friends_count` (`friends_count`),
   KEY `karma` (`karma`),
   KEY `rating` (`rating`),
-  KEY `is_online` (`is_online`),
   KEY `is_locked` (`is_locked`),
   KEY `date_reg` (`date_reg`),
   KEY `date_log` (`date_log`),
@@ -45495,16 +45490,16 @@ CREATE TABLE `{#}users` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_online`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '6fb0f0dda618e56f721bdd2a27355a7c', '40e1b1f395be54c1', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 12:08:19', '2013-02-02 14:40:35', '127.0.0.1', 0, NULL, NULL, NULL, '5cbac2a8d56a34cd39d6cefc34983a8d', NULL, '2013-04-24 15:01:17', 468, 2, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
+(1, '---\n- 6\n', 'admin@example.com', '6fb0f0dda618e56f721bdd2a27355a7c', '40e1b1f395be54c1', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 12:08:19', '2013-02-02 14:40:35', '127.0.0.1', NULL, NULL, NULL, NULL, NULL, '2013-04-24 15:01:17', 468, 2, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID пользователя',
-  `contact_id` int(11) DEFAULT NULL COMMENT 'ID контакта (другого пользователя)',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пользователя',
+  `contact_id` int(11) unsigned DEFAULT NULL COMMENT 'ID контакта (другого пользователя)',
   `date_last_msg` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата последнего сообщения',
-  `messages` int(11) NOT NULL DEFAULT '0' COMMENT 'Кол-во сообщений',
+  `messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во сообщений',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `contact_id` (`contact_id`)
@@ -45513,21 +45508,21 @@ CREATE TABLE `{#}users_contacts` (
 
 DROP TABLE IF EXISTS `{#}users_fields`;
 CREATE TABLE `{#}users_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ctype_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL,
   `name` varchar(20) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
-  `ordering` int(11) DEFAULT NULL,
+  `ordering` int(11) unsigned DEFAULT NULL,
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
-  `is_in_list` tinyint(1) DEFAULT NULL,
-  `is_in_item` tinyint(1) DEFAULT NULL,
-  `is_in_filter` tinyint(1) DEFAULT NULL,
-  `is_private` tinyint(1) DEFAULT NULL,
-  `is_fixed` tinyint(1) DEFAULT NULL,
-  `is_fixed_type` tinyint(1) DEFAULT NULL,
-  `is_system` tinyint(1) DEFAULT NULL,
+  `is_in_list` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_item` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_filter` tinyint(1) unsigned DEFAULT NULL,
+  `is_private` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed_type` tinyint(1) unsigned DEFAULT NULL,
+  `is_system` tinyint(1) unsigned DEFAULT NULL,
   `values` text,
   `options` text,
   `groups_read` text,
@@ -45557,25 +45552,25 @@ INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `order
 
 DROP TABLE IF EXISTS `{#}users_friends`;
 CREATE TABLE `{#}users_friends` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID пользователя',
-  `friend_id` int(11) DEFAULT NULL COMMENT 'ID друга',
-  `is_mutual` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Дружба взаимна?',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID пользователя',
+  `friend_id` int(11) unsigned DEFAULT NULL COMMENT 'ID друга',
+  `is_mutual` tinyint(1) unsigned DEFAULT NULL COMMENT 'Дружба взаимна?',
   PRIMARY KEY (`id`),
-  KEY `from_id` (`user_id`),
-  KEY `to_id` (`friend_id`),
-  KEY `is_mutual` (`is_mutual`)
+  KEY `is_mutual` (`is_mutual`),
+  KEY `friend_id` (`friend_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Дружба пользователей';
 
 
 DROP TABLE IF EXISTS `{#}users_groups`;
 CREATE TABLE `{#}users_groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `title` varchar(32) NOT NULL COMMENT 'Название группы',
-  `is_fixed` tinyint(1) DEFAULT NULL COMMENT 'Системная?',
-  `is_public` tinyint(1) DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
-  `is_filter` tinyint(1) DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL COMMENT 'Системная?',
+  `is_public` tinyint(1) unsigned DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
+  `is_filter` tinyint(1) unsigned DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
   PRIMARY KEY (`id`),
   KEY `is_fixed` (`is_fixed`),
   KEY `is_public` (`is_public`),
@@ -45591,8 +45586,8 @@ INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `
 
 DROP TABLE IF EXISTS `{#}users_groups_members`;
 CREATE TABLE `{#}users_groups_members` (
-  `user_id` int(11) NOT NULL,
-  `group_id` int(11) NOT NULL,
+  `user_id` int(11) unsigned NOT NULL,
+  `group_id` int(11) unsigned NOT NULL,
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Привязка пользователей к группам';
@@ -45602,20 +45597,20 @@ INSERT INTO `{#}users_groups_members` (`user_id`, `group_id`) VALUES
 
 DROP TABLE IF EXISTS `{#}users_groups_migration`;
 CREATE TABLE `{#}users_groups_migration` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_active` tinyint(1) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `is_active` tinyint(1) unsigned DEFAULT NULL,
   `title` varchar(256) DEFAULT NULL,
-  `group_from_id` int(11) DEFAULT NULL,
-  `group_to_id` int(11) DEFAULT NULL,
-  `is_keep_group` tinyint(1) DEFAULT NULL,
-  `is_passed` tinyint(1) DEFAULT NULL,
-  `is_rating` tinyint(1) DEFAULT NULL,
-  `is_karma` tinyint(1) DEFAULT NULL,
-  `passed_days` int(11) DEFAULT NULL,
-  `passed_from` tinyint(1) DEFAULT NULL,
+  `group_from_id` int(11) unsigned DEFAULT NULL,
+  `group_to_id` int(11) unsigned DEFAULT NULL,
+  `is_keep_group` tinyint(1) unsigned DEFAULT NULL,
+  `is_passed` tinyint(1) unsigned DEFAULT NULL,
+  `is_rating` tinyint(1) unsigned DEFAULT NULL,
+  `is_karma` tinyint(1) unsigned DEFAULT NULL,
+  `passed_days` int(11) unsigned DEFAULT NULL,
+  `passed_from` tinyint(1) unsigned DEFAULT NULL,
   `rating` int(11) DEFAULT NULL,
   `karma` int(11) DEFAULT NULL,
-  `is_notify` tinyint(1) DEFAULT NULL,
+  `is_notify` tinyint(1) unsigned DEFAULT NULL,
   `notify_text` text,
   PRIMARY KEY (`id`),
   KEY `group_from_id` (`group_from_id`),
@@ -45627,9 +45622,9 @@ INSERT INTO `{#}users_groups_migration` (`id`, `is_active`, `title`, `group_from
 
 DROP TABLE IF EXISTS `{#}users_ignors`;
 CREATE TABLE `{#}users_ignors` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL COMMENT 'ID пользователя',
-  `ignored_user_id` int(11) NOT NULL COMMENT 'ID игнорируемого пользователя',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned NOT NULL COMMENT 'ID пользователя',
+  `ignored_user_id` int(11) unsigned NOT NULL COMMENT 'ID игнорируемого пользователя',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `ignored_id` (`ignored_user_id`)
@@ -45638,8 +45633,8 @@ CREATE TABLE `{#}users_ignors` (
 
 DROP TABLE IF EXISTS `{#}users_invites`;
 CREATE TABLE `{#}users_invites` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `code` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -45651,9 +45646,9 @@ CREATE TABLE `{#}users_invites` (
 
 DROP TABLE IF EXISTS `{#}users_karma`;
 CREATE TABLE `{#}users_karma` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL COMMENT 'Кто поставил',
-  `profile_id` int(11) DEFAULT NULL COMMENT 'Кому поставил',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'Кто поставил',
+  `profile_id` int(11) unsigned DEFAULT NULL COMMENT 'Кому поставил',
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата оценки',
   `points` tinyint(2) DEFAULT NULL COMMENT 'Оценка',
   `comment` varchar(256) DEFAULT NULL COMMENT 'Пояснение',
@@ -45666,11 +45661,11 @@ CREATE TABLE `{#}users_karma` (
 
 DROP TABLE IF EXISTS `{#}users_messages`;
 CREATE TABLE `{#}users_messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `from_id` int(11) NOT NULL COMMENT 'ID отправителя',
-  `to_id` int(11) NOT NULL COMMENT 'ID получателя',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `from_id` int(11) unsigned NOT NULL COMMENT 'ID отправителя',
+  `to_id` int(11) unsigned NOT NULL COMMENT 'ID получателя',
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата создания',
-  `is_new` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Не прочитано?',
+  `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Не прочитано?',
   `content` text NOT NULL COMMENT 'Текст сообщения',
   PRIMARY KEY (`id`),
   KEY `from_id` (`from_id`),
@@ -45682,8 +45677,8 @@ CREATE TABLE `{#}users_messages` (
 
 DROP TABLE IF EXISTS `{#}users_notices`;
 CREATE TABLE `{#}users_notices` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned NOT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` text,
   `options` text,
@@ -45691,21 +45686,21 @@ CREATE TABLE `{#}users_notices` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `date_pub` (`date_pub`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}users_statuses`;
 CREATE TABLE `{#}users_statuses` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL COMMENT 'Пользователь',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'Пользователь',
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
   `content` varchar(140) DEFAULT NULL COMMENT 'Текст статуса',
-  `replies_count` int(11) NOT NULL DEFAULT '0' COMMENT 'Количество ответов',
-  `wall_entry_id` int(11) DEFAULT NULL COMMENT 'ID записи на стене',
+  `replies_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Количество ответов',
+  `wall_entry_id` int(11) unsigned DEFAULT NULL COMMENT 'ID записи на стене',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `date_pub` (`date_pub`),
-  KEY `replies_count` (`replies_count`)
+  KEY `replies_count` (`replies_count`),
+  KEY `wall_entry_id` (`wall_entry_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Текстовые статусы пользователей';
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
@@ -45713,12 +45708,12 @@ INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replie
 
 DROP TABLE IF EXISTS `{#}users_tabs`;
 CREATE TABLE `{#}users_tabs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(32) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `name` varchar(32) DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '0',
-  `ordering` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) unsigned DEFAULT NULL,
+  `ordering` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`),
@@ -45735,22 +45730,22 @@ INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `
 
 DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
   `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент владелец профиля',
   `profile_type` varchar(32) DEFAULT NULL COMMENT 'Тип профиля (пользователь/группа)',
-  `profile_id` int(11) DEFAULT NULL COMMENT 'ID профиля',
-  `user_id` int(11) DEFAULT NULL COMMENT 'ID автора',
-  `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ID родительской записи',
-  `status_id` int(11) DEFAULT NULL COMMENT 'Связь со статусом пользователя',
+  `profile_id` int(11) unsigned DEFAULT NULL COMMENT 'ID профиля',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID автора',
+  `parent_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID родительской записи',
+  `status_id` int(11) unsigned DEFAULT NULL COMMENT 'Связь со статусом пользователя',
   `content` text COMMENT 'Текст записи',
   `content_html` text COMMENT 'Текст после типографа',
   PRIMARY KEY (`id`),
   KEY `date_pub` (`date_pub`),
-  KEY `profile_type` (`profile_type`),
-  KEY `profile_id` (`profile_id`),
   KEY `user_id` (`user_id`),
-  KEY `parent_id` (`parent_id`)
+  KEY `parent_id` (`parent_id`),
+  KEY `profile_id` (`profile_id`,`profile_type`),
+  KEY `status_id` (`status_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Записи на стенах профилей';
 
 INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `profile_id`, `user_id`, `parent_id`, `status_id`, `content`, `content_html`) VALUES
@@ -45759,7 +45754,7 @@ INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `
 
 DROP TABLE IF EXISTS `{#}widgets`;
 CREATE TABLE `{#}widgets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер',
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `title` varchar(64) DEFAULT NULL COMMENT 'Название',
@@ -45791,22 +45786,22 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `widget_id` int(11) NOT NULL,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `widget_id` int(11) unsigned NOT NULL,
   `title` varchar(128) NOT NULL COMMENT 'Заголовок',
   `links` text,
   `class` varchar(64) DEFAULT NULL COMMENT 'CSS класс',
   `class_title` varchar(64) DEFAULT NULL,
   `class_wrap` varchar(64) DEFAULT NULL,
-  `is_title` tinyint(1) DEFAULT '1' COMMENT 'Показывать заголовок',
-  `is_enabled` tinyint(1) DEFAULT NULL COMMENT 'Включен?',
-  `is_tab_prev` tinyint(1) DEFAULT NULL COMMENT 'Объединять с предыдущим?',
+  `is_title` tinyint(1) unsigned DEFAULT '1' COMMENT 'Показывать заголовок',
+  `is_enabled` tinyint(1) unsigned DEFAULT NULL COMMENT 'Включен?',
+  `is_tab_prev` tinyint(1) unsigned DEFAULT NULL COMMENT 'Объединять с предыдущим?',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Не показывать группам',
-  `options` text DEFAULT NULL COMMENT 'Опции',
-  `page_id` int(11) DEFAULT NULL COMMENT 'ID страницы для вывода',
+  `options` text COMMENT 'Опции',
+  `page_id` int(11) unsigned DEFAULT NULL COMMENT 'ID страницы для вывода',
   `position` varchar(32) DEFAULT NULL COMMENT 'Имя позиции',
-  `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
+  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -45838,7 +45833,7 @@ INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `cl
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент',
   `name` varchar(64) DEFAULT NULL COMMENT 'Системное имя',
   `title_const` varchar(64) DEFAULT NULL COMMENT 'Название страницы (языковая константа)',
