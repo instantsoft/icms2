@@ -462,9 +462,9 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function update($table_name, $id, $data){
+    public function update($table_name, $id, $data, $skip_check_fields = false){
         $this->filterEqual('id', $id);
-        return $this->updateFiltered($table_name, $data);
+        return $this->updateFiltered($table_name, $data, $skip_check_fields);
     }
 
     public function updateFiltered($table_name, $data, $skip_check_fields = false){

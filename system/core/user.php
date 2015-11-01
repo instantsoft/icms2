@@ -41,8 +41,6 @@ class cmsUser {
 
         self::loadOnlineUsersIds();
 
-        self::deleteOldSessions();
-
         if (self::isSessionSet('user:id')){
 
             // уже авторизован
@@ -54,6 +52,8 @@ class cmsUser {
             $this->id  = self::autoLogin(self::getCookie('auth'));
 
         }
+
+        self::deleteOldSessions($this->id);
 
         //
         // если авторизован, заполняем объект данными из базы
@@ -74,7 +74,7 @@ class cmsUser {
             // сохраним дату в сессии и обновим в базе
             if (!self::isSessionSet('user:date_log')){
                 self::sessionSet('user:date_log', $user['date_log']);
-                $model->update('{users}', $this->id, array( 'date_log' => null ));
+                $model->update('{users}', $this->id, array('date_log' => null), true);
             }
 
             // заполняем объект данными из базы
@@ -131,7 +131,7 @@ class cmsUser {
         $model->update('{users}', $user['id'], array(
             'pass_token' => null,
             'ip' => self::getIp()
-        ));
+        ), true);
 
         $user = cmsEventsManager::hook('user_login', $user);
 
@@ -183,18 +183,20 @@ class cmsUser {
             'is_admin' => $user['is_admin'],
         ));
 
+        $update_data = array(
+            'ip' => self::getIp()
+        );
+
         if ($remember){
 
             $auth_token = string_random(32, $email);
             self::setCookie('auth', $auth_token, 8640000); //100 дней
 
-            $model->update('{users}', $user['id'], array('auth_token'=>$auth_token));
+            $update_data['auth_token'] = $auth_token;
 
         }
 
-        $model->update('{users}', $user['id'], array(
-            'ip' => self::getIp()
-        ));
+        $model->update('{users}', $user['id'], $update_data, true);
 
         return $user['id'];
 
@@ -211,7 +213,7 @@ class cmsUser {
 
         $model->update('{users}', $userSession['id'], array(
             'date_log' => null,
-        ));
+        ), true);
 
         cmsEventsManager::hook('user_logout', $userSession);
 
@@ -266,14 +268,17 @@ class cmsUser {
 
     }
 
-    public static function deleteOldSessions(){
+    public static function deleteOldSessions($current_user_id=0){
 
         $expired_users = array();
 
         if(self::$online_users){
-            foreach (self::$online_users as $user) {
+            foreach (self::$online_users as $k=>$user) {
                 if((time()-self::$online_interval) >= strtotime($user['date_created'])){
                     $expired_users[] = $user['user_id'];
+                    if($current_user_id != $user['user_id']){
+                        unset(self::$online_users[$k]);
+                    }
                 }
             }
         }
@@ -401,7 +406,7 @@ class cmsUser {
      */
     public static function getCookie($key){
         if (isset($_COOKIE['icms'][$key])){
-            return $_COOKIE['icms'][$key];
+            return trim($_COOKIE['icms'][$key]);
         } else {
             return false;
         }

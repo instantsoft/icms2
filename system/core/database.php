@@ -137,7 +137,7 @@ class cmsDatabase {
             $trace = debug_backtrace();
 
             if (isset($trace[1]['file']) && isset($trace[1]['function'])){
-                $src = $trace[1]['file'] .' => '. $trace[1]['function'] . '()';
+                $src = $trace[1]['file'] .' => '. $trace[1]['line'] .' => '. $trace[1]['function'] . '()';
                 $src = str_replace($config->root_path, '', $src);
             } else {
                 $src = '';
