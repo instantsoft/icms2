@@ -1,3 +1,13 @@
+DROP TABLE IF EXISTS `{#}users_personal_settings`;
+CREATE TABLE `{#}users_personal_settings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned NOT NULL,
+  `skey` varchar(150) DEFAULT NULL,
+  `settings` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`skey`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
 ALTER TABLE `{#}activity` ADD `is_pub` BOOLEAN NULL DEFAULT '1', ADD INDEX (`is_pub`);
 
 ALTER TABLE  `{#}activity` CHANGE  `id`  `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT ,

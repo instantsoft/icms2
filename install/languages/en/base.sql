@@ -45728,6 +45728,16 @@ INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `
 (5, 'Groups', 'groups', 'groups', 1, 3),
 (6, 'Reputation', 'users', 'karma', 1, 5);
 
+DROP TABLE IF EXISTS `{#}users_personal_settings`;
+CREATE TABLE `{#}users_personal_settings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) unsigned NOT NULL,
+  `skey` varchar(150) DEFAULT NULL,
+  `settings` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`skey`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
