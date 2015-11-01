@@ -16,6 +16,8 @@ class cmsDatabase {
 
     private $mysqli;
 
+    private $connect_error = false;
+
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self;
@@ -28,9 +30,9 @@ class cmsDatabase {
 
 	public function __construct(){
 
-        $this->connect();
-
-		$this->nestedSets = new cmsNestedsets($this);
+        if($this->connect()){
+            $this->nestedSets = new cmsNestedsets($this);
+        }
 
 	}
 
@@ -38,7 +40,16 @@ class cmsDatabase {
 
 		$config = cmsConfig::getInstance();
 
-        $this->mysqli = new mysqli($config->db_host, $config->db_user, $config->db_pass, $config->db_base);
+        mysqli_report(MYSQLI_REPORT_STRICT);
+
+        try {
+            $this->mysqli = new mysqli($config->db_host, $config->db_user, $config->db_pass, $config->db_base);
+        } catch (Exception $e) {
+
+            $this->connect_error = $e->getMessage();
+            return false;
+
+        }
 
         $this->mysqli->set_charset('utf8');
 
@@ -46,8 +57,16 @@ class cmsDatabase {
 
 		$this->prefix = $config->db_prefix;
 
-        return $this;
+        return true;
 
+    }
+
+	public function ready(){
+        return $this->connect_error === false;
+    }
+
+	public function connectError(){
+        return $this->connect_error;
     }
 
 	public function reconnect(){
@@ -56,11 +75,11 @@ class cmsDatabase {
 
             $this->mysqli->close();
 
-            $this->connect();
+            return $this->connect();
 
         }
 
-		return $this;
+		return true;
 
 	}
 

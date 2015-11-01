@@ -210,6 +210,7 @@
     define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
+    define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');

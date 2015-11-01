@@ -16,6 +16,12 @@
 	// Инициализируем конфиг
 	$config = cmsConfig::getInstance();
 
+    // Проверяем, что система установлена
+    if (!$config->isReady()){
+        header('location:'.str_replace(rtrim(ROOT, DIRECTORY_SEPARATOR), '', PATH).'/install/');
+        die();
+    }
+
     // Загружаем локализацию
     cmsCore::loadLanguage();
 
@@ -32,6 +38,10 @@
 
     // Подключаем базу
     $core->connectDB();
+
+    if(!$core->db->ready()){
+        cmsCore::error(ERR_DATABASE_CONNECT, $core->db->connectError());
+    }
 
     // Запускаем кеш
     cmsCache::getInstance()->start();
