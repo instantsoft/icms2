@@ -33,19 +33,19 @@
 
 			<?php if (!$user->is_logged && !$is_guests_allowed) { ?>
 				<div class="login_to_comment">
-					<?php 
+					<?php
 						$reg_url = href_to('auth', 'register');
 						$log_url = href_to('auth', 'login');
-						printf(LANG_COMMENTS_LOGIN, $log_url, $reg_url); 
+						printf(LANG_COMMENTS_LOGIN, $log_url, $reg_url);
 					?>
-				</div>						
+				</div>
 			<?php } ?>
-			
+
         <?php } ?>
 
         <?php if ($comments){ ?>
 
-            <?php echo $this->renderChild('comment', array('comments'=>$comments, 'user'=>$user, 'is_highlight_new'=>$is_highlight_new, 'is_can_rate' => $is_can_rate)); ?>
+            <?php echo $this->renderChild('comment', array('comments'=>$comments, 'target_user_id'=>$target_user_id, 'user'=>$user, 'is_highlight_new'=>$is_highlight_new, 'is_can_rate' => $is_can_rate)); ?>
 
         <?php } ?>
 
@@ -78,8 +78,8 @@
                     <?php echo html_input('hidden', 'ti', $target_id); ?>
                     <?php echo html_input('hidden', 'timestamp', time()); ?>
 					<?php if (!$user->is_logged) { ?>
-                        <?php 
-                            $this->addJS('templates/default/js/jquery-cookie.js'); 
+                        <?php
+                            $this->addJS('templates/default/js/jquery-cookie.js');
                             $name = cmsUser::getCookie('comments_guest_name');
                             $email = cmsUser::getCookie('comments_guest_email');
                         ?>

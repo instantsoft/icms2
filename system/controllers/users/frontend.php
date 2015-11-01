@@ -11,14 +11,13 @@ class users extends cmsFrontend {
 
         if (!is_numeric($action_name)){ return $action_name; }
 
+        $core = cmsCore::getInstance();
+        $user = cmsUser::getInstance();
+
         $user_id = $action_name;
 
         $profile = $this->model->getUser($user_id);
-
         if (!$profile) { cmsCore::error404(); }
-
-        $core = cmsCore::getInstance();
-        $user = cmsUser::getInstance();
 
         if (!$user->is_logged && $this->options['is_auth_only']){
             cmsUser::goLogin();
@@ -304,6 +303,3 @@ class users extends cmsFrontend {
     }
 
 }
-
-
-

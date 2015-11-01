@@ -886,7 +886,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     padding-left:20px;
     background: url("../images/icons/comment.png") no-repeat left center;
 }
-#comments_widget #comments_add_link a { font-size:18px; }
+#comments_widget #comments_add_link a { font-size:16px; }
 
 #comments_widget #comments_add_form {
     display: none;
@@ -1022,6 +1022,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list .comment .info .name .user{ color:#375D81; }
 #comments_list .comment .info .name .user:hover{ color:#d35400; }
+#comments_list .comment.is_topic_starter .info .name .user{ color:#d35400; }
+#comments_list .comment.is_topic_starter .info .name .user:hover{ color:#e67e22; }
 
 #comments_list .comment .info .name .guest_name{ font-weight: bold; }
 
@@ -1046,17 +1048,31 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     float:left;
     padding:2px;
     border:solid 1px #999;
+    position: relative
+}
+#comments_list .comment .body .avatar.comment_user_online{
+    border-left-color: #27ae60;
+    border-left-width: 2px;
 }
 
-#comments_list .comment .body .avatar img{ display:block; }
+#comments_list .comment .body .avatar img, #comments_list .comment .body .avatar a { display:block; }
+#comments_list .comment .body .avatar:after {
+    display: block;
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 14px;
+    background: url("../images/comment_arrow.png") no-repeat 0px 0px;
+    right: -10px;
+    top: 8px;
+}
 
 #comments_list .comment .content{
     color:#333;
-    padding-left:50px;
+    padding-left:10px;
     padding-top: 4px;
-    background: url("../images/comment_arrow.png") no-repeat 37px 8px;
     position: relative;
-    z-index: 2;
+    overflow: hidden;
 }
 
 #comments_list .comment .content img {

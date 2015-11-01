@@ -6,6 +6,7 @@
             echo $this->renderChild('comment', array(
                 'comments'=>$items,
                 'user'=>$user,
+                'target_user_id'=>$target_user_id,
                 'is_highlight_new'=>false,
                 'is_levels'=>false,
                 'is_controls'=>false,

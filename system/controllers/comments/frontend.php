@@ -12,8 +12,9 @@ class comments extends cmsFrontend {
         parent::__construct($request);
 
         $this->target_controller = $this->request->get('target_controller');
-        $this->target_subject = $this->request->get('target_subject');
-        $this->target_id = $this->request->get('target_id');
+        $this->target_subject    = $this->request->get('target_subject');
+        $this->target_id         = $this->request->get('target_id');
+        $this->target_user_id    = $this->request->get('target_user_id');
 
     }
 
@@ -41,19 +42,18 @@ class comments extends cmsFrontend {
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'list', array(
-            'user' => $user,
+        return cmsTemplate::getInstance()->renderInternal($this, 'list', array(
+            'user'              => $user,
             'target_controller' => $this->target_controller,
-            'target_subject' => $this->target_subject,
-            'target_id' => $this->target_id,
-            'is_tracking' => $is_tracking,
-            'is_highlight_new' => $is_highlight_new,
-            'user' => $user,
-            'comments' => $comments,
-            'csrf_token_seed' => $csrf_token_seed,
-            'is_can_rate' => cmsUser::isAllowed('comments', 'rate')
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $this->target_id,
+            'target_user_id'    => $this->target_user_id,
+            'is_tracking'       => $is_tracking,
+            'is_highlight_new'  => $is_highlight_new,
+            'user'              => $user,
+            'comments'          => $comments,
+            'csrf_token_seed'   => $csrf_token_seed,
+            'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
         ));
 
     }
@@ -160,17 +160,16 @@ class comments extends cmsFrontend {
 
         $items = cmsEventsManager::hook("comments_before_list", $items);
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'list_index', array(
-            'filters' => array(),
-            'dataset_name' => $dataset_name,
-            'page_url' => $page_url,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'items' => $items,
-            'user' => $user,
+        return cmsTemplate::getInstance()->renderInternal($this, 'list_index', array(
+            'filters'        => array(),
+            'dataset_name'   => $dataset_name,
+            'page_url'       => $page_url,
+            'page'           => $page,
+            'perpage'        => $perpage,
+            'total'          => $total,
+            'items'          => $items,
+            'user'           => $user,
+            'target_user_id' => $this->target_user_id,
         ));
 
     }

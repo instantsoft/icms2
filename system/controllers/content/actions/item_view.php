@@ -6,22 +6,22 @@ class actionContentItemView extends cmsAction {
 
         $user = cmsUser::getInstance();
 		$config = cmsConfig::getInstance();
-		
+
         // Получаем название типа контента и сам тип
         $ctype_name = $this->request->get('ctype_name');
-        $ctype = $this->model->getContentTypeByName($ctype_name);        
+        $ctype = $this->model->getContentTypeByName($ctype_name);
 
 		// Получаем SLUG записи
         $slug = $this->request->get('slug');
-		
+
 		if (!$ctype) {
 			if ($config->ctype_default){
-				$ctype = $this->model->getContentTypeByName($config->ctype_default);			
-				if (!$ctype) { cmsCore::error404(); }				
+				$ctype = $this->model->getContentTypeByName($config->ctype_default);
+				if (!$ctype) { cmsCore::error404(); }
 				$slug = $ctype_name . '/' . $slug;
 				$ctype_name = $config->ctype_default;
 			} else {
-				cmsCore::error404();				
+				cmsCore::error404();
 			}
 		} else {
 			$core = cmsCore::getInstance();
@@ -29,16 +29,16 @@ class actionContentItemView extends cmsAction {
 				$this->redirect(href_to($slug . '.html'), 301);
 			}
 		}
-		
+
 		if (!$ctype['options']['item_on']) { cmsCore::error404(); }
-		
+
         // Получаем запись
         $item = $this->model->getContentItemBySLUG($ctype_name, $slug);
-        if (!$item) { cmsCore::error404(); } 
+        if (!$item) { cmsCore::error404(); }
 
         // Проверяем прохождение модерации
         $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $user->id);
-        if (!$item['is_approved']){            
+        if (!$item['is_approved']){
             if (!$is_moderator && $user->id != $item['user_id']){ cmsCore::error404(); }
         }
 
@@ -46,7 +46,7 @@ class actionContentItemView extends cmsAction {
         if (!$item['is_pub']){
             if (!$is_moderator && $user->id != $item['user_id']){ cmsCore::error404(); }
         }
-		
+
         // Проверяем приватность
         if ($item['is_private']){
             $is_friend = $user->isFriend($item['user_id']);
@@ -102,6 +102,7 @@ class actionContentItemView extends cmsAction {
             $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
                 'target_controller' => $this->name,
                 'target_subject' => $ctype['name'],
+                'target_user_id' => $item['user_id'],
                 'target_id' => $item['id']
             ), cmsRequest::CTX_INTERNAL));
 
@@ -126,7 +127,7 @@ class actionContentItemView extends cmsAction {
 		if (!empty($ctype['options']['hits_on'])){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
-		
+
         return cmsTemplate::getInstance()->render('item_view', array(
             'ctype' => $ctype,
             'fields' => $fields,

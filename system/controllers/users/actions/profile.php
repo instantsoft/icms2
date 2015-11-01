@@ -35,13 +35,13 @@ class actionUsersProfile extends cmsAction {
         // Друзья
         $friends = $is_friends_on ? $this->model->getFriends($profile['id']) : false;
 
-        // Контент	
+        // Контент
 		$content_model = cmsCore::getModel('content');
-		
+
 		$is_filter_hidden = (!$is_own_profile && !$user->is_admin);
-		
+
         $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden);
-		
+
         //
         // Стена
         //

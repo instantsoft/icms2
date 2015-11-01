@@ -49,7 +49,7 @@ class modelComments extends cmsModel{
 
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
-		
+
 		if ($target_id){
 			$this->filterEqual('target_id', $target_id);
 		}
@@ -198,9 +198,10 @@ class modelComments extends cmsModel{
         return $this->get('comments', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'avatar'    => $item['user_avatar']
             );
 
             return $item;
@@ -342,15 +343,15 @@ class modelComments extends cmsModel{
 //============================================================================//
 
     public function getGuestLastCommentTime($ip){
-        
+
         $time = $this->
                     filterEqual('user_id', 0)->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
-        
+
         return strtotime($time);
-        
+
     }
-    
+
 }
