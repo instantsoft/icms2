@@ -130,7 +130,7 @@
                             SQL: <a href="#sql_debug" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
                         </span>
                         <span class="item">
-                            Cache: <?php echo cmsCache::getInstance()->query_count; ?></a>
+                            Cache: <?php echo cmsCache::getInstance()->query_count; ?>
                         </span>
                         <span class="item">
                             Mem: <?php echo round(memory_get_usage()/1024/1024, 2); ?> Mb
