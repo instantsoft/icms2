@@ -1426,6 +1426,11 @@ class modelContent extends cmsModel{
         $table_name = $this->table_prefix . $ctype_name;
 
         $item = $this->getContentItem($ctype_name, $id);
+        if(!$item){ return false; }
+
+        cmsEventsManager::hook('content_before_delete', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook("content_{$ctype_name}_before_delete", $item);
+
         $fields = $this->getContentFields($ctype_name, $id);
 
         foreach($fields as $field){
@@ -1445,7 +1450,14 @@ class modelContent extends cmsModel{
 
         $this->deletePropsValues($ctype_name, $id);
 
-        return $this->delete($table_name, $id);
+        $success = $this->delete($table_name, $id);
+
+        if($success){
+            cmsEventsManager::hook('content_after_delete', array('ctype_name'=>$ctype_name, 'item'=>$item));
+            cmsEventsManager::hook("content_{$ctype_name}_after_delete", $item);
+        }
+
+        return $success;
 
     }
 

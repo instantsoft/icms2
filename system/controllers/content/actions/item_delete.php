@@ -5,14 +5,13 @@ class actionContentItemDelete extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
-        $ctype = $this->model->getContentTypeByName($ctype_name);
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name'));
         if (!$ctype) { cmsCore::error404(); }
 
         $id = $this->request->get('id');
         if (!$id) { cmsCore::error404(); }
 
-        $item = $this->model->getContentItem($ctype_name, $id);
+        $item = $this->model->getContentItem($ctype['name'], $id);
         if (!$item) { cmsCore::error404(); }
 
         // проверяем наличие доступа
@@ -20,29 +19,23 @@ class actionContentItemDelete extends cmsAction {
         if (!cmsUser::isAllowed($ctype['name'], 'delete')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'delete', 'all') && $item['user_id'] != $user->id) { cmsCore::error404(); }
 
-        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $user->id);
+        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $user->id);
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
 
         $back_action = '';
 
         if ($ctype['is_cats'] && $item['category_id']){
 
-            $category = $this->model->getCategory($ctype_name, $item['category_id']);
+            $category = $this->model->getCategory($ctype['name'], $item['category_id']);
             $back_action = $category['slug'];
 
         }
 
-        cmsEventsManager::hook("content_before_delete", array('ctype_name'=>$ctype_name, 'item'=>$item));
-        cmsEventsManager::hook("content_{$ctype['name']}_before_delete", $item);
-
-        $this->model->deleteContentItem($ctype_name, $id);
+        $this->model->deleteContentItem($ctype['name'], $item['id']);
 
         if (!$item['is_approved']){
-            $this->notifyAuthor($ctype_name, $item);
+            $this->notifyAuthor($ctype['name'], $item);
         }
-
-        cmsEventsManager::hook("content_after_delete", array('ctype_name'=>$ctype_name, 'item'=>$item));
-        cmsEventsManager::hook("content_{$ctype['name']}_after_delete", $item);
 
         $back_url = $this->request->get('back');
 
@@ -50,7 +43,7 @@ class actionContentItemDelete extends cmsAction {
             $this->redirect($back_url);
         } else {
             if ($ctype['options']['list_on']){
-                $this->redirectTo($ctype_name, $back_action);
+                $this->redirectTo($ctype['name'], $back_action);
             } else {
                 $this->redirectToHome();
             }
