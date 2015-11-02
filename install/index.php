@@ -8,6 +8,7 @@ define('DOC_ROOT', str_replace(DS, '/', realpath($_SERVER['DOCUMENT_ROOT'])));
 
 header("Content-type:text/html; charset=utf-8");
 mb_internal_encoding('UTF-8');
+date_default_timezone_set('UTC');
 
 $default_lang = 'ru';
 
@@ -39,7 +40,7 @@ $steps = array(
 $current_step = 0;
 
 if (is_ajax_request()){
-    $step = $steps[$_POST['step']];
+    $step = $steps[(int)$_POST['step']];
     $is_submit = isset($_POST['submit']);
     echo json_encode( run_step($step, $is_submit) );
     exit();
