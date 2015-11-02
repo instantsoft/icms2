@@ -449,7 +449,7 @@ class cmsUser {
 
     }
 
-    public function getUPSActual($key, $data, $user_id = null){
+    public static function getUPSActual($key, $data, $user_id = null){
 
         if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
             return false;
