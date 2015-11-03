@@ -74,7 +74,7 @@
                 <?php $this->body(); ?>
 
                 <div class="pad"></div>
-                
+
                 <div class="loading-overlay"></div>
 
         </div>
@@ -84,7 +84,7 @@
     <div id="cp_footer">
         <div class="container">
             <a href="http://www.instantcms.ru/">InstantCMS</a> v<?php echo cmsCore::getVersion(); ?> &mdash;
-            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> 2013 &mdash;
+            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
         </div>
     </div>

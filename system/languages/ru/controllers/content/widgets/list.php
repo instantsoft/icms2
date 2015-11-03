@@ -10,3 +10,4 @@
     define('LANG_WD_CONTENT_LIST_STYLE_TILES_BIG',  'Большая плитка');
     define('LANG_WD_CONTENT_LIST_STYLE_TILES_SMALL','Маленькая плитка');
     define('LANG_WD_CONTENT_LIST_STYLE_COMPACT',    'Компактный');
+    define('LANG_WD_CONTENT_LIST_STYLE_CUSTOM',    'Шаблон, заданный во вкладке "Дизайн"');
