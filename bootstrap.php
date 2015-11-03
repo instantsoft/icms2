@@ -18,7 +18,8 @@
 
     // Проверяем, что система установлена
     if (!$config->isReady()){
-        header('location:'.str_replace(rtrim(ROOT, DIRECTORY_SEPARATOR), '', PATH).'/install/');
+        $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath(ROOT)), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
+        header('location:'.$root.'/install/');
         die();
     }
 

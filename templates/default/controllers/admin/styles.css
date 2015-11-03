@@ -328,7 +328,9 @@ form fieldset .field{
 form fieldset .field:last-child{
     margin-bottom: 0;
 }
-
+form fieldset .field, form .hint {
+    clear: both;
+}
 form fieldset{
     padding-right:15px;
     border-radius:4px;
@@ -1302,7 +1304,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     box-shadow: 0 1px 1px #E0C086;
     overflow: hidden;
 	height: 16px;
-	line-height: 16px;	
+	line-height: 16px;
 }
 
 #cp-widgets-layout .position li.tabbed{

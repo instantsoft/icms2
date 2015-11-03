@@ -764,9 +764,12 @@ class cmsCore {
      */
     public static function error($message, $details=''){
 
-        $config = cmsConfig::getInstance();
+        if(ob_get_length()) { ob_end_clean(); }
 
-        if ($config->debug){
+        header('HTTP/1.0 503 Service Unavailable');
+        header('Status: 503 Service Unavailable');
+
+        if (cmsConfig::get('debug')){
             cmsTemplate::getInstance()->renderAsset('errors/error', array(
                 'message'=>$message,
                 'details'=>$details
@@ -784,11 +787,11 @@ class cmsCore {
 
 		cmsEventsManager::hook('error_404', self::getInstance()->uri);
 
+        if(ob_get_length()) { ob_end_clean(); }
+
         header("HTTP/1.0 404 Not Found");
         header("HTTP/1.1 404 Not Found");
         header("Status: 404 Not Found");
-
-        if(ob_get_length()) { ob_end_clean(); }
 
         cmsTemplate::getInstance()->renderAsset('errors/notfound');
         die();
@@ -805,21 +808,6 @@ class cmsCore {
         cmsTemplate::getInstance()->renderAsset('errors/offline', array(
             'reason' => cmsConfig::get('off_reason')
         ));
-        die();
-
-    }
-
-    /**
-     * Показывает сообщение об ошибке 403 и завершает работу
-     */
-    public static function errorForbidden(){
-
-        $config = cmsConfig::getInstance();
-
-        header("HTTP/1.0 403 Forbidden");
-        header("Status: 403 Forbidden");
-
-        include	($config->root_path . 'templates/' . $config->template .'/system/forbidden.tpl.php');
         die();
 
     }

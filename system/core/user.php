@@ -416,6 +416,68 @@ class cmsUser {
         return isset($_COOKIE['icms'][$key]);
     }
 
+//============================================================================//
+//============================================================================//
+
+    /**
+     * Устанавливает для пользователя его уникальные персональные настройки
+     * User Personal Setting
+     *
+     * @param str       $key        Ключ настроек
+     * @param str|array $data       Данные
+     * @param int       $user_id    Ид юзера
+     * @return bool
+     */
+
+    public static function setUPS($key, $data, $user_id = null){
+
+        if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
+            return false;
+        }
+
+        return (bool) cmsCore::getModel('users')->setUPS($key, $data, $user_id);
+
+    }
+
+    public static function getUPS($key, $user_id = null){
+
+        if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
+            return false;
+        }
+
+        return cmsCore::getModel('users')->getUPS($key, $user_id);
+
+    }
+
+    public static function getUPSActual($key, $data, $user_id = null){
+
+        if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
+            return false;
+        }
+
+        $umodel = cmsCore::getModel('users');
+
+        $old = $umodel->getUPS($key, $user_id);
+        if (!$data) {
+            return $old;
+        }
+        if ($old !== $data) {
+            $umodel->setUPS($key, $data, $user_id);
+        }
+
+        return $data;
+
+    }
+
+    public static function deleteUPS($key, $user_id = null){
+
+        if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
+            return false;
+        }
+
+        return cmsCore::getModel('users')->deleteUPS($key, $user_id);
+
+    }
 
 //============================================================================//
 //============================================================================//

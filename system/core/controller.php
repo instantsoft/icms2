@@ -389,7 +389,8 @@ class cmsController {
             'is_pagination' => true,
             'is_toolbar' => true,
             'is_draggable' => false,
-            'is_selectable' => false
+            'is_selectable' => false,
+            'load_columns' => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
@@ -413,6 +414,22 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
+
+        if ($this->request->isAjax() && $this->request->has('heads')) {
+
+            $heads = $this->request->get('heads', array());
+            natsort($heads);
+
+            $grid_heads = array_keys($grid['columns']);
+            if ($grid['actions']) {
+                $grid_heads[] = 'dg_actions';
+            }
+            natsort($grid_heads);
+
+            if ($heads !== $grid_heads) {
+                $grid['options']['load_columns'] = true;
+            }
+        }
 
         return $grid;
 

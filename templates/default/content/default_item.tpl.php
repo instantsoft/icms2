@@ -21,7 +21,7 @@
 
         <?php if (!$field['is_in_item']) { continue; } ?>
         <?php if ($field['is_system']) { continue; } ?>
-        <?php if (empty($item[$field['name']])) { continue; } ?>
+        <?php if (empty($item[$field['name']]) || empty($field['html'])) { continue; } ?>
         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
         <?php
@@ -33,24 +33,15 @@
         ?>
 
         <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-
             <?php if ($label_pos != 'none'){ ?>
                 <div class="title_<?php echo $label_pos; ?>"><?php html($field['title']); ?>: </div>
             <?php } ?>
-
-            <div class="value">
-
-                <?php
-                    echo $field['html'];
-                ?>
-
-            </div>
-
+            <div class="value"><?php echo $field['html']; ?></div>
         </div>
 
     <?php } ?>
 
-    <?php if ($props && $props_values) { ?>
+    <?php if ($props && array_filter((array)$props_values)) { ?>
         <?php
             $props_fields = $this->controller->getPropsFields($props);
             $props_fieldsets = cmsForm::mapFieldsToFieldsets($props);
@@ -104,8 +95,8 @@
         $show_bar = $ctype['is_rating'] ||
                     $fields['date_pub']['is_in_item'] ||
                     $fields['user']['is_in_item'] ||
-					!empty($ctype['options']['hits_on']) || 
-					!$item['is_pub'] || 
+					!empty($ctype['options']['hits_on']) ||
+					!$item['is_pub'] ||
                     !$item['is_approved'];
     ?>
 
@@ -129,12 +120,12 @@
                 <div class="bar_item bi_not_pub">
                     <?php echo LANG_CONTENT_NOT_IS_PUB; ?>
                 </div>
-            <?php } ?>			
+            <?php } ?>
             <?php if (!empty($ctype['options']['hits_on'])){ ?>
                 <div class="bar_item bi_hits" title="<?php echo LANG_HITS; ?>">
                     <?php echo $item['hits_count']; ?>
                 </div>
-            <?php } ?>			
+            <?php } ?>
             <?php if ($fields['user']['is_in_item']){ ?>
                 <div class="bar_item bi_user" title="<?php html( $fields['user']['title'] ); ?>">
                     <?php echo $fields['user']['html']; ?>
