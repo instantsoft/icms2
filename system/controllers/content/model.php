@@ -1625,12 +1625,10 @@ class modelContent extends cmsModel{
 
 	public function publishDelayedContentItems($ctype_name){
 
-		$table_name = $this->table_prefix . $ctype_name;
-
 		return $this->
 					filterNotEqual('is_pub', 1)->
 					filter('i.date_pub <= NOW()')->
-					updateFiltered($table_name, array(
+					updateFiltered($this->table_prefix.$ctype_name, array(
 						'is_pub' => 1
 					));
 
@@ -1638,23 +1636,28 @@ class modelContent extends cmsModel{
 
 	public function hideExpiredContentItems($ctype_name){
 
-		$table_name = $this->table_prefix . $ctype_name;
-
 		return $this->
 					filterEqual('is_pub', 1)->
 					filterNotNull('date_pub_end')->
 					filter('i.date_pub_end <= NOW()')->
-					updateFiltered($table_name, array(
+					updateFiltered($this->table_prefix.$ctype_name, array(
 						'is_pub' => 0
 					));
 
 	}
 
+	public function deleteExpiredContentItems($ctype_name){
+
+		return $this->
+					filterNotNull('date_pub_end')->
+					filter('i.date_pub_end <= NOW()')->
+					deleteFiltered($this->table_prefix.$ctype_name);
+
+	}
+
 	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
 
-		$table_name = $this->table_prefix . $ctype_name;
-
-		return $this->update($table_name, $id, array(
+		return $this->update($this->table_prefix.$ctype_name, $id, array(
 			'is_pub' => $is_pub
 		));
 
@@ -1662,9 +1665,7 @@ class modelContent extends cmsModel{
 
 	public function incrementHitsCounter($ctype_name, $id){
 
-		$table_name = $this->table_prefix . $ctype_name;
-
-		$this->filterEqual('id', $id)->increment($table_name, 'hits_count');
+		$this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
 
 	}
 

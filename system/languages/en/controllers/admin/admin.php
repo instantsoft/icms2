@@ -49,6 +49,9 @@
     define('LANG_CP_PREMOD_EDIT',               'Approval required after editing');
     define('LANG_CP_IS_PUB_CONTROL',            'Publication date control');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Allows to change publication date and period by users permitted in "Permissions" tab');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired item action');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES',                'Categories');
     define('LANG_CP_CATEGORIES_ON',             'Categories enabled');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Show items from child categories in parent category');

@@ -49,6 +49,9 @@
     define('LANG_CP_PREMOD_EDIT',               'Модерация при редактировании');
     define('LANG_CP_IS_PUB_CONTROL',            'Управление сроком публикации');
     define('LANG_CP_IS_PUB_CONTROL_HINT',		'Позволяет выбирать дату и срок публикации для каждой записи тем пользователям, которым это разрешено в разделе "Доступ"');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Что делать после окончания срока публикации');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Скрыть');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Удалить');
     define('LANG_CP_CATEGORIES',                'Категории');
     define('LANG_CP_CATEGORIES_ON',             'Включить категории');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Показывать записи из подкатегорий внутри родительской категории');
