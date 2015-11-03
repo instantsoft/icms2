@@ -47,6 +47,14 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_IS_PUB_CONTROL,
                         'hint' => LANG_CP_IS_PUB_CONTROL_HINT
                     )),
+                    new fieldList('options:is_date_range_process', array(
+                        'title' => LANG_CP_IS_PUB_CONTROL_PROCESS,
+                        'default' => 'left',
+                        'items' => array(
+                            'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
+                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL
+                        )
+                    ))
                 )
             ),
             'categories' => array(
