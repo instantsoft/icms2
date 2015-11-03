@@ -10,8 +10,8 @@
     <?php echo html_select_range($field->data['fname_mins'], 0, 59, 5, true, $field->data['mins']); ?>
 <?php } ?>
 
-    <a class="ajaxlink" onclick="return parser_current_time(this);" href="#"><?php echo LANG_PARSER_CURRENT_TIME; ?></a>
-<script>function parser_current_time(a){
+    <a class="ajaxlink" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#"><?php echo LANG_PARSER_CURRENT_TIME; ?></a>
+<script>function parser_current_time_<?php echo $field->id; ?>(a){
     var now = new Date();
     var p = $(a).parent();
     p.find('input:eq(0)').val((now.getDate()+'.'+(now.getMonth()+1)+'.'+now.getFullYear()).replace(/(\b\d\b)/g, '0$1'));
