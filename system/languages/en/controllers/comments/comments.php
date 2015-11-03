@@ -57,4 +57,7 @@
     define('LANG_RULE_COMMENTS_VIEW_ALL', 'View private comments');
     define('LANG_RULE_COMMENTS_RATE',   'Rate comments');
     define('LANG_RULE_COMMENTS_KARMA',  'Reputation limit');
+	
+	define('LANG_COMMENTS_UPDATE_USER_RATING',	'Rating from comments can affect rating for author');
+	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Increase/Decrease in author rating for +/- in comments');
 
