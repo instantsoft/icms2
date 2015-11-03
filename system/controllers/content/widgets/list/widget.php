@@ -59,7 +59,7 @@ class widgetContentList extends cmsWidget {
 
         if (!$items) { return false; }
 
-        $this->setTemplate("list_{$style}");
+	!$this->tpl_body ? $this->setTemplate("list_{$style}") : $this->setTemplate($this->tpl_body);
 
         return array(
             'ctype' => $ctype,
