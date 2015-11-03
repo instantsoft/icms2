@@ -41,6 +41,11 @@ class formWidgetMenuOptions extends cmsForm {
                         'hint' => LANG_WD_MENU_MAX_ITEMS_HINT,
                         'default' => 0
                     )),
+                    
+                    new fieldString('options:tpl', array(
+                        'title' => 'LANG_WD_MENU_TEMPLATE_NAME',
+                        'hint' => 'LANG_WD_MENU_TEMPLATE_NAME_HINT',    
+                    )),
                             
                 )
             ),
