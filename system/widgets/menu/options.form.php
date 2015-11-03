@@ -43,8 +43,8 @@ class formWidgetMenuOptions extends cmsForm {
                     )),
                     
                     new fieldString('options:tpl', array(
-                        'title' => 'LANG_WD_MENU_TEMPLATE_NAME',
-                        'hint' => 'LANG_WD_MENU_TEMPLATE_NAME_HINT',    
+                        'title' => LANG_WD_MENU_TEMPLATE_NAME,
+                        'hint' => LANG_WD_MENU_TEMPLATE_NAME_HINT    
                     )),
                             
                 )
