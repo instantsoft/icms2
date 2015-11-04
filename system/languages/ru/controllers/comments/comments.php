@@ -62,5 +62,5 @@
     define('LANG_RULE_COMMENTS_KARMA',  'Репутация для добавления комментариев');
 	
 	define('LANG_COMMENTS_UPDATE_USER_RATING',	'Рейтинг комментариев повлияет на рейтинг автора');
-	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Увеличить/уменьшит рейтинг автора за +/- в комментариях');
+	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Увеличить/уменьшить рейтинг автора за +/- в комментариях');
 
