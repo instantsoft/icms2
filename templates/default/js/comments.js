@@ -160,6 +160,7 @@ icms.comments = (function ($) {
             timestamp: $('input[name=timestamp]', form).val(),
             tc: $('input[name=tc]', form).val(),
             ts: $('input[name=ts]', form).val(),
+            tud: $('input[name=tud]', form).val(),
             ti: $('input[name=ti]', form).val()
         }
 
@@ -192,6 +193,8 @@ icms.comments = (function ($) {
             icms.comments.refresh(false);
 
         }, "json");
+
+        return false;
 
     }
 
@@ -330,6 +333,7 @@ icms.comments = (function ($) {
             icms.events.run('icms_comments_remove', result);
 
         }, "json");
+        return false;
     }
 
     //=====================================================================//
@@ -388,12 +392,14 @@ icms.comments = (function ($) {
         $('#comments_widget .scroll-down').hide();
         $('.nav .scroll-down', c).show().data('child-id', from_id);
         this.show(to_id);
+        return false;
     }
 
     this.down = function (link){
         var to_id = $(link).data('child-id');
         $(link).hide();
         this.show(to_id);
+        return false;
     }
 
     //=====================================================================//

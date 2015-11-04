@@ -9,44 +9,45 @@ class actionCommentsSubmit extends cmsAction {
         $action = $this->request->get('action');
 
         $user = cmsUser::getInstance();
-		
+
 		$is_guests_allowed = !empty($this->options['is_guests']);
-		$is_guest = $is_guests_allowed && !$user->is_logged;
-		$is_user_allowed = ($user->is_logged && cmsUser::isAllowed('comments', 'add')) || $is_guests_allowed;
-		$is_karma_allowed = ($user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma)) || $is_guests_allowed;
-		$is_add_allowed = $is_user_allowed && $is_karma_allowed;		
-		
+        $is_guest          = $is_guests_allowed && !$user->is_logged;
+        $is_user_allowed   = ($user->is_logged && cmsUser::isAllowed('comments', 'add')) || $is_guests_allowed;
+        $is_karma_allowed  = ($user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma)) || $is_guests_allowed;
+        $is_add_allowed    = $is_user_allowed && $is_karma_allowed;
+
         if ($action=='add' && !$is_add_allowed){ cmsCore::error404(); }
         if ($action=='update' && !cmsUser::isAllowed('comments', 'edit')){ cmsCore::error404(); }
 
         $template = cmsTemplate::getInstance();
 
-        $csrf_token = $this->request->get('csrf_token');
+        $csrf_token        = $this->request->get('csrf_token');
         $target_controller = $this->request->get('tc');
-        $target_subject = $this->request->get('ts');
-        $target_id = $this->request->get('ti');
-        $parent_id = $this->request->get('parent_id');
-        $comment_id = $this->request->get('id');
-        $content = $this->request->get('content');
-		
-		if ($is_guest){
-			
+        $target_subject    = $this->request->get('ts');
+        $target_id         = $this->request->get('ti');
+        $target_user_id    = $this->request->get('tud');
+        $parent_id         = $this->request->get('parent_id');
+        $comment_id        = $this->request->get('id');
+        $content           = $this->request->get('content');
+
+        if ($is_guest){
+
 			$author_name = $this->request->get('author_name');
 			$author_email = $this->request->get('author_email');
-			
+
 			if (!$author_name){
 				$template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_NAME, 'html' => false));
 			}
 			if ($author_email && !preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $author_email)){
 				$template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
 			}
-            
+
             if (!empty($this->options['restricted_ips'])){
                 if (string_in_mask_list($user->ip, $this->options['restricted_ips'])){
                     $template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_IP, 'html' => false));
                 }
             }
-            
+
             if (!empty($this->options['guest_ip_delay'])){
                 $last_comment_time = $this->model->getGuestLastCommentTime($user->ip);
                 $now_time = time();
@@ -56,7 +57,7 @@ class actionCommentsSubmit extends cmsAction {
                     $template->renderJSON(array('error' => true, 'message' => sprintf(LANG_COMMENT_ERROR_TIME, $spellcount), 'html' => false));
                 }
             }
-			
+
 		}
 
         // Проверяем валидность
@@ -78,13 +79,13 @@ class actionCommentsSubmit extends cmsAction {
 
 		if (!$content_html){
 			$result = array(
-				'error' => false,
-				'message' => false,
-				'html' => false
-			);
-			$template->renderJSON($result);			
+				'error'   => false,
+                'message' => false,
+                'html'    => false
+            );
+			$template->renderJSON($result);
 		}
-		
+
         //
         // Превью комментария
         //
@@ -120,21 +121,21 @@ class actionCommentsSubmit extends cmsAction {
 
             // Собираем данные комментария
             $comment = array(
-                'user_id' => $user->id,
-                'parent_id' => $parent_id,
+                'user_id'           => $user->id,
+                'parent_id'         => $parent_id,
                 'target_controller' => $target_controller,
-                'target_subject' => $target_subject,
-                'target_id' => $target_id,
-                'content' => $content,
-                'content_html' => $content_html,
-				'author_url' => $user->ip
+                'target_subject'    => $target_subject,
+                'target_id'         => $target_id,
+                'content'           => $content,
+                'content_html'      => $content_html,
+                'author_url'        => $user->ip
             );
 
 			if ($is_guest){
-				$comment['author_name'] = $author_name;
-				$comment['author_email'] = $author_email;
-			}
-			
+				$comment['author_name']  = $author_name;
+                $comment['author_email'] = $author_email;
+            }
+
             // Получаем модель целевого контроллера
             $target_model = cmsCore::getModel( $target_controller );
 
@@ -143,9 +144,9 @@ class actionCommentsSubmit extends cmsAction {
 
             if ($target_info){
 
-                $comment['target_url'] = $target_info['url'];
+                $comment['target_url']   = $target_info['url'];
                 $comment['target_title'] = $target_info['title'];
-				$comment['is_private'] = empty($target_info['is_private']) ? false : $target_info['is_private'];
+                $comment['is_private']   = empty($target_info['is_private']) ? false : $target_info['is_private'];
 
                 // Сохраняем комментарий
                 $comment_id = $this->model->addComment($comment);
@@ -157,8 +158,9 @@ class actionCommentsSubmit extends cmsAction {
                 // Получаем и рендерим добавленный комментарий
                 $comment = $this->model->getComment($comment_id);
                 $comment_html = $template->render('comment', array(
-                    'comments' => array($comment),
-                    'user'=>$user
+                    'comments'       => array($comment),
+                    'target_user_id' => $target_user_id,
+                    'user'           => $user
                 ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
                 // Уведомляем модель целевого контента об изменении количества комментариев
@@ -184,12 +186,12 @@ class actionCommentsSubmit extends cmsAction {
 
         // Формируем и возвращаем результат
         $result = array(
-            'error' => $comment_id ? false : true,
-            'message' => $comment_id ? LANG_COMMENT_SUCCESS : LANG_COMMENT_ERROR,
-            'id' => $comment_id,
+            'error'     => $comment_id ? false : true,
+            'message'   => $comment_id ? LANG_COMMENT_SUCCESS : LANG_COMMENT_ERROR,
+            'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
-            'level' => isset($comment['level']) ? $comment['level'] : 0,
-            'html' => isset($comment_html) ? $comment_html : false
+            'level'     => isset($comment['level']) ? $comment['level'] : 0,
+            'html'      => isset($comment_html) ? $comment_html : false
         );
 
         $template->renderJSON($result);

@@ -3,6 +3,7 @@
 <?php $this->addJS('templates/default/js/jquery-scroll.js'); ?>
 <?php $this->addJS('templates/default/js/comments.js'); ?>
 <?php $is_guests_allowed =  !empty($this->controller->options['is_guests']); ?>
+<?php $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma); ?>
 
 <div id="comments_widget">
 
@@ -17,9 +18,9 @@
         <?php } ?>
     </div>
 
-    <?php if ($user->is_logged || $is_guests_allowed){ ?>
+    <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
         <div id="comments_refresh_panel">
-            <a href="#refresh" class="refresh_btn" onclick="icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
+            <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
         </div>
     <?php } ?>
 
@@ -65,7 +66,6 @@
         </div>
 
         <div id="comments_add_form">
-			<?php $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma); ?>
             <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
                 <div class="preview_box"></div>
                 <form action="<?php echo $this->href_to('submit'); ?>" method="post">
@@ -76,6 +76,7 @@
                     <?php echo html_input('hidden', 'tc', $target_controller); ?>
                     <?php echo html_input('hidden', 'ts', $target_subject); ?>
                     <?php echo html_input('hidden', 'ti', $target_id); ?>
+                    <?php echo html_input('hidden', 'tud', $target_user_id); ?>
                     <?php echo html_input('hidden', 'timestamp', time()); ?>
 					<?php if (!$user->is_logged) { ?>
                         <?php

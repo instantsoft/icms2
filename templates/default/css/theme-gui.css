@@ -623,9 +623,9 @@ form .input-prefix-suffix .suffix{
 
 input.button-submit,
 input.button {
-	padding: 10px 15px;
+	padding: 7px 10px;
 	line-height: 100%;
-	border-radius: 4px;
+	border-radius: 3px;
 	cursor: pointer;
 	width: auto;
     font-size: 14px;

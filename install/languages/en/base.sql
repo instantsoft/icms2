@@ -27,7 +27,7 @@ CREATE TABLE `{#}activity` (
 INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
 (3, 13, 1, NULL, 'Elliptical perigee in the XXI century', 1, '/articles/1-elliptical-perigee-in-the-xxi-century.html', NULL, NULL, NULL, '2013-07-24 10:49:30', 0, NULL),
 (6, 13, 1, NULL, 'Undersaturated diamond: preconditions and development', 4, '/articles/4-undersaturated-diamond-preconditions-and-development.html', NULL, NULL, NULL, '2013-07-24 11:22:39', 0, NULL),
-(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, '/users/1?wid=1&reply=1', NULL, NULL, '2013-07-24 11:35:13', 0, NULL),
+(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, '/users/1?wid=1&reply=1', NULL, NULL, CURRENT_TIMESTAMP, 0, NULL),
 (17, 1, 1, NULL, 'About', 1, '/pages/about.html', NULL, NULL, NULL, '2013-08-08 15:07:27', 0, NULL),
 (18, 1, 1, NULL, 'Terms and conditions', 2, '/pages/terms.html', NULL, NULL, NULL, '2013-08-08 15:09:13', 0, NULL),
 (33, 17, 1, NULL, 'Toys are becoming more expensive', 2, '/news/2-igrushki-stanovjatsja-dorozhe.html', NULL, NULL, NULL, '2013-09-09 16:02:07', 0, NULL),
@@ -98,8 +98,8 @@ CREATE TABLE `{#}comments` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_url`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
-(1, 0, 1, 1, 1, '2013-11-22 16:35:23', 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'This article is so complicated...', 'This article is so complicated…', NULL, 0, 0),
-(2, 1, 2, 2, 1, '2013-11-22 16:35:59', 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I haven''t understood anything', 'I haven''t understood anything', NULL, 0, 0);
+(1, 0, 1, 1, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'This article is so complicated...', 'This article is so complicated…', NULL, 0, 0),
+(2, 1, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I haven''t understood anything', 'I haven''t understood anything', NULL, 0, 0);
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
 CREATE TABLE `{#}comments_rating` (
@@ -44933,7 +44933,7 @@ CREATE TABLE `{#}groups` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Группы (сообщества)';
 
 INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
-(1, 1, '2013-07-24 11:48:28', 'Fans of Robots', 'The group is dedicated to robots, machine-building and all that is connected with it.', '---\noriginal: u1/004/f398ad69.png\nbig: u1/004/f13052e8.png\nnormal: u1/004/de897122.png\nsmall: u1/004/a442fa4b.png\nmicro: u1/004/c8a73161.png\n', 0, 1, 0, 0, 0, 0);
+(1, 1, CURRENT_TIMESTAMP, 'Fans of Robots', 'The group is dedicated to robots, machine-building and all that is connected with it.', '---\noriginal: u1/004/f398ad69.png\nbig: u1/004/f13052e8.png\nnormal: u1/004/de897122.png\nsmall: u1/004/a442fa4b.png\nmicro: u1/004/c8a73161.png\n', 0, 1, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
@@ -44962,7 +44962,7 @@ CREATE TABLE `{#}groups_members` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Члены групп (сообществ)';
 
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
-(1, 1, 1, 2, '2013-07-24 11:48:28');
+(1, 1, 1, 2, CURRENT_TIMESTAMP);
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -45072,7 +45072,7 @@ CREATE TABLE `{#}moderators` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}moderators` (`id`, `user_id`, `date_assigned`, `ctype_name`, `count_approved`, `count_deleted`, `count_idle`) VALUES
-(1, 1, '2013-07-24 10:42:55', 'articles', 0, 0, 0);
+(1, 1, CURRENT_TIMESTAMP, 'articles', 0, 0, 0);
 
 DROP TABLE IF EXISTS `{#}moderators_tasks`;
 CREATE TABLE `{#}moderators_tasks` (
@@ -45287,10 +45287,10 @@ CREATE TABLE `{#}photos` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}photos` (`id`, `album_id`, `user_id`, `date_pub`, `title`, `image`, `rating`, `comments`) VALUES
-(86, 16, 1, '2013-11-13 16:49:10', 'Nature by A423', '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 0, 0),
-(87, 16, 1, '2013-11-13 16:49:10', 'Nature by dingoou', '---\nbig: u1/004/70b77768.jpg\nnormal: u1/004/9568f6f9.jpg\nsmall: u1/004/2def2ff8.jpg\n', 0, 0),
-(88, 16, 1, '2013-11-13 16:49:10', 'Nature by mimih', '---\nbig: u1/004/641fbd6c.jpg\nnormal: u1/004/a381f541.jpg\nsmall: u1/004/0032a402.jpg\n', 0, 0),
-(89, 16, 1, '2013-11-13 16:49:10', 'Nature by PopiX', '---\nbig: u1/004/e75ad9ee.jpg\nnormal: u1/004/862f9e9d.jpg\nsmall: u1/004/554b8c90.jpg\n', 0, 0);
+(86, 16, 1, CURRENT_TIMESTAMP, 'Nature by A423', '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 0, 0),
+(87, 16, 1, CURRENT_TIMESTAMP, 'Nature by dingoou', '---\nbig: u1/004/70b77768.jpg\nnormal: u1/004/9568f6f9.jpg\nsmall: u1/004/2def2ff8.jpg\n', 0, 0),
+(88, 16, 1, CURRENT_TIMESTAMP, 'Nature by mimih', '---\nbig: u1/004/641fbd6c.jpg\nnormal: u1/004/a381f541.jpg\nsmall: u1/004/0032a402.jpg\n', 0, 0),
+(89, 16, 1, CURRENT_TIMESTAMP, 'Nature by PopiX', '---\nbig: u1/004/e75ad9ee.jpg\nnormal: u1/004/862f9e9d.jpg\nsmall: u1/004/554b8c90.jpg\n', 0, 0);
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -45330,9 +45330,9 @@ CREATE TABLE `{#}rss_feeds` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(2, 5, 'articles', 'Articles', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
-(3, 6, 'posts', 'Blog posts', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
-(4, 7, 'albums', 'Photo albums', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
+(2, 5, 'articles', 'Articles', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
+(3, 6, 'posts', 'Blog posts', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
+(4, 7, 'albums', 'Photo albums', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
 (6, 10, 'news', 'News', 'Информационные сообщения', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
@@ -45353,9 +45353,9 @@ CREATE TABLE `{#}scheduler_tasks` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
-(1, 'Members migrations between groups', 'users', 'migration', 1440, '2013-08-16 15:28:05', 1, 0),
-(2, 'Sitemap generation', 'sitemap', 'generate', 1440, '2013-10-09 15:25:38', 1, 0),
-(3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, '2013-09-06 12:28:31', 1, 0),
+(1, 'Members migrations between groups', 'users', 'migration', 1440, NULL, 1, 0),
+(2, 'Sitemap generation', 'sitemap', 'generate', 1440, NULL, 1, 0),
+(3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, NULL, 1, 0),
 (4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
@@ -45491,7 +45491,7 @@ CREATE TABLE `{#}users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '6fb0f0dda618e56f721bdd2a27355a7c', '40e1b1f395be54c1', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 12:08:19', '2013-02-02 14:40:35', '127.0.0.1', NULL, NULL, NULL, NULL, NULL, '2013-04-24 15:01:17', 468, 2, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+(1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, 468, 2, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 4716, 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -45704,7 +45704,7 @@ CREATE TABLE `{#}users_statuses` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Текстовые статусы пользователей';
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
-(1, 1, '2013-07-24 11:35:13', 'We are all made of stars © Moby', 1, 1);
+(1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
 
 DROP TABLE IF EXISTS `{#}users_tabs`;
 CREATE TABLE `{#}users_tabs` (
@@ -45759,8 +45759,8 @@ CREATE TABLE `{#}wall_entries` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Записи на стенах профилей';
 
 INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `profile_id`, `user_id`, `parent_id`, `status_id`, `content`, `content_html`) VALUES
-(1, '2013-07-24 11:35:13', 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
-(2, '2013-07-24 11:35:31', NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
+(1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
+(2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
 DROP TABLE IF EXISTS `{#}widgets`;
 CREATE TABLE `{#}widgets` (
