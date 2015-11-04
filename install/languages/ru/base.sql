@@ -58,6 +58,7 @@ CREATE TABLE `{#}activity_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
+(1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
 (7, 1, 'users', 'friendship', 'Дружба', 'и %s становятся друзьями'),
 (8, 1, 'users', 'signup', 'Регистрация', 'регистрируется. Приветствуем!'),
 (10, 1, 'groups', 'join', 'Вступление в группу', 'вступает в группу %s'),
