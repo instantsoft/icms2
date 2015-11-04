@@ -1648,10 +1648,13 @@ class modelContent extends cmsModel{
 
 	public function deleteExpiredContentItems($ctype_name){
 
-		return $this->
-					filterNotNull('date_pub_end')->
-					filter('i.date_pub_end <= NOW()')->
-					deleteFiltered($this->table_prefix.$ctype_name);
+        return $this->
+                    filterNotNull('date_pub_end')->
+                    filter('i.date_pub_end <= NOW()')->
+                    get($this->table_prefix.$ctype_name, function($item, $model) use($ctype_name){
+                        $this->deleteContentItem($ctype_name, $item['id']);
+                        return $item['id'];
+                    });
 
 	}
 
