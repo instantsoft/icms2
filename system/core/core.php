@@ -18,6 +18,8 @@ class cmsCore {
 
     public $db;
 
+    public static $start_time;
+
     private static $includedFiles = array();
 
     public static function getInstance() {
@@ -31,6 +33,16 @@ class cmsCore {
 
         $this->request = new cmsRequest($_REQUEST);
 
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public static function startGenTimer(){
+        self::$start_time = microtime(true);
+    }
+    public static function getGenTime(){
+        return microtime(true) - self::$start_time;
     }
 
 //============================================================================//
