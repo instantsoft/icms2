@@ -13,6 +13,8 @@
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
 
+    cmsCore::startTimer();
+
 	// Инициализируем конфиг
 	$config = cmsConfig::getInstance();
 

@@ -135,6 +135,9 @@
                         <span class="item">
                             Mem: <?php echo round(memory_get_usage()/1024/1024, 2); ?> Mb
                         </span>
+                        <span class="item">
+                            Time: <?php echo number_format(cmsCore::getTime(), 4); ?> s
+                        </span>
                     <?php } ?>
                 </li>
                 <li id="nav">

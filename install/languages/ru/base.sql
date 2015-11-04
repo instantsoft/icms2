@@ -27,7 +27,7 @@ CREATE TABLE `{#}activity` (
 INSERT INTO `{#}activity` (`id`, `type_id`, `user_id`, `group_id`, `subject_title`, `subject_id`, `subject_url`, `reply_url`, `images`, `images_count`, `date_pub`, `is_private`, `is_parent_hidden`) VALUES
 (3, 13, 1, NULL, 'Эллиптический перигей в XXI веке', 1, '/articles/1-ellipticheskii-perigei-v-xxi-veke.html', NULL, NULL, NULL, '2013-07-24 10:49:30', 0, NULL),
 (6, 13, 1, NULL, 'Недонасыщенный алмаз: предпосылки и развитие', 4, '/articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', NULL, NULL, NULL, '2013-07-24 11:22:39', 0, NULL),
-(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, '/users/1?wid=1&reply=1', NULL, NULL, '2013-07-24 11:35:13', 0, NULL),
+(10, 12, 1, NULL, 'We are all made of stars © Moby', NULL, NULL, '/users/1?wid=1&reply=1', NULL, NULL, CURRENT_TIMESTAMP, 0, NULL),
 (17, 1, 1, NULL, 'О проекте', 1, '/pages/about.html', NULL, NULL, NULL, '2013-08-08 15:07:27', 0, NULL),
 (18, 1, 1, NULL, 'Правила сайта', 2, '/pages/rules.html', NULL, NULL, NULL, '2013-08-08 15:09:13', 0, NULL),
 (32, 17, 1, NULL, 'На улице 22 Партсъезда прорвало трубы с водой', 1, '/news/1-na-ulice-prorvalo-truby.html', NULL, NULL, NULL, '2013-09-09 16:00:53', 0, NULL),
@@ -100,9 +100,9 @@ CREATE TABLE `{#}comments` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `date_pub`, `target_controller`, `target_subject`, `target_id`, `target_url`, `target_title`, `author_name`, `author_email`, `author_url`, `content`, `content_html`, `is_deleted`, `is_private`, `rating`) VALUES
-(3, 0, 1, 1, 6, '2013-07-24 11:42:36', 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
-(4, 0, 1, 1, 1, '2013-11-13 16:51:22', 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
-(5, 4, 2, 2, 1, '2013-11-13 16:52:55', 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Ответ на комментарий выше', 'Ответ на комментарий выше', NULL, 0, 0);
+(3, 0, 1, 1, 6, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-nedonasyschennyi-almaz-predposylki-i-razvitie.html', 'Недонасыщенный алмаз: предпосылки и развитие', NULL, NULL, NULL, 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 'Базальтовый слой <i>разогревает сталактит</i>, где присутствуют моренные суглинки днепровского возраста.', 1, 0, 1),
+(4, 0, 1, 1, 1, CURRENT_TIMESTAMP, 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Отличная статья, все очень доходчиво и познавательно', 'Отличная статья, все очень доходчиво и познавательно', NULL, 0, 0),
+(5, 4, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 11, 'articles/11-obschestvennyi-analiz-zarubezhnogo-opyta.html', 'Общественный анализ зарубежного опыта', NULL, NULL, NULL, 'Ответ на комментарий выше', 'Ответ на комментарий выше', NULL, 0, 0);
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
 CREATE TABLE `{#}comments_rating` (
@@ -13558,7 +13558,7 @@ CREATE TABLE `{#}groups` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Группы (сообщества)';
 
 INSERT INTO `{#}groups` (`id`, `owner_id`, `date_pub`, `title`, `description`, `logo`, `rating`, `members_count`, `join_policy`, `edit_policy`, `wall_policy`, `is_closed`) VALUES
-(1, 1, '2013-07-24 11:48:28', 'Робототехника', 'Группа посвящена роботам, машиностроению и всему что с этим связано.', '---\noriginal: u1/004/f398ad69.png\nbig: u1/004/f13052e8.png\nnormal: u1/004/de897122.png\nsmall: u1/004/a442fa4b.png\nmicro: u1/004/c8a73161.png\n', 0, 1, 0, 0, 0, 0);
+(1, 1, CURRENT_TIMESTAMP, 'Робототехника', 'Группа посвящена роботам, машиностроению и всему что с этим связано.', '---\noriginal: u1/004/f398ad69.png\nbig: u1/004/f13052e8.png\nnormal: u1/004/de897122.png\nsmall: u1/004/a442fa4b.png\nmicro: u1/004/c8a73161.png\n', 0, 1, 0, 0, 0, 0);
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
@@ -13587,7 +13587,7 @@ CREATE TABLE `{#}groups_members` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Члены групп (сообществ)';
 
 INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_updated`) VALUES
-(1, 1, 1, 2, '2013-07-24 11:48:28');
+(1, 1, 1, 2, CURRENT_TIMESTAMP);
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -13925,10 +13925,10 @@ CREATE TABLE `{#}photos` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}photos` (`id`, `album_id`, `user_id`, `date_pub`, `title`, `image`, `rating`, `comments`) VALUES
-(86, 16, 1, '2013-11-13 16:49:10', 'Nature by A423', '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 0, 0),
-(87, 16, 1, '2013-11-13 16:49:10', 'Nature by dingoou', '---\nbig: u1/004/70b77768.jpg\nnormal: u1/004/9568f6f9.jpg\nsmall: u1/004/2def2ff8.jpg\n', 0, 0),
-(88, 16, 1, '2013-11-13 16:49:10', 'Nature by mimih', '---\nbig: u1/004/641fbd6c.jpg\nnormal: u1/004/a381f541.jpg\nsmall: u1/004/0032a402.jpg\n', 0, 0),
-(89, 16, 1, '2013-11-13 16:49:10', 'Nature by PopiX', '---\nbig: u1/004/e75ad9ee.jpg\nnormal: u1/004/862f9e9d.jpg\nsmall: u1/004/554b8c90.jpg\n', 0, 0);
+(86, 16, 1, CURRENT_TIMESTAMP, 'Nature by A423', '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 0, 0),
+(87, 16, 1, CURRENT_TIMESTAMP, 'Nature by dingoou', '---\nbig: u1/004/70b77768.jpg\nnormal: u1/004/9568f6f9.jpg\nsmall: u1/004/2def2ff8.jpg\n', 0, 0),
+(88, 16, 1, CURRENT_TIMESTAMP, 'Nature by mimih', '---\nbig: u1/004/641fbd6c.jpg\nnormal: u1/004/a381f541.jpg\nsmall: u1/004/0032a402.jpg\n', 0, 0),
+(89, 16, 1, CURRENT_TIMESTAMP, 'Nature by PopiX', '---\nbig: u1/004/e75ad9ee.jpg\nnormal: u1/004/862f9e9d.jpg\nsmall: u1/004/554b8c90.jpg\n', 0, 0);
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -13968,9 +13968,9 @@ CREATE TABLE `{#}rss_feeds` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
-(2, 5, 'articles', 'Статьи', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
-(3, 6, 'posts', 'Посты', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
-(4, 7, 'albums', 'Фотоальбомы', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, '2013-08-12 14:59:27'),
+(2, 5, 'articles', 'Статьи', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
+(3, 6, 'posts', 'Посты', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
+(4, 7, 'albums', 'Фотоальбомы', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
 (5, 9, 'board', 'Объявления', 'Коммерческие объявления', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
 (6, 10, 'news', 'Новости', 'Информационные сообщения', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
@@ -13992,9 +13992,9 @@ CREATE TABLE `{#}scheduler_tasks` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
-(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, '2013-08-16 15:28:05', 1, 0),
-(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, '2013-10-09 15:25:38', 1, 0),
-(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, '2013-09-06 12:28:31', 1, 0),
+(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, 1, 0),
+(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, 1, 0),
+(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, 1, 0),
 (4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
@@ -14133,7 +14133,7 @@ CREATE TABLE `{#}users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `auth_token`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '814b7dbc3d1da7a405b1bf9d3fb9da33', 'ed0c56776caf89d8', 1, 'admin', '2013-02-02 14:40:35', '2015-03-16 11:56:29', '2013-02-02 14:40:35', '127.0.0.1', NULL, NULL, NULL, NULL, NULL, '2013-04-24 15:01:17', 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, '2013-09-06 12:28:08', '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
+(1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'Asia/Yekaterinburg', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 4400, 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -14340,7 +14340,7 @@ CREATE TABLE `{#}users_statuses` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Текстовые статусы пользователей';
 
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
-(1, 1, '2013-07-24 11:35:13', 'We are all made of stars © Moby', 1, 1);
+(1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
 
 DROP TABLE IF EXISTS `{#}users_tabs`;
 CREATE TABLE `{#}users_tabs` (
@@ -14395,8 +14395,8 @@ CREATE TABLE `{#}wall_entries` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Записи на стенах профилей';
 
 INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `profile_id`, `user_id`, `parent_id`, `status_id`, `content`, `content_html`) VALUES
-(1, '2013-07-24 11:35:13', 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
-(2, '2013-07-24 11:35:31', NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
+(1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
+(2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
 DROP TABLE IF EXISTS `{#}widgets`;
 CREATE TABLE `{#}widgets` (
@@ -14473,7 +14473,7 @@ INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `cl
 (14, 2, 'Новые пользователи', 'Все | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
 (15, 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
 (16, 4, 'Новости', 'Все новости | news\r\nОбсуждаемые | news-discussed', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
-(17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
 (18, 4, 'Новые объявления', 'Все | board', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3, NULL, NULL),
 (20, 12, 'Войти на сайт', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
 (21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);

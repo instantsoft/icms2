@@ -19,6 +19,7 @@ class cmsCore {
     public $db;
 
     private static $includedFiles = array();
+    private static $start_time;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -31,6 +32,14 @@ class cmsCore {
 
         $this->request = new cmsRequest($_REQUEST);
 
+    }
+
+    public static function startTimer() {
+        self::$start_time = microtime(true);
+    }
+
+    public static function getTime() {
+        return microtime(true) - self::$start_time;
     }
 
 //============================================================================//

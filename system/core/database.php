@@ -84,15 +84,7 @@ class cmsDatabase {
 	}
 
     public function setTimezone(){
-
-        $config = cmsConfig::getInstance();
-
-        // Пробуем установить временную зону по имени ...
-        $is_tz_set = $this->query("SET `time_zone` = '%s'", $config->time_zone, true);
-
-        // ... если по имени не удалось, устанавливаем по смещению
-        if (!$is_tz_set) { $this->query("SET `time_zone` = '%s'", date('P')); }
-
+        $this->query("SET `time_zone` = '%s'", date('P'));
     }
 
 //============================================================================//

@@ -45837,7 +45837,7 @@ INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `cl
 (14, 2, 'New members', 'All | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
 (15, 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
 (16, 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
-(17, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(17, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
 (20, 12, 'Login', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
 (21, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
