@@ -1652,7 +1652,7 @@ class modelContent extends cmsModel{
                     filterNotNull('date_pub_end')->
                     filter('i.date_pub_end <= NOW()')->
                     get($this->table_prefix.$ctype_name, function($item, $model) use($ctype_name){
-                        $this->deleteContentItem($ctype_name, $item['id']);
+                        $model->deleteContentItem($ctype_name, $item['id']);
                         return $item['id'];
                     });
 
