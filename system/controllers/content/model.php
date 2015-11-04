@@ -1297,7 +1297,7 @@ class modelContent extends cmsModel{
         foreach($names as $idx=>$field_name){
             if (!empty($item[$field_name])){
 
-                $value = $item[$field_name];
+                $value = str_replace('/', '', $item[$field_name]);
 
                 if (isset($fields[$field_name])){
                     $value = $fields[$field_name]['handler']->getStringValue($value);

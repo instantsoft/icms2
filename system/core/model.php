@@ -184,7 +184,7 @@ class cmsModel{
         foreach($category['path'] as $c){
             if ($c['id'] == 1) { continue; }
             if ($slug) { $slug .= '/'; }
-            $slug .= lang_slug( empty($c['slug_key']) ? $c['title'] : $c['slug_key'] );
+            $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
         }
 
         return $slug;

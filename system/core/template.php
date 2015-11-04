@@ -892,11 +892,22 @@ class cmsTemplate {
 
     }
 
-    public function renderJSON($data){
+    /**
+     * Выводит json строку
+     * @param array $data Массив для вывода
+     * @param bool $with_header Вывод вместе с хидером Content-type
+     */
+    public function renderJSON($data, $with_header=false){
+
+        if(ob_get_length()) { ob_end_clean(); }
+
+    	if ($with_header) {
+            header('Content-type: application/json; charset=utf-8');
+        }
 
         echo json_encode($data);
 
-        if ($this->controller->request->isAjax()) { $this->controller->halt(); }
+        $this->controller->halt();
 
     }
 

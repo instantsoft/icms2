@@ -29,7 +29,7 @@ class cmsUser {
     }
 
     public static function getIp(){
-        return $_SERVER['REMOTE_ADDR'];
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
     }
 
     public function __construct(){
