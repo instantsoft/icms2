@@ -654,7 +654,7 @@ class cmsController {
 //============================================================================//
 
     public function validate_required($value){
-        if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
+        if (empty($value) && $value !=="0") { return ERR_VALIDATE_REQUIRED; }
         return true;
     }
 
