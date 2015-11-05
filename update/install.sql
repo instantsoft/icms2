@@ -23,6 +23,9 @@ CHANGE  `is_pub`  `is_pub` TINYINT( 1 ) UNSIGNED NULL DEFAULT  '1';
 ALTER TABLE  `{#}activity_types` CHANGE  `id`  `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 CHANGE  `is_enabled`  `is_enabled` TINYINT( 1 ) UNSIGNED NULL DEFAULT  '1';
 
+INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
+(1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s');
+
 ALTER TABLE  `{#}comments` CHANGE  `id`  `id` INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT ,
 CHANGE  `parent_id`  `parent_id` INT( 11 ) UNSIGNED NULL DEFAULT NULL COMMENT  'ID родительского комментария',
 CHANGE  `level`  `level` TINYINT( 4 ) UNSIGNED NULL DEFAULT NULL COMMENT  'Уровень вложенности',
