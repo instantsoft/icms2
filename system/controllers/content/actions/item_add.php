@@ -49,7 +49,7 @@ class actionContentItemAdd extends cmsAction {
             $groups = $groups_model->getUserGroups($user->id);
 
             if (!$groups && $ctype['is_in_groups_only']){
-                cmsUser::addSessionMessage(sprintf(LANG_CONTENT_IS_IN_GROUPS_ONLY, $ctype['labels']['many']), 'error');
+                cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
                 $this->redirectBack();
             }
 

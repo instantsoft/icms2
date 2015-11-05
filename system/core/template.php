@@ -6,28 +6,28 @@ class cmsTemplate {
 
     public $name;
     public $path;
-    private $layout;
-    private $output;
-    private $options;
+    protected $layout;
+    protected $output;
+    protected $options;
 
-	private $head = array();
-	private $head_main_css = array();
-	private $head_css = array();
-	private $head_main_js = array();
-	private $head_js = array();
-	private $head_js_no_merge = array();
-	private $title;
-	private $metadesc;
-	private $metakeys;
+	protected $head = array();
+	protected $head_main_css = array();
+	protected $head_css = array();
+	protected $head_main_js = array();
+	protected $head_js = array();
+	protected $head_js_no_merge = array();
+	protected $title;
+	protected $metadesc;
+	protected $metakeys;
 
-    private $breadcrumbs = array();
-    private $menus = array();
+    protected $breadcrumbs = array();
+    protected $menus = array();
 
-    private $widgets = array();
-    private $widgets_group_index = 0;
+    protected $widgets = array();
+    protected $widgets_group_index = 0;
 
-    private $controller;
-    private $controllers_queue;
+    protected $controller;
+    protected $controllers_queue;
 
     public static function getInstance() {
         if (self::$instance === null) {
