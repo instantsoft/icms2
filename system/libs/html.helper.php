@@ -260,6 +260,7 @@ function html_attr_str($attributes){
     unset($attributes['class']);
     if (sizeof($attributes)){
         foreach($attributes as $key=>$val){
+            if ($key=='disabled') { $attr_str .=  $val ? $key : ''; continue; }
             $attr_str .= "{$key}=\"{$val}\" ";
         }
     }
