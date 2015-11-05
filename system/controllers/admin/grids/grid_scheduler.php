@@ -26,6 +26,7 @@ function grid_scheduler($controller){
             'title' => LANG_IS_ENABLED,
             'flag'  => true,
             'width' => 60,
+            'flag_toggle' => href_to($controller->name, 'settings/scheduler', array('toggle', '{id}'))
         ),
         'period' => array(
             'title' => LANG_CP_SCHEDULER_TASK_PERIOD,
