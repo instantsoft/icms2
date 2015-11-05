@@ -124,7 +124,7 @@ class actionContentItemView extends cmsAction {
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_before_item", array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
-		if (!empty($ctype['options']['hits_on']) && (!$user->is_admin || $user->id != $item['user_id'])){
+		if (!empty($ctype['options']['hits_on']) && $user->id != $item['user_id'] && !$user->is_admin){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 
