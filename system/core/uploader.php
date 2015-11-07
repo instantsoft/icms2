@@ -200,7 +200,7 @@ class cmsUploader {
 
         } else {
 
-            $destination = $cfg->upload_path . $destination . '/' . $dest_file;
+            $destination = $cfg->upload_path . $destination . '/' . $dest_name;
 
         }
 
