@@ -211,7 +211,7 @@ function href_to_rel($controller, $action='', $params=false){
 	$ctype_default = cmsConfig::get('ctype_default');
 
 	if ($ctype_default && $ctype_default == $controller){
-		if (preg_match('/([a-zA-Z0-9\-\/]+).html$/i', $action)){
+		if (preg_match('/([a-z0-9\-\/{}]+).html$/i', $action)){
 			$controller = '';
 		}
 	}

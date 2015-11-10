@@ -25,7 +25,7 @@ class actionContentItemView extends cmsAction {
 			}
 		} else {
 			$core = cmsCore::getInstance();
-			if ($config->ctype_default && $config->ctype_default == $core->uri_controller){
+			if ($config->ctype_default && $config->ctype_default == $core->uri_action){
 				$this->redirect(href_to($slug . '.html'), 301);
 			}
 		}
