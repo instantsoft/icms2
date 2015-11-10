@@ -147,10 +147,9 @@ class modelUsers extends cmsModel{
         $date_reg = date('Y-m-d H:i:s');
         $date_log = $date_reg;
 
-        $password = $user['password1'];
-        $password_salt = md5(implode(':', array($password, session_id(), time(), rand(0, 10000))));
+        $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
         $password_salt = substr($password_salt, rand(1,8), 16);
-        $password_hash = md5(md5($password) . $password_salt);
+        $password_hash = md5(md5($user['password1']) . $password_salt);
 
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
@@ -205,20 +204,19 @@ class modelUsers extends cmsModel{
 
         if (!empty($user['password1']) && !$errors){
 
-            if (strlen($user['password1']) < 6) {
-                $errors['password1'] = ERR_VALIDATE_MIN_LENGTH;
+            if (mb_strlen($user['password1']) < 6) {
+                $errors['password1'] = sprintf(ERR_VALIDATE_MIN_LENGTH, 6);
             }
 
             if ($user['password1'] != $user['password2']){
                 $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
             }
 
-            $password = $user['password1'];
-            $password_salt = md5(implode(':', array($password, session_id(), time(), rand(0, 10000))));
+            $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
             $password_salt = substr($password_salt, rand(1,8), 16);
-            $password_hash = md5(md5($password) . $password_salt);
+            $password_hash = md5(md5($user['password1']) . $password_salt);
 
-            $user['password'] = $password_hash;
+            $user['password']      = $password_hash;
             $user['password_salt'] = $password_salt;
 
         }
