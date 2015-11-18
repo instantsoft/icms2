@@ -21,7 +21,7 @@ function grid_controllers($controller){
         'author' => array(
             'title' => LANG_AUTHOR,
             'width' => 150,
-            'href' => '{author}',
+            'href' => '{url}',
             'filter' => 'like'
         )
     );
