@@ -633,7 +633,11 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_js_no_merge)) { continue; }
-            $file_path = $config->root_path . $file;
+            if ( (strpos($file,'http://') != 0) || (strpos($file,'https://') != 0)) {
+              $file_path = $config->root_path . $file; 
+            } else {
+              $file_path = $file; 
+            }
             $contents = file_get_contents($file_path);
             $merged_contents .= $contents;
         }
@@ -667,7 +671,12 @@ class cmsTemplate {
         $merged_contents = '';
 
         foreach($files as $file){
-            $file_path = $config->root_path . $file;
+            
+            if ( (strpos($file,'http://') != 0) || (strpos($file,'https://') != 0)) {
+              $file_path = $config->root_path . $file; 
+            } else {
+              $file_path = $file; 
+            }
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
             $contents = string_compress($contents);
