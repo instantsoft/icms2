@@ -528,6 +528,7 @@ form .field label {
 }
 
 form .field_error .error_text{ font-size:12px; color:#c0392b; float:right; margin-top: 8px; }
+form #f_slug.field_error .error_text { float:none; }
 
 .input{
     height:16px;

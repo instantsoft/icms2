@@ -532,7 +532,7 @@ class content extends cmsFrontend {
         // Если ручной ввод SLUG, то добавляем поле для этого
         if (!$ctype['is_auto_url']){
 
-			$slug_field_rules = array( array('required') );
+			$slug_field_rules = array( array('required'), array('slug') );
 
 			if ($action == 'add'){ $slug_field_rules[] = array('unique', $this->model->table_prefix . $ctype['name'], 'slug'); }
 			if ($action == 'edit'){ $slug_field_rules[] = array('unique_exclude', $this->model->table_prefix . $ctype['name'], 'slug', $item_id); }
