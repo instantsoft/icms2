@@ -197,7 +197,7 @@ class cmsTemplate {
     /**
      * Выводит меню
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false){
+    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $tpl=false){
 
         $core = cmsCore::getInstance();
         $config = cmsConfig::getInstance();
@@ -263,7 +263,7 @@ class cmsTemplate {
 			$active_ids = array($active_ids[count($active_ids)-1]);
 		}
 
-        $this->renderMenu($this->menus[$menu_name], $active_ids, $css_class, $max_items);
+        $this->renderMenu($this->menus[$menu_name], $active_ids, $css_class, $max_items, $tpl);
 
     }
 
@@ -1226,9 +1226,9 @@ class cmsTemplate {
      * @param array $items
      * @param int $active_id
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0){
+    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $tpl=false){
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/menu');
+        $tpl_file = $tpl ? $this->getTemplateFileName('widgets/menu/'.$tpl) : $this->getTemplateFileName('assets/ui/menu');
 
         include($tpl_file);
 
