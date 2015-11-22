@@ -20,7 +20,6 @@ class actionRssToggle extends cmsAction {
 
         $rss_model->toggleFeedEnable($id, $is_active);
 
-
         cmsTemplate::getInstance()->renderJSON(array(
                 'error' => false,
                 'is_on' => $is_active
