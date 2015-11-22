@@ -16,7 +16,8 @@ function grid_feeds($controller){
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,
             'flag'  => true,
-            'width' => 60
+            'width' => 60,
+            'flag_toggle' => href_to($controller->root_url, 'toggle', array('{id}'))
         ),
         'is_cache' => array(
             'title' => LANG_RSS_FEED_IS_CACHE,
