@@ -273,10 +273,9 @@ class cmsTemplate {
      */
     public function breadcrumbs($options=array()){
 
-        $config = cmsConfig::getInstance();
-
         $default_options = array(
-            'home_url' => $config->host,
+            'home_url'   => cmsConfig::get('host'),
+            'template'   => 'breadcrumbs',
             'strip_last' => true
         );
 
@@ -290,7 +289,7 @@ class cmsTemplate {
             }
         }
 
-        $this->renderAsset('ui/breadcrumbs', array(
+        $this->renderAsset('ui/'.$options['template'], array(
             'breadcrumbs' => $this->breadcrumbs,
             'options' => $options
         ));

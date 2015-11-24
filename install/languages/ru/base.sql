@@ -13676,12 +13676,12 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Войти', 'auth/login', 9, '---\nclass: ajax-modal key', '---\n- 1\n', NULL),
 (35, 5, 0, 'Регистрация', 'auth/register', 10, '---\nclass: user_add', '---\n- 1\n', NULL),
-(36, 5, 0, 'Выйти', 'auth/logout', 11, '---\nclass: logout', '---\n- 0\n', '---\n- 1\n'),
 (37, 2, 0, 'Модерация', '{moderation:panel}', 4, '---\nclass: checklist', '---\n- 5\n- 6\n', NULL),
 (38, 1, 0, 'Комментарии', 'comments', 8, '---\nclass:', '---\n- 0\n', NULL),
 (39, 1, 0, 'Объявления', 'board', 5, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (40, 1, 0, 'Новости', '{content:news}', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(42, 1, 0, 'Статьи', '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);
+(42, 1, 0, 'Статьи', '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(43, 2, 0, 'Выйти', 'auth/logout', 12, '---\ntarget: _self\nclass: logout', '---\n- 0\n', NULL);
 
 DROP TABLE IF EXISTS `{#}moderators`;
 CREATE TABLE `{#}moderators` (
@@ -14461,8 +14461,7 @@ CREATE TABLE `{#}widgets_bind` (
 
 INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
 (1, 3, 'Главное меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1, NULL, NULL),
-(2, 3, 'Верхнее меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
-(3, 9, 'Аватар пользователя', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'right-center', 2, NULL, NULL),
+(2, 3, 'Меню авторизации', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 1\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
 (5, 3, 'Меню действий', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\nis_detect: null\nmax_items: 0\n', 0, 'right-center', 3, NULL, NULL),
 (6, 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
 (8, 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
@@ -14477,7 +14476,8 @@ INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `cl
 (17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
 (18, 4, 'Новые объявления', 'Все | board', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3, NULL, NULL),
 (20, 12, 'Войти на сайт', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
-(21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
+(21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL),
+(22, 3, 'Меню пользователя', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 7\n', 0, 'header', 2, NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (
