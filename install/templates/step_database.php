@@ -28,6 +28,14 @@
         </div>
 
         <div class="field">
+            <label><?php echo LANG_DATABASE_ENGINE; ?></label>
+            <select class="input" name="db[engine]">
+                <option value="MyISAM">MyISAM</option>
+                <option value="InnoDB">InnoDB</option>
+            </select>
+        </div>
+
+        <div class="field">
             <label><?php echo LANG_DATABASE_PREFIX; ?></label>
             <input type="text" class="input input-icon icon-db-prefix" name="db[prefix]" value="cms_" />
         </div>

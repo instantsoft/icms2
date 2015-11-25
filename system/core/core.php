@@ -783,6 +783,8 @@ class cmsCore {
                 'message'=>$message,
                 'details'=>$details
             ));
+        } else {
+            echo '<h1>503 Service Unavailable</h1>';
         }
 
         die();
