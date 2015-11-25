@@ -277,6 +277,17 @@ class modelWidgets extends cmsModel {
 
     }
 
+    public function unbindAllWidgets(){
+
+        cmsCache::getInstance()->clean('widgets.bind');
+
+        $this->filterNotNull('page_id')->updateFiltered('widgets_bind', array(
+            'position'=>'_unused',
+            'page_id'=>null
+        ));
+
+    }
+
     public function getWidgetsForPages($pages_list){
 
         $this->useCache('widgets.bind');

@@ -203,6 +203,8 @@
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Add page');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Edit');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Delete');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Unbind all widgets');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from position?\nWidgets move to the unused');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; is created');

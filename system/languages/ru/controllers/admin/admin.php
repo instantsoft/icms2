@@ -205,6 +205,8 @@
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Создать страницу');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');

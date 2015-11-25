@@ -25,6 +25,12 @@
         'title' => LANG_CP_WIDGETS_DELETE_PAGE,
         'href'  => $this->href_to('widgets', 'page_delete')
     ));
+    $this->addToolButton(array(
+        'class'   => 'move',
+        'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
+        'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
+        'href'    => $this->href_to('widgets', 'unbind_all_widgets')
+    ));
 	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,
