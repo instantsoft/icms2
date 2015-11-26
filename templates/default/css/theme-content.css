@@ -59,7 +59,7 @@ article div.content_categories:last-child {
 .content_categories.categories_small li {
     font-size:14px;
     height: 24px;
-    line-height: 24px;    
+    line-height: 24px;
 }
 
 /* ========================================================================== */
@@ -98,8 +98,7 @@ article div.content_categories:last-child {
 
 /* ========================================================================== */
 
-.content_item .ft_text,
-.content_item .ft_html {
+.content_item .ft_text {
     clear:both;
 }
 
@@ -138,7 +137,7 @@ article div.content_categories:last-child {
 	display:inline-block;
 	width:32px;
 	height:16px;
-	border:solid 1px #000;	
+	border:solid 1px #000;
 }
 
 /* ========================================================================== */
@@ -222,11 +221,11 @@ article div.content_categories:last-child {
 .content_list_item .ft_user a:hover { color:#d35400; }
 
 .content_item .ft_listmultiple ul,
-.content_list_item .ft_listmultiple ul { 	
+.content_list_item .ft_listmultiple ul {
 	clear:both;
 }
 .content_item .ft_listmultiple ul li,
-.content_list_item .ft_listmultiple ul li { 
+.content_list_item .ft_listmultiple ul li {
 }
 
 .content_item .tags_bar,
@@ -254,7 +253,7 @@ article div.content_categories:last-child {
     overflow: hidden;
     font-size: 11px;
     color:#95a5a6;
-    display: inline-block;
+    clear: both;
 }
 
 .content_item .info_bar .bar_item,
@@ -289,7 +288,7 @@ article div.content_categories:last-child {
     background: url("../images/icons/user-small.png") no-repeat 5px center;
 }
 
-.content_item .info_bar .bi_hits, 
+.content_item .info_bar .bi_hits,
 .content_list_item .info_bar .bi_hits{
     padding-left:22px;
     background: url("../images/icons/eye-small.png") no-repeat 5px center;
@@ -361,8 +360,8 @@ article div.content_categories:last-child {
 }
 .content_list.featured .first .f_title{
 }
-.content_list.featured .first .info_bar{
-    clear:both;
+.content_list .info_bar{
+    display: inline-block;
 }
 .content_list.featured .first .info_bar .bar_item:first-child{
     padding-left:0;
