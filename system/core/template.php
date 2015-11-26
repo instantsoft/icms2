@@ -62,6 +62,10 @@ class cmsTemplate {
 
         $this->options = $this->getOptions();
 
+        if(!cmsCore::includeFile('templates/'.$name.'/assets/helper.php')){
+            cmsCore::loadLib('template.helper');
+        }
+
 	}
 
 // ========================================================================== //

@@ -50,7 +50,6 @@ class comments extends cmsFrontend {
             'target_user_id'    => $this->target_user_id,
             'is_tracking'       => $is_tracking,
             'is_highlight_new'  => $is_highlight_new,
-            'user'              => $user,
             'comments'          => $comments,
             'csrf_token_seed'   => $csrf_token_seed,
             'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
