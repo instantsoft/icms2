@@ -175,9 +175,9 @@ function files_format_bytes($bytes) {
  * @return string
  */
 function files_sanitize_name($filename){
-	
-	$path_parts = pathinfo($filename);	
-    $filename = lang_slug($path_parts['filename']) . '.' . $path_parts['extension'];	
+
+	$path_parts = pathinfo($filename);
+    $filename = lang_slug($path_parts['filename']) . '.' . $path_parts['extension'];
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
     $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
@@ -185,7 +185,7 @@ function files_sanitize_name($filename){
     $filename = str_replace('\'', '', $filename);
     $filename = preg_replace('/[^\w\-\.]+/', '', $filename);
     $filename = preg_replace('/[\-]+/', '-', $filename);
-	
+
 	return $filename;
 
 }
@@ -199,10 +199,15 @@ function file_get_contents_from_url($url){
         if (function_exists('curl_init')){
 
             $curl = curl_init();
+
+            if(strpos($url, 'https') !== false){
+                curl_setopt(CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt(CURLOPT_SSL_VERIFYPEER, false);
+            }
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 10);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
             $data = curl_exec($curl);
             curl_close($curl);
 
