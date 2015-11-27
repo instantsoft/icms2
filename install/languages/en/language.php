@@ -74,6 +74,7 @@
     define('LANG_DATABASE_USERS_TABLE',     'Users table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Use an existing table');
+    define('LANG_DATABASE_INSTALL_DEMO',    'To set a demo content');
 
     define('LANG_DATABASE_CONNECT_ERROR',   "MySQL Connection Error:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Error importing database\nCheck the provided settings");

@@ -75,6 +75,7 @@
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Использовать имеющуюся');
+    define('LANG_DATABASE_INSTALL_DEMO',    'Установить демо данные');
 
     define('LANG_DATABASE_CONNECT_ERROR',   "Ошибка подключения MySQL:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Ошибка импорта базы данных\nПроверьте правильность реквизитов");
