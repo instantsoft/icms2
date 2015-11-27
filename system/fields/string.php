@@ -15,7 +15,7 @@ class fieldString extends cmsFormField {
             new fieldNumber('max_length', array(
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
-            )),
+            ))
         );
     }
 
@@ -42,6 +42,9 @@ class fieldString extends cmsFormField {
     }
 
     public function store($value, $is_submitted, $old_value=null){
+        if($this->getProperty('is_clean_disable') === true){
+            return trim($value);
+        }
         return strip_tags($value);
     }
 

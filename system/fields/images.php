@@ -46,7 +46,7 @@ class fieldImages extends cmsFormField {
         foreach($images as $key=>$paths){
 
             if (!isset($paths[$this->getOption('size_full')])){ continue; }
-;
+
             $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
 
         }

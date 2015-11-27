@@ -19,10 +19,9 @@ class fieldUrl extends cmsFormField {
             )),
         );
     }
-    
+
     public function parse($value){
 
-        $value = strip_tags($value);
         $href = $value;
 
         if ($this->getOption('auto_http')){
@@ -30,8 +29,7 @@ class fieldUrl extends cmsFormField {
         }
 
         if ($this->getOption('redirect')){
-            $config = cmsConfig::getInstance();
-            $href = $config->root . 'redirect?url=' . $href;
+            $href = cmsConfig::get('root') . 'redirect?url=' . $href;
         }
 
         return '<a href="'.htmlspecialchars($href).'">'.$value.'</a>';
@@ -44,6 +42,6 @@ class fieldUrl extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
         return strip_tags($value);
-    }	
-	
+    }
+
 }

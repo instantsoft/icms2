@@ -20,8 +20,9 @@ class widgetContentSlider extends cmsWidget {
         if (!$ctype) { return false; }
 
 		if ($cat_id){
-			$model->filterCategoryId($ctype['name'], $cat_id, true);
-			$model->groupBy('i.id');
+			$category = $model->getCategory($ctype['name'], $cat_id);
+		} else {
+			$category = false;
 		}
 
         if ($dataset_id){
@@ -35,6 +36,11 @@ class widgetContentSlider extends cmsWidget {
             }
 
         }
+
+		if ($category){
+			$model->filterCategory($ctype['name'], $category, true);
+			$model->groupBy('i.id');
+		}
 
         if (!$dataset_id){
             $model->orderBy('date_pub', 'desc');
