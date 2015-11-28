@@ -32,6 +32,12 @@ class actionCommentsRate extends cmsAction {
         if ($comment['user_id'] == $user->id) { $template->renderJSON(array('error' => true)); }
 
         $success = $this->model->rateComment($comment_id, $user->id, $score);
+		
+		if($comment['user_id'] && isset($this->options['update_user_rating'])){
+			$rating = $this->model->getItemById('users', $comment['user_id']);
+			$new_rating = $rating['rating'] + $score;
+			$this->model->update('users', $comment['user_id'], array('rating' => $new_rating));
+		}
 
         $template->renderJSON(array('error' => !$success));
 
