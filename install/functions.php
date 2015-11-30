@@ -72,8 +72,8 @@ function copy_folder($dir_source, $dir_target) {
         @mkdir($dir_target);
         $d = dir($dir_source);
 
-        while (FALSE !== ($entry = $d->read())) {
-            if ($entry == '.' || $entry == '..') continue;
+        while (false !== ($entry = $d->read())) {
+            if ($entry == '.' || $entry == '..') { continue; }
             copy_folder("$dir_source/$entry", "$dir_target/$entry");
         }
 
