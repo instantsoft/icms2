@@ -22,6 +22,8 @@ class cmsModel{
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
 
+    protected static $cached = array();
+
     private $cache_key = false;
 
     public function __construct(){
@@ -1432,31 +1434,6 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    /**
-     * Сортирует элементы массива $items в виде плоского дерева
-     * на основании связей через parent_id
-     * @param array $items
-     * @param array $result_tree
-     * @param int $parent_id
-     * @param int $level
-     */
-    public function buildTreeRecursive($items, &$result_tree, $parent_id=0, $level=1){
-        $level++;
-
-        foreach($items as $num=>$item){
-            if ($item['parent_id']==$parent_id){
-                $item['level'] = $level-1;
-                if (!isset($result_tree[$item['id']])){
-                    $result_tree[$item['id']] = $item;
-                }
-                $this->buildTreeRecursive($items, $result_tree, $item['id'], $level);
-            }
-        }
-    }
-
-//============================================================================//
-//============================================================================//
-
     public function increment($table, $field, $step=1){
 
         $sign = $step > 0 ? '+' : '-';
@@ -1482,11 +1459,35 @@ class cmsModel{
 //============================================================================//
 
     /**
+     * Сортирует элементы массива $items в виде плоского дерева
+     * на основании связей через parent_id
+     * @param array $items
+     * @param array $result_tree
+     * @param int $parent_id
+     * @param int $level
+     */
+    public static function buildTreeRecursive($items, &$result_tree, $parent_id=0, $level=1){
+        $level++;
+        foreach($items as $item){
+            if ($item['parent_id']==$parent_id){
+                $item['level'] = $level-1;
+                if (!isset($result_tree[$item['id']])){
+                    $result_tree[$item['id']] = $item;
+                }
+                self::buildTreeRecursive($items, $result_tree, $item['id'], $level);
+            }
+        }
+    }
+
+//============================================================================//
+//============================================================================//
+
+    /**
      * Преобразует массив в YAML
      * @param array $array
      * @return string
      */
-    static public function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
+    public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
         cmsCore::loadLib('spyc.class', 'Spyc');
 
@@ -1510,12 +1511,27 @@ class cmsModel{
      * @param string $yaml
      * @return array
      */
-    static public function yamlToArray($yaml) {
+    public static function yamlToArray($yaml) {
 
         cmsCore::loadLib('spyc.class');
 
         return Spyc::YAMLLoadString($yaml);
 
+    }
+
+    /**
+     * Кеширует данные в пределах запроса
+     * @param string $key Ключ
+     * @param mixed $data Данные
+     */
+    public static function cacheResult($key, $data) {
+        self::$cached[$key] = $data;
+    }
+    public static function getCachedResult($key) {
+        if(isset(self::$cached[$key])){
+            return self::$cached[$key];
+        }
+        return null;
     }
 
 }

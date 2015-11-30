@@ -22,6 +22,8 @@ class cmsTemplate {
 
     protected $breadcrumbs = array();
     protected $menus = array();
+    protected $db_menus = array();
+    protected $menu_loaded = false;
 
     protected $widgets = array();
     protected $widgets_group_index = 0;
@@ -43,11 +45,10 @@ class cmsTemplate {
 
 		$config = cmsConfig::getInstance();
 
-        $name = $name ? $name : $config->template;
+        $this->name = $name ? $name : $config->template;
 
         $this->setLayout('main');
 
-		$this->head = array();
 		$this->title = $config->sitename;
 
 		$is_no_def_meta = isset($config->is_no_meta) ? $config->is_no_meta : false;
@@ -57,12 +58,11 @@ class cmsTemplate {
 			$this->metadesc = $config->metadesc;
 		}
 
-        $this->name = $name;
-        $this->path = $config->root_path . 'templates/' . $name;
+        $this->path = $config->root_path.'templates/'.$this->name;
 
         $this->options = $this->getOptions();
 
-        if(!cmsCore::includeFile('templates/'.$name.'/assets/helper.php')){
+        if(!cmsCore::includeFile('templates/'.$this->name.'/assets/helper.php')){
             cmsCore::loadLib('template.helper');
         }
 
@@ -124,20 +124,14 @@ class cmsTemplate {
 	 * @param string $title
 	 */
 	public function title(){
-		$config = cmsConfig::getInstance();
-		if ($this->title){
-			echo htmlspecialchars($this->title);
-		} else {
-			echo htmlspecialchars($config->sitename);
-		}
+    	echo htmlspecialchars($this->title);
 	}
 
 	/**
 	 * Выводит название сайта
 	 */
 	public function sitename(){
-		$config = cmsConfig::getInstance();
-		echo htmlspecialchars($config->sitename);
+		echo htmlspecialchars(cmsConfig::get('sitename'));
 	}
 
     /**
@@ -198,45 +192,80 @@ class cmsTemplate {
 
     }
 
+    protected function loadMenus($menu_name=false) {
+
+        if(!$this->menu_loaded){
+            $this->db_menus = cmsCore::getModel('menu')->getAllMenuItemsTree();
+            $this->menu_loaded = true;
+        }
+
+        if($menu_name && isset($this->db_menus[$menu_name])){
+            return modelMenu::buildMenu($this->db_menus[$menu_name]);
+        }
+
+        return false;
+
+    }
+
     /**
      * Выводит меню
+     * @param string $menu_name Название меню
+     * @param bool $detect_active_id Определять активные пункты меню
+     * @param string $css_class CSS класс контейнера пунктов меню
+     * @param int $max_items Максимальное количество видимых пунктов
+     * @param bool $is_allow_multiple_active Определять все активные пункты меню
+     * @param string $template Название файла шаблона меню в assets/ui/
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false){
+    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template = 'menu'){
 
-        $core = cmsCore::getInstance();
         $config = cmsConfig::getInstance();
 
         if (!isset($this->menus[$menu_name])) {
-            $menu_model = cmsCore::getModel('menu');
-            $menu = $menu_model->getMenu($menu_name, 'name');
+
+            $menu = $this->loadMenus($menu_name);
             if (!$menu){ return; }
-            $items = $menu_model->getMenuItemsTree($menu['id']);
-            if (!$items){ return; }
-            $this->addMenuItems($menu_name, $items);
+
+            $this->setMenuItems($menu_name, $menu);
+
         }
 
+        $menu       = $this->menus[$menu_name];
         $active_ids = array();
 
-        if ($detect_active_id){
+        // Для подсчета пунктов меню первого уровня
+        $first_level_count = 0;
+        $first_level_limit = 0;
+        $index = 0;
 
-            $current_url = trim($core->uri, '/');
+        // для определения активного пункта меню
+        $current_url = trim(cmsCore::getInstance()->uri, '/');
 
-            if ($menu_name == 'main'){
-//                dump($this->menus[$menu_name]);
+        foreach($menu as $id=>$item){
+
+            $menu[$id]['disabled']     = !empty($item['disabled']);
+            $menu[$id]['level']        = !isset($item['level']) ? 1 : $item['level'];
+            $menu[$id]['childs_count'] = !isset($item['childs_count']) ? 0 : $item['childs_count'];
+
+            if (!isset($item['url']) &&  !empty($item['controller'])) {
+                if (!isset($item['action'])) { $item['action'] = ''; }
+                if (!isset($item['params'])) { $item['params'] = array(); }
+                $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
+                $menu[$id]['url'] = $item['url'];
             }
 
-            //перебираем меню в поисках текущего пункта
-            foreach($this->menus[$menu_name] as $id=>$item){
+            // Если нужно, считаем количество пунктов первого уровня
+            if ($max_items){
 
-                if (!isset($item['url']) && !isset($item['controller'])) { continue; }
+                if ($item['level'] == 1){ $first_level_count++; }
+                if ($first_level_count > $max_items && !$first_level_limit){ $first_level_limit = $index; }
+                $index++;
 
-                if (!isset($item['url'])) {
-                    if (!isset($item['action'])) { $item['action'] = ''; }
-                    if (!isset($item['params'])) { $item['params'] = array(); }
-                    $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
-                    $this->menus[$menu_name][$id]['url'] = $item['url'];
-                    $menu[$id] = $item;
-                }
+            }
+
+            // ищем активные пункты меню
+            if ($detect_active_id){
+
+                if (!isset($item['url'])) { continue; }
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : $item['url'];
                 $url = mb_substr($url, mb_strlen($config->root));
@@ -247,14 +276,14 @@ class cmsTemplate {
                 //полное совпадение ссылки и адреса?
                 if ($current_url == $url){
                     $active_ids[] = $id;
-                    $is_strict = true;
+                    $is_strict = true; // не используется нигде
                 } else {
 
                     //частичное совпадение ссылки и адреса (по началу строки)?
                     $url_first_part = mb_substr($current_url, 0, mb_strlen($url));
                     if ($url_first_part == $url){
                         $active_ids[] = $id;
-                        $is_strict = false;
+                        $is_strict = false;  // не используется нигде
                     }
 
                 }
@@ -263,11 +292,47 @@ class cmsTemplate {
 
         }
 
-		if (!$is_allow_multiple_active && (count($active_ids)>1)){
-			$active_ids = array($active_ids[count($active_ids)-1]);
-		}
+        if ($max_items && $first_level_limit){
 
-        $this->renderMenu($this->menus[$menu_name], $active_ids, $css_class, $max_items);
+            //
+            // Если на первом уровне больше пунктов, чем нужно то
+            // разрезаем массив меню на две части - видимую и скрытую
+            //
+
+            $visible_items = array_slice($menu, 0, $first_level_limit, true);
+            $more_items    = array_slice($menu, $first_level_limit, sizeof($menu) - $first_level_limit, true);
+
+            $item_more_id = 10000;
+
+            $item_more = array(
+                $item_more_id => array(
+                    'id'           => $item_more_id,
+                    'title'        => LANG_MENU_MORE,
+                    'childs_count' => ($first_level_count - $max_items),
+                    'level'        => 1,
+                    'disabled'     => false,
+                    'options'      => array(
+                        'class' => 'more'
+                    )
+                )
+            );
+
+            foreach($more_items as $id=>$item){
+                if ($item['level']==1){
+                    $more_items[$id]['parent_id'] = $item_more_id;
+                }
+                $more_items[$id]['level']++;
+            }
+
+            $menu = $visible_items + $item_more + $more_items;
+
+        }
+
+        if (!$is_allow_multiple_active && (count($active_ids)>1)){
+            $active_ids = array($active_ids[count($active_ids)-1]);
+        }
+
+        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template);
 
     }
 
@@ -342,7 +407,9 @@ class cmsTemplate {
 		$config = cmsConfig::getInstance();
         if (func_num_args() > 1){ $pagetitle = implode(' - ', func_get_args()); }
         $this->title = $pagetitle;
-		$this->title .= ' - '.$config->sitename;
+        if($config->is_sitename_in_title){
+            $this->title .= ' — '.$config->sitename;
+        }
 	}
 
 	public function setFrontPageTitle($pagetitle){
@@ -1226,12 +1293,15 @@ class cmsTemplate {
 
     /**
      * Выводит меню
-     * @param array $items
-     * @param int $active_id
+     * @param array $menu Массив пунктов меню
+     * @param array $active_ids Массив активных пунктов меню
+     * @param string $css_class CSS класс контейнера пунктов меню
+     * @param int $max_items Максимальное количество видимых пунктов
+     * @param string $template Название файла шаблона меню в assets/ui/
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0){
+    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu'){
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/menu');
+        $tpl_file = $this->getTemplateFileName('assets/ui/'.$template);
 
         include($tpl_file);
 

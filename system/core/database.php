@@ -714,7 +714,7 @@ class cmsDatabase {
 
         if (!is_file($file)){ return false; }
 
-        set_time_limit(0);
+        @set_time_limit(0);
 
         $file = fopen($file, 'r');
 

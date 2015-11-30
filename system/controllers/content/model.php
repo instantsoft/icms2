@@ -1146,6 +1146,10 @@ class modelContent extends cmsModel{
             unset($item['props']);
         }
 
+        if(!isset($item['category_id'])){
+            $item['category_id'] = 0;
+        }
+
         if (!empty($item['new_category'])){
             $category = $this->addCategory($ctype['name'], array(
                 'title' => $item['new_category'],

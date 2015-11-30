@@ -252,7 +252,8 @@
     define('LANG_CP_SETTINGS_HOMETITLE',        'Frontpage title');
     define('LANG_CP_SETTINGS_METAKEYS',         'Site keywords');
     define('LANG_CP_SETTINGS_METADESC',         'Site description');
-    define('LANG_CP_SETTINGS_META_NO_DEFAULT',  "Use that site keywords and description only on frontpage");
+    define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Use that site keywords and description only on frontpage');
+    define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add page title to html title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');

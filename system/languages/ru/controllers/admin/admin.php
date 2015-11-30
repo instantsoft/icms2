@@ -254,7 +254,8 @@
     define('LANG_CP_SETTINGS_HOMETITLE',        'Заголовок главной страницы');
     define('LANG_CP_SETTINGS_METAKEYS',         'Ключевые слова');
     define('LANG_CP_SETTINGS_METADESC',         'Описание сайта');
-	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  "Использовать указанные выше слова и описание только для главной страницы");
+	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
+	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');

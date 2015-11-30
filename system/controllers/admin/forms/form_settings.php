@@ -92,6 +92,11 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_META_NO_DEFAULT,
                     )),
 
+                    new fieldCheckbox('is_sitename_in_title', array(
+                        'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
+                        'default' => 1
+                    )),
+
                     new fieldCheckbox('is_check_updates', array(
                         'title' => LANG_CP_SETTINGS_CHECK_UPDATES,
                     )),
