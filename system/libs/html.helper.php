@@ -16,6 +16,9 @@ function html($string){
  */
 function html_clean($string, $max_length=false){
 
+    // строка может быть без переносов
+    // и после strip_tags не будет пробелов между словами
+    $string = str_replace(array("\n", '<br>', '<br/>'), ' ', $string);
     $string = strip_tags($string);
 
     if (is_int($max_length)){

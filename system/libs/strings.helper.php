@@ -477,8 +477,10 @@ function string_get_meta_description($text, $limit=250){
  */
 function string_short($text, $limit){
 
+    // строка может быть без переносов
+    // и после strip_tags не будет пробелов между словами
+    $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", ' ', $text);
 
     if (mb_strlen($text) <= $limit) { return $text; }
 
