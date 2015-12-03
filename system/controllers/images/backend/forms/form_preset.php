@@ -4,8 +4,7 @@ class formImagesPreset extends cmsForm {
 
     public function init($do) {
 
-        return array(
-			
+        return array(		
             'basic' => array(
                 'type' => 'fieldset',
                 'childs' => array(

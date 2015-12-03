@@ -164,7 +164,7 @@ class cmsUploader {
 	public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
 		$user = cmsUser::getInstance();
-
+		
 		$dest_name = files_sanitize_name($_GET['qqfile']);
 		$dest_ext = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
@@ -232,7 +232,6 @@ class cmsUploader {
 		fseek($temp, 0, SEEK_SET);
 		stream_copy_to_stream($temp, $target);
 		fclose($target);
-
 		if ($this -> check_image_sizes($destination, $dest_name) == true) {
 			return $this -> check_image_sizes($destination, $dest_name);
 		} else {
@@ -483,10 +482,10 @@ class cmsUploader {
 	//============================================================================//
 
 	public function check_image_sizes($destination, $dest_name) {
-		$cfg = cmsConfig::getInstance();
+		$cfg = cmsController::loadOptions('images');
 		$image_limits = getimagesize($destination);
-		if (($image_limits[0] < $cfg -> image_minwidth) || ($image_limits[1] < $cfg -> image_minheight)) {
-			return array('error' => sprintf(LANG_UPLOAD_ERR_IMAGELIMITS, $cfg -> image_minwidth, $cfg -> image_minheight, $image_limits[0], $image_limits[1]), 'success' => false, 'name' => "$dest_name");
+		if (($image_limits[0] < $cfg['image_minwidth']) || ($image_limits[1] < $cfg['image_minwidth'])) {
+			return array('error' => sprintf(LANG_UPLOAD_ERR_IMAGELIMITS, $cfg['image_minwidth'], $cfg['image_minwidth'], $image_limits[0], $image_limits[1]), 'success' => false, 'name' => "$dest_name");
 		} else {
 			return false;
 		}
