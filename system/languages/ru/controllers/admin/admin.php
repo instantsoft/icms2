@@ -259,6 +259,7 @@
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
+	define('LANG_CP_SETTINGS_IMAGES',			'Настройки загрузки изображений');
 	define('LANG_CP_SETTINGS_IMAGES_MINWIDTH',	'Минимальная ШИРИНА загружаемых изображений в пикселях');
 	define('LANG_CP_SETTINGS_IMAGES_MINHEIGHT',	'Минимальная ВЫСОТА загружаемых изображений в пикселях');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');

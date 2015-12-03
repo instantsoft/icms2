@@ -138,14 +138,6 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
-                    new fieldNumber('image_minwidth', array(
-                        'title' => LANG_CP_SETTINGS_IMAGES_MINWIDTH,
-                    )),
-
-                    new fieldNumber('image_minheight', array(
-                        'title' => LANG_CP_SETTINGS_IMAGES_MINHEIGHT,
-                    )),
-
                     new fieldCheckbox('min_html', array(
                         'title' => LANG_CP_SETTINGS_HTML_MINIFY,
                     )),
@@ -249,7 +241,20 @@ class formAdminSettings extends cmsForm {
 
                 )
             ),
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_IMAGES,
+                'childs' => array(
 
+                    new fieldNumber('image_minwidth', array(
+                        'title' => LANG_CP_SETTINGS_IMAGES_MINWIDTH,
+                    )),
+
+                    new fieldNumber('image_minheight', array(
+                        'title' => LANG_CP_SETTINGS_IMAGES_MINHEIGHT,
+                    )),
+                )
+            ),
             array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_SETTINGS_CACHE,
