@@ -249,13 +249,17 @@ class cmsUploader {
         stream_copy_to_stream($temp, $target);
         fclose($target);
 
-        return array(
-            'success' => true,
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $realSize
-        );
+		if ($this->check_image_sizes($destination, $dest_name)==true) {
+			return $this->check_image_sizes($destination, $dest_name);
+		} else {
+	        return array(
+	            'success' => true,
+	            'path'  => $destination,
+	            'url' => str_replace($cfg->upload_path, '', $destination),
+	            'name' => $orig_name,
+	            'size' => $realSize
+	        );
+		}
 
     }
 
@@ -301,14 +305,20 @@ class cmsUploader {
         $upload_dir = dirname($destination);
         if (!is_writable($upload_dir)){	@chmod($upload_dir, 0777); }
 
-        return array(
-            'success' => @move_uploaded_file($source, $destination),
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $orig_size,
-            'error' => $uploadErrors[$errorCode]
-        );
+		$this->check_imagesizes($destination);
+
+		if ($this->check_image_sizes($destination, $dest_name)==true) {
+			return $this->check_image_sizes($destination, $dest_name);
+		} else {
+	        return array(
+	            'success' => @move_uploaded_file($source, $destination),
+	            'path'  => $destination,
+	            'url' => str_replace($cfg->upload_path, '', $destination),
+	            'name' => $orig_name,
+	            'size' => $orig_size,
+	            'error' => $uploadErrors[$errorCode]
+	        );
+		}
 
     }
 
@@ -403,12 +413,6 @@ class cmsUploader {
             return false;
         }
 
-        if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-
-            return copy($src, $dest);
-
-        }
-
         if ($format == 'png') {
             $quality = (10 - ceil($quality / 10));
         }
@@ -454,41 +458,38 @@ class cmsUploader {
             }
 
         } else {
+$iProp=round($maxwidth/$maxheight, 2);
 
-            if ($new_width > $maxwidth) {
+			/* Вырезание максимально возможного прямоугольника из начального изображения */
+			/* основываясь на пропорциях загружаемого и формируемого изображений */
+			if (round($new_width/$new_height, 2)<=$iProp) {
+				$new_width=$new_width;
+				$new_height=round($new_width/$iProp);
+			} else {
+				$new_height=$new_height;
+				$new_width=$new_height*$iProp;
+			}
+			/* создание нового изображения с шириной и высотой формируемого изображения */
+			$idest = imagecreatetruecolor($maxwidth, $maxheight);
+			/* Создание отступов при ресемплинге для того, чтобы вырезать центральную часть загружаемого изображения */
+			$pos_x = 0;
+			$pos_y = 0;	
+			/* если ширина основного изображения больше его высоты */
+			if (($size[0] > $size[1])) {
+				$pos_x = ($size[0]-$new_width)/2;
+				$pos_y = 0;
+			}
+			/* если ширина основного изображения меньше его высоты */
+			if (($size[0] < $size[1])) {
+				$pos_x = 0;
+				$pos_y = ($size[1]-$new_height)/2;
+			}
+			if ($size[0] == $size[1]) {
+				$pos_x = 0;
+				$pos_y = 0;	
+			}
 
-                $wscale = $maxwidth / $new_width;
-
-                $new_width  *= $wscale;
-                $new_height *= $wscale;
-
-            }
-
-            if ($new_height > $maxheight) {
-
-                $hscale = $maxheight / $new_height;
-
-                $new_width  *= $hscale;
-                $new_height *= $hscale;
-
-            }
-
-            $idest = imagecreatetruecolor($new_width, $new_height);
-
-            if ($format == 'jpeg') {
-
-                imagefill($idest, 0, 0, 0xFFFFFF);
-
-            } else if ($format == 'png' || $format == 'gif') {
-
-                $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-                imagefill($idest, 0, 0, $trans);
-                imagealphablending($idest, true);
-                imagesavealpha($idest, true);
-
-            }
-
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $size[0], $size[1]);
+			imagecopyresampled($idest, $isrc,0,0,$pos_x,$pos_y, $maxwidth, $maxheight, $new_width, $new_height);
 
         }
 
@@ -504,6 +505,24 @@ class cmsUploader {
         return true;
 
     }
+
+//============================================================================//
+//============================================================================//
+
+
+	public function check_image_sizes($destination, $dest_name) {
+		$cfg = cmsConfig::getInstance();
+		$image_limits = getimagesize($destination);
+		if (($image_limits[0] < $cfg->image_minwidth) || ($image_limits[1] < $cfg->image_minheight)) {
+			return array(
+				'error' => sprintf(LANG_UPLOAD_ERR_IMAGELIMITS, $cfg->image_minwidth, $cfg->image_minheight, $image_limits[0], $image_limits[1]),
+				'success' => false,
+				'name' => "$dest_name"
+			);
+		} else {
+			return false;
+		}
+	}
 
 //============================================================================//
 //============================================================================//

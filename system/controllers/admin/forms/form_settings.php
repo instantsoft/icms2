@@ -138,6 +138,14 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
+                    new fieldNumber('image_minwidth', array(
+                        'title' => LANG_CP_SETTINGS_IMAGES_MINWIDTH,
+                    )),
+
+                    new fieldNumber('image_minheight', array(
+                        'title' => LANG_CP_SETTINGS_IMAGES_MINHEIGHT,
+                    )),
+
                     new fieldCheckbox('min_html', array(
                         'title' => LANG_CP_SETTINGS_HTML_MINIFY,
                     )),
