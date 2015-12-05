@@ -115,9 +115,9 @@ class cmsUploader {
 		$dest_ext = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
 		if ($allowed_ext !== false) {
-
 			$allowed_ext = explode(',', $allowed_ext);
-			foreach ($allowed_ext as $idx => $ext) { $allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., ')));
+			foreach ($allowed_ext as $idx => $ext) { 
+				$allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., ')));
 			}
 
 			if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)) {
@@ -132,18 +132,13 @@ class cmsUploader {
 			}
 		}
 
-		$dest_file = substr(md5(uniqid() . microtime(true)), 0, 8) . '.' . $dest_ext;
+		$dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
 
 		if (!$destination) {
-
 			$user -> increaseFilesCount();
-
-			$destination = $this -> getUploadDestinationDirectory() . '/' . $dest_file;
-
+			$destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
 		} else {
-
-			$destination = $config -> upload_path . $destination . '/' . $dest_file;
-
+			$destination = $config->upload_path . $destination . '/' . $dest_name;
 		}
 
 		return $this -> moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);
@@ -232,8 +227,8 @@ class cmsUploader {
 		fseek($temp, 0, SEEK_SET);
 		stream_copy_to_stream($temp, $target);
 		fclose($target);
-		if ($this -> check_image_sizes($destination, $dest_name) == true) {
-			return $this -> check_image_sizes($destination, $dest_name);
+		if ($this -> check_image_sizes($destination, $orig_name) == true) {
+			return $this -> check_image_sizes($destination, $orig_name);
 		} else {
 			return array('success' => true, 'path' => $destination, 'url' => str_replace($cfg -> upload_path, '', $destination), 'name' => $orig_name, 'size' => $realSize);
 		}
@@ -269,13 +264,8 @@ class cmsUploader {
 		if (!is_writable($upload_dir)) {	@chmod($upload_dir, 0777);
 		}
 
-		$this -> check_image_sizes($destination);
 
-		if ($this -> check_image_sizes($destination, $dest_name) == true) {
-			return $this -> check_image_sizes($destination, $dest_name);
-		} else {
-			return array('success' => @move_uploaded_file($source, $destination), 'path' => $destination, 'url' => str_replace($cfg -> upload_path, '', $destination), 'name' => $orig_name, 'size' => $orig_size, 'error' => $uploadErrors[$errorCode]);
-		}
+		return array('success' => @move_uploaded_file($source, $destination), 'path' => $destination, 'url' => str_replace($cfg -> upload_path, '', $destination), 'name' => $orig_name, 'size' => $orig_size, 'error' => $uploadErrors[$errorCode]);
 
 	}
 
@@ -484,8 +474,12 @@ class cmsUploader {
 	public function check_image_sizes($destination, $dest_name) {
 		$cfg = cmsController::loadOptions('images');
 		$image_limits = getimagesize($destination);
-		if (($image_limits[0] < $cfg['image_minwidth']) || ($image_limits[1] < $cfg['image_minwidth'])) {
-			return array('error' => sprintf(LANG_UPLOAD_ERR_IMAGELIMITS, $cfg['image_minwidth'], $cfg['image_minwidth'], $image_limits[0], $image_limits[1]), 'success' => false, 'name' => "$dest_name");
+		if ($image_limits==true) {
+			if (($image_limits[0] < $cfg['image_minwidth']) || ($image_limits[1] < $cfg['image_minwidth'])) {
+				return array('error' => sprintf(LANG_UPLOAD_ERR_IMAGELIMITS, $cfg['image_minwidth'], $cfg['image_minwidth'], $image_limits[0], $image_limits[1]), 'success' => false, 'name' => "$dest_name");
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
