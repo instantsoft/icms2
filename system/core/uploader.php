@@ -257,7 +257,7 @@ class cmsUploader {
         stream_copy_to_stream($temp, $target);
         fclose($target);
 
-        if (in_array($dest_ext, $img_ext) && $this->check_image_sizes($destination, $dest_name) == true) {
+        if ($this->check_image_sizes($destination, $dest_name) == true) {
             return $this->check_image_sizes($destination, $dest_name);
         } else {
             return array(
