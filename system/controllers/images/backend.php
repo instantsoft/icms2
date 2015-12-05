@@ -2,14 +2,14 @@
 
 class backendImages extends cmsBackend{
 	
-	public $useDefaultOptionsAction = true;
+    public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
 
-    public function actionIndex(){
+    public function actionIndex() {
         $this->redirectToAction('presets');
     }
 
-    public function getBackendMenu(){
+    public function getBackendMenu() {
         return array(
             array(
                 'title' => LANG_IMAGES_PRESETS,

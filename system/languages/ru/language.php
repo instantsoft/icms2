@@ -225,7 +225,7 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 	 'Ошибка записи файла на диск');
     define('LANG_UPLOAD_ERR_EXTENSION', 	 'Загрузка файла была прервана');
     define('LANG_UPLOAD_ERR_MIME',           'Файл имеет неподходящий формат');
-	define('LANG_UPLOAD_ERR_IMAGELIMITS',    'Загружаемое изображение должно быть не менее %sx%sпикс., а Вы пытаетесь загрузить изображение размером %sx%sпикс.');
+    define('LANG_UPLOAD_ERR_IMAGELIMITS',    'Загружаемое изображение должно быть не менее %sx%sпикс., а Вы пытаетесь загрузить изображение размером %sx%sпикс.');
 
     //MONEY
     define('LANG_CURRENCY',                  'руб.');

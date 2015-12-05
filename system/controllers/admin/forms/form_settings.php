@@ -241,6 +241,7 @@ class formAdminSettings extends cmsForm {
 
                 )
             ),
+            
             array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_SETTINGS_CACHE,
