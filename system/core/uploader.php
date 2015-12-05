@@ -106,7 +106,7 @@ class cmsUploader {
 
 		$config = cmsConfig::getInstance();
 		$user = cmsUser::getInstance();
-
+		$img_ext = array('jpg','jpeg','gif','png','bmp');
 		$source = $_FILES[$post_filename]['tmp_name'];
 		$error_code = $_FILES[$post_filename]['error'];
 
@@ -115,9 +115,9 @@ class cmsUploader {
 		$dest_ext = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
 		if ($allowed_ext !== false) {
+
 			$allowed_ext = explode(',', $allowed_ext);
-			foreach ($allowed_ext as $idx => $ext) { 
-				$allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., ')));
+			foreach ($allowed_ext as $idx => $ext) { $allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., ')));
 			}
 
 			if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)) {
@@ -132,16 +132,25 @@ class cmsUploader {
 			}
 		}
 
-		$dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
+		$dest_file = substr(md5(uniqid() . microtime(true)), 0, 8) . '.' . $dest_ext;
 
 		if (!$destination) {
+
 			$user -> increaseFilesCount();
-			$destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
+
+			$destination = $this -> getUploadDestinationDirectory() . '/' . $dest_file;
+
 		} else {
-			$destination = $config->upload_path . $destination . '/' . $dest_name;
+
+			$destination = $config -> upload_path . $destination . '/' . $dest_name;
+
 		}
 
-		return $this -> moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);
+		if (in_array($dest_ext, $img_ext) && $this -> check_image_sizes($destination, $dest_name) == true) {
+			return $this -> check_image_sizes($destination, $dest_name);
+		} else {
+			return $this -> moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);
+		}
 
 	}
 
@@ -159,7 +168,6 @@ class cmsUploader {
 	public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
 		$user = cmsUser::getInstance();
-		
 		$dest_name = files_sanitize_name($_GET['qqfile']);
 		$dest_ext = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
@@ -184,17 +192,11 @@ class cmsUploader {
 		$dest_file = substr(md5(uniqid() . microtime(true)), 0, 8) . '.' . $dest_ext;
 
 		if (!$destination) {
-
 			$user -> increaseFilesCount();
-
 			$destination = $this -> getUploadDestinationDirectory() . '/' . $dest_file;
-
 		} else {
-
-			$destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
-
+			$destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_name;
 		}
-
 		return $this -> saveXHRFile($destination, $dest_name);
 
 	}
@@ -213,7 +215,6 @@ class cmsUploader {
 	public function saveXHRFile($destination, $orig_name = '') {
 
 		$cfg = cmsConfig::getInstance();
-
 		$input = fopen("php://input", "r");
 		$temp = tmpfile();
 		$realSize = stream_copy_to_stream($input, $temp);
@@ -227,12 +228,12 @@ class cmsUploader {
 		fseek($temp, 0, SEEK_SET);
 		stream_copy_to_stream($temp, $target);
 		fclose($target);
-		if ($this -> check_image_sizes($destination, $orig_name) == true) {
+
+		if ($this -> check_image_sizes($destination, $orig_name)==true) {
 			return $this -> check_image_sizes($destination, $orig_name);
 		} else {
 			return array('success' => true, 'path' => $destination, 'url' => str_replace($cfg -> upload_path, '', $destination), 'name' => $orig_name, 'size' => $realSize);
 		}
-
 	}
 
 	//============================================================================//
