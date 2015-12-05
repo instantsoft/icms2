@@ -269,7 +269,7 @@ class cmsUploader {
 		if (!is_writable($upload_dir)) {	@chmod($upload_dir, 0777);
 		}
 
-		$this -> check_imagesizes($destination);
+		$this -> check_image_sizes($destination);
 
 		if ($this -> check_image_sizes($destination, $dest_name) == true) {
 			return $this -> check_image_sizes($destination, $dest_name);
