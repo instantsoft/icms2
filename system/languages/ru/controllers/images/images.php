@@ -23,3 +23,7 @@
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_C', 'Центр');
     define('LANG_IMAGES_PRESET_WM_MARGIN', 'Отступ от краев изображения');
     define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Удалить пресет "{title}"?');   
+
+    define('LANG_CP_SETTINGS_IMAGES_MINMAX', 'Настройки минимальной ширины и высоты изображения');
+    define('LANG_CP_SETTINGS_IMAGES_MINWIDTH',	'Минимальная ШИРИНА загружаемых изображений в пикселях');
+    define('LANG_CP_SETTINGS_IMAGES_MINHEIGHT',	'Минимальная ВЫСОТА загружаемых изображений в пикселях');
