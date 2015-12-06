@@ -474,14 +474,14 @@ function string_get_meta_description($text, $limit=250){
  * @param int $limit Максимальная длина результата
  * @return string
  */
-function string_short($text, $limit){
+function string_short($text, $limit=0){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
     $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
 
-    if (mb_strlen($text) <= $limit) { return $text; }
+    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
 
     $text = mb_substr($text, 0, $limit);
     $text = preg_replace('/ |\s{3,}/',' ',$text);

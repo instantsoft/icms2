@@ -11,6 +11,7 @@ class widgetContentList extends cmsWidget {
         $is_show_details = $this->getOption('show_details');
         $style           = $this->getOption('style', 'basic');
         $limit           = $this->getOption('limit', 10);
+        $teaser_len      = $this->getOption('teaser_len', 100);
 
         $model = cmsCore::getModel('content');
 
@@ -76,6 +77,7 @@ class widgetContentList extends cmsWidget {
         return array(
             'ctype'             => $ctype,
             'hide_except_title' => $hide_except_title,
+            'teaser_len'        => $teaser_len,
             'image_field'       => $image_field,
             'teaser_field'      => $teaser_field,
             'is_show_details'   => $is_show_details,

@@ -112,8 +112,8 @@ class fieldListBitmask extends cmsFormField {
 
     public function getInput($value){
 
-	$this->data['items']    = $this->getListItems();
-	$this->data['selected'] = array();
+        $this->data['items']    = $this->getListItems();
+        $this->data['selected'] = array();
 
         if($value){
             if(!is_array($value)){

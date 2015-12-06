@@ -82,7 +82,7 @@
                 <?php $index = 0; ?>
                 <?php foreach($photos as $thumb) { ?>
                     <li <?php if ($thumb['id'] == $photo['id']) { ?>class="active"<?php } ?>>
-                        <a href="<?php echo $this->href_to('view', $thumb['id']); ?>" title="<?php echo $thumb['title']; ?>">
+                        <a href="<?php echo $this->href_to('view', $thumb['id']); ?>" title="<?php html($thumb['title']); ?>">
                             <?php echo html_image($thumb['image'], 'small', $thumb['title']); ?>
                         </a>
                     </li>

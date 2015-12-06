@@ -113,6 +113,11 @@ class formWidgetContentSliderOptions extends cmsForm {
 						'items' => $fields_list
                     )),
 
+                    new fieldNumber('options:teaser_len', array(
+                        'title' => LANG_PARSER_HTML_TEASER_LEN,
+                        'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+                    )),
+
                     new fieldNumber('options:delay', array(
                         'title' => LANG_WD_CONTENT_SLIDER_DELAY,
                         'hint' => LANG_WD_CONTENT_SLIDER_DELAY_HINT,

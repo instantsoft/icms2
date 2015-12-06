@@ -44,6 +44,10 @@ class fieldCaption extends cmsFormField {
         return $value;
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        return strip_tags($value);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
     }

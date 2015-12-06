@@ -253,9 +253,10 @@ function html_avatar_image($avatars, $size_preset='small', $alt=''){
  * @param array|yaml $image Все размеры заданного изображения
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
+ * @param array $attributes Массив аттрибутов тега
  * @return string
  */
-function html_image($image, $size_preset='small', $alt=''){
+function html_image($image, $size_preset='small', $alt='', $attributes = array()){
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
@@ -263,7 +264,10 @@ function html_image($image, $size_preset='small', $alt=''){
 
 	if (!$src) { return false; }
 
-    return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" />';
+    $attr_str = html_attr_str($attributes);
+    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
+
+    return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
 
 }
 
@@ -292,7 +296,7 @@ function html_select($name, $items, $selected = '', $attributes = array()){
                     $optgroup = false;
                 }
                 $optgroup = true;
-                $html .= "\t".'<optgroup label="'.$title[0].'">'."\n";
+                $html .= "\t".'<optgroup label="'.htmlspecialchars($title[0]).'">'."\n";
                 continue;
             }
 

@@ -735,6 +735,15 @@ class cmsController {
         return true;
     }
 
+    public function validate_color($value){
+        if (empty($value)) { return true; }
+        $value = ltrim($value, '#');
+        if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)){
+            return true;
+        }
+        return false;
+    }
+
     public function validate_regexp($regexp, $value){
         if (empty($value)) { return true; }
         if (!preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }

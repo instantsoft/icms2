@@ -62,7 +62,7 @@
                     <?php if ($teaser_field && !empty($item[$teaser_field])) { ?>
                         <div class="teaser">
                             <?php if (!$is_private) { ?>
-                                <?php echo $item[$teaser_field]; ?>
+                                <?php echo string_short($item[$teaser_field], $teaser_len); ?>
                             <?php } else { ?>
                                 <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
                             <?php } ?>

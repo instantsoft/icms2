@@ -3,7 +3,7 @@
 class fieldUrl extends cmsFormField {
 
     public $title = LANG_PARSER_URL;
-    public $sql   = 'text';
+    public $sql   = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
 	public $allow_index = false;
 
@@ -17,6 +17,10 @@ class fieldUrl extends cmsFormField {
                 'title' => LANG_PARSER_URL_AUTO_HTTP,
                 'default' => true
             )),
+            new fieldNumber('max_length', array(
+                'title' => LANG_PARSER_TEXT_MAX_LEN,
+                'default' => 500
+            ))
         );
     }
 

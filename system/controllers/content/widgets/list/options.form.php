@@ -111,6 +111,11 @@ class formWidgetContentListOptions extends cmsForm {
                        'title' =>  LANG_WD_CONTENT_LIST_DETAILS,
                     )),
 
+                    new fieldNumber('options:teaser_len', array(
+                        'title' => LANG_PARSER_HTML_TEASER_LEN,
+                        'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+                    )),
+
                     new fieldNumber('options:limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 10,

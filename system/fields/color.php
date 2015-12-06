@@ -7,6 +7,14 @@ class fieldColor extends cmsFormField {
     public $filter_type = 'str';
     public $filter_hint = '#RRGGBB';
 
+    public function getRules() {
+
+        $this->rules[] = array('color');
+
+        return $this->rules;
+
+    }
+
     public function parse($value){
         return '<div class="color-block" style="background-color:'.$value.'" title="'.$value.'"></div>';
     }

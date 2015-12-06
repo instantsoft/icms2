@@ -20,7 +20,7 @@ class fieldListMultiple extends cmsFormField {
 
         $this->data['items'] = ( $this->getProperty('show_all') ? array(0 => LANG_ALL) : array() ) + $this->getProperty('items');
 
-        return parent::getInput($value?:array(0));
+        return parent::getInput($value ? $value : array(0));
 
     }
 

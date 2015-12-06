@@ -82,9 +82,7 @@ class fieldNumber extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $value = str_replace(',', '.', trim($value));
-
-        return $value;
+        return str_replace(',', '.', trim($value));
 
     }
 
