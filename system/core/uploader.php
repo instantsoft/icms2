@@ -136,18 +136,20 @@ class cmsUploader {
             }
         }
 
-        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
-
         if (!$destination){
 
             $user->increaseFilesCount();
 
-            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_name;
 
         } else {
 
-            $destination = $config->upload_path . $destination . '/' . $dest_file;
+            $destination = $config->upload_path . $destination . '/' . $dest_name;
 
+        }
+
+        if(file_exists($destination)){
+            $destination = str_replace($dest_name, pathinfo($dest_name, PATHINFO_FILENAME).'_'.uniqid().'.'.$dest_ext, $destination);
         }
 
         return $this->moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);

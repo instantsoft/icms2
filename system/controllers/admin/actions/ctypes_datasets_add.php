@@ -18,22 +18,19 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
         $fields  = $content_model->getContentFields($ctype['name']);
 
 		$dataset = array('sorting' => array(array('by'=>'date_pub', 'to'=>'desc')));
-		
+
         if ($is_submitted){
 
 			$dataset = $form->parse($this->request, $is_submitted);
-			
-            $dataset['ctype_id']    = $ctype['id'];
-            $dataset['filters']     = $this->request->get('filters');
-            $dataset['sorting']     = $this->request->get('sorting');
+
+            $dataset['filters'] = $this->request->get('filters');
+            $dataset['sorting'] = $this->request->get('sorting');
 
             $errors = $form->validate($this,  $dataset);
 
             if (!$errors){
 
-                $dataset['ctype_id'] = $ctype['id'];
-
-                $dataset_id = $content_model->addContentDataset($dataset);
+                $dataset_id = $content_model->addContentDataset($dataset, $ctype);
 
                 if ($dataset_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_DATASET_CREATED, $dataset['title']), 'success'); }
 

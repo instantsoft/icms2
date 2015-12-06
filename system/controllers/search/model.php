@@ -146,6 +146,7 @@ class modelSearch extends cmsModel{
 
     public function getHighlightedText($text){
 
+        $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
         $text = strip_tags($text);
         $text = preg_replace('/\s+/u', ' ', $text);
 

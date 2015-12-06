@@ -38,9 +38,13 @@ class actionUsersProfileContent extends cmsAction {
         if ($user->id == $profile['id'] || $user->is_admin){
             $content_controller->model->disableApprovedFilter();
 			$content_controller->model->disablePubFilter();
+			$content_controller->model->disablePrivacyFilter();
         }
 
-        cmsEventsManager::hook("content_before_profile", array($ctype, $profile));
+        // указываем тут сортировку, чтобы тут же указать индекс для использования
+        $content_controller->model->orderBy('date_pub', 'desc')->forceIndex('user_id');
+
+        cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
 
         if ($folder_id){
             $page_url = href_to('users', $profile['id'], array('content', $ctype_name, $folder_id));
@@ -51,12 +55,12 @@ class actionUsersProfileContent extends cmsAction {
         $list_html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('user_id' => $profile['id']));
 
         return cmsTemplate::getInstance()->render('profile_content', array(
-            'id' => $profile['id'],
-            'profile' => $profile,
-            'ctype' => $ctype,
-            'folders' => $folders,
+            'id'        => $profile['id'],
+            'profile'   => $profile,
+            'ctype'     => $ctype,
+            'folders'   => $folders,
             'folder_id' => $folder_id,
-            'html' => $list_html
+            'html'      => $list_html
         ));
 
     }

@@ -37,16 +37,23 @@ class widgetContentList extends cmsWidget {
 
 		if ($category){
 			$model->filterCategory($ctype['name'], $category, true);
-			$model->groupBy('i.id');
 		}
 
-        if (!$dataset_id){
-            $model->orderBy('date_pub', 'desc');
+        // Приватность
+        // флаг показа только названий
+        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
+
+        // Сначала проверяем настройки типа контента
+        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+            $model->disablePrivacyFilter();
+            if($ctype['options']['privacy_type'] != 'show_title'){
+                $hide_except_title = false;
+            }
         }
 
-        // Отключаем фильтр приватности для тех кому это разрешено
+        // А потом, если разрешено правами доступа, отключаем фильтр приватности
         if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
-            $model->disablePrivacyFilter();
+            $model->disablePrivacyFilter(); $hide_except_title = false;
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
@@ -67,12 +74,13 @@ class widgetContentList extends cmsWidget {
         }
 
         return array(
-            'ctype' => $ctype,
-            'image_field' => $image_field,
-            'teaser_field' => $teaser_field,
-            'is_show_details' => $is_show_details,
-            'style' => $style,
-            'items' => $items
+            'ctype'             => $ctype,
+            'hide_except_title' => $hide_except_title,
+            'image_field'       => $image_field,
+            'teaser_field'      => $teaser_field,
+            'is_show_details'   => $is_show_details,
+            'style'             => $style,
+            'items'             => $items
         );
 
     }

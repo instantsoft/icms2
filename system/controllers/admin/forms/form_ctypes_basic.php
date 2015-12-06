@@ -165,11 +165,18 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_LISTVIEW_STYLE,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
                         'generator' => function(){
-                            $template = cmsTemplate::getInstance();
-                            $styles = $template->getAvailableContentListStyles();
-                            return $styles;
+                            return cmsTemplate::getInstance()->getAvailableContentListStyles();
                         }
                     )),
+                    new fieldList('options:privacy_type', array(
+                        'title'   => LANG_CP_PRIVACY_TYPE,
+                        'default' => 'hide',
+                        'items'   => array(
+                            'hide'       => LANG_CP_PRIVACY_TYPE_HIDE,
+                            'show_title' => LANG_CP_PRIVACY_TYPE_SHOW_TITLE,
+                            'show_all'   => LANG_CP_PRIVACY_TYPE_SHOW_ALL
+                        )
+                    ))
                 )
             ),
             'itemview' => array(

@@ -52,6 +52,7 @@ function create_config($path, $file){
         'db_user'				=> $_SESSION['install']['db']['user'],
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
+        'db_engine'				=> $_SESSION['install']['db']['engine'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
         'metakeys'				=> $_SESSION['install']['site']['metakeys'],

@@ -4,7 +4,7 @@ class fieldCaption extends cmsFormField {
 
     public $title           = LANG_PARSER_CAPTION;
     public $is_public       = false;
-    public $sql             = 'varchar(255) NULL DEFAULT NULL';
+    public $sql             = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type     = 'str';
 
     public function getOptions(){

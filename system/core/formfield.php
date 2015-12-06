@@ -95,7 +95,16 @@ class cmsFormField {
 
     public function setItem($item) { $this->item = $item; return $this; }
 
-    public function getSQL() { return $this->sql; }
+    public function getSQL() {
+
+        $max_length = $this->getOption('max_length');
+
+        if($max_length){
+            return str_replace('{max_length}', $max_length, $this->sql);
+        }
+        return $this->sql;
+
+    }
 
     public function getRules(){ return $this->rules; }
 

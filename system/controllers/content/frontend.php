@@ -76,6 +76,31 @@ class content extends cmsFrontend {
 
     }
 
+    public function getMenuPrivateItems($menu_item_id){
+
+        $result = array('url' => '#', 'items' => false);
+
+        $ctypes = $this->model->getContentTypes();
+        if (!$ctypes) { return false; }
+
+        foreach($ctypes as $ctype){
+
+            if (!$ctype['options']['list_on']) { continue; }
+
+            $result['items'][] = array(
+                'id' => 'private_list'.$ctype['id'],
+                'parent_id' =>  $menu_item_id,
+                'title' => sprintf(LANG_CONTENT_PRIVATE_FRIEND_ITEMS, mb_strtolower($ctype['title'])),
+                'childs_count' => 0,
+                'url' => href_to($ctype['name'], 'from_friends')
+            );
+
+        }
+
+        return $result;
+
+    }
+
 
 //============================================================================//
 
@@ -166,20 +191,37 @@ class content extends cmsFrontend {
 			}
 		}
 
-        // Отключаем фильтр приватности для тех кому это разрешено
-        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
+        // Приватность
+        // флаг показа только названий
+        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
+
+        // Сначала проверяем настройки типа контента
+        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
             $this->model->disablePrivacyFilter();
+            if($ctype['options']['privacy_type'] != 'show_title'){
+                $hide_except_title = false;
+            }
+        }
+
+        // А потом, если разрешено правами доступа, отключаем фильтр приватности
+        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
+            $this->model->disablePrivacyFilter(); $hide_except_title = false;
         }
 
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
-		list($ctype, $this->model) = cmsEventsManager::hook("content_list_filter", array($ctype, $this->model));
+		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', array($ctype, $this->model));
 		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
 
         // Получаем количество и список записей
         $total = $this->model->getContentItemsCount($ctype['name']);
         $items = $this->model->getContentItems($ctype['name']);
+
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
 
         // Рейтинг
         if ($ctype['is_rating'] && $items){
@@ -206,19 +248,20 @@ class content extends cmsFrontend {
         $template->setContext($this);
 
         $html = $template->renderContentList($ctype, array(
-			'category_id' => $category_id,
-            'page_url' => $page_url,
-            'ctype' => $ctype,
-            'fields' => $fields,
-            'props' => isset($props) ? $props : false,
-            'props_fields' => isset($props_fields) ? $props_fields : false,
-            'filters' => $filters,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'items' => $items,
-            'user' => $user,
-            'dataset' => $dataset,
+			'category_id'       => $category_id,
+            'page_url'          => $page_url,
+            'ctype'             => $ctype,
+            'fields'            => $fields,
+            'props'             => isset($props) ? $props : false,
+            'props_fields'      => isset($props_fields) ? $props_fields : false,
+            'filters'           => $filters,
+            'page'              => $page,
+            'perpage'           => $perpage,
+            'total'             => $total,
+            'items'             => $items,
+            'user'              => $user,
+            'dataset'           => $dataset,
+            'hide_except_title' => $hide_except_title
         ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
         $template->restoreContext();
@@ -353,18 +396,27 @@ class content extends cmsFrontend {
             if (!empty($ctype['options']['is_cats_title'])){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
             if (!empty($ctype['options']['is_cats_keys'])){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
             if (!empty($ctype['options']['is_cats_desc'])){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
         }
@@ -374,7 +426,7 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug_key', array(
-                'rules' => array( array('required') ),
+                'rules' => array( array('required'), array('max_length', 255) )
             )));
 
         }
@@ -529,6 +581,20 @@ class content extends cmsFrontend {
 
         }
 
+        //
+        // Если включены теги, то добавляем поле для них
+        //
+        if ($ctype['is_tags']){
+            $fieldset_id = $form->addFieldset(LANG_TAGS);
+            $form->addField($fieldset_id, new fieldString('tags', array(
+                'hint' => LANG_TAGS_HINT,
+                'autocomplete' => array(
+                    'multiple' => true,
+                    'url' => href_to('tags', 'autocomplete')
+                )
+            )));
+        }
+
         // Если ручной ввод SLUG, то добавляем поле для этого
         if (!$ctype['is_auto_url']){
 
@@ -560,6 +626,20 @@ class content extends cmsFrontend {
 
         }
 
+        // если разрешено отключать комментарии к записи
+        if(cmsUser::isAllowed($ctype['name'], 'disable_comments') && $ctype['is_comments']){
+
+            $fieldset_id = $form->addFieldset(LANG_RULE_CONTENT_COMMENT, 'is_comment');
+            $form->addField($fieldset_id, new fieldList('is_comments_on', array(
+				'default' => 1,
+				'items' => array(
+					1 => LANG_YES,
+					0 => LANG_NO
+				)
+			)));
+
+        }
+
         //
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
         //
@@ -568,49 +648,44 @@ class content extends cmsFrontend {
             if ($ctype['options']['is_manual_title']){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
             if (!$ctype['is_auto_keys']){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
             if (!$ctype['is_auto_desc']){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+					'rules' => array(
+						array('max_length', 256)
+					)
                 )));
             }
         }
 
         //
-        // Если включены теги, то добавляем поле для них
-        //
-        if ($ctype['is_tags']){
-            $fieldset_id = $form->addFieldset( LANG_TAGS );
-            $form->addField($fieldset_id, new fieldString('tags', array(
-                'hint' => LANG_TAGS_HINT,
-                'autocomplete' => array(
-                    'multiple' => true,
-                    'url' => href_to('tags', 'autocomplete')
-                )
-            )));
-        }
-
-        //
         // Если включен выбор даты публикации, то добавляем поля
         //
-		$pub_fieldset_id = false;
-		$is_dates = $ctype['is_date_range'];
-		$is_pub_start_date = cmsUser::isAllowed($ctype['name'], 'pub_late');
-		$is_pub_end_date = cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
-		$is_pub_end_days = cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
-		$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
-		$is_pub_ext = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
-		$pub_max_days = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
+		$pub_fieldset_id   = false;
+        $is_dates          = $ctype['is_date_range'];
+        $is_pub_start_date = cmsUser::isAllowed($ctype['name'], 'pub_late');
+        $is_pub_end_date   = cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
+        $is_pub_end_days   = cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
+        $is_pub_control    = cmsUser::isAllowed($ctype['name'], 'pub_on');
+        $is_pub_ext        = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
+        $pub_max_days      = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
 
-		if ($user->is_admin){ $is_pub_end_days = false; }
+        if ($user->is_admin){ $is_pub_end_days = false; }
 
 		if ($is_pub_control){
 			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );

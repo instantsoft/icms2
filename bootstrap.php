@@ -35,6 +35,7 @@
 	cmsCore::loadLib('html.helper');
 	cmsCore::loadLib('strings.helper');
 	cmsCore::loadLib('files.helper');
+    cmsCore::loadLib('spyc.class');
 
     // Инициализируем ядро
     $core = cmsCore::getInstance();

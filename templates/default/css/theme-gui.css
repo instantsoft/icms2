@@ -51,6 +51,10 @@
     height:16px;
     background:url("../images/icons/eye.png") no-repeat;
 }
+.content_list_item .is_private, .widget_content_list .is_private, .content_list .is_private,
+.content_list_item .is_closed, .widget_content_list .is_closed {
+    height:14px;
+}
 
 .is_closed{
     background:url("../images/icons/lock.png") no-repeat;
@@ -66,6 +70,7 @@
 
 /* Menu icons =============================================================== */
 
+.icon-accept, .menu .lock .item { background-image: url("../images/icons/lock.png"); }
 .icon-accept, .menu .accept .item { background-image: url("../images/icons/accept.png"); }
 .icon-add, .menu .add .item { background-image: url("../images/icons/add.png"); }
 .icon-edit, .menu .edit .item { background-image: url("../images/icons/edit.png"); }

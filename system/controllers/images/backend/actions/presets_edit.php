@@ -12,7 +12,7 @@ class actionImagesPresetsEdit extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        $preset = $images_model->getPreset($id);
+        $preset = $original_preset = $images_model->getPreset($id);
 
 		if ($preset['is_internal']){
 			$form->removeFieldset('basic');
@@ -26,6 +26,8 @@ class actionImagesPresetsEdit extends cmsAction {
             if (!$errors){
 
                 $images_model->updatePreset($id, $preset);
+
+                $this->createDefaultImages(array_merge($original_preset, $preset));
 
                 $this->redirectToAction('presets');
 

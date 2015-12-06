@@ -159,9 +159,7 @@ class cmsCore {
 
         if ($class && class_exists($class, false)){ return true; }
 
-        $config = cmsConfig::getInstance();
-
-        $lib_file = $config->root_path.'system/libs/'.$library.'.php';
+        $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
         if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
@@ -652,6 +650,9 @@ class cmsCore {
      */
     public function runWidgets(){
 
+        // в админке нам виджеты не нужны
+        if ($this->uri_controller == 'admin') { return; }
+
         $widgets_model = cmsCore::getModel('widgets');
         $pages = $widgets_model->getPages();
 
@@ -680,15 +681,16 @@ class cmsCore {
         if ($is_user_hide) { return false; }
         if (!$is_user_view) { return false; }
 
-        $path = 'system/' . cmsCore::getWidgetPath( $widget['name'], $widget['controller'] );
-        $file = $path . '/widget.php';
-
-        cmsCore::includeFile($file);
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
         $class = 'widget' .
                     ($widget['controller'] ? string_to_camel('_', $widget['controller']) : '') .
                     string_to_camel('_', $widget['name']);
+
+        if (!class_exists($class, false)) {
+            cmsCore::includeFile($file);
+            cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        }
 
         $widget_object = new $class($widget);
 

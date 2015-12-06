@@ -39,14 +39,12 @@ class widgetContentSlider extends cmsWidget {
 
 		if ($category){
 			$model->filterCategory($ctype['name'], $category, true);
-			$model->groupBy('i.id');
 		}
 
-        if (!$dataset_id){
-            $model->orderBy('date_pub', 'desc');
-        }
-
         // Отключаем фильтр приватности для тех кому это разрешено
+        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+            $model->disablePrivacyFilter();
+        }
         if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
             $model->disablePrivacyFilter();
         }

@@ -22,6 +22,9 @@ class actionImagesPresetsAdd extends cmsAction {
 
                 $id = $images_model->addPreset($preset);
 
+                // создаем дефолтные миниатюры
+                $this->createDefaultImages($preset);
+
                 $this->redirectToAction('presets');
 
             }

@@ -239,7 +239,7 @@
     define('ERR_VALIDATE_EMAIL',             'Invalid e-mail format');
     define('ERR_VALIDATE_REGEXP',            'Invalid format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and digits');
-    define('ERR_VALIDATE_SYSNAME',           'Only letters, digits and underscores');
+    define('ERR_VALIDATE_SYSNAME',           'Only letters (lower case), digits and underscores');
     define('ERR_VALIDATE_SLUG',              'Only letters (lower case), digits, hyphen and forward slash');
     define('ERR_VALIDATE_DIGITS',            'Only digits');
     define('ERR_VALIDATE_NUMBER',            'Enter a number');
@@ -391,6 +391,7 @@
     define('LANG_PRIVACY',                   'Privacy');
     define('LANG_PRIVACY_PUBLIC',            'For everyone');
     define('LANG_PRIVACY_PRIVATE',           'Only for friends');
+    define('LANG_PRIVACY_PRIVATE_HINT',      'This is a private item. Only author friends view it.');
     define('LANG_ON_FRONT',				 	 'On the home page');
     define('LANG_SHOWED',					 'Displaying');
     define('LANG_ORDER',					 'Order');

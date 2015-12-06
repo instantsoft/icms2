@@ -1329,12 +1329,13 @@ class cmsTemplate {
 
 //============================================================================//
 //============================================================================//
-
+    /**
+     * Возвращает все названия шаблонов для списка записей типов контента
+     * @return array|boolean
+     */
     public function getAvailableContentListStyles(){
 
-        $dir = 'templates/'.$this->name.'/content';
-        $files = cmsCore::getFilesList($dir, 'default_list*.tpl.php', true);
-
+        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
         if (!$files) { return false; }
 
         $styles = array();
@@ -1346,9 +1347,9 @@ class cmsTemplate {
             if (!$matches){
                 $styles[''] = 'default_list (' . LANG_CP_LISTVIEW_STYLE_BASIC .')';
             } else {
-                $title = constant('LANG_CP_LISTVIEW_STYLE_'.mb_strtoupper($matches[1]));
-                if ($title) { $title = " ({$title})"; }
-                $styles[$matches[1]] = pathinfo($file, PATHINFO_FILENAME) . $title;
+                $constant_name = 'LANG_CP_LISTVIEW_STYLE_'.mb_strtoupper($matches[1]);
+                $title = defined($constant_name) ? '('.constant($constant_name).')' : '';
+                $styles[$matches[1]] = pathinfo($file, PATHINFO_FILENAME).$title;
             }
 
         }

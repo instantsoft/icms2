@@ -13,9 +13,9 @@
 	define('LANG_CONTENT_PUB_LONG',			 'Publish for, days');
 	define('LANG_CONTENT_PUB_LONG_EXT',		 'Publish for more, days');
 	define('LANG_CONTENT_PUB_LONG_NOW',		 'Currently published until %s');
-	define('LANG_CONTENT_IS_PUB',			 'Publish %s on the site');	
+	define('LANG_CONTENT_IS_PUB',			 'Publish %s on the site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication is disabled by date');
-	
+
     define('LANG_RULE_CONTENT_ADD',         'Add items');
     define('LANG_RULE_CONTENT_EDIT',        'Edit items');
     define('LANG_RULE_CONTENT_DELETE',      'Delete items');
@@ -23,6 +23,7 @@
     define('LANG_RULE_CONTENT_EDIT_CAT',    'Edit categories');
     define('LANG_RULE_CONTENT_DELETE_CAT',  'Delete categories');
     define('LANG_RULE_CONTENT_COMMENT',     'Comments');
+    define('LANG_RULE_CONTENT_DISABLE_COMMENTS', 'Disabling comments in item');
     define('LANG_RULE_CONTENT_RATE',        'Rating');
     define('LANG_RULE_CONTENT_PRIVACY',     'Change item privacy mode');
     define('LANG_RULE_CONTENT_VIEW_ALL',    'View private items');
@@ -36,12 +37,14 @@
     define('LANG_PERM_OPTION_DAYS', 'Days');
     define('LANG_PERM_OPTION_ANY', 'Any date');
 
-	
     define('LANG_CONTENT_ACTIVITY_ADD',     'Add %s');
     define('LANG_CONTENT_ACTIVITY_ADD_DESC','adds %s %s');
 
     define('LANG_CONTENT_SELECT_CATEGORY',  '-- select a category --');
     define('LANG_CONTENT_SELECT_FOLDER',    '-- select a folder --');
+
+    define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Private friends %s');
+    define('LANG_CONTENT_PRIVATE_FRIEND_INFO', '% is only accessible by friends <a href="%s">%s</a>');
 
     //WIDGETS
     define('LANG_WP_CONTENT_ALL_PAGES',     '%s: All pages');

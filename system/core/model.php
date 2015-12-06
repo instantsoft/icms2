@@ -13,6 +13,7 @@ class cmsModel{
     public $where_separator  = 'AND';
     public $group_by   = '';
     public $order_by   = '';
+    public $index_action = '';
     public $limit      = 1000;
     public $perpage    = 50;
 
@@ -51,35 +52,35 @@ class cmsModel{
     public function getContentTableStruct(){
 
         return array(
-            'id'                    => array('type' => 'primary'),
-            'title'                 => array('type' => 'varchar', 'size' => 100),
-            'content'               => array('type' => 'text'),
-            'photo'                 => array('type' => 'text'),
-            'slug'                  => array('type' => 'varchar', 'index'=>true, 'size' => 100),
-            'seo_keys'              => array('type' => 'text'),
-            'seo_desc'              => array('type' => 'text'),
-            'seo_title'             => array('type' => 'varchar', 'size' => 256),
-            'tags'                  => array('type' => 'varchar', 'size' => 1000),
-            'date_pub'              => array('type' => 'timestamp', 'default_current' => true),
-            'date_last_modified'    => array('type' => 'timestamp'),
-            'date_pub_end'			=> array('type' => 'timestamp'),
-            'is_pub'				=> array('type' => 'bool', 'index'=>true, 'default' => 1, 'unsigned' => true),
-            'hits_count'            => array('type' => 'int', 'index'=>true, 'default' => 0, 'unsigned' => true),
-            'user_id'               => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'parent_id'             => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'parent_type'           => array('type' => 'varchar', 'size'=>32, 'index'=>true),
-            'parent_title'          => array('type' => 'varchar', 'size' => 100),
-            'parent_url'            => array('type' => 'varchar', 'size' => 255),
-            'is_parent_hidden'      => array('type' => 'bool', 'index'=>true),
-            'category_id'           => array('type' => 'int', 'index'=>true, 'default' => 1, 'unsigned' => true),
-            'folder_id'             => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'is_comments_on'        => array('type' => 'bool'),
-            'comments'              => array('type' => 'int', 'index'=>true, 'default' => 0, 'unsigned' => true),
-            'rating'                => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'is_approved'           => array('type' => 'tinyint', 'index'=>true, 'default' => 1, 'unsigned' => true),
-            'approved_by'           => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'date_approved'         => array('type' => 'timestamp'),
-            'is_private'            => array('type' => 'bool', 'index'=>true, 'default' => 0),
+            'id'                 => array('type' => 'primary'),
+            'title'              => array('type' => 'varchar', 'size' => 100, 'index' => true),
+            'content'            => array('type' => 'text'),
+            'photo'              => array('type' => 'text'),
+            'slug'               => array('type' => 'varchar', 'index' => true, 'size' => 100),
+            'seo_keys'           => array('type' => 'varchar', 'size' => 256),
+            'seo_desc'           => array('type' => 'varchar', 'size' => 256),
+            'seo_title'          => array('type' => 'varchar', 'size' => 256),
+            'tags'               => array('type' => 'varchar', 'size' => 1000),
+            'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(3,2,1), 'default_current' => true),
+            'date_last_modified' => array('type' => 'timestamp'),
+            'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
+            'is_pub'             => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1),
+            'hits_count'         => array('type' => 'int', 'default' => 0, 'unsigned' => true),
+            'user_id'            => array('type' => 'int', 'index' => 'user_id', 'composite_index' => 0, 'unsigned' => true),
+            'parent_id'          => array('type' => 'int', 'index' => 'parent_id', 'composite_index' => 0, 'unsigned' => true),
+            'parent_type'        => array('type' => 'varchar', 'size' => 32, 'index' => 'parent_id', 'composite_index' => 1),
+            'parent_title'       => array('type' => 'varchar', 'size' => 100),
+            'parent_url'         => array('type' => 'varchar', 'size' => 255),
+            'is_parent_hidden'   => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 1),
+            'category_id'        => array('type' => 'int', 'index' => true, 'default' => 1, 'unsigned' => true),
+            'folder_id'          => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'is_comments_on'     => array('type' => 'bool', 'default' => 1),
+            'comments'           => array('type' => 'int', 'default' => 0, 'unsigned' => true),
+            'rating'             => array('type' => 'int', 'default' => 0),
+            'is_approved'        => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2, 'default' => 1),
+            'approved_by'        => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'date_approved'      => array('type' => 'timestamp'),
+            'is_private'         => array('type' => 'bool', 'default' => 0)
         );
 
     }
@@ -92,7 +93,7 @@ class cmsModel{
             'name'          => array('type' => 'varchar', 'size' => 20),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
-            'ordering'      => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),
@@ -105,7 +106,7 @@ class cmsModel{
             'values'        => array('type' => 'text'),
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
-            'groups_edit'   => array('type' => 'text'),
+            'groups_edit'   => array('type' => 'text')
         );
 
     }
@@ -113,14 +114,14 @@ class cmsModel{
     public function getPropsTableStruct(){
 
         return array(
-            'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int', 'unsigned' => true),
-            'title'         => array('type' => 'varchar', 'size' => 100),
-            'fieldset'      => array('type' => 'varchar', 'size' => 32),
-            'type'          => array('type' => 'varchar', 'size' => 16),
-            'is_in_filter'  => array('type' => 'bool', 'index'=>true),
-            'values'        => array('type' => 'text'),
-            'options'       => array('type' => 'text'),
+            'id'           => array('type' => 'primary'),
+            'ctype_id'     => array('type' => 'int', 'unsigned' => true),
+            'title'        => array('type' => 'varchar', 'size' => 100),
+            'fieldset'     => array('type' => 'varchar', 'size' => 32),
+            'type'         => array('type' => 'varchar', 'size' => 16),
+            'is_in_filter' => array('type' => 'bool', 'index' => true),
+            'values'       => array('type' => 'text'),
+            'options'      => array('type' => 'text')
         );
 
     }
@@ -128,10 +129,10 @@ class cmsModel{
     public function getPropsBindTableStruct(){
 
         return array(
-            'id'        => array('type' => 'primary'),
-            'prop_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'cat_id'    => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'ordering'  => array('type' => 'int', 'index'=>true, 'unsigned' => true),
+            'id'       => array('type' => 'primary'),
+            'prop_id'  => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'cat_id'   => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'ordering' => array('type' => 'int', 'index' => true, 'unsigned' => true),
         );
 
     }
@@ -139,9 +140,9 @@ class cmsModel{
     public function getPropsValuesTableStruct(){
 
         return array(
-            'prop_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'item_id'   => array('type' => 'int', 'index'=>true, 'unsigned' => true),
-            'value'     => array('type' => 'varchar', 'size' => 255),
+            'prop_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'item_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'value'   => array('type' => 'varchar', 'size' => 255),
         );
 
     }
@@ -504,6 +505,7 @@ class cmsModel{
         $this->select       = array('i.*');
         $this->group_by     = '';
         $this->order_by     = '';
+        $this->index_action = '';
         $this->limit        = '';
         $this->join         = '';
 
@@ -755,8 +757,6 @@ class cmsModel{
 
     public function filterPrivacy(){
 
-        $user = cmsUser::getInstance();
-
         if ($this->privacy_filtered) { return $this; }
 
         // Этот фильтр может применяться при подсчете числа записей
@@ -764,7 +764,7 @@ class cmsModel{
         // используем флаг чтобы фильтр не применился дважды
         $this->privacy_filtered = true;
 
-        return $this->filter("(i.is_private = 0 OR i.user_id = '{$user->id}' OR (i.is_private = 1 AND EXISTS (SELECT id FROM {users}_friends WHERE user_id='{$user->id}' AND friend_id=i.user_id AND is_mutual=1)))");
+        return $this->filterEqual('i.is_private', 0);
 
     }
 
@@ -774,11 +774,21 @@ class cmsModel{
 
     public function filterFriends($user_id){
 
-        $user_id = intval($user_id);
+        $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
-        $this->joinInner('{users}_friends', 'f', "friend_id = i.user_id AND f.is_mutual = 1 AND f.user_id = '{$user_id}'");
+        $this->filterEqual('fr.user_id', intval($user_id));
+        $this->filterEqual('fr.is_mutual', 1);
 
         return $this;
+
+    }
+
+    public function filterFriendsPrivateOnly($user_id){
+
+        // фильтр приватности при этом не нужен
+        $this->privacy_filtered = true;
+
+        return $this->filterEqual('i.is_private', 1)->filterFriends($user_id);
 
     }
 
@@ -819,8 +829,12 @@ class cmsModel{
 
         }
 
-        if (!empty ($dataset['sorting']) && !$ignore_sorting){
+        if (!empty($dataset['sorting']) && !$ignore_sorting){
             $this->orderByList($dataset['sorting']);
+        }
+
+        if($dataset['index']){
+            $this->forceIndex($dataset['index']);
         }
 
         return true;
@@ -930,7 +944,45 @@ class cmsModel{
         return $this;
     }
 
-    public function orderBy($field, $direction=''){
+    /**
+     * Управляет индексами в запросе
+     * @param string $index_name Название индекса в БД
+     * @param string $action FORCE | IGNORE | USE
+     * @param int $for 1 - FOR JOIN, 2 - FOR ORDER BY, 3 - FOR GROUP BY
+     * @return \cmsModel
+     */
+    protected function indexHint($index_name, $action, $for='') {
+        switch ($for) {
+            case 1:
+                $for_action = 'FOR JOIN';
+                break;
+            case 2:
+                $for_action = 'FOR ORDER BY';
+                break;
+            case 3:
+                $for_action = 'FOR GROUP BY';
+                break;
+            default:
+                $for_action = '';
+                break;
+        }
+        $this->index_action .= "{$action} INDEX {$for_action} ({$index_name})\n";
+        return $this;
+    }
+
+    public function forceIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'FORCE', $for);
+    }
+
+    public function ignoreIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'IGNORE', $for);
+    }
+
+    public function useIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'USE', $for);
+    }
+
+    public function orderBy($field, $direction='', $is_force_index_by_field = false){
         if(strpos($field, '(') !== false){ return $this; } // в названии поля не может быть функции
         if($direction){
             $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
@@ -1032,7 +1084,7 @@ class cmsModel{
 
         $sql = "SELECT {$select}
                 FROM {#}{$table_name} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
@@ -1098,7 +1150,7 @@ class cmsModel{
 
         $sql = "SELECT COUNT(i.{$by_field}) as count
                 FROM {#}{$table_name} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
@@ -1221,7 +1273,7 @@ class cmsModel{
 
         $sql = "SELECT {$select}
                 FROM {#}{$this->table} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
@@ -1489,8 +1541,6 @@ class cmsModel{
      */
     public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
-        cmsCore::loadLib('spyc.class', 'Spyc');
-
         if(!empty($input_array)){
 
             foreach ($input_array as $key => $value) {
@@ -1512,8 +1562,6 @@ class cmsModel{
      * @return array
      */
     public static function yamlToArray($yaml) {
-
-        cmsCore::loadLib('spyc.class');
 
         return Spyc::YAMLLoadString($yaml);
 

@@ -107,6 +107,10 @@
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count the number of views (hits)');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'HTML code you enter here will be displayed at each entry');
+    define('LANG_CP_PRIVACY_TYPE',              'How to show private list entries');
+    define('LANG_CP_PRIVACY_TYPE_HIDE',         'Hide');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Show only title');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_ALL',     'Show full');
 
     define('LANG_CP_NUMERALS_LABELS',           'Plurals');
     define('LANG_CP_NUMERALS_1_LABEL',          'One (...)');

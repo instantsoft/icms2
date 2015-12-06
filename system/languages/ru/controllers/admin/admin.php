@@ -102,6 +102,10 @@
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Журнальный');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Плитка');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Таблица');
+    define('LANG_CP_PRIVACY_TYPE',              'Как показывать приватные записи в списке');
+    define('LANG_CP_PRIVACY_TYPE_HIDE',         'Не показывать');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Показывать только название');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_ALL',     'Показывать полностью');
 
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Просмотр записи');
     define('LANG_CP_ITEMVIEW_ON',               'Просмотр записи включен');

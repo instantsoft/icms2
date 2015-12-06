@@ -80,6 +80,11 @@ article div.content_categories:last-child {
 .content_item .field{
     margin-bottom: 15px;
     overflow:hidden;
+    color:#555;
+}
+
+.private_field_hint {
+    color: #95a5a6;
 }
 
 .content_item .field .title_left,
@@ -201,7 +206,8 @@ article div.content_categories:last-child {
 
 .content_list_item .field { margin-bottom: 6px; }
 .content_list_item .ft_caption { margin-bottom:10px;  }
-.content_list_item .ft_caption a { font-size:21px; color:#2c3e50; text-decoration: none; }
+.content_list_item .ft_caption .value { font-size:21px; color:#2c3e50; }
+.content_list_item .ft_caption a { color:inherit; text-decoration: none; }
 .content_list_item .ft_caption a:hover { text-decoration: underline; }
 .content_list_item .ft_caption a.parent_title { color:#7f8c8d; }
 .content_list_item .ft_caption a.parent_title:hover { color:#d35400; }
@@ -403,8 +409,8 @@ article div.content_categories:last-child {
 
 .content_list.tiled .clear { clear:both; }
 
-.content_list.tiled .tile { width:32%; float:left; margin-right: 8px; margin-bottom:20px; }
-.content_list.tiled .tile:nth-child(3) { margin-right: 8; }
+.content_list.tiled .tile { width:33.33333%; float:left; margin-bottom:20px; padding-right: 10px; box-sizing: border-box; }
+.content_list.tiled .tile:nth-child(3) { padding-right: 0; }
 
 .content_list.tiled .tile .photo img { width:100%; }
 .content_list.tiled .tile .photo { display: block; width:100%; height:120px; overflow:hidden; margin-bottom: 10px; position:relative; background:#bdc3c7; }
@@ -423,7 +429,8 @@ article div.content_categories:last-child {
 .content_list.tiled .tile .ft_caption  {
     font-size: 16px;
 }
-.content_list.tiled .tile .ft_caption a { color: #2c3e50; font-weight: bold; text-decoration: none; }
+.content_list.tiled .tile .ft_caption .value { color: #2c3e50; font-weight: bold; }
+.content_list.tiled .tile .ft_caption a { color: inherit; text-decoration: none; }
 .content_list.tiled .tile .ft_caption a:hover { text-decoration: underline; }
 .content_list.tiled .tile .ft_caption a.title{ display: block; }
 .content_list.tiled .tile .ft_caption a.parent_title{ font-size:14px; font-weight: normal; color:#7f8c8d; }
@@ -464,16 +471,14 @@ article div.content_categories:last-child {
 
 .content_item{ position: relative; }
 
-.content_item .field{
-    color:#555;
-}
-
 .content_item .ft_image {
     float:left;
     clear:none;
     margin-right: 10px;
 }
-
+.content_item .ft_image + .field {
+    overflow: visible;
+}
 .content_item .ft_image img {
     display: block;
     margin:0;

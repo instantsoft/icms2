@@ -13,6 +13,16 @@ class modelContent extends cmsModel{
     protected $approved_filter_disabled = false;
     protected $approved_filtered = false;
 
+    private static $all_ctypes = null;
+
+    public function __construct() {
+
+        parent::__construct();
+
+        $this->loadAllCtypes();
+
+    }
+
     public function setTablePrefix($prefix){
         $this->table_prefix = $prefix;
         return $this;
@@ -26,24 +36,26 @@ class modelContent extends cmsModel{
 
         $id = $this->insert('content_types', $ctype);
 
+        $config = cmsConfig::getInstance();
+
         // получаем структуру таблиц для хранения контента данного типа
-        $content_table_struct = $this->getContentTableStruct();
-        $fields_table_struct = $this->getFieldsTableStruct();
-        $props_table_struct = $this->getPropsTableStruct();
-        $props_bind_table_struct = $this->getPropsBindTableStruct();
+        $content_table_struct      = $this->getContentTableStruct();
+        $fields_table_struct       = $this->getFieldsTableStruct();
+        $props_table_struct        = $this->getPropsTableStruct();
+        $props_bind_table_struct   = $this->getPropsBindTableStruct();
         $props_values_table_struct = $this->getPropsValuesTableStruct();
 
         // создаем таблицы
         $table_name = $this->table_prefix . $ctype['name'];
 
         $this->db->createTable($table_name, $content_table_struct);
-        $this->db->createTable("{$table_name}_fields", $fields_table_struct, 'InnoDB');
+        $this->db->createTable("{$table_name}_fields", $fields_table_struct, $config->db_engine);
         $this->db->createCategoriesTable("{$table_name}_cats");
 		$this->db->createCategoriesBindsTable("{$table_name}_cats_bind");
 
-        $this->db->createTable("{$table_name}_props", $props_table_struct, 'InnoDB');
-        $this->db->createTable("{$table_name}_props_bind", $props_bind_table_struct, 'InnoDB');
-        $this->db->createTable("{$table_name}_props_values", $props_values_table_struct, 'InnoDB');
+        $this->db->createTable("{$table_name}_props", $props_table_struct, $config->db_engine);
+        $this->db->createTable("{$table_name}_props_bind", $props_bind_table_struct, $config->db_engine);
+        $this->db->createTable("{$table_name}_props_values", $props_values_table_struct, $config->db_engine);
 
         //
         // добавляем стандартные поля
@@ -197,18 +209,26 @@ class modelContent extends cmsModel{
 
     public function getContentTypesCount(){
 
-        return $this->getCount('content_types');
+        if(!self::$all_ctypes){
+            return 0;
+        }
+
+        return count(self::$all_ctypes);
 
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function getContentTypes(){
+    public function loadAllCtypes() {
+
+        if(isset(self::$all_ctypes)) {
+            return $this;
+        }
 
         $this->useCache('content.types');
 
-        return $this->get('content_types', function($item, $model){
+        self::$all_ctypes = $this->get('content_types', function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['labels'] = cmsModel::yamlToArray($item['labels']);
@@ -217,15 +237,27 @@ class modelContent extends cmsModel{
 
         });
 
+        return $this;
+
+    }
+
+    public function getContentTypes(){
+
+        return self::$all_ctypes;
+
     }
 
     public function getContentTypesNames(){
 
-        return $this->get('content_types', function($item, $model){
+        if(!self::$all_ctypes){
+            return false;
+        }
 
-            return $item['name'];
+        foreach (self::$all_ctypes as $ctype_id => $ctype) {
+            $names[$ctype_id] = $ctype['name'];
+        }
 
-        }, false);
+        return $names;
 
     }
 
@@ -234,16 +266,19 @@ class modelContent extends cmsModel{
 
     public function getContentType($id, $by_field='id'){
 
-        $this->useCache('content.types');
+        if(!self::$all_ctypes){
+            return false;
+        }
 
-        return $this->getItemByField('content_types', $by_field, $id, function($item, $model){
+        foreach (self::$all_ctypes as $ctype_id => $ctype) {
 
-            $item['options'] = cmsModel::yamlToArray($item['options']);
-            $item['labels'] = cmsModel::yamlToArray($item['labels']);
+            if($ctype[$by_field] == $id) {
+                return $ctype;
+            }
 
-            return $item;
+        }
 
-        });
+        return false;
 
     }
 
@@ -350,15 +385,14 @@ class modelContent extends cmsModel{
 
         if (!$is_virtual){
 
-            $field_class = "field" . string_to_camel('_', $field['type']);
-            $field_parser = new $field_class(null, null);
+            $field_class  = 'field'.string_to_camel('_', $field['type']);
+            $field_parser = new $field_class(null, (isset($field['options']) ? array('options' => $field['options']) : null));
 
             $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$field['name']}` {$field_parser->getSQL()}";
             $this->db->query($sql);
 
             if ($field['is_in_filter'] && $field_parser->allow_index){
-                $sql = "ALTER TABLE `{#}{$content_table_name}` ADD INDEX ( `{$field['name']}` )";
-                $this->db->query($sql);
+                $this->db->addIndex($content_table_name, $field['name']);
             }
 
         }
@@ -507,15 +541,40 @@ class modelContent extends cmsModel{
         $field_old = $this->getContentField($ctype_name, $id);
 
         if (!$field_old['is_system']){
-            if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
 
-                $field_class = "field" . string_to_camel('_', $field['type']);
-                $field_handler = new $field_class(null, null);
+            $new_lenght = ((isset($field['options']) && !empty($field['options']['max_length'])) ? $field['options']['max_length'] : false);
+            $old_lenght = ((isset($field_old['options']) && !empty($field_old['options']['max_length'])) ? $field_old['options']['max_length'] : false);
+
+            $field_class   = 'field'.string_to_camel('_', $field['type']);
+            $field_handler = new $field_class(null, (isset($field['options']) ? array('options' => $field['options']) : null));
+
+            if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
 
                 $sql = "ALTER TABLE  `{#}{$content_table_name}` CHANGE  `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
 
+                if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
+
+                    // удаляем старый индекс
+                    $this->db->dropIndex($content_table_name, $field_old['name']);
+
+                    // добавляем новый
+                    if ($field['is_in_filter'] && $field_handler->allow_index){
+                        $this->db->addIndex($content_table_name, $field['name']);
+                    }
+
+                }
+
             }
+
+            if ($field['is_in_filter'] && $field_handler->allow_index && !$field_old['is_in_filter']){
+                $this->db->addIndex($content_table_name, $field['name']);
+            }
+
+            if (!$field['is_in_filter'] && $field_handler->allow_index && $field_old['is_in_filter']){
+                $this->db->dropIndex($content_table_name, $field_old['name']);
+            }
+
         }
 
         return $this->update($fields_table_name, $id, $field);
@@ -942,18 +1001,101 @@ class modelContent extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function deleteContentDatasetIndex($ctype_name, $index_name) {
 
-    public function addContentDataset($dataset){
+        // если используется в других датасетах, не удаляем
+        if($this->getItemByField('content_datasets', 'index', $index_name)){
+            return false;
+        }
+
+        return $this->db->dropIndex($this->table_prefix.$ctype_name, $index_name);
+
+    }
+
+    public function addContentDatasetIndex($dataset, $ctype_name) {
+
+        $content_table_name = $this->table_prefix.$ctype_name;
+        $index_name         = 'dataset_'.$dataset['name'];
+
+        // поля для индекса
+        $filters_fields = $sorting_fields = $fields = array();
+
+        // создаем индекс
+        // параметры выборки
+        if($dataset['filters']){
+            foreach ($dataset['filters'] as $filters) {
+                if($filters && !in_array($filters['condition'], array('gt','lt','ge','le'))){
+                    $filters_fields[] = $filters['field'];
+                }
+            }
+            $filters_fields = array_unique($filters_fields);
+        }
+        // добавим условия, которые в каждой выборке
+        $filters_fields[] = 'is_pub';
+        $filters_fields[] = 'is_parent_hidden';
+        $filters_fields[] = 'is_approved';
+        // сортировка
+        if($dataset['sorting']){
+            foreach ($dataset['sorting'] as $sorting) {
+                if($sorting){
+                    $sorting_fields[] = $sorting['by'];
+                }
+            }
+        }
+
+        // если поле присутствует и в выборке и в сортировке, оставляем только в сортировке
+        if($filters_fields){
+            foreach ($filters_fields as $key => $field) {
+                if(in_array($field, $sorting_fields)){
+                    unset($filters_fields[$key]);
+                }
+            }
+        }
+
+        $fields = array_merge($filters_fields, $sorting_fields);
+
+        if($fields == array('date_pub')){
+            $index_name = 'date_pub';
+        } elseif($fields == array('user_id','date_pub') || $fields == array('user_id')){
+            $index_name = 'user_id';
+        } else {
+
+            // ищем индекс с таким же набором полей
+            $is_found = false;
+            $indexes = $this->db->getTableIndexes($content_table_name);
+            foreach ($indexes as $_index_name => $_index_fields) {
+                if($fields == $_index_fields){
+                    $is_found = $_index_name; break;
+                }
+            }
+
+            // нашли - используем его
+            if($is_found){
+                $index_name = $is_found;
+            } else {
+
+                // если нет, то создаем новый
+                $this->db->addIndex($content_table_name, $fields, $index_name);
+
+            }
+
+        }
+
+        return $index_name;
+
+    }
+
+    public function addContentDataset($dataset, $ctype){
 
         $table_name = 'content_datasets';
 
-        $dataset['ctype_id'] = (int)$dataset['ctype_id'];
+        $dataset['ctype_id'] = $ctype['id'];
 
         $this->filterEqual('ctype_id', $dataset['ctype_id']);
 
         $dataset['ordering'] = $this->getNextOrdering($table_name);
+
+        $dataset['index'] = $this->addContentDatasetIndex($dataset, $ctype['name']);
 
         $id = $this->insert($table_name, $dataset);
 
@@ -963,41 +1105,41 @@ class modelContent extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function updateContentDataset($id, $dataset, $ctype, $old_dataset){
 
-    public function updateContentDataset($id, $dataset){
+        $dataset['ctype_id'] = $ctype['id'];
 
-        $table_name = 'content_datasets';
-
-        $dataset['ctype_id'] = (int)$dataset['ctype_id'];
-
-        $id = $this->update($table_name, $id, $dataset);
+        $success = $this->update('content_datasets', $id, $dataset);
 
         cmsCache::getInstance()->clean('content.datasets');
 
-        return $id;
+        if(($old_dataset['sorting'] != $dataset['sorting']) || ($old_dataset['filters'] != $dataset['filters'])){
+
+            $this->deleteContentDatasetIndex($ctype['name'], $old_dataset['index']);
+
+            $index = $this->addContentDatasetIndex($dataset, $ctype['name']);
+
+            $this->update('content_datasets', $id, array('index'=>$index));
+
+            cmsCache::getInstance()->clean('content.datasets');
+
+        }
+
+        return $success;
 
     }
 
 	public function toggleContentDatasetVisibility($id, $is_visible){
 
-		$table_name = 'content_datasets';
-
-		return $this->update($table_name, $id, array(
+		return $this->update('content_datasets', $id, array(
 			'is_visible' => $is_visible
 		));
 
 	}
 
-//============================================================================//
-//============================================================================//
-
     public function reorderContentDatasets($fields_ids_list){
 
-        $table_name = 'content_datasets';
-
-        $this->reorderByList($table_name, $fields_ids_list);
+        $this->reorderByList('content_datasets', $fields_ids_list);
 
         cmsCache::getInstance()->clean('content.datasets');
 
@@ -1005,12 +1147,17 @@ class modelContent extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function deleteContentDataset($id){
 
+        $dataset = $this->getContentDataset($id);
+        if(!$dataset){ return false; }
+
+        $ctype = $this->getContentType($dataset['ctype_id']);
+        if (!$ctype) { return false; }
+
         $this->delete('content_datasets', $id);
+
+        $this->deleteContentDatasetIndex($ctype['name'], $dataset['index']);
 
         cmsCache::getInstance()->clean('content.datasets');
 
@@ -1529,15 +1676,18 @@ class modelContent extends cmsModel{
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
 
-        if (!$this->order_by){ $this->orderBy('date_pub', 'desc'); }
+        if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
 
         $this->useCache("content.list.{$ctype_name}");
 
-        return $this->get($table_name, function($item, $model){
+        $user = cmsUser::getInstance();
+
+        return $this->get($table_name, function($item, $model) use ($user){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_friend' => $user->isFriend($item['user_id'])
             );
 
             return $item;

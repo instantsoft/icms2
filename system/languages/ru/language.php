@@ -238,7 +238,7 @@
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы, цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
     define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
     define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
     define('ERR_VALIDATE_NUMBER',            'Введите число');
@@ -392,6 +392,7 @@
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
+    define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
     define('LANG_ON_FRONT',				 	 'На главной');
     define('LANG_SHOWED',					 'Показано');
     define('LANG_ORDER',					 'Порядок');

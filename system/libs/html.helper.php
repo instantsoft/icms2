@@ -148,6 +148,12 @@ function html_attr_str($attributes){
     return $attr_str;
 }
 
+function default_images($type, $preset) {
+    return array(
+        $preset => 'default/'.$type.'_'.$preset.'.png'
+    );
+}
+
 /**
  * Возвращает ссылку на аватар пользователя
  * @param array|yaml $avatars Все изображения аватара
@@ -158,14 +164,12 @@ function html_avatar_image_src($avatars, $size_preset='small'){
 
     $config = cmsConfig::getInstance();
 
-    $default = array(
-        'normal' => 'default/avatar.jpg',
-        'small' => 'default/avatar_small.jpg',
-        'micro' => 'default/avatar_micro.png'
-    );
-
     if (empty($avatars)){
-		$avatars = $default;
+		$avatars = array(
+            'normal' => 'default/avatar.jpg',
+            'small' => 'default/avatar_small.jpg',
+            'micro' => 'default/avatar_micro.png'
+        );
     }
 
     if (!is_array($avatars)){
@@ -203,7 +207,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
     }
 
     $keys = array_keys($image);
-    if ($keys[0]===0) { $image = $image[0]; }
+    if ($keys[0] === 0) { $image = $image[0]; }
 
 	if (isset($image[ $size_preset ])){
 		$src = $image[ $size_preset ];

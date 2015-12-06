@@ -30,7 +30,7 @@ class actionRssFeed extends cmsAction {
             $content_model->filterEqual('user_id', $user_id);
         }
 
-        $content_model->orderBy('id', 'desc')->limit($feed['limit']);
+        $content_model->limit($feed['limit']);
 
         $feed['items'] = $content_model->getContentItems($ctype_name);
 

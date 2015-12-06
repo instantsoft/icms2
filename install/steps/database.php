@@ -83,7 +83,7 @@ function check_db_engine($mysqli, $engine){
 
 function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';'){
 
-    set_time_limit(0);
+    @set_time_limit(0);
 
     $file = PATH . 'languages' . DS . LANG . DS . $file;
 
