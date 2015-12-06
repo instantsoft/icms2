@@ -6,13 +6,13 @@ function install_package(){
 	$content_model = cmsCore::getModel('content');
 
     $remove_table_indexes = array(
-        '{users}' => array(
+        '{users}_friends' => array(
             'is_mutual', 'friend_id', 'user_id'
         ),
     );
 
     $add_table_indexes = array(
-        '{users}' => array(
+        '{users}_friends' => array(
             'user_id'   => array('user_id', 'is_mutual'),
             'friend_id' => array('friend_id', 'is_mutual')
         ),
@@ -81,6 +81,8 @@ function install_package(){
 
         // комментарии по умолчанию включены
         $core->db->query("ALTER TABLE  `{#}{$content_model->table_prefix}{$ctype['name']}` CHANGE  `is_comments_on`  `is_comments_on` TINYINT( 1 ) UNSIGNED NULL DEFAULT  '1'");
+        // для текущих записей включаем их
+        $core->db->query("UPDATE `{#}{$content_model->table_prefix}{$ctype['name']}` SET `is_comments_on` =  '1'");
 
         // удаляем ненужные индексы
         foreach ($remove_ctype_indexes as $table_postfix=>$rcci) {
