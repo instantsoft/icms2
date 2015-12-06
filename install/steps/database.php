@@ -46,8 +46,8 @@ function check_db(){
 
     $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine']);
 
-    if ($db['is_install_demo_content']) {
-        $success = $success && import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine']);
+    if ($success && !empty($db['is_install_demo_content'])) {
+        $success = import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine']);
         $dir_install_upload = PATH . DS . 'upload';
         $dir_upload = DOC_ROOT . DS . 'upload';
         copy_folder($dir_install_upload, $dir_upload);

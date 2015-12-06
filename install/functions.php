@@ -64,7 +64,6 @@ function get_langs(){
 
 }
 
-
 function copy_folder($dir_source, $dir_target) {
 
     if (is_dir($dir_source))  {
@@ -78,8 +77,9 @@ function copy_folder($dir_source, $dir_target) {
         }
 
         $d->close();
-    }
 
-    else copy($dir_source, $dir_target);
+    } else {
+        copy($dir_source, $dir_target);
+    }
 
 }
