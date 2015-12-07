@@ -25,19 +25,19 @@ INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `d
 (1, 0, 1, 1, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'This article is so complicated...', 'This article is so complicated…', NULL, 0, 0),
 (2, 1, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I haven''t understood anything', 'I haven''t understood anything', NULL, 0, 0);
 
-INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `groups_view`, `groups_hide`) VALUES
-(1, 5, 'all', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(2, 5, 'reviews', 'Reviews', 2, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 2\n', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(3, 5, 'translations', 'Translations', 3, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 3\n', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(4, 5, 'featured', 'Editor''s choice', 4, 1, '---\n- \n  field: featured\n  condition: eq\n  value: 1\n', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(5, 5, 'rating', 'Top articles', 5, 1, '---\n- \n  field: rating\n  condition: gt\n  value: 0\n', '---\n- \n  by: rating\n  to: desc\n', '---\n- 0\n', NULL),
-(6, 6, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(7, 6, 'daily', 'Daily top', 2, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 1\n', '---\n- \n  by: rating\n  to: desc\n', '---\n- 0\n', NULL),
-(8, 6, 'weekly', 'Weekly top', 3, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 7\n', '---\n- \n  by: rating\n  to: desc\n', '---\n- 0\n', NULL),
-(9, 6, 'monthly', 'Monthly top', 4, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 31\n', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(10, 10, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', '---\n- 0\n', NULL),
-(11, 10, 'discussed', 'Discussed', 2, 1, '0', '---\n- \n  by: title\n  to: desc\n', '---\n- 0\n', NULL),
-(12, 10, 'popular', 'Popular', 3, 1, '0', '---\n- \n  by: rating\n  to: desc\n', '---\n- 0\n', NULL);
+INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`) VALUES
+(1, 5, 'all', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(2, 5, 'reviews', 'Reviews', 2, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 2\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
+(3, 5, 'translations', 'Translations', 3, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 3\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
+(4, 5, 'featured', 'Editor''s choice', 4, 1, '---\n- \n  field: featured\n  condition: eq\n  value: 1\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_featured', '---\n- 0\n', NULL),
+(5, 5, 'rating', 'Top articles', 5, 1, '---\n- \n  field: rating\n  condition: gt\n  value: 0\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_rating', '---\n- 0\n', NULL),
+(6, 6, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(7, 6, 'daily', 'Daily top', 2, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 1\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
+(8, 6, 'weekly', 'Weekly top', 3, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 7\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
+(9, 6, 'monthly', 'Monthly top', 4, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 31\n', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(10, 10, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(11, 10, 'discussed', 'Discussed', 2, 1, '0', '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
+(12, 10, 'popular', 'Популярные', 3, 1, '0', '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL);
 
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'My thoughts');
@@ -48,8 +48,8 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 (10, 'News', 'news', 'Information messages', NULL, 1, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: news\ntwo: news\nmany: news\ncreate: news\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
-(16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-krasota-okruzhayuschei-prirody', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4, NULL),
-(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
+(16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-krasota-okruzhayuschei-prirody', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4, NULL),
+(14, 'Other photos', 'Photos taken of me at leisure', '14-raznye-fotochki', 'photos', 'Photos taken of me at leisure', NULL, '0', '2013-10-09 16:46:43', '2013-10-09 16:46:43', NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
 
 INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
 (16, 1),
@@ -61,9 +61,9 @@ CREATE TABLE `{#}con_articles` (
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE `{#}con_articles` (
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
   `category_id` int(11) unsigned NOT NULL DEFAULT '1',
   `folder_id` int(11) unsigned DEFAULT NULL,
-  `is_comments_on` tinyint(1) DEFAULT NULL,
+  `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
   `is_approved` tinyint(4) NOT NULL DEFAULT '1',
@@ -91,29 +91,25 @@ CREATE TABLE `{#}con_articles` (
   `source` text,
   `featured` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `user_id` (`user_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `parent_type` (`parent_type`),
-  KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `category_id` (`category_id`),
-  KEY `is_comments_on` (`is_comments_on`),
-  KEY `comments` (`comments`),
-  KEY `rating` (`rating`),
-  KEY `is_approved` (`is_approved`),
   KEY `approved_by` (`approved_by`),
-  KEY `date_approved` (`date_approved`),
-  KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `title` (`title`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
+  KEY `user_id` (`user_id`,`date_pub`),
+  KEY `date_pub_end` (`date_pub_end`),
+  KEY `dataset_reviews` (`kind`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `dataset_featured` (`featured`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `dataset_rating` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `kind`, `notice`, `source`, `featured`) VALUES
-(1, 'Elliptical perigee in the XXI century', '<p>\r\n	Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.\r\n</p>\r\n<p>\r\n	Rank tall boy man them over post now. Off into she bed long fat room. Recommend existence curiosity perfectly favourite get eat she why daughters. Not may too nay busy last song must sell. An newspaper assurance discourse ye certainly. Soon gone game and why many calm have.\r\n</p>', '1-elliptical-perigee-in-the-xxi-century', 'warrant, remarkably, since, blush, mistake, exposed, noisy, still, hopes, young', 'Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake', NULL, 'example, article, science', '2013-07-24 10:49:30', '2013-11-22 16:23:29', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 0, 0, 1, NULL, '2013-07-24 10:53:11', 0, '<p>\r\n	<p>\r\n		Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous.\r\n	</p>\r\n</p>', 1, NULL, 'http://referats.yandex.ru/astronomy.xml', NULL),
-(4, 'Undersaturated diamond: preconditions and development', '<p>\r\n	Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many. Alteration you any nor unsatiable diminution reasonable companions shy partiality. Leaf by left deal mile oh if easy. Added woman first get led joy not early jokes.\r\n</p>\r\n<p>\r\n	Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished. Demesne new manners savings staying had. Under folly balls death own point now men. Match way these she avoid see death. She whose drift their fat off.\r\n</p>', '4-undersaturated-diamond-preconditions-and-development', 'diminution, staying, death, unsatiable, reasonable, alteration, companions, contented, early, first', 'Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many', NULL, 'article, science', '2013-07-24 11:22:39', '2013-11-22 16:22:45', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL, 2, 0, 1, NULL, '2013-10-04 14:55:37', 0, '<p>\r\n	<p>\r\n		Her old collecting she considered discovered. So at parties he warrant oh staying.\r\n	</p>\r\n</p>', 3, NULL, 'http://referats.yandex.ru/geology.xml', NULL),
-(11, 'Public review of international experience', '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps. By sometimes intention smallness he northward. Consisted we otherwise arranging commanded discovery it explained. Does cold even song like two yet been. Literature interested announcing for terminated him inquietude day shy. Himself he fertile chicken perhaps waiting if highest no it. Continued promotion has consulted fat improving not way.\r\n</p>\r\n<p>\r\n	Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n</p>', '11-public-review-of-international-experience', 'otherwise, explained, perceived, arranging, commanded, consisted, northward, intention, smallness, fertile', 'Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps', NULL, '0', '2013-10-09 14:54:36', '2013-11-22 16:21:33', NULL, 1, 6, 1, NULL, NULL, NULL, NULL, NULL, 9, NULL, NULL, 2, 0, 1, NULL, '2013-10-09 15:02:33', 0, '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps.\r\n</p>', 2, NULL, NULL, NULL),
-(10, 'Mythological recipient', '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n	<p>\r\n		Greatly hearted has who believe. Drift allow green son walls years for blush. Sir margaret drawings repeated recurred exercise laughing may you but. Do repeated whatever to welcomed absolute no. Fat surprise although outlived and informed shy dissuade property. Musical by me through he drawing savings an. No we stand avoid decay heard mr. Common so wicket appear to sudden worthy on. Shade of offer ye whole stood hoped.\r\n	</p>\r\n</p>', '10-mythological-recipient', 'enjoyment, repeated, belonging, preferred, delivered, affection, favourite, smallness, existence, attending', 'Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance', NULL, '0', '2013-10-09 14:48:19', '2013-11-22 16:22:04', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 6, NULL, NULL, 0, 0, 1, NULL, '2013-10-09 15:03:01', 0, '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow.\r\n	</p>\r\n</p>', 1, NULL, NULL, NULL);
+(1, 'Elliptical perigee in the XXI century', '<p>\r\n	Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake. Blush since so in noisy still built up an again. As young ye hopes no he place means. Partiality diminution gay yet entreaties admiration. In mr it he mention perhaps attempt pointed suppose. Unknown ye chamber of warrant of norland arrived.\r\n</p>\r\n<p>\r\n	Rank tall boy man them over post now. Off into she bed long fat room. Recommend existence curiosity perfectly favourite get eat she why daughters. Not may too nay busy last song must sell. An newspaper assurance discourse ye certainly. Soon gone game and why many calm have.\r\n</p>', '1-elliptical-perigee-in-the-xxi-century', 'warrant, remarkably, since, blush, mistake, exposed, noisy, still, hopes, young', 'Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous. Acuteness abilities ask can offending furnished fulfilled sex. Warrant fifteen exposed ye at mistake', NULL, 'example, article, science', '2013-07-24 10:49:30', '2013-11-22 16:23:29', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, 1, 0, 0, 1, NULL, '2013-07-24 10:53:11', 0, '<p>\r\n	<p>\r\n		Yet remarkably appearance get him his projection. Diverted endeavor bed peculiar men the not desirous.\r\n	</p>\r\n</p>', 1, NULL, 'http://referats.yandex.ru/astronomy.xml', NULL),
+(4, 'Undersaturated diamond: preconditions and development', '<p>\r\n	Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many. Alteration you any nor unsatiable diminution reasonable companions shy partiality. Leaf by left deal mile oh if easy. Added woman first get led joy not early jokes.\r\n</p>\r\n<p>\r\n	Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished. Demesne new manners savings staying had. Under folly balls death own point now men. Match way these she avoid see death. She whose drift their fat off.\r\n</p>', '4-undersaturated-diamond-preconditions-and-development', 'diminution, staying, death, unsatiable, reasonable, alteration, companions, contented, early, first', 'Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many', NULL, 'article, science', '2013-07-24 11:22:39', '2013-11-22 16:22:45', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 5, NULL, 1, 2, 0, 1, NULL, '2013-10-04 14:55:37', 0, '<p>\r\n	<p>\r\n		Her old collecting she considered discovered. So at parties he warrant oh staying.\r\n	</p>\r\n</p>', 3, NULL, 'http://referats.yandex.ru/geology.xml', NULL),
+(11, 'Public review of international experience', '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps. By sometimes intention smallness he northward. Consisted we otherwise arranging commanded discovery it explained. Does cold even song like two yet been. Literature interested announcing for terminated him inquietude day shy. Himself he fertile chicken perhaps waiting if highest no it. Continued promotion has consulted fat improving not way.\r\n</p>\r\n<p>\r\n	Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n</p>', '11-public-review-of-international-experience', 'otherwise, explained, perceived, arranging, commanded, consisted, northward, intention, smallness, fertile', 'Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps', NULL, '0', '2013-10-09 14:54:36', '2013-11-22 16:21:33', NULL, 1, 6, 1, NULL, NULL, NULL, NULL, NULL, 9, NULL, 1, 2, 0, 1, NULL, '2013-10-09 15:02:33', 0, '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps.\r\n</p>', 2, NULL, NULL, NULL),
+(10, 'Mythological recipient', '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n	<p>\r\n		Greatly hearted has who believe. Drift allow green son walls years for blush. Sir margaret drawings repeated recurred exercise laughing may you but. Do repeated whatever to welcomed absolute no. Fat surprise although outlived and informed shy dissuade property. Musical by me through he drawing savings an. No we stand avoid decay heard mr. Common so wicket appear to sudden worthy on. Shade of offer ye whole stood hoped.\r\n	</p>\r\n</p>', '10-mythological-recipient', 'enjoyment, repeated, belonging, preferred, delivered, affection, favourite, smallness, existence, attending', 'Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance', NULL, '0', '2013-10-09 14:48:19', '2013-11-22 16:22:04', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 6, NULL, 1, 0, 0, 1, NULL, '2013-10-09 15:03:01', 0, '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow.\r\n	</p>\r\n</p>', 1, NULL, NULL, NULL);
 
 DROP TABLE IF EXISTS `{#}con_articles_cats`;
 CREATE TABLE `{#}con_articles_cats` (
@@ -122,9 +118,9 @@ CREATE TABLE `{#}con_articles_cats` (
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -132,13 +128,10 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `ns_left` (`ns_left`),
-  KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
-  KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
+  KEY `parent_id` (`parent_id`,`ns_left`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -231,8 +224,7 @@ CREATE TABLE `{#}con_articles_props_bind` (
   `ordering` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `prop_id` (`prop_id`),
-  KEY `cat_id` (`cat_id`),
-  KEY `ordering` (`ordering`)
+  KEY `ordering` (`cat_id`,`ordering`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_articles_props_values`;
@@ -250,9 +242,9 @@ CREATE TABLE `{#}con_news` (
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
@@ -267,7 +259,7 @@ CREATE TABLE `{#}con_news` (
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
   `category_id` int(11) unsigned NOT NULL DEFAULT '1',
   `folder_id` int(11) unsigned DEFAULT NULL,
-  `is_comments_on` tinyint(1) DEFAULT NULL,
+  `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
   `is_approved` tinyint(4) NOT NULL DEFAULT '1',
@@ -277,34 +269,28 @@ CREATE TABLE `{#}con_news` (
   `teaser` varchar(255) DEFAULT NULL,
   `photo` text,
   PRIMARY KEY (`id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `date_last_modified` (`date_last_modified`),
-  KEY `user_id` (`user_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `parent_type` (`parent_type`),
-  KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `category_id` (`category_id`),
-  KEY `is_comments_on` (`is_comments_on`),
-  KEY `comments` (`comments`),
-  KEY `rating` (`rating`),
-  KEY `is_approved` (`is_approved`),
   KEY `approved_by` (`approved_by`),
-  KEY `date_approved` (`date_approved`),
-  KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `title` (`title`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
+  KEY `user_id` (`user_id`,`date_pub`),
+  KEY `date_pub_end` (`date_pub_end`),
+  KEY `dataset_discussed` (`is_pub`,`is_parent_hidden`,`is_approved`,`comments`),
+  KEY `dataset_popular` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `photo`) VALUES
-(2, 'Toys are becoming more expensive', '<p>\r\n	<p>\r\n		Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many. Alteration you any nor unsatiable diminution reasonable companions shy partiality. Leaf by left deal mile oh if easy. Added woman first get led joy not early jokes.\r\n	</p>\r\n	<p>\r\n		Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished. Demesne new manners savings staying had. Under folly balls death own point now men. Match way these she avoid see death. She whose drift their fat off.\r\n	</p>\r\n</p>', '2-igrushki-stanovjatsja-dorozhe', 'diminution, staying, death, unsatiable, reasonable, alteration, companions, contented, early, first', 'Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many', NULL, 'news', '2013-09-09 16:02:07', '2013-11-22 16:17:21', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 6, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:17:21', 0, 'Experts predict a further rise in children''s products', '---\noriginal: u1/003/25838c0f.jpg\nbig: u1/003/2e2bf124.jpg\nnormal: u1/003/f6f14e82.jpg\nsmall: u1/003/236d41e4.jpg\nmicro: u1/003/74809cbe.jpg\n'),
-(3, 'Сar service for vintage cars', '<p>\r\n	<p>\r\n		Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n	</p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n</p>', '3-v-gorode-otkryt-servis-dlja-retro-avtomobilei', 'belonging, enjoyment, attending, suspicion, certainty, matter, newspaper, family, exquisite, agreement', 'Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind', NULL, 'news, example', '2013-09-09 16:03:24', '2013-11-22 16:16:50', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:16:50', 0, 'Each person can request a repair', '---\noriginal: u1/003/5a771d4e.jpg\nbig: u1/003/4878547b.jpg\nnormal: u1/003/ad753a86.jpg\nsmall: u1/003/9f03ca75.jpg\nmicro: u1/003/5edc315b.jpg\n'),
-(4, 'Summer season has officially begun', '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n	<p>\r\n		Greatly hearted has who believe. Drift allow green son walls years for blush. Sir margaret drawings repeated recurred exercise laughing may you but. Do repeated whatever to welcomed absolute no. Fat surprise although outlived and informed shy dissuade property. Musical by me through he drawing savings an. No we stand avoid decay heard mr. Common so wicket appear to sudden worthy on. Shade of offer ye whole stood hoped.\r\n	</p>\r\n</p>', '4-dachnyi-sezon-otkryt', 'enjoyment, repeated, belonging, preferred, delivered, affection, favourite, smallness, existence, attending', 'Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance', NULL, 'example', '2013-09-09 16:04:25', '2013-11-22 16:14:56', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 0, 0, 1, NULL, '2013-09-11 15:33:21', 0, 'Citizens are moving en masse to the country', '---\noriginal: u1/003/01153b4d.jpg\nbig: u1/003/b9767257.jpg\nnormal: u1/003/53497165.jpg\nsmall: u1/003/b1e550ce.jpg\nmicro: u1/003/f1476363.jpg\n'),
-(5, 'Business expects to reduce taxes', '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps. By sometimes intention smallness he northward. Consisted we otherwise arranging commanded discovery it explained. Does cold even song like two yet been. Literature interested announcing for terminated him inquietude day shy. Himself he fertile chicken perhaps waiting if highest no it. Continued promotion has consulted fat improving not way.\r\n</p>\r\n<p>\r\n	Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n</p>', '5-snizhenie-nalogov-dlja-biznesa', 'otherwise, explained, perceived, arranging, commanded, consisted, northward, intention, smallness, fertile', 'Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps', NULL, '0', '2013-09-09 16:05:26', '2013-11-22 16:14:15', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL, 0, 0, 1, NULL, '2013-09-11 15:35:07', 0, 'Legal persons will pay even less', '---\noriginal: u1/003/0ff19ffb.jpg\nbig: u1/003/3c2e4a35.jpg\nnormal: u1/003/fa562059.jpg\nsmall: u1/003/cae0bdfb.jpg\nmicro: u1/003/852fb216.jpg\n'),
-(6, 'More and more people are buying homes abroad', '<p>\r\n	Turned it up should no valley cousin he. Speaking numerous ask did horrible packages set. Ashamed herself has distant can studied mrs. Led therefore its middleton perpetual fulfilled provision frankness. Small he drawn after among every three no. All having but you edward genius though remark one.\r\n</p>\r\n<p>\r\n	Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Timed balls match at by rooms we. Fat not boy neat left had with past here call. Court nay merit few nor party learn. Why our year her eyes know even how. Mr immediate remaining conveying allowance do or.\r\n</p>', '6-vse-bolshe-rossijan-pokupayut-nedvizhimost-za-granicei', 'studied, provision, drawn, small, fulfilled, frankness, after, among, genius, edward', 'Turned it up should no valley cousin he. Speaking numerous ask did horrible packages set. Ashamed herself has distant can studied mrs. Led therefore its middleton perpetual fulfilled provision frankness. Small he drawn after among every three no', NULL, 'example, news', '2013-09-12 12:09:24', '2013-11-22 16:13:28', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, NULL, 0, 0, 1, NULL, '2013-09-12 12:09:49', 0, 'Over the last year their number has increased markedly', '---\noriginal: u1/003/2fea4487.jpg\nbig: u1/003/a05ad20e.jpg\nnormal: u1/003/41646570.jpg\nsmall: u1/003/eb2bac70.jpg\nmicro: u1/003/1c88035a.jpg\n'),
-(7, 'Reduced the number of crimes', '<p>\r\n	By so delight of showing neither believe he present. Deal sigh up in shew away when. Pursuit express no or prepare replied. Wholly formed old latter future but way she. Day her likewise smallest expenses judgment building man carriage gay. Considered introduced themselves mr to discretion at. Means among saw hopes for. Death mirth in oh learn he equal on.\r\n</p>\r\n<p>\r\n	When be draw drew ye. Defective in do recommend suffering. House it seven in spoil tiled court. Sister others marked fat missed did out use. Alteration possession dispatched collecting instrument travelling he or on. Snug give made at spot or late that mr.\r\n</p>\r\n<p>\r\n	View fine me gone this name an rank. Compact greater and demands mrs the parlors. Park be fine easy am size away. Him and fine bred knew. At of hardly sister favour. As society explain country raising weather of. Sentiments nor everything off out uncommonly partiality bed.\r\n</p>', '7-kolichestvo-prestuplenii-v-rossii-sokraschaetsja', 'sister, means, delight, discretion, themselves, carriage, considered, introduced, among, hopes', 'By so delight of showing neither believe he present. Deal sigh up in shew away when. Pursuit express no or prepare replied. Wholly formed old latter future but way she. Day her likewise smallest expenses judgment building man carriage gay', NULL, '0', '2013-09-12 12:10:55', '2013-11-22 16:12:49', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 5, NULL, NULL, 0, 0, 1, NULL, '2013-09-12 12:11:14', 0, 'In recent reports from the police seen a positive trend', '---\noriginal: u1/003/4d953a88.jpg\nbig: u1/003/e3c52c3e.jpg\nnormal: u1/003/9e9ef526.jpg\nsmall: u1/003/3f768733.jpg\nmicro: u1/003/ddaa0bd4.jpg\n'),
-(8, 'Investing for Dummies: where to invest?', '<p>\r\n	Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions. Supposing exquisite daughters eagerness why repulsive for. Praise turned it lovers be warmly by. Little do it eldest former be if.\r\n</p>\r\n<p>\r\n	Insipidity the sufficient discretion imprudence resolution sir him decisively. Proceed how any engaged visitor. Explained propriety off out perpetual his you. Feel sold off felt nay rose met you. We so entreaties cultivated astonished is. Was sister for few longer mrs sudden talent become. Done may bore quit evil old mile. If likely am of beauty tastes.\r\n</p>', '8-investicii-dlja-chainikov-kuda-vkladyvat', 'repulsive, daughters, exquisite, additions, supposing, eagerness, praise, little, warmly, lovers', 'Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions', NULL, '0', '2013-09-12 12:13:19', '2013-11-22 16:12:12', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:12:12', 0, 'Read our review of the most popular ways of investment', '---\noriginal: u1/003/ff539643.jpg\nbig: u1/003/77fbbb95.jpg\nnormal: u1/003/89e8e681.jpg\nsmall: u1/003/3400aa78.jpg\nmicro: u1/003/f95ca1a2.jpg\n'),
-(9, 'We have won the World Championship!', '<p>\r\n	An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by. On could my in order never it. Or excited certain sixteen it to parties colonel. Depending conveying direction has led immediate. Law gate her well bed life feet seen rent. On nature or no except it sussex.\r\n</p>\r\n<p>\r\n	Entire any had depend and figure winter. Change stairs and men likely wisdom new happen piqued six. Now taken him timed sex world get. Enjoyed married an feeling delight pursuit as offered. As admire roused length likely played pretty to no. Means had joy miles her merry solid order.\r\n</p>\r\n<p>\r\n	Of recommend residence education be on difficult repulsive offending. Judge views had mirth table seems great him for her. Alone all happy asked begin fully stand own get. Excuse ye seeing result of we. See scale dried songs old may not. Promotion did disposing you household any instantly. Hills we do under times at first short an.\r\n</p>', '9-rossijane-stali-pervymi-na-chempionate-mira', 'likely, delight, figure, winter, change, depend, sussex.\r\r\r	entire, immediate, nature, except', 'An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by. On could my in order never it. Or excited certain sixteen it to parties colonel', NULL, '0', '2013-09-12 12:14:13', '2013-11-22 16:11:34', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 7, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:11:34', 0, 'Our team leaves no chances to competitors', '---\noriginal: u1/003/59b08272.jpg\nbig: u1/003/d0ed7732.jpg\nnormal: u1/003/44b68dc8.jpg\nsmall: u1/003/93e51e49.jpg\nmicro: u1/003/0599295b.jpg\n');
+(2, 'Toys are becoming more expensive', '<p>\r\n	<p>\r\n		Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many. Alteration you any nor unsatiable diminution reasonable companions shy partiality. Leaf by left deal mile oh if easy. Added woman first get led joy not early jokes.\r\n	</p>\r\n	<p>\r\n		Speedily say has suitable disposal add boy. On forth doubt miles of child. Exercise joy man children rejoiced. Yet uncommonly his ten who diminution astonished. Demesne new manners savings staying had. Under folly balls death own point now men. Match way these she avoid see death. She whose drift their fat off.\r\n	</p>\r\n</p>', '2-igrushki-stanovjatsja-dorozhe', 'diminution, staying, death, unsatiable, reasonable, alteration, companions, contented, early, first', 'Her old collecting she considered discovered. So at parties he warrant oh staying. Square new horses and put better end. Sincerity collected happiness do is contented. Sigh ever way now many', NULL, 'news', '2013-09-09 16:02:07', '2013-11-22 16:17:21', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 6, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:17:21', 0, 'Experts predict a further rise in children''s products', '---\noriginal: u1/003/25838c0f.jpg\nbig: u1/003/2e2bf124.jpg\nnormal: u1/003/f6f14e82.jpg\nsmall: u1/003/236d41e4.jpg\nmicro: u1/003/74809cbe.jpg\n'),
+(3, 'Сar service for vintage cars', '<p>\r\n	<p>\r\n		Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n	</p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n</p>', '3-v-gorode-otkryt-servis-dlja-retro-avtomobilei', 'belonging, enjoyment, attending, suspicion, certainty, matter, newspaper, family, exquisite, agreement', 'Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind', NULL, 'news, example', '2013-09-09 16:03:24', '2013-11-22 16:16:50', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:16:50', 0, 'Each person can request a repair', '---\noriginal: u1/003/5a771d4e.jpg\nbig: u1/003/4878547b.jpg\nnormal: u1/003/ad753a86.jpg\nsmall: u1/003/9f03ca75.jpg\nmicro: u1/003/5edc315b.jpg\n'),
+(4, 'Summer season has officially begun', '<p>\r\n	<p>\r\n		Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance. Small meant in so doubt hopes. Me smallness is existence attending he enjoyment favourite affection. Delivered is to ye belonging enjoyment preferred. Astonished and acceptance men two discretion. Law education recommend did objection how old.\r\n	</p>\r\n	<p>\r\n		Greatly hearted has who believe. Drift allow green son walls years for blush. Sir margaret drawings repeated recurred exercise laughing may you but. Do repeated whatever to welcomed absolute no. Fat surprise although outlived and informed shy dissuade property. Musical by me through he drawing savings an. No we stand avoid decay heard mr. Common so wicket appear to sudden worthy on. Shade of offer ye whole stood hoped.\r\n	</p>\r\n</p>', '4-dachnyi-sezon-otkryt', 'enjoyment, repeated, belonging, preferred, delivered, affection, favourite, smallness, existence, attending', 'Both rest of know draw fond post as. It agreement defective to excellent. Feebly do engage of narrow. Extensive repulsive belonging depending if promotion be zealously as. Preference inquietude ask now are dispatched led appearance', NULL, 'example', '2013-09-09 16:04:25', '2013-11-22 16:14:56', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, 1, 0, 0, 1, NULL, '2013-09-11 15:33:21', 0, 'Citizens are moving en masse to the country', '---\noriginal: u1/003/01153b4d.jpg\nbig: u1/003/b9767257.jpg\nnormal: u1/003/53497165.jpg\nsmall: u1/003/b1e550ce.jpg\nmicro: u1/003/f1476363.jpg\n'),
+(5, 'Business expects to reduce taxes', '<p>\r\n	Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps. By sometimes intention smallness he northward. Consisted we otherwise arranging commanded discovery it explained. Does cold even song like two yet been. Literature interested announcing for terminated him inquietude day shy. Himself he fertile chicken perhaps waiting if highest no it. Continued promotion has consulted fat improving not way.\r\n</p>\r\n<p>\r\n	Arrived compass prepare an on as. Reasonable particular on my it in sympathize. Size now easy eat hand how. Unwilling he departure elsewhere dejection at. Heart large seems may purse means few blind. Exquisite newspaper attending on certainty oh suspicion of. He less do quit evil is. Add matter family active mutual put wishes happen.\r\n</p>', '5-snizhenie-nalogov-dlja-biznesa', 'otherwise, explained, perceived, arranging, commanded, consisted, northward, intention, smallness, fertile', 'Her extensive perceived may any sincerity extremity. Indeed add rather may pretty see. Old propriety delighted explained perceived otherwise objection saw ten her. Doubt merit sir the right these alone keeps', NULL, '0', '2013-09-09 16:05:26', '2013-11-22 16:14:15', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, 1, 0, 0, 1, NULL, '2013-09-11 15:35:07', 0, 'Legal persons will pay even less', '---\noriginal: u1/003/0ff19ffb.jpg\nbig: u1/003/3c2e4a35.jpg\nnormal: u1/003/fa562059.jpg\nsmall: u1/003/cae0bdfb.jpg\nmicro: u1/003/852fb216.jpg\n'),
+(6, 'More and more people are buying homes abroad', '<p>\r\n	Turned it up should no valley cousin he. Speaking numerous ask did horrible packages set. Ashamed herself has distant can studied mrs. Led therefore its middleton perpetual fulfilled provision frankness. Small he drawn after among every three no. All having but you edward genius though remark one.\r\n</p>\r\n<p>\r\n	Departure so attention pronounce satisfied daughters am. But shy tedious pressed studied opinion entered windows off. Advantage dependent suspicion convinced provision him yet. Timed balls match at by rooms we. Fat not boy neat left had with past here call. Court nay merit few nor party learn. Why our year her eyes know even how. Mr immediate remaining conveying allowance do or.\r\n</p>', '6-vse-bolshe-rossijan-pokupayut-nedvizhimost-za-granicei', 'studied, provision, drawn, small, fulfilled, frankness, after, among, genius, edward', 'Turned it up should no valley cousin he. Speaking numerous ask did horrible packages set. Ashamed herself has distant can studied mrs. Led therefore its middleton perpetual fulfilled provision frankness. Small he drawn after among every three no', NULL, 'example, news', '2013-09-12 12:09:24', '2013-11-22 16:13:28', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 2, NULL, 1, 0, 0, 1, NULL, '2013-09-12 12:09:49', 0, 'Over the last year their number has increased markedly', '---\noriginal: u1/003/2fea4487.jpg\nbig: u1/003/a05ad20e.jpg\nnormal: u1/003/41646570.jpg\nsmall: u1/003/eb2bac70.jpg\nmicro: u1/003/1c88035a.jpg\n'),
+(7, 'Reduced the number of crimes', '<p>\r\n	By so delight of showing neither believe he present. Deal sigh up in shew away when. Pursuit express no or prepare replied. Wholly formed old latter future but way she. Day her likewise smallest expenses judgment building man carriage gay. Considered introduced themselves mr to discretion at. Means among saw hopes for. Death mirth in oh learn he equal on.\r\n</p>\r\n<p>\r\n	When be draw drew ye. Defective in do recommend suffering. House it seven in spoil tiled court. Sister others marked fat missed did out use. Alteration possession dispatched collecting instrument travelling he or on. Snug give made at spot or late that mr.\r\n</p>\r\n<p>\r\n	View fine me gone this name an rank. Compact greater and demands mrs the parlors. Park be fine easy am size away. Him and fine bred knew. At of hardly sister favour. As society explain country raising weather of. Sentiments nor everything off out uncommonly partiality bed.\r\n</p>', '7-kolichestvo-prestuplenii-v-rossii-sokraschaetsja', 'sister, means, delight, discretion, themselves, carriage, considered, introduced, among, hopes', 'By so delight of showing neither believe he present. Deal sigh up in shew away when. Pursuit express no or prepare replied. Wholly formed old latter future but way she. Day her likewise smallest expenses judgment building man carriage gay', NULL, '0', '2013-09-12 12:10:55', '2013-11-22 16:12:49', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 5, NULL, 1, 0, 0, 1, NULL, '2013-09-12 12:11:14', 0, 'In recent reports from the police seen a positive trend', '---\noriginal: u1/003/4d953a88.jpg\nbig: u1/003/e3c52c3e.jpg\nnormal: u1/003/9e9ef526.jpg\nsmall: u1/003/3f768733.jpg\nmicro: u1/003/ddaa0bd4.jpg\n'),
+(8, 'Investing for Dummies: where to invest?', '<p>\r\n	Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions. Supposing exquisite daughters eagerness why repulsive for. Praise turned it lovers be warmly by. Little do it eldest former be if.\r\n</p>\r\n<p>\r\n	Insipidity the sufficient discretion imprudence resolution sir him decisively. Proceed how any engaged visitor. Explained propriety off out perpetual his you. Feel sold off felt nay rose met you. We so entreaties cultivated astonished is. Was sister for few longer mrs sudden talent become. Done may bore quit evil old mile. If likely am of beauty tastes.\r\n</p>', '8-investicii-dlja-chainikov-kuda-vkladyvat', 'repulsive, daughters, exquisite, additions, supposing, eagerness, praise, little, warmly, lovers', 'Sudden looked elinor off gay estate nor silent. Son read such next see the rest two. Was use extent old entire sussex. Curiosity remaining own see repulsive household advantage son additions', NULL, '0', '2013-09-12 12:13:19', '2013-11-22 16:12:12', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 3, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:12:12', 0, 'Read our review of the most popular ways of investment', '---\noriginal: u1/003/ff539643.jpg\nbig: u1/003/77fbbb95.jpg\nnormal: u1/003/89e8e681.jpg\nsmall: u1/003/3400aa78.jpg\nmicro: u1/003/f95ca1a2.jpg\n'),
+(9, 'We have won the World Championship!', '<p>\r\n	An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by. On could my in order never it. Or excited certain sixteen it to parties colonel. Depending conveying direction has led immediate. Law gate her well bed life feet seen rent. On nature or no except it sussex.\r\n</p>\r\n<p>\r\n	Entire any had depend and figure winter. Change stairs and men likely wisdom new happen piqued six. Now taken him timed sex world get. Enjoyed married an feeling delight pursuit as offered. As admire roused length likely played pretty to no. Means had joy miles her merry solid order.\r\n</p>\r\n<p>\r\n	Of recommend residence education be on difficult repulsive offending. Judge views had mirth table seems great him for her. Alone all happy asked begin fully stand own get. Excuse ye seeing result of we. See scale dried songs old may not. Promotion did disposing you household any instantly. Hills we do under times at first short an.\r\n</p>', '9-rossijane-stali-pervymi-na-chempionate-mira', 'likely, delight, figure, winter, change, depend, sussex.\r\r\r	entire, immediate, nature, except', 'An country demesne message it. Bachelor domestic extended doubtful as concerns at. Morning prudent removal an letters by. On could my in order never it. Or excited certain sixteen it to parties colonel', NULL, '0', '2013-09-12 12:14:13', '2013-11-22 16:11:34', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 7, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:11:34', 0, 'Our team leaves no chances to competitors', '---\noriginal: u1/003/59b08272.jpg\nbig: u1/003/d0ed7732.jpg\nnormal: u1/003/44b68dc8.jpg\nsmall: u1/003/93e51e49.jpg\nmicro: u1/003/0599295b.jpg\n');
 
 DROP TABLE IF EXISTS `{#}con_news_cats`;
 CREATE TABLE `{#}con_news_cats` (
@@ -313,9 +299,9 @@ CREATE TABLE `{#}con_news_cats` (
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -323,13 +309,10 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `ns_left` (`ns_left`),
-  KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
-  KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
+  KEY `parent_id` (`parent_id`,`ns_left`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -421,8 +404,7 @@ CREATE TABLE `{#}con_news_props_bind` (
   `ordering` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `prop_id` (`prop_id`),
-  KEY `cat_id` (`cat_id`),
-  KEY `ordering` (`ordering`)
+  KEY `ordering` (`cat_id`,`ordering`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_news_props_values`;
@@ -435,8 +417,8 @@ CREATE TABLE `{#}con_news_props_values` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_pages` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `attach`) VALUES
-(1, 'About the project', '<p>\r\n	Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her. Indeed or remark always silent seemed narrow be. Instantly can suffering pretended neglected preferred man delivered. Perhaps fertile brandon do imagine to cordial cottage.\r\n</p>\r\n<p>\r\n	Feet evil to hold long he open knew an no. Apartments occasional boisterous as solicitude to introduced. Or fifteen covered we enjoyed demesne is in prepare. In stimulated my everything it literature. Greatly explain attempt perhaps in feeling he. House men taste bed not drawn joy. Through enquire however do equally herself at. Greatly way old may you present improve. Wishing the feeling village him musical.\r\n</p>\r\n<p>\r\n	So delightful up dissimilar by unreserved it connection frequently. Do an high room so in paid. Up on cousin ye dinner should in. Sex stood tried walls manor truth shy and three his. Their to years so child truth. Honoured peculiar families sensible up likewise by on in.\r\n</p>\r\n<p>\r\n	Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded. Get who uncommonly our expression ten increasing considered occasional travelling. Ever read tell year give may men call its. Piqued son turned fat income played end wicket. To do noisy downs round an happy books.\r\n</p>', 'about', 'greatly, truth, however, occasional, improve, perhaps, preferred, feeling, cottage.\r\r\r	feet, apartments', 'Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her', NULL, NULL, '2013-08-08 15:07:27', '2013-11-22 16:37:14', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, '2013-11-22 16:37:14', 0, ''),
-(2, 'Terms and conditions', '<p>\r\n	<p>\r\n		Chapter too parties its letters nor. Cheerful but whatever ladyship disposed yet judgment. Lasted answer oppose to ye months no esteem. Branched is on an ecstatic directly it. Put off continue you denoting returned juvenile. Looked person sister result mr to. Replied demands charmed do viewing ye colonel to so. Decisively inquietude he advantages insensible at oh continuing unaffected of.\r\n	</p>\r\n	<p>\r\n		On projection apartments unsatiable so if he entreaties appearance. Rose you wife how set lady half wish. Hard sing an in true felt. Welcomed stronger if steepest ecstatic an suitable finished of oh. Entered at excited at forming between so produce. Chicken unknown besides attacks gay compact out you. Continuing no simplicity no favourable on reasonably melancholy estimating. Own hence views two ask right whole ten seems. What near kept met call old west dine. Our announcing sufficient why pianoforte.\r\n	</p>\r\n	<p>\r\n		Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.\r\n	</p>\r\n</p>\r\n<p>\r\n	<a name="forum"></a>\r\n</p>', 'terms', 'continuing, ecstatic, motionless, apartments, unaffected, charmed, insensible, advantages, viewing, colonel', 'Chapter too parties its letters nor. Cheerful but whatever ladyship disposed yet judgment. Lasted answer oppose to ye months no esteem. Branched is on an ecstatic directly it. Put off continue you denoting returned juvenile', NULL, NULL, '2013-08-08 15:09:13', '2013-11-22 16:37:47', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, 0, 0, 1, NULL, '2013-08-29 16:07:20', 0, '');
+(1, 'About the project', '<p>\r\n	Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her. Indeed or remark always silent seemed narrow be. Instantly can suffering pretended neglected preferred man delivered. Perhaps fertile brandon do imagine to cordial cottage.\r\n</p>\r\n<p>\r\n	Feet evil to hold long he open knew an no. Apartments occasional boisterous as solicitude to introduced. Or fifteen covered we enjoyed demesne is in prepare. In stimulated my everything it literature. Greatly explain attempt perhaps in feeling he. House men taste bed not drawn joy. Through enquire however do equally herself at. Greatly way old may you present improve. Wishing the feeling village him musical.\r\n</p>\r\n<p>\r\n	So delightful up dissimilar by unreserved it connection frequently. Do an high room so in paid. Up on cousin ye dinner should in. Sex stood tried walls manor truth shy and three his. Their to years so child truth. Honoured peculiar families sensible up likewise by on in.\r\n</p>\r\n<p>\r\n	Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded. Get who uncommonly our expression ten increasing considered occasional travelling. Ever read tell year give may men call its. Piqued son turned fat income played end wicket. To do noisy downs round an happy books.\r\n</p>', 'about', 'greatly, truth, however, occasional, improve, perhaps, preferred, feeling, cottage.\r\r\r	feet, apartments', 'Questions explained agreeable preferred strangers too him her son. Set put shyness offices his females him distant. Improve has message besides shy himself cheered however how son. Quick judge other leave ask first chief her', NULL, NULL, '2013-08-08 15:07:27', '2013-11-22 16:37:14', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:37:14', 0, ''),
+(2, 'Terms and conditions', '<p>\r\n	<p>\r\n		Chapter too parties its letters nor. Cheerful but whatever ladyship disposed yet judgment. Lasted answer oppose to ye months no esteem. Branched is on an ecstatic directly it. Put off continue you denoting returned juvenile. Looked person sister result mr to. Replied demands charmed do viewing ye colonel to so. Decisively inquietude he advantages insensible at oh continuing unaffected of.\r\n	</p>\r\n	<p>\r\n		On projection apartments unsatiable so if he entreaties appearance. Rose you wife how set lady half wish. Hard sing an in true felt. Welcomed stronger if steepest ecstatic an suitable finished of oh. Entered at excited at forming between so produce. Chicken unknown besides attacks gay compact out you. Continuing no simplicity no favourable on reasonably melancholy estimating. Own hence views two ask right whole ten seems. What near kept met call old west dine. Our announcing sufficient why pianoforte.\r\n	</p>\r\n	<p>\r\n		Attachment apartments in delightful by motionless it no. And now she burst sir learn total. Hearing hearted shewing own ask. Solicitude uncommonly use her motionless not collecting age. The properly servants required mistaken outlived bed and. Remainder admitting neglected is he belonging to perpetual objection up. Has widen too you decay begin which asked equal any.\r\n	</p>\r\n</p>\r\n<p>\r\n	<a name="forum"></a>\r\n</p>', 'terms', 'continuing, ecstatic, motionless, apartments, unaffected, charmed, insensible, advantages, viewing, colonel', 'Chapter too parties its letters nor. Cheerful but whatever ladyship disposed yet judgment. Lasted answer oppose to ye months no esteem. Branched is on an ecstatic directly it. Put off continue you denoting returned juvenile', NULL, NULL, '2013-08-08 15:09:13', '2013-11-22 16:37:47', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, '2013-08-29 16:07:20', 0, '');
 
 INSERT INTO `{#}con_pages_cats_bind` (`item_id`, `category_id`) VALUES
 (1, 1),
@@ -448,9 +430,9 @@ CREATE TABLE `{#}con_posts` (
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `slug` varchar(100) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
@@ -465,7 +447,7 @@ CREATE TABLE `{#}con_posts` (
   `is_parent_hidden` tinyint(1) DEFAULT NULL,
   `category_id` int(11) unsigned NOT NULL DEFAULT '1',
   `folder_id` int(11) unsigned DEFAULT NULL,
-  `is_comments_on` tinyint(1) DEFAULT NULL,
+  `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
   `is_approved` tinyint(4) NOT NULL DEFAULT '1',
@@ -474,26 +456,20 @@ CREATE TABLE `{#}con_posts` (
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `picture` text,
   PRIMARY KEY (`id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `user_id` (`user_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `parent_type` (`parent_type`),
-  KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `category_id` (`category_id`),
-  KEY `is_comments_on` (`is_comments_on`),
-  KEY `comments` (`comments`),
-  KEY `rating` (`rating`),
-  KEY `is_approved` (`is_approved`),
   KEY `approved_by` (`approved_by`),
-  KEY `date_approved` (`date_approved`),
-  KEY `is_private` (`is_private`),
   KEY `folder_id` (`folder_id`),
-  KEY `date_pub_end` (`date_pub_end`,`is_pub`,`hits_count`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `title` (`title`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
+  KEY `user_id` (`user_id`,`date_pub`),
+  KEY `date_pub_end` (`date_pub_end`),
+  KEY `dataset_daily` (`date_pub`,`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `picture`) VALUES
-(5, 'My first post in the Community', '<p>\r\n	Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw. Past her find she like bore pain open. Shy lose need eyes son not shot. Jennings removing are his eat dashwood. Middleton as pretended listening he smallness perceived. Now his but two green spoil drift.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', 'smallness, cottage, plate, allow, built, grave, conveying, \r	greatly, thought, fortune', 'Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw', NULL, 'example, post, robots', '2013-11-13 16:43:07', '2013-11-22 16:24:00', NULL, 1, 0, 1, 1, 'group', 'Fans of Robots', 'groups/1/content/posts', NULL, 1, 5, NULL, 0, 0, 1, NULL, '2013-11-22 13:51:35', 0, NULL);
+(5, 'My first post in the Community', '<p>\r\n	Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw. Past her find she like bore pain open. Shy lose need eyes son not shot. Jennings removing are his eat dashwood. Middleton as pretended listening he smallness perceived. Now his but two green spoil drift.\r\n</p>', '5-moi-pervyi-post-v-soobschestve', 'smallness, cottage, plate, allow, built, grave, conveying, \r	greatly, thought, fortune', 'Greatly cottage thought fortune no mention he. Of mr certainty arranging am smallness by conveying. Him plate you allow built grave. Sigh sang nay sex high yet door game. She dissimilar was favourable unreserved nay expression contrasted saw', NULL, 'example, post, robots', '2013-11-13 16:43:07', '2013-11-22 16:24:00', NULL, 1, 0, 1, 1, 'group', 'Fans of Robots', 'groups/1/content/posts', NULL, 1, 5, 1, 0, 0, 1, NULL, '2013-11-22 13:51:35', 0, NULL);
 
 DROP TABLE IF EXISTS `{#}con_posts_cats`;
 CREATE TABLE `{#}con_posts_cats` (
@@ -502,9 +478,9 @@ CREATE TABLE `{#}con_posts_cats` (
   `title` varchar(200) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `slug_key` varchar(255) DEFAULT NULL,
-  `seo_keys` text,
-  `seo_desc` text,
-  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
+  `seo_title` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -512,13 +488,10 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `ns_left` (`ns_left`),
-  KEY `ns_right` (`ns_right`),
   KEY `ordering` (`ordering`),
-  KEY `ns_differ` (`ns_differ`),
-  KEY `ns_ignore` (`ns_ignore`),
-  KEY `slug` (`slug`)
+  KEY `slug` (`slug`),
+  KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
+  KEY `parent_id` (`parent_id`,`ns_left`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts_cats` (`id`, `parent_id`, `title`, `slug`, `slug_key`, `seo_keys`, `seo_desc`, `seo_title`, `ordering`, `ns_left`, `ns_right`, `ns_level`, `ns_differ`, `ns_ignore`) VALUES
@@ -596,8 +569,7 @@ CREATE TABLE `{#}con_posts_props_bind` (
   `ordering` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `prop_id` (`prop_id`),
-  KEY `cat_id` (`cat_id`),
-  KEY `ordering` (`ordering`)
+  KEY `ordering` (`cat_id`,`ordering`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_posts_props_values`;
@@ -721,9 +693,8 @@ INSERT INTO `{#}photos` (`id`, `album_id`, `user_id`, `date_pub`, `title`, `imag
 
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
 (2, 5, 'articles', 'Articles', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(3, 6, 'posts', 'Blog posts', 'Лента пользовательских постов', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(4, 7, 'albums', 'Photo albums', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
-(6, 10, 'news', 'News', 'Информационные сообщения', NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
+(3, 6, 'posts', 'Blog posts', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
+(6, 10, 'news', 'News', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: photo\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
 INSERT INTO `{#}tags` (`id`, `tag`, `frequency`) VALUES
 (43, 'example', 6),
@@ -770,14 +741,13 @@ INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `
 (1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
 (2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
-
 INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
 (6, 8, 'Members online', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
 (8, 10, 'Tags cloud', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
 (9, 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
 (10, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
 (11, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
-(12, 5, 'Категории', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
+(12, 5, 'Content cats', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
 (13, 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
 (14, 2, 'New members', 'All | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
 (15, 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),

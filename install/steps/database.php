@@ -45,6 +45,9 @@ function check_db(){
     }
 
     $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine']);
+    if($success){
+        $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine']);
+    }
 
     if ($success && !empty($db['is_install_demo_content'])) {
         $success = import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine']);
