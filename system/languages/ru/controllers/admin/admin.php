@@ -337,6 +337,19 @@
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
 
+    define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Требуемая версия установленного пакета');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Пакет установки компонента');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Пакет обновления компонента');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Пакет установки виджета');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Пакет обновления виджета');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'Пакет обновления InstantCMS');
+    define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Пакет версии %s уже был установлен. Если вы хотите его обновить, выберите соответствующий пакет обновления. Если вы хотите переустановить пакет, то сначала удалите его в админке.');
+    define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" имеет номер версии <b>%s</b>. У вас установлена версия <b>%s</b>. Для обновления выберите пакет большей версии.');
+    define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Версия пакета обновления соответствует установленной. Обновление не требуется.');
+    define('LANG_CP_PACKAGE_TYPE', 'Тип пакета');
+    define('LANG_CP_PACKAGE_NONAME', 'Неизвестный автор');
+    define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Невозможно установить пакет обновления, поскольку обновляемое дополнение не установлено');
+
     define('LANG_CP_FTP_ACCOUNT',               'Реквизиты FTP');
     define('LANG_CP_FTP_HOST',                  'Сервер');
     define('LANG_CP_FTP_USER',                  'Имя пользователя');

@@ -335,6 +335,19 @@
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
 
+    define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Component installation package');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Component service pack');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Widget installation package');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Widget service pack');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'InstantCMS service pack');
+    define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Package v.%s is already installed. If you want to update it, use corresponding update package. If you want to re-install it, remove installed version first.');
+    define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" has version <b>%s</b> but you have version <b>%s</b> installed. Please use package with larger version number to update.');
+    define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Update package has the same version as installed one. There is nothing to update.');
+    define('LANG_CP_PACKAGE_TYPE', 'Package type');
+    define('LANG_CP_PACKAGE_NONAME', 'Unknown author');
+    define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Update package cannot be installed because updated addon has not been installed');
+
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
     define('LANG_CP_FTP_USER',                  'Username');
