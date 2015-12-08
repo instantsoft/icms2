@@ -61,5 +61,14 @@ class modelRss extends cmsModel{
         return $this->delete('rss_feeds', $id);
 
     }
+    
+    public function toggleFeedEnable($id, $is_active){
+		
+     	return $this->update('rss_feeds', $id, array(
+		            
+                            'is_enabled' => $is_active
+                
+	));		
+    }
 
 }
