@@ -27,16 +27,16 @@ class modelImages extends cmsModel{
 			return $item;
 		});
 	}
-	
+
 	public function getPresetByName($name){
 		return $this->getItemByField('images_presets', 'name', $name, function($item, $model){
 			$item['wm_image'] = cmsModel::yamlToArray($item['wm_image']);
 			return $item;
 		});
 	}
-	
+
 	public function addPreset ($preset) {
-		return $this->insert('images_presets', $preset); 
+		return $this->insert('images_presets', $preset);
 	}
 
 	public function updatePreset ($id, $preset) {
@@ -47,20 +47,4 @@ class modelImages extends cmsModel{
 		return $this->delete('images_presets', $id);
 	}
 
-	public function togglePresetIsSquare($id, $is_square){
-				
-		return $this->update('images_presets', $id, array(
-			'is_square' => $is_square
-		));
-		
-	}	
-
-	public function togglePresetIsWatermark($id, $is_watermark){
-				
-		return $this->update('images_presets', $id, array(
-			'is_watermark' => $is_watermark
-		));
-		
-	}	
-	
 }

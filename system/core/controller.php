@@ -14,13 +14,11 @@ class cmsController {
 
     function __construct($request){
 
-        $config = cmsConfig::getInstance();
-
-        $this->name = mb_strtolower(get_called_class());
+        $this->name = $this->name ? $this->name : mb_strtolower(get_called_class());
 
         $this->root_url = $this->name;
 
-        $this->root_path = $config->root_path . 'system/controllers/' . $this->name . '/';
+        $this->root_path = cmsConfig::get('root_path') . 'system/controllers/' . $this->name . '/';
 
         $this->request = $request;
 
@@ -459,8 +457,8 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function halt() {
-        die();
+    public function halt($text='') {
+        die((string)$text);
     }
 
 //============================================================================//

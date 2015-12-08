@@ -37,6 +37,7 @@ function grid_migrations($controller){
             'title' => LANG_ON,
             'flag'  => true,
             'width' => 60,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', '{users}_groups_migration', 'is_active'))
         ),
     );
 

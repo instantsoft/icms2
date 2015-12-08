@@ -159,7 +159,7 @@ class admin extends cmsFrontend {
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
 
         if(!file_exists($ctrl_file)){
-            $this->halt(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
+            cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
         }
 
         include_once($ctrl_file);
@@ -167,6 +167,9 @@ class admin extends cmsFrontend {
         $controller_class = 'backend' . string_to_camel('_', $controller_name);
 
         $backend = new $controller_class($request);
+
+        // Устанавливаем корень для URL внутри бакенда
+        $backend->setRootURL($this->name.'/controllers/edit/'.$controller_name);
 
         return $backend;
 

@@ -350,6 +350,9 @@
     define('LANG_CP_PACKAGE_NONAME', 'Неизвестный автор');
     define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Невозможно установить пакет обновления, поскольку обновляемое дополнение не установлено');
 
+    define('LANG_CP_COMPONENT_IS_DELETED',      'Компонент "%s" успешно удален');
+    define('LANG_CP_DELETE_COMPONENT_CONFIRM',  'Вы действительно хотите удалить компонент "{title}"?');
+
     define('LANG_CP_FTP_ACCOUNT',               'Реквизиты FTP');
     define('LANG_CP_FTP_HOST',                  'Сервер');
     define('LANG_CP_FTP_USER',                  'Имя пользователя');

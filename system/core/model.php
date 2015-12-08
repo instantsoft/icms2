@@ -1507,6 +1507,17 @@ class cmsModel{
         return $this->increment($table, $field, $step * -1);
     }
 
+    public function deleteController($id) {
+
+		if(is_numeric($id)){
+            $field = 'id';
+		} else {
+			$field = 'name';
+		}
+
+        return $this->filterEqual($field, $id)->deleteFiltered('controllers');
+
+    }
 //============================================================================//
 //============================================================================//
 

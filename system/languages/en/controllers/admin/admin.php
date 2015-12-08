@@ -348,6 +348,9 @@
     define('LANG_CP_PACKAGE_NONAME', 'Unknown author');
     define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Update package cannot be installed because updated addon has not been installed');
 
+    define('LANG_CP_COMPONENT_IS_DELETED',      'Component "%s" successfully removed');
+    define('LANG_CP_DELETE_COMPONENT_CONFIRM',  'Delete component "{title}"?');
+
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
     define('LANG_CP_FTP_USER',                  'Username');

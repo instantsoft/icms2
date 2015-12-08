@@ -34,6 +34,15 @@ function grid_controllers($controller){
             'handler' => function($row){
                 return $row['is_backend'];
             }
+        ),
+        array(
+            'title' => LANG_DELETE,
+            'class' => 'delete',
+            'confirm' => LANG_CP_DELETE_COMPONENT_CONFIRM,
+            'href' => href_to($controller->name, 'controllers_delete', array('{name}')),
+            'handler' => function($row){
+                return $row['is_external'];
+            }
         )
     );
 

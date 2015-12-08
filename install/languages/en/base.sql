@@ -193,6 +193,7 @@ CREATE TABLE `{#}controllers` (
   `url` varchar(250) DEFAULT NULL COMMENT 'Сайт автора',
   `version` varchar(8) NOT NULL COMMENT 'Версия',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Есть админка?',
+  `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сторонний компонент',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `enabled` (`is_enabled`),

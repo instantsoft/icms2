@@ -108,6 +108,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_datasets` ADD `index` VARCHAR(40) NULL DEFAULT NULL COMMENT 'Название используемого индекса' AFTER `sorting`, ADD INDEX (`index`);");
     }
 
+    if(!$core->db->isFieldExists('controllers', 'is_external')){
+        $core->db->query("ALTER TABLE `{#}controllers` ADD `is_external` TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'Сторонний компонент' AFTER `is_backend`");
+    }
+
     if(!$core->db->getRowsCount('perms_rules', "controller = 'content' AND name = 'disable_comments'", 1)){
         $core->db->query("INSERT INTO `{#}perms_rules` (`controller`,`name`,`type`,`options`) VALUES ('content','disable_comments','flag', NULL)");
     }
