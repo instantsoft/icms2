@@ -35,7 +35,7 @@ class actionAdminInstall extends cmsAction {
 
             files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
-            cmsUser::addSessionMessage(LANG_CP_PACKAGE_DUBLE_INSTALL, 'error');
+            cmsUser::addSessionMessage(sprintf(LANG_CP_PACKAGE_DUBLE_INSTALL, $manifest['package']['installed_version']), 'error');
 
             $this->redirectToAction('install');
 
