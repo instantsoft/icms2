@@ -258,11 +258,11 @@ CREATE TABLE `{#}con_albums` (
   KEY `category_id` (`category_id`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
-  KEY `date_pub_end` (`date_pub_end`)
+  KEY `date_pub_end` (`date_pub_end`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_albums_cats`;
@@ -408,11 +408,11 @@ CREATE TABLE `{#}con_pages` (
   KEY `category_id` (`category_id`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
-  KEY `date_pub_end` (`date_pub_end`)
+  KEY `date_pub_end` (`date_pub_end`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}con_pages_cats`;

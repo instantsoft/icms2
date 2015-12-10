@@ -528,10 +528,7 @@ class cmsDatabase {
         $fcount = 0;
         $ftotal = sizeof($structure);
 
-        $indexes = array();
-        $unique = array();
-
-        $indexes_created = array();
+        $indexes = $fulltext = $unique = $indexes_created = array();
 
         foreach ($structure as $name=>$field){
 
@@ -541,9 +538,9 @@ class cmsDatabase {
             $default  = (!isset($field['default']) ? 'NULL' : "NOT NULL DEFAULT '{$field['default']}'");
             $unsigned = (!isset($field['unsigned']) ? '' : 'UNSIGNED');
 
+            // обычный индекс
             if (isset($field['index'])) {
 
-                // обычный индекс
                 if($field['index'] === true){
                     $indexes[$name] = array($name);
                 } else if(is_string($field['index'])) {
@@ -555,7 +552,16 @@ class cmsDatabase {
                 }
 
             }
+            // уникальный индекс
             if (isset($field['unique'])) { $unique[] = $name; }
+            // полнотекстовый индекс
+            if (isset($field['fulltext'])) {
+
+                if($field['fulltext'] === true){
+                    $fulltext[$name] = array($name);
+                }
+
+            }
 
             switch ($field['type']){
 
@@ -623,6 +629,16 @@ class cmsDatabase {
             $this->addIndex($table_name, $field, $field, 'UNIQUE');
 
             $indexes_created[] = $field;
+
+        }
+
+        foreach($fulltext as $index_name=>$fields){
+
+            if (in_array($index_name, $indexes_created)) { continue; }
+
+            $this->addIndex($table_name, $fields, $index_name, 'FULLTEXT');
+
+            $indexes_created[] = $index_name;
 
         }
 
@@ -756,11 +772,17 @@ class cmsDatabase {
     /**
      * Возвращает все индексы таблицы
      * @param string $table Название таблицы без префикса
+     * @param string $index_type Тип индекса
      * @return boolean|array
      */
-    public function getTableIndexes($table) {
+    public function getTableIndexes($table, $index_type=null) {
 
-        $result = $this->query("SHOW INDEX FROM  `{#}{$table}`");
+        $sql = "SHOW INDEX FROM  `{#}{$table}`";
+        if($index_type){
+            $sql .= " WHERE `Index_type` = '{$index_type}'";
+        }
+
+        $result = $this->query($sql);
 
 		if ($this->numRows($result)){
 

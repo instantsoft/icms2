@@ -21,6 +21,7 @@ class cmsFormField {
     public $is_hidden = false;
 
     public $rules = array();
+    public $options = array();
 
     public $data = array(); // массив для данных в шаблоне
 
@@ -48,8 +49,8 @@ class cmsFormField {
 
     public function getOption($key) {
 
-        if( isset($this->options[ $key ]) ){
-            return $this->options[ $key ];
+        if(array_key_exists($key, $this->options)){
+            return $this->options[$key];
         }
 
         $options = $this->getOptions();

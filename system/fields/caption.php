@@ -6,6 +6,7 @@ class fieldCaption extends cmsFormField {
     public $is_public       = false;
     public $sql             = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type     = 'str';
+    public $allow_index = false;
 
     public function getOptions(){
 
@@ -18,6 +19,10 @@ class fieldCaption extends cmsFormField {
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
             )),
+            new fieldCheckbox('in_fulltext_search', array(
+                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'default' => true
+            ))
         );
 
     }

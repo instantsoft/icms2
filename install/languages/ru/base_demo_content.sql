@@ -103,14 +103,14 @@ CREATE TABLE `{#}con_articles` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
   KEY `dataset_reviews` (`kind`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `dataset_featured` (`featured`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
-  KEY `dataset_rating` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
+  KEY `dataset_rating` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_articles` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `kind`, `notice`, `source`, `featured`) VALUES
@@ -283,12 +283,12 @@ CREATE TABLE `{#}con_board` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_cheap` (`is_pub`,`is_parent_hidden`,`is_approved`,`price`)
+  KEY `dataset_cheap` (`is_pub`,`is_parent_hidden`,`is_approved`,`price`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_board` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `photo`, `photos`, `price`, `phone`) VALUES
@@ -571,13 +571,13 @@ CREATE TABLE `{#}con_news` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
   KEY `dataset_discussed` (`is_pub`,`is_parent_hidden`,`is_approved`,`comments`),
-  KEY `dataset_popular` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
+  KEY `dataset_popular` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_news` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `teaser`, `photo`) VALUES
@@ -760,12 +760,12 @@ CREATE TABLE `{#}con_posts` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `title` (`title`),
   KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_daily` (`date_pub`,`is_pub`,`is_parent_hidden`,`is_approved`,`rating`)
+  KEY `dataset_daily` (`date_pub`,`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}con_posts` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `picture`) VALUES

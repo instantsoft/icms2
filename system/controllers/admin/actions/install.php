@@ -42,7 +42,7 @@ class actionAdminInstall extends cmsAction {
         }
 
         // если это пакет обновления, а полная версия не установлена
-        if(empty($manifest['package']['installed_version']) && $manifest['package']['action'] == 'update'){
+        if(isset($manifest['package']) && empty($manifest['package']['installed_version']) && $manifest['package']['action'] == 'update'){
 
             files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 

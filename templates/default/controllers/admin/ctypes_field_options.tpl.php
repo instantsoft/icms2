@@ -2,12 +2,10 @@
 
     <?php
 
-        $default = $field->getDefaultValue();
-
-        if (isset($values[ $field->name ])){
+        if (is_array($values) && @array_key_exists($field->name, $values)){
             $value = $values[ $field->name ];
         } else {
-            $value = $default;
+            $value = $field->getDefaultValue();
         }
 
         $name = "options:{$field->name}";

@@ -48,11 +48,11 @@ function install_package(){
         '_props_bind' => array('cat_id', 'ordering'),
         '' => array(
             'date_pub','user_id','parent_id','parent_type','is_comments_on','is_approved','date_approved',
-            'comments','rating','is_private','is_parent_hidden','photos_count','date_pub_end','date_last_modified'
+            'comments','rating','is_private','is_parent_hidden','photos_count','date_pub_end','date_last_modified','title'
         ),
     );
 
-    $add_ctype_indexs = array(
+    $add_ctype_indexes = array(
         '_cats' => array(
             'ns_left'   => array('ns_level', 'ns_right', 'ns_left'),
             'parent_id' => array('parent_id', 'ns_left'),
@@ -61,12 +61,17 @@ function install_package(){
             'ordering' => array('cat_id', 'ordering')
         ),
         '' => array(
-            'title'        => array('title'),
             'date_pub'     => array('is_pub', 'is_parent_hidden', 'is_approved', 'date_pub'),
             'parent_id'    => array('parent_id', 'parent_type', 'date_pub'),
             'user_id'      => array('user_id', 'date_pub'),
             'date_pub_end' => array('date_pub_end')
-        ),
+        )
+    );
+
+    $add_ctype_fulltext_indexes = array(
+        '' => array(
+            'title' => array('title')
+        )
     );
 
 	foreach($ctypes as $ctype){
@@ -93,11 +98,19 @@ function install_package(){
 
         }
 
-        // добавляем нужные
-        foreach ($add_ctype_indexs as $table_postfix=>$indexes) {
+        // добавляем нужные обычные индексы
+        foreach ($add_ctype_indexes as $table_postfix=>$indexes) {
 
             foreach ($indexes as $index_name => $fields) {
                 $core->db->addIndex($content_model->table_prefix.$ctype['name'].$table_postfix, $fields, $index_name);
+            }
+
+        }
+        // добавляем FULLTEXT индексы только для поля title. остальные поля включаются в индекс в настройках
+        foreach ($add_ctype_fulltext_indexes as $table_postfix=>$fulltext_indexes) {
+
+            foreach ($fulltext_indexes as $index_name => $fields) {
+                $core->db->addIndex($content_model->table_prefix.$ctype['name'].$table_postfix, $fields, $index_name, 'FULLTEXT');
             }
 
         }

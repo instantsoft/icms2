@@ -53,7 +53,7 @@ class cmsModel{
 
         return array(
             'id'                 => array('type' => 'primary'),
-            'title'              => array('type' => 'varchar', 'size' => 100, 'index' => true),
+            'title'              => array('type' => 'varchar', 'size' => 100, 'fulltext' => true),
             'content'            => array('type' => 'text'),
             'photo'              => array('type' => 'text'),
             'slug'               => array('type' => 'varchar', 'index' => true, 'size' => 100),

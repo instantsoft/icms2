@@ -379,7 +379,7 @@ class modelContent extends cmsModel{
     public function addContentField($ctype_name, $field, $is_virtual=false){
 
         $content_table_name = $this->table_prefix . $ctype_name;
-        $fields_table_name = $this->table_prefix . $ctype_name . '_fields';
+        $fields_table_name  = $this->table_prefix . $ctype_name . '_fields';
 
         $field['ordering'] = $this->getNextOrdering($fields_table_name);
 
@@ -398,6 +398,29 @@ class modelContent extends cmsModel{
         }
 
         $id = $this->insert($fields_table_name, $field);
+
+        // если есть опция полнотекстового поиска
+        if(!$is_virtual && is_array($field['options']) && !empty($field['options']['in_fulltext_search'])){
+            // получаем полнотекстовый индекс для таблицы, он может быть только один
+            $fulltext_index = $this->db->getTableIndexes($content_table_name, 'FULLTEXT');
+            if($fulltext_index){
+                // название индекса
+                $index_name = key($fulltext_index);
+                // поля индекса
+                $index_fields = $fulltext_index[$index_name];
+                // ищем, нет ли такого поля уже в индексе, мало ли :-)
+                $key = array_search($field['name'], $index_fields);
+                // не нашли, добавляем
+                if($key === false){
+                    // удаляем старый индекс
+                    $this->db->dropIndex($content_table_name, $index_name);
+                    // создаем новый
+                    $this->createFullTextIndex($ctype_name, $field['name']);
+                }
+            } else {
+                $this->createFullTextIndex($ctype_name, $field['name']);
+            }
+        }
 
         return $id;
 
@@ -575,12 +598,81 @@ class modelContent extends cmsModel{
                 $this->db->dropIndex($content_table_name, $field_old['name']);
             }
 
+            // если есть опция полнотекстового поиска и ее значение изменилось
+            if(is_array($field['options']) && array_key_exists('in_fulltext_search', $field['options'])){
+                if($field['options']['in_fulltext_search'] != @$field_old['options']['in_fulltext_search']){
+                    // получаем полнотекстовый индекс для таблицы, он может быть только один
+                    $fulltext_index = $this->db->getTableIndexes($content_table_name, 'FULLTEXT');
+                    if($fulltext_index){
+                        // название индекса
+                        $index_name = key($fulltext_index);
+                        // поля индекса
+                        $index_fields = $fulltext_index[$index_name];
+                        // выключили опцию
+                        if(!$field['options']['in_fulltext_search']){
+                            $key = array_search($field['name'], $index_fields);
+                            // нашли - удаляем из массива
+                            if($key !== false){
+                                unset($index_fields[$key]);
+                                // удаляем индекс
+                                $this->db->dropIndex($content_table_name, $index_name);
+                                // и создаем новый
+                                if($index_fields){
+                                    $this->db->addIndex($content_table_name, $index_fields, '', 'FULLTEXT');
+                                }
+                            }
+                        }
+                        // включили опцию
+                        if($field['options']['in_fulltext_search']){
+                            // ищем, нет ли такого поля уже в индексе, мало ли :-)
+                            $key = array_search($field['name'], $index_fields);
+                            // не нашли, добавляем
+                            if($key === false){
+                                // удаляем старый индекс
+                                $this->db->dropIndex($content_table_name, $index_name);
+                                // создаем новый
+                                $this->createFullTextIndex($ctype_name, $field['name']);
+                            }
+                        }
+
+                    }
+                }
+            }
+
         }
 
         return $this->update($fields_table_name, $id, $field);
 
     }
 
+    /**
+     * Создает fulltext индекс согласно настроек полей типа контента
+     * @param string $ctype_name Название типа контента
+     * @param string|null $add_field Название поля, для которого принудительно нужно создать индекс
+     * @return boolean
+     */
+    public function createFullTextIndex($ctype_name, $add_field=null) {
+
+        // важен порядок индексов, поэтому создаем их так, как они будут в запросе
+        // для этого получаем все поля этого типа контента
+        $fields = $this->getContentFields($ctype_name);
+
+        foreach ($fields as $field) {
+
+            $is_text = in_array($field['type'], array('caption', 'text', 'html')) && ($field['handler']->getOption('in_fulltext_search') || $field['name'] == $add_field);
+            if(!$is_text){ continue; }
+
+            $index_fields[] = $field['name'];
+
+        }
+
+        if($index_fields){
+            $this->db->addIndex($this->table_prefix . $ctype_name, $index_fields, '', 'FULLTEXT'); return true;
+        }
+
+        return false;
+
+    }
 //============================================================================//
 //============================================================================//
 

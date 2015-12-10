@@ -27,6 +27,11 @@ class fieldHtml extends cmsFormField {
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
                 'hint' => LANG_PARSER_HTML_TEASER_LEN_HINT,
+            )),
+            new fieldCheckbox('in_fulltext_search', array(
+                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'hint'  => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
+                'default' => false
             ))
         );
     }

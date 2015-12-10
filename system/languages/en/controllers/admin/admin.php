@@ -364,6 +364,9 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Error: path %s not found');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in %s');
 
+    define('LANG_CP_FTP_SKIP',				'Skip this step');
+    define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if it\'s impossible to do automatic FTP upload and you\'re using manual installation as described in the <a href="http://docs.instantcms.ru/en/manual/addons">user guide</a>');
+
     define('ERR_VALIDATE_UNIQUE_FIELD',         'The field already exists');
     define('LANG_CP_BACK_TO_SITE',              'Back to site');
     define('LANG_CP_3RDPARTY_CREDITS',          'Third-party credits');

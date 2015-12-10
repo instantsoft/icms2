@@ -366,6 +366,9 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
 
+    define('LANG_CP_FTP_SKIP',				'Пропустить этот шаг');
+    define('LANG_CP_FTP_SKIP_HINT',			'Пропустите шаг, если автоматический доступ на FTP невозможен и вы используете ручной способ установки описанный в <a href="http://docs.instantcms.ru/manual/addons">инструкции</a>');
+
     define('ERR_VALIDATE_UNIQUE_FIELD',         'Поле уже существует');
     define('LANG_CP_BACK_TO_SITE',              'Вернуться на сайт');
     define('LANG_CP_3RDPARTY_CREDITS',          'При участии');

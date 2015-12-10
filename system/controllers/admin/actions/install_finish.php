@@ -50,7 +50,7 @@ class actionAdminInstallFinish extends cmsAction {
 
         }
 
-        return true;
+        return '';
 
     }
 

@@ -125,6 +125,8 @@
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
 
     //USERS
     define('LANG_USER',                      'Пользователь');

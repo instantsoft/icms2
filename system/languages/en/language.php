@@ -126,7 +126,8 @@
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Not higher than %d Mb (allowed in PHP settings)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Show file size');
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
-
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Add the field into full-text search');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Notice: changing this option will force index to rebuild. That may take long time for large tables.');
     //USERS
     define('LANG_USER',                      'Member');
     define('LANG_USERS',                     'Members');
