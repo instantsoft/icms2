@@ -20,11 +20,11 @@ class actionAdminCtypesAjax extends cmsAction {
             $content_model->applyGridFilter($grid, $filter);
         }
 
-        $total = $content_model->getContentTypesCount();
+        $total = $content_model->getContentTypesCountFiltered();
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
         $pages = ceil($total / $perpage);
 
-        $ctypes = $content_model->getContentTypes();
+        $ctypes = $content_model->getContentTypesFiltered();
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $ctypes, $total, $pages);
 

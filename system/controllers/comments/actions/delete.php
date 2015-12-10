@@ -21,8 +21,8 @@ class actionCommentsDelete extends cmsAction {
 
         $user = cmsUser::getInstance();
 
-        if (!cmsUser::isAllowed('comments', 'edit', 'all')) {
-            if (cmsUser::isAllowed('comments', 'edit', 'own') && $comment['user']['id'] != $user->id) {
+        if (!cmsUser::isAllowed('comments', 'delete', 'all') && !cmsUser::isAllowed('comments', 'delete', 'full_delete')) {
+            if (cmsUser::isAllowed('comments', 'delete', 'own') && $comment['user']['id'] != $user->id) {
 
                 cmsTemplate::getInstance()->renderJSON(array(
                     'error' => true,
@@ -32,9 +32,16 @@ class actionCommentsDelete extends cmsAction {
             }
         }
 
-        $this->model->deleteComment($comment['id']);
+        // проверяем, есть ли дети комментария
+        $is_comment_child = $this->model->getItemByField('comments', 'parent_id', $comment['id']);
 
-        cmsEventsManager::hook('comments_after_hide', $comment['id']);
+        $this->model->deleteComment($comment['id'], (!$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true)));
+
+        if(cmsUser::isAllowed('comments', 'delete', 'full_delete')){
+            cmsEventsManager::hook('comments_after_delete', $comment['id']);
+        } else {
+            cmsEventsManager::hook('comments_after_hide', $comment['id']);
+        }
 
         cmsTemplate::getInstance()->renderJSON(array(
             'error' => false,

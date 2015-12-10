@@ -529,11 +529,13 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function isAllowed($subject, $permission, $value=true){
+    public static function isAllowed($subject, $permission, $value=true, $is_admin_strict=false){
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return true; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return true; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }

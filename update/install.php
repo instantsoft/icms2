@@ -9,12 +9,18 @@ function install_package(){
         '{users}_friends' => array(
             'is_mutual', 'friend_id', 'user_id'
         ),
+        'tags_bind' => array(
+            'tag_id'
+        ),
     );
 
     $add_table_indexes = array(
         '{users}_friends' => array(
             'user_id'   => array('user_id', 'is_mutual'),
             'friend_id' => array('friend_id', 'is_mutual')
+        ),
+        'tags_bind' => array(
+            'tag_id' => array('tag_id')
         ),
     );
 
@@ -128,6 +134,7 @@ function install_package(){
     if(!$core->db->getRowsCount('perms_rules', "controller = 'content' AND name = 'disable_comments'", 1)){
         $core->db->query("INSERT INTO `{#}perms_rules` (`controller`,`name`,`type`,`options`) VALUES ('content','disable_comments','flag', NULL)");
     }
+    $core->db->query("UPDATE `{#}perms_rules` SET `options` = 'own,all,full_delete' WHERE controller = 'comments' AND name = 'delete'");
 
     // для всех датасетов создаем индексы, если нужно
     $datasets = $content_model->select('ct.name', 'ctype_name')->
@@ -150,6 +157,35 @@ function install_package(){
     $values['db_engine'] = 'InnoDB';
     if(!$config->save($values)){
         cmsUser::addSessionMessage('Не могу записать файл конфигурации сайта. Добавьте в него строку <b>"db_engine" => "InnoDB",</b>', 'info');
+    }
+
+    // если вдруг для каких то компонентов нет конфига в таблице cms_controllers
+    // пропускаем компонент карты сайта, т.к. там конфиг динамический
+    // будем надеяться, что опции в нем хоть раз сохранялись =)
+    $controllers = $content_model->filterNotEqual('name', 'sitemap')->get('controllers', function ($item, $model) {
+        $item['options'] = cmsModel::yamlToArray($item['options']);
+        return $item;
+    }, 'name');
+    foreach ($controllers as $controller) {
+
+        $controller_root_path = cmsConfig::get('root_path').'system/controllers/'.$controller['name'].'/';
+
+        $form_file = $controller_root_path.'backend/forms/form_options.php';
+        $form_name = $controller['name'] . 'options';
+
+        cmsCore::loadControllerLanguage($controller['name']);
+
+        $form = cmsForm::getForm($form_file, $form_name, false);
+        if ($form) {
+            $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller['name'])));
+        } else {
+            $options = null;
+        }
+
+        $content_model->filterEqual('name', $controller['name'])->updateFiltered('controllers', array(
+            'options' => $options
+        ));
+
     }
 
 }

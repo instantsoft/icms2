@@ -88,14 +88,10 @@ class formRssFeed extends cmsForm {
 
                     new fieldList('mapping:image_size', array(
                         'title' => LANG_RSS_FEED_MAP_IMAGE_SIZE,
-                        'items' => array(
-                            'micro' => LANG_PARSER_IMAGE_SIZE_MICRO,
-                            'small' => LANG_PARSER_IMAGE_SIZE_SMALL,
-                            'normal' => LANG_PARSER_IMAGE_SIZE_NORMAL,
-                            'big' => LANG_PARSER_IMAGE_SIZE_BIG,
-                            'original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL
-                        )
-                    )),
+                        'generator' => function($item) {
+                            return array('original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL) + cmsCore::getModel('images')->getPresetsList();
+                        }
+                    ))
 
                 )
             ),

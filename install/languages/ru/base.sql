@@ -200,8 +200,8 @@ CREATE TABLE `{#}controllers` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Компоненты';
 
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
-(1, 'Панель управления', 'admin', 1, '', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
-(2, 'Контент', 'content', 1, '', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
+(1, 'Панель управления', 'admin', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
+(2, 'Контент', 'content', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (4, 'Комментарии', 'comments', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: \n  - 0\n', 'InstantCMS Team', 'http://www.instantcms.ru/', '2.0', 1),
@@ -724,7 +724,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (9, 'content', 'privacy', 'flag', NULL),
 (10, 'comments', 'add', 'flag', NULL),
 (11, 'comments', 'edit', 'list', 'own,all'),
-(12, 'comments', 'delete', 'list', 'own,all'),
+(12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
 (14, 'comments', 'view_all', 'flag', NULL),
 (15, 'groups', 'add', 'flag', NULL),
@@ -909,7 +909,8 @@ CREATE TABLE `{#}tags_bind` (
   `target_subject` varchar(32) DEFAULT NULL,
   `target_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
+  KEY `tag_id` (`tag_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка тегов к материалам';
 
 DROP TABLE IF EXISTS `{#}uploaded_files`;

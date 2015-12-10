@@ -4,10 +4,6 @@ class formPhotosOptions extends cmsForm {
 
     public function init() {
 
-		$presets = cmsCore::getModel('images')->getPresetsList();
-		
-		$presets = array('' => LANG_PHOTOS_PRESET_DEF) + $presets;
-		
         return array(
 
             array(
@@ -21,9 +17,11 @@ class formPhotosOptions extends cmsForm {
 
                     new fieldList('preset', array(
                         'title' => LANG_PHOTOS_PRESET,
-                        'items' => $presets
+                        'generator' => function($item) {
+                            return array('' => LANG_PHOTOS_PRESET_DEF) + cmsCore::getModel('images')->getPresetsList();
+                        }
                     )),
-					
+
                 )
             ),
 

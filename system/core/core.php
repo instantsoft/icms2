@@ -620,14 +620,14 @@ class cmsCore {
         if (!$this->uri_controller){ $this->uri_controller = $config->ct_autoload;	}
         if (!$this->uri_action) { $this->uri_action = 'index'; }
 
+        // проверяем ремаппинг контроллера
+        $remap_to = self::getControllerNameByAlias($this->uri_controller);
+        if ($remap_to) { $this->uri_controller = $remap_to; }
+
         if (!self::isControllerExists($this->uri_controller)) {
             $this->uri_action     = $this->uri_controller;
             $this->uri_controller = $config->ct_default;
         }
-
-        // проверяем ремаппинг контроллера
-        $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
 
         $this->controller = $this->uri_controller;
 

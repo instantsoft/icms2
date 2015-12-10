@@ -25,7 +25,7 @@ class actionModerationIndex extends cmsAction {
 
         $content_controller = cmsCore::getController('content');
 
-        $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypes();
+        $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypesFiltered();
         $ctypes = array_collection_to_list($ctypes, 'name', 'title');
 
         $ctype = $content_controller->model->getContentTypeByName($ctype_name);

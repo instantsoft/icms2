@@ -1,7 +1,7 @@
 <?php
 class cmsController {
 
-    public static $options_cache = array();
+    private static $controllers;
 
     public $name;
     public $title;
@@ -9,10 +9,13 @@ class cmsController {
     public $request;
     public $current_action;
     public $current_params;
+    public $options;
 
     protected $useOptions = false;
 
     function __construct($request){
+
+        self::loadControllers();
 
         $this->name = $this->name ? $this->name : mb_strtolower(get_called_class());
 
@@ -46,47 +49,41 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Загружает и возвращает опции контроллера,
-     * заполняя отсутсвующие из них значениями по-умолчанию
+     * Загружает и возвращает опции текущего контроллера,
      * @return array
      */
     public function getOptions(){
 
-        $options = self::loadOptions($this->name);
-
-        $form = $this->getForm('options', false, 'backend/');
-
-        if (!$form) { return array(); }
-
-        $options = $form->parse(new cmsRequest($options));
-
-        return $options;
+        return (array)self::loadOptions($this->name);
 
     }
 
+    private static function loadControllers() {
+
+        if(!isset(self::$controllers)){
+
+            $model = new cmsModel();
+
+            self::$controllers = $model->get('controllers', function ($item, $model) {
+                $item['options'] = cmsModel::yamlToArray($item['options']);
+                return $item;
+            }, 'name');
+
+        }
+
+    }
     /**
      * Загружает опции контроллера
      * @param string $controller_name
      * @return array
      */
-    static function loadOptions($controller_name){
+    public static function loadOptions($controller_name){
 
-        if (isset(self::$options_cache[$controller_name])){
-            return self::$options_cache[$controller_name];
+        if (isset(self::$controllers[$controller_name]['options'])){
+            return self::$controllers[$controller_name]['options'];
         }
 
-        $model = new cmsModel();
-
-        $model->filterEqual('name', $controller_name);
-
-        $options = $model->getFieldFiltered('controllers', 'options');
-
-        if ($options){
-            $options = cmsModel::yamlToArray($options);
-            self::$options_cache[$controller_name] = $options;
-        }
-
-        return $options;
+        return array();
 
     }
 

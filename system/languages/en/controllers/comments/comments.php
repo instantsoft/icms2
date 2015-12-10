@@ -60,3 +60,4 @@
 
 	define('LANG_COMMENTS_UPDATE_USER_RATING',	'Rating from comments can affect for author rating');
 	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Increase/Decrease in author rating for +/- in comments');
+    define('LANG_PERM_OPTION_FULL_DELETE',	'All full delete');

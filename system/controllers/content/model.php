@@ -226,9 +226,21 @@ class modelContent extends cmsModel{
             return $this;
         }
 
+        self::$all_ctypes = $this->getContentTypesFiltered();
+
+        return $this;
+
+    }
+
+    public function getContentTypes(){
+        return self::$all_ctypes;
+    }
+
+    public function getContentTypesFiltered(){
+
         $this->useCache('content.types');
 
-        self::$all_ctypes = $this->get('content_types', function($item, $model){
+        return $this->get('content_types', function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['labels'] = cmsModel::yamlToArray($item['labels']);
@@ -237,14 +249,10 @@ class modelContent extends cmsModel{
 
         });
 
-        return $this;
-
     }
 
-    public function getContentTypes(){
-
-        return self::$all_ctypes;
-
+    public function getContentTypesCountFiltered(){
+        return $this->getCount('content_types');
     }
 
     public function getContentTypesNames(){
@@ -1705,6 +1713,8 @@ class modelContent extends cmsModel{
 
         $this->deletePropsValues($ctype_name, $id);
 
+        $this->filterEqual('item_id', $item['id'])->deleteFiltered($table_name.'_cats_bind');
+
         $success = $this->delete($table_name, $id);
 
         if($success){
@@ -1796,6 +1806,7 @@ class modelContent extends cmsModel{
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
 
         $this->join('{users}', 'u', 'u.id = i.user_id');
