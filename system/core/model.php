@@ -38,12 +38,12 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    protected function useCache($key){
-        $this->cache_key = $key;
+    public function useCache($key){
+        $this->cache_key = $key; return $this;
     }
 
     protected function stopCache(){
-        $this->cache_key = false;
+        $this->cache_key = false;  return $this;
     }
 
 //============================================================================//

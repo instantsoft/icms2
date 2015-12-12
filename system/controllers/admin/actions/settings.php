@@ -42,6 +42,10 @@ class actionAdminSettings extends cmsAction {
                     }
                 }
 
+                if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
+                    files_clear_directory($config->cache_path.'data/');
+                }
+
                 $result = $config->save($values);
 
                 if (!$result){

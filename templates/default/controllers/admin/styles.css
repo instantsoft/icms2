@@ -22,7 +22,9 @@ h1 {
     line-height:50px;
 
 }
-
+h1+h2 {
+    margin-top: -5px;
+}
 h1 span, h2 span { color:#68809B; }
 
 a, a.ajaxlink { color: #34495e; }

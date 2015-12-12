@@ -338,11 +338,6 @@ aside .widget_tabbed > .tabs .links a {
   .widget_content_slider .items .item {
     padding: 8px;
   }
-  .wg_sl_title {
-    display: block;
-    height: 32px;
-    overflow: hidden;
-  }
 }
 
 /* ========================================================================== */

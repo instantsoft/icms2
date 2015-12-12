@@ -70,6 +70,7 @@
     define('LANG_DATABASE_PASS',            'Password');
     define('LANG_DATABASE_BASE',            'Database');
     define('LANG_DATABASE_ENGINE',          'Database engine');
+    define('LANG_DATABASE_ENGINE_HINT',     'Do not know what to choose? Choose MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
     define('LANG_DATABASE_USERS_TABLE',     'Users table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');

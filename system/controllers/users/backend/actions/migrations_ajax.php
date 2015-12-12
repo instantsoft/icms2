@@ -8,23 +8,21 @@ class actionUsersMigrationsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('migrations');
 
-        $users_model = cmsCore::getModel('users');
-
-        $users_model->setPerPage(admin::perpage);
+        $this->model->setPerPage(admin::perpage);
 
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
         if ($filter_str){
             parse_str($filter_str, $filter);
-            $users_model->applyGridFilter($grid, $filter);
+            $this->model->applyGridFilter($grid, $filter);
         }
 
-        $total = $users_model->getMigrationRulesCount();
+        $total = $this->model->getMigrationRulesCount();
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
         $pages = ceil($total / $perpage);
 
-        $rules = $users_model->getMigrationRules();
+        $rules = $this->model->getMigrationRules();
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $rules, $total, $pages);
 

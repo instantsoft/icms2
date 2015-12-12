@@ -29,7 +29,7 @@ class actionPhotosUpload extends cmsAction{
         $ctype = $content_model->getContentTypeByName('albums');
 
 		$albums = $content_model->
-					filterEqual('user_id', $user->id)->		
+					filterEqual('user_id', $user->id)->
 					filterOr()->
 					filterEqual('is_public', 1)->
 					orderByList(array(
@@ -119,35 +119,35 @@ class actionPhotosUpload extends cmsAction{
         }
 
 		$preset = array('width' => 600, 'height'=>460, 'is_square'=>false, 'is_watermark'=>false);
-		
+
 		if (!empty($this->options['preset'])){
 			$preset = cmsCore::getModel('images')->getPresetByName($this->options['preset']);
 		}
-		
+
         $result['paths'] = array(
-            'big' => $uploader->resizeImage($result['path'], array('width'=>$preset['width'], 'height'=>$preset['height'], 'square'=>$preset['is_square'])),
+            'big' => $uploader->resizeImage($result['path'], array('width'=>$preset['width'], 'height'=>$preset['height'], 'square'=>$preset['is_square'], 'quality'=>(($preset['is_watermark'] && !empty($preset['wm_image'])) ? 100 : $preset['quality']))),
             'normal' => $uploader->resizeImage($result['path'], array('width'=>160, 'height'=>160, 'square'=>true)),
             'small' => $uploader->resizeImage($result['path'], array('width'=>64, 'height'=>64, 'square'=>true)),
 			'original' => $result['url']
         );
 
 		if ($preset['is_watermark'] && !empty($preset['wm_image'])){
-			$images_controller = cmsCore::getController('images');
-			$images_controller->addWatermark(
-					$result['paths']['big'], 
-					$preset['wm_image']['original'], 
-					$preset['wm_origin'], 
-					$preset['wm_margin']
+			img_add_watermark(
+					$result['paths']['big'],
+					$preset['wm_image']['original'],
+					$preset['wm_origin'],
+					$preset['wm_margin'],
+					$preset['quality']
 			);
 		}
-		
+
         $result['filename'] = basename($result['path']);
 
 		if (empty($this->options['is_origs'])){
 			@unlink($result['path']);
 			unset($result['paths']['original']);
 		}
-		
+
         unset($result['path']);
 
         $result['url'] = $config->upload_host . '/' . $result['paths']['small'];

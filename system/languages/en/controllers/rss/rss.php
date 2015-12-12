@@ -4,7 +4,6 @@
     define('LANG_RSS_FEED_TITLE',      'RSS feed');
     define('LANG_RSS_FEED_IS_CACHE',   'Cache');
     define('LANG_RSS_CTYPE_ENABLE_FEED',     'Enable RSS feed');
-
     define('LANG_RSS_FEED_BASIC',           'Basic options');
     define('LANG_RSS_FEED_DESC',            'Feed description');
     define('LANG_RSS_FEED_IMAGE',           'Feed image');
@@ -19,5 +18,6 @@
     define('LANG_RSS_FEED_MAP_DATE',        'Created');
     define('LANG_RSS_FEED_MAP_IMAGE',       'Item image');
     define('LANG_RSS_FEED_MAP_IMAGE_SIZE',  'Item image size');
-
     define('LANG_RSS_FEED_TITLE_FORMAT',    '%s :: %s');
+    define('LANG_RSS_FEED_TEMPLATE',        'RSS feed template');
+    define('LANG_RSS_FEED_TEMPLATE_HINT',   'Template file in controllers/rss/ directory');

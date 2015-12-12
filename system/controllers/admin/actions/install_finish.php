@@ -50,6 +50,11 @@ class actionAdminInstallFinish extends cmsAction {
 
         }
 
+        $cache = cmsCache::getInstance();
+
+        $cache->clean('controllers');
+        $cache->clean('events');
+
         return '';
 
     }

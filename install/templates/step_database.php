@@ -28,6 +28,7 @@
         </div>
 
         <div class="field">
+            <div class="hint"><?php echo LANG_DATABASE_ENGINE_HINT; ?></div>
             <label><?php echo LANG_DATABASE_ENGINE; ?></label>
             <select class="input" name="db[engine]">
                 <option value="MyISAM">MyISAM</option>

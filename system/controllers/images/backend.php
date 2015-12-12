@@ -26,8 +26,6 @@ class backendImages extends cmsBackend{
             return false;
         }
 
-        $uploader = new cmsUploader();
-
         $default_root = cmsConfig::get('upload_path').'default/';
 
         foreach ($this->default_images_types as $image_type) {
@@ -66,7 +64,7 @@ class backendImages extends cmsBackend{
 
                 if (!isset($preset['height'])) { $preset['height'] = $preset['width']; }
 
-                $uploader->imageCopyResized($default_root.$original_file, $default_root.$file_name, $preset['width'], $preset['height'], $preset['is_square'], 30);
+                img_resize($default_root.$original_file, $default_root.$file_name, $preset['width'], $preset['height'], $preset['is_square'], 30);
 
             }
 

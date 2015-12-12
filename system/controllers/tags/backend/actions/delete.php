@@ -6,9 +6,7 @@ class actionTagsDelete extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $tags_model = cmsCore::getModel('tags');
-
-        $tags_model->deleteTag($id);
+        $this->model->deleteTag($id);
 
         $this->redirectBack();
 

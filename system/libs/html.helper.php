@@ -114,8 +114,12 @@ function href_to_rel($controller, $action='', $params=false){
  * Возвращает ссылку на текущую страницу
  * @return string
  */
-function href_to_current(){
-    return $_SERVER['REQUEST_URI'];
+function href_to_current($add_host=false){
+    if($add_host){
+        return cmsConfig::get('host').$_SERVER['REQUEST_URI'];
+    } else {
+        return $_SERVER['REQUEST_URI'];
+    }
 }
 
 /**

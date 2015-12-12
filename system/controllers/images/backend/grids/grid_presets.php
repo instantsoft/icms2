@@ -28,6 +28,13 @@ function grid_presets($controller){
 				return $val . ' x ' . $row['height'];
 			}
         ),
+        'quality' => array(
+            'title' => LANG_IMAGES_PRESET_QUALITY,
+			'handler' => function($val, $row){
+				return $val.' %';
+			},
+            'width' => 70
+        ),
         'is_square' => array(
             'title' => LANG_IMAGES_PRESET_SQUARE,
 			'flag' => true,

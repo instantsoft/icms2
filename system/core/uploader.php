@@ -47,8 +47,9 @@ class cmsUploader {
         $user->increaseFilesCount();
 
         if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['quality'])) { $size['quality'] = 90; }
 
-        if ($this->imageCopyResized($source_file, $dest_file, $size['width'], $size['height'], $size['square'])) {
+        if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['square'], $size['quality'])) {
 
             $url = str_replace($cfg->upload_path, '', $dest_file);
 
@@ -303,6 +304,15 @@ class cmsUploader {
         $upload_dir = dirname($destination);
         if (!is_writable($upload_dir)){	@chmod($upload_dir, 0777); }
 
+        if (!is_writable($upload_dir)){
+            return array(
+                'success' => false,
+                'error' => LANG_UPLOAD_ERR_CANT_WRITE,
+                'name' => $orig_name,
+                'path' => ''
+            );
+        }
+
         return array(
             'success' => @move_uploaded_file($source, $destination),
             'path'  => $destination,
@@ -360,151 +370,11 @@ class cmsUploader {
 
     }
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Это устаревший метод, используйте функцию img_resize
+     */
     public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
-
-        if (!file_exists($src)) {
-            return false;
-        }
-
-        $upload_dir = dirname($dest);
-
-        if (!is_writable($upload_dir)) {
-
-            @chmod($upload_dir, 0777);
-
-            if (!is_writable($upload_dir)) {
-                return false;
-            }
-
-        }
-
-        $size = getimagesize($src);
-
-        if ($size === false) {
-            return false;
-        }
-
-        $new_width  = $size[0];
-        $new_height = $size[1];
-
-        // Определяем исходный формат по MIME-информации, предоставленной
-        // функцией getimagesize, и выбираем соответствующую формату
-        // imagecreatefrom-функцию.
-        $format = mb_strtolower(mb_substr($size['mime'], mb_strpos($size['mime'], '/') + 1));
-        $icfunc = 'imagecreatefrom'.$format;
-        $igfunc = 'image'.$format;
-
-        if (!function_exists($icfunc)) {
-            return false;
-        }
-
-        if (!function_exists($igfunc)) {
-            return false;
-        }
-
-        if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-
-            return copy($src, $dest);
-
-        }
-
-        if ($format == 'png') {
-            $quality = (10 - ceil($quality / 10));
-        }
-
-        if ($format == 'gif') {
-            $quality = NULL;
-        }
-
-        $isrc = $icfunc($src);
-
-        if ($is_square) {
-
-            $idest = imagecreatetruecolor($maxwidth, $maxwidth);
-
-            if ($format == 'jpeg') {
-
-                imagefill($idest, 0, 0, 0xFFFFFF);
-
-            } else if ($format == 'png' || $format == 'gif') {
-
-                $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-                imagefill($idest, 0, 0, $trans);
-                imagealphablending($idest, true);
-                imagesavealpha($idest, true);
-
-            }
-
-            // вырезаем квадратную серединку по x, если фото горизонтальное
-            if ($new_width > $new_height) {
-
-                imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-
-            }
-
-            // вырезаем квадратную верхушку по y,
-            if ($new_width < $new_height) {
-                imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-            }
-
-            // квадратная картинка масштабируется без вырезок
-            if ($new_width == $new_height) {
-                imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
-            }
-
-        } else {
-
-            if ($new_width > $maxwidth) {
-
-                $wscale = $maxwidth / $new_width;
-
-                $new_width  *= $wscale;
-                $new_height *= $wscale;
-
-            }
-
-            if ($new_height > $maxheight) {
-
-                $hscale = $maxheight / $new_height;
-
-                $new_width  *= $hscale;
-                $new_height *= $hscale;
-
-            }
-
-            $idest = imagecreatetruecolor($new_width, $new_height);
-
-            if ($format == 'jpeg') {
-
-                imagefill($idest, 0, 0, 0xFFFFFF);
-
-            } else if ($format == 'png' || $format == 'gif') {
-
-                $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-                imagefill($idest, 0, 0, $trans);
-                imagealphablending($idest, true);
-                imagesavealpha($idest, true);
-
-            }
-
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $size[0], $size[1]);
-
-        }
-
-        if ($format == 'jpeg') {
-            imageinterlace($idest, 1);
-        }
-
-        // вывод картинки и очистка памяти
-        $igfunc($idest, $dest, $quality);
-        imagedestroy($isrc);
-        imagedestroy($idest);
-
-        return true;
-
+        return img_resize($src, $dest, $maxwidth, $maxheight, $is_square, $quality);
     }
 
 //============================================================================//

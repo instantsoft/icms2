@@ -131,6 +131,14 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}controllers` ADD `is_external` TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'Сторонний компонент' AFTER `is_backend`");
     }
 
+    if(!$core->db->isFieldExists('rss_feeds', 'template')){
+        $core->db->query("ALTER TABLE  `{#}rss_feeds` ADD  `template` VARCHAR(30) NOT NULL DEFAULT  'feed' COMMENT  'Шаблон ленты';");
+    }
+
+    if(!$core->db->isFieldExists('images_presets', 'quality')){
+        $core->db->query("ALTER TABLE  `{#}images_presets` ADD  `quality` TINYINT(1) NOT NULL DEFAULT  '90';");
+    }
+
     if(!$core->db->getRowsCount('perms_rules', "controller = 'content' AND name = 'disable_comments'", 1)){
         $core->db->query("INSERT INTO `{#}perms_rules` (`controller`,`name`,`type`,`options`) VALUES ('content','disable_comments','flag', NULL)");
     }

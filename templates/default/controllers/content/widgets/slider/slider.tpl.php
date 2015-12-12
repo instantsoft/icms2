@@ -39,7 +39,7 @@
                                     <!--/noindex-->
                                 <?php } ?>
                             <?php } ?>
-                            <span class="date"><?php html(string_date_age_max($item['date_pub'], true)); ?></span>
+                            <span class="date"><?php html(string_date_age_max($first_item['date_pub'], true)); ?></span>
                         </div>
                     </div>
                 </a>

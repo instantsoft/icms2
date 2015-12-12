@@ -1,6 +1,12 @@
 <?php
 class cmsCacheFiles {
 
+    private $cache_path;
+
+    public function __construct() {
+        $this->cache_path = cmsConfig::get('cache_path').'data/';
+    }
+
     public function set($key, $value, $ttl){
 
         $data = array(
@@ -12,6 +18,8 @@ class cmsCacheFiles {
         list($path, $file) = $this->getPathAndFile($key);
 
         @mkdir($path, 0777, true);
+        @chmod($path, 0777);
+        @chmod(pathinfo($path, PATHINFO_DIRNAME), 0777);
 
         return file_put_contents($file, serialize($data));
 
@@ -48,13 +56,16 @@ class cmsCacheFiles {
 
         if ($key){
 
-            $path = cmsConfig::get('cache_path') . str_replace('.', '/', $key);
+            $path = $this->cache_path . str_replace('.', '/', $key);
 
+            if(is_file($path.'.dat')){
+                @unlink($path.'.dat');
+            }
             return files_remove_directory($path);
 
         } else {
 
-            return files_clear_directory(cmsConfig::get('cache_path'));
+            return files_clear_directory($this->cache_path);
 
         }
 
@@ -62,7 +73,7 @@ class cmsCacheFiles {
 
     public function getPathAndFile($key){
 
-        $path = cmsConfig::get('cache_path') . str_replace('.', '/', $key);
+        $path = $this->cache_path . str_replace('.', '/', $key);
         $file = explode('/', $path);
 
         $path = dirname($path);

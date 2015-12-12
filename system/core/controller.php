@@ -64,7 +64,7 @@ class cmsController {
 
             $model = new cmsModel();
 
-            self::$controllers = $model->get('controllers', function ($item, $model) {
+            self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
                 $item['options'] = cmsModel::yamlToArray($item['options']);
                 return $item;
             }, 'name');
@@ -99,7 +99,11 @@ class cmsController {
 
         $model->filterEqual('name', $controller_name);
 
-        return $model->updateFiltered('controllers', array('options' => $options));
+        $model->updateFiltered('controllers', array('options' => $options));
+
+        cmsCache::getInstance()->clean('controllers');
+
+        return true;
 
     }
 
