@@ -1,13 +1,5 @@
 <?php
-/******************************************************************************/
-//                                                                            //
-//                             InstantMedia 2015                              //
-//	 		  http://www.instantmedia.ru/, support@instantmedia.ru            //
-//                               written by Fuze                              //
-//                  http://www.instantvideo.ru/copyright.html                 //
-//                         © ИП Бессмельцев И. В., 2015                       //
-//                                                                            //
-/******************************************************************************/
+
 class onContentRssContentControllerForm extends cmsAction {
 
     public function run($data){
