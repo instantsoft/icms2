@@ -97,7 +97,7 @@ class actionContentItemView extends cmsAction {
         }
 
         // Рейтинг
-        if ($ctype['is_rating']){
+        if ($ctype['is_rating'] &&  $this->isControllerEnabled('rating')){
 
             $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
                 'target_controller' => $this->name,
@@ -111,7 +111,7 @@ class actionContentItemView extends cmsAction {
         }
 
         // Комментарии
-        if ($ctype['is_comments'] && $item['is_approved'] && $item['is_comments_on']){
+        if ($ctype['is_comments'] && $item['is_approved'] && $item['is_comments_on'] &&  $this->isControllerEnabled('comments')){
 
             $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
                 'target_controller' => $this->name,

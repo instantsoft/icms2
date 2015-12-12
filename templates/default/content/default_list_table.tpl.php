@@ -56,7 +56,7 @@
                                 </a>
                             </td>
                         <?php } ?>
-                        <?php if ($ctype['is_rating']){ ?>
+                        <?php if (!empty($item['rating_widget'])){ ?>
                             <td class="rating">
                                 <?php echo $item['rating_widget']; ?>
                             </td>

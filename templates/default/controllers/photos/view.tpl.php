@@ -94,7 +94,7 @@
     </div>
 
     <div class="info_bar">
-        <?php if ($ctype['is_rating']){ ?>
+        <?php if (!empty($photo['rating_widget'])){ ?>
             <div class="bar_item bi_rating">
                 <?php echo $photo['rating_widget']; ?>
             </div>
@@ -120,7 +120,7 @@
     if ($html) { echo $html; }
 ?>
 
-<?php if ($ctype['is_comments']){ ?>
+<?php if (!empty($photo['comments_widget'])){ ?>
     <?php echo $photo['comments_widget']; ?>
 <?php } ?>
 

@@ -634,6 +634,11 @@ class cmsCore {
         // загружаем контроллер
         $controller = self::getController($this->uri_controller, $this->request);
 
+        // контроллер включен?
+        if(!$controller->isEnabled()){
+            self::error404();
+        }
+
         // сохраняем в контроллере название текущего экшена
         $controller->current_action = $this->uri_action;
 

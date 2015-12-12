@@ -58,6 +58,33 @@ class cmsController {
 
     }
 
+    /**
+     * Проверяет включен ли текущий контроллер
+     * @return boolean
+     */
+    public function isEnabled() {
+        return $this->isControllerEnabled($this->name);
+    }
+
+    public function isControllerEnabled($name) {
+
+        // проверяем только те, которые зарегистрированы в базе
+        if (isset(self::$controllers[$name]['is_enabled'])){
+            return self::$controllers[$name]['is_enabled'];
+        }
+
+        return true;
+
+    }
+
+    public static function enabled($name) {
+        self::loadControllers();
+        if (isset(self::$controllers[$name]['is_enabled'])){
+            return self::$controllers[$name]['is_enabled'];
+        }
+        return true;
+    }
+
     private static function loadControllers() {
 
         if(!isset(self::$controllers)){

@@ -224,7 +224,7 @@ class content extends cmsFrontend {
         }
 
         // Рейтинг
-        if ($ctype['is_rating'] && $items){
+        if ($ctype['is_rating'] && $items &&  $this->isControllerEnabled('rating')){
 
             $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
                 'target_controller' => $this->name,
