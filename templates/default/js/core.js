@@ -204,3 +204,10 @@ function toggleFilter(){
 function goBack(){
     window.history.go(-1);
 }
+
+function widgetUpdated(){
+
+    icms.modal.close();	
+    
+    location.reload();
+}
