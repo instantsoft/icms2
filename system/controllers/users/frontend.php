@@ -89,6 +89,8 @@ class users extends cmsFrontend {
 					$controller = $this->tabs_controllers[$tab['controller']];
 				}
 
+                if(!$controller->isEnabled()){ continue; }
+
 				$tab_info = $controller->runHook('user_tab_info', array('profile'=>$profile, 'tab_name'=>$tab['name']));
 
 				if ($tab_info == false) {
