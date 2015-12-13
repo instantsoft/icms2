@@ -137,6 +137,10 @@ class formAdminSettings extends cmsForm {
                             return $items;
                         }
                     )),
+                            
+                    new fieldCheckbox('breadcrumbs', array(
+                        'title' => LANG_CP_SETTINGS_BREADCRUMBS_VIEW,
+                    )),
 
                     new fieldCheckbox('min_html', array(
                         'title' => LANG_CP_SETTINGS_HTML_MINIFY,
