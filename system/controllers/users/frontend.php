@@ -83,13 +83,13 @@ class users extends cmsFrontend {
 					'url' => href_to($this->name, $profile['id'], $tab['name'])
 				);
 
+                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+
 				if (empty($this->tabs_controllers[$tab['controller']])){
 					$controller = cmsCore::getController($tab['controller'], $this->request);
 				} else {
 					$controller = $this->tabs_controllers[$tab['controller']];
 				}
-
-                if(!$controller->isEnabled()){ continue; }
 
 				$tab_info = $controller->runHook('user_tab_info', array('profile'=>$profile, 'tab_name'=>$tab['name']));
 
