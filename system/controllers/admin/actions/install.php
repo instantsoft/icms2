@@ -24,8 +24,6 @@ class actionAdminInstall extends cmsAction {
 
     private function showPackageInfo($package_name, $is_no_extract=false){
 
-        $config = cmsConfig::getInstance();
-
         if (!$is_no_extract) { $this->extractPackage($package_name); }
 
         $manifest = $this->parsePackageManifest();
@@ -113,7 +111,7 @@ class actionAdminInstall extends cmsAction {
             $manifest['contents'] = $this->getPackageContentsList();
         } else {
 			$manifest['contents'] = false;
-		}		
+		}
 
         if (isset($manifest['info']['image'])){
             $manifest['info']['image'] = $config->upload_host . '/' .
@@ -127,9 +125,7 @@ class actionAdminInstall extends cmsAction {
 
     private function getPackageContentsList(){
 
-        $config = cmsConfig::getInstance();
-
-        $path = $config->upload_path . $this->installer_upload_path . '/' . 'package';
+        $path = cmsConfig::get('upload_path') . $this->installer_upload_path . '/' . 'package';
 
         if (!is_dir($path)) { return false; }
 
@@ -139,16 +135,25 @@ class actionAdminInstall extends cmsAction {
 
     private function extractPackage($package_name){
 
-        $config = cmsConfig::getInstance();
-
-        $zip_dir = $config->upload_path . $this->installer_upload_path;
+        $zip_dir = cmsConfig::get('upload_path') . $this->installer_upload_path;
         $zip_file =  $zip_dir . '/' . $package_name;
 
         $zip = new ZipArchive();
 
-        if (!$zip->open( $zip_file )){
-            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR, 'error');
+        $res = $zip->open($zip_file);
+
+        if ($res !== true){
+
+            if(defined('LANG_ZIP_ERROR_'.$res)){
+                $zip_error = constant('LANG_ZIP_ERROR_'.$res);
+            } else {
+                $zip_error = '';
+            }
+
+            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR.($zip_error ? ': '.$zip_error : ''), 'error');
+
             $this->redirectBack();
+
         }
 
         $zip->extractTo($zip_dir);
@@ -162,13 +167,11 @@ class actionAdminInstall extends cmsAction {
 
     private function uploadPackage(){
 
-        $config = cmsConfig::getInstance();
-
         $uploader = new cmsUploader();
 
         if (!$uploader->isUploaded( $this->upload_name )){ return false; }
 
-        files_clear_directory($config->upload_path . $this->installer_upload_path);
+        files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
         $result = $uploader->uploadForm($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
 

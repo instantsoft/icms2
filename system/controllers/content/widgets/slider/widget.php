@@ -4,6 +4,7 @@ class widgetContentSlider extends cmsWidget {
 
     public function run(){
 
+        $cat_id           = $this->getOption('category_id');
         $ctype_id         = $this->getOption('ctype_id');
         $dataset_id       = $this->getOption('dataset');
         $image_field      = $this->getOption('image_field');
@@ -17,6 +18,11 @@ class widgetContentSlider extends cmsWidget {
 
         $ctype = $model->getContentType($ctype_id);
         if (!$ctype) { return false; }
+
+		if ($cat_id){
+			$model->filterCategoryId($ctype['name'], $cat_id, true);
+			$model->groupBy('i.id');
+		}
 
         if ($dataset_id){
 
@@ -41,6 +47,9 @@ class widgetContentSlider extends cmsWidget {
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
         $model->filterHiddenParents();
+
+		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
+		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 
         $items = $model->limit($limit)->getContentItems($ctype['name']);
         if (!$items) { return false; }

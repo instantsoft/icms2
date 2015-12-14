@@ -84,12 +84,6 @@
                 </div>
 
                 <?php
-                    $is_tags = $ctype['is_tags'] &&
-                            !empty($ctype['options']['is_tags_in_list']) &&
-                            $item['tags'];
-                ?>
-
-                <?php
                     $show_bar = $ctype['is_rating'] ||
                                 $fields['date_pub']['is_in_list'] ||
                                 $fields['user']['is_in_list'] ||

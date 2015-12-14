@@ -6,6 +6,8 @@ class onUsersCronMigration extends cmsAction {
 
         $rules = $this->model->filterEqual('is_active', 1)->getMigrationRules();
 
+        if(!$rules){ return; }
+
         foreach ($rules as $rule){
 
             extract($rule);
@@ -13,7 +15,7 @@ class onUsersCronMigration extends cmsAction {
             $this->model->filterGroup( $group_from_id );
 
             $users = $this->model->getUsers();
-			
+
             if (!$users) { continue; }
 
 			$passed_field = $passed_from ? 'date_group' : 'date_reg';
@@ -30,7 +32,7 @@ class onUsersCronMigration extends cmsAction {
                     $days = round(($now_time - $start_time)/60/60/24);
 
                     if ($days < $passed_days){ $is_migrate = false; }
-					
+
                 }
 
                 if ($is_rating){
@@ -56,7 +58,7 @@ class onUsersCronMigration extends cmsAction {
                     'groups' => $user['groups'],
                     'date_group' => null
                 ));
-				
+
                 if (!$is_notify) { continue; }
 
                 $messenger = cmsCore::getController('messages');
@@ -66,7 +68,7 @@ class onUsersCronMigration extends cmsAction {
                 $messenger->sendNoticePM(array('content' => nl2br($notify_text)));
 
             }
-			
+
         }
 
     }

@@ -211,7 +211,7 @@ function href_to_rel($controller, $action='', $params=false){
 	$ctype_default = cmsConfig::get('ctype_default');
 
 	if ($ctype_default && $ctype_default == $controller){
-		if (preg_match('/([a-zA-Z0-9\-\/]+).html$/i', $action)){
+		if (preg_match('/([a-z0-9\-\/{}]+).html$/i', $action)){
 			$controller = '';
 		}
 	}
@@ -260,6 +260,12 @@ function html_attr_str($attributes){
     unset($attributes['class']);
     if (sizeof($attributes)){
         foreach($attributes as $key=>$val){
+            if(is_bool($val)){
+                if($val === true){
+                    $attr_str .= "{$key} ";
+                }
+                continue;
+            }
             $attr_str .= "{$key}=\"{$val}\" ";
         }
     }
@@ -560,10 +566,10 @@ function html_select($name, $items, $selected = '', $attributes = array()){
     if($optgroup !== false){
         $html .= "\t".'</optgroup>'."\n";
     }
-    
+
     $html .= '</select>'."\n";
     return $html;
-    
+
 }
 
 function html_select_range($name, $start, $end, $step, $add_lead_zero=false, $selected='', $attributes=array()){

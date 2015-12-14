@@ -419,3 +419,13 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
+
+    define('LANG_ZIP_ERROR_10', 'File already exists');
+    define('LANG_ZIP_ERROR_21', 'Zip archive inconsistent');
+    define('LANG_ZIP_ERROR_18', 'Invalid argument');
+    define('LANG_ZIP_ERROR_14', 'Malloc failure');
+    define('LANG_ZIP_ERROR_9', 'No such file');
+    define('LANG_ZIP_ERROR_19', 'Not a zip archive');
+    define('LANG_ZIP_ERROR_11', 'Can\'t open file');
+    define('LANG_ZIP_ERROR_5', 'Read error');
+    define('LANG_ZIP_ERROR_4', 'Seek error');

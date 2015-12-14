@@ -1276,7 +1276,7 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getItemSlug($ctype, $item, $fields){
+    public function getItemSlug($ctype, $item, $fields, $check_slug = true){
 
         $pattern = trim($ctype['url_pattern'], '/');
 
@@ -1297,7 +1297,7 @@ class modelContent extends cmsModel{
         foreach($names as $idx=>$field_name){
             if (!empty($item[$field_name])){
 
-                $value = $item[$field_name];
+                $value = str_replace('/', '', $item[$field_name]);
 
                 if (isset($fields[$field_name])){
                     $value = $fields[$field_name]['handler']->getStringValue($value);
@@ -1309,7 +1309,19 @@ class modelContent extends cmsModel{
             }
         }
 
-        return lang_slug($pattern);
+        $slug = lang_slug($pattern);
+
+        if(!$check_slug){
+            return $slug;
+        }
+
+        if($this->filterNotEqual('id', $item['id'])->
+                filterEqual('slug', $slug)->
+                getFieldFiltered($this->table_prefix.$ctype['name'], 'id')){
+            $slug .= uniqid();
+        }
+
+        return $slug;
 
     }
 

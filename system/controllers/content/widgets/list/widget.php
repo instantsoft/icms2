@@ -52,6 +52,9 @@ class widgetContentList extends cmsWidget {
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
         $model->filterHiddenParents();
 
+		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
+		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
+
         $items = $model->
                     limit($limit)->
                     getContentItems($ctype['name']);

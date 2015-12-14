@@ -240,6 +240,7 @@
     define('ERR_VALIDATE_REGEXP',            'Invalid format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and digits');
     define('ERR_VALIDATE_SYSNAME',           'Only letters, digits and underscores');
+    define('ERR_VALIDATE_SLUG',              'Only letters (lower case), digits, hyphen and forward slash');
     define('ERR_VALIDATE_DIGITS',            'Only digits');
     define('ERR_VALIDATE_NUMBER',            'Enter a number');
     define('ERR_VALIDATE_UNIQUE',            'Value is already used');

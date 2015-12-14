@@ -4,7 +4,7 @@ class formWidgetContentSliderOptions extends cmsForm {
 
     public function init($options=false) {
 
-		$cats_list     = array();
+		$cats_list     = array('0' => '');
         $datasets_list = array('0' => '');
         $fields_list   = array('' => '');
 

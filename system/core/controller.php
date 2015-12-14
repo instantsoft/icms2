@@ -701,19 +701,25 @@ class cmsController {
 
     public function validate_email($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
+        if (!preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
         return true;
     }
 
     public function validate_alphanumeric($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
+        if (!preg_match("/^([a-z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
         return true;
     }
 
     public function validate_sysname($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9\_]*)$/i", $value)){ return ERR_VALIDATE_SYSNAME; }
+        if (!preg_match("/^([a-z0-9\_]*)$/i", $value)){ return ERR_VALIDATE_SYSNAME; }
+        return true;
+    }
+
+    public function validate_slug($value){
+        if (empty($value)) { return true; }
+        if (!preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
         return true;
     }
 

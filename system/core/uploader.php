@@ -112,15 +112,18 @@ class cmsUploader {
         $dest_ext   = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
         if ($allowed_ext !== false){
-            $allowed_ext = explode(",", $allowed_ext);
+
+            $allowed_ext = explode(',', $allowed_ext);
             foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., '))); }
-            if (!in_array($dest_ext, $allowed_ext)){
+
+            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
                 return array(
                     'error' => LANG_UPLOAD_ERR_MIME,
                     'success' => false,
                     'name' => $dest_name
                 );
             }
+
         }
 
         if ($allowed_size){
@@ -133,16 +136,17 @@ class cmsUploader {
             }
         }
 
+        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
+
         if (!$destination){
 
             $user->increaseFilesCount();
-            $dest_dir = $this->getUploadDestinationDirectory();
-            $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) ), 0, 8) . '.' . $dest_ext;
-            $destination = $dest_dir . '/' . $dest_file;
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
 
         } else {
 
-            $destination = $config->upload_path . $destination . '/' . $dest_name;
+            $destination = $config->upload_path . $destination . '/' . $dest_file;
 
         }
 
@@ -163,48 +167,51 @@ class cmsUploader {
      */
     public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
-        $cfg = cmsConfig::getInstance();
         $user = cmsUser::getInstance();
 
-        $dest_size  = 10; //$this->getXHRFileSize();
-
-        if (!$dest_size){
-            return array(
-                'success' => false,
-                'error' => LANG_UPLOAD_ERR_NO_FILE
-            );
-        }
-
-        $dest_name  = files_sanitize_name($_GET['qqfile']);
-        $dest_info  = pathinfo($dest_name);
-        $dest_ext   = $dest_info['extension'];
+        $dest_name = files_sanitize_name($_GET['qqfile']);
+        $dest_ext  = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
         if ($allowed_ext !== false){
-            $allowed_ext = explode(",", $allowed_ext);
+
+            $allowed_ext = explode(',', $allowed_ext);
             foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = trim($ext); }
-            if (!in_array($dest_ext, $allowed_ext)){
+
+            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
                 return array(
                     'error' => LANG_UPLOAD_ERR_MIME,
                     'success' => false,
                     'name' => $dest_name
                 );
             }
+
         }
+
+        if ($allowed_size){
+            if ($this->getXHRFileSize() > $allowed_size){
+                return array(
+                    'error' => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'success' => false,
+                    'name' => $dest_name
+                );
+            }
+        }
+
+        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
 
         if (!$destination){
 
             $user->increaseFilesCount();
-            $dest_dir = $this->getUploadDestinationDirectory();
-            $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) ), 0, 8) . '.' . $dest_ext;
-            $destination = $dest_dir . '/' . $dest_file;
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
 
         } else {
 
-            $destination = $cfg->upload_path . $destination . '/' . $dest_file;
+            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
 
         }
 
-        return $this->saveXHRFile($destination, $dest_name, $dest_size);
+        return $this->saveXHRFile($destination, $dest_name);
 
     }
 
@@ -219,7 +226,7 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
-    public function saveXHRFile($destination, $orig_name='', $orig_size=0){
+    public function saveXHRFile($destination, $orig_name=''){
 
         $cfg = cmsConfig::getInstance();
 
@@ -247,7 +254,7 @@ class cmsUploader {
             'path'  => $destination,
             'url' => str_replace($cfg->upload_path, '', $destination),
             'name' => $orig_name,
-            'size' => $orig_size
+            'size' => $realSize
         );
 
     }
@@ -292,7 +299,7 @@ class cmsUploader {
         }
 
         $upload_dir = dirname($destination);
-        if (!is_writable($upload_dir)){	@chmod($upload_dir, 0755); }
+        if (!is_writable($upload_dir)){	@chmod($upload_dir, 0777); }
 
         return array(
             'success' => @move_uploaded_file($source, $destination),
@@ -354,59 +361,143 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
-    public function imageCopyResized($src, $dest, $maxwidth, $maxheight, $is_square=false, $quality=100){
+    public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
 
-        if (!file_exists($src)) { return false; }
+        if (!file_exists($src)) {
+            return false;
+        }
 
         $upload_dir = dirname($dest);
 
-        if (!is_writable($upload_dir)) { @chmod($dest, 0777); }
+        if (!is_writable($upload_dir)) {
+
+            @chmod($upload_dir, 0777);
+
+            if (!is_writable($upload_dir)) {
+                return false;
+            }
+
+        }
 
         $size = getimagesize($src);
 
-        if ($size === false) { return false; }
-
-        $new_width = $size[0];
-        $new_height = $size[1];
-
-        if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-            @copy($src, $dest);
-            return true;
+        if ($size === false) {
+            return false;
         }
 
-        $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
-        $icfunc = "imagecreatefrom" . $format;
-        if (!function_exists($icfunc)) { return false; }
+        $new_width  = $size[0];
+        $new_height = $size[1];
+
+        // Определяем исходный формат по MIME-информации, предоставленной
+        // функцией getimagesize, и выбираем соответствующую формату
+        // imagecreatefrom-функцию.
+        $format = mb_strtolower(mb_substr($size['mime'], mb_strpos($size['mime'], '/') + 1));
+        $icfunc = 'imagecreatefrom'.$format;
+        $igfunc = 'image'.$format;
+
+        if (!function_exists($icfunc)) {
+            return false;
+        }
+
+        if (!function_exists($igfunc)) {
+            return false;
+        }
+
+        if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
+
+            return copy($src, $dest);
+
+        }
+
+        if ($format == 'png') {
+            $quality = (10 - ceil($quality / 10));
+        }
+
+        if ($format == 'gif') {
+            $quality = NULL;
+        }
 
         $isrc = $icfunc($src);
 
         if ($is_square) {
+
             $idest = imagecreatetruecolor($maxwidth, $maxwidth);
-            imagefill($idest, 0, 0, 0xFFFFFF);
-            if ($new_width > $new_height)
-                imagecopyresampled($idest, $isrc, 0, 0, round((max($new_width, $new_height) - min($new_width, $new_height)) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-            if ($new_width < $new_height)
+
+            if ($format == 'jpeg') {
+
+                imagefill($idest, 0, 0, 0xFFFFFF);
+
+            } else if ($format == 'png' || $format == 'gif') {
+
+                $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
+                imagefill($idest, 0, 0, $trans);
+                imagealphablending($idest, true);
+                imagesavealpha($idest, true);
+
+            }
+
+            // вырезаем квадратную серединку по x, если фото горизонтальное
+            if ($new_width > $new_height) {
+
+                imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
+
+            }
+
+            // вырезаем квадратную верхушку по y,
+            if ($new_width < $new_height) {
                 imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-            if ($new_width == $new_height)
+            }
+
+            // квадратная картинка масштабируется без вырезок
+            if ($new_width == $new_height) {
                 imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
+            }
+
         } else {
-            while ($new_width > $maxwidth) {
-                $new_width *= 0.99;
-                $new_height *= 0.99;
+
+            if ($new_width > $maxwidth) {
+
+                $wscale = $maxwidth / $new_width;
+
+                $new_width  *= $wscale;
+                $new_height *= $wscale;
+
             }
-            while ($new_height > $maxheight) {
-                $new_width *= 0.99;
-                $new_height *= 0.99;
+
+            if ($new_height > $maxheight) {
+
+                $hscale = $maxheight / $new_height;
+
+                $new_width  *= $hscale;
+                $new_height *= $hscale;
+
             }
+
             $idest = imagecreatetruecolor($new_width, $new_height);
-            imagefill($idest, 0, 0, 0xFFFFFF);
+
+            if ($format == 'jpeg') {
+
+                imagefill($idest, 0, 0, 0xFFFFFF);
+
+            } else if ($format == 'png' || $format == 'gif') {
+
+                $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
+                imagefill($idest, 0, 0, $trans);
+                imagealphablending($idest, true);
+                imagesavealpha($idest, true);
+
+            }
+
             imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $size[0], $size[1]);
+
         }
 
-        imageinterlace($idest, 1);
+        if ($format == 'jpeg') {
+            imageinterlace($idest, 1);
+        }
 
-        imagejpeg($idest, $dest, $quality);
-
+        // вывод картинки и очистка памяти
+        $igfunc($idest, $dest, $quality);
         imagedestroy($isrc);
         imagedestroy($idest);
 

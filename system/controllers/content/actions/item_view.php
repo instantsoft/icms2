@@ -25,7 +25,7 @@ class actionContentItemView extends cmsAction {
 			}
 		} else {
 			$core = cmsCore::getInstance();
-			if ($config->ctype_default && $config->ctype_default == $core->uri_controller){
+			if ($config->ctype_default && $config->ctype_default == $core->uri_action){
 				$this->redirect(href_to($slug . '.html'), 301);
 			}
 		}
@@ -124,7 +124,7 @@ class actionContentItemView extends cmsAction {
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_before_item", array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
-		if (!empty($ctype['options']['hits_on'])){
+		if (!empty($ctype['options']['hits_on']) && $user->id != $item['user_id'] && !$user->is_admin){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 

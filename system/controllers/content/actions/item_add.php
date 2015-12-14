@@ -49,7 +49,7 @@ class actionContentItemAdd extends cmsAction {
             $groups = $groups_model->getUserGroups($user->id);
 
             if (!$groups && $ctype['is_in_groups_only']){
-                cmsUser::addSessionMessage(sprintf(LANG_CONTENT_IS_IN_GROUPS_ONLY, $ctype['labels']['many']), 'error');
+                cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
                 $this->redirectBack();
             }
 
@@ -124,6 +124,21 @@ class actionContentItemAdd extends cmsAction {
 				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
 			}
 
+            // несколько категорий
+            if (!empty($ctype['options']['is_cats_multi'])){
+                $add_cats = $this->request->get('add_cats');
+                if (is_array($add_cats)){
+                    foreach($add_cats as $index=>$cat_id){
+                        if (!is_numeric($cat_id) || !$cat_id){
+                            unset($add_cats[$index]);
+                        }
+                    }
+                    if ($add_cats){
+                        $item['add_cats'] = $add_cats;
+                    }
+                }
+            }
+
             if (!$errors){
 
                 unset($item['ctype_name']);
@@ -185,20 +200,6 @@ class actionContentItemAdd extends cmsAction {
 				if (!isset($item['is_pub'])) { $item['is_pub'] = $is_pub; }
 				if (!empty($item['is_pub'])) { $item['is_pub'] = $is_pub; }
 
-				if (!empty($ctype['options']['is_cats_multi'])){
-					$add_cats = $this->request->get('add_cats');
-					if (is_array($add_cats)){
-						foreach($add_cats as $index=>$cat_id){
-							if (!is_numeric($cat_id) || !$cat_id){
-								unset($add_cats[$index]);
-							}
-						}
-						if ($add_cats){
-							$item['add_cats'] = $add_cats;
-						}
-					}
-				}
-
                 $item = cmsEventsManager::hook("content_before_add", $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
 
@@ -251,6 +252,7 @@ class actionContentItemAdd extends cmsAction {
             'is_moderator' => $is_moderator,
             'is_premoderation' => $is_premoderation,
             'is_load_props' => !isset($errors),
+            'add_cats' => isset($add_cats) ? $add_cats : array(),
             'errors' => isset($errors) ? $errors : false
         ));
 

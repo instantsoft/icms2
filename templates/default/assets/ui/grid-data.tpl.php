@@ -1,6 +1,5 @@
-<?php
-    $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage;
-?>
+<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage; ?>
+
 <form id="datagrid_filter">
     <?php if ($options['is_pagination']) { ?>
         <input type="hidden" name="page" value="1" />
@@ -16,10 +15,9 @@
     <input type="hidden" id="advanced_filter" name="advanced_filter" value="" />
 </form>
 
-<form id="datagrid_form" action="" method="post">
-</form>
+<form id="datagrid_form" action="" method="post"></form>
 
-<?php if ($options['is_toolbar']){ ?>
+<?php if ($options['is_toolbar'] && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
     </div>

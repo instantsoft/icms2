@@ -2,7 +2,7 @@
 
     // Определяем корень
     define('PATH', dirname(__FILE__));
-	define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+	define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');

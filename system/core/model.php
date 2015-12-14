@@ -184,7 +184,7 @@ class cmsModel{
         foreach($category['path'] as $c){
             if ($c['id'] == 1) { continue; }
             if ($slug) { $slug .= '/'; }
-            $slug .= lang_slug( empty($c['slug_key']) ? $c['title'] : $c['slug_key'] );
+            $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
         }
 
         return $slug;
@@ -700,17 +700,19 @@ class cmsModel{
 
     public function filterCategory($ctype_name, $category, $is_recursive=false){
 
-		$table_name = $this->table_prefix . $ctype_name . '_cats';
-		$bind_table_name = $table_name . '_bind';
+		$table_name      = $this->table_prefix . $ctype_name . '_cats';
+        $bind_table_name = $table_name . '_bind';
 
         if (!$is_recursive){
 
-            $this->join($bind_table_name, 'b', "b.item_id = i.id AND b.category_id = '{$category['id']}'");
+            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
 
         } else {
 
-            $this->join($bind_table_name, 'b', 'b.item_id = i.id');
-            $this->join($table_name, 'c', "c.id = b.category_id AND c.ns_left >= '{$category['ns_left']}' AND c.ns_right <= '{$category['ns_right']}'");
+            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
+            $this->joinInner($table_name, 'c', "c.id = b.category_id");
+            $this->filterGtEqual('c.ns_left', $category['ns_left']);
+            $this->filterLtEqual('c.ns_right', $category['ns_right']);
 
         }
 
@@ -722,14 +724,20 @@ class cmsModel{
 
 		if (!$is_recursive){
 
-			return $this->filterCategory($ctype_name, array('id'=>$category_id));
+            if($category_id){
+                return $this->filterCategory($ctype_name, array('id'=>$category_id));
+            }
 
 		} else {
 
 			$category = $this->getCategory($ctype_name, $category_id);
-			return $this->filterCategory($ctype_name, $category, true);
+            if($category){
+                return $this->filterCategory($ctype_name, $category, true);
+            }
 
 		}
+
+        return $this;
 
 	}
 
