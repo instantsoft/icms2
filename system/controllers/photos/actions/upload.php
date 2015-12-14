@@ -113,7 +113,17 @@ class actionPhotosUpload extends cmsAction{
 
         $result = $uploader->upload('qqfile');
 
+        if ($result['success']){
+            if (!$uploader->isImage($result['path'])){
+                $result['success'] = false;
+                $result['error']   = LANG_UPLOAD_ERR_MIME;
+            }
+        }
+
         if (!$result['success']){
+            if(!empty($result['path'])){
+                $uploader->remove($result['path']);
+            }
             cmsTemplate::getInstance()->renderJSON($result);
             $this->halt();
         }
@@ -160,4 +170,3 @@ class actionPhotosUpload extends cmsAction{
     }
 
 }
-
