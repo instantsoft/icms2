@@ -78,13 +78,14 @@ class actionAdminInstallFinish extends cmsAction {
         }
 
         $model->insert('controllers', array(
-            'title'      => $manifest['info']['title'],
-            'name'       => $manifest['package']['name'],
-            'options'    => $options,
-            'author'     => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
-            'url'        => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
-            'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
-            'is_backend' => file_exists($controller_root_path.'backend.php')
+            'title'       => $manifest['info']['title'],
+            'name'        => $manifest['package']['name'],
+            'options'     => $options,
+            'author'      => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
+            'url'         => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
+            'version'     => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
+            'is_backend'  => file_exists($controller_root_path.'backend.php'),
+            'is_external' => 1
         ));
 
         return 'controllers';
