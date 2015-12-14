@@ -89,6 +89,8 @@ class cmsTemplate {
 	 */
 	public function head($is_seo_meta=true){
 
+        cmsEventsManager::hook('before_print_head', $this);
+
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
 				echo "\t". '<meta content="'.htmlspecialchars($this->metakeys).'" name="keywords">' . "\n";
