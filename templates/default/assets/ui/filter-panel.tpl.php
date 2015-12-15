@@ -1,11 +1,12 @@
 <?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
 <div class="filter-panel gui-panel <?php echo $css_prefix;?>-filter">
-    <?php if(!$filters && !$is_expanded){ ?>
-        <div class="filter-link">
-            <a href="javascript:toggleFilter()"><span><?php echo LANG_SHOW_FILTER; ?></span></a>
-        </div>
-    <?php } ?>
+    <div class="filter-link" <?php if($filters || $is_expanded){ ?>style="display:none"<?php } ?>>
+        <a href="javascript:toggleFilter()"><span><?php echo LANG_SHOW_FILTER; ?></span></a>
+    </div>
     <div class="filter-container" <?php if(!$filters && !$is_expanded){ ?>style="display:none"<?php } ?>>
+		<div class="filter-close">
+            <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
+        </div>
         <form action="<?php echo cmsCore::getInstance()->uri_absolute; ?>" method="post">
             <?php echo html_input('hidden', 'page', 1); ?>
             <div class="fields">
