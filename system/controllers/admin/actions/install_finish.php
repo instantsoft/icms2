@@ -27,7 +27,15 @@ class actionAdminInstallFinish extends cmsAction {
         $redirect_action = '';
 
         if($is_imported && $is_installed === true){
+
             $redirect_action = $this->doPackage();
+
+            // если в файле install.php есть функция after_install_package, вызываем ее
+            // этот файл, если он есть, уже должен был загружен ранее
+            if (function_exists('after_install_package')){
+                call_user_func('after_install_package');
+            }
+
         }
 
         $is_cleared = files_clear_directory($path);
