@@ -232,6 +232,11 @@ class modelContent extends cmsModel{
 
     }
 
+    public function reloadAllCtypes() {
+        self::$all_ctypes = $this->getContentTypesFiltered();
+        return $this;
+    }
+
     public function getContentTypes(){
         return self::$all_ctypes;
     }
