@@ -842,7 +842,11 @@ class cmsTemplate {
 
         if (!file_exists($scheme_file)) { return false; }
 
-        return file_get_contents($scheme_file);
+        ob_start();
+
+        include($scheme_file);
+
+        return ob_get_clean();
 
     }
 
@@ -1516,6 +1520,10 @@ class cmsTemplate {
     public function saveOptions($options){
 
         $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
+
+        if(!is_writable($options_file)){
+            return false;
+        }
 
         $options_yaml = cmsModel::arrayToYaml($options);
 

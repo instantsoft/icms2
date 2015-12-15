@@ -303,6 +303,8 @@
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
 
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
+    define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');

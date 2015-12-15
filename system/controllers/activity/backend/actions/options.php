@@ -18,6 +18,8 @@ class actionActivityOptions extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 cmsController::saveOptions($this->name, $options);
 
                 $this->model->enableTypes($options['types']);
