@@ -25,8 +25,8 @@
         die();
     } else { // Удаляем папку /install, если система уже установлена
         cmsCore::loadLib('files.helper');
-        if (is_dir($config->root_path.'/install')) {
-            files_remove_directory($config->root_path.'/install');
+        if (is_dir($config->root_path.'install')) {
+            files_remove_directory($config->root_path.'install');
         }
     }
 
