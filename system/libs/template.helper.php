@@ -200,7 +200,7 @@ function html_datepicker($name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
 	$html  = '<input type="text" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
-    $html .= "$(function(){ $('#{$id}').datepicker({showStatus: true, showOn: 'both', dateFormat:'".cmsConfig::get('date_format_js')>"'}); });";
+    $html .= "$(function(){ $('#{$id}').datepicker({showStatus: true, changeYear: true, minDate: new Date(1970, 01 - 1, 02), showOn: 'both', dateFormat:'".cmsConfig::get('date_format_js')."'}); });";
     $html .= '</script>';
     return $html;
 }

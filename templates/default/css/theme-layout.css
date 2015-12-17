@@ -135,7 +135,7 @@ header .menu li:hover > ul {
     visibility: visible;
 }
 
-header .menu ul { width:250px; margin-top: 1px; }
+header .menu ul { width:250px; }
 
 header .menu ul li:last-child,
 header .menu ul li:last-child a {
