@@ -579,4 +579,23 @@ aside .menu .item{
 
 @media screen and (max-width: 480px) {
     #layout footer #nav { display: none !important; }
+    #breadcrumbs ul li:last-child {
+        display: none;
+    }
+    h1 {
+        font-size: 22px;
+    }
+    .content_list.featured .first .photo, .content_list.featured .first .fields, .content_list.tiled.albums_list .tile  {
+        width: 100% !important;
+    }
+    .content_list_item.second .photo, .content_list_item.second .first {
+        float: none !important;
+        margin-right: 0 !important;
+    }
+    .content_list.featured .first .ft_caption a {
+        font-size: 21px !important;
+    }
+    .content_list_item .ft_caption .value {
+        font-size: 18px !important;
+    }
 }

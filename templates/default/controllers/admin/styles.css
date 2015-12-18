@@ -382,6 +382,10 @@ select {
     padding:4px;
     box-shadow: inset 0 2px 8px #DDD;
     color:#333;
+    font-size: 100%;
+}
+.file-input {
+    font-size: 100%;
 }
 
 .textarea {
@@ -462,6 +466,7 @@ form .error_text{
 
 input.button-submit,
 input.button {
+    font-size: 100%;
 	margin: 0 2px 0 0;
 	padding: 10px 15px;
 	line-height: 100%;

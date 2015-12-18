@@ -974,6 +974,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list.striped-list .comment:last-child{
     border:none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 #comments_list .selected-comment{

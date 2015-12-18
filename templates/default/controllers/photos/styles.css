@@ -161,11 +161,10 @@
 #album-nav .arr-next a{
     background-position: -32px center;
 }
-
 @media screen and (max-width: 640px) {
-	
+
 	#album-nav #photos-slider li img {
 		width:30px;
 	}
-	
+
 }
