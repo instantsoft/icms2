@@ -556,7 +556,7 @@ select {
 .textarea { width:99%; }
 select { width:100%; }
 
-.textarea { height:200px; resize: vertical; }
+.textarea { resize: vertical; }
 
 .date-input { width: 90px; }
 
