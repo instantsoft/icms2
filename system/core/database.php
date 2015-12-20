@@ -30,6 +30,10 @@ class cmsDatabase {
         $this->connect();
 	}
 
+	public function __destruct(){
+		$this->mysqli->close();
+	}
+
     public function __get($name) {
         if ($name == 'nestedSets') {
             $this->nestedSets = new cmsNestedsets($this);
