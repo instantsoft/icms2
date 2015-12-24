@@ -1,6 +1,6 @@
 <?php
 
-class actionContentFromFriends extends cmsAction {
+class actionContentItemsFromFriends extends cmsAction {
 
     public function run(){
 

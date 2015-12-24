@@ -5,7 +5,7 @@ function routes_content(){
 
         array(
             'pattern'   => '/^([a-z0-9\-_]+)\/from_friends$/i',
-            'action'    => 'from_friends',
+            'action'    => 'items_from_friends',
             1           => 'ctype_name'
         ),
 
