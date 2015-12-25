@@ -1,6 +1,30 @@
+
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
+
+    define('LANG_CP_DASHBOARD_STATS',           'Статистика');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
+    define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Папка сайта');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
+    define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Установлен Zend Guard Loader');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'Генеральный спонсор проекта');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Официальный сайт проекта');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Документация');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Каталог дополнений');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Форумы сообщества');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Поддержите проект');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Предложение для спонсоров');
 
     define('LANG_CP_SECTION_INDEX',             'Главная');
     define('LANG_CP_SECTION_CTYPES',            'Типы контента');

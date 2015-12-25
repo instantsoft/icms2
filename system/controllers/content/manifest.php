@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'admin_dashboard_chart',
             'menu_content',
             'user_delete',
             'user_tab_info',

@@ -1596,3 +1596,109 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 /* ========================================================================== */
 /* ========================================================================== */
 
+#dashboard {
+    box-sizing: border-box;
+    display:table;
+    width:100%;
+    border-spacing: 10px;
+}
+
+#dashboard .row{
+    display:table-row;
+}
+
+#dashboard .col{
+    display:table-cell;
+    vertical-align: top;
+    border:solid 1px #EDEDED;
+}
+
+#dashboard .col-sm{
+    width:300px;
+}
+
+#dashboard .col h3 {
+    padding:10px 10px;
+    background:#F9F9F9;
+    margin:0;
+}
+
+#dashboard .col .col-body{
+    padding:15px;
+}
+
+#dashboard #chart .toolbar {
+    margin-bottom: 15px;
+}
+
+#dashboard #chart .toolbar .pills-menu {
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+#dashboard #chart select {
+    padding:5px;
+    background:#FFF;
+    font-size:16px;
+}
+
+#dashboard #chart-canvas {
+    width:100%;
+    height:400px;
+}
+
+#dashboard #sysinfo,
+#dashboard #sysinfo li {
+    margin: 0; padding: 0; list-style:none;
+}
+
+#dashboard #sysinfo li {
+    margin-bottom:8px;
+    color:#97A5A6;
+}
+
+#dashboard #sysinfo li span {
+    display:block;
+    margin-bottom:2px;
+    color:#34495e;
+}
+
+#dashboard #resources {
+    width:250px;
+}
+
+#dashboard #resources .links {
+    padding-left:25px;
+}
+
+#dashboard #resources .links li {
+    margin-bottom:4px;
+}
+
+#dashboard #resources .links li a {
+    color:#09c;
+}
+
+#dashboard #resources .links li a:hover {
+    color:#f90;
+}
+
+#dashboard #lead-sponsor .hint {
+    padding:5px 0;
+    color:#777;
+}
+
+#dashboard #lead-sponsor .hint a {
+    float:right;
+    color: #FFF;
+    text-align: center;
+    border-radius: 100%;
+    text-decoration: none;
+    padding: 1px 5px;
+    margin-top: 3px;
+    font-size: 10px;
+    background:#09c;
+    font-weight: bold;
+}

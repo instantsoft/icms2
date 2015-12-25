@@ -2,6 +2,29 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
 
+    define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Resources');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'PHP Version');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Memory Limit');
+    define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Site root folder');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Max uploaded file size');
+    define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General Sponsor');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official web site');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Documentation');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Plugins repository');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community forums');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
+
     define('LANG_CP_SECTION_INDEX',             'Index');
     define('LANG_CP_SECTION_CTYPES',            'Content Types');
     define('LANG_CP_SECTION_CONTENT',           'Content');
