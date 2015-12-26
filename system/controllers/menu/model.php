@@ -139,13 +139,25 @@ class modelMenu extends cmsModel{
         $items = array();
         $user  = cmsUser::getInstance();
 
+        $delta = array();
+
         // перебираем все вернувшиеся пункты меню
         foreach($menus as $item){
 
             $is_root_added = false;
 
-            if ($item['groups_view'] && !$user->isInGroups($item['groups_view'])) { continue; }
-            if ($item['groups_hide'] && $user->isInGroups($item['groups_hide'])) { continue; }
+            if (($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
+                    ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))) {
+
+                if(!isset($delta[$item['parent_id']])){
+                    $delta[$item['parent_id']] = 1;
+                } else {
+                    $delta[$item['parent_id']] += 1;
+                }
+
+                continue;
+
+            }
 
             $hook_result = array('items' => false);
 
@@ -208,6 +220,12 @@ class modelMenu extends cmsModel{
                 }
             }
 
+        }
+
+        if($delta){
+            foreach ($delta as $item_id => $d) {
+                $items[$item_id]['childs_count'] -= $d;
+            }
         }
 
         $tree = array();
