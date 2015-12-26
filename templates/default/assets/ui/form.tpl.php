@@ -185,7 +185,7 @@
     <?php echo $append_html; ?>
 
     <div class="buttons">
-        <?php echo html_submit( $submit['title'] ); ?>
+        <?php echo html_submit( $submit['title'], 'submit', $submit); ?>
         <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'"); } ?>
     </div>
 
