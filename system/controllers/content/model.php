@@ -1776,7 +1776,7 @@ class modelContent extends cmsModel{
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('f.title', 'folder_title');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
+        $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
@@ -2116,17 +2116,19 @@ class modelContent extends cmsModel{
 
     public function getNextModeratorId($ctype_name){
 
-        $id = $this->
-                    filterEqual('ctype_name', $ctype_name)->
+        $id = $this->filterEqual('ctype_name', $ctype_name)->
                     orderBy('count_idle', 'asc')->
                     getFieldFiltered('moderators', 'user_id');
 
         if (!$id){
 
-            $id = $this->
-                        filterEqual('is_admin', 1)->
+            $id = $this->filterEqual('is_admin', 1)->
                         getFieldFiltered('{users}', 'id');
-
+            // проверяем наличие администратора в таблице модераторов
+            // и если его там нет, добавляем
+            if(!$this->getItemById('moderators', $id)){
+                $this->addContentTypeModerator($ctype_name, $id);
+            }
 
         }
 

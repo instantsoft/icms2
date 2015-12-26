@@ -101,6 +101,12 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_CHECK_UPDATES,
                     )),
 
+                    new fieldString('detect_ip_key', array(
+                        'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
+                        'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
+                        'default' => 'REMOTE_ADDR'
+                    ))
+
                 )
             ),
 
@@ -289,6 +295,19 @@ class formAdminSettings extends cmsForm {
 
                 )
             ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_SECURITY,
+                'childs' => array(
+
+                    new fieldText('allow_ips', array(
+                        'title' => LANG_CP_SETTINGS_ALLOW_IPS,
+                        'hint'  => LANG_CP_SETTINGS_ALLOW_IPS_HINT
+                    ))
+
+                )
+            )
 
         );
 

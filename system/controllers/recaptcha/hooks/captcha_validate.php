@@ -12,7 +12,7 @@ class onRecaptchaCaptchaValidate extends cmsAction {
         return $this->callApi(array(
             'secret'   => $this->options['private_key'],
             'response' => $response,
-            'remoteip' => $_SERVER['REMOTE_ADDR']
+            'remoteip' => cmsUser::getIp()
         ));
 
     }

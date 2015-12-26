@@ -58,6 +58,10 @@ class cmsConfig {
             $this->data['time_zone'] = $_SESSION['user']['time_zone'];
         }
 
+        if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
+            $this->data['detect_ip_key'] = 'REMOTE_ADDR';
+        }
+
 		$this->upload_host_abs = $this->upload_host;
 
 		if (mb_strpos($this->upload_host, $this->host)===0){

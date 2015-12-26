@@ -10,13 +10,13 @@ class actionAdminIndex extends cmsAction {
         $extensions = get_loaded_extensions();
 
         $sysinfo = array(
-            LANG_CP_DASHBOARD_SI_PHP => phpversion(),
-            LANG_CP_DASHBOARD_SI_ML => ini_get('memory_limit'),
-            LANG_CP_DASHBOARD_SI_MAX => $uploader->getMaxUploadSize(),
-            LANG_CP_DASHBOARD_SI_IP => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
-            LANG_CP_DASHBOARD_SI_ROOT => ROOT,
-            LANG_CP_DASHBOARD_SI_ION => in_array('ionCube Loader', $extensions),
-            LANG_CP_DASHBOARD_SI_ZEND => in_array('Zend Optimizer', $extensions),
+            LANG_CP_DASHBOARD_SI_PHP   => phpversion(),
+            LANG_CP_DASHBOARD_SI_ML    => @ini_get('memory_limit'), // на страшных хостингах может быть запрещено использование ini_get
+            LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),
+            LANG_CP_DASHBOARD_SI_IP    => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
+            LANG_CP_DASHBOARD_SI_ROOT  => ROOT,
+            LANG_CP_DASHBOARD_SI_ION   => in_array('ionCube Loader', $extensions),
+            LANG_CP_DASHBOARD_SI_ZEND  => in_array('Zend Optimizer', $extensions),
             LANG_CP_DASHBOARD_SI_ZENDG => in_array('Zend Guard Loader', $extensions)
         );
 

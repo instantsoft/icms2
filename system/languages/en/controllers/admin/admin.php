@@ -271,7 +271,12 @@
     define('LANG_CP_SETTINGS_CACHE',            'Cache');
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
+    define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Allowed ip address, to access the admin panel');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Each address on a separate line. Not Set - are allowed all.');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to identify user ip');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', '$_SERVER key, containing real user ip address. Do\'t change this value if you are unsure. The default value is appropriate for most. For example, for CloudFlare must specify HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Reason why site is offline');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Check updates when admin login');

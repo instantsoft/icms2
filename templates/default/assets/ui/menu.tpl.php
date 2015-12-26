@@ -38,7 +38,7 @@
             <?php if ($item['disabled']) { ?>
                 <span class="item disabled"><?php html($item['title']); ?></span>
             <?php } else { ?>
-                <a class="item" <?php echo $data_attr; ?> href="<?php echo !empty($item['url']) ? $item['url'] : 'javascript:void(0)'; ?>" <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?> <?php if ($target) { ?>target="<?php echo $target; ?>"<?php } ?>>
+                <a class="item" <?php echo $data_attr; ?> href="<?php echo !empty($item['url']) ? htmlspecialchars($item['url']) : 'javascript:void(0)'; ?>" <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?> <?php if ($target) { ?>target="<?php echo $target; ?>"<?php } ?>>
                     <span class="wrap">
                         <?php if (!empty($item['title'])) { html($item['title']); } ?>
                         <?php if (isset($item['counter']) && $item['counter']){ ?>
