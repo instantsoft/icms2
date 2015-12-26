@@ -3,12 +3,14 @@
     $this->addJS('templates/default/js/admin-chart.js');
     $this->addJS('templates/default/js/admin-dashboard.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
+    $this->addJS('templates/default/js/jquery-ui.js');
+    $this->addCSS('templates/default/css/jquery-ui.css');
 ?>
 <h1><?php echo LANG_ADMIN_CONTROLLER; ?></h1>
 
 <div id="dashboard">
     <div class="row">
-        <div id="chart" class="col" data-url="<?php echo $this->href_to('index_chart_data'); ?>" data-period="<?php echo $defaults['period']; ?>">
+        <div id="chart" class="col" data-url="<?php echo $this->href_to('index_chart_data'); ?>" data-period="<?php html($defaults['period']); ?>">
 
             <h3><?php echo LANG_CP_DASHBOARD_STATS; ?></h3>
 
@@ -86,7 +88,37 @@
                     <li><a href="http://instantcms.ru/sponsorship.html"><?php echo LANG_CP_DASHBOARD_LINKS_SPONSORS; ?></a></li>
                 </ul>
 
+                <div class="premium"><?php echo LANG_CP_DASHBOARD_PREMIUM; ?></div>
+
+                <ul class="links premium_list">
+                    <li><a class="tooltip" title="<?php echo LANG_CP_DASHBOARD_BILLING_HINT; ?>" href="http://www.instantcms.ru/blogs/InstantSoft/biling-dlja-instantcms-2.html"><?php echo LANG_CP_DASHBOARD_BILLING; ?></a></li>
+                    <li><a class="tooltip" title="<?php echo LANG_CP_DASHBOARD_INVIDEO_HINT; ?>" href="https://instantvideo.ru/software/instantvideo2.html">InstantVideo</a></li>
+                    <li><a class="tooltip" title="<?php echo LANG_CP_DASHBOARD_INMAPS_HINT; ?>" href="http://www.instantcms.ru/blogs/InstantSoft/instantmaps-dlja-instantcms-2.html">InstantMaps</a></li>
+                </ul>
             </div>
         </div>
     </div>
+    <?php if($dashboard_blocks) { ?>
+        <?php foreach ($dashboard_blocks as $key => $dashboard_block) { ?>
+        <div class="row">
+            <div class="col col-sm" id="db_<?php echo $key; ?>">
+                <h3><?php echo $dashboard_block['title']; ?></h3>
+                <div class="col-body"><?php echo $dashboard_block['html']; ?></div>
+            </div>
+        </div>
+        <?php } ?>
+    <?php } ?>
 </div>
+<script>
+    $(function() {
+        $(document).tooltip({
+            items: '.tooltip',
+            show: { duration: 0 },
+            hide: { duration: 0 },
+            position: {
+                my: "center",
+                at: "top-20"
+            }
+        });
+    });
+</script>

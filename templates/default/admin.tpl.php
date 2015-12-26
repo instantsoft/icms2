@@ -48,9 +48,11 @@
             <div id="menu"><?php $this->menu('cp_main'); ?></div>
         </div>
 
-        <div id="cp_pathway">
-            <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
-        </div>
+        <?php if($this->isBreadcrumbs()){ ?>
+            <div id="cp_pathway">
+                <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
+            </div>
+        <?php } ?>
 
         <div id="cp_body">
 

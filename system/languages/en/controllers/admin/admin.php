@@ -25,6 +25,12 @@
     define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
     define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
 
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Premium components');
+    define('LANG_CP_DASHBOARD_BILLING',         'Billing');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Earn on your website');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Professional video catalog');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Object catalog on the map');
+
     define('LANG_CP_SECTION_INDEX',             'Index');
     define('LANG_CP_SECTION_CTYPES',            'Content Types');
     define('LANG_CP_SECTION_CONTENT',           'Content');

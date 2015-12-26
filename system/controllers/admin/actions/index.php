@@ -6,12 +6,12 @@ class actionAdminIndex extends cmsAction {
 
         $chart_nav = cmsEventsManager::hookAll('admin_dashboard_chart');
 
-        $uploader = new cmsUploader();
+        $uploader   = new cmsUploader();
         $extensions = get_loaded_extensions();
 
         $sysinfo = array(
             LANG_CP_DASHBOARD_SI_PHP   => phpversion(),
-            LANG_CP_DASHBOARD_SI_ML    => @ini_get('memory_limit'), // на страшных хостингах может быть запрещено использование ini_get
+            LANG_CP_DASHBOARD_SI_ML    => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),
             LANG_CP_DASHBOARD_SI_IP    => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
             LANG_CP_DASHBOARD_SI_ROOT  => ROOT,
@@ -24,23 +24,26 @@ class actionAdminIndex extends cmsAction {
 
         $defaults = array(
             'controller' => 'users',
-            'section' => 'reg',
-            'period' => 7
+            'section'    => 'reg',
+            'period'     => 7
         );
 
         if ($cookie){
             $cookie = json_decode($cookie, true);
-            $defaults = array(
-                'controller' => $cookie['c'],
-                'section' => $cookie['s'],
-                'period' => $cookie['p']
-            );
+            if(is_array($cookie)){
+                $defaults = array(
+                    'controller' => $cookie['c'],
+                    'section'    => $cookie['s'],
+                    'period'     => $cookie['p']
+                );
+            }
         }
 
         return cmsTemplate::getInstance()->render('index', array(
+            'dashboard_blocks' => cmsEventsManager::hookAll('admin_dashboard_block'),
             'chart_nav' => $chart_nav,
-            'sysinfo' => $sysinfo,
-            'defaults' => $defaults
+            'sysinfo'   => $sysinfo,
+            'defaults'  => $defaults
         ));
 
     }

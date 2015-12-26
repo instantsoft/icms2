@@ -1702,3 +1702,14 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     background:#09c;
     font-weight: bold;
 }
+@media screen and (max-width: 980px) {
+    #dashboard .col, #dashboard #resources {
+        float: left;
+        width: 100%;
+        display: block;
+        margin-top: 20px;
+    }
+    #dashboard .col:first-child {
+        margin-top: 0;
+    }
+}

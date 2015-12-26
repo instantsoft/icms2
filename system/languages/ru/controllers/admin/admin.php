@@ -22,6 +22,12 @@
     define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Каталог дополнений');
     define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Форумы сообщества');
 
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Премиум компоненты');
+    define('LANG_CP_DASHBOARD_BILLING',         'Биллинг');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Зарабатывайте на своем сайте');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Профессиональный видео каталог на сайте');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Каталог объектов на карте');
+
     define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Поддержите проект');
     define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Предложение для спонсоров');
 

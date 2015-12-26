@@ -439,6 +439,7 @@
     define('LANG_EVENTS_THIS_WEEK',          'Events this week');
     define('LANG_CALENDAR',                  'Calendar');
     define('LANG_TIME_ZONE',                 'Time zone');
+    define('LANG_YEAR',                      'Year');
     define('LANG_YEARS',                     'Years');
     define('LANG_YEAR1',                     'year');
     define('LANG_YEAR2',                     'years');
