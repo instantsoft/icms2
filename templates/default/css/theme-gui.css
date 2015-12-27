@@ -345,6 +345,16 @@
     overflow: hidden;
 }
 
+.filter-close {
+    text-align: right;
+    margin-right: 10px;
+    color: #34495e;
+}
+
+.filter-close a {
+    color: #34495e;
+}
+
 .filter-panel .fields { overflow: hidden; }
 
 .filter-panel .fields .title {
