@@ -149,10 +149,12 @@ class modelMenu extends cmsModel{
             if (($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
                     ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))) {
 
-                if(!isset($delta[$item['parent_id']])){
-                    $delta[$item['parent_id']] = 1;
-                } else {
-                    $delta[$item['parent_id']] += 1;
+                if($item['parent_id']){
+                    if(!isset($delta[$item['parent_id']])){
+                        $delta[$item['parent_id']] = 1;
+                    } else {
+                        $delta[$item['parent_id']] += 1;
+                    }
                 }
 
                 continue;

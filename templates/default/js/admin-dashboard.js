@@ -29,7 +29,7 @@ $(function(){
                 }]
             };
 
-            console.log(data);
+            //console.log(data);
 
             chart = new Chart(ctx).Bar(data);
 
@@ -45,7 +45,7 @@ $(function(){
         controller = $option.data('ctrl');
         section = $option.data('section');
 
-        console.log(controller, section);
+        //console.log(controller, section);
 
         loadChartData();
 
