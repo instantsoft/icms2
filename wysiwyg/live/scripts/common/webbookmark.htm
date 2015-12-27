@@ -17,7 +17,11 @@
 
 /*** COMMON ***/
 
-var isIE = (navigator.appName.indexOf('Microsoft') != -1);
+var UA = navigator.userAgent.toLowerCase();
+var isIE = (UA.indexOf('msie') >= 0) ? true : false;
+//if(!isIE) { //ie11
+//	isIE = (UA.indexOf('trident') >= 0) ? true : false;
+//}
 
 function GetElement(oElement,sMatchTag)
     {

@@ -28,11 +28,14 @@ if(!window.innovaeditor_script_loaded){
     addJSTag(sEditorPath+'common/nlslightbox/dialog.js');
     addJSTag(sEditorPath+'istoolbar.js');
 
-    if(navigator.appName.indexOf('Microsoft')!=-1) {
+    var UA = navigator.userAgent.toLowerCase();
+    var LiveEditor_isIE = (UA.indexOf('msie') >= 0) ? true : false;
+
+    if (LiveEditor_isIE) {
         addJSTag(sEditorPath+'editor.js');
-    } else if(navigator.userAgent.indexOf('Safari')!=-1) {
+    } else if (UA.indexOf('safari') != -1) {
         addJSTag(sEditorPath+'saf/editor.js');
-    } else {
+    } else { //ie11 use moz script now.
         addJSTag(sEditorPath+'moz/editor.js');
     }
 

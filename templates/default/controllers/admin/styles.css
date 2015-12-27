@@ -1359,22 +1359,25 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp-widgets-layout li .actions a ,
 #cp-widgets-list li .actions a {
-    display: none;
-    height:16px;
-    width: 16px;
-    float:left;
+    opacity: 0;
+    height: 22px;
+    width: 25px;
+    float: left;
     background-repeat: no-repeat;
-    margin-right: 2px;
+    margin: -3px 0;
+    background-position: center center;
+    transition:opacity 0.1s linear;
 }
 
 #cp-widgets-layout li:hover .actions a ,
 #cp-widgets-list li:hover .actions a {
-    display:block;
+    opacity: 1;
 }
 
 #cp-widgets-layout li .actions a.edit ,
 #cp-widgets-list li .actions a.edit {
     background-image: url("../../images/icons/edit.png");
+    margin-right: 5px;
 }
 
 #cp-widgets-layout li .actions a.delete ,
@@ -1583,14 +1586,14 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     overflow:hidden;
 }
 
-#site_settings #f_template select { float:left; }
-#site_settings #f_template .hint { float:left; }
+#site_settings #f_template .hint { display: inline-block; }
 #site_settings #f_template .hint a {
     padding-left:20px;
     height:32px;
     line-height:32px;
     margin-left:10px;
     background:url("../../images/icons/page_gear.png") no-repeat left center;
+    display: block;
 }
 
 /* ========================================================================== */

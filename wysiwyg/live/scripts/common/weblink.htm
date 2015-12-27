@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
     <script>
         var sLangDir = parent.oUtil.langDir;
@@ -111,7 +111,7 @@
 
             var oSel;
             var oEl;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 var oSel = oEditor.document.selection.createRange();
                 if (oSel.parentElement) oEl = GetElement(oSel.parentElement(), "A");
                 else oEl = GetElement(oSel.item(0), "A");
@@ -159,7 +159,7 @@
 
             var oSel;
             var oEl;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 oSel = oEditor.document.selection.createRange();
                 if (oSel.parentElement) oEl = GetElement(oSel.parentElement(), "A");
                 else oEl = GetElement(oSel.item(0), "A");
@@ -173,7 +173,7 @@
             if (oEl) {
                 if (oEl.nodeName == "A") {
 
-                    if (navigator.appName.indexOf('Microsoft') != -1) {
+                    if (isIE) {
                         var sType = oEditor.document.selection.type;
                         if (sType != "Control") {
                             try {
@@ -231,7 +231,7 @@
         }
 
         function I_InsertLink() {
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 I_InsertLinkMsft();
             } else if (navigator.userAgent.indexOf('Safari') != -1) {
                 I_InsertLinkSaf();
