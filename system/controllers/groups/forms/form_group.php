@@ -19,7 +19,7 @@ class formGroupsGroup extends cmsForm {
                     'description' => new fieldHtml('description', array(
                         'title' => LANG_GROUPS_GROUP_DESC,
                         'options' => array(
-                            'editor' => 'markitup'
+                            'editor' => cmsConfig::get('default_editor')
                         )
                     )),
 

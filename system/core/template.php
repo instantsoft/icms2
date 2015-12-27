@@ -631,7 +631,8 @@ class cmsTemplate {
 
         $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
-        echo '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
+        // атрибут rel="forceLoad" добавлен для nyroModal
+        echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
 
 	}
 
@@ -640,6 +641,33 @@ class cmsTemplate {
         $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
 		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
 
+    }
+
+    /**
+     * Подключает js файл на страницу в зависимости от контекста исходного запроса
+     * @param string $file
+     * @param string $comment
+     * @return bool
+     */
+    public function addJSFromContext($file, $comment='') {
+        if(cmsCore::getInstance()->request->isAjax()){
+            return $this->insertJS($file, $comment);
+        } else {
+            return $this->addJS($file, $comment, false);
+        }
+    }
+
+    /**
+     * Подключает css файл на страницу в зависимости от контекста исходного запрос
+     * @param string $file
+     * @return bool
+     */
+    public function addCSSFromContext($file) {
+        if(cmsCore::getInstance()->request->isAjax()){
+            return $this->insertCSS($file);
+        } else {
+            return $this->addCSS($file);
+        }
     }
 
     public function getJS($file){

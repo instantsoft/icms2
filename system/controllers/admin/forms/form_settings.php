@@ -144,6 +144,17 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
+                    new fieldList('default_editor', array(
+                        'title' => LANG_CP_SETTINGS_EDITOR,
+                        'default' => 'redactor',
+                        'generator' => function($item){
+                            $items = array();
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){ $items[$editor] = $editor; }
+                            return $items;
+                        }
+                    )),
+
                     new fieldCheckbox('min_html', array(
                         'title' => LANG_CP_SETTINGS_HTML_MINIFY,
                     )),

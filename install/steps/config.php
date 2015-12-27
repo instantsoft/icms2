@@ -80,7 +80,8 @@ function create_config($path, $file){
         'mail_smtp_pass'		=> '',
         'is_check_updates'		=> 1,
         'detect_ip_key'		    => 'REMOTE_ADDR',
-        'allow_ips'		        => ''
+        'allow_ips'		        => '',
+        'default_editor'		=> 'redactor'
     );
 
     write_config($file, $config);
