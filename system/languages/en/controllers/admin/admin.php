@@ -296,6 +296,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
+    define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumb?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Merge CSS files');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Merge JS files');

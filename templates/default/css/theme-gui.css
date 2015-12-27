@@ -346,13 +346,13 @@
 }
 
 .filter-close {
-    text-align: right;
-    margin-right: 10px;
-    color: #34495e;
+    float: right;
+    margin: -8px -6px 0 0;
+    font-size: 0.9em;
+    line-height: 0.9em;
 }
-
 .filter-close a {
-    color: #34495e;
+    color: #666;
 }
 
 .filter-panel .fields { overflow: hidden; }

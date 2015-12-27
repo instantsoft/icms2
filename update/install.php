@@ -166,6 +166,7 @@ function install_package(){
     $values['detect_ip_key']  = 'REMOTE_ADDR';
     $values['allow_ips']      = '';
     $values['default_editor'] = 'redactor';
+    $values['show_breadcrumbs'] = 1;
     if(!$config->save($values)){
         cmsUser::addSessionMessage('Не могу записать файл конфигурации сайта. Добавьте в него строку <b>"db_engine" => "InnoDB",</b>. После этого сделайте этот файл доступным для записи, зайдите в общие настройки сайта и просто пересохраните их.', 'info');
     }
