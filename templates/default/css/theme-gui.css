@@ -343,13 +343,15 @@
 .filter-panel .filter-container {
     padding:15px;
     overflow: hidden;
+    position: relative;
 }
 
 .filter-close {
-    float: right;
-    margin: -8px -6px 0 0;
     font-size: 0.9em;
     line-height: 0.9em;
+    position: absolute;
+    top: 6px;
+    right: 9px;
 }
 .filter-close a {
     color: #666;
