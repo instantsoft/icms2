@@ -874,11 +874,11 @@ class cmsCore {
     public static function getDirsList($root_dir){
 
         $dir = cmsConfig::get('root_path') . $root_dir;
-        $dir_context = opendir($dir);
+        $dir_context = scandir($dir,0);
 
         $list = array();
 
-        while ($next = readdir($dir_context)){
+        foreach ($dir_context as $next){
 
             if (in_array($next, array('.', '..'))){ continue; }
             if (strpos($next, '.') === 0){ continue; }
