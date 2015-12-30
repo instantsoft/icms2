@@ -180,6 +180,10 @@ function install_package(){
     }, 'name');
     foreach ($controllers as $controller) {
 
+        if(in_array($controller['name'], array('video','channels','places'))){
+            continue;
+        }
+
         $controller_root_path = cmsConfig::get('root_path').'system/controllers/'.$controller['name'].'/';
 
         $form_file = $controller_root_path.'backend/forms/form_options.php';
