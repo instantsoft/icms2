@@ -13,8 +13,9 @@ class cmsTemplate {
 	protected $head = array();
 	protected $head_main_css = array();
 	protected $head_css = array();
+        protected $head_css_no_merge = array();
 	protected $head_main_js = array();
-	protected $head_js = array();
+	protected $head_js = array();        
 	protected $head_js_no_merge = array();
 	protected $title;
 	protected $metadesc;
@@ -104,6 +105,7 @@ class cmsTemplate {
         } else {
             $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
             echo $tag;
+            foreach ($this->head_css_no_merge as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";      }
         }
 
         if (!cmsConfig::get('merge_js')){
@@ -582,10 +584,13 @@ class cmsTemplate {
 	 * Добавляет CSS файл в головной раздел страницы
 	 * @param string $file
 	 */
-	public function addCSS($file){
+	public function addCSS($file, $comment='', $allow_merge = true){
         $hash = md5($file);
         if (isset($this->head_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
+        if (!$allow_merge){
+            $this->head_css_no_merge[$hash] = $file;
+        }
         return true;
 	}
 
@@ -662,11 +667,11 @@ class cmsTemplate {
      * @param string $file
      * @return bool
      */
-    public function addCSSFromContext($file) {
+    public function addCSSFromContext($file, $comment='') {
         if(cmsCore::getInstance()->request->isAjax()){
             return $this->insertCSS($file);
         } else {
-            return $this->addCSS($file);
+            return $this->addCSS($file, $comment, false);
         }
     }
 
