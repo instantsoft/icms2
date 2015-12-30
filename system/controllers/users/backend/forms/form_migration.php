@@ -122,7 +122,7 @@ class formUsersMigration extends cmsForm {
                     new fieldHtml('notify_text', array(
                         'title' => LANG_USERS_MIG_NOTIFY_TEXT,
                         'options' => array(
-                            'editor' => 'markitup'
+                            'editor' => cmsConfig::get('default_editor')
                         )
                     )),
 

@@ -343,6 +343,18 @@
 .filter-panel .filter-container {
     padding:15px;
     overflow: hidden;
+    position: relative;
+}
+
+.filter-close {
+    font-size: 0.9em;
+    line-height: 0.9em;
+    position: absolute;
+    top: 6px;
+    right: 9px;
+}
+.filter-close a {
+    color: #666;
 }
 
 .filter-panel .fields { overflow: hidden; }
@@ -556,7 +568,7 @@ select {
 .textarea { width:99%; }
 select { width:100%; }
 
-.textarea { resize: vertical; }
+.textarea { height:200px; resize: vertical; }
 
 .date-input { width: 90px; }
 
@@ -974,6 +986,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list.striped-list .comment:last-child{
     border:none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 #comments_list .selected-comment{

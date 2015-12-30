@@ -6,6 +6,7 @@ define('DEF_GROUP_ID', 3);
 class cmsUser {
 
     private static $instance;
+    private static $_ip;
 
     public $id = 0;
     public $email;
@@ -29,7 +30,21 @@ class cmsUser {
     }
 
     public static function getIp(){
-        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
+
+        if(self::$_ip === null){
+
+            $config = cmsConfig::getInstance();
+
+            self::$_ip = isset($_SERVER[$config->detect_ip_key]) ? $_SERVER[$config->detect_ip_key] : '127.0.0.1';
+
+            if (!filter_var(self::$_ip, FILTER_VALIDATE_IP)) {
+                self::$_ip = '127.0.0.1';
+            }
+
+        }
+
+        return self::$_ip;
+
     }
 
     public function __construct(){

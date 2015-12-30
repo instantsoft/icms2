@@ -3,9 +3,6 @@
     <?php if ($widget['title'] && $is_titles){ ?>
         <div class="title<?php if ($widget['class_title']) { ?> <?php echo ltrim($widget['class_title'], '.');  } ?>">
             <?php echo $widget['title']; ?>
-            <?php if (cmsUser::isAdmin()){?>            
-                     <a class="ajax-modal" href="<?php echo href_to('admin', 'widgets/edit', $widget['id']); ?>"><img src="/templates/<?php html($this->name);?>/images/icons/config.png"></a>                    
-                <?php } ?>
             <?php if (!empty($widget['links'])) { ?>
                 <div class="links">
                     <?php $links = string_parse_list($widget['links']); ?>

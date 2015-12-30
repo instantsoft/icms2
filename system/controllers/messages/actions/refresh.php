@@ -18,8 +18,9 @@ class actionMessagesRefresh extends cmsAction {
         if ($messages){
 
             $messages_html = $template->render('message', array(
-                'messages' => $messages,
-                'user'=>$user
+                'messages'  => $messages,
+                'is_notify' => true,
+                'user'      => $user
             ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
             $this->model->setMessagesReaded($user->id, $contact_id);

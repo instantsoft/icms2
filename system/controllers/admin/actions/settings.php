@@ -52,6 +52,7 @@ class actionAdminSettings extends cmsAction {
                     $errors = array();
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
                 } else {
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                     $this->redirectBack();
                 }
 

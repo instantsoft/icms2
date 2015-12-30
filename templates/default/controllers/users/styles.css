@@ -333,7 +333,7 @@
 @media screen and (max-width: 640px) {
     #user_profile #left_column { float:none; }
     #user_profile #left_column .block { display: none; padding:0; border:none; }
-    #user_profile #left_column #avatar { display: block; margin-bottom:15px; }
+    #user_profile #left_column #avatar { display: block; margin-bottom:15px; margin-right: 0; }
     #user_profile #left_column #avatar img { width:100%; max-width:250px; }
     #user_profile_title .avatar { display:none; }
     #user_profile_title .name { padding-left:0; }

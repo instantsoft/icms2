@@ -1,7 +1,7 @@
 <?php
 class admin extends cmsFrontend {
 
-    const perpage = 15;
+    const perpage = 25;
 
     public $installer_upload_path = 'installer';
 
@@ -12,6 +12,8 @@ class admin extends cmsFrontend {
 
         if (!cmsUser::isAdmin()) { cmsCore::error404(); }
 
+        if(!$this->allowByIp()){ cmsCore::error404(); }
+
         parent::before($action_name);
 
         $template = cmsTemplate::getInstance();
@@ -19,6 +21,16 @@ class admin extends cmsFrontend {
         $template->setLayout('admin');
 
         $template->setMenuItems('cp_main', $this->getAdminMenu());
+
+    }
+
+    private function allowByIp() {
+
+        $allow_ips = cmsConfig::get('allow_ips');
+
+        if(!$allow_ips){ return true; }
+
+        return string_in_mask_list(cmsUser::getIp(), $allow_ips);
 
     }
 

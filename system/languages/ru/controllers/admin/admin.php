@@ -2,6 +2,35 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
 
+    define('LANG_CP_DASHBOARD_STATS',           'Статистика');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
+    define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Папка сайта');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
+    define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Установлен Zend Guard Loader');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'Генеральный спонсор проекта');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Официальный сайт проекта');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Документация');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Каталог дополнений');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Форумы сообщества');
+
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Премиум компоненты');
+    define('LANG_CP_DASHBOARD_BILLING',         'Биллинг');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Зарабатывайте на своем сайте');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Профессиональный видео каталог на сайте');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Каталог объектов на карте');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Поддержите проект');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Предложение для спонсоров');
+
     define('LANG_CP_SECTION_INDEX',             'Главная');
     define('LANG_CP_SECTION_CTYPES',            'Типы контента');
     define('LANG_CP_SECTION_CONTENT',           'Контент');
@@ -250,7 +279,12 @@
     define('LANG_CP_SETTINGS_CACHE',            'Кеширование');
     define('LANG_CP_SETTINGS_DEBUG',            'Отладка');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
+    define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем.');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
@@ -263,7 +297,8 @@
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
-    define('LANG_CP_SETTINGS_BREADCRUMBS_VIEW','Показывать глубиномер?');
+    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
+    define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Объединять CSS-файлы');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Объединять JS-файлы');
@@ -304,6 +339,8 @@
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
 
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
+    define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');

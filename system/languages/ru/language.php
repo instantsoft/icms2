@@ -441,6 +441,7 @@
     define('LANG_EVENTS_THIS_WEEK',          'События на этой неделе');
     define('LANG_CALENDAR',                  'Календарь');
     define('LANG_TIME_ZONE',                 'Часовой пояс');
+    define('LANG_YEAR',                      'Год');
     define('LANG_YEARS',                     'Года');
     define('LANG_YEAR1',                     'год');
     define('LANG_YEAR2',                     'года');

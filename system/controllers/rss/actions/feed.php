@@ -31,7 +31,13 @@ class actionRssFeed extends cmsAction {
             cmsCore::error404();
         }
 
-        $data = cmsCore::getController($ctype_name, $this->request)->runHook('rss_feed_list', array($feed));
+        $controller = cmsCore::getController($ctype_name, $this->request);
+
+        if(!$controller->isEnabled()){
+            cmsCore::error404();
+        }
+
+        $data = $controller->runHook('rss_feed_list', array($feed));
 
         if($data === $this->request){
             cmsCore::error404();

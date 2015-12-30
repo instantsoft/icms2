@@ -2,6 +2,35 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
 
+    define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Resources');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'PHP Version');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Memory Limit');
+    define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Site root folder');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Max uploaded file size');
+    define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General Sponsor');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official web site');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Documentation');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Plugins repository');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community forums');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
+
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Premium components');
+    define('LANG_CP_DASHBOARD_BILLING',         'Billing');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Earn on your website');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Professional video catalog');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Object catalog on the map');
+
     define('LANG_CP_SECTION_INDEX',             'Index');
     define('LANG_CP_SECTION_CTYPES',            'Content Types');
     define('LANG_CP_SECTION_CONTENT',           'Content');
@@ -248,7 +277,12 @@
     define('LANG_CP_SETTINGS_CACHE',            'Cache');
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
+    define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Allowed ip address, to access the admin panel');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Each address on a separate line. Not Set - are allowed all.');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to identify user ip');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', '$_SERVER key, containing real user ip address. Do\'t change this value if you are unsure. The default value is appropriate for most. For example, for CloudFlare must specify HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Reason why site is offline');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Check updates when admin login');
@@ -261,7 +295,8 @@
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');
-    define('LANG_CP_SETTINGS_BREADCRUMBS_VIEW', 'Show breadcrumb?');
+    define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
+    define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumb?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Merge CSS files');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Merge JS files');
@@ -302,6 +337,8 @@
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    "Can't connect to Memcached");
 
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
+    define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');

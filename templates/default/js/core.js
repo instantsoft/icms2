@@ -197,17 +197,10 @@ icms.events = (function ($) {
 
 function toggleFilter(){
     var filter = $('.filter-panel');
-    $('.filter-link', filter).slideToggle();
-    $('.filter-container', filter).slideToggle();
+    $('.filter-link', filter).toggle('fast');
+    $('.filter-container', filter).slideToggle('fast');
 }
 
 function goBack(){
     window.history.go(-1);
-}
-
-function widgetUpdated(){
-
-    icms.modal.close();	
-    
-    location.reload();
 }

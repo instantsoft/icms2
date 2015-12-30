@@ -1,7 +1,7 @@
 <?php
 class images extends cmsFrontend {
 
-	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp,swf';
+	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp';
 
 //============================================================================//
 //============================================================================//
@@ -40,12 +40,14 @@ class images extends cmsFrontend {
         if ($result['success']){
             if (!$uploader->isImage($result['path'])){
                 $result['success'] = false;
-                $result['error'] = LANG_UPLOAD_ERR_MIME;
+                $result['error']   = LANG_UPLOAD_ERR_MIME;
             }
         }
 
         if (!$result['success']){
-			$uploader->remove($result['path']);
+            if(!empty($result['path'])){
+                $uploader->remove($result['path']);
+            }
             cmsTemplate::getInstance()->renderJSON($result);
             $this->halt();
         }
@@ -127,7 +129,9 @@ class images extends cmsFrontend {
         }
 
         if (!$result['success']){
-			$uploader->remove($result['path']);
+            if(!empty($result['path'])){
+                $uploader->remove($result['path']);
+            }
             return $result;
         }
 
@@ -158,7 +162,7 @@ class images extends cmsFrontend {
 
 		$result['image'] = $image;
 
-		unlink($result['path']);
+		@unlink($result['path']);
         unset($result['path']);
 
         return $result;

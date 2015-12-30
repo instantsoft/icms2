@@ -5,6 +5,7 @@
     define('LANG_WALL',             'Profile Wall');
     define('LANG_WALL_EMPTY',       'There are no entries. Your will be first!');
 
+    define('LANG_WALL_ENTRIES',                 'Wall Posts');
     define('LANG_WALL_ENTRY_ERROR',             'Error saving record');
     define('LANG_WALL_ENTRY_ADD',               'Write on wall');
     define('LANG_WALL_ENTRY_SUCCESS',           'Entry is added');

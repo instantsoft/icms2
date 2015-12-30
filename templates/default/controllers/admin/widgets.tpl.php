@@ -40,13 +40,6 @@
 
 ?>
 
-<?php
-        cmsTemplate::getInstance()->insertCSS('wysiwyg/redactor/css/redactor.css');
-        cmsTemplate::getInstance()->insertJS('wysiwyg/redactor/js/redactor.js');
-        cmsTemplate::getInstance()->insertJS('wysiwyg/redactor/js/fullscreen.js');
-        cmsTemplate::getInstance()->insertJS("wysiwyg/redactor/lang/".cmsConfig::get('language').".js");
-?>
-
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>
 
 <table class="layout">

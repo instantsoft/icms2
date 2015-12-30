@@ -18,7 +18,7 @@ function html_clean($string, $max_length=false){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $string = str_replace(array("\n", '<br>', '<br/>'), ' ', $string);
+    $string = str_replace(array("\n", "\r", '<br>', '<br/>'), ' ', $string);
     $string = strip_tags($string);
 
     if (is_int($max_length)){
@@ -164,7 +164,7 @@ function default_images($type, $preset) {
  * @param string $size_preset Название пресета
  * @return string
  */
-function html_avatar_image_src($avatars, $size_preset='small'){
+function html_avatar_image_src($avatars, $size_preset='small', $is_relative=true){
 
     $config = cmsConfig::getInstance();
 
@@ -183,7 +183,11 @@ function html_avatar_image_src($avatars, $size_preset='small'){
     $src = $avatars[ $size_preset ];
 
 	if (strpos($src, $config->upload_host) === false){
-        $src = $config->upload_host . '/' . $src;
+        if($is_relative){
+            $src = $config->upload_host . '/' . $src;
+        } else {
+            $src = $config->upload_host_abs . '/' . $src;
+        }
     }
 
     return $src;
@@ -219,7 +223,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
 		return false;
 	}
 
-    if ($is_add_host && !strstr($src, $config->upload_host)){
+    if ($is_add_host && strpos($src, $config->upload_host) === false){
         if($is_relative){
             $src = $config->upload_host . '/' . $src;
         } else {

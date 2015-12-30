@@ -13,10 +13,13 @@ class cmsUploader {
      * @return string
      */
     public function getMaxUploadSize(){
-        $max_size = ini_get('upload_max_filesize');
-        $max_size = str_replace('M', 'Мb', $max_size);
-        $max_size = str_replace('K', 'Kb', $max_size);
-        return $max_size;
+
+        // вычисляем по тому, что меньше, т.к. если post_max_size меньше upload_max_filesize,
+        // то максимум можно будет загрузить post_max_size
+        $max_size = min(files_convert_bytes(@ini_get('upload_max_filesize')), files_convert_bytes(@ini_get('post_max_size')));
+
+        return files_format_bytes($max_size);
+
     }
 
     public function isUploaded($name){

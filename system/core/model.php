@@ -8,6 +8,7 @@ class cmsModel{
     //условия для выборок
     public $table      = '';
     public $select     = array('i.*');
+    public $distinct   = '';
     public $join       = '';
     public $where      = '';
     public $where_separator  = 'AND';
@@ -508,6 +509,7 @@ class cmsModel{
         $this->index_action = '';
         $this->limit        = '';
         $this->join         = '';
+        $this->distinct     = '';
 
 		if ($this->keep_filters) { return; }
 
@@ -517,6 +519,10 @@ class cmsModel{
 
         return $this;
 
+    }
+
+    public function distinctSelect() {
+        $this->distinct = 'DISTINCT'; return $this;
     }
 
     public function filter($condition){
@@ -709,11 +715,26 @@ class cmsModel{
 
         if (!$is_recursive){
 
-            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
+            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
 
         } else {
 
-            $this->joinInner($bind_table_name, 'b', 'b.item_id = i.id');
+            // для корневой категории фильтрация не нужна
+            if(!$category['parent_id']){
+                return $this;
+            }
+
+            /**
+             * Нам нужны только уникальные значения
+             * Закомментировано потому что DISTINCT дает нагрузку
+             * @todo сделать анализ кол-ва записей, вложенности категорий и динамически включать или отключать
+             * В общих случаях, когда дерево категорий имеет первый и второй уровень раскомментировать не нужно
+             * Для малых БД, где повсеместно используется принадлежность к нескольким категориям ниже второго уровня
+             * имеет смысл раскомментировать строку ниже
+             */
+            // $this->distinctSelect();
+
+            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
             $this->joinInner($table_name, 'c', "c.id = b.category_id");
             $this->filterGtEqual('c.ns_left', $category['ns_left']);
             $this->filterLtEqual('c.ns_right', $category['ns_right']);
@@ -853,8 +874,7 @@ class cmsModel{
     }
 
     public function join($table_name, $as, $on){
-        $this->join .= "JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
+        return $this->joinInner($table_name, $as, $on);
     }
 
     public function joinLeft($table_name, $as, $on){
@@ -1148,7 +1168,7 @@ class cmsModel{
 
     public function getCount($table_name, $by_field='id'){
 
-        $sql = "SELECT COUNT(i.{$by_field}) as count
+        $sql = "SELECT {$this->distinct} COUNT(i.{$by_field}) as count
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 
@@ -1271,7 +1291,7 @@ class cmsModel{
 
         $select = implode(', ', $this->select);
 
-        $sql = "SELECT {$select}
+        $sql = "SELECT {$this->distinct} {$select}
                 FROM {#}{$this->table} i
                 {$this->index_action}";
 

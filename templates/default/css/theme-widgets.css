@@ -22,7 +22,6 @@
 .widget > .title .links {
     float:right;
     font-size:13px;
-    margin-top: -1px;
 }
 
 .widget > .title .links a{
@@ -222,7 +221,14 @@ aside .widget_tabbed > .tabs .links a {
 .widget_content_list.tiles-small .item .image { margin:0; }
 
 .widget_content_list.compact .item { margin-bottom: 5px; }
+.widget_content_list.compact .item:last-child { margin-bottom: 0; }
 .widget_content_list.compact .item .title { font-size:13px; margin-bottom: 0; line-height: 15px; }
+
+@media screen and (max-width: 480px) {
+    .widget_content_list .item, .widget_content_list.featured .item-first {
+        width: 100% !important;
+    }
+}
 
 /* ========================================================================== */
 
@@ -455,7 +461,7 @@ aside .widget_tabbed > .tabs .links a {
 .widget_profiles_list.list .item:last-child { margin-bottom: 0; }
 
 .widget_profiles_list.list .item .image { float:left; margin-right: 10px; }
-.widget_profiles_list.list .item .image img { display: block; }
+.widget_profiles_list .item .image img, .item-avatar > img { display: block; }
 .widget_profiles_list.list .item .info { float:left; }
 
 .widget_profiles_list.tiles .item { display:inline-block; }
@@ -607,111 +613,4 @@ aside .widget_tabbed > .tabs .links a {
 
 .widget_content_filter .buttons input {
 	margin-right: 10px;
-}
-/*=========Form setting widgets===========*/
-form.modal{
-    margin:15px;
-}
-form fieldset .field{
-    margin-bottom: 5px;
-}
-form fieldset .field:last-child{
-    margin-bottom: 0;
-}
-form fieldset .field, form .hint {
-    clear: both;
-}
-form fieldset{
-    padding-right:15px;
-    border-radius:4px;
-    border:solid 1px #B3C2C9;
-    margin-bottom:12px;
-}
-form fieldset legend{
-    color:#34495e;
-    font-weight: bold;
-}
-form fieldset p {
-    color:#666;
-}
-form .label {
-    padding:5px 0;
-}
-form .field label {
-    display:block;
-    padding:3px 0;
-    color:#68809B;
-}
-form .field .input_checkbox_list label {
-    display: inline-table;
-    color:#666;
-}
-form.modal .textarea { resize:none; }
-.modal_form {
-    min-width:750px;
-    overflow: hidden;
-    overflow-y: auto;
-}
-.modal_form .tabs-menu{
-    margin-bottom: 10px;
-}
-.modal_form .tabs-menu > ul,
-.modal_form .tabs-menu > ul > li {
-    margin:0; padding:0;
-    list-style:none;
-}
-.modal_form .tabs-menu > ul {
-    border-bottom: solid 1px #B3C2C9;
-    height:33px;
-    clear:both;
-}
-.modal_form .tabs-menu > ul > li {
-    float:left;
-    font-size:15px;
-    margin-right: 3px;
-    background:#FFF;
-}
-.modal_form .tabs-menu > ul > li > a {
-    text-decoration: none;
-    display:inline-block;
-    padding:0 10px;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;
-    border: solid 1px #FFF;
-    border-bottom: solid 1px #B3C2C9;
-    height:32px;
-    line-height:32px;
-}
-.modal_forml .tabs-menu > ul > li > a {
-    color:#68809B !important;
-}
-.modal_form .tabs-menu > ul > li > a:hover {
-    background:#e1ebef;
-    color:#34495e !important;
-}
-.modal_form .tabs-menu > ul > li.active > a,
-.modal_form .tabs-menu > ul > li.active > a:hover {
-    cursor:default;
-    color:#34495e !important;
-    border: solid 1px #B3C2C9;
-    border-bottom: solid 1px #fff;
-    background:#FFF;
-}
-.modal_form .tabs-menu .tab {
-    border: solid 1px #B3C2C9;
-    border-top:none;
-    padding-top:10px;
-}
-.modal_form .tabs-menu .tab fieldset{
-    border:none;
-}
-.modal_form .tabs-menu > select { display:none; }
-.widget_modal_help_link{
-    float: right;
-    margin-top: -40px;
-    margin-right: 16px;
-}
-.widget_modal_help_link a{
-    padding-left:20px;
-    background:url("../images/icons/help.png") no-repeat left;
 }

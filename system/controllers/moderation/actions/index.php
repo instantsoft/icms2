@@ -23,7 +23,7 @@ class actionModerationIndex extends cmsAction {
 
         if (!$ctype_name) { $ctype_name = $ctypes_list[0]; $is_index = true; }
 
-        $content_controller = cmsCore::getController('content');
+        $content_controller = cmsCore::getController('content', $this->request);
 
         $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypesFiltered();
         $ctypes = array_collection_to_list($ctypes, 'name', 'title');
