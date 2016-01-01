@@ -444,7 +444,7 @@ function html_minify($html){
 
 }
 
-function nf($number, $decimals=2){
+function nf($number, $decimals=2, $thousands_sep=''){
     if (!$number) { return 0; }
-    return number_format((double)str_replace(',', '.', $number), $decimals, '.', '');
+    return number_format((double)str_replace(',', '.', $number), $decimals, '.', $thousands_sep);
 }
