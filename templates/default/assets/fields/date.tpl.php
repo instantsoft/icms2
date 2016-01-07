@@ -3,7 +3,7 @@
 
 <?php if($field->title){ ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
-<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], array('id'=>$field->id)); ?>
+<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], array('id'=>$field->id), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
 
 <?php if($field->data['show_time']){ ?>
     <?php echo html_select_range($field->data['fname_hours'], 0, 23, 1, true, $field->data['hours']); ?> :
