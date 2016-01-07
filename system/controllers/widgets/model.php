@@ -219,7 +219,8 @@ class modelWidgets extends cmsModel {
                 'id' => $bind['id'],
                 'title' => $bind['title'],
                 'is_tab_prev' => (bool)$bind['is_tab_prev'],
-                'is_disabled' => $bind['page_id'] != $page_id && $bind['position'] != '_unused'
+                'is_disabled' => $bind['page_id'] != $page_id && $bind['position'] != '_unused',
+                'hide'        => (bool)$bind['is_enabled']
             );
 
         }
@@ -285,6 +286,27 @@ class modelWidgets extends cmsModel {
             'position'=>'_unused',
             'page_id'=>null
         ));
+
+    }
+    
+    public function hideWidget($id){
+		
+		if (!$id || !is_numeric($id)){
+			cmsTemplate::getInstance()->renderJSON(array(
+				'error' => true,
+			));
+		}
+		
+		$i = $this->getItemByField('widgets_bind', 'id', $id);
+		
+		$active = $i['is_enabled'] ? false : true;
+		
+        $this->update('widgets_bind', $id, array('is_enabled'=> $active));
+		
+		cmsTemplate::getInstance()->renderJSON(array(
+			'error' => false,
+			'hide' => $active
+		));
 
     }
 
