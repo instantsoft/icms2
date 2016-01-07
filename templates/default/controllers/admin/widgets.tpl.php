@@ -72,6 +72,7 @@
                  data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"
                  data-load-url="<?php echo $this->href_to('widgets', 'load'); ?>"
                  data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
+                 data-hide-url="<?php echo $this->href_to('widgets', 'hide'); ?>"
                  data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"
                  data-delete-url="<?php echo $this->href_to('widgets', 'delete'); ?>"
                  data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
@@ -120,6 +121,7 @@
 
                 <div id="actions-template" style="display:none">
                     <span class="actions">
+                    	<a class="hide" href="javascript:" title="<?php echo LANG_HIDE; ?>"></a>
                         <a class="edit" href="javascript:" title="<?php echo LANG_EDIT; ?>"></a>
                         <a class="delete" href="javascript:" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
@@ -132,5 +134,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_PRIVACY_TYPE_HIDE'); ?>
 </script>
