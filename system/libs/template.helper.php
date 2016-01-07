@@ -157,7 +157,7 @@ function html_textarea($name='', $value='', $attributes=array()){
 }
 
 function html_back_button(){
-	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK_BUTTON.'</a></div>';
+	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK.'</a></div>';
 }
 
 function html_checkbox($name, $checked=false, $value=1, $attributes=array()){
