@@ -684,7 +684,7 @@ class cmsCore {
         $is_user_hide = !empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin;
 
         if ($is_user_hide) { return false; }
-        if (!$is_user_view) { return false; }
+        if (!$is_user_view || $widget['is_enabled']) { return false; }
 
         $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
