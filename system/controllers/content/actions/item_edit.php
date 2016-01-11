@@ -63,7 +63,7 @@ class actionContentItemEdit extends cmsAction {
             $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
         }
 
-		cmsEventsManager::hook("content_edit", array($ctype, $item));
+		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?

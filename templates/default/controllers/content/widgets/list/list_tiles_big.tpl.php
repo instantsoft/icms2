@@ -3,12 +3,24 @@
     <div class="widget_content_list tiles-big">
         <?php foreach($items as $item) { ?>
 
-            <?php $url = href_to($ctype['name'], $item['slug']) . '.html'; ?>
+            <?php
+                $url        = href_to($ctype['name'], $item['slug']) . '.html';
+                $is_private = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
+                $image      = (($image_field && !empty($item[$image_field])) ? $item[$image_field] : '');
+                if ($is_private) {
+                    $image  = default_images('private', 'normal');
+                    $url    = '';
+                }
+            ?>
 
             <div class="item">
-                <?php if ($image_field && !empty($item[$image_field])) { ?>
+                <?php if ($image) { ?>
                     <div class="image">
-                        <a style="background-image:url('<?php echo html_image_src($item[$image_field], 'normal', true); ?>')" href="<?php echo $url; ?>"></a>
+                        <?php if ($url) { ?>
+                            <a style="background-image:url('<?php echo html_image_src($image, 'normal', true); ?>')" href="<?php echo $url; ?>"></a>
+                        <?php } else { ?>
+                            <div style="background-image:url('<?php echo html_image_src($image, 'normal', true); ?>')"></div>
+                        <?php } ?>
                     </div>
                 <?php } ?>
                 <div class="info">
@@ -26,19 +38,35 @@
                             </span>
                             <?php if($ctype['is_comments']){ ?>
                                 <span class="comments">
-                                    <a href="<?php echo $url . '#comments'; ?>" title="<?php html(LANG_COMMENTS); ?>"><?php echo intval($item['comments']); ?></a>
+                                    <?php if ($url) { ?>
+                                        <a href="<?php echo $url . '#comments'; ?>" title="<?php echo LANG_COMMENTS; ?>">
+                                            <?php echo intval($item['comments']); ?>
+                                        </a>
+                                    <?php } else { ?>
+                                        <?php echo intval($item['comments']); ?>
+                                    <?php } ?>
                                 </span>
                             <?php } ?>
                         </div>
                     <?php } ?>
                     <div class="title">
-                        <a href="<?php echo $url; ?>"><?php html($item['title']); ?></a>
+                        <?php if ($url) { ?>
+                            <a href="<?php echo $url; ?>"><?php html($item['title']); ?></a>
+                        <?php } else { ?>
+                            <?php html($item['title']); ?>
+                        <?php } ?>
                         <?php if ($item['is_private']) { ?>
                             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                         <?php } ?>
                     </div>
                     <?php if ($teaser_field && !empty($item[$teaser_field])) { ?>
-                        <div class="teaser"><?php echo $item[$teaser_field]; ?></div>
+                        <div class="teaser">
+                            <?php if (!$is_private) { ?>
+                                <?php echo string_short($item[$teaser_field], $teaser_len); ?>
+                            <?php } else { ?>
+                                <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
+                            <?php } ?>
+                        </div>
                     <?php } ?>
                 </div>
             </div>

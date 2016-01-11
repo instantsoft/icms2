@@ -87,7 +87,7 @@ class activity extends cmsFrontend{
         }
 
 		$this->model->filterEqual('is_pub', 1);
-		
+
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
@@ -95,17 +95,17 @@ class activity extends cmsFrontend{
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
-        $items = cmsEventsManager::hook("activity_before_list", $items);
+        $items = cmsEventsManager::hook('activity_before_list', $items);
 
         return $template->renderInternal($this, 'list', array(
-            'filters' => array(),
+            'filters'      => array(),
             'dataset_name' => $dataset_name,
-            'page_url' => $page_url,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'items' => $items,
-            'user' => $user,
+            'page_url'     => $page_url,
+            'page'         => $page,
+            'perpage'      => $perpage,
+            'total'        => $total,
+            'items'        => $items,
+            'user'         => $user
         ));
 
     }

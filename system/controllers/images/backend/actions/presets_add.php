@@ -4,8 +4,6 @@ class actionImagesPresetsAdd extends cmsAction {
 
     public function run(){
 
-        $images_model = cmsCore::getModel('images');
-
         $form = $this->getForm('preset', array('add'));
 
         $is_submitted = $this->request->has('submit');
@@ -20,7 +18,10 @@ class actionImagesPresetsAdd extends cmsAction {
 
             if (!$errors){
 
-                $id = $images_model->addPreset($preset);
+                $id = $this->model->addPreset($preset);
+
+                // создаем дефолтные миниатюры
+                $this->createDefaultImages($preset);
 
                 $this->redirectToAction('presets');
 

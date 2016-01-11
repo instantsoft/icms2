@@ -33,35 +33,27 @@ class fieldImages extends cmsFormField {
 
     public function parseTeaser($value){
 
-        $config = cmsConfig::getInstance();
-
-        $images = cmsModel::yamlToArray($value);
-
-        $html = '';
-
-        foreach($images as $key=>$paths){
-            $html .= '<a href="'.$config->upload_host . '/' . $paths[$this->getOption('size_full')].'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title'].' '.$key).'" /></a>';
-            break;
-        }
-
-        return $html;
+        return $this->parse($value);
 
     }
 
     public function parse($value){
 
-        $config = cmsConfig::getInstance();
-
-        $images = cmsModel::yamlToArray($value);
+        $images = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
         $html = '';
 
         foreach($images as $key=>$paths){
-			$full = isset($paths[$this->getOption('size_full')]) ? $paths[$this->getOption('size_full')] : '';
-            $html .= '<a class="img-'.$this->getName().'" href="'.$config->upload_host . '/' . $full.'"><img src="'.$config->upload_host . '/' . $paths['small'].'" alt="'.htmlspecialchars(empty($this->item['title']) ? $this->name : $this->item['title'].' '.$key).'" /></a>';
+
+            if (!isset($paths[$this->getOption('size_full')])){ continue; }
+
+            $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+
         }
 
-        $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+        if($html){
+            $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+        }
 
         return $html;
 

@@ -2,7 +2,7 @@
 
     // Определяем корень
     define('PATH', dirname(__FILE__));
-	define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+	define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
@@ -35,6 +35,11 @@
 	cmsCore::loadLib('html.helper');
 	cmsCore::loadLib('strings.helper');
 	cmsCore::loadLib('files.helper');
+    cmsCore::loadLib('spyc.class');
+    // подключаем хелпер шаблона, если он есть
+    if(!cmsCore::includeFile('templates/'.$config->template.'/assets/helper.php')){
+        cmsCore::loadLib('template.helper');
+    }
 
     // Инициализируем ядро
     $core = cmsCore::getInstance();

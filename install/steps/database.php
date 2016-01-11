@@ -19,9 +19,10 @@ function check_db(){
 
     $db = $_POST['db'];
 
-    $db['host'] = trim($db['host']);
-    $db['user'] = trim($db['user']);
-    $db['base'] = trim($db['base']);
+    $db['host']   = trim($db['host']);
+    $db['user']   = trim($db['user']);
+    $db['base']   = trim($db['base']);
+    $db['engine'] = trim($db['engine']);
 
     $mysqli = @new mysqli($db['host'], $db['user'], $db['pass'], $db['base']);
 
@@ -34,7 +35,26 @@ function check_db(){
 
     $mysqli->set_charset("utf8");
 
-    $success = import_dump($mysqli, 'base.sql', $db['prefix']);
+    $check_engine = check_db_engine($mysqli, $db['engine']);
+
+    if ($check_engine !== true) {
+        return array(
+            'error' => true,
+            'message' => $check_engine
+        );
+    }
+
+    $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine']);
+    if($success){
+        $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine']);
+    }
+
+    if ($success && !empty($db['is_install_demo_content'])) {
+        $success = import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine']);
+        $dir_install_upload = PATH . DS . 'upload';
+        $dir_upload = DOC_ROOT . DS . 'upload';
+        copy_folder($dir_install_upload, $dir_upload);
+    }
 
     if ($success){
         if (!$db['users_exists']){
@@ -50,9 +70,30 @@ function check_db(){
 
 }
 
-function import_dump($mysqli, $file, $prefix, $delimiter = ';'){
+function check_db_engine($mysqli, $engine){
 
-    set_time_limit(0);
+    $r = $mysqli->query('SHOW ENGINES');
+    if ($r === false) {
+        return true; // невозможно выполнить запрос, оставляем на откуп пользователю
+    }
+
+    while($data = $r->fetch_assoc()){
+        if($data['Engine'] == $engine){
+            if(in_array($data['Support'], array('YES', 'DEFAULT'), true)){
+                return true;
+            } else {
+                return constant('LANG_DATABASE_ENGINE_'.$data['Support']);
+            }
+        }
+    }
+
+    return LANG_DATABASE_ENGINE_ERROR;
+
+}
+
+function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';'){
+
+    @set_time_limit(0);
 
     $file = PATH . 'languages' . DS . LANG . DS . $file;
 
@@ -70,7 +111,7 @@ function import_dump($mysqli, $file, $prefix, $delimiter = ';'){
 
             $query = trim(implode('', $query));
 
-            $query = str_replace('{#}', $prefix, $query);
+            $query = str_replace(array('{#}', 'InnoDB'), array($prefix, $engine), $query);
 
             $result = $mysqli->query($query);
 

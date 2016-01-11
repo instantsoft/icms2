@@ -19,6 +19,10 @@ class actionAdminUsersAdd extends cmsAction {
 
             $errors = $form->validate($this,  $user);
 
+            if (mb_strlen($user['password1']) < 6) {
+                $errors['password1'] = sprintf(ERR_VALIDATE_MIN_LENGTH, 6);
+            }
+
             if (!$errors){
 
                 $result = $users_model->addUser($user);

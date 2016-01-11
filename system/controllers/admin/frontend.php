@@ -1,7 +1,7 @@
 <?php
 class admin extends cmsFrontend {
 
-    const perpage = 15;
+    const perpage = 25;
 
     public $installer_upload_path = 'installer';
 
@@ -12,6 +12,8 @@ class admin extends cmsFrontend {
 
         if (!cmsUser::isAdmin()) { cmsCore::error404(); }
 
+        if(!$this->allowByIp()){ cmsCore::error404(); }
+
         parent::before($action_name);
 
         $template = cmsTemplate::getInstance();
@@ -19,6 +21,16 @@ class admin extends cmsFrontend {
         $template->setLayout('admin');
 
         $template->setMenuItems('cp_main', $this->getAdminMenu());
+
+    }
+
+    private function allowByIp() {
+
+        $allow_ips = cmsConfig::get('allow_ips');
+
+        if(!$allow_ips){ return true; }
+
+        return string_in_mask_list(cmsUser::getIp(), $allow_ips);
 
     }
 
@@ -159,7 +171,7 @@ class admin extends cmsFrontend {
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
 
         if(!file_exists($ctrl_file)){
-            $this->halt(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
+            cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
         }
 
         include_once($ctrl_file);
@@ -168,11 +180,97 @@ class admin extends cmsFrontend {
 
         $backend = new $controller_class($request);
 
+        // Устанавливаем корень для URL внутри бакенда
+        $backend->setRootURL($this->name.'/controllers/edit/'.$controller_name);
+
         return $backend;
 
     }
 
 //============================================================================//
 //============================================================================//
+
+    public function parsePackageManifest(){
+
+        $config = cmsConfig::getInstance();
+
+        $path = $config->upload_path . $this->installer_upload_path;
+
+        $ini_file = $path . '/' . "manifest.{$config->language}.ini";
+        $ini_file_default = $path . '/' . "manifest.ru.ini";
+
+        if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
+        if (!file_exists($ini_file)){ return false; }
+
+        $manifest = parse_ini_file($ini_file, true);
+
+        if (file_exists($config->upload_path . $this->installer_upload_path . '/' . 'package')){
+            $manifest['contents'] = $this->getPackageContentsList();
+        } else {
+			$manifest['contents'] = false;
+		}
+
+        if (isset($manifest['info']['image'])){
+            $manifest['info']['image'] = $config->upload_host . '/' .
+                                            $this->installer_upload_path . '/' .
+                                            $manifest['info']['image'];
+        }
+
+        if((isset($manifest['install']) || isset($manifest['update']))){
+
+            $action = (isset($manifest['install']) ? 'install' : 'update');
+
+            if(isset($manifest[$action]['type']) && isset($manifest[$action]['name'])){
+
+                $manifest['package'] = array(
+                    'type'       => $manifest[$action]['type'],
+                    'type_hint'  => constant('LANG_CP_PACKAGE_TYPE_'.strtoupper($manifest[$action]['type']).'_'.strtoupper($action)),
+                    'action'     => $action,
+                    'name'       => $manifest[$action]['name'],
+                    'controller' => (isset($manifest[$action]['controller']) ? $manifest[$action]['controller'] : null),
+                );
+
+                // проверяем установленную версию
+                $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
+
+            }
+
+        }
+
+        return $manifest;
+
+    }
+
+    private function componentInstalled($manifest_package) {
+
+        $model = new cmsModel();
+
+        return $model->filterEqual('name', $manifest_package['name'])->getFieldFiltered('controllers', 'version');
+
+    }
+
+    private function widgetInstalled($manifest_package) {
+
+        $model = new cmsModel();
+
+        return $model->filterEqual('name', $manifest_package['name'])->
+                filterEqual('controller', $manifest_package['controller'])->
+                getFieldFiltered('widgets', 'version');
+
+    }
+
+    private function systemInstalled($manifest_package) {
+        return cmsCore::getVersion();
+    }
+
+    private function getPackageContentsList(){
+
+        $path = cmsConfig::get('upload_path') . $this->installer_upload_path . '/' . 'package';
+
+        if (!is_dir($path)) { return false; }
+
+        return files_tree_to_array($path);
+
+    }
 
 }

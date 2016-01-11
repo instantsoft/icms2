@@ -159,9 +159,7 @@ class cmsCore {
 
         if ($class && class_exists($class, false)){ return true; }
 
-        $config = cmsConfig::getInstance();
-
-        $lib_file = $config->root_path.'system/libs/'.$library.'.php';
+        $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
         if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
@@ -622,19 +620,24 @@ class cmsCore {
         if (!$this->uri_controller){ $this->uri_controller = $config->ct_autoload;	}
         if (!$this->uri_action) { $this->uri_action = 'index'; }
 
+        // проверяем ремаппинг контроллера
+        $remap_to = self::getControllerNameByAlias($this->uri_controller);
+        if ($remap_to) { $this->uri_controller = $remap_to; }
+
         if (!self::isControllerExists($this->uri_controller)) {
             $this->uri_action     = $this->uri_controller;
             $this->uri_controller = $config->ct_default;
         }
 
-        // проверяем ремаппинг контроллера
-        $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
-
         $this->controller = $this->uri_controller;
 
         // загружаем контроллер
         $controller = self::getController($this->uri_controller, $this->request);
+
+        // контроллер включен?
+        if(!$controller->isEnabled()){
+            self::error404();
+        }
 
         // сохраняем в контроллере название текущего экшена
         $controller->current_action = $this->uri_action;
@@ -651,6 +654,9 @@ class cmsCore {
      * Запускает все виджеты, привязанные к текущей странице
      */
     public function runWidgets(){
+
+        // в админке нам виджеты не нужны
+        if ($this->uri_controller == 'admin') { return; }
 
         $widgets_model = cmsCore::getModel('widgets');
         $pages = $widgets_model->getPages();
@@ -680,15 +686,16 @@ class cmsCore {
         if ($is_user_hide) { return false; }
         if (!$is_user_view) { return false; }
 
-        $path = 'system/' . cmsCore::getWidgetPath( $widget['name'], $widget['controller'] );
-        $file = $path . '/widget.php';
-
-        cmsCore::includeFile($file);
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
         $class = 'widget' .
                     ($widget['controller'] ? string_to_camel('_', $widget['controller']) : '') .
                     string_to_camel('_', $widget['name']);
+
+        if (!class_exists($class, false)) {
+            cmsCore::includeFile($file);
+            cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        }
 
         $widget_object = new $class($widget);
 
@@ -783,6 +790,8 @@ class cmsCore {
                 'message'=>$message,
                 'details'=>$details
             ));
+        } else {
+            echo '<h1>503 Service Unavailable</h1>';
         }
 
         die();
@@ -884,7 +893,7 @@ class cmsCore {
     }
 
     /**
-     * Возвращает список файл из указанной директории по нужной маске
+     * Возвращает список файлов из указанной директории по нужной маске
      * @param string $root_dir Директория
      * @param string $pattern Маска файлов
      * @param bool $is_strip_ext Отрезать расширения?

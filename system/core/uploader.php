@@ -13,10 +13,13 @@ class cmsUploader {
      * @return string
      */
     public function getMaxUploadSize(){
-        $max_size = ini_get('upload_max_filesize');
-        $max_size = str_replace('M', 'Мb', $max_size);
-        $max_size = str_replace('K', 'Kb', $max_size);
-        return $max_size;
+
+        // вычисляем по тому, что меньше, т.к. если post_max_size меньше upload_max_filesize,
+        // то максимум можно будет загрузить post_max_size
+        $max_size = min(files_convert_bytes(@ini_get('upload_max_filesize')), files_convert_bytes(@ini_get('post_max_size')));
+
+        return files_format_bytes($max_size);
+
     }
 
     public function isUploaded($name){
@@ -47,8 +50,9 @@ class cmsUploader {
         $user->increaseFilesCount();
 
         if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['quality'])) { $size['quality'] = 90; }
 
-        if ($this->imageCopyResized($source_file, $dest_file, $size['width'], $size['height'], $size['square'])) {
+        if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['square'], $size['quality'])) {
 
             $url = str_replace($cfg->upload_path, '', $dest_file);
 
@@ -112,15 +116,18 @@ class cmsUploader {
         $dest_ext   = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
         if ($allowed_ext !== false){
-            $allowed_ext = explode(",", $allowed_ext);
+
+            $allowed_ext = explode(',', $allowed_ext);
             foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., '))); }
-            if (!in_array($dest_ext, $allowed_ext)){
+
+            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
                 return array(
                     'error' => LANG_UPLOAD_ERR_MIME,
                     'success' => false,
                     'name' => $dest_name
                 );
             }
+
         }
 
         if ($allowed_size){
@@ -136,14 +143,17 @@ class cmsUploader {
         if (!$destination){
 
             $user->increaseFilesCount();
-            $dest_dir = $this->getUploadDestinationDirectory();
-            $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) ), 0, 8) . '.' . $dest_ext;
-            $destination = $dest_dir . '/' . $dest_file;
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_name;
 
         } else {
 
             $destination = $config->upload_path . $destination . '/' . $dest_name;
 
+        }
+
+        if(file_exists($destination)){
+            $destination = str_replace($dest_name, pathinfo($dest_name, PATHINFO_FILENAME).'_'.uniqid().'.'.$dest_ext, $destination);
         }
 
         return $this->moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);
@@ -163,48 +173,51 @@ class cmsUploader {
      */
     public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
-        $cfg = cmsConfig::getInstance();
         $user = cmsUser::getInstance();
 
-        $dest_size  = 10; //$this->getXHRFileSize();
-
-        if (!$dest_size){
-            return array(
-                'success' => false,
-                'error' => LANG_UPLOAD_ERR_NO_FILE
-            );
-        }
-
-        $dest_name  = files_sanitize_name($_GET['qqfile']);
-        $dest_info  = pathinfo($dest_name);
-        $dest_ext   = $dest_info['extension'];
+        $dest_name = files_sanitize_name($_GET['qqfile']);
+        $dest_ext  = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
 
         if ($allowed_ext !== false){
-            $allowed_ext = explode(",", $allowed_ext);
+
+            $allowed_ext = explode(',', $allowed_ext);
             foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = trim($ext); }
-            if (!in_array($dest_ext, $allowed_ext)){
+
+            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
                 return array(
                     'error' => LANG_UPLOAD_ERR_MIME,
                     'success' => false,
                     'name' => $dest_name
                 );
             }
+
         }
+
+        if ($allowed_size){
+            if ($this->getXHRFileSize() > $allowed_size){
+                return array(
+                    'error' => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'success' => false,
+                    'name' => $dest_name
+                );
+            }
+        }
+
+        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
 
         if (!$destination){
 
             $user->increaseFilesCount();
-            $dest_dir = $this->getUploadDestinationDirectory();
-            $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) ), 0, 8) . '.' . $dest_ext;
-            $destination = $dest_dir . '/' . $dest_file;
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
 
         } else {
 
-            $destination = $cfg->upload_path . $destination . '/' . $dest_file;
+            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
 
         }
 
-        return $this->saveXHRFile($destination, $dest_name, $dest_size);
+        return $this->saveXHRFile($destination, $dest_name);
 
     }
 
@@ -219,7 +232,7 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
-    public function saveXHRFile($destination, $orig_name='', $orig_size=0){
+    public function saveXHRFile($destination, $orig_name=''){
 
         $cfg = cmsConfig::getInstance();
 
@@ -247,7 +260,7 @@ class cmsUploader {
             'path'  => $destination,
             'url' => str_replace($cfg->upload_path, '', $destination),
             'name' => $orig_name,
-            'size' => $orig_size
+            'size' => $realSize
         );
 
     }
@@ -292,7 +305,16 @@ class cmsUploader {
         }
 
         $upload_dir = dirname($destination);
-        if (!is_writable($upload_dir)){	@chmod($upload_dir, 0755); }
+        if (!is_writable($upload_dir)){	@chmod($upload_dir, 0777); }
+
+        if (!is_writable($upload_dir)){
+            return array(
+                'success' => false,
+                'error' => LANG_UPLOAD_ERR_CANT_WRITE,
+                'name' => $orig_name,
+                'path' => ''
+            );
+        }
 
         return array(
             'success' => @move_uploaded_file($source, $destination),
@@ -351,67 +373,11 @@ class cmsUploader {
 
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function imageCopyResized($src, $dest, $maxwidth, $maxheight, $is_square=false, $quality=100){
-
-        if (!file_exists($src)) { return false; }
-
-        $upload_dir = dirname($dest);
-
-        if (!is_writable($upload_dir)) { @chmod($dest, 0777); }
-
-        $size = getimagesize($src);
-
-        if ($size === false) { return false; }
-
-        $new_width = $size[0];
-        $new_height = $size[1];
-
-        if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-            @copy($src, $dest);
-            return true;
-        }
-
-        $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
-        $icfunc = "imagecreatefrom" . $format;
-        if (!function_exists($icfunc)) { return false; }
-
-        $isrc = $icfunc($src);
-
-        if ($is_square) {
-            $idest = imagecreatetruecolor($maxwidth, $maxwidth);
-            imagefill($idest, 0, 0, 0xFFFFFF);
-            if ($new_width > $new_height)
-                imagecopyresampled($idest, $isrc, 0, 0, round((max($new_width, $new_height) - min($new_width, $new_height)) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-            if ($new_width < $new_height)
-                imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-            if ($new_width == $new_height)
-                imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
-        } else {
-            while ($new_width > $maxwidth) {
-                $new_width *= 0.99;
-                $new_height *= 0.99;
-            }
-            while ($new_height > $maxheight) {
-                $new_width *= 0.99;
-                $new_height *= 0.99;
-            }
-            $idest = imagecreatetruecolor($new_width, $new_height);
-            imagefill($idest, 0, 0, 0xFFFFFF);
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $size[0], $size[1]);
-        }
-
-        imageinterlace($idest, 1);
-
-        imagejpeg($idest, $dest, $quality);
-
-        imagedestroy($isrc);
-        imagedestroy($idest);
-
-        return true;
-
+    /**
+     * Это устаревший метод, используйте функцию img_resize
+     */
+    public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
+        return img_resize($src, $dest, $maxwidth, $maxheight, $is_square, $quality);
     }
 
 //============================================================================//

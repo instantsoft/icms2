@@ -83,6 +83,8 @@ class users extends cmsFrontend {
 					'url' => href_to($this->name, $profile['id'], $tab['name'])
 				);
 
+                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+
 				if (empty($this->tabs_controllers[$tab['controller']])){
 					$controller = cmsCore::getController($tab['controller'], $this->request);
 				} else {

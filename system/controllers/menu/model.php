@@ -82,13 +82,15 @@ class modelMenu extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getMenuItems($menu_id, $parent_id=false){
+    public function getMenuItems($menu_id=false, $parent_id=false){
 
         $this->select('COUNT(childs.id)', 'childs_count');
 
         $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id');
 
-        $this->filterEqual('menu_id', $menu_id);
+        if($menu_id !== false){
+            $this->filterEqual('menu_id', $menu_id);
+        }
 
         if ($parent_id !== false){
             $this->filterEqual('parent_id', $parent_id);
@@ -98,11 +100,13 @@ class modelMenu extends cmsModel{
 
         $this->orderBy('ordering', 'asc');
 
-        $this->useCache("menu.items");
+        $this->useCache('menu.items');
 
         return $this->get('menu_items', function($item, $model){
             if ($item['options']){
                 $item['options'] = cmsModel::yamlToArray($item['options']);
+            } else {
+                $item['options'] = array();
             }
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
@@ -114,27 +118,57 @@ class modelMenu extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getMenuItemsTree($menu_id, $parse_hooks=true){
+    public function getAllMenuItemsTree() {
 
-        $result = $this->getMenuItems($menu_id);
+        $menus = $this->select('menu.name', 'menu_name')->joinLeft('menu', 'menu', 'menu.id = i.menu_id')->getMenuItems();
 
-        if (!$result){ return false; }
+        $result = array();
+
+        if($menus){
+            foreach ($menus as $menu) {
+                $result[$menu['menu_name']][$menu['id']] = $menu;
+            }
+        }
+
+        return $result;
+
+    }
+
+    public static function buildMenu($menus, $parse_hooks=true) {
 
         $items = array();
+        $user  = cmsUser::getInstance();
 
-        $user = cmsUser::getInstance();
+        $delta = array();
 
         // перебираем все вернувшиеся пункты меню
-        foreach($result as $item){
+        foreach($menus as $item){
 
             $is_root_added = false;
 
-            if ($item['groups_view'] && !$user->isInGroups($item['groups_view'])) { continue; }
-            if ($item['groups_hide'] && $user->isInGroups($item['groups_hide'])) { continue; }
+            if (($item['groups_view'] && !$user->isInGroups($item['groups_view'])) ||
+                    ($item['groups_hide'] && $user->isInGroups($item['groups_hide']))) {
+
+                if($item['parent_id']){
+                    if(!isset($delta[$item['parent_id']])){
+                        $delta[$item['parent_id']] = 1;
+                    } else {
+                        $delta[$item['parent_id']] += 1;
+                    }
+                }
+
+                continue;
+
+            }
 
             $hook_result = array('items' => false);
 
             if ($parse_hooks){
+
+                // если URL пункта меню содержит свойство пользователя
+                if(strpos($item['url'], '{user.') !== false){
+                    $item['url'] = string_replace_user_properties($item['url']);
+                } else
 
                 // если URL пункта меню содержит шаблон {controller:action}
                 if (preg_match('/^{([a-z0-9]+):*([a-z0-9_]*)}$/i', $item['url'], $matches)){
@@ -171,12 +205,9 @@ class modelMenu extends cmsModel{
 
                 }
 
-				$is_external = mb_strpos($item['url'], 'http://')!==false || mb_strpos($item['url'], 'https://')!==false;
-				
-                if (!$is_root_added && !$is_external) { $item['url'] = href_to($item['url']); }
+				$is_external = mb_strpos($item['url'], '://') !== false;
 
-                // если URL пункта меню содержит свойство пользователя
-                $item['url'] = string_replace_user_properties($item['url']);
+                if (!$is_root_added && !$is_external) { $item['url'] = href_to($item['url']); }
 
             }
 
@@ -193,12 +224,28 @@ class modelMenu extends cmsModel{
 
         }
 
+        if($delta){
+            foreach ($delta as $item_id => $d) {
+                $items[$item_id]['childs_count'] -= $d;
+            }
+        }
+
         $tree = array();
 
-        $this->buildTreeRecursive($items, $tree);
+        cmsModel::buildTreeRecursive($items, $tree);
 
         // возвращаем дерево
         return $tree;
+
+    }
+
+    public function getMenuItemsTree($menu_id, $parse_hooks=true){
+
+        $result = $this->getMenuItems($menu_id);
+
+        if (!$result){ return false; }
+
+        return self::buildMenu($result, $parse_hooks);
 
     }
 
@@ -210,9 +257,11 @@ class modelMenu extends cmsModel{
         return $this->getItemById('menu_items', $id, function($item, $model){
             if ($item['options']){
                 $item['options'] = cmsModel::yamlToArray($item['options']);
-                $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
-                $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            } else {
+                $item['options'] = array();
             }
+            $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+            $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
             return $item;
         });
 
@@ -240,10 +289,6 @@ class modelMenu extends cmsModel{
 
         $item['ordering'] = $this->getNextOrdering('menu_items');
 
-        if (is_array($item['options'])){
-            $item['options'] = cmsModel::arrayToYaml($item['options']);
-        }
-
         $id = $this->insert('menu_items', $item);
 
         cmsCache::getInstance()->clean("menu.items");
@@ -256,10 +301,6 @@ class modelMenu extends cmsModel{
 //============================================================================//
 
     public function updateMenuItem($id, $item){
-
-        if (is_array($item['options'])){
-            $item['options'] = cmsModel::arrayToYaml($item['options']);
-        }
 
         cmsCache::getInstance()->clean("menu.items");
 
@@ -276,9 +317,9 @@ class modelMenu extends cmsModel{
 
         $tree = $this->getMenuItemsTree($item['menu_id'], false);
 
-        $level = false;
+        $level      = false;
         $node_start = false;
-        $to_delete = array($id);
+        $to_delete  = array($id);
         $to_reorder = array();
 
         foreach($tree as $item){

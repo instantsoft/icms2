@@ -25,6 +25,12 @@
         'title' => LANG_CP_WIDGETS_DELETE_PAGE,
         'href'  => $this->href_to('widgets', 'page_delete')
     ));
+    $this->addToolButton(array(
+        'class'   => 'move',
+        'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
+        'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
+        'href'    => $this->href_to('widgets', 'unbind_all_widgets')
+    ));
 	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,
@@ -32,13 +38,6 @@
 		'href'  => LANG_HELP_URL_WIDGETS
 	));
 
-?>
-
-<?php
-        cmsTemplate::getInstance()->insertCSS('wysiwyg/redactor/css/redactor.css');
-        cmsTemplate::getInstance()->insertJS('wysiwyg/redactor/js/redactor.js');
-        cmsTemplate::getInstance()->insertJS('wysiwyg/redactor/js/fullscreen.js');
-        cmsTemplate::getInstance()->insertJS("wysiwyg/redactor/lang/".cmsConfig::get('language').".js");
 ?>
 
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>

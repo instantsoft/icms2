@@ -2,6 +2,35 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
 
+    define('LANG_CP_DASHBOARD_STATS',           'Статистика');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
+    define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Папка сайта');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
+    define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Установлен Zend Guard Loader');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'Генеральный спонсор проекта');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Официальный сайт проекта');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Документация');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Каталог дополнений');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Форумы сообщества');
+
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Премиум компоненты');
+    define('LANG_CP_DASHBOARD_BILLING',         'Биллинг');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Зарабатывайте на своем сайте');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Профессиональный видео каталог на сайте');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Каталог объектов на карте');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Поддержите проект');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Предложение для спонсоров');
+
     define('LANG_CP_SECTION_INDEX',             'Главная');
     define('LANG_CP_SECTION_CTYPES',            'Типы контента');
     define('LANG_CP_SECTION_CONTENT',           'Контент');
@@ -102,6 +131,10 @@
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Журнальный');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Плитка');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Таблица');
+    define('LANG_CP_PRIVACY_TYPE',              'Как показывать приватные записи в списке');
+    define('LANG_CP_PRIVACY_TYPE_HIDE',         'Не показывать');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Показывать только название');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_ALL',     'Показывать полностью');
 
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Просмотр записи');
     define('LANG_CP_ITEMVIEW_ON',               'Просмотр записи включен');
@@ -205,6 +238,8 @@
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Создать страницу');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
@@ -244,7 +279,12 @@
     define('LANG_CP_SETTINGS_CACHE',            'Кеширование');
     define('LANG_CP_SETTINGS_DEBUG',            'Отладка');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
+    define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем.');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
@@ -252,10 +292,13 @@
     define('LANG_CP_SETTINGS_HOMETITLE',        'Заголовок главной страницы');
     define('LANG_CP_SETTINGS_METAKEYS',         'Ключевые слова');
     define('LANG_CP_SETTINGS_METADESC',         'Описание сайта');
-	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  "Использовать указанные выше слова и описание только для главной страницы");
+	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
+	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
+    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
+    define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Объединять CSS-файлы');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Объединять JS-файлы');
@@ -296,6 +339,8 @@
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
 
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
+    define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');
@@ -330,6 +375,22 @@
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
 
+    define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Требуемая версия установленного пакета');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Пакет установки компонента');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Пакет обновления компонента');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Пакет установки виджета');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Пакет обновления виджета');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'Пакет обновления InstantCMS');
+    define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Пакет версии %s уже был установлен. Если вы хотите его обновить, выберите соответствующий пакет обновления. Если вы хотите переустановить пакет, то сначала удалите его в админке.');
+    define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" имеет номер версии <b>%s</b>. У вас установлена версия <b>%s</b>. Для обновления выберите пакет большей версии.');
+    define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Версия пакета обновления соответствует установленной. Обновление не требуется.');
+    define('LANG_CP_PACKAGE_TYPE', 'Тип пакета');
+    define('LANG_CP_PACKAGE_NONAME', 'Неизвестный автор');
+    define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Невозможно установить пакет обновления, поскольку обновляемое дополнение не установлено');
+
+    define('LANG_CP_COMPONENT_IS_DELETED',      'Компонент "%s" успешно удален');
+    define('LANG_CP_DELETE_COMPONENT_CONFIRM',  'Вы действительно хотите удалить компонент "{title}"?');
+
     define('LANG_CP_FTP_ACCOUNT',               'Реквизиты FTP');
     define('LANG_CP_FTP_HOST',                  'Сервер');
     define('LANG_CP_FTP_USER',                  'Имя пользователя');
@@ -342,6 +403,9 @@
     define('LANG_CP_FTP_MKDIR_FAILED',          'Ошибка создания директории. Проверьте правильность пути и наличие прав');
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
+
+    define('LANG_CP_FTP_SKIP',				'Пропустить этот шаг');
+    define('LANG_CP_FTP_SKIP_HINT',			'Пропустите шаг, если автоматический доступ на FTP невозможен и вы используете ручной способ установки описанный в <a href="http://docs.instantcms.ru/manual/addons">инструкции</a>');
 
     define('ERR_VALIDATE_UNIQUE_FIELD',         'Поле уже существует');
     define('LANG_CP_BACK_TO_SITE',              'Вернуться на сайт');
@@ -422,3 +486,12 @@
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/manual/settings/scheduler/task');
 
+    define('LANG_ZIP_ERROR_10', 'Файл уже существует');
+    define('LANG_ZIP_ERROR_21', 'Несовместимый ZIP-архив');
+    define('LANG_ZIP_ERROR_18', 'Недопустимый аргумент');
+    define('LANG_ZIP_ERROR_14', 'Ошибка динамического выделения памяти');
+    define('LANG_ZIP_ERROR_9', 'Нет такого файла');
+    define('LANG_ZIP_ERROR_19', 'Файл не является zip архивом');
+    define('LANG_ZIP_ERROR_11', 'Невозможно открыть файл');
+    define('LANG_ZIP_ERROR_5', 'Ошибка чтения');
+    define('LANG_ZIP_ERROR_4', 'Ошибка поиска');

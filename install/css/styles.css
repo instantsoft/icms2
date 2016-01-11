@@ -366,11 +366,15 @@ form .opt-group label{
     color:#333;
     outline:none;
     width:99%;
-    margin-top: 6px;    
+    margin-top: 6px;
 }
 
 .input{
     height:16px;
+}
+select.input {
+    height: 27px;
+    width: 101%;
 }
 
 .input-icon{

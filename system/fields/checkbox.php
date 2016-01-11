@@ -7,8 +7,7 @@ class fieldCheckbox extends cmsFormField {
     public $filter_type = 'int';
 
     public function parse($value){
-        $value = $value ? LANG_YES : LANG_NO;
-        return htmlspecialchars($value);
+        return htmlspecialchars(($value ? LANG_YES : LANG_NO));
     }
 
     public function applyFilter($model, $value) {

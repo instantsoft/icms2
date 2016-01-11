@@ -8,7 +8,7 @@ function grid_content_items($controller, $ctype_name=false){
         'is_filter' => true,
         'is_pagination' => true,
         'is_draggable' => false,
-        'is_selectable' => true, 
+        'is_selectable' => true,
         'order_by' => 'id',
         'order_to' => 'desc',
         'show_id' => true
@@ -32,6 +32,11 @@ function grid_content_items($controller, $ctype_name=false){
                 return html_date($value);
             }
         ),
+        'is_approved' => array(
+            'title' => LANG_MODERATION,
+            'width' => 75,
+            'flag' => true
+        ),
         'is_pub' => array(
             'title' => LANG_ON,
             'width' => 40,
@@ -39,9 +44,9 @@ function grid_content_items($controller, $ctype_name=false){
 			'flag_toggle' => href_to($controller->name, 'content', array('item_toggle', $ctype_name, '{id}'))
         ),
         'user_nickname' => array(
-            'title' => LANG_AUTHOR,            
+            'title' => LANG_AUTHOR,
             'href' => href_to('users', '{user_id}'),
-            'order_by' => 'u.nickname', 
+            'order_by' => 'u.nickname',
         ),
     );
 

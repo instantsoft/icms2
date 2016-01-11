@@ -70,21 +70,27 @@
     define('LANG_DATABASE_USER',            'Пользователь');
     define('LANG_DATABASE_PASS',            'Пароль');
     define('LANG_DATABASE_BASE',            'База данных');
+    define('LANG_DATABASE_ENGINE',          'Движок базы данных');
+    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Использовать имеющуюся');
+    define('LANG_DATABASE_INSTALL_DEMO',    'Установить демо данные');
 
     define('LANG_DATABASE_CONNECT_ERROR',   "Ошибка подключения MySQL:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Ошибка импорта базы данных\nПроверьте правильность реквизитов");
+    define('LANG_DATABASE_ENGINE_NO',       'Выбранный движок БД не поддерживается');
+    define('LANG_DATABASE_ENGINE_DISABLED', 'Выбранный движок БД поддерживается, но отключен в настройках MySQL');
+    define('LANG_DATABASE_ENGINE_ERROR',    'Выбранный движок БД не поддерживается сервером');
 
     define('LANG_SITE_SITENAME',            "Название сайта");
     define('LANG_SITE_HOMETITLE',           "Заголовок главной страницы");
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
-    define('LANG_SITE_METADESC',            "Описание сайта");    
-    
+    define('LANG_SITE_METADESC',            "Описание сайта");
+
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
-    
+
     define('LANG_ADMIN_EXTERNAL',           'Реквизиты администратора будут взяты из таблицы <b>%s</b>');
     define('LANG_ADMIN_INFO',               'Для создания главного администратора необходимо указать его реквизиты');
     define('LANG_ADMIN_NAME',               'Имя администратора');

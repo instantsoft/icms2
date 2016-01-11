@@ -29,6 +29,7 @@ function grid_tabs($controller){
             'title' => LANG_SHOW,
             'flag'  => true,
             'width' => 60,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', '{users}_tabs', 'is_active'))
         ),
     );
 

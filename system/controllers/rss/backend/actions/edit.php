@@ -4,40 +4,31 @@ class actionRssEdit extends cmsAction {
 
     public function run($feed_id){
 
-        if (!$feed_id) { cmsCore::error404(); }
+        $feed = $this->model->getFeed($feed_id);
+        if (!$feed) { cmsCore::error404(); }
 
-        $rss_model = cmsCore::getModel('rss');
+        $form = $this->getForm('feed');
 
-        $feed = $rss_model->getFeed($feed_id);
+        // выясняем контроллер ленты
+        $controller = $feed['ctype_name'];
+        if($this->model->isCtypeFeed($feed['ctype_name'])){
+            $controller = 'content';
+        }
 
-        $ctype_id = $feed['ctype_id'];
+        list($form, $feed) = cmsEventsManager::hook('rss_'.$controller.'_controller_form', array($form, $feed));
+        list($form, $feed) = cmsEventsManager::hook('rss_edit_form', array($form, $feed));
+        list($form, $feed) = cmsEventsManager::hook('rss_'.$feed['ctype_name'].'_edit_form', array($form, $feed));
 
-        $content_model = cmsCore::getModel('content');
+        if ($this->request->has('submit')){
 
-        $fields = $content_model->getContentFields($feed['ctype_name']);
-
-        $fields = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
-
-        $form = $this->getForm('feed', array($fields));
-
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
-
-            $feed = $form->parse($this->request, $is_submitted);
+            $feed = array_merge($feed, $form->parse($this->request, true));
             $errors = $form->validate($this,  $feed);
 
             if (!$errors){
 
-                $rss_model->updateFeed($feed_id, $feed);
+                $this->model->updateFeed($feed_id, $feed);
 
-                $ctype = $content_model->getContentType($ctype_id);
-
-                $ctype['options']['is_rss'] = $feed['is_enabled'];
-
-                $content_model->updateContentType($ctype_id, array(
-                    'options' => $ctype['options']
-                ));
+                cmsEventsManager::hook('rss_'.$controller.'_controller_after_update', $feed);
 
                 $this->redirectToAction();
 
@@ -60,4 +51,3 @@ class actionRssEdit extends cmsAction {
     }
 
 }
-

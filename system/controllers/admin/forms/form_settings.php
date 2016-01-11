@@ -92,9 +92,20 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_META_NO_DEFAULT,
                     )),
 
+                    new fieldCheckbox('is_sitename_in_title', array(
+                        'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
+                        'default' => 1
+                    )),
+
                     new fieldCheckbox('is_check_updates', array(
                         'title' => LANG_CP_SETTINGS_CHECK_UPDATES,
                     )),
+
+                    new fieldString('detect_ip_key', array(
+                        'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
+                        'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
+                        'default' => 'REMOTE_ADDR'
+                    ))
 
                 )
             ),
@@ -131,6 +142,22 @@ class formAdminSettings extends cmsForm {
                             }
                             return $items;
                         }
+                    )),
+
+                    new fieldList('default_editor', array(
+                        'title' => LANG_CP_SETTINGS_EDITOR,
+                        'default' => 'redactor',
+                        'generator' => function($item){
+                            $items = array();
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){ $items[$editor] = $editor; }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldCheckbox('show_breadcrumbs', array(
+                        'title'   => LANG_CP_SETTINGS_SHOW_BREADCRUMBS,
+                        'default' => 1
                     )),
 
                     new fieldCheckbox('min_html', array(
@@ -284,6 +311,19 @@ class formAdminSettings extends cmsForm {
 
                 )
             ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_SECURITY,
+                'childs' => array(
+
+                    new fieldText('allow_ips', array(
+                        'title' => LANG_CP_SETTINGS_ALLOW_IPS,
+                        'hint'  => LANG_CP_SETTINGS_ALLOW_IPS_HINT
+                    ))
+
+                )
+            )
 
         );
 

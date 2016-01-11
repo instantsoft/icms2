@@ -7,15 +7,15 @@ class cmsWysiwygRedactor{
 		$user = cmsUser::getInstance();
 
 		$template = cmsTemplate::getInstance();
-		
-        $template->insertCSS('wysiwyg/redactor/css/redactor.css');
-        $template->addJS('wysiwyg/redactor/js/redactor.js');
-        $template->addJS('wysiwyg/redactor/js/video.js');
-        $template->addJS('wysiwyg/redactor/js/fullscreen.js');
-        $template->addJS('wysiwyg/redactor/js/fontsize.js');
-        $template->addJS('wysiwyg/redactor/js/fontfamily.js');
-        $template->addJS('wysiwyg/redactor/js/fontcolor.js');
-        $template->addJS("wysiwyg/redactor/lang/{$lang}.js");
+
+        $template->addCSSFromContext('wysiwyg/redactor/css/redactor.css');
+        $template->addJSFromContext('wysiwyg/redactor/js/redactor.js');
+        $template->addJSFromContext('wysiwyg/redactor/js/video.js');
+        $template->addJSFromContext('wysiwyg/redactor/js/fullscreen.js');
+        $template->addJSFromContext('wysiwyg/redactor/js/fontsize.js');
+        $template->addJSFromContext('wysiwyg/redactor/js/fontfamily.js');
+        $template->addJSFromContext('wysiwyg/redactor/js/fontcolor.js');
+        $template->addJSFromContext("wysiwyg/redactor/lang/{$lang}.js");
 
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
@@ -29,7 +29,7 @@ class cmsWysiwygRedactor{
                         lang: '<?php echo $lang; ?>',
                         plugins: ['video', 'fontfamily', 'fontsize', 'fontcolor', 'fullscreen'],
                         imageUpload: '<?php echo href_to('redactor/upload'); ?>',
-						minHeight: 250, 
+						minHeight: 250,
 						<?php if ($user->is_admin) { ?>
                             buttonSource: true
 						<?php } ?>

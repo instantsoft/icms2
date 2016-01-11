@@ -125,6 +125,8 @@
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
 
     //USERS
     define('LANG_USER',                      'Пользователь');
@@ -238,7 +240,8 @@
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы, цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
     define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
     define('ERR_VALIDATE_NUMBER',            'Введите число');
     define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
@@ -391,6 +394,7 @@
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
+    define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
     define('LANG_ON_FRONT',				 	 'На главной');
     define('LANG_SHOWED',					 'Показано');
     define('LANG_ORDER',					 'Порядок');
@@ -437,6 +441,7 @@
     define('LANG_EVENTS_THIS_WEEK',          'События на этой неделе');
     define('LANG_CALENDAR',                  'Календарь');
     define('LANG_TIME_ZONE',                 'Часовой пояс');
+    define('LANG_YEAR',                      'Год');
     define('LANG_YEARS',                     'Года');
     define('LANG_YEAR1',                     'год');
     define('LANG_YEAR2',                     'года');

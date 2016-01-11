@@ -18,7 +18,7 @@
         <?php } ?>
     </div>
 
-    <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
+    <?php if ($user->is_logged){ ?>
         <div id="comments_refresh_panel">
             <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
         </div>

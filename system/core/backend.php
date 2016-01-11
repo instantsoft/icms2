@@ -3,13 +3,11 @@ class cmsBackend extends cmsController {
 
     function __construct($request){
 
+        $this->name = str_replace('backend', '', mb_strtolower(get_called_class()));
+
         parent::__construct($request);
 
-        $config = cmsConfig::getInstance();
-
-        $this->name = str_replace('backend', '', $this->name);
-
-        $this->root_path = $config->root_path . 'system/controllers/' . $this->name . '/backend/';
+        $this->root_path = $this->root_path . 'backend/';
 
     }
 
@@ -25,6 +23,39 @@ class cmsBackend extends cmsController {
 //=========              ШАБЛОНЫ ОСНОВНЫХ ДЕЙСТВИЙ                   =========//
 //============================================================================//
 //============================================================================//
+
+//============================================================================//
+//=========                Скрытие/показ записей                     =========//
+//============================================================================//
+
+    public function actionToggleItem($item_id=false, $table=false, $field='is_pub'){
+
+		if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
+			cmsTemplate::getInstance()->renderJSON(array(
+				'error' => true,
+			));
+		}
+
+        $i = $this->model->getItemByField($table, 'id', $item_id);
+
+		if (!$i || !array_key_exists($field, $i)){
+			cmsTemplate::getInstance()->renderJSON(array(
+				'error' => true,
+			));
+		}
+
+        $active = $i[$field] ? false : true;
+
+		$this->model->update($table, $item_id, array(
+			$field => $active
+		));
+
+		cmsTemplate::getInstance()->renderJSON(array(
+			'error' => false,
+			'is_on' => $active
+		));
+
+    }
 
 //============================================================================//
 //=========                  ОПЦИИ КОМПОНЕНТА                        =========//
@@ -48,6 +79,8 @@ class cmsBackend extends cmsController {
             $errors = $form->validate($this, $options);
 
             if (!$errors){
+
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 cmsController::saveOptions($this->name, $options);
 

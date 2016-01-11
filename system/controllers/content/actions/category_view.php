@@ -62,8 +62,6 @@ class actionContentCategoryView extends cmsAction {
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
-        } else {
-            $this->model->orderBy('date_pub', 'desc');
         }
 
         // Фильтр по категории

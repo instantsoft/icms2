@@ -21,6 +21,7 @@ class cmsFormField {
     public $is_hidden = false;
 
     public $rules = array();
+    public $options = array();
 
     public $data = array(); // массив для данных в шаблоне
 
@@ -48,8 +49,8 @@ class cmsFormField {
 
     public function getOption($key) {
 
-        if( isset($this->options[ $key ]) ){
-            return $this->options[ $key ];
+        if(array_key_exists($key, $this->options)){
+            return $this->options[$key];
         }
 
         $options = $this->getOptions();
@@ -95,7 +96,16 @@ class cmsFormField {
 
     public function setItem($item) { $this->item = $item; return $this; }
 
-    public function getSQL() { return $this->sql; }
+    public function getSQL() {
+
+        $max_length = $this->getOption('max_length');
+
+        if($max_length){
+            return str_replace('{max_length}', $max_length, $this->sql);
+        }
+        return $this->sql;
+
+    }
 
     public function getRules(){ return $this->rules; }
 

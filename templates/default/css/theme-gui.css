@@ -51,6 +51,10 @@
     height:16px;
     background:url("../images/icons/eye.png") no-repeat;
 }
+.content_list_item .is_private, .widget_content_list .is_private, .content_list .is_private,
+.content_list_item .is_closed, .widget_content_list .is_closed {
+    height:14px;
+}
 
 .is_closed{
     background:url("../images/icons/lock.png") no-repeat;
@@ -66,6 +70,7 @@
 
 /* Menu icons =============================================================== */
 
+.icon-accept, .menu .lock .item { background-image: url("../images/icons/lock.png"); }
 .icon-accept, .menu .accept .item { background-image: url("../images/icons/accept.png"); }
 .icon-add, .menu .add .item { background-image: url("../images/icons/add.png"); }
 .icon-edit, .menu .edit .item { background-image: url("../images/icons/edit.png"); }
@@ -338,6 +343,18 @@
 .filter-panel .filter-container {
     padding:15px;
     overflow: hidden;
+    position: relative;
+}
+
+.filter-close {
+    font-size: 0.9em;
+    line-height: 0.9em;
+    position: absolute;
+    top: 6px;
+    right: 9px;
+}
+.filter-close a {
+    color: #666;
 }
 
 .filter-panel .fields { overflow: hidden; }
@@ -528,6 +545,7 @@ form .field label {
 }
 
 form .field_error .error_text{ font-size:12px; color:#c0392b; float:right; margin-top: 8px; }
+form #f_slug.field_error .error_text { float:none; }
 
 .input{
     height:16px;
@@ -968,6 +986,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list.striped-list .comment:last-child{
     border:none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 #comments_list .selected-comment{

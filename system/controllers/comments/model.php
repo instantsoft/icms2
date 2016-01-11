@@ -27,9 +27,13 @@ class modelComments extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function deleteComment($id){
+    public function deleteComment($id, $delete=false){
 
-        $this->update('comments', $id, array('is_deleted'=>1));
+        if($delete){
+            $this->delete('comments', $id);
+        } else {
+            $this->update('comments', $id, array('is_deleted'=>1));
+        }
 
         cmsCache::getInstance()->clean("comments.list");
 

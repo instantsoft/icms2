@@ -25,8 +25,12 @@ class actionAdminSettingsTheme extends cmsAction {
 
             if (!$errors){
 
-                $template->saveOptions($options);
-                
+                if($template->saveOptions($options)){
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+                } else {
+                    cmsUser::addSessionMessage(LANG_CP_SETTINGS_TPL_NOT_WRITABLE, 'error');
+                }
+
                 $this->redirectBack('settings');
 
             }

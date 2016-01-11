@@ -73,7 +73,7 @@
 
                 <?php if ($this->isBody()){ ?>
                     <article>
-                        <?php if ($this->isBreadcrumbs()){ ?>
+                        <?php if ($config->show_breadcrumbs && $this->isBreadcrumbs()){ ?>
                             <div id="breadcrumbs">
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
@@ -129,9 +129,11 @@
                         <span class="item">
                             SQL: <a href="#sql_debug" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
                         </span>
-                        <span class="item">
-                            Cache: <?php echo cmsCache::getInstance()->query_count; ?>
-                        </span>
+                        <?php if ($config->cache_enabled){ ?>
+                            <span class="item">
+                                Cache: <?php echo cmsCache::getInstance()->query_count; ?>
+                            </span>
+                        <?php } ?>
                         <span class="item">
                             Mem: <?php echo round(memory_get_usage()/1024/1024, 2); ?> Mb
                         </span>

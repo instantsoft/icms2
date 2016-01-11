@@ -13,7 +13,7 @@ class onRssContentBeforeProfile extends cmsAction {
             $feed_title = sprintf(LANG_RSS_FEED_TITLE_FORMAT, $title, cmsConfig::get('sitename'));
             $feed_url = href_to_abs($this->name, 'feed', $ctype['name']) . '?user=' . $profile['id'];
 
-            $link_tag = '<link title="'.$feed_title.'" type="application/rss+xml" rel="alternate" href="'.$feed_url.'">';
+            $link_tag = '<link title="'.htmlspecialchars($feed_title).'" type="application/rss+xml" rel="alternate" href="'.$feed_url.'">';
 
             cmsTemplate::getInstance()->addHead($link_tag);
 

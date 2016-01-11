@@ -28,6 +28,15 @@
         </div>
 
         <div class="field">
+            <div class="hint"><?php echo LANG_DATABASE_ENGINE_HINT; ?></div>
+            <label><?php echo LANG_DATABASE_ENGINE; ?></label>
+            <select class="input" name="db[engine]">
+                <option value="MyISAM">MyISAM</option>
+                <option value="InnoDB">InnoDB</option>
+            </select>
+        </div>
+
+        <div class="field">
             <label><?php echo LANG_DATABASE_PREFIX; ?></label>
             <input type="text" class="input input-icon icon-db-prefix" name="db[prefix]" value="cms_" />
         </div>
@@ -50,6 +59,13 @@
 
             <input type="text" class="input input-icon icon-db-table" id="users_table" name="db[users_table]" value="cms_users" style="display:none" />
 
+        </div>
+
+        <div class="field">
+            <label>
+                <input type="checkbox" value="1" name="db[is_install_demo_content]">
+                <?php echo LANG_DATABASE_INSTALL_DEMO; ?>
+            </label>
         </div>
 
     </fieldset>
