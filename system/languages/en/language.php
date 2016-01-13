@@ -29,6 +29,7 @@
     define('LANG_FILTER_IS_NULL',            'not filled');
     define('LANG_FILTER_APPLY',              'Apply');
     define('LANG_FILTER_URL',                'Link');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Save different order');
     define('LANG_SORTING_FIELD',             'Sort by field');
     define('LANG_SORTING',                   'Sorting');
     define('LANG_SORTING_ADD',               'Add rule');

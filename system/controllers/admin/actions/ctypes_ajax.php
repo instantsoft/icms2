@@ -15,6 +15,8 @@ class actionAdminCtypesAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
+        $filter_str = cmsUser::getUPSActual('admin.grid_filter.ctypes', $filter_str);
+
         if ($filter_str){
             parse_str($filter_str, $filter);
             $content_model->applyGridFilter($grid, $filter);
