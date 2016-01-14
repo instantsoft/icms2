@@ -854,7 +854,7 @@ class cmsModel{
             $this->orderByList($dataset['sorting']);
         }
 
-        if($dataset['index']){
+        if(isset($dataset['index']) && $dataset['index']){
             $this->forceIndex($dataset['index']);
         }
 
