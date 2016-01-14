@@ -164,8 +164,8 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
-                        'generator' => function(){
-                            return cmsTemplate::getInstance()->getAvailableContentListStyles();
+                        'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
                         }
                     )),
                     new fieldList('options:privacy_type', array(

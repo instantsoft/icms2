@@ -14,8 +14,7 @@ class formActivityOptions extends cmsForm {
                     new fieldList('types', array(
                         'is_multiple' => true,
                         'generator' => function(){
-                            $activity_model = cmsCore::getModel('activity');
-                            $types = $activity_model->getTypes();
+                            $types = cmsCore::getModel('activity')->getTypes();
                             return array_collection_to_list($types, 'id', 'title');
                         }
                     )),

@@ -7,6 +7,7 @@ class formAdminSettings extends cmsForm {
 
         $is_css_cache = cmsCore::getFilesList('cache/static/css', '*.css');
         $is_js_cache = cmsCore::getFilesList('cache/static/js', '*.js');
+        $ctypes = cmsCore::getModel('content')->getContentTypes();
 
         return array(
 
@@ -39,14 +40,12 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('frontpage', array(
                         'title' => LANG_CP_SETTINGS_FP_SHOW,
-                        'generator' => function($item) {
+                        'generator' => function($item) use($ctypes){
 
                             $items = array(
                                 'none' => LANG_CP_SETTINGS_FP_SHOW_NONE,
                                 'profile' => LANG_CP_SETTINGS_FP_SHOW_PROFILE,
                             );
-
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
 
                             if ($ctypes) {
                                 foreach ($ctypes as $ctype) {
@@ -63,9 +62,7 @@ class formAdminSettings extends cmsForm {
                     new fieldList('ctype_default', array(
                         'title' => LANG_CP_SETTINGS_CTYPE_DEF,
 						'hint' => LANG_CP_SETTINGS_CTYPE_DEF_HINT,
-                        'generator' => function($item) {
-
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
+                        'generator' => function($item) use($ctypes){
 
 							$items[''] = '';
 
