@@ -1527,6 +1527,9 @@ class modelContent extends cmsModel{
             'tags' => $tags
         ));
 
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+
     }
 
 //============================================================================//
@@ -1934,9 +1937,14 @@ class modelContent extends cmsModel{
 
 	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
 
-		return $this->update($this->table_prefix.$ctype_name, $id, array(
+		$this->update($this->table_prefix.$ctype_name, $id, array(
 			'is_pub' => $is_pub
 		));
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+
+        return true;
 
 	}
 
@@ -2145,6 +2153,9 @@ class modelContent extends cmsModel{
             'approved_by' => $moderator_user_id,
             'date_approved' => ''
         ));
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
 
         return true;
 

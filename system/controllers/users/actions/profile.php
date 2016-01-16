@@ -30,7 +30,7 @@ class actionUsersProfile extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}');
 
         // Друзья
         $friends = $is_friends_on ? $this->model->getFriends($profile['id']) : false;

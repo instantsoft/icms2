@@ -226,7 +226,9 @@ class modelMenu extends cmsModel{
 
         if($delta){
             foreach ($delta as $item_id => $d) {
-                $items[$item_id]['childs_count'] -= $d;
+                if(isset($items[$item_id])){
+                    $items[$item_id]['childs_count'] -= $d;
+                }
             }
         }
 

@@ -16,6 +16,7 @@ class cmsTemplate {
 	protected $head_main_js = array();
 	protected $head_js = array();
 	protected $head_js_no_merge = array();
+	protected $head_css_no_merge = array();
 	protected $title;
 	protected $metadesc;
 	protected $metakeys;
@@ -104,15 +105,16 @@ class cmsTemplate {
         } else {
             $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
             echo $tag;
+            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
         }
 
         if (!cmsConfig::get('merge_js')){
-            foreach ($this->head_main_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
         } else {
             $tag = "\t". $this->getJSTag( $this->getMergedJSPath() ) . "\n";
             echo $tag;
-            foreach ($this->head_js_no_merge as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
         }
 
 	}
@@ -582,10 +584,13 @@ class cmsTemplate {
 	 * Добавляет CSS файл в головной раздел страницы
 	 * @param string $file
 	 */
-	public function addCSS($file){
+	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
         if (isset($this->head_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
+        if (!$allow_merge){
+            $this->head_css_no_merge[$hash] = $file;
+        }
         return true;
 	}
 
@@ -666,7 +671,7 @@ class cmsTemplate {
         if(cmsCore::getInstance()->request->isAjax()){
             return $this->insertCSS($file);
         } else {
-            return $this->addCSS($file);
+            return $this->addCSS($file, false);
         }
     }
 
@@ -763,6 +768,7 @@ class cmsTemplate {
         $merged_contents = '';
 
         foreach($files as $file){
+            if (in_array($file, $this->head_css_no_merge)) { continue; }
             $file_path = $config->root_path . $file;
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
