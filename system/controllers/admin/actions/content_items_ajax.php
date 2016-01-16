@@ -22,7 +22,7 @@ class actionAdminContentItemsAjax extends cmsAction {
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
 
         if($filter_str && mb_strpos($filter_str, 'ctype_changed=1') !== false && $diff_order){ // Изменён тип контента и должна быть сохранена сортировка
-//            $filter_str = cmsUser::getUPS('admin.grid_filter.content.'.$ctype['name'])?:$filter_str; // Если сортировка ещё не сохранялась, то возьмём пришедшую
+            // Проверим, что эта сортировка есть в бд, иначе будет использоваться пришедшая
             $ups_filter_str = cmsUser::getUPS('admin.grid_filter.content.'.$ctype['name']);
             if($ups_filter_str){
                 $filter_str = $ups_filter_str;
