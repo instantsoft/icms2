@@ -46,7 +46,7 @@ class fieldHtml extends cmsFormField {
             $value = cmsEventsManager::hook('html_filter', array('text'=>$value, 'is_auto_br'=>false));
         }
 
-        return $value;
+		return cmsEventsManager::hook('hidetext', $value);
 
     }
 
@@ -63,7 +63,7 @@ class fieldHtml extends cmsFormField {
 
         }
 
-        return $value;
+        return cmsEventsManager::hook('hidetext', $value);
 
     }
 

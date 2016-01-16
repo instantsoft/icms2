@@ -53,6 +53,8 @@ class actionWallSubmit extends cmsAction {
         //
         if ($action=='preview'){
 
+            $content_html = cmsEventsManager::hook("hidetext", $content_html);
+
             $result = array('error' => false, 'html' => $content_html);
 
             $template->renderJSON($result);
@@ -124,6 +126,8 @@ class actionWallSubmit extends cmsAction {
             }
 
         }
+
+        $entry_html = cmsEventsManager::hook("hidetext", $entry_html);
 
         // Формируем и возвращаем результат
         $result = array(

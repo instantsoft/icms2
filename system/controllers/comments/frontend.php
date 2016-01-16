@@ -33,6 +33,7 @@ class comments extends cmsFrontend {
                             getComments();
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
+        $comments = cmsEventsManager::hook("hidetext", $comments);
 
         $is_tracking = $this->model->getTracking($user->id);
 
@@ -158,6 +159,7 @@ class comments extends cmsFrontend {
         $items = $this->model->getComments();
 
         $items = cmsEventsManager::hook("comments_before_list", $items);
+        $items = cmsEventsManager::hook("hidetext", $items);
 
         return cmsTemplate::getInstance()->renderInternal($this, 'list_index', array(
             'filters'        => array(),

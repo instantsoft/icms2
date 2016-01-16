@@ -90,6 +90,7 @@ class actionCommentsSubmit extends cmsAction {
         // Превью комментария
         //
         if ($action=='preview'){
+		    $content_html = cmsEventsManager::hook('hidetext', $content_html);
             $result = array('error' => false, 'html' => $content_html);
             $template->renderJSON($result);
         }
@@ -183,6 +184,8 @@ class actionCommentsSubmit extends cmsAction {
             }
 
         }
+
+		$comment_html = cmsEventsManager::hook('hidetext', $comment_html);
 
         // Формируем и возвращаем результат
         $result = array(
