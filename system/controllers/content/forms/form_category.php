@@ -21,8 +21,7 @@ class formContentCategory extends cmsForm {
                         'title' => LANG_PARENT_CATEGORY,
                         'generator' => function($cat){
 
-                            $content_model = cmsCore::getModel('content');
-                            $tree = $content_model->getCategoriesTree($cat['ctype_name']);
+                            $tree = cmsCore::getModel('content')->getCategoriesTree($cat['ctype_name']);
 
                             if ($tree){
                                 foreach($tree as $item){

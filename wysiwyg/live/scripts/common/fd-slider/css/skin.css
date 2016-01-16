@@ -258,7 +258,7 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         _height:expression((this.parentNode.offsetHeight - 20) + "px");
         /* Using the gradient filter for IE 6, 7 & 8. Colour strings in AARRGGBB format */
         filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc');
-        -ms-filter"filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc')";
+        -ms-filter:"filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc')";
         }
 .fd-slider-vertical .fd-slider-handle,
 .fd-slider-vertical .fd-slider-handle:link,
@@ -587,7 +587,7 @@ IE6 sees this rule as being ".oldie .fd-slider-disabled .fd-slider-bar"
         /* IE 6 + 7 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000');
         /* IE8 */
-        -ms-filter"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000')";
+        -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000')";
         }
 /* 
 
@@ -604,7 +604,7 @@ both horizontal and vertical sliders
         /* IE 6 + 7 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000');
         /* IE8 */
-        -ms-filter"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000')";
+        -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000')";
         }
 /* Disabled range bar */
 .fd-slider-disabled .fd-slider-range

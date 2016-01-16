@@ -402,7 +402,7 @@ class cmsController {
      * Загружает и возвращает описание структуры таблицы
      * @param string $grid_name
      */
-    public function loadDataGrid($grid_name, $params = false){
+    public function loadDataGrid($grid_name, $params = false, $ups_key = ''){
 
         $default_options = array(
             'order_by' => 'id',
@@ -454,6 +454,14 @@ class cmsController {
 
             if ($heads !== $grid_heads) {
                 $grid['options']['load_columns'] = true;
+            }
+        }
+
+        if($ups_key){
+            $filter_str = cmsUser::getUPS($ups_key);
+            if($filter_str){
+                parse_str($filter_str, $filter);
+                $grid['filter'] = $filter;
             }
         }
 

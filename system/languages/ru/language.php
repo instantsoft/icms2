@@ -29,6 +29,7 @@
     define('LANG_FILTER_IS_NULL',            'не заполнено');
     define('LANG_FILTER_APPLY',              'Фильтровать');
     define('LANG_FILTER_URL',                'Ссылка');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Сохранять различную сортировку');
     define('LANG_SORTING_FIELD',             'Сортировка по полю');
     define('LANG_SORTING',                   'Сортировка');
     define('LANG_SORTING_ADD',               'Добавить правило');
