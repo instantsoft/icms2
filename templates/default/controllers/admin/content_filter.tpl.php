@@ -89,16 +89,9 @@
 
             <legend><?php echo LANG_CONFIG; ?></legend>
 
-            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                <tr>
-                    <td>
-                        <label><?php echo LANG_FILTER_SAVE_DIFF_ORDER; ?></label>
-                    </td>
-                    <td colspan="2">
-                        <?php echo html_checkbox('diff_order', $diff_order); ?>
-                    </td>
-                </tr>
-            </table>
+            <div>
+                <label><?php echo html_checkbox('diff_order', $diff_order); ?> <?php echo LANG_FILTER_SAVE_DIFF_ORDER; ?></label>
+            </div>
 
         </fieldset>
 

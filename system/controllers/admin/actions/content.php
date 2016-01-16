@@ -19,16 +19,18 @@ class actionAdminContent extends cmsAction {
             $ctype = $content_model->getContentType($ctype_id);
         }
 
-        $grid = $ctype ?
-                $this->loadDataGrid('content_items', false, 'admin.grid_filter.content.'.$ctype['name']) :
-                $this->loadDataGrid('content_items');
+        if(!empty($ctype)){
+            $grid = $this->loadDataGrid('content_items', false, 'admin.grid_filter.content.'.$ctype['name']);
+        } else {
+            $grid = $this->loadDataGrid('content_items');
+        }
 
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
 
         return cmsTemplate::getInstance()->render('content', array(
-            'ctypes'        => $ctypes,
-            'grid'          => $grid,
-            'diff_order'    => $diff_order
+            'ctypes'     => $ctypes,
+            'grid'       => $grid,
+            'diff_order' => $diff_order
         ));
 
     }
