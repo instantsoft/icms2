@@ -642,7 +642,7 @@ class cmsUser {
      */
     public function isInGroups($groups){
 
-        if ($groups == array(0)){ return true; }
+        if (empty($groups) || $groups == array(0)){ return true; }
         if (in_array(0, $groups)){ return true; }
 
         $found = false;

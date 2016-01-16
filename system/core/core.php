@@ -306,7 +306,7 @@ class cmsCore {
 
         $manifests = array();
 
-        $controllers = self::getDirsList('system/controllers');
+        $controllers = self::getDirsList('system/controllers', true);
 
         foreach($controllers as $controller_name){
 
@@ -869,9 +869,10 @@ class cmsCore {
     /**
      * Возвращает список директорий внутри указанной
      * @param string $root_dir
+     * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
      * @return array
      */
-    public static function getDirsList($root_dir){
+    public static function getDirsList($root_dir, $asc_sort=false){
 
         $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
@@ -886,6 +887,10 @@ class cmsCore {
 
             $list[] = $next;
 
+        }
+
+        if($asc_sort){
+            asort($list);
         }
 
         return $list;
