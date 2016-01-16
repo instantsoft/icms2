@@ -584,7 +584,7 @@ class cmsTemplate {
 	 * Добавляет CSS файл в головной раздел страницы
 	 * @param string $file
 	 */
-	public function addCSS($file, $comment='', $allow_merge = true){
+	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
         if (isset($this->head_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
@@ -667,11 +667,11 @@ class cmsTemplate {
      * @param string $file
      * @return bool
      */
-    public function addCSSFromContext($file, $comment='') {
+    public function addCSSFromContext($file) {
         if(cmsCore::getInstance()->request->isAjax()){
             return $this->insertCSS($file);
         } else {
-            return $this->addCSS($file, $comment, false);
+            return $this->addCSS($file, false);
         }
     }
 
