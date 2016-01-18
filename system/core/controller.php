@@ -226,7 +226,7 @@ class cmsController {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 
-        // епроверяем наличие экшена его в отдельном файле
+        // проверяем наличие экшена его в отдельном файле
         $action_file = $this->root_path . 'actions/' . $action_name.'.php';
 
         if(file_exists($action_file)){

@@ -3,7 +3,7 @@ class cmsBackend extends cmsController {
 
     function __construct($request){
 
-        $this->name = str_replace('backend', '', mb_strtolower(get_called_class()));
+        $this->name = str_replace('backend', '', strtolower(get_called_class()));
 
         parent::__construct($request);
 

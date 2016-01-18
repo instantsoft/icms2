@@ -176,7 +176,7 @@ class admin extends cmsFrontend {
 
         include_once($ctrl_file);
 
-        $controller_class = 'backend' . string_to_camel('_', $controller_name);
+        $controller_class = 'backend'.ucfirst($controller_name);
 
         $backend = new $controller_class($request);
 

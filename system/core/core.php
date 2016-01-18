@@ -631,8 +631,12 @@ class cmsCore {
 
         $this->controller = $this->uri_controller;
 
+        if(!preg_match('/[^a-z0-9_]/', $this->controller)){
+            self::error404();
+        }
+
         // загружаем контроллер
-        $controller = self::getController($this->uri_controller, $this->request);
+        $controller = self::getController($this->controller, $this->request);
 
         // контроллер включен?
         if(!$controller->isEnabled()){
@@ -656,7 +660,7 @@ class cmsCore {
     public function runWidgets(){
 
         // в админке нам виджеты не нужны
-        if ($this->uri_controller == 'admin') { return; }
+        if ($this->controller == 'admin') { return; }
 
         $widgets_model = cmsCore::getModel('widgets');
         $pages = $widgets_model->getPages();
