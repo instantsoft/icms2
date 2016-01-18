@@ -36,6 +36,8 @@ class wall extends cmsFrontend {
         $total = $this->model->getEntriesCount($profile_type, $profile_id);
         $entries = $this->model->getEntries($profile_type, $profile_id, $page);
 
+        $entries = cmsEventsManager::hook("hidetext", $entries);
+
         $csrf_token_seed = implode('/', array($profile_type, $profile_id));
 
         $template = cmsTemplate::getInstance();

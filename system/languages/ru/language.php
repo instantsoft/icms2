@@ -476,3 +476,10 @@
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
     define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');
+	
+	//HIDETEXT
+    define('LANG_HIDE_TEXT',		'Скрытый текст виден только <a href="/auth/register">зарегистрированным</a> пользователям');
+    define('LANG_HIDE_TEXT_KARMA',	'Пользователи с репутацией более %s могут просмотреть скрытый текст.');
+    define('LANG_HIDE_TEXT_ONE',	'пункта');
+    define('LANG_HIDE_TEXT_TWO',	'пунктов');
+    define('LANG_HIDE_TEXT_MANY',	'пунктов');

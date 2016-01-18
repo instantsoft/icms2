@@ -57,3 +57,8 @@ ul {
 
 .positive { color:green; }
 .negative { color:red; }
+
+.hidetext {
+	background-color: #fcfccc;
+    padding: 8px;
+}

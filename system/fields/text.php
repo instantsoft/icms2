@@ -51,10 +51,12 @@ class fieldText extends cmsFormField {
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){
-            return cmsEventsManager::hook('html_filter', $value);
+            $value = cmsEventsManager::hook('html_filter', $value);
         } else {
-            return nl2br(htmlspecialchars($value));
+            $value = nl2br(htmlspecialchars($value));
         }
+
+		return cmsEventsManager::hook('hidetext', $value);
 
     }
 
