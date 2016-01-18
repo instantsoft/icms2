@@ -68,6 +68,9 @@ class widgetContentList extends cmsWidget {
                     getContentItems($ctype['name']);
         if (!$items) { return false; }
 
+        list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
+
         if($style){
             $this->setTemplate('list_'.$style);
         } else {

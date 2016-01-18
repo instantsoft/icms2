@@ -90,7 +90,7 @@ class actionCommentsSubmit extends cmsAction {
         // Превью комментария
         //
         if ($action=='preview'){
-            $result = array('error' => false, 'html' => $content_html);
+            $result = array('error' => false, 'html' => cmsEventsManager::hook('parse_text', $content_html));
             $template->renderJSON($result);
         }
 
@@ -191,7 +191,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => isset($comment_html) ? $comment_html : false
+            'html'      => isset($comment_html) ? (cmsEventsManager::hook('parse_text', $comment_html)) : false
         );
 
         $template->renderJSON($result);

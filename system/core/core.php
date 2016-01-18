@@ -631,7 +631,7 @@ class cmsCore {
 
         $this->controller = $this->uri_controller;
 
-        if(!preg_match('/[^a-z0-9_]/', $this->controller)){
+        if ($this->controller && !preg_match('/^[a-z]{1}[a-z0-9_]*$/i', $this->controller)){
             self::error404();
         }
 

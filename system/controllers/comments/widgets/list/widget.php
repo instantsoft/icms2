@@ -4,8 +4,8 @@ class widgetCommentsList extends cmsWidget {
     public function run(){
 
         $show_avatars = $this->getOption('show_avatars', true);
-        $show_text = $this->getOption('show_text', false);
-        $limit = $this->getOption('limit', 10);
+        $show_text    = $this->getOption('show_text', false);
+        $limit        = $this->getOption('limit', 10);
 
         $model = cmsCore::getModel('comments');
 
@@ -22,10 +22,12 @@ class widgetCommentsList extends cmsWidget {
 
         if (!$items) { return false; }
 
+        $items = cmsEventsManager::hook('comments_before_list', $items);
+
         return array(
             'show_avatars' => $show_avatars,
-            'show_text' => $show_text,
-            'items' => $items
+            'show_text'    => $show_text,
+            'items'        => $items
         );
 
     }

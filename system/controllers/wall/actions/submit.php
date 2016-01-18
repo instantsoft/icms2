@@ -53,7 +53,7 @@ class actionWallSubmit extends cmsAction {
         //
         if ($action=='preview'){
 
-            $result = array('error' => false, 'html' => $content_html);
+            $result = array('error' => false, 'html' => cmsEventsManager::hook('parse_text', $content_html));
 
             $template->renderJSON($result);
 
@@ -127,11 +127,11 @@ class actionWallSubmit extends cmsAction {
 
         // Формируем и возвращаем результат
         $result = array(
-            'error' => $entry_id ? false : true,
-            'message' => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
-            'id' => $entry_id,
+            'error'     => $entry_id ? false : true,
+            'message'   => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
+            'id'        => $entry_id,
             'parent_id' => isset($entry['parent_id']) ? $entry['parent_id'] : 0,
-            'html' => isset($entry_html) ? $entry_html : false
+            'html'      => isset($entry_html) ? (cmsEventsManager::hook('parse_text', $entry_html)) : false
         );
 
         $template->renderJSON($result);
