@@ -5,7 +5,7 @@ class actionUsersProfileEdit extends cmsAction {
     public function run($profile, $do=false){
 
 		if (!cmsUser::isLogged()) { cmsCore::error404(); }
-		
+
         $user = cmsUser::getInstance();
 
         // если нужно, передаем управление другому экшену
@@ -21,7 +21,7 @@ class actionUsersProfileEdit extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}');
 
         // Строим форму
         $form = new cmsForm();
@@ -85,7 +85,7 @@ class actionUsersProfileEdit extends cmsAction {
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user_data:time_zone', $profile['time_zone']);
-		
+
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){
                     $activity_controller = cmsCore::getController('activity');
