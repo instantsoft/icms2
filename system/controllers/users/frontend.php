@@ -176,7 +176,7 @@ class users extends cmsFrontend {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}');
 
         $filters = array();
 
