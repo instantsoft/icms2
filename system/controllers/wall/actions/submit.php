@@ -68,6 +68,8 @@ class actionWallSubmit extends cmsAction {
 
             if ($entry['user']['id'] != $user->id && !$user->is_admin){ $this->error(); }
 
+            list($entry_id, $content, $content_html) = cmsEventsManager::hook('wall_before_update', array($entry_id, $content, $content_html));
+
             $this->model->updateEntryContent($entry_id, $content, $content_html);
 
             $entry_html = $content_html;
@@ -84,16 +86,16 @@ class actionWallSubmit extends cmsAction {
 
             // Собираем данные записи
             $entry = array(
-                'user_id' => $user->id,
-                'parent_id' => $parent_id,
+                'user_id'      => $user->id,
+                'parent_id'    => $parent_id,
                 'profile_type' => $profile_type,
-                'profile_id' => $profile_id,
-                'content' => $content,
+                'profile_id'   => $profile_id,
+                'content'      => $content,
                 'content_html' => $content_html
             );
 
             // Сохраняем запись
-            $entry_id = $this->model->addEntry($entry);
+            $entry_id = $this->model->addEntry(cmsEventsManager::hook('wall_before_add', $entry));
 
             if ($entry_id){
 

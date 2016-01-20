@@ -108,9 +108,11 @@ class actionCommentsSubmit extends cmsAction {
                 }
             }
 
-           $this->model->updateCommentContent($comment_id, $content, $content_html);
+            list($comment_id, $content, $content_html) = cmsEventsManager::hook('comment_before_update', array($comment_id, $content, $content_html));
 
-           $comment_html = $content_html;
+            $this->model->updateCommentContent($comment_id, $content, $content_html);
+
+            $comment_html = $content_html;
 
         }
 
@@ -149,7 +151,7 @@ class actionCommentsSubmit extends cmsAction {
                 $comment['is_private']   = empty($target_info['is_private']) ? false : $target_info['is_private'];
 
                 // Сохраняем комментарий
-                $comment_id = $this->model->addComment($comment);
+                $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
 
             }
 
