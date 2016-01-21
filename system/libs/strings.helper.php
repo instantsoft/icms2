@@ -351,7 +351,7 @@ function real_date_diff($date1, $date2 = NULL){
 }
 
 /**
- * Находит в строке все выжения вида {user.property} и заменяет property
+ * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser
  *
  * @param string $string
