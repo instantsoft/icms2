@@ -52,6 +52,7 @@ function create_config($path, $file){
         'db_user'				=> $_SESSION['install']['db']['user'],
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
+        'db_engine'				=> $_SESSION['install']['db']['engine'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
         'metakeys'				=> $_SESSION['install']['site']['metakeys'],
@@ -71,12 +72,17 @@ function create_config($path, $file){
         'merge_js'				=> 0,
         'mail_transport'		=> 'mail',
         'mail_from'				=> 'noreply@example.com',
+        'mail_from_name'		=> '',
         'mail_smtp_server'		=> 'smtp.example.com',
         'mail_smtp_port'		=> 25,
         'mail_smtp_auth'		=> 1,
         'mail_smtp_user'		=> 'user@example.com',
         'mail_smtp_pass'		=> '',
         'is_check_updates'		=> 1,
+        'detect_ip_key'		    => 'REMOTE_ADDR',
+        'allow_ips'		        => '',
+        'default_editor'		=> 'redactor',
+        'show_breadcrumbs'		=> 1
     );
 
     write_config($file, $config);

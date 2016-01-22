@@ -20,7 +20,7 @@ icms.modal = (function ($) {
 	}
 
     //====================================================================//
-	
+
 	this.openHtml = function(html) {
 		$.nmData(html);
 	};

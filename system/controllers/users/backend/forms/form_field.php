@@ -13,7 +13,7 @@ class formUsersField extends cmsForm {
                         'rules' => array(
                             array('required'),
                             array('sysname'),
-                            array('max_length', 20), 
+                            array('max_length', 20),
                             $do == 'add' ? array('unique_field') : false
                         )
                     )),
@@ -55,7 +55,7 @@ class formUsersField extends cmsForm {
                         'generator' => function($field) {
                             $model = cmsCore::getModel('content');
                             $model->setTablePrefix('');
-                            $fieldsets = $model->getContentFieldsets('users');
+                            $fieldsets = $model->getContentFieldsets('{users}');
                             $items = array('');
                             foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
                             return $items;

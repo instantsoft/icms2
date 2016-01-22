@@ -48,9 +48,11 @@
             <div id="menu"><?php $this->menu('cp_main'); ?></div>
         </div>
 
-        <div id="cp_pathway">
-            <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
-        </div>
+        <?php if($this->isBreadcrumbs()){ ?>
+            <div id="cp_pathway">
+                <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
+            </div>
+        <?php } ?>
 
         <div id="cp_body">
 
@@ -74,7 +76,7 @@
                 <?php $this->body(); ?>
 
                 <div class="pad"></div>
-                
+
                 <div class="loading-overlay"></div>
 
         </div>
@@ -84,7 +86,7 @@
     <div id="cp_footer">
         <div class="container">
             <a href="http://www.instantcms.ru/">InstantCMS</a> v<?php echo cmsCore::getVersion(); ?> &mdash;
-            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> 2013 &mdash;
+            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
         </div>
     </div>

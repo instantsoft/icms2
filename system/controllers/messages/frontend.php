@@ -8,6 +8,26 @@ class messages extends cmsFrontend {
     private $is_ignore_options = false;
 
     /**
+     * Все запросы могут быть выполнены только авторизованными и только по аякс
+     * @param type $action_name
+     */
+    public function before($action_name) {
+
+        parent::before($action_name);
+
+        if(!$this->request->isInternal()){
+
+            if (!$this->request->isAjax()){ cmsCore::error404(); }
+
+            if (!cmsUser::isLogged()){ cmsCore::error404(); }
+
+        }
+
+        return true;
+
+    }
+
+    /**
      * Устанавливает отправителя сообщения
      * @param int $user_id
      */
@@ -127,8 +147,6 @@ class messages extends cmsFrontend {
 
         $letter_text = string_replace_keys_values($letter_text, $notice);
 
-        $mailer = new cmsMailer();
-
         $success = true;
 
         foreach($recipients as $recipient){
@@ -150,7 +168,7 @@ class messages extends cmsFrontend {
 
     }
 
-    public function sendEmail($to, $letter, $data=array()){
+    public function sendEmail($to, $letter, $data=array(), $is_nl2br_text=true){
 
 		if (is_array($to)){
 			if (empty($to['email'])) { return false; }
@@ -172,8 +190,8 @@ class messages extends cmsFrontend {
 
         $data = array_merge(array(
             'site' => $config->sitename,
-            'date' => html_date(time()),
-            'time' => html_time(time()),
+            'date' => html_date(),
+            'time' => html_time()
         ), $data);
 
         $letter['text'] = string_replace_keys_values($letter['text'], $data);
@@ -185,7 +203,7 @@ class messages extends cmsFrontend {
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
 
-        $mailer->setBodyHTML( nl2br($letter['text']) );
+        $mailer->setBodyHTML( ($is_nl2br_text ? nl2br($letter['text']) : $letter['text']) );
 
         $result = $mailer->send();
 

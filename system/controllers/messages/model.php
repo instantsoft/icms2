@@ -200,6 +200,7 @@ class modelMessages extends cmsModel {
     public function getMessages($user_id, $contact_id){
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 
         if ($this->filter_on) { $this->filterAnd(); }
@@ -223,8 +224,9 @@ class modelMessages extends cmsModel {
         $messages = $this->get('{users}_messages', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['from_id'],
+                'id'       => $item['from_id'],
                 'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar']
             );
 
             return $item;
@@ -238,6 +240,7 @@ class modelMessages extends cmsModel {
     public function getMessagesFromContact($user_id, $contact_id){
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 
         if ($this->filter_on) { $this->filterAnd(); }
@@ -252,8 +255,9 @@ class modelMessages extends cmsModel {
         $messages = $this->get('{users}_messages', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['from_id'],
+                'id'       => $item['from_id'],
                 'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar']
             );
 
             return $item;
@@ -361,7 +365,7 @@ class modelMessages extends cmsModel {
         foreach($recipients as $recipient){
 
 			$id = is_array($recipient) ? $recipient['id'] : $recipient;
-			
+
             $notice_ids[] = $this->insert('{users}_notices', array(
                 'user_id' => $id,
                 'content' => $notice['content'],

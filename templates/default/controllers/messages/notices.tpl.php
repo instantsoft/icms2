@@ -14,7 +14,7 @@
             <div id="notice-<?php echo $notice['id']; ?>" class="item">
 
                 <?php if ($notice['options']['is_closeable']){ ?>
-                    <div class="close-button"><a href="#close" onclick="icms.messages.noticeAction(<?php echo $notice['id']; ?>, 'close')" title="<?php echo LANG_CLOSE; ?>"></a></div>
+                    <div class="close-button"><a href="#close" onclick="return icms.messages.noticeAction(<?php echo $notice['id']; ?>, 'close')" title="<?php echo LANG_CLOSE; ?>"></a></div>
                 <?php } ?>
 
                 <div class="date"><?php echo html_date_time($notice['date_pub']); ?></div>

@@ -21,6 +21,11 @@ class fieldText extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+            )),
+            new fieldCheckbox('in_fulltext_search', array(
+                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'hint'  => LANG_PARSER_IN_FULLTEXT_SEARCH_HINT,
+                'default' => false
             ))
         );
     }

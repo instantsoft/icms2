@@ -22,7 +22,9 @@ h1 {
     line-height:50px;
 
 }
-
+h1+h2 {
+    margin-top: -5px;
+}
 h1 span, h2 span { color:#68809B; }
 
 a, a.ajaxlink { color: #34495e; }
@@ -328,7 +330,9 @@ form fieldset .field{
 form fieldset .field:last-child{
     margin-bottom: 0;
 }
-
+form fieldset .field, form .hint {
+    clear: both;
+}
 form fieldset{
     padding-right:15px;
     border-radius:4px;
@@ -378,6 +382,10 @@ select {
     padding:4px;
     box-shadow: inset 0 2px 8px #DDD;
     color:#333;
+    font-size: 100%;
+}
+.file-input {
+    font-size: 100%;
 }
 
 .textarea {
@@ -458,6 +466,7 @@ form .error_text{
 
 input.button-submit,
 input.button {
+    font-size: 100%;
 	margin: 0 2px 0 0;
 	padding: 10px 15px;
 	line-height: 100%;
@@ -1302,7 +1311,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     box-shadow: 0 1px 1px #E0C086;
     overflow: hidden;
 	height: 16px;
-	line-height: 16px;	
+	line-height: 16px;
 }
 
 #cp-widgets-layout .position li.tabbed{
@@ -1350,22 +1359,25 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp-widgets-layout li .actions a ,
 #cp-widgets-list li .actions a {
-    display: none;
-    height:16px;
-    width: 16px;
-    float:left;
+    opacity: 0;
+    height: 22px;
+    width: 25px;
+    float: left;
     background-repeat: no-repeat;
-    margin-right: 2px;
+    margin: -3px 0;
+    background-position: center center;
+    transition:opacity 0.1s linear;
 }
 
 #cp-widgets-layout li:hover .actions a ,
 #cp-widgets-list li:hover .actions a {
-    display:block;
+    opacity: 1;
 }
 
 #cp-widgets-layout li .actions a.edit ,
 #cp-widgets-list li .actions a.edit {
     background-image: url("../../images/icons/edit.png");
+    margin-right: 5px;
 }
 
 #cp-widgets-layout li .actions a.delete ,
@@ -1574,16 +1586,133 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     overflow:hidden;
 }
 
-#site_settings #f_template select { float:left; }
-#site_settings #f_template .hint { float:left; }
+#site_settings #f_template .hint { display: inline-block; }
 #site_settings #f_template .hint a {
     padding-left:20px;
     height:32px;
     line-height:32px;
     margin-left:10px;
     background:url("../../images/icons/page_gear.png") no-repeat left center;
+    display: block;
 }
 
 /* ========================================================================== */
 /* ========================================================================== */
 
+#dashboard {
+    box-sizing: border-box;
+    display:table;
+    width:100%;
+    border-spacing: 10px;
+}
+
+#dashboard .row{
+    display:table-row;
+}
+
+#dashboard .col{
+    display:table-cell;
+    vertical-align: top;
+    border:solid 1px #EDEDED;
+}
+
+#dashboard .col-sm{
+    width:300px;
+}
+
+#dashboard .col h3 {
+    padding:10px 10px;
+    background:#F9F9F9;
+    margin:0;
+}
+
+#dashboard .col .col-body{
+    padding:15px;
+}
+
+#dashboard #chart .toolbar {
+    margin-bottom: 15px;
+}
+
+#dashboard #chart .toolbar .pills-menu {
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+#dashboard #chart select {
+    padding:5px;
+    background:#FFF;
+    font-size:16px;
+}
+
+#dashboard #chart-canvas {
+    width:100%;
+    height:400px;
+}
+
+#dashboard #sysinfo,
+#dashboard #sysinfo li {
+    margin: 0; padding: 0; list-style:none;
+}
+
+#dashboard #sysinfo li {
+    margin-bottom:8px;
+    color:#97A5A6;
+}
+
+#dashboard #sysinfo li span {
+    display:block;
+    margin-bottom:2px;
+    color:#34495e;
+}
+
+#dashboard #resources {
+    width:250px;
+}
+
+#dashboard #resources .links {
+    padding-left:25px;
+}
+
+#dashboard #resources .links li {
+    margin-bottom:4px;
+}
+
+#dashboard #resources .links li a {
+    color:#09c;
+}
+
+#dashboard #resources .links li a:hover {
+    color:#f90;
+}
+
+#dashboard #lead-sponsor .hint {
+    padding:5px 0;
+    color:#777;
+}
+
+#dashboard #lead-sponsor .hint a {
+    float:right;
+    color: #FFF;
+    text-align: center;
+    border-radius: 100%;
+    text-decoration: none;
+    padding: 1px 5px;
+    margin-top: 3px;
+    font-size: 10px;
+    background:#09c;
+    font-weight: bold;
+}
+@media screen and (max-width: 980px) {
+    #dashboard .col, #dashboard #resources {
+        float: left;
+        width: 100%;
+        display: block;
+        margin-top: 20px;
+    }
+    #dashboard .col:first-child {
+        margin-top: 0;
+    }
+}

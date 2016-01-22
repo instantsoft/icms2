@@ -6,13 +6,11 @@ class actionTagsEdit extends cmsAction {
 
         if (!$tag_id) { cmsCore::error404(); }
 
-        $tags_model = cmsCore::getModel('tags');
-
         $form = $this->getForm('tag');
 
         $is_submitted = $this->request->has('submit');
 
-        $tag = $tags_model->getTag($tag_id);
+        $tag = $this->model->getTag($tag_id);
 
         $original_tag = $tag['tag'];
 
@@ -21,16 +19,18 @@ class actionTagsEdit extends cmsAction {
             $tag = $form->parse($this->request, $is_submitted);
             $errors = $form->validate($this,  $tag);
 
+            if ($original_tag == $tag['tag']) { $this->redirectToAction(); }
+
             if (!$errors){
 
-                $duplicate_id = $tags_model->getTagId($tag['tag']);
+                $duplicate_id = $this->model->getTagId($tag['tag']);
 
                 if (!$duplicate_id){
-                    $tags_model->updateTag($tag_id, $tag);
+                    $this->model->updateTag($tag_id, $tag);
                 }
 
                 if ($duplicate_id){
-                    $tags_model->mergeTags($tag_id, $duplicate_id);
+                    $this->model->mergeTags($tag_id, $duplicate_id);
                     cmsUser::addSessionMessage(sprintf(LANG_TAGS_MERGED, $original_tag, $tag['tag']), 'success');
                 }
 
@@ -56,4 +56,3 @@ class actionTagsEdit extends cmsAction {
     }
 
 }
-

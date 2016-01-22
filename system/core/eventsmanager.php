@@ -2,7 +2,7 @@
 class cmsEventsManager {
 
     private static $structure;
-    
+
     /**
      * Оповещает слушателей о произошедшем событии
      * Входящие данные $data передаются каждому слушателю по очереди,
@@ -27,7 +27,7 @@ class cmsEventsManager {
             $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL);
 
             $controller = cmsCore::getController( $listener, $request );
-			
+
             $data = $controller->runHook($event_name, array($data));
 
         }
@@ -92,12 +92,12 @@ class cmsEventsManager {
 
         $listeners = array();
 
-        if (self::$structure === null){ 
+        if (self::$structure === null){
             self::$structure = self::getAllListeners();
         }
 
-        if (isset(self::$structure[ $event_name ])){ 
-            $listeners = self::$structure[ $event_name ];             
+        if (isset(self::$structure[ $event_name ])){
+            $listeners = self::$structure[ $event_name ];
         }
 
         return $listeners;
@@ -130,6 +130,7 @@ class cmsEventsManager {
 
             if (!isset($manifest['hooks'])) { continue; }
             if (!is_array($manifest['hooks'])) { continue; }
+            if (!cmsController::enabled($controller_name)) { continue; }
 
             foreach($manifest['hooks'] as $event_name){
 

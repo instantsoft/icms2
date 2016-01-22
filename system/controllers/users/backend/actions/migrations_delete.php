@@ -6,9 +6,7 @@ class actionUsersMigrationsDelete extends cmsAction {
 
         if (!$rule_id) { cmsCore::error404(); }
 
-        $users_model = cmsCore::getModel('users');
-
-        $users_model->deleteMigrationRule($rule_id);
+        $this->model->deleteMigrationRule($rule_id);
 
         $this->redirectToAction('migrations');
 

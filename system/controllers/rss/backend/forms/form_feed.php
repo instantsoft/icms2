@@ -2,7 +2,7 @@
 
 class formRssFeed extends cmsForm {
 
-    public function init($ctype_fields) {
+    public function init() {
 
         return array(
 
@@ -23,10 +23,31 @@ class formRssFeed extends cmsForm {
                         'title' => LANG_RSS_FEED_LIMIT,
                         'rules' => array(
                             array('required'),
-                            array('min', 0),
+                            array('digits'),
+                            array('min', 1),
                             array('max', 50),
                         )
                     )),
+
+                    new fieldList('template', array(
+                        'title' => LANG_RSS_FEED_TEMPLATE,
+                        'hint'  => LANG_RSS_FEED_TEMPLATE_HINT,
+                        'generator' => function($item) {
+
+                            $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/controllers/rss/', '*.tpl.php');
+
+                            $items = array();
+
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[str_replace('.tpl.php', '', $tpl)] = $tpl;
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    ))
 
                 )
             ),
@@ -35,10 +56,7 @@ class formRssFeed extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_RSS_FEED_IMAGE,
                 'childs' => array(
-
-                    new fieldImage('image', array(
-                    )),
-
+                    new fieldImage('image', array())
                 )
             ),
 
@@ -53,52 +71,14 @@ class formRssFeed extends cmsForm {
 
                     new fieldNumber('cache_interval', array(
                         'title' => LANG_RSS_FEED_CACHE_INT,
-                        'rules' => array(
-                            array('min', 0),
-                        )
-                    )),
+						'rules' => array(
+							array('digits'),
+							array('min', 1)
+						)
+                    ))
 
                 )
-            ),
-
-            'mapping' => array(
-                'type' => 'fieldset',
-                'title' => LANG_RSS_FEED_MAPPING,
-                'childs' => array(
-
-                    new fieldList('mapping:title', array(
-                        'title' => LANG_RSS_FEED_MAP_TITLE,
-                        'items' => $ctype_fields
-                    )),
-
-                    new fieldList('mapping:description', array(
-                        'title' => LANG_RSS_FEED_MAP_DESC,
-                        'items' => $ctype_fields
-                    )),
-
-                    new fieldList('mapping:pubDate', array(
-                        'title' => LANG_RSS_FEED_MAP_DATE,
-                        'items' => $ctype_fields
-                    )),
-
-                    new fieldList('mapping:image', array(
-                        'title' => LANG_RSS_FEED_MAP_IMAGE,
-                        'items' => $ctype_fields
-                    )),
-
-                    new fieldList('mapping:image_size', array(
-                        'title' => LANG_RSS_FEED_MAP_IMAGE_SIZE,
-                        'items' => array(
-                            'micro' => LANG_PARSER_IMAGE_SIZE_MICRO,
-                            'small' => LANG_PARSER_IMAGE_SIZE_SMALL,
-                            'normal' => LANG_PARSER_IMAGE_SIZE_NORMAL,
-                            'big' => LANG_PARSER_IMAGE_SIZE_BIG,
-                            'original' => LANG_PARSER_IMAGE_SIZE_ORIGINAL
-                        )
-                    )),
-
-                )
-            ),
+            )
 
         );
 

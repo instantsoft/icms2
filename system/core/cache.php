@@ -4,9 +4,10 @@ class cmsCache {
     private static $instance;
 
     private $cacher;
+    private $cache_ttl;
+    private $is_debug = false;
 
     public $query_count = 0;
-
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -17,63 +18,60 @@ class cmsCache {
 
     public function __construct() {
 
-        $cacher_class = 'cmsCache' . string_to_camel('_', cmsConfig::get('cache_method'));
-
-        $this->cacher = new $cacher_class();
-
-    }
-
-    public function start() {
-        if (!cmsConfig::get('cache_enabled')) { return false; }
-        $this->cacher->start();
-    }
-
-    public function stop() {
-        if (!cmsConfig::get('cache_enabled')) { return false; }
-        $this->cacher->stop();
-    }
-
-    public function set($key, $value, $ttl=false){
-
         $config = cmsConfig::getInstance();
 
-        if (!$config->cache_enabled) { return false; }
+        if ($config->cache_enabled) {
 
-        if (!$ttl) { $ttl = $config->cache_ttl; }
+            $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
+
+            $this->cacher = new $cacher_class();
+
+            $this->cache_ttl = $config->cache_ttl;
+            $this->is_debug  = $config->debug;
+
+        }
+
+    }
+
+    public function __call($method_name, $arguments) {
+
+        // кеширование отключено
+        if(!isset($this->cacher)){
+            return false;
+        }
+        // есть метод здесь, вызываем его
+        if(method_exists($this, '_'.$method_name)){
+            return call_user_func_array(array($this, '_'.$method_name), $arguments);
+        }
+        // есть метод в кешере, вызываем его
+        if(method_exists($this->cacher, $method_name)){
+            return call_user_func_array(array($this->cacher, $method_name), $arguments);
+        }
+        // ничего нет
+        trigger_error('not defined method name '.$method_name, E_USER_NOTICE);
+        return false;
+
+    }
+
+    private function _set($key, $value, $ttl=false){
+
+        if (!$ttl) { $ttl = $this->cache_ttl; }
 
         return $this->cacher->set($key, $value, $ttl);
 
     }
 
-    public function has($key){
+    private function _get($key){
 
-        if (!cmsConfig::get('cache_enabled')) { return false; }
-
-        return $this->cacher->has($key);
-
-    }
-
-    public function get($key){
-
-        if (!cmsConfig::get('cache_enabled')) { return false; }
-
-        if (!$this->has($key)){ return false; }
+        if (!$this->cacher->has($key)){ return false; }
 
         $value = $this->cacher->get($key);
 
-        if (cmsConfig::get('debug') && $value) {
+        if ($this->is_debug && $value) {
             $this->query_count++;
         }
 
         return $value;
-
-    }
-
-    public function clean($key){
-
-        if (!cmsConfig::get('cache_enabled')) { return false; }
-
-        return $this->cacher->clean($key);
 
     }
 

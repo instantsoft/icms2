@@ -107,6 +107,14 @@ class modelAdmin extends cmsModel{
         return $this->delete('scheduler_tasks', $id);
 
     }
+    
+    public function toggleSchedulerPublication($id, $is_active){
+		
+     	return $this->update('scheduler_tasks', $id, array(
+			'is_active' => $is_active
+		));
+		
+    }
 
 //============================================================================//
 //============================================================================//

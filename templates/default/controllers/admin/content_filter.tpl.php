@@ -85,6 +85,15 @@
             </table>
 
         </fieldset>
+        <fieldset>
+
+            <legend><?php echo LANG_CONFIG; ?></legend>
+
+            <div>
+                <label><?php echo html_checkbox('diff_order', $diff_order); ?> <?php echo LANG_FILTER_SAVE_DIFF_ORDER; ?></label>
+            </div>
+
+        </fieldset>
 
         <?php echo html_submit(LANG_APPLY); ?>
 

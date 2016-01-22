@@ -74,7 +74,7 @@ class actionAdminContentCatsAdd extends cmsAction {
 
 		$is_first = true;
 		$remove_level_offset = 0;
-		
+
         foreach($list as $category_title){
 
             $category_title = trim($category_title);
@@ -82,19 +82,19 @@ class actionAdminContentCatsAdd extends cmsAction {
             if (!$category_title) { continue; }
 
 			$level = mb_strlen(str_replace(' ', '', $category_title)) - mb_strlen(ltrim(str_replace(' ', '', $category_title), '- '));
-			
+
 //			dump($level.': '.ltrim($category_title, '- '), false);
-			
+
 			if ($is_first && $level > 0){ $remove_level_offset = $level; }
-			
+
 			$level = $level - $remove_level_offset;
-			
+
             $is_sub = $level>0;
-			
+
 			$is_first = false;
 
 			$category_title = ltrim($category_title, '- ');
-			
+
             if (!$is_sub){
 
                 $levels_ids = array();
@@ -110,9 +110,9 @@ class actionAdminContentCatsAdd extends cmsAction {
                 continue;
 
             }
-            
+
             $parent_id = $levels_ids[$level - 1];
-            
+
             if (!$category_title) { $category_title = 'untitled'; }
 
             $result = $content_model->addCategory($ctype['name'], array(
@@ -122,14 +122,12 @@ class actionAdminContentCatsAdd extends cmsAction {
 
             $levels_ids[$level] = $result['id'];
             $cats_ids[] = $result['id'];
-			
-			
+
+
 
         }
-		
-//		die();
 
-        if ($data['is_inherit_binds'] && $parent_props && $cats_ids){
+        if (!empty($data['is_inherit_binds']) && $parent_props && $cats_ids){
             foreach($parent_props as $prop_id){
                 $content_model->bindContentProp($ctype['name'], $prop_id, $cats_ids);
             }

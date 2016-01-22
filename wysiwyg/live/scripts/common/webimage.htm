@@ -35,6 +35,12 @@
 
     <script language="javascript" type="text/javascript">
 
+		var UA = navigator.userAgent.toLowerCase();
+		var isIE = (UA.indexOf('msie') >= 0) ? true : false;
+		//if(!isIE) { //ie11
+		//	isIE = (UA.indexOf('trident') >= 0) ? true : false;
+		//}
+
         function getQueryString() {
             var result = {}, queryString = location.search.substring(1), re = /([^&=]+)=([^&]*)/g, m;
 
@@ -161,7 +167,7 @@
 
             var oSel;
             var oEl;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 oSel = oEditor.document.selection.createRange();
                 if (oSel.parentElement) oEl = GetElement(oSel.parentElement(), "IMG");
                 else oEl = GetElement(oSel.item(0), "IMG");
@@ -175,7 +181,7 @@
             if (oEl) {
                 if (oEl.nodeName == "IMG") {
 
-                    if (navigator.appName.indexOf('Microsoft') != -1) {
+                    if (isIE) {
                         try {
                             var range = oEditor.document.body.createTextRange();
                             range.moveToElementText(oEl);
@@ -567,7 +573,7 @@
             var oEditor = parent.oUtil.oEditor;
 
             var oSel;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 oSel = oEditor.document.selection.createRange();
             }
             else {
@@ -723,7 +729,7 @@
                 }
 
                 var oElement;
-                if (navigator.appName.indexOf('Microsoft') != -1) {
+                if (isIE) {
                     oSel = oEditor.document.selection.createRange();
                     if (oSel.parentElement) oElement = GetElement(oSel.parentElement(), "A");
                     else oElement = GetElement(oSel.item(0), "A");
@@ -757,7 +763,7 @@
 
             var oSel;
             var oEl;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
 
                 var oSel = oEditor.document.selection.createRange();
 
@@ -827,8 +833,8 @@
             var sImgCssClass = "";
 
             /* Image Css Style */
-            var sImgCssStyle = "";
-            if (sLinkURL == "") sImgCssStyle = sCssStyle;
+            var sImgCssStyle = sCssStyle;
+            //if (sLinkURL == "") sImgCssStyle = sCssStyle;
 
             /* INSERT IMAGE */
             var oImg = I_InsertImage(sImgURL, sTitle, sImgCssClass, sImgCssStyle);
@@ -850,16 +856,16 @@
                     oImg.vspace = "7";
                 }
 
-            /* RETOUCH IMAGE */
+			/* RETOUCH IMAGE */
             applyRetouchedImage(oImg);
 
             /* INSERT LINK */
             if (sLinkURL != "") {
-                var oElement = I_CreateLink(sLinkURL, sTitle, sTarget, "", sCssStyle);
+                var oElement = I_CreateLink(sLinkURL, sTitle, sTarget, "", "");
 
                 /* Append Image to Link, Add Lightbox */
                 if (oElement) {
-                    if (navigator.appName.indexOf('Microsoft') != -1) {
+                    if (isIE) {
                         if (document.getElementById("chkOpenLarger").checked) {
                             oElement.rel = "lightbox";
                             oElement.target = "";
@@ -878,11 +884,16 @@
 
             /* EFFECTS */
             applyEffect(oImg)
-
-            /* PENTING: Update Selection (sebenarnya utk IE saja) */
-            var obj = parent.oUtil.obj;
-            parent.editorDoc_onkeyup(obj.oName);
-
+			
+			if(!isIE) {
+				var oSel = oEditor.getSelection();
+				oSel.removeAllRanges();
+				var range = oEditor.document.createRange();
+				range.selectNodeContents(oImg);
+                oSel.addRange(range);
+				if(obj.bookmarkSelection) obj.bookmarkSelection();
+			}
+			
             return true;
         }
 

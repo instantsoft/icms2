@@ -23,4 +23,24 @@
             'show' => true,
             'href' => $this->href_to('')
         )
-    ), $errors);
+    ), $errors); ?>
+
+<?php echo html_button(LANG_INSTALL, 'skip', "location.href='{$this->href_to('install/finish')}'", array('style'=>'display: none;','id'=>'skip')); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('form > .buttons').prepend($('#skip'));
+        $('#is_skip').on('click', function (){
+            form = $(this).parents('form');
+            if($(this).is(':checked')){
+                $(form).find('input').not(this).not('.buttons > input').prop('disabled', true);
+                $(form).find('.button-submit').hide();
+                $('#skip').show();
+            } else {
+                $(form).find('input').prop('disabled', false);
+                $(form).find('.button-submit').show();
+                $('#skip').hide();
+            }
+        });
+    });
+</script>

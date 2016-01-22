@@ -8,9 +8,7 @@ class actionImagesPresetsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('presets');
 
-        $images_model = cmsCore::getModel('images');
-
-        $presets = $images_model->getPresets();
+        $presets = $this->model->getPresets();
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $presets);
 

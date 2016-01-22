@@ -7,6 +7,12 @@ class modelSearch extends cmsModel{
     protected $type;
     protected $date_interval;
 
+    private $default_sql_fields = array('id','slug','date_pub');
+
+    public function getDefaultSqlFields() {
+        return $this->default_sql_fields;
+    }
+
     public function setQuery($query){
 
         $this->original_query = $query;
@@ -71,13 +77,24 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchSQL($table_name, $fields){
+    public function getSearchSQL($table_name, $fields, $default_fields=null){
+
+        if(!is_array($default_fields)){
+            $default_fields = $this->default_sql_fields;
+        }
 
         $query = $this->getFullTextQuery();
 
-        $sql_fields = implode(', ', $fields);
+        $sql_dfields = implode(', ', $default_fields);
+        $sql_fields  = implode(', ', $fields);
 
-        $sql = "SELECT id, slug, date_pub, {$sql_fields}
+        $select_fields = $sql_dfields;
+        // при запросе количества нам не нужно выбирать все поля
+        if(count($default_fields) > 1){
+            $select_fields .= ', '.$sql_fields;
+        }
+
+        $sql = "SELECT {$select_fields}
                 FROM {#}{$table_name}
                 WHERE is_pub = 1 AND MATCH({$sql_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
                 ";
@@ -86,13 +103,13 @@ class modelSearch extends cmsModel{
 
             switch ($this->date_interval){
                 case 'w':
-                    $sql .= "AND DATEDIFF(NOW(), date_pub) <= 7";
+                    $sql .= "AND DATEDIFF(NOW(), date_pub) <= 7 \n";
                     break;
                 case 'm':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub";
+                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub \n";
                     break;
                 case 'y':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub";
+                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub \n";
                     break;
             }
 
@@ -104,7 +121,7 @@ class modelSearch extends cmsModel{
 
     public function getSearchResultsCount($table_name, $fields){
 
-        $sql = $this->getSearchSQL($table_name, $fields);
+        $sql = $this->getSearchSQL($table_name, $fields, array('id'));
 
         $sql_result = $this->db->query($sql);
 
@@ -112,13 +129,15 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchResults($table_name, $fields, $page=1, $perpage=15){
+    public function getSearchResults($table_name, $fields, $default_fields=null, $item_callback=false){
 
-        $sql = $this->getSearchSQL($table_name, $fields);
+        if(!is_array($default_fields)){
+            $default_fields = $this->default_sql_fields;
+        }
 
-        $limit_start = ($page-1)*$perpage;
+        $sql = $this->getSearchSQL($table_name, $fields, $default_fields);
 
-        $sql .= " LIMIT {$limit_start}, {$perpage}";
+        if ($this->limit){ $sql .= " LIMIT {$this->limit}"; }
 
         $sql_result = $this->db->query($sql);
 
@@ -131,9 +150,14 @@ class modelSearch extends cmsModel{
         while ($item = $this->db->fetchAssoc($sql_result)){
 
             foreach($fields as $field_name){
-                if ($field_name != 'title'){
+                if (!in_array($field_name, array('title', 'photo'))){
                     $item[$field_name] = $this->getHighlightedText($item[$field_name]);
                 }
+            }
+
+            if (is_callable($item_callback)){
+                $item = $item_callback($item, $this);
+                if ($item === false){ continue; }
             }
 
             $items[] = $item;
@@ -146,6 +170,7 @@ class modelSearch extends cmsModel{
 
     public function getHighlightedText($text){
 
+        $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
         $text = strip_tags($text);
         $text = preg_replace('/\s+/u', ' ', $text);
 
@@ -180,7 +205,7 @@ class modelSearch extends cmsModel{
 
         $found_sentences = implode('... ', $found_sentences);
 
-        return $found_sentences;
+        return $found_sentences.'...';
 
     }
 

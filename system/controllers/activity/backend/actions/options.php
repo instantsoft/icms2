@@ -5,10 +5,7 @@ class actionActivityOptions extends cmsAction {
     public function run(){
 
         $form = $this->getForm('options');
-
         if (!$form) { cmsCore::error404(); }
-
-        $activity_model = cmsCore::getModel('activity');
 
         $is_submitted = $this->request->has('submit');
 
@@ -21,9 +18,11 @@ class actionActivityOptions extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 cmsController::saveOptions($this->name, $options);
 
-                $activity_model->enableTypes($options['types']);
+                $this->model->enableTypes($options['types']);
 
                 $this->redirectToAction('options');
 

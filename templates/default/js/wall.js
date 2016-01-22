@@ -262,6 +262,9 @@ icms.wall = (function ($) {
             icms.wall.restoreForm();
 
         }, "json");
+
+        return false;
+
     }
 
     //=====================================================================//

@@ -1,7 +1,7 @@
 <?php
 class cmsController {
 
-    public static $options_cache = array();
+    private static $controllers;
 
     public $name;
     public $title;
@@ -9,18 +9,19 @@ class cmsController {
     public $request;
     public $current_action;
     public $current_params;
+    public $options;
 
     protected $useOptions = false;
 
     function __construct($request){
 
-        $config = cmsConfig::getInstance();
+        self::loadControllers();
 
-        $this->name = mb_strtolower(get_called_class());
+        $this->name = $this->name ? $this->name : mb_strtolower(get_called_class());
 
         $this->root_url = $this->name;
 
-        $this->root_path = $config->root_path . 'system/controllers/' . $this->name . '/';
+        $this->root_path = cmsConfig::get('root_path') . 'system/controllers/' . $this->name . '/';
 
         $this->request = $request;
 
@@ -48,45 +49,68 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Загружает и возвращает опции контроллера,
-     * заполняя отсутсвующие из них значениями по-умолчанию
+     * Загружает и возвращает опции текущего контроллера,
      * @return array
      */
     public function getOptions(){
 
-        $options = self::loadOptions($this->name);
-
-        $form = $this->getForm('options', false, 'backend/');
-
-        $options = $form->parse(new cmsRequest($options));
-
-        return $options;
+        return (array)self::loadOptions($this->name);
 
     }
 
+    /**
+     * Проверяет включен ли текущий контроллер
+     * @return boolean
+     */
+    public function isEnabled() {
+        return $this->isControllerEnabled($this->name);
+    }
+
+    public function isControllerEnabled($name) {
+
+        // проверяем только те, которые зарегистрированы в базе
+        if (isset(self::$controllers[$name]['is_enabled'])){
+            return self::$controllers[$name]['is_enabled'];
+        }
+
+        return true;
+
+    }
+
+    public static function enabled($name) {
+        self::loadControllers();
+        if (isset(self::$controllers[$name]['is_enabled'])){
+            return self::$controllers[$name]['is_enabled'];
+        }
+        return true;
+    }
+
+    private static function loadControllers() {
+
+        if(!isset(self::$controllers)){
+
+            $model = new cmsModel();
+
+            self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
+                $item['options'] = cmsModel::yamlToArray($item['options']);
+                return $item;
+            }, 'name');
+
+        }
+
+    }
     /**
      * Загружает опции контроллера
      * @param string $controller_name
      * @return array
      */
-    static function loadOptions($controller_name){
+    public static function loadOptions($controller_name){
 
-        if (isset(self::$options_cache[$controller_name])){
-            return self::$options_cache[$controller_name];
+        if (isset(self::$controllers[$controller_name]['options'])){
+            return self::$controllers[$controller_name]['options'];
         }
 
-        $model = new cmsModel();
-
-        $model->filterEqual('name', $controller_name);
-
-        $options = $model->getFieldFiltered('controllers', 'options');
-
-        if ($options){
-            $options = cmsModel::yamlToArray($options);
-            self::$options_cache[$controller_name] = $options;
-        }
-
-        return $options;
+        return array();
 
     }
 
@@ -102,7 +126,11 @@ class cmsController {
 
         $model->filterEqual('name', $controller_name);
 
-        return $model->updateFiltered('controllers', array('options' => $options));
+        $model->updateFiltered('controllers', array('options' => $options));
+
+        cmsCache::getInstance()->clean('controllers');
+
+        return true;
 
     }
 
@@ -198,7 +226,7 @@ class cmsController {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 
-        // епроверяем наличие экшена его в отдельном файле
+        // проверяем наличие экшена его в отдельном файле
         $action_file = $this->root_path . 'actions/' . $action_name.'.php';
 
         if(file_exists($action_file)){
@@ -217,7 +245,7 @@ class cmsController {
                     $max_params = $rf->getNumberOfParameters();
                     if ($max_params < count($this->current_params)) { cmsCore::error404(); }
                 }
-                
+
                 // если есть нужный экшен, то вызываем его
                 $result = call_user_func_array(array($this, $method_name), $this->current_params);
 
@@ -244,7 +272,7 @@ class cmsController {
         }
 
         $this->after($action_name);
-				
+
         return $result;
 
     }
@@ -262,7 +290,7 @@ class cmsController {
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
-        include($action_file);
+        include_once $action_file;
 
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){
@@ -270,9 +298,9 @@ class cmsController {
             $max_params = $rf->getNumberOfParameters();
             if ($max_params < count($params)) { cmsCore::error404(); }
         }
-        
+
         $action_object = new $class_name($this, $params);
-        
+
         $result = call_user_func_array(array($action_object, 'run'), $params);
 
         return $result;
@@ -374,7 +402,7 @@ class cmsController {
      * Загружает и возвращает описание структуры таблицы
      * @param string $grid_name
      */
-    public function loadDataGrid($grid_name, $params = false){
+    public function loadDataGrid($grid_name, $params = false, $ups_key = ''){
 
         $default_options = array(
             'order_by' => 'id',
@@ -387,7 +415,8 @@ class cmsController {
             'is_pagination' => true,
             'is_toolbar' => true,
             'is_draggable' => false,
-            'is_selectable' => false
+            'is_selectable' => false,
+            'load_columns' => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
@@ -411,7 +440,31 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
-		
+
+        if ($this->request->isAjax() && $this->request->has('heads')) {
+
+            $heads = $this->request->get('heads', array());
+            natsort($heads);
+
+            $grid_heads = array_keys($grid['columns']);
+            if ($grid['actions']) {
+                $grid_heads[] = 'dg_actions';
+            }
+            natsort($grid_heads);
+
+            if ($heads !== $grid_heads) {
+                $grid['options']['load_columns'] = true;
+            }
+        }
+
+        if($ups_key){
+            $filter_str = cmsUser::getUPS($ups_key);
+            if($filter_str){
+                parse_str($filter_str, $filter);
+                $grid['filter'] = $filter;
+            }
+        }
+
         return $grid;
 
     }
@@ -440,8 +493,8 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function halt() {
-        die();
+    public function halt($text='') {
+        die((string)$text);
     }
 
 //============================================================================//
@@ -589,7 +642,7 @@ class cmsController {
 			if (is_array($params)) { $location .= '/' . implode('/', $params); }
 			else { $location .= '/' . $params; }
 		}
-		
+
         if ($query){ $location .= '?' . http_build_query($query); }
 
         $this->redirect(href_to($location));
@@ -682,19 +735,25 @@ class cmsController {
 
     public function validate_email($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
+        if (!preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
         return true;
     }
 
     public function validate_alphanumeric($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
+        if (!preg_match("/^([a-z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
         return true;
     }
 
     public function validate_sysname($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-zA-Z0-9\_]*)$/i", $value)){ return ERR_VALIDATE_SYSNAME; }
+        if (!preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        return true;
+    }
+
+    public function validate_slug($value){
+        if (empty($value)) { return true; }
+        if (!preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
         return true;
     }
 
@@ -708,6 +767,15 @@ class cmsController {
         if (empty($value)) { return true; }
         if (!preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
         return true;
+    }
+
+    public function validate_color($value){
+        if (empty($value)) { return true; }
+        $value = ltrim($value, '#');
+        if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)){
+            return true;
+        }
+        return false;
     }
 
     public function validate_regexp($regexp, $value){
@@ -739,7 +807,7 @@ class cmsController {
         $table_name = $content_model->table_prefix . $ctype_name;
         $result = !$core->db->isFieldExists($table_name, $value);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
-        return true;        
+        return true;
     }
 
     public function validate_unique_ctype_dataset($ctype_id, $value){

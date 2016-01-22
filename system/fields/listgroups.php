@@ -35,7 +35,7 @@ class fieldListGroups extends cmsFormField {
 
         $this->data['groups'] = $items;
 
-        return parent::getInput($value?:array(0));
+        return parent::getInput($value ? $value : array(0));
 
     }
 

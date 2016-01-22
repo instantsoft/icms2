@@ -36,7 +36,7 @@
 	define('LANG_PHP_VARIABLES',            'PHP configuration');
 	define('LANG_PHP_VARIABLES_HINT',       'Required values shown in gray');
 	define('LANG_PHP_VARIABLES_ON',			'On');
-	define('LANG_PHP_VARIABLES_OFF',		'Off');	
+	define('LANG_PHP_VARIABLES_OFF',		'Off');
     define('LANG_PHP_EXTENSIONS',           'Required extensions');
     define('LANG_PHP_EXTENSIONS_REQ',       'These extensions are required for InstantCMS to operate');
     define('LANG_PHP_EXTENSIONS_EXTRA',     'Recommended extensions');
@@ -69,19 +69,25 @@
     define('LANG_DATABASE_USER',            'Username');
     define('LANG_DATABASE_PASS',            'Password');
     define('LANG_DATABASE_BASE',            'Database');
+    define('LANG_DATABASE_ENGINE',          'Database engine');
+    define('LANG_DATABASE_ENGINE_HINT',     'Do not know what to choose? Choose MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
     define('LANG_DATABASE_USERS_TABLE',     'Users table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Use an existing table');
+    define('LANG_DATABASE_INSTALL_DEMO',    'To set a demo content');
 
     define('LANG_DATABASE_CONNECT_ERROR',   "MySQL Connection Error:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Error importing database\nCheck the provided settings");
-    
+    define('LANG_DATABASE_ENGINE_NO',       'The engine is not supported');
+    define('LANG_DATABASE_ENGINE_DISABLED', 'The engine is supported but has been disabled');
+    define('LANG_DATABASE_ENGINE_ERROR',    'The engine is not supported by server');
+
     define('LANG_SITE_SITENAME',            "Site name");
     define('LANG_SITE_HOMETITLE',           "Frontpage title");
     define('LANG_SITE_METAKEYS',            "Site keywords");
     define('LANG_SITE_METADESC',            "Site description");
-    
+
     define('LANG_SITE_SITENAME_ERROR',      "Site name is required");
 
     define('LANG_ADMIN_EXTERNAL',           "Administrator's account will be taken from the table <b>%s</b>");

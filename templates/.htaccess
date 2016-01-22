@@ -1,5 +1,4 @@
-Options -Indexes
 order allow,deny
-<Files ~ "\.(js|css|xml|png|gif|jpg|jpeg|html|htm|ico|bmp|map|eot|svg|ttf|woff)$">
+<Files ~ "\.(js|css|xml|png|gif|jpg|jpeg|html|htm|ico|bmp|map|eot|svg|ttf|woff|woff2)$">
    allow from all
 </Files>

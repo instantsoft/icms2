@@ -46,8 +46,8 @@ class actionContentItemEdit extends cmsAction {
         if ($ctype['is_folders']){
             $folders_list = $this->model->getContentFolders($ctype['id'], $item['user_id']);
             $folders_list = array_collection_to_list($folders_list, 'id', 'title');
-        }		
-		
+        }
+
         // Получаем поля для данного типа контента
         $this->model->orderBy('ordering');
         $fields = $this->model->getContentFields($ctype['name'], $id);
@@ -63,7 +63,7 @@ class actionContentItemEdit extends cmsAction {
             $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
         }
 
-		cmsEventsManager::hook("content_edit", array($ctype, $item));
+		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
@@ -80,24 +80,24 @@ class actionContentItemEdit extends cmsAction {
                 $form->addField('props', $field);
             }
         }
-		
+
 		$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 		$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
 		$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
 		$is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
 		$is_date_pub_ext_allowed = $is_date_pub_days_allowed && cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
-		
+
 		if ($is_date_pub_ext_allowed){
 			$item['pub_days'] = 0;
-		}	
-		
+		}
+
 		$add_cats = $this->model->getContentItemCategories($ctype['name'], $id);
-		
+
 		if ($add_cats){
 			foreach($add_cats as $index => $cat_id){
 				if ($cat_id == $item['category_id']) { unset($add_cats[$index]); break; }
 			}
-		}		
+		}
 
         if ($is_submitted){
 
@@ -106,10 +106,10 @@ class actionContentItemEdit extends cmsAction {
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $item);
-			
+
 			if (!$errors){
 				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
-			}			
+			}
 
             if (!$errors){
 
@@ -126,39 +126,40 @@ class actionContentItemEdit extends cmsAction {
                     $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                     $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
                 }
-		
+
 				$date_pub_time = strtotime($item['date_pub']);
 				$date_pub_end_time = strtotime($item['date_pub_end']);
-				$now_time = strtotime(date('Y-m-d', time()));
+				$now_time = time();
+                $now_date = strtotime(date('Y-m-d', $now_time));
 				$is_pub = true;
-				
-				if ($is_date_pub_allowed){					
-					$days_to_pub = ceil(($date_pub_time - $now_time)/60/60/24);					
-					$is_pub = $is_pub && ($days_to_pub < 1);
-				}				
-				if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){					
-					$days_from_pub = floor(($now_time - $date_pub_end_time)/60/60/24);
+
+				if ($is_date_pub_allowed){
+					$time_to_pub = $date_pub_time - $now_time;
+					$is_pub = $is_pub && ($time_to_pub < 0);
+				}
+				if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){
+					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 				} else if ($is_date_pub_ext_allowed && !$user->is_admin) {
 					$days = $item['pub_days'];
 					$date_pub_end_time = $date_pub_end_time + 60*60*24*$days;
-					$days_from_pub = floor(($now_time - $date_pub_end_time)/60/60/24);
+					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
 				} else {
 					$item['date_pub_end'] = false;
 				}
-				
+
 				unset($item['pub_days']);
-				
-				if (!$is_pub_control) { unset($item['is_pub']); }				
+
+				if (!$is_pub_control) { unset($item['is_pub']); }
 				if (!isset($item['is_pub']) || !empty($item['is_pub'])){
-					$item['is_pub'] = $is_pub; 
+					$item['is_pub'] = $is_pub;
 					if (!$is_pub){
 						cmsUser::addSessionMessage(LANG_CONTENT_IS_PUB_OFF);
 					}
 				}
-				
+
 				if (!empty($ctype['options']['is_cats_multi'])){
 					$add_cats = $this->request->get('add_cats');
 					if (is_array($add_cats)){
@@ -171,8 +172,8 @@ class actionContentItemEdit extends cmsAction {
 							$item['add_cats'] = $add_cats;
 						}
 					}
-				}				
-				
+				}
+
                 //
                 // Сохраняем запись и редиректим на ее просмотр
                 //
@@ -215,7 +216,7 @@ class actionContentItemEdit extends cmsAction {
             }
 
         }
-		
+
         return cmsTemplate::getInstance()->render('item_form', array(
             'do' => 'edit',
             'ctype' => $ctype,
@@ -229,7 +230,7 @@ class actionContentItemEdit extends cmsAction {
 			'add_cats' => $add_cats,
             'errors' => isset($errors) ? $errors : false
         ));
-		
+
     }
 
 }

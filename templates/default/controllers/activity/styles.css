@@ -20,10 +20,13 @@
     color:#d35400;
 }
 
-.activity-list .item .images { overflow: hidden; margin:10px 0; }
+.activity-list .item .images { overflow: hidden; margin:10px 0 0; }
 .activity-list .item .images .image {
     float:left; margin-right:2px;
     display:block; overflow: hidden;
+}
+.activity-list .item .images .image img {
+    width: 100%; display: block;
 }
 .activity-list .item .images .image.more {
     background: #ecf0f1;

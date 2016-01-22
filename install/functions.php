@@ -63,3 +63,23 @@ function get_langs(){
     return $list;
 
 }
+
+function copy_folder($dir_source, $dir_target) {
+
+    if (is_dir($dir_source))  {
+
+        @mkdir($dir_target);
+        $d = dir($dir_source);
+
+        while (false !== ($entry = $d->read())) {
+            if ($entry == '.' || $entry == '..') { continue; }
+            copy_folder("$dir_source/$entry", "$dir_target/$entry");
+        }
+
+        $d->close();
+
+    } else {
+        copy($dir_source, $dir_target);
+    }
+
+}

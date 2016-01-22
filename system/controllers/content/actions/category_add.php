@@ -22,11 +22,13 @@ class actionContentCategoryAdd extends cmsAction {
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
 
+        $category = array();
+        
+        list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));        
+        
         // Парсим форму и получаем поля записи
         $category = $form->parse($this->request, $is_submitted);
 		
-		list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
-
         if (!$is_submitted && $parent_id) { $category['parent_id'] = $parent_id; }
 
         if ($is_submitted){

@@ -5,7 +5,8 @@ class cmsConfig {
     private static $instance;
     private static $mapping;
 
-    private $data = array();
+    private $ready   = false;
+    private $data    = array();
     private $dynamic = array();
 
     public static function getInstance() {
@@ -22,9 +23,9 @@ class cmsConfig {
     public static function getControllersMapping(){
 
         if (self::$mapping !== null) { return self::$mapping; }
-        
+
         self::$mapping = array();
-        
+
         $map_file = 'system/config/remap.php';
         $map_function = 'remap_controllers';
 
@@ -46,9 +47,9 @@ class cmsConfig {
 	public function __construct($cfg_file='config.php'){
 
         $this->data = $this->load($cfg_file);
-        
+
         if(!$this->data){
-            die('Configuration file not found');
+            return;
         }
 
         $this->set('cfg_time_zone', $this->data['time_zone']);
@@ -57,23 +58,33 @@ class cmsConfig {
             $this->data['time_zone'] = $_SESSION['user']['time_zone'];
         }
 
+        if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
+            $this->data['detect_ip_key'] = 'REMOTE_ADDR';
+        }
+
 		$this->upload_host_abs = $this->upload_host;
-		
+
 		if (mb_strpos($this->upload_host, $this->host)===0){
 			$url_parts = parse_url(trim($this->host, '/'));
 			$host = empty($url_parts['path']) ? $this->host : $url_parts['scheme'] . '://' . $url_parts['host'];
 			$this->upload_host = str_replace($host, '', $this->upload_host);
 		}
-		
+
         $this->set('root_path', ROOT . $this->root);
         $this->set('system_path', $this->root_path . 'system/');
         $this->set('upload_path', ROOT . $this->upload_root);
         $this->set('cache_path', ROOT . $this->cache_root);
 
+        $this->ready = true;
+
 	}
 
 //============================================================================//
 //============================================================================//
+
+    public function isReady(){
+        return $this->ready;
+    }
 
     public function set($key, $value){
         $this->data[$key] = $value;
@@ -88,11 +99,11 @@ class cmsConfig {
 		if (!isset($this->data[$name])){ return false; }
         return $this->data[$name];
     }
-	
+
 	public function __isset($name) {
 		return isset($this->data[$name]);
 	}
-	
+
 //============================================================================//
 //============================================================================//
 

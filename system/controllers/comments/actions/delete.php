@@ -7,38 +7,46 @@ class actionCommentsDelete extends cmsAction {
         if (!$this->request->isAjax()){ cmsCore::error404(); }
         if (!cmsUser::isAllowed('comments', 'delete')){ cmsCore::error404(); }
 
-        $comment_id = $this->request->get('id');
+        $comment = $this->model->getComment((int)$this->request->get('id'));
 
-        // Проверяем валидность
-        $is_valid = is_numeric($comment_id);
+        // Проверяем
+        if (!$comment){
 
-        if (!$is_valid){
-            $result = array(
+            cmsTemplate::getInstance()->renderJSON($result = array(
                 'error' => true,
                 'message' => LANG_ERROR
-            );
-            cmsTemplate::getInstance()->renderJSON($result);
+            ));
+
         }
 
         $user = cmsUser::getInstance();
 
-        $comment = $this->model->getComment($comment_id);
+        if (!cmsUser::isAllowed('comments', 'delete', 'all') && !cmsUser::isAllowed('comments', 'delete', 'full_delete')) {
+            if (cmsUser::isAllowed('comments', 'delete', 'own') && $comment['user']['id'] != $user->id) {
 
-        if (!cmsUser::isAllowed('comments', 'edit', 'all')) {
-            if (cmsUser::isAllowed('comments', 'edit', 'own') && $comment['user']['id'] != $user->id) {
-                $result = array('error' => true, 'message' => LANG_ERROR);
-                cmsTemplate::getInstance()->renderJSON($result);
+                cmsTemplate::getInstance()->renderJSON(array(
+                    'error' => true,
+                    'message' => LANG_ERROR
+                ));
+
             }
         }
 
-        $this->model->deleteComment($comment_id);
+        // проверяем, есть ли дети комментария
+        $is_comment_child = $this->model->getItemByField('comments', 'parent_id', $comment['id']);
 
-        $result = array(
+        $this->model->deleteComment($comment['id'], (!$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true)));
+
+        if(cmsUser::isAllowed('comments', 'delete', 'full_delete')){
+            cmsEventsManager::hook('comments_after_delete', $comment['id']);
+        } else {
+            cmsEventsManager::hook('comments_after_hide', $comment['id']);
+        }
+
+        cmsTemplate::getInstance()->renderJSON(array(
             'error' => false,
             'message' => LANG_COMMENT_DELETED
-        );
-
-        cmsTemplate::getInstance()->renderJSON($result);
+        ));
 
     }
 

@@ -3,17 +3,19 @@ class formAdminCtypesField extends cmsForm {
 
     public function init($do, $ctype_name) {
 
+        $model = cmsCore::getModel('content');
+
         return array(
             'basic' => array(
                 'type' => 'fieldset',
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
-						'hint' => $do=='edit' ? LANG_SYSTEM_EDIT_NOTICE : false, 
+						'hint' => $do=='edit' ? LANG_SYSTEM_EDIT_NOTICE : false,
                         'rules' => array(
                             array('required'),
                             array('sysname'),
-                            array('max_length', 20), 
+                            array('max_length', 20),
                             $do == 'add' ? array('unique_ctype_field', $ctype_name) : false
                         )
                     )),
@@ -53,8 +55,7 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldList('fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($field) {
-                            $model = cmsCore::getModel('content');
+                        'generator' => function($field) use($model){
                             $fieldsets = $model->getContentFieldsets($field['ctype_id']);
                             $items = array('');
                             foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
@@ -145,9 +146,8 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldList('options:profile_value', array(
                         'hint' => LANG_CP_FIELD_PROFILE_VALUE_HINT,
-                        'generator' => function($field) {
-                            $model = cmsCore::getModel('content');
-                            $model->setTablePrefix('');
+                        'generator' => function($field) use($model){
+                            $model->setTablePrefix(''); // Ниже модель не используется
                             $fields = $model->filterIn('type', array('string', 'text', 'html', 'list'))->getContentFields('{users}');
                             $items = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
                             return $items;

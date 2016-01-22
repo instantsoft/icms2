@@ -14,8 +14,7 @@ class formSearchOptions extends cmsForm {
                     new fieldList('ctypes', array(
                         'is_multiple' => true,
                         'generator' => function(){
-                            $content_model = cmsCore::getModel('content');
-                            $ctypes = $content_model->getContentTypes();
+                            $ctypes = cmsCore::getModel('content')->getContentTypes();
                             $items = array_collection_to_list($ctypes, 'name', 'title');
                             return $items;
                         }

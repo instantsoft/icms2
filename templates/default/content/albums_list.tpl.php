@@ -20,7 +20,11 @@
 
         <?php foreach($items as $item){ ?>
 
-            <?php $item['ctype'] = $ctype; ?>
+            <?php
+                $item['ctype'] = $ctype;
+                $is_private    = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
+                $stop = 0;
+            ?>
 
             <div class="tile <?php echo $ctype['name']; ?>_list_item">
 
@@ -31,22 +35,27 @@
 							/ <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
 						<?php } ?>
                     </div>
-                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-                        <?php if (!empty($item['cover_image'])){ ?>
-                            <?php echo html_image($item['cover_image'], 'normal', $item['title']); ?>
-                            <?php unset($item['cover_image']); ?>
-                        <?php } ?>
-                    </a>
+                    <?php if ($is_private) { ?>
+                        <?php echo html_image(default_images('private', 'normal'), 'normal', $item['title']); ?>
+                    <?php } else { ?>
+                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
+                            <?php if (!empty($item['cover_image'])){ ?>
+                                <?php echo html_image($item['cover_image'], 'normal', $item['title']); ?>
+                                <?php unset($item['cover_image']); ?>
+                            <?php } ?>
+                        </a>
+                    <?php } ?>
+                    <?php unset($item['cover_image']); ?>
                 </div>
 
                 <div class="fields">
 
                 <?php foreach($fields as $field){ ?>
 
+                    <?php if ($stop === 2) { break; } ?>
                     <?php if (empty($item[$field['name']])) { continue; } ?>
                     <?php if ($field['is_system']) { continue; } ?>
                     <?php if (!$field['is_in_list']) { continue; } ?>
-
                     <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                     <?php
@@ -71,10 +80,23 @@
                                     &rarr;
                                 <?php } ?>
 
-                                <a class="title" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php echo htmlspecialchars($item[$field['name']]); ?></a>
+                                <?php if ($is_private) { ?>
+                                    <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                <?php } else { ?>
+                                    <a class="title" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
+                                    <?php if ($item['is_private']) { ?>
+                                        <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                    <?php } ?>
+                                <?php } ?>
 
                             <?php } else { ?>
-                                <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+
+                               <?php if ($is_private) { $stop++; ?>
+                                    <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
+                               <?php } else { ?>
+                                    <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                               <?php } ?>
+
                             <?php } ?>
                         </div>
 
@@ -117,7 +139,13 @@
                         <?php } ?>
                         <?php if ($ctype['is_comments']){ ?>
                             <div class="bar_item bi_comments">
-                                <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>#comments" title="<?php echo LANG_COMMENTS; ?>"><?php echo intval($item['comments']); ?></a>
+                                <?php if ($is_private) { ?>
+                                    <?php echo intval($item['comments']); ?>
+                                <?php } else { ?>
+                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>#comments" title="<?php echo LANG_COMMENTS; ?>">
+                                        <?php echo intval($item['comments']); ?>
+                                    </a>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>

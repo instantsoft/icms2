@@ -187,7 +187,7 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . rand(0, 99999)) . '$' . $seed);
+    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . uniqid()) . '$' . $seed);
 
     if ($length < 32) { $string = mb_substr($string, 0, $length); }
 
@@ -391,14 +391,15 @@ function string_replace_user_properties($string){
  */
 function string_replace_keys_values($string, $data){
 
-    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
-    $values = $data;
+    if(strpos($string, '{') === false){ return $string; }
 
-	foreach($values as $k=>$v){
-		if (is_array($v) || is_object($v)) { unset($values[$k]); }
+	foreach($data as $k=>$v){
+		if (is_array($v) || is_object($v)) { unset($data[$k]); }
 	}
-	
-    return str_replace($keys, $values, $string);
+
+    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
+
+    return str_replace($keys, array_values($data), $string);
 
 }
 
@@ -427,15 +428,16 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
 
     $stat = array();
 
+    $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", '', $text);
     $text = mb_strtolower($text);
 
     $words = explode(' ', $text);
 
-    foreach($words as $i=>$word){
+    foreach($words as $word){
 
-        $word = trim($word, "()+-., {}|\"\n");
+        $word = trim($word);
+        $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
         $word = preg_replace("/\.,\(\)\{\}/i", '', $word);
 
         if (mb_strlen($word)>=$min_length){
@@ -447,9 +449,7 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $stat = array_reverse($stat, true);
     $stat = array_slice($stat, 0, $limit, true);
 
-    $words = implode(', ', array_keys($stat));
-
-    return $words;
+    return implode(', ', array_keys($stat));
 
 }
 
@@ -474,14 +474,17 @@ function string_get_meta_description($text, $limit=250){
  * @param int $limit Максимальная длина результата
  * @return string
  */
-function string_short($text, $limit){
+function string_short($text, $limit=0){
 
+    // строка может быть без переносов
+    // и после strip_tags не будет пробелов между словами
+    $text = str_replace(array("\n", "\r", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", ' ', $text);
 
-    if (mb_strlen($text) <= $limit) { return $text; }
+    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
 
     $text = mb_substr($text, 0, $limit);
+    $text = preg_replace('/ |\s{3,}/',' ',$text);
 
     preg_match('/^(.*)([.!?])(.*)$/i', $text, $matches);
 

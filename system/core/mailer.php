@@ -8,14 +8,14 @@ class cmsMailer {
 
         $config = cmsConfig::getInstance();
 
-        cmsCore::loadLib('phpmailer/class.phpmailer', 'PHPMailer');        
-        
+        cmsCore::loadLib('phpmailer/class.phpmailer', 'PHPMailer');
+
         $this->mailer = new PHPMailer();
         $this->mailer->CharSet = 'UTF-8';
 
         $this->
             initTransport()->
-            setFrom( $config->mail_from )->
+            setFrom( $config->mail_from, (!empty($config->mail_from_name) ? $config->mail_from_name : '') )->
             setBodyText( LANG_MAIL_DEFAULT_ALT );
 
     }
@@ -46,7 +46,7 @@ class cmsMailer {
             $this->mailer->SMTPKeepAlive = true;
             $this->mailer->Username      = $config->mail_smtp_user;
             $this->mailer->Password      = $config->mail_smtp_pass;
-			if (!empty($config->mail_smtp_enc)){ 
+			if (!empty($config->mail_smtp_enc)){
 				$this->mailer->SMTPSecure = $config->mail_smtp_enc;
 			}
             return $this;
@@ -84,8 +84,8 @@ class cmsMailer {
 		$this->mailer->ClearReplyTos();
 		$this->mailer->AddReplyTo($email, $name='');
 		return $this;
-	}	
-	
+	}
+
     /**
      * Добавляет адрес получателя
      * @param string $email
@@ -175,7 +175,7 @@ class cmsMailer {
     public function parseAttachments($letter_text){
 
         // Парсим вложения
-        if(preg_match_all('/\[attachment:(.+)\]/iu', $letter_text, $matches)){
+        if(preg_match_all('/\[attachment:(.+?)\]/iu', $letter_text, $matches)){
 
             $config = cmsConfig::getInstance();
 

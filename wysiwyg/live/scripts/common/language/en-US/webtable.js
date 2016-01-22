@@ -12,6 +12,7 @@
     document.getElementById("btnMerge").value = "Merge Cell";
     document.getElementById("lblFormat").innerHTML = "FORMAT:";
     document.getElementById("lblTable").innerHTML = "Table";
+    document.getElementById("lblCell").innerHTML = "Cell";
     document.getElementById("lblEven").innerHTML = "Even Rows";
     document.getElementById("lblOdd").innerHTML = "Odd Rows";
     document.getElementById("lblCurrRow").innerHTML = "Current Row";

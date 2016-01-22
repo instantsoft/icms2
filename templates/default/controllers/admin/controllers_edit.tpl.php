@@ -12,14 +12,13 @@
 
 <?php if ($is_backend){ ?>
 
-    <div class="pills-menu">
-        <?php $this->menu('backend'); ?>
-    </div>
+    <?php if (isset($this->menus['backend'])){ ?>
+        <div class="pills-menu">
+            <?php $this->menu('backend'); ?>
+        </div>
+    <?php } ?>
 
-    <?php
-        $backend_html = $backend_controller->runAction($action_name, $params);
-        echo $backend_html;
-    ?>
+    <?php echo $backend_controller->runAction($action_name, $params); ?>
 
 <?php } ?>
 

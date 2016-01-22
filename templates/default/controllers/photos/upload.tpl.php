@@ -28,9 +28,9 @@
 					<?php if ($album['is_public']) { $album['title'] = '[' . LANG_PHOTOS_PUBLIC_ALBUM . '] ' . $album['title']; } ?>
                     <option value="<?php echo $album['id']; ?>" <?php if ($album['id'] == $album_id) {?>selected="selected"<?php } ?>>
                         <?php if (empty($album['parent_title'])){ ?>
-                            <?php echo $album['title']; ?>
+                            <?php html($album['title']); ?>
                         <?php } else { ?>
-                            <?php echo $album['parent_title'] . ' &rarr; ' . $album['title']; ?>
+                            <?php html($album['parent_title'].' → '.$album['title']); ?>
                         <?php } ?>
                     </option>
                 <?php } ?>

@@ -23,7 +23,7 @@ class widgetUsersList extends cmsWidget {
             case 'friends_online':
                 if (!$user->is_logged) { return false; }
                 $model->filterFriends($user->id);
-                $model->filterEqual('is_online', 1);
+                $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
                 break;
 
         }
@@ -39,7 +39,7 @@ class widgetUsersList extends cmsWidget {
             $model->filterGroups($groups);
         }
 
-        $profiles = $model->					
+        $profiles = $model->
                         limit($limit)->
                         getUsers();
 

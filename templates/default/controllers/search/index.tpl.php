@@ -67,12 +67,12 @@
             <?php foreach($ctype['items'] as $item){ ?>
                 <div class="item">
                     <div class="title">
-                        <a href="<?php echo href_to($ctype['name'], $item['slug'] . '.html'); ?>" target="_blank"><?php html($item['title']); ?></a>
+                        <a href="<?php echo $item['url']; ?>" target="_blank"><?php html($item['title']); ?></a>
                     </div>
                     <?php foreach($item as $field=>$value){ ?>
-                        <?php if (in_array($field, array('id', 'title', 'slug', 'date_pub'))) { continue; } ?>
+                        <?php if (in_array($field, array('id', 'title', 'slug', 'date_pub', 'url'))) { continue; } ?>
                         <?php if (!$value) { continue; } ?>
-                        <div class="field"><?php echo $value; ?>...</div>
+                        <div class="field search_field_<?php echo $field; ?>"><?php echo $value; ?></div>
                     <?php } ?>
                     <div class="info"><span class="date"><?php echo html_date_time($item['date_pub']); ?></span></div>
                 </div>

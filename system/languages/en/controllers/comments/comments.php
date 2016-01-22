@@ -7,7 +7,7 @@
     define('LANG_COMMENTS_OPT_GUESTS_DELAY',	'Delay between guest comments from single IP');
     define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS',	'Deny guest comments from IP');
     define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT',	'Single IP address in a row');
-	
+
     define('LANG_COMMENTS_DS_ALL',          'All');
     define('LANG_COMMENTS_DS_FRIENDS',      'My friends');
     define('LANG_COMMENTS_DS_MY',           'My');
@@ -22,10 +22,10 @@
     define('LANG_COMMENT_DELETE_CONFIRM',      'Delete comment from %s?');
 
 	define('LANG_COMMENT_ERROR_NAME',	'You must enter your name');
-	define('LANG_COMMENT_ERROR_EMAIL',	'Incorrect e-mail address');	
-	define('LANG_COMMENT_ERROR_TIME',	"You can write one comments in %s\nPlease, try later");	
-	define('LANG_COMMENT_ERROR_IP',     "We don't accept comments from your IP address");	
-	
+	define('LANG_COMMENT_ERROR_EMAIL',	'Incorrect e-mail address');
+	define('LANG_COMMENT_ERROR_TIME',	"You can write one comments in %s\nPlease, try later");
+	define('LANG_COMMENT_ERROR_IP',     "We don't accept comments from your IP address");
+
     define('LANG_COMMENT_SHOW_PARENT',  'Show parent');
     define('LANG_COMMENT_SHOW_CHILD',   'Back to reply');
     define('LANG_COMMENT_ANCHOR',       'Permanent link');
@@ -58,3 +58,6 @@
     define('LANG_RULE_COMMENTS_RATE',   'Rate comments');
     define('LANG_RULE_COMMENTS_KARMA',  'Reputation limit');
 
+	define('LANG_COMMENTS_UPDATE_USER_RATING',	'Rating from comments can affect for author rating');
+	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Increase/Decrease in author rating for +/- in comments');
+    define('LANG_PERM_OPTION_FULL_DELETE',	'All full delete');

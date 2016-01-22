@@ -1,4 +1,4 @@
-<?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ; ?>
+<?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
     </div>
@@ -18,16 +18,16 @@
     $prepend_html = isset($attributes['prepend_html']) ? $attributes['prepend_html'] : '';
     $append_html = isset($attributes['append_html']) ? $attributes['append_html'] : '';
 
+    $form_id = uniqid();
+
 ?>
-<form action="<?php echo $attributes['action']; ?>"
+<form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $method; ?>"
       <?php if ($is_ajax){ ?>
         class="modal"
-        onsubmit="return icms.forms.submitAjax(this)"
       <?php } ?>
       enctype="multipart/form-data"
-      accept-charset="utf-8"
-      >
+      accept-charset="utf-8">
 
     <?php echo html_csrf_token(); ?>
 
@@ -36,7 +36,7 @@
     <div id="form-tabs" <?php if($form->is_tabbed){ ?>class="tabs-menu"<?php } ?>>
 
         <?php if($form->is_tabbed){ ?>
-            <ul>
+            <ul class="tabbed">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                     <?php if (!isset($fieldset['childs']) || !sizeof($fieldset['childs'])) { continue; } ?>
                     <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
@@ -95,16 +95,16 @@
                                 $value = $default;
                             }
                         }
-                        
+
                         $classes = array(
-                            'field', 
+                            'field',
                             'ft_' . mb_strtolower(mb_substr(get_class($field), 5))
                         );
-                        
-                        if ($error){ 
+
+                        if ($error){
                             $classes[] = 'field_error';
                         }
-                        
+
                         if (!empty($field->groups_edit)){
                             if (!in_array(0, $field->groups_edit)){
                                 $classes[] = 'groups-limit';
@@ -113,19 +113,19 @@
                                 }
                             }
                         }
-                        
+
                         $styles = array();
-                        
+
                         if (isset($field->is_visible)){
                             if (!$field->is_visible){
                                 $styles[] = 'display:none';
                             }
                         }
-                        
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
                         $id = "f_{$field->id}";
-                        
+
                     ?>
 
                     <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>" <?php if ($rel) { ?>rel="<?php echo $rel; ?>"<?php } ?> <?php if ($styles) { ?>style="<?php echo $styles; ?>"<?php } ?>>
@@ -185,8 +185,17 @@
     <?php echo $append_html; ?>
 
     <div class="buttons">
-        <?php echo html_submit( $submit['title'] ); ?>
+        <?php echo html_submit($submit['title'], 'submit', $submit); ?>
         <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'"); } ?>
     </div>
 
 </form>
+<?php if ($is_ajax){ ?>
+    <script type="text/javascript">
+        $(function (){
+            $('#<?php echo $form_id; ?>').on('submit', function (){
+                return icms.forms.submitAjax(this);
+            });
+        });
+    </script>
+<?php } ?>

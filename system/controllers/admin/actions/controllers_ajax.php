@@ -13,6 +13,8 @@ class actionAdminControllersAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
+        $filter_str = cmsUser::getUPSActual('admin.grid_filter.controllers', $filter_str);
+
         if ($filter_str){
             parse_str($filter_str, $filter);
             $this->model->applyGridFilter($grid, $filter);
@@ -22,7 +24,7 @@ class actionAdminControllersAjax extends cmsAction {
         $pages = ceil($total / admin::perpage);
 
         $controllers = $this->model->getInstalledControllers();
-        
+
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $controllers, $total, $pages);
 
         $this->halt();

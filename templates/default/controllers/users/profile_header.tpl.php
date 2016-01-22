@@ -41,13 +41,15 @@
                     <?php } ?>
                 </span>
                 <?php if ($user->is_logged){ ?>
-                    <span class="reply">
-                        <?php if (empty($profile['status']['replies_count'])) { ?>
-                            <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>"><?php echo LANG_REPLY; ?></a>
-                        <?php } else { ?>
-                            <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}"; ?>"><?php echo html_spellcount($profile['status']['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
-                        <?php } ?>
-                    </span>
+                    <?php if ($this->controller->options['is_wall']){ ?>
+                        <span class="reply">
+                            <?php if (empty($profile['status']['replies_count'])) { ?>
+                                <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>"><?php echo LANG_REPLY; ?></a>
+                            <?php } else { ?>
+                                <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}"; ?>"><?php echo html_spellcount($profile['status']['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
+                            <?php } ?>
+                        </span>
+                    <?php } ?>
                     <?php if ($profile['id'] == $user->id) { ?>
                         <span class="delete">
                             <a href="#delete-status" onclick="return icms.users.deleteStatus(this)" data-url="<?php echo $this->href_to('status_delete', $profile['id']); ?>"><?php echo LANG_DELETE; ?></a>
@@ -87,7 +89,7 @@
 
 		<div id="user_profile_tabs">
 			<div class="tabs-menu">
-				<?php $this->menu('profile_tabs', true, '', $this->controller->options['max_tabs']); ?>
+				<?php $this->menu('profile_tabs', true, 'tabbed', $this->controller->options['max_tabs']); ?>
 			</div>
 		</div>
 

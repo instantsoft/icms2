@@ -4,8 +4,9 @@ class fieldCaption extends cmsFormField {
 
     public $title           = LANG_PARSER_CAPTION;
     public $is_public       = false;
-    public $sql             = 'varchar(255) NULL DEFAULT NULL';
+    public $sql             = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type     = 'str';
+    public $allow_index = false;
 
     public function getOptions(){
 
@@ -18,6 +19,10 @@ class fieldCaption extends cmsFormField {
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
             )),
+            new fieldCheckbox('in_fulltext_search', array(
+                'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
+                'default' => true
+            ))
         );
 
     }
@@ -42,6 +47,10 @@ class fieldCaption extends cmsFormField {
 
     public function getStringValue($value){
         return $value;
+    }
+
+    public function store($value, $is_submitted, $old_value=null){
+        return strip_tags($value);
     }
 
     public function applyFilter($model, $value) {

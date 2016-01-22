@@ -7,7 +7,7 @@
     define('LANG_COMMENTS_OPT_GUESTS_DELAY',	'Пауза между комментариями гостей с одного IP');
     define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS',	'Запретить гостевые комментарии с IP');
     define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT',	'Один IP адрес в каждой строке');
-	
+
     define('LANG_COMMENTS_DS_ALL',          'Все');
     define('LANG_COMMENTS_DS_FRIENDS',      'Моих друзей');
     define('LANG_COMMENTS_DS_MY',           'Только мои');
@@ -23,9 +23,9 @@
 
 	define('LANG_COMMENT_ERROR_NAME',	'Вы не указали свое имя');
 	define('LANG_COMMENT_ERROR_EMAIL',	'Указан некорректный адрес e-mail');
-	define('LANG_COMMENT_ERROR_TIME',	"Вы можете оставить комментарий один раз в %s\nПожалуйста, попробуйте позже");	
-	define('LANG_COMMENT_ERROR_IP',     'Комментарии с вашего IP адреса запрещены');	    
-	
+	define('LANG_COMMENT_ERROR_TIME',	"Вы можете оставить комментарий один раз в %s\nПожалуйста, попробуйте позже");
+	define('LANG_COMMENT_ERROR_IP',     'Комментарии с вашего IP адреса запрещены');
+
     define('LANG_COMMENT_SHOW_PARENT',  'Ответ на');
     define('LANG_COMMENT_SHOW_CHILD',   'Вернуться к ответу');
     define('LANG_COMMENT_ANCHOR',       'Ссылка на комментарий');
@@ -49,7 +49,7 @@
     define('LANG_COMMENTS_NOTIFY_REPLY',  'Уведомлять об ответах на комментарии');
 
     define('LANG_COMMENTS_LOW_KARMA',   'Недостаточно репутации для комментирования (требуется: %s)');
-    
+
 	define('LANG_COMMENTS_AUTHOR_NAME',  'Ваше имя');
 	define('LANG_COMMENTS_AUTHOR_EMAIL', 'E-mail для ответов');
 
@@ -61,3 +61,6 @@
     define('LANG_RULE_COMMENTS_RATE',   'Оценка комментариев');
     define('LANG_RULE_COMMENTS_KARMA',  'Репутация для добавления комментариев');
 
+	define('LANG_COMMENTS_UPDATE_USER_RATING',	'Рейтинг комментариев повлияет на рейтинг автора');
+	define('LANG_COMMENTS_UPDATE_USER_RATING_HINT',	'Увеличить/уменьшить рейтинг автора за +/- в комментариях');
+	define('LANG_PERM_OPTION_FULL_DELETE',	'Все удалять полностью');

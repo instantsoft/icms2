@@ -6,13 +6,11 @@ class actionUsersTabsEdit extends cmsAction {
 
         if (!$tab_id) { cmsCore::error404(); }
 
-        $users_model = cmsCore::getModel('users');
-
         $form = $this->getForm('tab', array('edit'));
 
         $is_submitted = $this->request->has('submit');
 
-        $tab = $users_model->getUsersProfilesTab($tab_id);
+        $tab = $this->model->getUsersProfilesTab($tab_id);
 
         if ($is_submitted){
 
@@ -21,7 +19,7 @@ class actionUsersTabsEdit extends cmsAction {
 
             if (!$errors){
 
-                $users_model->updateUsersProfilesTab($tab_id, $tab);
+                $this->model->updateUsersProfilesTab($tab_id, $tab);
 
                 $this->redirectToAction('tabs');
 
@@ -45,4 +43,3 @@ class actionUsersTabsEdit extends cmsAction {
     }
 
 }
-
