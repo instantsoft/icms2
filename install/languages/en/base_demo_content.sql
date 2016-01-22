@@ -723,17 +723,6 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 (124, 43, 'content', 'albums', 16),
 (125, 58, 'content', 'albums', 16);
 
-INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
-(1, NULL, 'birth_date', 'Age', NULL, 4, 'About', 'age', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Date of birth\nshow_y: 1\nshow_m: null\nshow_d: null\nshow_h: null\nshow_i: null\nrange: YEAR\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(2, NULL, 'city', 'City', 'Select the city where you live', 3, 'About', 'city', NULL, NULL, 1, NULL, 1, 1, NULL, NULL, '---\nlabel_in_item: left\nis_required: 1\nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(3, NULL, 'hobby', 'Tell us about yourself', 'Tell us about your interests and hobbies', 11, 'About me', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nis_html_filter: null\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(7, NULL, 'icq', 'ICQ', NULL, 8, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 9\nlabel_in_item: left\nis_required: null\nis_digits: 1\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(8, NULL, 'skype', 'Skype', NULL, 9, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 32\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(9, NULL, 'phone', 'Phone number', NULL, 7, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(10, NULL, 'music', 'Favorite Music', NULL, 6, 'Preferences', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(11, NULL, 'movies', 'Favorite Movies', NULL, 5, 'Preferences', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(12, NULL, 'site', 'Website', 'Your personal website', 10, 'Contacts', 'url', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n');
-
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
 
