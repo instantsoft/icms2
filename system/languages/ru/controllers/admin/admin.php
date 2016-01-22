@@ -367,7 +367,7 @@
     define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные папки сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание папок и файлов.');
-    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и хранятся в сессии только до конца текущего сеанса');
+    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и могут храниться в сессии только до конца текущего сеанса');
 
     define('LANG_CP_PACKAGE_AUTHOR',            'Автор пакета');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
@@ -404,6 +404,8 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
 
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Запомнить реквизиты ftp в сессии');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Это небезопасно в случае если дополнение не от надежного автора');
     define('LANG_CP_FTP_SKIP',				'Пропустить этот шаг');
     define('LANG_CP_FTP_SKIP_HINT',			'Пропустите шаг, если автоматический доступ на FTP невозможен и вы используете ручной способ установки описанный в <a href="http://docs.instantcms.ru/manual/addons">инструкции</a>');
 
