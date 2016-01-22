@@ -402,6 +402,8 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Error: path %s not found');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in %s');
 
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Save ftp account to session');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'It is not secure');
     define('LANG_CP_FTP_SKIP',				'Skip this step');
     define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if it\'s impossible to do automatic FTP upload and you\'re using manual installation as described in the <a href="http://docs.instantcms.ru/en/manual/addons">user guide</a>');
 
