@@ -1,4 +1,5 @@
 <?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
+<?php $form_url = is_array($page_url) ? $page_url['base'] : $page_url; $form_url_sep = strpos($form_url, '?') === false ? '?' : '&'; ?>
 <div class="filter-panel gui-panel <?php echo $css_prefix;?>-filter">
     <div class="filter-link" <?php if($filters || $is_expanded){ ?>style="display:none"<?php } ?>>
         <a href="javascript:toggleFilter()"><span><?php echo LANG_SHOW_FILTER; ?></span></a>
@@ -7,7 +8,7 @@
 		<div class="filter-close">
             <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
         </div>
-        <form action="<?php echo cmsCore::getInstance()->uri_absolute; ?>" method="post">
+        <form action="<?php echo $form_url; ?>" method="post">
             <?php echo html_input('hidden', 'page', 1); ?>
             <div class="fields">
                 <?php $fields_count = 0; ?>
@@ -49,10 +50,10 @@
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
                         <div class="link">
-                            <a href="<?php echo is_array($page_url) ? $page_url['base'] : $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
+                            <a href="<?php echo $form_url; ?>"><?php echo LANG_CANCEL; ?></a>
                         </div>
                         <div class="link">
-                            # <a href="<?php echo is_array($page_url) ? $page_url['base'] : $page_url; ?>?<?php echo http_build_query($filters); ?>"><?php echo LANG_FILTER_URL; ?></a>
+                            # <a href="<?php echo $form_url.$form_url_sep.http_build_query($filters); ?>"><?php echo LANG_FILTER_URL; ?></a>
                         </div>
                     <?php } ?>
                 </div>

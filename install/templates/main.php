@@ -42,7 +42,7 @@
                 <a href="http://www.instantsoft.ru">InstantSoft</a> &copy; <?php echo date('Y'); ?>
             </div>
             <div id="version">
-                2.4.0
+                2.4.1
             </div>
         </div>
 
