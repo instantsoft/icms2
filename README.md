@@ -10,11 +10,11 @@ Is a free open source content management system that allows you to build website
 * Extremely easy to extend;
 * Templates and plugins;
 * Powerful admin dashboard;
-* SEO inclusive;
+* SEO tools included;
 * Mobile friendly template;
 * Multilingual CMS interface;
 * User management;
-* Easy core updates.
+* Easy-to-install core updates.
 
 ## Resources
 
