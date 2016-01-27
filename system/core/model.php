@@ -1176,6 +1176,8 @@ class cmsModel{
 
         if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
 
+        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
+
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
         if ($this->cache_key){
