@@ -1551,13 +1551,19 @@ class cmsTemplate {
 
         $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
-        if(!is_writable($options_file)){
-            return false;
+        if(file_exists($options_file)){
+            if(!is_writable($options_file)){
+                return false;
+            }
+        } else {
+            if(!is_writable(dirname($options_file))){
+                return false;
+            }
         }
 
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return @file_put_contents($options_file, $options_yaml);
+        return file_put_contents($options_file, $options_yaml);
 
     }
 
