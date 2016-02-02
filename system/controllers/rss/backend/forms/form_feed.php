@@ -35,6 +35,10 @@ class formRssFeed extends cmsForm {
                         'generator' => function($item) {
 
                             $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/controllers/rss/', '*.tpl.php');
+							
+                            $default_tpls = cmsCore::getFilesList('templates/default/controllers/rss/', '*.tpl.php');
+							
+			    $tpls = array_unique(array_merge($tpls, $default_tpls));
 
                             $items = array();
 
