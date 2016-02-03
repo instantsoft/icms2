@@ -1372,7 +1372,9 @@ class cmsTemplate {
     public function getAvailableContentListStyles(){
 
         $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
-        if (!$files) { return false; }
+        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);        
+	$files = array_unique(array_merge($files, $default_files));
+	if (!$files) { return false; }
 
         $styles = array();
 
