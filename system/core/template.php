@@ -1367,16 +1367,17 @@ class cmsTemplate {
 //============================================================================//
     /**
      * Возвращает все названия шаблонов для списка записей типов контента
-     * @return array|boolean
+     * @return array
      */
     public function getAvailableContentListStyles(){
 
-        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
-        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);        
-	$files = array_unique(array_merge($files, $default_files));
-	if (!$files) { return false; }
-
         $styles = array();
+
+        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
+        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);
+
+        $files = array_unique(array_merge($files, $default_files));
+        if (!$files) { return $styles; }
 
         foreach($files as $file){
 

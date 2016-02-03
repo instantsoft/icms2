@@ -51,7 +51,7 @@ $(function() {
 
     $( "#cp-widgets-layout .position" ).sortable({
         items: "li:not(.disabled)",
-        revert: false,
+        revert: true,
         opacity: 0.9,
         delay: 150,
         cancel: '.actions',
