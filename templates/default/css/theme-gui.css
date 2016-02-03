@@ -1690,3 +1690,45 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 	margin-left:5px;
 	background:url("../images/icons/delete.png") no-repeat center;
 }
+.gif_image {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    overflow: hidden;
+}
+.content_item .ft_images .gif_image {
+    float: left;
+    margin-right: 5px;
+}
+.gif_image img {
+    display: block !important;
+    margin: 0 !important;
+}
+.image_label {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    padding: 4px 7px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+.micro_image, .micro_image > img {
+    width: 32px !important;
+    height: 32px !important;
+}
+.background_overlay {
+    position: absolute;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.3s;
+}
+.gif_image:hover .background_overlay {
+    opacity: 0.5;
+    z-index: 2;
+}

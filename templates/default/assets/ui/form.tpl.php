@@ -19,6 +19,7 @@
     $append_html = isset($attributes['append_html']) ? $attributes['append_html'] : '';
 
     $form_id = uniqid();
+    $index = 0;
 
 ?>
 <form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
@@ -33,7 +34,7 @@
 
     <?php echo $prepend_html; ?>
 
-    <div id="form-tabs" <?php if($form->is_tabbed){ ?>class="tabs-menu"<?php } ?>>
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
             <ul class="tabbed">
@@ -53,7 +54,7 @@
 
         <?php if (empty($fieldset['is_empty']) && (!isset($fieldset['childs']) || !sizeof($fieldset['childs']))) { continue; } ?>
 
-        <div id="tab-<?php echo $fieldset_id; ?>" class="tab">
+            <div id="tab-<?php echo $fieldset_id; ?>" class="tab" <?php if($form->is_tabbed && $index){ ?>style="display: none;"<?php } ?>>
             <fieldset id="fset_<?php echo $fieldset_id; ?>"
             <?php if (isset($fieldset['class'])){ ?>class="<?php echo $fieldset['class']; ?>"<?php } ?>
             <?php if (isset($fieldset['is_hidden'])){ ?>style="display:none"<?php } ?>>
@@ -80,7 +81,7 @@
                         $default = $field->getDefaultValue();
                         $rel = isset($field->rel) ? $field->rel : null;
 
-                        if (strstr($name, ':')){
+                        if (strpos($name, ':') !== false){
                             $name_parts = explode(':', $name);
                             $name       = $name_parts[0].'['.$name_parts[1].']';
                             if (isset($data[$name_parts[0]]) && @array_key_exists($name_parts[1], $data[$name_parts[0]])){
@@ -98,7 +99,7 @@
 
                         $classes = array(
                             'field',
-                            'ft_' . mb_strtolower(mb_substr(get_class($field), 5))
+                            'ft_'.strtolower(substr(get_class($field), 5))
                         );
 
                         if ($error){
@@ -152,25 +153,23 @@
             </fieldset>
         </div>
 
-        <?php } ?>
+        <?php $index++; } ?>
 
     </div>
 
     <?php if ($form->is_tabbed){ ?>
-        <script>
+        <script type="text/javascript">
+            $('#<?php echo $form_id; ?> .tab').hide();
+            $('#<?php echo $form_id; ?> .tab').eq(0).show();
+            $('#<?php echo $form_id; ?> ul.tabbed > li').eq(0).addClass('active');
 
-                $('#form-tabs .tab').hide();
-                $('#form-tabs .tab').eq(0).show();
-                $('#form-tabs > ul > li').eq(0).addClass('active');
-
-                $('#form-tabs > ul > li > a').click(function(){
-                    $('#form-tabs li').removeClass('active');
-                    $(this).parent('li').addClass('active');
-                    $('#form-tabs .tab').hide();
-                    $('#form-tabs '+$(this).attr('href')).show();
-                    return false;
-                });
-
+            $('#<?php echo $form_id; ?> ul.tabbed > li > a').click(function(){
+                $('#<?php echo $form_id; ?> li').removeClass('active');
+                $(this).parent('li').addClass('active');
+                $('#<?php echo $form_id; ?> .tab').hide();
+                $('#<?php echo $form_id; ?> '+$(this).attr('href')).show();
+                return false;
+            });
         </script>
     <?php } ?>
 

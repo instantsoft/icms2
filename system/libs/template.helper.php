@@ -267,16 +267,43 @@ function html_avatar_image($avatars, $size_preset='small', $alt=''){
  */
 function html_image($image, $size_preset='small', $alt='', $attributes = array()){
 
-	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
-
 	$src = html_image_src($image, $size_preset, true);
+	if (!$src) { return ''; }
 
-	if (!$src) { return false; }
+	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
     return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+
+}
+
+/**
+ * Возвращает тег HTML gif изображения
+ * @param array|yaml $image Все размеры заданного изображения
+ * @param string $size_preset Название пресета
+ * @param string $alt Замещающий текст изображения
+ * @param array $attributes Массив аттрибутов тега
+ * @return string
+ */
+function html_gif_image($image, $size_preset='small', $alt='', $attributes = array()){
+
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+    if($size_preset == 'micro'){
+        $class .= ' micro_image';
+    }
+
+    $original_src = html_image_src($image, 'original', true);
+    $preview_src  = html_image_src($image, $size_preset, true);
+
+    if (!$preview_src) { return ''; }
+
+    return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
+                <span class="background_overlay"></span>
+                <span class="image_label">gif</span>
+                <img src="'.$preview_src.'" alt="'.htmlspecialchars($alt).'" />
+            </a>';
 
 }
 
@@ -337,7 +364,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
     $start_level = false;
     foreach ($items as $value=>$title){
 
-        $checked = is_array($selected) && in_array($value, $selected);
+        $checked = is_array($selected) && in_array($value, $selected, true);
 
         if ($is_tree){
 

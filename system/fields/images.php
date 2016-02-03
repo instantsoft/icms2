@@ -47,12 +47,16 @@ class fieldImages extends cmsFormField {
 
             if (!isset($paths[$this->getOption('size_full')])){ continue; }
 
-            $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+            if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+                $html .= html_gif_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key, array('class'=>'img-'.$this->getName()));
+            } else {
+                $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+            }
 
         }
 
         if($html){
-            $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+            $html .= '<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
         }
 
         return $html;

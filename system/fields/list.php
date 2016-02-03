@@ -103,13 +103,11 @@ class fieldList extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['items']        = $this->getListItems();
-
-        $this->data['is_multiple']  = $this->getProperty('is_multiple');
-        $this->data['is_tree']      = $this->getProperty('is_tree');
-	$this->data['parent']       = $this->getProperty('parent');
-
-	$this->data['dom_attr']     = array('id'=>$this->id);
+        $this->data['items']       = $this->getListItems();
+        $this->data['is_multiple'] = $this->getProperty('is_multiple');
+        $this->data['is_tree']     = $this->getProperty('is_tree');
+        $this->data['parent']      = $this->getProperty('parent');
+        $this->data['dom_attr']    = array('id' => $this->id);
 
         return parent::getInput($value);
 

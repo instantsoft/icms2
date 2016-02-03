@@ -225,7 +225,16 @@ function widgetEdit(id){
 
     var edit_url = $('#cp-widgets-layout').data('edit-url');
 
-    icms.modal.openAjax(edit_url + '/' + id);
+    icms.modal.openAjax(edit_url + '/' + id, undefined, function (){
+        w = $('.modal_form').width();
+        h = 0;
+        $('.modal_form .form-tabs .tab').each(function(indx, element){
+            var th = $(this).height();
+            if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
+        });
+        $('.modal_form').parent().css({width: w+'px', height: h+'px'});
+        setTimeout(function(){ icms.modal.resize(); }, 10);
+    });
 
 }
 

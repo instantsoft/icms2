@@ -900,7 +900,8 @@ CREATE TABLE `{#}tags` (
   `tag` varchar(32) NOT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `tag` (`tag`)
+  UNIQUE KEY `tag` (`tag`,`frequency`),
+  UNIQUE KEY `frequency` (`frequency`,`tag`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список тегов';
 
 DROP TABLE IF EXISTS `{#}tags_bind`;
@@ -912,7 +913,8 @@ CREATE TABLE `{#}tags_bind` (
   `target_id` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
-  KEY `tag_id` (`tag_id`)
+  KEY `tag_id` (`tag_id`),
+  KEY `target_controller` (`target_controller`,`target_subject`,`tag_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка тегов к материалам';
 
 DROP TABLE IF EXISTS `{#}uploaded_files`;

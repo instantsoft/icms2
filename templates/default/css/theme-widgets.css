@@ -550,7 +550,9 @@ aside .widget_tabbed > .tabs .links a {
 .widget_tags_cloud .tags_as_list li .counter {
     font-size:11px;
 }
-
+.widget_tags_cloud li.colored > a {
+    color: inherit;
+}
 /* ========================================================================== */
 
 .widget_auth .field { overflow: hidden; }
