@@ -51,7 +51,7 @@ $(function() {
 
     $( "#cp-widgets-layout .position" ).sortable({
         items: "li:not(.disabled)",
-        revert: true,
+        revert: false,
         opacity: 0.9,
         delay: 150,
         cancel: '.actions',
@@ -64,6 +64,7 @@ $(function() {
                 var id = ui.item.data('id');
                 ui.item.attr('rel', '');
                 ui.item.data('widget-id', id);
+				ui.item.removeAttr('style');
                 widgetsAdd(id, pos, ui.item);
             } else {
                 widgetsSavePositionOrderings(pos);
