@@ -17,7 +17,7 @@ function install_package(){
     );
     $add_unique_table_indexes = array(
         'tags' => array(
-            'tag'      => array('tag', 'frequency'),
+            'tag'      => array('tag'),
             'frequency' => array('frequency', 'tag'),
         )
     );

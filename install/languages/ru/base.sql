@@ -900,7 +900,7 @@ CREATE TABLE `{#}tags` (
   `tag` varchar(32) NOT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `tag` (`tag`,`frequency`),
+  UNIQUE KEY `tag` (`tag`),
   UNIQUE KEY `frequency` (`frequency`,`tag`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Список тегов';
 
