@@ -107,7 +107,7 @@ class fieldList extends cmsFormField {
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');
-        $this->data['dom_attr']    = array('id' => $this->id);
+        $this->data['dom_attr']    = array('id' => $this->id, 'required'=>(array_search(array('required'), $this->getRules()) !== false));
 
         return parent::getInput($value);
 

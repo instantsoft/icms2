@@ -131,6 +131,7 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
  * @param string $type Тип поля
  * @param string $name Имя поля
  * @param string $value Значение по-умолчанию
+ * @param array $attributes Атрибуты тега название=>значение
  * @return html
  */
 function html_input($type='text', $name='', $value='', $attributes=array()){

@@ -1,7 +1,4 @@
-<?php
-    $config = cmsConfig::getInstance();
-    $core = cmsCore::getInstance();
-?>
+<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
