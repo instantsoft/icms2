@@ -28,10 +28,18 @@ class formCommentsOptions extends cmsForm {
 					new fieldCheckbox('update_user_rating', array(
                         'title' => LANG_COMMENTS_UPDATE_USER_RATING,
                         'hint' => LANG_COMMENTS_UPDATE_USER_RATING_HINT,
+                    )),
+
+                    new fieldNumber('limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
                     ))
 
                 )
-            ),
+            )
 
         );
 

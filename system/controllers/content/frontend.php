@@ -149,7 +149,7 @@ class content extends cmsFrontend {
 
         $page = $this->request->get('page', 1);
 
-        $perpage = self::perpage;
+        $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
 
         if ($hide_filter) { $ctype['options']['list_show_filter'] = false; }
 

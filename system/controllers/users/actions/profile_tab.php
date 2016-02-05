@@ -11,8 +11,6 @@ class actionUsersProfileTab extends cmsAction {
             cmsCore::error404();
         }
 
-        $arguments = func_get_args();
-
         $tabs_menu = $this->getProfileMenu($profile);
 
         if (!isset($this->tabs[$tab_name]) || !$this->tabs[$tab_name]){
@@ -30,15 +28,15 @@ class actionUsersProfileTab extends cmsAction {
         unset($this->tabs);
         unset($this->tabs_controllers);
 
-        $html = $controller->runHook('user_tab_show', $arguments);
-
+        $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 
         cmsTemplate::getInstance()->render('profile_tab', array(
-            'tabs' => $tabs_menu,
+            'tabs'    => $tabs_menu,
+            'tab'     => $tab,
             'profile' => $profile,
-            'user' => $user,
-            'html' => $html,
+            'user'    => $user,
+            'html'    => $html
         ));
 
     }

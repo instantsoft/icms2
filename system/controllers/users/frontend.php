@@ -170,7 +170,7 @@ class users extends cmsFrontend {
         $user = cmsUser::getInstance();
 
         $page = $this->request->get('page', 1);
-        $perpage = 15;
+        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Получаем поля
         $content_model = cmsCore::getModel('content');

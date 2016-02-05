@@ -15,9 +15,13 @@ class actionUsersProfileFriends extends cmsAction {
         $page_url = href_to($this->name, $profile['id'], 'friends');
         $profiles_list_html = $this->renderProfilesList($page_url);
 
+        $tabs = $this->controller->getProfileMenu($profile);
+
         return $template->render('profile_friends', array(
-            'user' => $user,
-            'profile' => $profile,
+            'user'               => $user,
+            'tabs'               => $tabs,
+            'tab'                => $this->tabs['friends'],
+            'profile'            => $profile,
             'profiles_list_html' => $profiles_list_html
         ));
 
