@@ -1440,7 +1440,7 @@ class PHPMailer
     public function getSMTPInstance()
     {
         if (!is_object($this->smtp)) {
-            $this->smtp = new SMTP;
+             $this->smtp = new SMTP;
         }
         return $this->smtp;
     }
