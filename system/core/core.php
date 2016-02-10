@@ -72,7 +72,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . 'system/config/version.ini';
 
-        if (!file_exists($file)){ die('version.ini not found'); }
+        if (!is_readable($file)){ die('version.ini not found'); }
 
         $version = parse_ini_file($file);
 
@@ -107,7 +107,7 @@ class cmsCore {
             return self::$includedFiles[$file];
         }
 
-        if (!file_exists($file)){
+        if (!is_readable($file)){
             self::$includedFiles[$file] = false;
             return false;
         }
@@ -126,7 +126,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (!file_exists($file)){ return false; }
+        if (!is_readable($file)){ return false; }
 
         $result = require $file;
 
@@ -161,7 +161,7 @@ class cmsCore {
 
         $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
-        if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
+        if (!is_readable($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
         include_once $lib_file;
 
@@ -180,7 +180,7 @@ class cmsCore {
 
         $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
 
-        if (!file_exists($class_file)){
+        if (!is_readable($class_file)){
             self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
         }
 
@@ -219,7 +219,7 @@ class cmsCore {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
-            if (file_exists($model_file)){
+            if (is_readable($model_file)){
                 include_once($model_file);
             } else {
                 self::error(ERR_MODEL_NOT_FOUND . ': '. $model_file);

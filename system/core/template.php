@@ -933,7 +933,7 @@ class cmsTemplate {
 
         if (!file_exists($tpl_file)) { $tpl_file = $default; }
 
-        if (!file_exists($tpl_file)){
+        if (!is_readable($tpl_file)){
             if (!$is_check){
                 cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
             } else {
@@ -1447,7 +1447,7 @@ class cmsTemplate {
 
         $template_file = $this->path . '/' . $layout . '.tpl.php';
 
-        if(file_exists($template_file)){
+        if(is_readable($template_file)){
 
             if (!$config->min_html){
                 include($template_file);
