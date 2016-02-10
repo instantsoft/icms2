@@ -376,11 +376,20 @@ class cmsCore {
 
             $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
+				'autocomplete' => array(
+                    'multiple' => false,
+                    'url' => href_to('admin/', 'widgets', 'autocomplete')
+                ),
 				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
             )));
 
             $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
+				'autocomplete' => array(
+                    'multiple' => false,
+					'widget_path' => $widget_path,
+                    'url' => href_to('admin/', 'widgets', 'autocomplete')
+                ),
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
             )));
 

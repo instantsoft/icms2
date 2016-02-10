@@ -58,6 +58,9 @@
             delay: 500,
             source: function( request, response ) {
                 var term = request.term;
+				<?php if(!empty($field->data['autocomplete']['widget_path'])) { ?>
+					request['widget_path'] = "<?php echo $field->data['autocomplete']['widget_path']; ?>";
+				<?php } ?>
                 if ( term in cache ) {
                     response( cache[ term ] );
                     return;
