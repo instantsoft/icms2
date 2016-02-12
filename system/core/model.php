@@ -584,9 +584,9 @@ class cmsModel{
         return $this;
     }
 
-    public function filterFunc($field, $value){
+    public function filterFunc($field, $value, $sign='='){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field = $value");
+        $this->filter("$field {$sign} $value");
         return $this;
     }
 
