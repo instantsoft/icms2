@@ -1351,13 +1351,13 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     margin-bottom: 0;
 }
 
-#cp-widgets-layout li .actions, 
+#cp-widgets-layout li .actions,
 #cp-widgets-list li .actions {
   display: block;
   overflow: hidden;
   position: absolute;
   right: 0;
-  top: 5px;
+  top: 3px;
 }
 
 #cp-widgets-layout li .actions a ,
