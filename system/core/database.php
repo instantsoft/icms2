@@ -717,6 +717,7 @@ class cmsDatabase {
                   `ns_level` int(11) UNSIGNED DEFAULT NULL,
                   `ns_differ` varchar(32) NOT NULL DEFAULT '',
                   `ns_ignore` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+                  `allow_add` text,
                   PRIMARY KEY (`id`),
                   KEY `slug` (`slug`),
                   KEY `parent_id` (`parent_id`,`ns_left`),

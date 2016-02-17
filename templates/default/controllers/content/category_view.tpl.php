@@ -32,9 +32,7 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $is_allowed = true;
-
-        if ($is_allowed){
+        if (!$category['id'] || $user->isInGroups($category['allow_add'])){
 
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 

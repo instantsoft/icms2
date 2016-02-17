@@ -171,6 +171,10 @@ class cmsModel{
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
+        if(!empty($category['allow_add'])){
+            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        }
+
         return $category;
 
     }
@@ -212,6 +216,9 @@ class cmsModel{
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
+            if(!empty($node['allow_add'])){
+                $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
+            }
             return $node;
         });
 

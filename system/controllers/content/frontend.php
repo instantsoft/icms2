@@ -388,6 +388,8 @@ class content extends cmsFrontend {
 
     public function getCategoryForm($ctype, $action){
 
+        $user = cmsUser::getInstance();
+
         $form = $this->getForm('category');
 
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
@@ -431,6 +433,19 @@ class content extends cmsFrontend {
 
         }
 
+        // для администраторов показываем поля доступа
+        if($user->is_admin){
+
+            $fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
+            $form->addField($fieldset_id, new fieldListGroups('allow_add', array(
+                'title'       => LANG_CONTENT_CATS_ALLOW_ADD,
+                'hint'        => LANG_CONTENT_CATS_ALLOW_ADD_HINT,
+                'show_all'    => true,
+                'show_guests' => false
+            )));
+
+        }
+
         return $form;
 
     }
@@ -458,7 +473,7 @@ class content extends cmsFrontend {
                         'rules' => array(
                             array('required')
                         ),
-                        'generator' => function($item){
+                        'generator' => function($item) use ($user){
 
                             $content_model = cmsCore::getModel('content');
                             $ctype = $content_model->getContentTypeByName($item['ctype_name']);
@@ -469,6 +484,10 @@ class content extends cmsFrontend {
 
                             if ($tree){
                                 foreach($tree as $c){
+
+                                    if(!empty($c['allow_add']) &&  !$user->isInGroups($c['allow_add'])){
+                                        continue;
+                                    }
 
                                     if ($ctype['options']['is_cats_only_last']){
 										$dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';

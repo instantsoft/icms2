@@ -37,6 +37,9 @@
     define('LANG_PERM_OPTION_DAYS', 'Дни');
     define('LANG_PERM_OPTION_ANY', 'Любая дата');
 
+    define('LANG_CONTENT_CATS_ALLOW_ADD',     'Группы, участники которой могут добавлять записи в эту категорию');
+    define('LANG_CONTENT_CATS_ALLOW_ADD_HINT', 'Добавление записей для выбранных групп должно быть разрешено');
+
     define('LANG_CONTENT_ACTIVITY_ADD',         'Добавление %s');
     define('LANG_CONTENT_ACTIVITY_ADD_DESC',    'добавляет %s %s');
 

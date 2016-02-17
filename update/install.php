@@ -3,6 +3,7 @@
 function install_package(){
 
 	$core = cmsCore::getInstance();
+    $content_model = cmsCore::getModel('content');
 
     $remove_table_indexes = array(
         'tags' => array(
@@ -40,5 +41,15 @@ function install_package(){
             $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
         }
     }
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'allow_add')){
+            $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `allow_add` TEXT NULL DEFAULT NULL");
+        }
+
+	}
 
 }
