@@ -68,6 +68,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->disableApprovedFilter();
         $content_model->disablePubFilter();
+        $content_model->disablePrivacyFilter();
 
         $total = $content_model->getContentItemsCount($ctype['name']);
 
