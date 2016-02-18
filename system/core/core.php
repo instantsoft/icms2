@@ -781,6 +781,7 @@ class cmsCore {
                 $regular = string_mask_to_regular($mask);
                 $regular = "/^{$regular}$/iu";
                 $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                $is_mask_match == false && $this->uri_controller == 'content' ? $is_mask_match = preg_match($regular, cmsConfig::getInstance()->ctype_default .'/'. $this->uri) : null;
             }
 
             if (!empty($page['url_mask_not'])) {
@@ -788,6 +789,7 @@ class cmsCore {
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
                     $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match == false && $this->uri_controller == 'content' ? $is_stop_match = preg_match($regular, cmsConfig::getInstance()->ctype_default .'/'. $this->uri) : null;
                 }
             }
 
