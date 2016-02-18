@@ -1320,6 +1320,10 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding-left:45px;
 }
 
+#cp-widgets-layout .position li.hide{
+    background:url("../../images/icons/admin/widget_drag.png") no-repeat 4px center #FFFAAA;
+}
+
 #cp-widgets-layout .position li.is_tab_prev{
     background-image:url("../../images/icons/admin/widget_drag_tab_prev.png");
     margin-left: 18px;
@@ -1375,6 +1379,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #cp-widgets-layout li:hover .actions a ,
 #cp-widgets-list li:hover .actions a {
     opacity: 1;
+}
+
+#cp-widgets-layout li .actions a.hide {
+    background-image: url("../../images/icons/eye.png");
+    margin-right: 5px;
 }
 
 #cp-widgets-layout li .actions a.edit ,

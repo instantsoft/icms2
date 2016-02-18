@@ -151,6 +151,10 @@ function widgetsLoad(page_id){
                 } else {
                     widgetAddActionButtons(widget_dom);
                 }
+                
+                if (widget.hide) {
+                    widget_dom.addClass('hide').attr('title', LANG_CP_PRIVACY_TYPE_HIDE);
+                }
 
                 widgetsMarkTabbed();
 
@@ -178,6 +182,11 @@ function widgetsMarkTabbed(){
 function widgetAddActionButtons(widget_dom){
 
     widget_dom.append( $('#actions-template').html() );
+    
+    $('.actions .hide', widget_dom).click(function(){
+        var widget_id = $(this).parent('span').parent('li').attr('bind-id');
+        widgetHide(widget_id);
+    });
 
     $('.actions .edit', widget_dom).click(function(){
         var widget_id = $(this).parent('span').parent('li').attr('bind-id');
@@ -218,6 +227,28 @@ function widgetsAdd(id, position, widget_dom){
 
         icms.events.run('admin_widgets_add', result);
 
+    }, 'json');
+
+}
+
+function widgetHide(id){
+
+    var hide_url = $('#cp-widgets-layout').data('hide-url');
+	
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + ']');
+	
+    $.post(hide_url + '/' + id, {}, function(result){
+		
+		if (result.hide == true){
+			
+			widget_dom.addClass('hide');
+			
+		} else {
+			
+			widget_dom.removeClass('hide');
+			
+		}
+	
     }, 'json');
 
 }

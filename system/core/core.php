@@ -374,14 +374,44 @@ class cmsCore {
                 'title' => LANG_CSS_CLASS_BODY,
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
+		'hint' => LANG_WIDGET_WRAPPER_TPL_HINT,
+		'generator' => function($item){
+				
+                        $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
+
+                        $items = array();
+
+                        if ($tpls) {
+                            foreach ($tpls as $tpl) {
+                                $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                            }
+                        }
+
+                        return $items;
+
+                    }
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
+		'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+		'generator' => function($item){
+
+                        $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.self::getWidgetPath($item['name'], $item['controller']), '*.tpl.php');
+
+                        $items = array();
+
+                        if ($tpls) {
+                            foreach ($tpls as $tpl) {
+                               $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                            }
+                        }
+
+                        return $items;
+
+                   }
             )));
 
         //
@@ -688,7 +718,7 @@ class cmsCore {
         $is_user_hide = !empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin;
 
         if ($is_user_hide) { return false; }
-        if (!$is_user_view) { return false; }
+        if (!$is_user_view || $widget['is_enabled']) { return false; }
 
         $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
@@ -755,6 +785,7 @@ class cmsCore {
                 $regular = string_mask_to_regular($mask);
                 $regular = "/^{$regular}$/iu";
                 $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                $is_mask_match == false && $this->uri_controller == 'content' ? $is_mask_match = preg_match($regular, cmsConfig::getInstance()->ctype_default .'/'. $this->uri) : null;
             }
 
             if (!empty($page['url_mask_not'])) {
@@ -762,6 +793,7 @@ class cmsCore {
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
                     $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match == false && $this->uri_controller == 'content' ? $is_stop_match = preg_match($regular, cmsConfig::getInstance()->ctype_default .'/'. $this->uri) : null;
                 }
             }
 
