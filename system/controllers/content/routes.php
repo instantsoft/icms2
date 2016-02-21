@@ -4,6 +4,12 @@ function routes_content(){
     return array(
 
         array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/from_friends$/i',
+            'action'    => 'items_from_friends',
+            1           => 'ctype_name'
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9\-_]+)\/add\/([0-9]+)$/i',
             'action'    => 'item_add',
             1           => 'ctype_name',
@@ -129,8 +135,8 @@ function routes_content(){
             'action'    => 'category_view',
             1           => 'ctype_name',
             'slug'      => 'index'
-        ),
-		
+        )
+
     );
 
 }

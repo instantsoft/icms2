@@ -6,13 +6,11 @@ class actionUsersMigrationsEdit extends cmsAction {
 
         if (!$rule_id) { cmsCore::error404(); }
 
-        $users_model = cmsCore::getModel('users');
-
         $form = $this->getForm('migration', array('edit'));
 
         $is_submitted = $this->request->has('submit');
 
-        $rule = $users_model->getMigrationRule($rule_id);
+        $rule = $this->model->getMigrationRule($rule_id);
 
         if ($is_submitted){
 
@@ -21,7 +19,7 @@ class actionUsersMigrationsEdit extends cmsAction {
 
             if (!$errors){
 
-                $users_model->updateMigrationRule($rule_id, $rule);
+                $this->model->updateMigrationRule($rule_id, $rule);
 
                 $this->redirectToAction('migrations');
 
@@ -45,4 +43,3 @@ class actionUsersMigrationsEdit extends cmsAction {
     }
 
 }
-

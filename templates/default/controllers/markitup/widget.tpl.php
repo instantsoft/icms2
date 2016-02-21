@@ -1,9 +1,9 @@
 <?php
-    cmsTemplate::getInstance()->insertJS('wysiwyg/markitup/sets/'.$options['set'].'/image_upload.js');
-    cmsTemplate::getInstance()->insertJS('wysiwyg/markitup/jquery.markitup.js');
-    cmsTemplate::getInstance()->insertJS('wysiwyg/markitup/sets/'.$options['set'].'/set.js');
-    cmsTemplate::getInstance()->insertCSS('wysiwyg/markitup/sets/'.$options['set'].'/style.css');
-    cmsTemplate::getInstance()->insertCSS('wysiwyg/markitup/skins/'.$options['skin'].'/style.css');
+    $this->addJSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/image_upload.js');
+    $this->addJSFromContext('wysiwyg/markitup/jquery.markitup.js');
+    $this->addJSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/set.js');
+    $this->addCSSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/style.css');
+    $this->addCSSFromContext('wysiwyg/markitup/skins/'.$options['skin'].'/style.css');
 ?>
 
 <textarea id="<?php echo $options['id']; ?>"

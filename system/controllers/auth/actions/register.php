@@ -3,7 +3,7 @@ class actionAuthRegister extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if (cmsUser::isLogged() && !cmsUser::isAdmin()) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
         $form = $this->getForm('registration');
@@ -110,14 +110,14 @@ class actionAuthRegister extends cmsAction {
                 $user = $form->parse($this->request, $is_submitted);
 
 				$user['groups'] = array();
-				
+
 				if (!empty($this->options['def_groups'])){
 					$user['groups'] = $this->options['def_groups'];
 				}
-				
-                if (isset($user['group_id'])) { 
+
+                if (isset($user['group_id'])) {
 					if (!in_array($user['group_id'], $user['groups'])){
-						$user['groups'][] = $user['group_id']; 					
+						$user['groups'][] = $user['group_id'];
 					}
 				}
 
@@ -197,7 +197,7 @@ class actionAuthRegister extends cmsAction {
                 $result = $users_model->addUser($user);
 
                 if ($result['success']){
-					
+
 					$user['id'] = $result['id'];
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
@@ -218,9 +218,9 @@ class actionAuthRegister extends cmsAction {
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
 
                     } else {
-						
+
 						cmsEventsManager::hook('user_registered', $user);
-						
+
 					}
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?

@@ -6,13 +6,11 @@ class actionImagesPresetsEdit extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $images_model = cmsCore::getModel('images');
-
         $form = $this->getForm('preset', array('edit'));
 
         $is_submitted = $this->request->has('submit');
 
-        $preset = $images_model->getPreset($id);
+        $preset = $original_preset = $this->model->getPreset($id);
 
 		if ($preset['is_internal']){
 			$form->removeFieldset('basic');
@@ -25,7 +23,9 @@ class actionImagesPresetsEdit extends cmsAction {
 
             if (!$errors){
 
-                $images_model->updatePreset($id, $preset);
+                $this->model->updatePreset($id, $preset);
+
+                $this->createDefaultImages(array_merge($original_preset, $preset));
 
                 $this->redirectToAction('presets');
 

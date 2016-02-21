@@ -4,8 +4,6 @@ class actionMessagesDelete extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
         $user = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
 

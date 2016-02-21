@@ -32,9 +32,7 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $is_allowed = true;
-
-        if ($is_allowed){
+        if (!$category['id'] || $user->isInGroups($category['allow_add'])){
 
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 
@@ -89,7 +87,7 @@
 ?>
 
 <?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
-    <?php if (!empty($ctype['options']['is_rss'])){ ?>
+    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
         <div class="content_list_rss_icon">
             <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">RSS</a>
         </div>

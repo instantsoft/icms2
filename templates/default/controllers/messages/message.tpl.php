@@ -11,3 +11,17 @@
     </div>
 
 <?php } ?>
+
+<?php if(!empty($is_notify)) { ?>
+
+<script type="text/javascript">
+    icms.messages.desktopNotification(
+        "<?php html(sprintf(LANG_PM_DESKTOP_NOTIFY_NEW, $message['user']['nickname'])); ?>", {
+            tag: "icms_msg<?php echo $message['user']['id']; ?>",
+            body: "<?php html(html_clean($message['content'], 50)); ?>",
+            icon: "<?php echo html_avatar_image_src($message['user']['avatar'], 'micro', false); ?>"
+        }
+    );
+</script>
+
+<?php } ?>

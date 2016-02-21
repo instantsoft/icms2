@@ -24,17 +24,17 @@ class actionPhotosView extends cmsAction{
         if (!$album['is_approved']){
             $is_moderator = $user->is_admin || cmsCore::getModel('content')->userIsContentTypeModerator($ctype['name'], $user->id);
             if (!$is_moderator && $user->id != $album['user_id']){ cmsCore::error404(); }
-        }        
-        
+        }
+
         // Проверяем приватность
         if ($album['is_private']){
             $is_friend = $user->isFriend($album['user_id']);
             $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
             if (!$is_friend && !$is_can_view_private && !$is_moderator){ cmsCore::error404(); }
-        }        
-        
+        }
+
         // Рейтинг
-        if ($ctype['is_rating']){
+        if ($ctype['is_rating'] &&  $this->isControllerEnabled('rating')){
 
             $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
                 'target_controller' => $this->name,
@@ -48,7 +48,7 @@ class actionPhotosView extends cmsAction{
         }
 
         // Комментарии
-        if ($ctype['is_comments']){
+        if ($ctype['is_comments'] && $this->isControllerEnabled('comments')){
 
             $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
                 'target_controller' => $this->name,

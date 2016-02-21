@@ -20,21 +20,23 @@ icms.modal = (function ($) {
 	}
 
     //====================================================================//
-	
+
 	this.openHtml = function(html) {
 		$.nmData(html);
 	};
 
     //====================================================================//
 
-    this.openAjax = function(url, data){
+    this.openAjax = function(url, data, open_callback){
+
+        open_callback = open_callback || function(){};
 
         if (typeof(data)=='undefined'){
-            $.nmManual(url, {autoSizable: true});
+            $.nmManual(url, {autoSizable: true, callbacks: {afterShowCont: open_callback}});
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, ajax:{data: data, type: "POST"}});
+        $.nmManual(url, {autoSizable: true, callbacks: {afterShowCont: open_callback}, ajax:{data: data, type: "POST"}});
         return false;
 
     }
@@ -56,8 +58,6 @@ icms.modal = (function ($) {
 
     this.setCallback = function(event, callback){
         switch(event){
-            case 'open':
-                $.nmTop().callbacks.afterShowCont = callback; break;
             case 'close':
                 $.nmTop().callbacks.beforeClose = callback; break;
         }

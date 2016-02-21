@@ -52,8 +52,8 @@ class fieldDate extends cmsFormField {
 
         if (!$this->getOption('filter_range')){
 
-            $date_start = date('Y-m-d', strtotime($value));
-            $date_final = date('Y-m-d', strtotime($value)+60*60*24);
+            $date_start = date('Y-m-d', strtotime($value['date']));
+            $date_final = date('Y-m-d', strtotime($value['date'])+60*60*24);
 
             $model->filterBetween($this->name, $date_start, $date_final);
 
@@ -91,6 +91,14 @@ class fieldDate extends cmsFormField {
     }
 
     public function getInput($value){
+
+        if($value){
+            if(is_array($value)){
+                if(!empty($value['date'])){
+                    $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+                }
+            }
+        }
 
         $this->data['show_time'] = $this->getOption('show_time');
 

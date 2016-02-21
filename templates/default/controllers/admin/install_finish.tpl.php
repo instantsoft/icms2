@@ -5,7 +5,7 @@
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE_DONE; ?></h1>
 
-<p>
+<p class="positive">
     <?php echo LANG_CP_INSTALL_PACKAGE_DONE_INFO; ?>
 </p>
 
@@ -16,6 +16,6 @@
 <?php } ?>
 
 <p>
-    <?php echo html_button(LANG_CONTINUE, 'continue', "location.href='".$this->href_to('')."'"); ?>
+    <?php echo html_button(LANG_CONTINUE, 'continue', "location.href='".$this->href_to($redirect_action)."'"); ?>
 </p>
 

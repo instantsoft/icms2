@@ -21,7 +21,7 @@
 
         <?php if (!$field['is_in_item']) { continue; } ?>
         <?php if ($field['is_system']) { continue; } ?>
-        <?php if (empty($item[$field['name']])) { continue; } ?>
+        <?php if (empty($item[$field['name']]) || empty($field['html'])) { continue; } ?>
         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
         <?php
@@ -33,24 +33,15 @@
         ?>
 
         <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-
             <?php if ($label_pos != 'none'){ ?>
                 <div class="title_<?php echo $label_pos; ?>"><?php html($field['title']); ?>: </div>
             <?php } ?>
-
-            <div class="value">
-
-                <?php
-                    echo $field['html'];
-                ?>
-
-            </div>
-
+            <div class="value"><?php echo $field['html']; ?></div>
         </div>
 
     <?php } ?>
 
-    <?php if ($props && $props_values) { ?>
+    <?php if ($props && array_filter((array)$props_values)) { ?>
         <?php
             $props_fields = $this->controller->getPropsFields($props);
             $props_fieldsets = cmsForm::mapFieldsToFieldsets($props);
@@ -101,11 +92,11 @@
     <?php } ?>
 
     <?php
-        $show_bar = $ctype['is_rating'] ||
+        $show_bar = !empty($item['rating_widget']) ||
                     $fields['date_pub']['is_in_item'] ||
                     $fields['user']['is_in_item'] ||
-					!empty($ctype['options']['hits_on']) || 
-					!$item['is_pub'] || 
+					!empty($ctype['options']['hits_on']) ||
+					!$item['is_pub'] ||
                     !$item['is_approved'];
     ?>
 
@@ -115,7 +106,7 @@
 
     <?php if ($show_bar){ ?>
         <div class="info_bar">
-            <?php if ($ctype['is_rating']){ ?>
+            <?php if (!empty($item['rating_widget'])){ ?>
                 <div class="bar_item bi_rating">
                     <?php echo $item['rating_widget']; ?>
                 </div>
@@ -129,12 +120,12 @@
                 <div class="bar_item bi_not_pub">
                     <?php echo LANG_CONTENT_NOT_IS_PUB; ?>
                 </div>
-            <?php } ?>			
+            <?php } ?>
             <?php if (!empty($ctype['options']['hits_on'])){ ?>
                 <div class="bar_item bi_hits" title="<?php echo LANG_HITS; ?>">
                     <?php echo $item['hits_count']; ?>
                 </div>
-            <?php } ?>			
+            <?php } ?>
             <?php if ($fields['user']['is_in_item']){ ?>
                 <div class="bar_item bi_user" title="<?php html( $fields['user']['title'] ); ?>">
                     <?php echo $fields['user']['html']; ?>
@@ -146,9 +137,10 @@
                 <?php } ?>
             <?php } ?>
             <div class="bar_item bi_share">
-                <div class="share" style="margin:-4px">
-                    <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
-                    <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,gplus"></div>
+                <div class="share">
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
                 </div>
             </div>
             <?php if (!$item['is_approved']){ ?>

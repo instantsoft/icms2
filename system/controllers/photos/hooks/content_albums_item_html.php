@@ -9,7 +9,7 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
         $user = cmsUser::getInstance();
 
         $page = $core->request->get('page', 1);
-        $perpage = 16;
+        $perpage = (empty($this->options['limit']) ? 16 : $this->options['limit']);
 
         $total = $this->model->getPhotosCount($album['id']);
 

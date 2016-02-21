@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'admin_dashboard_chart',
             'content_view_hidden',
             'rating_vote',
             'user_profile_buttons',

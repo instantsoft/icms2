@@ -14,7 +14,7 @@ class actionAdminContentItemMove extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
 
 		$fields = $content_model->getContentFields($ctype['name']);
-		
+
         $form = new cmsForm();
 
         $fieldset_id = $form->addFieldset(LANG_MOVE_TO_CATEGORY);
@@ -49,6 +49,8 @@ class actionAdminContentItemMove extends cmsAction {
 
                 $data['items'] = explode(',', $data['items']);
                 $content_model->moveContentItemsToCategory($ctype, $data['category_id'], $data['items'], $fields);
+
+                cmsEventsManager::hook("content_{$ctype['name']}_move_content_items", array($ctype, $fields, $data));
 
                 $template->renderJSON(array(
                     'errors' => false,

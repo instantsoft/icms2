@@ -39,6 +39,11 @@
         } else {
 
             $controller = cmsCore::getController($task['controller']);
+
+            if(!$controller->isEnabled()){
+                unset($controller); continue;
+            }
+
             $controllers[$task['controller']] = $controller;
 
         }

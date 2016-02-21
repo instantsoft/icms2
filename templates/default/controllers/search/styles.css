@@ -6,12 +6,18 @@
 
 #search_results_list .item {
     margin-bottom: 15px;
+    clear: both;
+    overflow: hidden;
 }
 
 #search_results_list .item .title {  margin-bottom:5px;  }
 #search_results_list .item .title a { font-size:16px;}
 
 #search_results_list .item .field {  margin-bottom:5px;  }
+#search_results_list .item .field.search_field_photo {
+    float: left;
+    margin: 2px 12px 0 0;
+}
 #search_results_list .item .info .date {  font-size:12px; color: #7f8c8d; }
 
 #search_results_list .item .field em { color:#c0392b; }

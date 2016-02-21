@@ -5,6 +5,7 @@
     define('LANG_WALL',             'Стена профиля');
     define('LANG_WALL_EMPTY',       'Нет записей. Ваша будет первой!');
 
+    define('LANG_WALL_ENTRIES',                 'Записи на стене');
     define('LANG_WALL_ENTRY_ERROR',             'Ошибка сохранения записи');
     define('LANG_WALL_ENTRY_ADD',               'Написать на стене');
     define('LANG_WALL_ENTRY_SUCCESS',           'Запись добавлена');

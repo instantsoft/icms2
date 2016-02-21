@@ -1,16 +1,16 @@
-<?php 
-	
+<?php
+
 	$this->addJS( $this->getJavascriptFileName('fileuploader') );
 	$this->addJS( $this->getJavascriptFileName('images-upload') );
-	
+
 	$config = cmsConfig::getInstance();
 
 	$upload_url = $this->href_to('upload', $name);
-	
-	if (is_array($sizes)) { 
+
+	if (is_array($sizes)) {
 		$upload_url .= '?sizes=' . implode(',', $sizes);
 	}
-	
+
 ?>
 
 <div id="widget_image_<?php echo $name; ?>" class="widget_image_multi">
@@ -29,8 +29,8 @@
         <?php if ($images){ ?>
             <?php foreach($images as $idx => $paths){ ?>
                 <div class="preview block" rel="<?php echo $idx; ?>">
-					<?php $is_image_exists = isset($paths['small']); ?>
-					<?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . $paths['small']; ?>" border="0" /><?php } ?> 
+					<?php  $is_image_exists = !empty($paths); ?>
+					<?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . end($paths); ?>" /><?php } ?>
                     <a href="javascript:" onclick="icms.images.removeOne('<?php echo $name; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
                 </div>
             <?php } ?>

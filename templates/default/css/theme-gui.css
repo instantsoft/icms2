@@ -51,6 +51,10 @@
     height:16px;
     background:url("../images/icons/eye.png") no-repeat;
 }
+.content_list_item .is_private, .widget_content_list .is_private, .content_list .is_private,
+.content_list_item .is_closed, .widget_content_list .is_closed {
+    height:14px;
+}
 
 .is_closed{
     background:url("../images/icons/lock.png") no-repeat;
@@ -66,6 +70,7 @@
 
 /* Menu icons =============================================================== */
 
+.icon-accept, .menu .lock .item { background-image: url("../images/icons/lock.png"); }
 .icon-accept, .menu .accept .item { background-image: url("../images/icons/accept.png"); }
 .icon-add, .menu .add .item { background-image: url("../images/icons/add.png"); }
 .icon-edit, .menu .edit .item { background-image: url("../images/icons/edit.png"); }
@@ -203,7 +208,7 @@
     clear:both;
 }
 
-.tabs-menu li {
+.tabs-menu .tabbed li {
     float:left;
     font-size:15px;
     margin-right: 3px;
@@ -215,7 +220,7 @@
     display:inline-block;
     padding:0 10px;
     border: solid 1px #FFF;
-    border-bottom: solid 1px #B3C2C9;
+    border-bottom: transparent;
     height:32px;
     line-height:32px;
 }
@@ -234,8 +239,9 @@
     cursor:default;
     color:#34495e;
     border: solid 1px #B3C2C9;
-    border-bottom: solid 1px #fff;
+    border-bottom: none;
     background-color:#FFF;
+    margin: 1px 0 0 0;
 }
 
 .tabs-menu li a .counter {
@@ -337,6 +343,18 @@
 .filter-panel .filter-container {
     padding:15px;
     overflow: hidden;
+    position: relative;
+}
+
+.filter-close {
+    font-size: 0.9em;
+    line-height: 0.9em;
+    position: absolute;
+    top: 6px;
+    right: 9px;
+}
+.filter-close a {
+    color: #666;
 }
 
 .filter-panel .fields { overflow: hidden; }
@@ -353,17 +371,17 @@
 
 .filter-panel select { padding:3px 4px; }
 
-.filter-panel .fields .field{	
+.filter-panel .fields .field{
     min-height:50px;
     width:48%;
     margin-bottom: 15px;
 }
 
 .filter-panel .fields .field:nth-child(even){
-	float:right;	
+	float:right;
 }
 
-.filter-panel .fields .field:nth-child(odd){        
+.filter-panel .fields .field:nth-child(odd){
 	float:left;
 }
 
@@ -468,7 +486,7 @@
 .pagebar_nav .disabled{
 	color:#BDC3C7;
 }
-.pagebar_nav .pagebar_page:first-child { 
+.pagebar_nav .pagebar_page:first-child {
 	margin-left: 0;
 	margin-right: 5px;
 }
@@ -527,6 +545,7 @@ form .field label {
 }
 
 form .field_error .error_text{ font-size:12px; color:#c0392b; float:right; margin-top: 8px; }
+form #f_slug.field_error .error_text { float:none; }
 
 .input{
     height:16px;
@@ -622,9 +641,9 @@ form .input-prefix-suffix .suffix{
 
 input.button-submit,
 input.button {
-	padding: 10px 15px;
+	padding: 7px 10px;
 	line-height: 100%;
-	border-radius: 4px;
+	border-radius: 3px;
 	cursor: pointer;
 	width: auto;
     font-size: 14px;
@@ -885,7 +904,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     padding-left:20px;
     background: url("../images/icons/comment.png") no-repeat left center;
 }
-#comments_widget #comments_add_link a { font-size:18px; }
+#comments_widget #comments_add_link a { font-size:16px; }
 
 #comments_widget #comments_add_form {
     display: none;
@@ -921,7 +940,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 #comments_widget #comments_add_form .author_data .field label {
 	float:left;
-	width:140px;	
+	width:140px;
 	height:20px;
 	line-height:20px;
 }
@@ -967,6 +986,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list.striped-list .comment:last-child{
     border:none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 #comments_list .selected-comment{
@@ -1021,6 +1042,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list .comment .info .name .user{ color:#375D81; }
 #comments_list .comment .info .name .user:hover{ color:#d35400; }
+#comments_list .comment.is_topic_starter .info .name .user{ color:#d35400; }
+#comments_list .comment.is_topic_starter .info .name .user:hover{ color:#e67e22; }
 
 #comments_list .comment .info .name .guest_name{ font-weight: bold; }
 
@@ -1045,17 +1068,31 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     float:left;
     padding:2px;
     border:solid 1px #999;
+    position: relative
+}
+#comments_list .comment .body .avatar.comment_user_online{
+    border-left-color: #27ae60;
+    border-left-width: 2px;
 }
 
-#comments_list .comment .body .avatar img{ display:block; }
+#comments_list .comment .body .avatar img, #comments_list .comment .body .avatar a { display:block; }
+#comments_list .comment .body .avatar:after {
+    display: block;
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 14px;
+    background: url("../images/comment_arrow.png") no-repeat 0px 0px;
+    right: -10px;
+    top: 8px;
+}
 
 #comments_list .comment .content{
     color:#333;
-    padding-left:50px;
+    padding-left:10px;
     padding-top: 4px;
-    background: url("../images/comment_arrow.png") no-repeat 37px 8px;
     position: relative;
-    z-index: 2;
+    overflow: hidden;
 }
 
 #comments_list .comment .content img {
@@ -1651,5 +1688,47 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 	width:16px;
 	height:16px;
 	margin-left:5px;
-	background:url("../images/icons/delete.png") no-repeat center;	
+	background:url("../images/icons/delete.png") no-repeat center;
+}
+.gif_image {
+    display: block;
+    position: relative;
+    text-decoration: none;
+    overflow: hidden;
+}
+.content_item .ft_images .gif_image {
+    float: left;
+    margin-right: 5px;
+}
+.gif_image img {
+    display: block !important;
+    margin: 0 !important;
+}
+.image_label {
+    position: absolute;
+    left: 4px;
+    bottom: 4px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    padding: 4px 7px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+.micro_image, .micro_image > img {
+    width: 32px !important;
+    height: 32px !important;
+}
+.background_overlay {
+    position: absolute;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.3s;
+}
+.gif_image:hover .background_overlay {
+    opacity: 0.5;
+    z-index: 2;
 }

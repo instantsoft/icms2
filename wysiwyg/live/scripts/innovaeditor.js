@@ -1,35 +1,47 @@
-/*** Editor Script Wrapper ***/
-var oScripts=document.getElementsByTagName("script");
+var oScripts=document.getElementsByTagName('script');
 var sEditorPath;
-for(var i=0;i<oScripts.length;i++)
-  {
-  var sSrc=oScripts[i].src.toLowerCase();
-  if(sSrc.indexOf("scripts/innovaeditor.js")!=-1) sEditorPath=oScripts[i].src.replace(/innovaeditor.js/,"");
+for (var i = 0; i < oScripts.length; i++) {
+    var sSrc = oScripts[i].src.toLowerCase();
+    if (sSrc.indexOf('scripts/innovaeditor.js') !== -1) {
+        sEditorPath = oScripts[i].src.replace(/innovaeditor.js/, "");
+    }
 }
 
-document.write("<scr" + "ipt src='" + sEditorPath + "common/nlslightbox/nlslightbox.js' type='text/javascript'></scr" + "ipt>");
-document.write("<scr" + "ipt src='" + sEditorPath + "common/nlslightbox/nlsanimation.js' type='text/javascript'></scr" + "ipt>");
-document.write("<link href='" + sEditorPath + "common/nlslightbox/nlslightbox.css' rel='stylesheet' type='text/css' />");
-document.write("<scr" + "ipt src='" + sEditorPath + "common/nlslightbox/dialog.js' type='text/javascript'></scr" + "ipt>");
-
-document.write("<li"+"nk rel='stylesheet' href='"+sEditorPath+"style/istoolbar.css' type='text/css' />");
-document.write("<scr"+"ipt src='"+sEditorPath+"istoolbar.js'></scr"+"ipt>");
-
-if(navigator.appName.indexOf('Microsoft')!=-1) {
-  document.write("<scr"+"ipt src='"+sEditorPath+"editor.js'></scr"+"ipt>");
-} else if(navigator.userAgent.indexOf('Safari')!=-1) {
-  document.write("<scr"+"ipt src='"+sEditorPath+"saf/editor.js'></scr"+"ipt>");
-} else {
-  document.write("<scr"+"ipt src='"+sEditorPath+"moz/editor.js'></scr"+"ipt>");
+function addJSTag(url){
+    t = document.createElement('script');
+    t.type = 'text/javascript';
+    t.src = url;
+    $('head').append(t);
+}
+function addCSSTag(url){
+    t = document.createElement('link');
+    t.type = 'text/css';
+    t.href = url;
+    t.rel  = 'stylesheet';
+    $('head').append(t);
 }
 
-/*
-modelessDialogShow = function (a, b, c) { modalDialog(a, b, c) };
-modalDialogShow = function (a, b, c) { modalDialog(a, b, c) };
-try {
-    $(document).ready(function () {
-        modelessDialogShow = function (a, b, c) { modalDialog(a, b, c) };
-        modalDialogShow = function (a, b, c) { modalDialog(a, b, c) };
-    });
-} catch (e) { }
-*/
+if(!window.innovaeditor_script_loaded){
+
+    addJSTag(sEditorPath+'common/nlslightbox/nlslightbox.js');
+    addJSTag(sEditorPath+'common/nlslightbox/nlsanimation.js');
+    addJSTag(sEditorPath+'common/nlslightbox/dialog.js');
+    addJSTag(sEditorPath+'istoolbar.js');
+
+    var UA = navigator.userAgent.toLowerCase();
+    var LiveEditor_isIE = (UA.indexOf('msie') >= 0) ? true : false;
+
+    if (LiveEditor_isIE) {
+        addJSTag(sEditorPath+'editor.js');
+    } else if (UA.indexOf('safari') != -1) {
+        addJSTag(sEditorPath+'saf/editor.js');
+    } else { //ie11 use moz script now.
+        addJSTag(sEditorPath+'moz/editor.js');
+    }
+
+    addCSSTag(sEditorPath+'common/nlslightbox/nlslightbox.css', 'link');
+    addCSSTag(sEditorPath+'style/istoolbar.css', 'link');
+
+}
+
+window['innovaeditor_script_loaded'] = true;

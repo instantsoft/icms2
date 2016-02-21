@@ -4,6 +4,7 @@
     $this->addCSS('templates/default/css/jquery-ui.css');
 
     $this->setPageTitle($profile['nickname']);
+    $this->setPageDescription($profile['nickname'].' — '.mb_strtolower(LANG_USERS_PROFILE_INDEX));
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);

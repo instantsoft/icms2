@@ -2,7 +2,7 @@
 
 class onGroupsUserTabShow extends cmsAction {
 
-    public function run($profile, $tab_name){
+    public function run($profile, $tab_name, $tab){
 
         $user = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
@@ -14,9 +14,10 @@ class onGroupsUserTabShow extends cmsAction {
         $list_html = $this->renderGroupsList($page_url, 'popular');
 
         return $template->renderInternal($this, 'profile_tab', array(
-            'user' => $user,
+            'user'    => $user,
+            'tab'     => $tab,
             'profile' => $profile,
-            'html' => $list_html
+            'html'    => $list_html
         ));
 
     }

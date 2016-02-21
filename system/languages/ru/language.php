@@ -29,6 +29,7 @@
     define('LANG_FILTER_IS_NULL',            'не заполнено');
     define('LANG_FILTER_APPLY',              'Фильтровать');
     define('LANG_FILTER_URL',                'Ссылка');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Сохранять различную сортировку');
     define('LANG_SORTING_FIELD',             'Сортировка по полю');
     define('LANG_SORTING',                   'Сортировка');
     define('LANG_SORTING_ADD',               'Добавить правило');
@@ -125,6 +126,8 @@
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
 
     //USERS
     define('LANG_USER',                      'Пользователь');
@@ -203,13 +206,14 @@
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
-    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена');
+    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных или она недоступна для чтения');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения или он недоступен для чтения');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
     define('ERR_FILE_NOT_FOUND',             'Файл не найден');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
+    define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
@@ -237,7 +241,8 @@
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы, цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
     define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
     define('ERR_VALIDATE_NUMBER',            'Введите число');
     define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
@@ -390,6 +395,7 @@
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
+    define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
     define('LANG_ON_FRONT',				 	 'На главной');
     define('LANG_SHOWED',					 'Показано');
     define('LANG_ORDER',					 'Порядок');
@@ -436,6 +442,7 @@
     define('LANG_EVENTS_THIS_WEEK',          'События на этой неделе');
     define('LANG_CALENDAR',                  'Календарь');
     define('LANG_TIME_ZONE',                 'Часовой пояс');
+    define('LANG_YEAR',                      'Год');
     define('LANG_YEARS',                     'Года');
     define('LANG_YEAR1',                     'год');
     define('LANG_YEAR2',                     'года');
@@ -468,4 +475,4 @@
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-
+    define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');

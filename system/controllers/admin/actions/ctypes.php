@@ -10,7 +10,7 @@ class actionAdminCtypes extends cmsAction {
             return;
         }
 
-        $grid = $this->loadDataGrid('ctypes');
+        $grid = $this->loadDataGrid('ctypes', false, 'admin.grid_filter.ctypes');
 
         return cmsTemplate::getInstance()->render('ctypes', array(
             'grid' => $grid

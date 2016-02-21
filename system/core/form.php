@@ -455,7 +455,7 @@ class cmsForm {
      */
     public static function generateCSRFToken(){
 
-        $hash = implode('::', array(session_id(), rand(0, 9999), microtime(true)));
+        $hash = implode('::', array(session_id(), uniqid(), microtime(true)));
         $token = md5($hash);
 
         cmsUser::sessionSet('csrf_token', $token);
@@ -470,7 +470,7 @@ class cmsForm {
      * @return bool
      */
     public static function validateCSRFToken($csrf_token){
-        return (cmsUser::sessionGet('csrf_token') == $csrf_token);
+        return (cmsUser::sessionGet('csrf_token') === $csrf_token);
     }
 
 //============================================================================//

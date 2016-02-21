@@ -24,14 +24,62 @@ class actionAdminInstall extends cmsAction {
 
     private function showPackageInfo($package_name, $is_no_extract=false){
 
-        $config = cmsConfig::getInstance();
-
         if (!$is_no_extract) { $this->extractPackage($package_name); }
 
         $manifest = $this->parsePackageManifest();
 
-        if (isset($manifest['depends'])){
-            $manifest['depends_results'] = $this->checkManifestDepends($manifest['depends']);
+        $manifest['depends_results'] = $this->checkManifestDepends($manifest);
+
+        // если пакет уже установлен, а мы пытаемся его еще раз установить, показываем сообщение
+        if(!empty($manifest['package']['installed_version']) && $manifest['package']['action'] == 'install'){
+
+            files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
+
+            cmsUser::addSessionMessage(sprintf(LANG_CP_PACKAGE_DUBLE_INSTALL, $manifest['package']['installed_version']), 'error');
+
+            $this->redirectToAction('install');
+
+        }
+
+        // если это пакет обновления, а полная версия не установлена
+        if(isset($manifest['package']) && empty($manifest['package']['installed_version']) && $manifest['package']['action'] == 'update'){
+
+            files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
+
+            cmsUser::addSessionMessage(LANG_CP_PACKAGE_UPDATE_NOINSTALL, 'error');
+
+            $this->redirectToAction('install');
+
+        }
+
+        // если это пакет обновления и обновляемая версия ниже существующей или равна
+        if(!empty($manifest['package']['installed_version']) && $manifest['package']['action'] == 'update'){
+
+            $package_v = $manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build'];
+
+            $upd = (int)str_pad(str_replace('.', '', $package_v), 6, '0');
+            $inst = (int)str_pad(str_replace('.', '', $manifest['package']['installed_version']), 6, '0');
+
+            if($upd < $inst){
+
+                files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
+
+                cmsUser::addSessionMessage(sprintf(LANG_CP_PACKAGE_UPDATE_ERROR, $manifest['package']['type_hint'], $manifest['info']['title'], $package_v, $manifest['package']['installed_version']), 'error');
+
+                $this->redirectToAction('install');
+
+            }
+
+            if($upd == $inst){
+
+                files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
+
+                cmsUser::addSessionMessage(LANG_CP_PACKAGE_UPDATE_IS_UPDATED, 'error');
+
+                $this->redirectToAction('install');
+
+            }
+
         }
 
         return cmsTemplate::getInstance()->render('install_package_info', array(
@@ -78,16 +126,24 @@ class actionAdminInstall extends cmsAction {
 
     }
 
-    private function checkManifestDepends($depends){
+    private function checkManifestDepends($manifest){
 
         $results = array();
 
-        if (isset($depends['core'])){
+        if (isset($manifest['depends']['core'])){
 
-            $need = (int)str_pad(str_replace('.', '', $depends['core']), 6, '0');
+            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['core']), 6, '0');
             $has = (int)str_pad(str_replace('.', '', cmsCore::getVersion()), 6, '0');
 
             $results['core'] = ($need <= $has) ? true : false;
+
+        }
+        if (isset($manifest['depends']['package']) && isset($manifest['package']['installed_version'])){
+
+            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['package']), 6, '0');
+            $has = (int)str_pad(str_replace('.', '', (string)$manifest['package']['installed_version']), 6, '0');
+
+            $results['package'] = ($need <= $has) ? true : false;
 
         }
 
@@ -95,60 +151,27 @@ class actionAdminInstall extends cmsAction {
 
     }
 
-    private function parsePackageManifest(){
-
-        $config = cmsConfig::getInstance();
-
-        $path = $config->upload_path . $this->installer_upload_path;
-
-        $ini_file = $path . '/' . "manifest.{$config->language}.ini";
-        $ini_file_default = $path . '/' . "manifest.ru.ini";
-
-        if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
-        if (!file_exists($ini_file)){ return false; }
-
-        $manifest = parse_ini_file($ini_file, true);
-
-        if (file_exists($config->upload_path . $this->installer_upload_path . '/' . 'package')){
-            $manifest['contents'] = $this->getPackageContentsList();
-        } else {
-			$manifest['contents'] = false;
-		}		
-
-        if (isset($manifest['info']['image'])){
-            $manifest['info']['image'] = $config->upload_host . '/' .
-                                            $this->installer_upload_path . '/' .
-                                            $manifest['info']['image'];
-        }
-
-        return $manifest;
-
-    }
-
-    private function getPackageContentsList(){
-
-        $config = cmsConfig::getInstance();
-
-        $path = $config->upload_path . $this->installer_upload_path . '/' . 'package';
-
-        if (!is_dir($path)) { return false; }
-
-        return files_tree_to_array($path);
-
-    }
-
     private function extractPackage($package_name){
 
-        $config = cmsConfig::getInstance();
-
-        $zip_dir = $config->upload_path . $this->installer_upload_path;
+        $zip_dir = cmsConfig::get('upload_path') . $this->installer_upload_path;
         $zip_file =  $zip_dir . '/' . $package_name;
 
         $zip = new ZipArchive();
 
-        if (!$zip->open( $zip_file )){
-            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR, 'error');
+        $res = $zip->open($zip_file);
+
+        if ($res !== true){
+
+            if(defined('LANG_ZIP_ERROR_'.$res)){
+                $zip_error = constant('LANG_ZIP_ERROR_'.$res);
+            } else {
+                $zip_error = '';
+            }
+
+            cmsUser::addSessionMessage(LANG_CP_INSTALL_ZIP_ERROR.($zip_error ? ': '.$zip_error : ''), 'error');
+
             $this->redirectBack();
+
         }
 
         $zip->extractTo($zip_dir);
@@ -162,13 +185,11 @@ class actionAdminInstall extends cmsAction {
 
     private function uploadPackage(){
 
-        $config = cmsConfig::getInstance();
-
         $uploader = new cmsUploader();
 
         if (!$uploader->isUploaded( $this->upload_name )){ return false; }
 
-        files_clear_directory($config->upload_path . $this->installer_upload_path);
+        files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
         $result = $uploader->uploadForm($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
 

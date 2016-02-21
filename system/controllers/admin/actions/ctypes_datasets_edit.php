@@ -15,23 +15,21 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        $dataset = $content_model->getContentDataset($dataset_id);
-
+        $dataset = $old_dataset = $content_model->getContentDataset($dataset_id);
         $fields  = $content_model->getContentFields($ctype['name']);
 
         if ($is_submitted){
 
             $dataset = $form->parse($this->request, $is_submitted);
 
-            $dataset['ctype_id']    = $ctype['id'];
-            $dataset['filters']     = $this->request->get('filters');
-            $dataset['sorting']     = $this->request->get('sorting');
+            $dataset['filters'] = $this->request->get('filters');
+            $dataset['sorting'] = $this->request->get('sorting');
 
             $errors = $form->validate($this,  $dataset);
 
             if (!$errors){
 
-                $content_model->updateContentDataset($dataset_id, $dataset);
+                $content_model->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
 
                 $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
 

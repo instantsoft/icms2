@@ -10,3 +10,4 @@
     define('LANG_WD_CONTENT_LIST_STYLE_TILES_BIG',  'Big tiles');
     define('LANG_WD_CONTENT_LIST_STYLE_TILES_SMALL','Small tiles');
     define('LANG_WD_CONTENT_LIST_STYLE_COMPACT',    'Compact');
+    define('LANG_WD_CONTENT_LIST_STYLE_CUSTOM',    'Template defined in the "Design" tab');

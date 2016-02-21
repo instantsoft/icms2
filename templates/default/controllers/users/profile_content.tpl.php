@@ -51,7 +51,7 @@
 
 <h1 id="user_profile_title">
 
-    <?php if (!empty($ctype['options']['is_rss'])){ ?>
+    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
         <div class="content_list_rss_icon">
             <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">RSS</a>
         </div>

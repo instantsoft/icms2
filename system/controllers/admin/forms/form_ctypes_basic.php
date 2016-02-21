@@ -47,6 +47,14 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_IS_PUB_CONTROL,
                         'hint' => LANG_CP_IS_PUB_CONTROL_HINT
                     )),
+                    new fieldList('options:is_date_range_process', array(
+                        'title' => LANG_CP_IS_PUB_CONTROL_PROCESS,
+                        'default' => 'hide',
+                        'items' => array(
+                            'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
+                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL
+                        )
+                    ))
                 )
             ),
             'categories' => array(
@@ -156,12 +164,26 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
-                        'generator' => function(){
-                            $template = cmsTemplate::getInstance();
-                            $styles = $template->getAvailableContentListStyles();
-                            return $styles;
+                        'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
                         }
                     )),
+                    new fieldList('options:privacy_type', array(
+                        'title'   => LANG_CP_PRIVACY_TYPE,
+                        'default' => 'hide',
+                        'items'   => array(
+                            'hide'       => LANG_CP_PRIVACY_TYPE_HIDE,
+                            'show_title' => LANG_CP_PRIVACY_TYPE_SHOW_TITLE,
+                            'show_all'   => LANG_CP_PRIVACY_TYPE_SHOW_ALL
+                        )
+                    )),
+                    new fieldNumber('options:limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
+                    ))
                 )
             ),
             'itemview' => array(

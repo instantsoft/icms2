@@ -2,7 +2,7 @@
 
     // Определяем корень
     define('PATH', dirname(__FILE__));
-	define('ROOT', $_SERVER['DOCUMENT_ROOT']);
+	define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
@@ -13,11 +13,32 @@
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
 
+    cmsCore::startTimer();
+
 	// Инициализируем конфиг
 	$config = cmsConfig::getInstance();
 
+    // дебаг отключен - скрываем все сообщения об ошибках
+    if(!$config->debug){
+        error_reporting(0);
+    } else {
+        error_reporting(E_ALL);
+    }
+
+    // Проверяем, что система установлена
+    if (!$config->isReady()){
+        $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath(ROOT)), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
+        header('location:'.$root.'/install/');
+        die();
+    }
+
     // Загружаем локализацию
     cmsCore::loadLanguage();
+
+    // устанавливаем локаль языка
+    if(function_exists('lang_setlocale')){
+        lang_setlocale();
+    }
 
     // Устанавливаем часовую зону
     date_default_timezone_set( $config->time_zone );
@@ -26,12 +47,21 @@
 	cmsCore::loadLib('html.helper');
 	cmsCore::loadLib('strings.helper');
 	cmsCore::loadLib('files.helper');
+    cmsCore::loadLib('spyc.class');
+    // подключаем хелпер шаблона, если он есть
+    if(!cmsCore::includeFile('templates/'.$config->template.'/assets/helper.php')){
+        cmsCore::loadLib('template.helper');
+    }
 
     // Инициализируем ядро
     $core = cmsCore::getInstance();
 
     // Подключаем базу
     $core->connectDB();
+
+    if(!$core->db->ready()){
+        cmsCore::error(ERR_DATABASE_CONNECT, $core->db->connectError());
+    }
 
     // Запускаем кеш
     cmsCache::getInstance()->start();

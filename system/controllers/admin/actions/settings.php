@@ -42,12 +42,17 @@ class actionAdminSettings extends cmsAction {
                     }
                 }
 
+                if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
+                    files_clear_directory($config->cache_path.'data/');
+                }
+
                 $result = $config->save($values);
 
                 if (!$result){
                     $errors = array();
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
                 } else {
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                     $this->redirectBack();
                 }
 
