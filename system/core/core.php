@@ -7,6 +7,7 @@ class cmsCore {
 	public $uri            = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
+    public $uri_controller_before_remap = '';
     public $uri_action     = '';
     public $uri_params     = array();
     public $uri_query      = array();
@@ -622,7 +623,18 @@ class cmsCore {
 
         // проверяем ремаппинг контроллера
         $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
+        if ($remap_to) {
+            // в uri также меняем
+            if($this->uri){
+                $original_uri = $this->uri;
+                $seg = explode('/', $this->uri);
+                $seg[0] = $remap_to;
+                $this->uri = implode('/', $seg);
+                $this->uri_absolute = str_replace($original_uri, $this->uri, $this->uri_absolute);
+            }
+            $this->uri_controller_before_remap = $this->uri_controller;
+            $this->uri_controller = $remap_to;
+        }
 
         if (!self::isControllerExists($this->uri_controller)) {
             $this->uri_action     = $this->uri_controller;

@@ -26,6 +26,15 @@ class actionContentItemView extends cmsAction {
 			if ($config->ctype_default && $config->ctype_default == $core->uri_action){
 				$this->redirect(href_to($slug . '.html'), 301);
 			}
+            // если название переопределено, то редиректим со старого на новый
+            $mapping = cmsConfig::getControllersMapping();
+            if($mapping){
+                foreach($mapping as $name=>$alias){
+                    if ($name == $ctype['name'] && !$core->uri_controller_before_remap) {
+                        $this->redirect(href_to($alias.'/'. $slug.'.html'), 301);
+                    }
+                }
+            }
 		}
 
 		if (!$ctype['options']['item_on']) { cmsCore::error404(); }
