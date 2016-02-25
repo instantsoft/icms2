@@ -289,7 +289,7 @@ icms.datagrid = (function ($) {
 
         $.each(result.rows, function(i){
             var row = this;
-            var row_html = '<tr id="tr_id_'+i+'">';
+            var row_html = '<tr id="'+(row[0] > 0 ? row[0] : ('tr_id_'+i))+'">';
             $.each(row, function(index){
                 if (index>0 || icms.datagrid.options.show_id) {
                         row_html = row_html + '<td>' + this + '</td>';
