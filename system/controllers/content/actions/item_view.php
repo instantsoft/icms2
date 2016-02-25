@@ -8,10 +8,10 @@ class actionContentItemView extends cmsAction {
         $config = cmsConfig::getInstance();
 
         // Получаем название типа контента и сам тип
-        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name'));
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
 
 		// Получаем SLUG записи
-        $slug = $this->request->get('slug');
+        $slug = $this->request->get('slug', '');
 
 		if (!$ctype) {
 			if ($config->ctype_default){

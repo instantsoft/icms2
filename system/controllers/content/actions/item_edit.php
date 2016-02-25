@@ -7,11 +7,11 @@ class actionContentItemEdit extends cmsAction {
         $user = cmsUser::getInstance();
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
         // Получаем нужную запись
@@ -32,8 +32,8 @@ class actionContentItemEdit extends cmsAction {
 
         // Получаем родительский тип, если он задан
         if ($this->request->has('parent_type')){
-            $parent['ctype'] = $this->model->getContentTypeByName($this->request->get('parent_type'));
-            $parent['item']  = $this->model->getContentItemBySLUG($parent['ctype']['name'], $this->request->get('parent_slug'));
+            $parent['ctype'] = $this->model->getContentTypeByName($this->request->get('parent_type', ''));
+            $parent['item']  = $this->model->getContentItemBySLUG($parent['ctype']['name'], $this->request->get('parent_slug', ''));
         }
 
         // Определяем наличие полей-свойств
@@ -161,7 +161,7 @@ class actionContentItemEdit extends cmsAction {
 				}
 
 				if (!empty($ctype['options']['is_cats_multi'])){
-					$add_cats = $this->request->get('add_cats');
+					$add_cats = $this->request->get('add_cats', array());
 					if (is_array($add_cats)){
 						foreach($add_cats as $index=>$cat_id){
 							if (!is_numeric($cat_id) || !$cat_id){
@@ -201,7 +201,7 @@ class actionContentItemEdit extends cmsAction {
                                 updateCommentsPrivacy($item['is_private'] || $item['is_parent_hidden']);
                 }
 
-                $back_url = $this->request->get('back');
+                $back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);

@@ -114,6 +114,13 @@ class cmsRequest {
             $value = $this->data[$name_parts[0]][$name_parts[1]];
         }
 
+        // типизируем, основываясь на значении по умолчанию
+        // пока что берем во внимание не все типы
+        $default_type = gettype($default);
+        if(in_array($default_type, array('integer','string','double','array'))){
+            settype($value, $default_type);
+        }
+
         //если дошли сюда, то возвращаем значение как есть
         return $value;
 

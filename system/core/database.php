@@ -778,6 +778,8 @@ class cmsDatabase {
 
     public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false){
 
+        $value = $this->escape(trim($value));
+
 		$where = "(`{$field_name}` = '{$value}')";
 
 		if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }

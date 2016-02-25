@@ -5,12 +5,12 @@ class actionAuthLogin extends cmsAction {
 
         if (cmsUser::isLogged()) { $this->redirectToHome(); }
 
-        $email      = $this->request->get('login_email');
-        $password   = $this->request->get('login_password');
+        $email      = $this->request->get('login_email','');
+        $password   = $this->request->get('login_password','');
         $remember   = (bool)$this->request->get('remember');
 
         $back_url = $this->request->has('back') ?
-                    $this->request->get('back') :
+                    $this->request->get('back','') :
                     false;
 
         $is_site_offline = !cmsConfig::get('is_site_on');

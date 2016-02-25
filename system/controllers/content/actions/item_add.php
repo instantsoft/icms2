@@ -7,7 +7,7 @@ class actionContentItemAdd extends cmsAction {
         $user = cmsUser::getInstance();
 
         // Получаем название типа контента
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype_name, 'add')) { cmsCore::error404(); }
@@ -33,7 +33,7 @@ class actionContentItemAdd extends cmsAction {
 		$item = array();
 
         if ($ctype['is_cats']){
-            $category_id = $this->request->get('to_id');
+            $category_id = $this->request->get('to_id', 0);
         }
 
         // Определяем наличие полей-свойств
@@ -95,7 +95,7 @@ class actionContentItemAdd extends cmsAction {
         if (!$is_submitted && !empty($category_id)) { $item['category_id'] = $category_id; }
 
 		if ($this->request->has('group_id') && $groups_list && !$is_submitted){
-			$item['parent_id'] = $this->request->get('group_id');
+			$item['parent_id'] = $this->request->get('group_id', 0);
 		}
 
         $item['ctype_name'] = $ctype['name'];
@@ -104,7 +104,7 @@ class actionContentItemAdd extends cmsAction {
         if ($is_submitted){
 
             if ($ctype['props']){
-                $props_cat_id = $this->request->get('category_id');
+                $props_cat_id = $this->request->get('category_id', 0);
                 if ($props_cat_id){
                     $item_props = $this->model->getContentProps($ctype['name'], $props_cat_id);
                     $item_props_fields = $this->getPropsFields($item_props);
@@ -126,7 +126,7 @@ class actionContentItemAdd extends cmsAction {
 
             // несколько категорий
             if (!empty($ctype['options']['is_cats_multi'])){
-                $add_cats = $this->request->get('add_cats');
+                $add_cats = $this->request->get('add_cats', array());
                 if (is_array($add_cats)){
                     foreach($add_cats as $index=>$cat_id){
                         if (!is_numeric($cat_id) || !$cat_id){
@@ -222,7 +222,7 @@ class actionContentItemAdd extends cmsAction {
                     $this->requestModeration($ctype_name, $item);
                 }
 
-                $back_url = $this->request->get('back');
+                $back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);

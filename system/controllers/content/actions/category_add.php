@@ -5,7 +5,7 @@ class actionContentCategoryAdd extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
@@ -15,7 +15,7 @@ class actionContentCategoryAdd extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'add_cat')) { cmsCore::error404(); }
 
-        $parent_id = $this->request->get('to_id');
+        $parent_id = $this->request->get('to_id', 0);
 
         $form = $this->getCategoryForm($ctype, 'add');
 

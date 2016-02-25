@@ -8,7 +8,7 @@ class actionContentCategoryView extends cmsAction {
         $core = cmsCore::getInstance();
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
 
         if (!$ctype) {
@@ -29,7 +29,7 @@ class actionContentCategoryView extends cmsAction {
         $subcats = array();
 
         // Получаем SLUG категории
-        $slug = $this->request->get('slug');
+        $slug = $this->request->get('slug', '');
 
         if (!$ctype['is_cats'] && $slug != 'index') { cmsCore::error404(); }
 
@@ -48,7 +48,7 @@ class actionContentCategoryView extends cmsAction {
         $datasets = $this->model->getContentDatasets($ctype['id'], true);
 
         // Текущий набор
-        $dataset = $this->request->get('dataset', false);
+        $dataset = $this->request->get('dataset', '');
 
         // Это вывод на главной?
         $is_frontpage = $this->request->get('is_frontpage', false);

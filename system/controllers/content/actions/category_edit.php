@@ -5,7 +5,7 @@ class actionContentCategoryEdit extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
@@ -15,7 +15,7 @@ class actionContentCategoryEdit extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit_cat')) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
         $category = $this->model->getCategory($ctype['name'], $id);
@@ -24,7 +24,7 @@ class actionContentCategoryEdit extends cmsAction {
 
         list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
 
-        $back_url = $this->request->get('back');
+        $back_url = $this->request->get('back', '');
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
