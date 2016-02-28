@@ -177,7 +177,7 @@ function html_radio($name, $checked=false, $value=1, $attributes=array()){
 
 function html_date($date=false, $is_time=false){
     $timestamp = $date ? strtotime($date) : time();
-    $date = htmlspecialchars(date(cmsConfig::get('date_format'), $timestamp));
+    $date = '<time datetime="'.date('c', $timestamp).'">'.htmlspecialchars(date(cmsConfig::get('date_format'), $timestamp)).'</time>';
     if ($is_time){ $date .= ' <span class="time">' . date('H:i', $timestamp). '</span>'; }
     return $date;
 }
