@@ -33,7 +33,7 @@ class onTypographHtmlFilter extends cmsAction {
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote',
-            'video', 'audio', 'youtube',
+            'video', 'audio', 'youtube','facebook',
             'object', 'param', 'embed', 'iframe'
         ));
 
@@ -99,6 +99,9 @@ class onTypographHtmlFilter extends cmsAction {
         // Ставим колбэк для youtube
         $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));
 
+        // Ставим колбэк для facebook
+        $jevix->cfgSetTagCallbackFull('facebook', array($this, 'parseFacebookVideo'));
+
         // Ставим колбэк на iframe
         $jevix->cfgSetTagCallbackFull('iframe', array($this, 'parseIframe'));
 
@@ -116,6 +119,21 @@ class onTypographHtmlFilter extends cmsAction {
         }
 
         return $this->getVideoCode($params['src']);
+
+    }
+
+    public function parseFacebookVideo($tag, $params, $content){
+
+        $video_link = (trim(strip_tags($content)));
+
+        $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:facebook\.com(?:/[^\/]+/videos/|/video\.php\?v=))([0-9]+)(?:.+)?$#x';
+        preg_match($pattern, $video_link, $matches);
+
+        if(empty($matches[1])){
+            return '';
+        }
+
+        return $this->getVideoCode('https://www.facebook.com/video/embed?video_id='.$matches[1]);
 
     }
 
