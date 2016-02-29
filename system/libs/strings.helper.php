@@ -198,21 +198,21 @@ function string_random($length=32, $seed=''){
 }
 
 /**
- * Выводит разницу между двумя датами или переданной датой и текущим временем
+ * Выводит разницу между переданной датой и текущим временем
  * в виде читабельной строки со склонениями
  *
  * Пример вывода: "2 года 16 дней 5 часов 12 минут"
  *
- * @param string $date1, $date2
- * @param array $options Массив элементов для перечисления: y, m, d, h, i
+ * @param string $date
+ * @param array $options Массив элементов для перечисления: y, m, d, h, i, from_date
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
-function string_date_age($date1, $options, $is_add_back=false, $date2 = NULL){
+function string_date_age($date, $options, $is_add_back=false){
 
-    if (!$date1) { return; }
+    if (!$date) { return; }
 
-    $diff = real_date_diff($date1, $date2);
+    $diff = real_date_diff($date, in_array('from_date', $options) ? $options['from_date'] : false);
 
     $diff_str = array();
 

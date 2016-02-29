@@ -97,6 +97,8 @@
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');
+    define('LANG_PARSER_AGE_FROM_DATE',      'Считать от указанной даты');
+    define('LANG_PARSER_AGE_FROM_DATE_HINT', 'Если не указано, отсчёт будет вестись от текущего значения времени');
     define('LANG_PARSER_DATE',               'Дата');
     define('LANG_PARSER_DATE_FILTER_HINT',   'ГГГГ-ММ-ДД');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Показывать время');
