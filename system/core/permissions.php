@@ -45,7 +45,11 @@ class cmsPermissions {
 
         $rules = $model->orderBy('name')->get('perms_rules', function($rule, $model){
 
-            $rule['title'] = constant('LANG_RULE_'.mb_strtoupper($rule['controller']).'_'.mb_strtoupper($rule['name']));
+            $title_const = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']);
+            $hint_const  = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']).'_HINT';
+
+            $rule['title'] = defined($title_const) ? constant($title_const) : $title_const;
+            $rule['title_hint'] = defined($hint_const) ? constant($hint_const) : '';
 
             if ($rule['type'] == 'list' && $rule['options']){
                 $rule['options'] = explode(',', $rule['options']);
@@ -231,10 +235,6 @@ class cmsPermissions {
 
 //============================================================================//
 //============================================================================//
-
-//============================================================================//
-//============================================================================//
-
 
 
 }

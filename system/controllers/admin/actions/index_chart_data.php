@@ -6,9 +6,9 @@ class actionAdminIndexChartData extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id      = $this->request->get('id');
         $section = $this->request->get('section');
-        $period = $this->request->get('period');
+        $period  = $this->request->get('period');
 
         if (!$id || !$section || !is_numeric($period)) { cmsCore::error404(); }
 
@@ -63,20 +63,15 @@ class actionAdminIndexChartData extends cmsAction {
 
     private function getData($source, $period){
 
-        $data = array();
-
         $this->model->
                 selectOnly($source['key'], 'date')->
                 select('COUNT(id)', 'count')->
-                filterGtEqual($source['key'], "(CURDATE() - INTERVAL {$period} DAY)")->
+                filterFunc($source['key'], "(CURDATE() - INTERVAL {$period} DAY)", '>=')->
                 orderBy($source['key'], 'asc');
 
         $this->model->group_by = $period < 300 ? "DAY({$source['key']})" : "MONTH({$source['key']})";
 
-        $data = $this->model->get($source['table'], false, false);
-
-        return $data;
-
+        return $this->model->get($source['table'], false, false);
 
     }
 

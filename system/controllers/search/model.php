@@ -19,14 +19,17 @@ class modelSearch extends cmsModel{
 
         $this->query = array();
 
+        $stopwords = string_get_stopwords(cmsConfig::get('language'));
+
         $words = explode(' ', $query);
 
         foreach($words as $word){
 
             $word = strip_tags(mb_strtolower(trim(urldecode($word))));
 
-            if (mb_strlen($word)<3) { continue; }
-            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word) . '*'; continue; }
+            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if($stopwords && in_array($word, $stopwords)){ continue; }
+            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
 
             if (mb_strlen($word) >= 12) {
                 $word = mb_substr($word, 0, mb_strlen($word) - 4);

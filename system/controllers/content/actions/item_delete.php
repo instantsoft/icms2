@@ -5,10 +5,10 @@ class actionContentItemDelete extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name'));
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
         $item = $this->model->getContentItem($ctype['name'], $id);
@@ -37,7 +37,7 @@ class actionContentItemDelete extends cmsAction {
             $this->notifyAuthor($ctype['name'], $item);
         }
 
-        $back_url = $this->request->get('back');
+        $back_url = $this->request->get('back', '');
 
         if ($back_url){
             $this->redirect($back_url);

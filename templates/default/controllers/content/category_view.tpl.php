@@ -5,7 +5,7 @@
     $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
-    $base_ds_url = $ctype['name'] . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
+    $base_ds_url = href_to_rel($ctype['name']) . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
     if (!$is_frontpage){
 		$seo_title = false;
@@ -32,9 +32,7 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $is_allowed = true;
-
-        if ($is_allowed){
+        if (!$category['id'] || $user->isInGroups($category['allow_add'])){
 
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 

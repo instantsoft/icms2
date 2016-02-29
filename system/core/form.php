@@ -305,9 +305,7 @@ class cmsForm {
 
                 $is_array = strpos($name, ':');
 
-                $value = $request->get($name, null);
-
-                if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
+                $value = $request->get($name, (($field->hasDefaultValue() && !$is_submitted) ? $field->getDefaultValue() : null));
 
                 $old_value = $item ? (isset($item[$name]) ? $item[$name] : null) : null;
 
@@ -353,7 +351,7 @@ class cmsForm {
         // Проверяем CSRF-token
         //
         if ($is_check_csrf){
-            $csrf_token = $controller->request->get('csrf_token');
+            $csrf_token = $controller->request->get('csrf_token', '');
             if ( !self::validateCSRFToken( $csrf_token ) ){
                 return true;
             }

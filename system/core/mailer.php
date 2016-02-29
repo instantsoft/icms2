@@ -39,6 +39,7 @@ class cmsMailer {
 
         // SMTP Server
         if ($config->mail_transport == 'smtp') {
+            cmsCore::loadLib('phpmailer/class.smtp', 'SMTP');
             $this->mailer->IsSMTP();
             $this->mailer->Host          = $config->mail_smtp_server;
             $this->mailer->Port          = $config->mail_smtp_port;

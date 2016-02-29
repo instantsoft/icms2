@@ -56,7 +56,7 @@ class modelTags extends cmsModel{
     }
 
     public function recountTagsFrequency($tags_ids=array()){
-	
+
         $this->
             select('t.id', 'tag_id')->
             select('COUNT(i.tag_id)', 'frequency')->
@@ -86,17 +86,17 @@ class modelTags extends cmsModel{
     public function updateTags($tags_string, $controller, $subject, $id){
 
         $this->filterTarget($controller, $subject, $id);
-        
+
         $this->lockFilters();
-        
+
         $tags_ids = $this->get('tags_bind', function($item, $model){
             return $item['tag_id'];
         });
-        
+
         $this->unlockFilters();
-        
+
         $this->deleteFiltered('tags_bind');
-        
+
         if ($tags_ids) { $this->recountTagsFrequency($tags_ids); }
 
         return $this->addTags($tags_string, $controller, $subject, $id);
@@ -226,12 +226,12 @@ class modelTags extends cmsModel{
     }
 
     public function deleteTags($controller, $subject, $id){
-    	
+
     	$tags_ids = $this->filterTarget($controller, $subject, $id)->
                 get('tags_bind', function($item, $model){
                     return $item['tag_id'];
                 });
-		
+
 	if (!$tags_ids) { return; }
 
         $this->filterIn('id', array_keys($tags_ids))->deleteFiltered('tags_bind');

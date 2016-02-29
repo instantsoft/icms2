@@ -206,11 +206,11 @@
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
-    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена');
+    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных или она недоступна для чтения');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения или он недоступен для чтения');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
     define('ERR_FILE_NOT_FOUND',             'Файл не найден');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');

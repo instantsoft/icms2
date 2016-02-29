@@ -110,7 +110,7 @@
 
     <script>
         <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM'); ?>
-        <?php if ($is_highlight_new){ ?>icms.commments.showFirstSelected();<?php } ?>
+        <?php if ($is_highlight_new){ ?>icms.comments.showFirstSelected();<?php } ?>
     </script>
 
 </div>

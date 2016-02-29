@@ -22,6 +22,14 @@ class formPhotosOptions extends cmsForm {
                         }
                     )),
 
+                    new fieldNumber('limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 16,
+                        'rules' => array(
+                            array('required')
+                        )
+                    ))
+
                 )
             ),
 

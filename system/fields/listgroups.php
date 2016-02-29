@@ -2,9 +2,9 @@
 
 class fieldListGroups extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST_GROUPS;
-    public $is_public = false;
-    public $sql   = 'text NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_LIST_GROUPS;
+    public $is_public   = false;
+    public $sql         = 'text NULL DEFAULT NULL';
     public $allow_index = false;
 
     public function getOptions(){
@@ -34,6 +34,10 @@ class fieldListGroups extends cmsFormField {
         }
 
         $this->data['groups'] = $items;
+
+        if(!is_array($value)){
+            $value = cmsModel::yamlToArray($value);
+        }
 
         return parent::getInput($value ? $value : array(0));
 

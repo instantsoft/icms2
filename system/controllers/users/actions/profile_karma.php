@@ -12,13 +12,17 @@ class actionUsersProfileKarma extends cmsAction {
         $total = $this->model->getKarmaLogCount($profile['id']);
         $log = $this->model->limitPage($page, $perpage)->getKarmaLog($profile['id']);
 
+        $tabs = $this->controller->getProfileMenu($profile);
+
         cmsTemplate::getInstance()->render('profile_karma', array(
-            'user' => $user,
+            'user'    => $user,
+            'tabs'    => $tabs,
+            'tab'     => $this->tabs['karma'],
             'profile' => $profile,
-            'log' => $log,
-            'total' => $total,
-            'page' => $page,
-            'perpage' => $perpage,
+            'log'     => $log,
+            'total'   => $total,
+            'page'    => $page,
+            'perpage' => $perpage
         ));
 
     }

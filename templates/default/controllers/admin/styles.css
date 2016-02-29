@@ -1312,6 +1312,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     overflow: hidden;
 	height: 16px;
 	line-height: 16px;
+    position: relative;
 }
 
 #cp-widgets-layout .position li.tabbed{
@@ -1352,9 +1353,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp-widgets-layout li .actions,
 #cp-widgets-list li .actions {
-    overflow: hidden;
-    float:right;
-    display:block;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 3px;
 }
 
 #cp-widgets-layout li .actions a ,

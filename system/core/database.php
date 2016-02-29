@@ -4,16 +4,53 @@ class cmsDatabase {
 
     private static $instance;
 
-	public $link;
+    /**
+     * Префикс таблиц
+     * @var string
+     */
 	public $prefix;
 
+    /**
+     * Суммарное количество запросов
+     * @var int
+     */
     public $query_count = 0;
-    public $query_list;
 
-    private $table_fields;
+    /**
+     * Массив отладки, содержащий в себе выполняемые запросы и их время
+     * @var array
+     */
+    public $query_list = array();
 
+    /**
+     * Массив кешированного списка полей для запрашиваемых таблиц
+     * @var array
+     */
+    private $table_fields = array();
+
+    /**
+     * Объект, представляющий подключение к серверу MySQL
+     * @var \mysqli
+     */
     private $mysqli;
 
+    /**
+     * Время соединения с базой
+     * @var int
+     */
+    private $init_start_time;
+
+    /**
+     * Время, через которое при PHP_SAPI == 'cli' нужно сделать реконнект
+     * для случаев, когда mysql.connect_timeout по дефолту (60 с) и переопределить это поведение нельзя
+     * @var int
+     */
+    private $reconnect_time = 60;
+
+    /**
+     * Ошибка подключения к базе
+     * @var bool|string
+     */
     private $connect_error = false;
 
     public static function getInstance() {
@@ -61,6 +98,8 @@ class cmsDatabase {
         $this->setTimezone();
 
 		$this->prefix = $config->db_prefix;
+
+        $this->init_start_time = time();
 
         return true;
 
@@ -140,7 +179,7 @@ class cmsDatabase {
 
         }
 
-        if(PHP_SAPI == 'cli'){
+        if(PHP_SAPI == 'cli' && (time() - $this->init_start_time) >= $this->reconnect_time){
             $this->reconnect();
         }
 
@@ -221,6 +260,8 @@ class cmsDatabase {
         }
 
 		$result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
+
+        $fields = array();
 
         while($data = $this->fetchAssoc($result)){
             $fields[] = $data['Field'];
@@ -311,17 +352,20 @@ class cmsDatabase {
 	 *
 	 * @param string $table Таблица
 	 * @param array $data Массив[Название поля] = значение поля
+	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
 	 * @return bool
 	 */
-	public function insert($table, $data){
+	public function insert($table, $data, $skip_check_fields = false){
 
         if(empty($data) || !is_array($data)) { return false; }
 
-        $table_fields = $this->getTableFields($table);
+        if(!$skip_check_fields){
+            $table_fields = $this->getTableFields($table);
+        }
 
         foreach ($data as $field => $value){
 
-            if(!in_array($field, $table_fields)){
+            if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
             }
 
@@ -408,12 +452,15 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	/**
-	 * Возвращает массив со всеми строками полученными после запроса
-	 *
-	 * @param string $sql
-	 */
-	public function getRows($table_name, $where='1', $fields='*', $order='id ASC'){
+    /**
+     * Возвращает массив со всеми строками полученными после запроса
+     * @param string $table_name
+     * @param string $where
+     * @param string $fields
+     * @param string $order
+     * @return boolean|array
+     */
+    public function getRows($table_name, $where='1', $fields='*', $order='id ASC'){
 		$sql = "SELECT {$fields} FROM {#}{$table_name} WHERE {$where} ORDER BY {$order}";
 		$result = $this->query($sql);
 		if(!$this->mysqli->errno){
@@ -670,6 +717,7 @@ class cmsDatabase {
                   `ns_level` int(11) UNSIGNED DEFAULT NULL,
                   `ns_differ` varchar(32) NOT NULL DEFAULT '',
                   `ns_ignore` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+                  `allow_add` text,
                   PRIMARY KEY (`id`),
                   KEY `slug` (`slug`),
                   KEY `parent_id` (`parent_id`,`ns_left`),
@@ -730,6 +778,8 @@ class cmsDatabase {
 
     public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false){
 
+        $value = $this->escape(trim($value));
+
 		$where = "(`{$field_name}` = '{$value}')";
 
 		if ($exclude_row_id) { $where .= " AND (id <> '{$exclude_row_id}')"; }
@@ -740,11 +790,9 @@ class cmsDatabase {
 
     public function isFieldExists($table_name, $field){
 
-        $row = $this->getRow($table_name);
+        $table_fields = $this->getTableFields($table_name);
 
-        if (!$row) { return false; }
-
-        return array_key_exists($field, $row);
+        return in_array($field, $table_fields, true);
 
     }
 

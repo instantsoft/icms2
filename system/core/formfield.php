@@ -123,6 +123,11 @@ class cmsFormField {
 
     public function getFilterInput($value){
         $this->element_title = false;
+        // при фильтрации все поля необязательны
+        $required_key = array_search(array('required'), $this->getRules());
+        if($required_key !== false){
+            unset($this->rules[$required_key]);
+        }
         return $this->getInput($value);
     }
 
