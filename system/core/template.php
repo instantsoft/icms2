@@ -1183,7 +1183,7 @@ class cmsTemplate {
                         $value = $row[$field];
                     }
 
-                    if (!$value) { $value = ''; }
+                    if ($value === null) { $value = ''; }
 
                     if (isset($column['flag']) && $column['flag']){
 
