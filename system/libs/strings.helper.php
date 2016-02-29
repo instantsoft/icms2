@@ -208,7 +208,7 @@ function string_random($length=32, $seed=''){
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
-function string_date_age($date1, $date2 = NULL, $options, $is_add_back=false){
+function string_date_age($date1, $options, $is_add_back=false, $date2 = NULL){
 
     if (!$date1) { return; }
 

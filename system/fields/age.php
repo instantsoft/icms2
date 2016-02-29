@@ -52,7 +52,7 @@ class fieldAge extends cmsFormField {
         if ($this->getOption('show_h')){ $options[] = 'h'; }
         if ($this->getOption('show_i')){ $options[] = 'i'; }
 
-        return string_date_age($date, false, $options);
+        return string_date_age($date, $options);
 
     }
 
