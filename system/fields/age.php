@@ -35,6 +35,10 @@ class fieldAge extends cmsFormField {
                     'DAY' => LANG_DAYS,
                 )
             )),
+			new fieldDate('from_date', array(
+				'title' => LANG_PARSER_AGE_FROM_DATE,
+				'hint' => LANG_PARSER_AGE_FROM_DATE_HINT,
+			))
         );
     }
 
@@ -51,6 +55,7 @@ class fieldAge extends cmsFormField {
         if ($this->getOption('show_d')){ $options[] = 'd'; }
         if ($this->getOption('show_h')){ $options[] = 'h'; }
         if ($this->getOption('show_i')){ $options[] = 'i'; }
+        if ($this->getOption('from_date')){ $options['from_date'] = $this->getOption('from_date'); }
 
         return string_date_age($date, $options);
 

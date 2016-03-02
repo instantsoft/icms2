@@ -204,7 +204,7 @@ function string_random($length=32, $seed=''){
  * Пример вывода: "2 года 16 дней 5 часов 12 минут"
  *
  * @param string $date
- * @param array $options Массив элементов для перечисления: y, m, d, h, i
+ * @param array $options Массив элементов для перечисления: y, m, d, h, i, from_date
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
@@ -212,7 +212,9 @@ function string_date_age($date, $options, $is_add_back=false){
 
     if (!$date) { return; }
 
-    $diff = real_date_diff($date);
+	$date2 = !empty($options['from_date']) ? $options['from_date'] : false;
+	
+    $diff = real_date_diff($date, $date2);
 
     $diff_str = array();
 

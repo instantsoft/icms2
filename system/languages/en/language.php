@@ -98,6 +98,8 @@
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');
+    define('LANG_PARSER_AGE_FROM_DATE',      'To count from a specified date');
+    define('LANG_PARSER_AGE_FROM_DATE_HINT', 'If not specified, the count will be conducted from the current time');
     define('LANG_PARSER_DATE',               'Date');
     define('LANG_PARSER_DATE_FILTER_HINT',   'YYYY-MM-DD');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Show time');
