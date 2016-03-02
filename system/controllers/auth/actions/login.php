@@ -10,7 +10,7 @@ class actionAuthLogin extends cmsAction {
         $remember   = (bool)$this->request->get('remember');
 
         $back_url = $this->request->has('back') ?
-                    $this->request->get('back','') :
+                    $this->request->get('back', '') :
                     false;
 
         $is_site_offline = !cmsConfig::get('is_site_on');
@@ -51,7 +51,7 @@ class actionAuthLogin extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->authRedirectUrl($this->options['auth_redirect']));
                     }
 
                 }

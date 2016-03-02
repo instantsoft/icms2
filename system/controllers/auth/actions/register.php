@@ -222,6 +222,26 @@ class actionAuthRegister extends cmsAction {
 						cmsEventsManager::hook('user_registered', $user);
 
 					}
+					
+					// авторизуем пользователя автоматически
+					if ($this->options['reg_auto_auth']){
+						$logged_id  = cmsUser::login($user['email'], $user['password1']);
+
+						if ( $logged_id ){
+
+							if (!cmsConfig::get('is_site_on')){
+								$userSession = cmsUser::sessionGet('user');
+								if (!$userSession['is_admin']){
+									cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
+									cmsUser::logout();
+									$this->redirectBack();
+								}
+							}
+
+							cmsEventsManager::hook('auth_login', $logged_id);
+
+						}
+					}
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
                                 cmsUser::sessionGet('auth_back_url', true) :
@@ -230,7 +250,7 @@ class actionAuthRegister extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->authRedirectUrl($this->options['first_auth_redirect']));
                     }
 
                 } else {
