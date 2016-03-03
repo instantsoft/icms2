@@ -23,8 +23,6 @@ class comments extends cmsFrontend {
 
     public function getWidget(){
 
-        $user = cmsUser::getInstance();
-
         $comments = $this->model->
                             lockFilters()->
                             filterEqual('target_controller', $this->target_controller)->
@@ -34,16 +32,16 @@ class comments extends cmsFrontend {
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
 
-        $is_tracking = $this->model->getTracking($user->id);
+        $is_tracking = $this->model->getTracking($this->cms_user->id);
 
         $is_highlight_new = $this->request->hasInQuery('new_comments');
 
-        if ($is_highlight_new && !$user->is_logged) { cmsCore::error404(); }
+        if ($is_highlight_new && !$this->cms_user->is_logged) { cmsCore::error404(); }
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
-        return cmsTemplate::getInstance()->renderInternal($this, 'list', array(
-            'user'              => $user,
+        return $this->cms_template->renderInternal($this, 'list', array(
+            'user'              => $this->cms_user,
             'target_controller' => $this->target_controller,
             'target_subject'    => $this->target_subject,
             'target_id'         => $this->target_id,
@@ -137,8 +135,6 @@ class comments extends cmsFrontend {
 
     public function renderCommentsList($page_url, $dataset_name=false){
 
-        $user = cmsUser::getInstance();
-
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
@@ -159,7 +155,7 @@ class comments extends cmsFrontend {
 
         $items = cmsEventsManager::hook("comments_before_list", $items);
 
-        return cmsTemplate::getInstance()->renderInternal($this, 'list_index', array(
+        return $this->cms_template->renderInternal($this, 'list_index', array(
             'filters'        => array(),
             'dataset_name'   => $dataset_name,
             'page_url'       => $page_url,
@@ -167,7 +163,7 @@ class comments extends cmsFrontend {
             'perpage'        => $perpage,
             'total'          => $total,
             'items'          => $items,
-            'user'           => $user,
+            'user'           => $this->cms_user,
             'target_user_id' => $this->target_user_id,
         ));
 
@@ -175,7 +171,6 @@ class comments extends cmsFrontend {
 
     public function getDatasets(){
 
-        $user = cmsUser::getInstance();
         $datasets = array();
 
         // Все (новые)
@@ -185,7 +180,7 @@ class comments extends cmsFrontend {
         );
 
         // Мои друзья
-        if ($user->is_logged){
+        if ($this->cms_user->is_logged){
             $datasets['friends'] = array(
                 'name' => 'friends',
                 'title' => LANG_COMMENTS_DS_FRIENDS,
@@ -197,7 +192,7 @@ class comments extends cmsFrontend {
         }
 
         // Только мои
-        if ($user->is_logged){
+        if ($this->cms_user->is_logged){
             $datasets['my'] = array(
                 'name' => 'my',
                 'title' => LANG_COMMENTS_DS_MY,
@@ -208,7 +203,7 @@ class comments extends cmsFrontend {
             );
         }
 
-        return $datasets;
+        return cmsEventsManager::hook('comments_datasets', $datasets);
 
     }
 

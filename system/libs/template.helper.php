@@ -363,6 +363,11 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
     $attr_str = html_attr_str($attributes);
 	$html = '<div class="input_checkbox_list" '.$attr_str.'>'."\n";
     $start_level = false;
+    if(is_array($selected) && $selected){
+        foreach ($selected as $k => $v) {
+            if(is_numeric($v)){ $selected[$k] = (int)$v; }
+        }
+    }
     foreach ($items as $value=>$title){
 
         $checked = is_array($selected) && in_array($value, $selected, true);

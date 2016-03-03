@@ -2,10 +2,11 @@
 
 class fieldListBitmask extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST_MULTIPLE;
-    public $sql   = 'varchar(64) NULL DEFAULT NULL';
-	public $allow_index = true;
-	public $filter_type = 'str';
+    public $title       = LANG_PARSER_LIST_MULTIPLE;
+    public $sql         = 'varchar(64) NULL DEFAULT NULL';
+    public $allow_index = true;
+    public $filter_type = 'str';
+    public $var_type    = 'array';
 
     public function getFilterInput($value) {
 
@@ -13,9 +14,7 @@ class fieldListBitmask extends cmsFormField {
 
         if(is_array($value)){
             foreach ($value as $k => $v) {
-                if(is_numeric($v)){
-                    $value[$k] = intval($v);
-                }
+                if(is_numeric($v)){ $value[$k] = intval($v); }
             }
         } else {
             $value = array();
@@ -83,7 +82,7 @@ class fieldListBitmask extends cmsFormField {
 
 	public function parseValue($values){
 
-		if (!$values) { return false; }
+		if (!$values) { return ''; }
 
 		$items = $this->getListItems();
 		$value = '';
@@ -102,8 +101,8 @@ class fieldListBitmask extends cmsFormField {
 
         $value = $this->parseValue($value);
 
-		if (mb_strpos($value, "1") === false){
-			return "";
+		if (mb_strpos($value, '1') === false){
+			return '';
 		}
 
         return $value;
@@ -115,6 +114,8 @@ class fieldListBitmask extends cmsFormField {
 		if (!is_array($values)) { return $model; }
 
 		$filter = $this->parseValue($values);
+        if (!$filter) { return $model; }
+
 		$filter = str_replace('0', '_', $filter) . '%';
 
 		$model->filterLike($this->name, $filter);

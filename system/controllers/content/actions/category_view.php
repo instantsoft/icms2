@@ -4,9 +4,6 @@ class actionContentCategoryView extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
-        $core = cmsCore::getInstance();
-
         // Получаем название типа контента и сам тип
         $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
@@ -20,7 +17,7 @@ class actionContentCategoryView extends cmsAction {
             if(!$ctype){
                 cmsCore::error404();
             } else {
-                $core->uri_controller_before_remap = $ctype_name;
+                $this->cms_core->uri_controller_before_remap = $ctype_name;
             }
         }
         if (!$ctype['options']['list_on']) { cmsCore::error404(); }
@@ -96,7 +93,7 @@ class actionContentCategoryView extends cmsAction {
             $mapping = cmsConfig::getControllersMapping();
             if($mapping){
                 foreach($mapping as $name=>$alias){
-                    if ($name == $ctype['name'] && !$core->uri_controller_before_remap) {
+                    if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
                         $this->redirect(href_to($alias . ($dataset ? '-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : ''), 301);
                     }
                 }
@@ -115,7 +112,7 @@ class actionContentCategoryView extends cmsAction {
 			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
 		}
 
-        return cmsTemplate::getInstance()->render('category_view', array(
+        return $this->cms_template->render('category_view', array(
             'is_frontpage' => $is_frontpage,
             'is_hide_items' => $is_hide_items,
             'parent' => isset($parent) ? $parent : false,
@@ -126,7 +123,7 @@ class actionContentCategoryView extends cmsAction {
             'category' => $category,
             'subcats' => $subcats,
             'items_list_html' => $items_list_html,
-            'user' => $user
+            'user' => $this->cms_user
         ), $this->request);
 
     }

@@ -213,7 +213,7 @@ function string_date_age($date, $options, $is_add_back=false){
     if (!$date) { return; }
 
 	$date2 = !empty($options['from_date']) ? $options['from_date'] : false;
-	
+
     $diff = real_date_diff($date, $date2);
 
     $diff_str = array();

@@ -98,10 +98,12 @@ class cmsRequest {
 
     /**
      * Возвращает параметр из запроса
-     * @param str $var
+     * @param string $var Название переменной
+     * @param mixed $default Значение по умолчанию, если в запросе переменной нет
+     * @param string $var_type Тип переменной
      * @return mixed
      */
-    public function get($var, $default=false){
+    public function get($var, $default=false, $var_type=null){
 
         //если значение не определено, возвращаем умолчание
 
@@ -114,14 +116,19 @@ class cmsRequest {
             $value = $this->data[$name_parts[0]][$name_parts[1]];
         }
 
-        // типизируем, основываясь на значении по умолчанию
-        // пока что берем во внимание не все типы
-        $default_type = gettype($default);
-        if(in_array($default_type, array('integer','string','double','array'))){
-            settype($value, $default_type);
+        if($var_type === null){
+
+            // типизируем, основываясь на значении по умолчанию
+            // пока что берем во внимание не все типы
+            $default_type = gettype($default);
+            if(in_array($default_type, array('integer','string','double','array'))){
+                @settype($value, $default_type); // подавляем, чтобы не видеть нотис, если массив в строку
+            }
+
+        } else {
+            @settype($value, $var_type);
         }
 
-        //если дошли сюда, то возвращаем значение как есть
         return $value;
 
     }
@@ -145,7 +152,7 @@ class cmsRequest {
 
     public function hasFile($name){
         if (!isset($_FILES[$name])) { return false; }
-        if (!$_FILES[$name]['size']) { return false; }
+        if (empty($_FILES[$name]['size'])) { return false; }
         return true;
     }
 

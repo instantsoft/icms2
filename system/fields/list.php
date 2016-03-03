@@ -2,10 +2,11 @@
 
 class fieldList extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST;
-    public $sql   = 'int NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_LIST;
+    public $sql         = 'int NULL DEFAULT NULL';
     public $filter_type = 'int';
     public $filter_hint = LANG_PARSER_LIST_FILTER_HINT;
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(
@@ -81,6 +82,16 @@ class fieldList extends cmsFormField {
 
     public function parseListItems($string){
         return string_explode_list($string);
+    }
+
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_multiple')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
     }
 
     public function applyFilter($model, $value) {

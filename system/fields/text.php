@@ -2,12 +2,12 @@
 
 class fieldText extends cmsFormField {
 
-    public $title = LANG_PARSER_TEXT;
-    public $sql   = 'text';
+    public $title       = LANG_PARSER_TEXT;
+    public $sql         = 'text';
     public $filter_type = 'str';
-	public $allow_index = false;
-
-    public $size = 5;
+    public $allow_index = false;
+    public $var_type    = 'string';
+    public $size        = 5;
 
     public function getOptions(){
         return array(

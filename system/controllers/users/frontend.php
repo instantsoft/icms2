@@ -11,22 +11,18 @@ class users extends cmsFrontend {
 
         if (!is_numeric($action_name)){ return $action_name; }
 
-        $core = cmsCore::getInstance();
-        $user = cmsUser::getInstance();
-
         $user_id = $action_name;
 
         $profile = $this->model->getUser($user_id);
         if (!$profile) { cmsCore::error404(); }
 
-        if (!$user->is_logged && $this->options['is_auth_only']){
+        if (!$this->cms_user->is_logged && $this->options['is_auth_only']){
             cmsUser::goLogin();
         }
 
-        $template = cmsTemplate::getInstance();
-        $template->applyProfileStyle($profile);
+        $this->cms_template->applyProfileStyle($profile);
 
-        $this->current_params = $core->uri_params;
+        $this->current_params = $this->cms_core->uri_params;
 
         // Статус
         if ($this->options['is_status']) {
@@ -34,23 +30,23 @@ class users extends cmsFrontend {
         }
 
         // Репутация
-        $profile['is_can_vote_karma'] = $user->is_logged &&
+        $profile['is_can_vote_karma'] = $this->cms_user->is_logged &&
                                         cmsUser::isAllowed('users', 'vote_karma') &&
-                                        ($user->id != $profile['id']) &&
-                                        $this->model->isUserCanVoteKarma($user->id, $profile['id'], $this->options['karma_time']);
+                                        ($this->cms_user->id != $profile['id']) &&
+                                        $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
 
         // Нет параметров после названия экшена (/users/id) - значит
         // это главная страница профиля, первым параметром добавляем
         // сам профиль
-        if (!$core->uri_params){
+        if (!$this->cms_core->uri_params){
             array_unshift($this->current_params, $profile);
             return 'profile';
         }
 
         // Ищем экшен внутри профиля
-        if ($this->isActionExists('profile_'.$core->uri_params[0])){
+        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
             $this->current_params[0] = $profile;
-            return 'profile_'.$core->uri_params[0];
+            return 'profile_'.$this->cms_core->uri_params[0];
         }
 
         // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
@@ -78,12 +74,24 @@ class users extends cmsFrontend {
 		if ($this->tabs){
 			foreach($this->tabs as $tab){
 
+                // права доступа
+                if (($tab['groups_view'] && !$this->cms_user->isInGroups($tab['groups_view'])) ||
+                        ($tab['groups_hide'] && $this->cms_user->isInGroups($tab['groups_hide']))) {
+                    continue;
+                }
+
+                // опция "показывать только владельцу профиля"
+                if($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id){
+                    continue;
+                }
+
+                // включен ли контроллер
+                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+
 				$default_tab_info = array(
 					'title' => $tab['title'],
-					'url' => href_to($this->name, $profile['id'], $tab['name'])
-				);
-
-                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+                    'url'   => href_to($this->name, $profile['id'], $tab['name'])
+                );
 
 				if (empty($this->tabs_controllers[$tab['controller']])){
 					$controller = cmsCore::getController($tab['controller'], $this->request);
@@ -114,8 +122,6 @@ class users extends cmsFrontend {
 
     public function getProfileEditMenu($profile){
 
-        $template = cmsTemplate::getInstance();
-
         $menu = array();
 
         $menu[] = array(
@@ -125,7 +131,7 @@ class users extends cmsFrontend {
             'params' => 'edit',
         );
 
-        if ($template->hasProfileThemesOptions() && $this->options['is_themes_on']){
+        if ($this->cms_template->hasProfileThemesOptions() && $this->options['is_themes_on']){
             $menu[] = array(
                 'title' => LANG_USERS_EDIT_PROFILE_THEME,
                 'controller' => $this->name,
@@ -155,7 +161,7 @@ class users extends cmsFrontend {
             'params' => array('edit', 'password'),
         );
 
-        return $menu;
+        return cmsEventsManager::hook('profile_edit_menu', $menu);
 
     }
 
@@ -163,11 +169,9 @@ class users extends cmsFrontend {
 
         if ($this->request->isInternal()){
             if ($this->useOptions){
-               $this->options = $this->getOptions();
+                $this->options = $this->getOptions();
             }
         }
-
-        $user = cmsUser::getInstance();
 
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
@@ -178,35 +182,43 @@ class users extends cmsFrontend {
         $content_model->orderBy('ordering');
         $fields = $content_model->getContentFields('{users}');
 
+        // Постраничный вывод
+        $this->model->limitPage($page, $perpage);
+
+        list($fields, $this->model) = cmsEventsManager::hook('profiles_list_filter', array($fields, $this->model));
+
         $filters = array();
 
         // проверяем запросы фильтрации по полям
         foreach($fields as $name => $field){
+
             if (!$field['is_in_filter']) { continue; }
+
             if (!$this->request->has($name)){ continue; }
-            $value = $this->request->get($name);
+
+            $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
             $this->model = $field['handler']->applyFilter($this->model, $value);
+
             $filters[$name] = $value;
+
         }
 
-        // Постраничный вывод
-        $this->model->limitPage($page, $perpage);
-
         // Получаем количество и список записей
-        $total = $this->model->getUsersCount();
+        $total    = $this->model->getUsersCount();
         $profiles = $this->model->getUsers();
 
-        return cmsTemplate::getInstance()->renderInternal($this, 'list', array(
-            'page_url' => $page_url,
-            'fields' => $fields,
-            'filters' => $filters,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'profiles' => $profiles,
+        return $this->cms_template->renderInternal($this, 'list', array(
+            'page_url'     => $page_url,
+            'fields'       => $fields,
+            'filters'      => $filters,
+            'page'         => $page,
+            'perpage'      => $perpage,
+            'total'        => $total,
+            'profiles'     => $profiles,
             'dataset_name' => $dataset_name,
-            'user' => $user
+            'user'         => $this->cms_user
         ));
 
     }
@@ -268,7 +280,7 @@ class users extends cmsFrontend {
             }
         }
 
-        return $datasets;
+        return cmsEventsManager::hook('profiles_datasets', $datasets);
 
     }
 

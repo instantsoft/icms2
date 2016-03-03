@@ -2,9 +2,10 @@
 
 class fieldString extends cmsFormField {
 
-    public $title   = LANG_PARSER_STRING;
-    public $sql     = 'varchar({max_length}) NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_STRING;
+    public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(

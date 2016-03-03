@@ -52,4 +52,16 @@ function install_package(){
 
 	}
 
+    if(!$core->db->isFieldExists('{users}_tabs', 'groups_view')){
+        $core->db->query("ALTER TABLE `{users}_tabs` ADD `groups_view` TEXT NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('{users}_tabs', 'groups_hide')){
+        $core->db->query("ALTER TABLE `{users}_tabs` ADD `groups_hide` TEXT NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('{users}_tabs', 'show_only_owner')){
+        $core->db->query("ALTER TABLE `{users}_tabs` ADD `show_only_owner` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+    }
+
 }

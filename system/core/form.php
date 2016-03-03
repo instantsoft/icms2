@@ -305,7 +305,9 @@ class cmsForm {
 
                 $is_array = strpos($name, ':');
 
-                $value = $request->get($name, (($field->hasDefaultValue() && !$is_submitted) ? $field->getDefaultValue() : null));
+                $value = $request->get($name, null, $field->getDefaultVarType());
+
+                if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
 
                 $old_value = $item ? (isset($item[$name]) ? $item[$name] : null) : null;
 

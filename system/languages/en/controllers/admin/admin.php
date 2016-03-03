@@ -155,6 +155,7 @@
     define('LANG_CP_TAB',                       'Tab');
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab only by the profile owner');
 
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');

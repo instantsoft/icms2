@@ -23,6 +23,15 @@ class cmsFormField {
     public $rules = array();
     public $options = array();
 
+    /**
+     * Тип переменной поля
+     * boolean | integer | double | string | array | object | resource
+     * если получаемые значения от поля типизированы (всегда одного типа)
+     * указывайте это свойство в своем классе поля
+     * @var string
+     */
+    public $var_type = null;
+
     public $data = array(); // массив для данных в шаблоне
 
 	function __construct($name, $options=false){
@@ -112,6 +121,27 @@ class cmsFormField {
     public function hasDefaultValue() { return isset($this->default); }
 
     public function getDefaultValue() { return $this->hasDefaultValue() ? $this->default : null; }
+
+    /**
+     * Возвращает тип переменной для поля
+     * @param bool $is_filter Указывает, что нам нужен тип при использовании в фильтре
+     * @return string|null
+     */
+    public function getDefaultVarType($is_filter=false) {
+
+        if(is_string($this->var_type)){
+            return $this->var_type;
+        }
+
+        $default_value = $this->getDefaultValue();
+
+        if($default_value === null){
+            return null;
+        }
+
+        return gettype($default_value);
+
+    }
 
     public function getInput($value) {
         $this->title = $this->element_title;

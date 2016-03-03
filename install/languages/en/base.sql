@@ -1209,11 +1209,12 @@ CREATE TABLE `{#}users_tabs` (
   `name` varchar(32) DEFAULT NULL,
   `is_active` tinyint(1) unsigned DEFAULT NULL,
   `ordering` int(11) unsigned DEFAULT NULL,
+  `groups_view` text,
+  `groups_hide` text,
+  `show_only_owner` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `controller` (`controller`),
-  KEY `name` (`name`),
-  KEY `is_active` (`is_active`),
-  KEY `ordering` (`ordering`)
+  UNIQUE KEY `name` (`name`),
+  KEY `is_active` (`is_active`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES

@@ -10,6 +10,8 @@ class cmsController {
     public $current_action;
     public $current_params;
     public $options;
+    public $root_url;
+    public $root_path;
 
     protected $useOptions = false;
 
@@ -21,7 +23,7 @@ class cmsController {
 
         $this->root_url = $this->name;
 
-        $this->root_path = cmsConfig::get('root_path') . 'system/controllers/' . $this->name . '/';
+        $this->root_path = $this->cms_config->root_path . 'system/controllers/' . $this->name . '/';
 
         $this->request = $request;
 
@@ -38,6 +40,36 @@ class cmsController {
         if ($this->useOptions){
             $this->options = $this->getOptions();
         }
+
+    }
+
+    protected function loadExternalMethod($name) {
+
+        if(strpos($name, 'cms') === 0){
+
+            $class_name = string_to_camel('_', $name);
+
+            if(method_exists($class_name, 'getInstance')){
+                $this->{$name} = call_user_func(array($class_name, 'getInstance'));
+            } else {
+                $this->{$name} = new $class_name();
+            }
+
+            return true;
+
+        }
+
+        return false;
+
+    }
+
+    public function __get($name) {
+
+        if($this->loadExternalMethod($name)){
+            return $this->{$name};
+        }
+
+        return null;
 
     }
 
@@ -146,7 +178,7 @@ class cmsController {
      */
     public function before($action_name){
 
-        cmsTemplate::getInstance()->setContext($this);
+        $this->cms_template->setContext($this);
 
         return true;
 
@@ -157,7 +189,7 @@ class cmsController {
      */
     public function after($action_name){
 
-        cmsTemplate::getInstance()->restoreContext();
+        $this->cms_template->restoreContext();
 
         return true;
 
@@ -613,8 +645,7 @@ class cmsController {
      */
     public function redirectTo($controller, $action='', $params=array(), $query=array()){
 
-        $config = cmsConfig::getInstance();
-        $location = $config->root . $controller . '/' . $action;
+        $location = $this->cms_config->root . $controller . '/' . $action;
 
         if ($params){ $location .= '/' . implode('/', $params); }
         if ($query){ $location .= '?' . http_build_query($query); }
@@ -654,8 +685,7 @@ class cmsController {
      * @return str
      */
     public function getBackURL() {
-        $config = cmsConfig::getInstance();
-        if (!isset($_SERVER['HTTP_REFERER'])) { return $config->root; }
+        if (!isset($_SERVER['HTTP_REFERER'])) { return $this->cms_config->root; }
         return strlen($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
     }
 
@@ -790,8 +820,7 @@ class cmsController {
     public function validate_unique($table_name, $field_name, $value){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
-        $core = cmsCore::getInstance();
-        $result = $core->db->isFieldUnique($table_name, $field_name, $value);
+        $result = $this->cms_core->db->isFieldUnique($table_name, $field_name, $value);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }
@@ -799,8 +828,7 @@ class cmsController {
     public function validate_unique_exclude($table_name, $field_name, $exclude_row_id, $value){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
-        $core = cmsCore::getInstance();
-        $result = $core->db->isFieldUnique($table_name, $field_name, $value, $exclude_row_id);
+        $result = $this->cms_core->db->isFieldUnique($table_name, $field_name, $value, $exclude_row_id);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }
@@ -817,10 +845,9 @@ class cmsController {
     public function validate_unique_ctype_dataset($ctype_id, $value){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
-        $core = cmsCore::getInstance();
         $ctype_id = (int)$ctype_id;
-        $value = $core->db->escape($value);
-        $result = !$core->db->getRow('content_datasets', "ctype_id='{$ctype_id}' AND name='{$value}'");
+        $value = $this->cms_core->db->escape($value);
+        $result = !$this->cms_core->db->getRow('content_datasets', "ctype_id='{$ctype_id}' AND name='{$value}'");
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }

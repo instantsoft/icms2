@@ -688,7 +688,11 @@ class modelUsers extends cmsModel{
 
         if ($only_active){ $this->filterEqual('is_active', 1); }
 
-        return $this->orderBy('ordering')->get('{users}_tabs', false, $by_field);
+        return $this->orderBy('ordering')->get('{users}_tabs', function($item, $model){
+            $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+            $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            return $item;
+        }, $by_field);
 
     }
 

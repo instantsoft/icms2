@@ -6,22 +6,9 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function before($action_name) {
-
-        parent::before($action_name);
-
-        $core = cmsCore::getInstance();
-
-    }
-
-//============================================================================//
-//============================================================================//
-
     public function route($uri){
 
-        $core = cmsCore::getInstance();
-
-        $action_name = $this->parseRoute($core->uri);
+        $action_name = $this->parseRoute($this->cms_core->uri);
 
         if (!$action_name) { cmsCore::error404(); }
 
@@ -31,12 +18,10 @@ class content extends cmsFrontend {
 
 	public function parseRoute($uri){
 
-		$config = cmsConfig::getInstance();
-
 		$action_name = parent::parseRoute($uri);
 
-		if (!$action_name && $config->ctype_default){
-			$action_name = parent::parseRoute($config->ctype_default . '/' . $uri);
+		if (!$action_name && $this->cms_config->ctype_default){
+			$action_name = parent::parseRoute($this->cms_config->ctype_default . '/' . $uri);
 		}
 
 		return $action_name;
@@ -142,8 +127,6 @@ class content extends cmsFrontend {
 
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
 
-        $user = cmsUser::getInstance();
-
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
@@ -165,7 +148,7 @@ class content extends cmsFrontend {
 			if (!$field['is_in_filter']) { continue; }
 			if (!$this->request->has($name)){ continue; }
 
-			$value = $this->request->get($name);
+			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
 			if (!$value) { continue; }
 
 			$this->model = $field['handler']->applyFilter($this->model, $value);
@@ -234,20 +217,18 @@ class content extends cmsFrontend {
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');
 
             foreach($items as $id=>$item){
-                $is_rating_enabled = $is_rating_allowed && ($item['user_id'] != $user->id);
+                $is_rating_enabled = $is_rating_allowed && ($item['user_id'] != $this->cms_user->id);
                 $items[$id]['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_enabled);
             }
 
         }
 
-        list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 
-        $template = cmsTemplate::getInstance();
+        $this->cms_template->setContext($this);
 
-        $template->setContext($this);
-
-        $html = $template->renderContentList($ctype, array(
+        $html = $this->cms_template->renderContentList($ctype, array(
 			'category_id'       => $category_id,
             'page_url'          => $page_url,
             'ctype'             => $ctype,
@@ -259,12 +240,12 @@ class content extends cmsFrontend {
             'perpage'           => $perpage,
             'total'             => $total,
             'items'             => $items,
-            'user'              => $user,
+            'user'              => $this->cms_user,
             'dataset'           => $dataset,
             'hide_except_title' => $hide_except_title
         ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
-        $template->restoreContext();
+        $this->cms_template->restoreContext();
 
         return $html;
 
@@ -388,8 +369,6 @@ class content extends cmsFrontend {
 
     public function getCategoryForm($ctype, $action){
 
-        $user = cmsUser::getInstance();
-
         $form = $this->getForm('category');
 
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
@@ -434,7 +413,7 @@ class content extends cmsFrontend {
         }
 
         // для администраторов показываем поля доступа
-        if($user->is_admin){
+        if($this->cms_user->is_admin){
 
             $fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
             $form->addField($fieldset_id, new fieldListGroups('allow_add', array(
@@ -455,8 +434,6 @@ class content extends cmsFrontend {
 
     public function getItemForm($ctype, $fields, $action, $data=array(), $item_id=false, $item=false){
 
-        $user = cmsUser::getInstance();
-
         // Контейнер для передачи дополнительных списков:
         // $groups_list, $folders_list и т.д.
         extract($data);
@@ -473,7 +450,9 @@ class content extends cmsFrontend {
                         'rules' => array(
                             array('required')
                         ),
-                        'generator' => function($item) use ($user){
+                        'generator' => function($item){
+
+                            $user = cmsUser::getInstance();
 
                             $content_model = cmsCore::getModel('content');
                             $ctype = $content_model->getContentTypeByName($item['ctype_name']);
@@ -704,7 +683,7 @@ class content extends cmsFrontend {
         $is_pub_ext        = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
         $pub_max_days      = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
 
-        if ($user->is_admin){ $is_pub_end_days = false; }
+        if ($this->cms_user->is_admin){ $is_pub_end_days = false; }
 
 		if ($is_pub_control){
 			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
