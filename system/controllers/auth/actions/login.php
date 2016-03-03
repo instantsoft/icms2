@@ -44,14 +44,21 @@ class actionAuthLogin extends cmsAction {
 
                     $is_back = $this->request->get('is_back');
 
-                    if ($is_back){
-                        $this->redirectBack();
+                    if ($is_back){ $this->redirectBack(); }
+
+                    $auth_redirect = $this->options['auth_redirect'];
+
+                    $is_first_auth = cmsUser::getUPS('first_auth', $logged_id);
+
+                    if ($is_first_auth){
+                        $auth_redirect = $this->options['first_auth_redirect'];
+                        cmsUser::deleteUPS('first_auth', $logged_id);
                     }
 
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirect($this->authRedirectUrl($this->options['auth_redirect']));
+                        $this->redirect($this->authRedirectUrl($auth_redirect));
                     }
 
                 }

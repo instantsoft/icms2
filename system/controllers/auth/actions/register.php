@@ -202,6 +202,8 @@ class actionAuthRegister extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
 
+                    cmsUser::setUPS('first_auth', 1, $user['id']);
+
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
 
