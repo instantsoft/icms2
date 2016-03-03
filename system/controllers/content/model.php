@@ -824,7 +824,7 @@ class modelContent extends cmsModel{
         $this->filterEqual('prop_id', $id);
 
         $prop['cats'] = $this->get($bind_table_name, function($item, $model){
-           return $item['cat_id'];
+           return (int)$item['cat_id'];
         });
 
         return $prop;
