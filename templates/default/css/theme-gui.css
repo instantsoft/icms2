@@ -586,16 +586,23 @@ select { width:100%; }
 }
 
 .city-input span { padding-right:20px; padding-left:2px; }
-.city-input a {
+.city-input a, .input_link_block {
     background:#68809B;
     color:#FFF;
     text-decoration:none;
     padding:1px 10px;
 }
-.city-input a:hover {
+.city-input a:hover, .input_link_block:hover {
     background:#34495e;
 }
-
+.input_link_block {
+    line-height: 28px;
+    display: inline-block;
+    border-radius: 4px;
+}
+.input_link_block:hover {
+    color: #FFF;
+}
 form .field_error .input,
 form .field_error .textarea,
 form .field_error .city-input,

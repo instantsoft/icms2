@@ -2,9 +2,10 @@
 
 class fieldImages extends cmsFormField {
 
-    public $title = LANG_PARSER_IMAGES;
-    public $sql   = 'text';
-	public $allow_index = false;
+    public $title       = LANG_PARSER_IMAGES;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
 
     public function getOptions(){
 
@@ -27,6 +28,9 @@ class fieldImages extends cmsFormField {
                 'default' => 0,
                 'items' => $presets
             )),
+            new fieldCheckbox('allow_import_link', array(
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            ))
         );
 
     }
@@ -142,6 +146,7 @@ class fieldImages extends cmsFormField {
         }
 
         $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

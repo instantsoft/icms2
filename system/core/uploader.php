@@ -2,7 +2,7 @@
 
 class cmsUploader {
 
-    public function __construct(){ }
+    private $allow_remote = false;
 
 //============================================================================//
 //============================================================================//
@@ -29,9 +29,19 @@ class cmsUploader {
     }
 
     public function isUploadedXHR($name){
-        return isset($_GET['qqfile']);
+        return !empty($_GET['qqfile']);
     }
 
+    public function isUploadedFromLink($name){
+        return $this->allow_remote && !empty($_POST['image_link']);
+    }
+
+    public function enableRemoteUpload() {
+        $this->allow_remote = true; return $this;
+    }
+    public function disableRemoteUpload() {
+        $this->allow_remote = false; return $this;
+    }
 //============================================================================//
 //============================================================================//
 
@@ -100,6 +110,10 @@ class cmsUploader {
      * @return array
      */
     public function upload($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
+
+        if ($this->isUploadedFromLink($post_filename)){
+            return $this->uploadFromLink($post_filename, $allowed_ext, $allowed_size, $destination);
+        }
 
         if ($this->isUploadedXHR($post_filename)){
             return $this->uploadXHR($post_filename, $allowed_ext, $allowed_size, $destination);
@@ -178,6 +192,68 @@ class cmsUploader {
 
 //============================================================================//
 //============================================================================//
+
+    public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
+
+        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST['image_link']), PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($_POST['image_link']);
+
+        if(!$this->checkExt($dest_ext, $allowed_ext)){
+            return array(
+                'error'   => LANG_UPLOAD_ERR_MIME,
+                'success' => false,
+                'name'    => $dest_name
+            );
+        }
+
+        $file_bin = file_get_contents_from_url($_POST['image_link']);
+
+        if(!$file_bin){
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_PARTIAL,
+                'name'    => $dest_name,
+                'path'    => ''
+            );
+        }
+
+        $image_size = strlen($file_bin);
+
+        if ($allowed_size){
+            if ($image_size > $allowed_size){
+                return array(
+                    'error'   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
+
+        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
+
+        if (!$destination){
+
+            cmsUser::getInstance()->increaseFilesCount();
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
+
+        } else {
+            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
+        }
+
+		$f = fopen($destination, 'w+');
+		fwrite($f, $file_bin);
+        fclose($f);
+
+        return array(
+            'success' => true,
+            'path'    => $destination,
+            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'name'    => $dest_name,
+            'size'    => $image_size
+        );
+
+    }
 
     /**
      * Загружает файл на сервер переданный через XHR

@@ -6,6 +6,7 @@ class fieldListGroups extends cmsFormField {
     public $is_public   = false;
     public $sql         = 'text NULL DEFAULT NULL';
     public $allow_index = false;
+    public $var_type    = 'array';
 
     public function getOptions(){
         return array(

@@ -108,6 +108,7 @@
     define('LANG_PARSER_USERS',              'Users list');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Size on list page');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Size on item page');
@@ -131,6 +132,10 @@
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Add the field into full-text search');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Notice: changing this option will force index to rebuild. That may take long time for large tables.');
+    define('LANG_PARSER_ADD_FROM_LINK', 'add by link');
+    define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
+    define('LANG_OR', 'or');
+
     //USERS
     define('LANG_USER',                      'Member');
     define('LANG_USERS',                     'Members');

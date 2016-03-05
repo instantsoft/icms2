@@ -107,6 +107,7 @@
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
@@ -130,6 +131,9 @@
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
+    define('LANG_PARSER_ADD_FROM_LINK', 'добавить по ссылке');
+    define('LANG_PARSER_ENTER_IMAGE_LINK', 'Введите ссылку на изображение');
+    define('LANG_OR', 'или');
 
     //USERS
     define('LANG_USER',                      'Пользователь');
