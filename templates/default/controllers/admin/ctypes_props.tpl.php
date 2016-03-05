@@ -79,6 +79,7 @@
 
             <div id="datatree">
                 <ul id="treeData" style="display: none">
+                    <li id="<?php echo $ctype['id'];?>.0"><?php echo LANG_ALL; ?></li>
                     <?php foreach($cats as $id=>$cat){ ?>
                         <li id="<?php echo $ctype['id'];?>.<?php echo $cat['id']; ?>" class="lazy folder"><?php echo $cat['title']; ?></li>
                     <?php } ?>
@@ -89,12 +90,12 @@
                     $(function(){
 
                         is_loaded = false;
-                    
+
                         $("#datatree").dynatree({
 
                             onPostInit: function(isReloading, isError){
                                 var path = $.cookie('icms[props<?php echo $ctype['id']; ?>_tree_path]');
-                                if (!path) { 
+                                if (!path) {
                                     $('a', "#datatree").eq(0).trigger('click');
                                 }
                                 if (path) {
@@ -103,7 +104,7 @@
                                             node.expand();
                                         }else if(status == "ok") {
                                             node.activate();
-                                            node.expand();                                            
+                                            node.expand();
                                         }
                                     });
                                 }
@@ -117,7 +118,7 @@
                                 $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
                                 $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
                                 $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
-                                $('form#props-bind').attr('action', "<?php echo $this->href_to('ctypes', array('props_bind')); ?>/" + key[0] + "/" + key[1]);                                
+                                $('form#props-bind').attr('action', "<?php echo $this->href_to('ctypes', array('props_bind')); ?>/" + key[0] + "/" + key[1]);
                                 if (node.bExpanded==false){
                                     $('#props-bind #is_childs .input-checkbox').removeAttr('checked');
                                     $('#props-bind #is_childs').hide();
@@ -126,7 +127,7 @@
                                     $('#props-bind #is_childs').show();
                                 }
                                 if (!is_loaded){
-                                    is_loaded = true;                                    
+                                    is_loaded = true;
                                     icms.datagrid.init();
                                 }
                                 icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props_ajax', $ctype['name'])); ?>/" + key[1]);

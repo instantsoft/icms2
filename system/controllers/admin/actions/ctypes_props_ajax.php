@@ -7,9 +7,7 @@ class actionAdminCtypesPropsAjax extends cmsAction {
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
         if (!$ctype_name) { cmsCore::error404(); }
-        
-        if (!$category_id) { $this->halt(); } 
-        
+
         $grid = $this->loadDataGrid('ctype_props');
 
         $content_model = cmsCore::getModel('content');

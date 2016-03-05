@@ -2,10 +2,11 @@
 
 class fieldDate extends cmsFormField {
 
-    public $title   = LANG_PARSER_DATE;
-    public $sql     = 'timestamp NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_DATE;
+    public $sql         = 'timestamp NULL DEFAULT NULL';
     public $filter_type = 'date';
     public $filter_hint = LANG_PARSER_DATE_FILTER_HINT;
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(
@@ -71,6 +72,16 @@ class fieldDate extends cmsFormField {
         }
 
         return $model;
+
+    }
+
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter || $this->getOption('show_time')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
 
     }
 

@@ -122,7 +122,7 @@
                                 <?php echo $fields['user']['handler']->parse( $item['user'] ); ?>
                             </div>
                         <?php } ?>
-                        <?php if ($ctype['is_comments']){ ?>
+                        <?php if ($ctype['is_comments'] && $item['is_comments_on']){ ?>
                             <div class="bar_item bi_comments">
                                 <?php if ($is_private) { ?>
                                     <?php echo intval($item['comments']); ?>

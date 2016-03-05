@@ -89,6 +89,9 @@ class fieldList extends cmsFormField {
         if ($is_filter && $this->getOption('filter_multiple')){
             $this->var_type = 'array';
         }
+        if($this->getProperty('is_multiple')){
+            $this->var_type = 'array';
+        }
 
         return parent::getDefaultVarType($is_filter);
 
