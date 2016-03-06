@@ -43,7 +43,7 @@ class cmsController {
 
     }
 
-    protected function loadExternalMethod($name) {
+    protected function loadCmsObj($name) {
 
         if(strpos($name, 'cms') === 0){
 
@@ -65,7 +65,7 @@ class cmsController {
 
     public function __get($name) {
 
-        if($this->loadExternalMethod($name)){
+        if($this->loadCmsObj($name)){
             return $this->{$name};
         }
 

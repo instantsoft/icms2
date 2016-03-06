@@ -564,6 +564,7 @@ aside .widget_tabbed > .tabs .links a {
 @media screen and (max-width: 640px) {
     .widget_content_slider .items .item .title { display:none !important; }
     .widget_content_slider .items { width:60px  !important; }
+    .widget_content_list.featured .item-first { float:none; margin-right:0; width:100%; }
 }
 
 /* ========================================================================== */

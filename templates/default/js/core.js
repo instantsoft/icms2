@@ -25,17 +25,21 @@ $(document).ready(function(){
     });
 
     var dropdown = $("<select>").appendTo("nav");
-    $("<option value=''></option>").appendTo(dropdown);
+    $("<option value='/'></option>").appendTo(dropdown);
 
     $("nav > .menu li > a").each(function() {
         var el = $(this);
         var nav_level = $("nav > .menu").parents().length;
         var el_level = $(this).parents().length - nav_level;
         var pad = new Array(el_level-2 + 1).join('-') + ' ';
-        $("<option>", {
-            "value"   : el.attr("href"),
-            "text"    : pad + el.text()
-        }).appendTo(dropdown);
+        var attr = {
+            value   : el.attr('href'),
+            text    : pad + el.text()
+        };
+        if(window.location.pathname.indexOf(el.attr('href')) === 0){
+            attr.selected = true;
+        }
+        $("<option>", attr).appendTo(dropdown);
     });
 
     $("nav select").change(function() {
@@ -49,14 +53,16 @@ $(document).ready(function(){
             var tabs = $(this);
 
             var dropdown = $("<select>").appendTo(tabs);
-            $("<option value=''></option>").appendTo(dropdown);
-
             $("ul > li > a", tabs).each(function() {
                 var el = $(this);
-                $("<option>", {
-                    "value"   : el.attr("href"),
-                    "text"    : el.text()
-                }).appendTo(dropdown);
+                var attr = {
+                    value   : el.attr('href'),
+                    text    : el.text()
+                };
+                if(window.location.pathname.indexOf(el.attr('href')) === 0){
+                    attr.selected = true;
+                }
+                $("<option>", attr).appendTo(dropdown);
             });
 
             $(dropdown).change(function() {
