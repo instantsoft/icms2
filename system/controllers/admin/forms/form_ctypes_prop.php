@@ -51,9 +51,12 @@ class formAdminCtypesProp extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'list',
                         'items' => array(
-                            'list' => LANG_PARSER_LIST,
-                            'string' => LANG_PARSER_STRING,
-                            'number' => LANG_PARSER_NUMBER,
+                            'list'          => LANG_PARSER_LIST,
+                            'list_multiple' => LANG_PARSER_LIST_MULTIPLE,
+                            'string'        => LANG_PARSER_STRING,
+                            'color'         => LANG_PARSER_COLOR,
+                            'number'        => LANG_PARSER_NUMBER,
+                            'checkbox'      => LANG_PARSER_CHECKBOX
                         )
                     )),
                     new fieldCheckbox('options:is_required', array(

@@ -165,10 +165,13 @@ class content extends cmsFrontend {
 				if (!$prop['is_in_filter']) { continue; }
 				if (!$this->request->has($name)){ continue; }
 
-				$value = $this->request->get($name);
+                $prop['handler'] = $props_fields[$prop['id']];
+
+				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType(true));
 				if (!$value) { continue; }
 
 				$this->model->filterPropValue($ctype['name'], $prop, $value);
+
 				$filters[$name] = $value;
 
 			}
@@ -782,6 +785,34 @@ class content extends cmsFrontend {
                     $field = new fieldList($field_name, array(
                         'title' => $prop['title'],
                         'items' => string_explode_list($prop['values']),
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'list_multiple':
+
+                    $field = new fieldListBitmask($field_name, array(
+                        'title' => $prop['title'],
+                        'items' => string_explode_list($prop['values']),
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'color':
+
+                    $field = new fieldColor($field_name, array(
+                        'title' => $prop['title'],
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'checkbox':
+
+                    $field = new fieldCheckbox($field_name, array(
+                        'title' => $prop['title'],
                         'rules' => $rules
                     ));
 

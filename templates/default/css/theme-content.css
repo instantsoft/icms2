@@ -138,7 +138,7 @@ article div.content_categories:last-child {
     background:url("../images/icons/clock-small.png") no-repeat left center;
 }
 
-.ft_color .color-block{
+.ft_color .color-block, .content_item_props .value .color-block {
 	display:inline-block;
 	width:32px;
 	height:16px;
@@ -529,4 +529,22 @@ article div.content_categories:last-child {
     position: relative;
     padding-bottom: 56.25%;
     overflow:hidden;
+}
+
+.content_item_props .value ul {
+    margin: 0;
+    list-style: none;
+}
+.content_item_props .value ul li {
+    display: inline-block;
+    padding: 0 3px 0 0;
+}
+.content_item_props .value ul li:after {
+    content: ', ';
+}
+.content_item_props .value ul li:last-child:after {
+    content: '';
+}
+.content_item_props .value ul li:last-child {
+    padding-right: 0;
 }

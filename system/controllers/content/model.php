@@ -1334,52 +1334,14 @@ class modelContent extends cmsModel{
 
     public function filterPropValue($ctype_name, $prop, $value){
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_values';
-        $table_alias = "p{$prop['id']}";
+        $table_name  = $this->table_prefix.$ctype_name.'_props_values';
+        $table_alias = 'p'.$prop['id'];
 
-        if (is_array($value)){
+        $this->joinInner($table_name, $table_alias, "{$table_alias}.item_id = i.id");
 
-            $value_condition = array();
-            $glue = 'OR';
+        $this->filterEqual($table_alias.'.prop_id', $prop['id']);
 
-            if (isset($value['from']) || isset($value['to'])){
-
-                if (empty($value['from']) && empty($value['to'])) { return $this; }
-
-                if (isset($value['from'])){
-                    $v = (int)$this->db->escape($value['from']);
-                    $value_condition[] = "{$table_alias}.value >= {$v}";
-                }
-
-                if (isset($value['to'])){
-                    $v = (int)$this->db->escape($value['to']);
-                    $value_condition[] = "{$table_alias}.value <= {$v}";
-                }
-
-                $glue = 'AND';
-
-            } else {
-
-                foreach($value as $v){
-                    if (!$v) { continue; }
-                    $v = $this->db->escape($v);
-                    $value_condition[] = "{$table_alias}.value = '{$v}'";
-                }
-
-            }
-
-            $value_condition = implode(" {$glue} ", $value_condition);
-
-        } else {
-
-            $value = $this->db->escape($value);
-            $value_condition = "{$table_alias}.value = '{$value}'";
-
-        }
-
-        $on_condition = "({$table_alias}.item_id = i.id AND {$table_alias}.prop_id = {$prop['id']} AND ({$value_condition}))";
-
-        $this->join($table_name, $table_alias, $on_condition);
+        $prop['handler']->setName($table_alias.'.value')->applyFilter($this, $value);
 
         return $this;
 

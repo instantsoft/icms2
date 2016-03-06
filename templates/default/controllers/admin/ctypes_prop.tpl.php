@@ -51,10 +51,15 @@
     $(document).ready(function(){
 
         $('#tab-type #type').change(function(){
-            if ($(this).val()=='list'){
+            if ($(this).val()=='list' || $(this).val()=='list_multiple'){
                 $('#tab-values').show();
             } else {
                 $('#tab-values').hide();
+            }
+            if ($(this).val()=='list_multiple'){
+                $('#f_options_is_filter_multi').hide();
+            } else {
+                $('#f_options_is_filter_multi').show();
             }
             if ($(this).val()=='number'){
                 $('#tab-number').show();

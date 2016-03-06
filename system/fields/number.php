@@ -2,8 +2,8 @@
 
 class fieldNumber extends cmsFormField {
 
-    public $title   = LANG_PARSER_NUMBER;
-    public $sql     = 'float NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_NUMBER;
+    public $sql         = 'float NULL DEFAULT NULL';
     public $filter_type = 'int';
 
     public function getOptions(){
@@ -32,6 +32,16 @@ class fieldNumber extends cmsFormField {
         if(!$units) { $units = ''; }
 		if (intval($value)==$value){ $value = number_format($value, 0, '.', ''); }
         return htmlspecialchars($value)." {$units}";
+    }
+
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_range')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
     }
 
     public function getFilterInput($value) {
