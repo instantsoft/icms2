@@ -66,7 +66,12 @@
             } else {
                 $('#tab-number').hide();
             }
-        })
+            if ($(this).val()=='color'){
+                $('#f_is_in_filter').hide();
+            } else {
+                $('#f_is_in_filter').show();
+            }
+        });
 
         $('#tab-type #type').trigger('change');
 

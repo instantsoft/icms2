@@ -6,20 +6,17 @@ class actionUsersFieldsOptions extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $field_id   = $this->request->get('field_id');
-        $field_type = $this->request->get('type');
+        $field_id   = $this->request->get('field_id', 0);
+        $field_type = $this->request->get('type', '');
 
         $field_class = 'field' . string_to_camel('_',  $field_type );
 
         $base_field = new $field_class(null, null);
 
         $options = $base_field->getOptions();
+        $values  = false;
 
-        if (!$options) { $this->halt(); }
-
-        $values = false;
-
-        if ($field_id){
+        if ($options && $field_id) {
 
             $content_model = cmsCore::getModel('content');
 
@@ -31,9 +28,10 @@ class actionUsersFieldsOptions extends cmsAction {
 
         }
 
-        cmsTemplate::getInstance()->render('backend/field_options', array(
-            'options' => $options,
-            'values' => $values
+        $this->cms_template->render('backend/field_options', array(
+            'is_can_in_filter' => ($base_field->filter_type !== false),
+            'options'          => $options,
+            'values'           => $values
         ));
 
     }
