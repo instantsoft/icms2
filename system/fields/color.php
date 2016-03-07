@@ -15,7 +15,11 @@ class fieldColor extends cmsFormField {
         return $this->rules;
 
     }
-
+    
+    public function applyFilter($model, $value) {
+        return $model->filterLike($this->name, "%{$value}%");
+    }
+    
     public function parse($value){
         return '<div class="color-block" style="background-color:'.$value.'" title="'.$value.'"></div>';
     }
