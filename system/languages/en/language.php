@@ -179,6 +179,8 @@
     define('LANG_PLEASE_LOGIN',              'Please, log in');
     define('LANG_LOGIN_ADMIN',               'Administrators login');
     define('LANG_ONLINE',                    'Online');
+    define('LANG_USERS_PROFILE_LAST_IP',     'Last IP');
+    define('LANG_USERS_PROFILE_LOGDATE',     'Last visit');
 
     //MODERATION
     define('LANG_MODERATION',                'Moderation');

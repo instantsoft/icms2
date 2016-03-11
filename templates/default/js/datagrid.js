@@ -23,22 +23,13 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').keypress(function(event){
-
-            if (event.which == 13) {
-
-                event.preventDefault();
-
-                $('.datagrid .filter .input').each(function(){
-                    var filter = $(this).attr('rel');
-                    $('#datagrid_filter input[name='+filter+']').val($(this).val());
-                });
-
-                icms.datagrid.setPage(1);
-                icms.datagrid.loadRows();
-
-            }
-
+        $('.datagrid .filter .input').on('search', function () {
+            $('.datagrid .filter .input').each(function(){
+                var filter = $(this).attr('rel');
+                $('#datagrid_filter input[name='+filter+']').val($(this).val());
+            });
+            icms.datagrid.setPage(1);
+            icms.datagrid.loadRows();
         });
     };
 

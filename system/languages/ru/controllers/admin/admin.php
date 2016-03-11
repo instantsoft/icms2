@@ -268,6 +268,8 @@
     define('LANG_CP_USER_LOCK_UNTIL',           'Заблокировать до');
     define('LANG_CP_USER_LOCK_REASON',          'Причина блокировки');
     define('LANG_CP_USER_NOT_FOUND',            'Пользователь %s не найден');
+    define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
 
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Компонент &laquo;%s&raquo; не имеет настроек');

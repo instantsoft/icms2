@@ -266,6 +266,8 @@
     define('LANG_CP_USER_LOCK_UNTIL',           'Block until');
     define('LANG_CP_USER_LOCK_REASON',          'Block reason');
     define('LANG_CP_USER_NOT_FOUND',            'User %s is not found');
+    define('LANG_CP_USER_FIND_BYIP',            'Find all by this ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
     define('LANG_CP_CONTROLLERS_ADD',           'Install extension');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Component &laquo;%s&raquo; has no settings');

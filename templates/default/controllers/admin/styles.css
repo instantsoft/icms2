@@ -906,7 +906,7 @@ ul.errors li .hint strong { color:#666666; }
 }
 
 .datagrid .filter td{
-    padding: 0 4px;
+    padding: 4px;
     background: #EDEDED;
     border-bottom: solid 1px #B3C2C9;
 }
@@ -914,7 +914,7 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid .filter td .input {
     width:100%;
     border: solid 1px #999;
-    padding:0px;
+    padding:2px;
 }
 
 .datagrid_dataset_filter label{
@@ -1506,14 +1506,18 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 /* ========================================================================== */
 /* ========================================================================== */
 
-.is_private, .is_closed {
+.is_private, .is_closed, .view_target {
     display: inline-block;
     cursor: help;
     width:16px;
     height:16px;
     background:url("../../images/icons/eye.png") no-repeat;
 }
-
+.view_target {
+    height:14px;
+    cursor: auto;
+    margin: 0 5px;
+}
 .is_closed{
     background:url("../../images/icons/lock.png") no-repeat;
 }

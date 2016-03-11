@@ -11,12 +11,13 @@ class users extends cmsFrontend {
 
         if (!is_numeric($action_name)){ return $action_name; }
 
-        $user_id = $action_name;
+        $user_id   = $action_name;
+        $is_logged = $this->cms_user->is_logged;
 
         $profile = $this->model->getUser($user_id);
         if (!$profile) { cmsCore::error404(); }
 
-        if (!$this->cms_user->is_logged && $this->options['is_auth_only']){
+        if (!$is_logged && $this->options['is_auth_only']){
             cmsUser::goLogin();
         }
 
@@ -30,7 +31,7 @@ class users extends cmsFrontend {
         }
 
         // Репутация
-        $profile['is_can_vote_karma'] = $this->cms_user->is_logged &&
+        $profile['is_can_vote_karma'] = $is_logged &&
                                         cmsUser::isAllowed('users', 'vote_karma') &&
                                         ($this->cms_user->id != $profile['id']) &&
                                         $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);

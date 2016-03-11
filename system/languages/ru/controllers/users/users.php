@@ -74,9 +74,7 @@
     define('LANG_USERS_PROFILE_WALL',       'Стена пользователя');
 
     define('LANG_USERS_PROFILE_REGDATE',    'Регистрация');
-    define('LANG_USERS_PROFILE_LOGDATE',    'Последний визит');
     define('LANG_USERS_PROFILE_INVITED_BY', 'По приглашению');
-    define('LANG_USERS_PROFILE_LAST_IP',    'Последний IP');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Личная информация скрыта настройками приватности');
 

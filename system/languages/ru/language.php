@@ -178,6 +178,8 @@
     define('LANG_PLEASE_LOGIN',              'Представьтесь, пожалуйста');
     define('LANG_LOGIN_ADMIN',               'Вход для администраторов');
     define('LANG_ONLINE',                    'Онлайн');
+    define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
+    define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
