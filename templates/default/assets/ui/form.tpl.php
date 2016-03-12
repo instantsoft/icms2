@@ -157,8 +157,9 @@
 
     </div>
 
-    <?php if ($form->is_tabbed){ ?>
         <script type="text/javascript">
+            <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT'); ?>
+        <?php if ($form->is_tabbed){ ?>
             $('#<?php echo $form_id; ?> .tab').hide();
             $('#<?php echo $form_id; ?> .tab').eq(0).show();
             $('#<?php echo $form_id; ?> ul.tabbed > li').eq(0).addClass('active');
@@ -170,8 +171,8 @@
                 $('#<?php echo $form_id; ?> '+$(this).attr('href')).show();
                 return false;
             });
+        <?php } ?>
         </script>
-    <?php } ?>
 
     <?php if(!empty($attributes['hook'])){ ?>
 

@@ -11,9 +11,11 @@ class formContentCategory extends cmsForm {
 
                     new fieldString('title', array(
                         'title' => LANG_CATEGORY_TITLE,
+                        'options'=>array(
+                            'max_length'=> 200
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('max_length', 64)
+                            array('required')
                         )
                     )),
 

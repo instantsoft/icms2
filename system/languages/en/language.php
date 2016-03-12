@@ -78,6 +78,7 @@
     define('LANG_PARSER_TEXT',               'Textarea');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Max length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Min length');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
     define('LANG_PARSER_HTML',               'HTML');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
@@ -432,6 +433,11 @@
     define('LANG_UNIT1',                     'unit');
     define('LANG_UNIT2',                     'units');
     define('LANG_UNIT10',                    'units');
+    define('LANG_CH1',                       'letter');
+    define('LANG_CH2',                       'letter');
+    define('LANG_CH10',                      'letters');
+
+    define('LANG_ISLEFT',                    'is left');
 
     //DATES
     define('LANG_ALL',                       'All');

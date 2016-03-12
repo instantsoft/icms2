@@ -697,7 +697,32 @@ form .ft_date select { width:50px; padding:2px; }
 form .ft_listmultiple.field_error .input_checkbox_list {
 	border:solid 1px #c0392b;
 }
-
+.symbols_count {
+    font-size: 12px;
+    margin: 3px 0 0 0;
+    display: none;
+}
+.symbols_count > span {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 0 3px 0 0;
+    color: #7f8c8d;
+}
+.symbols_count .symbols_num {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    color: #2980b9;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+.symbols_count .symbols_num:hover {
+    opacity: 0.8;
+}
+.symbols_count .overflowing {
+    background-color: #e74c3c;
+    color: #FFF;
+    border-color: #c0392b;
+}
 /* ========================================================================== */
 
 .input-users-list{

@@ -19,6 +19,9 @@ class fieldText extends cmsFormField {
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 4096
             )),
+            new fieldCheckbox('show_symbol_count', array(
+                'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
+            )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
             )),

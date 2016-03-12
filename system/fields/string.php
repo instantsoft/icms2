@@ -16,6 +16,9 @@ class fieldString extends cmsFormField {
             new fieldNumber('max_length', array(
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 255
+            )),
+            new fieldCheckbox('show_symbol_count', array(
+                'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             ))
         );
     }

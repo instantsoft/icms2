@@ -77,6 +77,7 @@
     define('LANG_PARSER_TEXT',               'Текст');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
@@ -433,6 +434,11 @@
     define('LANG_UNIT1',                     'единица');
     define('LANG_UNIT2',                     'единицы');
     define('LANG_UNIT10',                    'единиц');
+    define('LANG_CH1',                       'символ');
+    define('LANG_CH2',                       'символа');
+    define('LANG_CH10',                      'символов');
+
+    define('LANG_ISLEFT',                    'осталось');
 
     //DATES
     define('LANG_ALL',                       'Все');

@@ -380,27 +380,30 @@ class content extends cmsFrontend {
             if (!empty($ctype['options']['is_cats_title'])){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!empty($ctype['options']['is_cats_keys'])){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!empty($ctype['options']['is_cats_desc'])){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
         }
@@ -649,27 +652,30 @@ class content extends cmsFrontend {
             if ($ctype['options']['is_manual_title']){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!$ctype['is_auto_keys']){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!$ctype['is_auto_desc']){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
         }

@@ -93,13 +93,13 @@ icms.forms = (function ($) {
             }
         });
         return o;
-	}
+	};
 
     //====================================================================//
 
     this.submit = function(){
         $('.button-submit').trigger('click');
-    }
+    };
 
     //====================================================================//
 
@@ -125,7 +125,7 @@ icms.forms = (function ($) {
 
 		}, 'json');
 
-	}
+	};
 
     //====================================================================//
 
@@ -167,7 +167,49 @@ icms.forms = (function ($) {
 
         return false;
 
-    }
+    };
+
+    this.initSymbolCount = function (field_id, max){
+        $('#f_'+field_id).append('<div class="symbols_count"><span class="symbols_num"></span><span class="symbols_spell"></span></div>');
+        var symbols_count = $('#f_'+field_id+' > .symbols_count');
+        var symbols_num   = $('.symbols_num', symbols_count);
+        var symbols_spell = $('.symbols_spell', symbols_count);
+        var type = 'total';
+        $(symbols_num).on('click', function (){
+            if(max){
+                if(type === 'total'){
+                    type = 'left';
+                } else {
+                    type = 'total';
+                }
+                $('#'+field_id).trigger('input');
+            }
+        });
+        $('#'+field_id).on('input', function (){
+            num = +$(this).val().length;
+            if(type === 'total'){
+                if(!num){
+                    $(symbols_num).html(''); $(symbols_count).hide(); return;
+                }
+                $(symbols_count).fadeIn();
+                $(symbols_num).html(num);
+                $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10));
+                if(max && num > max){
+                    $(symbols_num).addClass('overflowing');
+                } else {
+                    $(symbols_num).removeClass('overflowing');
+                }
+            } else {
+                $(symbols_count).fadeIn();
+                if(num > max){
+                    num = max;
+                    $(this).val($(this).val().substr(0, max));
+                }
+                $(symbols_num).html((max - num)).removeClass('overflowing');
+                $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10)+' '+LANG_ISLEFT);
+            }
+        });
+    };
 
 	return this;
 
@@ -206,7 +248,16 @@ function toggleFilter(){
     $('.filter-link', filter).toggle('fast');
     $('.filter-container', filter).slideToggle('fast');
 }
-
 function goBack(){
     window.history.go(-1);
+}
+function spellcount (num, one, two, many){
+    if (num%10==1 && num%100!=11){
+        str = one;
+    } else if(num%10>=2 && num%10<=4 && (num%100<10 || num%100>=20)){
+        str = two;
+    } else {
+        str = many;
+    }
+    return str;
 }
