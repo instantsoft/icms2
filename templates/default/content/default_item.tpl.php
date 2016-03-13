@@ -19,9 +19,8 @@
 
     <?php foreach($fields as $name=>$field){ ?>
 
-        <?php if (!$field['is_in_item']) { continue; } ?>
-        <?php if ($field['is_system']) { continue; } ?>
-        <?php if (empty($item[$field['name']]) || empty($field['html'])) { continue; } ?>
+        <?php if (!$field['is_in_item'] || $field['is_system']) { continue; } ?>
+        <?php if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { continue; } ?>
         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
         <?php

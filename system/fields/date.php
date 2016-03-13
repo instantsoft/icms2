@@ -51,16 +51,18 @@ class fieldDate extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_range')){
+        if (!is_array($value) || !empty($value['date'])){
 
-            $date_start = date('Y-m-d', strtotime($value['date']));
-            $date_final = date('Y-m-d', strtotime($value['date'])+60*60*24);
+            if(!empty($value['date'])){
+                $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+            }
+
+            $date_start = date('Y-m-d', strtotime($value));
+            $date_final = date('Y-m-d', strtotime($value)+60*60*24);
 
             $model->filterBetween($this->name, $date_start, $date_final);
 
         } else {
-
-            if (!is_array($value)) { return $model; }
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, date('Y-m-d', strtotime($value['from'])));
@@ -77,7 +79,7 @@ class fieldDate extends cmsFormField {
 
     public function getDefaultVarType($is_filter=false) {
 
-        if ($is_filter || $this->getOption('show_time')){
+        if (($is_filter && $this->getOption('filter_range')) || $this->getOption('show_time')){
             $this->var_type = 'array';
         }
 
@@ -89,15 +91,17 @@ class fieldDate extends cmsFormField {
 
         if($value){
             if(is_array($value)){
-                if($value['date']){
+                if(!empty($value['date'])){
                     $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
-                    return date('Y-m-d H:i', strtotime($value));
+                    return date('Y-m-d H:i:s', strtotime($value));
                 }
-            }else{
+            } else {
                 return date('Y-m-d', strtotime($value));
             }
 
         }
+
+        return null;
 
     }
 

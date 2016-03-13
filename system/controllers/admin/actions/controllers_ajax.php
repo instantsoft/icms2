@@ -6,6 +6,8 @@ class actionAdminControllersAjax extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
+        cmsCore::loadAllControllersLanguages();
+
         $grid = $this->loadDataGrid('controllers');
 
         $this->model->setPerPage(admin::perpage);

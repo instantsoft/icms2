@@ -13,6 +13,7 @@ class cmsController {
     public $root_url;
     public $root_path;
 
+    protected $callbacks = array();
     protected $useOptions = false;
 
     function __construct($request){
@@ -41,6 +42,38 @@ class cmsController {
             $this->options = $this->getOptions();
         }
 
+        $this->loadCallback();
+
+    }
+
+    /////////////////    Набор методов для коллбэков    ////////////////////////
+    /**
+     * Этот метод переопределяется в дочерних классах
+     * где задается начальный набор функций, которые будут применены в коллбэках
+     */
+    public function loadCallback() { $this->callbacks = array(); }
+    /**
+     * Устанавливает один или множество коллбэков
+     * @param string $name Назначение - обычно название метода, где будет применяться
+     * @param array $callbacks Массив коллбэков
+     * @return \cmsController
+     */
+    public function setCallback($name, $callbacks) { $this->callbacks[$name] = $callbacks; return $this; }
+    /**
+     * Применяет коллбэки
+     * @param string $name Назначение - обычно __FUNCTION__
+     * @param array $params Массив параметров
+     * @return \cmsController
+     */
+    public function processCallback($name, $params) {
+        $name = strtolower($name);
+        if(!empty($this->callbacks[$name])){
+            array_unshift($params, $this);
+            foreach ($this->callbacks[$name] as $callback) {
+                call_user_func_array($callback, $params);
+            }
+        }
+        return $this;
     }
 
     protected function loadCmsObj($name) {
@@ -333,9 +366,7 @@ class cmsController {
 
         $action_object = new $class_name($this, $params);
 
-        $result = call_user_func_array(array($action_object, 'run'), $params);
-
-        return $result;
+        return call_user_func_array(array($action_object, 'run'), $params);
 
     }
 
@@ -403,9 +434,7 @@ class cmsController {
 
         $hook_object = new $class_name($this);
 
-        $result = call_user_func_array(array($hook_object, 'run'), $params);
-
-        return $result;
+        return call_user_func_array(array($hook_object, 'run'), $params);
 
     }
 
@@ -718,6 +747,7 @@ class cmsController {
 //============================================================================//
 
     public function validate_required($value){
+        if($value === '0'){ return true; }
         if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
         return true;
     }

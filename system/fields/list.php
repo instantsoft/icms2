@@ -99,13 +99,11 @@ class fieldList extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_multiple')){
+        if (!is_array($value)){
 
             $model->filterEqual($this->name, $value);
 
         } else {
-
-            if (!is_array($value)) { return $model; }
 
             $model->filterIn($this->name, $value);
 

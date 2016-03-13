@@ -69,13 +69,11 @@ class fieldNumber extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_range')){
+        if (!is_array($value)){
 
             $model->filterEqual($this->name, "{$value}");
 
         } else {
-
-            if (!is_array($value)) { return $model; }
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, $value['from']);

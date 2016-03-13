@@ -36,27 +36,25 @@ function string_strip_br($string){
  * Возвращает значение языковой константы
  * Если константа не найдена, возвращает ее имя или значение по-умолчанию
  *
- * Префикс LANG_ в имени константы указывать не нужно
+ * Префикс LANG_ в имени константы можно не указывать
  * Регистр не имеет значения
  *
- * @param string $constant
+ * @param string $constant Название языковой константы
  * @param string $default
  * @return string
  */
 function string_lang($constant, $default=false){
 
-    $constant = mb_strtoupper($constant);
+    $constant = strtoupper($constant);
 
     if (!$default) { $default = $constant; }
 
-    $constant = mb_strtoupper($constant);
-
-    if (!mb_strpos($constant, 'LANG_')===0){
+    if (strpos($constant, 'LANG_') === false){
         $constant = 'LANG_' . $constant;
     }
 
     if (defined($constant)){
-        $string = constant('LANG_'.$constant);
+        $string = constant($constant);
     } else {
         $string = $default;
     }
