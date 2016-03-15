@@ -121,9 +121,9 @@
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
-        <ul>
+        <ul class="<?php echo $ctype['name'];?>_icon">
             <?php foreach($subcats as $c){ ?>
-                <li>
+                <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
                     <a href="<?php echo href_to($base_url . ($dataset ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
                 </li>
             <?php } ?>
