@@ -125,7 +125,7 @@
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon">
             <?php foreach($subcats as $c){ ?>
-                <li class="<?php echo $c['slug'];?>">
+                <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
                     <a href="<?php echo href_to($base_url . ($dataset ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
                 </li>
             <?php } ?>
