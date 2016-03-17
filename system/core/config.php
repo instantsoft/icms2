@@ -53,9 +53,18 @@ class cmsConfig {
         }
 
         $this->set('cfg_time_zone', $this->data['time_zone']);
+        $this->set('cfg_language', $this->data['language']);
 
         if (isset($_SESSION['user']['time_zone'])){
             $this->data['time_zone'] = $_SESSION['user']['time_zone'];
+        }
+
+        if (isset($_SESSION['language'])){
+            $this->data['language'] = $_SESSION['language'];
+        }
+
+        if (isset($_SESSION['user']['language'])){
+            $this->data['language'] = $_SESSION['user']['language'];
         }
 
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){

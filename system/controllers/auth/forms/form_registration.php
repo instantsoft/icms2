@@ -24,7 +24,7 @@ class formAuthRegistration extends cmsForm {
                         )
                     )),
                     new fieldString('password1', array(
-                        'title' => LANG_NEW_PASS,
+                        'title' => LANG_PASSWORD,
                         'is_password' => true,
                         'rules' => array(
                             array('required'),
@@ -32,7 +32,7 @@ class formAuthRegistration extends cmsForm {
                         )
                     )),
                     new fieldString('password2', array(
-                        'title' => LANG_RETYPE_NEW_PASS,
+                        'title' => LANG_RETYPE_PASSWORD,
                         'is_password' => true,
                         'rules' => array(
                             array('required'),
