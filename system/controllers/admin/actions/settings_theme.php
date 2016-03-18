@@ -5,20 +5,16 @@ class actionAdminSettingsTheme extends cmsAction {
     public function run($template_name){
 
         $template = new cmsTemplate($template_name);
-
         if (!$template->hasOptions()){ cmsCore::error404(); }
 
         $form = $template->getOptionsForm();
 
-        // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
-
         $options = $template->getOptions();
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $options = $form->parse($this->request, $is_submitted, $options);
+            $options = $form->parse($this->request, true, $options);
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $options);
@@ -31,7 +27,7 @@ class actionAdminSettingsTheme extends cmsAction {
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_TPL_NOT_WRITABLE, 'error');
                 }
 
-                $this->redirectBack('settings');
+                $this->redirectToAction('settings');
 
             }
 
@@ -41,11 +37,11 @@ class actionAdminSettingsTheme extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('settings_theme', array(
+        return $this->cms_template->render('settings_theme', array(
             'template_name' => $template_name,
-            'options' => $options,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'options'       => $options,
+            'form'          => $form,
+            'errors'        => isset($errors) ? $errors : false
         ));
 
     }

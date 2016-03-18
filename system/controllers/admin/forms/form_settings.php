@@ -112,20 +112,6 @@ class formAdminSettings extends cmsForm {
                 'title' => LANG_CP_SETTINGS_GUI,
                 'childs' => array(
 
-                    new fieldList('language', array(
-                        'title' => LANG_CP_SETTINGS_LANGUAGE,
-                        'generator' => function($item) {
-                            $langs = cmsCore::getLanguages();
-                            $items = array();
-                            if ($langs) {
-                                foreach ($langs as $lang) {
-                                    $items[$lang] = mb_strtoupper($lang);
-                                }
-                            }
-                            return $items;
-                        }
-                    )),
-
                     new fieldList('template', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
                         'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
@@ -135,6 +121,65 @@ class formAdminSettings extends cmsForm {
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
                                     $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_admin', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_mobile', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_MOBILE,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_tablet', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('language', array(
+                        'title' => LANG_CP_SETTINGS_LANGUAGE,
+                        'generator' => function($item) {
+                            $langs = cmsCore::getLanguages();
+                            $items = array();
+                            if ($langs) {
+                                foreach ($langs as $lang) {
+                                    $items[$lang] = mb_strtoupper($lang);
                                 }
                             }
                             return $items;

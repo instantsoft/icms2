@@ -247,6 +247,7 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Put here the widgets you want to temporarily hide or move to another page without losing the settings');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
 
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
@@ -296,7 +297,10 @@
     define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Use that site keywords and description only on frontpage');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add page title to html title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control Panel theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile device theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumb?');

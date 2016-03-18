@@ -46,7 +46,25 @@ class cmsTemplate {
 
 		$config = cmsConfig::getInstance();
 
-        $this->name = $name ? $name : $config->template;
+        if($name){
+
+            $this->setName($name);
+
+        } else {
+
+            $device_type = cmsRequest::getDeviceType();
+            $template = $config->template;
+
+            if($device_type !== 'desktop'){
+                $device_template = cmsConfig::get('template_'.$device_type);
+                if($device_template){
+                    $template = $device_template;
+                }
+            }
+
+            $this->setName($template);
+
+        }
 
         $this->setLayout('main');
 
@@ -58,8 +76,6 @@ class cmsTemplate {
 			$this->metakeys = $config->metakeys;
 			$this->metadesc = $config->metadesc;
 		}
-
-        $this->path = $config->root_path.'templates/'.$this->name;
 
         $this->options = $this->getOptions();
 
@@ -864,11 +880,13 @@ class cmsTemplate {
      * Возвращает HTML-разметку схемы позиций виджетов
      * @return string
      */
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
         $config = cmsConfig::getInstance();
 
-        $scheme_file = $config->root_path . 'templates/'.$this->name.'/scheme.html';
+        $name = $name ? $name : $this->name;
+
+        $scheme_file = $config->root_path . 'templates/'.$name.'/scheme.html';
 
         if (!file_exists($scheme_file)) { return false; }
 
@@ -889,6 +907,21 @@ class cmsTemplate {
      */
     public function getName(){
         return $this->name;
+    }
+
+    /**
+     * Устанавливает название глобального шаблона
+     * @param string $name
+     * @return \cmsTemplate
+     */
+    public function setName($name){
+
+        $this->name = $name;
+
+        $this->path = cmsConfig::get('root_path').'templates/'.$this->name;
+
+        return $this;
+
     }
 
 // ========================================================================== //
@@ -1447,6 +1480,8 @@ class cmsTemplate {
 
         $template_file = $this->path . '/' . $layout . '.tpl.php';
 
+        $device_type = cmsRequest::getDeviceType();
+
         if(is_readable($template_file)){
 
             if (!$config->min_html){
@@ -1512,13 +1547,32 @@ class cmsTemplate {
 
         cmsCore::loadTemplateLanguage($this->name);
 
-        $form_file = $this->path . '/options.form.php';
+        $form_file            = $this->path . '/options.form.php';
+        $deprecated_form_name = 'template_options';
+        $form_name            = $this->name . '_template_options';
+        $form                 = null;
 
-        $form_name = 'template_options';
+        // $form = cmsForm::getForm($form_file, $form_name);
+        // для совместимости форм шаблонов делаем здесь то, что делается в cmsForm::getForm, но с проверкой класса
+        // убрать через пару релизов. http://docs.instantcms.ru/dev/templates/options
 
-        $form = cmsForm::getForm($form_file, $form_name);
+        include_once $form_file;
 
-        if (!$form) { $form = new cmsForm(); }
+        $form_class = 'form' . string_to_camel('_', $form_name);
+
+        if(!class_exists($form_class)){
+            $form_class = 'form' . string_to_camel('_', $deprecated_form_name);
+        }
+
+        if(class_exists($form_class)){
+
+            $form = new $form_class();
+
+            $form->setStructure( $form->init() );
+
+        }
+
+        if ($form === null) { $form = new cmsForm(); }
 
         return $form;
 

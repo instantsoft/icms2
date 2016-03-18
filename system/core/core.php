@@ -375,14 +375,34 @@ class cmsCore {
                 'title' => LANG_CSS_CLASS_BODY,
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
+				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+                'generator' => function($item){
+                    $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+                }
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
+				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+                'generator' => function($item){
+                    $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.cmsCore::getWidgetPath($item['name'], $item['controller']), '*.tpl.php');
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                           $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+               }
             )));
 
         //
@@ -682,7 +702,7 @@ class cmsCore {
         if (!is_array($matched_pages)) { return; }
         if (sizeof($matched_pages)==0) { return; }
 
-        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages);
+        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages, cmsTemplate::getInstance()->getName());
 
         if (is_array($widgets_list)){
             foreach ($widgets_list as $widget){

@@ -28,18 +28,29 @@
     ), $errors);
 ?></div>
 
-<script>
+<script type="text/javascript">
 
-    $(document).ready(function(){
-        $('#f_template select').change(function(){
-            setThemeConfigURL($(this).val());
+    var templates_has_options = <?php echo json_encode($templates_has_options); ?>
+
+    $(function(){
+        $('#template, #template_mobile, #template_tablet, #template_admin').each(function(){
+            $(this).change(function(){
+                setThemeConfigURL(this);
+            }).trigger('change');
         });
-        setThemeConfigURL($('#f_template select').val());
     });
 
-    function setThemeConfigURL(theme){
-        var theme_config_link = $('#f_template a');
-        theme_config_link.attr('href', theme_config_link.data('url')+'/'+theme);
+    function setThemeConfigURL(obj){
+        var theme = $(obj).val();
+        if($.inArray(theme, templates_has_options) === -1){
+            theme = false;
+        }
+        var theme_config_link = $(obj).parent().find('a');
+        if(theme){
+            theme_config_link.show().attr('href', theme_config_link.data('url')+'/'+theme);
+        } else {
+            theme_config_link.hide();
+        }
     }
 
 </script>

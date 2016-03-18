@@ -69,6 +69,8 @@ class cmsBackend extends cmsController {
         $form = $this->getForm('options');
         if (!$form) { cmsCore::error404(); }
 
+        $form = cmsEventsManager::hook("form_options_{$this->name}", $form);
+
         $options = cmsController::loadOptions($this->name);
 
         if ($this->request->has('submit')){

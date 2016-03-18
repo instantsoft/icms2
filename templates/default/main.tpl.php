@@ -23,7 +23,7 @@
     <?php $this->head(); ?>
     <style><?php include('options.css.php'); ?></style>
 </head>
-<body>
+<body id="<?php echo $device_type; ?>_device_type">
 
     <div id="layout">
 

@@ -290,6 +290,7 @@
     define('LANG_DELETE_FOLDER',             'Delete folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nThe content will also be deleted');
 
+    define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');

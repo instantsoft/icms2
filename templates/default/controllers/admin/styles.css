@@ -123,7 +123,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 
 #cp_top_line ul, #cp_top_line li { margin:0; padding:0; list-style:none; }
 #cp_top_line ul { overflow: hidden; }
-#cp_top_line ul li { float: left; padding:0 10px; border-right:solid 1px #666666; }
+#cp_top_line ul li { float: left; padding:0 10px; border-right:solid 1px #444; }
 #cp_top_line ul li:last-child { border:none; }
 
 #cp_top_line ul li a{ color:#999; }
@@ -384,6 +384,7 @@ select {
     color:#333;
     font-size: 100%;
 }
+select:focus { outline: none; }
 .file-input {
     font-size: 100%;
 }
@@ -1177,7 +1178,14 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #cp-widgets-layout{
 
 }
-
+#cp-widgets-select-template {
+    float: right;
+    margin: 1px;
+    color: #666;
+}
+#cp-widgets-select-template select {
+    border-radius: 0 3px 3px 0;
+}
 #cp-widgets-layout table{
     width:100%;
     margin:0;
@@ -1313,6 +1321,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 	height: 16px;
 	line-height: 16px;
     position: relative;
+    transition:background 0.1s linear;
 }
 
 #cp-widgets-layout .position li.tabbed{
@@ -1374,7 +1383,19 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp-widgets-layout li:hover .actions a ,
 #cp-widgets-list li:hover .actions a {
-    opacity: 1;
+    opacity: 0.9;
+}
+#cp-widgets-layout .position li.hide{
+    background: url("../../images/icons/drag.png") no-repeat 4px center #BBB;
+    background-color: #BBB;
+    border: solid 1px #AAA;
+    box-shadow: 0 1px 1px #CCC;
+    color: #666;
+}
+#cp-widgets-layout .position li.hide .actions a.hide{
+    background-image: url("../../images/icons/flag_check.png");
+    background-position: -16px 3px;
+    width: 18px;
 }
 
 #cp-widgets-layout li .actions a.edit ,
@@ -1387,7 +1408,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #cp-widgets-list li .actions a.delete {
     background-image: url("../../images/icons/delete.png");
 }
-
+#cp-widgets-layout li .actions a.hide {
+    background-image: url("../../images/icons/flag_check.png");
+    background-position: 9px 3px;
+    margin-right: 5px;
+}
 #cp-widgets-layout .position .placeholder{
     background:#e1ebef;
     border:solid 1px #A3CAE0;
@@ -1593,11 +1618,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     overflow:hidden;
 }
 
-#site_settings #f_template .hint { display: inline-block; }
-#site_settings #f_template .hint a {
+#site_settings #f_template .hint, #site_settings #f_template_mobile .hint, #site_settings #f_template_tablet .hint, #site_settings #f_template_admin  .hint{ display: inline-block; }
+#site_settings #f_template .hint a, #site_settings #f_template_mobile .hint a, #site_settings #f_template_tablet .hint a, #site_settings #f_template_admin  .hint a {
     padding-left:20px;
-    height:32px;
-    line-height:32px;
+    height:25px;
+    line-height:25px;
     margin-left:10px;
     background:url("../../images/icons/page_gear.png") no-repeat left center;
     display: block;

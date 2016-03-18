@@ -14,6 +14,9 @@ class cmsRequest {
     public $uri = '';
     public $query_string = '';
 
+    private static $device_type = null;
+    public static $device_types = array('desktop', 'mobile', 'tablet');
+
     /**
      * Создает объект запроса
      * @param array $data Параметры для контроллера
@@ -177,5 +180,35 @@ class cmsRequest {
 
 //============================================================================//
 //============================================================================//
+
+    private static function loadDeviceType() {
+
+        $device_type  = (string)cmsUser::getCookie('device_type');
+
+        if(!$device_type || !in_array($device_type, self::$device_types, true)){
+
+            cmsCore::loadLib('mobile_detect.class');
+
+            $detect = new Mobile_Detect();
+
+            $device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
+
+            cmsUser::setCookie('device_type', $device_type, 31536000); // на 1 год
+
+        }
+
+        self::$device_type = $device_type;
+
+    }
+
+    public static function getDeviceType() {
+
+        if(self::$device_type === null){
+            self::loadDeviceType();
+        }
+
+        return self::$device_type;
+
+    }
 
 }

@@ -8,12 +8,18 @@ function install_package(){
     $remove_table_indexes = array(
         'tags' => array(
             'tag'
-        )
+        ),
+        'widgets_bind' => array(
+            'is_enabled', 'ordering', 'page_id'
+        ),
     );
 
     $add_table_indexes = array(
         'tags_bind' => array(
             'target_controller' => array('target_controller', 'target_subject', 'tag_id')
+        ),
+        'widgets_bind' => array(
+            'page_id' => array('page_id', 'position', 'ordering')
         ),
     );
     $add_unique_table_indexes = array(
@@ -62,6 +68,12 @@ function install_package(){
 
     if(!$core->db->isFieldExists('{users}_tabs', 'show_only_owner')){
         $core->db->query("ALTER TABLE `{users}_tabs` ADD `show_only_owner` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('widgets_bind', 'template')){
+        $template_name = cmsConfig::get('template');
+        $core->db->query("ALTER TABLE  `{#}widgets_bind` ADD `template` VARCHAR(30) NULL DEFAULT NULL COMMENT 'Привязка к шаблону' AFTER `id`");
+        $core->db->query("UPDATE `{#}widgets_bind` SET `template` = '{$template_name}', `is_enabled` = 1");
     }
 
 }
