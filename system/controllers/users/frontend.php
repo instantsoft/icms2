@@ -11,6 +11,9 @@ class users extends cmsFrontend {
 
         if (!is_numeric($action_name)){ return $action_name; }
 
+        // разблокируем вызов экшенов, которым запрещено вызываться напрямую
+        $this->lock_explicit_call = false;
+
         $user_id   = $action_name;
         $is_logged = $this->cms_user->is_logged;
 

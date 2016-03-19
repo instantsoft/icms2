@@ -2,12 +2,12 @@
 
 class actionUsersProfileTab extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile, $tab_name){
 
-        $user = cmsUser::getInstance();
-
         // Доступность профиля для данного пользователя
-        if (!$user->isPrivacyAllowed($profile, 'users_profile_view')){
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')){
             cmsCore::error404();
         }
 
@@ -31,11 +31,11 @@ class actionUsersProfileTab extends cmsAction {
         $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 
-        cmsTemplate::getInstance()->render('profile_tab', array(
+        $this->cms_template->render('profile_tab', array(
             'tabs'    => $tabs_menu,
             'tab'     => $tab,
             'profile' => $profile,
-            'user'    => $user,
+            'user'    => $this->cms_user,
             'html'    => $html
         ));
 

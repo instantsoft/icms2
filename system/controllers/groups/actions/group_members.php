@@ -2,9 +2,9 @@
 
 class actionGroupsGroupMembers extends cmsAction {
 
-    public function run($group){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    public function run($group){
 
         $users_request = new cmsRequest($this->request->getData(), cmsRequest::CTX_INTERNAL);
 
@@ -16,8 +16,8 @@ class actionGroupsGroupMembers extends cmsAction {
         $profiles_list_html = $users_controller->renderProfilesList($page_url);
 
         return cmsTemplate::getInstance()->render('group_members', array(
-            'user' => $user,
-            'group' => $group,
+            'user'               => $this->cms_user,
+            'group'              => $group,
             'profiles_list_html' => $profiles_list_html
         ));
 

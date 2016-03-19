@@ -2,10 +2,9 @@
 
 class actionUsersProfileFriends extends cmsAction {
 
-    public function run($profile){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+    public function run($profile){
 
         // Проверяем наличие друзей
         if (!$this->model->getFriendsCount($profile['id'])) { cmsCore::error404(); }
@@ -17,8 +16,8 @@ class actionUsersProfileFriends extends cmsAction {
 
         $tabs = $this->controller->getProfileMenu($profile);
 
-        return $template->render('profile_friends', array(
-            'user'               => $user,
+        return $this->cms_template->render('profile_friends', array(
+            'user'               => $this->cms_user,
             'tabs'               => $tabs,
             'tab'                => $this->tabs['friends'],
             'profile'            => $profile,

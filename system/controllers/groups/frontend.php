@@ -23,6 +23,8 @@ class groups extends cmsFrontend{
 
         if (!is_numeric($action_name)){ return $action_name; }
 
+        $this->lock_explicit_call = false;
+
         $group_id = $action_name;
 
         $group = $this->model->getGroup($group_id);

@@ -2,11 +2,11 @@
 
 class actionUsersProfileContent extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile, $ctype_name=false, $folder_id=false){
 
         if (!$ctype_name) { cmsCore::error404(); }
-
-        $user = cmsUser::getInstance();
 
         $content_controller = cmsCore::getController('content', $this->request);
 
@@ -31,11 +31,11 @@ class actionUsersProfileContent extends cmsAction {
 
         }
 
-        if ($user->id != $profile['id'] && !$user->is_admin){
+        if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
             $content_controller->model->filterHiddenParents();
         }
 
-        if ($user->id == $profile['id'] || $user->is_admin){
+        if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){
             $content_controller->model->disableApprovedFilter();
 			$content_controller->model->disablePubFilter();
 			$content_controller->model->disablePrivacyFilter();
@@ -54,7 +54,7 @@ class actionUsersProfileContent extends cmsAction {
 
         $list_html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('user_id' => $profile['id']));
 
-        return cmsTemplate::getInstance()->render('profile_content', array(
+        return $this->cms_template->render('profile_content', array(
             'id'        => $profile['id'],
             'profile'   => $profile,
             'ctype'     => $ctype,

@@ -13,6 +13,14 @@ class cmsController {
     public $root_url;
     public $root_path;
 
+    /**
+     * Флаг блокировки прямого вызова экшена
+     * полезно если название экшена переопределяется
+     * а вызов экшена напрямую нужно запретить
+     * @var bool || null
+     */
+    public $lock_explicit_call = null;
+
     protected $callbacks = array();
     protected $useOptions = false;
 
@@ -365,6 +373,11 @@ class cmsController {
         }
 
         $action_object = new $class_name($this, $params);
+
+        // проверяем разрешен ли прямой вызов экшена
+        if($action_object->lock_explicit_call === true && $this->lock_explicit_call !== false && !$this->request->isInternal()){
+            cmsCore::error404();
+        }
 
         return call_user_func_array(array($action_object, 'run'), $params);
 

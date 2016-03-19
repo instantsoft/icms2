@@ -2,7 +2,9 @@
 
 class actionUsersProfile extends cmsAction {
 
-    public function run($profile){
+    public $lock_explicit_call = true;
+
+    public function run($profile=null){
 
         $profile = cmsEventsManager::hook('users_profile_view', $profile);
 
