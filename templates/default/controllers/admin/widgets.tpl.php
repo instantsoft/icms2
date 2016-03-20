@@ -70,6 +70,12 @@
             <div class="cp_toolbar">
                 <?php $this->toolbar(); ?>
             </div>
+            <div id="cp-widgets-search">
+                <ul style="display:none">
+                    <li></li>
+                </ul>
+                <?php echo html_input('text', 'widget_name', '', array('id'=>'widget_name', 'placeholder'=> LANG_FIND, 'autocomplete'=>'off')); ?>
+            </div>
 
             <div id="cp-widgets-layout"
                  data-template="<?php echo $template_name; ?>"
@@ -122,7 +128,7 @@
                     </div>
 
                 <?php } ?>
-
+                
                 <div id="actions-template" style="display:none">
                     <span class="actions">
                         <a class="hide" href="#" title="<?php echo LANG_HIDE; ?>"></a>
@@ -138,5 +144,34 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>  
+  
+    $( "#widget_name" ).autocomplete({
+        minLength: 2,
+        delay: 500,
+        source: function( request, response ) {
+            var term = request.term;
+            
+            $.getJSON('<?php echo $this->href_to('widgets', 'autocomplete'); ?>', request, function( data, status, xhr ) {      
+       
+                response( data );
+            });
+        },
+                
+        select: function(event, ui) {  
+           
+            $('#cp-widgets-search ul').addClass('position').show(); 
+            var widget_dom = $('#cp-widgets-search li').attr('bind-id', ui.item.id).html(ui.item.value);
+            $('#cp-widgets-search #actions-template').show(); 
+            $('#widget_name').hide(); 
+        if (!ui.item.enabled) {
+                widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
+            }
+            widgetAddActionButtons(widget_dom);            
+            $('#cp-widgets-search .actions').prepend("<a class='page' href='javascript:widgetsLoad("+ui.item.page_id+")' title='<?php echo LANG_PAGE; ?>'></a>"); 
+            $('#cp-widgets-search .actions').append('<a class="cancel" href="javascript:widgetCancel('+ui.item.id+')" title="<?php echo LANG_CANCEL; ?>"></a>'); 
+        }
+    });
+    
+    
 </script>

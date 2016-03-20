@@ -4,9 +4,9 @@ class onActivityPublishDelayedContent extends cmsAction {
 
     public function run($data){
 
-		foreach($data as $ctype_name => $items){
+	foreach($data as $ctype_name => $items){
 
-			foreach($items as $item){
+            foreach($items as $item){
 
                 $this->addEntry('content', "add.{$ctype_name}", array(
                     'user_id'          => $item['user_id'],
@@ -16,12 +16,13 @@ class onActivityPublishDelayedContent extends cmsAction {
                     'is_private'       => isset($item['is_private']) ? $item['is_private'] : 0,
                     'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
                     'is_parent_hidden' => $item['is_parent_hidden'],
+                    'date_pub'         => $item['date_pub'],
                     'is_pub'           => true
                 ));
 
             }
 
-		}
+	}
 
         return $data;
 
