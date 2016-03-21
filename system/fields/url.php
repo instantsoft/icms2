@@ -11,24 +11,49 @@ class fieldUrl extends cmsFormField {
     public function getOptions(){
         return array(
             new fieldCheckbox('redirect', array(
-                'title' => LANG_PARSER_URL_REDIRECT,
+                'title'   => LANG_PARSER_URL_REDIRECT,
                 'default' => false
             )),
             new fieldCheckbox('auto_http', array(
-                'title' => LANG_PARSER_URL_AUTO_HTTP,
+                'title'   => LANG_PARSER_URL_AUTO_HTTP,
                 'default' => true
             )),
+            new fieldCheckbox('target', array(
+                'title'   => LANG_PARSER_URL_TARGET,
+                'default' => false
+            )),
+            new fieldCheckbox('nofollow', array(
+                'title'   => LANG_PARSER_URL_NOFOLLOW,
+                'default' => false
+            )),
+            new fieldCheckbox('title', array(
+                'title'   => LANG_PARSER_URL_TITLE,
+                'default' => false
+            )),
+            new fieldString('css_class', array(
+                'title'   => LANG_PARSER_URL_CSS_CLASS,
+                'rules'   => array(
+                             array('max_length', 50)
+                             )
+            )),
             new fieldNumber('max_length', array(
-                'title' => LANG_PARSER_TEXT_MAX_LEN,
+                'title'   => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 500
-            ))
+            )) 
         );
     }
 
     public function parse($value){
 
-        $href = $value;
-
+        $result = strpos('|', trim($value));
+        
+        if ($result === false && !$this->getOption('title')){
+            $href = $value; 
+        }else{
+            $result = explode('|', $value);
+            $href = trim($result[0]); 
+        }
+ 
         if ($this->getOption('auto_http')){
             if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) { $href = 'http://' . $href; }
         }
@@ -36,8 +61,13 @@ class fieldUrl extends cmsFormField {
         if ($this->getOption('redirect')){
             $href = cmsConfig::get('root') . 'redirect?url=' . $href;
         }
+        
+        $this->getOption('target')    ? $target = 'target="_blank"'  : '';
+        $this->getOption('nofollow')  ? $nofollow = 'rel="nofollow"' : '';
+        $this->getOption('css_class') ? $class = "class=".$this->options['css_class']  : '';
+        !empty($result[1]) ? $value = trim($result[1]) : $value = $href;
 
-        return '<a href="'.htmlspecialchars($href).'">'.$value.'</a>';
+        return '<a href="'.htmlspecialchars($href).'" '.$class.' '.$target.' '.$nofollow.'>'.htmlspecialchars($value).'</a>';
 
     }
 

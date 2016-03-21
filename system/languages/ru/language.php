@@ -95,6 +95,11 @@
     define('LANG_PARSER_URL',                'Ссылка');
     define('LANG_PARSER_URL_REDIRECT',       'Ссылки через редирект');
     define('LANG_PARSER_URL_AUTO_HTTP',      'Автоматически добавлять http://');
+    define('LANG_PARSER_URL_TARGET',         'Открывать ссылку в новом окне');
+    define('LANG_PARSER_URL_TITLE',          'Возможность установить заголовок для ссылки');
+    define('LANG_PARSER_URL_NOFOLLOW',       'Добавлять атрибут rel="nofollow"');
+    define('LANG_PARSER_URL_CSS_CLASS',      'Установить для ссылки класс CSS');
+    define('LANG_PARSER_URL_TITLE_HINT',     'Для отображения названия ссылки, введите ее название через знак "|"<br>Пример: yandex.ru|Яндекс');
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');
