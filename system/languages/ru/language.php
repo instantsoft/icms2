@@ -109,6 +109,9 @@
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES',    'Максимальное количество изображений в записи');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_UNITS','шт.');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_HINT','если не указано, то по-умолчанию 5шт.');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
@@ -237,6 +240,7 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 	 'Ошибка записи файла на диск');
     define('LANG_UPLOAD_ERR_EXTENSION', 	 'Загрузка файла была прервана');
     define('LANG_UPLOAD_ERR_MIME',           'Файл имеет неподходящий формат');
+    define('LANG_UPLOAD_ERR_MAX_IMAGES',     'Для данной записи достигнуто ограничение по количеству изображений!');
 
     //MONEY
     define('LANG_CURRENCY',                  'руб.');

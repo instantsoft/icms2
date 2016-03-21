@@ -30,6 +30,12 @@ class fieldImages extends cmsFormField {
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            )),
+            new fieldNumber('max_images', array(
+                'title'   => LANG_PARSER_IMAGE_MAX_IMAGES,
+                'default' => 5,
+                'units'   => LANG_PARSER_IMAGE_MAX_IMAGES_UNITS,
+                'hint'    => LANG_PARSER_IMAGE_MAX_IMAGES_HINT
             ))
         );
 
@@ -145,8 +151,9 @@ class fieldImages extends cmsFormField {
             $this->data['images'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
-        $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['sizes']             = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
+        $this->data['max_images']        = $this->getOption('max_images');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

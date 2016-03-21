@@ -110,6 +110,9 @@
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES',    'The maximum number of images in the recording');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_UNITS','pcs.');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_HINT','if not specified, the default 5pcs.');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Size on list page');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Size on item page');
@@ -238,6 +241,7 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 'Failed to write file to disk');
     define('LANG_UPLOAD_ERR_EXTENSION', 'File download was interrupted');
     define('LANG_UPLOAD_ERR_MIME', 'The file has the wrong format');
+    define('LANG_UPLOAD_ERR_MAX_IMAGES',  'For this record reached the limit of images!');
 
     //MONEY
     define('LANG_CURRENCY',                  '$');

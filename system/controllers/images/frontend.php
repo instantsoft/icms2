@@ -17,13 +17,14 @@ class images extends cmsFrontend {
 
     }
 
-    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false){
+    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_images = false){
 
         return $this->cms_template->renderInternal($this, 'upload_multi', array(
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
-            'allow_import_link' => $allow_import_link
+            'allow_import_link' => $allow_import_link,
+            'max_images'        => $max_images             
         ));
 
     }
@@ -62,8 +63,8 @@ class images extends cmsFrontend {
 		if ($is_store_original){
 			$result['paths']['original'] = array(
 				'path' => $result['url'],
-                'url'  => $this->cms_config->upload_host . '/' . $result['url']
-            );
+                                'url'  => $this->cms_config->upload_host . '/' . $result['url']
+                         );
 		}
 
 		$presets = $this->model->getPresets();
@@ -76,17 +77,17 @@ class images extends cmsFrontend {
 
 			$path = $this->cms_uploader->resizeImage($result['path'], array(
 				'width'   => $p['width'],
-                'height'  => $p['height'],
-                'square'  => $p['is_square'],
-                'quality' => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
-            ));
+                                'height'  => $p['height'],
+                                'square'  => $p['is_square'],
+                                'quality' => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
+                            ));
 
 			if (!$path) { continue; }
 
 			$image = array(
 				'path' => $path,
-                'url'  => $this->cms_config->upload_host . '/' . $path
-            );
+                                'url'  => $this->cms_config->upload_host . '/' . $path
+                        );
 
 			if ($p['is_watermark'] && $p['wm_image']){
 				img_add_watermark($image['path'], $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
@@ -105,7 +106,7 @@ class images extends cmsFrontend {
         return cmsTemplate::getInstance()->renderJSON($result);
 
     }
-
+    
 //============================================================================//
 //============================================================================//
 
@@ -132,21 +133,21 @@ class images extends cmsFrontend {
 		if (!$preset){
 			return array(
 				'success' => false,
-                'error'   => ''
-            );
+                                'error'   => ''
+                        );
 		}
 
 		$path = $this->cms_uploader->resizeImage($result['path'], array(
 			'width'   => $preset['width'],
-            'height'  => $preset['height'],
-            'square'  => $preset['is_square'],
-            'quality' => (($preset['is_watermark'] && $preset['wm_image']) ? 100 : $preset['quality'])
-        ));
+                        'height'  => $preset['height'],
+                        'square'  => $preset['is_square'],
+                        'quality' => (($preset['is_watermark'] && $preset['wm_image']) ? 100 : $preset['quality'])
+                    ));
 
 		$image = array(
 			'path' => $path,
-            'url'  => $this->cms_config->upload_host . '/' . $path
-        );
+                        'url'  => $this->cms_config->upload_host . '/' . $path
+                    );
 
 		if ($preset['is_watermark'] && $preset['wm_image']){
 			img_add_watermark($image['path'], $preset['wm_image']['original'], $preset['wm_origin'], $preset['wm_margin'], $preset['quality']);
