@@ -30,7 +30,7 @@
 
 <script type="text/javascript">
 
-    var templates_has_options = <?php echo json_encode($templates_has_options); ?>
+    var templates_has_options = <?php echo json_encode($templates_has_options); ?>;
 
     $(function(){
         $('#template, #template_mobile, #template_tablet, #template_admin').each(function(){

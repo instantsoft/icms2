@@ -600,7 +600,7 @@ class cmsModel{
     public function filterNotEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field NOT IS NULL");
+            $this->filter("$field IS NOT NULL");
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field <> '$value'");
