@@ -77,3 +77,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
     Mobile Detect Library
         by Serban Ghita, Nick Ilyin, Victor Stanciu
         http://mobiledetect.net
+
+    Chosen
+        by Patrick Filler, Matthew Lettini, @pfiller, @kenearley, @stof, @koenpunt, and @tjschuck
+        http://harvesthq.github.io/chosen/

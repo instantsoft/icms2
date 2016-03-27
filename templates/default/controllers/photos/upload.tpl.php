@@ -1,6 +1,8 @@
 <?php
 
     $this->addJS( $this->getJavascriptFileName('photos') );
+    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
+    $this->addCSS('templates/default/css/jquery-chosen.css');
 
     $this->setPageTitle(LANG_PHOTOS_UPLOAD);
 
@@ -23,18 +25,7 @@
         <legend><?php printf(LANG_PHOTOS_SELECT_ALBUM, $ctype['labels']['one']); ?></legend>
 
         <div class="field ft_list f_album_id">
-            <select name="album_id">
-                <?php foreach($albums as $album) { ?>
-					<?php if ($album['is_public']) { $album['title'] = '[' . LANG_PHOTOS_PUBLIC_ALBUM . '] ' . $album['title']; } ?>
-                    <option value="<?php echo $album['id']; ?>" <?php if ($album['id'] == $album_id) {?>selected="selected"<?php } ?>>
-                        <?php if (empty($album['parent_title'])){ ?>
-                            <?php html($album['title']); ?>
-                        <?php } else { ?>
-                            <?php html($album['parent_title'].' → '.$album['title']); ?>
-                        <?php } ?>
-                    </option>
-                <?php } ?>
-            </select>
+            <?php echo html_select('album_id', $albums_select, $album_id, array('id'=>'album_id')); ?>
         </div>
         <div class="field">
             <?php printf(LANG_PHOTOS_NEW_ALBUM, href_to('albums', 'add'), $ctype['labels']['one']); ?>
@@ -48,3 +39,8 @@
     </div>
 
 </form>
+<script type="text/javascript">
+    $(function(){
+        $('#album_id').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', disable_search_threshold: 8, placeholder_text_single: '<?php echo LANG_SELECT; ?>'});
+    });
+</script>

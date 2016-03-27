@@ -201,14 +201,13 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     $datepicker_default = array(
         'showStatus' => true,
         'changeYear' => true,
-        'showOn'     => 'both',
         'dateFormat' => cmsConfig::get('date_format_js')
     );
     if($datepicker){
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
     $attr_str = html_attr_str($attributes);
-	$html  = '<input type="text" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
+	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
     $html .= '$(function(){ $("#'.$id.'").datepicker('.json_encode($datepicker_default).'); });';
     $html .= '</script>';

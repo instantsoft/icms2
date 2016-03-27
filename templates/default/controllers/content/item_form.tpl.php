@@ -1,6 +1,8 @@
 <?php
 
     $this->addJS('templates/default/js/content.js');
+    $this->addJS('templates/default/js/jquery-chosen.js');
+    $this->addCSS('templates/default/css/jquery-chosen.css');
 
     $page_title =   $do=='add' ?
                     sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) :
@@ -37,11 +39,11 @@
             'href'  => $back_url ? $back_url : href_to($ctype['name'])
         ));
     }
-	
+
 	$is_multi_cats = !empty($ctype['options']['is_cats_multi']);
 
     $this->addBreadcrumb($page_title);
-	
+
 ?>
 
 <h1><?php echo html($page_title) ?></h1>
@@ -68,24 +70,23 @@
 <?php } ?>
 
 <?php if ($is_multi_cats) { ?>
-	<div class="content_multi_cats_form">
-		<div class="list"></div>
-		<div class="add_button">
-			<a href="javascript:" class="ajaxlink"><?php echo LANG_ADD; ?></a>
-		</div>
+	<div class="content_multi_cats_data">
+        <?php echo html_select('add_cats[]', array(), '', array('multiple'=>true)); ?>
 	</div>
 <?php } ?>
 
 <?php if ($props || $is_multi_cats){ ?>
-    <script>        
+    <script>
 		<?php if ($is_multi_cats){ ?>
-			<?php echo $this->getLangJS('LANG_DELETE'); ?>
-			var add_cats = [];
+			<?php echo $this->getLangJS('LANG_LIST_EMPTY','LANG_SELECT', 'LANG_CONTENT_SELECT_CATEGORIES'); ?>
+			var add_cats = []; // оставлено для совместимости
+            var add_cats_data = [];
 			<?php if (!empty($add_cats)) { ?>
 				<?php foreach($add_cats as $cat_id){ ?>
-					add_cats.push(<?php echo $cat_id; ?>);
+					add_cats_data.push(<?php echo $cat_id; ?>);
 				<?php } ?>
 			<?php } ?>
+            icms.content.initMultiCats(add_cats_data);
 		<?php } ?>
 		<?php if ($props){ ?>
 			<?php echo $this->getLangJS('LANG_LOADING'); ?>

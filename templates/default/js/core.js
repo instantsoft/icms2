@@ -108,7 +108,7 @@ icms.forms = (function ($) {
 		var child_list = $('#'+child_id);
 
 		if ($('#f_'+child_id+' .loading').length==0){
-			child_list.after('<div class="loading"></div>');
+			$('#f_'+child_id+' label').append(' <div class="loading"></div>');
 		}
 
 		child_list.html('');
@@ -118,6 +118,8 @@ icms.forms = (function ($) {
 			for(var k in result){
 				child_list.append('<option value="'+k+'">'+result[k]+'</option>');
 			}
+
+            $(child_list).trigger('chosen:updated');
 
 			$('#f_'+child_id+' .loading').remove();
 

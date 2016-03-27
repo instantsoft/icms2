@@ -40,6 +40,8 @@ icms.geo = (function ($) {
 
             child_list.parent('.list').show();
 
+            $(child_list).trigger('chosen:updated');
+
             if (child_list_id != 'cities'){
                 icms.geo.changeParent(child_list, 'cities');
             }

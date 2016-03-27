@@ -465,7 +465,7 @@ class content extends cmsFrontend {
                             $tree = $content_model->getCategoriesTree($item['ctype_name']);
                             $level_offset = 0;
                             $last_header_id = false;
-                            $items = array('' => LANG_CONTENT_SELECT_CATEGORY );
+                            $items = array('' => '' );
 
                             if ($tree){
                                 foreach($tree as $c){
@@ -523,7 +523,7 @@ class content extends cmsFrontend {
         // Если включены личные папки, добавляем в форму поле выбора личной папки
         if ($ctype['is_folders']){
             $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder');
-            $folders = array('0'=>LANG_CONTENT_SELECT_FOLDER);
+            $folders = array('0'=>'');
             if ($folders_list) { $folders = $folders + $folders_list; }
             $form->addField($fieldset_id,
                 new fieldList('folder_id', array(

@@ -516,10 +516,7 @@ form .field:last-child{
 }
 
 form fieldset{
-    padding:10px 0;
-    padding-bottom:15px ;
-    padding-left:15px;
-    padding-right:20px;
+    padding:10px 15px 15px 15px;
     border:solid 1px #B3C2C9;
     margin-bottom:12px;
 }
@@ -547,10 +544,9 @@ form .field label {
 form .field_error .error_text{ font-size:12px; color:#c0392b; float:right; margin-top: 8px; }
 form #f_slug.field_error .error_text { float:none; }
 
-.input{
-    height:16px;
+.input {
+    line-height: normal;
 }
-
 .input,
 .date-input,
 .city-input,
@@ -562,10 +558,21 @@ select {
     box-shadow: inset 0 1px 2px #DDD;
     color:#333;
     outline:none;
+    box-sizing: border-box;
+    height: 27px;
+    line-height: 25px;
+    display: inline-block;
+    font-family: inherit;
+    font-size: inherit;
+    transition: box-shadow ease-in-out .15s;
+}
+.input:focus,
+.textarea:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .input,
-.textarea { width:99%; }
+.textarea,
 select { width:100%; }
 
 .textarea { height:200px; resize: vertical; }
@@ -580,8 +587,8 @@ select { width:100%; }
     display: inline-block;
     margin-bottom:2px;
     background:#FFF;
-    height:16px;
     line-height:16px;
+    height: 26px;
     padding: 4px 2px;
 }
 
@@ -624,6 +631,7 @@ form .input-prefix-suffix .input{
     width:300px;
     float:left;
     border-radius:0;
+    height: 26px;
 }
 
 form .input-prefix-suffix .prefix,
@@ -659,6 +667,7 @@ input.button {
 	vertical-align: middle;
 	background: #2980b9;
     border:none;
+    transition: background ease-in-out .15s;
 }
 
 input.button-submit:hover,
@@ -755,10 +764,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     height:32px;
     line-height:32px;
 }
-
-.input-users-list .profile .avatar{
-}
-
 .input-users-list .profile .name{
     height:32px;
     line-height:32px;
@@ -943,12 +948,11 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     margin:10px 0;
     background:#ecf0f1;
     padding:15px;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 #comments_widget #comments_add_form textarea{
     height:100px;
-    width:98%;
     margin-bottom:4px;
 }
 
@@ -1198,7 +1202,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #wall_widget #wall_add_form textarea{
     height:100px;
-    width:98%;
     margin-bottom:4px;
 }
 
@@ -1480,7 +1483,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 
 #pm_contact .composer .editor textarea{
-    width: 565px;
     height: 55px;
     resize: none;
 }
@@ -1631,19 +1633,22 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #geo_window {
     padding:15px;
-    height:150px;
+    height:350px;
+    width:300px;
+    box-sizing: border-box;
 }
-
 #geo_window .wrapper{
     margin-top: auto;
     margin-bottom: auto;
+    box-sizing: border-box;
 }
-
+#geo_window form > .list {
+    margin: 0 0 10px 0;
+}
 #geo_window select{
-    width:300px;
+    width:100%;
     margin-bottom:5px;
 }
-
 #geo_window .buttons{
     margin-top:10px;
     text-align: center;
@@ -1678,7 +1683,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     margin-top:100px;
 }
 
-
 .login_form .label{ color:#68809B; font-size:16px; }
 .login_form .input{ width:100%; }
 .login_form .input:focus{ box-shadow: 0 0 4px #BDC3C7;  }
@@ -1691,36 +1695,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .login_form .submit { margin: 0; }
 .login_form .reg_link { font-size:13px; padding-left: 15px; color:#34495e; }
 
-/* Content multi cats ================================================= */
-
-.content_multi_cats_form {
+.content_multi_cats_data {
 	display:none;
-}
-
-.content_multi_cats_form .add_button {
-	padding-left:20px;
-	background:url("../images/icons/add.png") no-repeat left center;
-	font-size:12px;
-}
-
-.content_multi_cats_form .list .field:last-child {
-	margin-bottom:5px;
-}
-
-.content_multi_cats_form .cat_selector{
-	overflow:hidden;
-}
-
-.content_multi_cats_form .cat_selector select {
-	width:90%;
-}
-
-.content_multi_cats_form .cat_selector a {
-	display: inline-block;
-	width:16px;
-	height:16px;
-	margin-left:5px;
-	background:url("../images/icons/delete.png") no-repeat center;
 }
 .gif_image {
     display: block;

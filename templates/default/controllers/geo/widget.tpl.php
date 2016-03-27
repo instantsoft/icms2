@@ -1,3 +1,7 @@
+<?php
+$this->addJSFromContext('templates/default/js/jquery-chosen.js');
+$this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+?>
 <div id="geo_window">
 
     <div class="wrapper">
@@ -25,3 +29,8 @@
     </div>
 
 </div>
+<script type="text/javascript">
+    $(function(){
+        $('#geo_window .list > select').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%'});
+    });
+</script>

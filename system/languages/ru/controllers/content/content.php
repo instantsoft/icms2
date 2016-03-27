@@ -44,6 +44,7 @@
     define('LANG_CONTENT_ACTIVITY_ADD_DESC',    'добавляет %s %s');
 
     define('LANG_CONTENT_SELECT_CATEGORY',   '-- выберите категорию --');
+    define('LANG_CONTENT_SELECT_CATEGORIES', 'Кликните, чтобы выбрать дополнительные категории');
     define('LANG_CONTENT_SELECT_FOLDER',     '-- выберите папку --');
 
     define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Приватные %s друзей');

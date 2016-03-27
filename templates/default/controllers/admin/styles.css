@@ -334,7 +334,7 @@ form fieldset .field, form .hint {
     clear: both;
 }
 form fieldset{
-    padding-right:15px;
+    padding:10px 15px 15px 15px;
     border-radius:4px;
     border:solid 1px #B3C2C9;
     margin-bottom:12px;
@@ -370,6 +370,10 @@ form .ft_list .loading{
 	height:16px;
 	margin-left:10px;
 }
+form .ft_list label .loading{
+	width:13px;
+	height:13px;
+}
 
 .input,
 .textarea,
@@ -378,11 +382,26 @@ form .ft_list .loading{
 .short-input,
 select {
     border: solid 1px #aaa;
-    border-radius:3px;
+    border-radius:2px;
     padding:4px;
+    font-size:14px;
     box-shadow: inset 0 2px 8px #DDD;
     color:#333;
-    font-size: 100%;
+    outline:none;
+    box-sizing: border-box;
+    height: 27px;
+    line-height: 25px;
+    display: inline-block;
+    font-family: inherit;
+    font-size: inherit;
+    transition: box-shadow ease-in-out .15s;
+}
+.chosen-container-single .chosen-single {
+    border-radius: 2px;
+}
+.input:focus,
+.textarea:focus {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 select:focus { outline: none; }
 .file-input {
@@ -423,8 +442,9 @@ form .field_error .input,
 form .field_error .textarea,
 form .field_error select { border:solid 1px red; }
 
-form .field .input, form .field .textarea{ width:99%; }
+form .field .input, form .field .textarea{ width:100%; }
 form select { width:300px; }
+#site_settings #fset_1 .chosen-container { width:300px !important; }
 
 form .field .input-number,
 form .field .input-small { width:70px; }
@@ -442,11 +462,13 @@ form .error_text{
     float:left;
     border-radius:0;
     margin:0;
+    height: 26px;
 }
 
 .input-prefix-suffix .prefix,
 .input-prefix-suffix .suffix{
     height:16px;
+    line-height: 16px;
     padding:4px 8px;
     display:inline-block;
     float:left;
@@ -490,6 +512,7 @@ input.button {
     box-shadow:
         inset 0 -1px 1px #fff,
         0 1px 1px #CCCCCC;
+    transition: all .3s;
 }
 
 input.button-submit:hover,
@@ -1510,19 +1533,22 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #geo_window {
     padding:15px;
-    height:150px;
+    height:350px;
+    width:300px;
+    box-sizing: border-box;
 }
-
 #geo_window .wrapper{
     margin-top: auto;
     margin-bottom: auto;
+    box-sizing: border-box;
 }
-
+#geo_window form > .list {
+    margin: 0 0 10px 0;
+}
 #geo_window select{
-    width:300px;
+    width:100%;
     margin-bottom:5px;
 }
-
 #geo_window .buttons{
     margin-top:10px;
     text-align: center;
@@ -1612,12 +1638,6 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 /* ========================================================================== */
 /* ========================================================================== */
-
-#site_settings #f_template {
-    clear:both;
-    overflow:hidden;
-}
-
 #site_settings #f_template .hint, #site_settings #f_template_mobile .hint, #site_settings #f_template_tablet .hint, #site_settings #f_template_admin  .hint{ display: inline-block; }
 #site_settings #f_template .hint a, #site_settings #f_template_mobile .hint a, #site_settings #f_template_tablet .hint a, #site_settings #f_template_admin  .hint a {
     padding-left:20px;
@@ -1677,6 +1697,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding:5px;
     background:#FFF;
     font-size:16px;
+    height: 32px;
 }
 
 #dashboard #chart-canvas {

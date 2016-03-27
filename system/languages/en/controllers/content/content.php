@@ -44,6 +44,7 @@
     define('LANG_CONTENT_ACTIVITY_ADD_DESC','adds %s %s');
 
     define('LANG_CONTENT_SELECT_CATEGORY',  '-- select a category --');
+    define('LANG_CONTENT_SELECT_CATEGORIES', 'Click to select additional categories');
     define('LANG_CONTENT_SELECT_FOLDER',    '-- select a folder --');
 
     define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Private friends %s');

@@ -319,33 +319,51 @@ class cmsUploader {
 
     public function saveXHRFile($destination, $orig_name=''){
 
-        $cfg = cmsConfig::getInstance();
+        $target = @fopen($destination, 'wb');
+        $input  = @fopen("php://input", 'rb');
 
-        $input = fopen("php://input", "r");
-        $temp = tmpfile();
-        $realSize = stream_copy_to_stream($input, $temp);
-        fclose($input);
-
-        if ($realSize != $this->getXHRFileSize()){
+        if (!$target){
             return array(
                 'success' => false,
-                'error' => LANG_UPLOAD_ERR_PARTIAL,
-                'name' => $orig_name,
-                'path' => ''
+                'error'   => LANG_UPLOAD_ERR_CANT_WRITE,
+                'name'    => $orig_name,
+                'path'    => ''
+            );
+        }
+        if (!$input){
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_NO_FILE,
+                'name'    => $orig_name,
+                'path'    => ''
             );
         }
 
-        $target = fopen($destination, "w");
-        fseek($temp, 0, SEEK_SET);
-        stream_copy_to_stream($temp, $target);
-        fclose($target);
+        while ($buff = fread($input, 4096)) {
+            fwrite($target, $buff);
+        }
+
+        @fclose($target);
+        @fclose($input);
+
+        $real_size = filesize($destination);
+
+        if ($real_size != $this->getXHRFileSize()){
+            @unlink($destination);
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_PARTIAL,
+                'name'    => $orig_name,
+                'path'    => ''
+            );
+        }
 
         return array(
             'success' => true,
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $realSize
+            'path'    => $destination,
+            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'name'    => $orig_name,
+            'size'    => $real_size
         );
 
     }

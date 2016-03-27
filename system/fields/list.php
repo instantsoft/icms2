@@ -7,6 +7,7 @@ class fieldList extends cmsFormField {
     public $filter_type = 'int';
     public $filter_hint = LANG_PARSER_LIST_FILTER_HINT;
     public $var_type    = 'string';
+    public $native_tag  = false;
 
     public function getOptions(){
         return array(
@@ -119,7 +120,7 @@ class fieldList extends cmsFormField {
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');
-        $this->data['dom_attr']    = array('id' => $this->id, 'required'=>(array_search(array('required'), $this->getRules()) !== false));
+        $this->data['dom_attr']    = array('id' => $this->id);
 
         return parent::getInput($value);
 
