@@ -96,6 +96,11 @@
     define('LANG_PARSER_URL',                'Link');
     define('LANG_PARSER_URL_REDIRECT',       'Links through a redirect');
     define('LANG_PARSER_URL_AUTO_HTTP',      'Automatically adds http://');
+    define('LANG_PARSER_URL_TARGET',         'Open link in new window');
+    define('LANG_PARSER_URL_NOFOLLOW',       'Add attribute rel="nofollow"');
+    define('LANG_PARSER_URL_CSS_CLASS',      'To link a CSS class');
+    define('LANG_PARSER_URL_TITLE',          'The ability to set the title for links');
+    define('LANG_PARSER_URL_TITLE_HINT',     'To display link title, enter its name through sign "|"<br>example: google.com|Google');
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');
@@ -110,6 +115,9 @@
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES',    'The maximum number of images in the recording');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_UNITS','pcs.');
+    define('LANG_PARSER_IMAGE_MAX_IMAGES_HINT','if not specified, the default 5pcs.');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Size on list page');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Size on item page');
@@ -238,6 +246,7 @@
     define('LANG_UPLOAD_ERR_CANT_WRITE', 'Failed to write file to disk');
     define('LANG_UPLOAD_ERR_EXTENSION', 'File download was interrupted');
     define('LANG_UPLOAD_ERR_MIME', 'The file has the wrong format');
+    define('LANG_UPLOAD_ERR_MAX_IMAGES',  'For this record reached the limit of images!');
 
     //MONEY
     define('LANG_CURRENCY',                  '$');

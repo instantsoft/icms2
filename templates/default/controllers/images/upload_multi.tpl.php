@@ -29,8 +29,8 @@
         <?php if ($images){ ?>
             <?php foreach($images as $idx => $paths){ ?>
                 <div class="preview block" rel="<?php echo $idx; ?>">
-					<?php  $is_image_exists = !empty($paths); ?>
-					<?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . end($paths); ?>" /><?php } ?>
+                    <?php  $is_image_exists = !empty($paths); ?>
+                    <?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . end($paths); ?>" /><?php } ?>
                     <a href="javascript:" onclick="icms.images.removeOne('<?php echo $name; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
                 </div>
             <?php } ?>
@@ -55,9 +55,9 @@
     <div class="loading block" style="display:none">
         <?php echo LANG_LOADING; ?>
     </div>
-
     <script>
-        <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
+        <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR', 'LANG_UPLOAD_ERR_MAX_IMAGES'); ?>
+        icms.images.max_images = <?php echo $max_images; ?>;
         icms.images.createUploader('<?php echo $name; ?>', '<?php echo $upload_url; ?>');
         <?php if($allow_import_link){ ?>
             $(function(){

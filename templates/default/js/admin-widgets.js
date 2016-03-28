@@ -206,7 +206,7 @@ function widgetAddActionButtons(widget_dom){
 
 function widgetToggle(id){
 
-    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + ']');
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + "], #cp-widgets-search li[bind-id=" + id + "]");
 
     var toggle_url = $('#cp-widgets-layout').data('toggle-url') + '/' + id;
 
@@ -311,6 +311,19 @@ function widgetDelete(id){
 
     return false;
 
+}
+
+function widgetCancel(id){
+
+    $('#cp-widgets-search ul').removeClass('position').hide();
+    
+    $('#cp-widgets-search ul li').removeClass('hide');
+    
+    $('#cp-widgets-search .actions').hide(); 
+    
+    $('#widget_name').val('').show();
+
+    return true;
 }
 
 function widgetsSavePositionOrderings(position){

@@ -175,6 +175,12 @@ class modelWidgets extends cmsModel {
         return $this->getItemById('widgets', $id);
 
     }
+    
+    public function getWidgetsName($name){
+
+        return $this->filterLike("title", "%{$name}%")->get('widgets_bind');
+
+    }
 
     public function getWidgetBinding($id){
 

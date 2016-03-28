@@ -262,7 +262,8 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 /* ========================================================================== */
 /* ========================================================================== */
 
-.cp_toolbar {
+.cp_toolbar,
+#cp-widgets-search{
     padding:5px 10px;
     background:#F9F9F9;
     border: solid 1px #EDEDED;
@@ -316,6 +317,9 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 .cp_toolbar .help .item { background: url("../../images/icons/help.png") no-repeat left center; }
 .cp_toolbar .install .item { background: url("../../images/icons/install.png") no-repeat left center; }
 
+#cp-widgets-search input {
+    width: 99%;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 
@@ -1321,6 +1325,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp-widgets-list ul,
 #cp-widgets-list li,
+#cp-widgets-search ul,
+#cp-widgets-search li,
 #cp-widgets-layout .position,
 #cp-widgets-layout .position li{
     margin:0;
@@ -1328,9 +1334,13 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     list-style: none;
     font-size:12px;
 }
-
+#cp-widgets-search ul,
+#cp-widgets-search li{
+    margin: 12px 0;  
+}
 #cp-widgets-list li,
-#cp-widgets-layout .position li{
+#cp-widgets-layout .position li,
+#cp-widgets-search .position li{
     cursor:pointer;
     padding:3px 8px;
     padding-left:24px;
@@ -1345,6 +1355,13 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 	line-height: 16px;
     position: relative;
     transition:background 0.1s linear;
+}
+#cp-widgets-search .position li{
+    background: #FCF2CF;
+    padding-left: 5px;
+}
+#cp-widgets-search {
+    position: relative;
 }
 
 #cp-widgets-layout .position li.tabbed{
@@ -1384,7 +1401,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 
 #cp-widgets-layout li .actions,
-#cp-widgets-list li .actions {
+#cp-widgets-list li .actions,
+#cp-widgets-search .actions{
   display: block;
   overflow: hidden;
   position: absolute;
@@ -1393,7 +1411,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 
 #cp-widgets-layout li .actions a ,
-#cp-widgets-list li .actions a {
+#cp-widgets-list li .actions a,
+#cp-widgets-search li .actions a{
     opacity: 0;
     height: 22px;
     width: 25px;
@@ -1403,35 +1422,52 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     background-position: center center;
     transition:opacity 0.1s linear;
 }
+#cp-widgets-search li .actions a{
+    opacity: 1;
+}
 
 #cp-widgets-layout li:hover .actions a ,
 #cp-widgets-list li:hover .actions a {
     opacity: 0.9;
 }
-#cp-widgets-layout .position li.hide{
+#cp-widgets-layout .position li.hide,
+#cp-widgets-search .position li.hide{
     background: url("../../images/icons/drag.png") no-repeat 4px center #BBB;
     background-color: #BBB;
     border: solid 1px #AAA;
     box-shadow: 0 1px 1px #CCC;
     color: #666;
 }
-#cp-widgets-layout .position li.hide .actions a.hide{
+#cp-widgets-search .position li.hide{
+    background: none;
+    background-color: #BBB;
+}
+#cp-widgets-layout .position li.hide .actions a.hide,
+#cp-widgets-search .position li.hide .actions a.hide{
     background-image: url("../../images/icons/flag_check.png");
     background-position: -16px 3px;
     width: 18px;
 }
-
-#cp-widgets-layout li .actions a.edit ,
-#cp-widgets-list li .actions a.edit {
+#cp-widgets-search .actions a.page{
+    background-image: url("../../images/icons/search.png");
+}
+#cp-widgets-search .actions a.cancel{
+    background-image: url("../../images/icons/cancel.png");
+}
+#cp-widgets-layout li .actions a.edit,
+#cp-widgets-list li .actions a.edit,
+#cp-widgets-search li .actions a.edit{
     background-image: url("../../images/icons/edit.png");
     margin-right: 5px;
 }
 
-#cp-widgets-layout li .actions a.delete ,
-#cp-widgets-list li .actions a.delete {
+#cp-widgets-layout li .actions a.delete,
+#cp-widgets-list li .actions a.delete,
+#cp-widgets-search li .actions a.delete{
     background-image: url("../../images/icons/delete.png");
 }
-#cp-widgets-layout li .actions a.hide {
+#cp-widgets-layout li .actions a.hide,
+#cp-widgets-search li .actions a.hide{
     background-image: url("../../images/icons/flag_check.png");
     background-position: 9px 3px;
     margin-right: 5px;
