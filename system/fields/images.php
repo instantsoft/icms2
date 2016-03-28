@@ -59,12 +59,9 @@ class fieldImages extends cmsFormField {
 
             if($this->getOption('first_image_emphasize') && !$small_preset){
                 $small_preset = $this->getOption('size_full');
-                $a_class = 'first_type_images is_first_image';
+                $a_class = 'first_type_images';
             } else {
                 $small_preset = 'small';
-                if($this->getOption('first_image_emphasize')){
-                    $a_class = 'first_type_images';
-                }
              }
 
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
