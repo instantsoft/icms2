@@ -568,6 +568,16 @@ aside .menu .item{
 }
 
 @media screen and (max-width: 640px) {
+    .is_first_image {
+        float: none;
+        clear: both;
+        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+    }
+    .is_first_image > img {
+        width: 100%;
+    }
     #layout header #logo { margin: 0 auto; overflow:hidden; width:200px; }
     #layout header .menu { display:none; }
     .tabs-menu ul { display:none; }

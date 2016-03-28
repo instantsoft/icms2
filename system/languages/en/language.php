@@ -65,13 +65,14 @@
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File from the <b>%s</b> folder in your theme, without <b>.tpl.php</b>');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
+    define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
-
     define('LANG_PARSER_CITY',               'City');
     define('LANG_PARSER_CITY_FILTER_HINT',   'City ID');
     define('LANG_PARSER_CHECKBOX',           'Checkbox');
@@ -110,6 +111,7 @@
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in the item');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Size on list page');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Size on item page');

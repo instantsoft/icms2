@@ -100,6 +100,10 @@ class images extends cmsFrontend {
 			unlink($result['path']);
 		}
 
+        if ($this->request->isInternal()){
+            return $result;
+        }
+
         unset($result['path']);
 
         return cmsTemplate::getInstance()->renderJSON($result);

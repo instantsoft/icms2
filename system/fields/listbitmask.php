@@ -3,10 +3,23 @@
 class fieldListBitmask extends cmsFormField {
 
     public $title       = LANG_PARSER_LIST_MULTIPLE;
-    public $sql         = 'varchar(64) NULL DEFAULT NULL';
+    public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $allow_index = true;
     public $filter_type = 'str';
     public $var_type    = 'array';
+
+    public function getOptions(){
+        return array(
+            new fieldNumber('max_length', array(
+                'title'   => LANG_PARSER_BITMASK_MAX,
+                'hint'    => LANG_PARSER_BITMASK_MAX_HINT,
+                'default' => 64,
+                'rules' => array(
+                    array('min', 1)
+                )
+            ))
+        );
+    }
 
     public function getFilterInput($value) {
 

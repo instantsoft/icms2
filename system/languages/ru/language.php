@@ -65,6 +65,8 @@
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
+    define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
@@ -109,6 +111,7 @@
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');

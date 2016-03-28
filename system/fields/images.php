@@ -30,6 +30,9 @@ class fieldImages extends cmsFormField {
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            )),
+            new fieldCheckbox('first_image_emphasize', array(
+                'title' => LANG_PARSER_FIRST_IMAGE_EMPHASIZE
             ))
         );
 
@@ -47,14 +50,27 @@ class fieldImages extends cmsFormField {
 
         $html = '';
 
+        $small_preset = false;
+        $a_class = '';
+
         foreach($images as $key=>$paths){
 
             if (!isset($paths[$this->getOption('size_full')])){ continue; }
 
+            if($this->getOption('first_image_emphasize') && !$small_preset){
+                $small_preset = $this->getOption('size_full');
+                $a_class = 'first_type_images is_first_image';
+            } else {
+                $small_preset = 'small';
+                if($this->getOption('first_image_emphasize')){
+                    $a_class = 'first_type_images';
+                }
+             }
+
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
                 $html .= html_gif_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key, array('class'=>'img-'.$this->getName()));
             } else {
-                $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+                $html .= '<a class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
             }
 
         }

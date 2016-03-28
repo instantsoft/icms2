@@ -14,8 +14,11 @@ class fieldString extends cmsFormField {
                 'default' => 0
             )),
             new fieldNumber('max_length', array(
-                'title' => LANG_PARSER_TEXT_MAX_LEN,
-                'default' => 255
+                'title'   => LANG_PARSER_TEXT_MAX_LEN,
+                'default' => 255,
+                'rules' => array(
+                    array('min', 1)
+                )
             )),
             new fieldCheckbox('show_symbol_count', array(
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
