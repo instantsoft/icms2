@@ -114,7 +114,7 @@ aside .widget > .title {
 
 .widget_tabbed > .tabs .links a{
     display:inline;
-    padding: 2px 8px;
+    padding: 3px 8px;
     background: #27ae60;
     color:#fff;
     font-size: 12px;
@@ -200,7 +200,7 @@ aside .widget_tabbed > .tabs .links a {
     margin-top: 10px;
 }
 
-.widget_content_list.featured .item-first .read-more a:hover { background:#2980b9; }
+.widget_content_list.featured .item-first .read-more a:hover { background:#3498db; }
 
 .widget_content_list.tiles-big .item {  }
 .widget_content_list.tiles-big .item .title { font-size:14px; }
@@ -558,7 +558,6 @@ aside .widget_tabbed > .tabs .links a {
 .widget_auth .field { overflow: hidden; }
 .widget_auth .field a { float:right; font-size:12px; margin-top:4px; }
 .widget_auth .field label { float:left; }
-.widget_auth .field .input { width: 95%; }
 .widget_auth .buttons { margin-top:15px; }
 
 @media screen and (max-width: 640px) {

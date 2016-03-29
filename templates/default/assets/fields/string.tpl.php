@@ -19,8 +19,8 @@ $(function(){
 </script>
 <?php } ?>
 <?php if($field->data['autocomplete']){ ?>
-    <?php $this->addJS('templates/default/js/jquery-ui.js'); ?>
-    <?php $this->addCSS('templates/default/css/jquery-ui.css'); ?>
+    <?php $this->addJSFromContext('templates/default/js/jquery-ui.js'); ?>
+    <?php $this->addCSSFromContext('templates/default/css/jquery-ui.css'); ?>
 
 <script type="text/javascript">
     var cache = {};

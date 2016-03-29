@@ -1064,6 +1064,10 @@ INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, 
 (21, 'default', 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
+(143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Страницы', NULL, 'pages\npages-*\npages/*', NULL),
+(144, 'content', 'pages.list', 'LANG_WP_CONTENT_LIST', 'Страницы', NULL, 'pages\npages-*\npages/*', 'pages/*.html\npages/add\npages/edit/*'),
+(145, 'content', 'pages.item', 'LANG_WP_CONTENT_ITEM', 'Страницы', NULL, 'pages/*.html', NULL),
+(146, 'content', 'pages.edit', 'LANG_WP_CONTENT_ITEM_EDIT', 'Страницы', NULL, 'pages/add\npages/edit/*', NULL),
 (147, 'content', 'articles.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Статьи', NULL, 'articles\narticles-*\narticles/*', NULL),
 (148, 'content', 'articles.list', 'LANG_WP_CONTENT_LIST', 'Статьи', NULL, 'articles\narticles-*\narticles/*', 'articles/*.html\narticles/add\narticles/edit/*'),
 (149, 'content', 'articles.item', 'LANG_WP_CONTENT_ITEM', 'Статьи', NULL, 'articles/*.html', NULL),

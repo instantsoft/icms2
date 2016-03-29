@@ -379,9 +379,9 @@ class cmsCore {
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
                 'generator' => function($item){
-                    $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
+                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
                     $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
-		    $tpls = array_unique(array_merge($tpls, $default_tpls));
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
                     $items = array();
                     if ($tpls) {
                         foreach ($tpls as $tpl) {
@@ -396,9 +396,10 @@ class cmsCore {
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
                 'generator' => function($item){
-                    $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.cmsCore::getWidgetPath($item['name'], $item['controller']), '*.tpl.php');
-                    $default_tpls = cmsCore::getFilesList('templates/default/'.cmsCore::getWidgetPath($item['name'], $item['controller']), '*.tpl.php');
-		    $tpls = array_unique(array_merge($tpls, $default_tpls));
+                    $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
+                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.$w_path, '*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/'.$w_path, '*.tpl.php');
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
                     $items = array();
                     if ($tpls) {
                         foreach ($tpls as $tpl) {
