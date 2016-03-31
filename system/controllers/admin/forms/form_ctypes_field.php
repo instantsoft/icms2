@@ -148,8 +148,8 @@ class formAdminCtypesField extends cmsForm {
                         'hint' => LANG_CP_FIELD_PROFILE_VALUE_HINT,
                         'generator' => function($field) use($model){
                             $model->setTablePrefix(''); // Ниже модель не используется
-                            $fields = $model->filterIn('type', array('string', 'text', 'html', 'list'))->getContentFields('{users}');
-                            $items = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
+                            $fields = $model->filterIn('type', array('string', 'text', 'html', 'list', 'city'))->getContentFields('{users}');
+                            $items = array(''=>LANG_NO) + array_collection_to_list($fields, 'name', 'title');
                             return $items;
                         }
                     ))

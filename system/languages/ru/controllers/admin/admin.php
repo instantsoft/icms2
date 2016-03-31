@@ -182,6 +182,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Сверху');
     define('LANG_CP_FIELD_IN_LIST',             'Показывать в списке');
     define('LANG_CP_FIELD_IN_ITEM',             'Показывать в записи');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Показывать в профиле');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');
     define('LANG_CP_FIELD_IN_FILTER',           'Показывать в фильтре');

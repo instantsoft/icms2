@@ -2,6 +2,8 @@
 
 class cmsFormField {
 
+    const FIELD_CACHE_POSTFIX = '_cache';
+
     public $name;
     public $element_name = '';
     public $filter_type = false;
@@ -13,7 +15,9 @@ class cmsFormField {
     public $is_public = true;
 
     public $sql;
+    public $cache_sql;
     public $allow_index = true;
+    public $is_denormalization = false;
 
     public $item = null;
 
@@ -90,6 +94,8 @@ class cmsFormField {
 
     public function getName() { return $this->name; }
 
+    public function getDenormalName() { return $this->name.self::FIELD_CACHE_POSTFIX; }
+
     public function setName($name) {
         $this->name = $name;
         if (strpos($name, ':') !== false){
@@ -104,6 +110,8 @@ class cmsFormField {
     public function getElementName() { return $this->element_name; }
 
     public function setItem($item) { $this->item = $item; return $this; }
+
+    public function getCacheSQL() { return $this->cache_sql; }
 
     public function getSQL() {
 
@@ -171,6 +179,10 @@ class cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
        return $value;
+    }
+
+    public function storeCachedValue($value){
+        return null;
     }
 
     public function delete($value){

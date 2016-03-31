@@ -73,8 +73,12 @@
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
-    define('LANG_PARSER_CITY',               'City');
-    define('LANG_PARSER_CITY_FILTER_HINT',   'City ID');
+    define('LANG_PARSER_CITY',               'Location');
+    define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine locations country-region-city, enter a name for unification of all fields. At a minimum, it should be established fields such as "Country" and "Region"');
+    define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'For example, "{country}, {city}", where country and city system field names. It is useful to use, disabling output for the rest of the field groups, showing the desired values in this field. If not specified - output value of the current field.');
     define('LANG_PARSER_CHECKBOX',           'Checkbox');
     define('LANG_PARSER_TEXT',               'Textarea');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Max length');
@@ -168,6 +172,8 @@
     define('LANG_MY_PROFILE',                'My profile');
     define('LANG_PROFILE',                   'Profile');
     define('LANG_CITY',                      'City');
+    define('LANG_REGION',                    'Region');
+    define('LANG_COUNTRY',                   'Country');
     define('LANG_COMPANY',                   'Company');
     define('LANG_PHONE',                     'Phone');
     define('LANG_NAME',                      'First Name');

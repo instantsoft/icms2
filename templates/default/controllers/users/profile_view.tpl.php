@@ -179,7 +179,7 @@
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
 
-                        <?php if (empty($profile[$field['name']])) { continue; } ?>
+                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
                         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
@@ -197,13 +197,9 @@
                             <?php } ?>
 
                             <div class="value">
-
                                 <?php
-
-                                    echo $field['handler']->parse( $profile[$field['name']] );
-
+                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
                                 ?>
-
                             </div>
 
                         </div>

@@ -38,12 +38,6 @@ class fieldImages extends cmsFormField {
 
     }
 
-    public function parseTeaser($value){
-
-        return $this->parse($value);
-
-    }
-
     public function parse($value){
 
         $images = is_array($value) ? $value : cmsModel::yamlToArray($value);

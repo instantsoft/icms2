@@ -309,9 +309,10 @@
     background: #F4F8FD;
     border: solid 1px #B8D6FB;
     margin: 20px 0;
-    overflow: hidden;
     padding:15px;
     color: #B3C2C9;
+    box-sizing: border-box;
+    clear: both;
 }
 
 .gui-panel h3 {
@@ -342,7 +343,8 @@
 
 .filter-panel .filter-container {
     padding:15px;
-    overflow: hidden;
+    box-sizing: border-box;
+    clear: both;
     position: relative;
 }
 
@@ -357,7 +359,10 @@
     color: #666;
 }
 
-.filter-panel .fields { overflow: hidden; }
+.filter-panel .fields {
+    box-sizing: border-box;
+    clear: both;
+}
 
 .filter-panel .fields .title {
     color:#68809B; text-shadow:0 1px 1px #fff;
@@ -373,8 +378,9 @@
 
 .filter-panel .fields .field{
     min-height:50px;
-    width:48%;
+    width:49%;
     margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
 .filter-panel .fields .field:nth-child(even){
@@ -388,8 +394,8 @@
 .filter-panel .input_checkbox_list { overflow:hidden; }
 .filter-panel .input_checkbox_list label { float:left; margin-right: 5px; color:#34495e; font-size:12px; }
 
-.filter-panel .buttons { overflow:hidden; margin-top: 5px; }
-.filter-panel .buttons .button-submit { margin-bottom: 3px; float:left; padding:8px; }
+.filter-panel .buttons { overflow:hidden; clear: both; margin-top: 5px; }
+.filter-panel .buttons .button-submit { float:left; padding:8px; }
 .filter-panel .buttons .link { float:left; height:32px; line-height: 32px; margin-left: 10px; }
 .filter-panel .buttons .link a { color:#34495e; }
 .filter-panel .buttons .link a:hover { color:#d35400; }

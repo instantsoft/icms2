@@ -11,6 +11,7 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
         $field_type = $this->request->get('type', '');
 
         $field_class = 'field' . string_to_camel('_',  $field_type );
+        if(!class_exists($field_class)){ cmsCore::error404(); }
 
         $base_field = new $field_class(null, null);
 
@@ -25,6 +26,11 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
 
             $values = $field['options'];
 
+        }
+
+        $options_js_file = $this->cms_template->getJavascriptFileName('fields/'.$field_type);
+        if($options_js_file){
+            $this->cms_template->addJSFromContext($options_js_file);
         }
 
         $this->cms_template->render('ctypes_field_options', array(

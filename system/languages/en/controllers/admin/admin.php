@@ -181,6 +181,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in item view');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In item');
     define('LANG_CP_FIELD_IN_FILTER',           'Show in filter');

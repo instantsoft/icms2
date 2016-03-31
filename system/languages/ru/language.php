@@ -73,8 +73,12 @@
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
-    define('LANG_PARSER_CITY',               'Город');
-    define('LANG_PARSER_CITY_FILTER_HINT',   'ID города');
+    define('LANG_PARSER_CITY',               'Местоположение');
+    define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'Если необходимо объединить местоположения страна-область-город, укажите одно имя объединения для всех полей. Как минимум должны быть созданы поля типа "страна" и "область"');
+    define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'Например, "{country}, {city}", где country и city системные имена полей. Полезно использовать, отключая для вывода остальные поля группировки, показывая нужные значения в этом поле. Если не указано - выводится значение текущего поля.');
     define('LANG_PARSER_CHECKBOX',           'Флаг');
     define('LANG_PARSER_TEXT',               'Текст');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
@@ -168,6 +172,8 @@
     define('LANG_MY_PROFILE',                'Мой профиль');
     define('LANG_PROFILE',                   'Профиль');
     define('LANG_CITY',                      'Город');
+    define('LANG_REGION',                    'Область');
+    define('LANG_COUNTRY',                   'Страна');
     define('LANG_COMPANY',                   'Компания');
     define('LANG_PHONE',                     'Телефон');
     define('LANG_NAME',                      'Имя');

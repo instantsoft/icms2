@@ -19,7 +19,7 @@ icms.content = (function ($) {
 			$('select', dom).val(add_cats[c]);
 		}
 	};
-    // оставено для совместимости, не используется в движке
+    // оставлено для совместимости, не используется в движке
 	this.addCat = function(){
 		var input = $('<select>').attr("name", "add_cats[]").html($('select#category_id').html());
 		var removeLink = $('<a>').attr('href', 'javascript:').attr('title', LANG_DELETE);

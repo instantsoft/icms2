@@ -76,4 +76,35 @@ function install_package(){
         $core->db->query("UPDATE `{#}widgets_bind` SET `template` = '{$template_name}', `is_enabled` = 1");
     }
 
+    if(!$core->db->isFieldExists('{users}', 'city_cache')){
+        $core->db->query("ALTER TABLE `{users}` ADD `city_cache` varchar(128) NULL DEFAULT NULL");
+    }
+
+    $users = $content_model->get('{users}');
+
+	foreach($users as $user){
+
+        if($user['city']){
+
+            $city_name = $content_model->getField('geo_cities', $user['city'], 'name');
+            if($city_name){
+                $content_model->update('{users}', $user['id'], array(
+                    'city_cache' => $city_name
+                ), true);
+            }
+
+        }
+
+	}
+
+    $core->db->update('{users}_fields', '1=1', array(
+        'is_in_item' => 1
+    ), true);
+
+    $core->db->update('{users}_fields', "type = 'city'", array(
+        'is_fixed'      => null,
+        'is_fixed_type' => null,
+        'is_system'     => null
+    ), true);
+
 }

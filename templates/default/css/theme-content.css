@@ -500,11 +500,14 @@ article div.content_categories:last-child {
 .content_item .ft_images .first_type_images > img {
     display: block;
     margin: 0;
+    width: 100%;
 }
 .first_type_images {
     margin-right: 10px;
     float: left;
     position: relative;
+    overflow: hidden;
+    max-width: 40%;
 }
 .first_type_images:after {
     content: '';

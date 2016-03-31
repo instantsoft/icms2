@@ -404,6 +404,14 @@ class modelContent extends cmsModel{
             $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$field['name']}` {$field_parser->getSQL()}";
             $this->db->query($sql);
 
+            if($field_parser->is_denormalization){
+
+                $cfield_name = $field['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+                $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$cfield_name}` {$field_parser->getCacheSQL()}";
+                $this->db->query($sql);
+
+            }
+
             if ($field['is_in_filter'] && $field_parser->allow_index){
                 $this->db->addIndex($content_table_name, $field['name']);
             }
@@ -586,10 +594,42 @@ class modelContent extends cmsModel{
 
             if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
 
-                $sql = "ALTER TABLE  `{#}{$content_table_name}` CHANGE  `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
+                $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
 
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
+
+                    // поля денормализации
+                    $old_cfield_name = $field_old['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+                    $new_cfield_name = $field['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+
+                    $update_cache_sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$old_cfield_name}` `{$new_cfield_name}` {$field_handler->getCacheSQL()}";
+
+                    // изменилось только имя поля
+                    if($field_handler->is_denormalization && $field_old['type'] == $field['type']){
+
+                        $this->db->query($update_cache_sql);
+
+                    }
+                    // изменился тип
+                    if($field_old['type'] != $field['type']){
+
+                        if($field_old['parser']->is_denormalization && $field_handler->is_denormalization){
+
+                            $this->db->query($update_cache_sql);
+
+                        } elseif($field_old['parser']->is_denormalization && !$field_handler->is_denormalization){
+
+                            $this->db->dropTableField($content_table_name, $old_cfield_name);
+
+                        } elseif(!$field_old['parser']->is_denormalization && $field_handler->is_denormalization){
+
+                            $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$new_cfield_name}` {$field_handler->getCacheSQL()}";
+                            $this->db->query($sql);
+
+                        }
+
+                    }
 
                     // удаляем старый индекс
                     $this->db->dropIndex($content_table_name, $field_old['name']);
@@ -722,6 +762,10 @@ class modelContent extends cmsModel{
         $this->reorder($fields_table_name);
 
         $this->db->dropTableField($content_table_name, $field['name']);
+
+        if($field['parser']->is_denormalization){
+            $this->db->dropTableField($content_table_name, $field['parser']->getDenormalName());
+        }
 
         return true;
 

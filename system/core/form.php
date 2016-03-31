@@ -314,7 +314,6 @@ class cmsForm {
                 $field->setItem($item);
 
                 $value = $field->store($value, $is_submitted, $old_value);
-
                 if ($value === false) { continue; }
 
                 if ($is_array === false){
@@ -324,6 +323,20 @@ class cmsForm {
                 if ($is_array !== false){
                     $name_parts = explode(':', $name);
                     $result[$name_parts[0]][$name_parts[1]] = $value;
+                }
+
+                // если нужна денормализация
+                if($is_submitted && $field->is_denormalization){
+
+                    $d_name = $field->getDenormalName();
+
+                    if ($is_array === false){
+                        $result[$d_name] = $field->storeCachedValue($value);
+                    } else {
+                        $d_name_parts = explode(':', $d_name);
+                        $result[$d_name_parts[0]][$d_name_parts[1]] = $field->storeCachedValue($value);
+                    }
+
                 }
 
             }

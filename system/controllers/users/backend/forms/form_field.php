@@ -73,9 +73,13 @@ class formUsersField extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_VISIBILITY,
                 'childs' => array(
+                    new fieldCheckbox('is_in_item', array(
+                        'title' => LANG_CP_FIELD_IN_PROFILE,
+                        'default' => true
+                    )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
-                    )),
+                    ))
                 )
             ),
             'labels' => array(

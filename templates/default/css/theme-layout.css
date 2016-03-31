@@ -574,6 +574,7 @@ aside .menu .item{
         margin-bottom: 10px;
         display: block;
         width: 100%;
+        max-width: 100%;
     }
     .content_item .ft_images .first_type_images:first-child > img {
         width: 100%;
