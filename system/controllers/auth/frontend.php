@@ -17,12 +17,11 @@ class auth extends cmsFrontend {
 
     public function actionLogout(){
 
-        cmsEventsManager::hook('auth_logout', cmsUser::getInstance()->id);
+        cmsEventsManager::hook('auth_logout', $this->cms_user->id);
 
         cmsUser::logout();
 
-        $this->redirectToHome();
-        $this->halt();
+        $this->redirectBack();
 
     }
 
@@ -56,14 +55,19 @@ class auth extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function authRedirectUrl($value){
+    public function getAuthRedirectUrl($value){
+
+        $url = href_to_home();
 
 		$user_id = cmsUser::sessionGet('user:id');
-		
-		if (!$user_id){ return href_to_home(); }
-		
+		if (!$user_id){ return $url; }
+
+        $back_url = $this->getBackURL();
+        if(strpos($back_url, href_to('auth', 'login')) !== false) {
+            $back_url = $url;
+        }
 		switch($value){
-			case 'none':        $url = href_to_current(); break;
+			case 'none':        $url = $back_url; break;
 			case 'index':       $url = href_to_home(); break;
 			case 'profile':     $url = href_to('users', $user_id); break;
 			case 'profileedit': $url = href_to('users', $user_id, 'edit'); break;

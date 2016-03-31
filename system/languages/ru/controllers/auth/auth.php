@@ -41,7 +41,7 @@
     define('LANG_REG_CFG_AUTH_CAPTCHA',         'Показывать капчу после неудачной авторизации');
     define('LANG_REG_CFG_FIRST_AUTH_REDIRECT',  'После первой авторизации на сайте');
     define('LANG_REG_CFG_AUTH_REDIRECT',        'После следующих авторизаций на сайте');
-    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Ничего не делать');
+    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Оставаться на странице, с которой авторизовались');
     define('LANG_REG_CFG_AUTH_REDIRECT_INDEX',       'Открыть главную страницу');
     define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE',     'Открыть профиль');
     define('LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT', 'Открыть настройки профиля');

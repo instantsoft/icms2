@@ -28,7 +28,6 @@
         <td class="left_cell" valign="top">
             <form action="<?php echo $this->href_to('login'); ?>" method="POST">
 
-                <?php if ($is_ajax){ echo html_input('hidden', 'is_back', 1); } ?>
                 <?php if ($back_url){ echo html_input('hidden', 'back', $back_url); } ?>
 
                 <div class="login_form">

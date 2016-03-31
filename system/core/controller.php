@@ -178,7 +178,7 @@ class cmsController {
      * @return array
      */
     public static function loadOptions($controller_name){
-
+        self::loadControllers();
         if (isset(self::$controllers[$controller_name]['options'])){
             return self::$controllers[$controller_name]['options'];
         }
@@ -723,12 +723,25 @@ class cmsController {
     }
 
     /**
-     * Возвращает предыдущий URL
+     * Возвращает предыдущий URL текущего сайта
      * @return str
      */
     public function getBackURL() {
-        if (!isset($_SERVER['HTTP_REFERER'])) { return $this->cms_config->root; }
-        return strlen($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/';
+
+        $back_url = $this->cms_config->root;
+
+        if(!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'http') === 0){
+
+            $refer = $_SERVER['HTTP_REFERER'];
+
+            if(strpos($refer, $this->cms_config->protocol.$_SERVER['HTTP_HOST']) === 0) {
+                $back_url = $refer;
+            }
+
+        }
+
+        return $back_url;
+
     }
 
     /**

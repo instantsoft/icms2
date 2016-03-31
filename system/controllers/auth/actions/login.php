@@ -5,17 +5,15 @@ class actionAuthLogin extends cmsAction {
 
         if (cmsUser::isLogged()) { $this->redirectToHome(); }
 
-        $email      = $this->request->get('login_email','');
-        $password   = $this->request->get('login_password','');
-        $remember   = (bool)$this->request->get('remember');
-
-        $back_url = $this->request->has('back') ?
-                    $this->request->get('back', '') :
-                    false;
+        $email    = $this->request->get('login_email', '');
+        $password = $this->request->get('login_password', '');
+        $remember = (bool)$this->request->get('remember');
+        $back_url = $this->request->get('back', '');
 
         $is_site_offline = !cmsConfig::get('is_site_on');
+        $is_submit = $this->request->has('submit');
 
-        if ($this->request->has('submit')){
+        if ($is_submit){
 
             $is_captcha_valid = true;
 
@@ -29,7 +27,7 @@ class actionAuthLogin extends cmsAction {
 
                 $logged_id  = cmsUser::login($email, $password, $remember);
 
-                if ( $logged_id ){
+                if ($logged_id){
 
                     if ($is_site_offline){
 						$userSession = cmsUser::sessionGet('user');
@@ -41,10 +39,6 @@ class actionAuthLogin extends cmsAction {
                     }
 
                     cmsEventsManager::hook('auth_login', $logged_id);
-
-                    $is_back = $this->request->get('is_back');
-
-                    if ($is_back){ $this->redirectBack(); }
 
                     $auth_redirect = $this->options['auth_redirect'];
 
@@ -58,7 +52,7 @@ class actionAuthLogin extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirect($this->authRedirectUrl($auth_redirect));
+                        $this->redirect($this->getAuthRedirectUrl($auth_redirect));
                     }
 
                 }
@@ -76,9 +70,15 @@ class actionAuthLogin extends cmsAction {
                 cmsUser::addSessionMessage(LANG_CAPTCHA_ERROR, 'error');
             }
 
+            if($this->options['auth_redirect'] == 'none' || (!empty($is_first_auth) && $this->options['first_auth_redirect'] == 'none')){
+
+                if(!$back_url){ $back_url = $this->getBackURL(); }
+
+            }
+
         }
 
-        if ($back_url){
+        if ($back_url && !$is_submit){
             cmsUser::addSessionMessage(LANG_LOGIN_REQUIRED, 'error');
         }
 
@@ -86,9 +86,9 @@ class actionAuthLogin extends cmsAction {
             $captcha_html = cmsEventsManager::hook('captcha_html');
         }
 
-        return cmsTemplate::getInstance()->render('login', array(
-            'back_url' => $back_url,
-            'captcha_html'=> isset($captcha_html) ? $captcha_html : false,
+        return $this->cms_template->render('login', array(
+            'back_url'     => $back_url,
+            'captcha_html' => (isset($captcha_html) ? $captcha_html : false)
         ));
 
     }

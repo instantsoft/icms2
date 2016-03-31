@@ -107,4 +107,25 @@ function install_package(){
         'is_system'     => null
     ), true);
 
+    // настройки контроллеров для пересохранения
+    save_controller_options(array('auth'));
+
+}
+
+function save_controller_options($controllers) {
+
+    foreach ($controllers as $controller) {
+        $controller_root_path = cmsConfig::get('root_path').'system/controllers/'.$controller.'/';
+        $form_file = $controller_root_path.'backend/forms/form_options.php';
+        $form_name = $controller.'options';
+        cmsCore::loadControllerLanguage($controller);
+        $form = cmsForm::getForm($form_file, $form_name, false);
+        if ($form) {
+            $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
+            cmsCore::getModel('content')->filterEqual('name', $controller)->updateFiltered('controllers', array(
+                'options' => $options
+            ));
+        }
+    }
+
 }

@@ -41,14 +41,14 @@
     define('LANG_REG_CFG_AUTH_CAPTCHA',         'Show CAPTCHA after failed log in');
     define('LANG_REG_CFG_FIRST_AUTH_REDIRECT',  'After the first login to the site');
     define('LANG_REG_CFG_AUTH_REDIRECT',        'After following authorizations on the website');
-    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Nothing to do');
-    define('LANG_REG_CFG_AUTH_REDIRECT_INDEX',       'Open the main page');
-    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE',     'Open the profile');
-    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT', 'Open the profile settings');
+    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Stay on page, at which the logged');
+    define('LANG_REG_CFG_AUTH_REDIRECT_INDEX',       'Open main page');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE',     'Open profile');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT', 'Open profile settings');
 
     define('LANG_REG_CFG_VERIFY_EMAIL',         'Send verification e-mail after registration');
     define('LANG_REG_CFG_VERIFY_EMAIL_HINT',    'New users will be blocked until they open URL from verification e-mail');
-	define('LANG_REG_CFG_REG_AUTO_AUTH',        'To authenticate the user after registration on the website');
+	define('LANG_REG_CFG_REG_AUTO_AUTH',        'Authorize user after registration');
     define('LANG_REG_CFG_VERIFY_EXPIRATION',   'Delete unverified accounts after, hours');
     define('LANG_REG_CFG_VERIFY_LOCK_REASON',  'E-mail verification required');
 	define('LANG_REG_CFG_DEF_GROUP_ID',		   'Put new users in groups');

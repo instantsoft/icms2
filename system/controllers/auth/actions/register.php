@@ -224,25 +224,18 @@ class actionAuthRegister extends cmsAction {
 						cmsEventsManager::hook('user_registered', $user);
 
 					}
-					
+
 					// авторизуем пользователя автоматически
 					if ($this->options['reg_auto_auth']){
-						$logged_id  = cmsUser::login($user['email'], $user['password1']);
 
-						if ( $logged_id ){
+						$logged_id = cmsUser::login($user['email'], $user['password1']);
 
-							if (!cmsConfig::get('is_site_on')){
-								$userSession = cmsUser::sessionGet('user');
-								if (!$userSession['is_admin']){
-									cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
-									cmsUser::logout();
-									$this->redirectBack();
-								}
-							}
+						if ($logged_id){
 
 							cmsEventsManager::hook('auth_login', $logged_id);
 
 						}
+
 					}
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
@@ -252,7 +245,7 @@ class actionAuthRegister extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirect($this->authRedirectUrl($this->options['first_auth_redirect']));
+                        $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
                     }
 
                 } else {
@@ -272,11 +265,16 @@ class actionAuthRegister extends cmsAction {
             $captcha_html = cmsEventsManager::hook('captcha_html');
         }
 
-        return cmsTemplate::getInstance()->render('registration', array(
-            'user' => $user,
-            'form' => $form,
-            'captcha_html'=> isset($captcha_html) ? $captcha_html : false,
-            'errors' => isset($errors) ? $errors : false
+        // запоминаем откуда пришли на регистрацию
+        if(empty($errors) && $this->options['first_auth_redirect'] == 'none'){
+            cmsUser::sessionSet('auth_back_url', $this->getBackURL());
+        }
+
+        return $this->cms_template->render('registration', array(
+            'user'         => $user,
+            'form'         => $form,
+            'captcha_html' => isset($captcha_html) ? $captcha_html : false,
+            'errors'       => isset($errors) ? $errors : false
         ));
 
     }
