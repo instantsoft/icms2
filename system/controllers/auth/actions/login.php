@@ -10,7 +10,7 @@ class actionAuthLogin extends cmsAction {
         $remember   = (bool)$this->request->get('remember');
 
         $back_url = $this->request->has('back') ?
-                    $this->request->get('back','') :
+                    $this->request->get('back', '') :
                     false;
 
         $is_site_offline = !cmsConfig::get('is_site_on');
@@ -44,14 +44,21 @@ class actionAuthLogin extends cmsAction {
 
                     $is_back = $this->request->get('is_back');
 
-                    if ($is_back){
-                        $this->redirectBack();
+                    if ($is_back){ $this->redirectBack(); }
+
+                    $auth_redirect = $this->options['auth_redirect'];
+
+                    $is_first_auth = cmsUser::getUPS('first_auth', $logged_id);
+
+                    if ($is_first_auth){
+                        $auth_redirect = $this->options['first_auth_redirect'];
+                        cmsUser::deleteUPS('first_auth', $logged_id);
                     }
 
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->authRedirectUrl($auth_redirect));
                     }
 
                 }

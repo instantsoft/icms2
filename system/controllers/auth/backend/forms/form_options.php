@@ -34,6 +34,10 @@ class formAuthOptions extends cmsForm {
                         'hint' => LANG_REG_CFG_VERIFY_EMAIL_HINT,
                     )),
 					
+                    new fieldCheckbox('reg_auto_auth', array(
+                        'title' => LANG_REG_CFG_REG_AUTO_AUTH,
+                    )),
+					
                     new fieldListGroups('def_groups', array(
                         'title' => LANG_REG_CFG_DEF_GROUP_ID,
                         'show_all' => false,
@@ -55,6 +59,28 @@ class formAuthOptions extends cmsForm {
 
                     new fieldCheckbox('auth_captcha', array(
                         'title' => LANG_REG_CFG_AUTH_CAPTCHA,
+                    )),
+
+                    new fieldList('first_auth_redirect', array(
+                        'title' => LANG_REG_CFG_FIRST_AUTH_REDIRECT,
+                        'default' => 'profile',
+						'items' => array(
+							'none' => LANG_REG_CFG_AUTH_REDIRECT_NONE,
+							'index' => LANG_REG_CFG_AUTH_REDIRECT_INDEX,
+							'profile' => LANG_REG_CFG_AUTH_REDIRECT_PROFILE,
+							'profileedit' => LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT,
+						)
+                    )),
+
+                    new fieldList('auth_redirect', array(
+                        'title' => LANG_REG_CFG_AUTH_REDIRECT,
+                        'default' => 'none',
+						'items' => array(
+							'none' => LANG_REG_CFG_AUTH_REDIRECT_NONE,
+							'index' => LANG_REG_CFG_AUTH_REDIRECT_INDEX,
+							'profile' => LANG_REG_CFG_AUTH_REDIRECT_PROFILE,
+							'profileedit' => LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT,
+						)
                     )),
 
                 )

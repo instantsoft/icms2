@@ -1,8 +1,6 @@
 <div class="widget_auth">
     <form action="<?php echo href_to('auth', 'login'); ?>" method="POST">
 
-        <?php echo html_input('hidden', 'is_back', 1); ?>
-
         <div class="field">
             <label><?php echo LANG_EMAIL; ?>:</label>
             <a href="<?php echo href_to('auth', 'register'); ?>"><?php echo LANG_REGISTRATION; ?></a>
