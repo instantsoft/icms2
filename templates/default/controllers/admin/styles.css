@@ -27,7 +27,7 @@ h1+h2 {
 }
 h1 span, h2 span { color:#68809B; }
 
-a, a.ajaxlink { color: #34495e; }
+a, a.ajaxlink { color: #34495e; transition: color ease-in-out .15s; }
 a:hover, a.ajaxlink:hover { color: #f90; }
 
 a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #34495e; }
@@ -662,6 +662,7 @@ form .hint {
     border-bottom: solid 1px #B3C2C9;
     height:32px;
     line-height:32px;
+    transition: background ease-in-out .15s;
 }
 
 .tabs-menu > ul > li > a {
@@ -718,6 +719,7 @@ form .hint {
     padding:4px 16px;
     border:solid 1px #B3C2C9;
     text-decoration: none;
+    transition: background-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
 
 .pills-menu li:first-child,
@@ -860,6 +862,7 @@ ul.errors li .hint strong { color:#666666; }
     background: #fff;
     color:#34495e;
     height:20px;
+    transition: background ease-in-out .15s;
 }
 
 .datagrid tr.odd td {
@@ -992,7 +995,7 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid .flag_lock_on { background-image: url("../../images/icons/flag_lock.png"); background-position: 0 0; }
 .datagrid .flag_lock_off { background-image: url("../../images/icons/flag_lock.png");  background-position: -16px 0; }
 
-.datagrid tr td .actions { opacity: 0.25; }
+.datagrid tr td .actions { opacity: 0.25; transition: opacity ease-in-out .15s; }
 .datagrid tr:hover td .actions { opacity: 1;  }
 
 .datagrid .actions a.view { background-image: url("../../images/icons/eye.png"); }

@@ -33,6 +33,11 @@ class actionContentItemView extends cmsAction {
             }
 		}
 
+        // чтобы привязки виджетов к записям работали
+        if ($this->cms_config->ctype_default && $this->cms_config->ctype_default == $ctype['name']){
+            $this->cms_core->uri = $this->cms_config->ctype_default .'/'. $this->cms_core->uri;
+        }
+
 		if (!$ctype['options']['item_on']) { cmsCore::error404(); }
 
         // Получаем запись

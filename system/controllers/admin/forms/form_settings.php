@@ -64,7 +64,7 @@ class formAdminSettings extends cmsForm {
 						'hint' => LANG_CP_SETTINGS_CTYPE_DEF_HINT,
                         'generator' => function($item) use($ctypes){
 
-							$items[''] = '';
+							$items[''] = LANG_NO;
 
                             if ($ctypes) {
                                 foreach ($ctypes as $ctype) {
