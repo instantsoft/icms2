@@ -52,39 +52,39 @@ function install_package(){
 
 	foreach($ctypes as $ctype){
 
-        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'allow_add')){
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'allow_add')){
             $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `allow_add` TEXT NULL DEFAULT NULL");
         }
 
-        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_fields", 'filter_view')){
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}_fields", 'filter_view')){
             $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` ADD `filter_view` TEXT NULL DEFAULT NULL");
         }
 
 	}
 
-    if(!$core->db->isFieldExists('{users}_fields', 'filter_view')){
+    if(!isFieldExists('{users}_fields', 'filter_view')){
         $core->db->query("ALTER TABLE `{users}_fields` ADD `filter_view` TEXT NULL DEFAULT NULL");
     }
 
-    if(!$core->db->isFieldExists('{users}_tabs', 'groups_view')){
+    if(!isFieldExists('{users}_tabs', 'groups_view')){
         $core->db->query("ALTER TABLE `{users}_tabs` ADD `groups_view` TEXT NULL DEFAULT NULL");
     }
 
-    if(!$core->db->isFieldExists('{users}_tabs', 'groups_hide')){
+    if(!isFieldExists('{users}_tabs', 'groups_hide')){
         $core->db->query("ALTER TABLE `{users}_tabs` ADD `groups_hide` TEXT NULL DEFAULT NULL");
     }
 
-    if(!$core->db->isFieldExists('{users}_tabs', 'show_only_owner')){
+    if(!isFieldExists('{users}_tabs', 'show_only_owner')){
         $core->db->query("ALTER TABLE `{users}_tabs` ADD `show_only_owner` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
     }
 
-    if(!$core->db->isFieldExists('widgets_bind', 'template')){
+    if(!isFieldExists('widgets_bind', 'template')){
         $template_name = cmsConfig::get('template');
         $core->db->query("ALTER TABLE  `{#}widgets_bind` ADD `template` VARCHAR(30) NULL DEFAULT NULL COMMENT 'Привязка к шаблону' AFTER `id`");
         $core->db->query("UPDATE `{#}widgets_bind` SET `template` = '{$template_name}', `is_enabled` = 1");
     }
 
-    if(!$core->db->isFieldExists('{users}', 'city_cache')){
+    if(!isFieldExists('{users}', 'city_cache')){
         $core->db->query("ALTER TABLE `{users}` ADD `city_cache` varchar(128) NULL DEFAULT NULL");
     }
 
@@ -136,4 +136,21 @@ function save_controller_options($controllers) {
         }
     }
 
+}
+/**
+ * Правильная функция isFieldExists
+ * сделана для случая, если сначала выполнится инсталлер, а потом заменятся файлы
+ */
+function isFieldExists($table_name, $field) {
+    $table_fields = getTableFields($table_name);
+    return in_array($field, $table_fields, true);
+}
+function getTableFields($table) {
+    $db = cmsDatabase::getInstance();
+    $fields = array();
+    $result = $db->query("SHOW COLUMNS FROM `{#}{$table}`");
+    while($data = $db->fetchAssoc($result)){
+        $fields[] = $data['Field'];
+    }
+    return $fields;
 }
