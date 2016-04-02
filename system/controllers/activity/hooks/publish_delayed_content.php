@@ -16,6 +16,7 @@ class onActivityPublishDelayedContent extends cmsAction {
                     'is_private'       => isset($item['is_private']) ? $item['is_private'] : 0,
                     'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
                     'is_parent_hidden' => $item['is_parent_hidden'],
+                    'date_pub'         => $item['date_pub'],
                     'is_pub'           => true
                 ));
 

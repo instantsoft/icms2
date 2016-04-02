@@ -1016,7 +1016,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_list .comment{
     overflow: hidden;
     border:solid 1px #FFF;
-    border-radius:6px;
+    border-radius:3px;
     padding:10px 0;
     margin:4px 0;
 }

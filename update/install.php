@@ -56,7 +56,15 @@ function install_package(){
             $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `allow_add` TEXT NULL DEFAULT NULL");
         }
 
+        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_fields", 'filter_view')){
+            $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` ADD `filter_view` TEXT NULL DEFAULT NULL");
+        }
+
 	}
+
+    if(!$core->db->isFieldExists('{users}_fields', 'filter_view')){
+        $core->db->query("ALTER TABLE `{users}_fields` ADD `filter_view` TEXT NULL DEFAULT NULL");
+    }
 
     if(!$core->db->isFieldExists('{users}_tabs', 'groups_view')){
         $core->db->query("ALTER TABLE `{users}_tabs` ADD `groups_view` TEXT NULL DEFAULT NULL");

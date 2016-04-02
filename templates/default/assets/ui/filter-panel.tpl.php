@@ -1,3 +1,4 @@
+<?php $user = cmsUser::getInstance(); ?>
 <?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
 <?php $form_url = is_array($page_url) ? $page_url['base'] : $page_url; $form_url_sep = strpos($form_url, '?') === false ? '?' : '&'; ?>
 <div class="filter-panel gui-panel <?php echo $css_prefix;?>-filter">
@@ -14,6 +15,7 @@
                 <?php $fields_count = 0; ?>
                 <?php foreach($fields as $name => $field){ ?>
                     <?php if (!$field['is_in_filter']){ continue; } ?>
+                    <?php if (!empty($field['filter_view']) && !$user->isInGroups($field['filter_view'])) { continue; } ?>
                     <?php $value = isset($filters[$name]) ? $filters[$name] : null; ?>
                     <?php $output = $field['handler']->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>

@@ -182,6 +182,15 @@ class formAdminCtypesField extends cmsForm {
                     ))
                 )
             ),
+            'filter_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_IN_FILTER,
+                'childs' => array(
+                    new fieldListGroups('filter_view', array(
+                        'show_all' => true
+                    ))
+                )
+            )
         );
 
     }

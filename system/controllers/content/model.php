@@ -476,6 +476,7 @@ class modelContent extends cmsModel{
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
+            $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
             $item['default'] = $item['values'];
 
             $rules = array();
@@ -544,6 +545,7 @@ class modelContent extends cmsModel{
 
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
+            $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
 
             $field_class = "field" . string_to_camel('_', $item['type']);
 
