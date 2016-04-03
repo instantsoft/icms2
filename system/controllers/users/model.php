@@ -241,7 +241,11 @@ class modelUsers extends cmsModel{
 
 		}
 
-        return $this->update('{users}', $id, array('theme'=>$theme));
+        $res = $this->update('{users}', $id, array('theme'=>$theme));
+
+        cmsCache::getInstance()->clean("users.user.{$id}");
+
+        return $res;
 
     }
 
