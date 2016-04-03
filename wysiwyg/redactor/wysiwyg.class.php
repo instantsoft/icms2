@@ -37,9 +37,11 @@ class cmsWysiwygRedactor{
                             buttonSource: true
 						<?php } ?>
                     });
-                    $(window).on('resize', function (){
-                        $('#<?php echo $dom_id; ?>').parent().width($('#f_<?php echo $dom_id; ?>').width());
-                    }).triggerHandler('resize');
+                    <?php if(!cmsCore::getInstance()->request->isAjax()){ ?>
+                        $(window).on('resize', function (){
+                            $('#<?php echo $dom_id; ?>').parent().width($('#f_<?php echo $dom_id; ?>').width());
+                        }).triggerHandler('resize');
+                    <?php } ?>
                 });
             </script>
         <?php
