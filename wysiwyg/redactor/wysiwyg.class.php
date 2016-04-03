@@ -13,9 +13,10 @@ class cmsWysiwygRedactor{
         $template->addJSFromContext('wysiwyg/redactor/js/video.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fullscreen.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fontsize.js');
-        $template->addJSFromContext('wysiwyg/redactor/js/fontfamily.js');
+        //$template->addJSFromContext('wysiwyg/redactor/js/fontfamily.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fontcolor.js');
-        $template->addJSFromContext("wysiwyg/redactor/lang/{$lang}.js");
+        $template->addJSFromContext('wysiwyg/redactor/js/table.js');
+        $template->addJSFromContext("wysiwyg/redactor/langs/{$lang}.js");
 
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
@@ -26,13 +27,19 @@ class cmsWysiwygRedactor{
                 $(function(){
                     $('#<?php echo $dom_id; ?>').redactor({
                         lang: '<?php echo $lang; ?>',
-                        plugins: ['video', 'fontfamily', 'fontsize', 'fontcolor', 'fullscreen'],
+                        plugins: ['video', 'fontsize', 'fontcolor', 'fullscreen', 'table'],
                         imageUpload: '<?php echo href_to('redactor/upload'); ?>',
 						minHeight: 190,
+                        replaceDivs: false,
+                        removeComments: true,
+                        //linkNofollow: true,
 						<?php if ($user->is_admin) { ?>
                             buttonSource: true
 						<?php } ?>
                     });
+                    $(window).on('resize', function (){
+                        $('#<?php echo $dom_id; ?>').parent().width($('#f_<?php echo $dom_id; ?>').width());
+                    }).triggerHandler('resize');
                 });
             </script>
         <?php

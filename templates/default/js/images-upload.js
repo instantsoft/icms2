@@ -63,14 +63,17 @@ icms.images = (function ($) {
 
         var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
 
-        $('img', preview_block).attr('src', result.paths.small.url);
+        preview_img_src = null;
+
+        for(var path in result.paths){
+            preview_img_src = result.paths[path].url;
+            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
+        }
+
+        $('img', preview_block).attr('src', preview_img_src);
         $('a', preview_block).click(function() { icms.images.removeOne(field_name, idx); });
 
         $('.previews_list', widget).append(preview_block);
-
-        for(var path in result.paths){
-            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
-        }
 
     };
 

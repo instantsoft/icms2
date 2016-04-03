@@ -21,7 +21,20 @@ class auth extends cmsFrontend {
 
         cmsUser::logout();
 
-        $this->redirectBack();
+        if(!function_exists('get_headers')){
+            $this->redirectToHome();
+        }
+
+        $back_url = $this->getBackURL();
+
+        $h = get_headers($this->getBackURL(), true);
+        $code = substr($h[0], 9, 3);
+
+        if((int)$code < 400){
+            $this->redirect($back_url);
+        }
+
+        $this->redirectToHome();
 
     }
 

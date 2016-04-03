@@ -75,14 +75,13 @@ header .menu > li > a:hover {
 
 header .menu > li.active > a { color:#F5CF53; }
 header .menu > li.active > a:hover { color:#F5CF53; }
-header .menu > li.active > ul a:hover { color:#000; }
+header .menu > li.active > ul a:hover { color:#EEE; }
 
 header .menu ul li a,
 header .menu li.active ul li a {
-    color: #000;
     text-shadow: none;
     text-decoration: none;
-    padding: 0 10px;
+    padding-right: 10px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }

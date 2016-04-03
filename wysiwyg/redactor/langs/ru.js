@@ -20,6 +20,8 @@ $.Redactor.opts.langs['ru'] = {
 	bold:  'Полужирный',
 	italic: 'Наклонный',
 	fontcolor: 'Цвет текста',
+	fontsize: 'Изменить размер шрифта',
+	remove_fontsize: 'Очистить размер шрифта',
 	backcolor: 'Заливка текста',
 	unorderedlist: 'Обычный список',
 	orderedlist: 'Нумерованный список',
@@ -71,8 +73,6 @@ $.Redactor.opts.langs['ru'] = {
 	filename: 'Название (необязательно)',
 	edit: 'Ред.',
 	center: 'По центру',
-	fontsize: 'Размер',
-	fontfamily: 'Шрифт',
-	
+	upload_label: 'Перетащите файл сюда или '
 };
 })( jQuery );

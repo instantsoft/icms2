@@ -68,6 +68,8 @@ $.Redactor.opts.langs['az'] = {
 	underline: 'Altıxətli',
 	alignment: 'Düzləndirmə',
 	filename: 'Name (optional)',
-	edit: 'Edit'
+	edit: 'Edit',
+	center: 'Center',
+	upload_label: 'Drop file here or '
 };
 })( jQuery );

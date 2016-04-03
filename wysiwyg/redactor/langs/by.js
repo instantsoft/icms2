@@ -71,6 +71,7 @@ $.Redactor.opts.langs['by'] = {
 	alignment: 'Alignment',
 	filename: 'Name (optional)',
 	edit: 'Edit',
-	center: 'Center'
+	center: 'Center',
+	upload_label: 'Drop file here or '
 };
 })( jQuery );
