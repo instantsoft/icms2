@@ -61,11 +61,13 @@
 }
 
 .is_online{
-    background:#0B0;
-    color:#FFF;
-    font-size:11px;
-    padding:1px 6px;
-    border-radius: 16px;
+    background: #40d47e;
+    color: #FFF;
+    font-size: 11px;
+    line-height: 15px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
 }
 
 /* Menu icons =============================================================== */
@@ -1739,4 +1741,48 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .gif_image:hover .background_overlay {
     opacity: 0.5;
     z-index: 2;
+}
+.default_avatar {
+    position: relative;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-style: normal;
+    font-weight: 300;
+    text-align: center;
+    text-transform: uppercase;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    display: block;
+    background: no-repeat center;
+    background-size: 1em;
+}
+.default_avatar img {
+    opacity: 0; display: block;
+}
+.default_avatar:before {
+    content: attr(data-letter);
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+.default_avatar.white_avatar_text:hover:after {
+    background: #000;
+    opacity: 0.4;
+}
+.default_avatar.black_avatar_text:after, .default_avatar.white_avatar_text:after {
+    transition: all 0.5s ease;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+.default_avatar.black_avatar_text:hover:after {
+    background: #FFF;
+    opacity: 0.2;
 }

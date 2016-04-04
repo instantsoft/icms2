@@ -245,15 +245,51 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
  * @param array|yaml $avatars Все изображения аватара
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
+ * @param bool $is_html_empty_avatar Вместо дефолтных изображений показывать цветной блок с буквой
  * @return string
  */
-function html_avatar_image($avatars, $size_preset='small', $alt=''){
+function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_empty_avatar=false){
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
-    return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" />';
+    $img = '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" />';
+
+    if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
+
+        $iparams = get_image_block_param_by_title($alt);
+
+        $img = '<div class="default_avatar '.$iparams['class'].'" style="'.$iparams['style'].'" data-letter="'.htmlspecialchars(mb_substr($alt, 0, 1)).'">'.$img.'</div>';
+
+    }
+
+    return $img;
+
+}
+
+function get_image_block_param_by_title($title) {
+
+    static $image_block_params = null;
+    if(isset($image_block_params[$title])){
+        return $image_block_params[$title];
+    }
+
+    $bg_color = substr(dechex(crc32($title)), 0, 6);
+
+    // выбираем контрастный цвет для текста
+    $r = hexdec( substr($bg_color, 0, 2) );
+    $g = hexdec( substr($bg_color, 2, 2) );
+    $b = hexdec( substr($bg_color, 4, 2) );
+    $yiq = (($r*299)+($g*587)+($b*114)) / 1000;
+    $txt_color = ($yiq >= 128) ? 'black' : 'white';
+
+    $image_block_params[$title] = array(
+        'style' => "background-color: rgba({$r}, {$g}, {$b}, .7); color: {$txt_color};",
+        'class' => $txt_color.'_avatar_text'
+    );
+
+    return $image_block_params[$title];
 
 }
 

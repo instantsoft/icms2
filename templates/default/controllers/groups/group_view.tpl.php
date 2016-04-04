@@ -1,6 +1,7 @@
 <?php
 
     $this->setPageTitle($group['title']);
+    $this->setPageDescription($group['description'] ? string_get_meta_description($group['description']): $group['title']);
 
     $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
     $this->addBreadcrumb($group['title']);

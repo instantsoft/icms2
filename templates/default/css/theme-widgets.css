@@ -464,7 +464,7 @@ aside .widget_tabbed > .tabs .links a {
 .widget_profiles_list .item .image img, .item-avatar > img { display: block; }
 .widget_profiles_list.list .item .info { float:left; }
 
-.widget_profiles_list.tiles .item { display:inline-block; }
+.widget_profiles_list.tiles .item, .widget_online_list .item, .widget_user_avatar .default_avatar { display:inline-block; }
 
 /* ========================================================================== */
 

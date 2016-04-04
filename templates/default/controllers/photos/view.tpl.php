@@ -3,6 +3,7 @@
     $this->addJS( $this->getJavascriptFileName('photos') );
 
     $this->setPageTitle($photo['title']);
+    $this->setPageDescription($photo['title']);
 
     $user = cmsUser::getInstance();
 
@@ -106,9 +107,10 @@
             <a href="<?php echo href_to('users', $photo['user']['id']) ?>"><?php echo $photo['user']['nickname']; ?></a>
         </div>
         <div class="bar_item bi_share">
-            <div class="share" style="margin:-4px">
-                <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
-                <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,gplus"></div>
+            <div class="share">
+                <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
             </div>
         </div>
     </div>
