@@ -142,6 +142,7 @@
     define('LANG_PARSER_ADD_FROM_LINK', 'добавить по ссылке');
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Введите ссылку на изображение');
     define('LANG_OR', 'или');
+    define('LANG_BEGIN_TYPING', 'Начните вводить или выберите из списка');
 
     //USERS
     define('LANG_USER',                      'Пользователь');

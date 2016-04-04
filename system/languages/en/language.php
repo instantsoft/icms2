@@ -142,6 +142,7 @@
     define('LANG_PARSER_ADD_FROM_LINK', 'add by link');
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
     define('LANG_OR', 'or');
+    define('LANG_BEGIN_TYPING', 'Begin entering, or select from the list');
 
     //USERS
     define('LANG_USER',                      'Member');

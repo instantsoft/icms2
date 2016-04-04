@@ -483,6 +483,7 @@ article div.content_categories:last-child {
     float:left;
     clear:none;
     margin-right: 10px;
+    max-width: 100%;
 }
 .content_item .ft_image + .field {
     overflow: visible;

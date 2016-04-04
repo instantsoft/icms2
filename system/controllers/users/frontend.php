@@ -24,7 +24,9 @@ class users extends cmsFrontend {
             cmsUser::goLogin();
         }
 
-        $this->cms_template->applyProfileStyle($profile);
+        if ($this->options['is_themes_on']){
+            $this->cms_template->applyProfileStyle($profile);
+        }
 
         $this->current_params = $this->cms_core->uri_params;
 

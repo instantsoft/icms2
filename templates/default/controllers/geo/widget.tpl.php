@@ -31,6 +31,6 @@ $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
 </div>
 <script type="text/javascript">
     $(function(){
-        $('#geo_window .list > select').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%'});
+        $('#geo_window .list > select').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
     });
 </script>

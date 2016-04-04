@@ -757,12 +757,12 @@ body .redactor-box-fullscreen {
   font-family: monospace, sans-serif;
 }
 .redactor-dropdown .redactor-formatting-h1 {
-  font-size: 36px;
+  font-size: 28px;
   line-height: 36px;
   font-weight: bold;
 }
 .redactor-dropdown .redactor-formatting-h2 {
-  font-size: 24px;
+  font-size: 23px;
   line-height: 36px;
   font-weight: bold;
 }
@@ -840,11 +840,11 @@ body .redactor-box-fullscreen {
   margin-bottom: 15px;
 }
 .redactor-editor blockquote {
-  margin-left: 1.6em !important;
-  padding: 0;
-  text-align: left;
-  color: #777;
-  font-style: italic;
+    padding: 6px 10px;
+    background: #F9F9F9;
+    border-left: solid 4px #EDEDED;
+    color: #666;
+    font-style: italic;
 }
 .redactor-editor blockquote:before,
 .redactor-editor blockquote:after {

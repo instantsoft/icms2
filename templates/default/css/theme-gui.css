@@ -326,8 +326,8 @@
 
 .filter-panel .filter-link a {
     display:block;
-    padding:5px 10px;
-    padding-left:15px;
+    padding:7px 5px;
+    padding-left:10px;
     text-decoration: none;
     color: #68809B;
 }
@@ -1212,11 +1212,11 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 
 #wall_widget #wall_add_form .preview_box{
-    margin-bottom:10px;
-    padding:15px;
-    border:solid 4px #B3C2C9;
-    border-radius:6px;
-    background:#FFF;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: solid 2px #B3C2C9;
+    border-radius: 4px;
+    background: #FFF;
     display:none;
 }
 

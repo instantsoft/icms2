@@ -627,6 +627,7 @@ form .hint {
     min-width:750px;
     overflow: hidden;
     overflow-y: auto;
+    height: 100%;
 }
 
 .tabs-menu{

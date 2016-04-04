@@ -41,6 +41,6 @@
 </form>
 <script type="text/javascript">
     $(function(){
-        $('#album_id').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', disable_search_threshold: 8, placeholder_text_single: '<?php echo LANG_SELECT; ?>'});
+        $('#album_id').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', width: '100%', disable_search_threshold: 8, placeholder_text_single: '<?php echo LANG_SELECT; ?>', search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
     });
 </script>
