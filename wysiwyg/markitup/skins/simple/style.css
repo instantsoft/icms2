@@ -144,3 +144,7 @@
     margin-top: 45px;
     margin-left: 5px;
 }
+#inline_upload_form > input {
+    max-width: 200px;
+    margin: 0 5px 0 0;
+}

@@ -77,7 +77,7 @@ class modelContent extends cmsModel{
                 'label_in_list' => 'none',
                 'label_in_item' => 'none',
                 'min_length' => 3,
-                'max_length' => 100,
+                'max_length' => 255,
                 'is_required' => true
             )
         ), true);
@@ -595,6 +595,8 @@ class modelContent extends cmsModel{
             $field_handler = new $field_class(null, (isset($field['options']) ? array('options' => $field['options']) : null));
 
             if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
+
+                if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
 
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
