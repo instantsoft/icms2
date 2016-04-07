@@ -82,7 +82,7 @@
                 <?php $this->widgets('left-bottom'); ?>
 
             </section>
-
+            <?php if($this->hasWidgetsOn('right-top', 'right-center', 'right-bottom')) { ?>
             <aside>
                 <?php $this->widgets('right-top'); ?>
 
@@ -90,7 +90,7 @@
 
                 <?php $this->widgets('right-bottom'); ?>
             </aside>
-
+            <?php } ?>
         </div>
 
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
