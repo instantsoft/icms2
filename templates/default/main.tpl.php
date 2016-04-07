@@ -83,13 +83,15 @@
 
             </section>
 
-            <aside>
-                <?php $this->widgets('right-top'); ?>
+            <?php if($is_sidebar){ ?>
+                <aside>
+                    <?php $this->widgets('right-top'); ?>
 
-                <?php $this->widgets('right-center'); ?>
+                    <?php $this->widgets('right-center'); ?>
 
-                <?php $this->widgets('right-bottom'); ?>
-            </aside>
+                    <?php $this->widgets('right-bottom'); ?>
+                </aside>
+            <?php } ?>
 
         </div>
 

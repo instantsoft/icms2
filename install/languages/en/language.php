@@ -89,6 +89,7 @@
     define('LANG_SITE_METADESC',            "Site description");
 
     define('LANG_SITE_SITENAME_ERROR',      "Site name is required");
+    define('LANG_SITE_HOMETITLE_ERROR',     "Home title is required");
 
     define('LANG_ADMIN_EXTERNAL',           "Administrator's account will be taken from the table <b>%s</b>");
     define('LANG_ADMIN_INFO',               "Please enter administrator's name, e-mail and password");
