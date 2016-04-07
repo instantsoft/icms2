@@ -4,6 +4,26 @@ class cmsUploader {
 
     private $allow_remote = false;
 
+    private $last_error = false;
+    private $upload_errors = array();
+
+    public function __construct() {
+        $this->upload_errors = array(
+            UPLOAD_ERR_OK         => LANG_UPLOAD_ERR_OK,
+            UPLOAD_ERR_INI_SIZE   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, $this->getMaxUploadSize()),
+            UPLOAD_ERR_FORM_SIZE  => LANG_UPLOAD_ERR_FORM_SIZE,
+            UPLOAD_ERR_PARTIAL    => LANG_UPLOAD_ERR_PARTIAL,
+            UPLOAD_ERR_NO_FILE    => LANG_UPLOAD_ERR_NO_FILE,
+            UPLOAD_ERR_NO_TMP_DIR => LANG_UPLOAD_ERR_NO_TMP_DIR,
+            UPLOAD_ERR_CANT_WRITE => LANG_UPLOAD_ERR_CANT_WRITE,
+            UPLOAD_ERR_EXTENSION  => LANG_UPLOAD_ERR_EXTENSION
+        );
+    }
+
+    public function getLastError() {
+        return $this->last_error;
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -23,9 +43,23 @@ class cmsUploader {
     }
 
     public function isUploaded($name){
+
         if (!isset($_FILES[$name])) { return false; }
-        if (empty($_FILES[$name]['size'])) { return false; }
+
+        if (empty($_FILES[$name]['size'])) {
+
+            if(isset($_FILES[$name]['error'])){
+                if(isset($this->upload_errors[$_FILES[$name]['error']]) && $this->upload_errors[$_FILES[$name]['error']] !== UPLOAD_ERR_OK){
+                    $this->last_error = $this->upload_errors[$_FILES[$name]['error']];
+                }
+            }
+
+            return false;
+
+        }
+
         return true;
+
     }
 
     public function isUploadedXHR($name){
@@ -123,9 +157,11 @@ class cmsUploader {
             return $this->uploadForm($post_filename, $allowed_ext, $allowed_size, $destination);
         }
 
+        $last_error = $this->getLastError();
+
         return array(
             'success' => false,
-            'error' => LANG_UPLOAD_ERR_NO_FILE
+            'error'   => ($last_error ? $last_error : LANG_UPLOAD_ERR_NO_FILE)
         );
 
     }
@@ -382,27 +418,13 @@ class cmsUploader {
 
         $cfg = cmsConfig::getInstance();
 
-        $max_size = $this->getMaxUploadSize();
-
-        // Возможные ошибки
-        $uploadErrors = array(
-            UPLOAD_ERR_OK => LANG_UPLOAD_ERR_OK,
-            UPLOAD_ERR_INI_SIZE => sprintf(LANG_UPLOAD_ERR_INI_SIZE, $max_size),
-            UPLOAD_ERR_FORM_SIZE => LANG_UPLOAD_ERR_FORM_SIZE,
-            UPLOAD_ERR_PARTIAL => LANG_UPLOAD_ERR_PARTIAL,
-            UPLOAD_ERR_NO_FILE => LANG_UPLOAD_ERR_NO_FILE,
-            UPLOAD_ERR_NO_TMP_DIR => LANG_UPLOAD_ERR_NO_TMP_DIR,
-            UPLOAD_ERR_CANT_WRITE => LANG_UPLOAD_ERR_CANT_WRITE,
-            UPLOAD_ERR_EXTENSION => LANG_UPLOAD_ERR_EXTENSION
-        );
-
-        if($errorCode !== UPLOAD_ERR_OK && isset($uploadErrors[$errorCode])){
+        if($errorCode !== UPLOAD_ERR_OK && isset($this->upload_errors[$errorCode])){
 
             return array(
                 'success' => false,
-                'error' => $uploadErrors[$errorCode],
-                'name' => $orig_name,
-                'path' => ''
+                'error'   => $this->upload_errors[$errorCode],
+                'name'    => $orig_name,
+                'path'    => ''
             );
 
         }
@@ -421,11 +443,11 @@ class cmsUploader {
 
         return array(
             'success' => @move_uploaded_file($source, $destination),
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $orig_size,
-            'error' => $uploadErrors[$errorCode]
+            'path'    => $destination,
+            'url'     => str_replace($cfg->upload_path, '', $destination),
+            'name'    => $orig_name,
+            'size'    => $orig_size,
+            'error'   => $this->upload_errors[$errorCode]
         );
 
     }
