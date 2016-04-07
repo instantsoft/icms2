@@ -1,6 +1,6 @@
 # InstantCMS
 
-Is a free open source content management system that allows you to build websites for any purpose
+Is a free open source CMS (content management system) that allows you to build websites for any purpose
 
 ## Key features
 
@@ -27,6 +27,6 @@ Is a free open source content management system that allows you to build website
 ## Resources
 
 * [Official site](http://www.instantcms.ru/)
-* [Add-ons](http://addons.instantcms.ru/)
+* [Add-ons for CMS](http://addons.instantcms.ru/)
 * [Documentation](http://docs.instantcms.ru/)
 * [Russian README](https://github.com/instantsoft/icms2/blob/master/README.RU.md)
