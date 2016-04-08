@@ -5,6 +5,7 @@
 		return {
 			reUrlYoutube: /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig,
 			reUrlVimeo: /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/,
+			reUrlFacebook: /https?:\/\/(?:www\.)?(?:facebook\.com(?:\/[^/\/]+\/videos\/|\/video.php\?v=))([0-9]+)(?:.+)?/,
 			getTemplate: function()
 			{
 				return String()
@@ -37,12 +38,11 @@
 			insert: function()
 			{
 				var data = $('#redactor-insert-video-area').val();
-
 				if (!data.match(/<iframe|<video/gi))
 				{
 					data = this.clean.stripTags(data);
 
-					// parse if it is link on youtube & vimeo
+					// parse if it is link on youtube, vimeo, FB
 					var iframeStart = '<iframe style="width: 500px; height: 281px;" src="',
 						iframeEnd = '" frameborder="0" allowfullscreen></iframe>';
 
@@ -53,6 +53,10 @@
 					else if (data.match(this.video.reUrlVimeo))
 					{
 						data = data.replace(this.video.reUrlVimeo, iframeStart + '//player.vimeo.com/video/$2' + iframeEnd);
+					}
+					else if (data.match(this.video.reUrlFacebook))
+					{
+						data = data.replace(this.video.reUrlFacebook, iframeStart + 'https://www.facebook.com/video/embed?video_id=$1' + iframeEnd);
 					}
 				}
 
