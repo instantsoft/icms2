@@ -33,7 +33,6 @@ class cmsWysiwygRedactor{
                         replaceDivs: false,
                         removeComments: true,
                         convertLinks: false,
-                        //linkNofollow: true,
 						<?php if ($user->is_admin) { ?>
                             buttonSource: true
 						<?php } ?>
