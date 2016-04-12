@@ -69,6 +69,12 @@ class actionAdminIndexChartData extends cmsAction {
                 filterFunc($source['key'], "(CURDATE() - INTERVAL {$period} DAY)", '>=')->
                 orderBy($source['key'], 'asc');
 
+        if(isset($source['filter'])){
+            foreach ($source['filter'] as $field_name => $value) {
+                $this->model->filterEqual($field_name, $value);
+            }
+        }
+
         $this->model->group_by = $period < 300 ? "DAY({$source['key']})" : "MONTH({$source['key']})";
 
         return $this->model->get($source['table'], false, false);

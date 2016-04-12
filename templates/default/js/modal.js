@@ -58,6 +58,8 @@ icms.modal = (function ($) {
 
     this.setCallback = function(event, callback){
         switch(event){
+            case 'open':
+                $.nmTop().callbacks.afterShowCont = callback; break;
             case 'close':
                 $.nmTop().callbacks.beforeClose = callback; break;
         }
