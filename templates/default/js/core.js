@@ -8,20 +8,8 @@ $(document).ready(function(){
         }
     }
 
-    $('.default_avatar').each(function(){
-        var a = this;
-        var i = $('img', this);
-        var isrc = $(i).attr('src');
-        $(i).attr('src', '');
-        $(i).attr('src', isrc);
-        $(i).load(function() {
-            var h = +$(this).height();
-            $(a).css({
-                'line-height': h+'px',
-                'font-size': Math.round((h*0.625))+'px'
-            });
-        });
-    });
+    renderHtmlAvatar();
+
     $('.widget_tabbed').each(function(){
 
        $('.tabs .tab a', $(this)).click(function(){
@@ -276,4 +264,21 @@ function spellcount (num, one, two, many){
         str = many;
     }
     return str;
+}
+function renderHtmlAvatar(wrap){
+    wrap = wrap || document;
+    $('div.default_avatar', wrap).each(function(){
+        var a = this;
+        var i = $('img', this);
+        var isrc = $(i).attr('src');
+        $(i).attr('src', '');
+        $(i).attr('src', isrc);
+        $(i).load(function() {
+            var h = +$(this).height();
+            $(a).css({
+                'line-height': h+'px',
+                'font-size': Math.round((h*0.625))+'px'
+            });
+        });
+    });
 }

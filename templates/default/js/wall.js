@@ -138,6 +138,8 @@ icms.wall = (function ($) {
 
             $('.replies', e).html( result.html );
 
+            renderHtmlAvatar($('.replies', e));
+
             if (typeof(callback)=='function'){
                 callback();
             }
