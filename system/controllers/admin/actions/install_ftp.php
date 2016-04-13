@@ -148,7 +148,7 @@ class actionAdminInstallFtp extends cmsAction {
                         $result = @ftp_mkdir($conn_id, $dst_dir."/".$file);
                         if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED);}
                         if($is_function_exists_ftp_chmod){
-                            @ftp_chmod($conn_id, 0644, $dst_dir."/".$file);
+                            @ftp_chmod($conn_id, 0755, $dst_dir."/".$file);
                         }
                     }
 
@@ -159,7 +159,7 @@ class actionAdminInstallFtp extends cmsAction {
                     $result = @ftp_put($conn_id, $dst_dir."/".$file, $src_dir."/".$file, FTP_BINARY);
                     if (!$result) { throw new Exception(LANG_CP_FTP_UPLOAD_FAILED); }
                     if($is_function_exists_ftp_chmod){
-                        @ftp_chmod($conn_id, 0755, $dst_dir."/".$file);
+                        @ftp_chmod($conn_id, 0644, $dst_dir."/".$file);
                     }
 
                 }

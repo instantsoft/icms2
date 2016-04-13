@@ -2,7 +2,9 @@
 
 class actionMessagesWrite extends cmsAction {
 
-    public function run($contact_id){
+    public function run($contact_id=null){
+
+        if(empty($contact_id)){ cmsCore::error404(); }
 
         $user = cmsUser::getInstance();
 
