@@ -278,14 +278,14 @@ function get_image_block_param_by_title($title) {
     $bg_color = substr(dechex(crc32($title)), 0, 6);
 
     // выбираем контрастный цвет для текста
-    $r = hexdec( substr($bg_color, 0, 2) );
-    $g = hexdec( substr($bg_color, 2, 2) );
-    $b = hexdec( substr($bg_color, 4, 2) );
+    $r = max( hexdec( substr($bg_color, 0, 2) ), 90);
+    $g = max( hexdec( substr($bg_color, 2, 2) ), 90);
+    $b = max( hexdec( substr($bg_color, 4, 2) ), 90);
     $yiq = (($r*299)+($g*587)+($b*114)) / 1000;
-    $txt_color = ($yiq >= 128) ? 'black' : 'white';
+    $txt_color = ($yiq >= 140) ? 'black' : 'white';
 
     $image_block_params[$title] = array(
-        'style' => "background-color: rgba({$r}, {$g}, {$b}, .7); color: {$txt_color};",
+        'style' => "background-color: rgba({$r}, {$g}, {$b}, .9); color: {$txt_color};",
         'class' => $txt_color.'_avatar_text'
     );
 
