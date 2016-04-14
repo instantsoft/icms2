@@ -125,6 +125,7 @@ class modelMenu extends cmsModel{
         $result = array();
 
         if($menus){
+            $menus = cmsEventsManager::hook('menu_before_list', $menus);
             foreach ($menus as $menu) {
                 $result[$menu['menu_name']][$menu['id']] = $menu;
             }

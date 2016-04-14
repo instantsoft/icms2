@@ -292,7 +292,7 @@ class modelWidgets extends cmsModel {
 
         $this->useCache('widgets.bind');
 
-        return $this->
+        $widgets = $this->
                     select('w.controller', 'controller')->
                     select('w.name', 'name')->
                     join('widgets', 'w', 'w.id = i.widget_id')->
@@ -306,6 +306,8 @@ class modelWidgets extends cmsModel {
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
                         return $item;
                     });
+
+        return cmsEventsManager::hook('widgets_before_list', $widgets);
 
     }
 
