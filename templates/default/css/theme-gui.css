@@ -1744,7 +1744,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 .default_avatar {
     position: relative;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-style: normal;
     font-weight: 300;
     text-align: center;
