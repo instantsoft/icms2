@@ -1,7 +1,7 @@
 <?php
 
-	$this->addJS( $this->getJavascriptFileName('fileuploader') );
-	$this->addJS( $this->getJavascriptFileName('images-upload') );
+	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
+	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
 
 	$config = cmsConfig::getInstance();
 
