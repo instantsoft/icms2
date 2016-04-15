@@ -242,6 +242,7 @@ function file_save_from_url($url, $destination){
         curl_setopt(CURLOPT_SSL_VERIFYPEER, false);
     }
     curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FILE, $dest_file);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_exec($curl);
