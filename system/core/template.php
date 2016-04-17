@@ -821,10 +821,10 @@ class cmsTemplate {
 
             foreach($urls as $i => $url){
 
-                $abs_url = trim($url, '" ');
+                $abs_url = trim($url, '\'" ');
 
                 $is_root = mb_substr($abs_url, 0, 1) == '/';
-                $is_http = mb_substr($abs_url, 0, 7) == 'http://';
+                $is_http = mb_substr($abs_url, 0, 4) == 'http';
                 $is_data = mb_substr($abs_url, 0, 10) == 'data:image';
 
                 if ($is_data) { continue; }

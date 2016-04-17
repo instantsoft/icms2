@@ -81,7 +81,7 @@
             <script type="text/javascript">
                 $(function(){
                     $(document).on('click', '.datagrid .filter_ip', function (){
-                        $('#filter_ip').val($(this).text()).trigger('search');
+                        $('#filter_ip').val($(this).text()).trigger('input');
                         return false;
                     });
                     $(document).tooltip({

@@ -23,7 +23,7 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').on('search', function () {
+        $('.datagrid .filter .input').on('input', function () {
             $('.datagrid .filter .input').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name='+filter+']').val($(this).val());
