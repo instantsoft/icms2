@@ -212,7 +212,7 @@ icms.forms = (function ($) {
                 $(symbols_num).html((max - num)).removeClass('overflowing');
                 $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10)+' '+LANG_ISLEFT);
             }
-        });
+        }).triggerHandler('input');
     };
 
 	return this;
