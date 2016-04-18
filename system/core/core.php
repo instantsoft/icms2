@@ -485,17 +485,51 @@ class cmsCore {
         $config = cmsConfig::getInstance();
 
         $lang_dir = 'system/languages/'. $config->language;
+        $lang_dir_cfg = 'system/languages/'. $config->cfg_language;
 
         if (!$file){
+            
+            // Если текущий язык и язык по-умолчанию совпадают, то подключаем все файлы без лишних сложностей
+            if($config->language === $config->cfg_language){
+                return self::getFilesList($lang_dir, '*.php', true, true);
+            }
 
             // Если файл не указан, то подключаем все php-файлы
             // из папки с текущим языком
-            return self::getFilesList($lang_dir, '*.php', true, true);
+            $files_current = self::getFilesList($lang_dir, '*.php');
+            // или из папки с языком по-умолчанию
+            $files_cfg = self::getFilesList($lang_dir_cfg, '*.php');
+
+            // Перебираем список файлов языка по-умолчанию, подразумевая, что в нем есть ВСЕ нужные файлы
+            foreach ($files_cfg as $item) {
+                
+                // Сначала проверяем имеется ли файл в текущей локали и если есть определяем его для подключения
+                if(in_array($item, $files_current)){
+                    $file = $lang_dir . '/' . $item;
+                // иначе подключаем из локали по-умолчпнию
+                }else{
+                    $file = $lang_dir_cfg . '/' . $item;
+                }
+
+                if (!isset(self::$includedFiles[$file])) {
+                    include_once $file;
+                    self::$includedFiles[$file] = true;
+                }
+
+            }
+
+            return $files_cfg;
 
         } else {
 
             // Если файл указан, то подключаем только его
             $lang_file = $lang_dir .'/'.$file.'.php';
+            
+            // Если файла нет в текущей локали, выбираем для него локаль по умолчанию
+            if( !file_exists( $config->root_path . $lang_file ) ){
+                $lang_file = $lang_dir_cfg . '/' . $file . '.php';
+            }
+            
             return self::includeFile($lang_file);
 
         }
