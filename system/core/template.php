@@ -16,12 +16,15 @@ class cmsTemplate {
 	protected $head_main_js = array();
 	protected $head_js = array();
 	protected $head_js_no_merge = array();
+	protected $head_css_no_merge = array();
 	protected $title;
 	protected $metadesc;
 	protected $metakeys;
 
     protected $breadcrumbs = array();
     protected $menus = array();
+    protected $db_menus = array();
+    protected $menu_loaded = false;
 
     protected $widgets = array();
     protected $widgets_group_index = 0;
@@ -43,11 +46,28 @@ class cmsTemplate {
 
 		$config = cmsConfig::getInstance();
 
-        $name = $name ? $name : $config->template;
+        if($name){
+
+            $this->setName($name);
+
+        } else {
+
+            $device_type = cmsRequest::getDeviceType();
+            $template = $config->template;
+
+            if($device_type !== 'desktop'){
+                $device_template = cmsConfig::get('template_'.$device_type);
+                if($device_template){
+                    $template = $device_template;
+                }
+            }
+
+            $this->setName($template);
+
+        }
 
         $this->setLayout('main');
 
-		$this->head = array();
 		$this->title = $config->sitename;
 
 		$is_no_def_meta = isset($config->is_no_meta) ? $config->is_no_meta : false;
@@ -56,9 +76,6 @@ class cmsTemplate {
 			$this->metakeys = $config->metakeys;
 			$this->metadesc = $config->metadesc;
 		}
-
-        $this->name = $name;
-        $this->path = $config->root_path . 'templates/' . $name;
 
         $this->options = $this->getOptions();
 
@@ -85,6 +102,8 @@ class cmsTemplate {
 	 */
 	public function head($is_seo_meta=true){
 
+        cmsEventsManager::hook('before_print_head', $this);
+
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
 				echo "\t". '<meta content="'.htmlspecialchars($this->metakeys).'" name="keywords">' . "\n";
@@ -102,15 +121,16 @@ class cmsTemplate {
         } else {
             $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
             echo $tag;
+            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
         }
 
         if (!cmsConfig::get('merge_js')){
-            foreach ($this->head_main_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
         } else {
             $tag = "\t". $this->getJSTag( $this->getMergedJSPath() ) . "\n";
             echo $tag;
-            foreach ($this->head_js_no_merge as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
         }
 
 	}
@@ -120,20 +140,14 @@ class cmsTemplate {
 	 * @param string $title
 	 */
 	public function title(){
-		$config = cmsConfig::getInstance();
-		if ($this->title){
-			echo htmlspecialchars($this->title);
-		} else {
-			echo htmlspecialchars($config->sitename);
-		}
+    	echo htmlspecialchars($this->title);
 	}
 
 	/**
 	 * Выводит название сайта
 	 */
 	public function sitename(){
-		$config = cmsConfig::getInstance();
-		echo htmlspecialchars($config->sitename);
+		echo htmlspecialchars(cmsConfig::get('sitename'));
 	}
 
     /**
@@ -194,45 +208,80 @@ class cmsTemplate {
 
     }
 
+    protected function loadMenus($menu_name=false) {
+
+        if(!$this->menu_loaded){
+            $this->db_menus = cmsCore::getModel('menu')->getAllMenuItemsTree();
+            $this->menu_loaded = true;
+        }
+
+        if($menu_name && isset($this->db_menus[$menu_name])){
+            return modelMenu::buildMenu($this->db_menus[$menu_name]);
+        }
+
+        return false;
+
+    }
+
     /**
      * Выводит меню
+     * @param string $menu_name Название меню
+     * @param bool $detect_active_id Определять активные пункты меню
+     * @param string $css_class CSS класс контейнера пунктов меню
+     * @param int $max_items Максимальное количество видимых пунктов
+     * @param bool $is_allow_multiple_active Определять все активные пункты меню
+     * @param string $template Название файла шаблона меню в assets/ui/
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false){
+    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template = 'menu'){
 
-        $core = cmsCore::getInstance();
         $config = cmsConfig::getInstance();
 
         if (!isset($this->menus[$menu_name])) {
-            $menu_model = cmsCore::getModel('menu');
-            $menu = $menu_model->getMenu($menu_name, 'name');
+
+            $menu = $this->loadMenus($menu_name);
             if (!$menu){ return; }
-            $items = $menu_model->getMenuItemsTree($menu['id']);
-            if (!$items){ return; }
-            $this->addMenuItems($menu_name, $items);
+
+            $this->setMenuItems($menu_name, $menu);
+
         }
 
+        $menu       = $this->menus[$menu_name];
         $active_ids = array();
 
-        if ($detect_active_id){
+        // Для подсчета пунктов меню первого уровня
+        $first_level_count = 0;
+        $first_level_limit = 0;
+        $index = 0;
 
-            $current_url = trim($core->uri, '/');
+        // для определения активного пункта меню
+        $current_url = trim(cmsCore::getInstance()->uri, '/');
 
-            if ($menu_name == 'main'){
-//                dump($this->menus[$menu_name]);
+        foreach($menu as $id=>$item){
+
+            $menu[$id]['disabled']     = !empty($item['disabled']);
+            $menu[$id]['level']        = !isset($item['level']) ? 1 : $item['level'];
+            $menu[$id]['childs_count'] = !isset($item['childs_count']) ? 0 : $item['childs_count'];
+
+            if (!isset($item['url']) &&  !empty($item['controller'])) {
+                if (!isset($item['action'])) { $item['action'] = ''; }
+                if (!isset($item['params'])) { $item['params'] = array(); }
+                $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
+                $menu[$id]['url'] = $item['url'];
             }
 
-            //перебираем меню в поисках текущего пункта
-            foreach($this->menus[$menu_name] as $id=>$item){
+            // Если нужно, считаем количество пунктов первого уровня
+            if ($max_items){
 
-                if (!isset($item['url']) && !isset($item['controller'])) { continue; }
+                if ($item['level'] == 1){ $first_level_count++; }
+                if ($first_level_count > $max_items && !$first_level_limit){ $first_level_limit = $index; }
+                $index++;
 
-                if (!isset($item['url'])) {
-                    if (!isset($item['action'])) { $item['action'] = ''; }
-                    if (!isset($item['params'])) { $item['params'] = array(); }
-                    $item['url'] = href_to($item['controller'], $item['action'], $item['params']);
-                    $this->menus[$menu_name][$id]['url'] = $item['url'];
-                    $menu[$id] = $item;
-                }
+            }
+
+            // ищем активные пункты меню
+            if ($detect_active_id){
+
+                if (!isset($item['url'])) { continue; }
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : $item['url'];
                 $url = mb_substr($url, mb_strlen($config->root));
@@ -243,14 +292,14 @@ class cmsTemplate {
                 //полное совпадение ссылки и адреса?
                 if ($current_url == $url){
                     $active_ids[] = $id;
-                    $is_strict = true;
+                    $is_strict = true; // не используется нигде
                 } else {
 
                     //частичное совпадение ссылки и адреса (по началу строки)?
                     $url_first_part = mb_substr($current_url, 0, mb_strlen($url));
                     if ($url_first_part == $url){
                         $active_ids[] = $id;
-                        $is_strict = false;
+                        $is_strict = false;  // не используется нигде
                     }
 
                 }
@@ -259,11 +308,47 @@ class cmsTemplate {
 
         }
 
-		if (!$is_allow_multiple_active && (count($active_ids)>1)){
-			$active_ids = array($active_ids[count($active_ids)-1]);
-		}
+        if ($max_items && $first_level_limit){
 
-        $this->renderMenu($this->menus[$menu_name], $active_ids, $css_class, $max_items);
+            //
+            // Если на первом уровне больше пунктов, чем нужно то
+            // разрезаем массив меню на две части - видимую и скрытую
+            //
+
+            $visible_items = array_slice($menu, 0, $first_level_limit, true);
+            $more_items    = array_slice($menu, $first_level_limit, sizeof($menu) - $first_level_limit, true);
+
+            $item_more_id = 10000;
+
+            $item_more = array(
+                $item_more_id => array(
+                    'id'           => $item_more_id,
+                    'title'        => LANG_MENU_MORE,
+                    'childs_count' => ($first_level_count - $max_items),
+                    'level'        => 1,
+                    'disabled'     => false,
+                    'options'      => array(
+                        'class' => 'more'
+                    )
+                )
+            );
+
+            foreach($more_items as $id=>$item){
+                if ($item['level']==1){
+                    $more_items[$id]['parent_id'] = $item_more_id;
+                }
+                $more_items[$id]['level']++;
+            }
+
+            $menu = $visible_items + $item_more + $more_items;
+
+        }
+
+        if (!$is_allow_multiple_active && (count($active_ids)>1)){
+            $active_ids = array($active_ids[count($active_ids)-1]);
+        }
+
+        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template);
 
     }
 
@@ -273,10 +358,9 @@ class cmsTemplate {
      */
     public function breadcrumbs($options=array()){
 
-        $config = cmsConfig::getInstance();
-
         $default_options = array(
-            'home_url' => $config->host,
+            'home_url'   => cmsConfig::get('host'),
+            'template'   => 'breadcrumbs',
             'strip_last' => true
         );
 
@@ -290,7 +374,7 @@ class cmsTemplate {
             }
         }
 
-        $this->renderAsset('ui/breadcrumbs', array(
+        $this->renderAsset('ui/'.$options['template'], array(
             'breadcrumbs' => $this->breadcrumbs,
             'options' => $options
         ));
@@ -339,7 +423,9 @@ class cmsTemplate {
 		$config = cmsConfig::getInstance();
         if (func_num_args() > 1){ $pagetitle = implode(' - ', func_get_args()); }
         $this->title = $pagetitle;
-		$this->title .= ' - '.$config->sitename;
+        if($config->is_sitename_in_title){
+            $this->title .= ' — '.$config->sitename;
+        }
 	}
 
 	public function setFrontPageTitle($pagetitle){
@@ -514,10 +600,13 @@ class cmsTemplate {
 	 * Добавляет CSS файл в головной раздел страницы
 	 * @param string $file
 	 */
-	public function addCSS($file){
+	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
         if (isset($this->head_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
+        if (!$allow_merge){
+            $this->head_css_no_merge[$hash] = $file;
+        }
         return true;
 	}
 
@@ -552,18 +641,19 @@ class cmsTemplate {
         $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
         return $this->addJS($path, $comment, $allow_merge);
     }
-    public function addControllerCSS($path, $cname = ''){
+    public function addControllerCSS($path, $cname = '', $allow_merge = true){
         if(!$cname){$cname = $this->controller->name;}
         $path = "/controllers/{$cname}/css/{$path}.css";
         $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
-        return $this->addCSS($path);
+        return $this->addCSS($path, $allow_merge);
     }
 
 	public function insertJS($file, $comment=''){
 
         $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
-        echo '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
+        // атрибут rel="forceLoad" добавлен для nyroModal
+        echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
 
 	}
 
@@ -572,6 +662,33 @@ class cmsTemplate {
         $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
 		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
 
+    }
+
+    /**
+     * Подключает js файл на страницу в зависимости от контекста исходного запроса
+     * @param string $file
+     * @param string $comment
+     * @return bool
+     */
+    public function addJSFromContext($file, $comment='') {
+        if(cmsCore::getInstance()->request->isAjax()){
+            return $this->insertJS($file, $comment);
+        } else {
+            return $this->addJS($file, $comment, false);
+        }
+    }
+
+    /**
+     * Подключает css файл на страницу в зависимости от контекста исходного запрос
+     * @param string $file
+     * @return bool
+     */
+    public function addCSSFromContext($file) {
+        if(cmsCore::getInstance()->request->isAjax()){
+            return $this->insertCSS($file);
+        } else {
+            return $this->addCSS($file, false);
+        }
     }
 
     public function getJS($file){
@@ -667,6 +784,7 @@ class cmsTemplate {
         $merged_contents = '';
 
         foreach($files as $file){
+            if (in_array($file, $this->head_css_no_merge)) { continue; }
             $file_path = $config->root_path . $file;
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
@@ -703,10 +821,10 @@ class cmsTemplate {
 
             foreach($urls as $i => $url){
 
-                $abs_url = trim($url, '" ');
+                $abs_url = trim($url, '\'" ');
 
                 $is_root = mb_substr($abs_url, 0, 1) == '/';
-                $is_http = mb_substr($abs_url, 0, 7) == 'http://';
+                $is_http = mb_substr($abs_url, 0, 4) == 'http';
                 $is_data = mb_substr($abs_url, 0, 10) == 'data:image';
 
                 if ($is_data) { continue; }
@@ -762,15 +880,21 @@ class cmsTemplate {
      * Возвращает HTML-разметку схемы позиций виджетов
      * @return string
      */
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
         $config = cmsConfig::getInstance();
 
-        $scheme_file = $config->root_path . 'templates/'.$this->name.'/scheme.html';
+        $name = $name ? $name : $this->name;
+
+        $scheme_file = $config->root_path . 'templates/'.$name.'/scheme.html';
 
         if (!file_exists($scheme_file)) { return false; }
 
-        return file_get_contents($scheme_file);
+        ob_start();
+
+        include($scheme_file);
+
+        return ob_get_clean();
 
     }
 
@@ -783,6 +907,21 @@ class cmsTemplate {
      */
     public function getName(){
         return $this->name;
+    }
+
+    /**
+     * Устанавливает название глобального шаблона
+     * @param string $name
+     * @return \cmsTemplate
+     */
+    public function setName($name){
+
+        $this->name = $name;
+
+        $this->path = cmsConfig::get('root_path').'templates/'.$this->name;
+
+        return $this;
+
     }
 
 // ========================================================================== //
@@ -827,7 +966,7 @@ class cmsTemplate {
 
         if (!file_exists($tpl_file)) { $tpl_file = $default; }
 
-        if (!file_exists($tpl_file)){
+        if (!is_readable($tpl_file)){
             if (!$is_check){
                 cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
             } else {
@@ -1025,17 +1164,6 @@ class cmsTemplate {
     public function renderForm($form, $data, $attributes=array(), $errors=false){
 
         $tpl_file = $this->getTemplateFileName('assets/ui/form');
-        
-        // unilang
-        if(is_array($data)){
-            foreach($data as $key => $value){
-                if($data['unilang_edit'] === true){ break; }
-                if(substr($key, 0, 8) === 'ul_orig_'){
-                    $data[substr($key, 8)] = $value;
-                }
-            }
-        }
-        // unilang AND
 
         include($tpl_file);
 
@@ -1088,7 +1216,7 @@ class cmsTemplate {
                         $value = $row[$field];
                     }
 
-                    if (!$value) { $value = ''; }
+                    if ($value === null) { $value = ''; }
 
                     if (isset($column['flag']) && $column['flag']){
 
@@ -1234,12 +1362,15 @@ class cmsTemplate {
 
     /**
      * Выводит меню
-     * @param array $items
-     * @param int $active_id
+     * @param array $menu Массив пунктов меню
+     * @param array $active_ids Массив активных пунктов меню
+     * @param string $css_class CSS класс контейнера пунктов меню
+     * @param int $max_items Максимальное количество видимых пунктов
+     * @param string $template Название файла шаблона меню в assets/ui/
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0){
+    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu'){
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/menu');
+        $tpl_file = $this->getTemplateFileName('assets/ui/'.$template);
 
         include($tpl_file);
 
@@ -1267,15 +1398,19 @@ class cmsTemplate {
 
 //============================================================================//
 //============================================================================//
-
+    /**
+     * Возвращает все названия шаблонов для списка записей типов контента
+     * @return array
+     */
     public function getAvailableContentListStyles(){
 
-        $dir = 'templates/'.$this->name.'/content';
-        $files = cmsCore::getFilesList($dir, 'default_list*.tpl.php', true);
-
-        if (!$files) { return false; }
-
         $styles = array();
+
+        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
+        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);
+
+        $files = array_unique(array_merge($files, $default_files));
+        if (!$files) { return $styles; }
 
         foreach($files as $file){
 
@@ -1284,9 +1419,9 @@ class cmsTemplate {
             if (!$matches){
                 $styles[''] = 'default_list (' . LANG_CP_LISTVIEW_STYLE_BASIC .')';
             } else {
-                $title = constant('LANG_CP_LISTVIEW_STYLE_'.mb_strtoupper($matches[1]));
-                if ($title) { $title = " ({$title})"; }
-                $styles[$matches[1]] = pathinfo($file, PATHINFO_FILENAME) . $title;
+                $constant_name = 'LANG_CP_LISTVIEW_STYLE_'.mb_strtoupper($matches[1]);
+                $title = defined($constant_name) ? '('.constant($constant_name).')' : '';
+                $styles[$matches[1]] = pathinfo($file, PATHINFO_FILENAME).$title;
             }
 
         }
@@ -1345,7 +1480,9 @@ class cmsTemplate {
 
         $template_file = $this->path . '/' . $layout . '.tpl.php';
 
-        if(file_exists($template_file)){
+        $device_type = cmsRequest::getDeviceType();
+
+        if(is_readable($template_file)){
 
             if (!$config->min_html){
                 include($template_file);
@@ -1410,13 +1547,32 @@ class cmsTemplate {
 
         cmsCore::loadTemplateLanguage($this->name);
 
-        $form_file = $this->path . '/options.form.php';
+        $form_file            = $this->path . '/options.form.php';
+        $deprecated_form_name = 'template_options';
+        $form_name            = $this->name . '_template_options';
+        $form                 = null;
 
-        $form_name = 'template_options';
+        // $form = cmsForm::getForm($form_file, $form_name);
+        // для совместимости форм шаблонов делаем здесь то, что делается в cmsForm::getForm, но с проверкой класса
+        // убрать через пару релизов. http://docs.instantcms.ru/dev/templates/options
 
-        $form = cmsForm::getForm($form_file, $form_name);
+        include_once $form_file;
 
-        if (!$form) { $form = new cmsForm(); }
+        $form_class = 'form' . string_to_camel('_', $form_name);
+
+        if(!class_exists($form_class)){
+            $form_class = 'form' . string_to_camel('_', $deprecated_form_name);
+        }
+
+        if(class_exists($form_class)){
+
+            $form = new $form_class();
+
+            $form->setStructure( $form->init() );
+
+        }
+
+        if ($form === null) { $form = new cmsForm(); }
 
         return $form;
 
@@ -1452,9 +1608,19 @@ class cmsTemplate {
 
         $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
+        if(file_exists($options_file)){
+            if(!is_writable($options_file)){
+                return false;
+            }
+        } else {
+            if(!is_writable(dirname($options_file))){
+                return false;
+            }
+        }
+
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return @file_put_contents($options_file, $options_yaml);
+        return file_put_contents($options_file, $options_yaml);
 
     }
 
