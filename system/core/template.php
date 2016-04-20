@@ -809,7 +809,7 @@ class cmsTemplate {
 
         $matches = array();
 
-        preg_match_all('/url\((.+)\)/i', $css, $matches);
+        preg_match_all('/url\(([^)]+)\)/si', $css, $matches);
 
         if ($matches){
 
