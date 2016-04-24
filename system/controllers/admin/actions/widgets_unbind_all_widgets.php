@@ -2,11 +2,13 @@
 
 class actionAdminWidgetsUnbindAllWidgets extends cmsAction {
 
-    public function run(){
+    public function run($template_name=null){
 
-        cmsCore::getModel('widgets')->unbindAllWidgets();
+        if($template_name){
+            cmsCore::getModel('widgets')->unbindAllWidgets($template_name);
+        }
 
-        $this->redirectToAction('widgets');
+        $this->redirectBack();
 
     }
 

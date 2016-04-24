@@ -156,6 +156,7 @@
     define('LANG_CP_TAB',                       'Вкладка');
     define('LANG_CP_TAB_TITLE',                 'Название вкладки');
     define('LANG_CP_TAB_IS_ACTIVE',             'Показывать вкладку');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Показывать вкладку только владельцу профиля');
 
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');
@@ -181,6 +182,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Сверху');
     define('LANG_CP_FIELD_IN_LIST',             'Показывать в списке');
     define('LANG_CP_FIELD_IN_ITEM',             'Показывать в записи');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Показывать в профиле');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');
     define('LANG_CP_FIELD_IN_FILTER',           'Показывать в фильтре');
@@ -239,7 +241,7 @@
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
-    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
@@ -248,6 +250,7 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
 
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
     define('LANG_CP_USER_CREATED',              'Пользователь &laquo;%s&raquo; создан');
@@ -267,6 +270,8 @@
     define('LANG_CP_USER_LOCK_UNTIL',           'Заблокировать до');
     define('LANG_CP_USER_LOCK_REASON',          'Причина блокировки');
     define('LANG_CP_USER_NOT_FOUND',            'Пользователь %s не найден');
+    define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
 
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Компонент &laquo;%s&raquo; не имеет настроек');
@@ -295,7 +300,10 @@
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по-умолчанию');
+    define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
+    define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
+    define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
@@ -367,7 +375,7 @@
     define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные папки сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание папок и файлов.');
-    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и хранятся в сессии только до конца текущего сеанса');
+    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и могут храниться в сессии только до конца текущего сеанса');
 
     define('LANG_CP_PACKAGE_AUTHOR',            'Автор пакета');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
@@ -404,6 +412,8 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
 
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Запомнить реквизиты ftp в сессии');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Это небезопасно в случае если дополнение не от надежного автора');
     define('LANG_CP_FTP_SKIP',				'Пропустить этот шаг');
     define('LANG_CP_FTP_SKIP_HINT',			'Пропустите шаг, если автоматический доступ на FTP невозможен и вы используете ручной способ установки описанный в <a href="http://docs.instantcms.ru/manual/addons">инструкции</a>');
 

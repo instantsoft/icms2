@@ -7,7 +7,7 @@ class actionContentItemsFromFriends extends cmsAction {
         $user = cmsUser::getInstance();
 
         // Получаем название типа контента и сам тип
-        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name'));
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype || !$ctype['options']['list_on']) { cmsCore::error404(); }
 
         if (!$user->is_logged){

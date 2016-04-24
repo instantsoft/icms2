@@ -29,6 +29,7 @@
     define('LANG_FILTER_IS_NULL',            'не заполнено');
     define('LANG_FILTER_APPLY',              'Фильтровать');
     define('LANG_FILTER_URL',                'Ссылка');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Сохранять различную сортировку');
     define('LANG_SORTING_FIELD',             'Сортировка по полю');
     define('LANG_SORTING',                   'Сортировка');
     define('LANG_SORTING_ADD',               'Добавить правило');
@@ -64,18 +65,25 @@
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
+    define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
-    define('LANG_PARSER_CITY',               'Город');
-    define('LANG_PARSER_CITY_FILTER_HINT',   'ID города');
+    define('LANG_PARSER_CITY',               'Местоположение');
+    define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'Если необходимо объединить местоположения страна-область-город, укажите одно имя объединения для всех полей. Как минимум должны быть созданы поля типа "страна" и "область"');
+    define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'Например, "{country}, {city}", где country и city системные имена полей. Полезно использовать, отключая для вывода остальные поля группировки, показывая нужные значения в этом поле. Если не указано - выводится значение текущего поля.');
     define('LANG_PARSER_CHECKBOX',           'Флаг');
     define('LANG_PARSER_TEXT',               'Текст');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
@@ -96,6 +104,8 @@
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');
+    define('LANG_PARSER_AGE_FROM_DATE',      'Считать от указанной даты');
+    define('LANG_PARSER_AGE_FROM_DATE_HINT', 'Если не указано, отсчет будет вестись от текущего значения времени');
     define('LANG_PARSER_DATE',               'Дата');
     define('LANG_PARSER_DATE_FILTER_HINT',   'ГГГГ-ММ-ДД');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Показывать время');
@@ -104,6 +114,8 @@
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
@@ -127,6 +139,10 @@
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
+    define('LANG_PARSER_ADD_FROM_LINK', 'добавить по ссылке');
+    define('LANG_PARSER_ENTER_IMAGE_LINK', 'Введите ссылку на изображение');
+    define('LANG_OR', 'или');
+    define('LANG_BEGIN_TYPING', 'Начните вводить или выберите из списка');
 
     //USERS
     define('LANG_USER',                      'Пользователь');
@@ -157,6 +173,8 @@
     define('LANG_MY_PROFILE',                'Мой профиль');
     define('LANG_PROFILE',                   'Профиль');
     define('LANG_CITY',                      'Город');
+    define('LANG_REGION',                    'Область');
+    define('LANG_COUNTRY',                   'Страна');
     define('LANG_COMPANY',                   'Компания');
     define('LANG_PHONE',                     'Телефон');
     define('LANG_NAME',                      'Имя');
@@ -171,6 +189,8 @@
     define('LANG_PLEASE_LOGIN',              'Представьтесь, пожалуйста');
     define('LANG_LOGIN_ADMIN',               'Вход для администраторов');
     define('LANG_ONLINE',                    'Онлайн');
+    define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
+    define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
@@ -205,11 +225,11 @@
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
-    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена');
+    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных или она недоступна для чтения');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения или он недоступен для чтения');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
     define('ERR_FILE_NOT_FOUND',             'Файл не найден');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
@@ -279,6 +299,7 @@
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
 
+    define('LANG_BY_DEFAULT',                'По-умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
     define('LANG_NO',                        'Нет');
@@ -424,6 +445,11 @@
     define('LANG_UNIT1',                     'единица');
     define('LANG_UNIT2',                     'единицы');
     define('LANG_UNIT10',                    'единиц');
+    define('LANG_CH1',                       'символ');
+    define('LANG_CH2',                       'символа');
+    define('LANG_CH10',                      'символов');
+
+    define('LANG_ISLEFT',                    'осталось');
 
     //DATES
     define('LANG_ALL',                       'Все');

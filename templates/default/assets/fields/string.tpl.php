@@ -1,22 +1,28 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
 <?php if(!isset($field->prefix) && !isset($field->suffix)){ ?>
-    <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id)); ?>
+    <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id, 'required'=>(array_search(array('required'), $field->getRules()) !== false))); ?>
 <?php } ?>
 
 <?php if(isset($field->prefix) || isset($field->suffix)){ ?>
     <div class="input-prefix-suffix">
         <?php if(isset($field->prefix)) { ?><span class="prefix"><?php echo $field->prefix; ?></span><?php } ?>
-        <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id)); ?>
+        <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id, 'required'=>(array_search(array('required'), $field->getRules()) !== false))); ?>
         <?php if(isset($field->suffix)) { ?><span class="suffix"><?php echo $field->suffix; ?></span><?php } ?>
     </div>
 <?php } ?>
-
+<?php if($field->getOption('show_symbol_count')){ ?>
+<script type="text/javascript">
+$(function(){
+    icms.forms.initSymbolCount('<?php echo $field->id; ?>', <?php echo ($field->getOption('max_length') ? (int)$field->getOption('max_length') : 0) ?>);
+});
+</script>
+<?php } ?>
 <?php if($field->data['autocomplete']){ ?>
-<?php $this->addJS('templates/default/js/jquery-ui.js'); ?>
-<?php $this->addCSS('templates/default/css/jquery-ui.css'); ?>
+    <?php $this->addJSFromContext('templates/default/js/jquery-ui.js'); ?>
+    <?php $this->addCSSFromContext('templates/default/css/jquery-ui.css'); ?>
 
-<script>
+<script type="text/javascript">
     var cache = {};
 
     <?php if(!empty($field->data['autocomplete']['multiple'])) { ?>

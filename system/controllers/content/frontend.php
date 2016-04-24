@@ -6,22 +6,9 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function before($action_name) {
-
-        parent::before($action_name);
-
-        $core = cmsCore::getInstance();
-
-    }
-
-//============================================================================//
-//============================================================================//
-
     public function route($uri){
 
-        $core = cmsCore::getInstance();
-
-        $action_name = $this->parseRoute($core->uri);
+        $action_name = $this->parseRoute($this->cms_core->uri);
 
         if (!$action_name) { cmsCore::error404(); }
 
@@ -31,12 +18,10 @@ class content extends cmsFrontend {
 
 	public function parseRoute($uri){
 
-		$config = cmsConfig::getInstance();
-
 		$action_name = parent::parseRoute($uri);
 
-		if (!$action_name && $config->ctype_default){
-			$action_name = parent::parseRoute($config->ctype_default . '/' . $uri);
+		if (!$action_name && $this->cms_config->ctype_default){
+			$action_name = parent::parseRoute($this->cms_config->ctype_default . '/' . $uri);
 		}
 
 		return $action_name;
@@ -142,14 +127,12 @@ class content extends cmsFrontend {
 
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
 
-        $user = cmsUser::getInstance();
-
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
         $page = $this->request->get('page', 1);
 
-        $perpage = self::perpage;
+        $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
 
         if ($hide_filter) { $ctype['options']['list_show_filter'] = false; }
 
@@ -165,7 +148,7 @@ class content extends cmsFrontend {
 			if (!$field['is_in_filter']) { continue; }
 			if (!$this->request->has($name)){ continue; }
 
-			$value = $this->request->get($name);
+			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
 			if (!$value) { continue; }
 
 			$this->model = $field['handler']->applyFilter($this->model, $value);
@@ -182,10 +165,13 @@ class content extends cmsFrontend {
 				if (!$prop['is_in_filter']) { continue; }
 				if (!$this->request->has($name)){ continue; }
 
-				$value = $this->request->get($name);
+                $prop['handler'] = $props_fields[$prop['id']];
+
+				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType(true));
 				if (!$value) { continue; }
 
 				$this->model->filterPropValue($ctype['name'], $prop, $value);
+
 				$filters[$name] = $value;
 
 			}
@@ -234,20 +220,18 @@ class content extends cmsFrontend {
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');
 
             foreach($items as $id=>$item){
-                $is_rating_enabled = $is_rating_allowed && ($item['user_id'] != $user->id);
+                $is_rating_enabled = $is_rating_allowed && ($item['user_id'] != $this->cms_user->id);
                 $items[$id]['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_enabled);
             }
 
         }
 
-        list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 
-        $template = cmsTemplate::getInstance();
+        $this->cms_template->setContext($this);
 
-        $template->setContext($this);
-
-        $html = $template->renderContentList($ctype, array(
+        $html = $this->cms_template->renderContentList($ctype, array(
 			'category_id'       => $category_id,
             'page_url'          => $page_url,
             'ctype'             => $ctype,
@@ -259,12 +243,12 @@ class content extends cmsFrontend {
             'perpage'           => $perpage,
             'total'             => $total,
             'items'             => $items,
-            'user'              => $user,
+            'user'              => $this->cms_user,
             'dataset'           => $dataset,
             'hide_except_title' => $hide_except_title
         ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
-        $template->restoreContext();
+        $this->cms_template->restoreContext();
 
         return $html;
 
@@ -396,27 +380,30 @@ class content extends cmsFrontend {
             if (!empty($ctype['options']['is_cats_title'])){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!empty($ctype['options']['is_cats_keys'])){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!empty($ctype['options']['is_cats_desc'])){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
         }
@@ -431,6 +418,19 @@ class content extends cmsFrontend {
 
         }
 
+        // для администраторов показываем поля доступа
+        if($this->cms_user->is_admin){
+
+            $fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
+            $form->addField($fieldset_id, new fieldListGroups('allow_add', array(
+                'title'       => LANG_CONTENT_CATS_ALLOW_ADD,
+                'hint'        => LANG_CONTENT_CATS_ALLOW_ADD_HINT,
+                'show_all'    => true,
+                'show_guests' => false
+            )));
+
+        }
+
         return $form;
 
     }
@@ -439,8 +439,6 @@ class content extends cmsFrontend {
 //============================================================================//
 
     public function getItemForm($ctype, $fields, $action, $data=array(), $item_id=false, $item=false){
-
-        $user = cmsUser::getInstance();
 
         // Контейнер для передачи дополнительных списков:
         // $groups_list, $folders_list и т.д.
@@ -460,15 +458,21 @@ class content extends cmsFrontend {
                         ),
                         'generator' => function($item){
 
+                            $user = cmsUser::getInstance();
+
                             $content_model = cmsCore::getModel('content');
                             $ctype = $content_model->getContentTypeByName($item['ctype_name']);
                             $tree = $content_model->getCategoriesTree($item['ctype_name']);
                             $level_offset = 0;
                             $last_header_id = false;
-                            $items = array('' => LANG_CONTENT_SELECT_CATEGORY );
+                            $items = array('' => '' );
 
                             if ($tree){
                                 foreach($tree as $c){
+
+                                    if(!empty($c['allow_add']) &&  !$user->isInGroups($c['allow_add'])){
+                                        continue;
+                                    }
 
                                     if ($ctype['options']['is_cats_only_last']){
 										$dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
@@ -519,7 +523,7 @@ class content extends cmsFrontend {
         // Если включены личные папки, добавляем в форму поле выбора личной папки
         if ($ctype['is_folders']){
             $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder');
-            $folders = array('0'=>LANG_CONTENT_SELECT_FOLDER);
+            $folders = array('0'=>'');
             if ($folders_list) { $folders = $folders + $folders_list; }
             $form->addField($fieldset_id,
                 new fieldList('folder_id', array(
@@ -648,27 +652,30 @@ class content extends cmsFrontend {
             if ($ctype['options']['is_manual_title']){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!$ctype['is_auto_keys']){
                 $form->addField($fieldset_id, new fieldString('seo_keys', array(
                     'title' => LANG_SEO_KEYS,
                     'hint' => LANG_SEO_KEYS_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
             if (!$ctype['is_auto_desc']){
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
-					'rules' => array(
-						array('max_length', 256)
-					)
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
                 )));
             }
         }
@@ -685,7 +692,7 @@ class content extends cmsFrontend {
         $is_pub_ext        = cmsUser::isAllowed($ctype['name'], 'pub_max_ext');
         $pub_max_days      = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
 
-        if ($user->is_admin){ $is_pub_end_days = false; }
+        if ($this->cms_user->is_admin){ $is_pub_end_days = false; }
 
 		if ($is_pub_control){
 			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
@@ -784,6 +791,34 @@ class content extends cmsFrontend {
                     $field = new fieldList($field_name, array(
                         'title' => $prop['title'],
                         'items' => string_explode_list($prop['values']),
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'list_multiple':
+
+                    $field = new fieldListBitmask($field_name, array(
+                        'title' => $prop['title'],
+                        'items' => string_explode_list($prop['values']),
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'color':
+
+                    $field = new fieldColor($field_name, array(
+                        'title' => $prop['title'],
+                        'rules' => $rules
+                    ));
+
+                    break;
+
+                case 'checkbox':
+
+                    $field = new fieldCheckbox($field_name, array(
+                        'title' => $prop['title'],
                         'rules' => $rules
                     ));
 

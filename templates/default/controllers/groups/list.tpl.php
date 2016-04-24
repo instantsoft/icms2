@@ -62,7 +62,7 @@
     </div>
 
     <?php if ($perpage < $total) { ?>
-        <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
+        <?php echo html_pagebar($page, $perpage, $total, $page_url); ?>
     <?php } ?>
 
 <?php } ?>

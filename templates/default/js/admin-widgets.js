@@ -4,6 +4,10 @@ var current_pallette = null;
 
 $(function() {
 
+    $('#cp-widgets-select-template select').on('change', function (){
+        window.location.href = $('#cp-widgets-select-template').data('current_url')+'?template_name='+$(this).val();
+    });
+
     current_pallette = false;
     page_id = 0;
 
@@ -64,6 +68,7 @@ $(function() {
                 var id = ui.item.data('id');
                 ui.item.attr('rel', '');
                 ui.item.data('widget-id', id);
+				ui.item.removeAttr('style');
                 widgetsAdd(id, pos, ui.item);
             } else {
                 widgetsSavePositionOrderings(pos);
@@ -125,10 +130,11 @@ function widgetsSelectPage(key){
 function widgetsLoad(page_id){
 
     var load_url = $('#cp-widgets-layout').data('load-url');
+    var template = $('#cp-widgets-layout').data('template');
 
     $('#cp-widgets-layout .position').html('');
 
-    $.post(load_url, {page_id: page_id}, function(result){
+    $.post(load_url, {page_id: page_id, template: template}, function(result){
 
         if (!result.is_exists){return;}
 
@@ -144,11 +150,14 @@ function widgetsLoad(page_id){
                 }
 
                 $('#cp-widgets-layout #pos-'+pos).append(widget_dom);
-
                 if (widget.is_disabled) {
                     widget_dom.addClass('disabled');
                 } else {
                     widgetAddActionButtons(widget_dom);
+                }
+
+                if (!widget.is_enabled) {
+                    widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
                 }
 
                 widgetsMarkTabbed();
@@ -180,24 +189,49 @@ function widgetAddActionButtons(widget_dom){
 
     $('.actions .edit', widget_dom).click(function(){
         var widget_id = $(this).parent('span').parent('li').attr('bind-id');
-        widgetEdit(widget_id);
+        return widgetEdit(widget_id);
     });
 
     $('.actions .delete', widget_dom).click(function(){
         var widget_id = $(this).parent('span').parent('li').attr('bind-id');
-        widgetDelete(widget_id);
+        return widgetDelete(widget_id);
     });
 
+    $('.actions .hide', widget_dom).click(function(){
+        var widget_id = $(this).parent('span').parent('li').attr('bind-id');
+        return widgetToggle(widget_id);
+    });
+
+}
+
+function widgetToggle(id){
+
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + ']');
+
+    var toggle_url = $('#cp-widgets-layout').data('toggle-url') + '/' + id;
+
+    $.post(toggle_url, {}, function(result){
+        if (result.error){ return; }
+        if (result.is_on){
+            widget_dom.removeClass('hide').find('.actions .hide').attr('title', LANG_HIDE);
+        } else {
+            widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
+        }
+    }, 'json');
+
+    return false;
 }
 
 function widgetsAdd(id, position, widget_dom){
 
     var add_url = $('#cp-widgets-layout').data('add-url');
+    var template = $('#cp-widgets-layout').data('template');
 
     var data = {
         widget_id: id,
         page_id: page_id,
-        position: position
+        position: position,
+        template: template
     };
 
     $.post(add_url, data, function(result){
@@ -225,7 +259,18 @@ function widgetEdit(id){
 
     var edit_url = $('#cp-widgets-layout').data('edit-url');
 
-    icms.modal.openAjax(edit_url + '/' + id);
+    icms.modal.openAjax(edit_url + '/' + id, undefined, function (){
+        w = $('.modal_form').width();
+        h = 0;
+        $('.modal_form .form-tabs .tab').each(function(indx, element){
+            var th = $(this).height();
+            if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
+        });
+        $('.modal_form').parent().css({width: w+'px', height: h+'px'});
+        setTimeout(function(){ icms.modal.resize(); }, 10);
+    });
+
+    return false;
 
 }
 
@@ -262,11 +307,9 @@ function widgetDelete(id){
         widgetsMarkTabbed();
     });
 
-    $.post(delete_url, {}, function(){
+    $.post(delete_url, {}, function(){});
 
-    });
-
-    return true;
+    return false;
 
 }
 

@@ -74,9 +74,7 @@
     define('LANG_USERS_PROFILE_WALL',       'Profile Wall');
 
     define('LANG_USERS_PROFILE_REGDATE',    'Registered');
-    define('LANG_USERS_PROFILE_LOGDATE',    'Last visit');
     define('LANG_USERS_PROFILE_INVITED_BY', 'Invited by');
-    define('LANG_USERS_PROFILE_LAST_IP',    'Last IP');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Personal information is hidden by privacy settings');
 

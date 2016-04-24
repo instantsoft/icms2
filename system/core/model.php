@@ -107,7 +107,8 @@ class cmsModel{
             'values'        => array('type' => 'text'),
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
-            'groups_edit'   => array('type' => 'text')
+            'groups_edit'   => array('type' => 'text'),
+            'filter_view'   => array('type' => 'text')
         );
 
     }
@@ -171,6 +172,10 @@ class cmsModel{
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
+        if(!empty($category['allow_add'])){
+            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        }
+
         return $category;
 
     }
@@ -212,6 +217,9 @@ class cmsModel{
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
+            if(!empty($node['allow_add'])){
+                $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
+            }
             return $node;
         });
 
@@ -584,16 +592,16 @@ class cmsModel{
         return $this;
     }
 
-    public function filterFunc($field, $value){
+    public function filterFunc($field, $value, $sign='='){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field = $value");
+        $this->filter("$field {$sign} $value");
         return $this;
     }
 
     public function filterNotEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field NOT IS NULL");
+            $this->filter("$field IS NOT NULL");
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field <> '$value'");
@@ -854,7 +862,7 @@ class cmsModel{
             $this->orderByList($dataset['sorting']);
         }
 
-        if($dataset['index']){
+        if(!empty($dataset['index'])){
             $this->forceIndex($dataset['index']);
         }
 
@@ -1175,6 +1183,8 @@ class cmsModel{
         if ($this->join){ $sql .= $this->join; }
 
         if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+
+        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша

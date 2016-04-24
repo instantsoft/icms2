@@ -2,9 +2,10 @@
 
 class fieldImages extends cmsFormField {
 
-    public $title = LANG_PARSER_IMAGES;
-    public $sql   = 'text';
-	public $allow_index = false;
+    public $title       = LANG_PARSER_IMAGES;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
 
     public function getOptions(){
 
@@ -27,13 +28,13 @@ class fieldImages extends cmsFormField {
                 'default' => 0,
                 'items' => $presets
             )),
+            new fieldCheckbox('allow_import_link', array(
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            )),
+            new fieldCheckbox('first_image_emphasize', array(
+                'title' => LANG_PARSER_FIRST_IMAGE_EMPHASIZE
+            ))
         );
-
-    }
-
-    public function parseTeaser($value){
-
-        return $this->parse($value);
 
     }
 
@@ -43,16 +44,30 @@ class fieldImages extends cmsFormField {
 
         $html = '';
 
+        $small_preset = false;
+        $a_class = '';
+
         foreach($images as $key=>$paths){
 
             if (!isset($paths[$this->getOption('size_full')])){ continue; }
 
-            $html .= '<a class="img-'.$this->getName().'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+            if($this->getOption('first_image_emphasize') && !$small_preset){
+                $small_preset = $this->getOption('size_full');
+                $a_class = 'first_type_images';
+            } else {
+                $small_preset = 'small';
+             }
+
+            if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+                $html .= html_gif_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key, array('class'=>'img-'.$this->getName()));
+            } else {
+                $html .= '<a class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+            }
 
         }
 
         if($html){
-            $html .= '<script>$(document).ready(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+            $html .= '<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
         }
 
         return $html;
@@ -138,6 +153,7 @@ class fieldImages extends cmsFormField {
         }
 
         $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

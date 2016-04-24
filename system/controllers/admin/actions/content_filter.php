@@ -19,7 +19,7 @@ class actionAdminContentFilter extends cmsAction {
 				'handler' => new fieldNumber('rating')
 			);
 		}
-		
+
 		if ($ctype['is_comments']){
 			$fields[] = array(
 				'title' => LANG_COMMENTS,
@@ -36,10 +36,13 @@ class actionAdminContentFilter extends cmsAction {
 			);
 		}
 
+        $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
+
         return cmsTemplate::getInstance()->render('content_filter', array(
-            'ctype' => $ctype,
-            'datasets' => $datasets,
-            'fields' => $fields
+            'ctype'         => $ctype,
+            'datasets'      => $datasets,
+            'fields'        => $fields,
+            'diff_order'    => $diff_order
         ));
 
     }

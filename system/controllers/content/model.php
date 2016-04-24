@@ -77,7 +77,7 @@ class modelContent extends cmsModel{
                 'label_in_list' => 'none',
                 'label_in_item' => 'none',
                 'min_length' => 3,
-                'max_length' => 100,
+                'max_length' => 255,
                 'is_required' => true
             )
         ), true);
@@ -404,6 +404,14 @@ class modelContent extends cmsModel{
             $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$field['name']}` {$field_parser->getSQL()}";
             $this->db->query($sql);
 
+            if($field_parser->is_denormalization){
+
+                $cfield_name = $field['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+                $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$cfield_name}` {$field_parser->getCacheSQL()}";
+                $this->db->query($sql);
+
+            }
+
             if ($field['is_in_filter'] && $field_parser->allow_index){
                 $this->db->addIndex($content_table_name, $field['name']);
             }
@@ -468,6 +476,7 @@ class modelContent extends cmsModel{
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
+            $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
             $item['default'] = $item['values'];
 
             $rules = array();
@@ -536,6 +545,7 @@ class modelContent extends cmsModel{
 
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
+            $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
 
             $field_class = "field" . string_to_camel('_', $item['type']);
 
@@ -586,10 +596,44 @@ class modelContent extends cmsModel{
 
             if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
 
-                $sql = "ALTER TABLE  `{#}{$content_table_name}` CHANGE  `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
+                if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
+
+                $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
 
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
+
+                    // поля денормализации
+                    $old_cfield_name = $field_old['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+                    $new_cfield_name = $field['name'].cmsFormField::FIELD_CACHE_POSTFIX;
+
+                    $update_cache_sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$old_cfield_name}` `{$new_cfield_name}` {$field_handler->getCacheSQL()}";
+
+                    // изменилось только имя поля
+                    if($field_handler->is_denormalization && $field_old['type'] == $field['type']){
+
+                        $this->db->query($update_cache_sql);
+
+                    }
+                    // изменился тип
+                    if($field_old['type'] != $field['type']){
+
+                        if($field_old['parser']->is_denormalization && $field_handler->is_denormalization){
+
+                            $this->db->query($update_cache_sql);
+
+                        } elseif($field_old['parser']->is_denormalization && !$field_handler->is_denormalization){
+
+                            $this->db->dropTableField($content_table_name, $old_cfield_name);
+
+                        } elseif(!$field_old['parser']->is_denormalization && $field_handler->is_denormalization){
+
+                            $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$new_cfield_name}` {$field_handler->getCacheSQL()}";
+                            $this->db->query($sql);
+
+                        }
+
+                    }
 
                     // удаляем старый индекс
                     $this->db->dropIndex($content_table_name, $field_old['name']);
@@ -723,6 +767,10 @@ class modelContent extends cmsModel{
 
         $this->db->dropTableField($content_table_name, $field['name']);
 
+        if($field['parser']->is_denormalization){
+            $this->db->dropTableField($content_table_name, $field['parser']->getDenormalName());
+        }
+
         return true;
 
     }
@@ -824,7 +872,7 @@ class modelContent extends cmsModel{
         $this->filterEqual('prop_id', $id);
 
         $prop['cats'] = $this->get($bind_table_name, function($item, $model){
-           return $item['cat_id'];
+           return (int)$item['cat_id'];
         });
 
         return $prop;
@@ -1146,6 +1194,7 @@ class modelContent extends cmsModel{
                     $sorting_fields[] = $sorting['by'];
                 }
             }
+            $sorting_fields = array_unique($sorting_fields);
         }
 
         // если поле присутствует и в выборке и в сортировке, оставляем только в сортировке
@@ -1333,52 +1382,14 @@ class modelContent extends cmsModel{
 
     public function filterPropValue($ctype_name, $prop, $value){
 
-        $table_name = $this->table_prefix . $ctype_name . '_props_values';
-        $table_alias = "p{$prop['id']}";
+        $table_name  = $this->table_prefix.$ctype_name.'_props_values';
+        $table_alias = 'p'.$prop['id'];
 
-        if (is_array($value)){
+        $this->joinInner($table_name, $table_alias, "{$table_alias}.item_id = i.id");
 
-            $value_condition = array();
-            $glue = 'OR';
+        $this->filterEqual($table_alias.'.prop_id', $prop['id']);
 
-            if (isset($value['from']) || isset($value['to'])){
-
-                if (empty($value['from']) && empty($value['to'])) { return $this; }
-
-                if (isset($value['from'])){
-                    $v = (int)$this->db->escape($value['from']);
-                    $value_condition[] = "{$table_alias}.value >= {$v}";
-                }
-
-                if (isset($value['to'])){
-                    $v = (int)$this->db->escape($value['to']);
-                    $value_condition[] = "{$table_alias}.value <= {$v}";
-                }
-
-                $glue = 'AND';
-
-            } else {
-
-                foreach($value as $v){
-                    if (!$v) { continue; }
-                    $v = $this->db->escape($v);
-                    $value_condition[] = "{$table_alias}.value = '{$v}'";
-                }
-
-            }
-
-            $value_condition = implode(" {$glue} ", $value_condition);
-
-        } else {
-
-            $value = $this->db->escape($value);
-            $value_condition = "{$table_alias}.value = '{$value}'";
-
-        }
-
-        $on_condition = "({$table_alias}.item_id = i.id AND {$table_alias}.prop_id = {$prop['id']} AND ({$value_condition}))";
-
-        $this->join($table_name, $table_alias, $on_condition);
+        $prop['handler']->setName($table_alias.'.value')->applyFilter($this, $value);
 
         return $this;
 
@@ -1526,6 +1537,9 @@ class modelContent extends cmsModel{
         $this->update($table_name, $id, array(
             'tags' => $tags
         ));
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
 
     }
 
@@ -1934,9 +1948,14 @@ class modelContent extends cmsModel{
 
 	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
 
-		return $this->update($this->table_prefix.$ctype_name, $id, array(
+		$this->update($this->table_prefix.$ctype_name, $id, array(
 			'is_pub' => $is_pub
 		));
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+
+        return true;
 
 	}
 
@@ -2145,6 +2164,9 @@ class modelContent extends cmsModel{
             'approved_by' => $moderator_user_id,
             'date_approved' => ''
         ));
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
 
         return true;
 

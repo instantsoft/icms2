@@ -33,20 +33,11 @@ class modelUsers extends cmsModel{
 
         $this->useCache('users.list');
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
-
         return $this->get('{users}', function($user){
 
             $user['groups']    = cmsModel::yamlToArray($user['groups']);
             $user['theme']     = cmsModel::yamlToArray($user['theme']);
             $user['is_online'] = cmsUser::userIsOnline($user['id']);
-
-            $user['city'] = $user['city_id'] ? array(
-                'id' => $user['city_id'],
-                'name' => $user['city_name'],
-            ) : false;
 
             return $user;
 
@@ -69,10 +60,7 @@ class modelUsers extends cmsModel{
 
         $this->useCache("users.user.{$id}");
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
         $this->select("u.nickname", 'inviter_nickname');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
 
         if ($id){
@@ -83,17 +71,11 @@ class modelUsers extends cmsModel{
 
         if (!$user) { return false; }
 
-        $user['groups'] = cmsModel::yamlToArray($user['groups']);
-        $user['theme'] = cmsModel::yamlToArray($user['theme']);
-        $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
+        $user['groups']          = cmsModel::yamlToArray($user['groups']);
+        $user['theme']           = cmsModel::yamlToArray($user['theme']);
+        $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-
-        $user['city'] = $user['city_id'] ? array(
-            'id' => $user['city_id'],
-            'name' => $user['city_name'],
-        ) : false;
-
-        $user['is_online'] = cmsUser::userIsOnline($user['id']);
+        $user['is_online']       = cmsUser::userIsOnline($user['id']);
 
         return $user;
 
@@ -225,8 +207,6 @@ class modelUsers extends cmsModel{
 
             $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
-            if (isset($user['city_id']) && !isset($user['city'])){ $user['city'] = $user['city_id']; }
-
             $success = $this->update('{users}', $id, $user);
 
             $this->saveUserGroupsMembership($id, $user['groups']);
@@ -261,7 +241,11 @@ class modelUsers extends cmsModel{
 
 		}
 
-        return $this->update('{users}', $id, array('theme'=>$theme));
+        $res = $this->update('{users}', $id, array('theme'=>$theme));
+
+        cmsCache::getInstance()->clean("users.user.{$id}");
+
+        return $res;
 
     }
 
@@ -688,7 +672,11 @@ class modelUsers extends cmsModel{
 
         if ($only_active){ $this->filterEqual('is_active', 1); }
 
-        return $this->orderBy('ordering')->get('{users}_tabs', false, $by_field);
+        return $this->orderBy('ordering')->get('{users}_tabs', function($item, $model){
+            $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+            $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            return $item;
+        }, $by_field);
 
     }
 

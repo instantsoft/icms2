@@ -53,9 +53,18 @@ class cmsConfig {
         }
 
         $this->set('cfg_time_zone', $this->data['time_zone']);
+        $this->set('cfg_language', $this->data['language']);
 
         if (isset($_SESSION['user']['time_zone'])){
             $this->data['time_zone'] = $_SESSION['user']['time_zone'];
+        }
+
+        if (isset($_SESSION['language'])){
+            $this->data['language'] = $_SESSION['language'];
+        }
+
+        if (isset($_SESSION['user']['language'])){
+            $this->data['language'] = $_SESSION['user']['language'];
         }
 
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
@@ -64,16 +73,31 @@ class cmsConfig {
 
 		$this->upload_host_abs = $this->upload_host;
 
-		if (mb_strpos($this->upload_host, $this->host)===0){
+		if (mb_strpos($this->upload_host, $this->host) === 0){
 			$url_parts = parse_url(trim($this->host, '/'));
 			$host = empty($url_parts['path']) ? $this->host : $url_parts['scheme'] . '://' . $url_parts['host'];
-			$this->upload_host = str_replace($host, '', $this->upload_host);
+			$this->upload_host = str_replace($host, '', $this->upload_host); $replace_upload_host_protocol = true;
 		}
 
         $this->set('root_path', ROOT . $this->root);
         $this->set('system_path', $this->root_path . 'system/');
         $this->set('upload_path', ROOT . $this->upload_root);
         $this->set('cache_path', ROOT . $this->cache_root);
+
+        $protocol = 'http://';
+        if(
+                (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+                (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+                (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+            ){
+            $protocol = 'https://';
+            $this->host = str_replace('http://', $protocol, $this->host);
+            if(!empty($replace_upload_host_protocol)){
+                $this->upload_host_abs = str_replace('http://', $protocol, $this->host);
+            }
+        }
+
+        $this->set('protocol', $protocol);
 
         $this->ready = true;
 

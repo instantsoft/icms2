@@ -56,12 +56,10 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 (10, 'Новости', 'news', 'Информационные сообщения', NULL, 1, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
-(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4, NULL),
-(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', DATE_SUB(NOW(),INTERVAL 2 DAY), DATE_SUB(NOW(),INTERVAL 1 DAY), NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
+(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4, NULL);
 
 INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
-(16, 1),
-(14, 1);
+(16, 1);
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
@@ -135,6 +133,7 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -188,6 +187,7 @@ CREATE TABLE `{#}con_articles_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -310,6 +310,7 @@ CREATE TABLE `{#}con_board_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -363,6 +364,7 @@ CREATE TABLE `{#}con_board_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -607,6 +609,7 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -663,6 +666,7 @@ CREATE TABLE `{#}con_news_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -787,6 +791,7 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -829,6 +834,7 @@ CREATE TABLE `{#}con_posts_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -1039,17 +1045,6 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 (108, 36, 'content', 'news', 1),
 (109, 37, 'content', 'news', 1);
 
-INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
-(1, NULL, 'birth_date', 'Возраст', NULL, 4, 'Анкета', 'age', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Дата рождения\nshow_y: 1\nshow_m: \nshow_d: \nshow_h: \nshow_i: \nrange: YEAR\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(2, NULL, 'city', 'Город', 'Укажите город, в котором вы живете', 3, 'Анкета', 'city', NULL, NULL, 1, NULL, 1, 1, NULL, NULL, '---\nlabel_in_item: left\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(3, NULL, 'hobby', 'Расскажите о себе', 'Расскажите о ваших интересах и увлечениях', 11, 'О себе', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: none\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(7, NULL, 'icq', 'ICQ', NULL, 8, 'Контакты', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 9\nlabel_in_item: left\nis_required: \nis_digits: 1\nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(8, NULL, 'skype', 'Skype', NULL, 9, 'Контакты', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 32\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(9, NULL, 'phone', 'Телефон', NULL, 7, 'Контакты', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(10, NULL, 'music', 'Любимая музыка', NULL, 6, 'Предпочтения', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(11, NULL, 'movies', 'Любимые фильмы', NULL, 5, 'Предпочтения', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(12, NULL, 'site', 'Сайт', 'Ваш персональный веб-сайт', 10, 'Контакты', 'url', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\n', '---\n- 0\n', '---\n- 0\n');
-
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
 
@@ -1057,22 +1052,26 @@ INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `
 (1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
 (2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
-INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
-(6, 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
-(8, 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
-(9, 6, 'Активность', 'Вся | activity\r\n{Моих друзей | activity/index/friends}\r\n{Моя | activity/index/my}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
-(10, 4, 'Статьи', 'Все статьи | articles\r\n{Добавить статью | articles/add}', 'columns-2', NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
-(11, 7, 'Комментарии', 'Все | comments\r\n{Моих друзей | comments/index/friends}\r\n{Мои | comments/index/my}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
-(12, 5, 'Категории', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
-(13, 4, 'Фотоальбомы', 'Все альбомы | albums\r\n{Загрузить фото | photos/upload}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
-(14, 2, 'Новые пользователи', 'Все | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
-(15, 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
-(16, 4, 'Новости', 'Все новости | news\r\nОбсуждаемые | news-discussed\r\n{Приватные | news/from_friends}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nteaser_len:\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
-(17, 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
-(18, 4, 'Новые объявления', 'Все | board', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3, NULL, NULL),
-(21, 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
+INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
+(6, 'default', 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
+(8, 'default', 10, 'Облако тегов', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
+(9, 'default', 6, 'Активность', 'Вся | activity\r\n{Моих друзей | activity/index/friends}\r\n{Моя | activity/index/my}', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
+(10, 'default', 4, 'Статьи', 'Все статьи | articles\r\n{Добавить статью | articles/add}', 'columns-2', NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
+(11, 'default', 7, 'Комментарии', 'Все | comments\r\n{Моих друзей | comments/index/friends}\r\n{Мои | comments/index/my}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
+(12, 'default', 5, 'Категории', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
+(13, 'default', 4, 'Фотоальбомы', 'Все альбомы | albums\r\n{Загрузить фото | photos/upload}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
+(14, 'default', 2, 'Новые пользователи', 'Все | users', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
+(15, 'default', 3, 'Нижнее меню', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
+(16, 'default', 4, 'Новости', 'Все новости | news\r\nОбсуждаемые | news-discussed\r\n{Приватные | news/from_friends}', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nteaser_len:\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
+(17, 'default', 11, 'Слайдер контента', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(18, 'default', 4, 'Новые объявления', 'Все | board', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 9\ndataset:\nimage_field: photo\nteaser_field:\nstyle: compact\nshow_details: null\nlimit: 10\n', 1, 'right-bottom', 3, NULL, NULL),
+(21, 'default', 13, 'Поиск', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
+(143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Страницы', NULL, 'pages\npages-*\npages/*', NULL),
+(144, 'content', 'pages.list', 'LANG_WP_CONTENT_LIST', 'Страницы', NULL, 'pages\npages-*\npages/*', 'pages/*.html\npages/add\npages/edit/*'),
+(145, 'content', 'pages.item', 'LANG_WP_CONTENT_ITEM', 'Страницы', NULL, 'pages/*.html', NULL),
+(146, 'content', 'pages.edit', 'LANG_WP_CONTENT_ITEM_EDIT', 'Страницы', NULL, 'pages/add\npages/edit/*', NULL),
 (147, 'content', 'articles.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Статьи', NULL, 'articles\narticles-*\narticles/*', NULL),
 (148, 'content', 'articles.list', 'LANG_WP_CONTENT_LIST', 'Статьи', NULL, 'articles\narticles-*\narticles/*', 'articles/*.html\narticles/add\narticles/edit/*'),
 (149, 'content', 'articles.item', 'LANG_WP_CONTENT_ITEM', 'Статьи', NULL, 'articles/*.html', NULL),

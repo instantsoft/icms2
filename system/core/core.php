@@ -7,6 +7,7 @@ class cmsCore {
 	public $uri            = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
+    public $uri_controller_before_remap = '';
     public $uri_action     = '';
     public $uri_params     = array();
     public $uri_query      = array();
@@ -72,7 +73,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . 'system/config/version.ini';
 
-        if (!file_exists($file)){ die('version.ini not found'); }
+        if (!is_readable($file)){ die('version.ini not found'); }
 
         $version = parse_ini_file($file);
 
@@ -107,7 +108,7 @@ class cmsCore {
             return self::$includedFiles[$file];
         }
 
-        if (!file_exists($file)){
+        if (!is_readable($file)){
             self::$includedFiles[$file] = false;
             return false;
         }
@@ -126,7 +127,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (!file_exists($file)){ return false; }
+        if (!is_readable($file)){ return false; }
 
         $result = require $file;
 
@@ -161,7 +162,7 @@ class cmsCore {
 
         $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
-        if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
+        if (!is_readable($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
         include_once $lib_file;
 
@@ -180,7 +181,7 @@ class cmsCore {
 
         $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
 
-        if (!file_exists($class_file)){
+        if (!is_readable($class_file)){
             self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
         }
 
@@ -219,7 +220,7 @@ class cmsCore {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
-            if (file_exists($model_file)){
+            if (is_readable($model_file)){
                 include_once($model_file);
             } else {
                 self::error(ERR_MODEL_NOT_FOUND . ': '. $model_file);
@@ -306,7 +307,7 @@ class cmsCore {
 
         $manifests = array();
 
-        $controllers = self::getDirsList('system/controllers');
+        $controllers = self::getDirsList('system/controllers', true);
 
         foreach($controllers as $controller_name){
 
@@ -374,14 +375,39 @@ class cmsCore {
                 'title' => LANG_CSS_CLASS_BODY,
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
+				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+                'generator' => function($item){
+                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+                }
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
+				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+                'generator' => function($item){
+                    $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
+                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.$w_path, '*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/'.$w_path, '*.tpl.php');
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                           $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+               }
             )));
 
         //
@@ -622,7 +648,18 @@ class cmsCore {
 
         // проверяем ремаппинг контроллера
         $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
+        if ($remap_to) {
+            // в uri также меняем
+            if($this->uri){
+                $original_uri = $this->uri;
+                $seg = explode('/', $this->uri);
+                $seg[0] = $remap_to;
+                $this->uri = implode('/', $seg);
+                $this->uri_absolute = str_replace($original_uri, $this->uri, $this->uri_absolute);
+            }
+            $this->uri_controller_before_remap = $this->uri_controller;
+            $this->uri_controller = $remap_to;
+        }
 
         if (!self::isControllerExists($this->uri_controller)) {
             $this->uri_action     = $this->uri_controller;
@@ -631,8 +668,12 @@ class cmsCore {
 
         $this->controller = $this->uri_controller;
 
+        if ($this->controller && !preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
+            self::error404();
+        }
+
         // загружаем контроллер
-        $controller = self::getController($this->uri_controller, $this->request);
+        $controller = self::getController($this->controller, $this->request);
 
         // контроллер включен?
         if(!$controller->isEnabled()){
@@ -656,7 +697,7 @@ class cmsCore {
     public function runWidgets(){
 
         // в админке нам виджеты не нужны
-        if ($this->uri_controller == 'admin') { return; }
+        if ($this->controller == 'admin') { return; }
 
         $widgets_model = cmsCore::getModel('widgets');
         $pages = $widgets_model->getPages();
@@ -666,7 +707,7 @@ class cmsCore {
         if (!is_array($matched_pages)) { return; }
         if (sizeof($matched_pages)==0) { return; }
 
-        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages);
+        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages, cmsTemplate::getInstance()->getName());
 
         if (is_array($widgets_list)){
             foreach ($widgets_list as $widget){
@@ -869,9 +910,10 @@ class cmsCore {
     /**
      * Возвращает список директорий внутри указанной
      * @param string $root_dir
+     * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
      * @return array
      */
-    public static function getDirsList($root_dir){
+    public static function getDirsList($root_dir, $asc_sort=false){
 
         $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
@@ -886,6 +928,10 @@ class cmsCore {
 
             $list[] = $next;
 
+        }
+
+        if($asc_sort){
+            asort($list);
         }
 
         return $list;

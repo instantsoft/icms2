@@ -155,6 +155,7 @@
     define('LANG_CP_TAB',                       'Tab');
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab only by the profile owner');
 
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
@@ -180,6 +181,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in item view');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In item');
     define('LANG_CP_FIELD_IN_FILTER',           'Show in filter');
@@ -246,6 +248,7 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Put here the widgets you want to temporarily hide or move to another page without losing the settings');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
 
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
@@ -265,6 +268,8 @@
     define('LANG_CP_USER_LOCK_UNTIL',           'Block until');
     define('LANG_CP_USER_LOCK_REASON',          'Block reason');
     define('LANG_CP_USER_NOT_FOUND',            'User %s is not found');
+    define('LANG_CP_USER_FIND_BYIP',            'Find all by this ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
     define('LANG_CP_CONTROLLERS_ADD',           'Install extension');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Component &laquo;%s&raquo; has no settings');
@@ -293,7 +298,10 @@
     define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Use that site keywords and description only on frontpage');
     define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add page title to html title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control Panel theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile device theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumb?');
@@ -402,6 +410,8 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Error: path %s not found');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in %s');
 
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Save ftp account to session');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'It is not secure');
     define('LANG_CP_FTP_SKIP',				'Skip this step');
     define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if it\'s impossible to do automatic FTP upload and you\'re using manual installation as described in the <a href="http://docs.instantcms.ru/en/manual/addons">user guide</a>');
 

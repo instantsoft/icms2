@@ -63,7 +63,7 @@
 
         <div class="field">
             <label>
-                <input type="checkbox" value="1" name="db[is_install_demo_content]">
+                <input type="checkbox" value="1" checked="true" name="db[is_install_demo_content]">
                 <?php echo LANG_DATABASE_INSTALL_DEMO; ?>
             </label>
         </div>

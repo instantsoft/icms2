@@ -5,7 +5,7 @@
     $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
-    $base_ds_url = $ctype['name'] . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
+    $base_ds_url = href_to_rel($ctype['name']) . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
     if (!$is_frontpage){
 		$seo_title = false;
@@ -32,9 +32,7 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $is_allowed = true;
-
-        if ($is_allowed){
+        if (!$category['id'] || $user->isInGroups($category['allow_add'])){
 
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 
@@ -123,9 +121,9 @@
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
-        <ul>
+        <ul class="<?php echo $ctype['name'];?>_icon">
             <?php foreach($subcats as $c){ ?>
-                <li>
+                <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
                     <a href="<?php echo href_to($base_url . ($dataset ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
                 </li>
             <?php } ?>

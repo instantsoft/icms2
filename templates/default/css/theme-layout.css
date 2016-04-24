@@ -75,14 +75,13 @@ header .menu > li > a:hover {
 
 header .menu > li.active > a { color:#F5CF53; }
 header .menu > li.active > a:hover { color:#F5CF53; }
-header .menu > li.active > ul a:hover { color:#000; }
+header .menu > li.active > ul a:hover { color:#EEE; }
 
 header .menu ul li a,
 header .menu li.active ul li a {
-    color: #000;
     text-shadow: none;
     text-decoration: none;
-    padding: 0 10px;
+    padding-right: 10px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }
@@ -568,6 +567,22 @@ aside .menu .item{
 }
 
 @media screen and (max-width: 640px) {
+    .content_item .ft_images .first_type_images:first-child {
+        float: none;
+        clear: both;
+        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+    .filter-panel .fields .field:nth-child(odd), .filter-panel .fields .field:nth-child(even){
+        float: none !important;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .content_item .ft_images .first_type_images:first-child > img {
+        width: 100%;
+    }
     #layout header #logo { margin: 0 auto; overflow:hidden; width:200px; }
     #layout header .menu { display:none; }
     .tabs-menu ul { display:none; }

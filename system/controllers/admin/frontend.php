@@ -1,7 +1,7 @@
 <?php
 class admin extends cmsFrontend {
 
-    const perpage = 25;
+    const perpage = 35;
 
     public $installer_upload_path = 'installer';
 
@@ -12,22 +12,24 @@ class admin extends cmsFrontend {
 
         if (!cmsUser::isAdmin()) { cmsCore::error404(); }
 
-        if(!$this->allowByIp()){ cmsCore::error404(); }
+        if(!$this->isAllowByIp()){ cmsCore::error404(); }
 
         parent::before($action_name);
 
-        $template = cmsTemplate::getInstance();
+        // если для админки свой шаблон
+        if($this->cms_config->template_admin){
+            $this->cms_template->setName($this->cms_config->template_admin);
+        }
 
-        $template->setLayout('admin');
+        $this->cms_template->setLayout('admin');
 
-        $template->setMenuItems('cp_main', $this->getAdminMenu());
+        $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
 
     }
 
-    private function allowByIp() {
+    private function isAllowByIp() {
 
         $allow_ips = cmsConfig::get('allow_ips');
-
         if(!$allow_ips){ return true; }
 
         return string_in_mask_list(cmsUser::getIp(), $allow_ips);
@@ -166,9 +168,7 @@ class admin extends cmsFrontend {
 
     public function loadControllerBackend($controller_name, $request){
 
-        $config = cmsConfig::getInstance();
-
-        $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
+        $ctrl_file = $this->cms_config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
 
         if(!file_exists($ctrl_file)){
             cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
@@ -176,7 +176,7 @@ class admin extends cmsFrontend {
 
         include_once($ctrl_file);
 
-        $controller_class = 'backend' . string_to_camel('_', $controller_name);
+        $controller_class = 'backend'.ucfirst($controller_name);
 
         $backend = new $controller_class($request);
 
@@ -192,11 +192,9 @@ class admin extends cmsFrontend {
 
     public function parsePackageManifest(){
 
-        $config = cmsConfig::getInstance();
+        $path = $this->cms_config->upload_path . $this->installer_upload_path;
 
-        $path = $config->upload_path . $this->installer_upload_path;
-
-        $ini_file = $path . '/' . "manifest.{$config->language}.ini";
+        $ini_file = $path . '/' . "manifest.{$this->cms_config->language}.ini";
         $ini_file_default = $path . '/' . "manifest.ru.ini";
 
         if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
@@ -204,14 +202,14 @@ class admin extends cmsFrontend {
 
         $manifest = parse_ini_file($ini_file, true);
 
-        if (file_exists($config->upload_path . $this->installer_upload_path . '/' . 'package')){
+        if (file_exists($this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package')){
             $manifest['contents'] = $this->getPackageContentsList();
         } else {
 			$manifest['contents'] = false;
 		}
 
         if (isset($manifest['info']['image'])){
-            $manifest['info']['image'] = $config->upload_host . '/' .
+            $manifest['info']['image'] = $this->cms_config->upload_host . '/' .
                                             $this->installer_upload_path . '/' .
                                             $manifest['info']['image'];
         }
@@ -265,7 +263,7 @@ class admin extends cmsFrontend {
 
     private function getPackageContentsList(){
 
-        $path = cmsConfig::get('upload_path') . $this->installer_upload_path . '/' . 'package';
+        $path = $this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package';
 
         if (!is_dir($path)) { return false; }
 

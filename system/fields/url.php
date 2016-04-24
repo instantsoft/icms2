@@ -2,10 +2,11 @@
 
 class fieldUrl extends cmsFormField {
 
-    public $title = LANG_PARSER_URL;
-    public $sql   = 'varchar({max_length}) NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_URL;
+    public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
-	public $allow_index = false;
+    public $allow_index = false;
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(

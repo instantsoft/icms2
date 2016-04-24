@@ -12,13 +12,13 @@
 	text-decoration:none;
 }
 .markItUp  {
-	margin:5px 0 5px 0;
+	margin: 0 0 5px 0;
 }
 .markItUpContainer  {
 	font:11px Verdana, Arial, Helvetica, sans-serif;
 }
 .markItUpEditor {
-	font:12px 'Courier New', Courier, monospace;
+	font-size: 12px;
 	padding:5px;
 	height:200px;
 	clear:both;
@@ -143,4 +143,8 @@
 .markitup-image-upload .qq-upload-button{
     margin-top: 45px;
     margin-left: 5px;
+}
+#inline_upload_form > input {
+    max-width: 200px;
+    margin: 0 5px 0 0;
 }

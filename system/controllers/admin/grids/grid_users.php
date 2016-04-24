@@ -22,18 +22,33 @@ function grid_users($controller){
         'nickname' => array(
             'title' => LANG_NICKNAME,
             'href' => href_to($controller->name, 'users', array('edit', '{id}')),
-            'filter' => 'like'
+            'filter' => 'like',
+            'handler' => function($nickname, $user){
+                if($user['is_admin']){
+                    $nickname = '<b class="tooltip" title="'.LANG_USER_IS_ADMIN.'">'.$nickname.'</b>';
+                }
+                return $nickname;
+            }
         ),
         'email' => array(
             'title' => LANG_EMAIL,
             'filter' => 'like'
         ),
+        'ip' => array(
+            'title' => LANG_USERS_PROFILE_LAST_IP,
+            'width' => 120,
+            'filter' => 'like',
+            'handler' => function($value){
+                return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
+            }
+        ),
         'date_reg' => array(
             'title' => LANG_REGISTRATION,
-            'width' => 100,
+            'width' => 80,
             'filter' => 'like',
-            'handler' => function($date){
-                return date('Y-m-d', strtotime($date));
+            'handler' => function($date, $user){
+                $ld = $user['is_online'] ? LANG_ONLINE : LANG_USERS_PROFILE_LOGDATE.' '.string_date_age_max($user['date_log'], true);
+                return '<span class="tooltip" title="'.$ld.'">'.html_date($date).'</span>';
             }
         ),
         'karma' => array(
@@ -52,24 +67,28 @@ function grid_users($controller){
         'is_locked' => array(
             'title' => LANG_CP_USER_LOCKED,
             'flag' => 'flag_lock',
-            'width' => 24
+            'width' => 24,
+            'handler' => function($value, $user){
+                $title = $user['is_locked'] ? ($user['lock_reason'] ? $user['lock_reason'] : LANG_TO.' '.strip_tags(html_date($user['lock_until']))) : '';
+                return '<div class="tooltip" title="'.$title.'">'.$value.'</div>';
+            }
         ),
     );
 
     $actions = array(
         array(
             'title' => LANG_PROFILE,
-            'class' => 'view',
+            'class' => 'view tooltip',
             'href' => href_to('users', '{id}')
         ),
         array(
             'title' => LANG_EDIT,
-            'class' => 'edit',
+            'class' => 'edit tooltip',
             'href' => href_to($controller->name, 'users', array('edit', '{id}'))
         ),
         array(
             'title' => LANG_DELETE,
-            'class' => 'delete',
+            'class' => 'delete tooltip',
             'href' => href_to($controller->name, 'users', array('delete', '{id}')),
             'confirm' => LANG_CP_USER_DELETE_CONFIRM
         ),

@@ -12,6 +12,8 @@ class modelAdmin extends cmsModel{
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
+
             return $item;
 
         });
@@ -27,6 +29,7 @@ class modelAdmin extends cmsModel{
     public function getControllerInfo($controller_name){
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
             return $item;
         });
     }
@@ -107,13 +110,13 @@ class modelAdmin extends cmsModel{
         return $this->delete('scheduler_tasks', $id);
 
     }
-    
+
     public function toggleSchedulerPublication($id, $is_active){
-		
+
      	return $this->update('scheduler_tasks', $id, array(
 			'is_active' => $is_active
 		));
-		
+
     }
 
 //============================================================================//

@@ -4,6 +4,7 @@
     $this->addCSS('templates/default/css/jquery-ui.css');
 
     $this->setPageTitle($profile['nickname']);
+    $this->setPageDescription($profile['nickname'].' — '.mb_strtolower(LANG_USERS_PROFILE_INDEX));
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
@@ -178,7 +179,7 @@
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
 
-                        <?php if (empty($profile[$field['name']])) { continue; } ?>
+                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
                         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
@@ -196,13 +197,9 @@
                             <?php } ?>
 
                             <div class="value">
-
                                 <?php
-
-                                    echo $field['handler']->parse( $profile[$field['name']] );
-
+                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
                                 ?>
-
                             </div>
 
                         </div>

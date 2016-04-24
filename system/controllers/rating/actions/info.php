@@ -8,17 +8,15 @@ class actionRatingInfo extends cmsAction{
         if (!$this->options['is_show']){ cmsCore::error404(); }
 
         // Получаем параметры
-        $target_controller = $this->request->get('controller');
-        $target_subject = $this->request->get('subject');
-        $target_id = $this->request->get('id');
+        $target_controller = $this->request->get('controller', '');
+        $target_subject    = $this->request->get('subject', '');
+        $target_id         = $this->request->get('id', 0);
 
         // Флаг что нужно вывести только голый список
         $is_list_only = $this->request->get('is_list_only');
-        
+
         $page = $this->request->get('page', 1);
         $perpage = 10;
-
-        $template = cmsTemplate::getInstance();
 
         $this->model->
                 filterVotes($target_controller, $target_subject, $target_id)->
@@ -31,16 +29,16 @@ class actionRatingInfo extends cmsAction{
         $pages = ceil($total / $perpage);
 
         if ($is_list_only){
-        
-            $template->render('info_list', array(
-                'votes' => $votes,
+
+            $this->cms_template->render('info_list', array(
+                'votes' => $votes
             ));
 
         }
-            
+
         if (!$is_list_only){
-        
-            $template->render('info', array(
+
+            $this->cms_template->render('info', array(
                 'target_controller' => $target_controller,
                 'target_subject' => $target_subject,
                 'target_id' => $target_id,
@@ -51,7 +49,7 @@ class actionRatingInfo extends cmsAction{
             ));
 
         }
-            
+
     }
 
 }

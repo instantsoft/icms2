@@ -29,7 +29,7 @@
         'class'   => 'move',
         'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
         'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
-        'href'    => $this->href_to('widgets', 'unbind_all_widgets')
+        'href'    => $this->href_to('widgets', array('unbind_all_widgets', $template_name))
     ));
 	$this->addToolButton(array(
 		'class' => 'help',
@@ -64,11 +64,16 @@
         </td>
         <td class="main" valign="top" style="padding-right:10px">
 
+            <div id="cp-widgets-select-template" data-current_url="<?php echo $this->href_to('widgets'); ?>">
+                <?php echo LANG_CP_WIDGETS_TEMPLATE; ?> <?php echo html_select('template', $templates, $template_name); ?>
+            </div>
             <div class="cp_toolbar">
                 <?php $this->toolbar(); ?>
             </div>
 
             <div id="cp-widgets-layout"
+                 data-template="<?php echo $template_name; ?>"
+                 data-toggle-url="<?php echo $this->href_to('widgets', 'toggle'); ?>"
                  data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"
                  data-load-url="<?php echo $this->href_to('widgets', 'load'); ?>"
                  data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
@@ -120,8 +125,9 @@
 
                 <div id="actions-template" style="display:none">
                     <span class="actions">
-                        <a class="edit" href="javascript:" title="<?php echo LANG_EDIT; ?>"></a>
-                        <a class="delete" href="javascript:" title="<?php echo LANG_DELETE; ?>"></a>
+                        <a class="hide" href="#" title="<?php echo LANG_HIDE; ?>"></a>
+                        <a class="edit" href="#" title="<?php echo LANG_EDIT; ?>"></a>
+                        <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
                 </div>
 
@@ -132,5 +138,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>
 </script>

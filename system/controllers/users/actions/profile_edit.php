@@ -2,11 +2,11 @@
 
 class actionUsersProfileEdit extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile, $do=false){
 
 		if (!cmsUser::isLogged()) { cmsCore::error404(); }
-		
-        $user = cmsUser::getInstance();
 
         // если нужно, передаем управление другому экшену
         if ($do){
@@ -15,13 +15,13 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         // Получаем поля
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}');
 
         // Строим форму
         $form = new cmsForm();
@@ -51,10 +51,9 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Добавляем поле выбора часового пояса
-        $config = cmsConfig::getInstance();
         $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
         $form->addField($fieldset_id, new fieldList('time_zone', array(
-            'default' => $config->time_zone,
+            'default' => $this->cms_config->time_zone,
             'generator' => function($item){
                 return cmsCore::getTimeZones();
             }
@@ -85,7 +84,7 @@ class actionUsersProfileEdit extends cmsAction {
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user_data:time_zone', $profile['time_zone']);
-		
+
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){
                     $activity_controller = cmsCore::getController('activity');
@@ -119,7 +118,7 @@ class actionUsersProfileEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('profile_edit', array(
+        return $this->cms_template->render('profile_edit', array(
             'do' => 'edit',
             'id' => $profile['id'],
             'profile' => $profile,

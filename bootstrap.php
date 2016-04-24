@@ -18,6 +18,13 @@
 	// Инициализируем конфиг
 	$config = cmsConfig::getInstance();
 
+    // дебаг отключен - скрываем все сообщения об ошибках
+    if(!$config->debug){
+        error_reporting(0);
+    } else {
+        error_reporting(E_ALL);
+    }
+
     // Проверяем, что система установлена
     if (!$config->isReady()){
         $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath(ROOT)), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
@@ -27,6 +34,11 @@
 
     // Загружаем локализацию
     cmsCore::loadLanguage();
+
+    // устанавливаем локаль языка
+    if(function_exists('lang_setlocale')){
+        lang_setlocale();
+    }
 
     // Устанавливаем часовую зону
     date_default_timezone_set( $config->time_zone );

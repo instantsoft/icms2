@@ -2,7 +2,27 @@
 
 class cmsUploader {
 
-    public function __construct(){ }
+    private $allow_remote = false;
+
+    private $last_error = false;
+    private $upload_errors = array();
+
+    public function __construct() {
+        $this->upload_errors = array(
+            UPLOAD_ERR_OK         => LANG_UPLOAD_ERR_OK,
+            UPLOAD_ERR_INI_SIZE   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, $this->getMaxUploadSize()),
+            UPLOAD_ERR_FORM_SIZE  => LANG_UPLOAD_ERR_FORM_SIZE,
+            UPLOAD_ERR_PARTIAL    => LANG_UPLOAD_ERR_PARTIAL,
+            UPLOAD_ERR_NO_FILE    => LANG_UPLOAD_ERR_NO_FILE,
+            UPLOAD_ERR_NO_TMP_DIR => LANG_UPLOAD_ERR_NO_TMP_DIR,
+            UPLOAD_ERR_CANT_WRITE => LANG_UPLOAD_ERR_CANT_WRITE,
+            UPLOAD_ERR_EXTENSION  => LANG_UPLOAD_ERR_EXTENSION
+        );
+    }
+
+    public function getLastError() {
+        return $this->last_error;
+    }
 
 //============================================================================//
 //============================================================================//
@@ -23,15 +43,39 @@ class cmsUploader {
     }
 
     public function isUploaded($name){
+
         if (!isset($_FILES[$name])) { return false; }
-        if (empty($_FILES[$name]['size'])) { return false; }
+
+        if (empty($_FILES[$name]['size'])) {
+
+            if(isset($_FILES[$name]['error'])){
+                if(isset($this->upload_errors[$_FILES[$name]['error']]) && $this->upload_errors[$_FILES[$name]['error']] !== UPLOAD_ERR_OK){
+                    $this->last_error = $this->upload_errors[$_FILES[$name]['error']];
+                }
+            }
+
+            return false;
+
+        }
+
         return true;
+
     }
 
     public function isUploadedXHR($name){
-        return isset($_GET['qqfile']);
+        return !empty($_GET['qqfile']);
     }
 
+    public function isUploadedFromLink($name){
+        return $this->allow_remote && !empty($_POST['image_link']);
+    }
+
+    public function enableRemoteUpload() {
+        $this->allow_remote = true; return $this;
+    }
+    public function disableRemoteUpload() {
+        $this->allow_remote = false; return $this;
+    }
 //============================================================================//
 //============================================================================//
 
@@ -40,12 +84,10 @@ class cmsUploader {
         $cfg = cmsConfig::getInstance();
         $user = cmsUser::getInstance();
 
-        $dest_dir   = $this->getUploadDestinationDirectory();
-
-        $dest_info  = pathinfo($source_file);
-        $dest_ext   = $dest_info['extension'];
-        $dest_file  = substr(md5( $user->id . $user->files_count . microtime(true) . $size['width'] ), 0, 8) . '.' . $dest_ext;
-        $dest_file  = $dest_dir . '/' . $dest_file;
+        $dest_dir  = $this->getUploadDestinationDirectory();
+        $dest_ext  = pathinfo($source_file, PATHINFO_EXTENSION);
+        $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) . $size['width'] ), 0, 8) . '.' . $dest_ext;
+        $dest_file = $dest_dir . '/' . $dest_file;
 
         $user->increaseFilesCount();
 
@@ -64,6 +106,32 @@ class cmsUploader {
 
     }
 
+    private function checkExt($ext, $allowed_ext) {
+
+        if($allowed_ext === false){
+            return true;
+        }
+
+        if(empty($ext)){ return false; }
+
+        if(!is_array($allowed_ext)){
+            $allowed_ext = explode(',', (string)$allowed_ext);
+        }
+
+        $allowed = array();
+
+        foreach($allowed_ext as $aext){
+            $aext = mb_strtolower(trim(trim((string)$aext, '., ')));
+            if(empty($aext)){
+                continue;
+            }
+            $allowed[] = $aext;
+        }
+
+        return in_array(mb_strtolower($ext), $allowed, true);
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -77,6 +145,10 @@ class cmsUploader {
      */
     public function upload($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
+        if ($this->isUploadedFromLink($post_filename)){
+            return $this->uploadFromLink($post_filename, $allowed_ext, $allowed_size, $destination);
+        }
+
         if ($this->isUploadedXHR($post_filename)){
             return $this->uploadXHR($post_filename, $allowed_ext, $allowed_size, $destination);
         }
@@ -85,9 +157,11 @@ class cmsUploader {
             return $this->uploadForm($post_filename, $allowed_ext, $allowed_size, $destination);
         }
 
+        $last_error = $this->getLastError();
+
         return array(
             'success' => false,
-            'error' => LANG_UPLOAD_ERR_NO_FILE
+            'error'   => ($last_error ? $last_error : LANG_UPLOAD_ERR_NO_FILE)
         );
 
     }
@@ -106,36 +180,28 @@ class cmsUploader {
     public function uploadForm($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
         $config = cmsConfig::getInstance();
-        $user = cmsUser::getInstance();
+        $user   = cmsUser::getInstance();
 
         $source     = $_FILES[$post_filename]['tmp_name'];
         $error_code = $_FILES[$post_filename]['error'];
+        $dest_size  = (int)$_FILES[$post_filename]['size'];
+        $dest_name  = files_sanitize_name($_FILES[$post_filename]['name']);
+        $dest_ext   = pathinfo($dest_name, PATHINFO_EXTENSION);
 
-        $dest_size  = $_FILES[$post_filename]['size'];
-        $dest_name  = basename(files_sanitize_name($_FILES[$post_filename]['name']));
-        $dest_ext   = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
-
-        if ($allowed_ext !== false){
-
-            $allowed_ext = explode(',', $allowed_ext);
-            foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = mb_strtolower(trim(trim($ext, '., '))); }
-
-            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
-                return array(
-                    'error' => LANG_UPLOAD_ERR_MIME,
-                    'success' => false,
-                    'name' => $dest_name
-                );
-            }
-
+        if(!$this->checkExt($dest_ext, $allowed_ext)){
+            return array(
+                'error'   => LANG_UPLOAD_ERR_MIME,
+                'success' => false,
+                'name'    => $dest_name
+            );
         }
 
         if ($allowed_size){
             if ($dest_size > $allowed_size){
                 return array(
-                    'error' => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'error'   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
                     'success' => false,
-                    'name' => $dest_name
+                    'name'    => $dest_name
                 );
             }
         }
@@ -163,6 +229,68 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
+    public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
+
+        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST['image_link']), PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($_POST['image_link']);
+
+        if(!$this->checkExt($dest_ext, $allowed_ext)){
+            return array(
+                'error'   => LANG_UPLOAD_ERR_MIME,
+                'success' => false,
+                'name'    => $dest_name
+            );
+        }
+
+        $file_bin = file_get_contents_from_url($_POST['image_link']);
+
+        if(!$file_bin){
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_PARTIAL,
+                'name'    => $dest_name,
+                'path'    => ''
+            );
+        }
+
+        $image_size = strlen($file_bin);
+
+        if ($allowed_size){
+            if ($image_size > $allowed_size){
+                return array(
+                    'error'   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
+
+        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
+
+        if (!$destination){
+
+            cmsUser::getInstance()->increaseFilesCount();
+
+            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
+
+        } else {
+            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
+        }
+
+		$f = fopen($destination, 'w+');
+		fwrite($f, $file_bin);
+        fclose($f);
+
+        return array(
+            'success' => true,
+            'path'    => $destination,
+            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'name'    => $dest_name,
+            'size'    => $image_size
+        );
+
+    }
+
     /**
      * Загружает файл на сервер переданный через XHR
      * @param string $post_filename Название поля с файлом в массиве $_GET
@@ -176,29 +304,22 @@ class cmsUploader {
         $user = cmsUser::getInstance();
 
         $dest_name = files_sanitize_name($_GET['qqfile']);
-        $dest_ext  = mb_strtolower(pathinfo($dest_name, PATHINFO_EXTENSION));
+        $dest_ext  = pathinfo($dest_name, PATHINFO_EXTENSION);
 
-        if ($allowed_ext !== false){
-
-            $allowed_ext = explode(',', $allowed_ext);
-            foreach($allowed_ext as $idx=>$ext){ $allowed_ext[$idx] = trim($ext); }
-
-            if (empty($dest_ext) || !in_array($dest_ext, $allowed_ext, true)){
-                return array(
-                    'error' => LANG_UPLOAD_ERR_MIME,
-                    'success' => false,
-                    'name' => $dest_name
-                );
-            }
-
+        if(!$this->checkExt($dest_ext, $allowed_ext)){
+            return array(
+                'error'   => LANG_UPLOAD_ERR_MIME,
+                'success' => false,
+                'name'    => $dest_name
+            );
         }
 
         if ($allowed_size){
             if ($this->getXHRFileSize() > $allowed_size){
                 return array(
-                    'error' => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
+                    'error'   => sprintf(LANG_UPLOAD_ERR_INI_SIZE, files_format_bytes($allowed_size)),
                     'success' => false,
-                    'name' => $dest_name
+                    'name'    => $dest_name
                 );
             }
         }
@@ -234,33 +355,51 @@ class cmsUploader {
 
     public function saveXHRFile($destination, $orig_name=''){
 
-        $cfg = cmsConfig::getInstance();
+        $target = @fopen($destination, 'wb');
+        $input  = @fopen("php://input", 'rb');
 
-        $input = fopen("php://input", "r");
-        $temp = tmpfile();
-        $realSize = stream_copy_to_stream($input, $temp);
-        fclose($input);
-
-        if ($realSize != $this->getXHRFileSize()){
+        if (!$target){
             return array(
                 'success' => false,
-                'error' => LANG_UPLOAD_ERR_PARTIAL,
-                'name' => $orig_name,
-                'path' => ''
+                'error'   => LANG_UPLOAD_ERR_CANT_WRITE,
+                'name'    => $orig_name,
+                'path'    => ''
+            );
+        }
+        if (!$input){
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_NO_FILE,
+                'name'    => $orig_name,
+                'path'    => ''
             );
         }
 
-        $target = fopen($destination, "w");
-        fseek($temp, 0, SEEK_SET);
-        stream_copy_to_stream($temp, $target);
-        fclose($target);
+        while ($buff = fread($input, 4096)) {
+            fwrite($target, $buff);
+        }
+
+        @fclose($target);
+        @fclose($input);
+
+        $real_size = filesize($destination);
+
+        if ($real_size != $this->getXHRFileSize()){
+            @unlink($destination);
+            return array(
+                'success' => false,
+                'error'   => LANG_UPLOAD_ERR_PARTIAL,
+                'name'    => $orig_name,
+                'path'    => ''
+            );
+        }
 
         return array(
             'success' => true,
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $realSize
+            'path'    => $destination,
+            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'name'    => $orig_name,
+            'size'    => $real_size
         );
 
     }
@@ -279,27 +418,13 @@ class cmsUploader {
 
         $cfg = cmsConfig::getInstance();
 
-        $max_size = $this->getMaxUploadSize();
-
-        // Возможные ошибки
-        $uploadErrors = array(
-            UPLOAD_ERR_OK => LANG_UPLOAD_ERR_OK,
-            UPLOAD_ERR_INI_SIZE => sprintf(LANG_UPLOAD_ERR_INI_SIZE, $max_size),
-            UPLOAD_ERR_FORM_SIZE => LANG_UPLOAD_ERR_FORM_SIZE,
-            UPLOAD_ERR_PARTIAL => LANG_UPLOAD_ERR_PARTIAL,
-            UPLOAD_ERR_NO_FILE => LANG_UPLOAD_ERR_NO_FILE,
-            UPLOAD_ERR_NO_TMP_DIR => LANG_UPLOAD_ERR_NO_TMP_DIR,
-            UPLOAD_ERR_CANT_WRITE => LANG_UPLOAD_ERR_CANT_WRITE,
-            UPLOAD_ERR_EXTENSION => LANG_UPLOAD_ERR_EXTENSION
-        );
-
-        if($errorCode !== UPLOAD_ERR_OK && isset($uploadErrors[$errorCode])){
+        if($errorCode !== UPLOAD_ERR_OK && isset($this->upload_errors[$errorCode])){
 
             return array(
                 'success' => false,
-                'error' => $uploadErrors[$errorCode],
-                'name' => $orig_name,
-                'path' => ''
+                'error'   => $this->upload_errors[$errorCode],
+                'name'    => $orig_name,
+                'path'    => ''
             );
 
         }
@@ -318,11 +443,11 @@ class cmsUploader {
 
         return array(
             'success' => @move_uploaded_file($source, $destination),
-            'path'  => $destination,
-            'url' => str_replace($cfg->upload_path, '', $destination),
-            'name' => $orig_name,
-            'size' => $orig_size,
-            'error' => $uploadErrors[$errorCode]
+            'path'    => $destination,
+            'url'     => str_replace($cfg->upload_path, '', $destination),
+            'name'    => $orig_name,
+            'size'    => $orig_size,
+            'error'   => $this->upload_errors[$errorCode]
         );
 
     }

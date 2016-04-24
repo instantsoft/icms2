@@ -29,6 +29,7 @@
     define('LANG_FILTER_IS_NULL',            'not filled');
     define('LANG_FILTER_APPLY',              'Apply');
     define('LANG_FILTER_URL',                'Link');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Save different order');
     define('LANG_SORTING_FIELD',             'Sort by field');
     define('LANG_SORTING',                   'Sorting');
     define('LANG_SORTING_ADD',               'Add rule');
@@ -64,19 +65,25 @@
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File from the <b>%s</b> folder in your theme, without <b>.tpl.php</b>');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
+    define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
-
-    define('LANG_PARSER_CITY',               'City');
-    define('LANG_PARSER_CITY_FILTER_HINT',   'City ID');
+    define('LANG_PARSER_CITY',               'Location');
+    define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine locations country-region-city, enter a name for unification of all fields. At a minimum, it should be established fields such as "Country" and "Region"');
+    define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'For example, "{country}, {city}", where country and city system field names. It is useful to use, disabling output for the rest of the field groups, showing the desired values in this field. If not specified - output value of the current field.');
     define('LANG_PARSER_CHECKBOX',           'Checkbox');
     define('LANG_PARSER_TEXT',               'Textarea');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Max length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Min length');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
     define('LANG_PARSER_HTML',               'HTML');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
@@ -97,6 +104,8 @@
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');
+    define('LANG_PARSER_AGE_FROM_DATE',      'To count from a specified date');
+    define('LANG_PARSER_AGE_FROM_DATE_HINT', 'If not specified, the count will be conducted from the current time');
     define('LANG_PARSER_DATE',               'Date');
     define('LANG_PARSER_DATE_FILTER_HINT',   'YYYY-MM-DD');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Show time');
@@ -105,6 +114,8 @@
     define('LANG_PARSER_USERS',              'Users list');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in the item');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Size on list page');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Size on item page');
@@ -128,6 +139,11 @@
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Add the field into full-text search');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Notice: changing this option will force index to rebuild. That may take long time for large tables.');
+    define('LANG_PARSER_ADD_FROM_LINK', 'add by link');
+    define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
+    define('LANG_OR', 'or');
+    define('LANG_BEGIN_TYPING', 'Begin entering, or select from the list');
+
     //USERS
     define('LANG_USER',                      'Member');
     define('LANG_USERS',                     'Members');
@@ -157,6 +173,8 @@
     define('LANG_MY_PROFILE',                'My profile');
     define('LANG_PROFILE',                   'Profile');
     define('LANG_CITY',                      'City');
+    define('LANG_REGION',                    'Region');
+    define('LANG_COUNTRY',                   'Country');
     define('LANG_COMPANY',                   'Company');
     define('LANG_PHONE',                     'Phone');
     define('LANG_NAME',                      'First Name');
@@ -171,6 +189,8 @@
     define('LANG_PLEASE_LOGIN',              'Please, log in');
     define('LANG_LOGIN_ADMIN',               'Administrators login');
     define('LANG_ONLINE',                    'Online');
+    define('LANG_USERS_PROFILE_LAST_IP',     'Last IP');
+    define('LANG_USERS_PROFILE_LOGDATE',     'Last visit');
 
     //MODERATION
     define('LANG_MODERATION',                'Moderation');
@@ -205,11 +225,11 @@
     define('LANG_FORM_ERRORS',				 'The form has errors');
     define('LANG_TRACE_STACK',				 'Recent calls');
     define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');
-    define('ERR_MODEL_NOT_FOUND',			 'Model not found');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Template not found');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found');
+    define('ERR_MODEL_NOT_FOUND',			 'Model not found or cannot be read');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Template not found or cannot be read');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found or cannot be read');
     define('ERR_FILE_NOT_FOUND',             'File not found');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Query error</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Database connection error');
@@ -279,6 +299,7 @@
     define('LANG_DELETE_FOLDER',             'Delete folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nThe content will also be deleted');
 
+    define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');
@@ -422,6 +443,11 @@
     define('LANG_UNIT1',                     'unit');
     define('LANG_UNIT2',                     'units');
     define('LANG_UNIT10',                    'units');
+    define('LANG_CH1',                       'letter');
+    define('LANG_CH2',                       'letter');
+    define('LANG_CH10',                      'letters');
+
+    define('LANG_ISLEFT',                    'is left');
 
     //DATES
     define('LANG_ALL',                       'All');

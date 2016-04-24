@@ -12,34 +12,30 @@ class rating extends cmsFrontend {
         parent::__construct($request);
 
         $this->target_controller = $this->request->get('target_controller');
-        $this->target_subject = $this->request->get('target_subject');
+        $this->target_subject    = $this->request->get('target_subject');
 
     }
 
     public function getWidget($target_id, $current_rating, $is_enabled=true){
 
-        $user = cmsUser::getInstance();
-
         // Этот пользователь уже голосовал?
-        $is_voted = $user->is_logged ? $this->model->isUserVoted(array(
-            'user_id' => $user->id,
+        $is_voted = $this->cms_user->is_logged ? $this->model->isUserVoted(array(
+            'user_id'           => $this->cms_user->id,
             'target_controller' => $this->target_controller,
-            'target_subject' => $this->target_subject,
-            'target_id' => $target_id
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $target_id
         )) : false;
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'widget', array(
-            'options' => $this->getOptions(),
+        return $this->cms_template->renderInternal($this, 'widget', array(
+            'options'           => $this->getOptions(),
             'target_controller' => $this->target_controller,
-            'target_subject' => $this->target_subject,
-            'target_id' => $target_id,
-            'is_guest' => $user->id == 0,
-            'is_enabled' => $is_enabled && !$is_voted,
-            'is_voted' => $is_voted,
-            'current_rating' => $current_rating ? $current_rating : 0,
-            'user' => $user,
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $target_id,
+            'is_guest'          => $this->cms_user->id == 0,
+            'is_enabled'        => $is_enabled && !$is_voted,
+            'is_voted'          => $is_voted,
+            'current_rating'    => $current_rating ? $current_rating : 0,
+            'user'              => $this->cms_user
         ));
 
     }

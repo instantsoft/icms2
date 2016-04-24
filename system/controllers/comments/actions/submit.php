@@ -90,7 +90,7 @@ class actionCommentsSubmit extends cmsAction {
         // Превью комментария
         //
         if ($action=='preview'){
-            $result = array('error' => false, 'html' => $content_html);
+            $result = array('error' => false, 'html' => cmsEventsManager::hook('parse_text', $content_html));
             $template->renderJSON($result);
         }
 
@@ -108,9 +108,11 @@ class actionCommentsSubmit extends cmsAction {
                 }
             }
 
-           $this->model->updateCommentContent($comment_id, $content, $content_html);
+            list($comment_id, $content, $content_html) = cmsEventsManager::hook('comment_before_update', array($comment_id, $content, $content_html));
 
-           $comment_html = $content_html;
+            $this->model->updateCommentContent($comment_id, $content, $content_html);
+
+            $comment_html = $content_html;
 
         }
 
@@ -149,7 +151,7 @@ class actionCommentsSubmit extends cmsAction {
                 $comment['is_private']   = empty($target_info['is_private']) ? false : $target_info['is_private'];
 
                 // Сохраняем комментарий
-                $comment_id = $this->model->addComment($comment);
+                $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
 
             }
 
@@ -191,7 +193,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => isset($comment_html) ? $comment_html : false
+            'html'      => isset($comment_html) ? (cmsEventsManager::hook('parse_text', $comment_html)) : false
         );
 
         $template->renderJSON($result);

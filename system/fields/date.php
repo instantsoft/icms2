@@ -2,10 +2,11 @@
 
 class fieldDate extends cmsFormField {
 
-    public $title   = LANG_PARSER_DATE;
-    public $sql     = 'timestamp NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_DATE;
+    public $sql         = 'timestamp NULL DEFAULT NULL';
     public $filter_type = 'date';
     public $filter_hint = LANG_PARSER_DATE_FILTER_HINT;
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(
@@ -50,7 +51,11 @@ class fieldDate extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_range')){
+        if (!is_array($value) || !empty($value['date'])){
+
+            if(!empty($value['date'])){
+                $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+            }
 
             $date_start = date('Y-m-d', strtotime($value));
             $date_final = date('Y-m-d', strtotime($value)+60*60*24);
@@ -58,8 +63,6 @@ class fieldDate extends cmsFormField {
             $model->filterBetween($this->name, $date_start, $date_final);
 
         } else {
-
-            if (!is_array($value)) { return $model; }
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, date('Y-m-d', strtotime($value['from'])));
@@ -74,23 +77,43 @@ class fieldDate extends cmsFormField {
 
     }
 
+    public function getDefaultVarType($is_filter=false) {
+
+        if (($is_filter && $this->getOption('filter_range')) || $this->getOption('show_time')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
+    }
+
     public function store($value, $is_submitted, $old_value=null){
 
         if($value){
             if(is_array($value)){
-                if($value['date']){
+                if(!empty($value['date'])){
                     $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
-                    return date('Y-m-d H:i', strtotime($value));
+                    return date('Y-m-d H:i:s', strtotime($value));
                 }
-            }else{
+            } else {
                 return date('Y-m-d', strtotime($value));
             }
 
         }
 
+        return null;
+
     }
 
     public function getInput($value){
+
+        if($value){
+            if(is_array($value)){
+                if(!empty($value['date'])){
+                    $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+                }
+            }
+        }
 
         $this->data['show_time'] = $this->getOption('show_time');
 

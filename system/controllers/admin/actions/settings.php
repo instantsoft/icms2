@@ -14,6 +14,7 @@ class actionAdminSettings extends cmsAction {
 
         $values = $config->getAll();
         $values['time_zone'] = $values['cfg_time_zone'];
+        $values['language'] = $values['cfg_language'];
 
         $form = $this->getForm('settings');
 
@@ -64,10 +65,18 @@ class actionAdminSettings extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('settings', array(
-            'do' => 'edit',
+        $tpls = cmsCore::getTemplates();
+        foreach ($tpls as $tpl) {
+            if(file_exists($config->root_path.'templates/'.$tpl.'/options.form.php')){
+                $templates_has_options[] = $tpl;
+            }
+        }
+
+        return $this->cms_template->render('settings', array(
+            'templates_has_options' => $templates_has_options,
+            'do'     => 'edit',
             'values' => $values,
-            'form' => $form,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

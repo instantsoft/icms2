@@ -46,7 +46,7 @@
                 <?php foreach($columns as $name=>$column){ ?>
                     <td>
                         <?php if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){ ?>
-                            <?php echo html_input('text', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+                            <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
                         <?php } ?>
                     </td>
                 <?php } ?>

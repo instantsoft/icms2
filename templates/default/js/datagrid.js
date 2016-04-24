@@ -15,7 +15,7 @@ icms.datagrid = (function ($) {
     }
 
     //====================================================================//
-	
+
     this.bind_sortable = function(){
         $('.datagrid th.sortable').click(function(){
 			console.log('click');
@@ -23,32 +23,23 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').keypress(function(event){
-
-            if (event.which == 13) {
-
-                event.preventDefault();
-
-                $('.datagrid .filter .input').each(function(){
-                    var filter = $(this).attr('rel');
-                    $('#datagrid_filter input[name='+filter+']').val($(this).val());
-                });
-
-                icms.datagrid.setPage(1);
-                icms.datagrid.loadRows();
-
-            }
-
+        $('.datagrid .filter .input').on('input', function () {
+            $('.datagrid .filter .input').each(function(){
+                var filter = $(this).attr('rel');
+                $('#datagrid_filter input[name='+filter+']').val($(this).val());
+            });
+            icms.datagrid.setPage(1);
+            icms.datagrid.loadRows();
         });
     };
-	
+
     //====================================================================//
 
     this.init = function(){
-		
+
         if(this.was_init){return false;}
         this.was_init = true;
-		
+
         console.log('init');
 
         if (this.options.is_sortable){
@@ -97,9 +88,9 @@ icms.datagrid = (function ($) {
                 last = tr;
             });
         }
-	
+
         this.setOrdering();
-        
+
         if (this.options.url){
             this.loadRows();
         }
@@ -287,9 +278,9 @@ icms.datagrid = (function ($) {
             return;
         }
 
-        $.each(result.rows, function(){
+        $.each(result.rows, function(i){
             var row = this;
-            var row_html = '<tr id="'+row[0]+'">';
+            var row_html = '<tr id="'+(row[0] > 0 ? row[0] : ('tr_id_'+i))+'">';
             $.each(row, function(index){
                 if (index>0 || icms.datagrid.options.show_id) {
                         row_html = row_html + '<td>' + this + '</td>';
@@ -341,31 +332,31 @@ icms.datagrid = (function ($) {
         icms.datagrid.options.pages_count = result.pages_count;
 
 		$('.datagrid .flag_trigger a').on('click', function(){
-		
+
 			var url = $(this).attr('href');
 			var link = $(this);
 
 			link.parent('.flag_trigger').addClass('loading');
-			
+
 			$.post(url, {}, function(result){
-				
+
 				var flag = link.parent('.flag_trigger').removeClass('loading');
 				if (result.error){ return; }
 
 				var flag_class = flag.data('class');
 				var flag_class_on = flag_class + '_on';
 				var flag_class_off = flag_class + '_off';
-				
+
 				if (result.is_on){
 					flag.removeClass(flag_class_off).addClass(flag_class_on);
 				} else {
 					flag.removeClass(flag_class_on).addClass(flag_class_off);
 				}
-				
+
 			}, 'json');
-			
+
 			return false;
-			
+
 		});
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
@@ -398,7 +389,7 @@ icms.datagrid = (function ($) {
     this.hideLoadIndicator = function(){
         $('.datagrid_loading').hide();
     }
-	
+
 	this.escapeHtml = function(text) {
 		return text
 			.replace(/&/g, "&amp;")

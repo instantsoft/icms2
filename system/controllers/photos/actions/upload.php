@@ -96,11 +96,32 @@ class actionPhotosUpload extends cmsAction{
 
         if (!isset($albums[$album_id])){ $album_id = false; }
 
+        $_albums_select = array(); $num = 0;
+        foreach ($albums as $album) {
+            if (!empty($album['parent_title'])){
+                if ($album['is_public']) { $album['title'] = '[' . LANG_PHOTOS_PUBLIC_ALBUM . '] ' . $album['title']; }
+                $_albums_select[$album['parent_title']][] = $album;
+            } elseif($album['is_public']) {
+                $_albums_select[LANG_PHOTOS_PUBLIC_ALBUMS][] = $album;
+            } else {
+                $_albums_select[LANG_PHOTOS_USER_ALBUMS][] = $album;
+            }
+        }
+        $albums_select = array(''=>'');
+        foreach ($_albums_select as $album_type=>$_albums) {
+            $albums_select['opt'.$num] = array($album_type);
+            foreach ($_albums as $album) {
+                $albums_select[$album['id']] = $album['title'];
+            }
+            $num++;
+        }
+
         cmsTemplate::getInstance()->render('upload', array(
-            'ctype' => $ctype,
-            'albums' => $albums,
-            'photos' => $photos,
-            'album_id' => $album_id
+            'ctype'         => $ctype,
+            'albums'        => $albums,
+            'albums_select' => $albums_select,
+            'photos'        => $photos,
+            'album_id'      => $album_id
         ));
 
     }

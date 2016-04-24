@@ -171,7 +171,7 @@ class cmsUser {
      */
     public static function login($email, $password, $remember=false) {
 
-        if (!preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $email)){
+        if (!preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $email)){
             return 0;
         }
 
@@ -642,7 +642,7 @@ class cmsUser {
      */
     public function isInGroups($groups){
 
-        if ($groups == array(0)){ return true; }
+        if (empty($groups) || $groups == array(0)){ return true; }
         if (in_array(0, $groups)){ return true; }
 
         $found = false;

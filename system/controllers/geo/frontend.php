@@ -5,9 +5,6 @@ class geo extends cmsFrontend {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $template = cmsTemplate::getInstance();
-        $user = cmsUser::getInstance();
-
         $countries = $this->model->getCountries();
         $countries = array('0'=>LANG_GEO_SELECT_COUNTRY) + $countries;
 
@@ -17,16 +14,34 @@ class geo extends cmsFrontend {
         $region_id = false;
         $country_id = false;
 
-        if ($user->is_logged && !$city_id && $user->city['id']){
-            $city_id = $user->city['id'];
+        if (!$city_id){
+
+            $geo = $this->getGeoByIp();
+            if(!empty($geo['city']['id'])){
+                $city_id = $geo['city']['id'];
+            }
+            if(!empty($geo['city']['region_id'])){
+                $region_id = $geo['city']['region_id'];
+            }
+            if(!empty($geo['city']['country_id'])){
+                $country_id = $geo['city']['country_id'];
+            }
+            if(!empty($geo['country']['id']) && !$country_id){
+                $country_id = $geo['country']['id'];
+            }
+
         }
 
         if ($city_id){
 
-            $city_parents = $this->model->getCityParents($city_id);
+            if(!$region_id || !$country_id){
 
-            $region_id = $city_parents['region_id'];
-            $country_id = $city_parents['country_id'];
+                $city_parents = $this->model->getCityParents($city_id);
+
+                $region_id = $region_id ? $region_id : $city_parents['region_id'];
+                $country_id = $country_id ? $country_id : $city_parents['country_id'];
+
+            }
 
             $regions = $this->model->getRegions($country_id);
             $regions = array('0'=>LANG_GEO_SELECT_REGION) + $regions;
@@ -36,14 +51,14 @@ class geo extends cmsFrontend {
 
         }
 
-        $template->render('widget', array(
-            'field_id' => $field_id,
-            'city_id' => $city_id,
+        $this->cms_template->render('widget', array(
+            'field_id'   => $field_id,
+            'city_id'    => $city_id,
             'country_id' => $country_id,
-            'region_id' => $region_id,
-            'countries' => $countries,
-            'regions' => $regions,
-            'cities' => $cities,
+            'region_id'  => $region_id,
+            'countries'  => $countries,
+            'regions'    => $regions,
+            'cities'     => $cities
         ));
 
     }
@@ -52,10 +67,10 @@ class geo extends cmsFrontend {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $type = $this->request->get('type');
-        $parent_id = $this->request->get('parent_id');
+        $type = $this->request->get('type', '');
+        $parent_id = $this->request->get('parent_id', 0);
 
-        if (!in_array($type, array('regions', 'cities'))) { cmsCore::error404(); }
+        if (!$type || !in_array($type, array('regions', 'cities'))) { cmsCore::error404(); }
         if (!$parent_id) { cmsCore::error404(); }
 
         switch ( $type ){
@@ -76,10 +91,56 @@ class geo extends cmsFrontend {
             $items = array('0'=>$select_text) + $items;
         }
 
-        cmsTemplate::getInstance()->renderJSON(array(
+        return $this->cms_template->renderJSON(array(
            'error' => $items ? false : true,
            'items' => $items
         ));
+
+    }
+
+    public function getGeoByIp() {
+
+        $cached_geo = cmsUser::sessionGet('geo_data');
+        if($cached_geo){ return $cached_geo; }
+
+        $out = simplexml_load_string(file_get_contents_from_url('http://ipgeobase.ru:7020/geo?ip='.cmsUser::getIp()));
+
+        $data = array();
+
+        if($out && is_object($out) && !empty($out->ip[0])){
+            foreach ($out->ip[0] as $key=>$value) {
+                $data[$key] = (string)$value;
+            }
+        }
+
+        $geo = array(
+            'city'    => array(
+                'id'   => null,
+                'name' => null
+            ),
+            'country' => array(
+                'id'   => null,
+                'name' => null
+            ),
+        );
+
+        if(isset($data['country'])){
+            $geo['country'] = $this->model->getItemByField('geo_countries', 'alpha2', $data['country']);
+        }
+
+        if(isset($data['city'])){
+
+            if(!empty($geo['country']['id'])){
+                $this->model->filterEqual('country_id', $geo['country']['id']);
+            }
+
+            $geo['city'] = $this->model->getItemByField('geo_cities', 'name', $data['city']);
+
+        }
+
+        cmsUser::sessionSet('geo_data', $geo);
+
+        return $geo;
 
     }
 

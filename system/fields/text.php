@@ -2,12 +2,12 @@
 
 class fieldText extends cmsFormField {
 
-    public $title = LANG_PARSER_TEXT;
-    public $sql   = 'text';
+    public $title       = LANG_PARSER_TEXT;
+    public $sql         = 'text';
     public $filter_type = 'str';
-	public $allow_index = false;
-
-    public $size = 5;
+    public $allow_index = false;
+    public $var_type    = 'string';
+    public $size        = 5;
 
     public function getOptions(){
         return array(
@@ -18,6 +18,9 @@ class fieldText extends cmsFormField {
             new fieldNumber('max_length', array(
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 4096
+            )),
+            new fieldCheckbox('show_symbol_count', array(
+                'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,

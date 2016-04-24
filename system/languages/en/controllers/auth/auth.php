@@ -39,9 +39,16 @@
 
     define('LANG_REG_CFG_REG_CAPTCHA',          'Show CAPTCHA to protect from spam registrations');
     define('LANG_REG_CFG_AUTH_CAPTCHA',         'Show CAPTCHA after failed log in');
+    define('LANG_REG_CFG_FIRST_AUTH_REDIRECT',  'After the first login to the site');
+    define('LANG_REG_CFG_AUTH_REDIRECT',        'After following authorizations on the website');
+    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Stay on page, at which the logged');
+    define('LANG_REG_CFG_AUTH_REDIRECT_INDEX',       'Open main page');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE',     'Open profile');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT', 'Open profile settings');
 
-    define('LANG_REG_CFG_VERIFY_EMAIL',        'Send verification e-mail after registration');
-    define('LANG_REG_CFG_VERIFY_EMAIL_HINT',   'New users will be blocked until they open URL from verification e-mail');
+    define('LANG_REG_CFG_VERIFY_EMAIL',         'Send verification e-mail after registration');
+    define('LANG_REG_CFG_VERIFY_EMAIL_HINT',    'New users will be blocked until they open URL from verification e-mail');
+	define('LANG_REG_CFG_REG_AUTO_AUTH',        'Authorize user after registration');
     define('LANG_REG_CFG_VERIFY_EXPIRATION',   'Delete unverified accounts after, hours');
     define('LANG_REG_CFG_VERIFY_LOCK_REASON',  'E-mail verification required');
 	define('LANG_REG_CFG_DEF_GROUP_ID',		   'Put new users in groups');
@@ -53,6 +60,7 @@
     define('LANG_REG_SUCCESS',               'Registration was successful');
     define('LANG_REG_SUCCESS_NEED_VERIFY',   'Verification e-mail sent to <b>%s</b>. Click on the link in the message to activate your account');
     define('LANG_REG_SUCCESS_VERIFIED',      'E-mail address is successfully validated. You can login now.');
+	define('LANG_REG_SUCCESS_VERIFIED_AND_AUTH', 'E-mail address is successfully validated. Welcome!');
 
     define('LANG_PASS_RESTORE',              'Password recovery');
     define('LANG_EMAIL_NOT_FOUND',           'This e-mail was not found in our database');

@@ -2,27 +2,27 @@
 
 class actionUsersProfile extends cmsAction {
 
-    public function run($profile){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    public function run($profile=null){
 
         $profile = cmsEventsManager::hook('users_profile_view', $profile);
 
         // Отношения
-        $is_own_profile = $user->id == $profile['id'];
+        $is_own_profile = $this->cms_user->id == $profile['id'];
         $is_friends_on = $this->options['is_friends_on'];
-        $is_friend_profile = $user->isFriend($profile['id']);
-        $is_friend_req = $is_friends_on ? $this->model->isFriendshipRequested($user->id, $profile['id']) : false;
+        $is_friend_profile = $this->cms_user->isFriend($profile['id']);
+        $is_friend_req = $is_friends_on ? $this->model->isFriendshipRequested($this->cms_user->id, $profile['id']) : false;
 
         // Доступность профиля для данного пользователя
-        if ( !$user->isPrivacyAllowed($profile, 'users_profile_view') ){
-            return cmsTemplate::getInstance()->render('profile_closed', array(
-                'profile' => $profile,
-                'user' => $user,
-                'is_own_profile' => $is_own_profile,
-                'is_friends_on' => $is_friends_on,
+        if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
+            return $this->cms_template->render('profile_closed', array(
+                'profile'           => $profile,
+                'user'              => $this->cms_user,
+                'is_own_profile'    => $is_own_profile,
+                'is_friends_on'     => $is_friends_on,
                 'is_friend_profile' => $is_friend_profile,
-                'is_friend_req' => $is_friend_req,
+                'is_friend_req'     => $is_friend_req
             ));
         }
 
@@ -30,7 +30,7 @@ class actionUsersProfile extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}');
 
         // Друзья
         $friends = $is_friends_on ? $this->model->getFriends($profile['id']) : false;
@@ -38,7 +38,7 @@ class actionUsersProfile extends cmsAction {
         // Контент
 		$content_model = cmsCore::getModel('content');
 
-		$is_filter_hidden = (!$is_own_profile && !$user->is_admin);
+		$is_filter_hidden = (!$is_own_profile && !$this->cms_user->is_admin);
 
         $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden);
 
@@ -58,26 +58,26 @@ class actionUsersProfile extends cmsAction {
             );
 
             $wall_permissions = array(
-                'add' => $user->is_logged && $user->isPrivacyAllowed($profile, 'users_profile_wall'),
-                'delete' => ($user->is_admin || ($user->id == $profile['id'])),
+                'add' => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
+                'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id'])),
             );
 
             $wall_html = $wall_controller->getWidget($wall_title, $wall_target, $wall_permissions);
 
         }
 
-        return cmsTemplate::getInstance()->render('profile_view', array(
-            'profile' => $profile,
-            'user' => $user,
-            'is_own_profile' => $is_own_profile,
-            'is_friends_on' => $is_friends_on,
+        return $this->cms_template->render('profile_view', array(
+            'profile'           => $profile,
+            'user'              => $this->cms_user,
+            'is_own_profile'    => $is_own_profile,
+            'is_friends_on'     => $is_friends_on,
             'is_friend_profile' => $is_friend_profile,
-            'is_friend_req' => $is_friend_req,
-            'friends' => $friends,
-            'content_counts' => $content_counts,
-            'fields' => $fields,
-            'wall_html' => isset($wall_html) ? $wall_html : false,
-            'tabs' => $this->getProfileMenu($profile)
+            'is_friend_req'     => $is_friend_req,
+            'friends'           => $friends,
+            'content_counts'    => $content_counts,
+            'fields'            => $fields,
+            'wall_html'         => isset($wall_html) ? $wall_html : false,
+            'tabs'              => $this->getProfileMenu($profile)
         ));
 
     }

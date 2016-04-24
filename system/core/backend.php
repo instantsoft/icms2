@@ -1,9 +1,10 @@
 <?php
+
 class cmsBackend extends cmsController {
 
     function __construct($request){
 
-        $this->name = str_replace('backend', '', mb_strtolower(get_called_class()));
+        $this->name = str_replace('backend', '', strtolower(get_called_class()));
 
         parent::__construct($request);
 
@@ -31,7 +32,7 @@ class cmsBackend extends cmsController {
     public function actionToggleItem($item_id=false, $table=false, $field='is_pub'){
 
 		if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
-			cmsTemplate::getInstance()->renderJSON(array(
+			$this->cms_template->renderJSON(array(
 				'error' => true,
 			));
 		}
@@ -39,7 +40,7 @@ class cmsBackend extends cmsController {
         $i = $this->model->getItemByField($table, 'id', $item_id);
 
 		if (!$i || !array_key_exists($field, $i)){
-			cmsTemplate::getInstance()->renderJSON(array(
+			$this->cms_template->renderJSON(array(
 				'error' => true,
 			));
 		}
@@ -50,7 +51,7 @@ class cmsBackend extends cmsController {
 			$field => $active
 		));
 
-		cmsTemplate::getInstance()->renderJSON(array(
+		$this->cms_template->renderJSON(array(
 			'error' => false,
 			'is_on' => $active
 		));
@@ -66,16 +67,15 @@ class cmsBackend extends cmsController {
         if (empty($this->useDefaultOptionsAction)){ cmsCore::error404(); }
 
         $form = $this->getForm('options');
-
         if (!$form) { cmsCore::error404(); }
 
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook("form_options_{$this->name}", $form);
 
         $options = cmsController::loadOptions($this->name);
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $options = $form->parse($this->request, $is_submitted);
+            $options = $form->parse($this->request, true);
             $errors = $form->validate($this, $options);
 
             if (!$errors){
@@ -83,6 +83,8 @@ class cmsBackend extends cmsController {
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 cmsController::saveOptions($this->name, $options);
+
+                $this->processCallback(__FUNCTION__, array($options));
 
                 $this->redirectToAction('options');
 
@@ -96,11 +98,24 @@ class cmsBackend extends cmsController {
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/options', array(
+        $template_params = array(
             'options' => $options,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
-        ));
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
+        );
+
+        // если задан шаблон опций в контроллере
+        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/options', true)){
+
+            return $this->cms_template->render('backend/options', $template_params);
+
+        } else {
+
+            $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_options');
+
+            return $this->cms_template->processRender($default_admin_tpl, $template_params);
+
+        }
 
     }
 
@@ -118,12 +133,25 @@ class cmsBackend extends cmsController {
         $users_model = cmsCore::getModel('users');
         $groups = $users_model->getGroups(false);
 
-        return cmsTemplate::getInstance()->render('backend/perms', array(
-            'rules' => $rules,
-            'values' => $values,
-            'groups' => $groups,
-            'subject' => $subject,
-        ));
+        $template_params = array(
+            'rules'   => $rules,
+            'values'  => $values,
+            'groups'  => $groups,
+            'subject' => $subject
+        );
+
+        // если задан шаблон опций в контроллере
+        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/perms', true)){
+
+            return $this->cms_template->render('backend/perms', $template_params);
+
+        } else {
+
+            $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_perms');
+
+            return $this->cms_template->processRender($default_admin_tpl, $template_params);
+
+        }
 
     }
 
@@ -131,9 +159,7 @@ class cmsBackend extends cmsController {
 
         if (empty($this->useDefaultPermissionsAction)){ cmsCore::error404(); }
 
-        $values = $this->request->get('value');
-
-        if (!$values) { cmsCore::error404(); }
+        $values = $this->request->get('value', array());
 
         $rules = cmsPermissions::getRulesList($this->name);
 

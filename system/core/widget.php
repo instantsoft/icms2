@@ -36,7 +36,7 @@ class cmsWidget {
 
         $this->position = $widget['position'];
         $this->template = $this->name;
-		
+
 		if (!empty($widget['tpl_wrap'])){
 			$this->setWrapper($widget['tpl_wrap']);
 		}

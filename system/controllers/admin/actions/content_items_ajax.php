@@ -18,8 +18,20 @@ class actionAdminContentItemsAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter');
 
-        // Для сохранения настроек грида необходимо добавить такую строку со своим ключом
-        $filter_str = cmsUser::getUPSActual('admin.filter_str.'.$ctype['name'], $filter_str);
+        // Одновременно смениться и тип контента, и настройка diff_order не могут
+        $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
+
+        if($filter_str && mb_strpos($filter_str, 'ctype_changed=1') !== false && $diff_order){ // Изменён тип контента и должна быть сохранена сортировка
+            // Проверим, что эта сортировка есть в бд, иначе будет использоваться пришедшая
+            $ups_filter_str = cmsUser::getUPS('admin.grid_filter.content.'.$ctype['name']);
+            if($ups_filter_str){
+                $filter_str = $ups_filter_str;
+            }
+            // Чтобы заполнить поля поиска фильтра
+            $grid['options']['load_columns'] = true;
+        }else{
+            $filter_str = cmsUser::getUPSActual('admin.grid_filter.content.'.$ctype['name'], $filter_str);
+        }
 
         if($filter_str){
 
@@ -37,6 +49,12 @@ class actionAdminContentItemsAjax extends cmsAction {
 
                 $content_model->applyDatasetFilters($dataset_filters);
 
+                // Различная сортировка у разных типов контента, сохранение настройки
+                $new_diff_order = !empty($dataset_filters['diff_order']) ? '1' : '0';
+                if($new_diff_order !== $diff_order){
+                    cmsUser::setUPS('admin.grid_filter.content.diff_order', $new_diff_order);
+                }
+
             }
 
             $content_model->applyGridFilter($grid, $filter);
@@ -50,6 +68,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->disableApprovedFilter();
         $content_model->disablePubFilter();
+        $content_model->disablePrivacyFilter();
 
         $total = $content_model->getContentItemsCount($ctype['name']);
 

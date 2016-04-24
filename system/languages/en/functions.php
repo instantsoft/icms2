@@ -44,12 +44,21 @@ function lang_slug($string){
     $string    = mb_strtolower($string, 'utf-8');
     $string    = str_replace(' ', '-', $string);
 
-    $slug = preg_replace ('/[^a-zA-Z0-9\-\/]/u', '-', $string);
+    $slug = preg_replace ('/[^a-z0-9\-\/]/u', '-', $string);
     $slug = preg_replace('/([-]+)/i', '-', $slug);
     $slug = trim($slug, '-');
 
     if (!$slug){ $slug = 'untitled'; }
+    if (is_numeric($slug)){ $slug .= strtolower(date('F')); }
 
     return $slug;
 
+}
+
+/**
+ * Set locale information
+ * @return mixed
+ */
+function lang_setlocale() {
+    return setlocale(LC_ALL, 'en_US.UTF-8');
 }

@@ -107,6 +107,8 @@
                     current_ctype = 0;
                     is_loaded = false;
 
+                    $('#datagrid_filter').append('<?php echo html_input('hidden', 'ctype_changed'); ?>');
+
                     $("#datatree").dynatree({
 
                         debugLevel: 0,
@@ -150,7 +152,7 @@
                             }
                             if(key[0] !== current_ctype){
                                 current_ctype = key[0];
-                                contentCancelFilter();
+                                contentCancelFilter(true);
                             }else{
                                 icms.datagrid.loadRows();
                             }

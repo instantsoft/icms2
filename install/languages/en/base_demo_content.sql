@@ -127,6 +127,7 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -180,6 +181,7 @@ CREATE TABLE `{#}con_articles_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -308,6 +310,7 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -363,6 +366,7 @@ CREATE TABLE `{#}con_news_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -487,6 +491,7 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -529,6 +534,7 @@ CREATE TABLE `{#}con_posts_fields` (
   `options` text,
   `groups_read` text,
   `groups_edit` text,
+  `filter_view` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `is_in_list` (`is_in_list`),
@@ -723,17 +729,6 @@ INSERT INTO `{#}tags_bind` (`id`, `tag_id`, `target_controller`, `target_subject
 (124, 43, 'content', 'albums', 16),
 (125, 58, 'content', 'albums', 16);
 
-INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`) VALUES
-(1, NULL, 'birth_date', 'Age', NULL, 4, 'About', 'age', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Date of birth\nshow_y: 1\nshow_m: null\nshow_d: null\nshow_h: null\nshow_i: null\nrange: YEAR\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(2, NULL, 'city', 'City', 'Select the city where you live', 3, 'About', 'city', NULL, NULL, 1, NULL, 1, 1, NULL, NULL, '---\nlabel_in_item: left\nis_required: 1\nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(3, NULL, 'hobby', 'Tell us about yourself', 'Tell us about your interests and hobbies', 11, 'About me', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nis_html_filter: null\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(7, NULL, 'icq', 'ICQ', NULL, 8, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 9\nlabel_in_item: left\nis_required: null\nis_digits: 1\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(8, NULL, 'skype', 'Skype', NULL, 9, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 32\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(9, NULL, 'phone', 'Phone number', NULL, 7, 'Contacts', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(10, NULL, 'music', 'Favorite Music', NULL, 6, 'Preferences', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(11, NULL, 'movies', 'Favorite Movies', NULL, 5, 'Preferences', 'string', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
-(12, NULL, 'site', 'Website', 'Your personal website', 10, 'Contacts', 'url', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n');
-
 INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replies_count`, `wall_entry_id`) VALUES
 (1, 1, CURRENT_TIMESTAMP, 'We are all made of stars © Moby', 1, 1);
 
@@ -741,21 +736,25 @@ INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `
 (1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
 (2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
-INSERT INTO `{#}widgets_bind` (`id`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
-(6, 8, 'Members online', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
-(8, 10, 'Tags cloud', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
-(9, 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
-(10, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
-(11, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
-(12, 5, 'Content cats', NULL, NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
-(13, 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, NULL, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
-(14, 2, 'New members', 'All | users', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
-(15, 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
-(16, 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, NULL, NULL, 1, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
-(17, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
-(21, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
+INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
+(6, 'default', 8, 'Members online', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
+(8, 'default', 10, 'Tags cloud', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
+(9, 'default', 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
+(10, 'default', 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
+(11, 'default', 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
+(12, 'default', 5, 'Content cats', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
+(13, 'default', 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
+(14, 'default', 2, 'New members', 'All | users', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
+(15, 'default', 3, 'Footer menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
+(16, 'default', 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
+(17, 'default', 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
+(21, 'default', 13, 'Search', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
+(143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Pages', NULL, 'pages\npages-*\npages/*', NULL),
+(144, 'content', 'pages.list', 'LANG_WP_CONTENT_LIST', 'Pages', NULL, 'pages\npages-*\npages/*', 'pages/*.html\npages/add\npages/edit/*'),
+(145, 'content', 'pages.item', 'LANG_WP_CONTENT_ITEM', 'Pages', NULL, 'pages/*.html', NULL),
+(146, 'content', 'pages.edit', 'LANG_WP_CONTENT_ITEM_EDIT', 'Pages', NULL, 'pages/add\npages/edit/*', NULL),
 (147, 'content', 'articles.all', 'LANG_WP_CONTENT_ALL_PAGES', 'Articles', NULL, 'articles\narticles-*\narticles/*', NULL),
 (148, 'content', 'articles.list', 'LANG_WP_CONTENT_LIST', 'Articles', NULL, 'articles\narticles-*\narticles/*', 'articles/*.html\narticles/add\narticles/edit/*'),
 (149, 'content', 'articles.item', 'LANG_WP_CONTENT_ITEM', 'Articles', NULL, 'articles/*.html', NULL),

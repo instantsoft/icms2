@@ -13,30 +13,37 @@ class cmsWysiwygRedactor{
         $template->addJSFromContext('wysiwyg/redactor/js/video.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fullscreen.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fontsize.js');
-        $template->addJSFromContext('wysiwyg/redactor/js/fontfamily.js');
+        //$template->addJSFromContext('wysiwyg/redactor/js/fontfamily.js');
         $template->addJSFromContext('wysiwyg/redactor/js/fontcolor.js');
-        $template->addJSFromContext("wysiwyg/redactor/lang/{$lang}.js");
+        $template->addJSFromContext('wysiwyg/redactor/js/table.js');
+        $template->addJSFromContext("wysiwyg/redactor/langs/{$lang}.js");
 
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
         echo html_textarea($field_id, $content, array('id'=>$dom_id));
 
         ?>
-
             <script type="text/javascript">
-                $(document).ready(function(){
+                $(function(){
                     $('#<?php echo $dom_id; ?>').redactor({
                         lang: '<?php echo $lang; ?>',
-                        plugins: ['video', 'fontfamily', 'fontsize', 'fontcolor', 'fullscreen'],
+                        plugins: ['video', 'fontsize', 'fontcolor', 'fullscreen', 'table'],
                         imageUpload: '<?php echo href_to('redactor/upload'); ?>',
-						minHeight: 250,
+						minHeight: 190,
+                        replaceDivs: false,
+                        removeComments: true,
+                        convertLinks: false,
 						<?php if ($user->is_admin) { ?>
                             buttonSource: true
 						<?php } ?>
                     });
+                    <?php if(!cmsCore::getInstance()->request->isAjax()){ ?>
+                        $(window).on('resize', function (){
+                            $('#<?php echo $dom_id; ?>').width($('#f_<?php echo $dom_id; ?>').width());
+                        }).triggerHandler('resize');
+                    <?php } ?>
                 });
             </script>
-
         <?php
 	}
 

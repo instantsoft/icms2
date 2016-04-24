@@ -1,9 +1,21 @@
 <?php
 
-class backendActivity extends cmsBackend{
+class backendActivity extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
+
+    public function loadCallback() {
+
+        $this->callbacks = array(
+            'actionoptions'=>array(
+                function($controller, $options){
+                    $controller->model->enableTypes($options['types']);
+                }
+            )
+        );
+
+    }
 
     public function actionIndex(){
         $this->redirectToAction('options');

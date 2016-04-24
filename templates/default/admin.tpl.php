@@ -10,11 +10,11 @@
 	<title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-modal.css"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery-modal.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/core.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/modal.js"); ?>
+    <?php $this->addMainCSS("templates/default/css/theme-modal.css"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery.js"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery-modal.js"); ?>
+    <?php $this->addMainJS("templates/default/js/core.js"); ?>
+    <?php $this->addMainJS("templates/default/js/modal.js"); ?>
     <?php $this->head(false); ?>
 <body>
 

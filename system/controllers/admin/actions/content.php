@@ -14,23 +14,23 @@ class actionAdminContent extends cmsAction {
 
         $ctypes = $content_model->getContentTypes();
 
-        $grid = $this->loadDataGrid('content_items');
-
         $tree_path = cmsUser::getCookie('content_tree_path');
         if($tree_path && ($tree_path = explode('/', $tree_path)) && !empty($tree_path[1]) && ($ctype_id = (int)$tree_path[1])){
             $ctype = $content_model->getContentType($ctype_id);
-            if($ctype){
-                $filter_str = cmsUser::getUPS('admin.filter_str.'.$ctype['name']);
-                if($filter_str){
-                    parse_str($filter_str, $filter);
-                    $grid['filter'] = $filter;
-                }
-            }
         }
 
+        if(!empty($ctype)){
+            $grid = $this->loadDataGrid('content_items', false, 'admin.grid_filter.content.'.$ctype['name']);
+        } else {
+            $grid = $this->loadDataGrid('content_items');
+        }
+
+        $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
+
         return cmsTemplate::getInstance()->render('content', array(
-            'ctypes' => $ctypes,
-            'grid' => $grid
+            'ctypes'     => $ctypes,
+            'grid'       => $grid,
+            'diff_order' => $diff_order
         ));
 
     }

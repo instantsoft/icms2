@@ -2,9 +2,9 @@
 
 class actionGroupsGroup extends cmsAction {
 
-    public function run($group){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    public function run($group){
 
         // Стена
         if ($this->options['is_wall']){
@@ -19,14 +19,14 @@ class actionGroupsGroup extends cmsAction {
                 'profile_id' => $group['id']
             );
 
-            $is_owner = $user->id == $group['owner_id'];
-            $membership = $this->model->getMembership($group['id'], $user->id);
+            $is_owner = $this->cms_user->id == $group['owner_id'];
+            $membership = $this->model->getMembership($group['id'], $this->cms_user->id);
             $is_member = ($membership !== false);
             $member_role = $is_member ? $membership['role'] : groups::ROLE_NONE;
 
             $wall_permissions = array(
 
-                'add' =>$user->is_admin || (
+                'add' =>$this->cms_user->is_admin || (
                             $membership && (
                                 ($group['wall_policy'] == groups::WALL_POLICY_MEMBERS) ||
                                 ($group['wall_policy'] == groups::WALL_POLICY_STAFF && $member_role==groups::ROLE_STAFF) ||
@@ -34,7 +34,7 @@ class actionGroupsGroup extends cmsAction {
                             )
                         ),
 
-                'delete' => ($user->is_admin || $is_owner),
+                'delete' => ($this->cms_user->is_admin || $is_owner),
 
             );
 
@@ -45,11 +45,11 @@ class actionGroupsGroup extends cmsAction {
         // Контент
         $content_counts = $this->model->getGroupContentCounts($group['id']);
 
-        return cmsTemplate::getInstance()->render('group_view', array(
-            'group' => $group,
+        return $this->cms_template->render('group_view', array(
+            'group'          => $group,
             'content_counts' => $content_counts,
-            'user' => $user,
-            'wall_html' => isset($wall_html) ? $wall_html : false,
+            'user'           => $this->cms_user,
+            'wall_html'      => isset($wall_html) ? $wall_html : false
         ));
 
     }

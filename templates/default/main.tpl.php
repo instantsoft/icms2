@@ -1,7 +1,4 @@
-<?php
-    $config = cmsConfig::getInstance();
-    $core = cmsCore::getInstance();
-?>
+<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +23,7 @@
     <?php $this->head(); ?>
     <style><?php include('options.css.php'); ?></style>
 </head>
-<body>
+<body id="<?php echo $device_type; ?>_device_type">
 
     <div id="layout">
 
@@ -86,13 +83,15 @@
 
             </section>
 
-            <aside>
-                <?php $this->widgets('right-top'); ?>
+            <?php if($is_sidebar){ ?>
+                <aside>
+                    <?php $this->widgets('right-top'); ?>
 
-                <?php $this->widgets('right-center'); ?>
+                    <?php $this->widgets('right-center'); ?>
 
-                <?php $this->widgets('right-bottom'); ?>
-            </aside>
+                    <?php $this->widgets('right-bottom'); ?>
+                </aside>
+            <?php } ?>
 
         </div>
 

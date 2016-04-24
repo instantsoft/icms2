@@ -2,6 +2,8 @@
 
 class cmsFormField {
 
+    const FIELD_CACHE_POSTFIX = '_cache';
+
     public $name;
     public $element_name = '';
     public $filter_type = false;
@@ -13,7 +15,9 @@ class cmsFormField {
     public $is_public = true;
 
     public $sql;
+    public $cache_sql;
     public $allow_index = true;
+    public $is_denormalization = false;
 
     public $item = null;
 
@@ -22,6 +26,15 @@ class cmsFormField {
 
     public $rules = array();
     public $options = array();
+
+    /**
+     * Тип переменной поля
+     * boolean | integer | double | string | array | object | resource
+     * если получаемые значения от поля типизированы (всегда одного типа)
+     * указывайте это свойство в своем классе поля
+     * @var string
+     */
+    public $var_type = null;
 
     public $data = array(); // массив для данных в шаблоне
 
@@ -81,20 +94,24 @@ class cmsFormField {
 
     public function getName() { return $this->name; }
 
+    public function getDenormalName() { return $this->name.self::FIELD_CACHE_POSTFIX; }
+
     public function setName($name) {
         $this->name = $name;
-
         if (strpos($name, ':') !== false){
             list($key, $subkey) = explode(':', $name);
             $this->element_name = "{$key}[{$subkey}]";
         } else {
             $this->element_name = $name;
         }
+        return $this;
     }
 
     public function getElementName() { return $this->element_name; }
 
     public function setItem($item) { $this->item = $item; return $this; }
+
+    public function getCacheSQL() { return $this->cache_sql; }
 
     public function getSQL() {
 
@@ -113,6 +130,27 @@ class cmsFormField {
 
     public function getDefaultValue() { return $this->hasDefaultValue() ? $this->default : null; }
 
+    /**
+     * Возвращает тип переменной для поля
+     * @param bool $is_filter Указывает, что нам нужен тип при использовании в фильтре
+     * @return string|null
+     */
+    public function getDefaultVarType($is_filter=false) {
+
+        if(is_string($this->var_type)){
+            return $this->var_type;
+        }
+
+        $default_value = $this->getDefaultValue();
+
+        if($default_value === null){
+            return null;
+        }
+
+        return gettype($default_value);
+
+    }
+
     public function getInput($value) {
         $this->title = $this->element_title;
         return cmsTemplate::getInstance()->renderFormField($this->class, array(
@@ -123,6 +161,11 @@ class cmsFormField {
 
     public function getFilterInput($value){
         $this->element_title = false;
+        // при фильтрации все поля необязательны
+        $required_key = array_search(array('required'), $this->getRules());
+        if($required_key !== false){
+            unset($this->rules[$required_key]);
+        }
         return $this->getInput($value);
     }
 
@@ -136,6 +179,10 @@ class cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
        return $value;
+    }
+
+    public function storeCachedValue($value){
+        return null;
     }
 
     public function delete($value){

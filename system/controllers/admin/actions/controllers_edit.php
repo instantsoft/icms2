@@ -11,7 +11,7 @@ class actionAdminControllersEdit extends cmsAction {
 
         cmsCore::loadControllerLanguage($controller_info['name']);
 
-        $controller_title = constant('LANG_'.mb_strtoupper($controller_info['name']).'_CONTROLLER');
+        $controller_title = string_lang($controller_info['name'].'_CONTROLLER', $controller_info['title']);
 
         $template = cmsTemplate::getInstance();
 

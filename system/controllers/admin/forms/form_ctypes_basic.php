@@ -164,8 +164,8 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
-                        'generator' => function(){
-                            return cmsTemplate::getInstance()->getAvailableContentListStyles();
+                        'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
                         }
                     )),
                     new fieldList('options:privacy_type', array(
@@ -175,6 +175,13 @@ class formAdminCtypesBasic extends cmsForm {
                             'hide'       => LANG_CP_PRIVACY_TYPE_HIDE,
                             'show_title' => LANG_CP_PRIVACY_TYPE_SHOW_TITLE,
                             'show_all'   => LANG_CP_PRIVACY_TYPE_SHOW_ALL
+                        )
+                    )),
+                    new fieldNumber('options:limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
                         )
                     ))
                 )
