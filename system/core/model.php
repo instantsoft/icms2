@@ -1145,7 +1145,7 @@ class cmsModel{
         $item = $this->db->fetchAssoc($result);
 
         if(is_callable($item_callback)){
-            $item = $item_callback( $item, $this );
+            $item = call_user_func_array($item_callback, array($item, $this));
         }
 
         // если указан ключ кеша для этого запроса
@@ -1267,7 +1267,7 @@ class cmsModel{
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)){
-                $item = $item_callback( $item, $this );
+                $item = call_user_func_array($item_callback, array($item, $this));
                 if ($item===false){ continue; }
             }
 
