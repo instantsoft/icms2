@@ -93,7 +93,7 @@ class cmsConfig {
             $protocol = 'https://';
             $this->host = str_replace('http://', $protocol, $this->host);
             if(!empty($replace_upload_host_protocol)){
-                $this->upload_host_abs = str_replace('http://', $protocol, $this->host);
+                $this->upload_host_abs = str_replace('http://', $protocol, $this->upload_host_abs);
             }
         }
 

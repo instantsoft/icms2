@@ -77,5 +77,10 @@ function lang_slug($string){
  * @return mixed
  */
 function lang_setlocale() {
-    return setlocale(LC_ALL, 'ru_RU.UTF-8');
+
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    setlocale(LC_NUMERIC, 'en_US.UTF-8');
+
+    return true;
+
 }
