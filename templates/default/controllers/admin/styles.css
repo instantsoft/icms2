@@ -81,7 +81,13 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     min-height: 100%;
     display:block;
 }
-
+#popup-manager.popup-show ~ div {
+    -webkit-filter:blur(2px);
+    -moz-filter:blur(2px);
+    -ms-filter:blur(2px);
+    -o-filter:blur(2px);
+    filter:blur(2px);
+}
 #cp_body .pad { height:30px; clear:both; }
 
 #cp_footer{
@@ -1771,5 +1777,29 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     }
     #dashboard .col:first-child {
         margin-top: 0;
+    }
+    #cp_header #menu li .wrap {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+@media screen and (max-width: 800px) {
+    #cp_top_line #left_links {
+        display: none;
+    }
+    #cp_header #logo {
+        position: absolute;
+        top: -22px;
+        left: 10px;
+    }
+    #cp_header {
+        padding: 0;
+    }
+}
+@media screen and (max-width: 640px) {
+    #cp_header #menu li .wrap {
+        padding-right: 5px;
+        padding-left: 5px;
+        font-size: 0.95em;
     }
 }

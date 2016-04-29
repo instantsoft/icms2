@@ -102,15 +102,13 @@ class fieldList extends cmsFormField {
 
         if (!is_array($value)){
 
-            $model->filterEqual($this->name, $value);
+            return $model->filterEqual($this->name, $value);
 
         } else {
 
-            $model->filterIn($this->name, $value);
+            return $model->filterIn($this->name, $value);
 
         }
-
-        return $model;
 
     }
 

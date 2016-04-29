@@ -151,8 +151,9 @@ class content extends cmsFrontend {
 			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
 			if (!$value) { continue; }
 
-			$this->model = $field['handler']->applyFilter($this->model, $value);
-			$filters[$name] = $value;
+			if($field['handler']->applyFilter($this->model, $value) !== false){
+                $filters[$name] = $value;
+            }
 
 		}
 
@@ -170,11 +171,14 @@ class content extends cmsFrontend {
 				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType(true));
 				if (!$value) { continue; }
 
-				$this->model->filterPropValue($ctype['name'], $prop, $value);
+				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
-				$filters[$name] = $value;
+                    $filters[$name] = $value;
+
+                }
 
 			}
+
 		}
 
         // Приватность

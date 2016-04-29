@@ -9,6 +9,7 @@ class cmsModel{
     public $table      = '';
     public $select     = array('i.*');
     public $distinct   = '';
+    public $straight_join = '';
     public $join       = '';
     public $where      = '';
     public $where_separator  = 'AND';
@@ -518,15 +519,21 @@ class cmsModel{
         $this->limit        = '';
         $this->join         = '';
         $this->distinct     = '';
+        $this->straight_join = '';
 
 		if ($this->keep_filters) { return; }
 
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
+        $this->is_prop_table_joined = false;
 
         return $this;
 
+    }
+
+    public function setStraightJoin() {
+        $this->straight_join = 'STRAIGHT_JOIN'; return $this;
     }
 
     public function distinctSelect() {
@@ -1176,7 +1183,7 @@ class cmsModel{
 
     public function getCount($table_name, $by_field='id'){
 
-        $sql = "SELECT {$this->distinct} COUNT(i.{$by_field}) as count
+        $sql = "SELECT {$this->distinct} {$this->straight_join} COUNT(i.{$by_field}) as count
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 
@@ -1301,7 +1308,7 @@ class cmsModel{
 
         $select = implode(', ', $this->select);
 
-        $sql = "SELECT {$this->distinct} {$select}
+        $sql = "SELECT {$this->distinct} {$this->straight_join} {$select}
                 FROM {#}{$this->table} i
                 {$this->index_action}";
 

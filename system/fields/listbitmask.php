@@ -124,16 +124,14 @@ class fieldListBitmask extends cmsFormField {
 
     public function applyFilter($model, $values) {
 
-		if (!is_array($values)) { return $model; }
+		if (!is_array($values)) { return parent::applyFilter($model, $values); }
 
 		$filter = $this->parseValue($values);
-        if (!$filter) { return $model; }
+        if (!$filter) { return parent::applyFilter($model, $values); }
 
 		$filter = str_replace('0', '_', $filter) . '%';
 
-		$model->filterLike($this->name, $filter);
-
-        return $model;
+		return $model->filterLike($this->name, $filter);
 
     }
 

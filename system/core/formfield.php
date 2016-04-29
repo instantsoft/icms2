@@ -175,7 +175,7 @@ class cmsFormField {
 
     public function getStringValue($value){ return $this->parse($value); }
 
-    public function applyFilter($model, $value) { return true; }
+    public function applyFilter($model, $value) { return false; }
 
     public function store($value, $is_submitted, $old_value=null){
        return $value;

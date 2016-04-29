@@ -76,19 +76,25 @@ class fieldAge extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!is_array($value)) { return $model; }
+        if (!is_array($value)) { return parent::applyFilter($model, $value); }
 
-        if (!empty($value['from'])){
-            $from = intval($value['from']);
-            $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+        if(!empty($value['from']) || !empty($value['to'])){
+
+            if (!empty($value['from'])){
+                $from = intval($value['from']);
+                $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+            }
+
+            if (!empty($value['to'])){
+                $to = intval($value['to']);
+                $model->filterDateYounger($this->name, $to, $this->getOption('range'));
+            }
+
+            return $model;
+
         }
 
-        if (!empty($value['to'])){
-            $to = intval($value['to']);
-            $model->filterDateYounger($this->name, $to, $this->getOption('range'));
-        }
-
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 

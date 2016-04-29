@@ -205,9 +205,9 @@ class users extends cmsFrontend {
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
 
-            $this->model = $field['handler']->applyFilter($this->model, $value);
-
-            $filters[$name] = $value;
+            if($field['handler']->applyFilter($this->model, $value) !== false){
+                $filters[$name] = $value;
+            }
 
         }
 

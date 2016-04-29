@@ -71,9 +71,9 @@ class fieldNumber extends cmsFormField {
 
         if (!is_array($value)){
 
-            $model->filterEqual($this->name, "{$value}");
+            return $model->filterEqual($this->name, "{$value}");
 
-        } else {
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, $value['from']);
@@ -82,9 +82,11 @@ class fieldNumber extends cmsFormField {
                 $model->filterLtEqual($this->name, $value['to']);
             }
 
+            return $model;
+
         }
 
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 

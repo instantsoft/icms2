@@ -1385,13 +1385,15 @@ class modelContent extends cmsModel{
         $table_name  = $this->table_prefix.$ctype_name.'_props_values';
         $table_alias = 'p'.$prop['id'];
 
-        $this->joinInner($table_name, $table_alias, "{$table_alias}.item_id = i.id");
+        if($prop['handler']->setName($table_alias.'.value')->applyFilter($this, $value) !== false){
 
-        $this->filterEqual($table_alias.'.prop_id', $prop['id']);
+            $this->joinInner($table_name, $table_alias, "{$table_alias}.item_id = i.id")->setStraightJoin();
 
-        $prop['handler']->setName($table_alias.'.value')->applyFilter($this, $value);
+            return $this->filterEqual($table_alias.'.prop_id', $prop['id']);
 
-        return $this;
+        }
+
+        return false;
 
     }
 

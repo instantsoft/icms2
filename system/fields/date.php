@@ -60,9 +60,9 @@ class fieldDate extends cmsFormField {
             $date_start = date('Y-m-d', strtotime($value));
             $date_final = date('Y-m-d', strtotime($value)+60*60*24);
 
-            $model->filterBetween($this->name, $date_start, $date_final);
+            return $model->filterBetween($this->name, $date_start, $date_final);
 
-        } else {
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, date('Y-m-d', strtotime($value['from'])));
@@ -71,9 +71,11 @@ class fieldDate extends cmsFormField {
                 $model->filterLtEqual($this->name, date('Y-m-d', strtotime($value['to'])+60*60*24));
             }
 
+            return $model;
+
         }
 
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 
