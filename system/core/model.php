@@ -526,7 +526,6 @@ class cmsModel{
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
-        $this->is_prop_table_joined = false;
 
         return $this;
 

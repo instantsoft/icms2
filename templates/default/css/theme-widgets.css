@@ -5,10 +5,13 @@
     margin-bottom:10px;
 }
 
-.widget:last-child {
+.widget_ajax_wrap:last-child .widget:last-child {
     margin-bottom: 0;
 }
-
+.widget_ajax_wrap {
+    position: relative;
+    box-sizing: border-box;
+}
 .widget > .title{
     padding:0 15px;
     height:47px;

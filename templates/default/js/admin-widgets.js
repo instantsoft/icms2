@@ -86,6 +86,23 @@ $(function() {
 
     $( "#cp-widgets-list #accordion a" ).eq(0).trigger('click');
 
+    var sb = $('#datatree').parent();
+    $(sb).after('<td id="slide_cell"></td>');
+    $('#slide_cell').on('click', function (){
+        if($(sb).is(':visible')){
+            $(sb).hide();
+            $(this).addClass('unslided');
+        } else {
+            $(sb).show();
+            $(this).removeClass('unslided');
+        }
+    });
+    $(window).on('resize', function(){
+        if(!$(sb).is(':visible')){
+            $('#slide_cell').addClass('unslided');
+        }
+    }).triggerHandler('resize');
+
 });
 
 function widgetsSelectPage(key){

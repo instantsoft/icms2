@@ -568,7 +568,26 @@ aside .menu .item{
     #body section { width:100% !important; }
     nav { padding:5px; height:auto; }
     nav .menu { display:none; }
-    nav select { display: block; }
+    nav select {
+        position: relative;
+        display: inline-block;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: #FFF;
+        font-size: 14px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 28px;
+        line-height: 20px;
+        background: url(../images/icons32/menu-icon.svg) no-repeat center right;
+    }
+    nav select option {
+        color: #333;
+        background: #FFF;
+        transition: all 0.3s ease;
+    }
     #layout footer #info { display: none !important; }
 }
 

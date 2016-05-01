@@ -29,9 +29,9 @@ $(document).ready(function(){
     var dropdown = $("<select>").appendTo("nav");
     $("<option value='/'></option>").appendTo(dropdown);
 
-    $("nav > .menu li > a").each(function() {
+    $("nav .menu li > a").each(function() {
         var el = $(this);
-        var nav_level = $("nav > .menu").parents().length;
+        var nav_level = $("nav .menu").parents().length;
         var el_level = $(this).parents().length - nav_level;
         var pad = new Array(el_level-2 + 1).join('-') + ' ';
         var attr = {

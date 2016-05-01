@@ -33,12 +33,12 @@
 
         <header>
             <div id="logo"><a href="<?php echo href_to_home(); ?>"></a></div>
-            <?php $this->widgets('header', false, 'wrapper_plain'); ?>
+            <div class="widget_ajax_wrap" id="widget_pos_header"><?php $this->widgets('header', false, 'wrapper_plain'); ?></div>
         </header>
 
         <?php if($this->hasWidgetsOn('top')) { ?>
             <nav>
-                <?php $this->widgets('top', false, 'wrapper_plain'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_top"><?php $this->widgets('top', false, 'wrapper_plain'); ?></div>
             </nav>
         <?php } ?>
 
@@ -66,7 +66,7 @@
 
             <section style="width:<?php echo $section_width; ?>">
 
-                <?php $this->widgets('left-top'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_left-top"><?php $this->widgets('left-top'); ?></div>
 
                 <?php if ($this->isBody()){ ?>
                     <article>
@@ -75,21 +75,19 @@
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
                         <?php } ?>
-                        <?php $this->body(); ?>
+                        <div id="controller_wrap"><?php $this->body(); ?></div>
                     </article>
                 <?php } ?>
 
-                <?php $this->widgets('left-bottom'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_left-bottom"><?php $this->widgets('left-bottom'); ?></div>
 
             </section>
 
             <?php if($is_sidebar){ ?>
                 <aside>
-                    <?php $this->widgets('right-top'); ?>
-
-                    <?php $this->widgets('right-center'); ?>
-
-                    <?php $this->widgets('right-bottom'); ?>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-top"><?php $this->widgets('right-top'); ?></div>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-center"><?php $this->widgets('right-center'); ?></div>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-bottom"><?php $this->widgets('right-bottom'); ?></div>
                 </aside>
             <?php } ?>
 
@@ -142,7 +140,7 @@
                     <?php } ?>
                 </li>
                 <li id="nav">
-                    <?php $this->widgets('footer', false, 'wrapper_plain'); ?>
+                    <div class="widget_ajax_wrap" id="widget_pos_footer"><?php $this->widgets('footer', false, 'wrapper_plain'); ?></div>
                 </li>
             </ul>
         </footer>
