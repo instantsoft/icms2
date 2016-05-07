@@ -4,6 +4,8 @@ class actionContentItemView extends cmsAction {
 
     public function run(){
 
+        $props = $props_values = false;
+
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
 
@@ -152,11 +154,17 @@ class actionContentItemView extends cmsAction {
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_item', $item);
+        cmsModel::cacheResult('current_ctype_fields', $fields);
+        cmsModel::cacheResult('current_ctype_props', $props);
+
         return $this->cms_template->render('item_view', array(
             'ctype'        => $ctype,
             'fields'       => $fields,
-            'props'        => isset($props) ? $props : false,
-            'props_values' => isset($props_values) ? $props_values : false,
+            'props'        => $props,
+            'props_values' => $props_values,
             'item'         => $item,
             'is_moderator' => $is_moderator,
             'user'         => $this->cms_user

@@ -112,6 +112,10 @@ class actionContentCategoryView extends cmsAction {
 			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
 		}
 
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_category', $category);
+
         return $this->cms_template->render('category_view', array(
             'is_frontpage' => $is_frontpage,
             'is_hide_items' => $is_hide_items,

@@ -127,6 +127,8 @@ class content extends cmsFrontend {
 
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
 
+        $props = $props_fields = false;
+
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
@@ -233,6 +235,10 @@ class content extends cmsFrontend {
         list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 
+        cmsModel::cacheResult('current_ctype_fields', $fields);
+        cmsModel::cacheResult('current_ctype_props', $props);
+        cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
+
         $this->cms_template->setContext($this);
 
         $html = $this->cms_template->renderContentList($ctype, array(
@@ -240,8 +246,8 @@ class content extends cmsFrontend {
             'page_url'          => $page_url,
             'ctype'             => $ctype,
             'fields'            => $fields,
-            'props'             => isset($props) ? $props : false,
-            'props_fields'      => isset($props_fields) ? $props_fields : false,
+            'props'             => $props,
+            'props_fields'      => $props_fields,
             'filters'           => $filters,
             'page'              => $page,
             'perpage'           => $perpage,

@@ -37,7 +37,7 @@ class fieldUrl extends cmsFormField {
             $href = cmsConfig::get('root') . 'redirect?url=' . $href;
         }
 
-        return '<a href="'.htmlspecialchars($href).'">'.$value.'</a>';
+        return '<a rel="nofollow noopener noreferrer" target="_blank" href="'.htmlspecialchars($href).'">'.$value.'</a>';
 
     }
 

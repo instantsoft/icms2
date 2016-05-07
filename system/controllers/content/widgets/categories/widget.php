@@ -7,28 +7,31 @@ class widgetContentCategories extends cmsWidget {
 
         $ctype_name = $this->getOption('ctype_name');
 
-        $slug = null;
+        $active_cat = false;
 
         if (!$ctype_name){
 
-            $core = cmsCore::getInstance();
+            $ctype = cmsModel::getCachedResult('current_ctype');
+            if(!$ctype){ return false; }
 
-            if ($core->controller != 'content'){ return false; }
+            $ctype_name = $ctype['name'];
 
-			$uri_segs = explode('/', $core->uri);
-			
-            $ctype_string = $uri_segs[0];
-            $slug = !mb_strstr($core->uri, '.html') ? mb_substr($core->uri, mb_strlen($ctype_string)+1) : null;
+            if(strpos(cmsCore::getInstance()->uri, '.html') === false){
 
-			$matches = array();
-			
-            if (preg_match('/^([a-z0-9]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[0];
-            } else
-            if (preg_match('/^([a-z0-9]+)-([a-z0-9_]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[1];
+                $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
+                if(!empty($current_ctype_category['id'])){
+                    $active_cat = $current_ctype_category;
+                }
+
             } else {
-                return false;
+
+                $item = cmsModel::getCachedResult('current_ctype_item');
+                if(!$item){ return false; }
+
+                if(!empty($item['category'])){
+                    $active_cat = $item['category'];
+                }
+
             }
 
         }
@@ -36,26 +39,19 @@ class widgetContentCategories extends cmsWidget {
         $model = cmsCore::getModel('content');
 
         $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
-
         if (!$cats) { return false; }
 
-        $active_cat = array('id'=>0);
-
-        foreach($cats as $id=>$cat){
-            if (($cat['slug'] === $slug) || (!$cat['slug'] && !$slug)){
-                $active_cat = $cat;
-                break;
-            }
+        if(!$active_cat){
+            $active_cat = reset($cats);
         }
 
         $path = $model->getCategoryPath($ctype_name, $active_cat);
 
         return array(
             'ctype_name' => $ctype_name,
-            'cats' => $cats,
+            'cats'       => $cats,
             'active_cat' => $active_cat,
-            'path' => $path,
-            'slug' => $slug,
+            'path'       => $path
         );
 
     }
