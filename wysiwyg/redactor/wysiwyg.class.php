@@ -33,8 +33,9 @@ class cmsWysiwygRedactor{
                         replaceDivs: false,
                         removeComments: true,
                         convertLinks: false,
-						<?php if ($user->is_admin) { ?>
-                            buttonSource: true
+                        pastePlainText: true,
+						<?php if (!$user->is_admin) { ?>
+                            buttonsHide: ['html']
 						<?php } ?>
                     });
                     <?php if(!cmsCore::getInstance()->request->isAjax()){ ?>

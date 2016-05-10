@@ -113,6 +113,9 @@ class formUsersField extends cmsForm {
                     new fieldCheckbox('options:is_email', array(
                         'title' => LANG_VALIDATE_EMAIL,
                     )),
+                    new fieldCheckbox('options:is_unique', array(
+                        'title' => LANG_VALIDATE_UNIQUE,
+                    )),
                 )
             ),
             'values' => array(

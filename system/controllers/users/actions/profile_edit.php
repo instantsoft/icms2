@@ -21,7 +21,7 @@ class actionUsersProfileEdit extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('{users}');
+        $fields = $content_model->getContentFields('{users}', $profile['id']);
 
         // Строим форму
         $form = new cmsForm();
