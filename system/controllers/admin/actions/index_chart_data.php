@@ -25,6 +25,7 @@ class actionAdminIndexChartData extends cmsAction {
         if (!$source) { cmsCore::error404(); }
 
         $data = $this->getData($source, $period);
+		$data = $data ? $data : array();
         $data_formatted = array();
         $result = array();
 
