@@ -175,9 +175,9 @@ class modelComments extends cmsModel{
 
     public function getCommentsCount(){
 
-        $count = $this->getCount('comments');
+        $this->useCache('comments.list');
 
-        return $count;
+        return $this->getCount('comments');
 
     }
 
@@ -197,7 +197,7 @@ class modelComments extends cmsModel{
             $this->orderBy('ordering');
         }
 
-        $this->useCache("comments.list");
+        $this->useCache('comments.list');
 
         return $this->get('comments', function($item, $model){
 
@@ -243,7 +243,7 @@ class modelComments extends cmsModel{
 
     public function getTracking($user_id){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         $this->filterEqual('user_id', $user_id);
 
@@ -299,7 +299,7 @@ class modelComments extends cmsModel{
 
     public function getTrackingUsers(){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         return $this->get('comments_tracks', function($item, $model){
             return $item['user_id'];

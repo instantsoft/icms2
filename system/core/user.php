@@ -47,6 +47,15 @@ class cmsUser {
 
     }
 
+    /**
+     * Для var_export
+     * @param array $data
+     * @return \cmsUser
+     */
+    public static function __set_state($data) {
+        return self::getInstance();
+    }
+
     public function __construct(){
 
         $config = cmsConfig::getInstance();

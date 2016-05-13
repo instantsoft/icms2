@@ -10,9 +10,9 @@ class cmsCacheFiles {
     public function set($key, $value, $ttl){
 
         $data = array(
-            'ttl' => $ttl,
-            'time' => time(),
-            'value' => serialize($value)
+            'ttl'   => $ttl,
+            'time'  => time(),
+            'value' => $value
         );
 
         list($path, $file) = $this->getPathAndFile($key);
@@ -21,7 +21,7 @@ class cmsCacheFiles {
         @chmod($path, 0777);
         @chmod(pathinfo($path, PATHINFO_DIRNAME), 0777);
 
-        return file_put_contents($file, serialize($data));
+        return file_put_contents($file, '<?php return '.var_export($data, true).';');
 
     }
 
@@ -37,18 +37,15 @@ class cmsCacheFiles {
 
         list($path, $file) = $this->getPathAndFile($key);
 
-        $data = file_get_contents($file);
-
+        $data = include $file;
         if (!$data) { return false; }
-
-        $data = unserialize($data);
 
         if (time() > $data['time'] + $data['ttl']){
             $this->clean($key);
             return false;
         }
 
-        return unserialize($data['value']);
+        return $data['value'];
 
     }
 

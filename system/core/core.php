@@ -719,6 +719,8 @@ class cmsCore {
 
     public function runWidget($widget){
 
+        $result = false;
+
         $user = cmsUser::getInstance();
 
         $is_user_view = $user->isInGroups($widget['groups_view']);
@@ -743,7 +745,11 @@ class cmsCore {
         $cache_key = "widgets.{$widget['id']}";
         $cache = cmsCache::getInstance();
 
-        if (!$widget_object->isCacheable() || false === ($result = $cache->get($cache_key))){
+        if($widget_object->isCacheable()){
+            $result = $cache->get($cache_key);
+        }
+
+        if ($result === false){
             $result = call_user_func_array(array($widget_object, 'run'), array());
             if ($result){
                 // Отдельно кешируем имя шаблона виджета, поскольку оно могло быть
@@ -751,7 +757,9 @@ class cmsCore {
                 // который возвращается кодом виджета (без самих свойств $widget_object)
                 $result['_wd_template'] = $widget_object->getTemplate();
             }
-            $cache->set($cache_key, $result);
+            if($widget_object->isCacheable()){
+                $cache->set($cache_key, $result);
+            }
         }
 
         if ($result===false) { return false; }

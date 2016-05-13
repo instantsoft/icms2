@@ -420,6 +420,8 @@ class modelContent extends cmsModel{
 
         $id = $this->insert($fields_table_name, $field);
 
+        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+
         // если есть опция полнотекстового поиска
         if(!$is_virtual && is_array($field['options']) && !empty($field['options']['in_fulltext_search'])){
             // получаем полнотекстовый индекс для таблицы, он может быть только один
@@ -454,6 +456,8 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
+        $this->useCache("content.fields.{$ctype_name}");
+
         return $this->getCount($table_name);
 
     }
@@ -465,12 +469,11 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->ctype_name = $ctype_name;
-        $this->item_id = $item_id;
+        $this->useCache("content.fields.{$ctype_name}");
 
         $this->orderBy('ordering');
 
-        return $this->get($table_name, function($item, $model){
+        return $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
@@ -487,10 +490,10 @@ class modelContent extends cmsModel{
             if ($item['options']['is_email']) {  $rules[] = array('email'); }
 
             if ($item['options']['is_unique']) {
-                if (!$model->item_id){
-                    $rules[] = array('unique', $model->table_prefix . $model->ctype_name, $item['name']);
+                if (!$item_id){
+                    $rules[] = array('unique', $model->table_prefix . $ctype_name, $item['name']);
                 } else {
-                    $rules[] = array('unique_exclude', $model->table_prefix . $model->ctype_name, $item['name'], $model->item_id);
+                    $rules[] = array('unique_exclude', $model->table_prefix . $ctype_name, $item['name'], $item_id);
                 }
             }
 
@@ -535,6 +538,8 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
+        $this->useCache("content.fields.{$ctype_name}");
+
         return $this->getItemById($table_name, $id, function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -571,6 +576,8 @@ class modelContent extends cmsModel{
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
         $this->reorderByList($table_name, $fields_ids_list);
+
+        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
         return true;
 
@@ -698,7 +705,11 @@ class modelContent extends cmsModel{
 
         }
 
-        return $this->update($fields_table_name, $id, $field);
+        $result = $this->update($fields_table_name, $id, $field);
+
+        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+
+        return $result;
 
     }
 
@@ -737,9 +748,13 @@ class modelContent extends cmsModel{
 
 		$fields_table_name = $this->table_prefix . $ctype_name . '_fields';
 
-		return $this->update($fields_table_name, $id, array(
+		$result = $this->update($fields_table_name, $id, array(
 			$mode => $is_visible
 		));
+
+        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+
+        return $result;
 
 	}
 
@@ -765,6 +780,8 @@ class modelContent extends cmsModel{
         $this->delete($fields_table_name, $id);
         $this->reorder($fields_table_name);
 
+        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+
         $this->db->dropTableField($content_table_name, $field['name']);
 
         if($field['parser']->is_denormalization){
@@ -788,6 +805,8 @@ class modelContent extends cmsModel{
         }
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
+
+        $this->useCache("content.fields.{$ctype_name}");
 
         $this->groupBy('fieldset');
         $this->orderBy('fieldset');
@@ -1778,6 +1797,8 @@ class modelContent extends cmsModel{
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
+
+        $this->useCache("content.list.{$ctype_name}");
 
         return $this->getCount($table_name);
 

@@ -6,7 +6,7 @@ class fieldImage extends cmsFormField {
     public $sql         = 'text';
     public $allow_index = false;
     public $var_type    = 'array';
-    private $teaser_url = '';
+    protected $teaser_url = '';
 
     public function getOptions(){
 

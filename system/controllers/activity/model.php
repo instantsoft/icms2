@@ -54,7 +54,7 @@ class modelActivity extends cmsModel{
 
     public function addEntry($entry){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->insert('activity', $entry);
 
@@ -62,7 +62,7 @@ class modelActivity extends cmsModel{
 
     public function updateEntry($type_id, $subject_id, $entry){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->
                     filterEqual('type_id', $type_id)->
@@ -73,7 +73,7 @@ class modelActivity extends cmsModel{
 
     public function deleteEntry($type_id, $subject_id){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->
                     filterEqual('type_id', $type_id)->
@@ -84,7 +84,7 @@ class modelActivity extends cmsModel{
 
     public function deleteEntryById($entry_id){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->delete('activity', $entry_id);
 
@@ -92,7 +92,7 @@ class modelActivity extends cmsModel{
 
     public function deleteEntries($type_id){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->delete('activity', $type_id, 'type_id');
 
@@ -100,7 +100,7 @@ class modelActivity extends cmsModel{
 
     public function deleteUserEntries($user_id){
 
-        cmsCache::getInstance()->clean("activity.entries");
+        cmsCache::getInstance()->clean('activity.entries');
 
         return $this->delete('activity', $user_id, 'user_id');
 
@@ -110,6 +110,8 @@ class modelActivity extends cmsModel{
 //============================================================================//
 
     public function getEntriesCount(){
+
+        $this->useCache('activity.entries');
 
         return $this->getCount('activity');
 
@@ -128,7 +130,7 @@ class modelActivity extends cmsModel{
             $this->orderBy('date_pub', 'desc');
         }
 
-        $this->useCache("activity.entries");
+        $this->useCache('activity.entries');
 
         return $this->get('activity', function($item, $model){
 
@@ -147,24 +149,24 @@ class modelActivity extends cmsModel{
             }
 
             $item['images'] = cmsModel::yamlToArray($item['images']);
-			
+
 			if ($item['images']){
-				
+
 				$config = cmsConfig::getInstance();
 				$images_exist = array();
-				
+
 				foreach($item['images'] as $idx=>$image){
 					if (mb_substr($image['src'], 0, 7)!='http://') {
 						if (!file_exists($config->upload_path . '/' . $image['src'])){
 							continue;
-						}						
+						}
 						$image['src'] = $config->upload_host . '/' . $image['src'];
 					}
 					$images_exist[] = $image;
 				}
-				
+
 				$item['images'] = $images_exist;
-				
+
 			}
 
             $item['description'] = sprintf($item['description'], $link);

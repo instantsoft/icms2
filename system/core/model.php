@@ -1239,6 +1239,8 @@ class cmsModel{
 
         $this->table = $table_name;
 
+        $items = $_items = array();
+
         $sql = $this->getSQL();
 
         // сбрасываем фильтры
@@ -1249,11 +1251,33 @@ class cmsModel{
         if ($this->cache_key){
 
             $cache_key = $this->cache_key . '.' . md5($sql);
+
             $cache = cmsCache::getInstance();
 
-            if (false !== ($items = $cache->get($cache_key))){
+            $_items = $cache->get($cache_key);
+
+            if ($_items !== false){
+
                 $this->stopCache();
+
+                // обрабатываем коллбэком
+                if (is_callable($item_callback)){
+
+                    foreach ($_items as $key => $item) {
+
+                        $item = call_user_func_array($item_callback, array($item, $this));
+                        if ($item === false){ continue; }
+
+                        $items[$key] = $item;
+
+                    }
+
+                } else {
+                    return $_items;
+                }
+
                 return $items;
+
             }
 
         }
@@ -1263,18 +1287,25 @@ class cmsModel{
         // если запрос ничего не вернул, возвращаем ложь
         if (!$this->db->numRows($result)){ return false; }
 
-        $items = array();
-
         // перебираем все вернувшиеся строки
         while($item = $this->db->fetchAssoc($result)){
 
             $key = $key_field ? $item[$key_field] : false;
 
+            // для кеша формируем массив без обработки коллбэком
+            if ($this->cache_key){
+                if ($key){
+                    $_items[$key] = $item;
+                } else {
+                    $_items[] = $item;
+                }
+            }
+
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)){
                 $item = call_user_func_array($item_callback, array($item, $this));
-                if ($item===false){ continue; }
+                if ($item === false){ continue; }
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -1288,8 +1319,9 @@ class cmsModel{
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
+        // сохраняем не обработанный коллбэком массив
         if ($this->cache_key){
-            $cache->set($cache_key, $items);
+            $cache->set($cache_key, $_items);
             $this->stopCache();
         }
 

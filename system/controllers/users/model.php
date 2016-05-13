@@ -8,6 +8,8 @@ class modelUsers extends cmsModel{
 
     public function getUsersCount(){
 
+        $this->useCache('users.list');
+
         return $this->getCount('{users}');
 
     }
