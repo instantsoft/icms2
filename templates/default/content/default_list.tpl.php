@@ -44,7 +44,7 @@
                 <?php foreach($fields as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if (empty($item[$field['name']])) { continue; } ?>
+                    <?php if (empty($item[$field['name']]) && $item[$field['name']] !=="0") { continue; } ?>
                     <?php if ($field['is_system']) { continue; } ?>
                     <?php if (!$field['is_in_list']) { continue; } ?>
                     <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>

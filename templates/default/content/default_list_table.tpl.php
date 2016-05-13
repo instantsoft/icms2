@@ -64,7 +64,7 @@
                         <?php foreach($fields as $field){ ?>
                                 <?php if (!$field['is_in_list']) { continue; } ?>
                                 <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                                <?php if (empty($item[$field['name']])) { echo '<td>&nbsp;</td>'; continue; } ?>
+                                <?php if (empty($item[$field['name']]) && $item[$field['name']] !=="0") { echo '<td>&nbsp;</td>'; continue; } ?>
                                 <td class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
                                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                                         <?php if ($item['parent_id']){ ?>
