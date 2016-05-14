@@ -463,9 +463,11 @@ class cmsController {
     public function getForm($form_name, $params=false, $path_prefix=''){
 
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
-        $form_name = $this->name . $form_name;
+        $form_name = $this->name . '_' . $form_name;
 
-        return cmsForm::getForm($form_file, $form_name, $params);
+        $form = cmsForm::getForm($form_file, $form_name, $params);
+
+		return cmsEventsManager::hook('form_'.$form_name, $form);
 
     }
 
