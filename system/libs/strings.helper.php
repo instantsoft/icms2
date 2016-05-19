@@ -553,7 +553,9 @@ function string_compress($string){
  * @param type $value
  * @return type
  */
-function array_collection_to_list($collection, $key, $value){
+function array_collection_to_list($collection, $key, $value=false){
+
+    $value = $value ?: $key;
 
     $list = array();
 
