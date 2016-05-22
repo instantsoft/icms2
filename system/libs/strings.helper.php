@@ -555,7 +555,7 @@ function string_compress($string){
  */
 function array_collection_to_list($collection, $key, $value=false){
 
-    $value = $value ?: $key;
+    $value = $value ? $value : $key;
 
     $list = array();
 
