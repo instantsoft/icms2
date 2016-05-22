@@ -202,6 +202,7 @@
     define('LANG_CP_PROP_VALUES',               'List items');
     define('LANG_CP_PROP_VALUES_HINT',          'One item in a row');
     define('LANG_CP_PROP_CATS',                 'Bind property to categories');
+    define('LANG_CP_PROP_UNITS',                'Units');
 
     define('LANG_CP_DATASET',                   'Dataset');
     define('LANG_CP_DATASET_ADD',               'Add dataset');

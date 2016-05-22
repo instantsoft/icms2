@@ -153,7 +153,7 @@ function files_format_bytes($bytes) {
     $gb = 1073741824;
 
     if (round($bytes / $gb) > 0) {
-        return ceil($bytes / $gb) . ' ' . LANG_GB;
+        return round(($bytes / $gb), 1, PHP_ROUND_HALF_UP). ' ' . LANG_GB;
     }
 
     if (round($bytes / $mb) > 0) {
