@@ -4,30 +4,30 @@
 
     define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
     define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
-    define('LANG_CP_DASHBOARD_RESOURCES',       'Resources');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');
 
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP Version');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory Limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
-    define('LANG_CP_DASHBOARD_SI_ROOT',         'Site root folder');
-    define('LANG_CP_DASHBOARD_SI_MAX',          'Max uploaded file size');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Max. file upload size');
     define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
 
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General Sponsor');
 
-    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official web site');
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official Site');
     define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Documentation');
-    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Plugins repository');
-    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community forums');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Addons');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community Forum');
 
     define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
     define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
 
     define('LANG_CP_DASHBOARD_PREMIUM',         'Premium components');
     define('LANG_CP_DASHBOARD_BILLING',         'Billing');
-    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Earn on your website');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Make money on your site');
     define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Professional video catalog');
     define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Object catalog on the map');
 
@@ -82,7 +82,7 @@
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES',                'Categories');
-    define('LANG_CP_CATEGORIES_ON',             'Categories enabled');
+    define('LANG_CP_CATEGORIES_ON',             'Enable categories');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Show items from child categories in parent category');
 	define('LANG_CP_CATEGORIES_EMPTY_ROOT',		"Don't show items in root category");
 	define('LANG_CP_CATEGORIES_MULTI',			'Allow multiple categories for single item');
@@ -98,10 +98,10 @@
     define('LANG_CP_CT_GROUPS_ALLOW',           'This content can be posted inside groups');
     define('LANG_CP_CT_GROUPS_ALLOW_ONLY',      '...and only inside groups');
     define('LANG_CP_COMMENTS',                  'Comments');
-    define('LANG_CP_COMMENTS_ON',               'Comments enabled');
+    define('LANG_CP_COMMENTS_ON',               'Enable comments');
     define('LANG_CP_RATING',                    'Rating');
-    define('LANG_CP_RATING_ON',                 'Rating enabled');
-    define('LANG_CP_TAGS_ON',                   'Tags enabled');
+    define('LANG_CP_RATING_ON',                 'Enable rating');
+    define('LANG_CP_TAGS_ON',                   'Enable tags');
     define('LANG_CP_TAGS_IN_LIST',              'Show tags in list view');
     define('LANG_CP_TAGS_IN_ITEM',              'Show tags in item view');
     define('LANG_CP_PHOTOS',                    'Images');
@@ -193,14 +193,14 @@
     define('LANG_CP_PROPS_NO_CATS',             'Content type &laquo;%s&raquo; has no categories.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create property');
-    define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete property "{title}"? Property will be removed from all categories');
+    define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete the "{title}" property?\n The property will be removed from all categories');
     define('LANG_CP_PROPS_BIND',                'Bind property');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'including nested categories');
     define('LANG_CP_PROPS_UNBIND',              'Unbind property');
     define('LANG_CP_PROP_TITLE',                'Property title');
     define('LANG_CP_PROP_IS_ACTIVE',            'Show property on the site');
     define('LANG_CP_PROP_VALUES',               'List items');
-    define('LANG_CP_PROP_VALUES_HINT',          'One item in a row');
+    define('LANG_CP_PROP_VALUES_HINT',          'One item per line');
     define('LANG_CP_PROP_CATS',                 'Bind property to categories');
     define('LANG_CP_PROP_UNITS',                'Units');
 
@@ -267,13 +267,13 @@
     define('LANG_CP_USER_LOCKED',               'Blocked');
     define('LANG_CP_USER_IS_LOCKED',            'Block user');
     define('LANG_CP_USER_LOCK_UNTIL',           'Block until');
-    define('LANG_CP_USER_LOCK_REASON',          'Block reason');
-    define('LANG_CP_USER_NOT_FOUND',            'User %s is not found');
+    define('LANG_CP_USER_LOCK_REASON',          'Blocking reason');
+    define('LANG_CP_USER_NOT_FOUND',            'User %s not found');
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this ip');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
-    define('LANG_CP_CONTROLLERS_ADD',           'Install extension');
-    define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Component &laquo;%s&raquo; has no settings');
+    define('LANG_CP_CONTROLLERS_ADD',           'Install component');
+    define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'The &laquo;%s&raquo; component has no settings');
 
     define('LANG_CP_SETTINGS_SITE',             'Site');
     define('LANG_CP_SETTINGS_GUI',              'Interface');
@@ -331,7 +331,7 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_USER',   'SMTP user');
     define('LANG_CP_SETTINGS_MAIL_SMTP_PASS',   'SMTP password');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC',    'SMTP Encryption');
-    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'None');
+    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Without encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
@@ -416,7 +416,7 @@
     define('LANG_CP_FTP_SKIP',				'Skip this step');
     define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if it\'s impossible to do automatic FTP upload and you\'re using manual installation as described in the <a href="http://docs.instantcms.ru/en/manual/addons">user guide</a>');
 
-    define('ERR_VALIDATE_UNIQUE_FIELD',         'The field already exists');
+    define('ERR_VALIDATE_UNIQUE_FIELD',         'Field already exists');
     define('LANG_CP_BACK_TO_SITE',              'Back to site');
     define('LANG_CP_3RDPARTY_CREDITS',          'Third-party credits');
 

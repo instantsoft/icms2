@@ -16,6 +16,14 @@ icms.comments = (function ($) {
             return icms.comments.rate(this, -1);
         });
 
+        $(document).on('click', function(event) {
+            if ($(event.target).closest('#comments_add_form').length) { return; }
+            if ($(event.target).closest($('#comments_add_link > a')).length) { return; }
+            if ($(event.target).closest($('#comments_list .links > a')).length) { return; }
+            icms.comments.restoreForm();
+            event.stopPropagation();
+        });
+
         var anchor = window.location.hash;
         if (!anchor) {return false;}
 
@@ -24,7 +32,7 @@ icms.comments = (function ($) {
 
         icms.comments.show(find_id[1]);
 
-    }
+    };
 
     //=====================================================================//
 
@@ -59,7 +67,7 @@ icms.comments = (function ($) {
         $('textarea', form).val('').focus();
 
         return false;
-    }
+    };
 
     //=====================================================================//
 
@@ -68,9 +76,6 @@ icms.comments = (function ($) {
         var form = $('#comments_add_form form');
 
 		var is_guest = $('.author_data', form).length >0 ? true : false;
-        var content = $('textarea', form).val();
-
-        if (!content) { return; }
 
 		if (is_guest){
 
@@ -91,7 +96,7 @@ icms.comments = (function ($) {
 
         $('.loading', form).show();
         $('.buttons', form).hide();
-        $('textarea', form).attr('disabled', 'disabled');
+        $('textarea', form).prop('disabled', true);
 
         if (action) {form_data.action = action;}
 
@@ -105,22 +110,13 @@ icms.comments = (function ($) {
 
         }, "json");
 
-    }
+    };
 
     //=====================================================================//
 
     this.preview = function () {
-
-        var form = $('#comments_add_form');
-        $('.preview_box', form).hide();
-
-        var content = $('textarea', form).val();
-
-        if (!content) {return;}
-
         this.submit('preview');
-
-    }
+    };
 
     //=====================================================================//
 
@@ -133,12 +129,18 @@ icms.comments = (function ($) {
 
 		if (result.html){
 			var form = $('#comments_add_form');
-			$('.preview_box', form).html( result.html ).slideDown();
+			var preview_box = $('.preview_box', form).html(result.html);
+            if(!$('.preview_box', form).is(':visible')){
+                $(preview_box).fadeIn();
+            } else {
+                $(preview_box).addClass('highlight');
+                setTimeout(function (){ $(preview_box).removeClass('highlight'); }, 500);
+            }
 		}
 
         this.restoreForm(false);
 
-    }
+    };
 
     //=====================================================================//
 
@@ -196,7 +198,7 @@ icms.comments = (function ($) {
 
         return false;
 
-    }
+    };
 
     //=====================================================================//
 
@@ -231,7 +233,7 @@ icms.comments = (function ($) {
 
         }
 
-    }
+    };
 
     //=====================================================================//
 
@@ -249,7 +251,7 @@ icms.comments = (function ($) {
 		this.restoreForm();
 		this.show(result.id);
 
-    }
+    };
 
     //=====================================================================//
 
@@ -265,7 +267,7 @@ icms.comments = (function ($) {
         this.restoreForm();
         this.show(result.id);
 
-    }
+    };
 
     //=====================================================================//
 
@@ -286,7 +288,7 @@ icms.comments = (function ($) {
 
         $('.loading', form).show();
         $('.buttons', form).hide();
-        $('textarea', form).attr('disabled', 'disabled');
+        $('textarea', form).prop('disabled', true);
 
         var url = $('#comments_urls').data('get-url');
 
@@ -306,7 +308,7 @@ icms.comments = (function ($) {
         }, "json");
 
         return false;
-    }
+    };
 
     //=====================================================================//
 
@@ -334,14 +336,14 @@ icms.comments = (function ($) {
 
         }, "json");
         return false;
-    }
+    };
 
     //=====================================================================//
 
     this.toggleTrack = function(checkbox){
         var is_track = checkbox.checked;
 
-        $(checkbox).attr('disabled', 'disabled');
+        $(checkbox).prop('disabled', true);
 
         var form = $('#comments_add_form form');
 
@@ -356,7 +358,7 @@ icms.comments = (function ($) {
 
         $.post(url, form_data, function(result){
 
-            $(checkbox).removeAttr('disabled');
+            $(checkbox).prop('disabled', false);
 
             if (result.error){
                 $(checkbox).attr('checked', !is_track);
@@ -366,7 +368,7 @@ icms.comments = (function ($) {
             icms.events.run('icms_comments_toggletrack', result);
 
         }, "json");
-    }
+    };
 
     //=====================================================================//
 
@@ -376,14 +378,14 @@ icms.comments = (function ($) {
         c.addClass('selected-comment');
         $.scrollTo( c, 500, {offset: {left:0, top:-10}} );
         return false;
-    }
+    };
 
     this.showFirstSelected = function(){
         if (!$('.selected-comment').length) { return false; }
         var c = $('.selected-comment').eq(0);
         $.scrollTo( c, 500, {offset: {left:0, top:-10}} );
         return false;
-    }
+    };
 
     //=====================================================================//
 
@@ -393,14 +395,14 @@ icms.comments = (function ($) {
         $('.nav .scroll-down', c).show().data('child-id', from_id);
         this.show(to_id);
         return false;
-    }
+    };
 
     this.down = function (link){
         var to_id = $(link).data('child-id');
         $(link).hide();
         this.show(to_id);
         return false;
-    }
+    };
 
     //=====================================================================//
 
@@ -439,14 +441,14 @@ icms.comments = (function ($) {
 
         return false;
 
-    }
+    };
 
     //=====================================================================//
 
     this.error = function(message){
         alert(message);
         this.restoreForm(false);
-    }
+    };
 
     this.restoreForm = function(clear_text){
         if (typeof(clear_text)=='undefined'){clear_text = true;}
@@ -455,7 +457,7 @@ icms.comments = (function ($) {
 
         $('.loading', form).hide();
         $('.buttons', form).show();
-        $('textarea', form).removeAttr('disabled');
+        $('textarea', form).prop('disabled', false);
 
         if (clear_text) {
             form.hide();
@@ -465,7 +467,7 @@ icms.comments = (function ($) {
             $('#comments_widget #comments_list .links .reply').show();
             $('.preview_box', form).html('').hide();
         }
-    }
+    };
 
     //=====================================================================//
 

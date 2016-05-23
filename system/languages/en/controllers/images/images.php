@@ -1,6 +1,6 @@
 <?php
 
-    define('LANG_IMAGES_CONTROLLER',     'Images Uploading');
+    define('LANG_IMAGES_CONTROLLER',     'Image upload');
     define('LANG_IMAGES_PRESETS', 'Presets');
     define('LANG_IMAGES_PRESET', 'Preset title');
     define('LANG_IMAGES_PRESET_SIZE', 'Size');
@@ -21,5 +21,5 @@
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_L', 'Left center');
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_R', 'Right center');
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_C', 'Center');
-    define('LANG_IMAGES_PRESET_WM_MARGIN', 'Indent from the edges of the image');
-    define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Delete preset "{title}"?');
+    define('LANG_IMAGES_PRESET_WM_MARGIN', 'Indent from image edges');
+    define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Delete the "{title}” preset?');

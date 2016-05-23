@@ -682,7 +682,12 @@ input.button-submit:hover,
 input.button:hover {
 	background: #3498db;
 }
-
+input.button.button-cancel {
+    background: #95a5a6;
+}
+input.button.button-cancel:hover {
+    background: #7f8c8d;
+}
 input.button-small {
     padding:4px 10px;
 }
@@ -949,28 +954,11 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     padding-left:20px;
     background: url("../images/icons/comment.png") no-repeat left center;
 }
-#comments_widget #comments_add_link a { font-size:16px; }
-
-#comments_widget #comments_add_form {
-    display: none;
-    margin:10px 0;
-    background:#ecf0f1;
-    padding:15px;
-    border-radius: 4px;
-}
+#comments_widget #comments_add_link a { font-size:14px; }
 
 #comments_widget #comments_add_form textarea{
     height:100px;
     margin-bottom:4px;
-}
-
-#comments_widget #comments_add_form .preview_box{
-    margin-bottom:10px;
-    padding:15px;
-    border:solid 4px #B3C2C9;
-    border-radius:6px;
-    background:#FFF;
-    display:none;
 }
 
 #comments_widget #comments_add_form .loading{ display: none; }
@@ -1037,7 +1025,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_list .selected-comment{
     padding:10px;
     background:#FFF;
-    box-shadow: 0 0 12px #B3C2C9;
+    box-shadow: 0 0 7px #B3C2C9;
     border:solid 1px #B3C2C9;
 }
 
@@ -1200,12 +1188,12 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     background:url("../images/icons/edit.png") no-repeat left center;
 }
 
-#wall_widget #wall_add_form {
+#wall_widget #wall_add_form, #comments_widget #comments_add_form  {
     display: none;
     margin:15px 0;
     background:#ecf0f1;
     padding:15px;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 #wall_widget #wall_add_form textarea{
@@ -1213,13 +1201,18 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     margin-bottom:4px;
 }
 
-#wall_widget #wall_add_form .preview_box{
+#wall_widget #wall_add_form .preview_box, #comments_widget #comments_add_form .preview_box{
     margin-bottom: 15px;
     padding: 10px;
     border: solid 2px #B3C2C9;
     border-radius: 4px;
     background: #FFF;
     display:none;
+    transition: all 0.5s ease;
+}
+.preview_box.highlight {
+    border-color: #2980b9 !important;
+    box-shadow: 0 0 5px #2980b9;
 }
 
 #wall_widget #wall_add_form .loading{ display: none; }

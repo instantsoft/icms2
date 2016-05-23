@@ -77,8 +77,6 @@
 
                 <div class="pad"></div>
 
-                <div class="loading-overlay"></div>
-
         </div>
 
     </div>
@@ -103,8 +101,8 @@
         $(document).ready(function(){
             fitLayout();
             window.onbeforeunload = function(){
-                $('.loading-overlay').show();
-            }
+                $('body').prepend('<div class="loading-overlay"/>');
+            };
         });
 
         $(window).resize(function(){

@@ -1,3 +1,3 @@
 <?php
 
-    define('LANG_MODERATION_CONTROLLER',     'Moderation Panel');
+    define('LANG_MODERATION_CONTROLLER',     'Moderation');

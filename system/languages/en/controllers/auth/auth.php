@@ -6,21 +6,21 @@
 
     define('LANG_AUTH_RESTRICTIONS',            'Restrictions');
     define('LANG_AUTH_RESTRICTED_EMAILS',       "Restricted e-mails");
-    define('LANG_AUTH_RESTRICTED_EMAILS_HINT',  'One address in a row. You can use * as a wildcard');
+    define('LANG_AUTH_RESTRICTED_EMAILS_HINT',  'One address per line, you can use the * symbol to insert any value');
     define('LANG_AUTH_RESTRICTED_EMAIL',        'E-mail <b>%s</b> is forbidden');
 
     define('LANG_AUTH_RESTRICTED_NAMES',        'Restricted nicknames');
-    define('LANG_AUTH_RESTRICTED_NAMES_HINT',   'One nickname in a row. You can use * as a wildcard');
+    define('LANG_AUTH_RESTRICTED_NAMES_HINT',   'One nickname per line, you can use the * symbol to insert any value');
     define('LANG_AUTH_RESTRICTED_NAME',         'Nickname <b>%s</b> is forbidden');
 
     define('LANG_AUTH_RESTRICTED_IPS',          'Restricted IP\'s for registration');
-    define('LANG_AUTH_RESTRICTED_IPS_HINT',     'One address in a row. You can use * as a wildcard');
+    define('LANG_AUTH_RESTRICTED_IPS_HINT',     'One address per line, you can use the * symbol to insert any value');
     define('LANG_AUTH_RESTRICTED_IP',           'Registration from IP <b>%s</b> is forbidden');
 
     define('LANG_AUTH_INVITES',                 'Invitations');
     define('LANG_AUTH_INVITES_AUTO',            'Issue invitations to registered users');
     define('LANG_AUTH_INVITES_AUTO_HINT',       'Users will be able to send invitations to their friends');
-    define('LANG_AUTH_INVITES_STRICT',          'Bind invitations to e-mail');
+    define('LANG_AUTH_INVITES_STRICT',          'Bind invitation to e-mail');
     define('LANG_AUTH_INVITES_STRICT_HINT',     'If enabled, it will be possible to register only with the e-mail invitation code was sent to');
     define('LANG_AUTH_INVITES_PERIOD',          'Issue invitations once in the period of');
     define('LANG_AUTH_INVITES_QTY',             'How many invitations to give');
@@ -53,10 +53,10 @@
     define('LANG_REG_CFG_VERIFY_LOCK_REASON',  'E-mail verification required');
 	define('LANG_REG_CFG_DEF_GROUP_ID',		   'Put new users in groups');
 
-    define('LANG_REG_INCORRECT_EMAIL',       'Invalid e-mail address');
-    define('LANG_REG_EMAIL_EXISTS',          'The email address is already registered');
+    define('LANG_REG_INCORRECT_EMAIL',       'E-mail address is incorrect');
+    define('LANG_REG_EMAIL_EXISTS',          'This e-mail address is already registered');
     define('LANG_REG_PASS_NOT_EQUAL',        'Passwords do not match');
-    define('LANG_REG_PASS_EMPTY',            'You must specify a password');
+    define('LANG_REG_PASS_EMPTY',            'Password is required');
     define('LANG_REG_SUCCESS',               'Registration was successful');
     define('LANG_REG_SUCCESS_NEED_VERIFY',   'Verification e-mail sent to <b>%s</b>. Click on the link in the message to activate your account');
     define('LANG_REG_SUCCESS_VERIFIED',      'E-mail address is successfully validated. You can login now.');

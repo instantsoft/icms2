@@ -2,7 +2,7 @@
 
     define('LANG_THEME_BG',               'Page background');
     define('LANG_THEME_BG_IMAGE',         'Background image');
-    define('LANG_THEME_BG_IMAGE_HINT',    'All other settings take effect only when image is loaded');
+    define('LANG_THEME_BG_IMAGE_HINT', 'All other settings will take effect once an image is uploaded');
     define('LANG_THEME_BG_COLOR',         'Background color');
 
     define('LANG_THEME_BG_REPEAT',        'Repeat background image');
@@ -23,7 +23,7 @@
 
     define('LANG_THEME_TOP_MARGIN',       'Page top margin');
 
-    define('LANG_THEME_LAYOUT',                 'Layout');
+    define('LANG_THEME_LAYOUT', 'Page layout');
     define('LANG_THEME_LAYOUT_LEFT',            'Left');
     define('LANG_THEME_LAYOUT_RIGHT',           'Right');
     define('LANG_THEME_LAYOUT_COLUMNS',         'Columns');
@@ -33,4 +33,4 @@
     define('LANG_THEME_COPYRIGHT_URL',          'Copyright URL');
     define('LANG_THEME_COPYRIGHT_URL_HINT',     'Homepage by default');
     define('LANG_THEME_COPYRIGHT_YEAR',         'Copyright year');
-    define('LANG_THEME_COPYRIGHT_YEAR_HINT',    'Current by default');
+    define('LANG_THEME_COPYRIGHT_YEAR_HINT', 'Current year by default');

@@ -97,6 +97,7 @@
                     <div class="buttons">
 						<?php echo html_button(LANG_PREVIEW, 'preview', 'icms.comments.preview()'); ?>
                         <?php echo html_button(LANG_SEND, 'submit', 'icms.comments.submit()'); ?>
+                        <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.comments.restoreForm()', array('class'=>'button-cancel')); ?>
                     </div>
                     <div class="loading">
                         <?php echo LANG_LOADING; ?>
