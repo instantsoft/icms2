@@ -79,7 +79,7 @@ function lang_slug($string){
 function lang_setlocale() {
 
     setlocale(LC_ALL, 'ru_RU.UTF-8');
-    setlocale(LC_NUMERIC, 'en_US.UTF-8');
+    setlocale(LC_NUMERIC, 'POSIX');
 
     return true;
 

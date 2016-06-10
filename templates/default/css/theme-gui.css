@@ -661,7 +661,11 @@ form .input-prefix-suffix .suffix{
     border-radius:0 5px 5px 0;
     border-left: none;
 }
-
+form .input-prefix-suffix:after {
+    clear: both;
+    content: '';
+    display: block;
+}
 input.button-submit,
 input.button {
 	padding: 7px 10px;

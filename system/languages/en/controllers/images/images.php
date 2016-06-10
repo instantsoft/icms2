@@ -22,4 +22,4 @@
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_R', 'Right center');
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_C', 'Center');
     define('LANG_IMAGES_PRESET_WM_MARGIN', 'Indent from image edges');
-    define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Delete the "{title}” preset?');
+    define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Delete the "{title}" preset?');
