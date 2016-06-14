@@ -1345,6 +1345,7 @@ class modelContent extends cmsModel{
     public function resetFilters(){
         parent::resetFilters();
         $this->approved_filtered = false;
+        $this->pub_filtered = false;
         return $this;
     }
 

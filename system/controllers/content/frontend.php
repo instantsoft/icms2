@@ -602,6 +602,10 @@ class content extends cmsFrontend {
             $fieldset_id = $form->addFieldset(LANG_TAGS);
             $form->addField($fieldset_id, new fieldString('tags', array(
                 'hint' => LANG_TAGS_HINT,
+                'options'=>array(
+                    'max_length'=> 1000,
+                    'show_symbol_count'=>true
+                ),
                 'autocomplete' => array(
                     'multiple' => true,
                     'url' => href_to('tags', 'autocomplete')
