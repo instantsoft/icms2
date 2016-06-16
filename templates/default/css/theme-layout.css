@@ -33,7 +33,7 @@ body {
     background:url("../images/bg_top.png") no-repeat center;
 }
 
-#layout header #logo a{
+#layout header #logo a, #layout header #logo > span{
     display: block;
     float: left;
     width: 180px;

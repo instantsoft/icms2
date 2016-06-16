@@ -32,7 +32,13 @@
         <?php } ?>
 
         <header>
-            <div id="logo"><a href="<?php echo href_to_home(); ?>"></a></div>
+            <div id="logo">
+                <?php if($core->uri) { ?>
+                    <a href="<?php echo href_to_home(); ?>"></a>
+                <?php } else { ?>
+                    <span></span>
+                <?php } ?>
+            </div>
             <div class="widget_ajax_wrap" id="widget_pos_header"><?php $this->widgets('header', false, 'wrapper_plain'); ?></div>
         </header>
 
