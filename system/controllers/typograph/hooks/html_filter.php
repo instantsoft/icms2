@@ -4,21 +4,25 @@ class onTypographHtmlFilter extends cmsAction {
 
     public function run($data){
 
-        $errors = null;
-        $is_auto_br = true;
+        $errors              = null;
+        $is_auto_br          = true;
+        $build_redirect_link = true;
 
         if (is_array($data)){
-            $text = $data['text'];
-            $is_auto_br = $data['is_auto_br'];
+            $text                = $data['text'];
+            $is_auto_br          = $data['is_auto_br'];
+            if(isset($data['build_redirect_link'])){
+                $build_redirect_link = $data['build_redirect_link'];
+            }
         } else {
             $text = $data;
         }
 
-        return $this->getJevix($is_auto_br)->parse($text, $errors);
+        return $this->getJevix($is_auto_br, $build_redirect_link)->parse($text, $errors);
 
     }
 
-    private function getJevix($is_auto_br){
+    private function getJevix($is_auto_br, $build_redirect_link){
 
         cmsCore::loadLib('jevix.class', 'Jevix');
 
@@ -57,7 +61,7 @@ class onTypographHtmlFilter extends cmsAction {
         ));
 
         // Устанавливаем разрешённые параметры тегов. Также можно устанавливать допустимые значения этих параметров.
-        $jevix->cfgAllowTagParams('a', array('href' => '#link', 'name' => '#text'));
+        $jevix->cfgAllowTagParams('a', array('href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('img', array('src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text'));
         $jevix->cfgAllowTagParams('span', array('style' => '#text'));
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
@@ -93,6 +97,11 @@ class onTypographHtmlFilter extends cmsAction {
         // включаем режим автоматического определения ссылок
         $jevix->cfgSetAutoLinkMode(true);
 
+        // если нужно обрабатывать внешние ссылки в редирект
+        if($build_redirect_link){
+            $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
+        }
+
         // Отключаем типографирование в определенном теге
         $jevix->cfgSetTagNoTypography('pre','youtube', 'iframe');
 
@@ -109,6 +118,31 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetTagCallback('code', array($this, 'parseCode'));
 
         return $jevix;
+
+    }
+
+    public function linkRedirectPrefix($tag, $params, $content) {
+
+        $is_external_link = isset($_SERVER['HTTP_HOST']) && !strstr($params['href'], $_SERVER['HTTP_HOST']);
+
+        if($is_external_link){
+            $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
+            $params['target'] = '_blank';
+            $params['href']   = href_to('redirect').'?url='.$params['href'];
+            $params['rel']    = 'nofollow';
+        }
+
+        $tag_string = '<a';
+
+        foreach($params as $param => $value) {
+            if ($value != '') {
+                $tag_string.=' '.$param.'="'.$value.'"';
+            }
+        }
+
+        $tag_string .= '>'.$content.'</a>';
+
+        return $tag_string;
 
     }
 

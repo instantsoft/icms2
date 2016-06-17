@@ -7,6 +7,7 @@
  * http://code.google.com/p/jevix/
  *
  * @author ur001 <ur001ur001@gmail.com>, http://ur001.habrahabr.ru
+ * @modified InstantSoft, http://www.instantcms.ru/ for InstantCMS
  * @version 1.01
  *
  * История версий:
@@ -106,7 +107,7 @@ class Jevix{
 	public $apostrof = "’";
 	public $dotes = "…";
 	public $nl = "\r\n";
-	public $defaultTagParamRules = array('href' => '#link', 'src' => '#image', 'width' => '#int', 'height' => '#int', 'text' => '#text', 'title' => '#text');
+	public $defaultTagParamRules = array('href' => '#link', 'src' => '#image', 'width' => '#int', 'height' => '#int', 'text' => '#text', 'title' => '#text', 'style' => '#text');
 
 	protected $text;
 	protected $textBuf;
@@ -705,7 +706,7 @@ class Jevix{
 	}
 
 	/**
-	 *  Получает име (тега, параметра) по принципу 1 сиивол далее цифра или символ
+	 *  Получает име (тега, параметра) по принципу 1 символ далее цифра или символ
 	 *
 	 * @param string $name
 	 */
@@ -1028,6 +1029,11 @@ class Jevix{
 						break;
 
 					case '#text':
+						// Ява-скрипт
+						if(preg_match('/javascript:/ui', $value)) {
+							$this->eror('Попытка вставить JavaScript в параметр тега');
+							continue(2);
+						}
 						$value = htmlspecialchars($value);
 						break;
 
@@ -1575,4 +1581,3 @@ function unichr($c) {
 	return false;
     }
 }
-?>
