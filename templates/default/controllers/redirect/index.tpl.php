@@ -3,9 +3,11 @@
 
     <?php $this->addJS('templates/default/js/jquery-cookie.js');; ?>
 
-    <div class="accept_redirect">
-        <label><input name="accept" id="accept_redirect" type="checkbox" value="1"> <?php echo LANG_REDIRECT_HINT4; ?></label>
-    </div>
+    <?php if($user->is_logged){ ?>
+        <div class="accept_redirect">
+            <label><input name="accept" id="accept_redirect" type="checkbox" value="1"> <?php echo LANG_REDIRECT_HINT4; ?></label>
+        </div>
+    <?php } ?>
     <h1><?php echo LANG_REDIRECT_H1; ?></h1>
 
     <p class="redirect"><?php printf(LANG_REDIRECT_HINT1, $host, $sitename, $url, $original_url); ?></p>

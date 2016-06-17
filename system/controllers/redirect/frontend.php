@@ -83,6 +83,7 @@ class redirect extends cmsFrontend {
 
         return $this->cms_template->render('index', array(
             'url'                     => $url,
+            'user'                    => $this->cms_user,
             'original_url'            => $original_url,
             'is_domain_banned'        => $is_domain_banned,
             'is_domain_in_black_list' => $is_domain_in_black_list,
