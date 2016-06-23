@@ -8,13 +8,25 @@ class redirect extends cmsFrontend {
         header('X-Frame-Options: DENY');
 
         // $original_url для кириллических доменов
-        $url = $original_url = $this->request->get('url', '');
+        $url = $original_url = urldecode($this->request->get('url', ''));
         if (!$url) { cmsCore::error404(); }
 
         if ($this->request->isAjax()){ cmsCore::error404(); }
 
         $url_host = parse_url($url, PHP_URL_HOST);
         if (!$url_host) { cmsCore::error404(); }
+
+        if(!empty($this->options['is_check_refer'])){
+
+            if(empty($_SERVER['HTTP_REFERER'])){
+                cmsCore::error404();
+            }
+
+            if(strpos($_SERVER['HTTP_REFERER'], $this->cms_config->protocol.$_SERVER['HTTP_HOST']) !== 0) {
+                cmsCore::error404();
+            }
+
+        }
 
         // кириллические домены
         if(preg_match('/^[а-яё]+/iu', $url_host)){

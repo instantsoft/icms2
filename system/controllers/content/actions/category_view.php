@@ -55,8 +55,8 @@ class actionContentCategoryView extends cmsAction {
 
         // Если это не главная, но данный контент выводится на главной и сейчас
         // открыта индексная страница контента - редиректим на главную
-        if (!$is_frontpage && cmsConfig::get('frontpage') == "content:{$ctype['name']}" && $slug == 'index' && !$dataset && $page==1){
-			$query = cmsCore::getInstance()->uri_query;
+        if (!$is_frontpage && $this->cms_config->frontpage == "content:{$ctype['name']}" && $slug == 'index' && !$dataset && $page==1){
+			$query = $this->cms_core->uri_query;
 			if ($query){
 				$this->redirect(href_to_home() . "/?" . http_build_query($query));
 			} else {
@@ -103,7 +103,6 @@ class actionContentCategoryView extends cmsAction {
         list($ctype, $category) = cmsEventsManager::hook("content_before_category", array($ctype, $category));
 		list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_before_category", array($ctype, $category));
 
-
 		$items_list_html = '';
 		$is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
 
@@ -117,17 +116,17 @@ class actionContentCategoryView extends cmsAction {
         cmsModel::cacheResult('current_ctype_category', $category);
 
         return $this->cms_template->render('category_view', array(
-            'is_frontpage' => $is_frontpage,
-            'is_hide_items' => $is_hide_items,
-            'parent' => isset($parent) ? $parent : false,
-            'slug' => $slug,
-            'ctype' => $ctype,
-            'datasets' => $datasets,
-            'dataset' => $dataset,
-            'category' => $category,
-            'subcats' => $subcats,
+            'is_frontpage'    => $is_frontpage,
+            'is_hide_items'   => $is_hide_items,
+            'parent'          => isset($parent) ? $parent : false,
+            'slug'            => $slug,
+            'ctype'           => $ctype,
+            'datasets'        => $datasets,
+            'dataset'         => $dataset,
+            'category'        => $category,
+            'subcats'         => $subcats,
             'items_list_html' => $items_list_html,
-            'user' => $this->cms_user
+            'user'            => $this->cms_user
         ), $this->request);
 
     }

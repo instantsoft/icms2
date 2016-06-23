@@ -123,12 +123,14 @@ class onTypographHtmlFilter extends cmsAction {
 
     public function linkRedirectPrefix($tag, $params, $content) {
 
-        $is_external_link = isset($_SERVER['HTTP_HOST']) && !strstr($params['href'], $_SERVER['HTTP_HOST']);
+        $href_params = parse_url($params['href']);
+
+        $is_external_link = !empty($href_params['host']) && !strstr($params['href'], parse_url($this->cms_config->host, PHP_URL_HOST));
 
         if($is_external_link){
             $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
             $params['target'] = '_blank';
-            $params['href']   = href_to('redirect').'?url='.$params['href'];
+            $params['href']   = href_to('redirect').'?url='.urlencode($params['href']);
             $params['rel']    = 'nofollow';
         }
 

@@ -9,7 +9,7 @@
 		<div class="filter-close">
             <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
         </div>
-        <form action="<?php echo $form_url; ?>" method="post">
+        <form action="<?php echo $form_url; ?>" method="get">
             <?php echo html_input('hidden', 'page', 1); ?>
             <div class="fields">
                 <?php $fields_count = 0; ?>

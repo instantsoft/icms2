@@ -35,6 +35,10 @@ class formRedirectOptions extends cmsForm {
                         'title'   => LANG_REDIRECT_REDIRECT_TIME,
                         'units'   => LANG_SECONDS,
                         'default' => 10
+                    )),
+
+                    new fieldCheckbox('is_check_refer', array(
+                        'title' => LANG_REDIRECT_IS_CHECK_REFER
                     ))
 
                 )

@@ -16,6 +16,7 @@ define('LANG_REDIRECT_ADMIN_HINT', 'The domain.com format, each on a new line. '
 define('LANG_REDIRECT_NO_REDIRECT_LIST_HINT', 'Clicking links will be carried out without an intermediate page.');
 define('LANG_REDIRECT_BLACK_LIST', 'Domains black list');
 define('LANG_REDIRECT_BLACK_LIST_HINT', 'Clicking links from of these domains will be blocked forever.');
+define('LANG_REDIRECT_IS_CHECK_REFER', 'Check HTTP referer');
 define('LANG_REDIRECT_IS_CHECK_LINK', 'Check links');
 define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Links are checked through the <a href="https://vk.com/dev/utils.checkLink" target="_blank">Vkontakte open method</a>');
 define('LANG_REDIRECT_WHITE_LIST', 'Domains wWhite list');

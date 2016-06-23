@@ -79,7 +79,7 @@
     <script>
 		<?php if ($is_multi_cats){ ?>
 			<?php echo $this->getLangJS('LANG_LIST_EMPTY','LANG_SELECT', 'LANG_CONTENT_SELECT_CATEGORIES'); ?>
-			var add_cats = []; // оставлено для совместимости
+			var add_cats = []; /** оставлено для совместимости **/
             var add_cats_data = [];
 			<?php if (!empty($add_cats)) { ?>
 				<?php foreach($add_cats as $cat_id){ ?>

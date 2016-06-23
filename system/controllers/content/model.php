@@ -1570,6 +1570,9 @@ class modelContent extends cmsModel{
 
     public function getItemSlug($ctype, $item, $fields, $check_slug = true){
 
+        $content_table_struct = $this->getContentTableStruct();
+        $slug_len = $content_table_struct['title']['size'];
+
         $pattern = trim($ctype['url_pattern'], '/');
 
         preg_match_all('/{([a-zA-Z0-9\_]+)}/i', $pattern, $matches);
@@ -1603,6 +1606,8 @@ class modelContent extends cmsModel{
 
         $slug = lang_slug($pattern);
 
+        $slug = mb_substr($slug, 0, $slug_len);
+
         if(!$check_slug){
             return $slug;
         }
@@ -1610,7 +1615,10 @@ class modelContent extends cmsModel{
         if($this->filterNotEqual('id', $item['id'])->
                 filterEqual('slug', $slug)->
                 getFieldFiltered($this->table_prefix.$ctype['name'], 'id')){
+
+            $slug = mb_substr($slug, 0, ($slug_len-13));
             $slug .= uniqid();
+
         }
 
         return $slug;
