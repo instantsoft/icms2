@@ -187,9 +187,11 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . uniqid()) . '$' . $seed);
+    $salt = substr(md5(mt_rand(0, 65535).cmsConfig::get('db_pass')), mt_rand(0, 16), mt_rand(8, 15));
 
-    if ($length < 32) { $string = mb_substr($string, 0, $length); }
+    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . $seed);
+
+    if ($length < 32) { $string = substr($string, 0, $length); }
 
     return $string;
 
@@ -432,6 +434,8 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $text = strip_tags($text);
     $text = mb_strtolower($text);
 
+    $stopwords = string_get_stopwords(cmsConfig::get('language'));
+
     $words = explode(' ', $text);
 
     foreach($words as $word){
@@ -439,6 +443,10 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
         $word = trim($word);
         $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
         $word = preg_replace("/\.,\(\)\{\}/i", '', $word);
+
+        if($stopwords && in_array($word, $stopwords)){
+            continue;
+        }
 
         if (mb_strlen($word)>=$min_length){
             $stat[$word] = isset($stat[$word]) ? $stat[$word]+1 : 1;
@@ -464,6 +472,26 @@ function string_get_meta_description($text, $limit=250){
 
     return string_short($text, $limit);
 
+}
+
+/**
+ * Возвращает массив стоп слов
+ * @staticvar array $words
+ * @param string $lang Язык, например ru, en
+ * @return array
+ */
+function string_get_stopwords($lang='ru') {
+    static $words = null;
+    if(isset($words[$lang])){
+        return $words[$lang];
+    }
+    $file = PATH.'/system/languages/'.$lang.'/stopwords.php';
+    if(file_exists($file)){
+        $words[$lang] = include $file;
+    } else {
+        $words[$lang] = array();
+    }
+    return $words[$lang];
 }
 
 /**

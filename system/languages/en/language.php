@@ -206,11 +206,11 @@
     define('LANG_FORM_ERRORS',				 'The form has errors');
     define('LANG_TRACE_STACK',				 'Recent calls');
     define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');
-    define('ERR_MODEL_NOT_FOUND',			 'Model not found');
-    define('ERR_TEMPLATE_NOT_FOUND', 		 'Template not found');
-    define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found');
+    define('ERR_MODEL_NOT_FOUND',			 'Model not found or cannot be read');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Template not found or cannot be read');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found or cannot be read');
     define('ERR_FILE_NOT_FOUND',             'File not found');
-    define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Query error</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Database connection error');

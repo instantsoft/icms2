@@ -56,12 +56,10 @@ INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_r
 (10, 'Новости', 'news', 'Информационные сообщения', NULL, 1, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
-(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4, NULL),
-(14, 'Разные фоточки', 'Фотографии снятые мной на досуге', '14-raznye-fotochki', 'фотографии, снятые, досуге', 'Фотографии снятые мной на досуге', NULL, '0', DATE_SUB(NOW(),INTERVAL 2 DAY), DATE_SUB(NOW(),INTERVAL 1 DAY), NULL, 1, 0, 6, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 0, NULL, NULL, 0, NULL, 0, NULL);
+(16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 4, NULL);
 
 INSERT INTO `{#}con_albums_cats_bind` (`item_id`, `category_id`) VALUES
-(16, 1),
-(14, 1);
+(16, 1);
 
 DROP TABLE IF EXISTS `{#}con_articles`;
 CREATE TABLE `{#}con_articles` (
@@ -135,6 +133,7 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -310,6 +309,7 @@ CREATE TABLE `{#}con_board_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -607,6 +607,7 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -787,6 +788,7 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_level` int(11) DEFAULT NULL,
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
+  `allow_add` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),

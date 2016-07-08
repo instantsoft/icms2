@@ -16,6 +16,14 @@ Is a free open source content management system that allows you to build website
 * User management;
 * Easy-to-install core updates.
 
+## Requirements ##
+* PHP 5.3+
+* PHP register_globals off
+* PHP magic_quotes_gpc off
+* GD, iconv, mbstring, simplexml, json and filter PHP extension
+* Mysql 5.0 or above and its support in PHP
+* Apache + mod_rewrite + (MultiViews option disabled)
+
 ## Resources
 
 * [Official site](http://www.instantcms.ru/)

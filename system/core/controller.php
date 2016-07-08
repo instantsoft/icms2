@@ -715,12 +715,14 @@ class cmsController {
     }
 
     public function validate_array_key($array, $value){
+        if (is_array($value)) { return ERR_VALIDATE_INVALID; }
         if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
         return true;
     }
 
     public function validate_array_keys($array, $values){
 		if (empty($values)) { return true; }
+        if (!is_array($values)) { return ERR_VALIDATE_INVALID; }
 		foreach($values as $value){
 			if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
 		}
@@ -735,57 +737,59 @@ class cmsController {
 
     public function validate_email($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
         return true;
     }
 
     public function validate_alphanumeric($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9]*)$/i", $value)){ return ERR_VALIDATE_ALPHANUMERIC; }
         return true;
     }
 
     public function validate_sysname($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
         return true;
     }
 
     public function validate_slug($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
+        if (!is_string($value) || !preg_match("/^([a-z0-9\-\/]*)$/", $value)){ return ERR_VALIDATE_SLUG; }
         return true;
     }
 
     public function validate_digits($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([0-9]+)$/i", $value)){ return ERR_VALIDATE_DIGITS; }
+        if (!in_array(gettype($value), array('integer','string')) || !preg_match("/^([0-9]+)$/i", $value)){ return ERR_VALIDATE_DIGITS; }
         return true;
     }
 
     public function validate_number($value){
         if (empty($value)) { return true; }
-        if (!preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){ return ERR_VALIDATE_NUMBER; }
         return true;
     }
 
     public function validate_color($value){
         if (empty($value)) { return true; }
+        if (!is_string($value)) { return ERR_VALIDATE_INVALID; }
         $value = ltrim($value, '#');
         if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)){
             return true;
         }
-        return false;
+        return ERR_VALIDATE_INVALID;
     }
 
     public function validate_regexp($regexp, $value){
         if (empty($value)) { return true; }
-        if (!preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
         return true;
     }
 
     public function validate_unique($table_name, $field_name, $value){
         if (empty($value)) { return true; }
+        if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
         $core = cmsCore::getInstance();
         $result = $core->db->isFieldUnique($table_name, $field_name, $value);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
@@ -794,6 +798,7 @@ class cmsController {
 
     public function validate_unique_exclude($table_name, $field_name, $exclude_row_id, $value){
         if (empty($value)) { return true; }
+        if (!in_array(gettype($value), array('integer','string','double'))) { return ERR_VALIDATE_INVALID; }
         $core = cmsCore::getInstance();
         $result = $core->db->isFieldUnique($table_name, $field_name, $value, $exclude_row_id);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
@@ -802,16 +807,16 @@ class cmsController {
 
     public function validate_unique_ctype_field($ctype_name, $value){
         if (empty($value)) { return true; }
-        $core = cmsCore::getInstance();
+        if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
         $content_model = cmsCore::getModel('content');
         $table_name = $content_model->table_prefix . $ctype_name;
-        $result = !$core->db->isFieldExists($table_name, $value);
-        if (!$result) { return ERR_VALIDATE_UNIQUE; }
+        if ($content_model->db->isFieldExists($table_name, $value)) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }
 
     public function validate_unique_ctype_dataset($ctype_id, $value){
         if (empty($value)) { return true; }
+        if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
         $core = cmsCore::getInstance();
         $ctype_id = (int)$ctype_id;
         $value = $core->db->escape($value);

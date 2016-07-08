@@ -37,6 +37,9 @@
     define('LANG_PERM_OPTION_DAYS', 'Days');
     define('LANG_PERM_OPTION_ANY', 'Any date');
 
+    define('LANG_CONTENT_CATS_ALLOW_ADD',     'Groups whose members can add entries in this category');
+    define('LANG_CONTENT_CATS_ALLOW_ADD_HINT', 'Adding entries for selected groups should be allowed');
+
     define('LANG_CONTENT_ACTIVITY_ADD',     'Add %s');
     define('LANG_CONTENT_ACTIVITY_ADD_DESC','adds %s %s');
 

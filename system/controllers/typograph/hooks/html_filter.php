@@ -33,7 +33,7 @@ class onTypographHtmlFilter extends cmsAction {
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote',
-            'video', 'audio', 'youtube',
+            'video', 'audio', 'youtube','facebook',
             'object', 'param', 'embed', 'iframe'
         ));
 
@@ -63,7 +63,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
         $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
         $jevix->cfgAllowTagParams('embed', array('src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text','allowscriptaccess' => '#text', 'allowfullscreen' => '#text','width' => '#int', 'height' => '#int', 'flashvars'=> '#text', 'wmode'=> '#text'));
-        $jevix->cfgAllowTagParams('iframe', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com'))));
+        $jevix->cfgAllowTagParams('iframe', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com','my.mail.ru'))));
         $jevix->cfgAllowTagParams('table', array('width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text'));
         $jevix->cfgAllowTagParams('td', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
         $jevix->cfgAllowTagParams('th', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
@@ -97,7 +97,13 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetTagNoTypography('pre','youtube', 'iframe');
 
         // Ставим колбэк для youtube
-        $jevix->cfgSetTagCallback('youtube', array($this, 'parseYouTubeVideo'));
+        $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));
+
+        // Ставим колбэк для facebook
+        $jevix->cfgSetTagCallbackFull('facebook', array($this, 'parseFacebookVideo'));
+
+        // Ставим колбэк на iframe
+        $jevix->cfgSetTagCallbackFull('iframe', array($this, 'parseIframe'));
 
         // Ставим колбэк для кода
         $jevix->cfgSetTagCallback('code', array($this, 'parseCode'));
@@ -106,21 +112,46 @@ class onTypographHtmlFilter extends cmsAction {
 
     }
 
-    public function parseYouTubeVideo($content){
+    public function parseIframe($tag, $params, $content) {
 
-        $video_id = $this->parseYouTubeVideoID(trim($content));
+        if(empty($params['src'])){
+            return '';
+        }
 
-        if (!$video_id) { return false; }
+        return $this->getVideoCode($params['src']);
 
-        $code = '<iframe width="320" height="240" src="http://www.youtube.com/embed/'.$video_id.'" frameborder="0" allowfullscreen></iframe>';
+    }
 
-        return $code;
+    public function parseFacebookVideo($tag, $params, $content){
 
+        $video_link = (trim(strip_tags($content)));
+
+        $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:facebook\.com(?:/[^\/]+/videos/|/video\.php\?v=))([0-9]+)(?:.+)?$#x';
+        preg_match($pattern, $video_link, $matches);
+
+        if(empty($matches[1])){
+            return '';
+        }
+
+        return $this->getVideoCode('https://www.facebook.com/video/embed?video_id='.$matches[1]);
+
+    }
+
+    public function parseYouTubeVideo($tag, $params, $content){
+
+        $video_id = $this->parseYouTubeVideoID(trim(strip_tags($content)));
+
+        return $this->getVideoCode('//www.youtube.com/embed/'.$video_id);
+
+    }
+
+    private function getVideoCode($src) {
+        return '<div class="video_wrap"><iframe class="video_frame" src="'.$src.'" frameborder="0" allowfullscreen></iframe></div>';
     }
 
     private function parseYouTubeVideoID($url) {
 
-        $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
+        $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
         preg_match($pattern, $url, $matches);
         return (isset($matches[1])) ? $matches[1] : false;
 

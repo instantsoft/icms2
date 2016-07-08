@@ -176,6 +176,13 @@ class formAdminCtypesBasic extends cmsForm {
                             'show_title' => LANG_CP_PRIVACY_TYPE_SHOW_TITLE,
                             'show_all'   => LANG_CP_PRIVACY_TYPE_SHOW_ALL
                         )
+                    )),
+                    new fieldNumber('options:limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
                     ))
                 )
             ),

@@ -22,21 +22,19 @@ class cmsWysiwygRedactor{
         echo html_textarea($field_id, $content, array('id'=>$dom_id));
 
         ?>
-
             <script type="text/javascript">
-                $(document).ready(function(){
+                $(function(){
                     $('#<?php echo $dom_id; ?>').redactor({
                         lang: '<?php echo $lang; ?>',
                         plugins: ['video', 'fontfamily', 'fontsize', 'fontcolor', 'fullscreen'],
                         imageUpload: '<?php echo href_to('redactor/upload'); ?>',
-						minHeight: 250,
+						minHeight: 190,
 						<?php if ($user->is_admin) { ?>
                             buttonSource: true
 						<?php } ?>
                     });
                 });
             </script>
-
         <?php
 	}
 

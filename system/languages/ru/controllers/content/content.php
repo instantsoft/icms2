@@ -37,6 +37,9 @@
     define('LANG_PERM_OPTION_DAYS', 'Дни');
     define('LANG_PERM_OPTION_ANY', 'Любая дата');
 
+    define('LANG_CONTENT_CATS_ALLOW_ADD',     'Группы, участники которой могут добавлять записи в эту категорию');
+    define('LANG_CONTENT_CATS_ALLOW_ADD_HINT', 'Добавление записей для выбранных групп должно быть разрешено');
+
     define('LANG_CONTENT_ACTIVITY_ADD',         'Добавление %s');
     define('LANG_CONTENT_ACTIVITY_ADD_DESC',    'добавляет %s %s');
 
@@ -44,7 +47,7 @@
     define('LANG_CONTENT_SELECT_FOLDER',     '-- выберите папку --');
 
     define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Приватные %s друзей');
-    define('LANG_CONTENT_PRIVATE_FRIEND_INFO', '%s доступна только друзьям пользователя <a href="%s">%s</a>');
+    define('LANG_CONTENT_PRIVATE_FRIEND_INFO', '%s только для друзей пользователя <a href="%s">%s</a>');
 
     //WIDGETS
     define('LANG_WP_CONTENT_ALL_PAGES',      '%s: Все страницы');

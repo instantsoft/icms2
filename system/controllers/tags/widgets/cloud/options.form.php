@@ -13,6 +13,21 @@ class formWidgetTagsCloudOptions extends cmsForm {
                 'title' => LANG_OPTIONS,
                 'childs' => array(
 
+                    new fieldListMultiple('options:subjects', array(
+                        'title'     => LANG_WD_TAGS_SUBJECTS,
+                        'show_all'  => true,
+                        'generator' => function($item) {
+                            $cts = cmsCore::getModel('content')->getContentTypes();
+                            $items = array();
+                            if ($cts) {
+                                foreach ($cts as $item) {
+                                    $items[$item['name']] = $item['title'];
+                                }
+                            }
+                            return $items;
+                        },
+                    )),
+
                     new fieldList('options:ordering', array(
                         'title' => LANG_WD_TAGS_CLOUD_ORDERING,
                         'items' => array(
@@ -39,10 +54,31 @@ class formWidgetTagsCloudOptions extends cmsForm {
                         'default' => 12
                     )),
 
+                    new fieldNumber('options:min_freq', array(
+                        'title' => LANG_WD_TAGS_MIN_FREQ,
+                        'default' => 0
+                    )),
+
+                    new fieldNumber('options:min_len', array(
+                        'title' => LANG_WD_TAGS_MIN_LEN,
+                        'units' => LANG_WD_TAGS_MIN_LEN_UNITS,
+                        'default' => 0
+                    )),
+
                     new fieldNumber('options:limit', array(
                         'title' => LANG_WD_TAGS_CLOUD_LIMIT,
                         'default' => 10
                     )),
+
+                    new fieldString('options:colors', array(
+                        'title' => LANG_WD_TAGS_COLORS,
+                        'hint'  => LANG_WD_TAGS_COLORS_HINT,
+                        'default' => ''
+                    )),
+
+                    new fieldCheckbox('options:shuffle', array(
+                        'title' => LANG_WD_TAGS_SHUFFLE
+                    ))
 
                 )
             ),

@@ -933,7 +933,7 @@ class cmsTemplate {
 
         if (!file_exists($tpl_file)) { $tpl_file = $default; }
 
-        if (!file_exists($tpl_file)){
+        if (!is_readable($tpl_file)){
             if (!$is_check){
                 cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
             } else {
@@ -1367,14 +1367,17 @@ class cmsTemplate {
 //============================================================================//
     /**
      * Возвращает все названия шаблонов для списка записей типов контента
-     * @return array|boolean
+     * @return array
      */
     public function getAvailableContentListStyles(){
 
-        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
-        if (!$files) { return false; }
-
         $styles = array();
+
+        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
+        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);
+
+        $files = array_unique(array_merge($files, $default_files));
+        if (!$files) { return $styles; }
 
         foreach($files as $file){
 
@@ -1444,7 +1447,7 @@ class cmsTemplate {
 
         $template_file = $this->path . '/' . $layout . '.tpl.php';
 
-        if(file_exists($template_file)){
+        if(is_readable($template_file)){
 
             if (!$config->min_html){
                 include($template_file);
@@ -1551,13 +1554,19 @@ class cmsTemplate {
 
         $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
-        if(!is_writable($options_file)){
-            return false;
+        if(file_exists($options_file)){
+            if(!is_writable($options_file)){
+                return false;
+            }
+        } else {
+            if(!is_writable(dirname($options_file))){
+                return false;
+            }
         }
 
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return @file_put_contents($options_file, $options_yaml);
+        return file_put_contents($options_file, $options_yaml);
 
     }
 

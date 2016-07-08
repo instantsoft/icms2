@@ -1146,6 +1146,7 @@ class modelContent extends cmsModel{
                     $sorting_fields[] = $sorting['by'];
                 }
             }
+            $sorting_fields = array_unique($sorting_fields);
         }
 
         // если поле присутствует и в выборке и в сортировке, оставляем только в сортировке

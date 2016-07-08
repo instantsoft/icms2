@@ -11,7 +11,16 @@ class fieldListBitmask extends cmsFormField {
 
         $items = $this->getListItems();
 
-		$value = is_array($value) ? $value : array();
+        if(is_array($value)){
+            foreach ($value as $k => $v) {
+                if(is_numeric($v)){
+                    $value[$k] = intval($v);
+                }
+            }
+        } else {
+            $value = array();
+        }
+
 		return html_select_multiple($this->name, $items, $value);
 
     }
@@ -56,7 +65,7 @@ class fieldListBitmask extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = $this->parseListItems($this->getDefaultValue());
+            $items = string_explode_list($this->getDefaultValue());
 
         }
 
@@ -64,8 +73,12 @@ class fieldListBitmask extends cmsFormField {
 
     }
 
-    public function parseListItems($string){
-        return string_explode_list($string);
+    public function setOptions($options){
+        parent::setOptions($options);
+        if (!isset($this->items) && $this->hasDefaultValue()){
+            $this->items = string_explode_list($this->getDefaultValue());
+            $this->default = null;
+        }
     }
 
 	public function parseValue($values){
@@ -102,7 +115,7 @@ class fieldListBitmask extends cmsFormField {
 		if (!is_array($values)) { return $model; }
 
 		$filter = $this->parseValue($values);
-		$filter = str_replace("0", "_", $filter) . '%';
+		$filter = str_replace('0', '_', $filter) . '%';
 
 		$model->filterLike($this->name, $filter);
 

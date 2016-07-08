@@ -171,6 +171,10 @@ class cmsModel{
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
+        if(!empty($category['allow_add'])){
+            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        }
+
         return $category;
 
     }
@@ -212,6 +216,9 @@ class cmsModel{
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
+            if(!empty($node['allow_add'])){
+                $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
+            }
             return $node;
         });
 
@@ -584,9 +591,9 @@ class cmsModel{
         return $this;
     }
 
-    public function filterFunc($field, $value){
+    public function filterFunc($field, $value, $sign='='){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field = $value");
+        $this->filter("$field {$sign} $value");
         return $this;
     }
 
@@ -1175,6 +1182,8 @@ class cmsModel{
         if ($this->join){ $sql .= $this->join; }
 
         if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+
+        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша

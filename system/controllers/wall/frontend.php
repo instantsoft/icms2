@@ -2,7 +2,7 @@
 
 class wall extends cmsFrontend {
 
-    public static $perpage = 10;
+    public static $perpage = 15;
 
     public function getWidget($title, $target, $permissions=array()){
 

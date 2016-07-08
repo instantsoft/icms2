@@ -7,11 +7,11 @@ class actionContentItemApprove extends cmsAction {
         $user = cmsUser::getInstance();
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
         // Получаем нужную запись

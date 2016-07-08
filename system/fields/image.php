@@ -61,7 +61,13 @@ class fieldImage extends cmsFormField {
 
         if (!$paths || !isset($paths[ $this->getOption('size_full') ])){ return ''; }
 
-        return html_image($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
+        if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+            $img_func = 'html_gif_image';
+        } else {
+            $img_func = 'html_image';
+        }
+
+        return $img_func($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
 

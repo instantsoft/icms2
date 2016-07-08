@@ -74,7 +74,7 @@ class actionAuthRegister extends cmsAction {
         $user = array();
 
         if ($this->request->hasInQuery('inv')){
-            $user['inv'] = $this->request->get('inv');
+            $user['inv'] = $this->request->get('inv','');
         }
 
         $is_submitted = $this->request->has('submit');

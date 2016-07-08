@@ -5,11 +5,11 @@ class actionUsersStatus extends cmsAction {
     public function run(){
 
 		if (!cmsUser::isLogged()) { cmsCore::error404(); }
-		
+
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
         $user_id = $this->request->get('user_id');
-        $content = $this->request->get('content');
+        $content = (string)$this->request->get('content');
 
         // Проверяем валидность
         if (!is_numeric($user_id)){
@@ -25,12 +25,15 @@ class actionUsersStatus extends cmsAction {
         }
 
         // Вырезаем теги и форматируем
-        $content = strip_tags($content);
-        if (mb_strlen($content) > 140) { $content = mb_substr($content, 0, 140); }
-        $content = cmsEventsManager::hook('html_filter', $content);
-
+        $content = cmsEventsManager::hook('html_filter', strip_tags(trim($content)));
         if (!$content){
-            $result = array( 'error' => true, 'message' => '');
+            $result = array( 'error' => true, 'message' => ERR_VALIDATE_REQUIRED);
+            cmsTemplate::getInstance()->renderJSON($result);
+        }
+
+        // проверяем длину статуса
+        if (mb_strlen($content) > 140) {
+            $result = array( 'error' => true, 'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 140));
             cmsTemplate::getInstance()->renderJSON($result);
         }
 
@@ -54,14 +57,14 @@ class actionUsersStatus extends cmsAction {
         ));
 
         if ($status_id){
-            
+
             $wall_model->updateEntryStatusId($wall_entry_id, $status_id);
-            
+
             cmsCore::getController('activity')->addEntry($this->name, "status", array(
                 'subject_title' => $content,
                 'reply_url' => href_to($this->name, $user_id) . "?wid={$wall_entry_id}&reply=1"
             ));
-            
+
         }
 
         $result = array(
