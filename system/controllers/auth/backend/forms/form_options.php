@@ -40,10 +40,10 @@ class formAuthOptions extends cmsForm {
 						'default' => array(3)
                     )),
 
-//                    new fieldNumber('verify_exp', array(
-//                        'title' => LANG_REG_CFG_VERIFY_EXPIRATION,
-//                        'default' => 48
-//                    )),
+                    new fieldNumber('verify_exp', array(
+                        'title' => LANG_REG_CFG_VERIFY_EXPIRATION,
+                        'default' => 48
+                    )),
 
                 )
             ),
