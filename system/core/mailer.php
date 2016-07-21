@@ -122,7 +122,7 @@ class cmsMailer {
         $this->mailer->MsgHTML( $message );
 
         if ($is_auto_alt){
-            $this->setBodyText( strip_tags($message) );
+            $this->setBodyText( $this->mailer->html2text($message) );
         }
 
         return $this;
