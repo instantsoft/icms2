@@ -178,7 +178,7 @@ class cmsForm {
      */
     public function addField($fieldset_id, $field){
 
-        $this->structure[ $fieldset_id ]['childs'][] = $field;
+        $this->structure[ $fieldset_id ]['childs'][$field->name] = $field;
 
     }
 
