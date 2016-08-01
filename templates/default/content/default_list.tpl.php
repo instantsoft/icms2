@@ -111,8 +111,8 @@
 
                 <?php
 					$show_bar = !empty($item['rating_widget']) ||
-								$fields['date_pub']['is_in_item'] ||
-								$fields['user']['is_in_item'] ||
+								$fields['date_pub']['is_in_list'] ||
+								$fields['user']['is_in_list'] ||
 								!empty($ctype['options']['hits_on']) ||
 								!$item['is_pub'] ||
 								!$item['is_approved'];
