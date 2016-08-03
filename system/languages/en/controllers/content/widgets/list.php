@@ -3,7 +3,7 @@
     define('LANG_WD_CONTENT_LIST_DATASET',  'Apply dataset filters');
     define('LANG_WD_CONTENT_LIST_IMAGE',    'Image field');
     define('LANG_WD_CONTENT_LIST_TEASER',   'Short description field');
-    define('LANG_WD_CONTENT_LIST_DETAILS',   'Show author, date and comments number');
+    define('LANG_WD_CONTENT_LIST_DETAILS',   'Show author, date and comment count');
     define('LANG_WD_CONTENT_LIST_STYLE',    'Style');
     define('LANG_WD_CONTENT_LIST_STYLE_BASIC',      'Basic');
     define('LANG_WD_CONTENT_LIST_STYLE_FEATURED',   'Featured');

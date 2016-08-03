@@ -23,15 +23,15 @@
     define('LANG_FILTER_LIKE',               'contains');
     define('LANG_FILTER_LIKE_BEGIN',         'starts with');
     define('LANG_FILTER_LIKE_END',           'ends with');
-    define('LANG_FILTER_DATE_YOUNGER',       'not earlier, days');
-    define('LANG_FILTER_DATE_OLDER',         'not later, days');
+    define('LANG_FILTER_DATE_YOUNGER',       'not older, days');
+    define('LANG_FILTER_DATE_OLDER',         'older, days');
     define('LANG_FILTER_NOT_NULL',           'filled');
-    define('LANG_FILTER_IS_NULL',            'not filled');
+    define('LANG_FILTER_IS_NULL',            'empty');
     define('LANG_FILTER_APPLY',              'Apply');
     define('LANG_FILTER_URL',                'URL');
-    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Save different order');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Save different sorting options');
     define('LANG_SORTING_FIELD',             'Sort by field');
-    define('LANG_SORTING',                   'Sort');
+    define('LANG_SORTING',                   'Sorting');
     define('LANG_SORTING_ADD',               'New rule');
     define('LANG_SORTING_ASC',               'Ascending');
     define('LANG_SORTING_DESC',              'Descending');
@@ -55,17 +55,17 @@
     define('LANG_WP_SYSTEM',                 'System');
     define('LANG_WP_CUSTOM',                 'Custom');
     define('LANG_WP_ALL_PAGES',              'All pages');
-    define('LANG_WP_HOME_PAGE',              'Main page');
+    define('LANG_WP_HOME_PAGE',              'Home page');
     define('LANG_WIDGET_TAB_PREV',           'Group with the previous widget');
     define('LANG_WIDGET_TITLE_LINKS',        'Links in the widget header');
-    define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link in a line');
+    define('LANG_WIDGET_TITLE_LINKS_HINT',   'In the <b><em>Title | URL</em></b> format, for example, <b><em>Google | http://www.google.com</em></b><br>If a link is wrapped in curly brackets <b>{ }</b>, it will be shown to authorized users only<br>One link per line');
     define('LANG_WIDGET_WRAPPER_TPL',		 'Container template');
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File title is taken from the <b>widgets</b> folder of your theme, without the <b>.tpl.php</b> extension');
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
 
     //PARSERS
-    define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
+    define('LANG_PARSER_BITMASK_MAX',        'Maximum number of list items');
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
@@ -75,20 +75,20 @@
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
-    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
-    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine locations country-region-city, enter a name for unification of all fields. At a minimum, it should be established fields such as "Country" and "Region"');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Group name');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine the country-region-city locations, enter a single name for all fields. You should create at least the "country" and "region" fields.');
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
-    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'For example, "{country}, {city}", where country and city system field names. It is useful to use, disabling output for the rest of the field groups, showing the desired values in this field. If not specified - output value of the current field.');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'For example, "{country}, {city}", where country and city are system field names. This is useful if you want to show the desired values by hiding other group fields. If not specified, current field value is displayed.');
     define('LANG_PARSER_CHECKBOX',           'Checkbox');
     define('LANG_PARSER_TEXT',               'Textarea');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Maximum length');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Minimum length');
-    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show characters count');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Show character count');
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
-    define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
+    define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to the specified length, formatting will be removed');
     define('LANG_PARSER_BBCODE',             'Textarea with BB-code');
     define('LANG_PARSER_LIST',               'List');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Item index');
@@ -104,7 +104,7 @@
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');
-    define('LANG_PARSER_AGE_FROM_DATE',      'To count from a specified date');
+    define('LANG_PARSER_AGE_FROM_DATE',      'Count from a specified date');
     define('LANG_PARSER_AGE_FROM_DATE_HINT', 'If not specified, the count will be conducted from the current time');
     define('LANG_PARSER_DATE',               'Date');
     define('LANG_PARSER_DATE_FILTER_HINT',   'YYYY-MM-DD');
@@ -115,10 +115,10 @@
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
-    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in the item');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');
-    define('LANG_PARSER_IMAGE_SIZE_FULL',    'Image size in item');
+    define('LANG_PARSER_IMAGE_SIZE_FULL',    'Image size in entry');
     define('LANG_PARSER_IMAGE_SIZE_MICRO',   'Micro');
     define('LANG_PARSER_IMAGE_SIZE_SMALL',   'Small');
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Medium');
@@ -130,19 +130,19 @@
     define('LANG_PARSER_FILE_LABEL_NAME',    'Filename');
     define('LANG_PARSER_FILE_LABEL_GET',     'Download');
     define('LANG_PARSER_FILE_EXTS',          'Allowed file extensions');
-    define('LANG_PARSER_FILE_EXTS_HINT',     'Extensions list separated by commas');
+    define('LANG_PARSER_FILE_EXTS_HINT',     'List of extensions separated by commas');
     define('LANG_PARSER_FILE_EXTS_FIELD_HINT',     'Allowed file types: %s');
     define('LANG_PARSER_FILE_SIZE_FIELD_HINT',     'Maximum file size: %s');
     define('LANG_PARSER_FILE_MAX_SIZE',      'Maximum file size, Mb');
-    define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Not higher than %d Mb (allowed in PHP settings)');
+    define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Not more than %d Mb (allowed in PHP settings)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Show file size');
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Include in full-text index');
-    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Attention! Index will be rebuilt, once the option is changed. It can take a long time in respect of large tables.');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Attention! Index will be rebuilt once the option is changed. It can take a long time on large tables.');
     define('LANG_PARSER_ADD_FROM_LINK', 'add by link');
     define('LANG_PARSER_ENTER_IMAGE_LINK', 'Enter image link');
     define('LANG_OR', 'or');
-    define('LANG_BEGIN_TYPING', 'Begin entering, or select from the list');
+    define('LANG_BEGIN_TYPING', 'Start typing or select from the list');
 
     //USERS
     define('LANG_USER',                      'User');
@@ -150,7 +150,7 @@
     define('LANG_AUTHOR',                    'Author');
     define('LANG_REGISTRATION',              'Registration');
     define('LANG_USER_REGISTRATION',         'User Registration');
-    define('LANG_CREATE_ACCOUNT',            'Please, sign up');
+    define('LANG_CREATE_ACCOUNT',            'Sign up, please.');
     define('LANG_LOG_IN',                    'Log in');
     define('LANG_LOG_IN_ACCOUNT',            'Log in using your account');
     define('LANG_LOG_IN_OPENID',             'Log in using social media');
@@ -200,9 +200,9 @@
     define('LANG_MODERATION_APPROVED',       'Page published');
     define('LANG_MODERATION_APPROVED_BY',    'Approved by moderator');
     define('LANG_MODERATION_PM_AUTHOR',      'Send a message to the author');
-    define('LANG_MODERATION_NOTICE',         'Item will be published after moderator\'s approval');
+    define('LANG_MODERATION_NOTICE',         'The entry will be published after moderator\'s approval');
     define('LANG_MODERATION_IDLE',           'Notification was sent to moderator %s');
-    define('LANG_MODERATION_NO_TASKS',       'No items require approval');
+    define('LANG_MODERATION_NO_TASKS',       'No entries require approval');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
@@ -259,9 +259,9 @@
     define('ERR_VALIDATE_MAX_LENGTH',        'Too long value (max. length: %s)');
     define('ERR_VALIDATE_EMAIL',             'Wrong e-mail format');
     define('ERR_VALIDATE_REGEXP',            'Wrong format');
-    define('ERR_VALIDATE_ALPHANUMERIC',      'Only Latin letters and numbers');
-    define('ERR_VALIDATE_SYSNAME',           'Only Latin letters (lowercase), numbers and break characters');
-    define('ERR_VALIDATE_SLUG',              'Only Latin letters (lowercase), numbers, hyphen and vertical bar');
+    define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
+    define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
+    define('ERR_VALIDATE_SLUG',              'Only letters (lowercase), numbers, hyphen and vertical bar');
     define('ERR_VALIDATE_DIGITS',            'Only numbers');
     define('ERR_VALIDATE_NUMBER',            'Enter a number');
     define('ERR_VALIDATE_UNIQUE',            'This value is already used');
@@ -270,7 +270,7 @@
     define('LANG_VALIDATE_REQUIRED',         'Field is required');
     define('LANG_VALIDATE_DIGITS',           'Only counting numbers');
     define('LANG_VALIDATE_NUMBER',           'Only numbers');
-    define('LANG_VALIDATE_ALPHANUMERIC',     'Only Latin letters and numbers');
+    define('LANG_VALIDATE_ALPHANUMERIC',     'Only letters and numbers');
     define('LANG_VALIDATE_EMAIL',            'E-mail address');
     define('LANG_VALIDATE_UNIQUE',           'Unique value');
 
@@ -286,26 +286,26 @@
     define('LANG_CAPTCHA_ERROR', 		 	 'Spam protection code is incorrect');
 
     //LISTS
-    define('LANG_NO_ITEMS', 		 		 'No elements to display');
+    define('LANG_NO_ITEMS', 		 		 'No items to display');
 
     //ACTIONS
-    define('LANG_ADD_CATEGORY',              'Add category');
+    define('LANG_ADD_CATEGORY',              'Add Category');
     define('LANG_ADD_CATEGORY_QUICK',        'or create a category inside the selected');
-    define('LANG_EDIT_CATEGORY',             'Edit category');
-    define('LANG_DELETE_CATEGORY',           'Delete category');
+    define('LANG_EDIT_CATEGORY',             'Edit Category');
+    define('LANG_DELETE_CATEGORY',           'Delete Category');
     define('LANG_DELETE_CATEGORY_CONFIRM',   'Are you sure you want to delete the category?\nIts contents will be deleted too!');
     define('LANG_ADD_FOLDER_QUICK',          'or add a new folder');
-    define('LANG_EDIT_FOLDER',               'Edit folder');
-    define('LANG_DELETE_FOLDER',             'Delete folder');
+    define('LANG_EDIT_FOLDER',               'Edit Folder');
+    define('LANG_DELETE_FOLDER',             'Delete Folder');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Are you sure you want to delete the folder?\nIts contents will be deleted too!');
 
     define('LANG_BY_DEFAULT',                'Default');
     define('LANG_BASIC_OPTIONS',             'Basic');
     define('LANG_YES',                       'Yes');
     define('LANG_NO',                        'No');
-    define('LANG_LIST_LIMIT',                'Items in list');
+    define('LANG_LIST_LIMIT',                'Entries in list');
     define('LANG_LIST_ALL',					 'Show all');
-    define('LANG_LIST_EMPTY',                'No elements to display');
+    define('LANG_LIST_EMPTY',                'No items to display');
     define('LANG_LIST_NONE_SELECTED',        'Nothing selected');
     define('LANG_DOWNLOAD',                  'Download');
     define('LANG_UPLOAD',                    'Upload');
@@ -377,7 +377,7 @@
     define('LANG_PAGE_LAST',                 'Last');
     define('LANG_PAGES', 					 'Pages');
     define('LANG_PAGE', 					 'Page');
-    define('LANG_PAGE_ADD',                  'NewPage');
+    define('LANG_PAGE_ADD',                  'New Page');
     define('LANG_PAGE_DELETE',               'Delete page');
     define('LANG_PAGE_CURRENT_DELETE',       'Delete current page');
     define('LANG_PAGES_SHOWN',               'Items %d-%d of %d');
@@ -388,9 +388,9 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
-    define('LANG_PAGE_MENU',                 'Page menu');
-    define('LANG_PAGE_HEADER',               'Page header');
-    define('LANG_PAGE_FOOTER',               'Page footer');
+    define('LANG_PAGE_MENU',                 'Menu');
+    define('LANG_PAGE_HEADER',               'Header');
+    define('LANG_PAGE_FOOTER',               'Footer');
     define('LANG_PAGE_LOGO',                 'Logo');
     define('LANG_MENU',                      'Menu');
     define('LANG_TITLE', 					 'Title');
@@ -445,11 +445,11 @@
     define('LANG_UNIT1',                     'unit');
     define('LANG_UNIT2',                     'units');
     define('LANG_UNIT10',                    'units');
-    define('LANG_CH1',                       'letter');
-    define('LANG_CH2',                       'letter');
-    define('LANG_CH10',                      'letters');
+    define('LANG_CH1',                       'character');
+    define('LANG_CH2',                       'characters');
+    define('LANG_CH10',                      'characters');
 
-    define('LANG_ISLEFT',                    'is left');
+    define('LANG_ISLEFT',                    'left');
 
     //DATES
     define('LANG_ALL',                       'All');
@@ -496,7 +496,7 @@
     define('LANG_DATE_AGO',                  '%s ago');
 
     //MAIL
-    define('LANG_MAIL_DEFAULT_ALT',          'Please, view this e-mail with a client that supports HTML');
+    define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="http://www.fatcow.com/free-icons">FatCow</a>');

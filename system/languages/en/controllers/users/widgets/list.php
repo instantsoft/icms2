@@ -1,7 +1,7 @@
 <?php
 
     define('LANG_WD_USERS_LIST_DATASET',         'List sorting');
-    define('LANG_WD_USERS_LIST_GROUPS',          'Show groups only');
+    define('LANG_WD_USERS_LIST_GROUPS',          'Show users from selected groups only');
     define('LANG_WD_USERS_LIST_AVATARS',         'Show avatars');
     define('LANG_WD_USERS_LIST_SHOW',            'Show');
     define('LANG_WD_USERS_LIST_SHOW_ALL',        'All users');
