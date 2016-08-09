@@ -24,26 +24,29 @@ $(function(){
 
 <script type="text/javascript">
     var cache = {};
-
     <?php if(!empty($field->data['autocomplete']['multiple'])) { ?>
-        $( "#<?php echo $field->id; ?>" ).bind( "keydown", function( event ) {
+        $( "#<?php echo $field->id; ?>" ).bind('keydown', function( event ) {
             if ( event.keyCode === $.ui.keyCode.TAB &&
-                $( this ).data( "ui-autocomplete" ).menu.active ) {
+                $( this ).data('ui-autocomplete').menu.active ) {
                 event.preventDefault();
             }
         }).autocomplete({
             minLength: 2,
             source: function( request, response ) {
-                var term = request.term;
-                if ( term in cache ) {
-                    response( cache[ term ] );
+                var full_term = request.term;
+                var term = full_term.split( /,\s*/ ).pop();
+                if (term.length < 2) {
+                    return false;
+                }
+                if (term in cache) {
+                    response(cache[term]);
                     return;
                 }
                 $.getJSON( '<?php echo $field->data['autocomplete']['url']; ?>', {
-                    term: term.split( /,\s*/ ).pop()
-                }, function( data, status, xhr ) {
-                    cache[ term ] = data;
-                    response( data );
+                    term: term
+                }, function(data, status, xhr) {
+                    cache[term] = data;
+                    response(data);
                 });
             },
             focus: function() {
@@ -53,8 +56,9 @@ $(function(){
                 var terms = this.value.split( /,\s*/ );
                 terms.pop();
                 terms.push( ui.item.value );
-                terms.push( "" );
-                this.value = terms.join( ", " );
+                terms.push('');
+                this.value = terms.join(', ');
+                icms.events.run('autocomplete_select', this);
                 return false;
             }
         });
@@ -72,8 +76,12 @@ $(function(){
                     cache[ term ] = data;
                     response( data );
                 });
+            },
+            select: function( event, ui ) {
+                icms.events.run('autocomplete_select', this);
+                return false;
             }
         });
     <?php } ?>
 </script>
-<?php } ?>
+<?php }

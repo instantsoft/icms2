@@ -179,6 +179,8 @@ icms.forms = (function ($) {
         var symbols_num   = $('.symbols_num', symbols_count);
         var symbols_spell = $('.symbols_spell', symbols_count);
         var type = 'total';
+        var field_id_el = $('#'+field_id);
+
         $(symbols_num).on('click', function (){
             if(max){
                 if(type === 'total'){
@@ -186,11 +188,11 @@ icms.forms = (function ($) {
                 } else {
                     type = 'total';
                 }
-                $('#'+field_id).trigger('input');
+                render_symbols_count();
             }
         });
-        $('#'+field_id).on('input', function (){
-            num = +$(this).val().length;
+        var render_symbols_count = function (){
+            num = +$(field_id_el).val().length;
             if(type === 'total'){
                 if(!num){
                     $(symbols_num).html(''); $(symbols_count).hide(); return;
@@ -207,12 +209,15 @@ icms.forms = (function ($) {
                 $(symbols_count).fadeIn();
                 if(num > max){
                     num = max;
-                    $(this).val($(this).val().substr(0, max));
+                    $(field_id_el).val($(field_id_el).val().substr(0, max));
                 }
                 $(symbols_num).html((max - num)).removeClass('overflowing');
                 $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10)+' '+LANG_ISLEFT);
             }
-        }).triggerHandler('input');
+        };
+        $(field_id_el).on('input', render_symbols_count);
+        icms.events.on('autocomplete_select', function(){ render_symbols_count(); });
+        render_symbols_count();
     };
 
 	return this;
@@ -229,11 +234,11 @@ icms.events = (function ($) {
         } else {
             this.listeners[name] = [callback];
         }
+        return this;
     };
 
     this.run = function(name, params){
         params = params || {};
-
         for(event_name in this.listeners[name]) {
             if(this.listeners[name].hasOwnProperty(event_name)){
                 if (typeof(this.listeners[name][event_name]) == 'function') {
@@ -241,6 +246,7 @@ icms.events = (function ($) {
                 }
             }
         }
+        return this;
     };
 
 	return this;
