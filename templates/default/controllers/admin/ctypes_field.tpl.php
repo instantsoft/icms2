@@ -51,17 +51,21 @@
 
         var field_type = $(field).val();
 
-        $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
-            <?php if ($do=='edit') { ?>
-                field_id: '<?php echo $field['id']; ?>',
-            <?php } ?>
-            ctype_name: '<?php echo $ctype['name']; ?>',
-            type: field_type
-        }, function( html ){
-            if (!html) { return; }
-            $('#f_type').after( html );
-            icms.events.run('loadfieldtypeoptions', html);
-        }, 'html')
+        if (field_type){
+
+            $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
+                <?php if ($do=='edit') { ?>
+                    field_id: '<?php echo $field['id']; ?>',
+                <?php } ?>
+                ctype_name: '<?php echo $ctype['name']; ?>',
+                type: field_type
+            }, function( html ){
+                if (!html) { return; }
+                $('#f_type').after( html );
+                icms.events.run('loadfieldtypeoptions', html);
+            }, 'html');
+
+		}
 
     }
 
