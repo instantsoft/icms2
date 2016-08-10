@@ -4,7 +4,7 @@ class comments extends cmsFrontend {
 
     protected $target_controller;
     protected $target_subject;
-	
+
 	protected $useOptions = true;
 
 	public function __construct($request){
@@ -12,8 +12,9 @@ class comments extends cmsFrontend {
         parent::__construct($request);
 
         $this->target_controller = $this->request->get('target_controller');
-        $this->target_subject = $this->request->get('target_subject');
-        $this->target_id = $this->request->get('target_id');
+        $this->target_subject    = $this->request->get('target_subject');
+        $this->target_id         = $this->request->get('target_id');
+        $this->target_user_id    = $this->request->get('target_user_id');
 
     }
 
@@ -22,8 +23,6 @@ class comments extends cmsFrontend {
 
     public function getWidget(){
 
-        $user = cmsUser::getInstance();
-
         $comments = $this->model->
                             lockFilters()->
                             filterEqual('target_controller', $this->target_controller)->
@@ -31,27 +30,27 @@ class comments extends cmsFrontend {
                             filterEqual('target_id', $this->target_id)->
                             getComments();
 
-        $is_tracking = $this->model->getTracking($user->id);
+        $comments = cmsEventsManager::hook('comments_before_list', $comments);
+
+        $is_tracking = $this->model->getTracking($this->cms_user->id);
 
         $is_highlight_new = $this->request->hasInQuery('new_comments');
 
-        if ($is_highlight_new && !$user->is_logged) { cmsCore::error404(); }
+        if ($is_highlight_new && !$this->cms_user->is_logged) { cmsCore::error404(); }
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'list', array(
-            'user' => $user,
+        return $this->cms_template->renderInternal($this, 'list', array(
+            'user'              => $this->cms_user,
             'target_controller' => $this->target_controller,
-            'target_subject' => $this->target_subject,
-            'target_id' => $this->target_id,
-            'is_tracking' => $is_tracking,
-            'is_highlight_new' => $is_highlight_new,
-            'user' => $user,
-            'comments' => $comments,
-            'csrf_token_seed' => $csrf_token_seed,
-            'is_can_rate' => cmsUser::isAllowed('comments', 'rate')
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $this->target_id,
+            'target_user_id'    => $this->target_user_id,
+            'is_tracking'       => $is_tracking,
+            'is_highlight_new'  => $is_highlight_new,
+            'comments'          => $comments,
+            'csrf_token_seed'   => $csrf_token_seed,
+            'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
         ));
 
     }
@@ -105,9 +104,9 @@ class comments extends cmsFrontend {
 
 		$is_guest_parent = !$parent_comment['user_id'] && $parent_comment['author_email'];
 		$is_guest_comment = !$comment['user_id'];
-		
+
 		$page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
-		
+
 		$letter_data = array(
             'page_url' => $page_url,
             'page_title' => $comment['target_title'],
@@ -116,12 +115,12 @@ class comments extends cmsFrontend {
             'comment' => $comment['content'],
             'original' => $parent_comment['content'],
         );
-		
+
 		if (!$is_guest_parent){
 			$messenger->addRecipient($parent_comment['user_id']);
 			$messenger->sendNoticeEmail('comments_reply', $letter_data);
 		}
-		
+
 		if ($is_guest_parent){
 			$letter_data['nickname'] = $parent_comment['author_name'];
 			$to = array('name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']);
@@ -136,10 +135,8 @@ class comments extends cmsFrontend {
 
     public function renderCommentsList($page_url, $dataset_name=false){
 
-        $user = cmsUser::getInstance();
-
         $page = $this->request->get('page', 1);
-        $perpage = 15;
+        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
         if (!$dataset_name || $dataset_name == 'all'){
@@ -158,24 +155,22 @@ class comments extends cmsFrontend {
 
         $items = cmsEventsManager::hook("comments_before_list", $items);
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'list_index', array(
-            'filters' => array(),
-            'dataset_name' => $dataset_name,
-            'page_url' => $page_url,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'items' => $items,
-            'user' => $user,
+        return $this->cms_template->renderInternal($this, 'list_index', array(
+            'filters'        => array(),
+            'dataset_name'   => $dataset_name,
+            'page_url'       => $page_url,
+            'page'           => $page,
+            'perpage'        => $perpage,
+            'total'          => $total,
+            'items'          => $items,
+            'user'           => $this->cms_user,
+            'target_user_id' => $this->target_user_id,
         ));
 
     }
 
     public function getDatasets(){
 
-        $user = cmsUser::getInstance();
         $datasets = array();
 
         // Все (новые)
@@ -185,7 +180,7 @@ class comments extends cmsFrontend {
         );
 
         // Мои друзья
-        if ($user->is_logged){
+        if ($this->cms_user->is_logged){
             $datasets['friends'] = array(
                 'name' => 'friends',
                 'title' => LANG_COMMENTS_DS_FRIENDS,
@@ -197,7 +192,7 @@ class comments extends cmsFrontend {
         }
 
         // Только мои
-        if ($user->is_logged){
+        if ($this->cms_user->is_logged){
             $datasets['my'] = array(
                 'name' => 'my',
                 'title' => LANG_COMMENTS_DS_MY,
@@ -208,7 +203,7 @@ class comments extends cmsFrontend {
             );
         }
 
-        return $datasets;
+        return cmsEventsManager::hook('comments_datasets', $datasets);
 
     }
 

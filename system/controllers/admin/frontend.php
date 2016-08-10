@@ -1,7 +1,7 @@
 <?php
 class admin extends cmsFrontend {
 
-    const perpage = 15;
+    const perpage = 35;
 
     public $installer_upload_path = 'installer';
 
@@ -12,13 +12,27 @@ class admin extends cmsFrontend {
 
         if (!cmsUser::isAdmin()) { cmsCore::error404(); }
 
+        if(!$this->isAllowByIp()){ cmsCore::error404(); }
+
         parent::before($action_name);
 
-        $template = cmsTemplate::getInstance();
+        // если для админки свой шаблон
+        if($this->cms_config->template_admin){
+            $this->cms_template->setName($this->cms_config->template_admin);
+        }
 
-        $template->setLayout('admin');
+        $this->cms_template->setLayout('admin');
 
-        $template->setMenuItems('cp_main', $this->getAdminMenu());
+        $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+
+    }
+
+    private function isAllowByIp() {
+
+        $allow_ips = cmsConfig::get('allow_ips');
+        if(!$allow_ips){ return true; }
+
+        return string_in_mask_list(cmsUser::getIp(), $allow_ips);
 
     }
 
@@ -154,19 +168,20 @@ class admin extends cmsFrontend {
 
     public function loadControllerBackend($controller_name, $request){
 
-        $config = cmsConfig::getInstance();
-
-        $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
+        $ctrl_file = $this->cms_config->root_path . 'system/controllers/'.$controller_name.'/backend.php';
 
         if(!file_exists($ctrl_file)){
-            $this->halt(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
+            cmsCore::error(sprintf(LANG_CP_ERR_BACKEND_NOT_FOUND, $controller_name));
         }
 
         include_once($ctrl_file);
 
-        $controller_class = 'backend' . string_to_camel('_', $controller_name);
+        $controller_class = 'backend'.ucfirst($controller_name);
 
         $backend = new $controller_class($request);
+
+        // Устанавливаем корень для URL внутри бакенда
+        $backend->setRootURL($this->name.'/controllers/edit/'.$controller_name);
 
         return $backend;
 
@@ -174,5 +189,86 @@ class admin extends cmsFrontend {
 
 //============================================================================//
 //============================================================================//
+
+    public function parsePackageManifest(){
+
+        $path = $this->cms_config->upload_path . $this->installer_upload_path;
+
+        $ini_file = $path . '/' . "manifest.{$this->cms_config->language}.ini";
+        $ini_file_default = $path . '/' . "manifest.ru.ini";
+
+        if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
+        if (!file_exists($ini_file)){ return false; }
+
+        $manifest = parse_ini_file($ini_file, true);
+
+        if (file_exists($this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package')){
+            $manifest['contents'] = $this->getPackageContentsList();
+        } else {
+			$manifest['contents'] = false;
+		}
+
+        if (isset($manifest['info']['image'])){
+            $manifest['info']['image'] = $this->cms_config->upload_host . '/' .
+                                            $this->installer_upload_path . '/' .
+                                            $manifest['info']['image'];
+        }
+
+        if((isset($manifest['install']) || isset($manifest['update']))){
+
+            $action = (isset($manifest['install']) ? 'install' : 'update');
+
+            if(isset($manifest[$action]['type']) && isset($manifest[$action]['name'])){
+
+                $manifest['package'] = array(
+                    'type'       => $manifest[$action]['type'],
+                    'type_hint'  => constant('LANG_CP_PACKAGE_TYPE_'.strtoupper($manifest[$action]['type']).'_'.strtoupper($action)),
+                    'action'     => $action,
+                    'name'       => $manifest[$action]['name'],
+                    'controller' => (isset($manifest[$action]['controller']) ? $manifest[$action]['controller'] : null),
+                );
+
+                // проверяем установленную версию
+                $manifest['package']['installed_version'] = call_user_func(array($this, $manifest[$action]['type'].'Installed'), $manifest['package']);
+
+            }
+
+        }
+
+        return $manifest;
+
+    }
+
+    private function componentInstalled($manifest_package) {
+
+        $model = new cmsModel();
+
+        return $model->filterEqual('name', $manifest_package['name'])->getFieldFiltered('controllers', 'version');
+
+    }
+
+    private function widgetInstalled($manifest_package) {
+
+        $model = new cmsModel();
+
+        return $model->filterEqual('name', $manifest_package['name'])->
+                filterEqual('controller', $manifest_package['controller'])->
+                getFieldFiltered('widgets', 'version');
+
+    }
+
+    private function systemInstalled($manifest_package) {
+        return cmsCore::getVersion();
+    }
+
+    private function getPackageContentsList(){
+
+        $path = $this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package';
+
+        if (!is_dir($path)) { return false; }
+
+        return files_tree_to_array($path);
+
+    }
 
 }

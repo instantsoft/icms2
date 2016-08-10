@@ -8,11 +8,11 @@ class formRecaptchaOptions extends cmsForm {
 
             array(
                 'type' => 'fieldset',
-                'title' => LANG_RECAPTCHA_KEYS, 
+                'title' => LANG_RECAPTCHA_KEYS,
                 'childs' => array(
 
                     new fieldString('public_key', array(
-                        'title' => LANG_RECAPTCHA_PUBLIC_KEY,                        
+                        'title' => LANG_RECAPTCHA_PUBLIC_KEY,
                     )),
 
                     new fieldString('private_key', array(
@@ -29,24 +29,31 @@ class formRecaptchaOptions extends cmsForm {
                 'childs' => array(
 
                     new fieldList('theme', array(
-                        'title' => LANG_RECAPTCHA_SKIN, 
+                        'title' => LANG_RECAPTCHA_SKIN,
                         'items' => array(
-                            'red' => 'red',
-                            'blackglass' => 'blackglass',
-                            'white' => 'white',
-                            'clean' => 'clean'
+                            'light' => LANG_RECAPTCHA_SKIN_LIGHT,
+                            'dark' => LANG_RECAPTCHA_SKIN_DARK
                         )
-                    )), 
-                    
+                    )),
+
+                    new fieldList('size', array(
+                        'title' => LANG_RECAPTCHA_SIZE,
+                        'items' => array(
+                            'normal' => LANG_RECAPTCHA_SIZE_NORMAL,
+                            'compact' => LANG_RECAPTCHA_SIZE_COMPACT
+                        )
+                    )),
+
                     new fieldList('lang', array(
-                        'title' => LANG_RECAPTCHA_LANG, 
+                        'title' => LANG_RECAPTCHA_LANG,
                         'items' => array(
                             'en' => 'English',
                             'nl' => 'Dutch',
                             'fr' => 'French',
                             'de' => 'German',
                             'pt' => 'Portuguese',
-                            'ru' => 'Russian',
+                            'ru' => 'Русский',
+                            'uk' => 'Український',
                             'es' => 'Spanish',
                             'tr' => 'Turkish'
                         )

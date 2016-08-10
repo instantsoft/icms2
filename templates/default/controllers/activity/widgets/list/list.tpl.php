@@ -38,7 +38,7 @@
                 <?php } ?>
                 <?php if ($show_avatars){ ?>
                     <div class="image">
-                        <a href="<?php echo $url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro'); ?></a>
+                        <a href="<?php echo $url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?></a>
                     </div>
                 <?php } ?>
                 <div class="info">
@@ -62,7 +62,7 @@
                             <?php foreach($item['images'] as $image){ ?>
                                 <div class="image">
                                     <a href="<?php echo $image['url']; ?>">
-                                        <img src="<?php echo $image['src']; ?>">
+                                        <img alt="<?php html($item['subject_title']); ?>" src="<?php echo $image['src']; ?>">
                                     </a>
                                 </div>
                             <?php } ?>

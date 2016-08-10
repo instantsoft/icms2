@@ -6,19 +6,15 @@ class actionWallSubmit extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        $action = $this->request->get('action');
+        $action = $this->request->get('action', '');
 
-        $template = cmsTemplate::getInstance();
-
-        $user = cmsUser::getInstance();
-
-        $csrf_token = $this->request->get('csrf_token');
-        $controller_name = $this->request->get('pc');
-        $profile_type = $this->request->get('pt');
-        $profile_id = $this->request->get('pi');
-        $parent_id = $this->request->get('parent_id');
-        $entry_id = $this->request->get('id');
-        $content = $this->request->get('content');
+        $csrf_token      = $this->request->get('csrf_token', '');
+        $controller_name = $this->request->get('pc', '');
+        $profile_type    = $this->request->get('pt', '');
+        $profile_id      = $this->request->get('pi', '');
+        $parent_id       = $this->request->get('parent_id', '');
+        $entry_id        = $this->request->get('id', '');
+        $content         = $this->request->get('content', '');
 
         // Проверяем валидность
         $is_valid = ($this->validate_sysname($controller_name)===true) &&
@@ -48,14 +44,18 @@ class actionWallSubmit extends cmsAction {
         // Типографируем текст
         $content_html = cmsEventsManager::hook('html_filter', $content);
 
+        if($this->validate_required($content_html) !== true){
+            $this->error(ERR_VALIDATE_REQUIRED);
+        }
+
         //
         // Превью записи
         //
         if ($action=='preview'){
 
-            $result = array('error' => false, 'html' => $content_html);
+            $result = array('error' => false, 'html' => cmsEventsManager::hook('parse_text', $content_html));
 
-            $template->renderJSON($result);
+            $this->cms_template->renderJSON($result);
 
         }
 
@@ -66,7 +66,9 @@ class actionWallSubmit extends cmsAction {
 
             $entry = $this->model->getEntry($entry_id);
 
-            if ($entry['user']['id'] != $user->id && !$user->is_admin){ $this->error(); }
+            if ($entry['user']['id'] != $this->cms_user->id && !$this->cms_user->is_admin){ $this->error(); }
+
+            list($entry_id, $content, $content_html) = cmsEventsManager::hook('wall_before_update', array($entry_id, $content, $content_html));
 
             $this->model->updateEntryContent($entry_id, $content, $content_html);
 
@@ -84,25 +86,25 @@ class actionWallSubmit extends cmsAction {
 
             // Собираем данные записи
             $entry = array(
-                'user_id' => $user->id,
-                'parent_id' => $parent_id,
+                'user_id'      => $this->cms_user->id,
+                'parent_id'    => $parent_id,
                 'profile_type' => $profile_type,
-                'profile_id' => $profile_id,
-                'content' => $content,
+                'profile_id'   => $profile_id,
+                'content'      => $content,
                 'content_html' => $content_html
             );
 
             // Сохраняем запись
-            $entry_id = $this->model->addEntry($entry);
+            $entry_id = $this->model->addEntry(cmsEventsManager::hook('wall_before_add', $entry));
 
             if ($entry_id){
 
                 // Получаем и рендерим добавленную запись
                 $entry = $this->model->getEntry($entry_id);
 
-                $entry_html = $template->renderInternal($this, 'entry', array(
+                $entry_html = $this->cms_template->renderInternal($this, 'entry', array(
                     'entries' => array($entry),
-                    'user'=>$user,
+                    'user'=>$this->cms_user,
                     'permissions'=>$permissions
                 ));
 
@@ -127,21 +129,20 @@ class actionWallSubmit extends cmsAction {
 
         // Формируем и возвращаем результат
         $result = array(
-            'error' => $entry_id ? false : true,
-            'message' => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
-            'id' => $entry_id,
+            'error'     => $entry_id ? false : true,
+            'message'   => $entry_id ? LANG_WALL_ENTRY_SUCCESS : LANG_WALL_ENTRY_ERROR,
+            'id'        => $entry_id,
             'parent_id' => isset($entry['parent_id']) ? $entry['parent_id'] : 0,
-            'html' => isset($entry_html) ? $entry_html : false
+            'html'      => isset($entry_html) ? (cmsEventsManager::hook('parse_text', $entry_html)) : false
         );
 
-        $template->renderJSON($result);
+        $this->cms_template->renderJSON($result);
 
     }
 
     private function error($message=LANG_WALL_ENTRY_ERROR){
 
-        $result = array('error' => true, 'message' => $message);
-        cmsTemplate::getInstance()->renderJSON($result);
+        $this->cms_template->renderJSON(array('error' => true, 'message' => $message));
 
     }
 

@@ -23,6 +23,8 @@ class groups extends cmsFrontend{
 
         if (!is_numeric($action_name)){ return $action_name; }
 
+        $this->lock_explicit_call = false;
+
         $group_id = $action_name;
 
         $group = $this->model->getGroup($group_id);
@@ -55,7 +57,7 @@ class groups extends cmsFrontend{
         $user = cmsUser::getInstance();
 
         $page = $this->request->get('page', 1);
-        $perpage = 10;
+        $perpage = (empty($this->options['limit']) ? 10 : $this->options['limit']);
 
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
@@ -64,14 +66,18 @@ class groups extends cmsFrontend{
         $total = $this->model->getGroupsCount();
         $groups = $this->model->getGroups();
 
+        if($this->request->isStandard()){
+            if(!$groups && $page > 1){ cmsCore::error404(); }
+        }
+
         return $template->renderInternal($this, 'list', array(
-            'page_url' => $page_url,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'groups' => $groups,
+            'page_url'     => $page_url,
+            'page'         => $page,
+            'perpage'      => $perpage,
+            'total'        => $total,
+            'groups'       => $groups,
             'dataset_name' => $dataset_name,
-            'user' => $user
+            'user'         => $user
         ));
 
     }

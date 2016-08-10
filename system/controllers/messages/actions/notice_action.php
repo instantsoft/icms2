@@ -4,12 +4,10 @@ class actionMessagesNoticeAction extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
-
-        $notice_id = $this->request->get('notice_id') or cmsCore::error404();
+        $notice_id   = $this->request->get('notice_id') or cmsCore::error404();
         $action_name = $this->request->get('action_name') or cmsCore::error404();
 
-        $user = cmsUser::getInstance();
+        $user     = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
 
         $notice = $this->model->getNotice($notice_id);

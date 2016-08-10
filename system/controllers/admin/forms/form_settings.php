@@ -7,6 +7,7 @@ class formAdminSettings extends cmsForm {
 
         $is_css_cache = cmsCore::getFilesList('cache/static/css', '*.css');
         $is_js_cache = cmsCore::getFilesList('cache/static/js', '*.js');
+        $ctypes = cmsCore::getModel('content')->getContentTypes();
 
         return array(
 
@@ -39,14 +40,12 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('frontpage', array(
                         'title' => LANG_CP_SETTINGS_FP_SHOW,
-                        'generator' => function($item) {
+                        'generator' => function($item) use($ctypes){
 
                             $items = array(
                                 'none' => LANG_CP_SETTINGS_FP_SHOW_NONE,
                                 'profile' => LANG_CP_SETTINGS_FP_SHOW_PROFILE,
                             );
-
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
 
                             if ($ctypes) {
                                 foreach ($ctypes as $ctype) {
@@ -63,14 +62,12 @@ class formAdminSettings extends cmsForm {
                     new fieldList('ctype_default', array(
                         'title' => LANG_CP_SETTINGS_CTYPE_DEF,
 						'hint' => LANG_CP_SETTINGS_CTYPE_DEF_HINT,
-                        'generator' => function($item) {
+                        'generator' => function($item) use($ctypes){
 
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
+							$items[''] = LANG_NO;
 
-							$items[''] = '';
-							
                             if ($ctypes) {
-                                foreach ($ctypes as $ctype) {                                    
+                                foreach ($ctypes as $ctype) {
                                     $items[$ctype['name']] = $ctype['title'];
                                 }
                             }
@@ -92,9 +89,20 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_META_NO_DEFAULT,
                     )),
 
+                    new fieldCheckbox('is_sitename_in_title', array(
+                        'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
+                        'default' => 1
+                    )),
+
                     new fieldCheckbox('is_check_updates', array(
                         'title' => LANG_CP_SETTINGS_CHECK_UPDATES,
                     )),
+
+                    new fieldString('detect_ip_key', array(
+                        'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
+                        'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
+                        'default' => 'REMOTE_ADDR'
+                    ))
 
                 )
             ),
@@ -103,6 +111,66 @@ class formAdminSettings extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_CP_SETTINGS_GUI,
                 'childs' => array(
+
+                    new fieldList('template', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array();
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_admin', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_mobile', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_MOBILE,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('template_tablet', array(
+                        'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
+                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'generator' => function($item) {
+                            $tpls = cmsCore::getTemplates();
+                            $items = array(''=>LANG_BY_DEFAULT);
+                            if ($tpls) {
+                                foreach ($tpls as $tpl) {
+                                    $items[$tpl] = $tpl;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
 
                     new fieldList('language', array(
                         'title' => LANG_CP_SETTINGS_LANGUAGE,
@@ -118,19 +186,20 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
-                    new fieldList('template', array(
-                        'title' => LANG_CP_SETTINGS_TEMPLATE,
-                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
-                        'generator' => function($item) {
-                            $tpls = cmsCore::getTemplates();
+                    new fieldList('default_editor', array(
+                        'title' => LANG_CP_SETTINGS_EDITOR,
+                        'default' => 'redactor',
+                        'generator' => function($item){
                             $items = array();
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    $items[$tpl] = $tpl;
-                                }
-                            }
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){ $items[$editor] = $editor; }
                             return $items;
                         }
+                    )),
+
+                    new fieldCheckbox('show_breadcrumbs', array(
+                        'title'   => LANG_CP_SETTINGS_SHOW_BREADCRUMBS,
+                        'default' => 1
                     )),
 
                     new fieldCheckbox('min_html', array(
@@ -198,6 +267,10 @@ class formAdminSettings extends cmsForm {
                         'rules' => array(
                             array('required'),
                         )
+                    )),
+
+                    new fieldString('mail_from_name', array(
+                        'title' => LANG_CP_SETTINGS_MAIL_FROM_NAME
                     )),
 
                     new fieldString('mail_smtp_server', array(
@@ -280,6 +353,19 @@ class formAdminSettings extends cmsForm {
 
                 )
             ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_SECURITY,
+                'childs' => array(
+
+                    new fieldText('allow_ips', array(
+                        'title' => LANG_CP_SETTINGS_ALLOW_IPS,
+                        'hint'  => LANG_CP_SETTINGS_ALLOW_IPS_HINT
+                    ))
+
+                )
+            )
 
         );
 

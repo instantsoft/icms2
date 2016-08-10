@@ -14,6 +14,7 @@ class actionAdminSettings extends cmsAction {
 
         $values = $config->getAll();
         $values['time_zone'] = $values['cfg_time_zone'];
+        $values['language'] = $values['cfg_language'];
 
         $form = $this->getForm('settings');
 
@@ -42,12 +43,17 @@ class actionAdminSettings extends cmsAction {
                     }
                 }
 
+                if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
+                    files_clear_directory($config->cache_path.'data/');
+                }
+
                 $result = $config->save($values);
 
                 if (!$result){
                     $errors = array();
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
                 } else {
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                     $this->redirectBack();
                 }
 
@@ -59,10 +65,18 @@ class actionAdminSettings extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('settings', array(
-            'do' => 'edit',
+        $tpls = cmsCore::getTemplates();
+        foreach ($tpls as $tpl) {
+            if(file_exists($config->root_path.'templates/'.$tpl.'/options.form.php')){
+                $templates_has_options[] = $tpl;
+            }
+        }
+
+        return $this->cms_template->render('settings', array(
+            'templates_has_options' => $templates_has_options,
+            'do'     => 'edit',
             'values' => $values,
-            'form' => $form,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

@@ -2,11 +2,11 @@
 
 class fieldImage extends cmsFormField {
 
-    public $title = LANG_PARSER_IMAGE;
-    public $sql   = 'text';
-	public $allow_index = false;
-
-    private $teaser_url = '';
+    public $title       = LANG_PARSER_IMAGE;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
+    protected $teaser_url = '';
 
     public function getOptions(){
 
@@ -29,6 +29,9 @@ class fieldImage extends cmsFormField {
                 'default' => 0,
                 'items' => $presets
             )),
+            new fieldCheckbox('allow_import_link', array(
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            ))
         );
     }
 
@@ -39,37 +42,35 @@ class fieldImage extends cmsFormField {
 
     public function parseTeaser($value){
 
-        $config = cmsConfig::getInstance();
-
         $paths = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths){ return; }
+        if (!$paths || !isset($paths[ $this->getOption('size_teaser') ])){ return ''; }
 
         $url = $this->teaser_url ?
                 $this->teaser_url :
                 href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
 
-        return '<a href="'.$url.'"><img src="'.$config->upload_host . '/' . $paths[ $this->getOption('size_teaser') ].'" border="0"></a>';
+        return '<a href="'.$url.'">'.html_image($paths, $this->getOption('size_teaser'), (empty($this->item['title']) ? $this->name : $this->item['title'])).'</a>';
 
     }
 
     public function parse($value){
 
-        $config = cmsConfig::getInstance();
-
         $paths = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths){ return; }
+        if (!$paths || !isset($paths[ $this->getOption('size_full') ])){ return ''; }
 
-		$src = isset($paths[ $this->getOption('size_full') ]) ? $paths[ $this->getOption('size_full') ] : false;
+        if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+            $img_func = 'html_gif_image';
+        } else {
+            $img_func = 'html_image';
+        }
 
-		if (!$src) { return; }
-
-        return '<img src="'.$config->upload_host . '/' . $src.'" border="0" />';
+        return $img_func($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
 
@@ -148,13 +149,14 @@ class fieldImage extends cmsFormField {
 
     public function getInput($value){
 
-	$this->data['paths'] = false;
+        $this->data['paths'] = false;
 
         if($value){
             $this->data['paths'] = is_array($value) ? $value : cmsModel::yamlToArray($value);
         }
 
-	$this->data['sizes'] = $this->getOption('sizes');
+        $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

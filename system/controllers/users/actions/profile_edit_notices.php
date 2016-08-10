@@ -2,13 +2,12 @@
 
 class actionUsersProfileEditNotices extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         $notify_types = cmsEventsManager::hookAll('user_notify_types');
 
@@ -70,12 +69,12 @@ class actionUsersProfileEditNotices extends cmsAction {
 
         }
 
-        return $template->render('profile_edit_notices', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit_notices', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
             'options' => $options,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

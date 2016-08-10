@@ -33,6 +33,21 @@ class formGroupsOptions extends cmsForm {
                 )
             ),
 
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_LIST_LIMIT,
+                'childs' => array(
+
+                    new fieldNumber('limit', array(
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
+                    ))
+
+                )
+            )
+
         );
 
     }

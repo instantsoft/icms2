@@ -15,16 +15,25 @@
         </td>
     </tr>
     <tr>
+        <?php if($this->options['aside_pos'] == 'left'){ ?>
+            <td width="35%">
+                {position:right-top}
+                {position:right-center}
+                {position:right-bottom}
+            </td>
+        <?php } ?>
         <td width="65%">
             {position:left-top}
             {block:LANG_PAGE_BODY}
             {position:left-bottom}
         </td>
-        <td width="35%">
-            {position:right-top}
-            {position:right-center}
-            {position:right-bottom}
-        </td>
+        <?php if($this->options['aside_pos'] == 'right'){ ?>
+            <td width="35%">
+                {position:right-top}
+                {position:right-center}
+                {position:right-bottom}
+            </td>
+        <?php } ?>
     </tr>
 </table>
 <table>

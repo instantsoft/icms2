@@ -36,27 +36,25 @@ function string_strip_br($string){
  * Возвращает значение языковой константы
  * Если константа не найдена, возвращает ее имя или значение по-умолчанию
  *
- * Префикс LANG_ в имени константы указывать не нужно
+ * Префикс LANG_ в имени константы можно не указывать
  * Регистр не имеет значения
  *
- * @param string $constant
+ * @param string $constant Название языковой константы
  * @param string $default
  * @return string
  */
 function string_lang($constant, $default=false){
 
-    $constant = mb_strtoupper($constant);
+    $constant = strtoupper($constant);
 
     if (!$default) { $default = $constant; }
 
-    $constant = mb_strtoupper($constant);
-
-    if (!mb_strpos($constant, 'LANG_')===0){
+    if (strpos($constant, 'LANG_') === false){
         $constant = 'LANG_' . $constant;
     }
 
     if (defined($constant)){
-        $string = constant('LANG_'.$constant);
+        $string = constant($constant);
     } else {
         $string = $default;
     }
@@ -187,9 +185,11 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . rand(0, 99999)) . '$' . $seed);
+    $salt = substr(md5(mt_rand(0, 65535).cmsConfig::get('db_pass')), mt_rand(0, 16), mt_rand(8, 15));
 
-    if ($length < 32) { $string = mb_substr($string, 0, $length); }
+    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . $seed);
+
+    if ($length < 32) { $string = substr($string, 0, $length); }
 
     return $string;
 
@@ -202,7 +202,7 @@ function string_random($length=32, $seed=''){
  * Пример вывода: "2 года 16 дней 5 часов 12 минут"
  *
  * @param string $date
- * @param array $options Массив элементов для перечисления: y, m, d, h, i
+ * @param array $options Массив элементов для перечисления: y, m, d, h, i, from_date
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
@@ -210,7 +210,9 @@ function string_date_age($date, $options, $is_add_back=false){
 
     if (!$date) { return; }
 
-    $diff = real_date_diff($date);
+	$date2 = !empty($options['from_date']) ? $options['from_date'] : false;
+
+    $diff = real_date_diff($date, $date2);
 
     $diff_str = array();
 
@@ -351,7 +353,7 @@ function real_date_diff($date1, $date2 = NULL){
 }
 
 /**
- * Находит в строке все выжения вида {user.property} и заменяет property
+ * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser
  *
  * @param string $string
@@ -391,14 +393,15 @@ function string_replace_user_properties($string){
  */
 function string_replace_keys_values($string, $data){
 
-    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
-    $values = $data;
+    if(strpos($string, '{') === false){ return $string; }
 
-	foreach($values as $k=>$v){
-		if (is_array($v) || is_object($v)) { unset($values[$k]); }
+	foreach($data as $k=>$v){
+		if (is_array($v) || is_object($v)) { unset($data[$k]); }
 	}
-	
-    return str_replace($keys, $values, $string);
+
+    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
+
+    return str_replace($keys, array_values($data), $string);
 
 }
 
@@ -427,16 +430,23 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
 
     $stat = array();
 
+    $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", '', $text);
     $text = mb_strtolower($text);
+
+    $stopwords = string_get_stopwords(cmsConfig::get('language'));
 
     $words = explode(' ', $text);
 
-    foreach($words as $i=>$word){
+    foreach($words as $word){
 
-        $word = trim($word, "()+-., {}|\"\n");
+        $word = trim($word);
+        $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
         $word = preg_replace("/\.,\(\)\{\}/i", '', $word);
+
+        if($stopwords && in_array($word, $stopwords)){
+            continue;
+        }
 
         if (mb_strlen($word)>=$min_length){
             $stat[$word] = isset($stat[$word]) ? $stat[$word]+1 : 1;
@@ -447,9 +457,7 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $stat = array_reverse($stat, true);
     $stat = array_slice($stat, 0, $limit, true);
 
-    $words = implode(', ', array_keys($stat));
-
-    return $words;
+    return implode(', ', array_keys($stat));
 
 }
 
@@ -467,6 +475,26 @@ function string_get_meta_description($text, $limit=250){
 }
 
 /**
+ * Возвращает массив стоп слов
+ * @staticvar array $words
+ * @param string $lang Язык, например ru, en
+ * @return array
+ */
+function string_get_stopwords($lang='ru') {
+    static $words = null;
+    if(isset($words[$lang])){
+        return $words[$lang];
+    }
+    $file = PATH.'/system/languages/'.$lang.'/stopwords.php';
+    if(file_exists($file)){
+        $words[$lang] = include $file;
+    } else {
+        $words[$lang] = array();
+    }
+    return $words[$lang];
+}
+
+/**
  * Обрезает исходный текст до указанной длины (или последнего предложения),
  * удаляя HTML-разметку
  *
@@ -474,14 +502,17 @@ function string_get_meta_description($text, $limit=250){
  * @param int $limit Максимальная длина результата
  * @return string
  */
-function string_short($text, $limit){
+function string_short($text, $limit=0){
 
+    // строка может быть без переносов
+    // и после strip_tags не будет пробелов между словами
+    $text = str_replace(array("\n", "\r", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", ' ', $text);
 
-    if (mb_strlen($text) <= $limit) { return $text; }
+    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
 
     $text = mb_substr($text, 0, $limit);
+    $text = preg_replace('/ |\s{3,}/',' ',$text);
 
     preg_match('/^(.*)([.!?])(.*)$/i', $text, $matches);
 
@@ -522,7 +553,9 @@ function string_compress($string){
  * @param type $value
  * @return type
  */
-function array_collection_to_list($collection, $key, $value){
+function array_collection_to_list($collection, $key, $value=false){
+
+    $value = $value ? $value : $key;
 
     $list = array();
 

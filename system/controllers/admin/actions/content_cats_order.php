@@ -34,7 +34,7 @@ class actionAdminContentCatsOrder extends cmsAction {
 
         $this->total_nodes = 0;
 
-        $tree = $this->prepareTree($hash['children']);
+        $tree = $this->prepareTree($hash);
 
         $tree = $this->buildNestedSet($tree);
 
@@ -98,7 +98,7 @@ class actionAdminContentCatsOrder extends cmsAction {
                 $node['right'] = $left + ($node['children_count']*2) + 1;
 
                 $child_level = $level+1;
-				
+
                 $node['children'] = $this->buildNestedSet($node['children'], $left, $child_level);
 
             } else {

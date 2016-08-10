@@ -2,10 +2,11 @@
 
 class fieldUrl extends cmsFormField {
 
-    public $title = LANG_PARSER_URL;
-    public $sql   = 'text';
+    public $title       = LANG_PARSER_URL;
+    public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
-	public $allow_index = false;
+    public $allow_index = false;
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(
@@ -17,12 +18,15 @@ class fieldUrl extends cmsFormField {
                 'title' => LANG_PARSER_URL_AUTO_HTTP,
                 'default' => true
             )),
+            new fieldNumber('max_length', array(
+                'title' => LANG_PARSER_TEXT_MAX_LEN,
+                'default' => 500
+            ))
         );
     }
-    
+
     public function parse($value){
 
-        $value = strip_tags($value);
         $href = $value;
 
         if ($this->getOption('auto_http')){
@@ -30,11 +34,10 @@ class fieldUrl extends cmsFormField {
         }
 
         if ($this->getOption('redirect')){
-            $config = cmsConfig::getInstance();
-            $href = $config->root . 'redirect?url=' . $href;
+            $href = cmsConfig::get('root') . 'redirect?url=' . $href;
         }
 
-        return '<a href="'.htmlspecialchars($href).'">'.$value.'</a>';
+        return '<a rel="nofollow noopener noreferrer" target="_blank" href="'.htmlspecialchars($href).'">'.$value.'</a>';
 
     }
 
@@ -44,6 +47,6 @@ class fieldUrl extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
         return strip_tags($value);
-    }	
-	
+    }
+
 }

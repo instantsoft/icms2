@@ -26,6 +26,7 @@ var mySettings = {
 		{name:'Image from URL', replaceWith:'<img src="[![Image URL:!:http://]!]" alt="[![Image description]!]" />', className: 'btnImg'},
 		{name:'Upload Image', className: 'btnImgUpload', beforeInsert: function(markItUp) { InlineUpload.display(markItUp) }},
 		{name:'YouTube Video', openWith:'<youtube>[![YouTube Video URL]!]', closeWith:'</youtube>', className: 'btnVideoYoutube'},
+        {name:'Facebook Video', openWith:'<facebook>[![Facebook Video URL]!]', closeWith:'</facebook>', className: 'btnVideoFacebook'},
         {name:'Code', openWith:'<code>', closeWith:'</code>', className: 'btnCode'}
 	]
 }

@@ -8,7 +8,7 @@ class widgetUsersOnline extends cmsWidget {
         $model = cmsCore::getModel('users');
 
         $profiles = $model->
-                        filterEqual('is_online', 1)->
+                        joinInner('sessions_online', 'online', 'i.id = online.user_id')->
                         getUsers();
 
         if (!$profiles) { return false; }

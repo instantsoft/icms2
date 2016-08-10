@@ -1,6 +1,7 @@
 <?php
 
     $this->setPageTitle($group['title']);
+    $this->setPageDescription($group['description'] ? string_get_meta_description($group['description']): $group['title']);
 
     $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
     $this->addBreadcrumb($group['title']);
@@ -17,7 +18,7 @@
 
 		<?php if ($group['logo']) { ?>
 			<div id="logo" class="block">
-				<?php echo html_image($group['logo'], 'normal'); ?>
+				<?php echo html_image($group['logo'], 'normal', $group['title']); ?>
 			</div>
 		<?php } ?>
 

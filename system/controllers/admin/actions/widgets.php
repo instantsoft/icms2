@@ -15,26 +15,36 @@ class actionAdminWidgets extends cmsAction {
         $widgets_model = cmsCore::getModel('widgets');
 
         $controllers = $widgets_model->getPagesControllers();
-        
+
         $widgets_list = $widgets_model->getAvailableWidgets();
 
-        $template = cmsTemplate::getInstance();
+        $tpls = cmsCore::getTemplates();
 
-        $scheme_html = $this->getSchemeHTML();
+        $template_name = $this->request->get('template_name', '');
 
-        return $template->render('widgets', array(
-            'controllers' => $controllers,
-            'widgets_list' => $widgets_list,
-            'scheme_html' => $scheme_html
+        if(!$template_name || !in_array($template_name, $tpls)){
+            $template_name = cmsConfig::get('template');
+        }
+
+        foreach ($tpls as $tpl) {
+            $templates[$tpl] = $tpl;
+        }
+
+        $scheme_html = $this->getSchemeHTML($template_name);
+
+        return $this->cms_template->render('widgets', array(
+            'controllers'   => $controllers,
+            'template_name' => $template_name,
+            'templates'     => $templates,
+            'widgets_list'  => $widgets_list,
+            'scheme_html'   => $scheme_html
         ));
 
     }
 
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
-        $template = cmsTemplate::getInstance();
-
-        $scheme_html = $template->getSchemeHTML();
+        $scheme_html = $this->cms_template->getSchemeHTML($name);
 
         if (!$scheme_html) { return false; }
 

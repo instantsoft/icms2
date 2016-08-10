@@ -1,6 +1,8 @@
 <?php
 
-class activity extends cmsFrontend{
+class activity extends cmsFrontend {
+
+    protected $useOptions = true;
 
     public function addType($type){
         return $this->model->addType($type);
@@ -79,7 +81,7 @@ class activity extends cmsFrontend{
         $template = cmsTemplate::getInstance();
 
         $page = $this->request->get('page', 1);
-        $perpage = 15;
+        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
         if (!$dataset_name || $dataset_name == 'all'){
@@ -87,7 +89,7 @@ class activity extends cmsFrontend{
         }
 
 		$this->model->filterEqual('is_pub', 1);
-		
+
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
@@ -95,17 +97,17 @@ class activity extends cmsFrontend{
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
-        $items = cmsEventsManager::hook("activity_before_list", $items);
+        $items = cmsEventsManager::hook('activity_before_list', $items);
 
         return $template->renderInternal($this, 'list', array(
-            'filters' => array(),
+            'filters'      => array(),
             'dataset_name' => $dataset_name,
-            'page_url' => $page_url,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'items' => $items,
-            'user' => $user,
+            'page_url'     => $page_url,
+            'page'         => $page,
+            'perpage'      => $perpage,
+            'total'        => $total,
+            'items'        => $items,
+            'user'         => $user
         ));
 
     }

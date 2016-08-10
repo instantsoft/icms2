@@ -1,6 +1,6 @@
-<label>
+<?php if($field->title){ ?><label><?php } ?>
     <?php echo html_checkbox($field->element_name, (bool)$value, 1, array('id'=>$field->id)); ?>
-    <?php echo $field->title; ?>
+    <?php if($field->title){echo $field->title;} ?>
     <?php if(!empty($field->toggle)) { ?>
         <?php $self_id = "#f_{$field->id}" ;?>
         <script>
@@ -17,4 +17,4 @@
             });
         </script>
     <?php } ?>
-</label>
+<?php if($field->title){ ?></label><?php } ?>

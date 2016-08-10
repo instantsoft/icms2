@@ -15,6 +15,8 @@ class actionAdminUsersAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter');
 
+        $filter_str = cmsUser::getUPSActual('admin.grid_filter.users', $filter_str);
+
         if ($filter_str){
 
             $content_model = cmsCore::getModel('content')->setTablePrefix('');

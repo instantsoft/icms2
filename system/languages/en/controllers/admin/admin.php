@@ -2,6 +2,35 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
 
+    define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
+    define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
+    define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');
+
+    define('LANG_CP_DASHBOARD_SI_PHP',          'PHP Version');
+    define('LANG_CP_DASHBOARD_SI_ML',           'Memory Limit');
+    define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
+    define('LANG_CP_DASHBOARD_SI_MAX',          'Max. file upload size');
+    define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
+    define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
+
+    define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General Sponsor');
+
+    define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official Site');
+    define('LANG_CP_DASHBOARD_LINKS_DOCS',      'Documentation');
+    define('LANG_CP_DASHBOARD_LINKS_ADDONS',    'Addons');
+    define('LANG_CP_DASHBOARD_LINKS_FORUMS',    'Community Forum');
+
+    define('LANG_CP_DASHBOARD_LINKS_DONATE',    'Donate');
+    define('LANG_CP_DASHBOARD_LINKS_SPONSORS',  'Become a Sponsor');
+
+    define('LANG_CP_DASHBOARD_PREMIUM',         'Premium components');
+    define('LANG_CP_DASHBOARD_BILLING',         'Billing');
+    define('LANG_CP_DASHBOARD_BILLING_HINT',    'Make money on your site');
+    define('LANG_CP_DASHBOARD_INVIDEO_HINT',    'Professional video catalog');
+    define('LANG_CP_DASHBOARD_INMAPS_HINT',     'Object catalog on the map');
+
     define('LANG_CP_SECTION_INDEX',             'Index');
     define('LANG_CP_SECTION_CTYPES',            'Content Types');
     define('LANG_CP_SECTION_CONTENT',           'Content');
@@ -49,8 +78,11 @@
     define('LANG_CP_PREMOD_EDIT',               'Approval required after editing');
     define('LANG_CP_IS_PUB_CONTROL',            'Publication date control');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Allows to change publication date and period by users permitted in "Permissions" tab');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired item action');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
+    define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES',                'Categories');
-    define('LANG_CP_CATEGORIES_ON',             'Categories enabled');
+    define('LANG_CP_CATEGORIES_ON',             'Enable categories');
     define('LANG_CP_CATEGORIES_RECURSIVE',      'Show items from child categories in parent category');
 	define('LANG_CP_CATEGORIES_EMPTY_ROOT',		"Don't show items in root category");
 	define('LANG_CP_CATEGORIES_MULTI',			'Allow multiple categories for single item');
@@ -66,10 +98,10 @@
     define('LANG_CP_CT_GROUPS_ALLOW',           'This content can be posted inside groups');
     define('LANG_CP_CT_GROUPS_ALLOW_ONLY',      '...and only inside groups');
     define('LANG_CP_COMMENTS',                  'Comments');
-    define('LANG_CP_COMMENTS_ON',               'Comments enabled');
+    define('LANG_CP_COMMENTS_ON',               'Enable comments');
     define('LANG_CP_RATING',                    'Rating');
-    define('LANG_CP_RATING_ON',                 'Rating enabled');
-    define('LANG_CP_TAGS_ON',                   'Tags enabled');
+    define('LANG_CP_RATING_ON',                 'Enable rating');
+    define('LANG_CP_TAGS_ON',                   'Enable tags');
     define('LANG_CP_TAGS_IN_LIST',              'Show tags in list view');
     define('LANG_CP_TAGS_IN_ITEM',              'Show tags in item view');
     define('LANG_CP_PHOTOS',                    'Images');
@@ -104,6 +136,10 @@
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count the number of views (hits)');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'HTML code you enter here will be displayed at each entry');
+    define('LANG_CP_PRIVACY_TYPE',              'How to show private list entries');
+    define('LANG_CP_PRIVACY_TYPE_HIDE',         'Hide');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Show only title');
+    define('LANG_CP_PRIVACY_TYPE_SHOW_ALL',     'Show full');
 
     define('LANG_CP_NUMERALS_LABELS',           'Plurals');
     define('LANG_CP_NUMERALS_1_LABEL',          'One (...)');
@@ -119,6 +155,7 @@
     define('LANG_CP_TAB',                       'Tab');
     define('LANG_CP_TAB_TITLE',                 'Tab title');
     define('LANG_CP_TAB_IS_ACTIVE',             'Tab is enabled');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Show tab only by the profile owner');
 
     define('LANG_CP_FIELD',                     'Field');
     define('LANG_CP_FIELD_FORMAT',              'Field validation');
@@ -144,6 +181,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in item view');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In item');
     define('LANG_CP_FIELD_IN_FILTER',           'Show in filter');
@@ -155,15 +193,16 @@
     define('LANG_CP_PROPS_NO_CATS',             'Content type &laquo;%s&raquo; has no categories.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create property');
-    define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete property "{title}"? Property will be removed from all categories');
+    define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete the "{title}" property?\n The property will be removed from all categories');
     define('LANG_CP_PROPS_BIND',                'Bind property');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'including nested categories');
     define('LANG_CP_PROPS_UNBIND',              'Unbind property');
     define('LANG_CP_PROP_TITLE',                'Property title');
     define('LANG_CP_PROP_IS_ACTIVE',            'Show property on the site');
     define('LANG_CP_PROP_VALUES',               'List items');
-    define('LANG_CP_PROP_VALUES_HINT',          'One item in a row');
+    define('LANG_CP_PROP_VALUES_HINT',          'One item per line');
     define('LANG_CP_PROP_CATS',                 'Bind property to categories');
+    define('LANG_CP_PROP_UNITS',                'Units');
 
     define('LANG_CP_DATASET',                   'Dataset');
     define('LANG_CP_DATASET_ADD',               'Add dataset');
@@ -200,6 +239,8 @@
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Add page');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Edit');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Delete');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Unbind all widgets');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from position?\nWidgets move to the unused');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; is created');
@@ -208,6 +249,7 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Put here the widgets you want to temporarily hide or move to another page without losing the settings');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
 
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
@@ -225,11 +267,13 @@
     define('LANG_CP_USER_LOCKED',               'Blocked');
     define('LANG_CP_USER_IS_LOCKED',            'Block user');
     define('LANG_CP_USER_LOCK_UNTIL',           'Block until');
-    define('LANG_CP_USER_LOCK_REASON',          'Block reason');
-    define('LANG_CP_USER_NOT_FOUND',            'User %s is not found');
+    define('LANG_CP_USER_LOCK_REASON',          'Blocking reason');
+    define('LANG_CP_USER_NOT_FOUND',            'User %s not found');
+    define('LANG_CP_USER_FIND_BYIP',            'Find all by this ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
-    define('LANG_CP_CONTROLLERS_ADD',           'Install extension');
-    define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Component &laquo;%s&raquo; has no settings');
+    define('LANG_CP_CONTROLLERS_ADD',           'Install component');
+    define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'The &laquo;%s&raquo; component has no settings');
 
     define('LANG_CP_SETTINGS_SITE',             'Site');
     define('LANG_CP_SETTINGS_GUI',              'Interface');
@@ -239,7 +283,12 @@
     define('LANG_CP_SETTINGS_CACHE',            'Cache');
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
+    define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_SETTINGS_ALLOW_IPS',        'Allowed ip address, to access the admin panel');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Each address on a separate line. Not Set - are allowed all.');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to identify user ip');
+    define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', '$_SERVER key, containing real user ip address. Do\'t change this value if you are unsure. The default value is appropriate for most. For example, for CloudFlare must specify HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Reason why site is offline');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Check updates when admin login');
@@ -247,10 +296,16 @@
     define('LANG_CP_SETTINGS_HOMETITLE',        'Frontpage title');
     define('LANG_CP_SETTINGS_METAKEYS',         'Site keywords');
     define('LANG_CP_SETTINGS_METADESC',         'Site description');
-    define('LANG_CP_SETTINGS_META_NO_DEFAULT',  "Use that site keywords and description only on frontpage");
+    define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Use that site keywords and description only on frontpage');
+    define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add page title to html title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Theme');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control Panel theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile device theme');
+    define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme settings');
+    define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
+    define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumb?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Merge CSS files');
     define('LANG_CP_SETTINGS_MERGE_JS',         'Merge JS files');
@@ -258,7 +313,7 @@
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Folder <b>%s</b> is succesfully cleared');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Unable to clear the folder <b>%s</b>. Check permissions or clean it manually');
 	define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content type');
-	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Pages URLs of that content type will not contain type\'s system name');	
+	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Pages URLs of that content type will not contain type\'s system name');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Show on the homepage');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Only widgets');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'User profile or authorization form');
@@ -268,6 +323,7 @@
     define('LANG_CP_SETTINGS_DATE_FORMAT_JS',   'JavaScript date format');
     define('LANG_CP_SETTINGS_MAIL_TRANSPORT',   'Mail transport');
     define('LANG_CP_SETTINGS_MAIL_FROM',        'Mail from');
+    define('LANG_CP_SETTINGS_MAIL_FROM_NAME',   'Mail from name');
     define('LANG_CP_SETTINGS_MAIL_SMTP',        'SMTP settings');
     define('LANG_CP_SETTINGS_MAIL_SMTP_HOST',   'SMTP server');
     define('LANG_CP_SETTINGS_MAIL_SMTP_PORT',   'SMTP port');
@@ -275,9 +331,9 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_USER',   'SMTP user');
     define('LANG_CP_SETTINGS_MAIL_SMTP_PASS',   'SMTP password');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC',    'SMTP Encryption');
-    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'None');
+    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Without encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
-    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');	
+    define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');
@@ -290,6 +346,8 @@
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    "Can't connect to Memcached");
 
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
+    define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
+    define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
@@ -324,6 +382,22 @@
     define('LANG_CP_PACKAGE_DEPENDS',           'Package dependencies');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Required core version');
 
+    define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Required installed package version');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Component installation package');
+    define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Component service pack');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_INSTALL', 'Widget installation package');
+    define('LANG_CP_PACKAGE_TYPE_WIDGET_UPDATE', 'Widget service pack');
+    define('LANG_CP_PACKAGE_TYPE_SYSTEM_UPDATE', 'InstantCMS service pack');
+    define('LANG_CP_PACKAGE_DUBLE_INSTALL', 'Package v.%s is already installed. If you want to update it, use corresponding update package. If you want to re-install it, remove installed version first.');
+    define('LANG_CP_PACKAGE_UPDATE_ERROR', '%s "%s" has version <b>%s</b> but you have version <b>%s</b> installed. Please use package with larger version number to update.');
+    define('LANG_CP_PACKAGE_UPDATE_IS_UPDATED', 'Update package has the same version as installed one. There is nothing to update.');
+    define('LANG_CP_PACKAGE_TYPE', 'Package type');
+    define('LANG_CP_PACKAGE_NONAME', 'Unknown author');
+    define('LANG_CP_PACKAGE_UPDATE_NOINSTALL', 'Update package cannot be installed because updated addon has not been installed');
+
+    define('LANG_CP_COMPONENT_IS_DELETED',      'Component "%s" successfully removed');
+    define('LANG_CP_DELETE_COMPONENT_CONFIRM',  'Delete component "{title}"?');
+
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
     define('LANG_CP_FTP_USER',                  'Username');
@@ -337,7 +411,12 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Error: path %s not found');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in %s');
 
-    define('ERR_VALIDATE_UNIQUE_FIELD',         'The field already exists');
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Save ftp account to session');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'It is not secure');
+    define('LANG_CP_FTP_SKIP',				'Skip this step');
+    define('LANG_CP_FTP_SKIP_HINT',			'Skip this step if it\'s impossible to do automatic FTP upload and you\'re using manual installation as described in the <a href="http://docs.instantcms.ru/en/manual/addons">user guide</a>');
+
+    define('ERR_VALIDATE_UNIQUE_FIELD',         'Field already exists');
     define('LANG_CP_BACK_TO_SITE',              'Back to site');
     define('LANG_CP_3RDPARTY_CREDITS',          'Third-party credits');
 
@@ -415,3 +494,13 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
+
+    define('LANG_ZIP_ERROR_10', 'File already exists');
+    define('LANG_ZIP_ERROR_21', 'Zip archive inconsistent');
+    define('LANG_ZIP_ERROR_18', 'Invalid argument');
+    define('LANG_ZIP_ERROR_14', 'Malloc failure');
+    define('LANG_ZIP_ERROR_9', 'No such file');
+    define('LANG_ZIP_ERROR_19', 'Not a zip archive');
+    define('LANG_ZIP_ERROR_11', 'Can\'t open file');
+    define('LANG_ZIP_ERROR_5', 'Read error');
+    define('LANG_ZIP_ERROR_4', 'Seek error');

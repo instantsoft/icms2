@@ -4,6 +4,8 @@ class formUsersMigration extends cmsForm {
 
     public function init($do) {
 
+        $groups = cmsCore::getModel('users')->getGroups();
+
         return array(
 
             'basic' => array(
@@ -39,18 +41,14 @@ class formUsersMigration extends cmsForm {
 
                     new fieldList('group_from_id', array(
                         'title' => LANG_USERS_MIG_FROM,
-                        'generator' => function() {
-                            $model = cmsCore::getModel('users');
-                            $groups = $model->getGroups();
+                        'generator' => function() use($groups){
                             return array_collection_to_list($groups, 'id', 'title');
                         }
                     )),
 
                     new fieldList('group_to_id', array(
                         'title' => LANG_USERS_MIG_TO,
-                        'generator' => function() {
-                            $model = cmsCore::getModel('users');
-                            $groups = $model->getGroups();
+                        'generator' => function() use($groups){
                             return array_collection_to_list($groups, 'id', 'title');
                         }
                     )),
@@ -122,7 +120,7 @@ class formUsersMigration extends cmsForm {
                     new fieldHtml('notify_text', array(
                         'title' => LANG_USERS_MIG_NOTIFY_TEXT,
                         'options' => array(
-                            'editor' => 'markitup'
+                            'editor' => cmsConfig::get('default_editor')
                         )
                     )),
 

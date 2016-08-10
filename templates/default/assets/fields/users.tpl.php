@@ -12,7 +12,7 @@
                 <div class="item">
                     <label for="cb-user-<?php echo $user['id']; ?>">
                         <div class="avatar">
-                            <?php echo html_avatar_image($user['avatar'], 'micro'); ?>
+                            <?php echo html_avatar_image($user['avatar'], 'micro', $user['nickname']); ?>
                         </div>
                         <div class="name">
                             <?php html($user['nickname']); ?>

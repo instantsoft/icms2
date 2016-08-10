@@ -28,7 +28,6 @@
         <td class="left_cell" valign="top">
             <form action="<?php echo $this->href_to('login'); ?>" method="POST">
 
-                <?php if ($is_ajax){ echo html_input('hidden', 'is_back', 1); } ?>
                 <?php if ($back_url){ echo html_input('hidden', 'back', $back_url); } ?>
 
                 <div class="login_form">
@@ -36,10 +35,10 @@
                     <h3><?php echo LANG_LOG_IN_ACCOUNT; ?></h3>
 
                     <div class="label"><label><?php echo LANG_EMAIL; ?>:</label></div>
-                    <div class="field"><?php echo html_input('text', 'login_email'); ?></div>
+                    <div class="field"><?php echo html_input('text', 'login_email', '', array('id'=>'login_email', 'required'=>true, 'autofocus'=>true)); ?></div>
 
                     <div class="label"><label><?php echo LANG_PASSWORD; ?>:</label></div>
-                    <div><?php echo html_input('password', 'login_password'); ?></div>
+                    <div><?php echo html_input('password', 'login_password', '', array('required'=>true)); ?></div>
 
                     <div class="options">
                         <input type="checkbox" id="remember" name="remember" value="1" />
@@ -49,7 +48,7 @@
                         </label>
 
                     </div>
-                    
+
                     <?php echo $captcha_html; ?>
 
                     <table cellpadding="0" cellspacing="0" border="0">
@@ -88,8 +87,6 @@
     </tr>
 
 </table>
-
-<script type="text/javascript">$(document).ready(function(){ $('#login_email').focus(); });</script>
 
 <?php if($is_ajax){ ?>
     </div>

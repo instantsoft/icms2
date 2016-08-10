@@ -4,6 +4,7 @@
     $this->addCSS('templates/default/css/jquery-ui.css');
 
     $this->setPageTitle($profile['nickname']);
+    $this->setPageDescription($profile['nickname'].' — '.mb_strtolower(LANG_USERS_PROFILE_INDEX));
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
@@ -79,7 +80,7 @@
     <div id="left_column" class="column">
 
         <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal'); ?>
+            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
         </div>
 
         <?php if ($content_counts) { ?>
@@ -107,7 +108,7 @@
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
                         <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro'); ?></span>
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?></span>
                         </a>
                     <?php } ?>
                 </div>
@@ -178,7 +179,7 @@
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
 
-                        <?php if (empty($profile[$field['name']])) { continue; } ?>
+                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
                         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
@@ -196,13 +197,9 @@
                             <?php } ?>
 
                             <div class="value">
-
                                 <?php
-
-                                    echo $field['handler']->parse( $profile[$field['name']] );
-
+                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
                                 ?>
-
                             </div>
 
                         </div>

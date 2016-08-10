@@ -72,7 +72,7 @@
 
 <h1 id="group_profile_title">
 	<?php if ($group['logo']){ ?>
-		<span class="logo"><?php echo html_image($group['logo'], 'micro'); ?></span>
+		<span class="logo"><?php echo html_image($group['logo'], 'micro', $group['title']); ?></span>
 	<?php } ?>
     <?php html($group['title']); ?>
     <?php if ($group['is_closed']) { ?>
@@ -84,7 +84,7 @@
 
     <div id="group_profile_tabs">
         <div class="tabs-menu">
-            <?php $this->menu('group_tabs'); ?>
+            <?php $this->menu('group_tabs', true, 'tabbed'); ?>
         </div>
     </div>
 

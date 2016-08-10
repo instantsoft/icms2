@@ -1,9 +1,9 @@
 <?php
 
-	define('LANG_LOADING',                   'Загрузка...');
-	define('LANG_SENDING',                   'Отправка...');
-	define('LANG_MORE',                      'Подробнее');
-	define('LANG_VERSION',                   'Версия');
+    define('LANG_LOADING',                   'Загрузка...');
+    define('LANG_SENDING',                   'Отправка...');
+    define('LANG_MORE',                      'Подробнее');
+    define('LANG_VERSION',                   'Версия');
 
     //CONTENT
     define('LANG_CONTENT_TYPE',              'Тип контента');
@@ -29,7 +29,8 @@
     define('LANG_FILTER_IS_NULL',            'не заполнено');
     define('LANG_FILTER_APPLY',              'Фильтровать');
     define('LANG_FILTER_URL',                'Ссылка');
-	define('LANG_SORTING_FIELD',             'Сортировка по полю');
+    define('LANG_FILTER_SAVE_DIFF_ORDER',    'Сохранять различную сортировку');
+    define('LANG_SORTING_FIELD',             'Сортировка по полю');
     define('LANG_SORTING',                   'Сортировка');
     define('LANG_SORTING_ADD',               'Добавить правило');
     define('LANG_SORTING_ASC',               'По возрастанию');
@@ -42,13 +43,13 @@
     define('LANG_KARMA_UP',                  'Поднять');
     define('LANG_KARMA_DOWN',                'Опустить');
     define('LANG_CSS_CLASS',                 'Класс CSS');
-	define('LANG_CSS_CLASS_WRAP',            'Класс CSS для контейнера');
-	define('LANG_CSS_CLASS_TITLE',           'Класс CSS для заголовка');
+    define('LANG_CSS_CLASS_WRAP',            'Класс CSS для контейнера');
+    define('LANG_CSS_CLASS_TITLE',           'Класс CSS для заголовка');
     define('LANG_CSS_CLASS_BODY',            'Класс CSS для тела');
     define('LANG_GROUP',                     'Группа');
     define('LANG_GROUPS',                    'Группы');
     define('LANG_WROTE_IN_GROUP',            'в группе');
-    define('LANG_DESIGN',					 'Дизайн');	
+    define('LANG_DESIGN',					 'Дизайн');
 
     //WIDGETS
     define('LANG_WP_SYSTEM',                 'Системные');
@@ -64,21 +65,29 @@
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
+    define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
-    define('LANG_PARSER_CITY',               'Город');
-    define('LANG_PARSER_CITY_FILTER_HINT',   'ID города');
+    define('LANG_PARSER_CITY',               'Местоположение');
+    define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
+    define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
+    define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'Если необходимо объединить местоположения страна-область-город, укажите одно имя объединения для всех полей. Как минимум должны быть созданы поля типа "страна" и "область"');
+    define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
+    define('LANG_PARSER_CITY_OUTPUT_STRING_HINT', 'Например, "{country}, {city}", где country и city системные имена полей. Полезно использовать, отключая для вывода остальные поля группировки, показывая нужные значения в этом поле. Если не указано - выводится значение текущего поля.');
     define('LANG_PARSER_CHECKBOX',           'Флаг');
     define('LANG_PARSER_TEXT',               'Текст');
     define('LANG_PARSER_TEXT_MAX_LEN',       'Максимальная длина');
     define('LANG_PARSER_TEXT_MIN_LEN',       'Минимальная длина');
+    define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
+    define('LANG_PARSER_BUILD_REDIRECT_LINK', 'При обработке типографом внешние ссылки формировать через редирект');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Обрезать текст при просмотре списка');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
     define('LANG_PARSER_BBCODE',             'Текст: BB-code');
@@ -96,6 +105,8 @@
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');
+    define('LANG_PARSER_AGE_FROM_DATE',      'Считать от указанной даты');
+    define('LANG_PARSER_AGE_FROM_DATE_HINT', 'Если не указано, отсчет будет вестись от текущего значения времени');
     define('LANG_PARSER_DATE',               'Дата');
     define('LANG_PARSER_DATE_FILTER_HINT',   'ГГГГ-ММ-ДД');
     define('LANG_PARSER_DATE_SHOW_TIME',     'Показывать время');
@@ -104,6 +115,8 @@
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
+    define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
+    define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
@@ -124,6 +137,13 @@
     define('LANG_PARSER_FILE_MAX_SIZE',      'Максимальный размер, Мб');
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
+    define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
+    define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
+    define('LANG_PARSER_ADD_FROM_LINK', 'добавить по ссылке');
+    define('LANG_PARSER_ENTER_IMAGE_LINK', 'Введите ссылку на изображение');
+    define('LANG_OR', 'или');
+    define('LANG_BEGIN_TYPING', 'Начните вводить или выберите из списка');
 
     //USERS
     define('LANG_USER',                      'Пользователь');
@@ -154,6 +174,8 @@
     define('LANG_MY_PROFILE',                'Мой профиль');
     define('LANG_PROFILE',                   'Профиль');
     define('LANG_CITY',                      'Город');
+    define('LANG_REGION',                    'Область');
+    define('LANG_COUNTRY',                   'Страна');
     define('LANG_COMPANY',                   'Компания');
     define('LANG_PHONE',                     'Телефон');
     define('LANG_NAME',                      'Имя');
@@ -168,6 +190,8 @@
     define('LANG_PLEASE_LOGIN',              'Представьтесь, пожалуйста');
     define('LANG_LOGIN_ADMIN',               'Вход для администраторов');
     define('LANG_ONLINE',                    'Онлайн');
+    define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
+    define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
@@ -190,28 +214,29 @@
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
 
-	//AUTHORIZATION
-	define('LANG_AUTH_LOGIN',			 'Логин');
-	define('LANG_AUTH_PASSWORD',		 'Пароль');
+    //AUTHORIZATION
+    define('LANG_AUTH_LOGIN',			 'Логин');
+    define('LANG_AUTH_PASSWORD',		 'Пароль');
 
     //PASSWORD RESTORE
     define('LANG_FORGOT_PASS',               'Забыли пароль?');
 
-	//SYSTEM ERRORS
-	define('LANG_ERROR',					 'Ошибка');
-	define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
-	define('LANG_TRACE_STACK',				 'Последние вызовы');
-	define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
-	define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных');
-	define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения');
-	define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена');
-	define('ERR_FILE_NOT_FOUND',             'Файл не найден');
-	define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден');
-	define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
-	define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
-	define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
-	define('ERR_SITE_OFFLINE',               'Сайт отключен');
-	define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
+    //SYSTEM ERRORS
+    define('LANG_ERROR',					 'Ошибка');
+    define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
+    define('LANG_TRACE_STACK',				 'Последние вызовы');
+    define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
+    define('ERR_MODEL_NOT_FOUND',			 'Не найдена модель данных или она недоступна для чтения');
+    define('ERR_TEMPLATE_NOT_FOUND', 		 'Не найден шаблон для отображения или он недоступен для чтения');
+    define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
+    define('ERR_FILE_NOT_FOUND',             'Файл не найден');
+    define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
+    define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
+    define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
+    define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
+    define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
+    define('ERR_SITE_OFFLINE',               'Сайт отключен');
+    define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');
@@ -227,43 +252,44 @@
     //MONEY
     define('LANG_CURRENCY',                  'руб.');
 
-	//VALIDATION ERRORS
-	define('ERR_VALIDATE_REQUIRED',          'Заполните поле');
-	define('ERR_VALIDATE_MIN',               'Слишком маленькое значение (минимум: %s)');
-	define('ERR_VALIDATE_MAX',               'Слишком большое значение (максимум: %s)');
-	define('ERR_VALIDATE_MIN_LENGTH',        'Слишком короткое значение (мин. длина: %s)');
-	define('ERR_VALIDATE_MAX_LENGTH',        'Слишком длинное значение (макс. длина: %s)');
-	define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
-	define('ERR_VALIDATE_REGEXP',            'Неверный формат');
-	define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
-	define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы, цифры и знаки подчеркивания');
-	define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
-	define('ERR_VALIDATE_NUMBER',            'Введите число');
-	define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
-	define('ERR_VALIDATE_INVALID',           'Указано недопустимое значение');
+    //VALIDATION ERRORS
+    define('ERR_VALIDATE_REQUIRED',          'Заполните поле');
+    define('ERR_VALIDATE_MIN',               'Слишком маленькое значение (минимум: %s)');
+    define('ERR_VALIDATE_MAX',               'Слишком большое значение (максимум: %s)');
+    define('ERR_VALIDATE_MIN_LENGTH',        'Слишком короткое значение (мин. длина: %s)');
+    define('ERR_VALIDATE_MAX_LENGTH',        'Слишком длинное значение (макс. длина: %s)');
+    define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
+    define('ERR_VALIDATE_REGEXP',            'Неверный формат');
+    define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
+    define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
+    define('ERR_VALIDATE_SLUG',              'Только латинские буквы (в нижнем регистре), цифры, дефис и прямой слеш');
+    define('ERR_VALIDATE_DIGITS',            'Введите только цифры');
+    define('ERR_VALIDATE_NUMBER',            'Введите число');
+    define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
+    define('ERR_VALIDATE_INVALID',           'Указано недопустимое значение');
 
-	define('LANG_VALIDATE_REQUIRED',         'Поле должно быть заполнено');
-	define('LANG_VALIDATE_DIGITS',           'Только целые числа');
-	define('LANG_VALIDATE_NUMBER',           'Только числа');
-	define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
-	define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
-	define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
+    define('LANG_VALIDATE_REQUIRED',         'Поле должно быть заполнено');
+    define('LANG_VALIDATE_DIGITS',           'Только целые числа');
+    define('LANG_VALIDATE_NUMBER',           'Только числа');
+    define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
+    define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
+    define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
 
-	define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
-	define('ERR_EMPTY_FIELDS', 			 	 'Обнаружены пустые поля!');
-	define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');
-	define('ERR_WRONG_OLD_PASS', 		 	 'Ошибка изменения пароля: Старый пароль указан неверно');
-	define('ERR_NEW_PASS_MISMATCH', 		 'Ошибка изменения пароля: Пароли не совпали');
-	define('ERR_NEW_PASS_REQUIRED', 		 'Нужно указать новый пароль дважды!');
+    define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
+    define('ERR_EMPTY_FIELDS', 			 	 'Обнаружены пустые поля!');
+    define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');
+    define('ERR_WRONG_OLD_PASS', 		 	 'Ошибка изменения пароля: Старый пароль указан неверно');
+    define('ERR_NEW_PASS_MISMATCH', 		 'Ошибка изменения пароля: Пароли не совпали');
+    define('ERR_NEW_PASS_REQUIRED', 		 'Нужно указать новый пароль дважды!');
 
-	//CAPTCHA
-	define('LANG_CAPTCHA_CODE', 		 	 'Защита от спама');
-	define('LANG_CAPTCHA_ERROR', 		 	 'Неправильно указан код защиты от спама');
+    //CAPTCHA
+    define('LANG_CAPTCHA_CODE', 		 	 'Защита от спама');
+    define('LANG_CAPTCHA_ERROR', 		 	 'Неправильно указан код защиты от спама');
 
-	//LISTS
+    //LISTS
     define('LANG_NO_ITEMS', 		 		 'Нет элементов для просмотра');
 
-	//ACTIONS
+    //ACTIONS
     define('LANG_ADD_CATEGORY',              'Создать категорию');
     define('LANG_ADD_CATEGORY_QUICK',        'или создать новую категорию внутри выбранной');
     define('LANG_EDIT_CATEGORY',             'Редактировать категорию');
@@ -274,65 +300,66 @@
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
 
-	define('LANG_BASIC_OPTIONS',             'Общие');
-	define('LANG_YES',                       'Да');
-	define('LANG_NO',                        'Нет');
-	define('LANG_LIST_LIMIT',                'Записей в списке');
-	define('LANG_LIST_ALL',					 'Показать все');
-	define('LANG_LIST_EMPTY',                'Нет элементов для отображения');
-	define('LANG_LIST_NONE_SELECTED',        'Ничего не выделено');
-	define('LANG_DOWNLOAD',                  'Скачать');
-	define('LANG_UPLOAD',                    'Загрузить');
-	define('LANG_SELECT_UPLOAD',             'Выбрать и загрузить');
-	define('LANG_DROP_TO_UPLOAD',            'Перетащите файлы сюда, чтобы загрузить');
-	define('LANG_CREATE',                    'Создать');
-	define('LANG_APPLY',                     'Применить');
-	define('LANG_ACCEPT',                    'Принять');
-	define('LANG_DECLINE',                   'Отклонить');
-	define('LANG_CONFIRM',                   'Подтвердить');
-	define('LANG_INVITE',                    'Пригласить');
-	define('LANG_ADD', 						 'Добавить');
-	define('LANG_ADD_CONTENT',				 'Создать страницу');
-	define('LANG_ADD_USER',                  'Создать пользователя');
-	define('LANG_ADD_NEWS',					 'Создать новость');
-	define('LANG_ADD_MENU',				 	 'Создать меню');
-	define('LANG_ADD_MENUITEM',				 'Создать пункт меню');
-	define('LANG_MENU_MORE',                 'Ещё');
-	define('LANG_VIEW', 					 'Просмотр');
-	define('LANG_EDIT', 					 'Редактировать');
-	define('LANG_EDIT_SELECTED',			 'Редактировать выделенные');
-	define('LANG_SHOW', 					 'Показать');
-	define('LANG_SHOW_ALL',                  'Показать все');
-	define('LANG_SHOW_SELECTED',			 'Показать выделенные');
-	define('LANG_ADMIN_SELECTED', 			 'Сделать выбранных администраторами');
-	define('LANG_UNADMIN_SELECTED',			 'Снять администраторские права у выделенных');
-	define('LANG_HIDE', 					 'Скрыть');
-	define('LANG_HIDE_SELECTED',			 'Скрыть выделенные');
-	define('LANG_CONFIG', 					 'Настройки');
-	define('LANG_DELETE', 					 'Удалить');
-	define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
-	define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
-	define('LANG_MOVE',                      'Перенести');
-	define('LANG_MOVE_TO_CATEGORY',          'Перенести в категорию');
-	define('LANG_ON',	 					 'Вкл.');
-	define('LANG_OFF', 						 'Выкл.');
-	define('LANG_SAVE',						 'Сохранить');
-	define('LANG_SAVE_CHANGES',              'Сохранить изменения');
-	define('LANG_SAVE_ORDER',                'Сохранить порядок');
-	define('LANG_SAVING',                    'Сохранение...');
-	define('LANG_PREVIEW',                   'Предпросмотр');
-	define('LANG_SEND',						 'Отправить');
-	define('LANG_INSTALL',					 'Установить');
-	define('LANG_INSERT',					 'Вставить');
-	define('LANG_CANCEL',					 'Отменить');
-	define('LANG_BACK',					 	 'Назад');
-	define('LANG_IN_QUEUE',					 'Объектов на очереди');
-	define('LANG_SELECT',                    'Выбрать');
-	define('LANG_SELECT_ALL',				 'Выделить все');
-	define('LANG_DESELECT_ALL',				 'Снять все');
-	define('LANG_INVERT_ALL',				 'Инвертировать');
-	define('LANG_CLOSE',                     'Закрыть');
-	define('LANG_CONTINUE',                  'Продолжить');
+    define('LANG_BY_DEFAULT',                'По-умолчанию');
+    define('LANG_BASIC_OPTIONS',             'Общие');
+    define('LANG_YES',                       'Да');
+    define('LANG_NO',                        'Нет');
+    define('LANG_LIST_LIMIT',                'Записей в списке');
+    define('LANG_LIST_ALL',					 'Показать все');
+    define('LANG_LIST_EMPTY',                'Нет элементов для отображения');
+    define('LANG_LIST_NONE_SELECTED',        'Ничего не выделено');
+    define('LANG_DOWNLOAD',                  'Скачать');
+    define('LANG_UPLOAD',                    'Загрузить');
+    define('LANG_SELECT_UPLOAD',             'Выбрать и загрузить');
+    define('LANG_DROP_TO_UPLOAD',            'Перетащите файлы сюда, чтобы загрузить');
+    define('LANG_CREATE',                    'Создать');
+    define('LANG_APPLY',                     'Применить');
+    define('LANG_ACCEPT',                    'Принять');
+    define('LANG_DECLINE',                   'Отклонить');
+    define('LANG_CONFIRM',                   'Подтвердить');
+    define('LANG_INVITE',                    'Пригласить');
+    define('LANG_ADD', 						 'Добавить');
+    define('LANG_ADD_CONTENT',				 'Создать страницу');
+    define('LANG_ADD_USER',                  'Создать пользователя');
+    define('LANG_ADD_NEWS',					 'Создать новость');
+    define('LANG_ADD_MENU',				 	 'Создать меню');
+    define('LANG_ADD_MENUITEM',				 'Создать пункт меню');
+    define('LANG_MENU_MORE',                 'Ещё');
+    define('LANG_VIEW', 					 'Просмотр');
+    define('LANG_EDIT', 					 'Редактировать');
+    define('LANG_EDIT_SELECTED',			 'Редактировать выделенные');
+    define('LANG_SHOW', 					 'Показать');
+    define('LANG_SHOW_ALL',                  'Показать все');
+    define('LANG_SHOW_SELECTED',			 'Показать выделенные');
+    define('LANG_ADMIN_SELECTED', 			 'Сделать выбранных администраторами');
+    define('LANG_UNADMIN_SELECTED',			 'Снять администраторские права у выделенных');
+    define('LANG_HIDE', 					 'Скрыть');
+    define('LANG_HIDE_SELECTED',			 'Скрыть выделенные');
+    define('LANG_CONFIG', 					 'Настройки');
+    define('LANG_DELETE', 					 'Удалить');
+    define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
+    define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
+    define('LANG_MOVE',                      'Перенести');
+    define('LANG_MOVE_TO_CATEGORY',          'Перенести в категорию');
+    define('LANG_ON',	 					 'Вкл.');
+    define('LANG_OFF', 						 'Выкл.');
+    define('LANG_SAVE',						 'Сохранить');
+    define('LANG_SAVE_CHANGES',              'Сохранить изменения');
+    define('LANG_SAVE_ORDER',                'Сохранить порядок');
+    define('LANG_SAVING',                    'Сохранение...');
+    define('LANG_PREVIEW',                   'Предпросмотр');
+    define('LANG_SEND',						 'Отправить');
+    define('LANG_INSTALL',					 'Установить');
+    define('LANG_INSERT',					 'Вставить');
+    define('LANG_CANCEL',					 'Отменить');
+    define('LANG_BACK',					 	 'Назад');
+    define('LANG_IN_QUEUE',					 'Объектов на очереди');
+    define('LANG_SELECT',                    'Выбрать');
+    define('LANG_SELECT_ALL',				 'Выделить все');
+    define('LANG_DESELECT_ALL',				 'Снять все');
+    define('LANG_INVERT_ALL',				 'Инвертировать');
+    define('LANG_CLOSE',                     'Закрыть');
+    define('LANG_CONTINUE',                  'Продолжить');
     define('LANG_OPTIONS',                   'Опции');
     define('LANG_REPLY',                     'Ответить');
     define('LANG_REPLY_SPELLCOUNT',          'ответ|ответа|ответов');
@@ -342,59 +369,60 @@
     define('LANG_HELP',                      'Помощь');
     define('LANG_HELP_URL',                  'http://docs.instantcms.ru');
 
-	//NAVIGATION
+    //NAVIGATION
     define('LANG_HOME',                      'Главная');
     define('LANG_BACK_TO_HOME',              'Вернуться на главную');
-	define('LANG_PAGE_NEXT', 				 'Следующая');
-	define('LANG_PAGE_PREV',                 'Предыдущая');
-	define('LANG_PAGE_FIRST', 				 'Первая');
-	define('LANG_PAGE_LAST',                 'Последняя');
-	define('LANG_PAGES', 					 'Страницы');
-	define('LANG_PAGE', 					 'Страница');
-	define('LANG_PAGE_ADD',                  'Добавить страницу');
-	define('LANG_PAGE_DELETE',               'Удалить страницу');
-	define('LANG_PAGE_CURRENT_DELETE',       'Удалить текущую страницу');
-	define('LANG_PAGES_SHOWN',               'Показаны %d-%d из %d');
-	define('LANG_PAGES_SHOW_PERPAGE',        'Показывать по');
+    define('LANG_PAGE_NEXT', 				 'Следующая');
+    define('LANG_PAGE_PREV',                 'Предыдущая');
+    define('LANG_PAGE_FIRST', 				 'Первая');
+    define('LANG_PAGE_LAST',                 'Последняя');
+    define('LANG_PAGES', 					 'Страницы');
+    define('LANG_PAGE', 					 'Страница');
+    define('LANG_PAGE_ADD',                  'Добавить страницу');
+    define('LANG_PAGE_DELETE',               'Удалить страницу');
+    define('LANG_PAGE_CURRENT_DELETE',       'Удалить текущую страницу');
+    define('LANG_PAGES_SHOWN',               'Показаны %d-%d из %d');
+    define('LANG_PAGES_SHOW_PERPAGE',        'Показывать по');
 
-	//FORMS
-	define('LANG_SUBMIT', 					 'Отправить');
+    //FORMS
+    define('LANG_SUBMIT', 					 'Отправить');
 
-	//LAYOUT
-	define('LANG_PAGE_BODY',                 'Тело страницы');
-	define('LANG_PAGE_MENU',                 'Меню страницы');
-	define('LANG_PAGE_HEADER',               'Шапка страницы');
-	define('LANG_PAGE_FOOTER',               'Подвал страницы');
-	define('LANG_PAGE_LOGO',                 'Логотип');
-	define('LANG_MENU',                      'Меню');
-	define('LANG_TITLE', 					 'Заголовок');
-	define('LANG_SHOW_TITLE',                'Показывать заголовок');
-	define('LANG_SYSTEM_NAME',               'Системное имя');
-	define('LANG_SYSTEM_EDIT_NOTICE',	     '<b>Внимание:</b> при изменении системного имени поле будет создано заново и все текущие данные будут потеряны!');
-	define('LANG_DESCRIPTION',               'Описание');
-	define('LANG_INFORMATION',               'Информация');
-	define('LANG_CONTENT', 					 'Содержимое');
-	define('LANG_CATEGORY',                  'Категория');
-	define('LANG_CATEGORY_TITLE',            'Название категории');
+    //LAYOUT
+    define('LANG_PAGE_BODY',                 'Тело страницы');
+    define('LANG_PAGE_MENU',                 'Меню страницы');
+    define('LANG_PAGE_HEADER',               'Шапка страницы');
+    define('LANG_PAGE_FOOTER',               'Подвал страницы');
+    define('LANG_PAGE_LOGO',                 'Логотип');
+    define('LANG_MENU',                      'Меню');
+    define('LANG_TITLE', 					 'Заголовок');
+    define('LANG_SHOW_TITLE',                'Показывать заголовок');
+    define('LANG_SYSTEM_NAME',               'Системное имя');
+    define('LANG_SYSTEM_EDIT_NOTICE',	     '<b>Внимание:</b> при изменении системного имени поле будет создано заново и все текущие данные будут потеряны!');
+    define('LANG_DESCRIPTION',               'Описание');
+    define('LANG_INFORMATION',               'Информация');
+    define('LANG_CONTENT', 					 'Содержимое');
+    define('LANG_CATEGORY',                  'Категория');
+    define('LANG_CATEGORY_TITLE',            'Название категории');
     define('LANG_FOLDER',                    'Папка');
-	define('LANG_ROOT_NODE',                 'Корень');
-	define('LANG_ROOT_CATEGORY',             'Корневая категория');
-	define('LANG_PARENT_CATEGORY',           'Родительская категория');
-	define('LANG_ADDITIONAL_CATEGORIES',	 'Дополнительные категории');
-	define('LANG_MESSAGE', 					 'Текст сообщения');
-	define('LANG_DATE', 					 'Дата');
-	define('LANG_DATE_PUB',                  'Дата публикации');
-	define('LANG_PUBLICATION',				 'Публикация');
-	define('LANG_SLUG',                      'URL');
-	define('LANG_PRIVACY',                   'Приватность');
-	define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
-	define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
-	define('LANG_ON_FRONT',				 	 'На главной');
-	define('LANG_SHOWED',					 'Показано');
-	define('LANG_ORDER',					 'Порядок');
-	define('LANG_ORDER_DOWN',				 'Переместить вниз');
-	define('LANG_ORDER_UP',					 'Переместить вверх');
-	define('LANG_HITS',                      'Просмотры');
+    define('LANG_ROOT_NODE',                 'Корень');
+    define('LANG_ROOT_CATEGORY',             'Корневая категория');
+    define('LANG_PARENT_CATEGORY',           'Родительская категория');
+    define('LANG_ADDITIONAL_CATEGORIES',	 'Дополнительные категории');
+    define('LANG_MESSAGE', 					 'Текст сообщения');
+    define('LANG_DATE', 					 'Дата');
+    define('LANG_DATE_PUB',                  'Дата публикации');
+    define('LANG_PUBLICATION',				 'Публикация');
+    define('LANG_SLUG',                      'URL');
+    define('LANG_PRIVACY',                   'Приватность');
+    define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
+    define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
+    define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
+    define('LANG_ON_FRONT',				 	 'На главной');
+    define('LANG_SHOWED',					 'Показано');
+    define('LANG_ORDER',					 'Порядок');
+    define('LANG_ORDER_DOWN',				 'Переместить вниз');
+    define('LANG_ORDER_UP',					 'Переместить вверх');
+    define('LANG_HITS',                      'Просмотры');
 
     //SEO
     define('LANG_SEO',                       'SEO');
@@ -413,11 +441,16 @@
     define('LANG_GB',              'Гб');
     define('LANG_TB',              'Тб');
     define('LANG_PB',              'Пб');
-	
-	//UNITS
+
+    //UNITS
     define('LANG_UNIT1',                     'единица');
     define('LANG_UNIT2',                     'единицы');
     define('LANG_UNIT10',                    'единиц');
+    define('LANG_CH1',                       'символ');
+    define('LANG_CH2',                       'символа');
+    define('LANG_CH10',                      'символов');
+
+    define('LANG_ISLEFT',                    'осталось');
 
     //DATES
     define('LANG_ALL',                       'Все');
@@ -435,6 +468,7 @@
     define('LANG_EVENTS_THIS_WEEK',          'События на этой неделе');
     define('LANG_CALENDAR',                  'Календарь');
     define('LANG_TIME_ZONE',                 'Часовой пояс');
+    define('LANG_YEAR',                      'Год');
     define('LANG_YEARS',                     'Года');
     define('LANG_YEAR1',                     'год');
     define('LANG_YEAR2',                     'года');
@@ -467,4 +501,4 @@
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-
+    define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');

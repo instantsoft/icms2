@@ -1,4 +1,5 @@
 var icms = icms || {};
+var Notification = window.Notification || window.mozNotification || window.webkitNotification;
 
 icms.messages = (function ($) {
 
@@ -11,7 +12,20 @@ icms.messages = (function ($) {
 
     //====================================================================//
 
+    this.desktopNotification = function (title, params){
+        if(Notification) {
+            var instance = Notification.requestPermission(function (permission){
+                if(permission !== 'granted') { return false; }
+                notification = new Notification(title, params);
+            });
+        }
+    };
+
     this.selectContact = function(id){
+
+        if(Notification) {
+            Notification.requestPermission(function (permission){});
+        }
 
         var pm_window = $('#pm_window');
         var contact = $('#contact-' + id, pm_window);
@@ -108,7 +122,7 @@ icms.messages = (function ($) {
             return;
         }
 
-		if (result.message){			
+		if (result.message){
 			$('#pm_contact .chat').append(result.message);
 			this.scrollChat();
 		}
@@ -330,7 +344,7 @@ icms.messages = (function ($) {
 
         }, "json");
 
-        return true;
+        return false;
 
     }
 

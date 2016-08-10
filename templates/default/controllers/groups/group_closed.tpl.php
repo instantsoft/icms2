@@ -16,7 +16,7 @@
     <div id="left_column" class="column">
 
         <div id="logo" class="block">
-            <?php echo html_image($group['logo'], 'normal'); ?>
+            <?php echo html_image($group['logo'], 'normal', $group['title']); ?>
         </div>
 
     </div>

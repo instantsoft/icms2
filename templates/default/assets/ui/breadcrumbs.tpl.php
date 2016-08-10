@@ -15,7 +15,7 @@
 
             <li>
                 <?php if (!isset($item['is_last'])){ ?>
-                    <a href="<?php echo $item['href']; ?>"><span><?php html($item['title']); ?></span></a>
+                    <a href="<?php html($item['href']); ?>"><span><?php html($item['title']); ?></span></a>
                 <?php } else { ?>
                     <span><?php html($item['title']); ?></span>
                 <?php } ?>

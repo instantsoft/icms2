@@ -83,6 +83,14 @@ class cmsNestedsets {
 						  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 			$this->_safe_query ($sql_update);
 
+            // Update Ordering
+            $sql_update = "UPDATE " . $this->TableName .
+                    " SET " . $this->FieldOrder . " = " . $this->FieldOrder . " - 1" .
+                    " WHERE " . $this->FieldOrder . " > " . $row_select[$this->FieldOrder] .
+                    " AND " . $this->FieldLevel . " = " . $row_select[$this->FieldLevel] .
+                    " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
+            $this->_safe_query ($sql_update);
+
 			$this->db->freeResult ($rs_select);
 
 			return true;
@@ -140,7 +148,7 @@ class cmsNestedsets {
 						  " AND " . $this->FieldOrder . " >= " . $Order .
 						  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 			$this->_safe_query ($sql_update);
-			
+
 			$sql_order = "SELECT * FROM " . $this->TableName .
 						 " WHERE " . $this->FieldIDParent . " = " . $IDParent .
 						 " AND " . $this->FieldOrder  . " <= " . $Order .
@@ -301,7 +309,7 @@ class cmsNestedsets {
 		              " WHERE " . $this->FieldID . " = " . $IDNode .
 		              " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 
-		
+
 		$rs_select = $this->_safe_query ($sql_select);
 		if (($rs_select) && ($row_select = $this->db->fetchAssoc ($rs_select)))
 		{
@@ -333,7 +341,7 @@ class cmsNestedsets {
 							  " AND " . $this->FieldRight . " <= " . $row_select[$this->FieldRight] .
 						  	  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
 				$this->_safe_query ($sql_ignore);
-			
+
 				// Update Order (set order = order +1 where order>$Order)
 				if ($Order == -1)
 				{
@@ -385,7 +393,7 @@ class cmsNestedsets {
 								  " AND " . $this->FieldLeft . " <= " . $row_select[$this->FieldLeft] .
 								  " AND " . $this->FieldIgnore . " = 0" .
 								  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
-					
+
 
 				}
 				else // Move to right
@@ -396,7 +404,7 @@ class cmsNestedsets {
 								  " AND " . $this->FieldLeft . " >= " . $row_select[$this->FieldLeft] .
 								  " AND " . $this->FieldIgnore . " = 0" .
 								  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
-					
+
 				}
 				$this->_safe_query ($sql_update);
 
@@ -409,7 +417,7 @@ class cmsNestedsets {
 								  " AND " . $this->FieldRight . " <= " . $row_select[$this->FieldRight] .
 								  " AND " . $this->FieldIgnore . " = 0" .
 								  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
-										
+
 
 				}
 				else // Move to right
@@ -420,7 +428,7 @@ class cmsNestedsets {
 								  " AND " . $this->FieldRight . " >= " . $row_select[$this->FieldRight] .
 								  " AND " . $this->FieldIgnore . " = 0" .
 								  " AND " . $this->FieldDiffer . " = '" . $Differ . "'";
-										
+
 
 				}
 				$this->_safe_query ($sql_update);

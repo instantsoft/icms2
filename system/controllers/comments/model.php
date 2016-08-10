@@ -27,9 +27,13 @@ class modelComments extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function deleteComment($id){
+    public function deleteComment($id, $delete=false){
 
-        $this->update('comments', $id, array('is_deleted'=>1));
+        if($delete){
+            $this->delete('comments', $id);
+        } else {
+            $this->update('comments', $id, array('is_deleted'=>1));
+        }
 
         cmsCache::getInstance()->clean("comments.list");
 
@@ -49,7 +53,7 @@ class modelComments extends cmsModel{
 
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
-		
+
 		if ($target_id){
 			$this->filterEqual('target_id', $target_id);
 		}
@@ -171,9 +175,9 @@ class modelComments extends cmsModel{
 
     public function getCommentsCount(){
 
-        $count = $this->getCount('comments');
+        $this->useCache('comments.list');
 
-        return $count;
+        return $this->getCount('comments');
 
     }
 
@@ -193,14 +197,15 @@ class modelComments extends cmsModel{
             $this->orderBy('ordering');
         }
 
-        $this->useCache("comments.list");
+        $this->useCache('comments.list');
 
         return $this->get('comments', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'avatar'    => $item['user_avatar']
             );
 
             return $item;
@@ -221,9 +226,10 @@ class modelComments extends cmsModel{
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'avatar'    => $item['user_avatar']
             );
 
             return $item;
@@ -237,7 +243,7 @@ class modelComments extends cmsModel{
 
     public function getTracking($user_id){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         $this->filterEqual('user_id', $user_id);
 
@@ -293,7 +299,7 @@ class modelComments extends cmsModel{
 
     public function getTrackingUsers(){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         return $this->get('comments_tracks', function($item, $model){
             return $item['user_id'];
@@ -342,15 +348,15 @@ class modelComments extends cmsModel{
 //============================================================================//
 
     public function getGuestLastCommentTime($ip){
-        
+
         $time = $this->
                     filterEqual('user_id', 0)->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
-        
+
         return strtotime($time);
-        
+
     }
-    
+
 }

@@ -4,8 +4,6 @@ class actionUsersMigrationsAdd extends cmsAction {
 
     public function run(){
 
-        $users_model = cmsCore::getModel('users');
-
         $form = $this->getForm('migration', array('add'));
 
         $is_submitted = $this->request->has('submit');
@@ -20,7 +18,7 @@ class actionUsersMigrationsAdd extends cmsAction {
 
             if (!$errors){
 
-                $rule_id = $users_model->addMigrationRule($rule);
+                $rule_id = $this->model->addMigrationRule($rule);
 
                 $this->redirectToAction('migrations');
 

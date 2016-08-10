@@ -15,7 +15,7 @@ class actionAdminUsers extends cmsAction {
         $groups = $users_model->getGroups();
         $groups = array_pad($groups, (sizeof($groups)+1)*-1, array('id'=>0, 'title'=>LANG_ALL));
 
-        $grid = $this->loadDataGrid('users');
+        $grid = $this->loadDataGrid('users', false, 'admin.grid_filter.users');
 
         return cmsTemplate::getInstance()->render('users', array(
             'groups' => $groups,

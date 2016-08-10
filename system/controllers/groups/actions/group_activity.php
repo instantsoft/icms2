@@ -2,9 +2,9 @@
 
 class actionGroupsGroupActivity extends cmsAction {
 
-    public function run($group){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    public function run($group){
 
         $activity_controller = cmsCore::getController('activity', $this->request);
 
@@ -15,9 +15,9 @@ class actionGroupsGroupActivity extends cmsAction {
         $html = $activity_controller->renderActivityList($page_url);
 
         return cmsTemplate::getInstance()->render('group_activity', array(
-            'user' => $user,
+            'user'  => $this->cms_user,
             'group' => $group,
-            'html' => $html
+            'html'  => $html
         ));
 
     }

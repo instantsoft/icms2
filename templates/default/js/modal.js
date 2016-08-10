@@ -10,7 +10,7 @@ icms.modal = (function ($) {
     //====================================================================//
 
 	this.bind = function(selector) {
-        $(selector).nyroModal();
+        $(selector).nyroModal({anim: {def: 'show'}});
 	}
 
     //====================================================================//
@@ -20,21 +20,23 @@ icms.modal = (function ($) {
 	}
 
     //====================================================================//
-	
+
 	this.openHtml = function(html) {
 		$.nmData(html);
 	};
 
     //====================================================================//
 
-    this.openAjax = function(url, data){
+    this.openAjax = function(url, data, open_callback){
+
+        open_callback = open_callback || function(){};
 
         if (typeof(data)=='undefined'){
-            $.nmManual(url, {autoSizable: true});
+            $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback}});
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, ajax:{data: data, type: "POST"}});
+        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback}, ajax:{data: data, type: "POST"}});
         return false;
 
     }
@@ -43,7 +45,7 @@ icms.modal = (function ($) {
 
     this.bindGallery = function(selector){
         $(selector).attr('rel', 'gal');
-        $(selector).nyroModal();
+        $(selector).nyroModal({anim: {def: 'show'}});
     }
 
     //====================================================================//

@@ -17,7 +17,13 @@ body {
     width: 980px;
     margin: 0 auto;
 }
-
+#popup-manager.popup-show + #layout {
+    -webkit-filter:blur(2px);
+    -moz-filter:blur(2px);
+    -ms-filter:blur(2px);
+    -o-filter:blur(2px);
+    filter:blur(2px);
+}
 /* Header =================================================================== */
 
 #layout header{
@@ -27,7 +33,7 @@ body {
     background:url("../images/bg_top.png") no-repeat center;
 }
 
-#layout header #logo a{
+#layout header #logo a, #layout header #logo > span{
     display: block;
     float: left;
     width: 180px;
@@ -75,14 +81,13 @@ header .menu > li > a:hover {
 
 header .menu > li.active > a { color:#F5CF53; }
 header .menu > li.active > a:hover { color:#F5CF53; }
-header .menu > li.active > ul a:hover { color:#000; }
+header .menu > li.active > ul a:hover { color:#EEE; }
 
 header .menu ul li a,
 header .menu li.active ul li a {
-    color: #000;
     text-shadow: none;
     text-decoration: none;
-    padding: 0 10px;
+    padding-right: 10px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }
@@ -135,7 +140,7 @@ header .menu li:hover > ul {
     visibility: visible;
 }
 
-header .menu ul { width:230px; margin-top: 1px; }
+header .menu ul { width:250px; }
 
 header .menu ul li:last-child,
 header .menu ul li:last-child a {
@@ -297,7 +302,7 @@ nav select { display: none; }
 
 /* Breadcrumbs ============================================================== */
 
-#breadcrumbs { margin:-20px; margin-bottom: 20px; background:#ecf0f1; padding:0 10px; }
+#breadcrumbs { margin:-20px; margin-bottom: 20px; background:#ecf0f1; padding:0 10px; position: relative; }
 
 #breadcrumbs ul, #breadcrumbs li { margin:0; padding:0; list-style: none; }
 
@@ -496,7 +501,7 @@ aside .menu .item{
 #layout footer a { color:#95a5a6; }
 #layout footer a:hover { color:#ecf0f1; }
 
-#layout footer span.item { padding:0 15px; border-left: solid 1px #7f8c8d; }
+#layout footer span.item { padding:0 10px; border-left: solid 1px #7f8c8d; }
 
 /* Footer SQL Debug ======================================================== */
 
@@ -515,6 +520,17 @@ aside .menu .item{
     font-size:12px;
     color:#999;
     margin-bottom:4px;
+}
+#sql_queries .query_time {
+    color: #999;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+#sql_queries .red_query {
+    color: #c0392b;
+}
+#sql_queries .green_query {
+    color: #27ae60;
 }
 
 /* Footer Navigation ======================================================== */
@@ -540,19 +556,58 @@ aside .menu .item{
 
 @media screen and (max-width: 980px) {
     #body section { width:100% !important; }
-    #body aside { display:none; }
+    #body aside {
+        float: none !important;
+        overflow: hidden;
+        width: 100%;
+        clear: both;
+    }
 }
 
 @media screen and (max-width: 800px) {
     #body section { width:100% !important; }
-    #body aside { display:none; }
     nav { padding:5px; height:auto; }
     nav .menu { display:none; }
-    nav select { display: block; }
+    nav select {
+        position: relative;
+        display: inline-block;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: #FFF;
+        font-size: 14px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 28px;
+        line-height: 20px;
+        background: url(../images/icons32/menu-icon.svg) no-repeat center right;
+    }
+    nav select option {
+        color: #333;
+        background: #FFF;
+        transition: all 0.3s ease;
+    }
     #layout footer #info { display: none !important; }
 }
 
 @media screen and (max-width: 640px) {
+    .content_item .ft_images .first_type_images:first-child {
+        float: none;
+        clear: both;
+        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+    .filter-panel .fields .field:nth-child(odd), .filter-panel .fields .field:nth-child(even){
+        float: none !important;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .content_item .ft_images .first_type_images:first-child > img {
+        width: 100%;
+    }
     #layout header #logo { margin: 0 auto; overflow:hidden; width:200px; }
     #layout header .menu { display:none; }
     .tabs-menu ul { display:none; }
@@ -564,4 +619,23 @@ aside .menu .item{
 
 @media screen and (max-width: 480px) {
     #layout footer #nav { display: none !important; }
+    #breadcrumbs ul li:last-child {
+        display: none;
+    }
+    h1 {
+        font-size: 22px;
+    }
+    .content_list.featured .first .photo, .content_list.featured .first .fields, .content_list.tiled.albums_list .tile  {
+        width: 100% !important;
+    }
+    .content_list_item.second .photo, .content_list_item.second .first {
+        float: none !important;
+        margin-right: 0 !important;
+    }
+    .content_list.featured .first .ft_caption a {
+        font-size: 21px !important;
+    }
+    .content_list_item .ft_caption .value {
+        font-size: 18px !important;
+    }
 }

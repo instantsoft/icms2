@@ -48,6 +48,20 @@
                 </fieldset>
                 <?php } ?>
 
+                <?php if (isset($manifest['package'])) { ?>
+                <fieldset>
+
+                    <legend><?php echo LANG_CP_PACKAGE_TYPE; ?></legend>
+
+                    <p><?php echo $manifest['package']['type_hint']; ?>
+                    <?php if (!empty($manifest['package']['installed_version'])) { ?>
+                        <?php echo ' '.$manifest['package']['installed_version'].' => '.$manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build']; ?>
+                    <?php } ?>
+                    </p>
+
+                </fieldset>
+                <?php } ?>
+
                 <?php if (isset($manifest['description'])) { ?>
                 <fieldset>
 
@@ -73,8 +87,14 @@
                             </li>
                             <?php if (!$manifest['depends_results']['core']){ $depends_pass = false; } ?>
                         <?php } ?>
+                        <?php if (isset($manifest['depends']['package'])) { ?>
+                            <li>
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?>:
+                                <?php echo html_bool_span($manifest['depends']['package'], $manifest['depends_results']['package']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['package']){ $depends_pass = false; } ?>
+                        <?php } ?>
                     </ul>
-
 
                 </fieldset>
                 <?php } ?>

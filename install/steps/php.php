@@ -18,7 +18,7 @@ function check_requirements(){
 
     $min_php_version = '5.3.0';
 	$vars = array('magic_quotes_gpc' => 0, 'register_globals' => 0);
-    $extensions = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session');
+    $extensions = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter');
     $extensions_extra = array('ftp', 'memcache', 'zip', 'curl');
 
     sort($extensions);
@@ -43,7 +43,7 @@ function check_requirements(){
 		);
 		$info['valid'] = $info['valid'] && ($req == $set);
 	}
-	
+
     foreach($extensions as $ext){
         $loaded = extension_loaded($ext);
         $info['ext'][$ext] = $loaded;

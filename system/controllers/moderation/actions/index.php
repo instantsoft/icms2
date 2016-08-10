@@ -23,9 +23,9 @@ class actionModerationIndex extends cmsAction {
 
         if (!$ctype_name) { $ctype_name = $ctypes_list[0]; $is_index = true; }
 
-        $content_controller = cmsCore::getController('content');
+        $content_controller = cmsCore::getController('content', $this->request);
 
-        $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypes();
+        $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypesFiltered();
         $ctypes = array_collection_to_list($ctypes, 'name', 'title');
 
         $ctype = $content_controller->model->getContentTypeByName($ctype_name);
@@ -34,18 +34,18 @@ class actionModerationIndex extends cmsAction {
 
         $page_url = $is_index ? href_to($this->name) : href_to($this->name, $ctype_name);
 
-        $content_controller->model->disableApprovedFilter();
+        $content_controller->model->disableApprovedFilter()->disablePubFilter();
 
         $list_html = $content_controller->renderItemsList($ctype, $page_url, true);
 
         return $template->render('index', array(
-            'is_index' => $is_index,
-            'counts' => $counts,
-            'ctype' => $ctype,
-            'ctypes' => $ctypes,
+            'is_index'   => $is_index,
+            'counts'     => $counts,
+            'ctype'      => $ctype,
+            'ctypes'     => $ctypes,
             'ctype_name' => $ctype_name,
-            'list_html' => $list_html,
-            'user' => $user
+            'list_html'  => $list_html,
+            'user'       => $user
         ));
 
     }

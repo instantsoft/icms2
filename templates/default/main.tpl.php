@@ -1,7 +1,4 @@
-<?php
-    $config = cmsConfig::getInstance();
-    $core = cmsCore::getInstance();
-?>
+<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +23,7 @@
     <?php $this->head(); ?>
     <style><?php include('options.css.php'); ?></style>
 </head>
-<body>
+<body id="<?php echo $device_type; ?>_device_type">
 
     <div id="layout">
 
@@ -35,13 +32,19 @@
         <?php } ?>
 
         <header>
-            <div id="logo"><a href="<?php echo href_to_home(); ?>"></a></div>
-            <?php $this->widgets('header', false, 'wrapper_plain'); ?>
+            <div id="logo">
+                <?php if($core->uri) { ?>
+                    <a href="<?php echo href_to_home(); ?>"></a>
+                <?php } else { ?>
+                    <span></span>
+                <?php } ?>
+            </div>
+            <div class="widget_ajax_wrap" id="widget_pos_header"><?php $this->widgets('header', false, 'wrapper_plain'); ?></div>
         </header>
 
         <?php if($this->hasWidgetsOn('top')) { ?>
             <nav>
-                <?php $this->widgets('top', false, 'wrapper_plain'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_top"><?php $this->widgets('top', false, 'wrapper_plain'); ?></div>
             </nav>
         <?php } ?>
 
@@ -69,30 +72,30 @@
 
             <section style="width:<?php echo $section_width; ?>">
 
-                <?php $this->widgets('left-top'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_left-top"><?php $this->widgets('left-top'); ?></div>
 
                 <?php if ($this->isBody()){ ?>
                     <article>
-                        <?php if ($this->isBreadcrumbs()){ ?>
+                        <?php if ($config->show_breadcrumbs && $this->isBreadcrumbs()){ ?>
                             <div id="breadcrumbs">
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
                         <?php } ?>
-                        <?php $this->body(); ?>
+                        <div id="controller_wrap"><?php $this->body(); ?></div>
                     </article>
                 <?php } ?>
 
-                <?php $this->widgets('left-bottom'); ?>
+                <div class="widget_ajax_wrap" id="widget_pos_left-bottom"><?php $this->widgets('left-bottom'); ?></div>
 
             </section>
 
-            <aside>
-                <?php $this->widgets('right-top'); ?>
-
-                <?php $this->widgets('right-center'); ?>
-
-                <?php $this->widgets('right-bottom'); ?>
-            </aside>
+            <?php if($is_sidebar){ ?>
+                <aside>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-top"><?php $this->widgets('right-top'); ?></div>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-center"><?php $this->widgets('right-center'); ?></div>
+                    <div class="widget_ajax_wrap" id="widget_pos_right-bottom"><?php $this->widgets('right-bottom'); ?></div>
+                </aside>
+            <?php } ?>
 
         </div>
 
@@ -103,6 +106,7 @@
                         <div class="query">
                             <div class="src"><?php echo $sql['src']; ?></div>
                             <?php echo nl2br($sql['sql']); ?>
+                            <div class="query_time"><?php echo LANG_DEBUG_QUERY_TIME; ?> <span class="<?php echo (($sql['time']>=0.1) ? 'red_query' : 'green_query'); ?>"><?php echo number_format($sql['time'], 5); ?></span> <?php echo LANG_SECOND10 ?></div>
                         </div>
                     <?php } ?>
                 </div>
@@ -128,16 +132,21 @@
                         <span class="item">
                             SQL: <a href="#sql_debug" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
                         </span>
-                        <span class="item">
-                            Cache: <?php echo cmsCache::getInstance()->query_count; ?></a>
-                        </span>
+                        <?php if ($config->cache_enabled){ ?>
+                            <span class="item">
+                                Cache: <?php echo cmsCache::getInstance()->query_count; ?>
+                            </span>
+                        <?php } ?>
                         <span class="item">
                             Mem: <?php echo round(memory_get_usage()/1024/1024, 2); ?> Mb
+                        </span>
+                        <span class="item">
+                            Time: <?php echo number_format(cmsCore::getTime(), 4); ?> s
                         </span>
                     <?php } ?>
                 </li>
                 <li id="nav">
-                    <?php $this->widgets('footer', false, 'wrapper_plain'); ?>
+                    <div class="widget_ajax_wrap" id="widget_pos_footer"><?php $this->widgets('footer', false, 'wrapper_plain'); ?></div>
                 </li>
             </ul>
         </footer>

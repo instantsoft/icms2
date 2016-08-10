@@ -10,11 +10,11 @@
 	<title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-modal.css"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery-modal.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/core.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/modal.js"); ?>
+    <?php $this->addMainCSS("templates/default/css/theme-modal.css"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery.js"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery-modal.js"); ?>
+    <?php $this->addMainJS("templates/default/js/core.js"); ?>
+    <?php $this->addMainJS("templates/default/js/modal.js"); ?>
     <?php $this->head(false); ?>
 <body>
 
@@ -48,9 +48,11 @@
             <div id="menu"><?php $this->menu('cp_main'); ?></div>
         </div>
 
-        <div id="cp_pathway">
-            <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
-        </div>
+        <?php if($this->isBreadcrumbs()){ ?>
+            <div id="cp_pathway">
+                <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'<div class="sep"></div>')); ?>
+            </div>
+        <?php } ?>
 
         <div id="cp_body">
 
@@ -74,8 +76,6 @@
                 <?php $this->body(); ?>
 
                 <div class="pad"></div>
-                
-                <div class="loading-overlay"></div>
 
         </div>
 
@@ -84,7 +84,7 @@
     <div id="cp_footer">
         <div class="container">
             <a href="http://www.instantcms.ru/">InstantCMS</a> v<?php echo cmsCore::getVersion(); ?> &mdash;
-            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> 2013 &mdash;
+            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
         </div>
     </div>
@@ -101,8 +101,8 @@
         $(document).ready(function(){
             fitLayout();
             window.onbeforeunload = function(){
-                $('.loading-overlay').show();
-            }
+                $('body').prepend('<div class="loading-overlay"/>');
+            };
         });
 
         $(window).resize(function(){

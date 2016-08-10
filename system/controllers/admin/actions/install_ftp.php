@@ -18,7 +18,15 @@ class actionAdminInstallFtp extends cmsAction {
 
             $account = array_merge($account, $form->parse($this->request, $is_submitted, $account));
 
-            cmsUser::sessionSet('ftp_account', $account);
+            if($account['save_to_session']){
+                cmsUser::sessionSet('ftp_account', $account);
+            } else {
+                cmsUser::sessionSet('ftp_account', array(
+                    'host'    => $account['host'],
+                    'path'    => $account['path'],
+                    'is_pasv' => $account['is_pasv']
+                ));
+            }
 
             $errors = $form->validate($this, $account);
 
@@ -30,7 +38,7 @@ class actionAdminInstallFtp extends cmsAction {
 				$account['host'] = trim(str_replace('ftp://', '', $account['host']), '/');
 				if ($account['path'] != '/' ) {
 					$account['path'] = '/' . trim($account['path'], '/') . '/';
-				}				
+				}
                 $this->uploadPackageToFTP($account);
             }
 
@@ -66,10 +74,10 @@ class actionAdminInstallFtp extends cmsAction {
 
         if($account['is_pasv']) { ftp_pasv($connection, true); }
 
-		if (!$this->checkDestination($connection, $account)){ 			
+		if (!$this->checkDestination($connection, $account)){
 			return false;
 		}
-		
+
         $src_dir = $this->getPackageContentsDir();
         $dst_dir = '/' . trim($account['path'], '/');
 
@@ -88,27 +96,27 @@ class actionAdminInstallFtp extends cmsAction {
         return true;
 
     }
-	
+
     private function checkDestination($connection, $account) {
 
         $ftp_path = 'ftp://' . $account['host'] . $account['path'];
-        
+
         $check_dirs = array(
-            'system/core' => 'core.php', 
+            'system/core' => 'core.php',
             'system/config' => 'config.php'
         );
-        
+
         if (!ftp_nlist($connection, $account['path'])){
             cmsUser::addSessionMessage(sprintf(LANG_CP_FTP_NO_ROOT, $ftp_path), 'error');
             return false;
-        }        
-        
+        }
+
         $files_list = array();
-        
+
         foreach ($check_dirs as $dir => $file) {
 
             $contents = ftp_nlist($connection, $account['path'] . $dir);
-            
+
             if (is_array($contents)){
                 foreach ($contents as $item) {
                     $files_list[] = basename($item);
@@ -121,14 +129,15 @@ class actionAdminInstallFtp extends cmsAction {
             }
 
         }
-        
+
         return true;
 
-    } 
+    }
 
     private function uploadDirectoryToFTP($conn_id, $src_dir, $dst_dir) {
 
         $d = dir($src_dir);
+        $is_function_exists_ftp_chmod = function_exists('ftp_chmod');
 
         while($file = $d->read()) {
 
@@ -138,6 +147,9 @@ class actionAdminInstallFtp extends cmsAction {
                     if (!@ftp_chdir($conn_id, $dst_dir."/".$file)) {
                         $result = @ftp_mkdir($conn_id, $dst_dir."/".$file);
                         if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED);}
+                        if($is_function_exists_ftp_chmod){
+                            @ftp_chmod($conn_id, 0755, $dst_dir."/".$file);
+                        }
                     }
 
                     $this->uploadDirectoryToFTP($conn_id, $src_dir."/".$file, $dst_dir."/".$file);
@@ -146,6 +158,9 @@ class actionAdminInstallFtp extends cmsAction {
 
                     $result = @ftp_put($conn_id, $dst_dir."/".$file, $src_dir."/".$file, FTP_BINARY);
                     if (!$result) { throw new Exception(LANG_CP_FTP_UPLOAD_FAILED); }
+                    if($is_function_exists_ftp_chmod){
+                        @ftp_chmod($conn_id, 0644, $dst_dir."/".$file);
+                    }
 
                 }
             }

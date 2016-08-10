@@ -2,13 +2,12 @@
 
 class actionUsersProfileEditPassword extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         $form = $this->getForm('password');
 
@@ -26,9 +25,9 @@ class actionUsersProfileEditPassword extends cmsAction {
 
             if (!$errors){
 
-                $password_hash = md5(md5($data['password']) . $user->password_salt);
+                $password_hash = md5(md5($data['password']) . $this->cms_user->password_salt);
 
-                if ($password_hash != $user->password){
+                if ($password_hash != $this->cms_user->password){
                     $errors = array('password' => LANG_OLD_PASS_INCORRECT);
                 }
 
@@ -55,12 +54,12 @@ class actionUsersProfileEditPassword extends cmsAction {
 
         }
 
-        return $template->render('profile_edit_password', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit_password', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
-            'data' => $data,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'data'    => $data,
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

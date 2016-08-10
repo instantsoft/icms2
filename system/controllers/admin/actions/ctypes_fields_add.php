@@ -22,15 +22,14 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            if (empty($field['is_system'])){
-                $field_type = $this->request->get('type');
-                $field_class = "field" . string_to_camel('_', $field_type);
-                $field_object = new $field_class(null, null);
-                $field_options = $field_object->getOptions();
-                foreach($field_options as $option_field){
-                    $option_field->setName("options:{$option_field->name}");
-                    $form->addField('type', $option_field);
-                }
+            $field_type    = $this->request->get('type');
+            $field_class   = "field" . string_to_camel('_', $field_type);
+            $field_object  = new $field_class(null, null);
+            $field_options = $field_object->getOptions();
+
+            foreach ($field_options as $option_field) {
+                $option_field->setName("options:{$option_field->name}");
+                $form->addField('type', $option_field);
             }
 
             $field = $form->parse($this->request, $is_submitted);

@@ -2,10 +2,12 @@
 
 class fieldList extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST;
-    public $sql   = 'int NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_LIST;
+    public $sql         = 'int NULL DEFAULT NULL';
     public $filter_type = 'int';
     public $filter_hint = LANG_PARSER_LIST_FILTER_HINT;
+    public $var_type    = 'string';
+    public $native_tag  = false;
 
     public function getOptions(){
         return array(
@@ -83,33 +85,40 @@ class fieldList extends cmsFormField {
         return string_explode_list($string);
     }
 
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_multiple')){
+            $this->var_type = 'array';
+        }
+        if($this->getProperty('is_multiple')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
+    }
+
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_multiple')){
+        if (!is_array($value)){
 
-            $model->filterEqual($this->name, $value);
+            return $model->filterEqual($this->name, $value);
 
         } else {
 
-            if (!is_array($value)) { return $model; }
-
-            $model->filterIn($this->name, $value);
+            return $model->filterIn($this->name, $value);
 
         }
-
-        return $model;
 
     }
 
     public function getInput($value){
 
-        $this->data['items']        = $this->getListItems();
-
-        $this->data['is_multiple']  = $this->getProperty('is_multiple');
-        $this->data['is_tree']      = $this->getProperty('is_tree');
-	$this->data['parent']       = $this->getProperty('parent');
-
-	$this->data['dom_attr']     = array('id'=>$this->id);
+        $this->data['items']       = $this->getListItems();
+        $this->data['is_multiple'] = $this->getProperty('is_multiple');
+        $this->data['is_tree']     = $this->getProperty('is_tree');
+        $this->data['parent']      = $this->getProperty('parent');
+        $this->data['dom_attr']    = array('id' => $this->id);
 
         return parent::getInput($value);
 

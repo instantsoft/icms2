@@ -15,12 +15,35 @@ class actionAuthVerify extends cmsAction {
 
         $users_model->unlockUser($user['id']);
         $users_model->clearUserPassToken($user['id']);
-		
+
 		cmsEventsManager::hook('user_registered', $user);
 
-        cmsUser::addSessionMessage(LANG_REG_SUCCESS_VERIFIED, 'success');
+        cmsUser::addSessionMessage($this->options['reg_auto_auth'] ? LANG_REG_SUCCESS_VERIFIED_AND_AUTH : LANG_REG_SUCCESS_VERIFIED, 'success');
 
-        $this->redirectToHome();
+		// авторизуем пользователя автоматически
+		if ($this->options['reg_auto_auth']){
+
+			$user = cmsEventsManager::hook('user_login', $user);
+
+			cmsUser::sessionSet('user', array(
+				'id'        => $user['id'],
+                'groups'    => $user['groups'],
+                'time_zone' => $user['time_zone'],
+                'perms'     => cmsUser::getPermissions($user['groups'], $user['id']),
+                'is_admin'  => $user['is_admin']
+            ));
+
+			$update_data = array(
+				'ip' => cmsUser::getIp()
+			);
+
+			$this->model->update('{users}', $user['id'], $update_data, true);
+
+    		cmsEventsManager::hook('auth_login', $user['id']);
+
+		}
+
+        $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
 
     }
 

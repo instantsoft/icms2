@@ -4,11 +4,12 @@ class actionImagesPresetsDelete extends cmsAction {
 
     public function run($id){
 
-        if (!$id) { cmsCore::error404(); }
+        $preset = $this->model->getPreset($id);
+        if (!$preset) { cmsCore::error404(); }
 
-        $images_model = cmsCore::getModel('images');
+        $this->model->deletePreset($preset['id']);
 
-        $images_model->deletePreset($id);
+        $this->deleteDefaultImages($preset);
 
         $this->redirectToAction('presets');
 

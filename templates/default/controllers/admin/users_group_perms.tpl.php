@@ -59,7 +59,12 @@
                     <tbody>
                         <?php foreach($rules as $rule){ ?>
                             <tr>
-                                <td><?php echo $rule['title']; ?></td>
+                                <td>
+                                    <?php echo $rule['title']; ?>
+                                    <?php if(!empty($rule['title_hint'])){ ?>
+                                        <div class="hint"><?php echo $rule['title_hint']; ?></div>
+                                    <?php } ?>
+                                </td>
 
                                 <?php
                                     $default =  isset($values[$rule['id']][$group['id']]) ?

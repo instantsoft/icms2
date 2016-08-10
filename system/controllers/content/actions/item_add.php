@@ -7,7 +7,7 @@ class actionContentItemAdd extends cmsAction {
         $user = cmsUser::getInstance();
 
         // Получаем название типа контента
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype_name, 'add')) { cmsCore::error404(); }
@@ -31,9 +31,9 @@ class actionContentItemAdd extends cmsAction {
         }
 
 		$item = array();
-		
+
         if ($ctype['is_cats']){
-            $category_id = $this->request->get('to_id');
+            $category_id = $this->request->get('to_id', 0);
         }
 
         // Определяем наличие полей-свойств
@@ -49,7 +49,7 @@ class actionContentItemAdd extends cmsAction {
             $groups = $groups_model->getUserGroups($user->id);
 
             if (!$groups && $ctype['is_in_groups_only']){
-                cmsUser::addSessionMessage(sprintf(LANG_CONTENT_IS_IN_GROUPS_ONLY, $ctype['labels']['many']), 'error');
+                cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
                 $this->redirectBack();
             }
 
@@ -74,7 +74,7 @@ class actionContentItemAdd extends cmsAction {
             'groups_list' => $groups_list,
             'folders_list' => $folders_list
         ));
-		
+
         // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
@@ -95,16 +95,16 @@ class actionContentItemAdd extends cmsAction {
         if (!$is_submitted && !empty($category_id)) { $item['category_id'] = $category_id; }
 
 		if ($this->request->has('group_id') && $groups_list && !$is_submitted){
-			$item['parent_id'] = $this->request->get('group_id');
-		}		
-		
+			$item['parent_id'] = $this->request->get('group_id', 0);
+		}
+
         $item['ctype_name'] = $ctype['name'];
 		$item['ctype_id'] = $ctype['id'];
 
         if ($is_submitted){
 
             if ($ctype['props']){
-                $props_cat_id = $this->request->get('category_id');
+                $props_cat_id = $this->request->get('category_id', 0);
                 if ($props_cat_id){
                     $item_props = $this->model->getContentProps($ctype['name'], $props_cat_id);
                     $item_props_fields = $this->getPropsFields($item_props);
@@ -116,16 +116,31 @@ class actionContentItemAdd extends cmsAction {
 
             // Парсим форму и получаем поля записи
             $item = array_merge($item, $form->parse($this->request, $is_submitted));
-			
+
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $item);
 
 			if (!$errors){
 				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
 			}
-			
+
+            // несколько категорий
+            if (!empty($ctype['options']['is_cats_multi'])){
+                $add_cats = $this->request->get('add_cats', array());
+                if (is_array($add_cats)){
+                    foreach($add_cats as $index=>$cat_id){
+                        if (!is_numeric($cat_id) || !$cat_id){
+                            unset($add_cats[$index]);
+                        }
+                    }
+                    if ($add_cats){
+                        $item['add_cats'] = $add_cats;
+                    }
+                }
+            }
+
             if (!$errors){
-				
+
                 unset($item['ctype_name']);
                 unset($item['ctype_id']);
 
@@ -141,10 +156,10 @@ class actionContentItemAdd extends cmsAction {
                         $group = $groups_model->getGroup($item['parent_id']);
                         $item['parent_type'] = 'group';
                         $item['parent_title'] = $groups_list[$item['parent_id']];
-                        $item['parent_url'] = href_to_rel('groups', $item['parent_id'], array('content', $ctype_name));                        
+                        $item['parent_url'] = href_to_rel('groups', $item['parent_id'], array('content', $ctype_name));
                         $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
                     } else {
-                        $item['parent_id'] = null;                        
+                        $item['parent_id'] = null;
                     }
                 }
 
@@ -156,48 +171,35 @@ class actionContentItemAdd extends cmsAction {
 				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
 				$is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
 				$pub_max_days = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
-				
+
 				$date_pub_time = isset($item['date_pub']) ? strtotime($item['date_pub']) : time();
-				$now_time = strtotime(date('Y-m-d', time()));
+				$now_time = time();
+                $now_date = strtotime(date('Y-m-d', $now_time));
 				$is_pub = true;
-				
-				if ($is_date_pub_allowed){					
-					$days_to_pub = ceil(($date_pub_time - $now_time)/60/60/24);
-					$is_pub = $is_pub && ($days_to_pub < 1);
-				}				
+
+				if ($is_date_pub_allowed){
+					$time_to_pub = $date_pub_time - $now_time;
+					$is_pub = $is_pub && ($time_to_pub < 0);
+				}
 				if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){
-					$date_pub_end_time = strtotime($item['date_pub_end']);					
-					$days_from_pub = floor(($now_time - $date_pub_end_time)/60/60/24);
+					$date_pub_end_time = strtotime($item['date_pub_end']);
+					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 				} else if ($is_date_pub_days_allowed && !$user->is_admin) {
 					$days = $item['pub_days'];
 					$date_pub_end_time = $date_pub_time + 60*60*24*$days;
-					$days_from_pub = floor(($now_time - $date_pub_end_time)/60/60/24);
+					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
 				} else {
 					$item['date_pub_end'] = false;
 				}
-				
+
 				unset($item['pub_days']);
 				if (!$is_pub_control) { unset($item['is_pub']); }
 				if (!isset($item['is_pub'])) { $item['is_pub'] = $is_pub; }
-				if (!empty($item['is_pub'])) { $item['is_pub'] = $is_pub; }				
-				
-				if (!empty($ctype['options']['is_cats_multi'])){
-					$add_cats = $this->request->get('add_cats');
-					if (is_array($add_cats)){
-						foreach($add_cats as $index=>$cat_id){
-							if (!is_numeric($cat_id) || !$cat_id){
-								unset($add_cats[$index]);
-							}
-						}
-						if ($add_cats){
-							$item['add_cats'] = $add_cats;
-						}
-					}
-				}
-				
+				if (!empty($item['is_pub'])) { $item['is_pub'] = $is_pub; }
+
                 $item = cmsEventsManager::hook("content_before_add", $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
 
@@ -220,7 +222,7 @@ class actionContentItemAdd extends cmsAction {
                     $this->requestModeration($ctype_name, $item);
                 }
 
-                $back_url = $this->request->get('back');
+                $back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);
@@ -250,6 +252,7 @@ class actionContentItemAdd extends cmsAction {
             'is_moderator' => $is_moderator,
             'is_premoderation' => $is_premoderation,
             'is_load_props' => !isset($errors),
+            'add_cats' => isset($add_cats) ? $add_cats : array(),
             'errors' => isset($errors) ? $errors : false
         ));
 

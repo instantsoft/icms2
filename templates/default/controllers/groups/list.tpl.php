@@ -24,7 +24,7 @@
 
                 <div class="icon">
                     <?php
-                        echo html_image($group['logo']);
+                        echo html_image($group['logo'], 'small', $group['title']);
                     ?>
                 </div>
 
@@ -62,7 +62,7 @@
     </div>
 
     <?php if ($perpage < $total) { ?>
-        <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
+        <?php echo html_pagebar($page, $perpage, $total, $page_url); ?>
     <?php } ?>
 
 <?php } ?>

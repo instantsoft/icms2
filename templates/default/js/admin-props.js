@@ -1,6 +1,6 @@
 function filterPropsList(){
 
-    console.log('bbbb');
+    $('#props-bind').show();
 
     if ($('select[name=props_list]').length == 0) { return; }
 
@@ -9,7 +9,7 @@ function filterPropsList(){
 
     current_list.html(full_list.html());
 
-    if ($('#datagrid tbody tr').length == 0){ return; }
+    if ($('#datagrid tbody tr').length <= 1){ return; }
 
     $('#datagrid tbody tr').each(function(){
 
@@ -19,5 +19,7 @@ function filterPropsList(){
        $('option[value='+prop_id+']', current_list).remove();
 
     });
+
+    if ($('option', current_list).length == 0) { $('#props-bind').hide(); }
 
 }

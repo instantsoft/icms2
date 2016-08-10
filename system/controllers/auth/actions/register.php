@@ -3,7 +3,7 @@ class actionAuthRegister extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if (cmsUser::isLogged() && !cmsUser::isAdmin()) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
         $form = $this->getForm('registration');
@@ -74,7 +74,7 @@ class actionAuthRegister extends cmsAction {
         $user = array();
 
         if ($this->request->hasInQuery('inv')){
-            $user['inv'] = $this->request->get('inv');
+            $user['inv'] = $this->request->get('inv','');
         }
 
         $is_submitted = $this->request->has('submit');
@@ -110,14 +110,14 @@ class actionAuthRegister extends cmsAction {
                 $user = $form->parse($this->request, $is_submitted);
 
 				$user['groups'] = array();
-				
+
 				if (!empty($this->options['def_groups'])){
 					$user['groups'] = $this->options['def_groups'];
 				}
-				
-                if (isset($user['group_id'])) { 
+
+                if (isset($user['group_id'])) {
 					if (!in_array($user['group_id'], $user['groups'])){
-						$user['groups'][] = $user['group_id']; 					
+						$user['groups'][] = $user['group_id'];
 					}
 				}
 
@@ -197,10 +197,12 @@ class actionAuthRegister extends cmsAction {
                 $result = $users_model->addUser($user);
 
                 if ($result['success']){
-					
+
 					$user['id'] = $result['id'];
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
+
+                    cmsUser::setUPS('first_auth', 1, $user['id']);
 
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
@@ -218,9 +220,22 @@ class actionAuthRegister extends cmsAction {
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
 
                     } else {
-						
+
 						cmsEventsManager::hook('user_registered', $user);
-						
+
+					}
+
+					// авторизуем пользователя автоматически
+					if ($this->options['reg_auto_auth']){
+
+						$logged_id = cmsUser::login($user['email'], $user['password1']);
+
+						if ($logged_id){
+
+							cmsEventsManager::hook('auth_login', $logged_id);
+
+						}
+
 					}
 
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
@@ -230,7 +245,7 @@ class actionAuthRegister extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
                     }
 
                 } else {
@@ -250,11 +265,16 @@ class actionAuthRegister extends cmsAction {
             $captcha_html = cmsEventsManager::hook('captcha_html');
         }
 
-        return cmsTemplate::getInstance()->render('registration', array(
-            'user' => $user,
-            'form' => $form,
-            'captcha_html'=> isset($captcha_html) ? $captcha_html : false,
-            'errors' => isset($errors) ? $errors : false
+        // запоминаем откуда пришли на регистрацию
+        if(empty($errors) && $this->options['first_auth_redirect'] == 'none'){
+            cmsUser::sessionSet('auth_back_url', $this->getBackURL());
+        }
+
+        return $this->cms_template->render('registration', array(
+            'user'         => $user,
+            'form'         => $form,
+            'captcha_html' => isset($captcha_html) ? $captcha_html : false,
+            'errors'       => isset($errors) ? $errors : false
         ));
 
     }

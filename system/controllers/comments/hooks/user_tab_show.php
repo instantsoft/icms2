@@ -2,7 +2,7 @@
 
 class onCommentsUserTabShow extends cmsAction {
 
-    public function run($profile, $tab_name){
+    public function run($profile, $tab_name, $tab){
 
         $user = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
@@ -14,9 +14,10 @@ class onCommentsUserTabShow extends cmsAction {
         $list_html = $this->renderCommentsList($page_url);
 
         return $template->renderInternal($this, 'profile_tab', array(
-            'user' => $user,
+            'tab'     => $tab,
+            'user'    => $user,
             'profile' => $profile,
-            'html' => $list_html
+            'html'    => $list_html
         ));
 
     }
