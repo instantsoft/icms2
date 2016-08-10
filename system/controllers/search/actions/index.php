@@ -86,8 +86,9 @@ class actionSearchIndex extends cmsAction {
                 if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
                     $sql_fields[] = $field['name'];
                 }
-                if ($field['name'] == 'photo' && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
+                if ($field['type'] == 'image' && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
                     $default_fields[] = $field['name'];
+                    $field_image_name = $field['name'];
                 }
             }
 
@@ -104,12 +105,15 @@ class actionSearchIndex extends cmsAction {
 
                 if ($ctype_name == $ctype['name'] || (!$ctype_name && !$is_results_found)){
 
-                    $result = $this->model->getSearchResults($table_name, $sql_fields, $default_fields, function($item, $model) use ($ctype) {
+                    $field_image_name = isset($field_image_name) ? $field_image_name : false;
 
-                        if(!empty($item['photo'])){
-                            $item['photo'] = html_image($item['photo'], 'small', $item['title']);
-                            if(!$item['photo']){ unset($item['photo']); }
+                    $result = $this->model->getSearchResults($table_name, $sql_fields, $default_fields, function($item, $model) use ($ctype, $field_image_name) {
+
+                        if ($field_image_name && !empty($item[$field_image_name])) {
+                            $item[$field_image_name] = html_image($item[$field_image_name], 'small', $item['title']);
+                            if (!$item[$field_image_name]) { unset($item[$field_image_name]); }
                         }
+
 
                         $item['url'] = href_to($ctype['name'], $item['slug'].'.html');
 
