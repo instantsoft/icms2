@@ -72,7 +72,6 @@
                     <?php foreach($item as $field=>$value){ ?>
                         <?php if (in_array($field, array('id', 'title', 'slug', 'date_pub', 'url'))) { continue; } ?>
                         <?php if (!$value) { continue; } ?>
-                        <?php if (mb_stristr($value, '<img ')) { $field = 'image'; }?>
                         <div class="field search_field_<?php echo $field; ?>"><?php echo $value; ?></div>
                     <?php } ?>
                     <div class="info"><span class="date"><?php echo html_date_time($item['date_pub']); ?></span></div>

@@ -14,7 +14,7 @@
 #search_results_list .item .title a { font-size:16px;}
 
 #search_results_list .item .field {  margin-bottom:5px;  }
-#search_results_list .item .field.search_field_image {
+#search_results_list .item .field.search_field_photo {
     float: left;
     margin: 2px 12px 0 0;
 }
