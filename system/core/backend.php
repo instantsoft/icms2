@@ -75,6 +75,8 @@ class cmsBackend extends cmsController {
 
         if ($this->request->has('submit')){
 
+            $old_options = $options;
+            
             $options = $form->parse($this->request, true);
             $errors = $form->validate($this, $options);
 
@@ -82,7 +84,7 @@ class cmsBackend extends cmsController {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                cmsController::saveOptions($this->name, $options);
+                cmsController::saveOptions($this->name, array_replace($old_options, $options));
 
                 $this->processCallback(__FUNCTION__, array($options));
 
