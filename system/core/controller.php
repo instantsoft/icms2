@@ -357,7 +357,7 @@ class cmsController {
      * Выполняет экшен, находящийся в отдельном файле ./actions/$action_name.php
      * @param str $action_name
      */
-    public function runExternalAction($action_name, $params = array()){
+    public function runExternalAction($action_name, $params = array(), $function_name = 'run'){
 
         $action_file = $this->root_path . 'actions/'.$action_name.'.php';
 
@@ -367,7 +367,7 @@ class cmsController {
 
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){
-            $rf = new ReflectionMethod($class_name, 'run');
+            $rf = new ReflectionMethod($class_name, $function_name);
             $max_params = $rf->getNumberOfParameters();
             if ($max_params < count($params)) { cmsCore::error404(); }
         }
@@ -379,7 +379,7 @@ class cmsController {
             cmsCore::error404();
         }
 
-        return call_user_func_array(array($action_object, 'run'), $params);
+        return call_user_func_array(array($action_object, $function_name), $params);
 
     }
 
