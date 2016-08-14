@@ -4,7 +4,7 @@ body {
     color:#444;
 }
 
-a, a.ajaxlink { color: #2980b9; transition: background 0.15s linear, color 0.15s linear; }
+a, a.ajaxlink { will-change: all; color: #2980b9; transition: background 0.15s linear, color 0.15s linear; }
 a:hover, a.ajaxlink:hover { color: #d35400; }
 
 a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #2980b9; }

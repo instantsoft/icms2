@@ -66,15 +66,17 @@
             <h3><?php echo LANG_CP_DASHBOARD_RESOURCES; ?></h3>
             <div class="col-body">
 
+                <?php /*
                 <div id="lead-sponsor">
                     <div class="hint">
                         <?php echo LANG_CP_DASHBOARD_LEAD_SPONSOR; ?>
                         <a href="http://www.instantcms.ru/sponsorship.html">?</a>
                     </div>
-                    <a href="http://web-studio.pro/%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7">
-                        <img src="<?php echo href_to('templates/default/images/wsp.png'); ?>">
+                    <a href="">
+                        <img src="<?php echo href_to('templates/default/images/'); ?>">
                     </a>
                 </div>
+                */ ?>
 
                 <ul class="links">
                     <li><a href="http://instantcms.ru/"><?php echo LANG_CP_DASHBOARD_LINKS_SITE; ?></a></li>

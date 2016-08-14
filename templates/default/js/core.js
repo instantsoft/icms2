@@ -192,7 +192,7 @@ icms.forms = (function ($) {
             }
         });
         var render_symbols_count = function (){
-            num = +$(field_id_el).val().length;
+            var num = +$(field_id_el).val().length;
             if(type === 'total'){
                 if(!num){
                     $(symbols_num).html(''); $(symbols_count).hide(); return;
@@ -239,7 +239,7 @@ icms.events = (function ($) {
 
     this.run = function(name, params){
         params = params || {};
-        for(event_name in this.listeners[name]) {
+        for(var event_name in this.listeners[name]) {
             if(this.listeners[name].hasOwnProperty(event_name)){
                 if (typeof(this.listeners[name][event_name]) == 'function') {
                     this.listeners[name][event_name](params);

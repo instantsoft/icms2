@@ -6,9 +6,9 @@ class actionAdminIndexChartData extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $id      = $this->request->get('id');
-        $section = $this->request->get('section');
-        $period  = $this->request->get('period');
+        $id      = $this->request->get('id', '');
+        $section = $this->request->get('section', '');
+        $period  = $this->request->get('period', '');
 
         if (!$id || !$section || !is_numeric($period)) { cmsCore::error404(); }
 
@@ -25,8 +25,8 @@ class actionAdminIndexChartData extends cmsAction {
         if (!$source) { cmsCore::error404(); }
 
         $data = $this->getData($source, $period);
-        $data_formatted = array();
-        $result = array();
+
+        $data_formatted = $result = array();
 
         if ($period < 300){
 
@@ -54,7 +54,7 @@ class actionAdminIndexChartData extends cmsAction {
 
         $result = array_reverse($result);
 
-        cmsTemplate::getInstance()->renderJSON(array(
+        $this->cms_template->renderJSON(array(
             'labels' => array_keys($result),
             'values' => array_values($result)
         ));
@@ -65,7 +65,7 @@ class actionAdminIndexChartData extends cmsAction {
 
         $this->model->
                 selectOnly($source['key'], 'date')->
-                select('COUNT(id)', 'count')->
+                select('COUNT(1)', 'count')->
                 filterFunc($source['key'], "(CURDATE() - INTERVAL {$period} DAY)", '>=')->
                 orderBy($source['key'], 'asc');
 

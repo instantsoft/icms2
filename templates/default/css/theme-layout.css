@@ -16,6 +16,7 @@ body {
 #layout{
     width: 980px;
     margin: 0 auto;
+    will-change: blur;
 }
 #popup-manager.popup-show + #layout {
     -webkit-filter:blur(2px);
