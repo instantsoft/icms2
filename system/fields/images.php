@@ -56,6 +56,7 @@ class fieldImages extends cmsFormField {
                 $a_class = 'first_type_images';
             } else {
                 $small_preset = 'small';
+                $a_class = 'second_type_images';
              }
 
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
