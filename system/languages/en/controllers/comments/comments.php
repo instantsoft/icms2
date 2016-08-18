@@ -2,6 +2,17 @@
 
     define('LANG_COMMENTS_CONTROLLER',  'Comments');
 
+    define('LANG_COMMENTS_TEXT',  'Comment text');
+    define('LANG_COMMENTS_IP',  'IP address');
+    define('LANG_COMMENTS_IS_DELETED',  'Removed?');
+    define('LANG_COMMENTS_IS_PRIVATE',  'Private?');
+    define('LANG_COMMENTS_VIEW',  'View comment');
+    define('LANG_COMMENTS_DELETE_CONFIRM',  'Do you really want to delete the comment? Nested comments are also deleted.');
+    define('LANG_COMMENTS_EDIT_TEXT',  'Edit the comment text');
+    define('LANG_COMMENTS_LIST',  'All comments');
+    define('LANG_COMMENTS_DISABLE_ICMS_COMMENTS', 'Disable InstantCMS comment systems');
+    define('LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT', 'It can be useful if you want to leave a comment for third-party systems, such as FaceBook. If other commenting systems are disabled, this option is ignored.');
+    define('LANG_COMMENTS_OPT_DIM_NEGATIVE', 'Dimming with negative comments rating');
     define('LANG_COMMENTS_OPT_IS_GUESTS',	'Allow guests to add comments');
     define('LANG_COMMENTS_OPT_IS_GUESTS_HINT',	'Unregistered users will be able to add comments');
     define('LANG_COMMENTS_OPT_GUESTS_DELAY',	'Delay between guest comments from one IP');
@@ -19,6 +30,7 @@
     define('LANG_COMMENT_ERROR',        'Failed to add a comment');
     define('LANG_COMMENT_SUCCESS',      'Comment added');
     define('LANG_COMMENT_DELETED',      'Comment deleted');
+    define('LANG_COMMENTS_DELETED',     ' deleted');
     define('LANG_COMMENT_DELETE_CONFIRM',      'Delete comment from %s?');
 
 	define('LANG_COMMENT_ERROR_NAME',	'You must enter your name');

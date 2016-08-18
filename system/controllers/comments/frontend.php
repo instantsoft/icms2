@@ -2,26 +2,24 @@
 
 class comments extends cmsFrontend {
 
-    protected $target_controller;
-    protected $target_subject;
+    public $target_controller;
+    public $target_subject;
 
 	protected $useOptions = true;
+    public $useSeoOptions = true;
 
 	public function __construct($request){
 
         parent::__construct($request);
 
-        $this->target_controller = $this->request->get('target_controller');
-        $this->target_subject    = $this->request->get('target_subject');
-        $this->target_id         = $this->request->get('target_id');
-        $this->target_user_id    = $this->request->get('target_user_id');
+        $this->target_controller = $this->request->get('target_controller', '');
+        $this->target_subject    = $this->request->get('target_subject', '');
+        $this->target_id         = $this->request->get('target_id', 0);
+        $this->target_user_id    = $this->request->get('target_user_id', 0);
 
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function getWidget(){
+    public function getNativeComments() {
 
         $comments = $this->model->
                             lockFilters()->
@@ -40,17 +38,35 @@ class comments extends cmsFrontend {
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
-        return $this->cms_template->renderInternal($this, 'list', array(
-            'user'              => $this->cms_user,
-            'target_controller' => $this->target_controller,
-            'target_subject'    => $this->target_subject,
-            'target_id'         => $this->target_id,
-            'target_user_id'    => $this->target_user_id,
-            'is_tracking'       => $is_tracking,
-            'is_highlight_new'  => $is_highlight_new,
-            'comments'          => $comments,
-            'csrf_token_seed'   => $csrf_token_seed,
-            'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
+        return array(
+            'name'  => 'icms',
+            'title' => ($comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS),
+            'html'  => $this->cms_template->renderInternal($this, 'list', array(
+                'user'              => $this->cms_user,
+                'target_controller' => $this->target_controller,
+                'target_subject'    => $this->target_subject,
+                'target_id'         => $this->target_id,
+                'target_user_id'    => $this->target_user_id,
+                'is_tracking'       => $is_tracking,
+                'is_highlight_new'  => $is_highlight_new,
+                'comments'          => $comments,
+                'csrf_token_seed'   => $csrf_token_seed,
+                'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
+            ))
+        );
+
+    }
+
+    public function getWidget(){
+
+        $comment_systems = cmsEventsManager::hookAll('comment_systems', $this, array());
+
+        if(empty($this->options['disable_icms_comments']) || !$comment_systems){
+            array_unshift($comment_systems, $this->getNativeComments());
+        }
+
+        return $this->cms_template->renderInternal($this, 'tab_list', array(
+            'comment_systems' => $comment_systems
         ));
 
     }
@@ -153,7 +169,7 @@ class comments extends cmsFrontend {
         $total = $this->model->getCommentsCount();
         $items = $this->model->getComments();
 
-        $items = cmsEventsManager::hook("comments_before_list", $items);
+        $items = cmsEventsManager::hook('comments_before_list', $items);
 
         return $this->cms_template->renderInternal($this, 'list_index', array(
             'filters'        => array(),

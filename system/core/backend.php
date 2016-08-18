@@ -62,6 +62,35 @@ class cmsBackend extends cmsController {
 //=========                  ОПЦИИ КОМПОНЕНТА                        =========//
 //============================================================================//
 
+    public function addControllerSeoOptions($form) {
+
+        if($this->useSeoOptions){
+            $form->addFieldset(LANG_ROOT_SEO, 'seo_basic', array(
+                'childs' => array(
+                    new fieldString('seo_keys', array(
+                        'title' => LANG_SEO_KEYS,
+                        'hint' => LANG_SEO_KEYS_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
+                    )),
+                    new fieldText('seo_desc', array(
+                        'title' => LANG_SEO_DESC,
+                        'hint' => LANG_SEO_DESC_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
+                    ))
+                )
+            ));
+        }
+
+        return $form;
+
+    }
+
     public function actionOptions(){
 
         if (empty($this->useDefaultOptionsAction)){ cmsCore::error404(); }
@@ -70,6 +99,8 @@ class cmsBackend extends cmsController {
         if (!$form) { cmsCore::error404(); }
 
         $form = cmsEventsManager::hook("form_options_{$this->name}", $form);
+
+        $form = $this->addControllerSeoOptions($form);
 
         $options = cmsController::loadOptions($this->name);
 

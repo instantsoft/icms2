@@ -123,6 +123,7 @@ class actionContentCategoryView extends cmsAction {
             'ctype'           => $ctype,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
+            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
             'category'        => $category,
             'subcats'         => $subcats,
             'items_list_html' => $items_list_html,

@@ -89,7 +89,7 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
 
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
@@ -98,15 +98,48 @@
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
 
-        $(document).ready(function(){
+        toolbarScroll = {
+            win: null,
+            toolbar: null,
+            init: function (){
+                this.win     = $(window);
+                this.toolbar = $('.cp_toolbar');
+                if(this.toolbar.length == 0){
+                    return;
+                }
+                this.offset  = this.toolbar.offset();
+                this.run();
+            },
+            run: function (){
+                handler = function (){
+                    toolbarScroll.doAutoScroll();
+                };
+                this.win.off('scroll', handler).on('scroll', handler).trigger('scroll');
+            },
+            doAutoScroll: function (){
+                scroll_top = this.win.scrollTop();
+                if (scroll_top > this.offset.top) {
+                    if(!$(this.toolbar).hasClass('fixed_toolbar')){
+                        $(this.toolbar).addClass('fixed_toolbar');
+                    }
+                } else {
+                    $(this.toolbar).removeClass('fixed_toolbar');
+                }
+            }
+        };
+
+        $(function(){
             fitLayout();
             window.onbeforeunload = function(){
-                $('body').prepend('<div class="loading-overlay"/>');
+                if (!icms.forms.form_changed) {
+                    $('body').prepend('<div class="loading-overlay"/>');
+                }
             };
-        });
-
-        $(window).resize(function(){
-            fitLayout();
+            toolbarScroll.init();
+            $(window).on('resize', function (){
+                toolbarScroll.init();
+                fitLayout();
+            });
         });
 
     </script>

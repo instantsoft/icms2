@@ -117,6 +117,7 @@
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in the item');
+    define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Thumbnails preset');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Image size in item');
@@ -386,6 +387,7 @@
 
     //FORMS
     define('LANG_SUBMIT', 					 'Submit');
+    define('LANG_SUBMIT_NOT_SAVE',			 'Leave this page? Changes are not saved.');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
@@ -426,6 +428,7 @@
 
     //SEO
     define('LANG_SEO',                       'SEO');
+    define('LANG_ROOT_SEO',                  'Component main page SEO data');
     define('LANG_SEO_TITLE',                 'Page title');
     define('LANG_SEO_KEYS',                  'Keywords');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');

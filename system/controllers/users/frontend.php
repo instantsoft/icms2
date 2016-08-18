@@ -3,6 +3,7 @@
 class users extends cmsFrontend {
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     public $tabs = array();
     public $tabs_controllers = array();

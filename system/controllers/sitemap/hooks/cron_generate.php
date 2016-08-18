@@ -42,7 +42,7 @@ class onSitemapCronGenerate extends cmsAction {
                 $urls = $controller->runHook('sitemap_urls', array($item));
 				if (!$urls) { continue; }
 
-                if(count($urls)>$this->max_count){
+                if(count($urls) > $this->max_count){
 
                     $chunk_data = array_chunk($urls, $this->max_count, true);
 

@@ -23,6 +23,11 @@ class fieldImages extends cmsFormField {
                 'default' => 'big',
                 'items' => $presets
             )),
+            new fieldList('size_small', array(
+                'title'   => LANG_PARSER_SMALL_IMAGE_PRESET,
+                'default' => 'small',
+                'items'   => $presets
+            )),
             new fieldListMultiple('sizes', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_UPLOAD,
                 'default' => 0,
@@ -55,7 +60,8 @@ class fieldImages extends cmsFormField {
                 $small_preset = $this->getOption('size_full');
                 $a_class = 'first_type_images';
             } else {
-                $small_preset = 'small';
+                $small_preset = $this->getOption('size_small');
+				$a_class = 'second_type_images';
              }
 
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){

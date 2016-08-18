@@ -217,7 +217,7 @@
     background:#FFF;
 }
 
-.tabs-menu li a {
+.tabs-menu .tabbed li a {
     text-decoration: none;
     display:inline-block;
     padding:0 10px;
@@ -227,17 +227,17 @@
     line-height:32px;
 }
 
-.tabs-menu li a {
+.tabs-menu .tabbed li a {
     color:#95a5a6;
 }
 
-.tabs-menu li a:hover {
+.tabs-menu .tabbed li a:hover {
     background-color:#e1ebef;
     color:#34495e;
 }
 
-.tabs-menu li.active a,
-.tabs-menu li.active a:hover {
+.tabs-menu .tabbed li.active a,
+.tabs-menu .tabbed li.active a:hover {
     cursor:default;
     color:#34495e;
     border: solid 1px #B3C2C9;
@@ -932,27 +932,44 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .rating_info_pagination a.active:hover { color:#FFF; background-color: #34495e; }
 
 /* Comments Widget ========================================================== */
-
-#comments_widget .title{
-    overflow: hidden;
+#comments_widget .bad {
+    transition: all 0.5s ease;
 }
-
-#comments_widget h2,
-#comments_widget .track{
-    float:left;
+#comments_widget .bad:hover {
+    opacity: 1;
 }
-
+.bad6{opacity:.1;}
+.bad5{opacity:.2;}
+.bad4{opacity:.35;}
+.bad3{opacity:.5;}
+.bad2{opacity:.65;}
+.bad1{opacity:.8;}
+#tab-vk {
+    margin: 20px 0 0 0;
+}
+#comments_widget {
+    margin: 20px 0 0 0;
+}
+.no_comments {
+    margin: 15px 0;
+}
 #comments_widget .track{
-    height:24px;
-    line-height:24px;
-    margin-top: 22px;
-    margin-left: 20px;
     font-size:12px;
     color:#999;
+    text-align: right;
 }
-
-#comments_widget .track input{ margin:0; padding:0; }
-
+#comments_widget .track label{
+    display: block;
+    line-height: 30px;
+}
+#comments_widget .track input {
+    vertical-align: middle;
+    position: relative;
+    bottom: 1px;
+}
+#comments_refresh_panel + #comments_list {
+    margin: -15px 0 0 0;
+}
 #comments_widget #comments_add_link {
     margin: 10px 0;
     padding-left:20px;
@@ -1009,15 +1026,18 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #comments_list .comment{
     overflow: hidden;
-    border:solid 1px #FFF;
-    border-radius:3px;
+    border-radius:2px;
     padding:10px 0;
     margin:4px 0;
 }
-
-#comments_list.striped-list .comment{
-    border-bottom: solid 1px #EDEDED;
-    padding-bottom:15px;
+#comments_list .comment:first-child {
+    margin-top: 0;
+}
+#comments_list .comment.selected-comment:first-child {
+    margin-top: 13px;
+}
+#comments_list.striped-list .comment {
+    padding-bottom: 15px;
 }
 
 #comments_list.striped-list .comment:last-child{
@@ -1027,10 +1047,8 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 
 #comments_list .selected-comment{
-    padding:10px;
-    background:#FFF;
-    box-shadow: 0 0 7px #B3C2C9;
-    border:solid 1px #B3C2C9;
+    padding-right: 10px;
+    box-shadow: 5px 5px 7px #B3C2C9;
 }
 
 #comments_list .comment .info,
@@ -1384,10 +1402,12 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #pm_window {
     overflow: hidden;
     padding:10px;
+    min-height: 120px;
 }
 
 #pm_window .notice{
-    margin: 20px;
+    margin: 20px 0;
+    text-align: center;
 }
 
 #pm_window .right-panel,

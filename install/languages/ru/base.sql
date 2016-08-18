@@ -40,6 +40,7 @@ CREATE TABLE `{#}activity_types` (
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
+(2, 1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s'),
 (7, 1, 'users', 'friendship', 'Дружба', 'и %s становятся друзьями'),
 (8, 1, 'users', 'signup', 'Регистрация', 'регистрируется. Приветствуем!'),
 (10, 1, 'groups', 'join', 'Вступление в группу', 'вступает в группу %s'),
@@ -63,7 +64,7 @@ CREATE TABLE `{#}comments` (
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Заголовок объекта комментирования',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Имя автора (гостя)',
   `author_email` varchar(100) DEFAULT NULL COMMENT 'E-mail автора (гостя)',
-  `author_url` varchar(255) DEFAULT NULL COMMENT 'Сайт автора (гостя)',
+  `author_url` varchar(15) DEFAULT NULL COMMENT 'ip адрес',
   `content` text COMMENT 'Текст комментария',
   `content_html` text COMMENT 'Текст после типографа',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Комментарий удален?',
@@ -73,7 +74,9 @@ CREATE TABLE `{#}comments` (
   KEY `user_id` (`user_id`),
   KEY `is_private` (`is_private`),
   KEY `rating` (`rating`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
+  KEY `author_url` (`author_url`),
+  KEY `date_pub` (`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
@@ -107,6 +110,7 @@ CREATE TABLE `{#}content_datasets` (
   `ctype_id` int(11) unsigned DEFAULT NULL COMMENT 'ID типа контента',
   `name` varchar(32) NOT NULL COMMENT 'Название набора',
   `title` varchar(100) NOT NULL COMMENT 'Заголовок набора',
+  `description` text COMMENT 'Описание',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
   `is_visible` tinyint(1) unsigned DEFAULT NULL COMMENT 'Отображать набор на сайте?',
   `filters` text NOT NULL COMMENT 'Массив фильтров набора',
@@ -114,6 +118,8 @@ CREATE TABLE `{#}content_datasets` (
   `index` varchar(40) DEFAULT NULL COMMENT 'Название используемого индекса',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Скрывать от групп',
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),
@@ -219,7 +225,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (18, 'Фотоальбомы', 'photos', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(21, 'Комментарии Вконтакте', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (

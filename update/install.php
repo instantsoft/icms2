@@ -8,7 +8,53 @@ function install_package(){
     if(!$core->db->getRowsCount('controllers', "name = 'redirect'")){
         $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`) VALUES ('Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1, NULL);");
     }
+    if(!$core->db->getRowsCount('controllers', "name = 'commentsvk'")){
+        $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`) VALUES ('Комментарии Вконтакте', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1, NULL)");
+    }
 
+    if(!$core->db->getRowsCount('activity_types', "name = 'vote.comment'")){
+        $core->db->query("INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES (1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s');");
+    }
+
+    if(!isFieldExists('content_datasets', 'description')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `description` TEXT NULL DEFAULT NULL AFTER `title`");
+    }
+
+    if(!isFieldExists('content_datasets', 'seo_keys')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_keys` VARCHAR(256) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('content_datasets', 'seo_desc')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_desc` VARCHAR(256) NULL DEFAULT NULL");
+    }
+
+    $core->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_url` VARCHAR( 15 ) NULL DEFAULT NULL COMMENT 'ip адрес'");
+
+    $remove_table_indexes = array();
+
+    $add_table_indexes = array(
+        'comments' => array(
+            'author_url' => array('author_url'),
+            'date_pub' => array('date_pub')
+        ),
+    );
+
+    // удаляем ненужные индексы
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    // добавляем нужные
+    if($add_table_indexes){
+        foreach ($add_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name);
+            }
+        }
+    }
 
 }
 

@@ -36,7 +36,7 @@
         $('#template, #template_mobile, #template_tablet, #template_admin').each(function(){
             $(this).change(function(){
                 setThemeConfigURL(this);
-            }).trigger('change');
+            }).triggerHandler('change');
         });
     });
 

@@ -1,6 +1,9 @@
 <?php
 
-class backendUsers extends cmsBackend{
+class backendUsers extends cmsBackend {
+
+    public $useSeoOptions = true;
+    protected $useOptions = true;
 
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;

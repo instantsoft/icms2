@@ -14,6 +14,12 @@ class cmsController {
     public $root_path;
 
     /**
+     * Флаг наличия SEO параметров для index экшена
+     * @var bool
+     */
+    public $useSeoOptions = false;
+
+    /**
      * Флаг блокировки прямого вызова экшена
      * полезно если название экшена переопределяется
      * а вызов экшена напрямую нужно запретить
@@ -220,6 +226,13 @@ class cmsController {
     public function before($action_name){
 
         $this->cms_template->setContext($this);
+
+        if($this->useSeoOptions && $action_name == 'index'){
+
+            if (!empty($this->options['seo_keys'])){ $this->cms_template->setPageKeywords($this->options['seo_keys']); }
+            if (!empty($this->options['seo_desc'])){ $this->cms_template->setPageDescription($this->options['seo_desc']); }
+
+        }
 
         return true;
 

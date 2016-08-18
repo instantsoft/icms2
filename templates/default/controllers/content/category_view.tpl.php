@@ -19,6 +19,8 @@
     if (!empty($ctype['seo_desc'])){ $this->setPageDescription($ctype['seo_desc']); }
     if (!empty($category['seo_keys'])){ $this->setPageKeywords($category['seo_keys']); }
     if (!empty($category['seo_desc'])){ $this->setPageDescription($category['seo_desc']); }
+    if (!empty($current_dataset['seo_keys'])){ $this->setPageKeywords($current_dataset['seo_keys']); }
+    if (!empty($current_dataset['seo_desc'])){ $this->setPageDescription($current_dataset['seo_desc']); }
 
     if ($ctype['options']['list_on'] && !$request->isInternal() && !$is_frontpage){
         $this->addBreadcrumb($list_header, href_to($base_url));
@@ -117,6 +119,11 @@
             <?php } ?>
         </ul>
     </div>
+    <?php if (!empty($current_dataset['description'])){ ?>
+    <div class="content_datasets_description">
+        <?php echo $current_dataset['description']; ?>
+    </div>
+    <?php } ?>
 <?php } ?>
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>

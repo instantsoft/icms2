@@ -5,26 +5,28 @@ class actionCommentsDelete extends cmsAction {
     public function run(){
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
-        if (!cmsUser::isAllowed('comments', 'delete')){ cmsCore::error404(); }
 
-        $comment = $this->model->getComment((int)$this->request->get('id'));
-
-        // Проверяем
-        if (!$comment){
-
-            cmsTemplate::getInstance()->renderJSON($result = array(
+        if (!cmsUser::isAllowed('comments', 'delete')){
+            $this->cms_template->renderJSON($result = array(
                 'error' => true,
                 'message' => LANG_ERROR
             ));
-
         }
 
-        $user = cmsUser::getInstance();
+        $comment = $this->model->getComment($this->request->get('id', 0));
+
+        // Проверяем
+        if (!$comment){
+            $this->cms_template->renderJSON($result = array(
+                'error' => true,
+                'message' => LANG_ERROR
+            ));
+        }
 
         if (!cmsUser::isAllowed('comments', 'delete', 'all') && !cmsUser::isAllowed('comments', 'delete', 'full_delete')) {
-            if (cmsUser::isAllowed('comments', 'delete', 'own') && $comment['user']['id'] != $user->id) {
+            if (cmsUser::isAllowed('comments', 'delete', 'own') && $comment['user']['id'] != $this->cms_user->id) {
 
-                cmsTemplate::getInstance()->renderJSON(array(
+                $this->cms_template->renderJSON(array(
                     'error' => true,
                     'message' => LANG_ERROR
                 ));
@@ -32,19 +34,31 @@ class actionCommentsDelete extends cmsAction {
             }
         }
 
-        // проверяем, есть ли дети комментария
+        // можем ли полностью удалять
         $is_comment_child = $this->model->getItemByField('comments', 'parent_id', $comment['id']);
+        $full_delete = !$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true);
 
-        $this->model->deleteComment($comment['id'], (!$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true)));
+        $this->model->deleteComment($comment['id'], $full_delete);
 
-        if(cmsUser::isAllowed('comments', 'delete', 'full_delete')){
+        if($full_delete){
+
+            // обновляем количество
+            $comments_count = $this->model->
+                                        filterEqual('target_controller', $comment['target_controller'])->
+                                        filterEqual('target_subject', $comment['target_subject'])->
+                                        filterEqual('target_id', $comment['target_id'])->
+                                        getCommentsCount();
+
+            cmsCore::getModel($comment['target_controller'])->updateCommentsCount($comment['target_subject'], $comment['target_id'], $comments_count);
+
             cmsEventsManager::hook('comments_after_delete', $comment['id']);
+
         } else {
             cmsEventsManager::hook('comments_after_hide', $comment['id']);
         }
 
-        cmsTemplate::getInstance()->renderJSON(array(
-            'error' => false,
+        $this->cms_template->renderJSON(array(
+            'error'   => false,
             'message' => LANG_COMMENT_DELETED
         ));
 

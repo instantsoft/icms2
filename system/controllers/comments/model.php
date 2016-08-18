@@ -1,24 +1,23 @@
 <?php
 
-class modelComments extends cmsModel{
+class modelComments extends cmsModel {
 
-//============================================================================//
-//============================================================================//
+    private $childs = array();
 
     public function updateCommentContent($id, $content, $content_html){
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->update('comments', $id, array(
-            'content'=>$content,
-            'content_html'=>$content_html
+            'content'      => $content,
+            'content_html' => $content_html
         ));
 
     }
 
     public function updateCommentsPrivacy($is_private){
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->updateFiltered('comments', array('is_private' => $is_private));
 
@@ -26,16 +25,43 @@ class modelComments extends cmsModel{
 
 //============================================================================//
 //============================================================================//
-
+    /**
+     *
+     * @param integer $id ID комментария
+     * @param boolean $delete Удалять или скрывать
+     * @return integer Количество удаленных комментариев
+     */
     public function deleteComment($id, $delete=false){
 
+        $delete_count = 0;
+
         if($delete){
+
+            $activity = cmsCore::getController('activity');
+
+            $delete_count = 1;
+
+            // ищем детей
+            $childs = $this->getCommentChildIds($id);
+            if($childs){
+                $this->filterIn('id', $childs)->deleteFiltered('comments');
+                $this->filterIn('comment_id', $childs)->deleteFiltered('comments_rating');
+                $delete_count += count($childs);
+                $activity->deleteEntry('comments', 'vote.comment', $childs);
+            }
+
             $this->delete('comments', $id);
+            $this->delete('comments_rating', $id, 'comment_id');
+
+            $activity->deleteEntry('comments', 'vote.comment', $id);
+
         } else {
             $this->update('comments', $id, array('is_deleted'=>1));
         }
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $delete_count;
 
     }
 
@@ -45,22 +71,39 @@ class modelComments extends cmsModel{
 
         $this->delete('comments_tracks', $user_id, 'user_id');
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
     }
 
     public function deleteComments($target_controller, $target_subject, $target_id=false){
 
+        $this->selectOnly('i.id');
+
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
-
 		if ($target_id){
 			$this->filterEqual('target_id', $target_id);
 		}
 
-        $this->deleteFiltered('comments');
+        $this->lockFilters();
 
-        cmsCache::getInstance()->clean("comments.list");
+        $ids = $this->get('comments', function($item, $model){
+            return $item['id'];
+        });
+
+        $this->unlockFilters();
+
+        if($ids){
+
+            $this->deleteFiltered('comments');
+
+            $this->filterIn('comment_id', $ids)->deleteFiltered('comments_rating');
+
+            cmsCache::getInstance()->clean('comments.list');
+
+        }
+
+        return $ids ? true : false;
 
     }
 
@@ -87,7 +130,7 @@ class modelComments extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->insert('comments', $comment);
 
@@ -113,8 +156,8 @@ class modelComments extends cmsModel{
 
         $this->insert('comments_rating', array(
             'comment_id' => $comment_id,
-            'user_id' => $user_id,
-            'score' => $score
+            'user_id'    => $user_id,
+            'score'      => $score
         ));
 
         $this->filterEqual('id', $comment_id);
@@ -181,9 +224,6 @@ class modelComments extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function getComments(){
 
         $user = cmsUser::getInstance();
@@ -238,6 +278,44 @@ class modelComments extends cmsModel{
 
     }
 
+    public function getCommentChildIds($id, $clear = true) {
+
+        $this->loadCommentChildIds($id);
+
+        if($this->childs){
+
+            if($clear){
+
+                $return = $this->childs; $this->childs = array();
+
+                return $return;
+
+            }
+
+            return $this->childs;
+
+        }
+
+        return $this->childs;
+
+    }
+
+    private function loadCommentChildIds($id) {
+
+        $this->selectOnly('i.id');
+
+        return $this->filterEqual('parent_id', $id)->get('comments', function($item, $model){
+
+            $model->childs[] = $item['id'];
+
+            $model->loadCommentChildIds($item['id']);
+
+            return $item['id'];
+
+        });
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -261,22 +339,22 @@ class modelComments extends cmsModel{
 
         if (!$target_info){ return false; }
 
-        cmsCache::getInstance()->clean("comments.tracks");
+        cmsCache::getInstance()->clean('comments.tracks');
 
         return $this->insert('comments_tracks', array(
-            'user_id' => $user_id,
+            'user_id'           => $user_id,
             'target_controller' => $target_controller,
-            'target_subject' => $target_subject,
-            'target_id' => $target_id,
-            'target_url' => $target_info['url'],
-            'target_title' => $target_info['title'],
+            'target_subject'    => $target_subject,
+            'target_id'         => $target_id,
+            'target_url'        => $target_info['url'],
+            'target_title'      => $target_info['title']
         ));
 
     }
 
     public function deleteTracking($id){
 
-        cmsCache::getInstance()->clean("comments.tracks");
+        cmsCache::getInstance()->clean('comments.tracks');
 
         return $this->delete('comments_tracks', $id);
 

@@ -39,7 +39,7 @@
         <?php if($form->is_tabbed){ ?>
             <ul class="tabbed">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
-                    <?php if (!isset($fieldset['childs']) || !sizeof($fieldset['childs'])) { continue; } ?>
+                    <?php if (empty($fieldset['childs'])) { continue; } ?>
                     <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
                 <?php } ?>
             </ul>
@@ -52,7 +52,7 @@
             <?php continue; ?>
         <?php } ?>
 
-        <?php if (empty($fieldset['is_empty']) && (!isset($fieldset['childs']) || !sizeof($fieldset['childs']))) { continue; } ?>
+        <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
 
             <div id="tab-<?php echo $fieldset_id; ?>" class="tab" <?php if($form->is_tabbed && $index){ ?>style="display: none;"<?php } ?>>
             <fieldset id="fset_<?php echo $fieldset_id; ?>"
@@ -158,20 +158,13 @@
     </div>
 
         <script type="text/javascript">
-            <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT'); ?>
-        <?php if ($form->is_tabbed){ ?>
-            $('#<?php echo $form_id; ?> .tab').hide();
-            $('#<?php echo $form_id; ?> .tab').eq(0).show();
-            $('#<?php echo $form_id; ?> ul.tabbed > li').eq(0).addClass('active');
-
-            $('#<?php echo $form_id; ?> ul.tabbed > li > a').click(function(){
-                $('#<?php echo $form_id; ?> li').removeClass('active');
-                $(this).parent('li').addClass('active');
-                $('#<?php echo $form_id; ?> .tab').hide();
-                $('#<?php echo $form_id; ?> '+$(this).attr('href')).show();
-                return false;
+            <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
+            $(function (){
+                icms.forms.initUnsaveNotice();
+            <?php if ($form->is_tabbed){ ?>
+                initTabs('#<?php echo $form_id; ?>');
+            <?php } ?>
             });
-        <?php } ?>
         </script>
 
     <?php if(!empty($attributes['hook'])){ ?>

@@ -18,6 +18,7 @@ class groups extends cmsFrontend{
     const ROLE_STAFF = 2;
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     public function routeAction($action_name){
 

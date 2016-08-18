@@ -49,13 +49,13 @@ icms.geo = (function ($) {
 
                         $(child_list).val(selected_id);
 
-                        if (child == 'regions'){ city_list.html(''); $(city_list).trigger('chosen:updated'); $(child_list).trigger('change'); }
+                        if (child == 'regions'){ city_list.html(''); $(city_list).trigger('chosen:updated'); $(child_list).triggerHandler('change'); }
 
                         $(child_list).trigger('chosen:updated');
 
                     }, 'json');
 
-                }).trigger('change');
+                }).triggerHandler('change');
             }
         });
     };

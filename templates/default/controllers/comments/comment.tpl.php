@@ -1,6 +1,7 @@
 <?php // Шаблон одного комментария // ?>
 
 <?php
+	$dim_negative = !empty($this->controller->options['dim_negative']);
 	$is_guests_allowed = !empty($this->controller->options['is_guests']);
     $is_can_add = ($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed);
     $is_highlight_new = isset($is_highlight_new) ? $is_highlight_new : false;
@@ -87,7 +88,7 @@
             </a>
         </div>
         <div class="content">
-            <div class="text">
+            <div class="text<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
                 <?php echo $entry['content_html']; ?>
             </div>
             <?php if ($is_controls){ ?>

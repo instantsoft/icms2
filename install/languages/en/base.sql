@@ -39,6 +39,7 @@ CREATE TABLE `{#}activity_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
+(2, 1, 'comments', 'vote.comment', 'Rating comments', 'evaluate a comment on the %s page'),
 (7, 1, 'users', 'friendship', 'Friendship', 'and %s became friends'),
 (8, 1, 'users', 'signup', 'New users', 'registered. Welcome!'),
 (10, 1, 'groups', 'join', 'Group joining', 'joined the group %s'),
@@ -63,7 +64,7 @@ CREATE TABLE `{#}comments` (
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Commented object title',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Author (guest) name',
   `author_email` varchar(100) DEFAULT NULL COMMENT 'Author (guest) E-mail',
-  `author_url` varchar(255) DEFAULT NULL COMMENT 'Author (guest) site',
+  `author_url` varchar(255) DEFAULT NULL COMMENT 'Author ip',
   `content` text COMMENT 'Comment text',
   `content_html` text COMMENT 'Sanitized text',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Comment deleted?',
@@ -73,7 +74,9 @@ CREATE TABLE `{#}comments` (
   KEY `user_id` (`user_id`),
   KEY `is_private` (`is_private`),
   KEY `rating` (`rating`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
+  KEY `author_url` (`author_url`),
+  KEY `date_pub` (`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='User comments';
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
@@ -107,6 +110,7 @@ CREATE TABLE `{#}content_datasets` (
   `ctype_id` int(11) unsigned DEFAULT NULL COMMENT 'Content typpe ID',
   `name` varchar(32) NOT NULL COMMENT 'Dataset title',
   `title` varchar(100) NOT NULL COMMENT 'Dataset heading',
+  `description` text COMMENT 'Dataset description',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Order number',
   `is_visible` tinyint(1) unsigned DEFAULT NULL COMMENT 'Show dataset on site?',
   `filters` text NOT NULL COMMENT 'Dataset filters array',
@@ -114,6 +118,8 @@ CREATE TABLE `{#}content_datasets` (
   `index` varchar(40) DEFAULT NULL COMMENT 'Index title',
   `groups_view` text COMMENT 'Show to groups',
   `groups_hide` text COMMENT 'Hide from groups',
+  `seo_keys` varchar(256) DEFAULT NULL,
+  `seo_desc` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),
@@ -219,7 +225,8 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (18, 'Photos', 'photos', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Image Upload', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(21, 'VK comments', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (

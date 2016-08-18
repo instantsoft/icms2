@@ -5,7 +5,7 @@
 
     if ($do=='add') { $this->setPageTitle(LANG_CP_DATASET_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_DATASET . ': ' . $dataset['title']); }
-    
+
     $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
 
     if ($do=='add'){
@@ -72,6 +72,17 @@
         </div>
 
         <?php
+            $name = 'description';
+            if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+            if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
+        ?>
+        <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_description">
+            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+            <label for="<?php echo $name; ?>"><?php echo LANG_DESCRIPTION; ?></label>
+            <?php echo html_wysiwyg($name, $value, cmsConfig::get('default_editor')); ?>
+        </div>
+
+        <?php
             $name = 'is_visible';
             if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
             if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = false; }
@@ -81,6 +92,36 @@
                 <?php echo html_checkbox($name, $value, 1, array('id'=>$name)); ?>
                 <?php echo LANG_CP_DATASET_IS_VISIBLE; ?>
             </label>
+        </div>
+
+    </fieldset>
+
+    <fieldset>
+
+        <legend><?php echo LANG_SEO; ?></legend>
+
+        <?php
+            $name = 'seo_keys';
+            if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+            if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
+        ?>
+        <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_seo_keys">
+            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+            <label for="<?php echo $name; ?>"><?php echo LANG_SEO_KEYS; ?></label>
+            <?php echo html_input('text', $name, $value, array('id'=>$name, 'class'=>$error?'error':'')); ?>
+            <div class="hint"><?php echo LANG_SEO_KEYS_HINT; ?></div>
+        </div>
+
+        <?php
+            $name = 'seo_desc';
+            if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+            if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
+        ?>
+        <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_seo_desc">
+            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+            <label for="<?php echo $name; ?>"><?php echo LANG_SEO_DESC; ?></label>
+            <?php echo html_textarea($name, $value, array('rows'=>5, 'id'=>$name)); ?>
+            <div class="hint"><?php echo LANG_SEO_DESC_HINT; ?></div>
         </div>
 
     </fieldset>
@@ -124,14 +165,14 @@
         <legend><?php echo LANG_SORTING; ?></legend>
 
 		<div id="sortings"></div>
-		
+
         <div id="add_sorting" style="display:none">
             <?php echo LANG_SORTING_FIELD; ?>:
             <select></select>
             <a class="ajaxlink" href="javascript:submitSorting()"><?php echo LANG_ADD; ?></a> |
             <a class="ajaxlink" href="javascript:cancelSorting()"><?php echo LANG_CANCEL; ?></a>
-        </div>		
-		
+        </div>
+
 		<a id="add_sorting_link" class="ajaxlink" href="javascript:addSorting()"><?php echo LANG_SORTING_ADD; ?></a>
 
     </fieldset>

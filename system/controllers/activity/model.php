@@ -75,10 +75,13 @@ class modelActivity extends cmsModel{
 
         cmsCache::getInstance()->clean('activity.entries');
 
-        return $this->
-                    filterEqual('type_id', $type_id)->
-                    filterEqual('subject_id', $subject_id)->
-                    deleteFiltered('activity');
+        if(is_array($subject_id)){
+            $this->filterIn('subject_id', $subject_id);
+        } else {
+            $this->filterEqual('subject_id', $subject_id);
+        }
+
+        return $this->filterEqual('type_id', $type_id)->deleteFiltered('activity');
 
     }
 

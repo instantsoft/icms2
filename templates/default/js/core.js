@@ -79,7 +79,29 @@ $(document).ready(function(){
 
 icms.forms = (function ($) {
 
-    //====================================================================//
+    this.submitted = false;
+    this.form_changed = false;
+
+    this.initUnsaveNotice = function(){
+
+        $(document).on('change', '.form-tabs input, .form-tabs select, .form-tabs textarea', function (e) {
+            icms.forms.form_changed = true;
+        });
+        $(document).on('submit', 'form', function () {
+            icms.forms.submitted = true;
+        });
+        $(window).on('beforeunload', function (e) {
+            if (icms.forms.form_changed && !icms.forms.submitted) {
+                var e = e || window.event;
+                var msg = LANG_SUBMIT_NOT_SAVE;
+                if (e) {
+                    e.returnValue = msg;
+                }
+                return msg;
+            }
+        });
+
+    };
 
 	this.toJSON = function(form) {
         var o = {};
@@ -97,9 +119,8 @@ icms.forms = (function ($) {
         return o;
 	};
 
-    //====================================================================//
-
     this.submit = function(){
+        icms.forms.submitted = true;
         $('.button-submit').trigger('click');
     };
 
@@ -135,6 +156,8 @@ icms.forms = (function ($) {
 
     this.submitAjax = function(form){
 
+        icms.forms.submitted = true;
+
         var form_data = this.toJSON($(form));
 
         var url = $(form).attr('action');
@@ -157,11 +180,14 @@ icms.forms = (function ($) {
                     var id = field_id.replace(':', '_');
                     $('#f_'+id, form).addClass('field_error');
                     $('#f_'+id, form).prepend('<div class="error_text">' + result.errors[field_id] + '</div>');
+                    $(form).find('ul.tabbed > li > a[href = "#'+$('#f_'+id, form).parents('.tab').attr('id')+'"]').trigger('click');
                 }
 
                 icms.events.run('icms_forms_submitajax', result);
 
                 icms.modal.resize();
+
+                icms.forms.submitted = false;
 
                 return;
 
@@ -286,5 +312,22 @@ function renderHtmlAvatar(wrap){
                 'font-size': Math.round((h*0.625))+'px'
             });
         });
+    });
+}
+function initTabs(selector){
+    $(selector+' .tab').hide();
+    $(selector+' .tab').eq(0).show();
+    $(selector+' ul.tabbed > li').eq(0).addClass('active');
+    $(selector+' ul.tabbed > li > a').click(function(){
+        $(selector+' li').removeClass('active');
+        $(this).parent('li').addClass('active');
+        $(selector+' .tab').hide();
+        $(selector+' '+$(this).attr('href')).show();
+        return false;
+    });
+    $(selector+' .field').each(function(indx, element){
+        if($(element).hasClass('field_error')){
+            $(selector+' ul.tabbed > li > a[href = "#'+$(element).parents('.tab').attr('id')+'"]').trigger('click');
+        }
     });
 }

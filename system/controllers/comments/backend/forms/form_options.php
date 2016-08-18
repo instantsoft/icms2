@@ -2,13 +2,21 @@
 
 class formCommentsOptions extends cmsForm {
 
+    public $is_tabbed = true;
+
     public function init() {
 
         return array(
 
             array(
-                'type' => 'fieldset',
+                'type'  => 'fieldset',
+                'title' => LANG_BASIC_OPTIONS,
                 'childs' => array(
+
+                    new fieldCheckbox('disable_icms_comments', array(
+                        'title' => LANG_COMMENTS_DISABLE_ICMS_COMMENTS,
+                        'hint' => LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT
+                    )),
 
                     new fieldCheckbox('is_guests', array(
                         'title' => LANG_COMMENTS_OPT_IS_GUESTS,
@@ -18,6 +26,10 @@ class formCommentsOptions extends cmsForm {
                     new fieldNumber('guest_ip_delay', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_DELAY,
                         'units' => LANG_MINUTE10,
+                    )),
+
+                    new fieldCheckbox('dim_negative', array(
+                        'title' => LANG_COMMENTS_OPT_DIM_NEGATIVE
                     )),
 
                     new fieldText('restricted_ips', array(

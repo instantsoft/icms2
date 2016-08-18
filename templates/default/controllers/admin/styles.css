@@ -279,8 +279,23 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     border: solid 1px #EDEDED;
     border-radius: 4px;
     margin-bottom:10px;
+    transition: all ease-in-out .2s;
 }
-
+.fixed_toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0;
+    z-index: 1;
+    box-shadow: 0px 2px 10px #B3C2C9;
+    padding: 10px 21px;
+    box-sizing: border-box;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-color: #B3C2C9;
+}
 .cp_toolbar ul,
 .cp_toolbar li {
     overflow:hidden;
@@ -848,7 +863,7 @@ ul.errors li .hint strong { color:#666666; }
     padding-left:25px;
     border-bottom: solid 1px #B3C2C9;
     text-align: left;
-    background: #B3C2C9;
+    background: #9DB1B9;
 }
 
 .datagrid th.center,
@@ -859,17 +874,17 @@ ul.errors li .hint strong { color:#666666; }
 
 .datagrid th.sortable{
     cursor: pointer;
-    background:url("../../images/icons/sort_none.png") no-repeat 5px center #B3C2C9;
+    background:url("../../images/icons/sort_none.png") no-repeat 5px center #9DB1B9;
 }
 
 .datagrid th.sort_asc {
     cursor: pointer;
-    background:url("../../images/icons/sort_asc.png") no-repeat 5px center #B3C2C9;
+    background:url("../../images/icons/sort_asc.png") no-repeat 5px center #9DB1B9;
 }
 
 .datagrid th.sort_desc {
     cursor: pointer;
-    background:url("../../images/icons/sort_desc.png") no-repeat 5px center #B3C2C9;
+    background:url("../../images/icons/sort_desc.png") no-repeat 5px center #9DB1B9;
 }
 
 .datagrid td {
@@ -1678,7 +1693,42 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     background:url("../../images/icons/page_gear.png") no-repeat left center;
     display: block;
 }
-
+.symbols_count {
+    font-size: 12px;
+    margin: 3px 0 0 0;
+    display: none;
+}
+.symbols_count > span {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 0 3px 0 0;
+    color: #7f8c8d;
+}
+.symbols_count .symbols_num {
+    background-color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    color: #2980b9;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+.symbols_count .symbols_num:hover {
+    opacity: 0.8;
+}
+.symbols_count .overflowing {
+    background-color: #e74c3c;
+    color: #FFF;
+    border-color: #c0392b;
+}
+.comment_text_edit {
+    text-decoration: none;
+}
+.comment_text_edit:hover {
+    border-bottom: 1px dotted;
+    color: #34495e;
+}
+#comments_edit_form {
+    height: 300px;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 

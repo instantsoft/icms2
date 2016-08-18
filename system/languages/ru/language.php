@@ -117,6 +117,7 @@
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
+	define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Пресет миниатюр');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
@@ -386,6 +387,7 @@
 
     //FORMS
     define('LANG_SUBMIT', 					 'Отправить');
+    define('LANG_SUBMIT_NOT_SAVE',			 'Покинуть страницу? Возможно, внесённые изменения не сохранятся.');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');
@@ -426,6 +428,7 @@
 
     //SEO
     define('LANG_SEO',                       'SEO');
+    define('LANG_ROOT_SEO',                  'SEO для главной страницы');
     define('LANG_SEO_TITLE',                 'Тайтл страницы');
     define('LANG_SEO_KEYS',                  'Ключевые слова');
     define('LANG_SEO_KEYS_HINT',             'Ключевые слова страницы, через запятую');
