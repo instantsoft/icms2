@@ -15,7 +15,6 @@ class onCommentsvkCommentSystems extends cmsAction {
                 'api_id'    => $this->options['api_id'],
                 'page_id'   => $target_controller->target_controller.'_'.$target_controller->target_subject.$target_controller->target_id,
                 'vk_params' => json_encode(array(
-                    'redesign'    => (int) $this->options['redesign'],
                     'autoPublish' => (int) $this->options['autoPublish'],
                     'norealtime'  => (int) $this->options['norealtime'],
                     'limit'       => (int) $this->options['limit'],

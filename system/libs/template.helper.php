@@ -201,6 +201,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     $datepicker_default = array(
         'showStatus' => true,
         'changeYear' => true,
+        'yearRange'  => '1976:'.date('Y', strtotime('+5 year')),
         'dateFormat' => cmsConfig::get('date_format_js')
     );
     if($datepicker){

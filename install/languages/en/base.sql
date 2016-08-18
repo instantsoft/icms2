@@ -64,7 +64,7 @@ CREATE TABLE `{#}comments` (
   `target_title` varchar(100) DEFAULT NULL COMMENT 'Commented object title',
   `author_name` varchar(100) DEFAULT NULL COMMENT 'Author (guest) name',
   `author_email` varchar(100) DEFAULT NULL COMMENT 'Author (guest) E-mail',
-  `author_url` varchar(255) DEFAULT NULL COMMENT 'Author ip',
+  `author_url` varchar(15) DEFAULT NULL COMMENT 'Author ip',
   `content` text COMMENT 'Comment text',
   `content_html` text COMMENT 'Sanitized text',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Comment deleted?',
