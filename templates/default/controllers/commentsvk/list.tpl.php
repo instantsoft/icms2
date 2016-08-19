@@ -1,4 +1,4 @@
-<?php $this->addJS('//vk.com/js/api/openapi.js?122'); ?>
+<?php $this->addJS('//vk.com/js/api/openapi.js?122','', false); ?>
 
 <script type="text/javascript">
     VK.init({

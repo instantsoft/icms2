@@ -1,6 +1,6 @@
 <?php if($api_id){ ?>
 
-    <?php $this->addJS('//vk.com/js/api/openapi.js?122'); ?>
+    <?php $this->addJS('//vk.com/js/api/openapi.js?122','',false); ?>
 
     <div id="vk_comments_browse"></div>
 

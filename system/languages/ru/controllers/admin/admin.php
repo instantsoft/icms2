@@ -9,7 +9,8 @@
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
-    define('LANG_CP_DASHBOARD_SI_ROOT',         'Папка сайта');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
+    define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
     define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');

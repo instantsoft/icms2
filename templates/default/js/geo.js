@@ -8,6 +8,16 @@ icms.geo = (function ($) {
         for(location_group in this.geo_group) {
             this.initLocation(location_group, this.geo_group[location_group]);
         }
+        $('.city-name').on('click', function (){
+            $(this).parent().find('.ajax-modal').trigger('click');
+        });
+        $('.city_clear_link').on('click', function (){
+            var g_wrap = $(this).parent();
+            $('.city-id', g_wrap).val('');
+            $('.city-name', g_wrap).html('').hide();
+            $('.city_clear_link', g_wrap).hide();
+            return false;
+        });
     };
 
     this.initLocation = function (location_group, location_types){
@@ -146,6 +156,7 @@ icms.geo = (function ($) {
 
         $('.city-id', widget).val(id);
         $('.city-name', widget).html(name).show();
+        $('.city_clear_link', widget).show();
 
         icms.modal.close();
 

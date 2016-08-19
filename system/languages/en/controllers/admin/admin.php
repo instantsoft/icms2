@@ -10,6 +10,7 @@
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory Limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
+    define('LANG_CP_DASHBOARD_SI_SESSION',      'Session folder');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Max. file upload size');
     define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');

@@ -29,6 +29,7 @@
 
         <span class="city-name" <?php if (empty($value['name'])){ ?>style="display:none"<?php } ?>><?php echo $value['name']; ?></span>
 
+        <a class="city_clear_link" href="#" <?php if (empty($value['name'])){ ?>style="display:none"<?php } ?>><?php echo LANG_DELETE; ?></a>
         <a class="ajax-modal" href="<?php echo href_to('geo', 'widget', array($field->element_name, $value['id'])); ?>"><?php echo LANG_SELECT; ?></a>
 
     </div>
