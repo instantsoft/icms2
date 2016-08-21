@@ -277,6 +277,9 @@ function widgetEdit(id){
     var edit_url = $('#cp-widgets-layout').data('edit-url');
 
     icms.modal.openAjax(edit_url + '/' + id, undefined, function (){
+        icms.modal.setCallback('close', function(){
+            icms.forms.form_changed = false;
+        });
         w = $('.modal_form').width();
         h = 0;
         $('.modal_form .form-tabs .tab').each(function(indx, element){

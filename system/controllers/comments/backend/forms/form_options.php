@@ -28,13 +28,13 @@ class formCommentsOptions extends cmsForm {
                         'units' => LANG_MINUTE10,
                     )),
 
-                    new fieldCheckbox('dim_negative', array(
-                        'title' => LANG_COMMENTS_OPT_DIM_NEGATIVE
-                    )),
-
                     new fieldText('restricted_ips', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS,
                         'hint' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT,
+                    )),
+
+                    new fieldCheckbox('dim_negative', array(
+                        'title' => LANG_COMMENTS_OPT_DIM_NEGATIVE
                     )),
 
 					new fieldCheckbox('update_user_rating', array(

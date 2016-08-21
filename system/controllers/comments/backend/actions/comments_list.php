@@ -17,9 +17,13 @@ class actionCommentsCommentsList extends cmsAction {
                 $this->model->applyGridFilter($grid, $filter);
             }
 
+            $total   = $this->model->getCount('comments');
+            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
+            $pages   = ceil($total / $perpage);
+
             $data = $this->model->joinUserLeft()->get('comments');
 
-            $this->cms_template->renderGridRowsJSON($grid, $data);
+            $this->cms_template->renderGridRowsJSON($grid, $data, $total, $pages);
 
             $this->halt();
 
