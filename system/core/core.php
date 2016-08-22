@@ -711,6 +711,9 @@ class cmsCore {
 
         if (is_array($widgets_list)){
             foreach ($widgets_list as $widget){
+                if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
+                    continue;
+                }
                 $this->runWidget($widget);
             }
         }
