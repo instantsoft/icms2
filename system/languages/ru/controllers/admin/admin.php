@@ -474,6 +474,7 @@
     define('LANG_HELP_URL_WIDGETS_CFG',             'http://docs.instantcms.ru/manual/widgets/config');
     define('LANG_HELP_URL_WIDGETS_PAGES',           'http://docs.instantcms.ru/manual/widgets/pages');
     define('LANG_HELP_URL_COMPONENTS',              'http://docs.instantcms.ru/manual/components');
+    define('LANG_HELP_URL_INSTALL',                 'http://docs.instantcms.ru/manual/addons');
     define('LANG_HELP_URL_COM_AUTH',                'http://docs.instantcms.ru/manual/components/auth');
     define('LANG_HELP_URL_COM_ACTIVITY',            'http://docs.instantcms.ru/manual/components/activity');
     define('LANG_HELP_URL_COM_GROUPS',              'http://docs.instantcms.ru/manual/components/groups');

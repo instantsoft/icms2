@@ -13,7 +13,8 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
         $form = $this->getForm('ctypes_field', array('edit', $ctype['name']));
 
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook('ctype_field_form', $form);
+        list($form, $ctype) = cmsEventsManager::hook($ctype['name'].'_ctype_field_form', array($form, $ctype));
 
         $field = $content_model->getContentField($ctype['name'], $field_id);
 
@@ -34,7 +35,7 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         // удалим выбор типа для полей с фиксированным типом
         if ($field['is_fixed_type']) { $form->removeFieldset('type'); }
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
@@ -52,7 +53,7 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
 
-            $field = array_merge($defaults, $form->parse($this->request, $is_submitted));
+            $field = array_merge($defaults, $form->parse($this->request, true));
             $errors = $form->validate($this,  $field);
 
             if (!$errors){
@@ -79,11 +80,11 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_field', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'field' => $field,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_field', array(
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'field'  => $field,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

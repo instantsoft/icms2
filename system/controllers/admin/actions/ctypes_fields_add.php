@@ -13,11 +13,12 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
 
         $form = $this->getForm('ctypes_field', array('add', $ctype['name']));
 
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook('ctype_field_form', $form);
+        list($form, $ctype) = cmsEventsManager::hook($ctype['name'].'_ctype_field_form', array($form, $ctype));
 
         $field = array('ctype_id' => $ctype['id']);
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
@@ -32,7 +33,7 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
                 $form->addField('type', $option_field);
             }
 
-            $field = $form->parse($this->request, $is_submitted);
+            $field = $form->parse($this->request, true);
 
             $errors = $form->validate($this,  $field);
 
@@ -64,11 +65,11 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_field', array(
-            'do' => 'add',
-            'ctype' => $ctype,
-            'field' => $field,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_field', array(
+            'do'     => 'add',
+            'ctype'  => $ctype,
+            'field'  => $field,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

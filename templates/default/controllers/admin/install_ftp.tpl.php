@@ -1,6 +1,14 @@
 <?php
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);
+
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_INSTALL
+    ));
+
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE; ?></h1>

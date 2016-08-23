@@ -418,7 +418,9 @@ class modelContent extends cmsModel{
 
         }
 
-        $id = $this->insert($fields_table_name, $field);
+        $field['id'] = $this->insert($fields_table_name, $field);
+
+        cmsEventsManager::hook('ctype_field_after_add', array($field, $ctype_name, $this));
 
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
@@ -445,7 +447,7 @@ class modelContent extends cmsModel{
             }
         }
 
-        return $id;
+        return $field['id'];
 
     }
 
@@ -707,6 +709,11 @@ class modelContent extends cmsModel{
 
         $result = $this->update($fields_table_name, $id, $field);
 
+        if ($result){
+            $field['id'] = $id;
+            cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
+        }
+
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
         return $result;
@@ -771,8 +778,9 @@ class modelContent extends cmsModel{
         }
 
         $field = $this->getContentField($ctype_name, $id);
-
         if ($field['is_fixed']) { return false; }
+
+        cmsEventsManager::hook('ctype_field_before_delete', array($field, $ctype_name, $this));
 
         $content_table_name = $this->table_prefix . $ctype_name;
         $fields_table_name = $this->table_prefix . $ctype_name . '_fields';
@@ -904,11 +912,13 @@ class modelContent extends cmsModel{
 
         $cats_list = $prop['cats']; unset($prop['cats']);
 
-        $prop_id = $this->insert($table_name, $prop);
+        $prop['id'] = $this->insert($table_name, $prop);
 
-        $this->bindContentProp($ctype_name, $prop_id, $cats_list);
+        $this->bindContentProp($ctype_name, $prop['id'], $cats_list);
 
-        return $prop_id;
+        cmsEventsManager::hook('ctype_prop_after_add', array($prop, $ctype_name, $this));
+
+        return $prop['id'];
 
     }
 
@@ -933,7 +943,12 @@ class modelContent extends cmsModel{
 
         unset($prop['cats']);
 
-        return $this->update($table_name, $id, $prop);
+        $result = $this->update($table_name, $id, $prop);
+
+        $prop['id'] = $id;
+        cmsEventsManager::hook('ctype_prop_after_update', array($prop, $ctype_name, $this));
+
+        return $result;
 
     }
 
@@ -960,6 +975,8 @@ class modelContent extends cmsModel{
         $table_name = $this->table_prefix . $ctype_name . '_props';
 
         $prop = $this->getContentProp($ctype_name, $prop_id);
+
+        cmsEventsManager::hook('ctype_prop_before_delete', array($prop, $ctype_name, $this));
 
         foreach($prop['cats'] as $cat_id){
             $this->unbindContentProp($ctype_name, $prop_id, $cat_id);
@@ -1270,11 +1287,13 @@ class modelContent extends cmsModel{
 
         $dataset['index'] = $this->addContentDatasetIndex($dataset, $ctype['name']);
 
-        $id = $this->insert($table_name, $dataset);
+        $dataset['id'] = $this->insert($table_name, $dataset);
+
+        cmsEventsManager::hook('ctype_dataset_add', array($dataset, $ctype, $this));
 
         cmsCache::getInstance()->clean('content.datasets');
 
-        return $id;
+        return $dataset['id'];
 
     }
 
@@ -1283,6 +1302,9 @@ class modelContent extends cmsModel{
         $dataset['ctype_id'] = $ctype['id'];
 
         $success = $this->update('content_datasets', $id, $dataset);
+
+        $dataset['id'] = $id;
+        cmsEventsManager::hook('ctype_dataset_update', array($dataset, $ctype, $this));
 
         cmsCache::getInstance()->clean('content.datasets');
 
@@ -1327,6 +1349,8 @@ class modelContent extends cmsModel{
 
         $ctype = $this->getContentType($dataset['ctype_id']);
         if (!$ctype) { return false; }
+
+        cmsEventsManager::hook('ctype_dataset_before_delete', array($dataset, $ctype, $this));
 
         $this->delete('content_datasets', $id);
 
