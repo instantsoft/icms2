@@ -77,7 +77,7 @@ class actionAdminIndexChartData extends cmsAction {
 
         $this->model->group_by = $period < 300 ? "DAY({$source['key']})" : "MONTH({$source['key']})";
 
-        return $this->model->get($source['table'], false, false);
+        return (array)$this->model->get($source['table'], false, false);
 
     }
 
