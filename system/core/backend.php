@@ -106,8 +106,8 @@ class cmsBackend extends cmsController {
 
         if ($this->request->has('submit')){
 
-            $options = $form->parse($this->request, true);
-            $errors = $form->validate($this, $options);
+            $options = array_merge( $options, $form->parse($this->request, true) );
+            $errors  = $form->validate($this, $options);
 
             if (!$errors){
 
