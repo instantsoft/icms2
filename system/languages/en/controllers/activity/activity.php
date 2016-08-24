@@ -6,5 +6,5 @@
     define('LANG_ACTIVITY_DS_FRIENDS',      'My friends');
     define('LANG_ACTIVITY_DS_MY',           'My');
     define('LANG_ACTIVITY_OPT_TYPES',       'Manage feed items');
-    define('LANG_RULE_ACTIVITY_DELETE',     'Delete feed items');
-    define('LANG_ACTIVITY_TAB_MY',          'Friends activity');
+    define('LANG_RULE_ACTIVITY_DELETE',     'Deleting feed items');
+    define('LANG_ACTIVITY_TAB_MY',          'Friend Feed');

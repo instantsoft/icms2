@@ -10,7 +10,7 @@
     define('LANG_WALL_ENTRY_ADD',               'Write on the Wall');
     define('LANG_WALL_ENTRY_SUCCESS',           'Post added');
     define('LANG_WALL_ENTRY_DELETED',           'Post deleted');
-    define('LANG_WALL_ENTRY_DELETE_CONFIRM',    'Delete %s’s post?');
+    define('LANG_WALL_ENTRY_DELETE_CONFIRM',    'Delete %s\'s post?');
     define('LANG_WALL_ENTRY_ANCHOR',            'Post link');
 
     define('LANG_WALL_NOTIFY_NEW',              'Notify on new wall posts');

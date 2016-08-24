@@ -12,7 +12,7 @@
     define('LANG_RSS_FEED_CACHING',         'Caching');
     define('LANG_RSS_FEED_CACHE',           'Cache feed');
     define('LANG_RSS_FEED_CACHE_INT',       'Cache refresh interval, minutes');
-    define('LANG_RSS_FEED_MAPPING',         'Feed element Fields');
+    define('LANG_RSS_FEED_MAPPING',         'Feed element fields');
     define('LANG_RSS_FEED_MAP_TITLE',       'Element title');
     define('LANG_RSS_FEED_MAP_DESC',        'Element description');
     define('LANG_RSS_FEED_MAP_DATE',        'Creation date');
@@ -20,4 +20,4 @@
     define('LANG_RSS_FEED_MAP_IMAGE_SIZE',  'Image size');
     define('LANG_RSS_FEED_TITLE_FORMAT',    '%s :: %s');
     define('LANG_RSS_FEED_TEMPLATE',        'RSS feed template');
-    define('LANG_RSS_FEED_TEMPLATE_HINT',   'File template in controllers/rss/');
+    define('LANG_RSS_FEED_TEMPLATE_HINT',   'Template file in controllers/rss/');
