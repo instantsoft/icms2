@@ -1056,7 +1056,7 @@ class cmsTemplate {
 
         $result = $this->render($tpl_file, $data, new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
-        $this->restoreContext($result);
+        $this->restoreContext();
 
         return $result;
 
