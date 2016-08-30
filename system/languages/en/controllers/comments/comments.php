@@ -35,7 +35,7 @@
 
 	define('LANG_COMMENT_ERROR_NAME',	'You must enter your name');
 	define('LANG_COMMENT_ERROR_EMAIL',	'E-mail is incorrect');
-	define('LANG_COMMENT_ERROR_TIME',	'You can post comments once every %s\nPlease try again later');
+	define('LANG_COMMENT_ERROR_TIME',	"You can post comments once every %s\nPlease try again later");
 	define('LANG_COMMENT_ERROR_IP',     'Your IP address was blocked for comments');
 
     define('LANG_COMMENT_SHOW_PARENT',  'Show parent');

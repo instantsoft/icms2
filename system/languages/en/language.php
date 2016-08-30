@@ -391,9 +391,9 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
-    define('LANG_PAGE_MENU',                 'Menu');
-    define('LANG_PAGE_HEADER',               'Header');
-    define('LANG_PAGE_FOOTER',               'Footer');
+    define('LANG_PAGE_MENU',                 'Page menu');
+    define('LANG_PAGE_HEADER',               'Page header');
+    define('LANG_PAGE_FOOTER',               'Page footer');
     define('LANG_PAGE_LOGO',                 'Logo');
     define('LANG_MENU',                      'Menu');
     define('LANG_TITLE', 					 'Title');
@@ -428,7 +428,7 @@
 
     //SEO
     define('LANG_SEO',                       'SEO');
-    define('LANG_ROOT_SEO',                  'Main page SEO');
+    define('LANG_ROOT_SEO',                  'Component main page SEO');
     define('LANG_SEO_TITLE',                 'Page title');
     define('LANG_SEO_KEYS',                  'Keywords');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');
