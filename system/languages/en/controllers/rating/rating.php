@@ -2,7 +2,7 @@
 
     define('LANG_RATING_CONTROLLER',  'Rating');
 
-    define('LANG_RATING_DISABLED',    'You can not vote');
+    define('LANG_RATING_DISABLED',    'You cannot vote');
     define('LANG_RATING_VOTED',       'You have already voted');
     define('LANG_RATING_VOTE_UP',     'Vote Up');
     define('LANG_RATING_VOTE_DOWN',   'Vote Down');

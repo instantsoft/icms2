@@ -7,7 +7,7 @@
     define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank">Installation Manual</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
-    define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');
+    define('LANG_LANGUAGE_SELECT_EN',       'Please select a language');
 
     define('LANG_STEP_LANGUAGE',            'Language');
     define('LANG_STEP_START',               'Introduction');
@@ -28,14 +28,14 @@
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');
     define('LANG_LICENSE_NOTE',             'InstantCMS is licensed under <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU/GPL</a> v2.');
-    define('LANG_LICENSE_ORIGINAL',         'Original');
+    define('LANG_LICENSE_ORIGINAL',         'English');
     define('LANG_LICENSE_TRANSLATION',      'Russian');
 
     define('LANG_PHP_VERSION',              'PHP version');
     define('LANG_PHP_VERSION_REQ',          'PHP 5.3 or higher is required');
     define('LANG_PHP_VERSION_DESC',         'Installed version');
 	define('LANG_PHP_VARIABLES',            'PHP configuration');
-	define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked grey');
+	define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked gray');
 	define('LANG_PHP_VARIABLES_ON',			'On');
 	define('LANG_PHP_VARIABLES_OFF',		'Off');
     define('LANG_PHP_EXTENSIONS',           'Required extensions');
@@ -45,12 +45,12 @@
     define('LANG_PHP_EXT_INSTALLED',        'Installed');
     define('LANG_PHP_EXT_NOT_INSTALLED',    'Not found');
     define('LANG_PHP_CHECK_ERROR',          'You will not be able to proceed the installation unless all conditions that are marked red are fixed.');
-    define('LANG_PHP_CHECK_ERROR_HINT',     'Request your hosting support to provide the required conditions. Then, restart the installation.');
+    define('LANG_PHP_CHECK_ERROR_HINT',     'Request your hosting support to provide the required conditions and restart the installation.');
 
     define('LANG_PATHS_ROOT_INFO',          'All paths are relative to:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'edit');
     define('LANG_PATHS_CHANGE_INFO',        'You will be able to edit the paths in the configuration file later.<br/>Do not forget to do it after migration from local server to hosting!');
-    define('LANG_PATHS_HTACCESS_INFO',      'You are installing InstantCMS not to the root folder, that is why you need to change the .htaccess file. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Manual</a>');
+    define('LANG_PATHS_HTACCESS_INFO',      'You are installing InstantCMS not to the root folder; that is why you need to edit the .htaccess file. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Manual</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Must be writable');
     define('LANG_PATHS_NOT_WRITABLE',       'not writable!');
     define('LANG_PATHS_WRITABLE_HINT',      'Set correct permissions for the folder');
@@ -76,12 +76,12 @@
     define('LANG_DATABASE_USERS_TABLE',     'User table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Use an existing table');
-    define('LANG_DATABASE_INSTALL_DEMO',    'Install demo data');
+    define('LANG_DATABASE_INSTALL_DEMO',    'Install demo content');
 
     define('LANG_DATABASE_CONNECT_ERROR',   "MySQL Connection Error:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Database import error\nCheck provided details");
     define('LANG_DATABASE_ENGINE_NO',       'Database engine is not supported');
-    define('LANG_DATABASE_ENGINE_DISABLED', 'Database engine is supported, but has been disabled in MySQL settings');
+    define('LANG_DATABASE_ENGINE_DISABLED', 'Database engine is supported but has been disabled in MySQL settings');
     define('LANG_DATABASE_ENGINE_ERROR',    'Database engine is not supported by the server');
 
     define('LANG_SITE_SITENAME',            "Site name");
@@ -117,8 +117,8 @@
     define('LANG_CRON_SUPPORT_1',           'For more information about CRON settings please see the FAQ section on the site of your hosting provider.');
     define('LANG_CRON_SUPPORT_2',           'If you experience difficulties, copy the text above and request your hosting support.');
 
-    define('LANG_FINISH_1',                 'InstantCMS installation complete.');
-    define('LANG_FINISH_2',                 'Before proceeding, delete the <b>install</b> folder in the root directory.');
+    define('LANG_FINISH_1',                 'InstantCMS installation is complete.');
+    define('LANG_FINISH_2',                 'Delete the <b>install</b> folder from the root directory before you proceed.');
 
     define('LANG_FINISH_TO_SITE',           'Visit site');
 
@@ -128,5 +128,5 @@
     define('LANG_CFG_DATE_FORMAT',          'd.m.Y');
     define('LANG_CFG_DATE_FORMAT_JS',       'dd.mm.yy');
     define('LANG_CFG_TIME_ZONE',            'Europe/London');
-    define('LANG_CFG_METAKEYS',             'key, words, site');
-    define('LANG_CFG_METADESC',             'Site description');
+    define('LANG_CFG_METAKEYS',             'site, blog, community');
+    define('LANG_CFG_METADESC',             'My social site');

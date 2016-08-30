@@ -11,5 +11,5 @@
     define('LANG_TAGS_TAG_DELETE_CONFIRM',  'Delete the «{tag}» tag?');
     define('LANG_TAGS_MERGED',              'The «%s» tag was merged with the «%s» tag');
 
-    define('LANG_TAGS_SETTINGS',            'Tag settings');
+    define('LANG_TAGS_SETTINGS',            'Configure Tags');
     define('LANG_TAGS_RECOUNT',             'Recount Tags');
