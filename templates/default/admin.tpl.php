@@ -36,7 +36,7 @@
                 </li>
             </ul>
             <ul id="right_links">
-                <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo $user->nickname; ?></a></li>
+                <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
                 <li><a href="<?php echo LANG_HELP_URL; ?>"><?php echo LANG_HELP; ?></a></li>
                 <li><a href="<?php echo href_to_home(); ?>"><?php echo LANG_CP_BACK_TO_SITE; ?></a></li>
                 <li><a href="<?php echo href_to('auth', 'logout'); ?>" class="logout"><?php echo LANG_LOG_OUT; ?></a></li>

@@ -2,7 +2,7 @@
 
 class formWidgetMenuOptions extends cmsForm {
 
-    public function init() {
+    public function init($options, $template_name) {
 
         return array(
 
@@ -34,15 +34,18 @@ class formWidgetMenuOptions extends cmsForm {
                     new fieldList('options:template', array(
                         'title' => LANG_WD_MENU_TEMPLATE,
                         'hint'  => LANG_WD_MENU_TEMPLATE_HINT,
-                        'generator' => function($item) {
+                        'generator' => function($item) use ($template_name) {
 
-                            $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/assets/ui/', 'menu*.tpl.php');
+                            $default_tpls = cmsCore::getFilesList('templates/default/assets/ui/', 'menu*.tpl.php');
+                            $current_tpls = cmsCore::getFilesList('templates/'.$template_name.'/assets/ui/', 'menu*.tpl.php');
+
+                            $tpls = array_unique(array_merge($current_tpls, $default_tpls));
 
                             $items = array();
 
                             if ($tpls) {
                                 foreach ($tpls as $tpl) {
-                                    $items[str_replace('.tpl.php', '', $tpl)] = $tpl;
+                                    $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
                                 }
                             }
 

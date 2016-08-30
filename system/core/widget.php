@@ -18,26 +18,16 @@ class cmsWidget {
 
     public function __construct($widget){
 
-        $this->name = $widget['name'];
-        $this->controller = $widget['controller'];
-
-        $form = cmsCore::getWidgetOptionsForm($this->name, $this->controller, $widget['options']);
-        $data = $form->parse(new cmsRequest($widget), true);
-
-        foreach($data as $field => $value){
+        foreach($widget as $field => $value){
             $this->{$field} = $value;
         }
 
-        $this->css_class = $widget['class'];
+        $this->css_class       = $widget['class'];
         $this->css_class_title = empty($widget['class_title']) ? '' : $widget['class_title'];
-        $this->css_class_wrap = empty($widget['class_wrap']) ? '' : $widget['class_wrap'];
+        $this->css_class_wrap  = empty($widget['class_wrap']) ? '' : $widget['class_wrap'];
+        $this->template        = $this->name;
 
-        $this->links = $widget['links'];
-
-        $this->position = $widget['position'];
-        $this->template = $this->name;
-
-		if (!empty($widget['tpl_wrap'])){
+        if (!empty($widget['tpl_wrap'])){
 			$this->setWrapper($widget['tpl_wrap']);
 		}
 

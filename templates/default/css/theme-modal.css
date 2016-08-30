@@ -23,7 +23,7 @@
 }
 .nyroModalTitle {
     margin: 0;
-    top: -30px;
+    top: -25px;
     font-size: 1.4em;
     color: #FFF;
     z-index: 200;
@@ -36,7 +36,7 @@
 .nyroModalCont {
 	position: absolute;
     box-shadow:0 0 30px #000;
-	margin: 25px;
+	margin: 30px;
     padding:0;
 	background: #fff;
     z-index: 101;

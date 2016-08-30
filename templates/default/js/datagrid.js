@@ -111,6 +111,43 @@ icms.datagrid = (function ($) {
                 $('#slide_cell').addClass('unslided');
             }
         }).triggerHandler('resize');
+        $(document).on('click', '.inline_submit', function(){
+            var s_button = $(this);
+            $(s_button).prop('disabled', true).parent().addClass('process_save');
+            var tr_wrap = $(this).closest('tr');
+            var action_url = $(this).data('action');
+            var fields = {};
+            $(tr_wrap).find('.grid_field_edit input.input').each(function (){
+                fields[$(this).attr('name')] = $(this).val();
+            });
+            $.post(action_url, {data: fields}, function(data){
+                $(s_button).prop('disabled', false).parent().removeClass('process_save');
+                if(data.error){ alert(data.error); } else {
+                    $(tr_wrap).find('.grid_field_edit').addClass('success').removeClass('edit_by_click_visible');
+                    $(tr_wrap).find('.grid_field_value').removeClass('edit_by_click_hidden');
+                    for(var _field in fields){
+                        var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
+                        if($(g_value_wrap).children().length){
+                            $(g_value_wrap).find('*').last().html(data.values[_field]);
+                        } else {
+                            $(g_value_wrap).html(data.values[_field]);
+                        }
+                    }
+                }
+            }, 'json');
+            return false;
+        });
+        $(document).on('input', '.grid_field_edit input.input', function(){
+            $(this).parent().removeClass('success');
+        });
+        $(document).on('keypress', '.grid_field_edit input.input', function(e){
+            if (e.which == 13) {
+                $(this).closest('tr').find('.inline_submit').trigger('click');
+            }
+        });
+        $(document).on('click', '.grid_field_value.edit_by_click', function(){
+            $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
+        });
 
     }
 

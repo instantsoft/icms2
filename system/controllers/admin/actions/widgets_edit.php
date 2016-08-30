@@ -17,10 +17,10 @@ class actionAdminWidgetsEdit extends cmsAction {
 
         cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
 
-        $form = cmsCore::getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options']);
+        $form = cmsCore::getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $widget['template']);
 
         return $this->cms_template->render('widgets_settings', array(
-            'form' => $form,
+            'form'   => $form,
             'widget' => $widget,
             'errors' => false
         ));
@@ -28,4 +28,3 @@ class actionAdminWidgetsEdit extends cmsAction {
     }
 
 }
-

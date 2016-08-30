@@ -20,11 +20,14 @@ function grid_ctype_datasets($controller){
         'title' => array(
             'title' => LANG_CP_DATASET_TITLE,
             'href' => href_to($controller->name, 'ctypes', array('datasets_edit', '{ctype_id}', '{id}')),
+            'editable' => array(
+                'table' => 'content_datasets'
+            )
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
             'width' => 150,
-        ),        
+        ),
         'is_visible' => array(
             'title' => LANG_PUBLICATION,
             'flag'  => true,
@@ -48,10 +51,9 @@ function grid_ctype_datasets($controller){
     );
 
     return array(
-        'options' => $options, 
+        'options' => $options,
         'columns' => $columns,
         'actions' => $actions
     );
-    
-}
 
+}

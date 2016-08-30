@@ -135,6 +135,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 #cp_top_line ul, #cp_top_line li { margin:0; padding:0; list-style:none; }
 #cp_top_line ul { overflow: hidden; }
 #cp_top_line ul li { float: left; padding:0 10px; border-right:solid 1px #444; }
+#cp_top_line ul li:hover { background-color: #444; }
 #cp_top_line ul li:last-child { border:none; }
 
 #cp_top_line ul li a{ color:#999; }
@@ -148,8 +149,19 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 }
 
 #cp_top_line a.user{
-    padding-left:18px;
-    background: url("../../images/icons/user.png") no-repeat left 3px;
+    display: block;
+    height: 35px;
+}
+#cp_top_line a.user > img {
+    float: left;
+    padding: 3px 0;
+    height: 29px;
+    width: 29px;
+    border-radius: 50%;
+}
+#cp_top_line a.user > span {
+    float: left;
+    margin: 0 0 0 10px;
 }
 
 #cp_top_line #is_update a {
@@ -1838,6 +1850,73 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     font-size: 10px;
     background:#09c;
     font-weight: bold;
+}
+.grid_field_edit > .button {
+    line-height: 23px;
+    height: 24px;
+    padding: 0 7px;
+    font-size: 12px;
+    margin: 0 0 0 10px;
+    border-radius: 3px;
+    vertical-align: baseline;
+    display: inline-block;
+    box-sizing: border-box;
+    box-shadow: none;
+    text-shadow: none;
+}
+.grid_field_edit > .button:hover, .grid_field_edit > .button:focus {
+    box-shadow: none;
+}
+.grid_field_edit > .button[disabled] {
+    display: none;
+}
+.grid_field_edit.process_save:after {
+    content: '';
+    display: inline-block;
+    background: url("../../images/loader16.gif") no-repeat center center;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+}
+.grid_field_edit {
+    display: none;
+}
+.grid_field_value {
+    height: 27px;
+    line-height: 25px;
+    display: inline-block;
+}
+.grid_field_edit > .input {
+    width: 60%;
+}
+.grid_field_edit.success > .input {
+    background-image: url("../../images/icons/accept.png");
+    background-repeat: no-repeat;
+    background-position: right 5px center;
+}
+.datagrid tr:hover .grid_field_edit:not(.edit_by_click) {
+    display: block;
+}
+.datagrid tr:hover .grid_field_value:not(.edit_by_click) {
+    display: none;
+}
+.datagrid tr:hover .edit_by_click.edit_by_click_visible {
+    display: block;
+}
+.datagrid tr:hover .edit_by_click.edit_by_click_hidden {
+    display: none;
+}
+.datagrid tr:hover .grid_field_value.edit_by_click:after {
+    content: '';
+    background-image: url("../../images/icons/labels.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 32px;
+    height: 26px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 0 0 10px;
+    cursor: pointer;
 }
 @media screen and (max-width: 980px) {
     #dashboard .col, #dashboard #resources {

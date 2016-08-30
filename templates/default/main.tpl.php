@@ -130,7 +130,7 @@
                     </span>
                     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
                         <span class="item">
-                            SQL: <a href="#sql_debug" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
+                            SQL: <a href="#sql_debug" title="SQL dump" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
                         </span>
                         <?php if ($config->cache_enabled){ ?>
                             <span class="item">

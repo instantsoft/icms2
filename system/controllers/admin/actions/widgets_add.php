@@ -22,6 +22,15 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $binded_id = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template);
 
+        $bind_widget = $widgets_model->getWidgetBinding($binded_id);
+
+        cmsCore::loadWidgetLanguage($bind_widget['name'], $bind_widget['controller']);
+
+        $form = cmsCore::getWidgetOptionsForm($bind_widget['name'], $bind_widget['controller'], false, $bind_widget['template']);
+        $data = $form->parse(new cmsRequest($bind_widget), true);
+
+        $widgets_model->updateWidgetBinding($binded_id, $data);
+
         cmsTemplate::getInstance()->renderJSON(array(
             'error' => !(bool) $binded_id,
             'id'    => $binded_id

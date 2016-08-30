@@ -1206,6 +1206,8 @@ class cmsTemplate {
             foreach($dataset as $row){
 
                 $cell_index = 0;
+                $editable_index = 1;
+                $editable_count = count(array_column($grid['columns'], 'editable'));
 
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
@@ -1249,6 +1251,26 @@ class cmsTemplate {
                     if (isset($column['href'])){
 						$column['href'] = string_replace_keys_values($column['href'], $row);
                         $value = '<a href="'.$column['href'].'">'.$value.'</a>';
+                    }
+
+                    if(!empty($column['editable']['table'])){
+                        if(!empty($row['id'])){
+                            $save_action = href_to('admin', 'inline_save', array(urlencode($column['editable']['table']), $row['id']));
+                        }
+                        if(!empty($column['editable']['save_action'])){
+                            $save_action = $column['editable']['save_action'];
+                        }
+                        if(!empty($save_action)){
+                            $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
+                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field]);
+                            if($editable_index == $editable_count){
+                                $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit'));
+                            }
+                            $value .= '</div>';
+
+                            $editable_index++;
+
+                        }
                     }
 
                     $rows[$row_index][] = $value;
@@ -1333,10 +1355,10 @@ class cmsTemplate {
         }
 
         $result = array(
-            'rows' => $rows,
+            'rows'        => $rows,
             'pages_count' => $pages_count,
-            'total' => $total,
-            'columns' => $columns
+            'total'       => $total,
+            'columns'     => $columns
         );
 
         echo json_encode($result);

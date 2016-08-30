@@ -20,18 +20,22 @@ function grid_users($controller){
             'filter' => 'exact'
         ),
         'nickname' => array(
-            'title' => LANG_NICKNAME,
-            'href' => href_to($controller->name, 'users', array('edit', '{id}')),
-            'filter' => 'like',
-            'handler' => function($nickname, $user){
-                if($user['is_admin']){
-                    $nickname = '<b class="tooltip" title="'.LANG_USER_IS_ADMIN.'">'.$nickname.'</b>';
+            'title'   => LANG_NICKNAME,
+            'href'    => href_to($controller->name, 'users', array('edit', '{id}')),
+            'filter'  => 'like',
+            'editable' => array(
+                'table' => '{users}'
+            ),
+            'handler' => function($nickname, $user) {
+                if ($user['is_admin']) {
+                    $nickname = '<b class="tooltip" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
                 }
                 return $nickname;
             }
         ),
         'email' => array(
-            'title' => LANG_EMAIL,
+            'title'  => LANG_EMAIL,
+            'width'  => 200,
             'filter' => 'like'
         ),
         'ip' => array(

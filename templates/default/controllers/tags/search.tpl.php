@@ -2,7 +2,11 @@
 
     $this->setPageTitle(sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag));
 
+    if (!empty($ctype['seo_keys'])){ $this->setPageKeywords($ctype['seo_keys']); }
+    if (!empty($ctype['seo_desc'])){ $this->setPageDescription($ctype['seo_desc']); }
+
     $this->addBreadcrumb(sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag));
+
     $content_menu = array();
 
     if ($is_results){

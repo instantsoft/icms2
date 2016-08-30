@@ -342,7 +342,9 @@ class cmsCore {
 
     }
 
-    public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false){
+    public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false, $template=false){
+
+        $template = $template ? $template : cmsConfig::get('template');
 
 		$widget_path = self::getWidgetPath($widget_name, $controller_name);
 
@@ -352,8 +354,7 @@ class cmsCore {
 
         $form_name = 'widget' . ($controller_name ? "_{$controller_name}_" : '_') . "{$widget_name}_options";
 
-        $form = cmsForm::getForm($form_file, $form_name, array($options));
-
+        $form = cmsForm::getForm($form_file, $form_name, array($options, $template));
         if (!$form) { $form = new cmsForm(); }
 
         $form->is_tabbed = true;
@@ -378,8 +379,8 @@ class cmsCore {
             $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
-                'generator' => function($item){
-                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/widgets', '*.tpl.php');
+                'generator' => function($item) use ($template){
+                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', '*.tpl.php');
                     $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
                     $tpls = array_unique(array_merge($current_tpls, $default_tpls));
                     $items = array();
@@ -395,9 +396,9 @@ class cmsCore {
             $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
-                'generator' => function($item){
+                'generator' => function($item) use ($template){
                     $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
-                    $current_tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/'.$w_path, '*.tpl.php');
+                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/'.$w_path, '*.tpl.php');
                     $default_tpls = cmsCore::getFilesList('templates/default/'.$w_path, '*.tpl.php');
                     $tpls = array_unique(array_merge($current_tpls, $default_tpls));
                     $items = array();
@@ -458,6 +459,7 @@ class cmsCore {
             // Флаг объединения с предыдущим виджетом
             $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', array(
                 'title' => LANG_WIDGET_TAB_PREV,
+                'default' => false
             )));
 
             // Ссылки в заголовке

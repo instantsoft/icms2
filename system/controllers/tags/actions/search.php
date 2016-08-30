@@ -4,19 +4,18 @@ class actionTagsSearch extends cmsAction {
 
     public function run($ctype_name=false){
 
-        $query = $this->request->get('q');
-
+        $query = $this->request->get('q', '');
         if (!$query) { cmsCore::error404(); }
 
         $tag_id = $this->model->getTagId($query);
 
-        $targets = $tag_id ? $this->model->getTagTargets($tag_id) : false; 
+        $targets = $tag_id ? $this->model->getTagTargets($tag_id) : false;
 
-        if (!$targets || !$tag_id) { 
-            return cmsTemplate::getInstance()->render('search', array(
+        if (!$targets || !$tag_id) {
+            return $this->cms_template->render('search', array(
                 'is_results' => false,
-                'tag' => $query,
-            ));            
+                'tag'        => $query
+            ));
         }
 
         $is_first_tab = !$ctype_name;
@@ -52,13 +51,13 @@ class actionTagsSearch extends cmsAction {
 
         $html = $content_controller->renderItemsList($ctype, $page_url);
 
-        return cmsTemplate::getInstance()->render('search', array(
-            'is_results' => true, 
-            'tag' => $query,
-            'targets' => $targets,
-            'ctypes' => $ctypes,
-            'ctype' => $ctype,
-            'html' => $html
+        return $this->cms_template->render('search', array(
+            'is_results' => true,
+            'tag'        => $query,
+            'targets'    => $targets,
+            'ctypes'     => $ctypes,
+            'ctype'      => $ctype,
+            'html'       => $html
         ));
 
     }
