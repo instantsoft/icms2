@@ -88,23 +88,23 @@ class actionUsersProfileEdit extends cmsAction {
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){
                     $activity_controller = cmsCore::getController('activity');
-                    $activity_controller->deleteEntry($this->name, "avatar", $profile['id']);
+                    $activity_controller->deleteEntry($this->name, 'avatar', $profile['id']);
 					if (!empty($new['avatar'])){
-						$activity_controller->addEntry($this->name, "avatar", array(
-							'user_id' => $profile['id'],
-							'subject_title' => $profile['nickname'],
-							'subject_id' => $profile['id'],
-							'subject_url' => href_to('users', $profile['id']),
-							'is_private' => 0,
-							'group_id' => null,
-							'images' => array(
-								array(
-									'url' => href_to('users', $profile['id']),
-									'src' => html_image_src($new['avatar'], 'normal')
-								)
-							),
-							'images_count' => 1
-						));
+						$activity_controller->addEntry($this->name, 'avatar', array(
+							'user_id'       => $profile['id'],
+                            'subject_title' => $profile['nickname'],
+                            'subject_id'    => $profile['id'],
+                            'subject_url'   => href_to_rel('users', $profile['id']),
+                            'is_private'    => 0,
+                            'group_id'      => null,
+                            'images'        => array(
+                                array(
+                                    'url' => href_to_rel('users', $profile['id']),
+                                    'src' => html_image_src($new['avatar'], 'normal')
+                                )
+                            ),
+                            'images_count'  => 1
+                        ));
 					}
                 }
 
@@ -119,11 +119,11 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         return $this->cms_template->render('profile_edit', array(
-            'do' => 'edit',
-            'id' => $profile['id'],
+            'do'      => 'edit',
+            'id'      => $profile['id'],
             'profile' => $profile,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

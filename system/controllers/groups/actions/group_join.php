@@ -20,10 +20,10 @@ class actionGroupsGroupJoin extends cmsAction {
 
         if ($invite){ $this->model->deleteInvite($invite['id']); }
 
-        cmsCore::getController('activity')->addEntry($this->name, "join", array(
+        cmsCore::getController('activity')->addEntry($this->name, 'join', array(
             'subject_title' => $group['title'],
             'subject_id'    => $group['id'],
-            'subject_url'   => href_to($this->name, $group['id']),
+            'subject_url'   => href_to_rel($this->name, $group['id']),
             'group_id'      => $group['id']
         ));
 

@@ -76,7 +76,7 @@
                             <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
 
                                 <?php if ($item['parent_id']){ ?>
-                                    <a class="parent_title" href="<?php echo href_to($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
+                                    <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
                                     &rarr;
                                 <?php } ?>
 

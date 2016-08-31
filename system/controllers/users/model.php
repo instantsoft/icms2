@@ -627,18 +627,18 @@ class modelUsers extends cmsModel{
 
             $friend = $this->getUser($friend_id);
 
-            cmsCore::getController('activity')->addEntry('users', "friendship", array(
+            cmsCore::getController('activity')->addEntry('users', 'friendship', array(
                 'subject_title' => $friend['nickname'],
-                'subject_id' => $friend_id,
-                'subject_url' => href_to('users', $friend_id),
+                'subject_id'    => $friend_id,
+                'subject_url'   => href_to_rel('users', $friend_id)
             ));
 
         }
 
-        cmsCache::getInstance()->clean("users.friends");
+        cmsCache::getInstance()->clean('users.friends');
 
         return $this->insert('{users}_friends', array(
-            'user_id' => $user_id,
+            'user_id'   => $user_id,
             'friend_id' => $friend_id,
             'is_mutual' => $is_mutual
         ));

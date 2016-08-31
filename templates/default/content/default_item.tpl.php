@@ -4,7 +4,7 @@
     <h1>
         <?php if ($item['parent_id']){ ?>
             <div class="parent_title">
-                <a href="<?php echo href_to($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a> &rarr;
+                <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a> &rarr;
             </div>
         <?php } ?>
         <?php html($item['title']); ?>

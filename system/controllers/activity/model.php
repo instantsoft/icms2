@@ -138,17 +138,22 @@ class modelActivity extends cmsModel{
         return $this->get('activity', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
+                'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'avatar'   => $item['user_avatar']
             );
 
             if (!empty($item['subject_url'])){
+                $item['subject_url'] = rel_to_href($item['subject_url']);
                 $max_title_len = 50;
                 $item['subject_title'] = mb_strlen($item['subject_title'])>$max_title_len ? mb_substr($item['subject_title'], 0, $max_title_len).'...' : $item['subject_title'];
                 $link = '<a href="'.$item['subject_url'].'">'. $item['subject_title'].'</a>';
             } else {
                 $link = $item['subject_title'];
+            }
+
+            if (!empty($item['reply_url'])){
+                $item['reply_url'] = rel_to_href($item['reply_url']);
             }
 
             $item['images'] = cmsModel::yamlToArray($item['images']);
@@ -159,12 +164,13 @@ class modelActivity extends cmsModel{
 				$images_exist = array();
 
 				foreach($item['images'] as $idx=>$image){
-					if (mb_substr($image['src'], 0, 7)!='http://') {
+					if (strpos($image['src'], 'http') !== 0) {
 						if (!file_exists($config->upload_path . '/' . $image['src'])){
 							continue;
 						}
 						$image['src'] = $config->upload_host . '/' . $image['src'];
 					}
+                    $image['url'] = rel_to_href($image['url']);
 					$images_exist[] = $image;
 				}
 

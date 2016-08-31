@@ -68,7 +68,7 @@
                                 <td class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
                                     <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                                         <?php if ($item['parent_id']){ ?>
-                                            <a class="parent_title" href="<?php echo href_to($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
+                                            <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
                                             &rarr;
                                         <?php } ?>
                                         <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php echo htmlspecialchars($item[$field['name']]); ?></a>

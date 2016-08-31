@@ -56,6 +56,13 @@ function install_package(){
         }
     }
 
+    // в ленте делаем  относительные урлы
+    $root = cmsConfig::get('root');
+    $root_len = strlen($root)+1;
+    $core->db->query("UPDATE `{#}activity` SET `subject_url` = SUBSTRING(`subject_url`, {$root_len}) WHERE `subject_url` IS NOT NULL AND `subject_url` LIKE '{$root}%'");
+    $core->db->query("UPDATE `{#}activity` SET `reply_url` = SUBSTRING(`reply_url`, {$root_len}) WHERE `reply_url` IS NOT NULL AND `reply_url` LIKE '{$root}%'");
+    $core->db->query("UPDATE `{#}activity` SET `images` = REPLACE(`images`, 'url: {$root}', 'url: ') WHERE `images` IS NOT NULL");
+
 }
 
 // настройки контроллеров для пересохранения

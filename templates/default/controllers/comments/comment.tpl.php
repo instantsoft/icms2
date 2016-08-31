@@ -17,7 +17,7 @@
     if (!isset($is_show_target)){ $is_show_target = false; }
 
     if ($is_show_target){
-        $target_url = href_to($entry['target_url']) . "#comment_{$entry['id']}";
+        $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
     }
 
     if ($is_controls){

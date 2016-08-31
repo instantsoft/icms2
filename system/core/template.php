@@ -363,7 +363,7 @@ class cmsTemplate {
     public function breadcrumbs($options=array()){
 
         $default_options = array(
-            'home_url'   => cmsConfig::get('host'),
+            'home_url'   => href_to_home(),
             'template'   => 'breadcrumbs',
             'strip_last' => true
         );

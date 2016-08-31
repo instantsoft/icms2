@@ -105,7 +105,7 @@
                 <?php $ds_selected = ($dataset == $set['name'] || (!$dataset && $ds_counter==0)); ?>
                 <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
 
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(href_to($base_ds_url), $set['name']); } ?>
+                    <?php if ($ds_counter > 0) { $ds_url = sprintf(rel_to_href($base_ds_url), $set['name']); } ?>
                     <?php if ($ds_counter == 0) { $ds_url = href_to($base_url, isset($category['slug']) ? $category['slug'] : ''); } ?>
 
                     <?php if ($ds_selected){ ?>

@@ -45,6 +45,19 @@ function html_strip($string, $max_length){
 }
 
 /**
+ * Формирует ссылку по относительной (без добавления корня URL)
+ * @param string $rel_link
+ * @return string
+ */
+function rel_to_href($rel_link){
+
+    $lang_href = cmsCore::getLanguageHrefPrefix();
+
+	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : '').$rel_link;
+
+}
+
+/**
  * Возвращает ссылку на указанное действие контроллера
  * с добавлением пути от корня сайта
  * @param string $controller
@@ -54,7 +67,9 @@ function html_strip($string, $max_length){
  */
 function href_to($controller, $action='', $params=false){
 
-	return cmsConfig::get('root') . href_to_rel($controller, $action, $params);
+    $lang_href = cmsCore::getLanguageHrefPrefix();
+
+	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params);
 
 }
 
@@ -68,7 +83,9 @@ function href_to($controller, $action='', $params=false){
  */
 function href_to_abs($controller, $action='', $params=false){
 
-	return cmsConfig::get('host') . '/' . href_to_rel($controller, $action, $params);
+    $lang_href = cmsCore::getLanguageHrefPrefix();
+
+	return cmsConfig::get('host') . '/' .($lang_href ? $lang_href.'/' : ''). href_to_rel($controller, $action, $params);
 
 }
 
@@ -81,8 +98,6 @@ function href_to_abs($controller, $action='', $params=false){
  * @return string
  */
 function href_to_rel($controller, $action='', $params=false){
-
-    $href = cmsCore::getLanguageHrefPrefix();
 
     $controller = trim($controller, '/ ');
 
@@ -97,7 +112,7 @@ function href_to_rel($controller, $action='', $params=false){
 	$controller_alias = cmsCore::getControllerAliasByName($controller);
 	if ($controller_alias) { $controller = $controller_alias; }
 
-    if($controller){ $href .= '/' . $controller; }
+    $href = $controller;
 
 	if($action){ $href .= '/' . $action; }
 	if($params){
@@ -117,10 +132,12 @@ function href_to_rel($controller, $action='', $params=false){
  * @return string
  */
 function href_to_current($add_host=false){
+    $lang_href = cmsCore::getLanguageHrefPrefix();
+    $lang_href = ($lang_href ? '/'.$lang_href : '');
     if($add_host){
-        return cmsConfig::get('host').$_SERVER['REQUEST_URI'];
+        return cmsConfig::get('host').$lang_href.$_SERVER['REQUEST_URI'];
     } else {
-        return $_SERVER['REQUEST_URI'];
+        return $lang_href.$_SERVER['REQUEST_URI'];
     }
 }
 

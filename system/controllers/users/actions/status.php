@@ -14,38 +14,36 @@ class actionUsersStatus extends cmsAction {
         // Проверяем валидность
         if (!is_numeric($user_id)){
             $result = array( 'error' => true, 'message' => LANG_ERROR );
-            cmsTemplate::getInstance()->renderJSON($result);
+            return $this->cms_template->renderJSON($result);
         }
 
-        $user = cmsUser::getInstance();
-
-        if ($user->id != $user_id){
+        if ($this->cms_user->id != $user_id){
             $result = array( 'error' => true, 'message' => LANG_ERROR );
-            cmsTemplate::getInstance()->renderJSON($result);
+            return $this->cms_template->renderJSON($result);
         }
 
         // Вырезаем теги и форматируем
         $content = cmsEventsManager::hook('html_filter', strip_tags(trim($content)));
         if (!$content){
             $result = array( 'error' => true, 'message' => ERR_VALIDATE_REQUIRED);
-            cmsTemplate::getInstance()->renderJSON($result);
+            return $this->cms_template->renderJSON($result);
         }
 
         // проверяем длину статуса
         if (mb_strlen($content) > 140) {
             $result = array( 'error' => true, 'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 140));
-            cmsTemplate::getInstance()->renderJSON($result);
+            return $this->cms_template->renderJSON($result);
         }
 
         // Добавляем запись на стену
         $wall_model = cmsCore::getModel('wall');
 
         $wall_entry_id = $wall_model->addEntry(array(
-            'controller' => 'users',
+            'controller'   => 'users',
             'profile_type' => 'user',
-            'profile_id' => $user_id,
-            'user_id' => $user_id,
-            'content' => $content,
+            'profile_id'   => $user_id,
+            'user_id'      => $user_id,
+            'content'      => $content,
             'content_html' => $content
         ));
 
@@ -60,9 +58,9 @@ class actionUsersStatus extends cmsAction {
 
             $wall_model->updateEntryStatusId($wall_entry_id, $status_id);
 
-            cmsCore::getController('activity')->addEntry($this->name, "status", array(
+            cmsCore::getController('activity')->addEntry($this->name, 'status', array(
                 'subject_title' => $content,
-                'reply_url' => href_to($this->name, $user_id) . "?wid={$wall_entry_id}&reply=1"
+                'reply_url' => href_to_rel($this->name, $user_id) . "?wid={$wall_entry_id}&reply=1"
             ));
 
         }
@@ -73,7 +71,7 @@ class actionUsersStatus extends cmsAction {
             'content' => $content,
         );
 
-        cmsTemplate::getInstance()->renderJSON($result);
+        return $this->cms_template->renderJSON($result);
 
     }
 
