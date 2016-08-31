@@ -255,6 +255,7 @@ class cmsTemplate {
 
         // для определения активного пункта меню
         $current_url = trim(cmsCore::getInstance()->uri, '/');
+        $href_lang = cmsCore::getLanguageHrefPrefix();
 
         foreach($menu as $id=>$item){
 
@@ -285,6 +286,9 @@ class cmsTemplate {
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : $item['url'];
                 $url = mb_substr($url, mb_strlen($config->root));
+                if($href_lang){
+                    $url = mb_substr($url, mb_strlen($href_lang));
+                }
                 $url = trim($url, '/');
 
                 if (!$url) { continue; }

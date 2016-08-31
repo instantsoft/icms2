@@ -700,7 +700,9 @@ class cmsController {
      */
     public function redirectTo($controller, $action='', $params=array(), $query=array()){
 
-        $location = $this->cms_config->root . $controller . '/' . $action;
+        $href_lang = cmsCore::getLanguageHrefPrefix();
+
+        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . '/' . $action;
 
         if ($params){ $location .= '/' . implode('/', $params); }
         if ($query){ $location .= '?' . http_build_query($query); }

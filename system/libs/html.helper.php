@@ -82,6 +82,8 @@ function href_to_abs($controller, $action='', $params=false){
  */
 function href_to_rel($controller, $action='', $params=false){
 
+    $href = cmsCore::getLanguageHrefPrefix();
+
     $controller = trim($controller, '/ ');
 
 	$ctype_default = cmsConfig::get('ctype_default');
@@ -95,12 +97,12 @@ function href_to_rel($controller, $action='', $params=false){
 	$controller_alias = cmsCore::getControllerAliasByName($controller);
 	if ($controller_alias) { $controller = $controller_alias; }
 
-	$href = $controller;
+    if($controller){ $href .= '/' . $controller; }
 
 	if($action){ $href .= '/' . $action; }
 	if($params){
         if (is_array($params)){
-            $href .= '/' . implode("/", $params);
+            $href .= '/' . implode('/', $params);
         } else {
             $href .= '/' . $params;
         }
@@ -127,7 +129,7 @@ function href_to_current($add_host=false){
  * @return string
  */
 function href_to_home(){
-    return cmsConfig::get('host');
+    return cmsConfig::get('host').'/'.cmsCore::getLanguageHrefPrefix();
 }
 
 /**

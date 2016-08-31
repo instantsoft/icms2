@@ -12,6 +12,9 @@ class cmsCore {
     public $uri_params     = array();
     public $uri_query      = array();
 
+    private static $language = 'ru';
+    private static $language_href_prefix = '';
+
     public $controller = '';
 
 	public $link;
@@ -33,6 +36,8 @@ class cmsCore {
 
         $this->request = new cmsRequest($_REQUEST);
 
+        self::detectLanguage();
+
     }
 
     public static function startTimer() {
@@ -41,6 +46,45 @@ class cmsCore {
 
     public static function getTime() {
         return microtime(true) - self::$start_time;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    private static function detectLanguage() {
+
+        $config = cmsConfig::getInstance();
+
+        self::$language = $config->language;
+
+        if(!empty($_SERVER['REQUEST_URI'])){
+
+            $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
+
+            // язык может быть только двухбуквенный, определяем его по первому сегменту
+            if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
+                if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
+                    // язык по-умолчанию без префиксов, дубли нам не нужны
+                    if($segments[0] != $config->language){
+
+                        self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
+
+                        $_SERVER['REQUEST_URI'] = $config->root.implode('/', $segments);
+
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    public static function getLanguageHrefPrefix() {
+        return self::$language_href_prefix;
+    }
+
+    public static function getLanguageName() {
+        return self::$language;
     }
 
 //============================================================================//
@@ -484,9 +528,7 @@ class cmsCore {
      */
     public static function loadLanguage($file=false){
 
-        $config = cmsConfig::getInstance();
-
-        $lang_dir = 'system/languages/'. $config->language;
+        $lang_dir = 'system/languages/'. self::$language;
 
         if (!$file){
 
@@ -511,11 +553,7 @@ class cmsCore {
      */
     public static function getLanguageTextFile($file){
 
-        $config = cmsConfig::getInstance();
-
-        if (!isset($config->language)){	$config->language = 'ru'; }
-
-        $lang_dir = $config->root_path . 'system/languages/'. $config->language;
+        $lang_dir = cmsConfig::get('root_path').'system/languages/'.self::$language;
 
         $lang_file = $lang_dir .'/' . $file . '.txt';
 

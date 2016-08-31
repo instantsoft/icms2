@@ -3,7 +3,7 @@ class cmsWysiwygRedactor{
 
 	public function displayEditor($field_id, $content=''){
 
-        $lang = cmsConfig::get('language');
+        $lang = cmsCore::getLanguageName();
 		$user = cmsUser::getInstance();
 
 		$template = cmsTemplate::getInstance();

@@ -32,14 +32,6 @@
         die();
     }
 
-    // Загружаем локализацию
-    cmsCore::loadLanguage();
-
-    // устанавливаем локаль языка
-    if(function_exists('lang_setlocale')){
-        lang_setlocale();
-    }
-
     // Устанавливаем часовую зону
     date_default_timezone_set( $config->time_zone );
 
@@ -55,6 +47,14 @@
 
     // Инициализируем ядро
     $core = cmsCore::getInstance();
+
+    // Загружаем локализацию
+    cmsCore::loadLanguage();
+
+    // устанавливаем локаль языка
+    if(function_exists('lang_setlocale')){
+        lang_setlocale();
+    }
 
     // Подключаем базу
     $core->connectDB();

@@ -434,7 +434,7 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $text = strip_tags($text);
     $text = mb_strtolower($text);
 
-    $stopwords = string_get_stopwords(cmsConfig::get('language'));
+    $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
     $words = explode(' ', $text);
 
@@ -485,7 +485,7 @@ function string_get_stopwords($lang='ru') {
     if(isset($words[$lang])){
         return $words[$lang];
     }
-    $file = PATH.'/system/languages/'.$lang.'/stopwords.php';
+    $file = PATH.'/system/languages/'.$lang.'/stopwords/stopwords.php';
     if(file_exists($file)){
         $words[$lang] = include $file;
     } else {

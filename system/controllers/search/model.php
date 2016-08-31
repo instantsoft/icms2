@@ -19,7 +19,7 @@ class modelSearch extends cmsModel{
 
         $this->query = array();
 
-        $stopwords = string_get_stopwords(cmsConfig::get('language'));
+        $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
         $words = explode(' ', $query);
 

@@ -3,7 +3,7 @@ class cmsWysiwygLive{
 
 	public function displayEditor($field_id, $content=''){
 
-        $lang = cmsConfig::get('language');
+        $lang = cmsCore::getLanguageName();
         if ($lang == 'en') { $lang = 'en-US'; }
 
         $template = cmsTemplate::getInstance();
