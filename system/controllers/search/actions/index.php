@@ -77,6 +77,8 @@ class actionSearchIndex extends cmsAction {
 
             $fields = $content_model->getContentFields($ctype['name']);
 
+            $field_image_name = false;
+
             foreach($fields as $field){
 
                 // индексы создаются только на поля типа caption, text, html
@@ -86,8 +88,9 @@ class actionSearchIndex extends cmsAction {
                 if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
                     $sql_fields[] = $field['name'];
                 }
-                if ($field['name'] == 'photo' && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
+                if ($field['type'] == 'image' && !$field['is_private'] && (!$field['groups_read'] || $user->isInGroups($field['groups_read']))){
                     $default_fields[] = $field['name'];
+ +                  $field_image_name = $field['name'];
                 }
             }
 
@@ -106,9 +109,10 @@ class actionSearchIndex extends cmsAction {
 
                     $result = $this->model->getSearchResults($table_name, $sql_fields, $default_fields, function($item, $model) use ($ctype) {
 
-                        if(!empty($item['photo'])){
-                            $item['photo'] = html_image($item['photo'], 'small', $item['title']);
-                            if(!$item['photo']){ unset($item['photo']); }
+                        if ($field_image_name && !empty($item[$field_image_name])) {
+ +                          $item['image'] = html_image($item[$field_image_name], 'small', $item['title']);
+ +                          if (!$item['image']) { unset($item['image']); }
+                            if ($field_image_name != 'image') { unset($item[$field_image_name]); }
                         }
 
                         $item['url'] = href_to($ctype['name'], $item['slug'].'.html');
