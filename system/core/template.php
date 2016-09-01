@@ -1211,7 +1211,7 @@ class cmsTemplate {
 
                 $cell_index = 0;
                 $editable_index = 1;
-                $editable_count = count(array_column($grid['columns'], 'editable'));
+                $editable_count = count(array_filter($grid['columns'], function($element) { return isset($element['editable']); }));
 
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){

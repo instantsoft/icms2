@@ -41,7 +41,7 @@ class admin extends cmsFrontend {
 
     public function getAdminMenu(){
 
-        return array(
+        return cmsEventsManager::hook('adminpanel_menu', array(
 
             array(
                 'title' => LANG_CP_SECTION_CONTENT,
@@ -91,9 +91,9 @@ class admin extends cmsFrontend {
                 'options' => array(
                     'class' => 'item-settings'
                 )
-            ),
+            )
 
-        );
+        ));
 
     }
 
@@ -102,7 +102,7 @@ class admin extends cmsFrontend {
 
     public function getCtypeMenu($do='add', $id=null){
 
-        return array(
+        return cmsEventsManager::hook('admin_ctype_menu', array(
 
             array(
                 'title' => LANG_CP_CTYPE_SETTINGS,
@@ -139,7 +139,7 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             )
 
-        );
+        ));
 
     }
 
@@ -148,7 +148,7 @@ class admin extends cmsFrontend {
 
     public function getSettingsMenu(){
 
-        return array(
+        return cmsEventsManager::hook('admin_settings_menu', array(
 
             array(
                 'title' => LANG_BASIC_OPTIONS,
@@ -159,7 +159,7 @@ class admin extends cmsFrontend {
                 'url' => href_to($this->name, 'settings', array('scheduler'))
             ),
 
-        );
+        ));
 
     }
 
