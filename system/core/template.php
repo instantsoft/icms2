@@ -1262,7 +1262,7 @@ class cmsTemplate {
                             $save_action = href_to('admin', 'inline_save', array(urlencode($column['editable']['table']), $row['id']));
                         }
                         if(!empty($column['editable']['save_action'])){
-                            $save_action = $column['editable']['save_action'];
+                            $save_action = string_replace_keys_values($column['editable']['save_action'], $row);
                         }
                         if(!empty($save_action)){
                             $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
