@@ -289,7 +289,7 @@ class cmsController {
 
         $action_file = $this->root_path . 'actions/' . $action_name.'.php';
 
-        if (file_exists($action_file)){
+        if (is_readable($action_file)){
             return true;
         }
 
@@ -315,7 +315,7 @@ class cmsController {
         // проверяем наличие экшена его в отдельном файле
         $action_file = $this->root_path . 'actions/' . $action_name.'.php';
 
-        if(file_exists($action_file)){
+        if(is_readable($action_file)){
 
             // вызываем экшен из отдельного файла
             $result = $this->runExternalAction($action_name, $this->current_params);
@@ -419,7 +419,7 @@ class cmsController {
             // если метода хука нет, проверяем наличие его в отдельном файле
             $hook_file = $this->root_path . 'hooks/' . $event_name . '.php';
 
-            if (file_exists($hook_file)){
+            if (is_readable($hook_file)){
 
                 // вызываем хук из отдельного файла
                 $result = $this->runExternalHook($event_name, $params);
@@ -508,7 +508,7 @@ class cmsController {
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
 
-        if (!file_exists($grid_file)){ return false; }
+        if (!is_readable($grid_file)){ return false; }
 
         include($grid_file);
 
@@ -563,7 +563,7 @@ class cmsController {
 
         $file = $this->root_path . 'routes.php';
 
-        if (!file_exists($file)){ return array(); }
+        if (!is_readable($file)){ return array(); }
 
         include_once($file);
 
