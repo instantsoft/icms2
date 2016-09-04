@@ -34,3 +34,6 @@
     define('LANG_THEME_COPYRIGHT_URL_HINT',     'Если не указана, ведет на главную страницу');
     define('LANG_THEME_COPYRIGHT_YEAR',         'Год копирайта');
     define('LANG_THEME_COPYRIGHT_YEAR_HINT',    'Если не указан, выводится текущий');
+
+    define('LANG_THEME_ADMIN',          'Админ панель');
+    define('LANG_THEME_ADMIN_OVERLAY',  'Использовать эффект размытия при переходах');
