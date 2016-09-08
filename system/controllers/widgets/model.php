@@ -132,9 +132,15 @@ class modelWidgets extends cmsModel {
         if ($controller_name != 'custom'){
             $this->filterNotNull('controller');
             $this->filterEqual('controller', $controller_name);
+            if ($controller_name === 'content'){
+                $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")
+                        ->select('ct.title', 'title_subject');
+            }
         } else {
             $this->filterIsNull('controller');
         }
+
+        $this->orderByList(array( array( 'by'=>'controller', 'to'=>'asc' ), array( 'by'=>'name', 'to'=>'asc' ) ));
 
         return $this->get('widgets_pages', function($item, $model){
 
