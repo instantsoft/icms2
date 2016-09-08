@@ -140,7 +140,7 @@ class modelWidgets extends cmsModel {
             $this->filterIsNull('controller');
         }
 
-        $this->orderByList(array( array( 'by'=>'controller', 'to'=>'asc' ), array( 'by'=>'name', 'to'=>'asc' ) ));
+        $this->orderBy('name');
 
         return $this->get('widgets_pages', function($item, $model){
 
