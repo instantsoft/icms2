@@ -130,11 +130,13 @@
 
         $(function(){
             fitLayout();
+            <?php if(!empty($this->options['admin_overlay'])){ ?>
             window.onbeforeunload = function(){
                 if (!icms.forms.form_changed) {
                     $('body').prepend('<div class="loading-overlay"/>');
                 }
             };
+            <?php } ?>
             toolbarScroll.init();
             $(window).on('resize', function (){
                 toolbarScroll.init();

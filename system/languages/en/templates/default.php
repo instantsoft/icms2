@@ -2,7 +2,7 @@
 
     define('LANG_THEME_BG',               'Page background');
     define('LANG_THEME_BG_IMAGE',         'Background image');
-    define('LANG_THEME_BG_IMAGE_HINT', 'All other settings will take effect once an image is uploaded');
+    define('LANG_THEME_BG_IMAGE_HINT',    'All other settings will take effect once an image is uploaded');
     define('LANG_THEME_BG_COLOR',         'Background color');
 
     define('LANG_THEME_BG_REPEAT',        'Repeat background image');
@@ -34,3 +34,6 @@
     define('LANG_THEME_COPYRIGHT_URL_HINT',     'Homepage by default');
     define('LANG_THEME_COPYRIGHT_YEAR',         'Copyright year');
     define('LANG_THEME_COPYRIGHT_YEAR_HINT', 'Current year by default');
+
+    define('LANG_THEME_ADMIN',          'Admin area');
+    define('LANG_THEME_ADMIN_OVERLAY',  'Use the blur effect in the transitions');

@@ -14,7 +14,7 @@ class formDefaultTemplateOptions extends cmsForm {
                         'options' => array(
                             'sizes' => array('small', 'original')
                         )
-                    )),
+                    ))
                 )
             ),
 
@@ -35,7 +35,7 @@ class formDefaultTemplateOptions extends cmsForm {
                     new fieldString('owner_year', array(
                         'title' => LANG_THEME_COPYRIGHT_YEAR,
                         'hint' => LANG_THEME_COPYRIGHT_YEAR_HINT
-                    )),
+                    ))
 
                 )
             ),
@@ -52,11 +52,22 @@ class formDefaultTemplateOptions extends cmsForm {
                             'left' => LANG_THEME_LAYOUT_LEFT,
                             'right' => LANG_THEME_LAYOUT_RIGHT,
                         )
-                    )),
+                    ))
 
                 )
             ),
 
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_THEME_ADMIN,
+                'childs' => array(
+
+                    new fieldCheckbox('admin_overlay', array(
+                        'title' => LANG_THEME_ADMIN_OVERLAY
+                    ))
+
+                )
+            )
 
         );
 
