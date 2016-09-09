@@ -212,9 +212,10 @@ class actionAuthRegister extends cmsAction {
                         $letter = array('name' => 'reg_verify');
 
                         $messenger->sendEmail($to, $letter, array(
-                            'nickname' => $user['nickname'],
-                            'page_url' => href_to_abs('auth', 'verify', $user['pass_token']),
-                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true),
+                            'nickname'    => $user['nickname'],
+                            'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
+                            'pass_token'  => $user['pass_token'],
+                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true)
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
