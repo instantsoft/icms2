@@ -38,7 +38,7 @@ class actionCommentsRate extends cmsAction {
             'is_private'    => (int)$comment['is_private'],
             'subject_title' => $comment['target_title'],
             'subject_id'    => $comment_id,
-            'subject_url'   => $comment['target_url'], '#comment_'.$comment['id']
+            'subject_url'   => $comment['target_url'] . '#comment_'.$comment['id']
         ));
 
         $this->cms_template->renderJSON(array('error' => !$success));
