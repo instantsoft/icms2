@@ -131,3 +131,15 @@
     define('LANG_USERS_INVITES_EMAILS_HINT','One e-mail address per line');
     define('LANG_USERS_INVITES_SENT_TO',    'Invites were successfully sent');
     define('LANG_USERS_INVITES_FAILED_TO',  'Failed to send invites');
+    define('LANG_USERS_SESSIONS',  'Sessions');
+    define('LANG_USERS_SESSIONS_DELETE',  'Session successfully closed');
+    define('LANG_SESS_DESKTOP',  'Desktop PC');
+    define('LANG_SESS_TABLET',  'The tablet');
+    define('LANG_SESS_MOBILE',  'Phone');
+    define('LANG_SESS_APP',  'Mobile app');
+    define('LANG_SESS_NOT_FOUND',  'There are no active sessions saved.');
+    define('LANG_SESS_DROP',  'Drop');
+    define('LANG_SESS_IP',  'IP-address');
+    define('LANG_SESS_LAST_DATE',  'Last activity');
+    define('LANG_SESS_TYPE',  'Access type');
+    define('LANG_SESSIONS_HINT',  'It shows the sessions with active access authorization when you set the checkbox "Remember me" or sessions with a mobile application. You can at any time to terminate any of the sessions.');

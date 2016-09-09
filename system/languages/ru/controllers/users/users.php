@@ -131,3 +131,15 @@
     define('LANG_USERS_INVITES_EMAILS_HINT','По одному адресу в строке');
     define('LANG_USERS_INVITES_SENT_TO',    'Приглашения успешно отправлены на адреса');
     define('LANG_USERS_INVITES_FAILED_TO',  'Не удалось отправить приглашения на адреса');
+    define('LANG_USERS_SESSIONS',  'Сеансы');
+    define('LANG_USERS_SESSIONS_DELETE',  'Сеанс успешно закрыт');
+    define('LANG_SESS_DESKTOP',  'Настольный ПК');
+    define('LANG_SESS_TABLET',  'Планшет');
+    define('LANG_SESS_MOBILE',  'Телефон');
+    define('LANG_SESS_APP',  'Приложение');
+    define('LANG_SESS_NOT_FOUND',  'Нет активных сохранённых сеансов.');
+    define('LANG_SESS_DROP',  'завершить');
+    define('LANG_SESS_IP',  'IP-адрес');
+    define('LANG_SESS_LAST_DATE',  'Последняя активность');
+    define('LANG_SESS_TYPE',  'Тип доступа');
+    define('LANG_SESSIONS_HINT',  'Здесь показаны сеансы с активным доступом, когда при авторизации вы ставили чекбокс "Запомнить меня" или сеансы с мобильного приложения. Вы можете в любой момент прекратить любой из сеансов.');

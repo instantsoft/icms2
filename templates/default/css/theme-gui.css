@@ -25,7 +25,10 @@
 .sess_messages .message_error {
     background:url("../images/icons/error.png") no-repeat 10px center #e74c3c;
 }
-
+.sess_messages .message_info_in_page {
+    color: #555;
+    padding: 10px 15px;
+}
 /* Indicators =============================================================== */
 
 .loading{
@@ -1801,4 +1804,35 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .default_avatar.black_avatar_text:hover:after {
     background: #FFF;
     opacity: 0.2;
+}
+table.data_list {
+    border-collapse: collapse;
+    width:100%;
+}
+table.data_list th {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    border-bottom: solid 1px #B3C2C9;
+    text-align: left;
+    background: #9DB1B9;
+}
+table.data_list td {
+    padding:5px 10px;
+    background: #fff;
+    color:#34495e;
+    height:20px;
+    transition: background ease-in-out .15s;
+}
+table.data_list tr:nth-child(odd) td {
+    background: #f9f9f9;
+}
+table.data_list tr:hover td {
+    background: rgb(233,246,253);
+}
+table.data_list .empty{
+    color:#B3C2C9;
+}
+table.data_list .actions{
+    width: 70px;
 }

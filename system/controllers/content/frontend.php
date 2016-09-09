@@ -296,7 +296,6 @@ class content extends cmsFrontend {
             'controller' => 'content',
             'name' => "{$ctype['name']}.all",
             'title_const' => 'LANG_WP_CONTENT_ALL_PAGES',
-            'title_subject' => $ctype['title'],
             'url_mask' => array(
                 "{$ctype['name']}",
                 "{$ctype['name']}-*",
@@ -308,7 +307,6 @@ class content extends cmsFrontend {
             'controller' => 'content',
             'name' => "{$ctype['name']}.list",
             'title_const' => 'LANG_WP_CONTENT_LIST',
-            'title_subject' => $ctype['title'],
             'url_mask' => array(
                 "{$ctype['name']}",
                 "{$ctype['name']}-*",
@@ -325,7 +323,6 @@ class content extends cmsFrontend {
             'controller' => 'content',
             'name' => "{$ctype['name']}.item",
             'title_const' => 'LANG_WP_CONTENT_ITEM',
-            'title_subject' => $ctype['title'],
             'url_mask' => "{$ctype['name']}/*.html"
         ));
 
@@ -333,7 +330,6 @@ class content extends cmsFrontend {
             'controller' => 'content',
             'name' => "{$ctype['name']}.edit",
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
-            'title_subject' => $ctype['title'],
             'url_mask' => array(
                 "{$ctype['name']}/add",
                 "{$ctype['name']}/edit/*"

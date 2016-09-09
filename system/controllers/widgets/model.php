@@ -11,7 +11,7 @@ class modelWidgets extends cmsModel {
             $page['url_mask_not'] = implode("\n", $page['url_mask_not']);
         }
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->insert('widgets_pages', $page);
 
@@ -19,7 +19,7 @@ class modelWidgets extends cmsModel {
 
     public function updatePage($id, $page){
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->update('widgets_pages', $id, $page);
 
@@ -30,7 +30,7 @@ class modelWidgets extends cmsModel {
         $this->filterEqual('page_id', $id);
         $this->deleteFiltered('widgets_bind');
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->delete('widgets_pages', $id);
 
@@ -38,7 +38,7 @@ class modelWidgets extends cmsModel {
 
     public function getPage($id){
 
-        $this->useCache("widgets.pages");
+        $this->useCache('widgets.pages');
 
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
@@ -96,7 +96,7 @@ class modelWidgets extends cmsModel {
 
         $this->filterLike('name', $name);
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->deleteFiltered('widgets_pages');
 
@@ -106,7 +106,7 @@ class modelWidgets extends cmsModel {
 
         $this->filterEqual('page_id', $page_id);
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->deleteFiltered('widgets_bind');
 
@@ -132,9 +132,15 @@ class modelWidgets extends cmsModel {
         if ($controller_name != 'custom'){
             $this->filterNotNull('controller');
             $this->filterEqual('controller', $controller_name);
+            if ($controller_name === 'content'){
+                $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")
+                        ->select('ct.title', 'title_subject');
+            }
         } else {
             $this->filterIsNull('controller');
         }
+
+        $this->orderBy('name');
 
         return $this->get('widgets_pages', function($item, $model){
 
@@ -183,7 +189,7 @@ class modelWidgets extends cmsModel {
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
-        $this->useCache("widgets.bind");
+        $this->useCache('widgets.bind');
 
         return $this->getItemById('widgets_bind', $id, function($item, $model){
             $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -247,7 +253,7 @@ class modelWidgets extends cmsModel {
 
     public function updateWidgetBinding($id, $widget){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->update('widgets_bind', $id, $widget);
 
@@ -255,7 +261,7 @@ class modelWidgets extends cmsModel {
 
     public function deleteWidgetBinding($id){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->delete('widgets_bind', $id);
 
@@ -263,7 +269,7 @@ class modelWidgets extends cmsModel {
 
     public function reorderWidgetsBindings($position, $items, $page_id=0){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         $this->reorderByList('widgets_bind', $items, array('position'=>$position));
 

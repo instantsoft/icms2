@@ -54,7 +54,7 @@ class actionAuthRegister extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getRequiredContentFields('users');
+        $fields = $content_model->getRequiredContentFields('{users}');
 
         // Разбиваем поля по группам
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields);

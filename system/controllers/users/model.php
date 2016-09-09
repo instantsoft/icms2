@@ -92,6 +92,45 @@ class modelUsers extends cmsModel{
 //============================================================================//
 //============================================================================//
 
+    public function setAuthToken($user_id, $auth_token, $type = null, $subj = null){
+
+        if(!$type){ $type = cmsRequest::getDeviceType(); }
+
+        return $this->insert('{users}_auth_tokens', array(
+            'ip'          => sprintf('%u', ip2long(cmsUser::getIp())),
+            'access_type' => cmsModel::arrayToYaml(array(
+                'type' => $type,
+                'subj' => $subj
+            )),
+            'auth_token'  => $auth_token,
+            'user_id'     => $user_id
+        ));
+
+    }
+
+    public function deleteExpiredToken($user_id, $auth_token_expiration_int){
+        return $this->filterEqual('user_id', $user_id)->
+                filterDateOlder('date_auth', $auth_token_expiration_int, 'SECOND')->
+                deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteAuthToken($auth_token){
+        return $this->filterEqual('auth_token', $auth_token)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function getUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model){
+            $item['ip'] = long2ip($item['ip']);
+            $item['date_log'] = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
+            $item['access_type'] = cmsModel::yamlToArray($item['access_type']);
+            return $item;
+        });
+    }
+
     public function getUserByPassToken($pass_token){
 
         return $this->filterEqual('pass_token', $pass_token)->getUser();
@@ -138,12 +177,12 @@ class modelUsers extends cmsModel{
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
         $user = array_merge($user, array(
-            'groups' => $groups,
-            'password' => $password_hash,
+            'groups'        => $groups,
+            'password'      => $password_hash,
             'password_salt' => $password_salt,
-            'date_reg' => $date_reg,
-            'date_log' => $date_log,
-			'time_zone' => cmsConfig::get('time_zone')
+            'date_reg'      => $date_reg,
+            'date_log'      => $date_log,
+            'time_zone'     => cmsConfig::get('time_zone')
         ));
 
         $id = $this->insert('{users}', $user);
@@ -158,12 +197,12 @@ class modelUsers extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("users.list");
+        cmsCache::getInstance()->clean('users.list');
 
         return array(
-            'success' => $id!==false,
-            'errors' => false,
-            'id' => $id
+            'success' => $id !== false,
+            'errors'  => false,
+            'id'      => $id
         );
 
     }
@@ -256,6 +295,7 @@ class modelUsers extends cmsModel{
 
     public function deleteUser($id){
 
+        $this->deleteUserAuthTokens($id);
         $this->delete('{users}_friends', $id, 'user_id');
         $this->delete('{users}_friends', $id, 'friend_id');
         $this->delete('{users}_groups_members', $id, 'user_id');

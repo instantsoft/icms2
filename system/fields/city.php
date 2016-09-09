@@ -69,14 +69,35 @@ class fieldCity extends cmsFormField {
 
     }
 
-    public function getInput($value){
+    public function getListItems(){
 
         $model = cmsCore::getModel('geo');
+
+        $items = array();
 
         $location_group = $this->getOption('location_group');
         $location_type  = $this->getOption('location_type');
 
-        $this->data['items'] = array();
+        if($location_type == 'countries'){
+
+            $items = array('0'=>'') + $model->getCountries();
+
+        } elseif(!$location_group &&  $location_type == 'regions'){
+
+            $items = array('0'=>'') + $model->getRegions();
+
+        }
+
+        return $items;
+
+    }
+
+    public function getInput($value){
+
+        $location_group = $this->getOption('location_group');
+        $location_type  = $this->getOption('location_type');
+
+        $this->data['items'] = $this->getListItems();
 
         // если поля не объеденены и это поле выбора города
         if(!$location_group && $location_type == 'cities'){
@@ -87,14 +108,6 @@ class fieldCity extends cmsFormField {
                 'id'   => $value,
                 'name' => $city_name
             );
-
-        } elseif($location_type == 'countries'){
-
-            $this->data['items'] = array('0'=>'') + $model->getCountries();
-
-        } elseif(!$location_group &&  $location_type == 'regions'){
-
-            $this->data['items'] = array('0'=>'') + $model->getRegions();
 
         }
 

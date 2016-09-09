@@ -24,6 +24,8 @@ class cmsModel{
 
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
+    protected $approved_filter_disabled = false;
+    protected $approved_filtered = false;
 
     protected static $cached = array();
 
@@ -521,11 +523,12 @@ class cmsModel{
         $this->distinct     = '';
         $this->straight_join = '';
 
-		if ($this->keep_filters) { return; }
+		if ($this->keep_filters) { return $this; }
 
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
+        $this->approved_filtered = false;
 
         return $this;
 
@@ -800,6 +803,29 @@ class cmsModel{
         $this->privacy_filtered = true;
 
         return $this->filterEqual('i.is_private', 0);
+
+    }
+
+    public function enableApprovedFilter(){
+        $this->approved_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableApprovedFilter(){
+        $this->approved_filter_disabled = true;
+        return $this;
+    }
+
+    public function filterApprovedOnly(){
+
+        if ($this->approved_filtered) { return $this; }
+
+        // Этот фильтр может применяться при подсчете числа записей
+        // и при выборке самих записей
+        // используем флаг чтобы фильтр не применился дважды
+        $this->approved_filtered = true;
+
+        return $this->filterEqual('is_approved', 1);
 
     }
 

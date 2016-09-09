@@ -21,20 +21,23 @@ class comments extends cmsFrontend {
 
     public function getNativeComments() {
 
-        $comments = $this->model->
-                            lockFilters()->
-                            filterEqual('target_controller', $this->target_controller)->
-                            filterEqual('target_subject', $this->target_subject)->
-                            filterEqual('target_id', $this->target_id)->
-                            getComments();
+        $comments = $this->model->filterCommentTarget(
+                $this->target_controller,
+                $this->target_subject,
+                $this->target_id
+            )->getComments();
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
 
-        $is_tracking = $this->model->getTracking($this->cms_user->id);
+        $is_tracking = $this->model->filterCommentTarget(
+                $this->target_controller,
+                $this->target_subject,
+                $this->target_id
+            )->getTracking($this->cms_user->id);
 
         $is_highlight_new = $this->request->hasInQuery('new_comments');
 
-        if ($is_highlight_new && !$this->cms_user->is_logged) { cmsCore::error404(); }
+        if ($is_highlight_new && !$this->cms_user->is_logged) { $is_highlight_new = false; }
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
@@ -76,11 +79,11 @@ class comments extends cmsFrontend {
 
     public function notifySubscribers($comment, $parent_comment=false){
 
-        $subscribers = $this->model->
-                                filterEqual('target_controller', $comment['target_controller'])->
-                                filterEqual('target_subject', $comment['target_subject'])->
-                                filterEqual('target_id', $comment['target_id'])->
-                                getTrackingUsers();
+        $subscribers = $this->model->filterCommentTarget(
+                $comment['target_controller'],
+                $comment['target_subject'],
+                $comment['target_id']
+            )->getTrackingUsers();
 
         if (!$subscribers) { return; }
 
@@ -103,11 +106,11 @@ class comments extends cmsFrontend {
         $messenger->addRecipients($subscribers);
 
         $messenger->sendNoticeEmail('comments_new', array(
-            'page_url' => href_to_abs($comment['target_url']) . "#comment_{$comment['id']}",
-            'page_title' => $comment['target_title'],
-            'author_url' => href_to_abs('users', $comment['user_id']),
+            'page_url'        => href_to_abs($comment['target_url']) . "#comment_{$comment['id']}",
+            'page_title'      => $comment['target_title'],
+            'author_url'      => href_to_abs('users', $comment['user_id']),
             'author_nickname' => $comment['user_nickname'],
-            'comment' => $comment['content']
+            'comment'         => $comment['content']
         ));
 
     }

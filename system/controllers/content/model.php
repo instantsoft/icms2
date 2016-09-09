@@ -10,8 +10,6 @@ class modelContent extends cmsModel{
 
     protected $pub_filter_disabled = false;
     protected $pub_filtered = false;
-    protected $approved_filter_disabled = false;
-    protected $approved_filtered = false;
 
     private static $all_ctypes = null;
 
@@ -1368,18 +1366,7 @@ class modelContent extends cmsModel{
 
     public function resetFilters(){
         parent::resetFilters();
-        $this->approved_filtered = false;
         $this->pub_filtered = false;
-        return $this;
-    }
-
-    public function enableApprovedFilter(){
-        $this->approved_filter_disabled = false;
-        return $this;
-    }
-
-    public function disableApprovedFilter(){
-        $this->approved_filter_disabled = true;
         return $this;
     }
 
@@ -1391,19 +1378,6 @@ class modelContent extends cmsModel{
     public function disablePubFilter(){
         $this->pub_filter_disabled = true;
         return $this;
-    }
-
-    public function filterApprovedOnly(){
-
-        if ($this->approved_filtered) { return $this; }
-
-        // Этот фильтр может применяться при подсчете числа записей
-        // и при выборке самих записей
-        // используем флаг чтобы фильтр не применился дважды
-        $this->approved_filtered = true;
-
-        return $this->filterEqual('is_approved', 1);
-
     }
 
 	public function filterPublishedOnly(){

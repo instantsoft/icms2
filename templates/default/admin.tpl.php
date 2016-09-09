@@ -129,17 +129,10 @@
         };
 
         $(function(){
-            fitLayout();
-            window.onbeforeunload = function(){
-                if (!icms.forms.form_changed) {
-                    $('body').prepend('<div class="loading-overlay"/>');
-                }
-            };
-            toolbarScroll.init();
             $(window).on('resize', function (){
                 toolbarScroll.init();
                 fitLayout();
-            });
+            }).triggerHandler('resize');
         });
 
     </script>

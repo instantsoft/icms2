@@ -4,6 +4,14 @@ class modelComments extends cmsModel {
 
     private $childs = array();
 
+    public function filterCommentTarget($target_controller, $target_subject, $target_id = null) {
+
+        return $this->filterEqual('target_controller', $target_controller)->
+            filterEqual('target_subject', $target_subject)->
+            filterEqual('target_id', $target_id);
+
+    }
+
     public function updateCommentContent($id, $content, $content_html){
 
         cmsCache::getInstance()->clean('comments.list');
@@ -173,9 +181,7 @@ class modelComments extends cmsModel {
 
     public function getNextParentOrdering($parent_comment){
 
-        $this->filterEqual('target_controller', $parent_comment['target_controller']);
-        $this->filterEqual('target_subject', $parent_comment['target_subject']);
-        $this->filterEqual('target_id', $parent_comment['target_id']);
+        $this->filterCommentTarget($parent_comment['target_controller'], $parent_comment['target_subject'], $parent_comment['target_id']);
         $this->filterLtEqual('level', $parent_comment['level']);
         $this->filterGt('ordering', $parent_comment['ordering']);
         $this->limit(1);
@@ -194,19 +200,13 @@ class modelComments extends cmsModel {
 
     public function getMaxThreadOrdering($target_controller, $target_subject, $target_id){
 
-        $this->filterEqual('target_controller', $target_controller);
-        $this->filterEqual('target_subject', $target_subject);
-        $this->filterEqual('target_id', $target_id);
-
-        return $this->getMaxOrdering('comments');
+        return $this->filterCommentTarget($target_controller, $target_subject, $target_id)->getMaxOrdering('comments');
 
     }
 
     public function incrementThreadOrdering($target_controller, $target_subject, $target_id, $after){
 
-        $this->filterEqual('target_controller', $target_controller);
-        $this->filterEqual('target_subject', $target_subject);
-        $this->filterEqual('target_id', $target_id);
+        $this->filterCommentTarget($target_controller, $target_subject, $target_id);
         $this->filterGtEqual('ordering', $after);
 
         $this->increment('comments', 'ordering');
@@ -217,6 +217,8 @@ class modelComments extends cmsModel {
 //============================================================================//
 
     public function getCommentsCount(){
+
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         $this->useCache('comments.list');
 
@@ -236,6 +238,8 @@ class modelComments extends cmsModel {
         if (!$this->order_by){
             $this->orderBy('ordering');
         }
+
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         $this->useCache('comments.list');
 
@@ -396,15 +400,11 @@ class modelComments extends cmsModel {
         $counts = array();
         $timestamp = strtotime($date_after);
 
-
         foreach($tracks as $track){
 
-        $this->
-            resetFilters()->
+        $this->resetFilters()->
             filterTimestampGt('date_pub', $timestamp)->
-            filterEqual('target_controller', $track['target_controller'])->
-            filterEqual('target_subject', $track['target_subject'])->
-            filterEqual('target_id', $track['target_id']);
+            filterCommentTarget($track['target_controller'], $track['target_subject'], $track['target_id']);
 
             $count = $this->getCommentsCount();
 

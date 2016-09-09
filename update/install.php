@@ -28,6 +28,14 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_desc` VARCHAR(256) NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('comments', 'is_approved')){
+        $core->db->query("ALTER TABLE `{#}comments` ADD `is_approved` TINYINT(1) UNSIGNED NULL DEFAULT '1'");
+    }
+
+    if(isFieldExists('{users}', 'auth_token')){
+        $core->db->query("ALTER TABLE `{users}` DROP `auth_token`");
+    }
+
     $core->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_url` VARCHAR( 15 ) NULL DEFAULT NULL COMMENT 'ip адрес'");
 
     $remove_table_indexes = array();

@@ -168,6 +168,13 @@ class users extends cmsFrontend {
             'params' => array('edit', 'password'),
         );
 
+        $menu[] = array(
+            'title'      => LANG_USERS_SESSIONS,
+            'controller' => $this->name,
+            'action'     => $profile['id'],
+            'params'     => array('edit', 'sessions')
+        );
+
         return cmsEventsManager::hook('profile_edit_menu', $menu);
 
     }

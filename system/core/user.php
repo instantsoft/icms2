@@ -2,6 +2,7 @@
 
 define('GUEST_GROUP_ID', 1);
 define('DEF_GROUP_ID', 3);
+define('AUTH_TOKEN_EXPIRATION_INT', 8640000); // 100 дней
 
 class cmsUser {
 
@@ -15,7 +16,7 @@ class cmsUser {
     public $is_admin = 0;
     public $is_logged = false;
 
-    private static $online_users = array();
+    public static $online_users = array();
     private static $online_interval = 180;
 
     public static function getInstance() {
@@ -58,8 +59,6 @@ class cmsUser {
 
     public function __construct(){
 
-        $config = cmsConfig::getInstance();
-
         $this->groups = array(GUEST_GROUP_ID);
         $this->ip     = self::getIp();
 
@@ -83,53 +82,63 @@ class cmsUser {
         // если авторизован, заполняем объект данными из базы
         //
         if ($this->id){
-
-            $model = cmsCore::getModel('users');
-
-            $user = $model->getUser($this->id);
-
-			if (!$user){
-				self::logout();
-				return;
-			}
-
-            // если дата последнего визита еще не сохранена в сессии,
-            // значит авторизация была только что
-            // сохраним дату в сессии и обновим в базе
-            if (!self::isSessionSet('user:date_log')){
-                self::sessionSet('user:date_log', $user['date_log']);
-                $model->update('{users}', $this->id, array('date_log' => null), true);
-            }
-
-            // заполняем объект данными из базы
-            foreach($user as $field=>$value){
-                $this->{$field} = $value;
-            }
-
-            // конвертим список аватаров в массив
-            // к пути каждого аватара добавляем путь корня
-            $this->avatar = cmsModel::yamlToArray($this->avatar);
-            if ($this->avatar){
-                foreach($this->avatar as $size=>$path){
-                    $this->avatar[$size] = $config->upload_host . '/' . $path;
-                }
-            }
-
-            // кешируем список друзей в сессию
-            $this->recacheFriends();
-
-            // создаем online-сессию
-            self::createSession($this->id);
-
-            // восстанавливаем те поля, которые не должны
-            // изменяться в течении сессии
-            $this->date_log = self::sessionGet('user:date_log');
-            $this->perms = self::getPermissions($user['groups'], $user['id']);
-            $this->is_logged = true;
-
-            cmsEventsManager::hook('user_loaded', $user);
-
+            $this->loadAuthUser($this->id);
         }
+
+    }
+
+    /**
+     * Загружает данные для авторизованного пользователя
+     * @param integer $user_id id пользователя, прошедшего авторизацию
+     * @return array
+     */
+    public function loadAuthUser($user_id) {
+
+        $config = cmsConfig::getInstance();
+        $model  = cmsCore::getModel('users');
+
+        $user = $model->getUser($user_id);
+
+        if (!$user){
+            self::logout();
+            return array();
+        }
+
+        // если дата последнего визита еще не сохранена в сессии,
+        // значит авторизация была только что
+        // сохраним дату в сессии и обновим в базе
+        if (!self::isSessionSet('user:date_log')){
+            self::sessionSet('user:date_log', $user['date_log']);
+            $model->update('{users}', $user_id, array('date_log' => null), true);
+        }
+
+        // заполняем объект данными из базы
+        foreach($user as $field=>$value){
+            $this->{$field} = $value;
+        }
+
+        // конвертим список аватаров в массив
+        // к пути каждого аватара добавляем путь корня
+        $this->avatar = cmsModel::yamlToArray($this->avatar);
+        if ($this->avatar){
+            foreach($this->avatar as $size=>$path){
+                $this->avatar[$size] = $config->upload_host . '/' . $path;
+            }
+        }
+
+        // кешируем список друзей в сессию
+        $this->recacheFriends();
+
+        // создаем online-сессию
+        self::createSession($user_id);
+
+        // восстанавливаем те поля, которые не должны
+        // изменяться в течении сессии
+        $this->date_log  = self::sessionGet('user:date_log');
+        $this->perms     = self::getPermissions($user['groups'], $user['id']);
+        $this->is_logged = true;
+
+        return cmsEventsManager::hook('user_loaded', $user);
 
     }
 
@@ -146,11 +155,18 @@ class cmsUser {
 
         $model = cmsCore::getModel('users');
 
-        $model->filterEqual('auth_token', $auth_token);
-
-        $user = $model->getUser();
-
+        $user = $model->joinInner('{users}_auth_tokens', 'au', 'au.user_id = i.id')->
+                filterEqual('au.auth_token', $auth_token)->select('au.date_auth')->getUser();
         if (!$user){ return 0; }
+        // проверяем не истек ли срок действия токена
+        if((time() - strtotime($user['date_auth'])) > AUTH_TOKEN_EXPIRATION_INT){
+            $model->deleteAuthToken($auth_token);
+            return 0;
+        }
+        // обновляем дату токена
+        $model->filterEqual('auth_token', $auth_token)->updateFiltered('{users}_auth_tokens', array(
+            'date_log' => null
+        ));
 
         $model->update('{users}', $user['id'], array(
             'pass_token' => null,
@@ -160,11 +176,11 @@ class cmsUser {
         $user = cmsEventsManager::hook('user_login', $user);
 
         self::sessionSet('user', array(
-            'id' => $user['id'],
-            'groups' => $user['groups'],
+            'id'        => $user['id'],
+            'groups'    => $user['groups'],
             'time_zone' => $user['time_zone'],
-            'perms' => self::getPermissions($user['groups'], $user['id']),
-            'is_admin' => $user['is_admin'],
+            'perms'     => self::getPermissions($user['groups'], $user['id']),
+            'is_admin'  => $user['is_admin']
         ));
 
         return $user['id'];
@@ -200,27 +216,25 @@ class cmsUser {
         $user = cmsEventsManager::hook('user_login', $user);
 
         self::sessionSet('user', array(
-            'id' => $user['id'],
-            'groups' => $user['groups'],
+            'id'        => $user['id'],
+            'groups'    => $user['groups'],
             'time_zone' => $user['time_zone'],
-            'perms' => self::getPermissions($user['groups'], $user['id']),
-            'is_admin' => $user['is_admin'],
+            'perms'     => self::getPermissions($user['groups'], $user['id']),
+            'is_admin'  => $user['is_admin']
         ));
-
-        $update_data = array(
-            'ip' => self::getIp()
-        );
 
         if ($remember){
 
             $auth_token = string_random(32, $email);
-            self::setCookie('auth', $auth_token, 8640000); //100 дней
-
-            $update_data['auth_token'] = $auth_token;
+            self::setCookie('auth', $auth_token, AUTH_TOKEN_EXPIRATION_INT); //100 дней
+            $model->setAuthToken($user['id'], $auth_token);
+            $model->deleteExpiredToken($user['id'], AUTH_TOKEN_EXPIRATION_INT);
 
         }
 
-        $model->update('{users}', $user['id'], $update_data, true);
+        $model->update('{users}', $user['id'], array(
+            'ip' => self::getIp()
+        ), true);
 
         return $user['id'];
 
@@ -236,13 +250,21 @@ class cmsUser {
         $userSession = self::sessionGet('user');
 
         $model->update('{users}', $userSession['id'], array(
-            'date_log' => null,
+            'date_log' => null
         ), true);
 
         cmsEventsManager::hook('user_logout', $userSession);
 
+        if (self::getCookie('auth')) {
+
+            self::unsetCookie('auth');
+
+            if (preg_match('/^[0-9a-f]{32}$/i', self::getCookie('auth'))){
+                $model->deleteAuthToken(self::getCookie('auth'));
+            }
+
+        }
         self::sessionUnset('user');
-        self::unsetCookie('auth');
 
         self::deleteSession($userSession['id']);
         self::deleteOldSessions();
