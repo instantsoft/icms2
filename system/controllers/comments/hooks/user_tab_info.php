@@ -8,10 +8,15 @@ class onCommentsUserTabInfo extends cmsAction {
             return false;
         }
 
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_comments')){
+            return false;
+        }
+
         $this->count = $this->model->
-                                filterEqual('user_id', $profile['id'])->
-                                filterIsNull('is_deleted')->
-                                getCommentsCount();
+                filterEqual('user_id', $profile['id'])->
+                filterIsNull('is_deleted')->getCommentsCount();
+
+        $this->model->resetFilters();
 
         if (!$this->count){ return false; }
 

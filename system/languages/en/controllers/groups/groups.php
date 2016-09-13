@@ -81,3 +81,4 @@
     define('LANG_GROUPS_PROFILE_CONTENT',   'Content');
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'member|members|members');
     define('LANG_GROUPS_CTYPES',             'Group content types');
+    define('LANG_GROUPS10',                  'groups');

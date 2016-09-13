@@ -105,6 +105,7 @@
 
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
+    define('LANG_USERS_PRIVACY_PROFILE_CTYPE',  'Кто может просматривать список ваших %s?');
 
     define('LANG_USERS_FRIENDS_SPELLCOUNT',     'друг|друга|друзей');
 

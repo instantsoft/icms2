@@ -162,7 +162,13 @@ icms.forms = (function ($) {
 
         var url = $(form).attr('action');
 
+        var submit_btn = $(form).find('.button-submit');
+
+        $(submit_btn).prop('disabled', true);
+
         $.post(url, form_data, function(result){
+
+            $(submit_btn).prop('disabled', false);
 
             if (result.errors == false){
                 if ("callback" in result){

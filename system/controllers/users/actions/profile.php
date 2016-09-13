@@ -40,7 +40,10 @@ class actionUsersProfile extends cmsAction {
 
 		$is_filter_hidden = (!$is_own_profile && !$this->cms_user->is_admin);
 
-        $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden);
+        $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile){
+            return cmsUser::isAllowed($ctype['name'], 'add') ||
+                    cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name']);
+        });
 
         //
         // Стена

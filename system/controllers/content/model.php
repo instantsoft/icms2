@@ -1899,7 +1899,7 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getUserContentCounts($user_id, $is_filter_hidden=false){
+    public function getUserContentCounts($user_id, $is_filter_hidden=false, $access_callback = false){
 
         $counts = array();
 
@@ -1917,6 +1917,10 @@ class modelContent extends cmsModel{
         }
 
         foreach($ctypes as $ctype){
+
+            if(is_callable($access_callback) && !$access_callback($ctype)){
+                continue;
+            }
 
             $count = $this->getContentItemsCount( $ctype['name'] );
 

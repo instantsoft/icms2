@@ -8,6 +8,7 @@
             'user_delete',
             'user_tab_info',
             'user_tab_show',
+            'user_privacy_types',
             'sitemap_sources',
             'rss_feed_list',
             'rss_content_controller_form',
