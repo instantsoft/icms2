@@ -349,6 +349,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
     define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
+    define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
@@ -422,7 +423,7 @@
     define('LANG_CP_3RDPARTY_CREDITS',          'Third-party credits');
 
     define('LANG_MODERATOR_ADD',             'Add moderator');
-    define('LANG_MODERATOR_ADD_HINT',        'Enter the nickname of a user whom you want to assign as a moderator');
+    define('LANG_MODERATOR_ADD_HINT',        'Enter the email of a user whom you want to assign as a moderator');
     define('LANG_MODERATOR_APPROVED_COUNT',  'Approved');
     define('LANG_MODERATOR_DELETED_COUNT',   'Deleted');
     define('LANG_MODERATOR_IDLE_COUNT',      'Idle');

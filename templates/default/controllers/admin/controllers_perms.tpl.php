@@ -2,6 +2,12 @@
 
     $this->addBreadcrumb(LANG_PERMISSIONS);
 
+    $this->addToolButton(array(
+        'class' => 'save',
+        'title' => LANG_SAVE,
+        'href'  => "javascript:icms.forms.submit()"
+    ));
+
     $help_href_const = 'LANG_HELP_URL_COM_'.strtoupper($this->controller->name);
     if(defined($help_href_const)){
         $this->addToolButton(array(

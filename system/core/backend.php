@@ -161,8 +161,15 @@ class cmsBackend extends cmsController {
         $rules  = cmsPermissions::getRulesList($this->name);
         $values = cmsPermissions::getPermissions($subject);
 
-        $users_model = cmsCore::getModel('users');
-        $groups = $users_model->getGroups(false);
+        // добавляем правила доступа от типа контента, если контроллер на его основе
+		$ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
+        if ($ctype) {
+            $rules = array_merge(cmsPermissions::getRulesList('content'), $rules);
+        }
+
+        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", array($rules, $values));
+
+        $groups = cmsCore::getModel('users')->getGroups(false);
 
         $template_params = array(
             'rules'   => $rules,
@@ -191,11 +198,17 @@ class cmsBackend extends cmsController {
         if (empty($this->useDefaultPermissionsAction)){ cmsCore::error404(); }
 
         $values = $this->request->get('value', array());
+        $rules  = cmsPermissions::getRulesList($this->name);
 
-        $rules = cmsPermissions::getRulesList($this->name);
+        // добавляем правила доступа от типа контента, если контроллер на его основе
+		$ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
+        if ($ctype) {
+            $rules = array_merge(cmsPermissions::getRulesList('content'), $rules);
+        }
 
-        $users_model = cmsCore::getModel('users');
-        $groups = $users_model->getGroups(false);
+        list($rules, $values) = cmsEventsManager::hook("controller_{$this->name}_perms", array($rules, $values));
+
+        $groups = cmsCore::getModel('users')->getGroups(false);
 
         // перебираем правила
         foreach($rules as $rule){
@@ -215,6 +228,8 @@ class cmsBackend extends cmsController {
             }
 
         }
+
+        cmsUser::addSessionMessage(LANG_CP_PERMISSIONS_SUCCESS, 'success');
 
         cmsPermissions::savePermissions($subject, $values);
 

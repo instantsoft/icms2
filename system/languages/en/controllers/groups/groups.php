@@ -21,7 +21,7 @@
     define('LANG_GROUPS_WALL',              'Group Wall');
 
     define('LANG_GROUPS_ADD_STAFF',         'Add administrator');
-    define('LANG_GROUPS_ADD_STAFF_HINT',    'Enter the name of a group member whom you want to assign as moderator');
+    define('LANG_GROUPS_ADD_STAFF_HINT',    'Enter the email of a group member whom you want to assign as moderator');
 
     define('LANG_GROUPS_STAFF_NOT_MEMBER',  'User %s is either not a group member, or has already been assigned as administrator');
 

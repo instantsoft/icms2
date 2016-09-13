@@ -48,7 +48,7 @@
         $list = array();
         if (is_array($members)){
             foreach($members as $member){
-                $list[] = $member['nickname'];
+                $list[] = $member['email'];
             }
         }
     ?>
@@ -64,7 +64,7 @@
             source: members_list
         });
 
-        $( "#staff-submit" ).removeAttr('disabled');
+        $( "#staff-submit" ).prop('disabled', false);
 
     });
 

@@ -13,11 +13,11 @@
     $this->addMenuItems('ctype', $this->controller->getCtypeMenu('moderators', $ctype['id']));
 
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_MODERATORS
-	));
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_CTYPES_MODERATORS
+    ));
 
 ?>
 
@@ -64,7 +64,7 @@
     <div class="hint"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
 
     <div class="field">
-        <?php echo html_input('text', 'username', '', array('id'=>'username', 'autocomplete'=>'off')); ?>
+        <?php echo html_input('text', 'user_email', '', array('id'=>'user_email', 'autocomplete'=>'off')); ?>
         <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add()', array('id'=>'submit', 'disabled'=>'disabled')); ?>
     </div>
     <div class="loading-icon" style="display:none"></div>
@@ -80,7 +80,7 @@
 
         var cache = {};
 
-        $( "#username" ).autocomplete({
+        $( "#user_email" ).autocomplete({
             minLength: 2,
             delay: 500,
             source: function( request, response ) {
@@ -100,7 +100,7 @@
             }
         });
 
-        $( "#submit" ).removeAttr('disabled');
+        $( "#submit" ).prop('disabled', false);
         $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
 
     });

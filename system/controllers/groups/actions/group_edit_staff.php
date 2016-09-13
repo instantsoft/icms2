@@ -28,13 +28,18 @@ class actionGroupsGroupEditStaff extends cmsAction {
 
     public function submit($group, $members, $staff){
 
-        $name = $this->request->get('name', '');
-        $name = mb_strtolower(trim($name));
+        $email = mb_strtolower(trim($this->request->get('name', '')));
+        if ($this->validate_email($email) !== true){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => ERR_VALIDATE_EMAIL
+            ));
+        }
 
         $member = false;
 
         foreach($members as $user){
-            if (mb_strtolower($user['nickname']) == $name && !isset($staff[$user['id']])){
+            if (mb_strtolower($user['email']) == $email && !isset($staff[$user['id']])){
                 $member = $user;
                 break;
             }
@@ -43,7 +48,7 @@ class actionGroupsGroupEditStaff extends cmsAction {
         if ($member === false){
             return $this->cms_template->renderJSON(array(
                 'error'   => true,
-                'message' => sprintf(LANG_GROUPS_STAFF_NOT_MEMBER, $name)
+                'message' => sprintf(LANG_GROUPS_STAFF_NOT_MEMBER, $email)
             ));
         }
 
@@ -51,7 +56,7 @@ class actionGroupsGroupEditStaff extends cmsAction {
 
         return $this->cms_template->renderJSON(array(
             'error' => false,
-            'name'  => $name,
+            'name'  => $member['nickname'],
             'html'  => $this->cms_template->render('group_edit_staff_item', array(
                     'member' => $member,
                     'group'  => $group

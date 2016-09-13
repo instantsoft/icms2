@@ -16,7 +16,7 @@
     define('LANG_GROUPS_EDIT_STAFF',        'Администраторы');
     define('LANG_GROUPS_WALL',              'Стена группы');
     define('LANG_GROUPS_ADD_STAFF',         'Добавить администратора');
-    define('LANG_GROUPS_ADD_STAFF_HINT',    'Введите имя члена группы, которого вы хотите назначить администратором');
+    define('LANG_GROUPS_ADD_STAFF_HINT',    'Введите email члена группы, которого вы хотите назначить администратором');
     define('LANG_GROUPS_STAFF_NOT_MEMBER',  'Пользователь %s не является членом группы либо уже назначен администратором');
     define('LANG_GROUPS_INVITE',            'Пригласить в группу');
     define('LANG_GROUPS_INVITE_NOTICE',     '%s приглашает вас вступить в группу &laquo;%s&raquo;');

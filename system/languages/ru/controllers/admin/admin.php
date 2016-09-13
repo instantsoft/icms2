@@ -350,6 +350,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
     define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
+    define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');
@@ -423,7 +424,7 @@
     define('LANG_CP_3RDPARTY_CREDITS',          'При участии');
 
     define('LANG_MODERATOR_ADD',             'Добавить модератора');
-    define('LANG_MODERATOR_ADD_HINT',        'Введите имя пользователя которого вы хотите назначить модератором');
+    define('LANG_MODERATOR_ADD_HINT',        'Введите email пользователя, которого вы хотите назначить модератором');
     define('LANG_MODERATOR_APPROVED_COUNT',  'Одобрено');
     define('LANG_MODERATOR_DELETED_COUNT',   'Удалено');
     define('LANG_MODERATOR_IDLE_COUNT',      'В процессе');
