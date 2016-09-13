@@ -35,7 +35,7 @@ class widgetActivityList extends cmsWidget {
         return array(
             'show_avatars' => $show_avatars,
             'show_date_groups' => $show_date_groups,
-            'items' => $items,
+            'items' => cmsEventsManager::hook('activity_before_list', $items)
         );
 
     }
