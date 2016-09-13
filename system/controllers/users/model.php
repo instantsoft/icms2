@@ -246,11 +246,15 @@ class modelUsers extends cmsModel{
 
         if (!$errors){
 
-            $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+            if(isset($user['groups'])){
+
+                $user['groups'] = is_array($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+
+                $this->saveUserGroupsMembership($id, $user['groups']);
+
+            }
 
             $success = $this->update('{users}', $id, $user);
-
-            $this->saveUserGroupsMembership($id, $user['groups']);
 
         }
 
