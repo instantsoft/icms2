@@ -244,14 +244,15 @@ class modelUsers extends cmsModel{
 
         }
 
-        if (!$errors){
+        if (!empty($user['groups']) && !$errors){
 
-            $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
-
-            $success = $this->update('{users}', $id, $user);
+            if (!is_array($user['groups'])) $user['groups'] = array(DEF_GROUP_ID);
 
             $this->saveUserGroupsMembership($id, $user['groups']);
+        }
 
+        if (!$errors){
+            $success = $this->update('{users}', $id, $user);
         }
 
         cmsCache::getInstance()->clean("users.list");
