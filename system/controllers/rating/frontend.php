@@ -11,29 +11,31 @@ class rating extends cmsFrontend {
 
         parent::__construct($request);
 
-        $this->target_controller = $this->request->get('target_controller');
-        $this->target_subject    = $this->request->get('target_subject');
+        $this->target_controller = $this->request->get('target_controller', '');
+        $this->target_subject    = $this->request->get('target_subject', '');
 
     }
 
     public function getWidget($target_id, $current_rating, $is_enabled=true){
 
-        // Этот пользователь уже голосовал?
-        $is_voted = $this->cms_user->is_logged ? $this->model->isUserVoted(array(
-            'user_id'           => $this->cms_user->id,
-            'target_controller' => $this->target_controller,
-            'target_subject'    => $this->target_subject,
-            'target_id'         => $target_id
-        )) : false;
+        // разрешено ли голосование гостям
+        if(!$this->cms_user->is_logged && !empty($this->options['allow_guest_vote'])){
+            $is_enabled = true;
+        }
+
+        // эта кука ставится только если общий рейтинг не показывается до голосования
+        // все проверки на стороне сервера делает экшн vote
+        // т.е. просто улучшение юзабилити
+        $is_voted = cmsUser::getCookie($this->target_subject.$target_id);
 
         return $this->cms_template->renderInternal($this, 'widget', array(
             'options'           => $this->getOptions(),
             'target_controller' => $this->target_controller,
             'target_subject'    => $this->target_subject,
             'target_id'         => $target_id,
-            'is_guest'          => $this->cms_user->id == 0,
-            'is_enabled'        => $is_enabled && !$is_voted,
+            'is_guest'          => !$this->cms_user->is_logged,
             'is_voted'          => $is_voted,
+            'is_enabled'        => ($is_voted ? false : $is_enabled),
             'current_rating'    => $current_rating ? $current_rating : 0,
             'user'              => $this->cms_user
         ));

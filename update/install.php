@@ -16,6 +16,10 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES (1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s');");
     }
 
+    if(!isFieldExists('rating_log', 'ip')){
+        $core->db->query("ALTER TABLE `{#}rating_log` ADD `ip` INT(10) UNSIGNED NULL DEFAULT NULL, ADD INDEX (`ip`)");
+    }
+
     if(!isFieldExists('content_datasets', 'description')){
         $core->db->query("ALTER TABLE `{#}content_datasets` ADD `description` TEXT NULL DEFAULT NULL AFTER `title`");
     }

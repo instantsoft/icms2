@@ -841,10 +841,12 @@ CREATE TABLE `{#}rating_log` (
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Компонент (владелец оцениваемого контента)',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект (тип оцениваемого контента)',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта (записи оцениваемого контента)',
-  `score` tinyint(3) DEFAULT NULL COMMENT 'Значение оценки',
+  `score` tinyint(1) DEFAULT NULL COMMENT 'Значение оценки',
+  `ip` int(10) unsigned DEFAULT NULL COMMENT 'ip-адрес проголосовавшего',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
+  KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Оценки рейтинга';
 
 DROP TABLE IF EXISTS `{#}rss_feeds`;

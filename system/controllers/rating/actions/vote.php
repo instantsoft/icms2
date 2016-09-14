@@ -6,43 +6,67 @@ class actionRatingVote extends cmsAction{
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        // Получаем параметры
-        $direction = $this->request->get('direction');
-        $target_controller = $this->request->get('controller');
-        $target_subject = $this->request->get('subject');
-        $target_id = $this->request->get('id');
+        // включено ли голосование от гостей?
+        if(empty($this->options['allow_guest_vote']) && !$this->cms_user->is_logged){
+            $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_ERROR
+            ));
+        }
 
-        $template = cmsTemplate::getInstance();
+        // Получаем параметры
+        $direction         = $this->request->get('direction', '');
+        $target_controller = $this->request->get('controller', '');
+        $target_subject    = $this->request->get('subject', '');
+        $target_id         = $this->request->get('id', 0);
 
         $is_valid = ($this->validate_sysname($target_controller)===true) &&
                     ($this->validate_sysname($target_subject)===true) &&
                     is_numeric($target_id) &&
-                    in_array($direction, array('up', 'down'));	
-		
-        if (!$is_valid){ $template->renderJSON(array('success' => false)); }
+                    in_array($direction, array('up', 'down'));
 
-        $user = cmsUser::getInstance();
+        if (!$is_valid){
+            $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_ERROR
+            ));
+        }
 
         // Объединяем всю информацию о голосе
         $vote = array(
-            'user_id' => $user->id,
+            'user_id'           => ($this->cms_user->id ? $this->cms_user->id : null),
             'target_controller' => $target_controller,
-            'target_subject' => $target_subject,
-            'target_id' => $target_id,
-            'score' => $direction=='up' ? 1 : -1
+            'target_subject'    => $target_subject,
+            'target_id'         => $target_id,
+            'score'             => ($direction == 'up' ? 1 : -1),
+            'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 
         // Этот голос уже учитывался?
-        $is_voted = $this->model->isUserVoted($vote);
-        if ($is_voted){ $template->renderJSON(array('success' => false)); }
+        $is_voted = $this->model->isUserVoted($vote, $this->cms_user->is_logged);
+        if ($is_voted){
+            // если куки нет, ставим
+            if(!empty($this->options['is_hidden']) && !cmsUser::getCookie($target_subject.$target_id)){
+                cmsUser::setCookie($target_subject.$target_id, 1, 2628000); // год
+            }
+            $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_RATING_VOTED
+            ));
+        }
 
         $target_model = cmsCore::getModel( $target_controller );
 
         $target = $target_model->getRatingTarget($target_subject, $target_id);
 
         if (!empty($target['user_id'])){
-            if ($target['user_id'] == $user->id){
-                $template->renderJSON(array('success' => false));
+            if($this->cms_user->is_logged){
+                if ($target['user_id'] == $this->cms_user->id || !cmsUser::isAllowed($target_subject, 'rate')){
+                    $this->cms_template->renderJSON(array(
+                        'success' => false,
+                        'message' => LANG_RATING_DISABLED
+                    ));
+                }
             }
         }
 
@@ -56,21 +80,26 @@ class actionRatingVote extends cmsAction{
         // Оповещаем всех об изменении рейтинга
         cmsEventsManager::hook('rating_vote', array(
             'subject' => $target_subject,
-            'id' => $target_id,
-            'target' => $target,
-            'vote' => $vote,
-            'rating' => $rating
+            'id'      => $target_id,
+            'target'  => $target,
+            'vote'    => $vote,
+            'rating'  => $rating
         ));
 
         // Собираем результат
         $result = array(
-            'success' => true,
-            'rating' => html_signed_num( $rating ),
-            'css_class' => html_signed_class( $rating ) . ($this->options['is_show'] ? ' clickable' : ''),
-            'message' => LANG_RATING_VOTED
+            'success'   => true,
+            'rating'    => html_signed_num($rating),
+            'css_class' => html_signed_class($rating) . ($this->options['is_show'] ? ' clickable' : ''),
+            'message'   => LANG_RATING_VOTED
         );
 
-        $template->renderJSON($result);
+        // запоминаем в куках
+        if(!empty($this->options['is_hidden'])){
+            cmsUser::setCookie($target_subject.$target_id, 1, 2628000); // год
+        }
+
+        $this->cms_template->renderJSON($result);
 
     }
 

@@ -425,6 +425,7 @@
     define('LANG_ORDER_DOWN',				 'Move down');
     define('LANG_ORDER_UP',					 'Move up');
     define('LANG_HITS',                      'Views');
+    define('LANG_GUEST',                     'Guest');
 
     //SEO
     define('LANG_SEO',                       'SEO');

@@ -843,10 +843,12 @@ CREATE TABLE `{#}rating_log` (
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Component (target content owner)',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject (target content type)',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID (target content items)',
-  `score` tinyint(3) DEFAULT NULL COMMENT 'Score value',
+  `score` tinyint(1) DEFAULT NULL COMMENT 'Score value',
+  `ip` int(10) unsigned DEFAULT NULL COMMENT 'ip-address',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `target_id` (`target_id`,`target_controller`,`target_subject`)
+  KEY `target_id` (`target_id`,`target_controller`,`target_subject`),
+  KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Rating scores';
 
 DROP TABLE IF EXISTS `{#}rss_feeds`;
