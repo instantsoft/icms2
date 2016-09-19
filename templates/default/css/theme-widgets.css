@@ -493,7 +493,7 @@ aside .widget_tabbed > .tabs .links a {
     padding-left:20px;
     background: url("../images/icons/folder.png") no-repeat left 1px;
 }
-
+.folder_hidden { display: none; }
 .widget_content_tree ul li.active > a:hover,
 .widget_content_tree ul li.active > a { color:#000; text-decoration: none; }
 

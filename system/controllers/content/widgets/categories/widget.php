@@ -5,16 +5,20 @@ class widgetContentCategories extends cmsWidget {
 
     public function run(){
 
+        $ctype = cmsModel::getCachedResult('current_ctype');
+
         $ctype_name = $this->getOption('ctype_name');
 
         $active_cat = false;
 
         if (!$ctype_name){
 
-            $ctype = cmsModel::getCachedResult('current_ctype');
             if(!$ctype){ return false; }
-
             $ctype_name = $ctype['name'];
+
+        }
+
+        if($ctype && $ctype['name'] == $ctype_name){
 
             if(strpos(cmsCore::getInstance()->uri, '.html') === false){
 
@@ -41,17 +45,22 @@ class widgetContentCategories extends cmsWidget {
         $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
         if (!$cats) { return false; }
 
-        if(!$active_cat){
-            $active_cat = reset($cats);
-        }
+        if($active_cat){
 
-        $path = $model->getCategoryPath($ctype_name, $active_cat);
+            $path = array_filter($cats, function($cat) use($active_cat){
+                return ($cat['ns_left'] <= $active_cat['ns_left'] &&
+                        $cat['ns_level'] <= $active_cat['ns_level'] &&
+                        $cat['ns_right'] >= $active_cat['ns_right'] &&
+                        $cat['ns_level'] > 0);
+            });
+
+        }
 
         return array(
             'ctype_name' => $ctype_name,
             'cats'       => $cats,
             'active_cat' => $active_cat,
-            'path'       => $path
+            'path'       => (!empty($path) ? $path : array())
         );
 
     }
