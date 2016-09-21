@@ -53,13 +53,14 @@ class images extends cmsFrontend {
 
 		if (!empty($sizes) && preg_match('/([a-zA-Z0-9_,]+)/i', $sizes)){
 			$sizes = explode(',', $sizes);
-		}
-
-		$is_store_original = !is_array($sizes) || in_array('original', $sizes);
+		} else {
+                    $sizes = array_keys((array)$this->model->getPresetsList());
+                    $sizes[] = 'original';
+                }
 
         $result['paths'] = array();
 
-		if ($is_store_original){
+		if (in_array('original', $sizes)){
 			$result['paths']['original'] = array(
 				'path' => $result['url'],
                 'url'  => $this->cms_config->upload_host . '/' . $result['url']
@@ -70,7 +71,7 @@ class images extends cmsFrontend {
 
 		foreach($presets as $p){
 
-			if (is_array($sizes) && !in_array($p['name'], $sizes)){
+			if (!in_array($p['name'], $sizes)){
 				continue;
 			}
 
@@ -96,7 +97,7 @@ class images extends cmsFrontend {
 
 		}
 
-		if (!$is_store_original){
+		if (!in_array('original', $sizes)){
 			unlink($result['path']);
 		}
 
