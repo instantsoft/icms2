@@ -31,84 +31,83 @@ class images extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function actionUpload($name)
-    {
+    public function actionUpload($name){
+
         $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
 
-        if ($result['success']) {
-            if (!$this->cms_uploader->isImage($result['path'])) {
+        if ($result['success']){
+            if (!$this->cms_uploader->isImage($result['path'])){
                 $result['success'] = false;
                 $result['error']   = LANG_UPLOAD_ERR_MIME;
             }
         }
 
-        if (!$result['success']) {
-            if (!empty($result['path'])) {
+        if (!$result['success']){
+            if(!empty($result['path'])){
                 $this->cms_uploader->remove($result['path']);
             }
             return $this->cms_template->renderJSON($result);
         }
 
-        $sizes = $this->request->get('sizes', '');
+		$sizes = $this->request->get('sizes', '');
 
-        if (!empty($sizes) && preg_match('/([a-zA-Z0-9_,]+)/i', $sizes))
-        {
-            $sizes = explode(',', $sizes);
-        }
-        else
-        {
-            $sizes = array_keys((array)$this->model->getPresetsList());
-            $sizes[] = 'original';
-        }
+		if (!empty($sizes) && preg_match('/([a-zA-Z0-9_,]+)/i', $sizes)){
+			$sizes = explode(',', $sizes);
+		}
+
+		$is_store_original = !is_array($sizes) || in_array('original', $sizes);
 
         $result['paths'] = array();
 
-        if (in_array('original', $sizes)) {
-            $result['paths']['original'] = array(
-                'path' => $result['url'],
+		if ($is_store_original){
+			$result['paths']['original'] = array(
+				'path' => $result['url'],
                 'url'  => $this->cms_config->upload_host . '/' . $result['url']
             );
-        }
+		}
 
-        $presets = $this->model->getPresets();
+		$presets = $this->model->getPresets();
 
-        foreach ($presets as $p) {
-            if (!in_array($p['name'], $sizes)) {
-                continue;
-            }
+		foreach($presets as $p){
 
-            $path = $this->cms_uploader->resizeImage($result['path'], array(
-                'width'   => $p['width'],
+			if (is_array($sizes) && !in_array($p['name'], $sizes)){
+				continue;
+			}
+
+			$path = $this->cms_uploader->resizeImage($result['path'], array(
+				'width'   => $p['width'],
                 'height'  => $p['height'],
                 'square'  => $p['is_square'],
                 'quality' => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
             ));
 
-            if (!$path) { continue; }
+			if (!$path) { continue; }
 
-            $image = array(
-                'path' => $path,
+			$image = array(
+				'path' => $path,
                 'url'  => $this->cms_config->upload_host . '/' . $path
             );
 
-            if ($p['is_watermark'] && $p['wm_image']) {
-                img_add_watermark($image['path'], $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
-            }
+			if ($p['is_watermark'] && $p['wm_image']){
+				img_add_watermark($image['path'], $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
+			}
 
-            $result['paths'][$p['name']] = $image;
-        }
+			$result['paths'][$p['name']] = $image;
 
-        if (!in_array('original', $sizes)) {
-            unlink($result['path']);
-        }
+		}
 
-        if ($this->request->isInternal()) {
+		if (!$is_store_original){
+			unlink($result['path']);
+		}
+
+        if ($this->request->isInternal()){
             return $result;
         }
 
         unset($result['path']);
 
         return cmsTemplate::getInstance()->renderJSON($result);
+
     }
 
 //============================================================================//
