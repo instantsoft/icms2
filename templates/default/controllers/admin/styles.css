@@ -154,9 +154,9 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 }
 #cp_top_line a.user > img {
     float: left;
-    padding: 3px 0;
-    height: 29px;
-    width: 29px;
+    padding: 4px 0;
+    height: 27px;
+    width: 27px;
     border-radius: 50%;
 }
 #cp_top_line a.user > span {
@@ -1746,39 +1746,87 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #dashboard {
     box-sizing: border-box;
-    display:table;
-    width:100%;
-    border-spacing: 10px;
+    margin-right: -20px;
+    margin-top: -20px;
+    overflow: hidden;
 }
-
-#dashboard .row{
-    display:table-row;
-}
-
-#dashboard .col{
-    display:table-cell;
+#dashboard .col, .colplaceholder {
     vertical-align: top;
     border:solid 1px #EDEDED;
+    box-sizing: border-box;
+    float: left;
+    margin-right: 20px;
+    margin-top: 20px;
+    background: #FFF;
 }
-
-#dashboard .col-sm{
-    width:300px;
+#dashboard .colplaceholder {
+    background: #F9F9F9;
 }
-
+#dashboard .col1 {
+    width: calc(20% - 20px);
+}
+#dashboard .col2 {
+    width: 40%;
+}
+#dashboard .col3 {
+    width: calc(60% - 20px);
+}
+#dashboard .col4 {
+    width: 80%;
+}
+#dashboard .col5 {
+    width: 100%;
+}
+#dashboard .ui-sortable-helper {
+    box-shadow: 3px 3px 5px #CCC;
+}
 #dashboard .col h3 {
     padding:10px 10px;
     background:#F9F9F9;
     margin:0;
 }
-
+#dashboard .actions-toolbar {
+    padding: 5px 0;
+    float: right;
+    position: relative;
+    opacity: 0;
+    transition: opacity ease-in-out .15s;
+}
+#dashboard .col:hover .actions-toolbar {
+    opacity: 1;
+}
+#dashboard .actions-toolbar > * {
+    margin: 0 5px;
+    display: inline-block;
+    padding: 5px;
+    width: 16px;
+    height: 16px;
+}
+#dashboard .actions-toolbar > .drag {
+    background:url("../../images/icons/drag.png") no-repeat center;
+    cursor: move;
+}
 #dashboard .col .col-body{
     padding:15px;
 }
-
+#dashboard .links {
+    margin: 0 0 10px;
+    list-style: none;
+    padding: 0;
+}
+#dashboard .links li {
+    padding: 0 0 7px;
+    color: #97A5A6;
+}
 #dashboard #chart .toolbar {
     margin-bottom: 15px;
 }
-
+.premium {
+    padding: 5px 0;
+    margin: 0 0 20px;
+    color: #666;
+    border-bottom: 1px solid #EDEDED;
+}
 #dashboard #chart .toolbar .pills-menu {
     margin: 0;
     display: inline-block;
@@ -1812,10 +1860,6 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     display:block;
     margin-bottom:2px;
     color:#34495e;
-}
-
-#dashboard #resources {
-    width:250px;
 }
 
 #dashboard #resources .links {
@@ -1919,14 +1963,20 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     cursor: pointer;
 }
 @media screen and (max-width: 980px) {
-    #dashboard .col, #dashboard #resources {
-        float: left;
-        width: 100%;
-        display: block;
-        margin-top: 20px;
+    #dashboard .col1 {
+        width: calc(50% - 20px);
     }
-    #dashboard .col:first-child {
-        margin-top: 0;
+    #dashboard .col2 {
+        width: 50%;
+    }
+    #dashboard .col3 {
+        width: calc(100% - 20px);
+    }
+    #dashboard .col4 {
+        width: 100%;
+    }
+    #dashboard .col5 {
+        width: 100%;
     }
     #cp_header #menu li .wrap {
         padding-right: 10px;
@@ -1966,6 +2016,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     }
 }
 @media screen and (max-width: 640px) {
+    #dashboard .col {
+        width: calc(100% - 20px);
+    }
     #cp_header #menu li .wrap {
         padding-right: 5px;
         padding-left: 5px;

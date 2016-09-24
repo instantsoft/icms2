@@ -29,6 +29,24 @@
     color: #555;
     padding: 10px 15px;
 }
+.ui_message {
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #E4F1FE;
+    border-color: #2980b9;
+    border-width: 1px;
+    border-style: solid;
+    border-left-width: 10px;
+    color: #555;
+}
+.ui_message.ui_warning {
+    background-color: #FDE3A7;
+    border-color: #f39c12;
+}
+.ui_message.ui_error {
+    background-color: #F1A9A0;
+    border-color: #e74c3c;
+}
 /* Indicators =============================================================== */
 
 .loading{
@@ -1612,10 +1630,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #pm_notices_list .item{
     overflow: hidden;
-    border: solid  1px #BDC3C7;
+    border: solid 1px #BDC3C7;
     background:#e1ebef;
     padding:5px;
-    padding-right:5px;
     color:#34495e;
     margin-bottom: 6px;
 }

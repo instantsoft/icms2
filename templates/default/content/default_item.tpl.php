@@ -2,16 +2,16 @@
 
 <?php if ($fields['title']['is_in_item']){ ?>
     <h1>
-        <?php if ($item['parent_id']){ ?>
-            <div class="parent_title">
-                <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a> &rarr;
-            </div>
-        <?php } ?>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>
+    <?php if ($item['parent_id']){ ?>
+        <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
+            <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+        </h2>
+    <?php } ?>
     <?php unset($fields['title']); ?>
 <?php } ?>
 

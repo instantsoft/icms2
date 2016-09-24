@@ -361,10 +361,14 @@ nav select { display: none; }
     color:#34495e;
 }
 
-#body section h1 .parent_title{
+#body section h1 + .parent_title{
     font-size:16px;
+    margin: -10px 0 20px 0;
 }
-
+.item_group_title {
+    background: url("../images/icons/group.png") no-repeat left center;
+    padding: 0 0 0 25px;
+}
 /* Sidebar ================================================================== */
 
 #body aside{

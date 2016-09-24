@@ -132,7 +132,9 @@
             $(window).on('resize', function (){
                 toolbarScroll.init();
                 fitLayout();
-            }).triggerHandler('resize');
+            });
+            toolbarScroll.init();
+            fitLayout();
         });
 
     </script>

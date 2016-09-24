@@ -1,6 +1,8 @@
 <?php
 class admin extends cmsFrontend {
 
+    protected $useOptions = true;
+
     const perpage = 30;
 
     public $installer_upload_path = 'installer';

@@ -244,6 +244,7 @@ article div.content_categories:last-child {
     font-size: 12px;
     padding-left:20px;
     background:url("../images/icons/tag.png") no-repeat left center;
+    line-height: 16px;
 }
 
 .content_item .tags_bar a ,
@@ -292,7 +293,7 @@ article div.content_categories:last-child {
     font-weight: bold;
 }
 
-.content_list_item .info_bar .bi_user{
+.content_list_item .info_bar .bi_user, .content_item .info_bar .bi_user{
     padding-left:25px;
     background: url("../images/icons/user-small.png") no-repeat 5px center;
 }

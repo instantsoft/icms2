@@ -16,14 +16,6 @@ icms.comments = (function ($) {
             return icms.comments.rate(this, -1);
         });
 
-        $(document).on('click', function(event) {
-            if ($(event.target).closest('#comments_add_form').length) { return; }
-            if ($(event.target).closest($('#comments_add_link > a')).length) { return; }
-            if ($(event.target).closest($('#comments_list .links > a')).length) { return; }
-            icms.comments.restoreForm();
-            event.stopPropagation();
-        });
-
         var anchor = window.location.hash;
         if (!anchor) {return false;}
 

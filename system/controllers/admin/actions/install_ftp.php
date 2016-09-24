@@ -10,13 +10,11 @@ class actionAdminInstallFtp extends cmsAction {
 
         $form = $this->getForm('ftp');
 
-        $is_submitted = $this->request->has('submit');
-
         $account = cmsUser::isSessionSet('ftp_account') ? cmsUser::sessionGet('ftp_account') : array();
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $account = array_merge($account, $form->parse($this->request, $is_submitted, $account));
+            $account = array_merge($account, $form->parse($this->request, true, $account));
 
             if($account['save_to_session']){
                 cmsUser::sessionSet('ftp_account', $account);
@@ -44,10 +42,11 @@ class actionAdminInstallFtp extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('install_ftp', array(
-            'account' => $account,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+        return $this->cms_template->render('install_ftp', array(
+            'manifest' => $this->parsePackageManifest(),
+            'account'  => $account,
+            'form'     => $form,
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }
