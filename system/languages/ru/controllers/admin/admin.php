@@ -314,8 +314,10 @@
     define('LANG_CP_SETTINGS_CACHE_CLEAN_MERGED',  '&mdash; <a href="%s">Очистить кеш</a>');
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Папка <b>%s</b> успешно очищена');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Не удалось очистить папку <b>%s</b>. Проверьте права или очистите ее вручную');
-	define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
-	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'Кеш успешно очищен');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Ошибка очистки кеша');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
+    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Выводить на главной странице');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Только виджеты');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'Профиль / авторизация');
