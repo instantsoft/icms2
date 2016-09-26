@@ -12,7 +12,7 @@ class actionUsersProfileEditSessions extends cmsAction {
         return $this->cms_template->render('profile_edit_sessions', array(
             'id'       => $profile['id'],
             'profile'  => $profile,
-            'sessions' => $this->model->getUserAuthTokens($this->cms_user->id)
+            'sessions' => $this->model->getUserAuthTokens($profile['id'])
         ));
 
     }

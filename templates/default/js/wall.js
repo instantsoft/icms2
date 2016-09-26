@@ -323,7 +323,7 @@ icms.wall = (function ($) {
     //=====================================================================//
 
     this.error = function(message){
-        alert(message);
+        icms.modal.alert(message);
         this.restoreForm(false);
     };
 

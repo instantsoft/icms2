@@ -4,32 +4,34 @@ class actionMessagesRefresh extends cmsAction {
 
     public function run(){
 
-        $contact_id = $this->request->get('contact_id') or cmsCore::error404();
+        $contact_id = $this->request->get('contact_id', 0) or cmsCore::error404();
+        $last_date  = $this->request->get('last_date', '');
 
-        $user     = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+        $contact = $this->model->getContact($this->cms_user->id, $contact_id);
 
-        $contact = $this->model->getContact($user->id, $contact_id);
+        if (!$contact){ $this->cms_template->renderJSON(array('error' => true)); }
 
-        if (!$contact){ $template->renderJSON(array('error' => true)); }
-
-        $messages = $this->model->filterEqual('is_new', 1)->getMessagesFromContact($user->id, $contact_id);
+        $messages = $this->model->filterEqual('is_new', 1)->getMessagesFromContact($this->cms_user->id, $contact_id);
 
         if ($messages){
 
-            $messages_html = $template->render('message', array(
+            $messages_html = $this->cms_template->render('message', array(
                 'messages'  => $messages,
+                'last_date' => $last_date,
                 'is_notify' => true,
-                'user'      => $user
+                'user'      => $this->cms_user
             ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
-            $this->model->setMessagesReaded($user->id, $contact_id);
+            $this->model->setMessagesReaded($this->cms_user->id, $contact_id);
 
         }
 
-        $template->renderJSON(array(
-            'error' => false,
-            'html' => $messages? $messages_html : false
+        $this->cms_template->renderJSON(array(
+            'error'      => false,
+            'contact_id' => $contact['contact_id'],
+            'is_online'  => (int) $contact['is_online'],
+            'date_log'   => mb_strtolower(string_date_age_max($contact['date_log'], true)),
+            'html'       => ($messages ? $messages_html : false)
         ));
 
     }

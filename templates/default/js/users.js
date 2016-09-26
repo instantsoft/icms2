@@ -158,7 +158,7 @@ icms.users = (function ($) {
     //=====================================================================//
 
     this.error = function(message){
-        if (message) { alert(message); }
+        if (message) { icms.modal.alert(message); }
         this.enableStatusInput(false);
     }
 

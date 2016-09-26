@@ -24,7 +24,7 @@ icms.images = (function ($) {
         widget = $('#widget_image_'+field_name);
 
         if(!result.success) {
-            alert(result.error);
+            icms.modal.alert(result.error);
             icms.images._showButton(field_name);
             return;
         }

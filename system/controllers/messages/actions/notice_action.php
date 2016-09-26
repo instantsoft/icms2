@@ -4,11 +4,8 @@ class actionMessagesNoticeAction extends cmsAction {
 
     public function run(){
 
-        $notice_id   = $this->request->get('notice_id') or cmsCore::error404();
-        $action_name = $this->request->get('action_name') or cmsCore::error404();
-
-        $user     = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+        $notice_id   = $this->request->get('notice_id', 0) or cmsCore::error404();
+        $action_name = $this->request->get('action_name', '') or cmsCore::error404();
 
         $notice = $this->model->getNotice($notice_id);
 
@@ -17,9 +14,9 @@ class actionMessagesNoticeAction extends cmsAction {
         //
         // Проверяем хозяина уведомления
         //
-        if ($notice['user_id'] != $user->id){
-            $template->renderJSON(array(
-                'error' => true,
+        if ($notice['user_id'] != $this->cms_user->id){
+            $this->cms_template->renderJSON(array(
+                'error'   => true,
                 'message' => 'unknown user'
             ));
         }
@@ -29,8 +26,8 @@ class actionMessagesNoticeAction extends cmsAction {
         //
         if ($action_name == 'close' && $notice['options']['is_closeable']){
             $this->model->deleteNotice($notice_id);
-            $template->renderJSON(array(
-                'error' => false,
+            $this->cms_template->renderJSON(array(
+                'error' => false
             ));
         }
 
@@ -38,8 +35,8 @@ class actionMessagesNoticeAction extends cmsAction {
         // Проверяем наличие требуемого действия
         //
         if (!isset($notice['actions'][$action_name])){
-            $template->renderJSON(array(
-                'error' => true,
+            $this->cms_template->renderJSON(array(
+                'error'   => true,
                 'message' => 'unknown action'
             ));
         }
@@ -52,7 +49,7 @@ class actionMessagesNoticeAction extends cmsAction {
         if (isset($action['href'])){
             $result = array(
                 'error' => false,
-                'href' => $action['href'],
+                'href'  => $action['href']
             );
         }
 
@@ -68,7 +65,7 @@ class actionMessagesNoticeAction extends cmsAction {
             $controller->runAction($action['action'], $params);
 
             $result = array(
-                'error' => false,
+                'error' => false
             );
 
         }
@@ -77,7 +74,8 @@ class actionMessagesNoticeAction extends cmsAction {
         // Удаляем уведомление и возвращаем результат
         //
         if (!$result['error']) { $this->model->deleteNotice($notice_id); }
-        $template->renderJSON($result);
+
+        $this->cms_template->renderJSON($result);
 
     }
 

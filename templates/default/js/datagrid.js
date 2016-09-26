@@ -122,7 +122,7 @@ icms.datagrid = (function ($) {
             });
             $.post(action_url, {data: fields}, function(data){
                 $(s_button).prop('disabled', false).parent().removeClass('process_save');
-                if(data.error){ alert(data.error); } else {
+                if(data.error){ icms.modal.alert(data.error); } else {
                     $(tr_wrap).find('.grid_field_edit').addClass('success').removeClass('edit_by_click_visible');
                     $(tr_wrap).find('.grid_field_value').removeClass('edit_by_click_hidden');
                     for(var _field in fields){
@@ -220,7 +220,7 @@ icms.datagrid = (function ($) {
         var selected_rows_count = $('.datagrid tr.selected').length;
 
         if (this.options.is_selectable && !selected_rows_count) {
-            alert(LANG_LIST_NONE_SELECTED);
+            icms.modal.alert(LANG_LIST_NONE_SELECTED, 'ui_warning');
             return 0;
         }
 

@@ -18,7 +18,7 @@ body {
     margin: 0 auto;
     will-change: blur;
 }
-#popup-manager.popup-show + #layout {
+#popup-manager.popup-show + #layout, .wrap_blur {
     -webkit-filter:blur(2px);
     -moz-filter:blur(2px);
     -ms-filter:blur(2px);

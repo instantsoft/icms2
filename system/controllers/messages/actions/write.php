@@ -6,16 +6,14 @@ class actionMessagesWrite extends cmsAction {
 
         if(empty($contact_id)){ cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
-
-        $is_contact_exists = $this->model->isContactExists($user->id, $contact_id);
+        $is_contact_exists = $this->model->isContactExists($this->cms_user->id, $contact_id);
 
         if ($is_contact_exists){
-            $this->model->updateContactsDateLastMsg($user->id, $contact_id, false);
+            $this->model->updateContactsDateLastMsg($this->cms_user->id, $contact_id, false);
         }
 
         if (!$is_contact_exists){
-            $this->model->addContact($user->id, $contact_id);
+            $this->model->addContact($this->cms_user->id, $contact_id);
         }
 
         $this->runAction('index');

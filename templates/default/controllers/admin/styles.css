@@ -836,7 +836,32 @@ form .hint {
     color: red;
     border-bottom: solid 1px #e8b2b2;
 }
-
+#alert_wrap {
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 320px;
+}
+#alert_wrap .ui_message {
+    margin-bottom: 0;
+}
+.ui_message {
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #E4F1FE;
+    border-color: #2980b9;
+    border-width: 1px;
+    border-style: solid;
+    border-left-width: 10px;
+    color: #555;
+}
+.ui_message.ui_warning {
+    background-color: #FDE3A7;
+    border-color: #f39c12;
+}
+.ui_message.ui_error {
+    background-color: #F1A9A0;
+    border-color: #e74c3c;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 

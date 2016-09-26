@@ -24,7 +24,7 @@ icms.groups = (function ($) {
             $('#group_staff_add .loading-icon').hide();
 
             if (result.error){
-                alert(result.message);
+                icms.modal.alert(result.message);
                 return false;
             }
 
@@ -33,7 +33,7 @@ icms.groups = (function ($) {
         }, 'json');
 
         return false;
-        
+
     }
 
     //====================================================================//

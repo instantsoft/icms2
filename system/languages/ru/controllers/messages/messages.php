@@ -8,6 +8,7 @@
     define('LANG_PM_SHOW_OLDER_MESSAGES',   'Показать предыдущие сообщения &uarr;');
     define('LANG_PM_ACTION_IGNORE',         'В игнор');
     define('LANG_PM_ACTION_FORGIVE',        'Прекратить игнор');
+    define('LANG_PM_DELETE_CONTACT',        'Удалить контакт');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Удалить контакт из списка?');
     define('LANG_PM_IGNORE_CONTACT_CONFIRM','Добавить контакт в черный список?\nВы не будете получать от него сообщения после этого');
     define('LANG_PM_SEND_TO_USER',          'Написать сообщение');
@@ -19,3 +20,5 @@
     define('LANG_PM_PRIVACY_CONTACT',       'Кто может писать вам личные сообщения?');
     define('LANG_PM_NOTIFY_NEW',            'Уведомлять о новых сообщениях');
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Сообщение от %s');
+    define('LANG_PM_USER_SEARCH',           'Начните вводить имя...');
+    define('LANG_PM_IS_DELETE',             'Сообщение удалено. <a href="#" onclick="return icms.messages.restoreMsg(this);">Восстановить</a>');

@@ -75,6 +75,11 @@ icms.modal = (function ($) {
         $('.nyroModalCont').css('height', height+'px');
     };
 
+	this.alert = function(text, type) {
+        type = type || '';
+		this.openHtml('<div id="alert_wrap"><div class="ui_message '+type+'">'+text+'</div></div>');
+	};
+
 	return this;
 
 }).call(icms.modal || {},jQuery);

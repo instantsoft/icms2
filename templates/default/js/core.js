@@ -284,7 +284,11 @@ icms.events = (function ($) {
 	return this;
 
 }).call(icms.events || {},jQuery);
-
+$.expr[':'].Contains = $.expr.createPseudo(function(arg) {
+    return function( elem ) {
+        return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+    };
+});
 function toggleFilter(){
     var filter = $('.filter-panel');
     $('.filter-link', filter).toggle('fast');

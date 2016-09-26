@@ -1015,8 +1015,8 @@ CREATE TABLE `{#}users_contacts` (
   `date_last_msg` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата последнего сообщения',
   `messages` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во сообщений',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `contact_id` (`contact_id`)
+  KEY `user_id` (`user_id`,`contact_id`),
+  KEY `contact_id` (`contact_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Контакты пользователей';
 
 DROP TABLE IF EXISTS `{#}users_fields`;
@@ -1138,8 +1138,8 @@ CREATE TABLE `{#}users_ignors` (
   `user_id` int(11) unsigned NOT NULL COMMENT 'ID пользователя',
   `ignored_user_id` int(11) unsigned NOT NULL COMMENT 'ID игнорируемого пользователя',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `ignored_id` (`ignored_user_id`)
+  KEY `ignored_user_id` (`ignored_user_id`,`user_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}users_invites`;
@@ -1176,11 +1176,10 @@ CREATE TABLE `{#}users_messages` (
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата создания',
   `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Не прочитано?',
   `content` text NOT NULL COMMENT 'Текст сообщения',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `from_id` (`from_id`),
-  KEY `to_id` (`to_id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `is_new` (`is_new`)
+  KEY `from_id` (`from_id`,`to_id`),
+  KEY `to_id` (`to_id`,`is_new`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Личные сообщения пользователей';
 
 DROP TABLE IF EXISTS `{#}users_notices`;

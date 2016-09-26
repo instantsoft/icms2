@@ -47,6 +47,14 @@
     background-color: #F1A9A0;
     border-color: #e74c3c;
 }
+#alert_wrap {
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 320px;
+}
+#alert_wrap .ui_message {
+    margin-bottom: 0;
+}
 /* Indicators =============================================================== */
 
 .loading{
@@ -1108,7 +1116,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 
 #comments_list .comment .info .rating .value {
-    display: block;
     float:left;
     font-weight: bold;
 }
@@ -1228,7 +1235,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #wall_widget .title_bar #wall_add_link {
     float:right;
-    display: block;
     margin-top: 23px;
     padding-left:20px;
     background:url("../images/icons/edit.png") no-repeat left center;
@@ -1425,85 +1431,139 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 #pm_window {
     overflow: hidden;
-    padding:10px;
     min-height: 120px;
+    box-sizing: border-box;
+    width: 960px;
 }
-
 #pm_window .notice{
     margin: 20px 0;
     text-align: center;
 }
-
+.layout {
+    box-sizing: border-box;
+    overflow: hidden;
+    height:700px;
+}
 #pm_window .right-panel,
 #pm_window .left-panel {
     float:left;
-    height:500px;
+    height:100%;
+    box-sizing: border-box;
+    position: relative;
 }
-
 #pm_window .right-panel{
-    width:200px;
-    background:#ecf0f1;
+    width:25%;
     overflow: hidden;
-    overflow-y: auto;
-    margin-right: 10px;
+    box-shadow: 1px 0px 1px #DDD;
 }
-
 #pm_window .left-panel{
-    width:600px;
+    width:75%;
+    padding-left: 1px;
 }
-
+#pm_window .contacts {
+    overflow: hidden;
+    box-sizing: border-box;
+    position: relative;
+    height: calc(100% - 51px);
+    overflow-y: auto;
+}
 #pm_window .contacts .contact{
     overflow: hidden;
+    box-shadow: 0px 0px 1px #EEE;
 }
-
+#pm_contact {
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
 #pm_window .contacts .contact a{
     display: block;
     overflow:hidden;
-    padding:5px;
+    padding:9px;
     color:#000;
     text-decoration: none;
+    position: relative;
 }
-
 #pm_window .contacts .contact a span{
-    display: block;
     float:left;
     height:32px;
     line-height: 32px;
     margin-right:4px;
     overflow: hidden;
+    position: relative;
 }
-
+#pm_window .contacts .contact img, #pm_contact .overview a img {
+    border-radius: 50%;
+}
+.peer_online:after {
+    bottom: 0;
+    right: 0;
+    border: 2px solid #fff;
+    height: 8px;
+    width: 8px;
+    content: '';
+    position: absolute;
+    background-color: #8ac176;
+    border-radius: 50%;
+}
 #pm_window .contacts .contact a:hover{
-    background:#2ecc71;
+    background:#95a5a6;
     color:#FFF;
 }
 
 #pm_window .contacts .contact a.selected{
-    background:#27ae60;
+    background:#3498db;
     color:#FFF;
 }
 
 #pm_window .contacts .contact a .counter {
-    height:16px;
-    line-height: 16px;
-    margin-top:6px;
-    padding:2px 5px;
-    background: #BDC3C7;
-    border-radius: 10px;
-    color:#FFF;
-    font-size:11px;
-    float:right;
+    height: 12px;
+    line-height: 12px;
+    padding: 2px 5px;
+    background: #e67e22;
+    border-radius: 50%;
+    color: #FFF;
+    font-size: 12px;
+    position: absolute;
+    right: 4px;
+    bottom: 6px;
 }
-
+#pm_window .contacts .contact a > strong {
+    font-weight: normal;
+    font-size: 11px;
+    color: #CCC;
+    position: absolute;
+    right: 9px;
+    top: 6px;
+}
 /* ========================================================================== */
 
-#pm_contact .overview {
+#pm_contact .overview, #user_search_panel {
     overflow: hidden;
-    background-color: #ecf0f1;
-    padding:6px;
-    margin-bottom:10px;
+    padding:9px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #DDD;
 }
-
+#user_search_panel {
+    padding: 10px;
+    line-height: 30px;
+}
+#user_search_panel input{
+    padding-left: 24px;
+    background: url(../images/icons/search-glyph.png) no-repeat 4px center;
+}
+#pm_contact  #contact_toggle {
+    background: url(../images/modal/controls.png) no-repeat center -1px;
+    width: 24px;
+    cursor: pointer;
+    display: none;
+}
+#pm_contact .overview .user_date_log {
+    display: inline-block;
+    line-height: 32px;
+    font-size: 12px;
+    color: #AAA;
+}
 #pm_contact .overview a {
     overflow:hidden;
     padding:5px;
@@ -1511,71 +1571,190 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     border-left:none;
     border-right: none;
 }
-
-#pm_contact .overview a span {
-    display: block;
+#pm_contact .overview a span, #pm_contact  #contact_toggle {
     float:left;
     height:32px;
     line-height: 32px;
     margin-right:4px;
     overflow: hidden;
+    position: relative;
 }
-
 #pm_contact .actions {
     float:right;
     line-height: 28px;
 }
-
 #pm_contact .composer {
-    background-color: #ecf0f1;
     padding:10px;
+    box-sizing: border-box;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    border-top: 1px solid #DDD;
 }
-
 #pm_contact .composer .editor textarea{
     height: 55px;
     resize: none;
 }
-
 #pm_contact .composer .buttons {
     text-align: right;
+    position: relative;
+    box-sizing: border-box;
 }
-
+#error_wrap {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    padding: 6px;
+    background: #c0392b;
+    color: #FFF;
+    display: none;
+}
+.msg_overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #333;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+}
+.confirm_wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 360px;
+    height: 110px;
+    margin: -55px 0 0 -180px;
+}
+.ui_message .buttons {
+    margin: 10px 0 0 0;
+}
+.ui_message .buttons .button {
+    margin: 0px 10px 0 0;
+}
 #pm_contact .composer .sending {
     background: url("../images/loader16.gif") no-repeat left center;
-    height: 35px;
 }
-
 #pm_contact .composer .ignored_info{
     display:block;
     padding: 10px 6px;
     color:#999;
     font-style: italic;
+    line-height: 97px;
 }
-
+.ctrenter_hint {
+    font-size: 12px;
+    color: #CCC;
+    display: inline-block;
+    margin: 0 10px 0 0;
+}
 #pm_contact .composer .ignored_info .button{
     margin-left:10px;
 }
-
+#pm_chat .content {
+    background: #DAE2ED;
+    padding: 7px 10px;
+    border-radius: 5px;
+    min-width: 30%;
+    border: 1px solid #cdd5e0;
+    box-sizing: border-box;
+    position: relative;
+    margin-left: 50px;
+}
+#pm_chat .content.is_can_select {
+    cursor: pointer;
+}
+#pm_chat .content.selected {
+    border-color: #3498db !important;
+    box-shadow: 0px 0px 1px #3498db;
+}
+.button_hide {
+    display: none;
+}
+#pm_chat .message .content > span, #pm_chat .message .content > span a {
+    color: #AAA;
+}
+#pm_chat .message .content > span a:hover {
+    color: #27ae60;
+}
+#pm_chat .message_text {
+    font-size: 13px;
+}
+#pm_chat .message-my .content {
+    margin-right: 60px;
+    margin-left: 0;
+    background: #FFF;
+    border: 1px solid #DDD;
+}
+#pm_chat .content:before {
+    position: absolute;
+    top: 12px;
+    left: -9px;
+    display: inline-block;
+    background: inherit;
+    width: 16px;
+    height: 16px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+    border-color: inherit;
+    content: '';
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+}
+#pm_chat .message-my .content:before {
+    right: -9px;
+    left: auto;
+    border-right: 1px solid;
+    border-top: none;
+    border-bottom: 1px solid;
+    border-left: none;
+    border-color: inherit;
+}
+.user_avatar {
+    float: left;
+    margin-left: 0;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+.user_avatar img {
+    border-radius: 50%;
+}
+.message-my .user_avatar {
+    float: right;
+    margin-left: 10px;
+}
 #pm_contact .chat{
     position: relative;
-    height: 252px;
-    margin-bottom: 10px;
+    height: calc(100% - 189px);
     overflow: hidden;
     overflow-y: auto;
     padding:10px;
-    padding-left: 5px;
     line-height: 20px;
+    background-color: #ecf0f1;
+    box-sizing: border-box;
 }
-
+#pm_chat h3 {
+    margin: 5px 0 10px 0;
+    font-size: 12px;
+    color: #828282;
+    text-align: center;
+}
+#pm_chat .show-older + h3 {
+    margin-top: 0;
+}
 #pm_contact .chat .message{
     margin-bottom:10px;
+    width: 100%;
+    clear: both;
+    position: relative;
 }
-
 #pm_contact .chat .message .title{
     font-size: 11px;
     overflow: hidden;
 }
-
 #pm_contact .chat .message .title .author{ color:#bf0000; }
 #pm_contact .chat .message-my .title .author{ color:#376499; }
 
@@ -1583,51 +1762,39 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #pm_contact .chat .message .title .date-new {
     float: right;
 }
-
 #pm_contact .chat .message .title .date {
-    color:#CCCCCC;
+    color:#AAA;
 }
-
 #pm_contact .chat .message .title .date-new {
     color:#d35400;
 }
-
 #pm_contact .chat a.show-older{
     display:block;
-    background:#f9f9f9;
+    background:#bdc3c7;
     text-align:center;
     height:25px;
     line-height:25px;
-    color:#CCCCCC;
+    color:#FFF;
     text-decoration: none;
     margin-bottom: 15px;
 }
-
 #pm_contact .chat a.show-older:hover{
-    color:#999;
-    background:#EDEDED;
+    background:#95a5a6;
 }
-
-
 #pm_contact .chat .older-loading{
     display:none;
     height:25px;
     margin-bottom: 15px;
     background: url("../images/loader16.gif") no-repeat center center #EDEDED;
 }
-
-/* ========================================================================== */
-
 #pm_notices_window {
     width:450px;
 }
-
 #pm_notices_list {
     padding:5px;
     overflow: hidden;
     overflow-y: auto;
 }
-
 #pm_notices_list .item{
     overflow: hidden;
     border: solid 1px #BDC3C7;
@@ -1636,43 +1803,35 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     color:#34495e;
     margin-bottom: 6px;
 }
-
 #pm_notices_list .item:last-child{
     margin-bottom: 0;
 }
-
 #pm_notices_list .item .date{
     color:#BDC3C7;
     font-size:11px;
     padding-left:10px;
     padding-top:10px;
 }
-
 #pm_notices_list .item .content{
     padding:10px;
     padding-top:3px;
 }
-
 #pm_notices_list .item .close-button {
     float:right;
 }
-
 #pm_notices_list .item .close-button a {
     display:block;
     width:16px;
     height:16px;
     background: url("../images/icons/close.png") no-repeat;
 }
-
 #pm_notices_list .item .close-button a:hover {
     background-position-x: -16px;
 }
-
 #pm_notices_list .item .buttons{
     padding:10px;
     padding-top: 0;
 }
-
 #pm_notices_list .item .buttons .button{
     border-color:#BDC3C7;
 }
@@ -1855,4 +2014,41 @@ table.data_list .empty{
 }
 table.data_list .actions{
     width: 70px;
+}
+@media screen and (max-height: 600px) {
+    .layout {
+        height:510px;
+    }
+}
+@media screen and (max-height: 480px) {
+    .layout {
+        height:390px;
+    }
+}
+@media screen and (max-width: 800px) {
+    #pm_window {
+        width: 690px;
+    }
+    #pm_contact  #contact_toggle {
+        display: block;
+    }
+    #pm_window .right-panel{
+        width:100%;
+        left: -700px;
+        display: none;
+    }
+    #pm_window .left-panel{
+        width:100%;
+        padding-left: 0;
+    }
+}
+@media screen and (max-width: 640px) {
+    #pm_window {
+        width: 530px;
+    }
+}
+@media screen and (max-width: 480px) {
+    #pm_window {
+        width: 370px;
+    }
 }

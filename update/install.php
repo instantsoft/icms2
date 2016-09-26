@@ -40,14 +40,40 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}` DROP `auth_token`");
     }
 
+    if(!isFieldExists('{users}_messages', 'is_deleted')){
+        $core->db->query("ALTER TABLE `{users}_messages` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+    }
+
     $core->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_url` VARCHAR( 15 ) NULL DEFAULT NULL COMMENT 'ip адрес'");
 
-    $remove_table_indexes = array();
+    $remove_table_indexes = array(
+        '{users}_contacts' => array(
+            'user_id', 'contact_id'
+        ),
+        '{users}_ignors' => array(
+            'user_id', 'ignored_id'
+        ),
+        '{users}_messages' => array(
+            'from_id', 'to_id', 'date_pub', 'is_new'
+        ),
+    );
 
     $add_table_indexes = array(
         'comments' => array(
             'author_url' => array('author_url'),
             'date_pub' => array('date_pub')
+        ),
+        '{users}_contacts' => array(
+            'user_id' => array('user_id', 'contact_id'),
+            'contact_id' => array('contact_id', 'user_id')
+        ),
+        '{users}_ignors' => array(
+            'user_id' => array('user_id'),
+            'ignored_user_id' => array('ignored_user_id', 'user_id')
+        ),
+        '{users}_messages' => array(
+            'from_id' => array('from_id', 'to_id', 'is_deleted'),
+            'to_id' => array('to_id', 'is_new', 'is_deleted'),
         ),
     );
 
