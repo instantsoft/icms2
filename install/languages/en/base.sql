@@ -1189,7 +1189,7 @@ CREATE TABLE `{#}users_messages` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `from_id` int(11) unsigned NOT NULL COMMENT 'Sender ID',
   `to_id` int(11) unsigned NOT NULL COMMENT 'Recipient ID',
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Creation date',
+  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation date',
   `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Unread?',
   `content` text NOT NULL COMMENT 'Message',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,

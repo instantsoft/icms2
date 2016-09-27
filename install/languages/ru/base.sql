@@ -1173,7 +1173,7 @@ CREATE TABLE `{#}users_messages` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `from_id` int(11) unsigned NOT NULL COMMENT 'ID отправителя',
   `to_id` int(11) unsigned NOT NULL COMMENT 'ID получателя',
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Дата создания',
+  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
   `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Не прочитано?',
   `content` text NOT NULL COMMENT 'Текст сообщения',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
