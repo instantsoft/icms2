@@ -482,7 +482,8 @@ form .field_error select { border:solid 1px red; }
 
 form .field .input, form .field .textarea{ width:100%; }
 form select { width:300px; }
-#site_settings #fset_1 .chosen-container { width:300px !important; }
+#site_settings #fset_1 .chosen-container,
+#site_settings #fset_4 .chosen-container { width:300px !important; }
 
 form .field .input-number,
 form .field .input-small { width:70px; }
@@ -1721,7 +1722,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 /* ========================================================================== */
 /* ========================================================================== */
-#site_settings #f_template .hint, #site_settings #f_template_mobile .hint, #site_settings #f_template_tablet .hint, #site_settings #f_template_admin  .hint{ display: inline-block; }
+#site_settings #f_template .hint, #site_settings #f_template_mobile .hint, #site_settings #f_template_tablet .hint, #site_settings #f_template_admin  .hint,
+#site_settings #f_cache_method .hint, #site_settings #f_merge_css .hint, #site_settings #f_merge_js .hint{ display: inline-block; }
 #site_settings #f_template .hint a, #site_settings #f_template_mobile .hint a, #site_settings #f_template_tablet .hint a, #site_settings #f_template_admin  .hint a {
     padding-left:20px;
     height:25px;
@@ -1730,6 +1732,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     background:url("../../images/icons/page_gear.png") no-repeat left center;
     display: block;
 }
+#site_settings #f_merge_js label, #site_settings #f_merge_css label {display: inline-block;}
 .symbols_count {
     font-size: 12px;
     margin: 3px 0 0 0;
