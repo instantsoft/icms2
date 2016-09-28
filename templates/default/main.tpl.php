@@ -136,7 +136,7 @@
                         </span>
                         <?php if ($config->cache_enabled){ ?>
                             <span class="item">
-                                Cache: <a href="<? echo href_to('admin', 'cache_delete', cmsConfig::get('cache_method'));?>" title="Clear cache"><?php echo cmsCache::getInstance()->query_count; ?></a>
+                                Cache: <a href="<?php echo href_to('admin', 'cache_delete', $config->cache_method);?>" title="Clear cache"><?php echo cmsCache::getInstance()->query_count; ?></a>
                             </span>
                         <?php } ?>
                         <span class="item">
