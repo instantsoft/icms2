@@ -16,6 +16,10 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES (1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s');");
     }
 
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'messages'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Очистка удалённых личных сообщений', 'messages', 'clean', '1440', '1');");
+    }
+
     if(!isFieldExists('rating_log', 'ip')){
         $core->db->query("ALTER TABLE `{#}rating_log` ADD `ip` INT(10) UNSIGNED NULL DEFAULT NULL, ADD INDEX (`ip`)");
     }

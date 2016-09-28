@@ -9,9 +9,10 @@ class actionMessagesIndex extends cmsAction {
         $contacts = $this->model->getContacts($this->cms_user->id);
 
         $this->cms_template->render('index', array(
-            'user'       => $this->cms_user,
-            'is_allowed' => $is_allowed,
-            'contacts'   => $contacts
+            'user'         => $this->cms_user,
+            'is_allowed'   => $is_allowed,
+            'refresh_time' => (!empty($this->options['refresh_time']) ? ($this->options['refresh_time']*1000) : 15000),
+            'contacts'     => $contacts
         ));
 
     }

@@ -106,10 +106,10 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta content="'.htmlspecialchars($this->metakeys).'" name="keywords">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.htmlspecialchars($this->metakeys).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta content="'.htmlspecialchars($this->metadesc).'" name="description">' ."\n";
+				echo "\t". '<meta name="description" content="'.htmlspecialchars($this->metadesc).'">' ."\n";
 			}
         }
 

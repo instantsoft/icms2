@@ -17,8 +17,12 @@
     define('LANG_PM_CONTACT_IS_IGNORED',    'This user is in your blacklist');
     define('LANG_PM_CONTACT_IS_PRIVATE',    'This user accepts messages only from friends');
     define('LANG_PM_LIMIT',                 'Number of messages shown at a time');
+    define('LANG_PM_TIME_DELETE_OLD',       'How to store deleted messages?');
+    define('LANG_PM_TIME_DELETE_OLD_HINT',  '0 - always keep');
+    define('LANG_PM_REFRESH_TIME',          'New messages requests interval');
     define('LANG_PM_PRIVACY_CONTACT',       'Who can send private messages to you?');
     define('LANG_PM_NOTIFY_NEW',            'Notify on new messages');
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Messages from %s');
     define('LANG_PM_USER_SEARCH',           'Start typing the name...');
-    define('LANG_PM_IS_DELETE',             'Message is deleted. <a href="#" onclick="return icms.messages.restoreMsg(this);">Restore</a>');
+    define('LANG_PM_IS_DELETE',             'Message is deleted.');
+    define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Restore</a>');

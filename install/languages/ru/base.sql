@@ -897,7 +897,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, 1, 0),
 (2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, 1, 0),
 (3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, 1, 0),
-(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1);
+(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1),
+(5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

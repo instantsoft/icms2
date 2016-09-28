@@ -899,7 +899,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (1, 'User migrations between groups', 'users', 'migration', 1440, NULL, 1, 0),
 (2, 'Sitemap generation', 'sitemap', 'generate', 1440, NULL, 1, 0),
 (3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, NULL, 1, 0),
-(4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, 1, 1);
+(4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, 1, 1),
+(5, 'Cleaning deleted private messages', 'messages', 'clean', 1440, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

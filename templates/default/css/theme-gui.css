@@ -1547,10 +1547,11 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #user_search_panel {
     padding: 10px;
     line-height: 30px;
+    background-color: #ecf0f1;
 }
 #user_search_panel input{
     padding-left: 24px;
-    background: url(../images/icons/search-glyph.png) no-repeat 4px center;
+    background: url(../images/icons/search-glyph.png) no-repeat 4px center #FFF;
 }
 #pm_contact  #contact_toggle {
     background: url(../images/modal/controls.png) no-repeat center -1px;
@@ -1754,6 +1755,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #pm_contact .chat .message .title{
     font-size: 11px;
     overflow: hidden;
+    margin-top: -4px;
 }
 #pm_contact .chat .message .title .author{ color:#bf0000; }
 #pm_contact .chat .message-my .title .author{ color:#376499; }

@@ -11,12 +11,18 @@ class actionMessagesDeleteMesage extends cmsAction {
             $message_ids[] = (int)$message_id;
         }
 
-        $this->model->deleteMessages($this->cms_user->id, $message_ids);
+        $delete_msg_ids = $this->model->deleteMessages($this->cms_user->id, $message_ids);
+
+        if($delete_msg_ids){
+            $message_ids = array_diff($message_ids, $delete_msg_ids);
+        }
 
         $this->cms_template->renderJSON(array(
-            'error'       => false,
-            'delete_text' => LANG_PM_IS_DELETE,
-            'message_ids' => $message_ids
+            'error'          => false,
+            'delete_text'    => LANG_PM_IS_DELETE.LANG_PM_DO_RESTORE,
+            'remove_text'    => LANG_PM_IS_DELETE,
+            'message_ids'    => $message_ids,
+            'delete_msg_ids' => $delete_msg_ids
         ));
 
     }

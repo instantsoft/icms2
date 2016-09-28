@@ -187,9 +187,25 @@ class modelMessages extends cmsModel {
         $this->filterEqual('from_id', $user_id);
         $this->filterIn('id', $ids);
 
-        return $this->updateFiltered('{users}_messages', array(
+        $this->lockFilters()->updateFiltered('{users}_messages', array(
            'is_deleted' => 1
         ));
+
+        $this->filterEqual('is_new', 1);
+
+        $delete_msg_ids = $this->selectOnly('id')->get('{users}_messages', function($item, $model){
+            return $item['id'];
+        }, false);
+
+        $this->unlockFilters();
+
+        if($delete_msg_ids){
+            $this->deleteFiltered('{users}_messages');
+        }
+
+        $this->resetFilters();
+
+        return $delete_msg_ids;
 
     }
 

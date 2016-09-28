@@ -60,9 +60,19 @@
         </div>
 
         <script type="text/javascript">
+            icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
             icms.messages.initUserSearch();
             icms.messages.selectContact(<?php echo $first_id; ?>);
             icms.messages.bindMyMsg();
+            var resize_func = function(){
+                var pm_window = $('#pm_window:visible');
+                if ($(pm_window).length == 0){
+                    $(window).off('resize', resize_func);
+                    return false;
+                }
+                icms.modal.resize();
+            };
+            $(window).on('resize', resize_func);
         </script>
 
     <?php } ?>

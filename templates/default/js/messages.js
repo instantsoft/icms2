@@ -84,11 +84,26 @@ icms.messages = (function ($) {
                 $('.left-panel .is_can_select', pm_window).removeClass('selected');
                 $('#delete_msgs').hide();
 
-                for(var key in result.message_ids){
-                    $('#message-' + result.message_ids[key], pm_window).
-                            find('.is_can_select').removeClass('is_can_select').
+                var replace_func = function (id, delete_text, is_remove_block){
+                    var msg_block = $('#message-' + id, pm_window);
+                    $(msg_block).find('.is_can_select').removeClass('is_can_select').
                             find('.message_text').hide().
-                            after('<span>'+result.delete_text+'</span>');
+                            after('<span>'+delete_text+'</span>');
+                    if(is_remove_block){
+                        $(msg_block).delay(3000).fadeOut();
+                    }
+                };
+
+                if(result.message_ids){
+                    for(var key in result.message_ids){
+                        replace_func(result.message_ids[key], result.delete_text);
+                    }
+                }
+
+                if(result.delete_msg_ids){
+                    for(var key in result.delete_msg_ids){
+                        replace_func(result.delete_msg_ids[key], result.remove_text, true);
+                    }
                 }
 
             }, 'json');
@@ -285,8 +300,7 @@ icms.messages = (function ($) {
         if (!icms.messages.options.isRefresh) {return false;}
 
         var pm_window = $('#pm_window:visible');
-
-        if (!pm_window){return false;}
+        if ($(pm_window).length == 0){return false;}
 
         var form = $('.composer form', pm_window);
 
