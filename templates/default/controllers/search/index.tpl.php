@@ -69,6 +69,10 @@
                     <div class="title">
                         <a href="<?php echo $item['url']; ?>" target="_blank"><?php html($item['title']); ?></a>
                     </div>
+                    <?php if (!empty($item['image'])) ?>
+                        <div class="field search_field_image"><?php echo $item['image']; ?></div>
+                        <?php unset($item['image']); ?>
+                    <?php } ?>
                     <?php foreach($item as $field=>$value){ ?>
                         <?php if (in_array($field, array('id', 'title', 'slug', 'date_pub', 'url'))) { continue; } ?>
                         <?php if (!$value) { continue; } ?>
