@@ -8,6 +8,10 @@ class actionGroupsAdd extends cmsAction {
 
         $form = $this->getForm('group');
 
+        if (!$this->options['is_wall']){
+            $form->removeField('basic', 'wall_policy');
+        }
+
         $is_submitted = $this->request->has('submit');
 
         $group = $form->parse($this->request, $is_submitted);
