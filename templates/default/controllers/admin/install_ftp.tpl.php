@@ -10,6 +10,10 @@
         'href'   => LANG_HELP_URL_INSTALL
     ));
 
+    if(!empty($manifest['notice_system_files'])){
+        cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
+    }
+
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE.' «'.$manifest['info']['title'].'»'; ?></h1>

@@ -1,5 +1,7 @@
 <?php
 
+    $this->addCSS('templates/default/controllers/photos/styles.css');
+
     $this->setPageTitle(LANG_SEARCH_TITLE);
 
     $this->addBreadcrumb(LANG_SEARCH_TITLE, $this->href_to(''));
@@ -72,20 +74,22 @@
         <?php $this->menu('results_tabs', true, 'pills-menu-small'); ?>
     </div>
 
-    <div id="search_results_list">
+    <div id="album-photos-list">
         <?php foreach($search_data['items'] as $item){ ?>
-            <div class="item">
-                <h3 class="title">
-                    <a href="<?php echo $item['url']; ?>" target="_blank"><?php echo $item['title']; ?></a>
-                </h3>
-                <?php if(!empty($item['image'])){ ?>
-                    <div class="field search_field_image"><?php echo $item['image']; ?></div>
-                <?php } ?>
-                <?php foreach($item['fields'] as $field=>$value){ ?>
-                    <?php if (!$value) { continue; } ?>
-                    <div class="field search_field_<?php echo $field; ?>"><?php echo $value; ?></div>
-                <?php } ?>
-                <div class="info"><span class="date"><?php echo html_date_time($item['date_pub']); ?></span></div>
+            <div class="photo photo-<?php echo $item['id']; ?>">
+                <div class="image">
+                    <a href="<?php echo $item['url']; ?>" title="<?php html($item['title']); ?>" target="_blank">
+                        <?php echo $item['image']; ?>
+                    </a>
+                </div>
+                <div class="info">
+                    <div class="rating <?php echo html_signed_class($item['rating']); ?>">
+                        <?php echo html_signed_num($item['rating']); ?>
+                    </div>
+                    <div class="comments">
+                        <span><?php echo $item['comments']; ?></span>
+                    </div>
+                </div>
             </div>
         <?php } ?>
     </div>

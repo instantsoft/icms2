@@ -499,7 +499,6 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
-
     define('LANG_ZIP_ERROR_10', 'File already exists');
     define('LANG_ZIP_ERROR_21', 'Inconsistent ZIP-archive');
     define('LANG_ZIP_ERROR_18', 'Invalid argument');
@@ -509,3 +508,4 @@
     define('LANG_ZIP_ERROR_11', 'Unable to open the file');
     define('LANG_ZIP_ERROR_5', 'Read error');
     define('LANG_ZIP_ERROR_4', 'Seek error');
+    define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');

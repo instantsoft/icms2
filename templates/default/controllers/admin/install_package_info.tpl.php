@@ -18,6 +18,10 @@
     // Зависимости удовлетворены
     $depends_pass = true;
 
+    if(!empty($manifest['notice_system_files'])){
+        cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
+    }
+
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE_INFO; ?></h1>

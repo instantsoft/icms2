@@ -206,6 +206,24 @@ class admin extends cmsFrontend {
 
         if (file_exists($this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package')){
             $manifest['contents'] = $this->getPackageContentsList();
+            if($manifest['contents']){
+                if(!empty($manifest['contents']['system']['core'])){
+                    foreach ($manifest['contents']['system']['core'] as $file) {
+                        if(file_exists($this->cms_config->root_path . 'system/core/'.$file)){
+                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
+                            break;
+                        }
+                    }
+                }
+                if(!empty($manifest['contents']['system']['config'])){
+                    foreach ($manifest['contents']['system']['config'] as $file) {
+                        if(file_exists($this->cms_config->root_path . 'system/config/'.$file)){
+                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
+                            break;
+                        }
+                    }
+                }
+            }
         } else {
 			$manifest['contents'] = false;
 		}

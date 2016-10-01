@@ -425,7 +425,7 @@ class cmsTemplate {
 	 */
 	public function setPageTitle($pagetitle){
 		$config = cmsConfig::getInstance();
-        if (func_num_args() > 1){ $pagetitle = implode(' - ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
         $this->title = $pagetitle;
         if($config->is_sitename_in_title){
             $this->title .= ' — '.$config->sitename;

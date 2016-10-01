@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'fulltext_search',
             'admin_dashboard_chart',
             'menu_content',
             'user_delete',
