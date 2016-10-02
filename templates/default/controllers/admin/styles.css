@@ -86,7 +86,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     min-height: 100%;
     display:block;
 }
-#popup-manager.popup-show ~ div {
+#popup-manager.popup-show ~ #wrapper, #popup-manager.popup-show ~ #cp_footer {
     -webkit-filter:blur(2px);
     -moz-filter:blur(2px);
     -ms-filter:blur(2px);

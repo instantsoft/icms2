@@ -1814,6 +1814,23 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
+    public function getContentItemsForSitemap($ctype_name){
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        $this->selectOnly('slug');
+        $this->select('date_last_modified');
+
+        if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
+        if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
+
+        if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
+
+        return $this->get($table_name);
+
+    }
+
     public function getContentItems($ctype_name){
 
         $table_name = $this->table_prefix . $ctype_name;
