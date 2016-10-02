@@ -1191,12 +1191,14 @@ CREATE TABLE `{#}users_messages` (
   `from_id` int(11) unsigned NOT NULL COMMENT 'Sender ID',
   `to_id` int(11) unsigned NOT NULL COMMENT 'Recipient ID',
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation date',
+  `date_delete` timestamp NULL DEFAULT NULL COMMENT 'Delete date',
   `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Unread?',
   `content` text NOT NULL COMMENT 'Message',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `from_id` (`from_id`,`to_id`),
-  KEY `to_id` (`to_id`,`is_new`)
+  KEY `to_id` (`to_id`,`is_new`),
+  KEY `date_delete` (`date_delete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='User private messages';
 
 DROP TABLE IF EXISTS `{#}users_notices`;

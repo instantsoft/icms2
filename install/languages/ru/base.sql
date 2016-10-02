@@ -1175,12 +1175,14 @@ CREATE TABLE `{#}users_messages` (
   `from_id` int(11) unsigned NOT NULL COMMENT 'ID отправителя',
   `to_id` int(11) unsigned NOT NULL COMMENT 'ID получателя',
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания',
+  `date_delete` timestamp NULL DEFAULT NULL COMMENT 'Дата удаления',
   `is_new` tinyint(1) unsigned DEFAULT '1' COMMENT 'Не прочитано?',
   `content` text NOT NULL COMMENT 'Текст сообщения',
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `from_id` (`from_id`,`to_id`),
-  KEY `to_id` (`to_id`,`is_new`)
+  KEY `to_id` (`to_id`,`is_new`),
+  KEY `date_delete` (`date_delete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Личные сообщения пользователей';
 
 DROP TABLE IF EXISTS `{#}users_notices`;

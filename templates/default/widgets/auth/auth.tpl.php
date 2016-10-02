@@ -21,7 +21,7 @@
         </div>
 
         <div class="buttons">
-            <?php echo html_submit(LANG_LOG_IN, LANG_LOG_IN, array('tabindex' => '4')); ?>
+            <?php echo html_submit(LANG_LOG_IN, 'submit', array('tabindex' => '4')); ?>
         </div>
 
     </form>

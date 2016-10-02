@@ -48,6 +48,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}_messages` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('{users}_messages', 'date_delete')){
+        $core->db->query("ALTER TABLE `{users}_messages` ADD `date_delete` TIMESTAMP NULL DEFAULT NULL COMMENT 'Дата удаления' AFTER `date_pub`, ADD INDEX (`date_delete`);");
+    }
+
     $core->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_url` VARCHAR( 15 ) NULL DEFAULT NULL COMMENT 'ip адрес'");
     $core->db->query("ALTER TABLE `{users}_messages` CHANGE `date_pub` `date_pub` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания'");
 
