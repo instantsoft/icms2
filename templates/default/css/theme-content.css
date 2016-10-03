@@ -112,12 +112,14 @@ article div.content_categories:last-child {
     line-height:20px;
 }
 
-.content_item .ft_html .value table {
+.content_item .ft_html .value table, .redactor-editor table {
     border-collapse: collapse;
 }
 
 .content_item .ft_html .value table th,
-.content_item .ft_html .value table td {
+.content_item .ft_html .value table td,
+.redactor-editor table td,
+.redactor-editor table th {
     padding: 10px;
     border:solid 1px #CCC;
 }
