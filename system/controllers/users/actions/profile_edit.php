@@ -74,7 +74,14 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors){
                 $is_allowed = cmsEventsManager::hookAll('user_profile_update', $profile, true);
-                if ($is_allowed !== true && in_array(false, $is_allowed)) { $errors = true; }
+                if (is_array($is_allowed)) {
+                    $errors = array();
+                    foreach ($is_allowed as $error_list) {
+                        if(is_array($error_list) && $error_list){
+                            $errors = array_merge($error_list);
+                        }
+                    }
+                }
             }
 
             if (!$errors){

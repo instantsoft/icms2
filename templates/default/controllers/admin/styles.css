@@ -1850,10 +1850,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     margin-bottom: 15px;
 }
 .premium {
-    padding: 5px 0;
-    margin: 0 0 20px;
-    color: #666;
-    border-bottom: 1px solid #EDEDED;
+    padding: 5px 0 5px 6px;
+    margin: 0 0 15px;
+    color: #FFF;
+    border-bottom: 1px solid #177940;
+    background: #27ae60;
 }
 #dashboard #chart .toolbar .pills-menu {
     margin: 0;

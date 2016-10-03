@@ -1,13 +1,13 @@
 <?php
     if( $ctype['options']['list_show_filter'] ) {
         $this->renderAsset('ui/filter-panel', array(
-            'css_prefix' => $ctype['name'],
-            'page_url' => $page_url,
-            'fields' => $fields,
+            'css_prefix'   => $ctype['name'],
+            'page_url'     => $page_url,
+            'fields'       => $fields,
             'props_fields' => $props_fields,
-            'props' => $props,
-            'filters' => $filters,
-            'is_expanded' => $ctype['options']['list_expand_filter']
+            'props'        => $props,
+            'filters'      => $filters,
+            'is_expanded'  => $ctype['options']['list_expand_filter']
         ));
     }
 ?>
@@ -48,10 +48,9 @@
                 <?php foreach($fields as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if (empty($item[$field['name']])) { continue; } ?>
-                    <?php if ($field['is_system']) { continue; } ?>
-                    <?php if (!$field['is_in_list']) { continue; } ?>
+                    <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; } ?>
                     <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
+                    <?php if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; } ?>
 
                     <?php
                         if (!isset($field['options']['label_in_list'])) {
@@ -69,36 +68,35 @@
                             </div>
                         <?php } ?>
 
-                        <div class="value">
-                            <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ $stop++; ?>
-
-                                <?php if ($item['parent_id']){ ?>
-                                    <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
-                                    &rarr;
-                                <?php } ?>
-
-                                <?php if ($is_private) { ?>
-                                    <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-                                <?php } else { ?>
-                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
-                                    <?php if ($item['is_private']) { ?>
-                                        <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-                                    <?php } ?>
-                                <?php } ?>
-
-                            <?php } else { ?>
-
-                               <?php if ($is_private) { $stop++; ?>
-                                    <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
-                               <?php } else { ?>
-                                    <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
-                               <?php } ?>
-
+                        <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
+                            <h2 class="value">
+                            <?php if ($item['parent_id']){ ?>
+                                <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+                                &rarr;
                             <?php } ?>
-                        </div>
+
+                            <?php if ($is_private) { ?>
+                                <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                            <?php } else { ?>
+                                <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
+                                <?php if ($item['is_private']) { ?>
+                                    <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                <?php } ?>
+                            <?php } ?>
+                            </h2>
+                        <?php } else { ?>
+                            <div class="value">
+                                <?php if ($is_private) { ?>
+                                     <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
+                                <?php } else { ?>
+                                     <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
 
                     </div>
 
+                <?php   $stop++; ?>
                 <?php } ?>
 
                 </div>

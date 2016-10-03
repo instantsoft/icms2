@@ -4,23 +4,21 @@ class onAuthUserProfileUpdate extends cmsAction {
 
     public function run($profile){
 
-        $user = cmsUser::getInstance();
+        if (!$profile) { return array('csrf_token'=>''); }
 
-        if ($user->is_admin) { return true; }
+        $success = array();
 
-        if (!$profile) { return false; }
+        if ($this->cms_user->is_admin) { return $success; }
 
         if (!$this->isEmailAllowed($profile['email'])){
-            cmsUser::addSessionMessage(sprintf(LANG_AUTH_RESTRICTED_EMAIL, $profile['email']), 'error');
-            return false;
+            $success['email'] = sprintf(LANG_AUTH_RESTRICTED_EMAIL, $profile['email']);
         }
 
         if (!$this->isNameAllowed($profile['nickname'])){
-            cmsUser::addSessionMessage(sprintf(LANG_AUTH_RESTRICTED_NAME, $profile['nickname']), 'error');
-            return false;
+            $success['nickname'] = sprintf(LANG_AUTH_RESTRICTED_NAME, $profile['nickname']);
         }
 
-        return true;
+        return $success;
 
     }
 

@@ -1,13 +1,13 @@
 <?php
     if( $ctype['options']['list_show_filter'] ) {
         $this->renderAsset('ui/filter-panel', array(
-            'css_prefix' => $ctype['name'],
-            'page_url' => $page_url,
-            'fields' => $fields,
+            'css_prefix'   => $ctype['name'],
+            'page_url'     => $page_url,
+            'fields'       => $fields,
             'props_fields' => $props_fields,
-            'props' => $props,
-            'filters' => $filters,
-            'is_expanded' => $ctype['options']['list_expand_filter']
+            'props'        => $props,
+            'filters'      => $filters,
+            'is_expanded'  => $ctype['options']['list_expand_filter']
         ));
     }
 ?>
@@ -53,10 +53,9 @@
                 <?php foreach($fields as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if (empty($item[$field['name']])) { continue; } ?>
-                    <?php if ($field['is_system']) { continue; } ?>
-                    <?php if (!$field['is_in_list']) { continue; } ?>
+                    <?php if ($field['is_system'] || !$field['is_in_list']) { continue; } ?>
                     <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
+                    <?php if (empty($item[$field['name']]) && $item[$field['name']] !== '0') { continue; } ?>
 
                     <?php
                         if (!isset($field['options']['label_in_list'])) {

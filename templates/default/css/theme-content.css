@@ -209,7 +209,7 @@ article div.content_categories:last-child {
 
 .content_list_item .field { margin-bottom: 6px; }
 .content_list_item .ft_caption { margin-bottom:10px;  }
-.content_list_item .ft_caption .value { font-size:21px; color:#2c3e50; }
+.content_list_item .ft_caption .value { font-size:21px; color:#2c3e50; margin: 0; }
 .content_list_item .ft_caption a { color:inherit; text-decoration: none; }
 .content_list_item .ft_caption a:hover { text-decoration: underline; }
 .content_list_item .ft_caption a.parent_title { color:#7f8c8d; }
@@ -409,6 +409,10 @@ article div.content_categories:last-child {
 .content_list.table table td.ft_number {
     width:100px;
 }
+.content_list.table table td.ft_caption h2 {
+    font-size: 16px;
+    margin: 0;
+}
 
 /* ========================================================================== */
 
@@ -435,8 +439,8 @@ article div.content_categories:last-child {
 
 .content_list.tiled .tile .photo .note span { color:#f1c40f; }
 
-.content_list.tiled .tile .ft_caption  {
-    font-size: 16px;
+.content_list.tiled .tile .ft_caption, .content_list.tiled .tile .ft_caption h2  {
+    font-size: 16px; margin: 0;
 }
 .content_list.tiled .tile .ft_caption .value { color: #2c3e50; font-weight: bold; }
 .content_list.tiled .tile .ft_caption a { color: inherit; text-decoration: none; }
