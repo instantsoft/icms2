@@ -84,8 +84,8 @@ class modelSearch extends cmsModel{
         $filter_sql = '';
         if($filters){
             foreach ($filters as $filter) {
-                $filter['value'] = $this->db->escape($filter['value']);
-                $filter_sql[] = "`{$filter['field']}` {$filter['condition']} '{$filter['value']}'";
+                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
+                $filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
             }
             $filter_sql = implode(' AND ', $filter_sql).' AND ';
         }

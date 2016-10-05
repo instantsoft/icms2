@@ -61,6 +61,11 @@ class onContentFulltextSearch extends cmsAction {
                     'value'     => 1,
                     'field'     => 'is_approved'
                 ),
+                array(
+                    'condition' => 'IS',
+                    'value'     => NULL,
+                    'field'     => 'is_parent_hidden'
+                )
             );
 
         }
