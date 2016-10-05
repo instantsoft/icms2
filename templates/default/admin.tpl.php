@@ -107,7 +107,10 @@
                 if(this.toolbar.length == 0){
                     return;
                 }
-                this.offset  = this.toolbar.offset();
+                this.offset  = (this.toolbar).offset().top;
+                if((+$('#wrapper').height() - +$(this.win).height()) <= this.offset){
+                    return;
+                }
                 this.run();
             },
             run: function (){
@@ -118,7 +121,7 @@
             },
             doAutoScroll: function (){
                 scroll_top = this.win.scrollTop();
-                if (scroll_top > this.offset.top) {
+                if (scroll_top > this.offset) {
                     if(!$(this.toolbar).hasClass('fixed_toolbar')){
                         $(this.toolbar).addClass('fixed_toolbar');
                     }

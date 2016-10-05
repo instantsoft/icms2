@@ -537,7 +537,11 @@ aside .menu .item{
 #sql_queries .green_query {
     color: #27ae60;
 }
-
+#sql_stat {
+    margin: 10px;
+    font-size: 11px;
+    color: #AAA;
+}
 /* Footer Navigation ======================================================== */
 
 #layout footer #nav {

@@ -127,6 +127,16 @@ class cmsDatabase {
 
 	}
 
+    public function getStat(){
+
+        if (isset($this->mysqli->stat)){
+            return $this->mysqli->stat;
+        }
+
+		return '';
+
+	}
+
     public function setTimezone(){
         $this->query("SET `time_zone` = '%s'", date('P'));
     }

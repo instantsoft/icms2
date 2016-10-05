@@ -788,6 +788,9 @@ body .redactor-box-fullscreen {
 
 	##############################################
 */
-.redactor-editor > *:first-child, .redactor-editor > *:last-child {
+.redactor-editor > *:first-child {
     margin-top: 0;
+}
+.redactor-editor > *:last-child {
+    margin-bottom: 0;
 }

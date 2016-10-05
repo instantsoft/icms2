@@ -104,10 +104,11 @@
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
             <div id="sql_debug" style="display:none">
                 <div id="sql_queries">
+                    <div id="sql_stat"><?php echo $core->db->getStat(); ?></div>
                     <?php foreach($core->db->query_list as $sql) { ?>
                         <div class="query">
                             <div class="src"><?php echo $sql['src']; ?></div>
-                            <?php echo nl2br($sql['sql']); ?>
+                            <?php echo nl2br(htmlspecialchars($sql['sql'])); ?>
                             <div class="query_time"><?php echo LANG_DEBUG_QUERY_TIME; ?> <span class="<?php echo (($sql['time']>=0.1) ? 'red_query' : 'green_query'); ?>"><?php echo number_format($sql['time'], 5); ?></span> <?php echo LANG_SECOND10 ?></div>
                         </div>
                     <?php } ?>
