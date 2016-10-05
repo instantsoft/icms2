@@ -55,7 +55,7 @@ class actionAdminCtypesEdit extends cmsAction {
 
         }
 
-        // проверяем, есть ли нативный контроллер и есть ти ли у него опции
+        // проверяем, есть ли нативный контроллер и есть ли у него опции
         $is_controller = false;
         if(cmsCore::isControllerExists($ctype['name'])){
             if(cmsCore::getController($ctype['name'])->options){
