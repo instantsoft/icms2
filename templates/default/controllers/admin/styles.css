@@ -26,6 +26,7 @@ h1+h2 {
     margin-top: -5px;
 }
 h1 span, h2 span { color:#68809B; }
+h1 span a { color: inherit;}
 
 a, a.ajaxlink { color: #34495e; transition: color ease-in-out .15s; }
 a:hover, a.ajaxlink:hover { color: #f90; }

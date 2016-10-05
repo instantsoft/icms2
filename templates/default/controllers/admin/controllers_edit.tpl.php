@@ -1,4 +1,12 @@
-<h1><?php echo LANG_CP_SECTION_CONTROLLERS; ?>: <span><?php echo $controller_title; ?></span></h1>
+<h1>
+    <?php echo LANG_CP_SECTION_CONTROLLERS; ?>:
+    <span>
+        <?php echo $controller_title; ?>
+        <?php if($ctype){ ?>
+            @ <a href="<?php echo $this->href_to('ctypes', array('edit', $ctype['id'])); ?>"><?php echo $ctype['title']; ?></a>
+        <?php } ?>
+    </span>
+</h1>
 
 <?php
     $this->setPageTitle($controller_title);
@@ -20,5 +28,4 @@
 
     <?php echo $backend_controller->runAction($action_name, $params); ?>
 
-<?php } ?>
-
+<?php }

@@ -274,6 +274,7 @@
     define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
     define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
 
+    define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Компонент &laquo;%s&raquo; не имеет настроек');
 

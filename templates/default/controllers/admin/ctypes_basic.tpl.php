@@ -16,6 +16,12 @@
     if ($do=='edit'){
         $this->addBreadcrumb($ctype['title']);
         $this->addMenuItems('ctype', $this->controller->getCtypeMenu('edit', $id));
+        if($is_controller){
+            $this->addMenuItem('ctype', array(
+                'title' => LANG_CP_CONTROLLERS_OPTIONS,
+                'url'   => $this->href_to('controllers', array('edit', $ctype['name'], 'options'))
+            ));
+        }
     }
 
     $this->addToolButton(array(

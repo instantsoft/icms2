@@ -273,6 +273,7 @@
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this IP');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
+    define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'The &laquo;%s&raquo; component has no settings');
 
