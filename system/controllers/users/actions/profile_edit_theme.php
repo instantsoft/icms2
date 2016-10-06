@@ -2,18 +2,16 @@
 
 class actionUsersProfileEditTheme extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
-        $template = cmsTemplate::getInstance();
+        if (!$this->cms_template->hasProfileThemesOptions()){ cmsCore::error404(); }
 
-        if (!$template->hasProfileThemesOptions()){ cmsCore::error404(); }
-
-        $form = $template->getProfileOptionsForm();
+        $form = $this->cms_template->getProfileOptionsForm();
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
@@ -43,11 +41,11 @@ class actionUsersProfileEditTheme extends cmsAction {
 
         }
 
-        return $template->render('profile_edit_theme', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit_theme', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

@@ -1,6 +1,8 @@
 <?php
 
-class activity extends cmsFrontend{
+class activity extends cmsFrontend {
+
+    protected $useOptions = true;
 
     public function addType($type){
         return $this->model->addType($type);
@@ -79,7 +81,7 @@ class activity extends cmsFrontend{
         $template = cmsTemplate::getInstance();
 
         $page = $this->request->get('page', 1);
-        $perpage = 15;
+        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
         if (!$dataset_name || $dataset_name == 'all'){

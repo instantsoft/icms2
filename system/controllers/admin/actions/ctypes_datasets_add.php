@@ -13,15 +13,13 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         $form = $this->getForm('ctypes_dataset', array('add', $ctype['id']));
 
-        $is_submitted = $this->request->has('submit');
-
         $fields  = $content_model->getContentFields($ctype['name']);
 
 		$dataset = array('sorting' => array(array('by'=>'date_pub', 'to'=>'desc')));
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-			$dataset = $form->parse($this->request, $is_submitted);
+			$dataset = $form->parse($this->request, true);
 
             $dataset['filters'] = $this->request->get('filters');
             $dataset['sorting'] = $this->request->get('sorting');
@@ -39,20 +37,18 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_dataset', array(
-            'do' => 'add',
-            'ctype' => $ctype,
+        return $this->cms_template->render('ctypes_dataset', array(
+            'do'      => 'add',
+            'ctype'   => $ctype,
             'dataset' => $dataset,
-            'fields' => $fields,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'fields'  => $fields,
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

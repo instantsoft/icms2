@@ -1,10 +1,9 @@
 <?php
 
-    $user = cmsUser::getInstance();
-
     $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
     $this->setPageTitle($list_header, $profile['nickname']);
+    $this->setPageDescription($profile['nickname'].' — '.$list_header);
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
@@ -20,7 +19,7 @@
 
     }
 
-    if ($folder_id && ($user->id == $profile['id'] || $user->is_admin)){
+    if ($folder_id  && is_numeric($folder_id) && ($user->id == $profile['id'] || $user->is_admin)){
 
         $this->addToolButton(array(
             'class' => 'folder_edit',
@@ -37,7 +36,7 @@
 
     }
 
-    if (cmsUser::isAdmin()){
+    if ($user->is_admin){
         $this->addToolButton(array(
             'class' => 'page_gear',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),

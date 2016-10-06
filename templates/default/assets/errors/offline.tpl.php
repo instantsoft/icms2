@@ -5,14 +5,14 @@
 <html>
 <head>
 	<title><?php echo ERR_SITE_OFFLINE; ?> &mdash; <?php echo $config->sitename; ?></title>
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/css/theme-errors.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/css/theme-modal.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/css/theme-gui.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/css/theme-text.css">
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/js/jquery.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/js/jquery-modal.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/js/core.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/<?php echo $this->name; ?>/js/modal.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-errors.css">
+    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-modal.css">
+    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-gui.css">
+    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-text.css">
+    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery.js"></script>
+    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery-modal.js"></script>
+    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/core.js"></script>
+    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/modal.js"></script>
 </head>
 <body>
 

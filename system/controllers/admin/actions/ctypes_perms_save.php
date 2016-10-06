@@ -9,15 +9,15 @@ class actionAdminCtypesPermsSave extends cmsAction {
         if (!$values || !$ctype_name) { cmsCore::error404(); }
 
 		$content_model = cmsCore::getModel('content');
-		
+
 		$ctype = $content_model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }		
+        if (!$ctype) { cmsCore::error404(); }
 
 		$rules = cmsPermissions::getRulesList('content');
 
 		list($ctype, $rules, $values) = cmsEventsManager::hook('content_perms', array($ctype, $rules, $values));
-		list($ctype, $rules, $values) = cmsEventsManager::hook("content_{$ctype['name']}_perms", array($ctype, $rules, $values));		
-		
+		list($ctype, $rules, $values) = cmsEventsManager::hook("content_{$ctype['name']}_perms", array($ctype, $rules, $values));
+
         $users_model = cmsCore::getModel('users');
         $groups = $users_model->getGroups(false);
 
@@ -39,6 +39,8 @@ class actionAdminCtypesPermsSave extends cmsAction {
             }
 
         }
+
+        cmsUser::addSessionMessage(LANG_CP_PERMISSIONS_SUCCESS, 'success');
 
         cmsPermissions::savePermissions($ctype_name, $values);
 

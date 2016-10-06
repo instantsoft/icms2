@@ -16,8 +16,15 @@ body {
 #layout{
     width: 980px;
     margin: 0 auto;
+    will-change: blur;
 }
-
+#popup-manager.popup-show + #layout, .wrap_blur {
+    -webkit-filter:blur(2px);
+    -moz-filter:blur(2px);
+    -ms-filter:blur(2px);
+    -o-filter:blur(2px);
+    filter:blur(2px);
+}
 /* Header =================================================================== */
 
 #layout header{
@@ -27,7 +34,7 @@ body {
     background:url("../images/bg_top.png") no-repeat center;
 }
 
-#layout header #logo a{
+#layout header #logo a, #layout header #logo > span{
     display: block;
     float: left;
     width: 180px;
@@ -75,14 +82,13 @@ header .menu > li > a:hover {
 
 header .menu > li.active > a { color:#F5CF53; }
 header .menu > li.active > a:hover { color:#F5CF53; }
-header .menu > li.active > ul a:hover { color:#000; }
+header .menu > li.active > ul a:hover { color:#EEE; }
 
 header .menu ul li a,
 header .menu li.active ul li a {
-    color: #000;
     text-shadow: none;
     text-decoration: none;
-    padding: 0 10px;
+    padding-right: 10px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }
@@ -355,10 +361,14 @@ nav select { display: none; }
     color:#34495e;
 }
 
-#body section h1 .parent_title{
+#body section h1 + .parent_title{
     font-size:16px;
+    margin: -10px 0 20px 0;
 }
-
+.item_group_title {
+    background: url("../images/icons/group.png") no-repeat left center;
+    padding: 0 0 0 25px;
+}
 /* Sidebar ================================================================== */
 
 #body aside{
@@ -527,7 +537,11 @@ aside .menu .item{
 #sql_queries .green_query {
     color: #27ae60;
 }
-
+#sql_stat {
+    margin: 10px;
+    font-size: 11px;
+    color: #AAA;
+}
 /* Footer Navigation ======================================================== */
 
 #layout footer #nav {
@@ -563,11 +577,46 @@ aside .menu .item{
     #body section { width:100% !important; }
     nav { padding:5px; height:auto; }
     nav .menu { display:none; }
-    nav select { display: block; }
+    nav select {
+        position: relative;
+        display: inline-block;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        color: #FFF;
+        font-size: 14px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        height: 28px;
+        line-height: 20px;
+        background: url(../images/icons32/menu-icon.svg) no-repeat center right;
+    }
+    nav select option {
+        color: #333;
+        background: #FFF;
+        transition: all 0.3s ease;
+    }
     #layout footer #info { display: none !important; }
 }
 
 @media screen and (max-width: 640px) {
+    .content_item .ft_images .first_type_images:first-child {
+        float: none;
+        clear: both;
+        margin-bottom: 10px;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+    }
+    .filter-panel .fields .field:nth-child(odd), .filter-panel .fields .field:nth-child(even){
+        float: none !important;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .content_item .ft_images .first_type_images:first-child > img {
+        width: 100%;
+    }
     #layout header #logo { margin: 0 auto; overflow:hidden; width:200px; }
     #layout header .menu { display:none; }
     .tabs-menu ul { display:none; }

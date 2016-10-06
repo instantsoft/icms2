@@ -8,6 +8,8 @@ class modelUsers extends cmsModel{
 
     public function getUsersCount(){
 
+        $this->useCache('users.list');
+
         return $this->getCount('{users}');
 
     }
@@ -33,20 +35,11 @@ class modelUsers extends cmsModel{
 
         $this->useCache('users.list');
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
-
         return $this->get('{users}', function($user){
 
             $user['groups']    = cmsModel::yamlToArray($user['groups']);
             $user['theme']     = cmsModel::yamlToArray($user['theme']);
             $user['is_online'] = cmsUser::userIsOnline($user['id']);
-
-            $user['city'] = $user['city_id'] ? array(
-                'id' => $user['city_id'],
-                'name' => $user['city_name'],
-            ) : false;
 
             return $user;
 
@@ -69,10 +62,7 @@ class modelUsers extends cmsModel{
 
         $this->useCache("users.user.{$id}");
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
         $this->select("u.nickname", 'inviter_nickname');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
 
         if ($id){
@@ -83,17 +73,11 @@ class modelUsers extends cmsModel{
 
         if (!$user) { return false; }
 
-        $user['groups'] = cmsModel::yamlToArray($user['groups']);
-        $user['theme'] = cmsModel::yamlToArray($user['theme']);
-        $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
+        $user['groups']          = cmsModel::yamlToArray($user['groups']);
+        $user['theme']           = cmsModel::yamlToArray($user['theme']);
+        $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-
-        $user['city'] = $user['city_id'] ? array(
-            'id' => $user['city_id'],
-            'name' => $user['city_name'],
-        ) : false;
-
-        $user['is_online'] = cmsUser::userIsOnline($user['id']);
+        $user['is_online']       = cmsUser::userIsOnline($user['id']);
 
         return $user;
 
@@ -107,6 +91,45 @@ class modelUsers extends cmsModel{
 
 //============================================================================//
 //============================================================================//
+
+    public function setAuthToken($user_id, $auth_token, $type = null, $subj = null){
+
+        if(!$type){ $type = cmsRequest::getDeviceType(); }
+
+        return $this->insert('{users}_auth_tokens', array(
+            'ip'          => sprintf('%u', ip2long(cmsUser::getIp())),
+            'access_type' => cmsModel::arrayToYaml(array(
+                'type' => $type,
+                'subj' => $subj
+            )),
+            'auth_token'  => $auth_token,
+            'user_id'     => $user_id
+        ));
+
+    }
+
+    public function deleteExpiredToken($user_id, $auth_token_expiration_int){
+        return $this->filterEqual('user_id', $user_id)->
+                filterDateOlder('date_auth', $auth_token_expiration_int, 'SECOND')->
+                deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteAuthToken($auth_token){
+        return $this->filterEqual('auth_token', $auth_token)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function getUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model){
+            $item['ip'] = long2ip($item['ip']);
+            $item['date_log'] = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
+            $item['access_type'] = cmsModel::yamlToArray($item['access_type']);
+            return $item;
+        });
+    }
 
     public function getUserByPassToken($pass_token){
 
@@ -154,12 +177,12 @@ class modelUsers extends cmsModel{
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
         $user = array_merge($user, array(
-            'groups' => $groups,
-            'password' => $password_hash,
+            'groups'        => $groups,
+            'password'      => $password_hash,
             'password_salt' => $password_salt,
-            'date_reg' => $date_reg,
-            'date_log' => $date_log,
-			'time_zone' => cmsConfig::get('time_zone')
+            'date_reg'      => $date_reg,
+            'date_log'      => $date_log,
+            'time_zone'     => cmsConfig::get('time_zone')
         ));
 
         $id = $this->insert('{users}', $user);
@@ -174,12 +197,12 @@ class modelUsers extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("users.list");
+        cmsCache::getInstance()->clean('users.list');
 
         return array(
-            'success' => $id!==false,
-            'errors' => false,
-            'id' => $id
+            'success' => $id !== false,
+            'errors'  => false,
+            'id'      => $id
         );
 
     }
@@ -223,13 +246,15 @@ class modelUsers extends cmsModel{
 
         if (!$errors){
 
-            $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+            if(isset($user['groups'])){
 
-            if (isset($user['city_id']) && !isset($user['city'])){ $user['city'] = $user['city_id']; }
+                $user['groups'] = is_array($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+
+                $this->saveUserGroupsMembership($id, $user['groups']);
+
+            }
 
             $success = $this->update('{users}', $id, $user);
-
-            $this->saveUserGroupsMembership($id, $user['groups']);
 
         }
 
@@ -261,7 +286,11 @@ class modelUsers extends cmsModel{
 
 		}
 
-        return $this->update('{users}', $id, array('theme'=>$theme));
+        $res = $this->update('{users}', $id, array('theme'=>$theme));
+
+        cmsCache::getInstance()->clean("users.user.{$id}");
+
+        return $res;
 
     }
 
@@ -270,6 +299,7 @@ class modelUsers extends cmsModel{
 
     public function deleteUser($id){
 
+        $this->deleteUserAuthTokens($id);
         $this->delete('{users}_friends', $id, 'user_id');
         $this->delete('{users}_friends', $id, 'friend_id');
         $this->delete('{users}_groups_members', $id, 'user_id');
@@ -641,18 +671,18 @@ class modelUsers extends cmsModel{
 
             $friend = $this->getUser($friend_id);
 
-            cmsCore::getController('activity')->addEntry('users', "friendship", array(
+            cmsCore::getController('activity')->addEntry('users', 'friendship', array(
                 'subject_title' => $friend['nickname'],
-                'subject_id' => $friend_id,
-                'subject_url' => href_to('users', $friend_id),
+                'subject_id'    => $friend_id,
+                'subject_url'   => href_to_rel('users', $friend_id)
             ));
 
         }
 
-        cmsCache::getInstance()->clean("users.friends");
+        cmsCache::getInstance()->clean('users.friends');
 
         return $this->insert('{users}_friends', array(
-            'user_id' => $user_id,
+            'user_id'   => $user_id,
             'friend_id' => $friend_id,
             'is_mutual' => $is_mutual
         ));
@@ -688,7 +718,11 @@ class modelUsers extends cmsModel{
 
         if ($only_active){ $this->filterEqual('is_active', 1); }
 
-        return $this->orderBy('ordering')->get('{users}_tabs', false, $by_field);
+        return $this->orderBy('ordering')->get('{users}_tabs', function($item, $model){
+            $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+            $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            return $item;
+        }, $by_field);
 
     }
 

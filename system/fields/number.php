@@ -2,8 +2,8 @@
 
 class fieldNumber extends cmsFormField {
 
-    public $title   = LANG_PARSER_NUMBER;
-    public $sql     = 'float NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_NUMBER;
+    public $sql         = 'float NULL DEFAULT NULL';
     public $filter_type = 'int';
 
     public function getOptions(){
@@ -34,6 +34,16 @@ class fieldNumber extends cmsFormField {
         return htmlspecialchars($value)." {$units}";
     }
 
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_range')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
+    }
+
     public function getFilterInput($value) {
 
         $units = $this->getProperty('units');
@@ -59,13 +69,11 @@ class fieldNumber extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_range')){
+        if (!is_array($value)){
 
-            $model->filterEqual($this->name, "{$value}");
+            return $model->filterEqual($this->name, "{$value}");
 
-        } else {
-
-            if (!is_array($value)) { return $model; }
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
 
             if (!empty($value['from'])){
                 $model->filterGtEqual($this->name, $value['from']);
@@ -74,9 +82,11 @@ class fieldNumber extends cmsFormField {
                 $model->filterLtEqual($this->name, $value['to']);
             }
 
+            return $model;
+
         }
 
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 

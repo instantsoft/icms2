@@ -2,15 +2,15 @@
 
 class actionGroupsGroupEdit extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($group, $do=false){
 
         if (!cmsUser::isAllowed('groups', 'edit')) { cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
+        $is_owner = $group['owner_id'] == $this->cms_user->id || $this->cms_user->is_admin;
 
-        $is_owner = $group['owner_id'] == $user->id || $user->is_admin;
-
-        $membership = $this->model->getMembership($group['id'], $user->id);
+        $membership = $this->model->getMembership($group['id'], $this->cms_user->id);
         $is_member = ($membership !== false);
         $member_role = $is_member ? $membership['role'] : groups::ROLE_NONE;
 
@@ -65,10 +65,10 @@ class actionGroupsGroupEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('group_edit', array(
-            'do' => 'edit',
-            'group' => $group,
-            'form' => $form,
+        return $this->cms_template->render('group_edit', array(
+            'do'     => 'edit',
+            'group'  => $group,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

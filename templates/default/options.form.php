@@ -1,6 +1,6 @@
 <?php
 
-class formTemplateOptions extends cmsForm {
+class formDefaultTemplateOptions extends cmsForm {
 
     public function init() {
 

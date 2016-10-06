@@ -1,9 +1,22 @@
 <?php
-    $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
-    $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);
+    $this->setPageTitle(LANG_CP_INSTALL_PACKAGE.' «'.$manifest['info']['title'].'»');
+    $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE, $this->href_to('install'));
+    $this->addBreadcrumb($manifest['info']['title']);
+
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_INSTALL
+    ));
+
+    if(!empty($manifest['notice_system_files'])){
+        cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
+    }
+
 ?>
 
-<h1><?php echo LANG_CP_INSTALL_PACKAGE; ?></h1>
+<h1><?php echo LANG_CP_INSTALL_PACKAGE.' «'.$manifest['info']['title'].'»'; ?></h1>
 
 <div id="cp_package_ftp_notices">
     <div class="notice">
@@ -25,12 +38,13 @@
         )
     ), $errors); ?>
 
-<?php echo html_button(LANG_INSTALL, 'skip', "location.href='{$this->href_to('install/finish')}'", array('style'=>'display: none;','id'=>'skip')); ?>
+<?php echo html_button(LANG_INSTALL, 'skip', '', array('style'=>'display: none;','id'=>'skip')); ?>
 
 <script type="text/javascript">
     $(function() {
         $('form > .buttons').prepend($('#skip'));
         $('#is_skip').on('click', function (){
+            icms.forms.submitted = true;
             form = $(this).parents('form');
             if($(this).is(':checked')){
                 $(form).find('input').not(this).not('.buttons > input').prop('disabled', true);
@@ -41,6 +55,10 @@
                 $(form).find('.button-submit').show();
                 $('#skip').hide();
             }
+        });
+        $('#skip').on('click', function (){
+            location.href='<?php echo $this->href_to('install/finish'); ?>';
+            return false;
         });
     });
 </script>

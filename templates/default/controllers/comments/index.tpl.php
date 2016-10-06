@@ -1,10 +1,8 @@
 <?php
 
-    $this->setPageTitle($dataset ? LANG_COMMENTS . ' - ' . $dataset['title'] : LANG_COMMENTS);
-
     $base_url = $this->controller->name;
-    $base_ds_url = $this->controller->name . '/index/%s';
 
+    $this->setPageTitle($dataset ? LANG_COMMENTS . ' - ' . $dataset['title'] : LANG_COMMENTS);
     $this->addBreadcrumb(LANG_COMMENTS, href_to($base_url));
 
 ?>
@@ -19,7 +17,7 @@
                 <?php $ds_selected = ($dataset_name == $set['name'] || (!$dataset_name && $ds_counter==0)); ?>
                 <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
 
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(href_to($base_ds_url), $set['name']); } ?>
+                    <?php if ($ds_counter > 0) { $ds_url = href_to($base_url, 'index', $set['name']); } ?>
                     <?php if ($ds_counter == 0) { $ds_url = href_to($base_url); } ?>
 
                     <?php if ($ds_selected){ ?>

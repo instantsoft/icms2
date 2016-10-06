@@ -22,14 +22,12 @@ class actionPhotosUpload extends cmsAction{
 
         if (!cmsUser::isAllowed('albums', 'add')) { cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
-
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentTypeByName('albums');
 
 		$albums = $content_model->
-					filterEqual('user_id', $user->id)->
+					filterEqual('user_id', $this->cms_user->id)->
 					filterOr()->
 					filterEqual('is_public', 1)->
 					orderByList(array(
@@ -43,14 +41,14 @@ class actionPhotosUpload extends cmsAction{
 
         if ($this->request->has('submit')){
 
-            $album_id = $this->request->get('album_id');
+            $album_id = $this->request->get('album_id', 0);
 
             if (!isset($albums[$album_id])){ $this->redirectBack(); }
             if (!$this->request->has('photos')) { $this->redirectBack(); }
 
             $album = $albums[$album_id];
 
-            $photos_titles = $this->request->get('photos');
+            $photos_titles = $this->request->get('photos', array());
 
             $this->model->assignAlbumId($album_id);
 
@@ -69,7 +67,7 @@ class actionPhotosUpload extends cmsAction{
             if ($photos_count){
                 foreach($photos as $photo){
                     $activity_thumb_images[] = array(
-                        'url' => href_to('photos', 'view', $photo['id']),
+                        'url' => href_to_rel('photos', 'view', $photo['id']),
                         'src' => html_image_src($photo['image'], 'small')
                     );
                 }
@@ -77,15 +75,15 @@ class actionPhotosUpload extends cmsAction{
 
             $activity_controller = cmsCore::getController('activity');
 
-            $activity_controller->addEntry($this->name, "add.photos", array(
-                'user_id' => $user->id,
+            $activity_controller->addEntry($this->name, 'add.photos', array(
+                'user_id'       => $this->cms_user->id,
                 'subject_title' => $album['title'],
-                'subject_id' => $album['id'],
-                'subject_url' => href_to('albums', $album['slug'] . '.html'),
-                'is_private' => isset($album['is_private']) ? $album['is_private'] : 0,
-                'group_id' => isset($album['parent_id']) ? $album['parent_id'] : null,
-                'images' => $activity_thumb_images,
-                'images_count' => $photos_count
+                'subject_id'    => $album['id'],
+                'subject_url'   => href_to_rel('albums', $album['slug'] . '.html'),
+                'is_private'    => isset($album['is_private']) ? $album['is_private'] : 0,
+                'group_id'      => isset($album['parent_id']) ? $album['parent_id'] : null,
+                'images'        => $activity_thumb_images,
+                'images_count'  => $photos_count
             ));
 
             $this->redirect(href_to('albums', $albums[$album_id]['slug'] . '.html'));
@@ -96,18 +94,37 @@ class actionPhotosUpload extends cmsAction{
 
         if (!isset($albums[$album_id])){ $album_id = false; }
 
-        cmsTemplate::getInstance()->render('upload', array(
-            'ctype' => $ctype,
-            'albums' => $albums,
-            'photos' => $photos,
-            'album_id' => $album_id
+        $_albums_select = array(); $num = 0;
+        foreach ($albums as $album) {
+            if (!empty($album['parent_title'])){
+                if ($album['is_public']) { $album['title'] = '[' . LANG_PHOTOS_PUBLIC_ALBUM . '] ' . $album['title']; }
+                $_albums_select[$album['parent_title']][] = $album;
+            } elseif($album['is_public']) {
+                $_albums_select[LANG_PHOTOS_PUBLIC_ALBUMS][] = $album;
+            } else {
+                $_albums_select[LANG_PHOTOS_USER_ALBUMS][] = $album;
+            }
+        }
+        $albums_select = array(''=>'');
+        foreach ($_albums_select as $album_type=>$_albums) {
+            $albums_select['opt'.$num] = array($album_type);
+            foreach ($_albums as $album) {
+                $albums_select[$album['id']] = $album['title'];
+            }
+            $num++;
+        }
+
+        $this->cms_template->render('upload', array(
+            'ctype'         => $ctype,
+            'albums'        => $albums,
+            'albums_select' => $albums_select,
+            'photos'        => $photos,
+            'album_id'      => $album_id
         ));
 
     }
 
     public function processUpload($album_id){
-
-        $config = cmsConfig::getInstance();
 
         $uploader = new cmsUploader();
 
@@ -124,8 +141,7 @@ class actionPhotosUpload extends cmsAction{
             if(!empty($result['path'])){
                 $uploader->remove($result['path']);
             }
-            cmsTemplate::getInstance()->renderJSON($result);
-            $this->halt();
+            return $this->cms_template->renderJSON($result);
         }
 
 		$preset = array('width' => 600, 'height'=>460, 'is_square'=>false, 'is_watermark'=>false);
@@ -160,12 +176,11 @@ class actionPhotosUpload extends cmsAction{
 
         unset($result['path']);
 
-        $result['url'] = $config->upload_host . '/' . $result['paths']['small'];
+        $result['url'] = $this->cms_config->upload_host . '/' . $result['paths']['small'];
 
         $result['id'] = $this->model->addPhoto($album_id, $result['paths']);
 
-        cmsTemplate::getInstance()->renderJSON($result);
-        $this->halt();
+        return $this->cms_template->renderJSON($result);
 
     }
 

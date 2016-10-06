@@ -15,7 +15,7 @@
         <?php if ($is_enabled){ ?>
             <a href="#vote-up" class="vote-up" title="<?php echo LANG_RATING_VOTE_UP; ?>"></a>
         <?php } else { ?>
-            <span class="disabled" title="<?php html( $is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED ); ?>"></span>
+            <span class="disabled" title="<?php html($is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>"></span>
         <?php } ?>
     </div>
 
@@ -29,11 +29,11 @@
         <?php } ?>
     </div>
 
-    <div class="arrow down <?php if (!$is_enabled){ ?>disabled<?php } ?>">
+    <div class="arrow down">
         <?php if ($is_enabled){ ?>
             <a href="#vote-down" class="vote-down" title="<?php echo LANG_RATING_VOTE_DOWN; ?>"></a>
         <?php } else { ?>
-            <span class="disabled" title="<?php html( $is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED ); ?>"></span>
+            <span class="disabled" title="<?php html($is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?>"></span>
         <?php } ?>
     </div>
 

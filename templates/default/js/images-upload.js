@@ -7,6 +7,90 @@ icms.images = (function ($) {
 
     //====================================================================//
 
+    this._onSubmit = function(field_name){
+        widget = $('#widget_image_'+field_name);
+        $('.upload', widget).hide();
+        $('.loading', widget).show();
+    };
+
+    this._showButton = function(field_name){
+        widget = $('#widget_image_'+field_name);
+        $('.upload', widget).show();
+        $('.loading', widget).hide();
+    };
+
+    this._onComplete = function(field_name, result){
+
+        widget = $('#widget_image_'+field_name);
+
+        if(!result.success) {
+            icms.modal.alert(result.error);
+            icms.images._showButton(field_name);
+            return;
+        }
+
+        preview_img_src = null;
+
+        $('.data', widget).html('');
+
+        for(var path in result.paths){
+            preview_img_src = result.paths[path].url;
+            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+path+']" value="'+result.paths[path].path+'" />');
+        }
+
+        $('.preview img', widget).attr('src', preview_img_src);
+        $('.preview', widget).show();
+        $('.loading', widget).hide();
+
+        if (typeof(icms.images.uploadCallback) == 'function'){
+            icms.images.uploadCallback(field_name, result);
+        }
+
+    };
+
+    this._onMultiComplete = function (field_name, result){
+
+        icms.images._showButton(field_name);
+
+        widget = $('#widget_image_'+field_name);
+
+        if(!result.success) {
+            return;
+        }
+
+        var idx = $('.data input:last', widget).attr('rel');
+        if (typeof(idx) == 'undefined') { idx = 0; } else { idx++; }
+
+        var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
+
+        preview_img_src = null;
+
+        for(var path in result.paths){
+            preview_img_src = result.paths[path].url;
+            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
+        }
+
+        $('img', preview_block).attr('src', preview_img_src);
+        $('a', preview_block).click(function() { icms.images.removeOne(field_name, idx); });
+
+        $('.previews_list', widget).append(preview_block);
+
+    };
+
+    this.uploadByLink = function(field_name, upload_url, link){
+        icms.images._onSubmit(field_name);
+        $.post(upload_url, {image_link: link}, function(result){
+            icms.images._onComplete(field_name, result);
+        }, 'json');
+    };
+
+    this.uploadMultyByLink = function(field_name, upload_url, link){
+        icms.images._onSubmit(field_name);
+        $.post(upload_url, {image_link: link}, function(result){
+            icms.images._onMultiComplete(field_name, result);
+        }, 'json');
+    };
+
     this.upload = function(field_name, upload_url){
 
         var uploader = new qq.FileUploader({
@@ -16,39 +100,11 @@ icms.images = (function ($) {
             debug: false,
 
             onSubmit: function(id, fileName){
-                var widget = $('#widget_image_'+field_name);
-                $('.upload', widget).hide();
-                $('.loading', widget).show();
+                icms.images._onSubmit(field_name);
             },
 
             onComplete: function(id, file_name, result){
-
-                var widget = $('#widget_image_'+field_name);
-
-                if(!result.success) {
-                    alert(result.error);
-                    $('.upload', widget).show();
-                    $('.loading', widget).hide();
-                    return;
-                }
-
-                preview_img_src = null;
-
-                $('.data', widget).html('');
-
-                for(var path in result.paths){
-                    preview_img_src = result.paths[path].url;
-                    $('.data', widget).append('<input type="hidden" name="'+field_name+'['+path+']" value="'+result.paths[path].path+'" />');
-                }
-
-                $('.preview img', widget).attr('src', preview_img_src);
-                $('.preview', widget).show();
-                $('.loading', widget).hide();
-
-                if (typeof(icms.images.uploadCallback) == 'function'){
-                    icms.images.uploadCallback(field_name, result);
-                }
-
+                icms.images._onComplete(field_name, result);
             }
 
         });
@@ -64,27 +120,12 @@ icms.images = (function ($) {
             action: upload_url,
             debug: false,
 
+            onSubmit: function(id, fileName){
+                icms.images._onSubmit(field_name);
+            },
+
             onComplete: function(id, file_name, result){
-
-                if(!result.success) {
-                    return;
-                }
-
-                var idx = $('.data input:last', widget).attr('rel');
-                if (typeof(idx) == 'undefined') { idx = 0; } else { idx++; }
-
-                var widget = $('#widget_image_'+field_name);
-                var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
-
-                $('img', preview_block).attr('src', result.paths.small.url);
-                $('a', preview_block).click(function() { icms.images.removeOne(field_name, idx); });
-
-                $('.previews_list', widget).append(preview_block);
-
-                for(var path in result.paths){
-                    $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
-                }
-
+                icms.images._onMultiComplete(field_name, result);
             }
 
         });

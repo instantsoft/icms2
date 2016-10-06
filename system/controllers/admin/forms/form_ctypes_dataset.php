@@ -28,6 +28,19 @@ class formAdminCtypesDataset extends cmsForm {
                             array('max_length', 100)
                         )
                     )),
+                    new fieldHtml('description', array(
+                        'options' => array('editor' => cmsConfig::get('default_editor'))
+                    )),
+                    new fieldString('seo_keys', array(
+                        'options'=>array(
+                            'max_length'=> 256
+                        )
+                    )),
+                    new fieldText('seo_desc', array(
+                        'options'=>array(
+                            'max_length'=> 256
+                        )
+                    )),
                     new fieldCheckbox('is_visible', array(
                         'default' => true
                     )),

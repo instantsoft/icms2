@@ -3,7 +3,7 @@ class cmsWysiwygLive{
 
 	public function displayEditor($field_id, $content=''){
 
-        $lang = cmsConfig::get('language');
+        $lang = cmsCore::getLanguageName();
         if ($lang == 'en') { $lang = 'en-US'; }
 
         $template = cmsTemplate::getInstance();
@@ -36,7 +36,7 @@ class cmsWysiwygLive{
                 <?php } ?>
                 window["le_<?php echo $dom_id; ?>"] = new InnovaEditor("le_<?php echo $dom_id; ?>");
                 window["le_<?php echo $dom_id; ?>"].width = '100%';
-                window["le_<?php echo $dom_id; ?>"].height = 350;
+                window["le_<?php echo $dom_id; ?>"].height = 290;
                 window["le_<?php echo $dom_id; ?>"].css = '<?php echo cmsConfig::get('root') . 'wysiwyg/live/styles/simple.css'; ?>';
                 window["le_<?php echo $dom_id; ?>"].enableTableAutoformat = true;
                 window["le_<?php echo $dom_id; ?>"].fileBrowser = '/live_editor/upload';

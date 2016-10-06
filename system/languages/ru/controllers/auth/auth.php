@@ -39,9 +39,16 @@
 
     define('LANG_REG_CFG_REG_CAPTCHA',          'Показывать капчу для защиты от спамовых регистраций');
     define('LANG_REG_CFG_AUTH_CAPTCHA',         'Показывать капчу после неудачной авторизации');
+    define('LANG_REG_CFG_FIRST_AUTH_REDIRECT',  'После первой авторизации на сайте');
+    define('LANG_REG_CFG_AUTH_REDIRECT',        'После следующих авторизаций на сайте');
+    define('LANG_REG_CFG_AUTH_REDIRECT_NONE',        'Оставаться на странице, с которой авторизовались');
+    define('LANG_REG_CFG_AUTH_REDIRECT_INDEX',       'Открыть главную страницу');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE',     'Открыть профиль');
+    define('LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT', 'Открыть настройки профиля');
 
-    define('LANG_REG_CFG_VERIFY_EMAIL',        'Требовать подтверждения e-mail при регистрации');
-    define('LANG_REG_CFG_VERIFY_EMAIL_HINT',   'После регистрации пользователь блокируется до перехода по ссылке из полученного письма');
+    define('LANG_REG_CFG_VERIFY_EMAIL',         'Требовать подтверждения e-mail при регистрации');
+    define('LANG_REG_CFG_VERIFY_EMAIL_HINT',    'После регистрации пользователь блокируется до перехода по ссылке из полученного письма');
+	define('LANG_REG_CFG_REG_AUTO_AUTH',        'Авторизовать пользователя сразу после регистрации на сайте');
     define('LANG_REG_CFG_VERIFY_EXPIRATION',   'Удалять неподтвержденные аккаунты через, часов');
     define('LANG_REG_CFG_VERIFY_LOCK_REASON',  'Требуется подтверждение адреса e-mail');
     define('LANG_REG_CFG_DEF_GROUP_ID',		   'Помещать новых пользователей в группы');
@@ -53,6 +60,7 @@
     define('LANG_REG_SUCCESS',               'Регистрация прошла успешно');
     define('LANG_REG_SUCCESS_NEED_VERIFY',   'На адрес <b>%s</b> отправлено письмо. Перейдите по ссылке из письма чтобы активировать Ваш аккаунт');
     define('LANG_REG_SUCCESS_VERIFIED',      'Адрес e-mail успешно подтвержден. Вы можете авторизоваться на сайте');
+	define('LANG_REG_SUCCESS_VERIFIED_AND_AUTH', 'Адрес e-mail успешно подтвержден. Добро пожаловать!');
 
     define('LANG_PASS_RESTORE',              'Восстановление пароля');
     define('LANG_EMAIL_NOT_FOUND',           'Указанный E-mail не найден в нашей базе');

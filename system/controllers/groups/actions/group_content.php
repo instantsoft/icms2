@@ -2,11 +2,11 @@
 
 class actionGroupsGroupContent extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($group, $ctype_name=false){
 
         if (!$ctype_name) { cmsCore::error404(); }
-
-        $user = cmsUser::getInstance();
 
         $content_controller = cmsCore::getController('content', $this->request);
 
@@ -22,8 +22,8 @@ class actionGroupsGroupContent extends cmsAction {
 
         $html = $content_controller->renderItemsList($ctype, $page_url);
 
-        return cmsTemplate::getInstance()->render('group_content', array(
-            'user'  => $user,
+        return $this->cms_template->render('group_content', array(
+            'user'  => $this->cms_user,
             'group' => $group,
             'ctype' => $ctype,
             'html'  => $html

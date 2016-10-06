@@ -153,7 +153,7 @@ function files_format_bytes($bytes) {
     $gb = 1073741824;
 
     if (round($bytes / $gb) > 0) {
-        return ceil($bytes / $gb) . ' ' . LANG_GB;
+        return round(($bytes / $gb), 1, PHP_ROUND_HALF_UP). ' ' . LANG_GB;
     }
 
     if (round($bytes / $mb) > 0) {
@@ -242,6 +242,7 @@ function file_save_from_url($url, $destination){
         curl_setopt(CURLOPT_SSL_VERIFYPEER, false);
     }
     curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_FILE, $dest_file);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_exec($curl);

@@ -4,6 +4,7 @@
 
         'hooks' => array(
             'admin_dashboard_chart',
+            'user_privacy_types',
             'user_login',
             'user_notify_types',
             'user_delete',

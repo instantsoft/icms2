@@ -7,9 +7,13 @@ class cmsCore {
 	public $uri            = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
+    public $uri_controller_before_remap = '';
     public $uri_action     = '';
     public $uri_params     = array();
     public $uri_query      = array();
+
+    private static $language = 'ru';
+    private static $language_href_prefix = '';
 
     public $controller = '';
 
@@ -32,6 +36,8 @@ class cmsCore {
 
         $this->request = new cmsRequest($_REQUEST);
 
+        self::detectLanguage();
+
     }
 
     public static function startTimer() {
@@ -40,6 +46,45 @@ class cmsCore {
 
     public static function getTime() {
         return microtime(true) - self::$start_time;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    private static function detectLanguage() {
+
+        $config = cmsConfig::getInstance();
+
+        self::$language = $config->language;
+
+        if(!empty($_SERVER['REQUEST_URI'])){
+
+            $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
+
+            // язык может быть только двухбуквенный, определяем его по первому сегменту
+            if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
+                if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
+                    // язык по-умолчанию без префиксов, дубли нам не нужны
+                    if($segments[0] != $config->language){
+
+                        self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
+
+                        $_SERVER['REQUEST_URI'] = $config->root.implode('/', $segments);
+
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    public static function getLanguageHrefPrefix() {
+        return self::$language_href_prefix;
+    }
+
+    public static function getLanguageName() {
+        return self::$language;
     }
 
 //============================================================================//
@@ -72,7 +117,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . 'system/config/version.ini';
 
-        if (!file_exists($file)){ die('version.ini not found'); }
+        if (!is_readable($file)){ die('version.ini not found'); }
 
         $version = parse_ini_file($file);
 
@@ -107,7 +152,7 @@ class cmsCore {
             return self::$includedFiles[$file];
         }
 
-        if (!file_exists($file)){
+        if (!is_readable($file)){
             self::$includedFiles[$file] = false;
             return false;
         }
@@ -126,7 +171,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (!file_exists($file)){ return false; }
+        if (!is_readable($file)){ return false; }
 
         $result = require $file;
 
@@ -161,7 +206,7 @@ class cmsCore {
 
         $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
-        if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
+        if (!is_readable($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
         include_once $lib_file;
 
@@ -180,7 +225,7 @@ class cmsCore {
 
         $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
 
-        if (!file_exists($class_file)){
+        if (!is_readable($class_file)){
             self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
         }
 
@@ -219,7 +264,7 @@ class cmsCore {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
-            if (file_exists($model_file)){
+            if (is_readable($model_file)){
                 include_once($model_file);
             } else {
                 self::error(ERR_MODEL_NOT_FOUND . ': '. $model_file);
@@ -306,7 +351,7 @@ class cmsCore {
 
         $manifests = array();
 
-        $controllers = self::getDirsList('system/controllers');
+        $controllers = self::getDirsList('system/controllers', true);
 
         foreach($controllers as $controller_name){
 
@@ -341,7 +386,9 @@ class cmsCore {
 
     }
 
-    public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false){
+    public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false, $template=false){
+
+        $template = $template ? $template : cmsConfig::get('template');
 
 		$widget_path = self::getWidgetPath($widget_name, $controller_name);
 
@@ -351,8 +398,7 @@ class cmsCore {
 
         $form_name = 'widget' . ($controller_name ? "_{$controller_name}_" : '_') . "{$widget_name}_options";
 
-        $form = cmsForm::getForm($form_file, $form_name, array($options));
-
+        $form = cmsForm::getForm($form_file, $form_name, array($options, $template));
         if (!$form) { $form = new cmsForm(); }
 
         $form->is_tabbed = true;
@@ -374,14 +420,39 @@ class cmsCore {
                 'title' => LANG_CSS_CLASS_BODY,
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
+				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+                'generator' => function($item) use ($template){
+                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', '*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+                }
             )));
 
-            $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
+            $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
+				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+                'generator' => function($item) use ($template){
+                    $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
+                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/'.$w_path, '*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/'.$w_path, '*.tpl.php');
+                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
+                    $items = array();
+                    if ($tpls) {
+                        foreach ($tpls as $tpl) {
+                           $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
+                        }
+                    }
+                    return $items;
+               }
             )));
 
         //
@@ -432,6 +503,7 @@ class cmsCore {
             // Флаг объединения с предыдущим виджетом
             $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', array(
                 'title' => LANG_WIDGET_TAB_PREV,
+                'default' => false
             )));
 
             // Ссылки в заголовке
@@ -456,9 +528,7 @@ class cmsCore {
      */
     public static function loadLanguage($file=false){
 
-        $config = cmsConfig::getInstance();
-
-        $lang_dir = 'system/languages/'. $config->language;
+        $lang_dir = 'system/languages/'. self::$language;
 
         if (!$file){
 
@@ -483,11 +553,7 @@ class cmsCore {
      */
     public static function getLanguageTextFile($file){
 
-        $config = cmsConfig::getInstance();
-
-        if (!isset($config->language)){	$config->language = 'ru'; }
-
-        $lang_dir = $config->root_path . 'system/languages/'. $config->language;
+        $lang_dir = cmsConfig::get('root_path').'system/languages/'.self::$language;
 
         $lang_file = $lang_dir .'/' . $file . '.txt';
 
@@ -622,7 +688,18 @@ class cmsCore {
 
         // проверяем ремаппинг контроллера
         $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
+        if ($remap_to) {
+            // в uri также меняем
+            if($this->uri){
+                $original_uri = $this->uri;
+                $seg = explode('/', $this->uri);
+                $seg[0] = $remap_to;
+                $this->uri = implode('/', $seg);
+                $this->uri_absolute = str_replace($original_uri, $this->uri, $this->uri_absolute);
+            }
+            $this->uri_controller_before_remap = $this->uri_controller;
+            $this->uri_controller = $remap_to;
+        }
 
         if (!self::isControllerExists($this->uri_controller)) {
             $this->uri_action     = $this->uri_controller;
@@ -631,8 +708,12 @@ class cmsCore {
 
         $this->controller = $this->uri_controller;
 
+        if ($this->controller && !preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
+            self::error404();
+        }
+
         // загружаем контроллер
-        $controller = self::getController($this->uri_controller, $this->request);
+        $controller = self::getController($this->controller, $this->request);
 
         // контроллер включен?
         if(!$controller->isEnabled()){
@@ -656,7 +737,7 @@ class cmsCore {
     public function runWidgets(){
 
         // в админке нам виджеты не нужны
-        if ($this->uri_controller == 'admin') { return; }
+        if ($this->controller == 'admin') { return; }
 
         $widgets_model = cmsCore::getModel('widgets');
         $pages = $widgets_model->getPages();
@@ -666,10 +747,13 @@ class cmsCore {
         if (!is_array($matched_pages)) { return; }
         if (sizeof($matched_pages)==0) { return; }
 
-        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages);
+        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages, cmsTemplate::getInstance()->getName());
 
         if (is_array($widgets_list)){
             foreach ($widgets_list as $widget){
+                if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
+                    continue;
+                }
                 $this->runWidget($widget);
             }
         }
@@ -677,6 +761,8 @@ class cmsCore {
     }
 
     public function runWidget($widget){
+
+        $result = false;
 
         $user = cmsUser::getInstance();
 
@@ -702,7 +788,11 @@ class cmsCore {
         $cache_key = "widgets.{$widget['id']}";
         $cache = cmsCache::getInstance();
 
-        if (!$widget_object->isCacheable() || false === ($result = $cache->get($cache_key))){
+        if($widget_object->isCacheable()){
+            $result = $cache->get($cache_key);
+        }
+
+        if ($result === false){
             $result = call_user_func_array(array($widget_object, 'run'), array());
             if ($result){
                 // Отдельно кешируем имя шаблона виджета, поскольку оно могло быть
@@ -710,7 +800,9 @@ class cmsCore {
                 // который возвращается кодом виджета (без самих свойств $widget_object)
                 $result['_wd_template'] = $widget_object->getTemplate();
             }
-            $cache->set($cache_key, $result);
+            if($widget_object->isCacheable()){
+                $cache->set($cache_key, $result);
+            }
         }
 
         if ($result===false) { return false; }
@@ -869,9 +961,10 @@ class cmsCore {
     /**
      * Возвращает список директорий внутри указанной
      * @param string $root_dir
+     * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
      * @return array
      */
-    public static function getDirsList($root_dir){
+    public static function getDirsList($root_dir, $asc_sort=false){
 
         $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
@@ -886,6 +979,10 @@ class cmsCore {
 
             $list[] = $next;
 
+        }
+
+        if($asc_sort){
+            asort($list);
         }
 
         return $list;

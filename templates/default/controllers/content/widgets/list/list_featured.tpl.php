@@ -10,8 +10,10 @@
                 $is_private = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
                 $image      = (($image_field && !empty($item[$image_field])) ? $item[$image_field] : '');
                 if ($is_private) {
-                    $image  = default_images('private', $size);
-                    $url    = '';
+                    if($image_field && !empty($item[$image_field])){
+                        $image = default_images('private', $size);
+                    }
+                    $url = '';
                 }
             ?>
 
@@ -42,7 +44,7 @@
                                 <a href="<?php echo href_to('users', $item['user']['id']); ?>"><?php html($item['user']['nickname']); ?></a>
                                 <?php if ($item['parent_id']){ ?>
                                     <?php echo LANG_WROTE_IN_GROUP; ?>
-                                    <a href="<?php echo href_to($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+                                    <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                 <?php } ?>
                             </span>
                             <span class="date">
@@ -91,7 +93,7 @@
                                 <a href="<?php echo href_to('users', $item['user']['id']); ?>"><?php html($item['user']['nickname']); ?></a>
                                 <?php if ($item['parent_id']){ ?>
                                     <?php echo LANG_WROTE_IN_GROUP; ?>
-                                    <a href="<?php echo href_to($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+                                    <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                 <?php } ?>
                             </span>
                             <span class="date">

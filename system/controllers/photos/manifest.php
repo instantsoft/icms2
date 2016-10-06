@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'fulltext_search',
             'content_albums_after_add',
             'content_albums_after_update',
             'content_albums_after_delete',

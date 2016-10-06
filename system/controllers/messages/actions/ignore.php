@@ -4,23 +4,20 @@ class actionMessagesIgnore extends cmsAction {
 
     public function run(){
 
-        $user     = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+        $contact_id = $this->request->get('contact_id', 0);
 
-        $contact_id = $this->request->get('contact_id');
-
-        $contact = $this->model->getContact($user->id, $contact_id);
+        $contact = $this->model->getContact($this->cms_user->id, $contact_id);
 
         if (!$contact){
-            $template->renderJSON(array('error' => true));
+            $this->cms_template->renderJSON(array('error' => true));
         }
 
-        $this->model->ignoreContact($user->id, $contact_id);
-        $this->model->deleteContact($user->id, $contact_id);
+        $this->model->ignoreContact($this->cms_user->id, $contact_id);
+        $this->model->deleteContact($this->cms_user->id, $contact_id);
 
-        $count = $this->model->getContactsCount($user->id);
+        $count = $this->model->getContactsCount($this->cms_user->id);
 
-        $template->renderJSON(array(
+        $this->cms_template->renderJSON(array(
             'error' => false,
             'count' => $count
         ));

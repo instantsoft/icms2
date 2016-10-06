@@ -9,6 +9,7 @@ class cmsModel{
     public $table      = '';
     public $select     = array('i.*');
     public $distinct   = '';
+    public $straight_join = '';
     public $join       = '';
     public $where      = '';
     public $where_separator  = 'AND';
@@ -23,6 +24,8 @@ class cmsModel{
 
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
+    protected $approved_filter_disabled = false;
+    protected $approved_filtered = false;
 
     protected static $cached = array();
 
@@ -107,7 +110,8 @@ class cmsModel{
             'values'        => array('type' => 'text'),
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
-            'groups_edit'   => array('type' => 'text')
+            'groups_edit'   => array('type' => 'text'),
+            'filter_view'   => array('type' => 'text')
         );
 
     }
@@ -171,6 +175,10 @@ class cmsModel{
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
 
+        if(!empty($category['allow_add'])){
+            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        }
+
         return $category;
 
     }
@@ -212,6 +220,9 @@ class cmsModel{
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
+            if(!empty($node['allow_add'])){
+                $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
+            }
             return $node;
         });
 
@@ -510,15 +521,21 @@ class cmsModel{
         $this->limit        = '';
         $this->join         = '';
         $this->distinct     = '';
+        $this->straight_join = '';
 
-		if ($this->keep_filters) { return; }
+		if ($this->keep_filters) { return $this; }
 
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
+        $this->approved_filtered = false;
 
         return $this;
 
+    }
+
+    public function setStraightJoin() {
+        $this->straight_join = 'STRAIGHT_JOIN'; return $this;
     }
 
     public function distinctSelect() {
@@ -584,16 +601,16 @@ class cmsModel{
         return $this;
     }
 
-    public function filterFunc($field, $value){
+    public function filterFunc($field, $value, $sign='='){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field = $value");
+        $this->filter("$field {$sign} $value");
         return $this;
     }
 
     public function filterNotEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field NOT IS NULL");
+            $this->filter("$field IS NOT NULL");
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field <> '$value'");
@@ -789,6 +806,29 @@ class cmsModel{
 
     }
 
+    public function enableApprovedFilter(){
+        $this->approved_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableApprovedFilter(){
+        $this->approved_filter_disabled = true;
+        return $this;
+    }
+
+    public function filterApprovedOnly(){
+
+        if ($this->approved_filtered) { return $this; }
+
+        // Этот фильтр может применяться при подсчете числа записей
+        // и при выборке самих записей
+        // используем флаг чтобы фильтр не применился дважды
+        $this->approved_filtered = true;
+
+        return $this->filterEqual('is_approved', 1);
+
+    }
+
     public function filterHiddenParents(){
         return $this->filterIsNull('is_parent_hidden');
     }
@@ -854,7 +894,7 @@ class cmsModel{
             $this->orderByList($dataset['sorting']);
         }
 
-        if($dataset['index']){
+        if(!empty($dataset['index'])){
             $this->forceIndex($dataset['index']);
         }
 
@@ -1137,7 +1177,7 @@ class cmsModel{
         $item = $this->db->fetchAssoc($result);
 
         if(is_callable($item_callback)){
-            $item = $item_callback( $item, $this );
+            $item = call_user_func_array($item_callback, array($item, $this));
         }
 
         // если указан ключ кеша для этого запроса
@@ -1168,13 +1208,15 @@ class cmsModel{
 
     public function getCount($table_name, $by_field='id'){
 
-        $sql = "SELECT {$this->distinct} COUNT(i.{$by_field}) as count
+        $sql = "SELECT {$this->distinct} {$this->straight_join} COUNT(i.{$by_field}) as count
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
         if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+
+        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
@@ -1223,6 +1265,8 @@ class cmsModel{
 
         $this->table = $table_name;
 
+        $items = $_items = array();
+
         $sql = $this->getSQL();
 
         // сбрасываем фильтры
@@ -1233,11 +1277,33 @@ class cmsModel{
         if ($this->cache_key){
 
             $cache_key = $this->cache_key . '.' . md5($sql);
+
             $cache = cmsCache::getInstance();
 
-            if (false !== ($items = $cache->get($cache_key))){
+            $_items = $cache->get($cache_key);
+
+            if ($_items !== false){
+
                 $this->stopCache();
+
+                // обрабатываем коллбэком
+                if (is_callable($item_callback)){
+
+                    foreach ($_items as $key => $item) {
+
+                        $item = call_user_func_array($item_callback, array($item, $this));
+                        if ($item === false){ continue; }
+
+                        $items[$key] = $item;
+
+                    }
+
+                } else {
+                    return $_items;
+                }
+
                 return $items;
+
             }
 
         }
@@ -1247,18 +1313,25 @@ class cmsModel{
         // если запрос ничего не вернул, возвращаем ложь
         if (!$this->db->numRows($result)){ return false; }
 
-        $items = array();
-
         // перебираем все вернувшиеся строки
         while($item = $this->db->fetchAssoc($result)){
 
             $key = $key_field ? $item[$key_field] : false;
 
+            // для кеша формируем массив без обработки коллбэком
+            if ($this->cache_key){
+                if ($key){
+                    $_items[$key] = $item;
+                } else {
+                    $_items[] = $item;
+                }
+            }
+
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)){
-                $item = $item_callback( $item, $this );
-                if ($item===false){ continue; }
+                $item = call_user_func_array($item_callback, array($item, $this));
+                if ($item === false){ continue; }
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -1272,8 +1345,9 @@ class cmsModel{
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
+        // сохраняем не обработанный коллбэком массив
         if ($this->cache_key){
-            $cache->set($cache_key, $items);
+            $cache->set($cache_key, $_items);
             $this->stopCache();
         }
 
@@ -1291,7 +1365,7 @@ class cmsModel{
 
         $select = implode(', ', $this->select);
 
-        $sql = "SELECT {$this->distinct} {$select}
+        $sql = "SELECT {$this->distinct} {$this->straight_join} {$select}
                 FROM {#}{$this->table} i
                 {$this->index_action}";
 

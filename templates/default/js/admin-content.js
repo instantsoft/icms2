@@ -6,18 +6,20 @@ function contentFilter(){
     $('.cp_toolbar .filter a').hide();
     $('.cp_toolbar .delete_filter a').show();
     icms.datagrid.setPage(1);
-    icms.datagrid.loadRows();
+    icms.datagrid.loadRows(); // В UPS diff_order обновлется только здесь
     icms.modal.close();
     is_filter = true;
     return false;
 }
 
-function contentCancelFilter(){
+function contentCancelFilter(ctype_changed){
     $('#datagrid_filter #advanced_filter').val('');
     $('.cp_toolbar .filter a').show();
     $('.cp_toolbar .delete_filter a').hide();
     icms.datagrid.setPage(1);
+    $('#datagrid_filter input[name=ctype_changed]').val(ctype_changed ? '1' : '0');
     icms.datagrid.loadRows();
+    $('#datagrid_filter input[name=ctype_changed]').val('0');
     is_filter = false;
     return false;
 }

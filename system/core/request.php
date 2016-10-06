@@ -14,6 +14,9 @@ class cmsRequest {
     public $uri = '';
     public $query_string = '';
 
+    private static $device_type = null;
+    public static $device_types = array('desktop', 'mobile', 'tablet');
+
     /**
      * Создает объект запроса
      * @param array $data Параметры для контроллера
@@ -98,10 +101,12 @@ class cmsRequest {
 
     /**
      * Возвращает параметр из запроса
-     * @param str $var
+     * @param string $var Название переменной
+     * @param mixed $default Значение по умолчанию, если в запросе переменной нет
+     * @param string $var_type Тип переменной
      * @return mixed
      */
-    public function get($var, $default=false){
+    public function get($var, $default=false, $var_type=null){
 
         //если значение не определено, возвращаем умолчание
 
@@ -114,7 +119,19 @@ class cmsRequest {
             $value = $this->data[$name_parts[0]][$name_parts[1]];
         }
 
-        //если дошли сюда, то возвращаем значение как есть
+        if($var_type === null){
+
+            // типизируем, основываясь на значении по умолчанию
+            // пока что берем во внимание не все типы
+            $default_type = gettype($default);
+            if(in_array($default_type, array('integer','string','double','array'))){
+                @settype($value, $default_type); // подавляем, чтобы не видеть нотис, если массив в строку
+            }
+
+        } else {
+            @settype($value, $var_type);
+        }
+
         return $value;
 
     }
@@ -138,7 +155,7 @@ class cmsRequest {
 
     public function hasFile($name){
         if (!isset($_FILES[$name])) { return false; }
-        if (!$_FILES[$name]['size']) { return false; }
+        if (empty($_FILES[$name]['size'])) { return false; }
         return true;
     }
 
@@ -163,5 +180,35 @@ class cmsRequest {
 
 //============================================================================//
 //============================================================================//
+
+    private static function loadDeviceType() {
+
+        $device_type  = (string)cmsUser::getCookie('device_type');
+
+        if(!$device_type || !in_array($device_type, self::$device_types, true)){
+
+            cmsCore::loadLib('mobile_detect.class');
+
+            $detect = new Mobile_Detect();
+
+            $device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'mobile') : 'desktop');
+
+            cmsUser::setCookie('device_type', $device_type, 31536000); // на 1 год
+
+        }
+
+        self::$device_type = $device_type;
+
+    }
+
+    public static function getDeviceType() {
+
+        if(self::$device_type === null){
+            self::loadDeviceType();
+        }
+
+        return self::$device_type;
+
+    }
 
 }

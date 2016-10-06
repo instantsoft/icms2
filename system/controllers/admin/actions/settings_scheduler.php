@@ -10,7 +10,7 @@ class actionAdminSettingsScheduler extends cmsAction {
             return;
         }
 
-        $grid = $this->loadDataGrid('scheduler');
+        $grid = $this->loadDataGrid('scheduler', false, 'admin.grid_filter.set_scheduler');
 
         return cmsTemplate::getInstance()->render('settings_scheduler', array(
             'grid' => $grid

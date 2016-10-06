@@ -9,7 +9,8 @@
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
-    define('LANG_CP_DASHBOARD_SI_ROOT',         'Папка сайта');
+    define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
+    define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
     define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
@@ -50,6 +51,7 @@
     define('LANG_CP_CTYPES_EDIT',               'Изменить тип контента');
     define('LANG_CP_CTYPE_CREATED',             'Тип контента &laquo;%s&raquo; создан');
     define('LANG_CP_CTYPE_DELETE_CONFIRM',      'Удалить тип контента "{title}"?');
+    define('LANG_CP_CTYPE_ERROR_NAME',          'Не должно называться именем существующего компонента');
 
     define('LANG_CP_CTYPE_SETTINGS',            'Настройки');
     define('LANG_CP_CTYPE_LABELS',              'Заголовки');
@@ -156,6 +158,7 @@
     define('LANG_CP_TAB',                       'Вкладка');
     define('LANG_CP_TAB_TITLE',                 'Название вкладки');
     define('LANG_CP_TAB_IS_ACTIVE',             'Показывать вкладку');
+    define('LANG_CP_TAB_SHOW_ONLY_OWNER',       'Показывать вкладку только владельцу профиля');
 
     define('LANG_CP_FIELD',                     'Поле');
     define('LANG_CP_FIELD_FORMAT',              'Формат поля');
@@ -181,6 +184,7 @@
     define('LANG_CP_FIELD_LABEL_TOP',           'Сверху');
     define('LANG_CP_FIELD_IN_LIST',             'Показывать в списке');
     define('LANG_CP_FIELD_IN_ITEM',             'Показывать в записи');
+    define('LANG_CP_FIELD_IN_PROFILE',          'Показывать в профиле');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');
     define('LANG_CP_FIELD_IN_FILTER',           'Показывать в фильтре');
@@ -239,7 +243,7 @@
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
     define('LANG_CP_WIDGETS_DELETE_PAGE',       'Удалить');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Отвязать все виджеты');
-    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
@@ -248,6 +252,7 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
+    define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
 
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
     define('LANG_CP_USER_CREATED',              'Пользователь &laquo;%s&raquo; создан');
@@ -267,7 +272,10 @@
     define('LANG_CP_USER_LOCK_UNTIL',           'Заблокировать до');
     define('LANG_CP_USER_LOCK_REASON',          'Причина блокировки');
     define('LANG_CP_USER_NOT_FOUND',            'Пользователь %s не найден');
+    define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
+    define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
 
+    define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'Компонент &laquo;%s&raquo; не имеет настроек');
 
@@ -295,7 +303,10 @@
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по-умолчанию');
+    define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
+    define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
+    define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
@@ -305,8 +316,10 @@
     define('LANG_CP_SETTINGS_CACHE_CLEAN_MERGED',  '&mdash; <a href="%s">Очистить кеш</a>');
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Папка <b>%s</b> успешно очищена');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Не удалось очистить папку <b>%s</b>. Проверьте права или очистите ее вручную');
-	define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
-	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'Кеш успешно очищен');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Ошибка очистки кеша');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
+    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Выводить на главной странице');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Только виджеты');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'Профиль / авторизация');
@@ -341,6 +354,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
     define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
+    define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');
@@ -367,7 +381,7 @@
     define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные папки сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание папок и файлов.');
-    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и хранятся в сессии только до конца текущего сеанса');
+    define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и могут храниться в сессии только до конца текущего сеанса');
 
     define('LANG_CP_PACKAGE_AUTHOR',            'Автор пакета');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
@@ -404,6 +418,8 @@
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
 
+    define('LANG_CP_FTP_SAVE_TO_SESSION',   'Запомнить реквизиты ftp в сессии');
+    define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Это небезопасно в случае если дополнение не от надежного автора');
     define('LANG_CP_FTP_SKIP',				'Пропустить этот шаг');
     define('LANG_CP_FTP_SKIP_HINT',			'Пропустите шаг, если автоматический доступ на FTP невозможен и вы используете ручной способ установки описанный в <a href="http://docs.instantcms.ru/manual/addons">инструкции</a>');
 
@@ -412,7 +428,7 @@
     define('LANG_CP_3RDPARTY_CREDITS',          'При участии');
 
     define('LANG_MODERATOR_ADD',             'Добавить модератора');
-    define('LANG_MODERATOR_ADD_HINT',        'Введите имя пользователя которого вы хотите назначить модератором');
+    define('LANG_MODERATOR_ADD_HINT',        'Введите email пользователя, которого вы хотите назначить модератором');
     define('LANG_MODERATOR_APPROVED_COUNT',  'Одобрено');
     define('LANG_MODERATOR_DELETED_COUNT',   'Удалено');
     define('LANG_MODERATOR_IDLE_COUNT',      'В процессе');
@@ -463,6 +479,7 @@
     define('LANG_HELP_URL_WIDGETS_CFG',             'http://docs.instantcms.ru/manual/widgets/config');
     define('LANG_HELP_URL_WIDGETS_PAGES',           'http://docs.instantcms.ru/manual/widgets/pages');
     define('LANG_HELP_URL_COMPONENTS',              'http://docs.instantcms.ru/manual/components');
+    define('LANG_HELP_URL_INSTALL',                 'http://docs.instantcms.ru/manual/addons');
     define('LANG_HELP_URL_COM_AUTH',                'http://docs.instantcms.ru/manual/components/auth');
     define('LANG_HELP_URL_COM_ACTIVITY',            'http://docs.instantcms.ru/manual/components/activity');
     define('LANG_HELP_URL_COM_GROUPS',              'http://docs.instantcms.ru/manual/components/groups');
@@ -485,7 +502,6 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/manual/settings/scheduler/task');
-
     define('LANG_ZIP_ERROR_10', 'Файл уже существует');
     define('LANG_ZIP_ERROR_21', 'Несовместимый ZIP-архив');
     define('LANG_ZIP_ERROR_18', 'Недопустимый аргумент');
@@ -495,3 +511,4 @@
     define('LANG_ZIP_ERROR_11', 'Невозможно открыть файл');
     define('LANG_ZIP_ERROR_5', 'Ошибка чтения');
     define('LANG_ZIP_ERROR_4', 'Ошибка поиска');
+    define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Внимание! Пакет заменяет некоторые системные файлы CMS. Не рекомендуется продолжать установку, если разработчик пакета Вам неизвестен.');

@@ -32,9 +32,7 @@ class messages extends cmsFrontend {
      * @param int $user_id
      */
     public function setSender($user_id){
-
-        $this->sender_id = $user_id;
-
+        $this->sender_id = $user_id; return $this;
     }
 
     /**
@@ -42,9 +40,7 @@ class messages extends cmsFrontend {
      * @param int $user_id
      */
     public function addRecipient($user_id){
-
-        $this->recipients[] = $user_id;
-
+        $this->recipients[] = $user_id; return $this;
     }
 
     /**
@@ -52,13 +48,11 @@ class messages extends cmsFrontend {
      * @param array $list
      */
     public function addRecipients($list){
-
-        $this->recipients = array_merge($this->recipients, $list);
-
+        $this->recipients = array_merge($this->recipients, $list); return $this;
     }
 
     public function clearRecipients(){
-        $this->recipients = array();
+        $this->recipients = array(); return $this;
     }
 
     /**
@@ -90,8 +84,7 @@ class messages extends cmsFrontend {
     }
 
     public function ignoreNotifyOptions(){
-        $this->is_ignore_options = true;
-        return $this;
+        $this->is_ignore_options = true; return $this;
     }
 
     /**

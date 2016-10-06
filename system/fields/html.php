@@ -2,10 +2,11 @@
 
 class fieldHtml extends cmsFormField {
 
-    public $title = LANG_PARSER_HTML;
-    public $sql   = 'mediumtext';
+    public $title       = LANG_PARSER_HTML;
+    public $sql         = 'mediumtext';
     public $filter_type = 'str';
-	public $allow_index = false;
+    public $allow_index = false;
+    public $var_type    = 'string';
 
     public function hasOptions(){ return true; }
 
@@ -23,6 +24,9 @@ class fieldHtml extends cmsFormField {
             )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+            )),
+            new fieldCheckbox('build_redirect_link', array(
+                'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
             )),
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,
@@ -43,7 +47,11 @@ class fieldHtml extends cmsFormField {
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){
-            $value = cmsEventsManager::hook('html_filter', array('text'=>$value, 'is_auto_br'=>false));
+            $value = cmsEventsManager::hook('html_filter', array(
+                'text'                => $value,
+                'is_auto_br'          => false,
+                'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
+            ));
         }
 
         return $value;

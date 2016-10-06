@@ -2,6 +2,17 @@
 
     define('LANG_COMMENTS_CONTROLLER',  'Комментарии');
 
+    define('LANG_COMMENTS_TEXT',  'Текст комментария');
+    define('LANG_COMMENTS_IP',  'IP адрес');
+    define('LANG_COMMENTS_IS_DELETED',  'Удалён?');
+    define('LANG_COMMENTS_IS_PRIVATE',  'Приватный?');
+    define('LANG_COMMENTS_VIEW',  'Смотреть комментарий');
+    define('LANG_COMMENTS_DELETE_CONFIRM',  'Вы действительно хотите удалить комментарий? Вложенные комментарии также удалятся.');
+    define('LANG_COMMENTS_EDIT_TEXT',  'Редактировать текст комментария');
+    define('LANG_COMMENTS_LIST',  'Все комментарии');
+    define('LANG_COMMENTS_DISABLE_ICMS_COMMENTS', 'Отключить систему комментирования InstantCMS');
+    define('LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT', 'Может пригодиться, если вы хотите оставить для комментирования стороннюю систему, например Вконтакте. Если другие системы комментирования отключены, эта опция игнорируется.');
+    define('LANG_COMMENTS_OPT_DIM_NEGATIVE', 'Затемнять комментарии с отрицательным рейтингом');
     define('LANG_COMMENTS_OPT_IS_GUESTS',	'Разрешить комментирование гостям');
     define('LANG_COMMENTS_OPT_IS_GUESTS_HINT',	'Незарегистрированные пользователи смогут добавлять комментарии');
     define('LANG_COMMENTS_OPT_GUESTS_DELAY',	'Пауза между комментариями гостей с одного IP');
@@ -19,6 +30,7 @@
     define('LANG_COMMENT_ERROR',        'Ошибка создания комментария');
     define('LANG_COMMENT_SUCCESS',      'Комментарий добавлен');
     define('LANG_COMMENT_DELETED',      'Комментарий удален');
+    define('LANG_COMMENTS_DELETED',     ' удалены');
 	define('LANG_COMMENT_DELETE_CONFIRM',      'Удалить комментарий пользователя %s?');
 
 	define('LANG_COMMENT_ERROR_NAME',	'Вы не указали свое имя');

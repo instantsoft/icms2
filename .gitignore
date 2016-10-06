@@ -3,3 +3,8 @@
 /upload/u1/
 /upload/000/
 /upload/default/
+/upgrade/
+/system/controllers/api/
+/system/languages/ru/controllers/api/
+/system/languages/en/controllers/api/
+/templates/default/controllers/api/

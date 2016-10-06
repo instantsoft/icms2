@@ -12,6 +12,8 @@ class modelAdmin extends cmsModel{
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
+
             return $item;
 
         });
@@ -27,6 +29,7 @@ class modelAdmin extends cmsModel{
     public function getControllerInfo($controller_name){
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
             return $item;
         });
     }
@@ -52,23 +55,25 @@ class modelAdmin extends cmsModel{
         $tasks = $this->filterEqual('is_active', 1)->getSchedulerTasks();
         $pending = array();
 
-        foreach($tasks as $task){
-
-            if ($task['is_new']) {
-                $pending[] = $task;
-                continue;
-            }
-
-            $time_last_run = strtotime($task['date_last_run']);
-            $time_now = time();
-
-            $minutes_ago = floor(($time_now - $time_last_run) / 60);
-
-            if ($minutes_ago >= $task['period']){
-                $pending[] = $task;
-                continue;
-            }
-
+        if($tasks){
+	        foreach($tasks as $task){
+	
+	            if ($task['is_new']) {
+	                $pending[] = $task;
+	                continue;
+	            }
+	
+	            $time_last_run = strtotime($task['date_last_run']);
+	            $time_now = time();
+	
+	            $minutes_ago = floor(($time_now - $time_last_run) / 60);
+	
+	            if ($minutes_ago >= $task['period']){
+	                $pending[] = $task;
+	                continue;
+	            }
+	
+	        }
         }
 
         return $pending;
@@ -107,13 +112,13 @@ class modelAdmin extends cmsModel{
         return $this->delete('scheduler_tasks', $id);
 
     }
-    
+
     public function toggleSchedulerPublication($id, $is_active){
-		
+
      	return $this->update('scheduler_tasks', $id, array(
 			'is_active' => $is_active
 		));
-		
+
     }
 
 //============================================================================//

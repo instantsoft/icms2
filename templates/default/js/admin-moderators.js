@@ -9,7 +9,7 @@ icms.adminModerators = (function ($) {
 
     this.add = function(){
 
-        var name = $('#username').val();
+        var name = $('#user_email').val();
 
         if (name.length==0) { return false; }
 
@@ -18,7 +18,7 @@ icms.adminModerators = (function ($) {
 
         $.post(this.url_submit, {name: name}, function(result){
 
-            $('#username').val('');
+            $('#user_email').val('');
 
             $('#ctype_moderators_add .field').show();
             $('#ctype_moderators_add .loading-icon').hide();

@@ -1,6 +1,6 @@
 <?php
-	$this->addJS( $this->getJavascriptFileName('fileuploader') );
-	$this->addJS( $this->getJavascriptFileName('images-upload') );
+	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
+	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
 
     $is_image_exists = !empty($paths);
 
@@ -34,12 +34,27 @@
         <?php echo LANG_LOADING; ?>
     </div>
 
+    <?php if($allow_import_link){ ?>
+        <div class="image_link upload block" <?php if ($is_image_exists) { ?>style="display:none"<?php } ?>>
+            <span><?php echo LANG_OR; ?></span> <a class="input_link_block" href="#"><?php echo LANG_PARSER_ADD_FROM_LINK; ?></a>
+        </div>
+    <?php } ?>
+
     <script>
 
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
 
         $(document).ready(function(){
             icms.images.upload('<?php echo $name; ?>', '<?php echo $upload_url; ?>');
+            <?php if($allow_import_link){ ?>
+                $('#widget_image_<?php echo $name; ?> .image_link a').on('click', function (){
+                    link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
+                    if(link){
+                        icms.images.uploadByLink('<?php echo $name; ?>', '<?php echo $upload_url; ?>', link);
+                    }
+                    return false;
+                });
+            <?php } ?>
         });
 
     </script>

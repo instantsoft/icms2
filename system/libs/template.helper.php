@@ -131,6 +131,7 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
  * @param string $type Тип поля
  * @param string $name Имя поля
  * @param string $value Значение по-умолчанию
+ * @param array $attributes Атрибуты тега название=>значение
  * @return html
  */
 function html_input($type='text', $name='', $value='', $attributes=array()){
@@ -157,7 +158,7 @@ function html_textarea($name='', $value='', $attributes=array()){
 }
 
 function html_back_button(){
-	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK_BUTTON.'</a></div>';
+	return '<div class="back_button"><a href="javascript:window.history.go(-1);">'.LANG_BACK.'</a></div>';
 }
 
 function html_checkbox($name, $checked=false, $value=1, $attributes=array()){
@@ -176,7 +177,7 @@ function html_radio($name, $checked=false, $value=1, $attributes=array()){
 
 function html_date($date=false, $is_time=false){
     $timestamp = $date ? strtotime($date) : time();
-    $date = htmlspecialchars(date(cmsConfig::get('date_format'), $timestamp));
+    $date = '<time datetime="'.date('c', $timestamp).'">'.htmlspecialchars(date(cmsConfig::get('date_format'), $timestamp)).'</time>';
     if ($is_time){ $date .= ' <span class="time">' . date('H:i', $timestamp). '</span>'; }
     return $date;
 }
@@ -200,14 +201,14 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     $datepicker_default = array(
         'showStatus' => true,
         'changeYear' => true,
-        'showOn'     => 'both',
+        'yearRange'  => '1976:'.date('Y', strtotime('+5 year')),
         'dateFormat' => cmsConfig::get('date_format_js')
     );
     if($datepicker){
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
     $attr_str = html_attr_str($attributes);
-	$html  = '<input type="text" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
+	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
     $html .= '$(function(){ $("#'.$id.'").datepicker('.json_encode($datepicker_default).'); });';
     $html .= '</script>';
@@ -245,15 +246,51 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
  * @param array|yaml $avatars Все изображения аватара
  * @param string $size_preset Название пресета
  * @param string $alt Замещающий текст изображения
+ * @param bool $is_html_empty_avatar Вместо дефолтных изображений показывать цветной блок с буквой
  * @return string
  */
-function html_avatar_image($avatars, $size_preset='small', $alt=''){
+function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_empty_avatar=false){
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
-    return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" />';
+    $img = '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" title="'.htmlspecialchars($alt).'" />';
+
+    if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
+
+        $iparams = get_image_block_param_by_title($alt);
+
+        $img = '<div class="default_avatar '.$iparams['class'].'" style="'.$iparams['style'].'" data-letter="'.htmlspecialchars(mb_substr($alt, 0, 1)).'">'.$img.'</div>';
+
+    }
+
+    return $img;
+
+}
+
+function get_image_block_param_by_title($title) {
+
+    static $image_block_params = null;
+    if(isset($image_block_params[$title])){
+        return $image_block_params[$title];
+    }
+
+    $bg_color = substr(dechex(crc32($title)), 0, 6);
+
+    // выбираем контрастный цвет для текста
+    $r = max( hexdec( substr($bg_color, 0, 2) ), 90);
+    $g = max( hexdec( substr($bg_color, 2, 2) ), 90);
+    $b = max( hexdec( substr($bg_color, 4, 2) ), 90);
+    $yiq = (($r*299)+($g*587)+($b*114)) / 1000;
+    $txt_color = ($yiq >= 140) ? 'black' : 'white';
+
+    $image_block_params[$title] = array(
+        'style' => "background-color: rgba({$r}, {$g}, {$b}, .9); color: {$txt_color};",
+        'class' => $txt_color.'_avatar_text'
+    );
+
+    return $image_block_params[$title];
 
 }
 
@@ -267,16 +304,45 @@ function html_avatar_image($avatars, $size_preset='small', $alt=''){
  */
 function html_image($image, $size_preset='small', $alt='', $attributes = array()){
 
+	$src = html_image_src($image, $size_preset, true);
+	if (!$src) { return ''; }
+
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
-	$src = html_image_src($image, $size_preset, true);
-
-	if (!$src) { return false; }
+    $title = htmlspecialchars(isset($attributes['title']) ? $attributes['title'] : $alt); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    return '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+    return '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+
+}
+
+/**
+ * Возвращает тег HTML gif изображения
+ * @param array|yaml $image Все размеры заданного изображения
+ * @param string $size_preset Название пресета
+ * @param string $alt Замещающий текст изображения
+ * @param array $attributes Массив аттрибутов тега
+ * @return string
+ */
+function html_gif_image($image, $size_preset='small', $alt='', $attributes = array()){
+
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+    if($size_preset == 'micro'){
+        $class .= ' micro_image';
+    }
+
+    $original_src = html_image_src($image, 'original', true);
+    $preview_src  = html_image_src($image, $size_preset, true);
+
+    if (!$preview_src) { return ''; }
+
+    return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
+                <span class="background_overlay"></span>
+                <span class="image_label">gif</span>
+                <img src="'.$preview_src.'" alt="'.htmlspecialchars($alt).'" />
+            </a>';
 
 }
 
@@ -335,9 +401,14 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
     $attr_str = html_attr_str($attributes);
 	$html = '<div class="input_checkbox_list" '.$attr_str.'>'."\n";
     $start_level = false;
+    if(is_array($selected) && $selected){
+        foreach ($selected as $k => $v) {
+            if(is_numeric($v)){ $selected[$k] = (int)$v; }
+        }
+    }
     foreach ($items as $value=>$title){
 
-        $checked = is_array($selected) && in_array($value, $selected);
+        $checked = is_array($selected) && in_array($value, $selected, true);
 
         if ($is_tree){
 

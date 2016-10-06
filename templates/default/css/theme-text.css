@@ -4,7 +4,7 @@ body {
     color:#444;
 }
 
-a, a.ajaxlink { color: #2980b9; }
+a, a.ajaxlink { will-change: all; color: #2980b9; transition: background 0.15s linear, color 0.15s linear; }
 a:hover, a.ajaxlink:hover { color: #d35400; }
 
 a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #2980b9; }
@@ -30,7 +30,7 @@ pre {
 code pre {
     display:block;
     overflow: auto;
-    border: 1px solid #CCCCCC;    
+    border: 1px solid #CCCCCC;
     border-radius: 2px;
     background: #F8F8F8;
     padding: 5px 15px;
@@ -57,3 +57,21 @@ ul {
 
 .positive { color:green; }
 .negative { color:red; }
+
+.hide_tag {
+    background:url("../images/icons/lock.png") no-repeat 5px center #e67e22;
+    color: #fff;
+    padding: 5px 10px 5px 25px;
+    overflow: hidden;
+}
+.hide_billing {
+    background:url("../images/icons/coin.png") no-repeat 5px center #3498db;
+}
+.user_field_denied {
+    background-color: #7f8c8d;
+}
+.hide_tag_allow {
+    border-left: 3px solid #e67e22;
+    padding: 5px 0 5px 10px;
+    overflow: hidden;
+}

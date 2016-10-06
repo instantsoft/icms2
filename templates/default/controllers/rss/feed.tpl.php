@@ -10,7 +10,7 @@
         <title><?php html($feed_title); ?></title>
         <link><?php html($config->host); ?></link>
         <description><?php html($feed['description']); ?></description>
-        <language><?php html($config->language); ?></language>
+        <language><?php html(cmsCore::getLanguageName()); ?></language>
         <pubDate><?php html(date('r')); ?></pubDate>
         <?php if(!empty($feed['image'])) { ?>
             <image>

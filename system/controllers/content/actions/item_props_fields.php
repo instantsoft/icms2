@@ -6,9 +6,9 @@ class actionContentItemPropsFields extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $ctype_name = $this->request->get('ctype_name');
-        $category_id = $this->request->get('category_id');
-        $item_id = $this->request->get('item_id');
+        $ctype_name  = $this->request->get('ctype_name', '');
+        $category_id = $this->request->get('category_id', 0);
+        $item_id     = $this->request->get('item_id', 0);
 
         if (!$ctype_name || !$category_id) { cmsCore::error404(); }
 

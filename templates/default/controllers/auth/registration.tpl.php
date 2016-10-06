@@ -30,7 +30,7 @@
 
         var group_id = $('select#group_id').val();
 
-        $('.groups-limit').hide();
+        $('.groups-limit').hide().find('input, select, textarea').prop('required', false);
 
         $('.group-' + group_id).show();
 

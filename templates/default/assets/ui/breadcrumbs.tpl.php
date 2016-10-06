@@ -13,9 +13,9 @@
 
             <?php if (in_array($item['href'], $listed)){ continue; } ?>
 
-            <li>
+            <li <?php if (!isset($item['is_last'])){ ?>itemscope itemtype="http://data-vocabulary.org/Breadcrumb"<?php } ?>>
                 <?php if (!isset($item['is_last'])){ ?>
-                    <a href="<?php html($item['href']); ?>"><span><?php html($item['title']); ?></span></a>
+                    <a href="<?php html($item['href']); ?>" itemprop="url"><span itemprop="title"><?php html($item['title']); ?></span></a>
                 <?php } else { ?>
                     <span><?php html($item['title']); ?></span>
                 <?php } ?>

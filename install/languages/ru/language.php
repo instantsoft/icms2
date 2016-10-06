@@ -90,6 +90,7 @@
     define('LANG_SITE_METADESC',            "Описание сайта");
 
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
+    define('LANG_SITE_HOMETITLE_ERROR',     "Требуется указать заголовок главной страницы");
 
     define('LANG_ADMIN_EXTERNAL',           'Реквизиты администратора будут взяты из таблицы <b>%s</b>');
     define('LANG_ADMIN_INFO',               'Для создания главного администратора необходимо указать его реквизиты');

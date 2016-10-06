@@ -16,6 +16,7 @@ class cmsTemplate {
 	protected $head_main_js = array();
 	protected $head_js = array();
 	protected $head_js_no_merge = array();
+	protected $head_css_no_merge = array();
 	protected $title;
 	protected $metadesc;
 	protected $metakeys;
@@ -45,7 +46,25 @@ class cmsTemplate {
 
 		$config = cmsConfig::getInstance();
 
-        $this->name = $name ? $name : $config->template;
+        if($name){
+
+            $this->setName($name);
+
+        } else {
+
+            $device_type = cmsRequest::getDeviceType();
+            $template = $config->template;
+
+            if($device_type !== 'desktop'){
+                $device_template = cmsConfig::get('template_'.$device_type);
+                if($device_template){
+                    $template = $device_template;
+                }
+            }
+
+            $this->setName($template);
+
+        }
 
         $this->setLayout('main');
 
@@ -57,8 +76,6 @@ class cmsTemplate {
 			$this->metakeys = $config->metakeys;
 			$this->metadesc = $config->metadesc;
 		}
-
-        $this->path = $config->root_path.'templates/'.$this->name;
 
         $this->options = $this->getOptions();
 
@@ -89,10 +106,10 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta content="'.htmlspecialchars($this->metakeys).'" name="keywords">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.htmlspecialchars($this->metakeys).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta content="'.htmlspecialchars($this->metadesc).'" name="description">' ."\n";
+				echo "\t". '<meta name="description" content="'.htmlspecialchars($this->metadesc).'">' ."\n";
 			}
         }
 
@@ -104,15 +121,16 @@ class cmsTemplate {
         } else {
             $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
             echo $tag;
+            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
         }
 
         if (!cmsConfig::get('merge_js')){
-            foreach ($this->head_main_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
         } else {
             $tag = "\t". $this->getJSTag( $this->getMergedJSPath() ) . "\n";
             echo $tag;
-            foreach ($this->head_js_no_merge as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+            foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
         }
 
 	}
@@ -237,6 +255,7 @@ class cmsTemplate {
 
         // для определения активного пункта меню
         $current_url = trim(cmsCore::getInstance()->uri, '/');
+        $href_lang = cmsCore::getLanguageHrefPrefix();
 
         foreach($menu as $id=>$item){
 
@@ -267,6 +286,9 @@ class cmsTemplate {
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : $item['url'];
                 $url = mb_substr($url, mb_strlen($config->root));
+                if($href_lang){
+                    $url = mb_substr($url, mb_strlen($href_lang));
+                }
                 $url = trim($url, '/');
 
                 if (!$url) { continue; }
@@ -341,7 +363,7 @@ class cmsTemplate {
     public function breadcrumbs($options=array()){
 
         $default_options = array(
-            'home_url'   => cmsConfig::get('host'),
+            'home_url'   => href_to_home(),
             'template'   => 'breadcrumbs',
             'strip_last' => true
         );
@@ -403,7 +425,7 @@ class cmsTemplate {
 	 */
 	public function setPageTitle($pagetitle){
 		$config = cmsConfig::getInstance();
-        if (func_num_args() > 1){ $pagetitle = implode(' - ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
         $this->title = $pagetitle;
         if($config->is_sitename_in_title){
             $this->title .= ' — '.$config->sitename;
@@ -582,10 +604,13 @@ class cmsTemplate {
 	 * Добавляет CSS файл в головной раздел страницы
 	 * @param string $file
 	 */
-	public function addCSS($file){
+	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
         if (isset($this->head_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
+        if (!$allow_merge){
+            $this->head_css_no_merge[$hash] = $file;
+        }
         return true;
 	}
 
@@ -620,11 +645,11 @@ class cmsTemplate {
         $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
         return $this->addJS($path, $comment, $allow_merge);
     }
-    public function addControllerCSS($path, $cname = ''){
+    public function addControllerCSS($path, $cname = '', $allow_merge = true){
         if(!$cname){$cname = $this->controller->name;}
         $path = "/controllers/{$cname}/css/{$path}.css";
         $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
-        return $this->addCSS($path);
+        return $this->addCSS($path, $allow_merge);
     }
 
 	public function insertJS($file, $comment=''){
@@ -666,7 +691,7 @@ class cmsTemplate {
         if(cmsCore::getInstance()->request->isAjax()){
             return $this->insertCSS($file);
         } else {
-            return $this->addCSS($file);
+            return $this->addCSS($file, false);
         }
     }
 
@@ -763,6 +788,7 @@ class cmsTemplate {
         $merged_contents = '';
 
         foreach($files as $file){
+            if (in_array($file, $this->head_css_no_merge)) { continue; }
             $file_path = $config->root_path . $file;
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
@@ -787,7 +813,7 @@ class cmsTemplate {
 
         $matches = array();
 
-        preg_match_all('/url\((.+)\)/i', $css, $matches);
+        preg_match_all('/url\(([^)]+)\)/si', $css, $matches);
 
         if ($matches){
 
@@ -799,10 +825,10 @@ class cmsTemplate {
 
             foreach($urls as $i => $url){
 
-                $abs_url = trim($url, '" ');
+                $abs_url = trim($url, '\'" ');
 
                 $is_root = mb_substr($abs_url, 0, 1) == '/';
-                $is_http = mb_substr($abs_url, 0, 7) == 'http://';
+                $is_http = mb_substr($abs_url, 0, 4) == 'http';
                 $is_data = mb_substr($abs_url, 0, 10) == 'data:image';
 
                 if ($is_data) { continue; }
@@ -858,11 +884,13 @@ class cmsTemplate {
      * Возвращает HTML-разметку схемы позиций виджетов
      * @return string
      */
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
         $config = cmsConfig::getInstance();
 
-        $scheme_file = $config->root_path . 'templates/'.$this->name.'/scheme.html';
+        $name = $name ? $name : $this->name;
+
+        $scheme_file = $config->root_path . 'templates/'.$name.'/scheme.html';
 
         if (!file_exists($scheme_file)) { return false; }
 
@@ -883,6 +911,21 @@ class cmsTemplate {
      */
     public function getName(){
         return $this->name;
+    }
+
+    /**
+     * Устанавливает название глобального шаблона
+     * @param string $name
+     * @return \cmsTemplate
+     */
+    public function setName($name){
+
+        $this->name = $name;
+
+        $this->path = cmsConfig::get('root_path').'templates/'.$this->name;
+
+        return $this;
+
     }
 
 // ========================================================================== //
@@ -927,7 +970,7 @@ class cmsTemplate {
 
         if (!file_exists($tpl_file)) { $tpl_file = $default; }
 
-        if (!file_exists($tpl_file)){
+        if (!is_readable($tpl_file)){
             if (!$is_check){
                 cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
             } else {
@@ -1017,7 +1060,7 @@ class cmsTemplate {
 
         $result = $this->render($tpl_file, $data, new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
-        $this->restoreContext($result);
+        $this->restoreContext();
 
         return $result;
 
@@ -1167,6 +1210,8 @@ class cmsTemplate {
             foreach($dataset as $row){
 
                 $cell_index = 0;
+                $editable_index = 1;
+                $editable_count = count(array_filter($grid['columns'], function($element) { return isset($element['editable']); }));
 
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
@@ -1177,7 +1222,7 @@ class cmsTemplate {
                         $value = $row[$field];
                     }
 
-                    if (!$value) { $value = ''; }
+                    if ($value === null) { $value = ''; }
 
                     if (isset($column['flag']) && $column['flag']){
 
@@ -1210,6 +1255,26 @@ class cmsTemplate {
                     if (isset($column['href'])){
 						$column['href'] = string_replace_keys_values($column['href'], $row);
                         $value = '<a href="'.$column['href'].'">'.$value.'</a>';
+                    }
+
+                    if(!empty($column['editable']['table'])){
+                        if(!empty($row['id'])){
+                            $save_action = href_to('admin', 'inline_save', array(urlencode($column['editable']['table']), $row['id']));
+                        }
+                        if(!empty($column['editable']['save_action'])){
+                            $save_action = string_replace_keys_values($column['editable']['save_action'], $row);
+                        }
+                        if(!empty($save_action)){
+                            $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
+                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field]);
+                            if($editable_index == $editable_count){
+                                $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit'));
+                            }
+                            $value .= '</div>';
+
+                            $editable_index++;
+
+                        }
                     }
 
                     $rows[$row_index][] = $value;
@@ -1294,10 +1359,10 @@ class cmsTemplate {
         }
 
         $result = array(
-            'rows' => $rows,
+            'rows'        => $rows,
             'pages_count' => $pages_count,
-            'total' => $total,
-            'columns' => $columns
+            'total'       => $total,
+            'columns'     => $columns
         );
 
         echo json_encode($result);
@@ -1361,14 +1426,17 @@ class cmsTemplate {
 //============================================================================//
     /**
      * Возвращает все названия шаблонов для списка записей типов контента
-     * @return array|boolean
+     * @return array
      */
     public function getAvailableContentListStyles(){
 
-        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
-        if (!$files) { return false; }
-
         $styles = array();
+
+        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
+        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);
+
+        $files = array_unique(array_merge($files, $default_files));
+        if (!$files) { return $styles; }
 
         foreach($files as $file){
 
@@ -1438,7 +1506,9 @@ class cmsTemplate {
 
         $template_file = $this->path . '/' . $layout . '.tpl.php';
 
-        if(file_exists($template_file)){
+        $device_type = cmsRequest::getDeviceType();
+
+        if(is_readable($template_file)){
 
             if (!$config->min_html){
                 include($template_file);
@@ -1503,13 +1573,32 @@ class cmsTemplate {
 
         cmsCore::loadTemplateLanguage($this->name);
 
-        $form_file = $this->path . '/options.form.php';
+        $form_file            = $this->path . '/options.form.php';
+        $deprecated_form_name = 'template_options';
+        $form_name            = $this->name . '_template_options';
+        $form                 = null;
 
-        $form_name = 'template_options';
+        // $form = cmsForm::getForm($form_file, $form_name);
+        // для совместимости форм шаблонов делаем здесь то, что делается в cmsForm::getForm, но с проверкой класса
+        // убрать через пару релизов. http://docs.instantcms.ru/dev/templates/options
 
-        $form = cmsForm::getForm($form_file, $form_name);
+        include_once $form_file;
 
-        if (!$form) { $form = new cmsForm(); }
+        $form_class = 'form' . string_to_camel('_', $form_name);
+
+        if(!class_exists($form_class)){
+            $form_class = 'form' . string_to_camel('_', $deprecated_form_name);
+        }
+
+        if(class_exists($form_class)){
+
+            $form = new $form_class();
+
+            $form->setStructure( $form->init() );
+
+        }
+
+        if ($form === null) { $form = new cmsForm(); }
 
         return $form;
 
@@ -1545,13 +1634,19 @@ class cmsTemplate {
 
         $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
 
-        if(!is_writable($options_file)){
-            return false;
+        if(file_exists($options_file)){
+            if(!is_writable($options_file)){
+                return false;
+            }
+        } else {
+            if(!is_writable(dirname($options_file))){
+                return false;
+            }
         }
 
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return @file_put_contents($options_file, $options_yaml);
+        return file_put_contents($options_file, $options_yaml);
 
     }
 

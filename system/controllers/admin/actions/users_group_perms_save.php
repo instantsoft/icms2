@@ -4,8 +4,8 @@ class actionAdminUsersGroupPermsSave extends cmsAction {
 
     public function run(){
 
-        $new_values = $this->request->get('value');
-        $group_id = $this->request->get('group_id');
+        $new_values = $this->request->get('value', array());
+        $group_id   = $this->request->get('group_id', 0);
 
         if (!$new_values || !$group_id) { cmsCore::error404(); }
 
@@ -52,6 +52,8 @@ class actionAdminUsersGroupPermsSave extends cmsAction {
 
             }
         }
+
+        cmsUser::addSessionMessage(LANG_CP_PERMISSIONS_SUCCESS, 'success');
 
         $this->redirectBack();
 

@@ -7,13 +7,13 @@ class onUsersUserPrivacyTypes extends cmsAction {
         $types = array();
 
         $types['users_profile_view'] = array(
-                'title' => LANG_USERS_PRIVACY_PROFILE_VIEW,
-                'options' => array('anyone', 'friends')
+            'title'   => LANG_USERS_PRIVACY_PROFILE_VIEW,
+            'options' => array('anyone', 'friends')
         );
 
         if ($this->options['is_wall']) {
             $types['users_profile_wall'] = array(
-                'title' => LANG_USERS_PRIVACY_PROFILE_WALL,
+                'title'   => LANG_USERS_PRIVACY_PROFILE_WALL,
                 'options' => array('anyone', 'friends')
             );
         }

@@ -29,8 +29,8 @@ class actionAdminCtypesModerators extends cmsAction {
 
         $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
 
-        return cmsTemplate::getInstance()->render('ctypes_moderators', array(
-            'ctype' => $this->ctype,
+        return $this->cms_template->render('ctypes_moderators', array(
+            'ctype'      => $this->ctype,
             'moderators' => $moderators
         ));
 
@@ -40,19 +40,14 @@ class actionAdminCtypesModerators extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $name = $this->request->get('name');
-
+        $name = $this->request->get('name', '');
         if (!$name) { cmsCore::error404(); }
 
-        $template = cmsTemplate::getInstance();
+        $user = cmsCore::getModel('users')->filterEqual('email', $name)->getUser();
 
-        $users_model = cmsCore::getModel('users');
-
-        $user = $users_model->filterEqual('nickname', $name)->getUser();
-
-        if ($user===false){
-            return $template->renderJSON(array(
-                'error' => true,
+        if ($user === false){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
                 'message' => sprintf(LANG_CP_USER_NOT_FOUND, $name)
             ));
         }
@@ -60,29 +55,29 @@ class actionAdminCtypesModerators extends cmsAction {
         $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
 
         if (isset($moderators[$user['id']])){
-            return $template->renderJSON(array(
-                'error' => true,
-                'message' => sprintf(LANG_MODERATOR_ALREADY, $name)
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => sprintf(LANG_MODERATOR_ALREADY, $user['nickname'])
             ));
         }
 
         $moderator = $this->content_model->addContentTypeModerator($this->ctype['name'], $user['id']);
 
         if (!$moderator){
-            return $template->renderJSON(array(
-                'error' => true,
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
                 'message' => LANG_ERROR
             ));
         }
-        
-        return $template->renderJSON(array(
+
+        return $this->cms_template->renderJSON(array(
             'error' => false,
-            'name' => $name,
-            'html' => $template->render('ctypes_moderator', array(
+            'name'  => $user['nickname'],
+            'html'  => $this->cms_template->render('ctypes_moderator', array(
                 'moderator' => $moderator,
-                'ctype' => $this->ctype
+                'ctype'     => $this->ctype
             ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL)),
-            'id' => $user['id'],
+            'id'    => $user['id']
         ));
 
     }
@@ -91,24 +86,21 @@ class actionAdminCtypesModerators extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
-
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
-
-        $template = cmsTemplate::getInstance();
 
         $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
 
         if (!isset($moderators[$id])){
-            return $template->renderJSON(array(
-                'error' => true,
+            return $this->cms_template->renderJSON(array(
+                'error' => true
             ));
         }
 
         $this->content_model->deleteContentTypeModerator($this->ctype['name'], $id);
 
-        return $template->renderJSON(array(
-            'error' => false,
+        return $this->cms_template->renderJSON(array(
+            'error' => false
         ));
 
     }

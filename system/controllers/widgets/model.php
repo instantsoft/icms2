@@ -11,7 +11,7 @@ class modelWidgets extends cmsModel {
             $page['url_mask_not'] = implode("\n", $page['url_mask_not']);
         }
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->insert('widgets_pages', $page);
 
@@ -19,7 +19,7 @@ class modelWidgets extends cmsModel {
 
     public function updatePage($id, $page){
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->update('widgets_pages', $id, $page);
 
@@ -30,7 +30,7 @@ class modelWidgets extends cmsModel {
         $this->filterEqual('page_id', $id);
         $this->deleteFiltered('widgets_bind');
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->delete('widgets_pages', $id);
 
@@ -38,7 +38,7 @@ class modelWidgets extends cmsModel {
 
     public function getPage($id){
 
-        $this->useCache("widgets.pages");
+        $this->useCache('widgets.pages');
 
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
@@ -96,7 +96,7 @@ class modelWidgets extends cmsModel {
 
         $this->filterLike('name', $name);
 
-        cmsCache::getInstance()->clean("widgets.pages");
+        cmsCache::getInstance()->clean('widgets.pages');
 
         return $this->deleteFiltered('widgets_pages');
 
@@ -106,7 +106,7 @@ class modelWidgets extends cmsModel {
 
         $this->filterEqual('page_id', $page_id);
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->deleteFiltered('widgets_bind');
 
@@ -132,9 +132,15 @@ class modelWidgets extends cmsModel {
         if ($controller_name != 'custom'){
             $this->filterNotNull('controller');
             $this->filterEqual('controller', $controller_name);
+            if ($controller_name === 'content'){
+                $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")
+                        ->select('ct.title', 'title_subject');
+            }
         } else {
             $this->filterIsNull('controller');
         }
+
+        $this->orderBy('name');
 
         return $this->get('widgets_pages', function($item, $model){
 
@@ -183,7 +189,7 @@ class modelWidgets extends cmsModel {
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
-        $this->useCache("widgets.bind");
+        $this->useCache('widgets.bind');
 
         return $this->getItemById('widgets_bind', $id, function($item, $model){
             $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -194,18 +200,15 @@ class modelWidgets extends cmsModel {
 
     }
 
-    public function getWidgetBindingsScheme($page_id){
+    public function getWidgetBindingsScheme($page_id, $template_name){
 
         $binds = $this->
+                    filterEqual('template', $template_name)->
                     filterStart()->
                         filterEqual('page_id', 0)->
-                    filterEnd()->
-                    filterOr()->
-                    filterStart()->
+                        filterOr()->
                         filterEqual('page_id', $page_id)->
-                    filterEnd()->
-                    filterOr()->
-                    filterStart()->
+                        filterOr()->
                         filterEqual('position', '_unused')->
                     filterEnd()->
                     orderBy('page_id, ordering')->
@@ -219,6 +222,7 @@ class modelWidgets extends cmsModel {
                 'id' => $bind['id'],
                 'title' => $bind['title'],
                 'is_tab_prev' => (bool)$bind['is_tab_prev'],
+                'is_enabled'  => (bool)$bind['is_enabled'],
                 'is_disabled' => $bind['page_id'] != $page_id && $bind['position'] != '_unused'
             );
 
@@ -228,26 +232,28 @@ class modelWidgets extends cmsModel {
 
     }
 
-    public function addWidgetBinding($widget, $page_id, $position){
+    public function addWidgetBinding($widget, $page_id, $position, $template){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->insert('widgets_bind', array(
-            'widget_id' => $widget['id'],
-            'title' => $widget['title'],
-            'page_id' => $page_id,
-            'position' => $position,
-            'ordering' => $this->
-                                filterEqual('page_id', $page_id)->
-                                filterEqual('position', $position)->
-                                getMaxOrdering('widgets_bind')
+            'template'   => $template,
+            'widget_id'  => $widget['id'],
+            'title'      => $widget['title'],
+            'page_id'    => $page_id,
+            'position'   => $position,
+            'is_enabled' => 1,
+            'ordering'   => $this->
+                    filterEqual('page_id', $page_id)->
+                    filterEqual('position', $position)->
+                    getMaxOrdering('widgets_bind')
         ));
 
     }
 
     public function updateWidgetBinding($id, $widget){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->update('widgets_bind', $id, $widget);
 
@@ -255,7 +261,7 @@ class modelWidgets extends cmsModel {
 
     public function deleteWidgetBinding($id){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->delete('widgets_bind', $id);
 
@@ -263,7 +269,7 @@ class modelWidgets extends cmsModel {
 
     public function reorderWidgetsBindings($position, $items, $page_id=0){
 
-        cmsCache::getInstance()->clean("widgets.bind");
+        cmsCache::getInstance()->clean('widgets.bind');
 
         $this->reorderByList('widgets_bind', $items, array('position'=>$position));
 
@@ -277,33 +283,37 @@ class modelWidgets extends cmsModel {
 
     }
 
-    public function unbindAllWidgets(){
+    public function unbindAllWidgets($template_name){
 
         cmsCache::getInstance()->clean('widgets.bind');
 
-        $this->filterNotNull('page_id')->updateFiltered('widgets_bind', array(
+        $this->filterNotNull('page_id')->filterEqual('template', $template_name)->updateFiltered('widgets_bind', array(
             'position'=>'_unused',
             'page_id'=>null
         ));
 
     }
 
-    public function getWidgetsForPages($pages_list){
+    public function getWidgetsForPages($pages_list, $template){
 
         $this->useCache('widgets.bind');
 
-        return $this->
+        $widgets = $this->
                     select('w.controller', 'controller')->
                     select('w.name', 'name')->
                     join('widgets', 'w', 'w.id = i.widget_id')->
+                    filterEqual('template', $template)->
+                    filterNotNull('is_enabled')->
                     filterIn('page_id', $pages_list)->
-                    orderBy('page_id, position, ordering')->
+                    orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
                     get('widgets_bind', function($item, $model){
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
                         return $item;
                     });
+
+        return cmsEventsManager::hook('widgets_before_list', $widgets);
 
     }
 

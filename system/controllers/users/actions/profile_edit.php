@@ -2,26 +2,26 @@
 
 class actionUsersProfileEdit extends cmsAction {
 
-    public function run($profile, $do=false){
+    public $lock_explicit_call = true;
+
+    public function run($profile, $do=false, $param=false){
 
 		if (!cmsUser::isLogged()) { cmsCore::error404(); }
-		
-        $user = cmsUser::getInstance();
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2));
+            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
             return;
         }
 
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         // Получаем поля
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}', $profile['id']);
 
         // Строим форму
         $form = new cmsForm();
@@ -51,10 +51,9 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Добавляем поле выбора часового пояса
-        $config = cmsConfig::getInstance();
         $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
         $form->addField($fieldset_id, new fieldList('time_zone', array(
-            'default' => $config->time_zone,
+            'default' => $this->cms_config->time_zone,
             'generator' => function($item){
                 return cmsCore::getTimeZones();
             }
@@ -75,7 +74,14 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors){
                 $is_allowed = cmsEventsManager::hookAll('user_profile_update', $profile, true);
-                if ($is_allowed !== true && in_array(false, $is_allowed)) { $errors = true; }
+                if (is_array($is_allowed)) {
+                    $errors = array();
+                    foreach ($is_allowed as $error_list) {
+                        if(is_array($error_list) && $error_list){
+                            $errors = array_merge($error_list);
+                        }
+                    }
+                }
             }
 
             if (!$errors){
@@ -85,27 +91,27 @@ class actionUsersProfileEdit extends cmsAction {
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user_data:time_zone', $profile['time_zone']);
-		
+
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){
                     $activity_controller = cmsCore::getController('activity');
-                    $activity_controller->deleteEntry($this->name, "avatar", $profile['id']);
+                    $activity_controller->deleteEntry($this->name, 'avatar', $profile['id']);
 					if (!empty($new['avatar'])){
-						$activity_controller->addEntry($this->name, "avatar", array(
-							'user_id' => $profile['id'],
-							'subject_title' => $profile['nickname'],
-							'subject_id' => $profile['id'],
-							'subject_url' => href_to('users', $profile['id']),
-							'is_private' => 0,
-							'group_id' => null,
-							'images' => array(
-								array(
-									'url' => href_to('users', $profile['id']),
-									'src' => html_image_src($new['avatar'], 'normal')
-								)
-							),
-							'images_count' => 1
-						));
+						$activity_controller->addEntry($this->name, 'avatar', array(
+							'user_id'       => $profile['id'],
+                            'subject_title' => $profile['nickname'],
+                            'subject_id'    => $profile['id'],
+                            'subject_url'   => href_to_rel('users', $profile['id']),
+                            'is_private'    => 0,
+                            'group_id'      => null,
+                            'images'        => array(
+                                array(
+                                    'url' => href_to_rel('users', $profile['id']),
+                                    'src' => html_image_src($new['avatar'], 'normal')
+                                )
+                            ),
+                            'images_count'  => 1
+                        ));
 					}
                 }
 
@@ -119,12 +125,12 @@ class actionUsersProfileEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('profile_edit', array(
-            'do' => 'edit',
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit', array(
+            'do'      => 'edit',
+            'id'      => $profile['id'],
             'profile' => $profile,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

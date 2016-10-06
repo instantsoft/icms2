@@ -187,7 +187,16 @@ class actionAdminInstall extends cmsAction {
 
         $uploader = new cmsUploader();
 
-        if (!$uploader->isUploaded( $this->upload_name )){ return false; }
+        if (!$uploader->isUploaded( $this->upload_name )){
+
+            $last_error = $uploader->getLastError();
+            if($last_error){
+                cmsUser::addSessionMessage($last_error, 'error');
+            }
+
+            return false;
+
+        }
 
         files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 

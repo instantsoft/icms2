@@ -42,7 +42,7 @@ body {
 
 .image{ float:right; margin:10px; }
 
-#layout a{ color:#09c; }
+#layout a{ color:#09c; transition: color ease-in-out .2s; }
 #layout a:hover{ color:#F90; }
 
 #layout a.ajaxlink{ color:#09c; border-bottom: dashed 1px #09c; text-decoration: none; }

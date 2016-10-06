@@ -37,9 +37,6 @@
 		'href'  => LANG_HELP_URL_CTYPES_FIELD
 	));
 
-?>
-
-<?php
     $this->renderForm($form, $field, array(
         'action' => '',
         'method' => 'post'
@@ -48,30 +45,35 @@
 
 <script type="text/javascript">
 
-    function loadFieldTypeOptions(){
+    function loadFieldTypeOptions(field){
 
-        var field_type = $('select#type').val();
+        $('#fset_type > div[id!=f_type]').remove();
 
-        $('#fset_type div[id!=f_type]').remove();
+        var field_type = $(field).val();
 
-        $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
-            <?php if ($do=='edit') { ?>                
-                field_id: '<?php echo $field['id']; ?>',
-            <?php } ?>
-            ctype_name: '<?php echo $ctype['name']; ?>',
-            type: field_type
-        }, function( html ){
-            if (!html) { return; }
-            $('#f_type').after( html );
-            icms.events.run('loadfieldtypeoptions', html);
-        }, "html")
+        if(field_type){
+            $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
+                <?php if ($do=='edit') { ?>
+                    field_id: '<?php echo $field['id']; ?>',
+                <?php } ?>
+                ctype_name: '<?php echo $ctype['name']; ?>',
+                type: field_type
+            }, function( html ){
+                if (!html) { return; }
+                $('#f_type').after( html );
+                icms.events.run('loadfieldtypeoptions', html);
+            }, 'html');
+        }
 
     }
 
-    $(document).ready(function(){
-        $('select#type').change(function(){ loadFieldTypeOptions(); });
-        if ($('#fset_type div[id!=f_type]').length == 0){
-            loadFieldTypeOptions();
+    $(function(){
+        var select_type = $('select#type');
+        $(select_type).on('change', function(){
+            loadFieldTypeOptions(this);
+        });
+        if ($('#fset_type > div[id!=f_type]').length == 0){
+            loadFieldTypeOptions(select_type);
         }
     });
 

@@ -311,6 +311,7 @@ class modelGroups extends cmsModel{
 
         $this->select('u.id', 'id');
         $this->select('u.nickname', 'nickname');
+        $this->select('u.email', 'email');
         $this->select('u.avatar', 'avatar');
 
         $this->join('{users}', 'u', 'u.id = i.user_id');

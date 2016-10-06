@@ -1,10 +1,8 @@
 <?php
 
-    $this->setPageTitle(LANG_USERS);
-
     $base_url = $this->controller->name;
-    $base_ds_url = $this->controller->name . '/index/%s';
 
+    $this->setPageTitle($dataset ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS);
     $this->addBreadcrumb(LANG_USERS, href_to($base_url));
 
 ?>
@@ -19,7 +17,7 @@
                 <?php $ds_selected = ($dataset_name == $set['name'] || (!$dataset_name && $ds_counter==0)); ?>
                 <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
 
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(href_to($base_ds_url), $set['name']); } ?>
+                    <?php if ($ds_counter > 0) { $ds_url = href_to($base_url, 'index', $set['name']); } ?>
                     <?php if ($ds_counter == 0) { $ds_url = href_to($base_url); } ?>
 
                     <?php if ($ds_selected){ ?>
@@ -35,4 +33,4 @@
     </div>
 <?php } ?>
 
-<?php echo $profiles_list_html; ?>
+<?php echo $profiles_list_html;

@@ -1,12 +1,19 @@
 <?php
-
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS 2                                   //
+//                        http://instantcms.ru/                               //
+//                   produced by InstantSoft, instantsoft.ru                  //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 	session_start();
 
 	define('VALID_RUN', true);
 
 	// Устанавливаем кодировку
 	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS');
+    header('X-Powered-By: InstantCMS 2');
 
     require_once 'bootstrap.php';
 

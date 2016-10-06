@@ -2,10 +2,7 @@
 
 class onCommentsUserTabShow extends cmsAction {
 
-    public function run($profile, $tab_name){
-
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+    public function run($profile, $tab_name, $tab){
 
         $this->model->filterEqual('user_id', $profile['id']);
 
@@ -13,10 +10,11 @@ class onCommentsUserTabShow extends cmsAction {
 
         $list_html = $this->renderCommentsList($page_url);
 
-        return $template->renderInternal($this, 'profile_tab', array(
-            'user' => $user,
+        return $this->cms_template->renderInternal($this, 'profile_tab', array(
+            'tab'     => $tab,
+            'user'    => $this->cms_user,
             'profile' => $profile,
-            'html' => $list_html
+            'html'    => $list_html
         ));
 
     }

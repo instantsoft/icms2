@@ -10,11 +10,11 @@
 	<title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $this->addMainCSS("templates/{$this->name}/css/theme-modal.css"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/jquery-modal.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/core.js"); ?>
-    <?php $this->addMainJS("templates/{$this->name}/js/modal.js"); ?>
+    <?php $this->addMainCSS("templates/default/css/theme-modal.css"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery.js"); ?>
+    <?php $this->addMainJS("templates/default/js/jquery-modal.js"); ?>
+    <?php $this->addMainJS("templates/default/js/core.js"); ?>
+    <?php $this->addMainJS("templates/default/js/modal.js"); ?>
     <?php $this->head(false); ?>
 <body>
 
@@ -36,7 +36,7 @@
                 </li>
             </ul>
             <ul id="right_links">
-                <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo $user->nickname; ?></a></li>
+                <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
                 <li><a href="<?php echo LANG_HELP_URL; ?>"><?php echo LANG_HELP; ?></a></li>
                 <li><a href="<?php echo href_to_home(); ?>"><?php echo LANG_CP_BACK_TO_SITE; ?></a></li>
                 <li><a href="<?php echo href_to('auth', 'logout'); ?>" class="logout"><?php echo LANG_LOG_OUT; ?></a></li>
@@ -77,8 +77,6 @@
 
                 <div class="pad"></div>
 
-                <div class="loading-overlay"></div>
-
         </div>
 
     </div>
@@ -91,7 +89,7 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
 
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
@@ -100,14 +98,45 @@
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
 
-        $(document).ready(function(){
-            fitLayout();
-            window.onbeforeunload = function(){
-                $('.loading-overlay').show();
+        toolbarScroll = {
+            win: null,
+            toolbar: null,
+            init: function (){
+                this.win     = $(window);
+                this.toolbar = $('.cp_toolbar');
+                if(this.toolbar.length == 0){
+                    return;
+                }
+                this.offset  = (this.toolbar).offset().top;
+                if((+$('#wrapper').height() - +$(this.win).height()) <= this.offset){
+                    return;
+                }
+                this.run();
+            },
+            run: function (){
+                handler = function (){
+                    toolbarScroll.doAutoScroll();
+                };
+                this.win.off('scroll', handler).on('scroll', handler).trigger('scroll');
+            },
+            doAutoScroll: function (){
+                scroll_top = this.win.scrollTop();
+                if (scroll_top > this.offset) {
+                    if(!$(this.toolbar).hasClass('fixed_toolbar')){
+                        $(this.toolbar).addClass('fixed_toolbar');
+                    }
+                } else {
+                    $(this.toolbar).removeClass('fixed_toolbar');
+                }
             }
-        });
+        };
 
-        $(window).resize(function(){
+        $(function(){
+            $(window).on('resize', function (){
+                toolbarScroll.init();
+                fitLayout();
+            });
+            toolbarScroll.init();
             fitLayout();
         });
 

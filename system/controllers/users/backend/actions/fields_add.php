@@ -8,28 +8,25 @@ class actionUsersFieldsAdd extends cmsAction {
         $content_model->setTablePrefix('');
 
         $form = $this->getForm('field', array('add'));
-
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook('user_field_form', $form);
 
         $field = array('ctype_id' => 'users');
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            if (!empty($field['is_system'])){
-                $field_type = $this->request->get('type');
-                $field_class = "field" . string_to_camel('_', $field_type);
-                $field_object = new $field_class(null, null);
-                $field_options = $field_object->getOptions();
-                foreach($field_options as $option_field){
-                    $option_field->setName("options:{$option_field->name}");
-                    $form->addField('type', $option_field);
-                }
+            $field_type = $this->request->get('type');
+            $field_class = "field" . string_to_camel('_', $field_type);
+            $field_object = new $field_class(null, null);
+            $field_options = $field_object->getOptions();
+            foreach($field_options as $option_field){
+                $option_field->setName("options:{$option_field->name}");
+                $form->addField('type', $option_field);
             }
 
-            $field = $form->parse($this->request, $is_submitted);
+            $field = $form->parse($this->request, true);
 
             $errors = $form->validate($this,  $field);
 
@@ -54,17 +51,15 @@ class actionUsersFieldsAdd extends cmsAction {
             }
 
             if ($errors){
-
-            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/field', array(
-            'do' => 'add',
-            'field' => $field,
-            'form' => $form,
+        return $this->cms_template->render('backend/field', array(
+            'do'     => 'add',
+            'field'  => $field,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

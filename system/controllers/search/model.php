@@ -7,17 +7,13 @@ class modelSearch extends cmsModel{
     protected $type;
     protected $date_interval;
 
-    private $default_sql_fields = array('id','slug','date_pub');
-
-    public function getDefaultSqlFields() {
-        return $this->default_sql_fields;
-    }
-
     public function setQuery($query){
 
         $this->original_query = $query;
 
         $this->query = array();
+
+        $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
         $words = explode(' ', $query);
 
@@ -25,8 +21,9 @@ class modelSearch extends cmsModel{
 
             $word = strip_tags(mb_strtolower(trim(urldecode($word))));
 
-            if (mb_strlen($word)<3) { continue; }
-            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word) . '*'; continue; }
+            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if($stopwords && in_array($word, $stopwords)){ continue; }
+            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
 
             if (mb_strlen($word) >= 12) {
                 $word = mb_substr($word, 0, mb_strlen($word) - 4);
@@ -77,26 +74,25 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchSQL($table_name, $fields, $default_fields=null){
+    public function getSearchSQL($table_name, $match_fields, $select_fields, $filters){
 
-        if(!is_array($default_fields)){
-            $default_fields = $this->default_sql_fields;
-        }
+        $match_fields  = implode(', ', $match_fields);
+        $select_fields = implode(', ', $select_fields);
 
         $query = $this->getFullTextQuery();
 
-        $sql_dfields = implode(', ', $default_fields);
-        $sql_fields  = implode(', ', $fields);
-
-        $select_fields = $sql_dfields;
-        // при запросе количества нам не нужно выбирать все поля
-        if(count($default_fields) > 1){
-            $select_fields .= ', '.$sql_fields;
+        $filter_sql = '';
+        if($filters){
+            foreach ($filters as $filter) {
+                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
+                $filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
+            }
+            $filter_sql = implode(' AND ', $filter_sql).' AND ';
         }
 
         $sql = "SELECT {$select_fields}
                 FROM {#}{$table_name}
-                WHERE is_pub = 1 AND MATCH({$sql_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
+                WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
                 ";
 
         if ($this->date_interval != 'all'){
@@ -119,9 +115,9 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchResultsCount($table_name, $fields){
+    public function getSearchResultsCount($table_name, $match_fields, $filters){
 
-        $sql = $this->getSearchSQL($table_name, $fields, array('id'));
+        $sql = $this->getSearchSQL($table_name, $match_fields, array('1'), $filters);
 
         $sql_result = $this->db->query($sql);
 
@@ -129,13 +125,9 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchResults($table_name, $fields, $default_fields=null, $item_callback=false){
+    public function getSearchResults($table_name, $match_fields, $select_fields, $filters, $item_callback=false, $sources_name = ''){
 
-        if(!is_array($default_fields)){
-            $default_fields = $this->default_sql_fields;
-        }
-
-        $sql = $this->getSearchSQL($table_name, $fields, $default_fields);
+        $sql = $this->getSearchSQL($table_name, $match_fields, $select_fields, $filters);
 
         if ($this->limit){ $sql .= " LIMIT {$this->limit}"; }
 
@@ -149,14 +141,12 @@ class modelSearch extends cmsModel{
 
         while ($item = $this->db->fetchAssoc($sql_result)){
 
-            foreach($fields as $field_name){
-                if (!in_array($field_name, array('title', 'photo'))){
-                    $item[$field_name] = $this->getHighlightedText($item[$field_name]);
-                }
+            foreach($match_fields as $field_name){
+                $item[$field_name] = $this->getHighlightedText($item[$field_name]);
             }
 
             if (is_callable($item_callback)){
-                $item = $item_callback($item, $this);
+                $item = call_user_func_array($item_callback, array($item, $this, $sources_name, $match_fields, $select_fields));
                 if ($item === false){ continue; }
             }
 
@@ -201,7 +191,7 @@ class modelSearch extends cmsModel{
             if ($is_found) { $found_sentences[] = $sentence; }
         }
 
-        if (!$found_sentences) { return false; }
+        if (!$found_sentences) { return string_short($text, 260); }
 
         $found_sentences = implode('... ', $found_sentences);
 

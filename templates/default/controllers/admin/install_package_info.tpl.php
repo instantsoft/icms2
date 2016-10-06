@@ -8,12 +8,27 @@
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);
 
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_INSTALL
+    ));
+
     // Зависимости удовлетворены
     $depends_pass = true;
+
+    if(!empty($manifest['notice_system_files'])){
+        cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
+    }
 
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE_INFO; ?></h1>
+
+<div class="cp_toolbar">
+    <?php $this->toolbar(); ?>
+</div>
 
 <h2>
     <?php html($manifest['info']['title']); ?>

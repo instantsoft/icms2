@@ -32,6 +32,7 @@
             <div class="buttons">
                 <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.wall.preview()'); ?>
                 <?php echo html_button(LANG_SEND, 'submit', 'icms.wall.submit()'); ?>
+                <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.wall.restoreForm()', array('class'=>'button-cancel')); ?>
             </div>
             <div class="loading">
                 <?php echo LANG_LOADING; ?>

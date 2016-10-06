@@ -6,7 +6,7 @@ class actionContentFolderDelete extends cmsAction {
 
         $user = cmsUser::getInstance();
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
         $folder = $this->model->getContentFolder($id);

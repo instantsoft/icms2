@@ -54,7 +54,7 @@ class actionAuthRegister extends cmsAction {
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getRequiredContentFields('users');
+        $fields = $content_model->getRequiredContentFields('{users}');
 
         // Разбиваем поля по группам
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields);
@@ -74,7 +74,7 @@ class actionAuthRegister extends cmsAction {
         $user = array();
 
         if ($this->request->hasInQuery('inv')){
-            $user['inv'] = $this->request->get('inv');
+            $user['inv'] = $this->request->get('inv','');
         }
 
         $is_submitted = $this->request->has('submit');
@@ -202,6 +202,8 @@ class actionAuthRegister extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
 
+                    cmsUser::setUPS('first_auth', 1, $user['id']);
+
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
 
@@ -210,9 +212,10 @@ class actionAuthRegister extends cmsAction {
                         $letter = array('name' => 'reg_verify');
 
                         $messenger->sendEmail($to, $letter, array(
-                            'nickname' => $user['nickname'],
-                            'page_url' => href_to_abs('auth', 'verify', $user['pass_token']),
-                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true),
+                            'nickname'    => $user['nickname'],
+                            'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
+                            'pass_token'  => $user['pass_token'],
+                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true)
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
@@ -223,6 +226,19 @@ class actionAuthRegister extends cmsAction {
 
 					}
 
+					// авторизуем пользователя автоматически
+					if ($this->options['reg_auto_auth']){
+
+						$logged_id = cmsUser::login($user['email'], $user['password1']);
+
+						if ($logged_id){
+
+							cmsEventsManager::hook('auth_login', $logged_id);
+
+						}
+
+					}
+
                     $back_url = cmsUser::sessionGet('auth_back_url') ?
                                 cmsUser::sessionGet('auth_back_url', true) :
                                 false;
@@ -230,7 +246,7 @@ class actionAuthRegister extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
                     }
 
                 } else {
@@ -250,11 +266,16 @@ class actionAuthRegister extends cmsAction {
             $captcha_html = cmsEventsManager::hook('captcha_html');
         }
 
-        return cmsTemplate::getInstance()->render('registration', array(
-            'user' => $user,
-            'form' => $form,
-            'captcha_html'=> isset($captcha_html) ? $captcha_html : false,
-            'errors' => isset($errors) ? $errors : false
+        // запоминаем откуда пришли на регистрацию
+        if(empty($errors) && $this->options['first_auth_redirect'] == 'none'){
+            cmsUser::sessionSet('auth_back_url', $this->getBackURL());
+        }
+
+        return $this->cms_template->render('registration', array(
+            'user'         => $user,
+            'form'         => $form,
+            'captcha_html' => isset($captcha_html) ? $captcha_html : false,
+            'errors'       => isset($errors) ? $errors : false
         ));
 
     }

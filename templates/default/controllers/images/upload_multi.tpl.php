@@ -1,7 +1,7 @@
 <?php
 
-	$this->addJS( $this->getJavascriptFileName('fileuploader') );
-	$this->addJS( $this->getJavascriptFileName('images-upload') );
+	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
+	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
 
 	$config = cmsConfig::getInstance();
 
@@ -42,14 +42,34 @@
         <a href="javascript:"><?php echo LANG_DELETE; ?></a>
     </div>
 
-    <div id="file-uploader-<?php echo $name; ?>"></div>
+    <div class="upload block">
+        <div id="file-uploader-<?php echo $name; ?>"></div>
+    </div>
+
+    <?php if($allow_import_link){ ?>
+        <div class="image_link upload block">
+            <span><?php echo LANG_OR; ?></span> <a class="input_link_block" href="#"><?php echo LANG_PARSER_ADD_FROM_LINK; ?></a>
+        </div>
+    <?php } ?>
+
+    <div class="loading block" style="display:none">
+        <?php echo LANG_LOADING; ?>
+    </div>
 
     <script>
-
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
-
         icms.images.createUploader('<?php echo $name; ?>', '<?php echo $upload_url; ?>');
-
+        <?php if($allow_import_link){ ?>
+            $(function(){
+                $('#widget_image_<?php echo $name; ?> .image_link a').on('click', function (){
+                    link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
+                    if(link){
+                        icms.images.uploadMultyByLink('<?php echo $name; ?>', '<?php echo $upload_url; ?>', link);
+                    }
+                    return false;
+                });
+            });
+        <?php } ?>
     </script>
 
 </div>

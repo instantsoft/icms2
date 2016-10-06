@@ -2,7 +2,7 @@
 
 class onActivityUserTabShow extends cmsAction {
 
-    public function run($profile, $tab_name){
+    public function run($profile, $tab_name, $tab){
 
         $user = cmsUser::getInstance();
         $template = cmsTemplate::getInstance();
@@ -21,10 +21,15 @@ class onActivityUserTabShow extends cmsAction {
 
         $list_html = $this->renderActivityList($page_url);
 
+        if($profile['id'] == $user->id){
+            $tab['title'] = LANG_ACTIVITY_TAB_MY;
+        }
+
         return $template->renderInternal($this, 'profile_tab', array(
-            'user' => $user,
+            'user'    => $user,
+            'tab'     => $tab,
             'profile' => $profile,
-            'html' => $list_html
+            'html'    => $list_html
         ));
 
     }

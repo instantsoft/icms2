@@ -15,7 +15,7 @@ icms.datagrid = (function ($) {
     }
 
     //====================================================================//
-	
+
     this.bind_sortable = function(){
         $('.datagrid th.sortable').click(function(){
 			console.log('click');
@@ -23,32 +23,23 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').keypress(function(event){
-
-            if (event.which == 13) {
-
-                event.preventDefault();
-
-                $('.datagrid .filter .input').each(function(){
-                    var filter = $(this).attr('rel');
-                    $('#datagrid_filter input[name='+filter+']').val($(this).val());
-                });
-
-                icms.datagrid.setPage(1);
-                icms.datagrid.loadRows();
-
-            }
-
+        $('.datagrid .filter .input').on('input', function () {
+            $('.datagrid .filter .input').each(function(){
+                var filter = $(this).attr('rel');
+                $('#datagrid_filter input[name='+filter+']').val($(this).val());
+            });
+            icms.datagrid.setPage(1);
+            icms.datagrid.loadRows();
         });
     };
-	
+
     //====================================================================//
 
     this.init = function(){
-		
+
         if(this.was_init){return false;}
         this.was_init = true;
-		
+
         console.log('init');
 
         if (this.options.is_sortable){
@@ -70,15 +61,19 @@ icms.datagrid = (function ($) {
         }
 
         if (this.options.is_selectable){
-            var ctrl = false, shift = false;
+            var shift = false;
             var tbody = $('#datagrid > tbody');
             var last = tbody.find('> tr:not(.filter):first');
-            $(document).keydown(function(event) {
-                if(event.keyCode === 16){shift = true;$('#datagrid').disableSelection();}
-                if(event.keyCode === 17){ctrl = true;$('#datagrid').disableSelection();}
-                }).keyup(function(event){
-                if(event.keyCode === 16){shift = false;$('#datagrid').enableSelection();}
-                if(event.keyCode === 17){ctrl = false;$('#datagrid').enableSelection();}
+            $(document).keydown(function(event){
+                if(event.keyCode === 16){
+                    shift = true;
+                    try{$('#datagrid').disableSelection();}catch(e){}
+                }
+            }).keyup(function(event){
+                if(event.keyCode === 16){
+                    shift = false;
+                    try{$('#datagrid').enableSelection();}catch(e){}
+                }
             });
             $(document).on('click', '#datagrid > tbody > tr:not(.filter) > td', function(){
                 var tr = $(this).parent();
@@ -89,7 +84,7 @@ icms.datagrid = (function ($) {
                     if(in1 === in2){
                         tr.toggleClass('selected');
                     }else{
-                        tbody.find('> tr:not(.filter):gt('+((in1<in2 ? in1-2 : in2-1))+'):not(:gt('+((in1>in2 ? (in1-in2) : (in2-in1))-1)+'))').toggleClass('selected');
+                        tbody.find('> tr:not(.filter)').slice((in1<in2 ? in1-1 : in2), (in1<in2 ? in2-1 : in1)).toggleClass('selected');
                     }
                 }else{
                     tr.toggleClass('selected');
@@ -97,12 +92,66 @@ icms.datagrid = (function ($) {
                 last = tr;
             });
         }
-	
+
         this.setOrdering();
-        
+
         if (this.options.url){
             this.loadRows();
         }
+
+        var sb = $('#datatree').parent();
+        $(sb).after('<td id="slide_cell"></td>');
+        $('#slide_cell').on('click', function (){
+            if($(sb).is(':visible')){
+                $(sb).hide();
+                $(this).addClass('unslided');
+            } else {
+                $(sb).show();
+                $(this).removeClass('unslided');
+            }
+        });
+        $(window).on('resize', function(){
+            if(!$(sb).is(':visible')){
+                $('#slide_cell').addClass('unslided');
+            }
+        }).triggerHandler('resize');
+        $(document).on('click', '.inline_submit', function(){
+            var s_button = $(this);
+            $(s_button).prop('disabled', true).parent().addClass('process_save');
+            var tr_wrap = $(this).closest('tr');
+            var action_url = $(this).data('action');
+            var fields = {};
+            $(tr_wrap).find('.grid_field_edit input.input').each(function (){
+                fields[$(this).attr('name')] = $(this).val();
+            });
+            $.post(action_url, {data: fields}, function(data){
+                $(s_button).prop('disabled', false).parent().removeClass('process_save');
+                if(data.error){ icms.modal.alert(data.error); } else {
+                    $(tr_wrap).find('.grid_field_edit').addClass('success').removeClass('edit_by_click_visible');
+                    $(tr_wrap).find('.grid_field_value').removeClass('edit_by_click_hidden');
+                    for(var _field in fields){
+                        var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
+                        if($(g_value_wrap).children().length){
+                            $(g_value_wrap).find('*').last().html(data.values[_field]);
+                        } else {
+                            $(g_value_wrap).html(data.values[_field]);
+                        }
+                    }
+                }
+            }, 'json');
+            return false;
+        });
+        $(document).on('input', '.grid_field_edit input.input', function(){
+            $(this).parent().removeClass('success');
+        });
+        $(document).on('keypress', '.grid_field_edit input.input', function(e){
+            if (e.which == 13) {
+                $(this).closest('tr').find('.inline_submit').trigger('click');
+            }
+        });
+        $(document).on('click', '.grid_field_value.edit_by_click', function(){
+            $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
+        });
 
     }
 
@@ -175,7 +224,7 @@ icms.datagrid = (function ($) {
         var selected_rows_count = $('.datagrid tr.selected').length;
 
         if (this.options.is_selectable && !selected_rows_count) {
-            alert(LANG_LIST_NONE_SELECTED);
+            icms.modal.alert(LANG_LIST_NONE_SELECTED, 'ui_warning');
             return 0;
         }
 
@@ -287,9 +336,9 @@ icms.datagrid = (function ($) {
             return;
         }
 
-        $.each(result.rows, function(){
+        $.each(result.rows, function(i){
             var row = this;
-            var row_html = '<tr id="'+row[0]+'">';
+            var row_html = '<tr id="'+(row[0] > 0 ? row[0] : ('tr_id_'+i))+'">';
             $.each(row, function(index){
                 if (index>0 || icms.datagrid.options.show_id) {
                         row_html = row_html + '<td>' + this + '</td>';
@@ -341,31 +390,31 @@ icms.datagrid = (function ($) {
         icms.datagrid.options.pages_count = result.pages_count;
 
 		$('.datagrid .flag_trigger a').on('click', function(){
-		
+
 			var url = $(this).attr('href');
 			var link = $(this);
 
 			link.parent('.flag_trigger').addClass('loading');
-			
+
 			$.post(url, {}, function(result){
-				
+
 				var flag = link.parent('.flag_trigger').removeClass('loading');
 				if (result.error){ return; }
 
 				var flag_class = flag.data('class');
 				var flag_class_on = flag_class + '_on';
 				var flag_class_off = flag_class + '_off';
-				
+
 				if (result.is_on){
 					flag.removeClass(flag_class_off).addClass(flag_class_on);
 				} else {
 					flag.removeClass(flag_class_on).addClass(flag_class_off);
 				}
-				
+
 			}, 'json');
-			
+
 			return false;
-			
+
 		});
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
@@ -398,7 +447,7 @@ icms.datagrid = (function ($) {
     this.hideLoadIndicator = function(){
         $('.datagrid_loading').hide();
     }
-	
+
 	this.escapeHtml = function(text) {
 		return text
 			.replace(/&/g, "&amp;")

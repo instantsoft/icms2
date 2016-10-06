@@ -21,9 +21,6 @@
         'href'  => $this->href_to('fields')
     ));
 
-?>
-
-<?php
     $this->renderForm($form, $field, array(
         'action' => '',
         'method' => 'post'
@@ -32,11 +29,11 @@
 
 <script type="text/javascript">
 
-    function loadFieldTypeOptions(){
+    function loadFieldTypeOptions(field){
 
-        var field_type = $('select#type').val();
+        $('#fset_type > div[id!=f_type]').remove();
 
-        $('#fset_type div[id!=f_type]').remove();
+        var field_type = $(field).val();
 
         $.post('<?php echo $this->href_to('fields_options'); ?>', {
             <?php if ($do=='edit') { ?>
@@ -46,14 +43,18 @@
         }, function( html ){
             if (!html) { return; }
             $('#f_type').after( html );
-        }, "html")
+            icms.events.run('loaduserfieldtypeoptions', html);
+        }, 'html')
 
     }
 
-    $(document).ready(function(){
-        $('select#type').change(function(){ loadFieldTypeOptions(); });
-        if ($('#fset_type div[id!=f_type]').length == 0){
-            loadFieldTypeOptions();
+    $(function(){
+        var select_type = $('select#type');
+        $(select_type).on('change', function(){
+            loadFieldTypeOptions(this);
+        });
+        if ($('#fset_type > div[id!=f_type]').length == 0){
+            loadFieldTypeOptions(select_type);
         }
     });
 

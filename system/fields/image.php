@@ -2,11 +2,11 @@
 
 class fieldImage extends cmsFormField {
 
-    public $title = LANG_PARSER_IMAGE;
-    public $sql   = 'text';
-	public $allow_index = false;
-
-    private $teaser_url = '';
+    public $title       = LANG_PARSER_IMAGE;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
+    protected $teaser_url = '';
 
     public function getOptions(){
 
@@ -29,6 +29,9 @@ class fieldImage extends cmsFormField {
                 'default' => 0,
                 'items' => $presets
             )),
+            new fieldCheckbox('allow_import_link', array(
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            ))
         );
     }
 
@@ -61,7 +64,13 @@ class fieldImage extends cmsFormField {
 
         if (!$paths || !isset($paths[ $this->getOption('size_full') ])){ return ''; }
 
-        return html_image($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
+        if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+            $img_func = 'html_gif_image';
+        } else {
+            $img_func = 'html_image';
+        }
+
+        return $img_func($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
 
@@ -147,6 +156,7 @@ class fieldImage extends cmsFormField {
         }
 
         $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

@@ -178,7 +178,7 @@ class cmsForm {
      */
     public function addField($fieldset_id, $field){
 
-        $this->structure[ $fieldset_id ]['childs'][] = $field;
+        $this->structure[ $fieldset_id ]['childs'][$field->name] = $field;
 
     }
 
@@ -305,7 +305,7 @@ class cmsForm {
 
                 $is_array = strpos($name, ':');
 
-                $value = $request->get($name, null);
+                $value = $request->get($name, null, $field->getDefaultVarType());
 
                 if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
 
@@ -314,7 +314,6 @@ class cmsForm {
                 $field->setItem($item);
 
                 $value = $field->store($value, $is_submitted, $old_value);
-
                 if ($value === false) { continue; }
 
                 if ($is_array === false){
@@ -324,6 +323,20 @@ class cmsForm {
                 if ($is_array !== false){
                     $name_parts = explode(':', $name);
                     $result[$name_parts[0]][$name_parts[1]] = $value;
+                }
+
+                // если нужна денормализация
+                if($is_submitted && $field->is_denormalization){
+
+                    $d_name = $field->getDenormalName();
+
+                    if ($is_array === false){
+                        $result[$d_name] = $field->storeCachedValue($value);
+                    } else {
+                        $d_name_parts = explode(':', $d_name);
+                        $result[$d_name_parts[0]][$d_name_parts[1]] = $field->storeCachedValue($value);
+                    }
+
                 }
 
             }
@@ -353,7 +366,7 @@ class cmsForm {
         // Проверяем CSRF-token
         //
         if ($is_check_csrf){
-            $csrf_token = $controller->request->get('csrf_token');
+            $csrf_token = $controller->request->get('csrf_token', '');
             if ( !self::validateCSRFToken( $csrf_token ) ){
                 return true;
             }

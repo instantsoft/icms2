@@ -2,16 +2,16 @@
 
 <?php if ($fields['title']['is_in_item']){ ?>
     <h1>
-        <?php if ($item['parent_id']){ ?>
-            <div class="parent_title">
-                <a href="<?php echo href_to($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a> &rarr;
-            </div>
-        <?php } ?>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>
+    <?php if ($item['parent_id']){ ?>
+        <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
+            <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+        </h2>
+    <?php } ?>
     <?php unset($fields['title']); ?>
 <?php } ?>
 
@@ -19,9 +19,8 @@
 
     <?php foreach($fields as $name=>$field){ ?>
 
-        <?php if (!$field['is_in_item']) { continue; } ?>
-        <?php if ($field['is_system']) { continue; } ?>
-        <?php if (empty($item[$field['name']]) || empty($field['html'])) { continue; } ?>
+        <?php if (!$field['is_in_item'] || $field['is_system']) { continue; } ?>
+        <?php if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { continue; } ?>
         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
         <?php
@@ -137,9 +136,10 @@
                 <?php } ?>
             <?php } ?>
             <div class="bar_item bi_share">
-                <div class="share" style="margin:-4px">
-                    <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
-                    <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir,lj,gplus"></div>
+                <div class="share">
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
                 </div>
             </div>
             <?php if (!$item['is_approved']){ ?>

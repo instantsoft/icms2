@@ -2,11 +2,11 @@
 
 class fieldColor extends cmsFormField {
 
-    public $title   = LANG_PARSER_COLOR;
-    public $sql     = 'varchar(7) NULL DEFAULT NULL';
-    public $filter_type = 'str';
+    public $title       = LANG_PARSER_COLOR;
+    public $sql         = 'varchar(7) NULL DEFAULT NULL';
     public $filter_hint = '#RRGGBB';
     public $allow_index = false;
+    public $var_type    = 'string';
 
     public function getRules() {
 

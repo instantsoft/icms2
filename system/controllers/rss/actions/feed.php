@@ -47,7 +47,7 @@ class actionRssFeed extends cmsAction {
 
 		header('Content-type: application/rss+xml; charset=utf-8');
 
-        $rss = cmsTemplate::getInstance()->getRenderedChild($feed['template'], array(
+        $rss = $this->cms_template->getRenderedChild($feed['template'], array(
             'feed'     => $feed,
             'category' => $category,
             'author'   => $author

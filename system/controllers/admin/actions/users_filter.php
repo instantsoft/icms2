@@ -22,8 +22,14 @@ class actionAdminUsersFilter extends cmsAction {
             'handler' => new fieldNumber('karma')
         );
 
+        $fields[] = array(
+            'title' => LANG_USER_IS_ADMIN,
+            'name' => 'is_admin',
+            'handler' => new fieldCheckbox('is_admin')
+        );
+
 		$fields = cmsEventsManager::hook('admin_users_filter', $fields);
-		
+
         return cmsTemplate::getInstance()->render('users_filter', array(
             'ctype' => $ctype,
             'fields' => $fields

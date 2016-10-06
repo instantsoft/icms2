@@ -16,7 +16,7 @@ class modelMessages extends cmsModel {
     public function addContact($user_id, $contact_id){
 
         return $this->insert('{users}_contacts', array(
-            'user_id' => $user_id,
+            'user_id'    => $user_id,
             'contact_id' => $contact_id
         ));
 
@@ -45,10 +45,11 @@ class modelMessages extends cmsModel {
         $this->select('u.nickname', 'nickname');
         $this->select('u.avatar', 'avatar');
         $this->select('u.is_admin', 'is_admin');
+        $this->select('u.date_log', 'date_log');
         $this->select('IFNULL(COUNT(m.id), 0)', 'new_messages');
 
         $this->join('{users}', 'u', 'u.id = i.contact_id');
-        $this->joinLeft('{users}_messages', 'm', 'm.from_id = i.contact_id AND m.to_id = i.user_id AND m.is_new = 1');
+        $this->joinLeft('{users}_messages', 'm', 'm.from_id = i.contact_id AND m.to_id = i.user_id AND m.is_new = 1 AND m.is_deleted IS NULL');
 
         $this->filterEqual('user_id', $user_id);
 
@@ -56,7 +57,10 @@ class modelMessages extends cmsModel {
 
         $this->orderBy('date_last_msg', 'desc');
 
-        return $this->get('{users}_contacts');
+        return $this->get('{users}_contacts', function ($item, $model){
+            $item['is_online'] = cmsUser::userIsOnline($item['id']);
+            return $item;
+        });
 
     }
 
@@ -72,12 +76,13 @@ class modelMessages extends cmsModel {
 
         $this->select('u.id', 'id');
         $this->select('u.nickname', 'nickname');
+        $this->select('u.date_log', 'date_log');
         $this->select('u.avatar', 'avatar');
         $this->select('u.is_admin', 'is_admin');
         $this->select('u.privacy_options', 'privacy_options');
         $this->select('COUNT(g.user_id)', 'is_ignored');
         $this->join('{users}', 'u', 'u.id = i.contact_id');
-        $this->joinLeft('{users}_ignors', 'g', 'g.ignored_user_id = i.contact_id AND g.user_id = ' . $user_id);
+        $this->joinLeft('{users}_ignors', 'g', "g.ignored_user_id = i.contact_id AND g.user_id = '{$user_id}'");
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('contact_id', $contact_id);
@@ -86,6 +91,7 @@ class modelMessages extends cmsModel {
 
         return $this->getItem('{users}_contacts', function($item, $model){
             $item['privacy_options'] = cmsModel::yamlToArray($item['privacy_options']);
+            $item['is_online'] = cmsUser::userIsOnline($item['contact_id']);
             return $item;
         });
 
@@ -166,7 +172,7 @@ class modelMessages extends cmsModel {
 
             $message_ids[] = $this->insert('{users}_messages', array(
                 'from_id' => $from_id,
-                'to_id' => $to_id,
+                'to_id'   => $to_id,
                 'content' => $content
             ));
 
@@ -176,19 +182,61 @@ class modelMessages extends cmsModel {
 
     }
 
+    public function deleteMessages($user_id, $ids){
+
+        $this->filterEqual('from_id', $user_id);
+        $this->filterIn('id', $ids);
+
+        $this->lockFilters()->updateFiltered('{users}_messages', array(
+           'is_deleted'  => 1,
+           'date_delete' => NULL
+        ));
+
+        $this->filterEqual('is_new', 1);
+
+        $delete_msg_ids = $this->selectOnly('id')->get('{users}_messages', function($item, $model){
+            return $item['id'];
+        }, false);
+
+        $this->unlockFilters();
+
+        if($delete_msg_ids){
+            $this->deleteFiltered('{users}_messages');
+        }
+
+        $this->resetFilters();
+
+        return $delete_msg_ids;
+
+    }
+
+    public function restoreMessages($user_id, $id){
+
+        $this->filterEqual('from_id', $user_id);
+        $this->filterEqual('id', $id);
+
+        return $this->updateFiltered('{users}_messages', array(
+           'is_deleted'  => null,
+           'date_delete' => false
+        ));
+
+    }
+
 //============================================================================//
 //============================================================================//
 
     public function getMessage($id){
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->join('{users}', 'u', 'u.id = i.from_id');
 
         return $this->getItemById('{users}_messages', $id, function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['from_id'],
+                'id'       => $item['from_id'],
                 'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar']
             );
 
             return $item;
@@ -205,19 +253,9 @@ class modelMessages extends cmsModel {
 
         if ($this->filter_on) { $this->filterAnd(); }
 
-        $this->filterStart();
-            $this->filterStart();
-            $this->filterEqual('from_id', $user_id);
-            $this->filterEqual('to_id', $contact_id);
-            $this->filterEnd();
-
-            $this->filterOr();
-
-            $this->filterStart();
-            $this->filterEqual('from_id', $contact_id);
-            $this->filterEqual('to_id', $user_id);
-            $this->filterEnd();
-        $this->filterEnd();
+        $this->filterIn('from_id', array($user_id, $contact_id));
+        $this->filterIn('to_id', array($user_id, $contact_id));
+        $this->filterIsNull('is_deleted');
 
         $this->orderBy('id', 'desc');
 
@@ -233,7 +271,7 @@ class modelMessages extends cmsModel {
 
         }, false);
 
-        return is_array($messages) ? array_reverse($messages) : false;
+        return is_array($messages) ? array_reverse($messages) : array();
 
     }
 
@@ -249,6 +287,7 @@ class modelMessages extends cmsModel {
         $this->filterEqual('from_id', $contact_id);
         $this->filterEqual('to_id', $user_id);
         $this->filterEnd();
+        $this->filterIsNull('is_deleted');
 
         $this->orderBy('id');
 
@@ -273,71 +312,27 @@ class modelMessages extends cmsModel {
 
     public function deleteUserMessages($user_id){
 
-        $this->delete('{users}_ignors', $user_id, "user_id");
-        $this->delete('{users}_messages', $user_id, "from_id");
-        $this->delete('{users}_messages', $user_id, "to_id");
-        $this->delete('{users}_notices', $user_id, "user_id");
-        $this->delete('{users}_contacts', $user_id, "user_id");
-        $this->delete('{users}_contacts', $user_id, "contact_id");
+        $this->delete('{users}_ignors', $user_id, 'user_id');
+        $this->delete('{users}_messages', $user_id, 'from_id');
+        $this->delete('{users}_messages', $user_id, 'to_id');
+        $this->delete('{users}_notices', $user_id, 'user_id');
+        $this->delete('{users}_contacts', $user_id, 'user_id');
+        $this->delete('{users}_contacts', $user_id, 'contact_id');
 
     }
 
 //============================================================================//
 //============================================================================//
-
-    public function hasOlderMessages($user_id, $contact_id, $message_id){
-
-        $this->filterStart();
-            $this->filterStart();
-            $this->filterEqual('from_id', $user_id);
-            $this->filterEqual('to_id', $contact_id);
-            $this->filterEnd();
-
-            $this->filterOr();
-
-            $this->filterStart();
-            $this->filterEqual('from_id', $contact_id);
-            $this->filterEqual('to_id', $user_id);
-            $this->filterEnd();
-        $this->filterEnd();
-
-        $this->filterAnd();
-
-        $this->filterLt('id', $message_id);
-
-        $count = $this->getCount('{users}_messages');
-
-        $this->resetFilters();
-
-        return (bool)$count;
-
-    }
 
     public function getNewMessagesCount($user_id){
 
         $this->filterEqual('to_id', $user_id);
         $this->filterEqual('is_new', 1);
+        $this->filterIsNull('is_deleted');
 
         $count = $this->getCount('{users}_messages');
 
         return $count;
-
-    }
-
-    public function getContactsWithNewMessages($user_id){
-
-        $this->select('COUNT(i.id)', 'messages');
-
-        $this->filterEqual('to_id', $user_id);
-        $this->filterEqual('is_new', 1);
-
-        $this->groupBy('from_id');
-
-        return $this->get('{users}_messages', function($item, $model){
-
-            return $item['messages'];
-
-        }, 'from_id');
 
     }
 

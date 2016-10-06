@@ -1,6 +1,8 @@
 <?php
 class modelGeo extends cmsModel {
 
+    public $limit = '';
+
     public function getCountries(){
 
         $this->useCache("geo.countries");

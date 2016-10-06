@@ -5,10 +5,13 @@
     margin-bottom:10px;
 }
 
-.widget:last-child {
+.widget_ajax_wrap:last-child .widget:last-child {
     margin-bottom: 0;
 }
-
+.widget_ajax_wrap {
+    position: relative;
+    box-sizing: border-box;
+}
 .widget > .title{
     padding:0 15px;
     height:47px;
@@ -114,7 +117,7 @@ aside .widget > .title {
 
 .widget_tabbed > .tabs .links a{
     display:inline;
-    padding: 2px 8px;
+    padding: 3px 8px;
     background: #27ae60;
     color:#fff;
     font-size: 12px;
@@ -200,7 +203,7 @@ aside .widget_tabbed > .tabs .links a {
     margin-top: 10px;
 }
 
-.widget_content_list.featured .item-first .read-more a:hover { background:#2980b9; }
+.widget_content_list.featured .item-first .read-more a:hover { background:#3498db; }
 
 .widget_content_list.tiles-big .item {  }
 .widget_content_list.tiles-big .item .title { font-size:14px; }
@@ -464,7 +467,7 @@ aside .widget_tabbed > .tabs .links a {
 .widget_profiles_list .item .image img, .item-avatar > img { display: block; }
 .widget_profiles_list.list .item .info { float:left; }
 
-.widget_profiles_list.tiles .item { display:inline-block; }
+.widget_profiles_list.tiles .item, .widget_online_list .item, .widget_user_avatar .default_avatar { display:inline-block; }
 
 /* ========================================================================== */
 
@@ -490,7 +493,7 @@ aside .widget_tabbed > .tabs .links a {
     padding-left:20px;
     background: url("../images/icons/folder.png") no-repeat left 1px;
 }
-
+.folder_hidden { display: none; }
 .widget_content_tree ul li.active > a:hover,
 .widget_content_tree ul li.active > a { color:#000; text-decoration: none; }
 
@@ -550,18 +553,20 @@ aside .widget_tabbed > .tabs .links a {
 .widget_tags_cloud .tags_as_list li .counter {
     font-size:11px;
 }
-
+.widget_tags_cloud li.colored > a {
+    color: inherit;
+}
 /* ========================================================================== */
 
 .widget_auth .field { overflow: hidden; }
 .widget_auth .field a { float:right; font-size:12px; margin-top:4px; }
 .widget_auth .field label { float:left; }
-.widget_auth .field .input { width: 95%; }
 .widget_auth .buttons { margin-top:15px; }
 
 @media screen and (max-width: 640px) {
     .widget_content_slider .items .item .title { display:none !important; }
     .widget_content_slider .items { width:60px  !important; }
+    .widget_content_list.featured .item-first { float:none; margin-right:0; width:100%; }
 }
 
 /* ========================================================================== */
@@ -569,7 +574,6 @@ aside .widget_tabbed > .tabs .links a {
 .widget_search { background-color:#34495E; margin:-15px; padding:10px; }
 
 .widget_search .input {
-    width:192px;
     border:none; box-shadow: none;
     padding-left:24px;
     background:url("../images/icons/search-glyph.png") no-repeat 4px center #FFF;

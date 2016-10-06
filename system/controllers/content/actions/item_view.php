@@ -4,29 +4,41 @@ class actionContentItemView extends cmsAction {
 
     public function run(){
 
-        $user   = cmsUser::getInstance();
-        $config = cmsConfig::getInstance();
+        $props = $props_values = false;
 
         // Получаем название типа контента и сам тип
-        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name'));
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
 
 		// Получаем SLUG записи
-        $slug = $this->request->get('slug');
+        $slug = $this->request->get('slug', '');
 
 		if (!$ctype) {
-			if ($config->ctype_default){
-				$ctype = $this->model->getContentTypeByName($config->ctype_default);
+			if ($this->cms_config->ctype_default){
+				$ctype = $this->model->getContentTypeByName($this->cms_config->ctype_default);
 				if (!$ctype) { cmsCore::error404(); }
 				$slug = $ctype['name'] . '/' . $slug;
 			} else {
 				cmsCore::error404();
 			}
 		} else {
-			$core = cmsCore::getInstance();
-			if ($config->ctype_default && $config->ctype_default == $core->uri_action){
+			if ($this->cms_config->ctype_default && $this->cms_config->ctype_default == $this->cms_core->uri_action){
 				$this->redirect(href_to($slug . '.html'), 301);
 			}
+            // если название переопределено, то редиректим со старого на новый
+            $mapping = cmsConfig::getControllersMapping();
+            if($mapping){
+                foreach($mapping as $name=>$alias){
+                    if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
+                        $this->redirect(href_to($alias.'/'. $slug.'.html'), 301);
+                    }
+                }
+            }
 		}
+
+        // чтобы привязки виджетов к записям работали
+        if ($this->cms_config->ctype_default && $this->cms_config->ctype_default == $ctype['name']){
+            $this->cms_core->uri = $this->cms_config->ctype_default .'/'. $this->cms_core->uri;
+        }
 
 		if (!$ctype['options']['item_on']) { cmsCore::error404(); }
 
@@ -35,20 +47,20 @@ class actionContentItemView extends cmsAction {
         if (!$item) { cmsCore::error404(); }
 
         // Проверяем прохождение модерации
-        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $user->id);
+        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
         if (!$item['is_approved']){
-            if (!$is_moderator && $user->id != $item['user_id']){ cmsCore::error404(); }
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
         }
 
         // Проверяем публикацию
         if (!$item['is_pub']){
-            if (!$is_moderator && $user->id != $item['user_id']){ cmsCore::error404(); }
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
         }
 
         // Проверяем приватность
         if ($item['is_private'] == 1){ // доступ только друзьям
 
-            $is_friend           = $user->isFriend($item['user_id']);
+            $is_friend           = $this->cms_user->isFriend($item['user_id']);
             $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
 
             if (!$is_friend && !$is_can_view_private && !$is_moderator){
@@ -104,7 +116,7 @@ class actionContentItemView extends cmsAction {
                 'target_subject' => $ctype['name']
             ), cmsRequest::CTX_INTERNAL));
 
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($item['user_id'] != $user->id);
+            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($item['user_id'] != $this->cms_user->id);
 
             $item['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_allowed);
 
@@ -131,25 +143,31 @@ class actionContentItemView extends cmsAction {
         }
 
         // Информация о модераторе для админа и владельца записи
-        if ($item['approved_by'] && ($user->is_admin || $user->id == $item['user_id'])){
+        if ($item['approved_by'] && ($this->cms_user->is_admin || $this->cms_user->id == $item['user_id'])){
             $item['approved_by'] = cmsCore::getModel('users')->getUser($item['approved_by']);
         }
 
         list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
-		if (!empty($ctype['options']['hits_on']) && $user->id != $item['user_id'] && !$user->is_admin){
+		if (!empty($ctype['options']['hits_on']) && $this->cms_user->id != $item['user_id'] && !$this->cms_user->is_admin){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 
-        return cmsTemplate::getInstance()->render('item_view', array(
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_item', $item);
+        cmsModel::cacheResult('current_ctype_fields', $fields);
+        cmsModel::cacheResult('current_ctype_props', $props);
+
+        return $this->cms_template->render('item_view', array(
             'ctype'        => $ctype,
             'fields'       => $fields,
-            'props'        => isset($props) ? $props : false,
-            'props_values' => isset($props_values) ? $props_values : false,
+            'props'        => $props,
+            'props_values' => $props_values,
             'item'         => $item,
             'is_moderator' => $is_moderator,
-            'user'         => $user
+            'user'         => $this->cms_user
         ));
 
     }

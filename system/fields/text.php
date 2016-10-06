@@ -2,12 +2,12 @@
 
 class fieldText extends cmsFormField {
 
-    public $title = LANG_PARSER_TEXT;
-    public $sql   = 'text';
+    public $title       = LANG_PARSER_TEXT;
+    public $sql         = 'text';
     public $filter_type = 'str';
-	public $allow_index = false;
-
-    public $size = 5;
+    public $allow_index = false;
+    public $var_type    = 'string';
+    public $size        = 5;
 
     public function getOptions(){
         return array(
@@ -19,8 +19,14 @@ class fieldText extends cmsFormField {
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 4096
             )),
+            new fieldCheckbox('show_symbol_count', array(
+                'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
+            )),
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
+            )),
+            new fieldCheckbox('build_redirect_link', array(
+                'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -51,7 +57,11 @@ class fieldText extends cmsFormField {
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){
-            return cmsEventsManager::hook('html_filter', $value);
+            return cmsEventsManager::hook('html_filter', array(
+                'text'                => $value,
+                'is_auto_br'          => true,
+                'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
+            ));
         } else {
             return nl2br(htmlspecialchars($value));
         }

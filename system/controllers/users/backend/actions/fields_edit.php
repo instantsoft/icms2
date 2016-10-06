@@ -11,8 +11,7 @@ class actionUsersFieldsEdit extends cmsAction {
         $content_model->setTablePrefix('');
 
         $form = $this->getForm('field', array('edit'));
-
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook('user_field_form', $form);
 
         $field = $content_model->getContentField('{users}', $field_id);
 
@@ -27,11 +26,11 @@ class actionUsersFieldsEdit extends cmsAction {
             $form->removeFieldset('privacy');
             $form->removeFieldset('values');
         }
-        
-        // удалим выбор типа для полей с фиксированным типом
-        if ($field['is_fixed_type']) { $form->removeFieldset('type'); }        
 
-        if ($is_submitted){
+        // удалим выбор типа для полей с фиксированным типом
+        if ($field['is_fixed_type']) { $form->removeFieldset('type'); }
+
+        if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
@@ -49,7 +48,7 @@ class actionUsersFieldsEdit extends cmsAction {
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
 
-            $field = array_merge($defaults, $form->parse($this->request, $is_submitted));
+            $field = array_merge($defaults, $form->parse($this->request, true));
             $errors = $form->validate($this,  $field);
 
             if (!$errors){
@@ -69,21 +68,18 @@ class actionUsersFieldsEdit extends cmsAction {
             }
 
             if ($errors){
-
-            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/field', array(
-            'do' => 'edit',
-            'field' => $field,
-            'form' => $form,
+        return $this->cms_template->render('backend/field', array(
+            'do'     => 'edit',
+            'field'  => $field,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 
     }
 
 }
-

@@ -73,3 +73,11 @@ Third-party plugins, libraries and resources included in InstantCMS:
     Jevix - HTML filtration tool
         by ur001
         http://code.google.com/p/jevix/
+
+    Mobile Detect Library
+        by Serban Ghita, Nick Ilyin, Victor Stanciu
+        http://mobiledetect.net
+
+    Chosen
+        by Patrick Filler, Matthew Lettini, @pfiller, @kenearley, @stof, @koenpunt, and @tjschuck
+        http://harvesthq.github.io/chosen/

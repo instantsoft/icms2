@@ -16,9 +16,7 @@ class onSitemapCronGenerate extends cmsAction {
         $sources_list = $options['sources'];
         if (!$sources_list) { return false; }
 
-        $config = cmsConfig::getInstance();
-
-        if(!is_writable($config->root_path.'cache/static/sitemaps/')){
+        if(!is_writable($this->cms_config->root_path.'cache/static/sitemaps/')){
             return false;
         }
 
@@ -42,21 +40,22 @@ class onSitemapCronGenerate extends cmsAction {
                 $urls = $controller->runHook('sitemap_urls', array($item));
 				if (!$urls) { continue; }
 
-                if(count($urls)>$this->max_count){
+                if(count($urls) > $this->max_count){
 
-                    $chunk_data = array_chunk($urls, $this->max_count, true);
+                    $chunk_data = array_chunk($urls, $this->max_count, true); unset($urls);
 
                     foreach ($chunk_data as $index=>$chunk_urls) {
 
                         $index = $index ? '_'.$index : '';
 
-                        $xml = cmsTemplate::getInstance()->renderInternal($this, 'sitemap', array(
-                            'urls' => $chunk_urls
-                        ));
-
                         $sitemap_file = "sitemap_{$controller_name}_{$item}{$index}.xml";
 
-                        file_put_contents($config->root_path . "cache/static/sitemaps/{$sitemap_file}", $xml);
+                        file_put_contents(
+                            $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file}",
+                            $this->cms_template->renderInternal($this, 'sitemap', array(
+                                'urls' => $chunk_urls
+                            ))
+                        );
 
                         $sitemaps[] = $sitemap_file;
 
@@ -64,13 +63,14 @@ class onSitemapCronGenerate extends cmsAction {
 
                 } else {
 
-                    $xml = cmsTemplate::getInstance()->renderInternal($this, 'sitemap', array(
-                        'urls' => $urls
-                    ));
-
                     $sitemap_file = "sitemap_{$controller_name}_{$item}.xml";
 
-                    file_put_contents($config->root_path . "cache/static/sitemaps/{$sitemap_file}", $xml);
+                    file_put_contents(
+                        $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file}",
+                        $this->cms_template->renderInternal($this, 'sitemap', array(
+                            'urls' => $urls
+                        ))
+                    );
 
                     $sitemaps[] = $sitemap_file;
 
@@ -80,12 +80,13 @@ class onSitemapCronGenerate extends cmsAction {
 
         }
 
-        $xml = cmsTemplate::getInstance()->renderInternal($this, 'sitemap_index', array(
-            'sitemaps' => $sitemaps,
-            'host' => $config->host
-        ));
-
-        file_put_contents(cmsConfig::get('root_path') . 'cache/static/sitemaps/sitemap.xml', $xml);
+        file_put_contents(
+            $this->cms_config->root_path.'cache/static/sitemaps/sitemap.xml',
+            $this->cms_template->renderInternal($this, 'sitemap_index', array(
+                'sitemaps' => $sitemaps,
+                'host' => $this->cms_config->host
+            ))
+        );
 
         return true;
 
