@@ -144,7 +144,7 @@ class actionPhotosUpload extends cmsAction{
             return $this->cms_template->renderJSON($result);
         }
 
-		$preset = array('width' => 600, 'height'=>460, 'is_square'=>false, 'is_watermark'=>false);
+		$preset = array('width' => 600, 'height'=>460, 'is_square'=>false, 'is_watermark'=>false, 'quality' => 90);
 
 		if (!empty($this->options['preset'])){
 			$preset = cmsCore::getModel('images')->getPresetByName($this->options['preset']);
