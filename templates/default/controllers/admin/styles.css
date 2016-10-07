@@ -891,6 +891,7 @@ ul.errors li .hint strong { color:#666666; }
     background: #f9f9f9;
     margin-bottom:15px;
     padding:0;
+    position: relative;
 }
 .datagrid {
     width:100%;
@@ -967,22 +968,20 @@ ul.errors li .hint strong { color:#666666; }
 }
 
 .datagrid_loading{
-    background:rgb(0, 0, 0);
-    background:rgba(0, 0, 0, 0.2);
     position: absolute;
-    display:none;
-    text-align: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 31px;
 }
-.datagrid_loading .indicator{
+.loading_overlay{
     position: absolute;
-    height:40px;
-    line-height:40px;
-    width:110px;
-    border:solid 2px #EDEDED;
-    border-radius:5px;
-    box-shadow:0 0 40px #333;
-    padding-left: 25px;
-    background:url("../../images/loader16.gif") no-repeat 15px center #FFF;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #999;
+    opacity: 0.6;
 }
 
 .datagrid_navigation{

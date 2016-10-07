@@ -309,12 +309,31 @@ nav select { display: none; }
 
 #breadcrumbs ul{
     overflow: hidden;
+    position: relative;
 }
-
+#breadcrumbs > ul:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: -moz-linear-gradient(left,  rgba(236,240,241,0.1) 0%, rgba(236,240,241,1) 100%);
+    background: -webkit-linear-gradient(left,  rgba(236,240,241,0.1) 0%,rgba(236,240,241,1) 100%);
+    background: linear-gradient(to right,  rgba(236,240,241,0.1) 0%,rgba(236,240,241,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1aecf0f1', endColorstr='#ecf0f1',GradientType=1 );
+    width: 50px;
+    height: 100%;
+}
 #breadcrumbs ul li {
-    height:32px; line-height:32px; float:left;
-    font-size:12px;
-    color:#2c3e50;
+    font-size: 12px;
+    color: #2c3e50;
+    display: table-cell;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    vertical-align: middle;
 }
 
 #breadcrumbs ul li a {
@@ -327,9 +346,9 @@ nav select { display: none; }
 }
 
 #breadcrumbs ul li.sep {
-    margin:0 10px;
+    padding:0 10px;
     width: 4px;
-    background: url("../images/nav-arrow-right-light.png") no-repeat left center;
+    background: url("../images/nav-arrow-right-light.png") no-repeat center center;
 }
 
 #breadcrumbs ul li.home {
