@@ -1646,7 +1646,11 @@ class cmsTemplate {
 
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return file_put_contents($options_file, $options_yaml);
+        $success = file_put_contents($options_file, $options_yaml);
+
+        if ($success && function_exists('opcache_invalidate')) { opcache_invalidate($options_file, true); }
+
+        return $success;
 
     }
 
