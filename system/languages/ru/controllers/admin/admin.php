@@ -379,16 +379,21 @@
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Автоматическая распаковка архива не возможна');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Обратитесь к хостеру с просьбой обеспечить работу класса <b>ZipArchive</b> для PHP на вашем сервере');
     define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
+    define('LANG_CP_INSTALL_ERROR',             'Ошибка установки пакета');
+    define('LANG_CP_INSTALL_PERM_ERROR',        'Файл %s недоступен для чтения');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'Для загрузки содержимого пакета в нужные папки сайта необходимо указать реквизиты FTP-пользователя, имеющего права на создание папок и файлов.');
     define('LANG_CP_INSTALL_FTP_PRIVACY',       'Введенные реквизиты никуда не передаются и могут храниться в сессии только до конца текущего сеанса');
-
     define('LANG_CP_PACKAGE_AUTHOR',            'Автор пакета');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Описание пакета');
     define('LANG_CP_PACKAGE_CONTENTS',          'Содержимое пакета');
     define('LANG_CP_PACKAGE_DEPENDS',           'Зависимости пакета');
     define('LANG_CP_PACKAGE_DEPENDS_CORE',      'Требуемая версия ядра');
-
+    define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Требуется установленный %s <a href="%s" target="_blank">%s</a>');
+    define('LANG_CP_PACKAGE_DEPENDENT_COMPONENT', 'компонент');
+    define('LANG_CP_PACKAGE_DEPENDENT_WIDGET',    'виджет');
+    define('LANG_CP_INSTALLED',     'установлен');
+    define('LANG_CP_NOT_INSTALLED', 'не установлен');
     define('LANG_CP_PACKAGE_DEPENDS_PACKAGE',   'Требуемая версия установленного пакета');
     define('LANG_CP_PACKAGE_TYPE_COMPONENT_INSTALL', 'Пакет установки компонента');
     define('LANG_CP_PACKAGE_TYPE_COMPONENT_UPDATE', 'Пакет обновления компонента');

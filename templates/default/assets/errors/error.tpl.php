@@ -11,11 +11,12 @@
         <div class="pre"><?php echo nl2br($details); ?></div>
 <?php } ?>
 
+<?php $stack = debug_backtrace(); ?>
+<?php if(!isset($stack[4])){ return; } ?>
+
 <p><b><?php echo LANG_TRACE_STACK; ?>:</b></p>
 
 <ul id="trace_stack">
-
-    <?php $stack = debug_backtrace(); ?>
 
     <?php for($i=4; $i<=14; $i++){ ?>
 

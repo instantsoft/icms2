@@ -1436,8 +1436,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     width: 960px;
 }
 #pm_window .notice{
-    margin: 20px 0;
+    margin: 25px 0;
     text-align: center;
+    font-size: 1.3em;
 }
 .layout {
     box-sizing: border-box;

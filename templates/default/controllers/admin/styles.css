@@ -1570,7 +1570,10 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 
 #cp_package_info .info ul.flat { margin:10px 0; }
 
-#cp_package_info .info ul.flat li { margin-bottom: 3px; }
+#cp_package_info .info ul.flat li {
+    margin-bottom: 10px;
+    color: #666;
+}
 #cp_package_info .info ul.flat li:last-child { margin-bottom: 0; }
 
 #cp_package_info .info .author span {

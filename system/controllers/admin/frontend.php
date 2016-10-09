@@ -259,7 +259,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function componentInstalled($manifest_package) {
+    public function componentInstalled($manifest_package) {
 
         $model = new cmsModel();
 
@@ -267,7 +267,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function widgetInstalled($manifest_package) {
+    public function widgetInstalled($manifest_package) {
 
         $model = new cmsModel();
 
