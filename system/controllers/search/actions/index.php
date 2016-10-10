@@ -114,6 +114,7 @@ class actionSearchIndex extends cmsAction {
         }
 
         return $this->cms_template->render($tpl, array(
+            'user'         => $this->cms_user,
             'query'        => $query,
             'type'         => $type,
             'date'         => $date,
