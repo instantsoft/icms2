@@ -20,6 +20,10 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Очистка удалённых личных сообщений', 'messages', 'clean', '1440', '1');");
     }
 
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'auth' AND hook = 'delete_expired_unverified'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', '60', '1');");
+    }
+
     if(!isFieldExists('rating_log', 'ip')){
         $core->db->query("ALTER TABLE `{#}rating_log` ADD `ip` INT(10) UNSIGNED NULL DEFAULT NULL, ADD INDEX (`ip`)");
     }

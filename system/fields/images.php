@@ -47,14 +47,15 @@ class fieldImages extends cmsFormField {
 
         $images = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
-        $html = '';
-
+        $html         = '';
         $small_preset = false;
-        $a_class = '';
+        $a_class      = '';
 
-        foreach($images as $key=>$paths){
+        foreach($images as $key => $paths){
 
             if (!isset($paths[$this->getOption('size_full')])){ continue; }
+
+            $title = (empty($this->item['title']) ? $this->name : $this->item['title']);
 
             if($this->getOption('first_image_emphasize') && !$small_preset){
                 $small_preset = $this->getOption('size_full');
@@ -62,12 +63,12 @@ class fieldImages extends cmsFormField {
             } else {
                 $small_preset = $this->getOption('size_small');
 				$a_class = 'second_type_images';
-             }
+            }
 
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
-                $html .= html_gif_image($paths, 'small', (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key, array('class'=>'img-'.$this->getName()));
+                $html .= html_gif_image($paths, 'small', $title.' '.$key, array('class'=>'img-'.$this->getName()));
             } else {
-                $html .= '<a class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, (empty($this->item['title']) ? $this->name : $this->item['title']).' '.$key).'</a>';
+                $html .= '<a title="'.htmlspecialchars($title).'" class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, $title.' '.$key).'</a>';
             }
 
         }

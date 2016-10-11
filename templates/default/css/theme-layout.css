@@ -89,6 +89,7 @@ header .menu li.active ul li a {
     text-shadow: none;
     text-decoration: none;
     padding-right: 10px;
+    font-size: 12px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }
