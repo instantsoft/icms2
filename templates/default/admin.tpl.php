@@ -94,7 +94,7 @@
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
             var h2 = $('#cp_footer').offset().top;
-            $('table.layout').height(h2 - h1 + 2);
+            $('table.layout').height(h2 - h1 - 2);
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
 

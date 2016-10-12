@@ -419,6 +419,8 @@ icms.datagrid = (function ($) {
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
 
+        fitLayout();
+
     }
 
     //====================================================================//

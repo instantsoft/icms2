@@ -595,7 +595,7 @@ class cmsTemplate {
 	 */
     public function addMainCSS($file){
         $hash = md5($file);
-        if (isset($this->head_main_css[$hash])) { return false; }
+        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) { return false; }
 		$this->head_main_css[$hash] = $file;
         return true;
     }
@@ -606,7 +606,7 @@ class cmsTemplate {
 	 */
 	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
-        if (isset($this->head_css[$hash])) { return false; }
+        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
         if (!$allow_merge){
             $this->head_css_no_merge[$hash] = $file;

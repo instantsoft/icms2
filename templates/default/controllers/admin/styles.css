@@ -1195,9 +1195,9 @@ span.jPag-snext-img{
 /* ========================================================================== */
 
 table.layout,
-table.layout-no-fit { border:none; width:100%; height:100%; position: relative; }
+table.layout-no-fit { border:none; width:100%; height:100%; position: relative; border-spacing: 0; }
 
-table.layout { margin:-22px; }
+table.layout { margin:-20px; }
 
 table.layout td.sidebar,
 table.layout-no-fit td.sidebar {
