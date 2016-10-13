@@ -6,9 +6,7 @@ class actionCommentsTrackStop extends cmsAction {
 
         if (!$this->request->isInternal()){ cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
-
-        $track = $this->model->getTracking($user->id, $target_controller, $target_subject, $target_id);
+        $track = $this->model->getTracking($this->cms_user->id, $target_controller, $target_subject, $target_id);
 
         if ($track){ $this->model->deleteTracking($track['id']); }
 

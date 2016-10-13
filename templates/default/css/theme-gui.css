@@ -999,7 +999,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     position: relative;
     bottom: 1px;
 }
-#comments_refresh_panel + #comments_list {
+.track + #comments_refresh_panel + #comments_list {
     margin: -15px 0 0 0;
 }
 #comments_widget #comments_add_link {
