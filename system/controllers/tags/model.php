@@ -119,19 +119,43 @@ class modelTags extends cmsModel{
 
     }
 
-    public function getTagTargets($tag_id){
+    public function getTagsIDs($tags){
 
-        $binds = $this->filterEqual('tag_id', $tag_id)->get('tags_bind');
+        return $this->
+                filterIn('tag', $tags)->
+                get('tags', function($item, $model){
+                    return $item['id'];
+                });
 
-        if (!$binds) { return false; }
+    }
 
-        $targets = array();
+    public function getTagTargets($tags_ids){
 
-        foreach ($binds as $bind){
-            $targets[$bind['target_controller']][] = $bind['target_subject'];
+        if (!is_array($tags_ids)) { $tags_ids = array($tags_ids); }
+
+        $sql = 'SELECT * '
+             . 'FROM `{#}tags_bind` '
+             . 'WHERE `tag_id` IN (' . implode(',', $tags_ids) . ') '
+             . 'GROUP BY `target_controller`, `target_subject`, `target_id` '
+             . 'HAVING COUNT(DISTINCT `tag_id`) = ' . count($tags_ids);
+
+        $result = $this->db->query($sql);
+        
+        // если запрос ничего не вернул, возвращаем ложь
+        if (!$this->db->numRows($result)){ return false; }
+
+        $items = array();
+
+        // перебираем все вернувшиеся строки
+        while($item = $this->db->fetchAssoc($result)){
+
+            $items[$item['target_controller']][$item['target_subject']][] = $item['target_id'];
+
         }
 
-        return $targets;
+        $this->db->freeResult($result);
+
+        return $items;
 
     }
 
