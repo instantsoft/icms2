@@ -5,7 +5,7 @@
     define('LANG_TAGS_TAG',                 'Tag');
     define('LANG_TAGS_TAG_FREQUENCY',       'Frequency');
 
-    define('LANG_TAGS_SEARCH_BY_TAG',       'Search by the «%s» tag');
+    define('LANG_TAGS_SEARCH_BY_TAG',       'Search by tags: «%s»');
     define('LANG_TAGS_SEARCH_NO_RESULTS',   'Nothing found');
 
     define('LANG_TAGS_TAG_DELETE_CONFIRM',  'Delete the «{tag}» tag?');
