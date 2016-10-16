@@ -1,3 +1,20 @@
+#search_tags_form,
 #tags_search_pills {
     margin-bottom: 20px;
+}
+
+#search_tags_form .input {
+    width: 70%;
+    padding:5px;
+}
+
+#search_tags_form .button-submit {
+    padding: 6px 10px;
+    min-width: 65px;
+}
+
+@supports (width: calc(100% - 70px)) {
+    #search_tags_form .input {
+        width: calc(100% - 70px);
+    }
 }
