@@ -16,6 +16,7 @@
     <?php $this->addMainJS("templates/default/js/core.js"); ?>
     <?php $this->addMainJS("templates/default/js/modal.js"); ?>
     <?php $this->head(false); ?>
+</head>	
 <body>
 
     <div id="wrapper">
