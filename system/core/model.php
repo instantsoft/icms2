@@ -1552,7 +1552,7 @@ class cmsModel{
         foreach($grid['columns'] as $field => $column){
             if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){
 
-                if (!empty($filter[$field])){
+                if (!empty($filter[$field]) || $filter[$field]==='0'){
 
                     if (!empty($column['filter_by'])){
                         $filter_field = $column['filter_by'];
