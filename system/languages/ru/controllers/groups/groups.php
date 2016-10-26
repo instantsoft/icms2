@@ -66,3 +66,4 @@
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'участник|участника|участников');
     define('LANG_GROUPS10',                  'групп');
     define('LANG_GROUPS_CTYPES',             'Типы контента для создания в группах');
+    define('LANG_GROUPS_CTYPE_ACCESS',       'Для просмотра записи вы должны быть участником группы <a href="%s">%s</a>');

@@ -691,12 +691,6 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 6, 'news', '1'),
 (13, 6, 'news', '1');
 
-INSERT INTO `{#}photos` (`id`, `album_id`, `user_id`, `date_pub`, `title`, `image`, `rating`, `comments`) VALUES
-(86, 16, 1, CURRENT_TIMESTAMP, 'Nature by A423', '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg\n', 0, 0),
-(87, 16, 1, CURRENT_TIMESTAMP, 'Nature by dingoou', '---\nbig: u1/004/70b77768.jpg\nnormal: u1/004/9568f6f9.jpg\nsmall: u1/004/2def2ff8.jpg\n', 0, 0),
-(88, 16, 1, CURRENT_TIMESTAMP, 'Nature by mimih', '---\nbig: u1/004/641fbd6c.jpg\nnormal: u1/004/a381f541.jpg\nsmall: u1/004/0032a402.jpg\n', 0, 0),
-(89, 16, 1, CURRENT_TIMESTAMP, 'Nature by PopiX', '---\nbig: u1/004/e75ad9ee.jpg\nnormal: u1/004/862f9e9d.jpg\nsmall: u1/004/554b8c90.jpg\n', 0, 0);
-
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
 (2, 5, 'articles', 'Articles', NULL, NULL, '---\ntitle: title\ndescription: teaser\npubDate: date_pub\nimage:\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
 (3, 6, 'posts', 'Blog posts', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: picture\nimage_size: normal\n', 15, 1, NULL, 60, NULL),
@@ -752,18 +746,18 @@ INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, 
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
 (143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'pages\npages-*\npages/*', NULL),
-(144, 'content', 'pages.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'pages\npages-*\npages/*', 'pages/*.html\npages/add\npages/edit/*'),
+(144, 'content', 'pages.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'pages/*.html\npages/add\npages/add/%\npages/addcat\npages/addcat/%\npages/editcat/%\npages/edit/*'),
 (145, 'content', 'pages.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'pages/*.html', NULL),
 (146, 'content', 'pages.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'pages/add\npages/edit/*', NULL),
 (147, 'content', 'articles.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'articles\narticles-*\narticles/*', NULL),
-(148, 'content', 'articles.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'articles\narticles-*\narticles/*', 'articles/*.html\narticles/add\narticles/edit/*'),
+(148, 'content', 'articles.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'articles\narticles-*\narticles/*', 'articles/*.html\narticles/add\narticles/add/%\narticles/addcat\narticles/addcat/%\narticles/editcat/%\narticles/edit/*'),
 (149, 'content', 'articles.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'articles/*.html', NULL),
 (150, 'content', 'articles.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'articles/add\narticles/edit/*', NULL),
 (151, 'content', 'posts.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'posts\nposts-*\nposts/*', NULL),
-(152, 'content', 'posts.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'posts\nposts-*\nposts/*', 'posts/*.html\nposts/add\nposts/edit/*'),
+(152, 'content', 'posts.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'posts\nposts-*\nposts/*', 'posts/*.html\nposts/add\nposts/add/%\nposts/addcat\nposts/addcat/%\nposts/editcat/%\nposts/edit/*'),
 (153, 'content', 'posts.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'posts/*.html', NULL),
 (154, 'content', 'posts.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'posts/add\nposts/edit/*', NULL),
 (163, 'content', 'news.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'news\nnews-*\nnews/*', NULL),
-(164, 'content', 'news.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'news\nnews-*\nnews/*', 'news/*.html\nnews/add\nnews/edit/*'),
+(164, 'content', 'news.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'news\nnews-*\nnews/*', 'news/*.html\nnews/add\nnews/add/%\nnews/addcat\nnews/addcat/%\nnews/editcat/%\nnews/edit/*'),
 (165, 'content', 'news.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'news/*.html', NULL),
 (166, 'content', 'news.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'news/add\nnews/edit/*', NULL);

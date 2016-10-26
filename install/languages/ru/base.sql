@@ -136,8 +136,7 @@ CREATE TABLE `{#}content_folders` (
   `user_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ctype_id` (`ctype_id`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`,`ctype_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_types`;
@@ -224,7 +223,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (16, 'Генератор карты сайта', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(18, 'Фотоальбомы', 'photos', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(18, 'Фотоальбомы', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\r\n  2 | Векторы\r\n  3 | Иллюстрации\nordering: date_pub\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (21, 'Комментарии Вконтакте', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1);
@@ -821,18 +820,34 @@ CREATE TABLE `{#}photos` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `album_id` int(11) unsigned DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
-  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_photo` timestamp NULL DEFAULT NULL,
   `title` varchar(128) NOT NULL,
+  `content_source` text,
+  `content` text,
   `image` text NOT NULL,
+  `exif` varchar(250) DEFAULT NULL,
+  `height` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `width` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `sizes` varchar(250) DEFAULT NULL,
   `rating` int(11) NOT NULL DEFAULT '0',
   `comments` int(11) unsigned DEFAULT '0',
+  `hits_count` int(11) unsigned NOT NULL DEFAULT '0',
+  `orientation` enum('square','landscape','portrait','') DEFAULT NULL,
+  `type` tinyint(3) unsigned DEFAULT NULL,
+  `camera` varchar(50) DEFAULT NULL,
+  `slug` varchar(100) DEFAULT NULL,
+  `is_private` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `ordering` int(11) unsigned NOT NULL DEFAULT '0',
+  `downloads_count` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `album_id` (`album_id`),
-  KEY `user_id` (`user_id`),
-  KEY `date_pub` (`date_pub`),
-  KEY `rating` (`rating`),
-  KEY `comments` (`comments`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `user_id` (`user_id`,`date_pub`),
+  KEY `album_id` (`album_id`,`date_pub`,`id`),
+  KEY `slug` (`slug`),
+  KEY `camera` (`camera`),
+  KEY `ordering` (`ordering`),
+  FULLTEXT KEY `title` (`title`,`content`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -1311,7 +1326,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (12, NULL, 'auth', 'Авторизация', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
 (14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
+(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
+(16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
@@ -1367,6 +1383,8 @@ INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `titl
 (101, 'users', 'profile', 'LANG_USERS_PROFILE', NULL, NULL, 'users/%*', NULL),
 (102, 'users', 'edit', 'LANG_USERS_EDIT_PROFILE', NULL, NULL, 'users/edit/*', NULL),
 (155, 'content', 'albums.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'albums\nalbums-*\nalbums/*', NULL),
-(156, 'content', 'albums.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'albums\nalbums-*\nalbums/*', 'albums/*.html\nalbums/add\nalbums/edit/*'),
+(156, 'content', 'albums.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'albums\nalbums-*\nalbums/*', 'albums/*.html\nalbums/add\nalbums/add/%\nalbums/addcat\nalbums/addcat/%\nalbums/editcat/%\nalbums/edit/*'),
 (157, 'content', 'albums.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'albums/*.html', NULL),
-(158, 'content', 'albums.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'albums/add\nalbums/edit/*', NULL);
+(158, 'content', 'albums.edit', 'LANG_WP_CONTENT_ITEM_EDIT', NULL, NULL, 'albums/add\nalbums/add/%\nalbums/edit/*', NULL),
+(159, 'photos', 'item', 'LANG_PHOTOS_WP_ITEM', NULL, NULL, 'photos/*.html', NULL),
+(160, 'photos', 'upload', 'LANG_PHOTOS_WP_UPLOAD', NULL, NULL, 'photos/upload/%\r\nphotos/upload', NULL);

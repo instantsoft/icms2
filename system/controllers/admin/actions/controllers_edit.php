@@ -62,7 +62,7 @@ class actionAdminControllersEdit extends cmsAction {
 
         return $this->cms_template->render('controllers_edit', array(
             'is_backend'         => true,
-            'ctype'              => cmsCore::getModel('content')->getContentTypeByName($controller_name),
+            'ctype'              => cmsCore::getModel('content')->getContentTypeByName($backend_controller->maintained_ctype ? $backend_controller->maintained_ctype : $controller_name),
             'controller_name'    => $controller_info['name'],
             'controller_title'   => $controller_title,
             'params'             => $params,

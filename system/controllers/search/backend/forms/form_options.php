@@ -30,6 +30,10 @@ class formSearchOptions extends cmsForm {
                         }
                     )),
 
+                    new fieldCheckbox('is_hash_tag', array(
+                        'title' => LANG_SEARCH_IS_HASH_TAG
+                    ))
+
                 )
             ),
 

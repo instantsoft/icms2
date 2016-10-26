@@ -96,11 +96,12 @@ class cmsTemplate {
 		echo $this->output;
 	}
 
-	/**
-	 * Выводит головные теги страницы
-	 *
-	 */
-	public function head($is_seo_meta=true){
+    /**
+     * Выводит головные теги страницы
+     * @param boolean $is_seo_meta Выводить мета теги
+     * @param boolean $print_js Выводить javascript
+     */
+	public function head($is_seo_meta=true, $print_js = true){
 
         cmsEventsManager::hook('before_print_head', $this);
 
@@ -124,6 +125,17 @@ class cmsTemplate {
             foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
         }
 
+        if($print_js){
+            $this->printJavascriptTags();
+        }
+
+	}
+
+    /**
+     * Выводит javascript теги
+     */
+    public function printJavascriptTags() {
+
         if (!cmsConfig::get('merge_js')){
             foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
@@ -133,7 +145,7 @@ class cmsTemplate {
             foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
         }
 
-	}
+    }
 
 	/**
 	 * Выводит заголовок текущей страницы
@@ -1648,7 +1660,7 @@ class cmsTemplate {
 
         $success = file_put_contents($options_file, $options_yaml);
 
-        if ($success && function_exists('opcache_invalidate')) { opcache_invalidate($options_file, true); }
+        if ($success && function_exists('opcache_invalidate')) { @opcache_invalidate($options_file, true); }
 
         return $success;
 

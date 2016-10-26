@@ -77,9 +77,6 @@ class activity extends cmsFrontend {
 
     public function renderActivityList($page_url, $dataset_name=false){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
@@ -93,13 +90,15 @@ class activity extends cmsFrontend {
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
+        cmsEventsManager::hook('activity_list_filter', $this->model);
+
         // Получаем количество и список записей
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
         $items = cmsEventsManager::hook('activity_before_list', $items);
 
-        return $template->renderInternal($this, 'list', array(
+        return $this->cms_template->renderInternal($this, 'list', array(
             'filters'      => array(),
             'dataset_name' => $dataset_name,
             'page_url'     => $page_url,
@@ -107,14 +106,15 @@ class activity extends cmsFrontend {
             'perpage'      => $perpage,
             'total'        => $total,
             'items'        => $items,
-            'user'         => $user
+            'user'         => $this->cms_user
         ));
 
     }
 
     public function getDatasets(){
 
-        $user = cmsUser::getInstance();
+        $user = $this->cms_user;
+
         $datasets = array();
 
         // Все (новые)
@@ -123,31 +123,26 @@ class activity extends cmsFrontend {
             'title' => LANG_ACTIVITY_DS_ALL,
         );
 
-        // Мои друзья
         if ($user->is_logged){
+            // Мои друзья
             $datasets['friends'] = array(
                 'name' => 'friends',
                 'title' => LANG_ACTIVITY_DS_FRIENDS,
-                'filter' => function($model){
-                    $user = cmsUser::getInstance();
+                'filter' => function($model) use($user){
                     return $model->filterFriends($user->id);
                 }
             );
-        }
-
-        // Только мои
-        if ($user->is_logged){
+            // Только мои
             $datasets['my'] = array(
                 'name' => 'my',
                 'title' => LANG_ACTIVITY_DS_MY,
-                'filter' => function($model){
-                    $user = cmsUser::getInstance();
+                'filter' => function($model) use($user){
                     return $model->filterEqual('user_id', $user->id);
                 }
             );
         }
 
-        return $datasets;
+        return cmsEventsManager::hook('activity_datasets', $datasets);
 
     }
 

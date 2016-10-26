@@ -17,8 +17,6 @@ class actionUsersProfileContent extends cmsAction {
             cmsCore::error404();
         }
 
-        $content_controller->model->filterEqual('user_id', $profile['id']);
-
         $folders = array();
 
         if ($ctype['is_folders']){
@@ -32,6 +30,8 @@ class actionUsersProfileContent extends cmsAction {
             }
 
         }
+
+        $content_controller->model->filterEqual('user_id', $profile['id']);
 
         list($folders, $content_controller->model, $profile, $folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
             $folders,

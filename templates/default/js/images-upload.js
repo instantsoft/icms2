@@ -79,14 +79,16 @@ icms.images = (function ($) {
 
     this.uploadByLink = function(field_name, upload_url, link){
         icms.images._onSubmit(field_name);
-        $.post(upload_url, {image_link: link}, function(result){
+        var post_params = {}; post_params[field_name] = link;
+        $.post(upload_url, post_params, function(result){
             icms.images._onComplete(field_name, result);
         }, 'json');
     };
 
     this.uploadMultyByLink = function(field_name, upload_url, link){
         icms.images._onSubmit(field_name);
-        $.post(upload_url, {image_link: link}, function(result){
+        var post_params = {}; post_params[field_name] = link;
+        $.post(upload_url, post_params, function(result){
             icms.images._onMultiComplete(field_name, result);
         }, 'json');
     };

@@ -4,13 +4,13 @@ class onAuthCronDeleteExpiredUnverified extends cmsAction {
 
     public function run(){
 
-        $this->options['verify_exp'] = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
+        $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
 
         $users_model = cmsCore::getModel('users');
 
         $users_model->filterNotNull('is_locked')->
                 filterNotNull('pass_token')->
-                filterDateOlder('date_reg', $this->options['verify_exp'], 'HOUR')->
+                filterDateOlder('date_reg', $verify_exp, 'HOUR')->
                 filterIsNull('ip')->
                 filterIsNull('lock_until');
 

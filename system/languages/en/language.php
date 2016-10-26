@@ -424,6 +424,7 @@
     define('LANG_ORDER',					 'Order');
     define('LANG_ORDER_DOWN',				 'Move down');
     define('LANG_ORDER_UP',					 'Move up');
+    define('LANG_HITS_SPELL',                'views|views|views');
     define('LANG_HITS',                      'Views');
     define('LANG_GUEST',                     'Guest');
 
@@ -499,6 +500,7 @@
     define('LANG_SECOND2',                   'seconds');
     define('LANG_SECOND10',                  'seconds');
     define('LANG_DATE_AGO',                  '%s ago');
+    define('LANG_AUTO',                      'Auto');
 
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
@@ -506,3 +508,4 @@
     define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="http://www.fatcow.com/free-icons">FatCow</a>');
     define('LANG_DEBUG_QUERY_TIME',          'Query time');
+    define('LANG_SUCCESS_MSG',               'Successfully saved');

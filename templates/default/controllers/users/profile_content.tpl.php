@@ -78,7 +78,7 @@
                                 $this->href_to($profile['id'], array('content', $ctype['name']));
                 ?>
                 <li <?php if ($is_selected){ ?>class="active"<?php } ?>>
-                    <?php if ($is_selected){ ?>
+                    <?php if ($is_selected){ $current_folder = $folder; ?>
                         <div><?php echo $folder['title']; ?></div>
                     <?php } else { ?>
                         <a href="<?php echo $url; ?>"><?php echo $folder['title']; ?></a>
@@ -92,3 +92,10 @@
 <div id="user_content_list">
     <?php echo $html; ?>
 </div>
+
+<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('user_view', $ctype, $profile, (!empty($current_folder) ? $current_folder : array()))); ?>
+<?php if ($hooks_html) { ?>
+    <div class="sub_items_list">
+        <?php echo html_each($hooks_html); ?>
+    </div>
+<?php } ?>

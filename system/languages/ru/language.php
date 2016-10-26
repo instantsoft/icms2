@@ -424,6 +424,7 @@
     define('LANG_ORDER',					 'Порядок');
     define('LANG_ORDER_DOWN',				 'Переместить вниз');
     define('LANG_ORDER_UP',					 'Переместить вверх');
+    define('LANG_HITS_SPELL',                'просмотр|просмотра|просмотров');
     define('LANG_HITS',                      'Просмотры');
     define('LANG_GUEST',                     'Гость');
 
@@ -499,10 +500,11 @@
     define('LANG_SECOND2',                   'секунды');
     define('LANG_SECOND10',                  'секунд');
     define('LANG_DATE_AGO',                  '%s назад');
-
+    define('LANG_AUTO',                      'Авто');
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Для просмотра сообщения требуется почтовый клиент с поддержкой HTML');
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
     define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');
+    define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');

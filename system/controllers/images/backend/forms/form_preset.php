@@ -34,21 +34,13 @@ class formImagesPreset extends cmsForm {
                 'childs' => array(
 					new fieldNumber('width', array(
 						'title' => LANG_IMAGES_PRESET_SIZE_W,
-						'units' => 'px',
-						'rules' => array(
-							array('required'),
-							array('digits'),
-							array('min', 1)
-						)
+						'hint'  => LANG_IMAGES_PRESET_SIZE_W_HINT,
+						'units' => 'px'
 					)),
 					new fieldNumber('height', array(
 						'title' => LANG_IMAGES_PRESET_SIZE_H,
-                        'units' => 'px',
-						'rules' => array(
-							array('required'),
-							array('digits'),
-							array('min', 1)
-						)
+						'hint'  => LANG_IMAGES_PRESET_SIZE_H_HINT,
+                        'units' => 'px'
 					)),
 					new fieldCheckbox('is_square', array(
 						'title' => LANG_IMAGES_PRESET_SQUARE,

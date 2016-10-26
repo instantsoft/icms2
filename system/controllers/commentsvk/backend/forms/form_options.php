@@ -31,7 +31,7 @@ class formCommentsvkOptions extends cmsForm {
                         'items'   => array(
                             0      => LANG_NO,
                             1      => LANG_YES,
-                            'auto' => LANG_COM_VK_AUTO
+                            'auto' => LANG_AUTO
                         )
                     )),
 

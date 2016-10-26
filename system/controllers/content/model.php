@@ -1390,9 +1390,19 @@ class modelContent extends cmsModel{
 
 	}
 
-    public function filterByModeratorTask($moderator_id, $ctype_name){
+    public function filterByModeratorTask($moderator_id, $ctype_name, $is_admin = false){
 
-        return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='{$ctype_name}' AND item_id=i.id))");
+        if($is_admin){
+
+            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
+
+            return $this->filterEqual('m.ctype_name', $ctype_name);
+
+        } else {
+
+            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='{$ctype_name}' AND item_id=i.id))");
+
+        }
 
     }
 
@@ -1573,7 +1583,7 @@ class modelContent extends cmsModel{
 
         $pattern = trim($ctype['url_pattern'], '/');
 
-        preg_match_all('/{([a-zA-Z0-9\_]+)}/i', $pattern, $matches);
+        preg_match_all('/{([a-z0-9\_]+)}/i', $pattern, $matches);
 
         if (!$matches) { return lang_slug($item['id']); }
 
@@ -1814,12 +1824,17 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getContentItemsForSitemap($ctype_name){
+    public function getContentItemsForSitemap($ctype_name, $fields = array()){
 
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->selectOnly('slug');
         $this->select('date_last_modified');
+        if($fields){
+            foreach ($fields as $field) {
+                $this->select($field);
+            }
+        }
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
@@ -1871,11 +1886,9 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name;
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
 
-        $this->join('{users}', 'u', 'u.id = i.user_id');
+        $this->joinUser();
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         $this->useCache("content.item.{$ctype_name}");
@@ -1883,8 +1896,9 @@ class modelContent extends cmsModel{
         return $this->getItemByField($table_name, $by_field, $id, function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname']
+                'id'       => $item['user_id'],
+                'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar']
             );
 
             return $item;

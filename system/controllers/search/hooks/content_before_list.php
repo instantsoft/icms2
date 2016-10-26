@@ -1,0 +1,41 @@
+<?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantMedia 2016                              //
+//	 		     https://instantvideo.ru/, support@instantvideo.ru            //
+//                               written by Fuze                              //
+//                     https://instantvideo.ru/copyright.html                 //
+//                                                                            //
+/******************************************************************************/
+class onSearchContentBeforeList extends cmsAction {
+
+	public function run($data){
+
+        if(empty($this->options['is_hash_tag'])){ return $data; }
+
+        list($ctype, $items) = $data;
+
+        if(empty($items)){
+            return $data;
+        }
+
+        $fields = cmsCore::getModel('content')->filterIn('type', array('text', 'html'))->getContentFields($ctype['name']);
+        if(!$fields){ return $data; }
+
+        foreach ($items as $item) {
+            foreach ($fields as $field) {
+
+                if(!$field['is_in_list'] || empty($field['options']['in_fulltext_search'])){ continue; }
+
+                if(!empty($item[$field['name']])){
+                    $items[$item['id']][$field['name']] = $this->parseHashTag($item[$field['name']]);
+                }
+
+            }
+        }
+
+        return array($ctype, $items);
+
+    }
+
+}

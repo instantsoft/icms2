@@ -108,7 +108,7 @@ class actionCommentsSubmit extends cmsAction {
 
             $this->model->updateCommentContent($comment_id, $content, $content_html);
 
-            $comment_html = $content_html;
+            $comment_html = cmsEventsManager::hook('parse_text', $content_html);
 
         }
 
@@ -155,6 +155,7 @@ class actionCommentsSubmit extends cmsAction {
 
                 // Получаем и рендерим добавленный комментарий
                 $comment = $this->model->getComment($comment_id);
+                $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
                 $comment_html = $this->cms_template->render('comment', array(
                     'comments'       => array($comment),
                     'target_user_id' => $target_user_id,
@@ -167,6 +168,8 @@ class actionCommentsSubmit extends cmsAction {
                                             filterEqual('target_subject', $target_subject)->
                                             filterEqual('target_id', $target_id)->
                                             getCommentsCount();
+
+                $this->model->resetFilters();
 
                 $target_model->updateCommentsCount($target_subject, $target_id, $comments_count);
 
@@ -189,7 +192,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => isset($comment_html) ? (cmsEventsManager::hook('parse_text', $comment_html)) : false
+            'html'      => isset($comment_html) ? $comment_html : false
         );
 
         $this->cms_template->renderJSON($result);

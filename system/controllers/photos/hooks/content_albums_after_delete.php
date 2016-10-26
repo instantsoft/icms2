@@ -6,7 +6,7 @@ class onPhotosContentAlbumsAfterDelete extends cmsAction {
 
         $this->model->deletePhotos($album['id']);
 
-        cmsCore::getController('activity')->deleteEntry('photos', "add.photos", $album['id']);
+        cmsCore::getController('activity')->deleteEntry('photos', 'add.photos', $album['id']);
 
         return true;
 

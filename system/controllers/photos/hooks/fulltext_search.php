@@ -7,11 +7,14 @@ class onPhotosFulltextSearch extends cmsAction {
         $sources['photos'] = LANG_PHOTOS;
 
         // по каким полям поиск
-        $match_fields['photos'] = array('title');
+        $match_fields['photos'] = array('title', 'content');
         // какие поля получать
-        $select_fields['photos'] = array('id', 'image', 'date_pub', 'title', 'rating', 'comments');
+        $select_fields['photos'] = array('id', 'content', 'image', 'slug', 'date_pub', 'title', 'rating', 'comments', 'user_id', 'sizes', 'hits_count');
         // из каких таблиц выборка
         $table_names['photos'] = 'photos';
+
+        // получаем тут высоту строк, чтобы в шаблоне потом забрать
+        $this->getRowHeight();
 
         return array(
             'name'          => $this->name,
@@ -22,13 +25,11 @@ class onPhotosFulltextSearch extends cmsAction {
             'filters'       => array('photos'=>array()),
             'item_callback' => function($item, $model, $sources_name, $match_fields, $select_fields){
 
-                return array_merge($item, array(
-                    'url'      => href_to($sources_name, 'view', $item['id']),
-                    'title'    => $item['title'],
-                    'fields'   => array(),
-                    'date_pub' => $item['date_pub'],
-                    'image'    => html_image($item['image'], 'normal', strip_tags($item['title']))
-                ));
+                $item['image'] = cmsModel::yamlToArray($item['image']);
+                $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
+                $item['title'] = strip_tags($item['title']);
+
+                return $item;
 
             }
         );

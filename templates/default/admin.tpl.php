@@ -108,7 +108,7 @@
                     return;
                 }
                 this.offset  = (this.toolbar).offset().top;
-                if((+$('#wrapper').height() - +$(this.win).height()) <= this.offset){
+                if((+$('#wrapper').height() - +$(this.win).height()) <= (this.offset + 20)){
                     return;
                 }
                 this.run();

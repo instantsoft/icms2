@@ -315,6 +315,10 @@ class content extends cmsFrontend {
             'url_mask_not' => array(
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
+                "{$ctype['name']}/addcat",
+                "{$ctype['name']}/addcat/%",
+                "{$ctype['name']}/editcat/%",
                 "{$ctype['name']}/edit/*",
             )
         ));
@@ -332,6 +336,7 @@ class content extends cmsFrontend {
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
             'url_mask' => array(
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
                 "{$ctype['name']}/edit/*"
             )
         ));

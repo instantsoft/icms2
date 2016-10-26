@@ -2,7 +2,9 @@
 
 class cmsBackend extends cmsController {
 
-    function __construct($request){
+    public $maintained_ctype = false;
+
+    public function __construct($request){
 
         $this->name = str_replace('backend', '', strtolower(get_called_class()));
 
@@ -16,6 +18,10 @@ class cmsBackend extends cmsController {
 //============================================================================//
 
     public function getBackendMenu(){
+        return array();
+    }
+
+    public function getOptionsToolbar(){
         return array();
     }
 
@@ -130,6 +136,7 @@ class cmsBackend extends cmsController {
         }
 
         $template_params = array(
+            'toolbar' => $this->getOptionsToolbar(),
             'options' => $options,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false

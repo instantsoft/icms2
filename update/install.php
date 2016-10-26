@@ -59,6 +59,86 @@ function install_package(){
     $core->db->query("ALTER TABLE `{#}comments` CHANGE `author_url` `author_url` VARCHAR( 15 ) NULL DEFAULT NULL COMMENT 'ip адрес'");
     $core->db->query("ALTER TABLE `{users}_messages` CHANGE `date_pub` `date_pub` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата создания'");
 
+    // фотогалерея —> //
+
+    if(!isFieldExists('photos', 'hits_count')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `hits_count` INT(11) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
+    if(!isFieldExists('photos', 'downloads_count')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `downloads_count` INT(11) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
+    if(!isFieldExists('photos', 'sizes')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `sizes` VARCHAR(250) NULL DEFAULT NULL AFTER `image`");
+    }
+
+    if(!isFieldExists('photos', 'width')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `width` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `image`");
+    }
+
+    if(!isFieldExists('photos', 'height')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `height` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `image`");
+    }
+
+    if(!isFieldExists('photos', 'orientation')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `orientation` ENUM( 'square',  'landscape',  'portrait',  '') NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('photos', 'type')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `type` TINYINT UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('photos', 'content')){
+        $core->db->query("ALTER TABLE  `{#}photos` ADD  `content` TEXT NULL DEFAULT NULL AFTER  `title`");
+        $core->db->query("ALTER TABLE  `{#}photos` ADD  `content_source` TEXT NULL DEFAULT NULL AFTER  `title`");
+    }
+
+    if(!isFieldExists('photos', 'camera')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `camera` VARCHAR(50) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('photos', 'slug')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `slug` VARCHAR(100) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('photos', 'is_private')){
+        $core->db->query("ALTER TABLE  `{#}photos` ADD `is_private` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
+    if(!isFieldExists('photos', 'exif')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `exif` VARCHAR(250) NULL DEFAULT NULL AFTER `image`");
+    }
+
+    if(!isFieldExists('photos', 'date_photo')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `date_photo` TIMESTAMP NULL DEFAULT NULL AFTER `date_pub`");
+    }
+
+    if(!isFieldExists('photos', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}photos` ADD `ordering` INT(11) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
+    $core->db->query("ALTER TABLE `{#}photos` CHANGE `date_pub` `date_pub` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+    $core->db->query("ALTER TABLE `{#}photos` ENGINE = MYISAM");
+
+    if(!$core->db->getRowsCount('widgets', "controller = 'photos' AND name = 'list'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`) VALUES ('photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');");
+    }
+
+    if(!$core->db->getRowsCount('widgets_pages', "controller = 'photos' AND name = 'item'")){
+        $core->db->query("INSERT INTO `{#}widgets_pages` (`controller`, `name`, `title_const`, `url_mask`) VALUES ('photos', 'item', 'LANG_PHOTOS_WP_ITEM', 'photos/*.html')");
+    }
+
+    if(!$core->db->getRowsCount('widgets_pages', "controller = 'photos' AND name = 'upload'")){
+        $core->db->query("INSERT INTO `{#}widgets_pages` (`controller`, `name`, `title_const`, `url_mask`) VALUES ('photos', 'upload', 'LANG_PHOTOS_WP_UPLOAD', 'photos/upload/%\r\nphotos/upload')");
+    }
+
+    save_controller_options(array('photos'));
+
+    migratePhotos();
+
+    // —> фотогалерея //
+
     $remove_table_indexes = array(
         '{users}_contacts' => array(
             'user_id', 'contact_id'
@@ -68,6 +148,12 @@ function install_package(){
         ),
         '{users}_messages' => array(
             'from_id', 'to_id', 'date_pub', 'is_new'
+        ),
+        'photos' => array(
+            'comments', 'rating', 'date_pub', 'user_id', 'album_id'
+        ),
+        'content_folders' => array(
+            'ctype_id', 'user_id'
         ),
     );
 
@@ -88,6 +174,22 @@ function install_package(){
             'from_id' => array('from_id', 'to_id', 'is_deleted'),
             'to_id' => array('to_id', 'is_new', 'is_deleted'),
         ),
+        'content_folders' => array(
+            'user_id' => array('user_id', 'ctype_id')
+        ),
+        'photos' => array(
+            'album_id' => array('album_id', 'date_pub', 'id'),
+            'user_id' => array('user_id', 'date_pub'),
+            'slug' => array('slug'),
+            'camera' => array('camera'),
+            'ordering' => array('ordering')
+        ),
+    );
+
+    $add_table_ft_indexes = array(
+        'photos' => array(
+            'title' => array('title', 'content')
+        ),
     );
 
     // удаляем ненужные индексы
@@ -103,6 +205,13 @@ function install_package(){
         foreach ($add_table_indexes as $table=>$indexes) {
             foreach ($indexes as $index_name => $fields) {
                 $core->db->addIndex($table, $fields, $index_name);
+            }
+        }
+    }
+    if($add_table_ft_indexes){
+        foreach ($add_table_ft_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'FULLTEXT');
             }
         }
     }
@@ -150,4 +259,91 @@ function getTableFields($table) {
         $fields[] = $data['Field'];
     }
     return $fields;
+}
+
+function migratePhotos() {
+
+    $model = cmsCore::getModel('photos');
+    $config = cmsConfig::getInstance();
+
+    $photos = $model->orderByList(array(
+            array(
+                'by' => 'album_id',
+                'to' => 'asc'
+            ),
+            array(
+                'by' => 'date_pub',
+                'to' => 'asc'
+            )
+    ))->get('photos', function($item, $model){
+        $item['image'] = cmsModel::yamlToArray($item['image']);
+        return $item;
+    });
+
+    if(!$photos){ return false; }
+
+    $album_ids = $last_photo_id = $order = array();
+
+    foreach ($photos as $photo) {
+
+        $album_ids[] = $photo['album_id'];
+
+        $_order = isset($order[$photo['album_id']]) ? $order[$photo['album_id']] : 1;
+
+        $_widths = $_heights = $sizes = $width_presets = array();
+
+        foreach ($photo['image'] as $preset => $path) {
+
+            $s = getimagesize($config->upload_path.$path);
+            if ($s === false) { continue; }
+
+            $_widths[]  = $s[0];
+            $_heights[] = $s[1];
+
+            $sizes[$preset] = array(
+                'width'  => $s[0],
+                'height' => $s[1]
+            );
+
+            $width_presets[$s[0]] = $preset;
+
+        }
+
+        $order[$photo['album_id']] = $_order + 1;
+        $last_photo_id[$photo['album_id']] = $photo['id'];
+
+        // exif
+        $max_size_preset = $width_presets[max($_widths)];
+        $image_data = img_get_params($config->upload_path.$photo['image'][$max_size_preset]);
+
+        $date_photo = (isset($image_data['exif']['date']) ? $image_data['exif']['date'] : false);
+        $camera     = (isset($image_data['exif']['camera']) ? $image_data['exif']['camera'] : null);
+        unset($image_data['exif']['date'], $image_data['exif']['camera'], $image_data['exif']['orientation']);
+
+        $photo['slug']     = $model->getPhotoSlug($photo);
+        $photo['sizes']    = $sizes;
+        $photo['height']   = max($_heights);
+        $photo['width']    = max($_widths);
+        $photo['ordering'] = $_order;
+        $photo['orientation'] = $image_data['orientation'];
+        $photo['date_photo'] = $date_photo;
+        $photo['camera'] = $camera;
+        $photo['exif'] = (!empty($image_data['exif']) ? $image_data['exif'] : null);
+
+        $model->filterEqual('id', $photo['id'])->updateFiltered('photos', $photo);
+
+    }
+
+    $album_ids = array_unique($album_ids);
+
+    foreach ($album_ids as $album_id) {
+
+        cmsCache::getInstance()->clean("photos.{$album_id}");
+
+        $model->updateAlbumCoverImage($album_id, array($last_photo_id[$album_id]));
+
+        $model->updateAlbumPhotosCount($album_id);
+
+    }
+
 }

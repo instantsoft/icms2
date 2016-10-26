@@ -181,7 +181,7 @@ class cmsConfig {
 
         if(is_writable($file)){
             $success = file_put_contents($file, $dump);
-            if (function_exists('opcache_invalidate')) { opcache_invalidate($file, true); }
+            if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
         }
 
         return $success;

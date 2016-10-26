@@ -2,25 +2,28 @@
 
 class modelModeration extends cmsModel{
 
-    public function getTasksCounts($moderator_id){
+    public function getTasksCounts($moderator_id, $is_admin = false){
 
-       $tasks = $this->filterEqual('moderator_id', $moderator_id)->getTasks();
+        if(!$is_admin){
+            $this->filterEqual('moderator_id', $moderator_id);
+        }
 
-       if (!$tasks) { return false; }
+        $tasks = $this->getTasks();
+        if (!$tasks) { return false; }
 
-       $counts = array();
+        $counts = array();
 
-       foreach($tasks as $task){
+        foreach($tasks as $task){
 
-           if (!isset($counts[$task['ctype_name']])){
-               $counts[$task['ctype_name']] = 1;
-           } else {
-               $counts[$task['ctype_name']]++;
-           }
+            if (!isset($counts[$task['ctype_name']])){
+                $counts[$task['ctype_name']] = 1;
+            } else {
+                $counts[$task['ctype_name']]++;
+            }
 
-       }
+        }
 
-       return $counts;
+        return $counts;
 
     }
 

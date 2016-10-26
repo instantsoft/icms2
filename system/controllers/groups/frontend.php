@@ -31,6 +31,10 @@ class groups extends cmsFrontend{
         $group = $this->model->getGroup($group_id);
         if (!$group) { cmsCore::error404(); }
 
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_group', $group);
+        cmsModel::cacheResult('group_model', $this->model);
+
         $core = cmsCore::getInstance();
         $user = cmsUser::getInstance();
 
