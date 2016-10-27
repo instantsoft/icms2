@@ -29,6 +29,15 @@ class fieldImage extends cmsFormField {
                     return $presets;
                 }
             )),
+            new fieldList('size_modal', array(
+                'title'     => LANG_PARSER_IMAGE_SIZE_MODAL,
+                'default'   => '',
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return array('' => '') + $presets;
+                }
+            )),
             new fieldListMultiple('sizes', array(
                 'title'     => LANG_PARSER_IMAGE_SIZE_UPLOAD,
                 'default'   => 0,
@@ -72,15 +81,21 @@ class fieldImage extends cmsFormField {
 
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths || !isset($paths[ $this->getOption('size_full') ])){ return ''; }
+        $size_full = $this->getOption('size_full');
+        $size_modal = $this->getOption('size_modal');
+
+        if (!$paths || !isset($paths[ $size_full ])){ return ''; }
+
+        $presets = array($size_full, false);
 
         if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
             $img_func = 'html_gif_image';
         } else {
             $img_func = 'html_image';
+            if($size_modal){ $presets[1] = $size_modal; }
         }
 
-        return $img_func($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
+        return $img_func($paths, $presets, (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
 

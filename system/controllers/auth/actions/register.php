@@ -65,8 +65,15 @@ class actionAuthRegister extends cmsAction {
             $fieldset_id = $form->addFieldset($fieldset['title']);
 
             foreach($fieldset['fields'] as $field){
+
+                if ($field['name'] == 'nickname') {
+                    $form->addFieldToBeginning('basic', $field['handler']);
+                }
+
                 if ($field['is_system']) { continue; }
+
                 $form->addField($fieldset_id, $field['handler']);
+
             }
 
         }

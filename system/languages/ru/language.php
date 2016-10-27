@@ -121,6 +121,7 @@
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
+    define('LANG_PARSER_IMAGE_SIZE_MODAL',   'Размер в записи при клике');
     define('LANG_PARSER_IMAGE_SIZE_MICRO',   'Микро');
     define('LANG_PARSER_IMAGE_SIZE_SMALL',   'Маленький');
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Средний');

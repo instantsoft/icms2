@@ -772,7 +772,13 @@ class cmsModel{
 
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
 
-        return $this->filter("MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)");
+        $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
+
+        $this->select($search_param, 'fsort');
+
+        $this->order_by = "fsort desc";
+
+        return $this->filter($search_param);
 
     }
 

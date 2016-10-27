@@ -1938,6 +1938,10 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     width: 32px !important;
     height: 32px !important;
 }
+.modal_image {
+    position: relative;
+    display: block;
+}
 .background_overlay {
     position: absolute;
     background: #000;
@@ -1945,6 +1949,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     height: 100%;
     opacity: 0;
     transition: all 0.3s;
+    content: '';
+    top: 0;
+    left: 0;
 }
 .gif_image:hover .background_overlay {
     opacity: 0.5;

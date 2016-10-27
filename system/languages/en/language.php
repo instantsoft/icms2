@@ -121,6 +121,7 @@
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Image size in entry');
+    define('LANG_PARSER_IMAGE_SIZE_MODAL',   'Image size in entry whith modal');
     define('LANG_PARSER_IMAGE_SIZE_MICRO',   'Micro');
     define('LANG_PARSER_IMAGE_SIZE_SMALL',   'Small');
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Medium');
