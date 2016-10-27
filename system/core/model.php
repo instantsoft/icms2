@@ -1609,9 +1609,9 @@ class cmsModel{
         // и проверяем не передан ли фильтр для нее
         //
         foreach($grid['columns'] as $field => $column){
-            if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){
+            if (!empty($column['filter']) && $column['filter'] != 'none' && isset($filter[$field])){
 
-                if (!empty($filter[$field])){
+                if ($filter[$field] || (string)$filter[$field] === '0'){
 
                     if (!empty($column['filter_by'])){
                         $filter_field = $column['filter_by'];
