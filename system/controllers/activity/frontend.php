@@ -35,15 +35,24 @@ class activity extends cmsFrontend {
         if (!$type['is_enabled']) { return false; }
 
         if (!isset($entry['user_id'])) {
-            $user = cmsUser::getInstance();
-            $entry['user_id'] = $user->id;
+            $entry['user_id'] = $this->cms_user->id;
         }
 
         if (!isset($entry['type_id'])) {
             $entry['type_id'] = $type['id'];
         }
 
-        return $this->model->addEntry($entry);
+        $entry = cmsEventsManager::hook('activity_before_add', $entry);
+        if($entry === false){ return false; }
+        $entry = cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_before_add', $entry);
+        if($entry === false){ return false; }
+
+        $entry['id'] = $this->model->addEntry($entry);
+
+        cmsEventsManager::hook('activity_after_add', $entry);
+        cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_after_add', $entry);
+
+        return $entry['id'];
 
     }
 

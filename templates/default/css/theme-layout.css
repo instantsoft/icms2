@@ -567,7 +567,13 @@ aside .menu .item, section .menu .item {
     border:solid 1px red;
     color:red;
 }
-
+.modal_padding {
+    padding: 10px;
+    box-sizing: border-box;
+}
+.modal_padding h3, .modal_padding h2  {
+    margin-top: 5px;
+}
 /* Media Queries ============================================================ */
 
 @media screen and (max-width: 980px) {

@@ -134,9 +134,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
     </div>
 
     <?php if($item['filter_selected']) { ?>
-        <a class="box_menu clear_filter" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-            <?php echo LANG_PHOTOS_CLEAR_FILTER; ?>
-        </a>
+        <a title="<?php echo LANG_PHOTOS_CLEAR_FILTER; ?>" class="box_menu clear_filter" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">x</a>
     <?php } ?>
 
     </form>

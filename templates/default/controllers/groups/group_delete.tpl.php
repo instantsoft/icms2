@@ -8,8 +8,11 @@
 
 ?>
 
-<h1><?php echo LANG_GROUPS_DELETE; ?></h1>
+<?php if (!$request->isAjax()) { ?>
+    <h1><?php echo LANG_GROUPS_DELETE; ?></h1>
+<?php } ?>
 
+<?php if ($request->isAjax()) { ?><div class="modal_padding"><?php } ?>
 <h3><?php printf(LANG_GROUPS_DELETE_CONFIRM, $group['title']); ?></h3>
 
 <form action="" method="post">
@@ -23,3 +26,4 @@
     <?php echo html_submit(LANG_CONFIRM); ?>
     <?php echo html_button(LANG_CANCEL, 'cancel', "window.history.go(-1)"); ?>
 </form>
+<?php if ($request->isAjax()) { ?></div><?php } ?>

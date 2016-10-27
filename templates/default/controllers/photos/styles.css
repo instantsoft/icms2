@@ -255,7 +255,13 @@ span.album_user img {
 }
 .photo_filter .box_menu.clear_filter {
     text-decoration: none;
-    color: #d35400;
+    color: #FFF;
+    margin-right: 0;
+    font-weight: bold;
+    background-color: #d35400;
+    line-height: 18px;
+    padding: 0 5px;
+    border-radius: 50%;
 }
 .photo_filter .box_menu.clear_filter:after {
     content: initial;
