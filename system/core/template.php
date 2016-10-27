@@ -266,7 +266,7 @@ class cmsTemplate {
         $index = 0;
 
         // для определения активного пункта меню
-        $current_url = trim(cmsCore::getInstance()->uri, '/');
+        $current_url = trim(cmsCore::getInstance()->uri_before_remap, '/');
         $href_lang = cmsCore::getLanguageHrefPrefix();
 
         foreach($menu as $id=>$item){

@@ -6,6 +6,12 @@ class actionUsersProfileFriends extends cmsAction {
 
     public function run($profile){
 
+        $tabs = $this->controller->getProfileMenu($profile);
+
+        if (!isset($this->tabs['friends'])){
+            cmsCore::error404();
+        }
+
         // Проверяем наличие друзей
         if (!$this->model->getFriendsCount($profile['id'])) { cmsCore::error404(); }
 
@@ -13,8 +19,6 @@ class actionUsersProfileFriends extends cmsAction {
 
         $page_url = href_to($this->name, $profile['id'], 'friends');
         $profiles_list_html = $this->renderProfilesList($page_url);
-
-        $tabs = $this->controller->getProfileMenu($profile);
 
         return $this->cms_template->render('profile_friends', array(
             'user'               => $this->cms_user,

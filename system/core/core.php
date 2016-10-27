@@ -5,6 +5,7 @@ class cmsCore {
     private static $instance;
 
 	public $uri            = '';
+	public $uri_before_remap = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
     public $uri_controller_before_remap = '';
@@ -651,7 +652,7 @@ class cmsCore {
 
         }
 
-        $this->uri = $uri;
+        $this->uri = $this->uri_before_remap = $uri;
         $this->uri_absolute = $config->root . $uri;
 
         // разбиваем URL на сегменты
@@ -691,11 +692,10 @@ class cmsCore {
         if ($remap_to) {
             // в uri также меняем
             if($this->uri){
-                $original_uri = $this->uri;
                 $seg = explode('/', $this->uri);
                 $seg[0] = $remap_to;
                 $this->uri = implode('/', $seg);
-                $this->uri_absolute = str_replace($original_uri, $this->uri, $this->uri_absolute);
+                $this->uri_absolute = str_replace($this->uri_before_remap, $this->uri, $this->uri_absolute);
             }
             $this->uri_controller_before_remap = $this->uri_controller;
             $this->uri_controller = $remap_to;
