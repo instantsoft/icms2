@@ -1,12 +1,4 @@
 <?php
-/******************************************************************************/
-//                                                                            //
-//                             InstantMedia 2016                              //
-//	 		     https://instantvideo.ru/, support@instantvideo.ru            //
-//                               written by Fuze                              //
-//                     https://instantvideo.ru/copyright.html                 //
-//                                                                            //
-/******************************************************************************/
 class onSearchContentBeforeList extends cmsAction {
 
 	public function run($data){
