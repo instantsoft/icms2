@@ -557,7 +557,7 @@ class content extends cmsFrontend {
 
         // Если этот контент можно создавать в группах (сообществах) то добавляем
         // поле выбора группы
-        if ($action == 'add' && $groups_list && $groups_list != array('0'=>'')){
+        if (($action == 'add' || $this->cms_user->is_admin) && !empty($groups_list) && $groups_list != array('0'=>'')){
 
             $fieldset_id = $form->addFieldset(LANG_GROUP);
             $form->addField($fieldset_id,
