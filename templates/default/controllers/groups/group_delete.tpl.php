@@ -6,6 +6,8 @@
     $this->addBreadcrumb($group['title'], $this->href_to($group['id']));
     $this->addBreadcrumb(LANG_GROUPS_DELETE);
 
+    $cancel_act = $request->isAjax() ? 'icms.modal.close()' : 'window.history.go(-1)';
+
 ?>
 
 <?php if (!$request->isAjax()) { ?>
@@ -24,6 +26,6 @@
     </p>
     <?php echo html_csrf_token(); ?>
     <?php echo html_submit(LANG_CONFIRM); ?>
-    <?php echo html_button(LANG_CANCEL, 'cancel', "window.history.go(-1)"); ?>
+    <?php echo html_button(LANG_CANCEL, 'cancel', $cancel_act); ?>
 </form>
 <?php if ($request->isAjax()) { ?></div><?php } ?>

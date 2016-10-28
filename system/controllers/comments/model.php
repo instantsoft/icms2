@@ -31,6 +31,17 @@ class modelComments extends cmsModel {
 
     }
 
+    public function updateCommentsUrl($target_url, $target_title){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->updateFiltered('comments', array(
+            'target_url' => $target_url,
+            'target_title' => $target_title
+        ));
+
+    }
+
 //============================================================================//
 //============================================================================//
     /**

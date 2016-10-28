@@ -191,15 +191,6 @@ class actionContentItemEdit extends cmsAction {
                     $this->requestModeration($ctype['name'], $item, false);
                 }
 
-                // обновляем приватность комментариев
-                if (isset($item['is_private'])){
-                    cmsCore::getModel('comments')->
-                                filterEqual('target_controller', $this->name)->
-                                filterEqual('target_subject', $ctype['name'])->
-                                filterEqual('target_id', $item['id'])->
-                                updateCommentsPrivacy($item['is_private'] || $item['is_parent_hidden']);
-                }
-
                 $back_url = $this->request->get('back', '');
 
                 if ($back_url){
