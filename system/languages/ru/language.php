@@ -114,9 +114,12 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_IMAGE',              'Изображение');
+    define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
+    define('LANG_PARSER_IMAGE_MAX_COUNT',    'Максимальное количество изображений');
+    define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Максимум %s');
 	define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Пресет миниатюр');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');

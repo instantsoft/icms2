@@ -43,9 +43,9 @@
 <div id="album-photo-item" class="content_item" data-item-delete-url="<?php if ($is_can_delete){ echo $this->href_to('delete'); } ?>" data-id="<?php echo $photo['id']; ?>" itemscope itemtype="http://schema.org/ImageObject">
     <div class="left">
         <div class="inside">
-            <div class="inside_wrap">
-                <div id="photo_container" <?php if($full_size_img){?>data-full-size-img="<?php echo $full_size_img['image']; ?>"<?php } ?>>
-                    <?php echo $this->renderControllerChild('photos', 'view_photo_container', array(
+            <div class="inside_wrap orientation_<?php echo $photo['orientation']; ?>" id="fullscreen_cont">
+                <div id="photo_container" <?php if($full_size_img){?>data-full-size-img="<?php echo $full_size_img; ?>"<?php } ?>>
+                    <?php echo $this->renderChild('view_photo_container', array(
                         'photo'      => $photo,
                         'preset'     => $preset,
                         'prev_photo' => $prev_photo,
@@ -57,7 +57,7 @@
             <div id="related_photos_wrap">
                 <h3><?php echo $related_title; ?></h3>
                 <div class="album-photos-wrap owl-carousel" id="related_photos" data-delete-url="<?php echo href_to('photos', 'delete'); ?>">
-                    <?php echo $this->renderControllerChild('photos', 'photos', array(
+                    <?php echo $this->renderChild('photos', array(
                         'photos'        => $photos,
                         'is_owner'      => false,
                         'user'          => $user,
@@ -111,8 +111,8 @@
                 <div id="bubble">
                     <table>
                         <tbody>
-                            <?php foreach ($downloads as $_preset => $download) { ?>
-                            <tr class="<?php echo $_preset; ?>_download_preset <?php echo (!$download['link'] ? 'disable_download' : ''); ?>">
+                            <?php foreach ($downloads as $download) { ?>
+                            <tr class="<?php echo $download['preset']; ?>_download_preset <?php echo (!$download['link'] ? 'disable_download' : ''); ?>">
                                 <td>
                                     <label><input <?php echo ($download['select'] ? 'checked=""' : ''); ?> type="radio" name="download" <?php echo (!$download['link'] ? 'disabled=""' : ''); ?> value="<?php echo $download['link']; ?>"> <?php echo $download['name']; ?> </label>
                                 </td>

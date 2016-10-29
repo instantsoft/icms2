@@ -1142,6 +1142,8 @@ class cmsTemplate {
      */
     public function renderChild($tpl_file, $data=array()){
 
+        $request = $this->controller->request;
+
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 
         extract($data); include($tpl_file);

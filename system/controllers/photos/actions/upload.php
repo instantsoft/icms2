@@ -315,6 +315,7 @@ class actionPhotosUpload extends cmsAction{
             'width'       => $image_data['width'],
             'height'      => $image_data['height'],
             'sizes'       => $sizes,
+            'is_private'  => 2,
             'orientation' => $image_data['orientation'],
             'exif'        => (!empty($image_data['exif']) ? $image_data['exif'] : null),
         ));

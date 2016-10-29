@@ -114,9 +114,12 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');
     define('LANG_PARSER_USERS',              'User list');
     define('LANG_PARSER_IMAGE',              'Image');
+    define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
+    define('LANG_PARSER_IMAGE_MAX_COUNT',    'The maximum images count');
+    define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Maximum %s');
     define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Thumbnail preset');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');

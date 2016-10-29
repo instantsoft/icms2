@@ -863,6 +863,10 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .qq-upload-drop-area span {
     display:block; position:absolute; top: 50%; width:100%; margin-top:-8px; font-size:14px;
 }
+.upload .qq-upload-drop-area span {
+    top: 12px;
+    font-size: 12px;
+}
 .qq-upload-drop-area-active {background:#3498db;}
 
 .qq-upload-list { margin:15px 0 0 0; padding:0; }

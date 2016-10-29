@@ -58,11 +58,18 @@ icms.photos = (function ($) {
                 if(!screenfull.isFullscreen){
                     $('#photo_container img').attr('src', icms.photos.page_img);
                     $('#fullscreen_photo').removeClass('close');
+                    $('#fullscreen_cont').removeClass('fullscreen_now');
                     $('.photo_navigation').off('click', icms.photos.bindFullScreenNav);
                     var current_page_url = $('#photo_container img').data('page-url');
                     if(current_page_url != icms.photos.page_url){
                         window.location.href = current_page_url;
                     }
+                } else {
+                    icms.photos.page_img = $('#photo_container img').attr('src');
+                    $('#photo_container img').attr('src', icms.photos.big_img);
+                    $('#fullscreen_photo').addClass('close');
+                    $('#fullscreen_cont').addClass('fullscreen_now');
+                    $('#photo_container').on('click', '.photo_navigation', icms.photos.bindFullScreenNav);
                 }
             });
         } else {
@@ -77,11 +84,7 @@ icms.photos = (function ($) {
 
     this.bindFullScreen = function (){
         $(document).on('click', '#fullscreen_photo', function (){
-            icms.photos.page_img = $('#photo_container img').attr('src');
-            $('#photo_container img').attr('src', icms.photos.big_img);
-            screenfull.toggle($('#photo_container')[0]);
-            $(this).addClass('close');
-            $('#photo_container').on('click', '.photo_navigation', icms.photos.bindFullScreenNav);
+            screenfull.toggle($('#fullscreen_cont')[0]);
             return false;
         });
     };

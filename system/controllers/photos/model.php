@@ -48,7 +48,7 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getPhotos($id = 0, $filter_field = 'album_id', $only_fields = false){
+    public function getPhotos($id = 0, $filter_field = 'album_id', $only_fields = false, $item_callback = false){
 
         if(!$only_fields){
 
@@ -74,7 +74,7 @@ class modelPhotos extends cmsModel{
             $this->filterEqual($filter_field, $id);
         }
 
-        return $this->get('photos', function($item, $model){
+        return $this->get('photos', function($item, $model) use ($item_callback){
 
             if(isset($item['user_nickname'])){
                 $item['user'] = array(
@@ -88,26 +88,35 @@ class modelPhotos extends cmsModel{
                 $item['image'] = cmsModel::yamlToArray($item['image']);
             }
 
-            if(isset($item['image'])){
+            if(isset($item['sizes'])){
                 $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
             }
 
-            if(!empty($item['type']) && !empty($this->config['types'])){
-                 $item['type'] = $this->config['types'][$item['type']];
+            if(!empty($item['type']) && !empty($model->config['types'])){
+                 $item['type'] = $model->config['types'][$item['type']];
+            }
+
+            if(is_callable($item_callback)){
+                $item = call_user_func_array($item_callback, array($item, $model));
+                if ($item === false){ return false; }
             }
 
             return $item;
 
-        });
+        }, false);
 
     }
 
-    public function getUserPhotos($user_id, $only_fields = false) {
-        return $this->getPhotos($user_id, 'user_id', $only_fields);
+    public function getUserPhotos($user_id, $only_fields = false, $item_callback = false) {
+        return $this->getPhotos($user_id, 'user_id', $only_fields, $item_callback);
     }
 
     public function getOrphanPhotos($user_id){
-        return $this->filterIsNull('slug')->getUserPhotos($user_id);
+        $this->disablePrivacyFilter();
+        return $this->filterIsNull('slug')->getUserPhotos($user_id, false, function($item, $model){
+            $item['is_private'] = 0;
+            return $item;
+        });
     }
 
     public function getPhotosByIdsList($ids_list){

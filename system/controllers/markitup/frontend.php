@@ -23,6 +23,13 @@ class markitup extends cmsFrontend {
 
     public function actionUpload(){
 
+        if (!cmsUser::isLogged()) {
+            return $this->cms_template->renderJSON(array(
+                'status' => 'error',
+                'msg'    => 'auth error'
+            ));
+        }
+
 		$result = cmsCore::getController('images')->uploadWithPreset('inline_upload_file', 'wysiwyg_markitup');
 
         if (!$result['success']){

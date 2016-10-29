@@ -17,12 +17,13 @@ class images extends cmsFrontend {
 
     }
 
-    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false){
+    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_photos = 0){
 
         return $this->cms_template->renderInternal($this, 'upload_multi', array(
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
+            'max_photos'        => (int)$max_photos,
             'allow_import_link' => $allow_import_link
         ));
 
@@ -32,6 +33,15 @@ class images extends cmsFrontend {
 //============================================================================//
 
     public function actionUpload($name){
+
+        if (!cmsUser::isLogged()) {
+
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'error'   => 'auth error'
+            ));
+
+        }
 
         $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
 

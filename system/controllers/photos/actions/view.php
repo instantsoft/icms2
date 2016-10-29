@@ -155,9 +155,13 @@ class actionPhotosView extends cmsAction {
         $available_downloads = array_filter($downloads, function ($item){
             return !empty($item['link']);
         });
-        $full_size_img = array();
+        $full_size_img_preset = '';
         if($available_downloads){
-            $full_size_img = reset($available_downloads);
+            $download_photo_sizes = array();
+            foreach ($available_downloads as $preset => $data) {
+                $download_photo_sizes[$preset] = $photo['sizes'][$preset];
+            }
+            $full_size_img_preset = $this->getMaxSizePresetName($download_photo_sizes);
         }
 
         $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
@@ -166,12 +170,12 @@ class actionPhotosView extends cmsAction {
                 getPrevPhoto($photo, $this->options['ordering']);
 
         $tpl    = 'view';
-        $preset = $this->getBigPreset($photo['image'], $photo['sizes']);
+        $preset = $this->getBigPreset($photo['sizes']);
         if($this->request->isAjax()){
 
             $tpl = 'view_photo_container';
-            if($full_size_img){
-                $preset = $full_size_img['preset'];
+            if($full_size_img_preset){
+                $preset = $full_size_img_preset;
             }
 
         }
@@ -192,7 +196,7 @@ class actionPhotosView extends cmsAction {
             'ctype'         => $ctype,
             'photo_details' => $this->buildPhotoDetails($photo, $album, $ctype),
             'hooks_html'    => cmsEventsManager::hookAll('photos_item_html', $photo),
-            'full_size_img' => $full_size_img
+            'full_size_img' => ($full_size_img_preset ? $available_downloads[$full_size_img_preset]['image'] : '')
         ));
 
     }
@@ -247,20 +251,28 @@ class actionPhotosView extends cmsAction {
 
     }
 
-    private function getBigPreset($images, $sizes) {
+    private function getBigPreset($sizes) {
 
-        if(isset($images[$this->options['preset']])){
+        if(isset($sizes[$this->options['preset']])){
             return $this->options['preset'];
         }
 
         unset($sizes['original']);
 
+        return $this->getMaxSizePresetName($sizes);
+
+    }
+
+    private function getMaxSizePresetName($sizes, $_size = 'width') {
+
+        $__sizes = $presets = array();
+
         foreach ($sizes as $preset => $size) {
-            $widths[$preset] = $size['width'];
-            $_widths[$size['width']] = $preset;
+            $__sizes[] = $size[$_size];
+            $presets[] = $preset;
         }
 
-        return $_widths[max($widths)];
+        return $presets[array_search(max($__sizes), $__sizes)];
 
     }
 
