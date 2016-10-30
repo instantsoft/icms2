@@ -20,6 +20,7 @@ class actionAdminControllersEdit extends cmsAction {
         if (!$controller_info['is_backend']){
             return $this->cms_template->render('controllers_edit', array(
                 'is_backend'       => false,
+                'ctype'            => false,
                 'controller_name'  => $controller_info['name'],
                 'controller_title' => $controller_title
             ));

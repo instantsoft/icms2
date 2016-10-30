@@ -387,8 +387,11 @@ span.album_user img {
     display: block;
 }
 .sub_items_list {
-    margin: 10px 0 -20px 0;
+    margin: 10px 0 0 0;
     overflow: hidden;
+}
+.sub_items_list .show-more {
+    margin-bottom: 0;
 }
 /* ========================================================================== */
 

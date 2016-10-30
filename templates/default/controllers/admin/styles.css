@@ -1117,10 +1117,11 @@ ul.jPag-pages{
     padding:0px;
 }
 ul.jPag-pages li{
-    display:inline;
+    display:inline-block;
     float:left;
     padding:0px;
     margin:0px;
+    width: 21px;
 }
 ul.jPag-pages li a{
     float:left;

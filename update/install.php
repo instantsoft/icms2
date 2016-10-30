@@ -11,6 +11,9 @@ function install_package(){
     if(!$core->db->getRowsCount('controllers', "name = 'commentsvk'")){
         $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`) VALUES ('Комментарии Вконтакте', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1, NULL)");
     }
+    if(!$core->db->getRowsCount('controllers', "name = 'geo'")){
+        $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`) VALUES ('География', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1, NULL)");
+    }
 
     if(!$core->db->getRowsCount('activity_types', "name = 'vote.comment'")){
         $core->db->query("INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES (1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s');");

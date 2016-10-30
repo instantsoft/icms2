@@ -354,6 +354,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
     define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');
+    define('LANG_CP_ORDER_SUCCESS',             'Порядок успешно сохранён');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');

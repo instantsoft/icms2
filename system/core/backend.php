@@ -2,6 +2,8 @@
 
 class cmsBackend extends cmsController {
 
+    private $h1 = '';
+
     public $maintained_ctype = false;
 
     public function __construct($request){
@@ -12,6 +14,18 @@ class cmsBackend extends cmsController {
 
         $this->root_path = $this->root_path . 'backend/';
 
+    }
+
+    public function setH1($title) {
+
+        if (is_array($title)){ $title = implode(' -> ', $title); }
+
+        $this->h1 = ' -> '.$title;
+
+    }
+
+    public function getH1() {
+        return $this->h1;
     }
 
 //============================================================================//
