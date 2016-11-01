@@ -96,11 +96,12 @@ class cmsTemplate {
 		echo $this->output;
 	}
 
-	/**
-	 * Выводит головные теги страницы
-	 *
-	 */
-	public function head($is_seo_meta=true){
+    /**
+     * Выводит головные теги страницы
+     * @param boolean $is_seo_meta Выводить мета теги
+     * @param boolean $print_js Выводить javascript
+     */
+	public function head($is_seo_meta=true, $print_js = true){
 
         cmsEventsManager::hook('before_print_head', $this);
 
@@ -124,6 +125,17 @@ class cmsTemplate {
             foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
         }
 
+        if($print_js){
+            $this->printJavascriptTags();
+        }
+
+	}
+
+    /**
+     * Выводит javascript теги
+     */
+    public function printJavascriptTags() {
+
         if (!cmsConfig::get('merge_js')){
             foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
@@ -133,7 +145,7 @@ class cmsTemplate {
             foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
         }
 
-	}
+    }
 
 	/**
 	 * Выводит заголовок текущей страницы
@@ -254,7 +266,7 @@ class cmsTemplate {
         $index = 0;
 
         // для определения активного пункта меню
-        $current_url = trim(cmsCore::getInstance()->uri, '/');
+        $current_url = trim(cmsCore::getInstance()->uri_before_remap, '/');
         $href_lang = cmsCore::getLanguageHrefPrefix();
 
         foreach($menu as $id=>$item){
@@ -425,7 +437,7 @@ class cmsTemplate {
 	 */
 	public function setPageTitle($pagetitle){
 		$config = cmsConfig::getInstance();
-        if (func_num_args() > 1){ $pagetitle = implode(' - ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
         $this->title = $pagetitle;
         if($config->is_sitename_in_title){
             $this->title .= ' — '.$config->sitename;
@@ -595,7 +607,7 @@ class cmsTemplate {
 	 */
     public function addMainCSS($file){
         $hash = md5($file);
-        if (isset($this->head_main_css[$hash])) { return false; }
+        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) { return false; }
 		$this->head_main_css[$hash] = $file;
         return true;
     }
@@ -606,7 +618,7 @@ class cmsTemplate {
 	 */
 	public function addCSS($file, $allow_merge = true){
         $hash = md5($file);
-        if (isset($this->head_css[$hash])) { return false; }
+        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) { return false; }
 		$this->head_css[$hash] = $file;
         if (!$allow_merge){
             $this->head_css_no_merge[$hash] = $file;
@@ -1130,6 +1142,8 @@ class cmsTemplate {
      */
     public function renderChild($tpl_file, $data=array()){
 
+        $request = $this->controller->request;
+
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 
         extract($data); include($tpl_file);
@@ -1646,7 +1660,11 @@ class cmsTemplate {
 
         $options_yaml = cmsModel::arrayToYaml($options);
 
-        return file_put_contents($options_file, $options_yaml);
+        $success = file_put_contents($options_file, $options_yaml);
+
+        if ($success && function_exists('opcache_invalidate')) { @opcache_invalidate($options_file, true); }
+
+        return $success;
 
     }
 

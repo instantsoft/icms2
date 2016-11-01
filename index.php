@@ -13,7 +13,7 @@
 
 	// Устанавливаем кодировку
 	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS');
+    header('X-Powered-By: InstantCMS 2');
 
     require_once 'bootstrap.php';
 

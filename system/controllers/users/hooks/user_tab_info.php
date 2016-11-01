@@ -14,12 +14,6 @@ class onUsersUserTabInfo extends cmsAction {
 
         }
 
-        if ($tab_name == 'karma'){
-
-//            if ($profile['karma']==0) { return false; }
-
-        }
-
         return true;
 
     }

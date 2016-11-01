@@ -31,6 +31,17 @@ class modelComments extends cmsModel {
 
     }
 
+    public function updateCommentsUrl($target_url, $target_title){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->updateFiltered('comments', array(
+            'target_url' => $target_url,
+            'target_title' => $target_title
+        ));
+
+    }
+
 //============================================================================//
 //============================================================================//
     /**
@@ -352,6 +363,26 @@ class modelComments extends cmsModel {
             'target_id'         => $target_id,
             'target_url'        => $target_info['url'],
             'target_title'      => $target_info['title']
+        ));
+
+    }
+
+    public function updateTracking($target_controller, $target_subject, $target_id){
+
+        // Получаем модель целевого контроллера
+        $target_model = cmsCore::getModel( $target_controller );
+
+        // Получаем URL и заголовок комментируемой страницы
+        $target_info = $target_model->getTargetItemInfo($target_subject, $target_id);
+        if (!$target_info){ return false; }
+
+        cmsCache::getInstance()->clean('comments.tracks');
+
+        $this->filterCommentTarget($target_controller, $target_subject, $target_id);
+
+        return $this->updateFiltered('comments_tracks', array(
+            'target_url'   => $target_info['url'],
+            'target_title' => $target_info['title']
         ));
 
     }

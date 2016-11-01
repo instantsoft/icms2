@@ -59,6 +59,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div class="datagrid_loading">
+        <div class="loading_overlay"></div>
+    </div>
 </div>
 
 <?php if ($options['is_pagination']){ ?>
@@ -78,10 +81,6 @@
     <div class="datagrid_pagination"></div>
 </div>
 <?php } ?>
-
-<div class="datagrid_loading">
-    <div class="indicator"><?php echo LANG_LOADING; ?></div>
-</div>
 
 <script>
 

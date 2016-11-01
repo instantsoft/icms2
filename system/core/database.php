@@ -68,7 +68,9 @@ class cmsDatabase {
 	}
 
 	public function __destruct(){
-		$this->mysqli->close();
+        if($this->ready()){
+            $this->mysqli->close();
+        }
 	}
 
     public function __get($name) {
@@ -124,6 +126,16 @@ class cmsDatabase {
         }
 
 		return true;
+
+	}
+
+    public function getStat(){
+
+        if (isset($this->mysqli->stat)){
+            return $this->mysqli->stat;
+        }
+
+		return '';
 
 	}
 

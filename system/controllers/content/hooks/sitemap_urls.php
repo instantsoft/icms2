@@ -9,9 +9,9 @@ class onContentSitemapUrls extends cmsAction {
         if (empty($ctype_name)) { return $urls; }
 
 		$is_ctype_exists = $this->model->getContentTypeByName($ctype_name);
-		if (!$is_ctype_exists) { return false; }
+		if (!$is_ctype_exists) { return $urls; }
 
-        $items = $this->model->limit(false)->getContentItems($ctype_name);
+        $items = $this->model->limit(false)->getContentItemsForSitemap($ctype_name);
 
         if ($items){
             foreach($items as $item){

@@ -280,8 +280,8 @@ function widgetEdit(id){
         icms.modal.setCallback('close', function(){
             icms.forms.form_changed = false;
         });
-        w = $('.modal_form').width();
-        h = 0;
+        var w = $('.modal_form').width();
+        var h = 0;
         $('.modal_form .form-tabs .tab').each(function(indx, element){
             var th = $(this).height();
             if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }

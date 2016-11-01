@@ -321,6 +321,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('cache_method', array(
                         'title' => LANG_CP_SETTINGS_CACHE_METHOD,
+                        'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method'))),
                         'items' => array(
                             'files' => 'Files',
                             'memory' => 'Memcached' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),

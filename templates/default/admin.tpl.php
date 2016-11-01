@@ -16,6 +16,7 @@
     <?php $this->addMainJS("templates/default/js/core.js"); ?>
     <?php $this->addMainJS("templates/default/js/modal.js"); ?>
     <?php $this->head(false); ?>
+</head>	
 <body>
 
     <div id="wrapper">
@@ -94,7 +95,7 @@
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
             var h2 = $('#cp_footer').offset().top;
-            $('table.layout').height(h2 - h1 + 2);
+            $('table.layout').height(h2 - h1 - 2);
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
 
@@ -107,7 +108,10 @@
                 if(this.toolbar.length == 0){
                     return;
                 }
-                this.offset  = this.toolbar.offset();
+                this.offset  = (this.toolbar).offset().top;
+                if((+$('#wrapper').height() - +$(this.win).height()) <= (this.offset + 20)){
+                    return;
+                }
                 this.run();
             },
             run: function (){
@@ -118,7 +122,7 @@
             },
             doAutoScroll: function (){
                 scroll_top = this.win.scrollTop();
-                if (scroll_top > this.offset.top) {
+                if (scroll_top > this.offset) {
                     if(!$(this.toolbar).hasClass('fixed_toolbar')){
                         $(this.toolbar).addClass('fixed_toolbar');
                     }

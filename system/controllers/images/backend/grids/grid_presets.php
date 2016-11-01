@@ -30,7 +30,7 @@ function grid_presets($controller){
             'title' => LANG_IMAGES_PRESET_SIZE,
             'width' => 100,
 			'handler' => function($val, $row){
-				return $val . ' x ' . $row['height'];
+				return ($val ? $val : LANG_AUTO) . ' x ' . ($row['height'] ? $row['height'] : LANG_AUTO);
 			}
         ),
         'quality' => array(

@@ -4,11 +4,8 @@ class actionContentItemEdit extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
-
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name', '');
-        $ctype = $this->model->getContentTypeByName($ctype_name);
+        $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) { cmsCore::error404(); }
 
         $id = $this->request->get('id', 0);
@@ -21,13 +18,13 @@ class actionContentItemEdit extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all')) {
-            if (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] != $user->id) {
+            if (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] != $this->cms_user->id) {
                 cmsCore::error404();
             }
         }
 
         $is_premoderation = $ctype['is_premod_edit'];
-        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $user->id);
+        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
 
         // Получаем родительский тип, если он задан
@@ -49,11 +46,26 @@ class actionContentItemEdit extends cmsAction {
         }
 
         // Получаем поля для данного типа контента
-        $this->model->orderBy('ordering');
-        $fields = $this->model->getContentFields($ctype['name'], $id);
+        $fields = $this->model->orderBy('ordering')->getContentFields($ctype['name'], $id);
+
+        // Если этот контент можно создавать в группах (сообществах) то получаем список групп
+        $groups_list = array();
+
+        if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
+
+            $groups_model = cmsCore::getModel('groups');
+            $groups = $groups_model->getUserGroups($this->cms_user->id);
+
+            if ($groups){
+                $groups_list = ($ctype['is_in_groups_only']) ? array() : array('0'=>'');
+                $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
+            }
+
+        }
 
         // Строим форму
         $form = $this->getItemForm($ctype, $fields, 'edit', array(
+            'groups_list' => $groups_list,
             'folders_list' => $folders_list
         ), $id, $item);
 
@@ -64,7 +76,7 @@ class actionContentItemEdit extends cmsAction {
         }
 
 		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
-        list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
+        list($form, $item)  = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
@@ -116,6 +128,21 @@ class actionContentItemEdit extends cmsAction {
                 unset($item['ctype_name']);
                 unset($item['ctype_id']);
 
+                if (isset($item['parent_id']) && $groups_list){
+                    if (array_key_exists($item['parent_id'], $groups_list) && $item['parent_id'] > 0){
+                        $group = $groups_model->getGroup($item['parent_id']);
+                        $item['parent_type']      = 'group';
+                        $item['parent_title']     = $groups_list[$item['parent_id']];
+                        $item['parent_url']       = href_to_rel('groups', $item['parent_id'], array('content', $ctype['name']));
+                        $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
+                    } else {
+                        $item['parent_id']    = null;
+                        $item['parent_type']  = null;
+                        $item['parent_title'] = null;
+                        $item['parent_url']   = null;
+                    }
+                }
+
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;
 
@@ -140,7 +167,7 @@ class actionContentItemEdit extends cmsAction {
 				if ($is_date_pub_end_allowed && !empty($item['date_pub_end'])){
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
-				} else if ($is_date_pub_ext_allowed && !$user->is_admin) {
+				} else if ($is_date_pub_ext_allowed && !$this->cms_user->is_admin) {
 					$days = $item['pub_days'];
 					$date_pub_end_time = $date_pub_end_time + 60*60*24*$days;
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
@@ -177,28 +204,21 @@ class actionContentItemEdit extends cmsAction {
                 //
                 // Сохраняем запись и редиректим на ее просмотр
                 //
-                $item = cmsEventsManager::hook("content_before_update", $item);
+                $item = cmsEventsManager::hook('content_before_update', $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_update", $item);
 
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
 
-                cmsEventsManager::hook("content_after_update", $item);
+                $item['ctype_data'] = $ctype;
+
+                cmsEventsManager::hook('content_after_update', $item);
                 cmsEventsManager::hook("content_{$ctype['name']}_after_update", $item);
 
                 if ($item['is_approved'] || $is_moderator){
-                    cmsEventsManager::hook("content_after_update_approve", array('ctype_name'=>$ctype_name, 'item'=>$item));
+                    cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
                     cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
                 } else {
-                    $this->requestModeration($ctype_name, $item, false);
-                }
-
-                // обновляем приватность комментариев
-                if (isset($item['is_private'])){
-                    cmsCore::getModel('comments')->
-                                filterEqual('target_controller', $this->name)->
-                                filterEqual('target_subject', $ctype_name)->
-                                filterEqual('target_id', $item['id'])->
-                                updateCommentsPrivacy($item['is_private'] || $item['is_parent_hidden']);
+                    $this->requestModeration($ctype['name'], $item, false);
                 }
 
                 $back_url = $this->request->get('back', '');
@@ -206,7 +226,7 @@ class actionContentItemEdit extends cmsAction {
                 if ($back_url){
                     $this->redirect($back_url);
                 } else {
-                    $this->redirectTo($ctype_name, $item['slug'] . '.html');
+                    $this->redirectTo($ctype['name'], $item['slug'] . '.html');
                 }
 
             }
@@ -217,18 +237,18 @@ class actionContentItemEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('item_form', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'parent' => isset($parent) ? $parent : false,
-            'item' => $item,
-            'form' => $form,
-            'props' => $props,
-            'is_moderator' => $is_moderator,
+        return $this->cms_template->render('item_form', array(
+            'do'               => 'edit',
+            'ctype'            => $ctype,
+            'parent'           => isset($parent) ? $parent : false,
+            'item'             => $item,
+            'form'             => $form,
+            'props'            => $props,
+            'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
-            'is_load_props' => false,
-			'add_cats' => $add_cats,
-            'errors' => isset($errors) ? $errors : false
+            'is_load_props'    => false,
+            'add_cats'         => $add_cats,
+            'errors'           => isset($errors) ? $errors : false
         ));
 
     }

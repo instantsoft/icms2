@@ -8,7 +8,8 @@ class onMessagesCronClean extends cmsAction {
             return false;
         }
 
-        $this->model->filterDateOlder('date_pub', $this->options['time_delete_old'])->deleteFiltered('{users}_messages');
+        $this->model->filterDateOlder('date_pub', $this->options['time_delete_old'])->
+                filterNotNull('is_deleted')->deleteFiltered('{users}_messages');
 
         return true;
 

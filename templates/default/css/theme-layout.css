@@ -89,6 +89,7 @@ header .menu li.active ul li a {
     text-shadow: none;
     text-decoration: none;
     padding-right: 10px;
+    font-size: 12px;
 }
 
 header .menu li ul li.active a{ color:#F5CF53; }
@@ -309,12 +310,31 @@ nav select { display: none; }
 
 #breadcrumbs ul{
     overflow: hidden;
+    position: relative;
 }
-
+#breadcrumbs > ul:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: -moz-linear-gradient(left,  rgba(236,240,241,0.1) 0%, rgba(236,240,241,1) 100%);
+    background: -webkit-linear-gradient(left,  rgba(236,240,241,0.1) 0%,rgba(236,240,241,1) 100%);
+    background: linear-gradient(to right,  rgba(236,240,241,0.1) 0%,rgba(236,240,241,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1aecf0f1', endColorstr='#ecf0f1',GradientType=1 );
+    width: 50px;
+    height: 100%;
+}
 #breadcrumbs ul li {
-    height:32px; line-height:32px; float:left;
-    font-size:12px;
-    color:#2c3e50;
+    font-size: 12px;
+    color: #2c3e50;
+    display: table-cell;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border-spacing: 0;
+    vertical-align: middle;
 }
 
 #breadcrumbs ul li a {
@@ -327,9 +347,9 @@ nav select { display: none; }
 }
 
 #breadcrumbs ul li.sep {
-    margin:0 10px;
+    padding:0 10px;
     width: 4px;
-    background: url("../images/nav-arrow-right-light.png") no-repeat left center;
+    background: url("../images/nav-arrow-right-light.png") no-repeat center center;
 }
 
 #breadcrumbs ul li.home {
@@ -379,20 +399,17 @@ nav select { display: none; }
 
 /* Sidebar Navigation ======================================================= */
 
-#body aside .menu, #body aside .menu li { margin:0; padding:0; list-style: none; }
+#body aside .menu, #body aside .menu li,
+#body section .menu, #body section .menu li
+{ margin:0; padding:0; list-style: none; background:#FFF; }
 
-#body aside .menu ul{
+#body aside .menu ul,
+#body section .menu ul{
     border: solid 1px #EDEDED;
     border-bottom: none;
 }
 
-#body aside .menu ,
-#body aside .menu li ul {
-    padding:0;
-    background:#FFF;
-}
-
-#body aside .menu{
+#body aside .menu {
     margin:-15px;
 }
 
@@ -412,43 +429,31 @@ nav select { display: none; }
 }
 
 #body aside .menu li:hover,
-#body aside .menu li.active {
+#body aside .menu li.active,
+#body section .menu li:hover,
+#body section .menu li.active {
     position: relative;
     z-index: 2;
     cursor: default;
     background: #ecf0f1;
 }
-
-/*#body aside .menu li:hover > a,
-#body aside .menu li.active > a { color:#FFF; }*/
-
-#body aside .menu li:first-child {
-}
-
 #body aside .menu li:last-child {
     border-bottom: none;
 }
-
 #body aside .menu li:hover > ul {
     visibility: visible;
 }
-
-#body aside .menu li.active:hover {
-}
-
-aside .menu .item{
+aside .menu .item, section .menu .item {
     background: url("../images/icons/item.png") no-repeat 10px center;
 }
-
-#body aside .menu li.active .item {
+#body aside .menu li.active .item,
+#body section .menu li.active .item {
     color:#000;
 }
-
-#body aside .menu li.hover a {
-}
-
 #body aside .menu a,
-#body aside .menu span.item {
+#body aside .menu span.item,
+#body section .menu a,
+#body section .menu span.item {
     overflow: hidden;
     display:block;
     color:#666;
@@ -461,7 +466,8 @@ aside .menu .item{
     color:#000;
 }
 
-#body aside .menu .counter{
+#body aside .menu .counter,
+#body section .menu .counter{
     float:right;
     padding: 0px 7px;
     background: #376499;
@@ -470,7 +476,8 @@ aside .menu .item{
     color: white;
 }
 
-#body aside .menu li:hover .counter{
+#body aside .menu li:hover .counter,
+#body section .menu li:hover .counter{
     background:#BDC3C7;
 }
 
@@ -537,7 +544,11 @@ aside .menu .item{
 #sql_queries .green_query {
     color: #27ae60;
 }
-
+#sql_stat {
+    margin: 10px;
+    font-size: 11px;
+    color: #AAA;
+}
 /* Footer Navigation ======================================================== */
 
 #layout footer #nav {
@@ -556,7 +567,13 @@ aside .menu .item{
     border:solid 1px red;
     color:red;
 }
-
+.modal_padding {
+    padding: 10px;
+    box-sizing: border-box;
+}
+.modal_padding h3, .modal_padding h2  {
+    margin-top: 5px;
+}
 /* Media Queries ============================================================ */
 
 @media screen and (max-width: 980px) {
@@ -613,8 +630,7 @@ aside .menu .item{
     .content_item .ft_images .first_type_images:first-child > img {
         width: 100%;
     }
-    #layout header #logo { margin: 0 auto; overflow:hidden; width:200px; }
-    #layout header .menu { display:none; }
+    #layout header #logo { width:200px; }
     .tabs-menu ul { display:none; }
     .tabs-menu select { display:block !important; }
     .widget > .title { font-size:14px !important; }

@@ -114,13 +114,17 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');
     define('LANG_PARSER_USERS',              'User list');
     define('LANG_PARSER_IMAGE',              'Image');
+    define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
+    define('LANG_PARSER_IMAGE_MAX_COUNT',    'The maximum images count');
+    define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Maximum %s');
     define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Thumbnail preset');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Create thumbnails');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Image size in list');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Image size in entry');
+    define('LANG_PARSER_IMAGE_SIZE_MODAL',   'Image size in entry whith modal');
     define('LANG_PARSER_IMAGE_SIZE_MICRO',   'Micro');
     define('LANG_PARSER_IMAGE_SIZE_SMALL',   'Small');
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Medium');
@@ -424,6 +428,7 @@
     define('LANG_ORDER',					 'Order');
     define('LANG_ORDER_DOWN',				 'Move down');
     define('LANG_ORDER_UP',					 'Move up');
+    define('LANG_HITS_SPELL',                'views|views|views');
     define('LANG_HITS',                      'Views');
     define('LANG_GUEST',                     'Guest');
 
@@ -499,6 +504,7 @@
     define('LANG_SECOND2',                   'seconds');
     define('LANG_SECOND10',                  'seconds');
     define('LANG_DATE_AGO',                  '%s ago');
+    define('LANG_AUTO',                      'Auto');
 
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
@@ -506,3 +512,4 @@
     define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="http://www.fatcow.com/free-icons">FatCow</a>');
     define('LANG_DEBUG_QUERY_TIME',          'Query time');
+    define('LANG_SUCCESS_MSG',               'Successfully saved');

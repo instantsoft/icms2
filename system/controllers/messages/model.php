@@ -188,7 +188,8 @@ class modelMessages extends cmsModel {
         $this->filterIn('id', $ids);
 
         $this->lockFilters()->updateFiltered('{users}_messages', array(
-           'is_deleted' => 1
+           'is_deleted'  => 1,
+           'date_delete' => NULL
         ));
 
         $this->filterEqual('is_new', 1);
@@ -215,7 +216,8 @@ class modelMessages extends cmsModel {
         $this->filterEqual('id', $id);
 
         return $this->updateFiltered('{users}_messages', array(
-           'is_deleted' => null
+           'is_deleted'  => null,
+           'date_delete' => false
         ));
 
     }

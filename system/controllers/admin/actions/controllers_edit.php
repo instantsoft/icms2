@@ -2,23 +2,26 @@
 
 class actionAdminControllersEdit extends cmsAction {
 
-    public function run( $controller_name ){
+    public function run($controller_name){
 
         if (!$controller_name) { cmsCore::error404(); }
 
         $controller_info = $this->model->getControllerInfo($controller_name);
-        if (!$controller_info) { cmsCore::error404(); }
+        if (!$controller_info) {
+            // если компонент имеет несколько контроллеров и один из них использует опции другого
+            $controller_info = cmsEventsManager::hook("admin_{$controller_name}_controller_info", false);
+            if (!$controller_info) { cmsCore::error404(); }
+        }
 
         cmsCore::loadControllerLanguage($controller_info['name']);
 
         $controller_title = string_lang($controller_info['name'].'_CONTROLLER', $controller_info['title']);
 
-        $template = cmsTemplate::getInstance();
-
         if (!$controller_info['is_backend']){
-            return $template->render('controllers_edit', array(
-                'is_backend' => false,
-                'controller_name' => $controller_info['name'],
+            return $this->cms_template->render('controllers_edit', array(
+                'is_backend'       => false,
+                'ctype'            => false,
+                'controller_name'  => $controller_info['name'],
                 'controller_title' => $controller_title
             ));
         }
@@ -53,13 +56,14 @@ class actionAdminControllersEdit extends cmsAction {
         }
 
         // Подключаем CSS бакенда если он есть
-        $css_file = $template->getStylesFileName($controller_info['name'], 'backend');
-        if ($css_file){ $template->addCSS($css_file); }
+        $css_file = $this->cms_template->getStylesFileName($controller_info['name'], 'backend');
+        if ($css_file){ $this->cms_template->addCSS($css_file); }
 
-        $template->setMenuItems('backend', $backend_controller->getBackendMenu());
+        $this->cms_template->setMenuItems('backend', $backend_controller->getBackendMenu());
 
-        return $template->render('controllers_edit', array(
+        return $this->cms_template->render('controllers_edit', array(
             'is_backend'         => true,
+            'ctype'              => cmsCore::getModel('content')->getContentTypeByName($backend_controller->maintained_ctype ? $backend_controller->maintained_ctype : $controller_name),
             'controller_name'    => $controller_info['name'],
             'controller_title'   => $controller_title,
             'params'             => $params,

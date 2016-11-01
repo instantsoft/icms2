@@ -304,17 +304,33 @@ function get_image_block_param_by_title($title) {
  */
 function html_image($image, $size_preset='small', $alt='', $attributes = array()){
 
-	$src = html_image_src($image, $size_preset, true);
+    if(is_array($size_preset)){
+        list($small_preset, $modal_preset) = $size_preset;
+    } else {
+        $small_preset = $size_preset;
+        $modal_preset = false;
+    }
+
+	$src = html_image_src($image, $small_preset, true);
 	if (!$src) { return ''; }
 
-	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
+	$size = $small_preset == 'micro' ? 'width="32" height="32"' : '';
 
     $title = htmlspecialchars(isset($attributes['title']) ? $attributes['title'] : $alt); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    return '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+    $image_html = '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+
+    if($modal_preset){
+        $modal_src = html_image_src($image, $modal_preset, true);
+        if ($modal_src) {
+            return '<a title="'.$title.'" class="ajax-modal modal_image hover_image" href="'.$modal_src.'">'.$image_html.'</a>';
+        }
+    }
+
+    return $image_html;
 
 }
 

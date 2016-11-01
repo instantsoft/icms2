@@ -42,6 +42,9 @@ class users extends cmsFrontend {
                                         ($this->cms_user->id != $profile['id']) &&
                                         $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
 
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_profile', $profile);
+
         // Нет параметров после названия экшена (/users/id) - значит
         // это главная страница профиля, первым параметром добавляем
         // сам профиль

@@ -67,7 +67,7 @@ class cmsUploader {
     }
 
     public function isUploadedFromLink($name){
-        return $this->allow_remote && !empty($_POST['image_link']);
+        return $this->allow_remote && !empty($_POST[$name]);
     }
 
     public function enableRemoteUpload() {
@@ -94,7 +94,7 @@ class cmsUploader {
         if (!isset($size['height'])) { $size['height'] = $size['width']; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
-        if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['square'], $size['quality'])) {
+        if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {
 
             $url = str_replace($cfg->upload_path, '', $dest_file);
 
@@ -231,8 +231,8 @@ class cmsUploader {
 
     public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
-        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST['image_link']), PHP_URL_PATH), PATHINFO_EXTENSION));
-        $dest_name = files_sanitize_name($_POST['image_link']);
+        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST[$post_filename]), PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($_POST[$post_filename]);
 
         if(!$this->checkExt($dest_ext, $allowed_ext)){
             return array(
@@ -242,7 +242,7 @@ class cmsUploader {
             );
         }
 
-        $file_bin = file_get_contents_from_url($_POST['image_link']);
+        $file_bin = file_get_contents_from_url($_POST[$post_filename]);
 
         if(!$file_bin){
             return array(

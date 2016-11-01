@@ -315,6 +315,10 @@ class content extends cmsFrontend {
             'url_mask_not' => array(
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
+                "{$ctype['name']}/addcat",
+                "{$ctype['name']}/addcat/%",
+                "{$ctype['name']}/editcat/%",
                 "{$ctype['name']}/edit/*",
             )
         ));
@@ -332,6 +336,7 @@ class content extends cmsFrontend {
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
             'url_mask' => array(
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
                 "{$ctype['name']}/edit/*"
             )
         ));
@@ -552,7 +557,7 @@ class content extends cmsFrontend {
 
         // Если этот контент можно создавать в группах (сообществах) то добавляем
         // поле выбора группы
-        if ($action == 'add' && $groups_list && $groups_list != array('0'=>'')){
+        if (($action == 'add' || $this->cms_user->is_admin) && !empty($groups_list) && $groups_list != array('0'=>'')){
 
             $fieldset_id = $form->addFieldset(LANG_GROUP);
             $form->addField($fieldset_id,

@@ -725,6 +725,63 @@ class cmsModel{
         return $this;
     }
 
+    public function filterRelated($field, $value, $lang = false){
+
+        if(mb_strlen($value) <= 3){
+            return $this->filterLike($field, $this->db->escape($value).'%');
+        }
+
+        $query = array();
+
+        $words = explode(' ', str_replace(array('"','\'','+','*','-','%',')','(','.',',','!','?'), ' ', $value));
+
+        $stopwords = string_get_stopwords($lang ? $lang : cmsConfig::get('language'));
+
+        foreach($words as $word){
+
+            $word = mb_strtolower(trim($word));
+
+            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if($stopwords && in_array($word, $stopwords)){ continue; }
+            if (mb_strlen($word)==3) { $query[] = $this->db->escape($word); continue; }
+
+            if (mb_strlen($word) >= 12) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 3).'*';
+            } else if (mb_strlen($word) >= 10) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 2).'*';
+            } else if (mb_strlen($word) >= 6) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 1).'*';
+            }
+
+            $query[] = $this->db->escape($word);
+
+        }
+
+        if (empty($query)) {
+            $ft_query = '\"' . $this->db->escape($value) . '\"';
+        } else {
+
+            usort($query, function ($a, $b){
+                return mb_strlen($b)-mb_strlen($a);
+            });
+            $query = array_slice($query, 0, 5);
+
+            $ft_query  = '>\"' . $this->db->escape($value).'\" <';
+            $ft_query .= implode(' ', $query);
+        }
+
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+
+        $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
+
+        $this->select($search_param, 'fsort');
+
+        $this->order_by = "fsort desc";
+
+        return $this->filter($search_param);
+
+    }
+
     public function filterCategory($ctype_name, $category, $is_recursive=false){
 
 		$table_name      = $this->table_prefix . $ctype_name . '_cats';
@@ -962,7 +1019,7 @@ class cmsModel{
         if (!$user_fields){
             $user_fields = array(
                 'u.nickname' => 'user_nickname',
-                'u.avatar' => 'user_avatar',
+                'u.avatar'   => 'user_avatar'
             );
         }
 
@@ -1093,6 +1150,14 @@ class cmsModel{
         $perpage = (int) $perpage;
         if ($perpage <= 0) { $perpage = $this->perpage; }
         $this->limit(($page-1)*$perpage, $perpage);
+        return $this;
+    }
+
+    public function limitPagePlus($page, $perpage=0) {
+        $page    = (int) $page;
+        $perpage = (int) $perpage;
+        if ($perpage <= 0) { $perpage = $this->perpage; }
+        $this->limit(($page-1)*$perpage, $perpage+1);
         return $this;
     }
 
@@ -1550,9 +1615,9 @@ class cmsModel{
         // и проверяем не передан ли фильтр для нее
         //
         foreach($grid['columns'] as $field => $column){
-            if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){
+            if (!empty($column['filter']) && $column['filter'] != 'none' && isset($filter[$field])){
 
-                if (!empty($filter[$field])){
+                if ($filter[$field] || (string)$filter[$field] === '0'){
 
                     if (!empty($column['filter_by'])){
                         $filter_field = $column['filter_by'];

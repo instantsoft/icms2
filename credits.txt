@@ -81,3 +81,11 @@ Third-party plugins, libraries and resources included in InstantCMS:
     Chosen
         by Patrick Filler, Matthew Lettini, @pfiller, @kenearley, @stof, @koenpunt, and @tjschuck
         http://harvesthq.github.io/chosen/
+
+    Owl Carousel 2
+        by Bartosz Wojciechowski
+        http://www.owlcarousel.owlgraphic.com/
+
+    screenfull
+        by Sindre Sorhus
+        https://github.com/sindresorhus/screenfull.js

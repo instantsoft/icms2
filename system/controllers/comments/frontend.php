@@ -158,7 +158,7 @@ class comments extends cmsFrontend {
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
-        if (!$dataset_name || $dataset_name == 'all'){
+        if ((!$dataset_name || $dataset_name == 'all') && !cmsUser::isAllowed('comments', 'view_all')){
             $this->model->filterPrivacy();
         }
 

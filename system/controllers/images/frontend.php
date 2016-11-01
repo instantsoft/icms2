@@ -17,12 +17,13 @@ class images extends cmsFrontend {
 
     }
 
-    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false){
+    public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_photos = 0){
 
         return $this->cms_template->renderInternal($this, 'upload_multi', array(
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
+            'max_photos'        => (int)$max_photos,
             'allow_import_link' => $allow_import_link
         ));
 
@@ -32,6 +33,15 @@ class images extends cmsFrontend {
 //============================================================================//
 
     public function actionUpload($name){
+
+        if (!cmsUser::isLogged()) {
+
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'error'   => 'auth error'
+            ));
+
+        }
 
         $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
 
@@ -67,7 +77,10 @@ class images extends cmsFrontend {
             );
 		}
 
-		$presets = $this->model->getPresets();
+		$presets = $this->model->orderByList(array(
+            array('by' => 'is_square', 'to' => 'asc'),
+            array('by' => 'width', 'to' => 'desc')
+        ))->getPresets();
 
 		foreach($presets as $p){
 
@@ -76,10 +89,10 @@ class images extends cmsFrontend {
 			}
 
 			$path = $this->cms_uploader->resizeImage($result['path'], array(
-				'width'   => $p['width'],
-                'height'  => $p['height'],
-                'square'  => $p['is_square'],
-                'quality' => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
+				'width'     => $p['width'],
+                'height'    => $p['height'],
+                'is_square' => $p['is_square'],
+                'quality'   => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality']) // потом уже при наложении ватермарка будет правильное качество
             ));
 
 			if (!$path) { continue; }
@@ -142,10 +155,10 @@ class images extends cmsFrontend {
 		}
 
 		$path = $this->cms_uploader->resizeImage($result['path'], array(
-			'width'   => $preset['width'],
-            'height'  => $preset['height'],
-            'square'  => $preset['is_square'],
-            'quality' => (($preset['is_watermark'] && $preset['wm_image']) ? 100 : $preset['quality'])
+			'width'     => $preset['width'],
+            'height'    => $preset['height'],
+            'is_square' => $preset['is_square'],
+            'quality'   => (($preset['is_watermark'] && $preset['wm_image']) ? 100 : $preset['quality'])
         ));
 
 		$image = array(

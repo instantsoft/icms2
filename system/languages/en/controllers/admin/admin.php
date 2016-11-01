@@ -51,6 +51,7 @@
     define('LANG_CP_CTYPES_EDIT',               'Edit Content Type');
     define('LANG_CP_CTYPE_CREATED',             'Content type &laquo;%s&raquo; created');
     define('LANG_CP_CTYPE_DELETE_CONFIRM',      'Delete content type "{title}"?');
+    define('LANG_CP_CTYPE_ERROR_NAME',          'It should not be called the name of an existing component');
 
     define('LANG_CP_CTYPE_SETTINGS',            'Settings');
     define('LANG_CP_CTYPE_LABELS',              'Labels');
@@ -273,6 +274,7 @@
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this IP');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
 
+    define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
     define('LANG_CP_ERR_BACKEND_NOT_FOUND',     'The &laquo;%s&raquo; component has no settings');
 
@@ -313,8 +315,10 @@
     define('LANG_CP_SETTINGS_CACHE_CLEAN_MERGED',  '&mdash; <a href="%s">Clear cache</a>');
     define('LANG_CP_SETTINGS_MERGED_CLEANED',   'Folder <b>%s</b> is succesfully cleared');
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Unable to clear the folder <b>%s</b>. Check permissions or clean it manually');
-	define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content type');
-	define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Page URLs of this content type will not contain the content type\'s system name');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'The cache is successfully cleared');
+    define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Error clearing cache');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content type');
+    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Page URLs of this content type will not contain the content type\'s system name');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Show on the homepage');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Only widgets');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'User profile or authorization form');
@@ -349,6 +353,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
     define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
+    define('LANG_CP_ORDER_SUCCESS',             'The order was successfully saved');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
@@ -374,10 +379,16 @@
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Automatic extraction is impossible');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Request your hoster to install the <b>ZipArchive</b> class for PHP on your server');
     define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Change file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
+    define('LANG_CP_INSTALL_ERROR',             'Package installation error');
+    define('LANG_CP_INSTALL_PERM_ERROR',        'The "%s" file is not readable');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Package extraction error');
     define('LANG_CP_INSTALL_FTP_NOTICE',        'To install the package you must provide the details of an FTP-user that has permissions to create folders and files.');
     define('LANG_CP_INSTALL_FTP_PRIVACY',       'The details are not stored or transferred anywhere');
-
+    define('LANG_CP_PACKAGE_DEPENDENT_TYPE',      'Requires installed %s - <a href="%s" target="_blank">%s</a>');
+    define('LANG_CP_PACKAGE_DEPENDENT_COMPONENT', 'component');
+    define('LANG_CP_PACKAGE_DEPENDENT_WIDGET',    'widget');
+    define('LANG_CP_INSTALLED',     'installed');
+    define('LANG_CP_NOT_INSTALLED', 'not installed');
     define('LANG_CP_PACKAGE_AUTHOR',            'Package author');
     define('LANG_CP_PACKAGE_DESCRIPTION',       'Package description');
     define('LANG_CP_PACKAGE_CONTENTS',          'Package contents');
@@ -497,7 +508,6 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
-
     define('LANG_ZIP_ERROR_10', 'File already exists');
     define('LANG_ZIP_ERROR_21', 'Inconsistent ZIP-archive');
     define('LANG_ZIP_ERROR_18', 'Invalid argument');
@@ -507,3 +517,4 @@
     define('LANG_ZIP_ERROR_11', 'Unable to open the file');
     define('LANG_ZIP_ERROR_5', 'Read error');
     define('LANG_ZIP_ERROR_4', 'Seek error');
+    define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');

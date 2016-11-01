@@ -104,7 +104,7 @@ class admin extends cmsFrontend {
 
     public function getCtypeMenu($do='add', $id=null){
 
-        return cmsEventsManager::hook('admin_ctype_menu', array(
+        $ctype_menu = array(
 
             array(
                 'title' => LANG_CP_CTYPE_SETTINGS,
@@ -141,7 +141,19 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             )
 
-        ));
+        );
+
+        list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
+
+        if($do == 'edit'){
+
+            $ctype = cmsCore::getModel('content')->getContentType($id);
+
+            list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+
+        }
+
+        return $ctype_menu;
 
     }
 
@@ -206,6 +218,24 @@ class admin extends cmsFrontend {
 
         if (file_exists($this->cms_config->upload_path . $this->installer_upload_path . '/' . 'package')){
             $manifest['contents'] = $this->getPackageContentsList();
+            if($manifest['contents']){
+                if(!empty($manifest['contents']['system']['core'])){
+                    foreach ($manifest['contents']['system']['core'] as $file) {
+                        if(file_exists($this->cms_config->root_path . 'system/core/'.$file)){
+                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
+                            break;
+                        }
+                    }
+                }
+                if(!empty($manifest['contents']['system']['config'])){
+                    foreach ($manifest['contents']['system']['config'] as $file) {
+                        if(file_exists($this->cms_config->root_path . 'system/config/'.$file)){
+                            $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
+                            break;
+                        }
+                    }
+                }
+            }
         } else {
 			$manifest['contents'] = false;
 		}
@@ -241,7 +271,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function componentInstalled($manifest_package) {
+    public function componentInstalled($manifest_package) {
 
         $model = new cmsModel();
 
@@ -249,7 +279,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function widgetInstalled($manifest_package) {
+    public function widgetInstalled($manifest_package) {
 
         $model = new cmsModel();
 

@@ -36,11 +36,6 @@ class formAuthOptions extends cmsForm {
                         'title' => LANG_REG_CFG_REG_CAPTCHA,
                     )),
 
-                    new fieldCheckbox('verify_email', array(
-                        'title' => LANG_REG_CFG_VERIFY_EMAIL,
-                        'hint' => LANG_REG_CFG_VERIFY_EMAIL_HINT,
-                    )),
-
                     new fieldCheckbox('reg_auto_auth', array(
                         'title'   => LANG_REG_CFG_REG_AUTO_AUTH,
                         'default' => 1
@@ -52,10 +47,19 @@ class formAuthOptions extends cmsForm {
 						'default' => array(3)
                     )),
 
-//                    new fieldNumber('verify_exp', array(
-//                        'title' => LANG_REG_CFG_VERIFY_EXPIRATION,
-//                        'default' => 48
-//                    )),
+                    new fieldCheckbox('verify_email', array(
+                        'title' => LANG_REG_CFG_VERIFY_EMAIL,
+                        'hint' => LANG_REG_CFG_VERIFY_EMAIL_HINT,
+                    )),
+
+                    new fieldNumber('verify_exp', array(
+                        'title'   => LANG_REG_CFG_VERIFY_EXPIRATION,
+                        'default' => 48,
+                        'rules' => array(
+                            array('required'),
+                            array('min', 1)
+                        )
+                    ))
 
                 )
             ),

@@ -135,7 +135,9 @@ class modelActivity extends cmsModel{
 
         $this->useCache('activity.entries');
 
-        return $this->get('activity', function($item, $model){
+        $config = cmsConfig::getInstance();
+
+        return $this->get('activity', function($item, $model) use ($config) {
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
@@ -160,10 +162,9 @@ class modelActivity extends cmsModel{
 
 			if ($item['images']){
 
-				$config = cmsConfig::getInstance();
 				$images_exist = array();
 
-				foreach($item['images'] as $idx=>$image){
+				foreach($item['images'] as $key => $image){
 					if (strpos($image['src'], 'http') !== 0) {
 						if (!file_exists($config->upload_path . '/' . $image['src'])){
 							continue;
@@ -173,6 +174,10 @@ class modelActivity extends cmsModel{
                     $image['url'] = rel_to_href($image['url']);
 					$images_exist[] = $image;
 				}
+
+                if(!$images_exist){
+                    $model->deleteEntryById($item['id']);
+                }
 
 				$item['images'] = $images_exist;
 
