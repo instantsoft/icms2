@@ -3,6 +3,8 @@
 class actionUsersIndex extends cmsAction {
 
     public function run($tab='all'){
+        
+        if ($this->options['is_users_listview']){ cmsCore::error404(); }
 
         $dataset_name = false;
         $datasets = $this->getDatasets();
