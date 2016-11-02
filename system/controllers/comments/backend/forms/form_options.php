@@ -23,6 +23,11 @@ class formCommentsOptions extends cmsForm {
                         'hint' => LANG_COMMENTS_OPT_IS_GUESTS_HINT,
                     )),
 
+                    new fieldCheckbox('is_guests_moderate', array(
+                        'title' => LANG_COMMENTS_OPT_IS_GUESTS_MODERATE,
+                        'default' => 1
+                    )),
+
                     new fieldNumber('guest_ip_delay', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_DELAY,
                         'units' => LANG_MINUTE10,

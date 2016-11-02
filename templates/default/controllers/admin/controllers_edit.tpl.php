@@ -17,7 +17,9 @@
         <?php if($ctype){ ?>
             @ <a href="<?php echo $this->href_to('ctypes', array('edit', $ctype['id'])); ?>"><?php echo $ctype['title']; ?></a>
         <?php } ?>
-        <?php echo $backend_controller->getH1(); ?>
+        <?php if ($is_backend){ ?>
+            <?php echo $backend_controller->getH1(); ?>
+        <?php } ?>
     </span>
 </h1>
 
