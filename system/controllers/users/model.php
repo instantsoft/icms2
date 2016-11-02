@@ -296,22 +296,41 @@ class modelUsers extends cmsModel{
 
 //============================================================================//
 //============================================================================//
+    /**
+     * Удаляет пользователя
+     * @param integer|array $user id пользователя или массив данных пользователя
+     * @return boolean
+     */
+    public function deleteUser($user){
 
-    public function deleteUser($id){
+        if(is_numeric($user)){
+            $user = $this->getUser($user);
+            if(!$user){ return false; }
+        }
 
-        $this->deleteUserAuthTokens($id);
-        $this->delete('{users}_friends', $id, 'user_id');
-        $this->delete('{users}_friends', $id, 'friend_id');
-        $this->delete('{users}_groups_members', $id, 'user_id');
-        $this->delete('{users}_karma', $id, 'user_id');
-        $this->delete('{users}_statuses', $id, 'user_id');
-        $this->delete('{users}_personal_settings', $id, 'user_id');
-        $this->delete('{users}', $id);
+        $content_model = cmsCore::getModel('content');
+        $content_model->setTablePrefix('');
+        $fields = $content_model->getContentFields('{users}', $user['id']);
+
+        foreach($fields as $field){
+            $field['handler']->delete($user[$field['name']]);
+        }
+
+        $this->deleteUserAuthTokens($user['id']);
+        $this->delete('{users}_friends', $user['id'], 'user_id');
+        $this->delete('{users}_friends', $user['id'], 'friend_id');
+        $this->delete('{users}_groups_members', $user['id'], 'user_id');
+        $this->delete('{users}_karma', $user['id'], 'user_id');
+        $this->delete('{users}_statuses', $user['id'], 'user_id');
+        $this->delete('{users}_personal_settings', $user['id'], 'user_id');
+        $this->delete('{users}', $user['id']);
 
         $inCache = cmsCache::getInstance();
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
-        $inCache->clean('users.user.'.$id);
+        $inCache->clean('users.user.'.$user['id']);
+
+        return true;
 
     }
 
