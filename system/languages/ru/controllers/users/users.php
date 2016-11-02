@@ -63,6 +63,8 @@
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Показывать фильтр');
 
+    define('LANG_USERS_OPT_USERS_LIST_SHOW', 'Отключить показ списка пользователей');
+
     define('LANG_USERS_FIELD_PRIVATE',      'Показывать поле только владельцу профиля');
 
     define('LANG_USERS_PROFILE_INDEX',      'Профиль');
