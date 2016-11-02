@@ -242,6 +242,9 @@
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
+    define('ERR_SEARCH_TITLE',               'Поиск');
+    define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
+
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');
