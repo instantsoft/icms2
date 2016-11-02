@@ -242,6 +242,8 @@
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
     define('ERR_SITE_OFFLINE',               'Site is offline');
     define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a href="%s">Enable</a>');
+    define('ERR_SEARCH_TITLE',               'Search');
+    define('ERR_SEARCH_QUERY_INPUT',         'What?');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');
