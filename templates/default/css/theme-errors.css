@@ -3,7 +3,12 @@ html, body{
     font-family: 'Trebuchet MS', sans-serif;
     height:100%;
 }
-
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0;
+    line-height: normal;
+}
 a, a.ajaxlink { color: #2980b9; }
 a:hover, a.ajaxlink:hover { color: #d35400; }
 
