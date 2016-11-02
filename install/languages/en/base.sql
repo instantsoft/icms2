@@ -625,11 +625,11 @@ CREATE TABLE `{#}images_presets` (
 INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`) VALUES
 (1, 'micro', 'Micro', 32, 32, 1, NULL, NULL, NULL, NULL, NULL),
 (2, 'small', 'Small', 64, 64, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 'normal', 'Medium', 256, 256, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'big', 'Big', 640, 480, NULL, 1, NULL, 'bottom-right', NULL, NULL),
+(3, 'normal', 'Medium', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 'big', 'Big', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL),
 (5, 'wysiwyg_markitup', 'Editor: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1),
 (6, 'wysiwyg_redactor', 'Editor: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1),
-(7, 'wysiwyg_live', 'Editor: Live', 640, 640, NULL, NULL, NULL, 'top-left', NULL, 1);
+(7, 'wysiwyg_live', 'Editor: Live', 690, 690, NULL, NULL, NULL, 'top-left', NULL, 1);
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (

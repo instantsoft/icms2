@@ -2255,13 +2255,13 @@ class modelContent extends cmsModel{
 
         return $this->insert('moderators_tasks', array(
             'moderator_id' => $user_id,
-            'author_id' => $item['user_id'],
-            'item_id' => $item['id'],
-            'ctype_name' => $ctype_name,
-            'title' => $item['title'],
-            'url' => href_to($ctype_name, $item['slug'].".html"),
-            'date_pub' => '',
-            'is_new_item' => $is_new_item
+            'author_id'    => $item['user_id'],
+            'item_id'      => $item['id'],
+            'ctype_name'   => $ctype_name,
+            'title'        => $item['title'],
+            'url'          => href_to_rel($ctype_name, $item['slug'] . '.html'),
+            'date_pub'     => '',
+            'is_new_item'  => $is_new_item
         ));
 
     }
