@@ -8,7 +8,7 @@
     define('LANG_GROUPS_ADD',               'New Group');
     define('LANG_GROUPS_EDIT',              'Group settings');
     define('LANG_GROUPS_DELETE',            'Delete Group');
-    define('LANG_GROUPS_DELETE_CONFIRM',    'Are you sure you want to delete the %s group?');
+    define('LANG_GROUPS_DELETE_CONFIRM',    'Delete the %s group?');
     define('LANG_GROUPS_DELETE_CONTENT',    'Delete all group content too');
     define('LANG_GROUPS_DELETED',           'The %s group was deleted');
     define('LANG_GROUPS_SETTINGS',          'Configure Groups');

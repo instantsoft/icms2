@@ -22,7 +22,7 @@ class actionGroupsGroupDelete extends cmsAction {
 
             $this->model->removeContentFromGroup($group['id'], $is_delete_content);
 
-            $this->model->deleteGroup($group['id']);
+            $this->model->deleteGroup($group);
 
             cmsUser::addSessionMessage(sprintf(LANG_GROUPS_DELETED, $group['title']));
 

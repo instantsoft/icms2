@@ -27,9 +27,18 @@ class modelModeration extends cmsModel{
 
     }
 
+    public function getTasksCount(){
+
+        return $this->getCount('moderators_tasks');
+
+    }
+
     public function getTasks(){
 
-        return $this->get('moderators_tasks');
+        return $this->get('moderators_tasks', function ($item, $model){
+            $item['url'] = rel_to_href($item['url']);
+            return $item;
+        });
 
     }
 

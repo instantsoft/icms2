@@ -959,6 +959,14 @@ class cmsModel{
 
     }
 
+    public function selectList($fields, $is_this_only = false){
+        if($is_this_only){ $this->select = array(); }
+        foreach($fields as $field => $alias){
+            $this->select($field, $alias);
+        }
+        return $this;
+    }
+
     public function select($field, $as=false){
         $this->select[] = $as ? "{$field} as {$as}" : $field;
         return $this;

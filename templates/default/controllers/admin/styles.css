@@ -1790,6 +1790,24 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     margin-right: 20px;
     margin-top: 20px;
     background: #FFF;
+    position: relative;
+}
+#dashboard a.view_all_link {
+    display: block;
+    text-decoration: none;
+    color: #34495e;
+    background: #ecf0f1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px 15px;
+    box-sizing: border-box;
+    text-align: center;
+    transition:background 0.1s linear;
+}
+#dashboard a.view_all_link:hover {
+    background: #e1e5e6;
 }
 #dashboard .colplaceholder {
     background: #F9F9F9;
@@ -1846,9 +1864,23 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     list-style: none;
     padding: 0;
 }
+#dashboard .links:last-child {
+    margin-bottom: 0;
+}
 #dashboard .links li {
     padding: 0 0 7px;
     color: #97A5A6;
+}
+#dashboard .links li:last-child {
+    padding-bottom: 0;
+}
+#dashboard .adb_list li > div {
+    margin:5px 0;
+}
+#dashboard .adb_list li .date {
+    text-align: right;
+    font-size: 12px;
+    color: #CCC;
 }
 #dashboard #chart .toolbar {
     margin-bottom: 15px;

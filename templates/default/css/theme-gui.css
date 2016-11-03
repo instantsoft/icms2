@@ -1065,7 +1065,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_widget #comments_refresh_panel a:hover{
     background-color: #e1ebef;
 }
-
+.no_approved { display: none; }
 #comments_list .comment{
     overflow: hidden;
     border-radius:2px;
@@ -1115,7 +1115,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_list .comment .info .rating .buttons{
     float:right;
     margin-left:5px;
-    padding-top:2px;
 }
 
 #comments_list .comment .info .rating a {

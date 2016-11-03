@@ -48,6 +48,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 
 <div id="comments_urls" style="display: none"
         data-get-url="<?php echo $this->href_to('get'); ?>"
+        data-approve-url="<?php echo $this->href_to('approve'); ?>"
         data-delete-url="<?php echo $this->href_to('delete'); ?>"
         data-refresh-url="<?php echo $this->href_to('refresh'); ?>"
         data-track-url="<?php echo $this->href_to('track'); ?>"

@@ -29,7 +29,7 @@ class actionAuthVerify extends cmsAction {
 				'id'        => $user['id'],
                 'groups'    => $user['groups'],
                 'time_zone' => $user['time_zone'],
-                'perms'     => cmsUser::getPermissions($user['groups'], $user['id']),
+                'perms'     => cmsUser::getPermissions($user['groups']),
                 'is_admin'  => $user['is_admin']
             ));
 

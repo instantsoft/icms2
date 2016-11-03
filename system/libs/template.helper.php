@@ -210,7 +210,8 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     $attr_str = html_attr_str($attributes);
 	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
-    $html .= '$(function(){ $("#'.$id.'").datepicker('.json_encode($datepicker_default).'); });';
+    $html .= 'var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected;';
+    $html .= '$(function(){ $("#'.$id.'").datepicker(datepicker_params); });function datepickerSelected(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);}';
     $html .= '</script>';
     return $html;
 }

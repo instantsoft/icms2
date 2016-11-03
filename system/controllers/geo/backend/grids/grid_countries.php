@@ -28,7 +28,7 @@ function grid_countries($controller){
         ),
 		'alpha2' => array(
             'title'  => LANG_GEO_ALPHA2,
-            'width'  => 220,
+            'width'  => 250,
             'filter' => 'like',
             'editable' => array(
                 'table' => 'geo_countries'

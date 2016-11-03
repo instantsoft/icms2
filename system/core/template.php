@@ -42,7 +42,7 @@ class cmsTemplate {
 // ========================================================================== //
 // ========================================================================== //
 
-	function __construct($name=''){
+	public function __construct($name=''){
 
 		$config = cmsConfig::getInstance();
 
@@ -90,7 +90,6 @@ class cmsTemplate {
 
 	/**
 	 * Выводит тело страницы
-	 *
 	 */
 	public function body(){
 		echo $this->output;
@@ -99,9 +98,10 @@ class cmsTemplate {
     /**
      * Выводит головные теги страницы
      * @param boolean $is_seo_meta Выводить мета теги
-     * @param boolean $print_js Выводить javascript
+     * @param boolean $print_js Выводить javascript теги
+     * @param boolean $print_css Выводить CSS теги
      */
-	public function head($is_seo_meta=true, $print_js = true){
+	public function head($is_seo_meta=true, $print_js = true, $print_css = true){
 
         cmsEventsManager::hook('before_print_head', $this);
 
@@ -116,13 +116,8 @@ class cmsTemplate {
 
 		foreach ($this->head as $id=>$tag){	echo "\t". $tag . "\n";	}
 
-        if (!cmsConfig::get('merge_css')){
-            foreach ($this->head_main_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
-            foreach ($this->head_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
-        } else {
-            $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
-            echo $tag;
-            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
+        if($print_css){
+            $this->printCssTags();
         }
 
         if($print_js){
@@ -147,9 +142,24 @@ class cmsTemplate {
 
     }
 
+    /**
+     * Выводит CSS теги
+     */
+    public function printCssTags() {
+
+        if (!cmsConfig::get('merge_css')){
+            foreach ($this->head_main_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
+            foreach ($this->head_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
+        } else {
+            $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
+            echo $tag;
+            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
+        }
+
+    }
+
 	/**
 	 * Выводит заголовок текущей страницы
-	 * @param string $title
 	 */
 	public function title(){
     	echo htmlspecialchars($this->title);
@@ -370,7 +380,7 @@ class cmsTemplate {
 
     /**
      * Выводит глубиномер
-     * @return <type>
+     * @param array $options Опции глубиномера
      */
     public function breadcrumbs($options=array()){
 
@@ -397,6 +407,12 @@ class cmsTemplate {
 
     }
 
+    /**
+     * Формирует ссылку в контексте текущего контроллера
+     * @param string $action Экшен
+     * @param string|array $params Параметры экшена
+     * @return type
+     */
     public function href_to($action, $params=false){
 
         if (!isset($this->controller->root_url)){
@@ -412,7 +428,7 @@ class cmsTemplate {
 
     /**
      * Добавляет переданный код к выводу
-     * @param str $html
+     * @param string $html
      */
     public function addOutput($html){
         $this->output .= $html;
@@ -450,8 +466,8 @@ class cmsTemplate {
 
 	/**
 	 * Устанавливает ключевые слова и описание страницы
-	 * @param str $keywords
-	 * @param str $description
+	 * @param string $keywords Ключевые слова
+	 * @param string $description Описание
 	 */
 	public function setMeta($keywords, $description){
 		$this->metakeys = $keywords;
@@ -460,7 +476,7 @@ class cmsTemplate {
 
 	/**
 	 * Устанавливает ключевые слова страницы
-	 * @param str $keywords
+	 * @param string $keywords Ключевые слова
 	 */
     public function setPageKeywords($keywords){
         $this->metakeys = $keywords;
@@ -468,7 +484,7 @@ class cmsTemplate {
 
 	/**
 	 * Устанавливает описание страницы
-	 * @param str $description
+	 * @param string $description Описание
 	 */
     public function setPageDescription($description){
         $this->metadesc = $description;
@@ -513,6 +529,11 @@ class cmsTemplate {
 // ========================================================================== //
 // ========================================================================== //
 
+    /**
+     * Добавляет один пункт меню в меню
+     * @param string $menu_name Название меню
+     * @param array $item Массив данных пункта меню
+     */
     public function addMenuItem($menu_name, $item){
 
         if (!isset($this->menus[$menu_name])){
@@ -521,8 +542,15 @@ class cmsTemplate {
 
         array_push($this->menus[$menu_name], $item);
 
+        return $this;
+
     }
 
+    /**
+     * Добавляет массив пунктов меню в меню
+     * @param string $menu_name Название меню
+     * @param array $items Массив пунктов меню
+     */
     public function addMenuItems($menu_name, $items){
 
         if (!isset($this->menus[$menu_name])){
@@ -534,30 +562,48 @@ class cmsTemplate {
             array_push($this->menus[$menu_name], $item);
         }
 
+        return $this;
+
     }
 
+    /**
+     * Устанавливает массив пунктов меню для меню
+     * Если для переданного меню уже были пункты - заменятся заданными
+     *
+     * @param string $menu_name Название меню
+     * @param array $items Массив пунктов меню
+     * @return type
+     */
     public function setMenuItems($menu_name, $items){
 
-        if (!$items) { return; }
+        if ($items) {
+            $this->menus[$menu_name] = $items;
+        }
 
-        $this->menus[$menu_name] = $items;
+        return $this;
 
     }
 
 // ========================================================================== //
 // ========================================================================== //
-
+    /**
+     * Добавляет пункт в глубиномер
+     * @param string $title Название
+     * @param string $href Ссылка. Если не передана, устанавливается текущий URI
+     */
     public function addBreadcrumb($title, $href=''){
 
         if (!$href) { $href = $_SERVER['REQUEST_URI']; }
 
         $this->breadcrumbs[] = array('title'=>$title, 'href'=>$href);
 
+        return $this;
+
     }
 
     /**
      * Проверяет наличие пунктов в глубиномере
-     * @return bool
+     * @return boolean
      */
     public function isBreadcrumbs(){
         return (bool)$this->breadcrumbs;
@@ -569,7 +615,7 @@ class cmsTemplate {
     /**
      * Добавляет тег в головной раздел страницы
      * @param string $tag
-     * @param bool $is_include_once
+     * @param boolean $is_include_once
      */
 	public function addHead($tag, $is_include_once=true){
         if($is_include_once){
@@ -578,11 +624,12 @@ class cmsTemplate {
             $hash = count($this->head);
         }
 		$this->head[$hash] = $tag;
+        return $this;
 	}
 
     /**
      * Возвращает тег <link rel="stylesheet"> для указанного файла
-     * @param string $file
+     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @return string
      */
     public function getCSSTag($file){
@@ -592,7 +639,8 @@ class cmsTemplate {
 
     /**
      * Возвращает тег <script> для указанного файла
-     * @param string $file
+     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
+     * @param string $comment Комментарий к скрипту
      * @return string
      */
     public function getJSTag($file, $comment=''){

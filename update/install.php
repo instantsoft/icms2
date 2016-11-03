@@ -226,6 +226,36 @@ function install_package(){
     $core->db->query("UPDATE `{#}activity` SET `reply_url` = SUBSTRING(`reply_url`, {$root_len}) WHERE `reply_url` IS NOT NULL AND `reply_url` LIKE '{$root}%'");
     $core->db->query("UPDATE `{#}activity` SET `images` = REPLACE(`images`, 'url: {$root}', 'url: ') WHERE `images` IS NOT NULL");
 
+    // права доступа flag
+    add_perms(array(
+        'comments' => array(
+            'add_approved', 'is_moderator'
+        )
+    ), 'flag');
+
+}
+
+function add_perms($data, $type, $options = null) {
+
+    $model = new cmsModel();
+
+    foreach ($data as $controller => $names) {
+
+        foreach ($names as $name) {
+
+            if(!$model->db->getRowsCount('perms_rules', "controller = '{$controller}' AND name = '{$name}'", 1)){
+                $model->insert('perms_rules', array(
+                    'controller' => $controller,
+                    'name'       => $name,
+                    'type'       => $type,
+                    'options'    => $options
+                ));
+            }
+
+        }
+
+    }
+
 }
 
 // настройки контроллеров для пересохранения

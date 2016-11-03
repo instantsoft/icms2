@@ -17,7 +17,7 @@
 <?php if ($request->isAjax()) { ?><div class="modal_padding"><?php } ?>
 <h3><?php printf(LANG_GROUPS_DELETE_CONFIRM, $group['title']); ?></h3>
 
-<form action="" method="post">
+<form action="<?php echo $this->href_to($group['id'], 'delete'); ?>" method="post">
     <p>
         <label>
             <?php echo html_checkbox('is_delete_content', true); ?>
