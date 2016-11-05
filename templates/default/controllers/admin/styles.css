@@ -1758,7 +1758,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 .symbols_count .symbols_num:hover {
     opacity: 0.8;
 }
-.symbols_count .overflowing {
+.symbols_count .overflowing, .symbols_count .overflowing_min {
     background-color: #e74c3c;
     color: #FFF;
     border-color: #c0392b;
@@ -1919,6 +1919,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #dashboard #sysinfo li {
     margin-bottom:8px;
     color:#97A5A6;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 #dashboard #sysinfo li span {

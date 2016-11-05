@@ -1,8 +1,6 @@
 <?php
 
     $this->addJS('templates/default/js/admin-moderators.js');
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
 
     $this->setPageTitle(LANG_MODERATORS, $ctype['title']);
 

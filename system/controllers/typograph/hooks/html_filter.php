@@ -166,6 +166,11 @@ class onTypographHtmlFilter extends cmsAction {
         preg_match($pattern, $video_link, $matches);
 
         if(empty($matches[1])){
+            $pattern = '#^(?:(?:https|http)?://)?(?:www\.)?(?:facebook\.com(?:/[^\/]+/videos/[^\/]+))/([0-9]+)(?:.+)?$#x';
+            preg_match($pattern, $video_link, $matches);
+        }
+
+        if(empty($matches[1])){
             return '';
         }
 

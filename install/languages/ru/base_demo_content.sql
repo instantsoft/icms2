@@ -1044,7 +1044,7 @@ INSERT INTO `{#}users_statuses` (`id`, `user_id`, `date_pub`, `content`, `replie
 
 INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `profile_id`, `user_id`, `parent_id`, `status_id`, `content`, `content_html`) VALUES
 (1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
-(2, CURRENT_TIMESTAMP, NULL, 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
+(2, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 1, NULL, 'Спасибо что заглянули в мой профиль!', 'Спасибо что заглянули в мой профиль!');
 
 INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
 (6, 'default', 8, 'Сейчас онлайн', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),

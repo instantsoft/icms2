@@ -12,11 +12,15 @@ class onCommentsUserTabInfo extends cmsAction {
             return false;
         }
 
+        if($profile['id'] == $this->cms_user->id || cmsUser::isAllowed('comments', 'is_moderator')){
+            $this->model->disableApprovedFilter();
+        }
+
         $this->count = $this->model->
                 filterEqual('user_id', $profile['id'])->
                 filterIsNull('is_deleted')->getCommentsCount();
 
-        $this->model->resetFilters();
+        $this->model->resetFilters()->enableApprovedFilter();
 
         if (!$this->count){ return false; }
 

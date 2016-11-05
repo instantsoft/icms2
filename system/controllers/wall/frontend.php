@@ -6,12 +6,10 @@ class wall extends cmsFrontend {
 
     public function getWidget($title, $target, $permissions=array()){
 
-        $user = cmsUser::getInstance();
-
         extract($target);
 
         $page          = $this->request->get('page', 1);
-        $show_id       = $this->request->get('wid');
+        $show_id       = $this->request->get('wid', 0);
         $go_reply      = $this->request->get('reply', 0);
         $show_reply_id = 0;
 
@@ -39,15 +37,12 @@ class wall extends cmsFrontend {
 
         $csrf_token_seed = implode('/', array($profile_type, $profile_id));
 
-        $template = cmsTemplate::getInstance();
-
-        return $template->renderInternal($this, 'list', array(
+        return $this->cms_template->renderInternal($this, 'list', array(
             'title'           => $title,
-            'user'            => $user,
             'controller'      => $controller,
             'profile_type'    => $profile_type,
             'profile_id'      => $profile_id,
-            'user'            => $user,
+            'user'            => $this->cms_user,
             'entries'         => $entries,
             'permissions'     => $permissions,
             'page'            => $page,

@@ -87,6 +87,14 @@ icms.photos = (function ($) {
             screenfull.toggle($('#fullscreen_cont')[0]);
             return false;
         });
+        $(document).keyup(function(event){
+            if(event.keyCode === 39){
+                try{ $('#photo_container .photo_navigation.next_item').trigger('click');}catch(e){}
+            }
+            if(event.keyCode === 37){
+                try{ $('#photo_container .photo_navigation.prev_item').trigger('click'); }catch(e){}
+            }
+        });
     };
 
     this.bindFullScreenNav = function (link) {
@@ -130,7 +138,7 @@ icms.photos = (function ($) {
         init_callback = init_callback || function(){};
         $(selector).owlCarousel({
             items:3,
-            loop:true,
+            loop:false,
             margin:10,
             autoWidth:true,
             nav:true,

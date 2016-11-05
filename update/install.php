@@ -4,6 +4,7 @@ function install_package(){
 
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
+    $photo_model = cmsCore::getModel('photos');
 
     if(!$core->db->getRowsCount('controllers', "name = 'redirect'")){
         $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`, `is_external`) VALUES ('Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1, NULL);");
@@ -225,6 +226,10 @@ function install_package(){
     $core->db->query("UPDATE `{#}activity` SET `subject_url` = SUBSTRING(`subject_url`, {$root_len}) WHERE `subject_url` IS NOT NULL AND `subject_url` LIKE '{$root}%'");
     $core->db->query("UPDATE `{#}activity` SET `reply_url` = SUBSTRING(`reply_url`, {$root_len}) WHERE `reply_url` IS NOT NULL AND `reply_url` LIKE '{$root}%'");
     $core->db->query("UPDATE `{#}activity` SET `images` = REPLACE(`images`, 'url: {$root}', 'url: ') WHERE `images` IS NOT NULL");
+
+    // правим некорректные записи стены
+    $core->db->query("UPDATE `{#}wall_entries` SET `controller` = 'users' WHERE `controller` IS NULL AND `profile_type` = 'user'");
+    $core->db->query("UPDATE `{#}wall_entries` SET `controller` = 'groups' WHERE `controller` IS NULL AND `profile_type` = 'group'");
 
     // права доступа flag
     add_perms(array(

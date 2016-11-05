@@ -2,12 +2,23 @@
 
     $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-    $this->setPageTitle($list_header, $profile['nickname']);
-    $this->setPageDescription($profile['nickname'].' — '.$list_header);
-
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
-    $this->addBreadcrumb($list_header);
+    $this->addBreadcrumb($list_header, href_to('users', $profile['id'], array('content', $ctype['name'])));
+
+    if ($folders && isset($folders[$folder_id])){
+
+        $this->addBreadcrumb($folders[$folder_id]['title']);
+
+        $this->setPageTitle($list_header, $folders[$folder_id]['title'], $profile['nickname']);
+        $this->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$folder_id]['title']);
+
+    } else {
+
+        $this->setPageTitle($list_header, $profile['nickname']);
+        $this->setPageDescription($profile['nickname'].' — '.$list_header);
+
+    }
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 

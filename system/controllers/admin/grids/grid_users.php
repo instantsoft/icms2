@@ -23,9 +23,6 @@ function grid_users($controller){
             'title'   => LANG_NICKNAME,
             'href'    => href_to($controller->name, 'users', array('edit', '{id}')),
             'filter'  => 'like',
-            'editable' => array(
-                'table' => '{users}'
-            ),
             'handler' => function($nickname, $user) {
                 if ($user['is_admin']) {
                     $nickname = '<b class="tooltip" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';

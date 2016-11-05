@@ -20,8 +20,8 @@ class modelPhotos extends cmsModel{
             'date_pub'   => LANG_PHOTOS_DATE_PUB,
             'date_photo' => LANG_PHOTOS_DATE_PHOTO,
             'rating'     => LANG_PHOTOS_RATING,
-            'comments'   => LANG_PHOTOS_COMMENTS,
-            'hits_count' => LANG_PHOTOS_HITS_COUNT
+            'hits_count' => LANG_PHOTOS_HITS_COUNT,
+            'comments'   => LANG_PHOTOS_COMMENTS
         );
     }
 
@@ -418,29 +418,23 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function updatePhotoList($photo_list, $generate_slug = false){
+    public function updatePhotoList($photo_list, $generate_slug = false, $is_assign = false){
 
         if (!$photo_list || !is_array($photo_list)) { return false; }
 
         $ids = array_keys($photo_list);
 
-        $return = true;
+        $photos = $this->getPhotosByIdsList($ids);
 
-        if($generate_slug){
-
-            $photos = $this->getPhotosByIdsList($ids);
-
-            $return = array();
-
-        }
+        $return = array();
 
         foreach($photo_list as $photo_id => $photo){
 
+            $_photo = array_merge($photos[$photo_id], $photo);
+
             if($generate_slug){
 
-                $photo['slug'] = $this->getPhotoSlug(array_merge($photos[$photo_id], $photo));
-
-                $_photo = array_merge($photos[$photo_id], $photo);
+                $photo['slug'] = $this->getPhotoSlug($_photo);
 
                 if(!$_photo['is_private']){
                     $return[$photo_id] = $_photo;
@@ -454,11 +448,12 @@ class modelPhotos extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("photos.{$photo['album_id']}");
+        cmsCache::getInstance()->clean("photos.{$_photo['album_id']}");
 
-        $this->updateAlbumCoverImage($photo['album_id'], $ids);
-
-        $this->updateAlbumPhotosCount($photo['album_id']);
+        if($is_assign){
+            $this->updateAlbumCoverImage($_photo['album_id'], $ids);
+            $this->updateAlbumPhotosCount($_photo['album_id']);
+        }
 
         return $return;
 
@@ -466,7 +461,7 @@ class modelPhotos extends cmsModel{
 
     public function assignPhotoList($photo_list){
 
-        return $this->updatePhotoList($photo_list, true);
+        return $this->updatePhotoList($photo_list, true, true);
 
     }
 
