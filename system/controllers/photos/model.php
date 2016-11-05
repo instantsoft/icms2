@@ -1,25 +1,42 @@
 <?php
 class modelPhotos extends cmsModel{
 
-    public function addPhoto($album_id, $paths){
+	public $config = array();
 
-        $user = cmsUser::getInstance();
+    public function __construct() {
 
-        $rel_paths = array();
+        parent::__construct();
 
-        foreach($paths as $name=>$path){
-            $rel_paths[$name] = $path;
+        $this->config = cmsController::loadOptions('photos');
+
+        if(!empty($this->config['types'])){
+            $this->config['types'] = string_explode_list($this->config['types']);
         }
 
-        return $this->insert('photos', array(
-            'album_id' => $album_id,
-            'user_id' => $user->id,
-            'image' => $rel_paths
-        ));
+	}
 
+    public static function getOrderList(){
+        return array(
+            'date_pub'   => LANG_PHOTOS_DATE_PUB,
+            'date_photo' => LANG_PHOTOS_DATE_PHOTO,
+            'rating'     => LANG_PHOTOS_RATING,
+            'comments'   => LANG_PHOTOS_COMMENTS,
+            'hits_count' => LANG_PHOTOS_HITS_COUNT
+        );
+    }
+
+    public static function getOrientationList(){
+        return array(
+            ''          => LANG_PHOTOS_ALL_ORIENT,
+            'square'    => LANG_PHOTOS_SQUARE,
+            'landscape' => LANG_PHOTOS_LANDSCAPE,
+            'portrait'  => LANG_PHOTOS_PORTRAIT
+        );
     }
 
     public function getPhotosCount($album_id){
+
+        if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
 
         $this->filterEqual('album_id', $album_id);
 
@@ -31,30 +48,75 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getPhotos($album_id){
+    public function getPhotos($id = 0, $filter_field = 'album_id', $only_fields = false, $item_callback = false){
 
-        $this->useCache("photos.{$album_id}");
+        if(!$only_fields){
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
+            if($filter_field == 'album_id'){
+                $this->useCache("photos.{$id}");
+            }
 
-        $this->filterEqual('album_id', $album_id);
+            $this->joinUser();
 
-        return $this->get('photos', function($item, $model){
+            if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
 
-            $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
-            );
+        } else {
 
-            $item['image'] = cmsModel::yamlToArray($item['image']);
+            $this->select = array();
+
+            foreach ($only_fields as $field) {
+                $this->select($field);
+            }
+
+        }
+
+        if($filter_field){
+            $this->filterEqual($filter_field, $id);
+        }
+
+        return $this->get('photos', function($item, $model) use ($item_callback){
+
+            if(isset($item['user_nickname'])){
+                $item['user'] = array(
+                    'id'       => $item['user_id'],
+                    'nickname' => $item['user_nickname'],
+                    'avatar'   => $item['user_avatar']
+                );
+            }
+
+            if(isset($item['image'])){
+                $item['image'] = cmsModel::yamlToArray($item['image']);
+            }
+
+            if(isset($item['sizes'])){
+                $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
+            }
+
+            if(!empty($item['type']) && !empty($model->config['types'])){
+                 $item['type'] = $model->config['types'][$item['type']];
+            }
+
+            if(is_callable($item_callback)){
+                $item = call_user_func_array($item_callback, array($item, $model));
+                if ($item === false){ return false; }
+            }
 
             return $item;
 
-        });
+        }, false);
 
+    }
+
+    public function getUserPhotos($user_id, $only_fields = false, $item_callback = false) {
+        return $this->getPhotos($user_id, 'user_id', $only_fields, $item_callback);
+    }
+
+    public function getOrphanPhotos($user_id){
+        $this->disablePrivacyFilter();
+        return $this->filterIsNull('slug')->getUserPhotos($user_id, false, function($item, $model){
+            $item['is_private'] = 0;
+            return $item;
+        });
     }
 
     public function getPhotosByIdsList($ids_list){
@@ -62,32 +124,9 @@ class modelPhotos extends cmsModel{
         $this->filterIn('id', $ids_list);
 
         return $this->get('photos', function($item, $model){
-            $item['image'] = cmsModel::yamlToArray($item['image']);
-            return $item;
-        });
-
-    }
-
-    public function getOrphanPhotos(){
-
-        $user = cmsUser::getInstance();
-
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
-
-        $this->filterIsNull('album_id');
-        $this->filterEqual('user_id', $user->id);
-
-        return $this->get('photos', function($item, $model){
-
-            $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
-            );
 
             $item['image'] = cmsModel::yamlToArray($item['image']);
+            $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
 
             return $item;
 
@@ -97,19 +136,23 @@ class modelPhotos extends cmsModel{
 
     public function getPhoto($id){
 
-        $this->select('u.nickname', 'user_nickname');
-        $this->select('u.avatar', 'user_avatar');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
+        if(is_numeric($id)){
+            $this->filterEqual('id', $id);
+        } else {
+            $this->filterEqual('slug', $id);
+        }
 
-        return $this->getItemById('photos', $id, function($item, $model){
+        return $this->joinUser()->getItem('photos', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
+                'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'avatar'   => $item['user_avatar']
             );
 
             $item['image'] = cmsModel::yamlToArray($item['image']);
+            $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
+            $item['exif']  = cmsModel::yamlToArray($item['exif']);
 
             return $item;
 
@@ -117,40 +160,98 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function deletePhoto($id){
+    public function getPrevPhoto($item, $order_field) {
 
-        $photo = $this->getPhoto($id);
+        $this->filterStart()->
+            filterGt($order_field, $item[$order_field])->
+            filterOr()->
+            filterStart()->
+                filterEqual($order_field, $item[$order_field])->
+                filterAnd()->
+                filterGt('id', $item['id'])->
+            filterEnd()->
+        filterEnd();
 
-        if(is_array($photo['image'])){
+        $this->orderByList(array(
+            array(
+                'by' => $order_field,
+                'to' => 'asc'
+            ),
+            array(
+                'by' => 'id',
+                'to' => 'asc'
+            )
+        ));
 
-            $config = cmsConfig::getInstance();
-
-            foreach($photo['image'] as $path){
-                @unlink($config->upload_path . $path);
-            }
-
-        }
-
-        $this->filterEqual('id', $photo['album_id'])->decrement('con_albums', 'photos_count');
-
-        cmsCache::getInstance()->clean("photos.{$photo['album_id']}");
-
-        cmsCore::getModel('comments')->deleteComments('photos', 'photo', $id);
-        cmsCore::getModel('rating')->deleteVotes('content', 'photo', $id);
-
-        $this->delete('photos', $id);
+        return $this->getItem('photos', function($item, $model){
+            $item['image'] = cmsModel::yamlToArray($item['image']);
+            $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
+            return $item;
+        });
 
     }
 
-    public function deletePhotos($album_id){
+    public function getNextPhoto($item, $order_field) {
 
-        $photos = $this->getPhotos($album_id);
+        $this->filterStart()->
+            filterLt($order_field, $item[$order_field])->
+            filterOr()->
+            filterStart()->
+                filterEqual($order_field, $item[$order_field])->
+                filterAnd()->
+                filterLt('id', $item['id'])->
+            filterEnd()->
+        filterEnd();
 
-        if (!$photos) { return; }
+        $this->orderByList(array(
+            array(
+                'by' => $order_field,
+                'to' => 'desc'
+            ),
+            array(
+                'by' => 'id',
+                'to' => 'desc'
+            )
+        ));
+
+        return $this->getItem('photos', function($item, $model){
+            $item['image'] = cmsModel::yamlToArray($item['image']);
+            $item['sizes'] = cmsModel::yamlToArray($item['sizes']);
+            return $item;
+        });
+
+    }
+
+	public function incrementCounter($id, $field = 'hits_count'){
+
+        if(cmsUser::hasCookie($field.$id)){
+            return false;
+        }
+
+		$this->filterEqual('id', $id)->increment('photos', $field);
+
+        cmsUser::setCookie($field.$id, 1, 2592000);
+
+        return true;
+
+	}
+
+    /**************************************************************************/
+
+    public function deletePhoto($id_or_photo){
+
+        $photo = is_array($id_or_photo) ? $id_or_photo : $this->getPhoto($id_or_photo);
+        if (!$photo) { return false; }
+
+        return $this->deletePhotosByPhotoList(array($photo), $photo['album_id']);
+
+    }
+
+    public function deletePhotosByPhotoList($photos, $album_id = false){
 
         $config = cmsConfig::getInstance();
         $comments_model = cmsCore::getModel('comments');
-        $rating_model = cmsCore::getModel('rating');
+        $rating_model   = cmsCore::getModel('rating');
 
         foreach($photos as $photo){
 
@@ -161,112 +262,219 @@ class modelPhotos extends cmsModel{
             }
 
             $comments_model->deleteComments('photos', 'photo', $photo['id']);
-            $rating_model->deleteVotes('content', $ctype_name, $id);
+            $rating_model->deleteVotes('photos', 'photo', $photo['id']);
 
             $this->delete('photos', $photo['id']);
 
         }
 
-        cmsCache::getInstance()->clean("photos.{$album_id}");
+        if($album_id){
+
+            $this->setRandomAlbumCoverImage($album_id);
+
+            $this->updateAlbumPhotosCount($album_id);
+
+            cmsCache::getInstance()->clean("photos.{$album_id}");
+
+        } else {
+            cmsCache::getInstance()->clean('photos');
+        }
+
+        return true;
+
+    }
+
+    public function deletePhotos($album_id){
+
+        $photos = $this->getPhotos($album_id, 'album_id', array('image', 'id'));
+        if (!$photos) { return false; }
+
+        return $this->deletePhotosByPhotoList($photos, $album_id);
 
     }
 
     public function deleteUserPhotos($user_id){
 
-        cmsCache::getInstance()->clean("photos");
+        $photos = $this->getUserPhotos($user_id, array('image', 'id'));
+        if (!$photos) { return false; }
 
-        return $this->delete('photos', $user_id, 'user_id');
+        return $this->deletePhotosByPhotoList($photos);
 
     }
 
-    public function updateAlbumCoverImage($album_id, $photos){
+    /**************************************************************************/
 
-        $ids = array_keys($photos);
+    public function updateAlbumCoverImage($album_id, $photo_ids){
 
-        $photo = $this->getPhoto($ids[0]);
+        $photo = $this->getPhoto($photo_ids[0]);
 
         $this->update('con_albums', $album_id, array(
             'cover_image' => $photo['image']
         ));
 
-    }
-
-    public function setRandomAlbumCoverImage($album_id){
-
-        $photos = $this->getPhotos($album_id);
-
-		if ($photos){
-			$first_photo = array_shift($photos);
-
-			$this->update('con_albums', $album_id, array(
-				'cover_image' => $first_photo['image']
-			));
-		}
-
-    }
-
-    public function updateAlbumPhotosCount($album_id, $count){
-
-        $this->
-            filterEqual('id', $album_id)->
-            increment('con_albums', 'photos_count', $count);
-
-    }
-
-    public function assignAlbumId($album_id){
-
-        $user = cmsUser::getInstance();
-
-        $this->filterIsNull('album_id');
-        $this->filterEqual('user_id', $user->id);
-
-        $this->updateFiltered('photos', array(
-           'album_id' => $album_id
-        ));
-
-    }
-
-    public function updatePhotoTitles($album_id, $photos){
-
-        if (!is_array($photos)) { return false; }
-
-        foreach($photos as $id => $title){
-
-            $this->filterEqual('album_id', $album_id);
-            $this->filterEqual('id', $id);
-
-            if (!$title) { $title = sprintf(LANG_PHOTOS_PHOTO_UNTITLED, $id); }
-
-            $this->updateFiltered('photos', array(
-                'title' => $title
-            ));
-
-        }
-
-        cmsCache::getInstance()->clean("photos.{$album_id}");
+        cmsCache::getInstance()->clean('content.list.albums');
+        cmsCache::getInstance()->clean('content.item.albums');
 
         return true;
 
     }
-	
-	public function renamePhoto($id, $title){
-		
-		if (!$title) { $title = sprintf(LANG_PHOTOS_PHOTO_UNTITLED, $id); }
-		
-		$photo = $this->getPhoto($id);
-		
-		$this->update("photos", $id, array('title' => $title));
-		
-		cmsCache::getInstance()->clean("photos.{$photo['album_id']}");
-		
-	}
+
+    public function setRandomAlbumCoverImage($album_id){
+
+        $this->limit(50);
+        $this->orderBy('date_pub', 'desc');
+
+        $photos = $this->getPhotos($album_id, 'album_id', array('image'));
+
+		if ($photos){
+            shuffle($photos);
+			$first_photo = array_shift($photos);
+		} else {
+            $first_photo = array('image' => null);
+        }
+
+        $this->update('con_albums', $album_id, array(
+            'cover_image' => $first_photo['image']
+        ));
+
+        cmsCache::getInstance()->clean('content.list.albums');
+        cmsCache::getInstance()->clean('content.item.albums');
+
+        return true;
+
+    }
+
+    public function updateAlbumPhotosCount($album_id){
+
+        if($album_id){
+            $this->db->query("UPDATE {#}con_albums SET photos_count=(SELECT COUNT(id) FROM {#}photos WHERE album_id = '{$album_id}') WHERE id='{$album_id}' LIMIT 1");
+            cmsCache::getInstance()->clean('content.list.albums');
+            cmsCache::getInstance()->clean('content.item.albums');
+        }
+
+        return $this;
+
+    }
+
+    public function addPhoto($data){
+
+        $id = $this->insert('photos', $data);
+
+        cmsCache::getInstance()->clean("photos.{$data['album_id']}");
+
+        return $id;
+
+    }
+
+    public function getPhotoSlug($item, $check_slug = true){
+
+        $url_pattern = empty($this->config['url_pattern']) ? '{id}-{title}' : $this->config['url_pattern'];
+
+        $slug_len = 100; $matches = array(); $pattern = trim($url_pattern, '/');
+
+        preg_match_all('/{([a-z0-9\_]+)}/i', $pattern, $matches);
+
+        if (!$matches) { return lang_slug($item['id']); }
+
+        list($tags, $names) = $matches;
+
+        foreach($names as $idx => $field_name){
+
+            if (!empty($item[$field_name])){
+
+                $value = str_replace('/', '', $item[$field_name]);
+
+                if ($field_name == 'type' && !empty($this->config['types'])){
+                    $value = $this->config['types'][$value];
+                    $value = trim($value, '/');
+                }
+
+                $pattern = str_replace($tags[$idx], $value, $pattern);
+
+            }
+
+        }
+
+        $slug = lang_slug($pattern);
+
+        $slug = mb_substr($slug, 0, $slug_len);
+
+        if(!$check_slug){
+            return $slug;
+        }
+
+        if($this->filterNotEqual('id', $item['id'])->
+                filterEqual('slug', $slug)->
+                getFieldFiltered('photos', 'id')){
+
+            $id_len = strlen((string)$item['id'])+1;
+
+            $slug = mb_substr($slug, 0, ($slug_len - $id_len));
+            $slug .= '-'.$item['id'];
+
+        }
+
+        return $slug;
+
+    }
+
+    public function updatePhotoList($photo_list, $generate_slug = false){
+
+        if (!$photo_list || !is_array($photo_list)) { return false; }
+
+        $ids = array_keys($photo_list);
+
+        $return = true;
+
+        if($generate_slug){
+
+            $photos = $this->getPhotosByIdsList($ids);
+
+            $return = array();
+
+        }
+
+        foreach($photo_list as $photo_id => $photo){
+
+            if($generate_slug){
+
+                $photo['slug'] = $this->getPhotoSlug(array_merge($photos[$photo_id], $photo));
+
+                $_photo = array_merge($photos[$photo_id], $photo);
+
+                if(!$_photo['is_private']){
+                    $return[$photo_id] = $_photo;
+                }
+
+            }
+
+            $this->filterEqual('id', $photo_id);
+
+            $this->updateFiltered('photos', $photo);
+
+        }
+
+        cmsCache::getInstance()->clean("photos.{$photo['album_id']}");
+
+        $this->updateAlbumCoverImage($photo['album_id'], $ids);
+
+        $this->updateAlbumPhotosCount($photo['album_id']);
+
+        return $return;
+
+    }
+
+    public function assignPhotoList($photo_list){
+
+        return $this->updatePhotoList($photo_list, true);
+
+    }
 
     public function getAlbum($id){
 
         $content_model = cmsCore::getModel('content');
 
         $album = $content_model->getContentItem('albums', $id);
-
         if (!$album) { return false; }
 
         $album['ctype'] = $content_model->getContentTypeByName('albums');
@@ -280,16 +488,21 @@ class modelPhotos extends cmsModel{
 
     public function getRatingTarget($subject, $id){
 
-        $item = $this->getPhoto($id);
-
-        return $item;
+        return $this->getPhoto($id);
 
     }
 
 
     public function updateRating($subject, $id, $rating){
 
-        $this->update('photos', $id, array('rating' => $rating));
+        $item = $this->getPhoto($id);
+        if (!$item){ return false; }
+
+        $this->update('photos', $item['id'], array('rating' => $rating));
+
+        cmsCache::getInstance()->clean("photos.{$item['album_id']}");
+
+        return true;
 
     }
 
@@ -303,6 +516,9 @@ class modelPhotos extends cmsModel{
 
         $this->filterEqual('id', $item['album_id'])->increment('con_albums', 'rating', $vote['score']);
 
+        cmsCache::getInstance()->clean('content.list.albums');
+        cmsCache::getInstance()->clean('content.item.albums');
+
         return $rating;
 
     }
@@ -312,7 +528,12 @@ class modelPhotos extends cmsModel{
 
     public function updateCommentsCount($subject, $id, $comments_count){
 
-        $this->update('photos', $id, array('comments' => $comments_count));
+        $item = $this->getPhoto($id);
+        if (!$item){ return false; }
+
+        $this->update('photos', $item['id'], array('comments' => $comments_count));
+
+        cmsCache::getInstance()->clean("photos.{$item['album_id']}");
 
         return true;
 
@@ -321,11 +542,10 @@ class modelPhotos extends cmsModel{
     public function getTargetItemInfo($ctype_name, $id){
 
         $item = $this->getPhoto($id);
-
         if (!$item){ return false; }
 
         return array(
-            'url' => href_to_rel('photos', 'view', $id),
+            'url'   => href_to_rel('photos', $item['slug'].'.html'),
             'title' => $item['title']
         );
 

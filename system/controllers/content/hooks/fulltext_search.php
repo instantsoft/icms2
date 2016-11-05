@@ -68,6 +68,8 @@ class onContentFulltextSearch extends cmsAction {
                 )
             );
 
+            $_ctypes[$ctype['name']] = $ctype;
+
         }
 
         return array(
@@ -77,7 +79,7 @@ class onContentFulltextSearch extends cmsAction {
             'match_fields'  => $match_fields,
             'select_fields' => $select_fields,
             'filters'       => $filters,
-            'item_callback' => function($item, $model, $sources_name, $match_fields, $select_fields){
+            'item_callback' => function($item, $model, $sources_name, $match_fields, $select_fields) use ($_ctypes){
 
                 $fields = array();
 
@@ -88,6 +90,7 @@ class onContentFulltextSearch extends cmsAction {
 
                 return array_merge($item, array(
                     'url'      => href_to($sources_name, $item['slug'] . '.html'),
+                    'ctype'    => $_ctypes[$sources_name],
                     'title'    => $item['title'],
                     'fields'   => $fields,
                     'date_pub' => $item['date_pub'],

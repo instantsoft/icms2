@@ -28,10 +28,7 @@ class onAuthCronSendInvites extends cmsAction {
         $users_model->filterGtEqual('rating', $min_rating);
         $users_model->filterDateOlder('date_reg', $min_days);
 
-//        dump($users_model->getSQL());
-
         $users = $users_model->getUsers();
-
         if (!$users) { return false; }
 
         foreach($users as $user){

@@ -7,7 +7,6 @@ define('LANG_COM_VK_API_ID_HINT',  'Create an <a target="_blank" href="https://v
 define('LANG_COM_VK_AUTOPUBLISH',  'Automatically publish comments to the user\'s VK page ');
 define('LANG_COM_VK_NOREALTIME',  'Disable realtime updates of the comment feed');
 define('LANG_COM_VK_MINI',  'Minimalistic widget design');
-define('LANG_COM_VK_AUTO',  'Auto');
 define('LANG_COM_VK_ATTACH',  'Attachments allowed in comments');
 define('LANG_COM_VK_GRAFFITI',  'Graffiti');
 define('LANG_COM_VK_VIDEO',  'Video');

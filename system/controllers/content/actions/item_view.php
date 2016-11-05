@@ -82,8 +82,25 @@ class actionContentItemView extends cmsAction {
 
         // Проверяем ограничения доступа из других контроллеров
         if ($item['is_parent_hidden']){
-            $is_parent_viewable_result = cmsEventsManager::hook("content_view_hidden", array('viewable'=>true, 'item'=>$item, 'is_moderator'=>$is_moderator));
+            $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', array(
+                'viewable'     => true,
+                'item'         => $item,
+                'is_moderator' => $is_moderator
+            ));
             if (!$is_parent_viewable_result['viewable']){
+
+                if(isset($is_parent_viewable_result['access_text'])){
+
+                    cmsUser::addSessionMessage($is_parent_viewable_result['access_text'], 'error');
+
+                    if(isset($is_parent_viewable_result['access_redirect_url'])){
+                        $this->redirect($is_parent_viewable_result['access_redirect_url']);
+                    } else {
+                        $this->redirect(href_to($ctype['name']));
+                    }
+
+                }
+
                 cmsUser::goLogin();
             }
         }

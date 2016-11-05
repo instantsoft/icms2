@@ -4,6 +4,7 @@
     define('LANG_SEARCH_TITLE',             'Search');
     define('LANG_SEARCH_ON',                'Search on %s');
     define('LANG_SEARCH_IN_CTYPES',         'Content Search');
+    define('LANG_SEARCH_IS_HASH_TAG',       'Enable hashtags');
     define('LANG_SEARCH_PERPAGE',           'Results per page');
     define('LANG_SEARCH_QUERY_INPUT',        'What are you searching?');
     define('LANG_SEARCH_GO',                 'Find');

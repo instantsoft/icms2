@@ -18,9 +18,11 @@ class actionGroupsGroupDelete extends cmsAction {
 
             if (!cmsForm::validateCSRFToken($csrf_token)){ cmsCore::error404(); }
 
+            list($group, $is_delete_content) = cmsEventsManager::hook('group_before_delete', array($group, $is_delete_content));
+
             $this->model->removeContentFromGroup($group['id'], $is_delete_content);
 
-            $this->model->deleteGroup($group['id']);
+            $this->model->deleteGroup($group);
 
             cmsUser::addSessionMessage(sprintf(LANG_GROUPS_DELETED, $group['title']));
 

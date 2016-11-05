@@ -8,9 +8,9 @@
     if (!isset($is_can_rate)) { $is_can_rate = false; }
 ?>
 
-<?php foreach($comments as $entry){ ?>
+<?php foreach($comments as $entry){
 
-<?php
+    $no_approved_class = $entry['is_approved'] ? '' : 'no_approved';
 
     if (!isset($is_levels)){ $is_levels = true; }
     if (!isset($is_controls)){ $is_controls = true; }
@@ -45,9 +45,7 @@
 			<?php if ($entry['user_id']) { ?>
 				<a class="user" href="<?php echo href_to('users', $entry['user']['id']); ?>"><?php echo $entry['user']['nickname']; ?></a>
 			<?php } else { ?>
-				<span class="guest_name">
-					<?php echo $entry['author_name']; ?>
-				</span>
+				<span class="guest_name user"><?php echo $entry['author_name']; ?></span>
 				<?php if ($user->is_admin && !empty($entry['author_url'])) { ?>
 					<span class="guest_ip">
 						[<?php echo $entry['author_url']; ?>]
@@ -60,7 +58,10 @@
             <?php } ?>
         </div>
         <div class="date">
-            <?php echo html_date_time($entry['date_pub']); ?>
+            <span class="<?php echo $no_approved_class; ?>"><?php echo html_date_time($entry['date_pub']); ?></span>
+            <?php if ($no_approved_class){ ?>
+                <span class="hide_approved"><?php echo html_bool_span(LANG_CONTENT_NOT_APPROVED, false); ?></span>
+            <?php } ?>
         </div>
         <?php if ($is_controls){ ?>
             <div class="nav">
@@ -70,7 +71,7 @@
                 <?php } ?>
                 <a href="#down" class="scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
             </div>
-            <div class="rating">
+            <div class="rating <?php echo $no_approved_class; ?>">
                 <span class="value <?php echo html_signed_class($entry['rating']); ?>"><?php echo $entry['rating'] ? html_signed_num($entry['rating']) : ''; ?></span>
                 <?php if ($is_can_rate && ($entry['user_id'] != $user->id) && !$entry['is_rated']){ ?>
                     <div class="buttons">
@@ -93,8 +94,11 @@
             </div>
             <?php if ($is_controls){ ?>
                 <div class="links">
+                    <?php if ($no_approved_class){ ?>
+                        <a href="#approve" class="approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)"><?php echo LANG_COMMENTS_APPROVE; ?></a>
+                    <?php } ?>
                     <?php if ($is_can_add){ ?>
-                        <a href="#reply" class="reply" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)"><?php echo LANG_REPLY; ?></a>
+                        <a href="#reply" class="reply <?php echo $no_approved_class; ?>" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)"><?php echo LANG_REPLY; ?></a>
                     <?php } ?>
                     <?php if ($is_can_edit){ ?>
                         <a href="#edit" class="edit" onclick="return icms.comments.edit(<?php echo $entry['id']; ?>)"><?php echo LANG_EDIT; ?></a>

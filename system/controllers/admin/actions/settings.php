@@ -10,18 +10,14 @@ class actionAdminSettings extends cmsAction {
             return;
         }
 
-        $config = cmsConfig::getInstance();
-
-        $values = $config->getAll();
+        $values = $this->cms_config->getAll();
         $values['time_zone'] = $values['cfg_time_zone'];
 
         $form = $this->getForm('settings');
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit')){
 
-        if ($is_submitted){
-
-            $values = array_merge($values, $form->parse($this->request, $is_submitted));
+            $values = array_merge($values, $form->parse($this->request, true));
             $errors = $form->validate($this,  $values);
 
             if (!$errors){
@@ -43,17 +39,17 @@ class actionAdminSettings extends cmsAction {
                 }
 
                 if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
-                    files_clear_directory($config->cache_path.'data/');
+                    files_clear_directory($this->cms_config->cache_path.'data/');
                 }
 
-                $result = $config->save($values);
+                $result = $this->cms_config->save($values);
 
                 if (!$result){
                     $errors = array();
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
                 } else {
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
-                    $this->redirectBack();
+                    $this->redirectToAction('settings');
                 }
 
             } else {
@@ -66,7 +62,7 @@ class actionAdminSettings extends cmsAction {
 
         $tpls = cmsCore::getTemplates();
         foreach ($tpls as $tpl) {
-            if(file_exists($config->root_path.'templates/'.$tpl.'/options.form.php')){
+            if(file_exists($this->cms_config->root_path.'templates/'.$tpl.'/options.form.php')){
                 $templates_has_options[] = $tpl;
             }
         }

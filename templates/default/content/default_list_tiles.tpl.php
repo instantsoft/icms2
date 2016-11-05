@@ -75,7 +75,7 @@
                                     <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                     &rarr;
                                 <?php } ?>
-                                <?php if ($is_private) { ?>
+                                <?php if ($is_private) { $stop++; ?>
                                     <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                                 <?php } else { ?>
                                     <a class="title" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
@@ -96,7 +96,6 @@
 
                     </div>
 
-                <?php   $stop++; ?>
                 <?php } ?>
 
                 </div>

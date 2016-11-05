@@ -70,7 +70,7 @@
                                 &rarr;
                             <?php } ?>
 
-                            <?php if ($is_private) { ?>
+                            <?php if ($is_private) { $stop++; ?>
                                 <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                             <?php } else { ?>
                                 <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
@@ -91,7 +91,6 @@
 
                     </div>
 
-                <?php   $stop++; ?>
                 <?php } ?>
 
                 </div>

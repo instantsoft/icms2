@@ -16,6 +16,7 @@ h1 a { color:#BDC3C7; }
 h1 a:hover { color:#d35400; }h1, h2, h3, h4, h5, h6 { color:#34495e; font-weight: normal; margin-bottom: 10px; }
 
 p { line-height:20px; }
+p:first-child { margin-top: 0; }
 
 pre {
     display:block;

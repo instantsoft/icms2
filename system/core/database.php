@@ -68,7 +68,9 @@ class cmsDatabase {
 	}
 
 	public function __destruct(){
-		$this->mysqli->close();
+        if($this->ready()){
+            $this->mysqli->close();
+        }
 	}
 
     public function __get($name) {

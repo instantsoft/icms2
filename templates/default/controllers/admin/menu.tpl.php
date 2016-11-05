@@ -37,7 +37,7 @@
 
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => LANG_SAVE_ORDER,
         'href'  => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('menu', array('items_reorder'))}')"
     ));

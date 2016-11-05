@@ -109,6 +109,20 @@
                             </li>
                             <?php if (!$manifest['depends_results']['package']){ $depends_pass = false; } ?>
                         <?php } ?>
+                        <?php if (isset($manifest['depends']['dependent_type'])) { ?>
+                            <li>
+                                <?php echo sprintf(LANG_CP_PACKAGE_DEPENDENT_TYPE, string_lang('LANG_CP_PACKAGE_DEPENDENT_'.$manifest['depends']['dependent_type']), $manifest['depends']['dependent_url'], $manifest['depends']['dependent_title']); ?>:
+                                <?php echo html_bool_span(($manifest['depends_results']['dependent_type'] ? LANG_CP_INSTALLED : LANG_CP_NOT_INSTALLED), $manifest['depends_results']['dependent_type']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['dependent_type']){ $depends_pass = false; } ?>
+                        <?php } ?>
+                        <?php if (!empty($manifest['depends_results']['dependent_type']) && isset($manifest['depends']['dependent_version'])) { ?>
+                            <li>
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank"><?php echo $manifest['depends']['dependent_title']; ?></a>:
+                                <?php echo html_bool_span($manifest['depends']['dependent_version'], $manifest['depends_results']['dependent_version']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['dependent_version']){ $depends_pass = false; } ?>
+                        <?php } ?>
                     </ul>
 
                 </fieldset>

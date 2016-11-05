@@ -104,7 +104,7 @@ class admin extends cmsFrontend {
 
     public function getCtypeMenu($do='add', $id=null){
 
-        return cmsEventsManager::hook('admin_ctype_menu', array(
+        $ctype_menu = array(
 
             array(
                 'title' => LANG_CP_CTYPE_SETTINGS,
@@ -141,7 +141,19 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             )
 
-        ));
+        );
+
+        list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
+
+        if($do == 'edit'){
+
+            $ctype = cmsCore::getModel('content')->getContentType($id);
+
+            list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+
+        }
+
+        return $ctype_menu;
 
     }
 
@@ -259,7 +271,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function componentInstalled($manifest_package) {
+    public function componentInstalled($manifest_package) {
 
         $model = new cmsModel();
 
@@ -267,7 +279,7 @@ class admin extends cmsFrontend {
 
     }
 
-    private function widgetInstalled($manifest_package) {
+    public function widgetInstalled($manifest_package) {
 
         $model = new cmsModel();
 

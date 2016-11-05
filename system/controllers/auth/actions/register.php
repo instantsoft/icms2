@@ -65,8 +65,15 @@ class actionAuthRegister extends cmsAction {
             $fieldset_id = $form->addFieldset($fieldset['title']);
 
             foreach($fieldset['fields'] as $field){
+
+                if ($field['name'] == 'nickname') {
+                    $form->addFieldToBeginning('basic', $field['handler']);
+                }
+
                 if ($field['is_system']) { continue; }
+
                 $form->addField($fieldset_id, $field['handler']);
+
             }
 
         }
@@ -207,6 +214,8 @@ class actionAuthRegister extends cmsAction {
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
 
+                        $this->options['verify_exp'] = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
+
                         $messenger = cmsCore::getController('messages');
                         $to = array('email' => $user['email'], 'name' => $user['nickname']);
                         $letter = array('name' => 'reg_verify');
@@ -224,18 +233,18 @@ class actionAuthRegister extends cmsAction {
 
 						cmsEventsManager::hook('user_registered', $user);
 
-					}
+                        // авторизуем пользователя автоматически
+                        if ($this->options['reg_auto_auth']){
 
-					// авторизуем пользователя автоматически
-					if ($this->options['reg_auto_auth']){
+                            $logged_id = cmsUser::login($user['email'], $user['password1']);
 
-						$logged_id = cmsUser::login($user['email'], $user['password1']);
+                            if ($logged_id){
 
-						if ($logged_id){
+                                cmsEventsManager::hook('auth_login', $logged_id);
 
-							cmsEventsManager::hook('auth_login', $logged_id);
+                            }
 
-						}
+                        }
 
 					}
 

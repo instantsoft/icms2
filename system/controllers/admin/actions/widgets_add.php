@@ -27,11 +27,11 @@ class actionAdminWidgetsAdd extends cmsAction {
         cmsCore::loadWidgetLanguage($bind_widget['name'], $bind_widget['controller']);
 
         $form = cmsCore::getWidgetOptionsForm($bind_widget['name'], $bind_widget['controller'], false, $bind_widget['template']);
-        $data = $form->parse(new cmsRequest($bind_widget), true);
+        $data = $form->parse(new cmsRequest($bind_widget));
 
         $widgets_model->updateWidgetBinding($binded_id, $data);
 
-        cmsTemplate::getInstance()->renderJSON(array(
+        $this->cms_template->renderJSON(array(
             'error' => !(bool) $binded_id,
             'id'    => $binded_id
         ));

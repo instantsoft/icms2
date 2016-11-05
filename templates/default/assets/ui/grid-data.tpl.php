@@ -46,7 +46,16 @@
                 <?php foreach($columns as $name=>$column){ ?>
                     <td>
                         <?php if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){ ?>
-                            <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+
+                            <?php if(strpos($name, 'date_') === 0){ ?>
+
+                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input'), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+
+                            <?php } else { ?>
+
+                                <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+
+                            <?php } ?>
                         <?php } ?>
                     </td>
                 <?php } ?>
@@ -59,6 +68,9 @@
             <?php } ?>
         </tbody>
     </table>
+    <div class="datagrid_loading">
+        <div class="loading_overlay"></div>
+    </div>
 </div>
 
 <?php if ($options['is_pagination']){ ?>
@@ -78,10 +90,6 @@
     <div class="datagrid_pagination"></div>
 </div>
 <?php } ?>
-
-<div class="datagrid_loading">
-    <div class="indicator"><?php echo LANG_LOADING; ?></div>
-</div>
 
 <script>
 

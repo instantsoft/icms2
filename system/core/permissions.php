@@ -4,22 +4,24 @@ class cmsPermissions {
 
     /**
      * Добавляет правило доступа в каталог правил
-     * @param string $controller
-     * @param array $rule
-     * @return int
+     * @param string $controller Название контроллера
+     * @param array $rule Массив данных правила
+     * @return integer|false
      */
     static function addRule($controller, $rule){
 
         $core = cmsCore::getInstance();
 
-        $rule['is_required'] = isset($rule['is_required']) ? intval($rule['is_required']) : 0;
+        if($core->db->getRowsCount('perms_rules', "controller = '{$controller}' AND name = '{$rule['name']}'", 1)){
+            return false;
+        }
 
         if (!in_array($rule['type'], array('flag', 'list', 'number'))){ $rule['type'] = 'flag'; }
 
-        $sql = "INSERT INTO {#}perms_rules (controller, name, type, options, is_required)
-                VALUES ('{$controller}', '{$rule['name']}', '{$rule['type']}', '{$rule['options']}', '{$rule['is_required']}')";
+        $sql = "INSERT INTO {#}perms_rules (controller, name, type, options)
+                VALUES ('{$controller}', '{$rule['name']}', '{$rule['type']}', '{$rule['options']}')";
 
-        $core->db->query($sql);
+        $core->db->query($sql, false, true);
 
         $rule_id = ($core->db->error()) ? false : $core->db->lastId('perms_rules');
 
@@ -27,12 +29,9 @@ class cmsPermissions {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Возвращает список доступных правил доступа для указанного компонента
-     * @param string $controller
+     * @param string $controller Название контроллера
      * @return array
      */
     static function getRulesList($controller){
@@ -43,7 +42,7 @@ class cmsPermissions {
 
         cmsCore::loadControllerLanguage($controller);
 
-        $rules = $model->orderBy('name')->get('perms_rules', function($rule, $model){
+        return $model->orderBy('name')->get('perms_rules', function($rule, $model){
 
             $title_const = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']);
             $hint_const  = 'LANG_RULE_'.strtoupper($rule['controller']).'_'.strtoupper($rule['name']).'_HINT';
@@ -65,17 +64,10 @@ class cmsPermissions {
 
         });
 
-        return $rules;
-
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
-     * Возвращает значения всех правил доступа для указанного контроллера
-     * и всех групп пользователей
-     * @param string $controller
+     * Возвращает значения всех правил доступа для указанного субъекта действия
      * @param string $subject
      * @return array
      */
@@ -88,7 +80,6 @@ class cmsPermissions {
         }
 
         $items = $model->get('perms_users', false, false);
-
         if (!$items) { return false; }
 
         $values = array();
@@ -103,9 +94,11 @@ class cmsPermissions {
 
     }
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Возвращает правила доступа для переданных id групп
+     * @param array $user_groups id групп
+     * @return array
+     */
     static function getUserPermissions($user_groups) {
 
         $model = new cmsModel();
@@ -119,8 +112,7 @@ class cmsPermissions {
         $model->joinInner('perms_rules', 'r FORCE INDEX (PRIMARY ) ', 'r.id = i.rule_id');
 
         $items = $model->get('perms_users', false, false);
-
-        if (!$items) { return false; }
+        if (!$items) { return array(); }
 
         $values = array();
 
@@ -155,29 +147,27 @@ class cmsPermissions {
 
     }
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Возвращает массив контроллеров, для которых есть правила доступа
+     * @return array
+     */
     static function getControllersWithRules(){
 
         $model = new cmsModel();
 
         $model->groupBy('controller');
 
-        $controllers = $model->get('perms_rules', function($rule, $model){
-
-            $controller = $rule['controller'];
-            return $controller;
-
+        return $model->get('perms_rules', function($rule, $model){
+            return $rule['controller'];
         }, false);
-
-        return $controllers;
 
     }
 
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Сохраняет значения правил для субъекта
+     * @param string $subject Субъект действия правила
+     * @param array $perms Правила и их значения
+     */
     static function savePermissions($subject, $perms){
 
         $model = new cmsModel();
@@ -233,8 +223,53 @@ class cmsPermissions {
 
     }
 
-//============================================================================//
-//============================================================================//
+    /**
+     * Возвращает пользователей групп, для которых переданное правило включено
+     * или установлено в значение $value
+     *
+     * @param string $controller Название компонента
+     * @param string $name Название правила
+     * @param mixed $value Значение правила. Если не передано, значение не учитывается
+     * @param string $subject Субъект правила. Если не передан, то одинаков с компонентом
+     *
+     * @return array Массив пользователей с данными: id, email, nickname, avatar, notify_options, is_online
+     */
+    static function getRulesGroupMembers($controller, $name, $value = false, $subject = false) {
 
+        if(!$subject){ $subject = $controller; }
+
+        $model = new cmsModel();
+
+        $rule = $model->filterEqual('controller', $controller)->filterEqual('name', $name)->getItem('perms_rules');
+        if(!$rule){ return array(); }
+
+        $model->filterEqual('subject', $subject)->filterEqual('rule_id', $rule['id']);
+        if($value){
+            $model->filterEqual('value', $value);
+        }
+
+        $groups_ids = $model->selectOnly('group_id')->get('perms_users', function($item, $model){
+            return $item['group_id'];
+        }, 'group_id');
+        if(!$groups_ids){ return array(); }
+
+        return $model->filterIn('group_id', $groups_ids)->
+                selectOnly('user_id', 'id')->
+                joinUser('user_id', array(
+                    'u.notify_options' => 'notify_options',
+                    'u.email'          => 'email',
+                    'u.nickname'       => 'nickname',
+                    'u.avatar'         => 'avatar'
+                ))->
+                get('{users}_groups_members', function($item, $model){
+
+                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
+                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
+
+                    return $item;
+
+                });
+
+    }
 
 }

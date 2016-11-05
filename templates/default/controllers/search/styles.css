@@ -1,6 +1,6 @@
-#search_form .input { width:320px; padding:5px; }
-#search_form select { width:140px; }
-#search_form .button-submit { padding: 6px 10px; }
+#search_form .input { width:320px; padding:5px; vertical-align: top; }
+#search_form select { width:140px; vertical-align: top; }
+#search_form .button-submit { padding: 6px 10px; vertical-align: top; }
 
 #search_results_pills { margin:20px 0; }
 

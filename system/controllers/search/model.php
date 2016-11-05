@@ -191,7 +191,7 @@ class modelSearch extends cmsModel{
             if ($is_found) { $found_sentences[] = $sentence; }
         }
 
-        if (!$found_sentences) { return string_short($text, 260); }
+        if (!$found_sentences) { return $text; }
 
         $found_sentences = implode('... ', $found_sentences);
 

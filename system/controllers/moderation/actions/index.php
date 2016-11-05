@@ -4,17 +4,13 @@ class actionModerationIndex extends cmsAction {
 
     public function run($ctype_name=false){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+        $counts = $this->model->getTasksCounts($this->cms_user->id, $this->cms_user->is_admin);
 
-        $counts = $this->model->getTasksCounts($user->id);
-
-        $is_moderator = $this->model->isUserModerator($user->id);
-
+        $is_moderator = $this->model->isUserModerator($this->cms_user->id) || $this->cms_user->is_admin;
         if (!$is_moderator) { cmsCore::error404(); }
 
         if (!$counts){
-            return $template->render('empty');
+            return $this->cms_template->render('empty');
         }
 
         $is_index = false;
@@ -30,22 +26,22 @@ class actionModerationIndex extends cmsAction {
 
         $ctype = $content_controller->model->getContentTypeByName($ctype_name);
 
-        $content_controller->model->filterByModeratorTask($user->id, $ctype_name);
+        $content_controller->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
 
         $page_url = $is_index ? href_to($this->name) : href_to($this->name, $ctype_name);
 
-        $content_controller->model->disableApprovedFilter()->disablePubFilter();
+        $content_controller->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter();
 
         $list_html = $content_controller->renderItemsList($ctype, $page_url, true);
 
-        return $template->render('index', array(
+        return $this->cms_template->render('index', array(
             'is_index'   => $is_index,
             'counts'     => $counts,
             'ctype'      => $ctype,
             'ctypes'     => $ctypes,
             'ctype_name' => $ctype_name,
             'list_html'  => $list_html,
-            'user'       => $user
+            'user'       => $this->cms_user
         ));
 
     }

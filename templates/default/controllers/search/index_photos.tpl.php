@@ -1,6 +1,8 @@
 <?php
 
     $this->addCSS('templates/default/controllers/photos/styles.css');
+    $this->addJS( $this->getJavascriptFileName('photos') );
+    $this->addJS( $this->getJavascriptFileName('jquery-flex-images') );
 
     $this->setPageTitle(LANG_SEARCH_TITLE);
 
@@ -74,27 +76,22 @@
         <?php $this->menu('results_tabs', true, 'pills-menu-small'); ?>
     </div>
 
-    <div id="album-photos-list">
-        <?php foreach($search_data['items'] as $item){ ?>
-            <div class="photo photo-<?php echo $item['id']; ?>">
-                <div class="image">
-                    <a href="<?php echo $item['url']; ?>" title="<?php html($item['title']); ?>" target="_blank">
-                        <?php echo $item['image']; ?>
-                    </a>
-                </div>
-                <div class="info">
-                    <div class="rating <?php echo html_signed_class($item['rating']); ?>">
-                        <?php echo html_signed_num($item['rating']); ?>
-                    </div>
-                    <div class="comments">
-                        <span><?php echo $item['comments']; ?></span>
-                    </div>
-                </div>
-            </div>
-        <?php } ?>
+    <div class="album-photos-wrap" id="album-photos-list" data-delete-url="<?php echo href_to('photos', 'delete'); ?>">
+        <?php echo $this->renderControllerChild('photos', 'photos', array(
+            'photos'        => $search_data['items'],
+            'is_owner'      => false,
+            'user'          => $user,
+            'has_next'      => false,
+            'preset_small'  => photos::$preset_small,
+            'page'          => 1
+        )); ?>
     </div>
     <?php if ($search_data['count'] > $perpage){ ?>
         <?php echo html_pagebar($page, $perpage, $search_data['count'], $page_url, $uri_query); ?>
     <?php } ?>
-
-<?php } ?>
+<script>
+    icms.photos.init = true;
+    icms.photos.mode = 'album';
+    icms.photos.row_height = '<?php echo photos::$row_height; ?>';
+</script>
+<?php }

@@ -23,13 +23,18 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').on('input', function () {
-            $('.datagrid .filter .input').each(function(){
+        $('.datagrid .filter .input, .datagrid .filter .date-input').on('input', function () {
+            $('.datagrid .filter .input, .datagrid .filter .date-input').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name='+filter+']').val($(this).val());
             });
             icms.datagrid.setPage(1);
             icms.datagrid.loadRows();
+        });
+        $('.datagrid .filter .date-input').each(function(){
+            icms.events.on('icms_datepicker_selected_'+$(this).attr('id'), function(inst){
+                $('#'+$(inst).attr('id')).trigger('input');
+            });
         });
     };
 
@@ -282,7 +287,7 @@ icms.datagrid = (function ($) {
 
         this.is_loading = true;
 
-        setTimeout(this.showLoadIndicator, 500);
+        this.showLoadIndicator();
 
         var filter_query = $('#datagrid_filter').serialize();
 
@@ -389,7 +394,7 @@ icms.datagrid = (function ($) {
 
         icms.datagrid.options.pages_count = result.pages_count;
 
-		$('.datagrid .flag_trigger a').on('click', function(){
+		$('.datagrid .flag_trigger > a').on('click', function(){
 
 			var url = $(this).attr('href');
 			var link = $(this);
@@ -419,34 +424,20 @@ icms.datagrid = (function ($) {
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
 
+        fitLayout();
+
     }
 
     //====================================================================//
 
     this.showLoadIndicator = function(){
         if (!this.is_loading) {return;}
-
         $('.datagrid_loading').show();
-
-        var pos = $('.datagrid tbody').offset();
-        var w = $('.datagrid tbody').width();
-        var h = $('.datagrid tbody').height();
-
-        var iw = $('.datagrid_loading .indicator').width();
-        var ih = $('.datagrid_loading .indicator').height();
-
-        var itop = h/2 - ih/2 - 4;
-        var ileft = w/2 - iw/2 - 4;
-
-        $('.datagrid_loading').css('left', pos.left+'px').css('top', pos.top+'px');
-        $('.datagrid_loading').css('width', w+'px').css('height', h+'px').css('line-height', h+'px');
-
-        $('.datagrid_loading .indicator').css('top', itop+'px').css('left', ileft+'px');
-    }
+    };
 
     this.hideLoadIndicator = function(){
-        $('.datagrid_loading').hide();
-    }
+        $('.datagrid_loading').fadeOut('fast');
+    };
 
 	this.escapeHtml = function(text) {
 		return text

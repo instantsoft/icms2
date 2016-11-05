@@ -21,6 +21,10 @@ class comments extends cmsFrontend {
 
     public function getNativeComments() {
 
+        if(cmsUser::isAllowed('comments', 'is_moderator')){
+            $this->model->disableApprovedFilter();
+        }
+
         $comments = $this->model->filterCommentTarget(
                 $this->target_controller,
                 $this->target_subject,
@@ -158,7 +162,7 @@ class comments extends cmsFrontend {
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
-        if (!$dataset_name || $dataset_name == 'all'){
+        if ((!$dataset_name || $dataset_name == 'all') && !cmsUser::isAllowed('comments', 'view_all')){
             $this->model->filterPrivacy();
         }
 
@@ -204,8 +208,7 @@ class comments extends cmsFrontend {
                 'name' => 'friends',
                 'title' => LANG_COMMENTS_DS_FRIENDS,
                 'filter' => function($model){
-                    $user = cmsUser::getInstance();
-                    return $model->filterFriends($user->id);
+                    return $model->filterFriends(cmsUser::getInstance()->id);
                 }
             );
         }
@@ -216,8 +219,19 @@ class comments extends cmsFrontend {
                 'name' => 'my',
                 'title' => LANG_COMMENTS_DS_MY,
                 'filter' => function($model){
-                    $user = cmsUser::getInstance();
-                    return $model->filterEqual('user_id', $user->id);
+                    return $model->filterEqual('user_id', cmsUser::getInstance()->id);
+                }
+            );
+        }
+
+        // модерация
+        if(cmsUser::isAllowed('comments', 'is_moderator')){
+            $datasets['moderation'] = array(
+                'name'  => 'moderation',
+                'title' => LANG_MODERATION,
+                'filter' => function($model){
+                    $model->disableApprovedFilter();
+                    return $model->filterNotEqual('is_approved', 1);
                 }
             );
         }
@@ -226,7 +240,81 @@ class comments extends cmsFrontend {
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function isApproved($comment) {
+
+        // модерация для гостей
+        if (!empty($comment['author_name'])){
+            return empty($this->options['is_guests_moderate']);
+        }
+
+        $is_approved = cmsUser::isAllowed('comments', 'add_approved');
+
+        $is_approved_by_hook = cmsEventsManager::hook('comments_is_approved', array(
+            'is_approved' => $is_approved,
+            'comment'     => $comment
+        ));
+
+        $is_approved_by_hook['is_approved'] = ($is_approved_by_hook['is_approved'] ?
+            $is_approved_by_hook['is_approved'] :
+            cmsUser::isAllowed('comments', 'is_moderator'));
+
+        return $is_approved_by_hook['is_approved'];
+
+    }
+
+    public function notifyModerators($comment) {
+
+        // проверяем, нет ли уже комментариев на модерации
+        $this->model->disableApprovedFilter()->filterNotEqual('is_approved', 1);
+            $count = $this->model->getCommentsCount();
+        $this->model->resetFilters();
+
+        // если больше одного, значит уже уведомления рассылали
+        if($count > 1){ return false; }
+
+        $messenger = cmsCore::getController('messages');
+
+        // рассылаем модераторам уведомления
+        $moderators = $this->model->getCommentsModerators();
+
+        foreach ($moderators as $moderator) {
+
+            $messenger->addRecipient($moderator['id']);
+
+            $messenger->sendNoticePM(array(
+                'content' => LANG_COMMENTS_MODERATE_NOTIFY,
+                'actions' => array(
+                    'view' => array(
+                        'title' => LANG_SHOW,
+                        'href'  => href_to('comments', 'index', 'moderation')
+                    )
+                )
+            ));
+
+            if(!$moderator['is_online']){
+
+                $page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
+
+                $messenger->sendEmail(
+                    array(
+                        'email' => $moderator['email'],
+                        'name'  => $moderator['nickname']
+                    ),
+                    'comments_moderate',
+                    array(
+                        'author_nickname' => !$comment['user_id'] ? $comment['author_name'] : $comment['user_nickname'],
+                        'author_url' => !$comment['user_id'] ? $page_url : href_to_abs('users', $comment['user_id']),
+                        'page_url'   => $page_url,
+                        'comment'    => strip_tags($comment['content_html']),
+                        'nickname'   => $moderator['nickname'],
+                        'list_url'   => href_to_abs('comments', 'index', 'moderate')
+                    )
+                );
+
+            }
+
+        }
+
+    }
 
 }

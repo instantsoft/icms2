@@ -72,6 +72,18 @@ function grid_comments_list($controller){
             'width'       => 50,
             'filter'      => 'exact'
         ),
+        'is_approved' => array(
+            'title'  => LANG_MODERATION,
+            'flag'   => true,
+            'width'  => 50,
+            'filter' => 'exact',
+            'handler' => function($value, $item){
+                if(!$item['is_approved']){
+                    return '<div class="flag_trigger flag_off"><span><a class="approve_comment" title="'.LANG_COMMENTS_APPROVE.'" href="#" data-approve-url="'.href_to('comments', 'approve').'?id='.$item['id'].'"></a></span></div>';
+                }
+                return '<div class="flag_trigger flag_on"></div>';
+            }
+        ),
         'is_private' => array(
             'title'  => LANG_COMMENTS_IS_PRIVATE,
             'flag'   => true,
