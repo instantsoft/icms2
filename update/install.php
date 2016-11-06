@@ -123,6 +123,7 @@ function install_package(){
     }
 
     $core->db->query("ALTER TABLE `{#}photos` CHANGE `date_pub` `date_pub` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+    $core->db->query("ALTER TABLE `{#}photos` CHANGE `title` `title` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
     $core->db->query("ALTER TABLE `{#}photos` ENGINE = MYISAM");
 
     if(!$core->db->getRowsCount('widgets', "controller = 'photos' AND name = 'list'")){

@@ -825,7 +825,7 @@ CREATE TABLE `{#}photos` (
   `user_id` int(11) unsigned DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_photo` timestamp NULL DEFAULT NULL,
-  `title` varchar(128) NOT NULL,
+  `title` varchar(128) DEFAULT NULL,
   `content_source` text,
   `content` text,
   `image` text NOT NULL,
