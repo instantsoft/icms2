@@ -332,7 +332,7 @@ span.album_user img {
 }
 .content_list.tiled.albums_list .tile .photo .note {
     top: 10px;
-    bottom: initial;
+    bottom: auto;
     left: 10px;
     border-radius: 2px;
 }
@@ -433,7 +433,8 @@ span.album_user img {
 #photo_container > img {
     display: block;
     height: auto;
-    width: 100%;
+	width: 100%;
+    max-width: 100%;
     position: relative;
     box-shadow: 0 1px 3px rgba(0,0,30,.3);
 }
@@ -722,13 +723,13 @@ span.album_user img {
 .fullscreen_now #photo_container {
     height: 100%;
     width: 100%;
-    text-align: center;
+	display: flex;
 }
 .fullscreen_now #photo_container img {
-    margin: 0 auto;
-    text-align: center;
-    height: 100%;
-    width: auto;
+    margin: auto;
+	width:auto;
+    max-width: 100%;
+	max-height: 100%;
 }
 
 @media screen and (max-width: 800px) {
@@ -772,4 +773,10 @@ span.album_user img {
     #photo_container {
         display: block;
     }
+}
+
+@media screen and (min-width:0\0) {
+	.fullscreen_now #photo_container img {
+		height:100%;
+	}
 }
