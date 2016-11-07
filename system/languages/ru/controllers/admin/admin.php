@@ -297,6 +297,7 @@
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем.');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
