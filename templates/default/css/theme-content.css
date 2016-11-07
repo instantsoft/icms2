@@ -506,7 +506,7 @@ article div.content_categories:last-child {
     margin:0;
 	max-width:100%;
 }
-.content_item .ft_images, .ft_images img {
+.ft_images img {
     display: block;
     margin: 0;
     width: 100%;

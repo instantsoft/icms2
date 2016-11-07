@@ -54,6 +54,9 @@
 .owl-carousel.album-photos-wrap .photo, .owl-carousel.album-photos-wrap {
     margin: 0;
 }
+.owl-carousel.album-photos-wrap .photo {
+    float: none;
+}
 .widget_ajax_wrap > .owl-carousel.album-photos-wrap {
     margin-bottom: 10px;
 }
@@ -458,7 +461,7 @@ span.album_user img {
     display: inline-block;
     vertical-align: middle;
     float: none;
-    padding: 5px 7px;
+    padding: 5px 6px;
     border-radius: 2px;
 }
 #album-photo-item .like_buttons {
