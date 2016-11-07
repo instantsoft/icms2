@@ -333,6 +333,8 @@ function migratePhotos() {
 
         foreach ($photo['image'] as $preset => $path) {
 
+            if(!is_readable($config->upload_path.$path)){ continue; }
+
             $s = getimagesize($config->upload_path.$path);
             if ($s === false) { continue; }
 

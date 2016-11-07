@@ -434,7 +434,7 @@ class modelPhotos extends cmsModel{
 
             if($generate_slug){
 
-                $photo['slug'] = $this->getPhotoSlug($_photo);
+                $photo['slug'] = $_photo['slug'] = $this->getPhotoSlug($_photo);
 
                 if(!$_photo['is_private']){
                     $return[$photo_id] = $_photo;
