@@ -3,7 +3,7 @@
 
 html, body {
     padding:0; margin:0;
-    font-family: Trebuchet MS;
+    font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
     height: 100%;
     font-size:14px;
 }

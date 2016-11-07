@@ -176,7 +176,7 @@
 }
 .album-photos-wrap .photo > a {
     display: block;
-    height: 100%;
+    max-height: 100%;
 }
 .album-photos-wrap .photo .info .positive { color:lime; }
 .album-photos-wrap .photo .info .negative { color:red; }

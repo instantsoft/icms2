@@ -110,6 +110,27 @@ class formAdminCtypesField extends cmsForm {
                     )),
                 )
             ),
+            'wrap' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_WRAP,
+                'childs' => array(
+                    new fieldList('options:wrap_type', array(
+                        'title' => LANG_CP_FIELD_WRAP_TYPE,
+                        'default' => 'auto',
+                        'items' => array(
+                            'left'  => LANG_CP_FIELD_WRAP_LTYPE,
+                            'right' => LANG_CP_FIELD_WRAP_RTYPE,
+                            'none'  => LANG_CP_FIELD_WRAP_NTYPE,
+                            'auto'  => LANG_CP_FIELD_WRAP_ATYPE
+                        )
+                    )),
+                    new fieldString('options:wrap_width', array(
+                        'title'   => LANG_CP_FIELD_WRAP_WIDTH,
+                        'hint'    => LANG_CP_FIELD_WRAP_WIDTH_HINT,
+                        'default' => ''
+                    ))
+                )
+            ),
             'format' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_FORMAT,
