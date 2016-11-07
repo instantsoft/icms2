@@ -6,7 +6,7 @@
     $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
     $this->addBreadcrumb($list_header, href_to('users', $profile['id'], array('content', $ctype['name'])));
 
-    if ($folders && isset($folders[$folder_id])){
+    if ($folders && $folder_id && isset($folders[$folder_id])){
 
         $this->addBreadcrumb($folders[$folder_id]['title']);
 

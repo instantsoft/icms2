@@ -221,6 +221,10 @@ icms.photos = (function ($) {
 
     this.deletePhoto = function(id, link){
 
+        if(!confirm(LANG_PHOTOS_DELETE_PHOTO_CONFIRM)){
+            return false;
+        }
+
         var block = $(link).closest('.photo');
         var photo_wrap = $(link).closest('.album-photos-wrap');
 
