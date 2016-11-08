@@ -58,7 +58,7 @@ class actionContentCategoryView extends cmsAction {
         if (!$is_frontpage && $this->cms_config->frontpage == "content:{$ctype['name']}" && $slug == 'index' && !$dataset && $page==1){
 			$query = $this->cms_core->uri_query;
 			if ($query){
-				$this->redirect(href_to_home() . "/?" . http_build_query($query));
+				$this->redirect(href_to_home() . '?' . http_build_query($query));
 			} else {
 				$this->redirectToHome();
 			}

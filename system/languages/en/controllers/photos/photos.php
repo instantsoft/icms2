@@ -45,7 +45,7 @@ define('LANG_PHOTOS_SIZE_H', 'Height');
 define('LANG_PHOTOS_MORE_THAN', 'Larger than');
 define('LANG_PHOTOS_CLEAR_FILTER', 'Clear filters');
 define('LANG_PHOTOS_DATE_PUB', 'Latest');
-define('LANG_PHOTOS_DATE_PHOTO', 'Nearest photographing');
+define('LANG_PHOTOS_DATE_PHOTO', 'By photographing date');
 define('LANG_PHOTOS_RATING', 'By rating');
 define('LANG_PHOTOS_COMMENTS', 'Most commented');
 define('LANG_PHOTOS_HITS_COUNT', 'Most popular');

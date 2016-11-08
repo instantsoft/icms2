@@ -1,8 +1,9 @@
 <?php if ($photos){ ?>
+    <?php $disable_owner = isset($disable_owner) ? true : false; ?>
     <?php foreach($photos as $photo){ ?>
 
         <?php
-            $is_photo_owner = $is_owner || $photo['user_id'] == $user->id;
+            $is_photo_owner = ($is_owner || $photo['user_id'] == $user->id) && !$disable_owner;
             $photo_url = $photo['slug'] ? href_to('photos', $photo['slug'].'.html') : '#';
             $photo['title'] = $photo_url=='#' ? LANG_PHOTOS_NO_PUB : $photo['title'];
         ?>

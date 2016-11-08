@@ -15,6 +15,7 @@ $photo_wrap_id = 'widget-photos-'.$widget->id;
         'user'          => $user,
         'photo_wrap_id' => $photo_wrap_id,
         'preset_small'  => $preset_small,
+        'disable_owner' => true,
         'disable_flex'  => true
     )); ?>
 </div>

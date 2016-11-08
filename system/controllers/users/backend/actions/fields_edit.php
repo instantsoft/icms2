@@ -23,6 +23,7 @@ class actionUsersFieldsEdit extends cmsAction {
             $form->removeFieldset('type');
             $form->removeFieldset('format');
             $form->removeFieldset('labels');
+            $form->removeFieldset('wrap');
             $form->removeFieldset('privacy');
             $form->removeFieldset('values');
         }

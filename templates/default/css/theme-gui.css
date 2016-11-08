@@ -773,7 +773,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .symbols_count .symbols_num:hover {
     opacity: 0.8;
 }
-.symbols_count .overflowing {
+.symbols_count .overflowing, .symbols_count .overflowing_min {
     background-color: #e74c3c;
     color: #FFF;
     border-color: #c0392b;

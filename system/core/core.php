@@ -58,7 +58,7 @@ class cmsCore {
 
         self::$language = $config->language;
 
-        if(!empty($_SERVER['REQUEST_URI'])){
+        if(!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)){
 
             $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
 

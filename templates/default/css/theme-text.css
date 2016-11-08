@@ -1,5 +1,7 @@
 body {
-    font-family: 'Trebuchet MS', sans-serif;
+    font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
+	font-style: normal;
+	font-variant: normal;
     font-size: 14px;
     color:#444;
 }

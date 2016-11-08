@@ -192,6 +192,14 @@
     define('LANG_CP_FIELD_PRIVATE',             'Показывать поле только автору записи');
     define('LANG_CP_FIELD_GROUPS_READ',         'Доступ для чтения');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Доступ для изменения');
+    define('LANG_CP_FIELD_WRAP',               'Обтекание');
+    define('LANG_CP_FIELD_WRAP_TYPE',          'Тип');
+    define('LANG_CP_FIELD_WRAP_LTYPE',         'Следующее поле справа от текущего');
+    define('LANG_CP_FIELD_WRAP_RTYPE',         'Следующее поле слева от текущего');
+    define('LANG_CP_FIELD_WRAP_NTYPE',         'Не участвовать в обтекании');
+    define('LANG_CP_FIELD_WRAP_ATYPE',         'Авто');
+    define('LANG_CP_FIELD_WRAP_WIDTH',         'Ширина блока поля');
+    define('LANG_CP_FIELD_WRAP_WIDTH_HINT',    'Не указано - автоматическая ширина. Указывайте вместе с единицей измерения, например 200px, 60% и т.п.');
 
     define('LANG_CP_PROPS_NO_CATS',             'Тип контента &laquo;%s&raquo; не содержит категорий.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Создайте категории</a> чтобы добавлять свойства.');
@@ -289,6 +297,7 @@
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем.');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');

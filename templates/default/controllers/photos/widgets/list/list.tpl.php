@@ -18,6 +18,7 @@ $photo_wrap_id = 'widget-photos-'.$widget->id;
 </div>
 
 <script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
     icms.photos.row_height = '<?php echo $row_height; ?>';
     $(function(){
         icms.photos.initAlbum('#<?php echo $photo_wrap_id; ?>');

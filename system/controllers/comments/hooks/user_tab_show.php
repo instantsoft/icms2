@@ -6,9 +6,22 @@ class onCommentsUserTabShow extends cmsAction {
 
         $this->model->filterEqual('user_id', $profile['id']);
 
+        if($profile['id'] == $this->cms_user->id || cmsUser::isAllowed('comments', 'is_moderator')){
+
+            $this->model->disableApprovedFilter();
+
+            $this->model->orderByList(array(
+                array('by' => 'is_approved', 'to' => 'desc'),
+                array('by' => 'date_pub', 'to' => 'desc')
+            ));
+
+        }
+
         $page_url = href_to('users', $profile['id'], 'comments');
 
         $list_html = $this->renderCommentsList($page_url);
+
+        $this->model->enableApprovedFilter();
 
         return $this->cms_template->renderInternal($this, 'profile_tab', array(
             'tab'     => $tab,

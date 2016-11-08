@@ -373,13 +373,17 @@ class modelContent extends cmsModel{
     public function getDefaultContentFieldOptions(){
 
         return array(
-            'is_required' => 0,
-            'is_digits' => 0,
-            'is_number' => 0,
+            'is_required'     => 0,
+            'is_digits'       => 0,
+            'is_number'       => 0,
             'is_alphanumeric' => 0,
-            'is_email' => 0,
-            'is_unique' => 0,
-            'label_pos' => 'left'
+            'is_email'        => 0,
+            'is_unique'       => 0,
+            'label_in_list'   => 'none',
+            'label_in_item'   => 'none',
+            'wrap_type'       => 'auto',
+            'wrap_width'      => '',
+            'profile_value'   => '',
         );
 
     }

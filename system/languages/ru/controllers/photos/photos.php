@@ -45,7 +45,7 @@
     define('LANG_PHOTOS_MORE_THAN',             'Больше чем');
     define('LANG_PHOTOS_CLEAR_FILTER',          'Очистить фильтр');
     define('LANG_PHOTOS_DATE_PUB',              'Последние загрузки');
-    define('LANG_PHOTOS_DATE_PHOTO',            'Ближайшая съёмка');
+    define('LANG_PHOTOS_DATE_PHOTO',            'По дате съёмки');
     define('LANG_PHOTOS_RATING',                'По рейтингу');
     define('LANG_PHOTOS_COMMENTS',              'Комментируемые');
     define('LANG_PHOTOS_HITS_COUNT',            'По популярности');
