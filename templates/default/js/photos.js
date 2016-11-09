@@ -135,23 +135,30 @@ icms.photos = (function ($) {
     };
 
     this.initCarousel = function (selector, init_callback){
+        var def = $.when(
+            $('.photo', selector).each(function (){
+                $('img', this).width($(this).data('w')).height($(this).data('h'));
+            })
+        );
         init_callback = init_callback || function(){};
-        $(selector).owlCarousel({
-            items:3,
-            loop:false,
-            margin:10,
-            autoWidth:true,
-            nav:true,
-            autoplay: true,
-            autoplayTimeout:5000,
-            autoplayHoverPause:true,
-            navText: ['',''],
-            onInitialized: init_callback,
-            responsive:{
-                0:{items:1, nav:false },
-                640:{items:2},
-                980:{items:3}
-            }
+        def.done(function(){
+            $(selector).owlCarousel({
+                items:3,
+                loop:false,
+                margin:10,
+                autoWidth:true,
+                nav:true,
+                autoplay: true,
+                autoplayTimeout:5000,
+                autoplayHoverPause:true,
+                navText: ['',''],
+                onInitialized: init_callback,
+                responsive:{
+                    0:{items:1, nav:false },
+                    640:{items:2},
+                    980:{items:3}
+                }
+            });
         });
     };
 
