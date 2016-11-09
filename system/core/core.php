@@ -828,6 +828,8 @@ class cmsCore {
 
         $matched_pages = array(0);
 
+        $_full_uri = $this->uri.($this->uri_query ? '?'.implode('&', $this->uri_query) : '');
+
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
@@ -842,14 +844,14 @@ class cmsCore {
             foreach($page['url_mask'] as $mask){
                 $regular = string_mask_to_regular($mask);
                 $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                $is_mask_match = $is_mask_match || preg_match($regular, $_full_uri);
             }
 
             if (!empty($page['url_mask_not'])) {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 
