@@ -450,7 +450,7 @@ class cmsController {
 
         $class_name = 'on' . string_to_camel('_', $this->name) . string_to_camel('_', $event_name);
 
-        if (!class_exists($class_name)){
+        if (!class_exists($class_name, false)){
 
             $hook_file = $this->root_path . 'hooks/' . $event_name . '.php';
 

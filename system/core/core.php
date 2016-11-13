@@ -261,7 +261,7 @@ class cmsCore {
 
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
-        if (!class_exists($model_class)) {
+        if (!class_exists($model_class, false)) {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
@@ -303,7 +303,7 @@ class cmsCore {
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
-        if (!class_exists($controller_name)) {
+        if (!class_exists($controller_name, false)) {
             include_once($ctrl_file);
         }
 
@@ -313,7 +313,7 @@ class cmsCore {
             $controller_class = $controller_name;
         } else {
             $controller_class = $controller_name . '_custom';
-            if (!class_exists($controller_class)){
+            if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
         }
