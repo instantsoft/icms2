@@ -53,7 +53,7 @@ class formRecaptchaOptions extends cmsForm {
                             'de' => 'German',
                             'pt' => 'Portuguese',
                             'ru' => 'Русский',
-                            'uk' => 'Український',
+                            'uk' => 'Українська',
                             'es' => 'Spanish',
                             'tr' => 'Turkish'
                         )
