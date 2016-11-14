@@ -87,6 +87,14 @@ icms.photos = (function ($) {
             screenfull.toggle($('#fullscreen_cont')[0]);
             return false;
         });
+        $(document).keyup(function(event){
+            if(event.keyCode === 39){
+                try{ $('#photo_container .photo_navigation.next_item').trigger('click');}catch(e){}
+            }
+            if(event.keyCode === 37){
+                try{ $('#photo_container .photo_navigation.prev_item').trigger('click'); }catch(e){}
+            }
+        });
     };
 
     this.bindFullScreenNav = function (link) {
@@ -127,23 +135,30 @@ icms.photos = (function ($) {
     };
 
     this.initCarousel = function (selector, init_callback){
+        var def = $.when(
+            $('.photo', selector).each(function (){
+                $('img', this).width($(this).data('w')).height($(this).data('h'));
+            })
+        );
         init_callback = init_callback || function(){};
-        $(selector).owlCarousel({
-            items:3,
-            loop:true,
-            margin:10,
-            autoWidth:true,
-            nav:true,
-            autoplay: true,
-            autoplayTimeout:5000,
-            autoplayHoverPause:true,
-            navText: ['',''],
-            onInitialized: init_callback,
-            responsive:{
-                0:{items:1, nav:false },
-                640:{items:2},
-                980:{items:3}
-            }
+        def.done(function(){
+            $(selector).owlCarousel({
+                items:3,
+                loop:false,
+                margin:10,
+                autoWidth:true,
+                nav:true,
+                autoplay: true,
+                autoplayTimeout:5000,
+                autoplayHoverPause:true,
+                navText: ['',''],
+                onInitialized: init_callback,
+                responsive:{
+                    0:{items:1, nav:false },
+                    640:{items:2},
+                    980:{items:3}
+                }
+            });
         });
     };
 
@@ -212,6 +227,10 @@ icms.photos = (function ($) {
     };
 
     this.deletePhoto = function(id, link){
+
+        if(!confirm(LANG_PHOTOS_DELETE_PHOTO_CONFIRM)){
+            return false;
+        }
 
         var block = $(link).closest('.photo');
         var photo_wrap = $(link).closest('.album-photos-wrap');

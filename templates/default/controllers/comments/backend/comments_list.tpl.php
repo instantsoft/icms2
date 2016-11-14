@@ -2,9 +2,6 @@
 $this->addBreadcrumb(LANG_COMMENTS_LIST);
 $this->setPageTitle(LANG_COMMENTS_LIST);
 
-$this->addJS('templates/default/js/jquery-ui.js');
-$this->addCSS('templates/default/css/jquery-ui.css');
-
 $this->renderGrid($this->href_to('comments_list'), $grid); ?>
 
 <script type="text/javascript">

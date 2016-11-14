@@ -84,70 +84,49 @@ class actionAuthRegister extends cmsAction {
             $user['inv'] = $this->request->get('inv','');
         }
 
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             if (!$this->options['is_reg_enabled']){
                 cmsCore::error404();
             }
 
-            $errors = false;
             $is_captcha_valid = true;
-
-            //
-            // Проверяем капчу
-            //
-            if ($this->options['reg_captcha']){
-
-                $is_captcha_valid = cmsEventsManager::hook('captcha_validate', $this->request);
-
-                if (!$is_captcha_valid){
-                    $errors = true;
-                    cmsUser::addSessionMessage(LANG_CAPTCHA_ERROR, 'error');
-                }
-
-            }
 
             //
             // Парсим и валидируем форму
             //
-            if (!$errors){
+            $user = $form->parse($this->request, true);
 
-                $user = $form->parse($this->request, $is_submitted);
+            $user['groups'] = array();
 
-				$user['groups'] = array();
-
-				if (!empty($this->options['def_groups'])){
-					$user['groups'] = $this->options['def_groups'];
-				}
-
-                if (isset($user['group_id'])) {
-					if (!in_array($user['group_id'], $user['groups'])){
-						$user['groups'][] = $user['group_id'];
-					}
-				}
-
-                //
-                // убираем поля которые не относятся к выбранной пользователем группе
-                //
-                foreach($fieldsets as $fieldset){
-                    foreach($fieldset['fields'] as $field){
-
-                        if (!$field['groups_edit']) { continue; }
-                        if (in_array(0, $field['groups_edit'])) { continue; }
-
-                        if (!in_array($user['group_id'], $field['groups_edit'])){
-                            $form->disableField($field['name']);
-                            unset($user[$field['name']]);
-                        }
-
-                    }
-                }
-
-                $errors = $form->validate($this,  $user);
-
+            if (!empty($this->options['def_groups'])){
+                $user['groups'] = $this->options['def_groups'];
             }
+
+            if (isset($user['group_id'])) {
+                if (!in_array($user['group_id'], $user['groups'])){
+                    $user['groups'][] = $user['group_id'];
+                }
+            }
+
+            //
+            // убираем поля которые не относятся к выбранной пользователем группе
+            //
+            foreach($fieldsets as $fieldset){
+                foreach($fieldset['fields'] as $field){
+
+                    if (!$field['groups_edit']) { continue; }
+                    if (in_array(0, $field['groups_edit'])) { continue; }
+
+                    if (!in_array($user['group_id'], $field['groups_edit'])){
+                        $form->disableField($field['name']);
+                        unset($user[$field['name']]);
+                    }
+
+                }
+            }
+
+            $errors = $form->validate($this,  $user);
 
             if (!$errors){
 
@@ -181,6 +160,20 @@ class actionAuthRegister extends cmsAction {
                 if (!$this->isIPAllowed(cmsUser::get('ip'))){
                     cmsUser::addSessionMessage(sprintf(LANG_AUTH_RESTRICTED_IP, cmsUser::get('ip')), 'error');
                     $errors = true;
+                }
+
+            }
+
+            //
+            // Проверяем капчу
+            //
+            if (!$errors && $this->options['reg_captcha']){
+
+                $is_captcha_valid = cmsEventsManager::hook('captcha_validate', $this->request);
+
+                if (!$is_captcha_valid){
+                    $errors = true;
+                    cmsUser::addSessionMessage(LANG_CAPTCHA_ERROR, 'error');
                 }
 
             }

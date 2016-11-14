@@ -1,7 +1,7 @@
 <?php
     $this->addJSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/image_upload.js');
     $this->addJSFromContext('wysiwyg/markitup/jquery.markitup.js');
-    $this->addJSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/set.js');
+    $this->addJSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/'.(isset($options['set_name']) ? $options['set_name'] : 'set').'.js');
     $this->addCSSFromContext('wysiwyg/markitup/sets/'.$options['set'].'/style.css');
     $this->addCSSFromContext('wysiwyg/markitup/skins/'.$options['skin'].'/style.css');
 ?>

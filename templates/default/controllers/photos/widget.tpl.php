@@ -35,7 +35,7 @@
                                 <?php echo html_input('text', 'photos['.$photo['id'].']', $photo['title']); ?>
                             </div>
                             <div class="photo_content">
-                                <?php echo html_editor('content['.$photo['id'].']', $photo['content_source']); ?>
+                                <?php echo html_editor('content['.$photo['id'].']', $photo['content_source'], array('set_name' => 'photos')); ?>
                             </div>
                             <div class="photo_additional">
                                 <div class="photo_privacy">
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div style="display:none"><?php echo html_editor(''); ?></div> <!-- чтобы редактор был подключен -->
+            <div style="display:none"><?php echo html_editor('', '', array('set_name' => 'photos')); ?></div> <!-- чтобы редактор был подключен -->
 
             <div id="album-photos-uploader"></div>
 

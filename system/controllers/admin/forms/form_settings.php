@@ -186,6 +186,10 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
+                    new fieldCheckbox('is_user_change_lang', array(
+                        'title' => LANG_CP_SETTINGS_USER_CHANGE_LANG
+                    )),
+
                     new fieldList('default_editor', array(
                         'title' => LANG_CP_SETTINGS_EDITOR,
                         'default' => 'redactor',

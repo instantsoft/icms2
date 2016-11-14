@@ -166,14 +166,18 @@ class comments extends cmsFrontend {
             $this->model->filterPrivacy();
         }
 
+        if(!$this->model->order_by){
+            $this->model->orderBy('date_pub', 'desc');
+        }
+
         // Постраничный вывод
-        $this->model->orderBy('date_pub', 'desc')->limitPage($page, $perpage);
+        $this->model->limitPage($page, $perpage);
 
         // Скрываем удаленные
         $this->model->filterIsNull('is_deleted');
 
         // Получаем количество и список записей
-        $total = $this->model->getCommentsCount();
+        $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();
         $items = $this->model->getComments();
 
         $items = cmsEventsManager::hook('comments_before_list', $items);
@@ -219,7 +223,8 @@ class comments extends cmsFrontend {
                 'name' => 'my',
                 'title' => LANG_COMMENTS_DS_MY,
                 'filter' => function($model){
-                    return $model->filterEqual('user_id', cmsUser::getInstance()->id);
+                    $model->filterEqual('user_id', cmsUser::getInstance()->id);
+                    return $model->disableApprovedFilter();
                 }
             );
         }

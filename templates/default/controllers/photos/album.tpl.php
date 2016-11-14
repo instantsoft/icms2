@@ -28,6 +28,7 @@
 <?php } ?>
 
 <script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_PHOTOS_DELETE_PHOTO_CONFIRM'); ?>
     icms.photos.row_height = '<?php echo $row_height; ?>';
     $(function(){
         icms.photos.initAlbum();

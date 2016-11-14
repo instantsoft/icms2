@@ -421,7 +421,7 @@ aside .widget_tabbed > .tabs .links a {
 
 .widget_comments_list { overflow: hidden; line-height: 20px; }
 
-.widget_comments_list .item { margin-bottom: 10px; overflow: hidden; }
+.widget_comments_list .item { margin-bottom: 15px; overflow: hidden; }
 .widget_comments_list .item:last-child { margin-bottom: 0; }
 
 .widget_comments_list .item .image { float:left; margin-right: 10px; padding:2px; border:solid 1px #B3C2C9; }

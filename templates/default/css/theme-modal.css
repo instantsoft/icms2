@@ -80,7 +80,7 @@
 }
 .nyroModalPrev, .nyroModalNext {
 	outline: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	height: 60%;
 	width: 150px;
@@ -88,6 +88,7 @@
 	max-height: 300px;
 	cursor: pointer;
 	text-indent: -9999em;
+    transition: none;
 }
 .nyroModalPrev:after, .nyroModalNext:after {
     content: '';
@@ -98,8 +99,7 @@
     position: absolute;
     top: 50%;
     margin-top: -16px;
-    opacity: 0;
-    transition: opacity 300ms ease;
+    opacity: 0.5;
 }
 .nyroModalImage .nyroModalPrev, .nyroModalImage .nyroModalNext {
 	height: 100%;
@@ -112,12 +112,13 @@
 .nyroModalNext {
 	right: 0;
 }
-.nyroModalPrev:hover:after {
+.nyroModalPrev:after {
 	left: 30px;
-    opacity: 1;
 }
-.nyroModalNext:hover:after {
-	opacity: 1;
+.nyroModalNext:after {
     right: 30px;
     background-position: 0px -40px;
+}
+.nyroModalPrev:hover:after, .nyroModalNext:hover:after {
+	opacity: 1;
 }

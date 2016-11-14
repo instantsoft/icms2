@@ -1,6 +1,5 @@
 <?php
     $this->addCSS('templates/default/css/datatree.css');
-    $this->addJS('templates/default/js/jquery-ui.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addJS('templates/default/js/admin-props.js');

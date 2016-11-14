@@ -124,7 +124,8 @@ class actionPhotosUpload extends cmsAction{
             if ($photos_count){
                 foreach($photos as $photo){
 
-                    $small_preset = end(array_keys($photo['image']));
+                    $_presets = array_keys($photo['image']);
+                    $small_preset = end($_presets);
 
                     $activity_thumb_images[] = array(
                         'url' => href_to_rel('photos', $photo['slug'].'.html'),

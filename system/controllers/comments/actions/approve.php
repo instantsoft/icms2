@@ -51,6 +51,8 @@ class actionCommentsApprove extends cmsAction {
         // Уведомляем об ответе на комментарий
         if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
 
+        $comment = cmsEventsManager::hook('comment_after_add', $comment);
+
         return $this->cms_template->renderJSON(array(
             'error'     => false,
             'message'   => '',

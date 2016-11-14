@@ -97,6 +97,10 @@ class cmsDatabase {
 
         $this->mysqli->set_charset('utf8');
 
+        if(!empty($config->clear_sql_mode)){
+            $this->mysqli->query("SET sql_mode=''");
+        }
+
         $this->setTimezone();
 
 		$this->prefix = $config->db_prefix;

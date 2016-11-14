@@ -57,10 +57,13 @@ class actionCommentsSubmit extends cmsAction {
 		}
 
         // Проверяем валидность
-        $is_valid = ($this->validate_sysname($target_controller)===true) &&
+        $is_valid = $target_controller && $target_subject && $target_id &&
+                    ($this->validate_sysname($target_controller)===true) &&
                     ($this->validate_sysname($target_subject)===true) &&
                     is_numeric($target_id) &&
                     is_numeric($parent_id) &&
+                    cmsCore::isControllerExists($target_controller) &&
+                    cmsCore::isModelExists($target_controller) &&
                     (!$comment_id || is_numeric($comment_id)) &&
                     cmsForm::validateCSRFToken($csrf_token, false) &&
                     in_array($action, array('add', 'preview', 'update'), true);
@@ -148,6 +151,15 @@ class actionCommentsSubmit extends cmsAction {
                 // проверяем модерацию
                 $comment['is_approved'] = $this->isApproved($comment);
 
+                list($comment, $permissions) = cmsEventsManager::hook('comment_add_permissions', array(
+                    $comment,
+                    array('error'=>false, 'message'=>'')
+                ));
+
+                if($permissions['error']){
+                    return $this->cms_template->renderJSON($permissions);
+                }
+
                 // Сохраняем комментарий
                 $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
 
@@ -195,6 +207,8 @@ class actionCommentsSubmit extends cmsAction {
 
                     // Уведомляем об ответе на комментарий
                     if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
+
+                    $comment = cmsEventsManager::hook('comment_after_add', $comment);
 
                 }
 

@@ -4,7 +4,7 @@
         <div class="field">
             <label><?php echo LANG_EMAIL; ?>:</label>
             <a href="<?php echo href_to('auth', 'register'); ?>" tabindex="6"><?php echo LANG_REGISTRATION; ?></a>
-            <?php echo html_input('text', 'login_email', '', array('required'=>true, 'autofocus' => true, 'tabindex' => '1')); ?>
+            <?php echo html_input('text', 'login_email', '', array('required'=>true, 'tabindex' => '1')); ?>
         </div>
 
         <div class="field">

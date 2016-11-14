@@ -33,8 +33,6 @@ class actionPhotosView extends cmsAction {
         $album = $this->model->getAlbum($photo['album_id']);
         if (!$album) { cmsCore::error404(); }
 
-        $photo['content'] = cmsEventsManager::hook('parse_text', $photo['content']);
-
         $ctype = $album['ctype']; unset($album['ctype']);
 
         list($photo, $album, $ctype) = cmsEventsManager::hook('photos_before_item', array($photo, $album, $ctype));

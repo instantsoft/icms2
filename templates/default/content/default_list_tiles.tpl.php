@@ -24,6 +24,7 @@
                 $item['ctype'] = $ctype;
                 $is_private    = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
                 $stop = 0;
+                $preset = $fields['photo']['options']['size_teaser'];
             ?>
 
             <div class="tile <?php echo $ctype['name']; ?>_list_item<?php if (!empty($item['is_vip'])){ ?> is_vip<?php } ?>">
@@ -36,10 +37,10 @@
                             </div>
                         <?php } ?>
                         <?php if ($is_private) { ?>
-                            <?php echo html_image(default_images('private', 'normal'), 'normal', $item['title']); ?>
+                            <?php echo html_image(default_images('private', $preset), $preset, $item['title']); ?>
                         <?php } else { ?>
                             <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-                                <?php echo html_image($item['photo'], 'normal', $item['title']); ?>
+                                <?php echo html_image($item['photo'], $preset, $item['title']); ?>
                             </a>
                         <?php } ?>
                         <?php unset($item['photo']); ?>

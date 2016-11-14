@@ -8,31 +8,29 @@ class actionUsersStatus extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        $user_id = $this->request->get('user_id');
-        $content = (string)$this->request->get('content');
+        $user_id = $this->request->get('user_id', 0);
+        $content = $this->request->get('content', '');
 
         // Проверяем валидность
         if (!is_numeric($user_id)){
-            $result = array( 'error' => true, 'message' => LANG_ERROR );
-            return $this->cms_template->renderJSON($result);
+            return $this->cms_template->renderJSON(array( 'error' => true, 'message' => LANG_ERROR ));
         }
 
         if ($this->cms_user->id != $user_id){
-            $result = array( 'error' => true, 'message' => LANG_ERROR );
-            return $this->cms_template->renderJSON($result);
+            return $this->cms_template->renderJSON(array( 'error' => true, 'message' => LANG_ERROR ));
         }
 
         // Вырезаем теги и форматируем
         $content = cmsEventsManager::hook('html_filter', strip_tags(trim($content)));
         if (!$content){
-            $result = array( 'error' => true, 'message' => ERR_VALIDATE_REQUIRED);
-            return $this->cms_template->renderJSON($result);
+            return $this->cms_template->renderJSON(array( 'error' => true, 'message' => ERR_VALIDATE_REQUIRED));
         }
 
+        $status_content = trim(strip_tags($content));
+
         // проверяем длину статуса
-        if (mb_strlen($content) > 140) {
-            $result = array( 'error' => true, 'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 140));
-            return $this->cms_template->renderJSON($result);
+        if (mb_strlen($status_content) > 140) {
+            return $this->cms_template->renderJSON(array( 'error' => true, 'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 140)));
         }
 
         // Добавляем запись на стену
@@ -49,8 +47,8 @@ class actionUsersStatus extends cmsAction {
 
         // сохраняем статус
         $status_id = $this->model->addUserStatus(array(
-            'user_id' => $user_id,
-            'content' => $content,
+            'user_id'       => $user_id,
+            'content'       => $status_content,
             'wall_entry_id' => $wall_entry_id
         ));
 
@@ -65,13 +63,11 @@ class actionUsersStatus extends cmsAction {
 
         }
 
-        $result = array(
-            'error' => $status_id ? false : true,
+        return $this->cms_template->renderJSON(array(
+            'error'         => $status_id ? false : true,
             'wall_entry_id' => $wall_entry_id,
-            'content' => $content,
-        );
-
-        return $this->cms_template->renderJSON($result);
+            'content'       => $status_content
+        ));
 
     }
 

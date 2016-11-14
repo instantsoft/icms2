@@ -205,12 +205,19 @@ icms.forms = (function ($) {
 
     };
 
-    this.initSymbolCount = function (field_id, max){
+    this.initSymbolCount = function (field_id, max, min){
         $('#f_'+field_id).append('<div class="symbols_count"><span class="symbols_num"></span><span class="symbols_spell"></span></div>');
         var symbols_count = $('#f_'+field_id+' > .symbols_count');
         var symbols_num   = $('.symbols_num', symbols_count);
         var symbols_spell = $('.symbols_spell', symbols_count);
-        var type = 'total';
+        if(max){
+            var type = 'left';
+        } else {
+            var type = 'total';
+        }
+        if(min){
+            type = 'total';
+        }
         var field_id_el = $('#'+field_id);
 
         $(symbols_num).on('click', function (){
@@ -225,25 +232,30 @@ icms.forms = (function ($) {
         });
         var render_symbols_count = function (){
             var num = +$(field_id_el).val().length;
+            if(!num){
+                $(symbols_num).html(''); $(symbols_count).hide(); return;
+            }
+            if(min){ if(num < min){
+                    $(symbols_num).addClass('overflowing_min');
+                } else {
+                    $(symbols_num).removeClass('overflowing_min');
+            }}
+            if(max && num > max){
+                $(symbols_num).addClass('overflowing');
+            } else {
+                $(symbols_num).removeClass('overflowing');
+            }
             if(type === 'total'){
-                if(!num){
-                    $(symbols_num).html(''); $(symbols_count).hide(); return;
-                }
                 $(symbols_count).fadeIn();
                 $(symbols_num).html(num);
                 $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10));
-                if(max && num > max){
-                    $(symbols_num).addClass('overflowing');
-                } else {
-                    $(symbols_num).removeClass('overflowing');
-                }
             } else {
                 $(symbols_count).fadeIn();
                 if(num > max){
                     num = max;
                     $(field_id_el).val($(field_id_el).val().substr(0, max));
                 }
-                $(symbols_num).html((max - num)).removeClass('overflowing');
+                $(symbols_num).html((max - num));
                 $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10)+' '+LANG_ISLEFT);
             }
         };
