@@ -1682,7 +1682,7 @@ class cmsTemplate {
 
         if (!$this->hasOptions()){ return false; }
 
-        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
+        $options_file = cmsConfig::get('root_path') . "config/theme_{$this->name}.yml";
 
         if (!file_exists($options_file)){ return array(); }
 
@@ -1694,7 +1694,7 @@ class cmsTemplate {
 
     public function saveOptions($options){
 
-        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
+        $options_file = cmsConfig::get('root_path') . "config/theme_{$this->name}.yml";
 
         if(file_exists($options_file)){
             if(!is_writable($options_file)){
