@@ -16,7 +16,7 @@ class actionAdminContentItemsAjax extends cmsAction {
         $grid = $this->loadDataGrid('content_items', $ctype['name']);
 
         $filter     = array();
-        $filter_str = $this->request->get('filter');
+        $filter_str = $this->request->get('filter', '');
 
         // Одновременно смениться и тип контента, и настройка diff_order не могут
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
@@ -64,7 +64,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         }
 
-        $content_model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+        $content_model->filterCategory($ctype['name'], $category, true);
 
         $content_model->disableApprovedFilter();
         $content_model->disablePubFilter();
@@ -80,7 +80,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $items = $content_model->getContentItems($ctype['name']);
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);
 
         $this->halt();
 

@@ -74,8 +74,12 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Фильтр по категории
-        if ($ctype['is_cats'] && $slug != 'index') {
-            $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+        if ($ctype['is_cats']) {
+            if($slug != 'index'){
+                $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+            } elseif(!$ctype['is_cats_recursive']){
+                $this->model->filterCategory($ctype['name'], array('id' => 1));
+            }
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
