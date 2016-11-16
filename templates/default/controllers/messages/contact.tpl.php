@@ -6,7 +6,9 @@
     <div class="overview">
         <div id="contact_toggle"></div>
         <a href="<?php echo href_to('users', $contact['id']); ?>">
-            <span <?php if ($contact['is_online']) { ?>class="peer_online"<?php } ?>><?php echo html_avatar_image($contact['avatar'], 'micro'); ?></span>
+            <span class="<?php if ($contact['is_online']) { ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+                <?php echo html_avatar_image($contact['avatar'], 'micro'); ?>
+            </span>
             <span><?php echo $contact['nickname']; ?></span>
         </a>
         <?php if (!$contact['is_online']) { ?>
@@ -21,6 +23,7 @@
             <?php } ?>
             <?php echo html_button(LANG_PM_DELETE_CONTACT, 'delete', 'icms.messages.deleteContact('.$contact['id'].')', array('class'=>'button-small')); ?>
         </div>
+        <div class="toogle-actions"></div>
     </div>
 
     <div id="pm_chat" class="chat">

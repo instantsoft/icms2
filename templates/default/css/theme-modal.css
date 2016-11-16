@@ -41,6 +41,10 @@
 	background: #fff;
     z-index: 101;
 }
+.nyroModalMessage .nyroModalCont {
+	box-sizing: border-box;
+    max-width: calc(90% - 100px)!important;
+}
 .nyroModalCont .notice{
     padding:20px;
     color:#BDC3C7;
@@ -121,4 +125,37 @@
 }
 .nyroModalPrev:hover:after, .nyroModalNext:hover:after {
 	opacity: 1;
+}
+@media screen and (max-width: 640px) {
+	.nyroModalCont{
+		margin: 30px 15px;
+	}
+	.nyroModalCloseButton {
+		top: -30px;
+		right: 0;
+		width: 25px;
+		height: 25px;
+		background-size:cover;
+		z-index:201;
+	}
+	.nyroModalTitle {
+		font-size:14px;
+		padding:0 60px 0 0;
+	}
+	.nyroModalMessage .nyroModalCont {
+		max-width: calc(100% - 30px) !important;
+		margin:30px 0 15px !important;
+	}
+	.nyroModalMessage .nyroModalCont.nyroModalImg{
+		margin:0 !important;
+	}
+	.nyroModalMessage .nyroModalTitle {
+		font-size:22px;
+		padding:0;
+	}
+	.nyroModalMessage .nyroModalImage img {
+		max-width:100%;
+		max-height:100%;
+		margin:auto;
+	}
 }

@@ -75,6 +75,10 @@ $(document).ready(function(){
 
     }
 
+	$('.messages.ajax-modal a').on('click', function(){
+        $('#popup-manager').addClass('nyroModalMessage');
+	});
+
 });
 
 icms.forms = (function ($) {
