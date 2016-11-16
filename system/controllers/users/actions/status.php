@@ -57,7 +57,7 @@ class actionUsersStatus extends cmsAction {
             $wall_model->updateEntryStatusId($wall_entry_id, $status_id);
 
             cmsCore::getController('activity')->addEntry($this->name, 'status', array(
-                'subject_title' => $content,
+                'subject_title' => $status_content,
                 'reply_url' => href_to_rel($this->name, $user_id) . "?wid={$wall_entry_id}&reply=1"
             ));
 

@@ -1200,7 +1200,7 @@ CREATE TABLE `{#}users_messages` (
   `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `from_id` (`from_id`,`to_id`),
-  KEY `to_id` (`to_id`,`is_new`),
+  KEY `to_id` (`to_id`,`is_new`,`is_deleted`),
   KEY `date_delete` (`date_delete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Личные сообщения пользователей';
 

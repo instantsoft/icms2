@@ -577,7 +577,7 @@ header .widget_user_avatar .menu {
     box-shadow: -2px 2px 10px #224674;
     opacity: 0.99;
     transition: visibility 0.2s;
-    z-index: 100;
+    z-index: 102;
 }
 header .widget_user_avatar:hover .user_info + .menu {
     visibility: visible;

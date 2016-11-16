@@ -54,7 +54,7 @@ $(document).ready(function(){
 
             var tabs = $(this);
 
-            var dropdown = $("<select>").appendTo(tabs);
+            var dropdown = $("<select>").prependTo(tabs);
             $("ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
@@ -351,5 +351,8 @@ function initTabs(selector){
         if($(element).hasClass('field_error')){
             $(selector+' ul.tabbed > li > a[href = "#'+$(element).parents('.tab').attr('id')+'"]').trigger('click');
         }
+    });
+    $('> select', selector).change(function() {
+        $(selector+' ul.tabbed > li > a[href = "'+$(this).find("option:selected").val()+'"]').trigger('click');
     });
 }

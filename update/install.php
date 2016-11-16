@@ -314,7 +314,7 @@ function migratePhotos() {
                 'by' => 'date_pub',
                 'to' => 'asc'
             )
-    ))->get('photos', function($item, $model){
+    ))->limit(false)->get('photos', function($item, $model){
         $item['image'] = cmsModel::yamlToArray($item['image']);
         return $item;
     });
