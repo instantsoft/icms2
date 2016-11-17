@@ -906,6 +906,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .rating_widget .score.loading > *{
     display: none;
 }
+.rating_widget .score.loading {
+    padding-left: 16px;
+}
 
 .rating_widget .arrow span,
 .rating_widget .arrow a {

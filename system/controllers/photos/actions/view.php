@@ -120,7 +120,7 @@ class actionPhotosView extends cmsAction {
 
             $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
                 'target_controller' => $this->name,
-                'target_subject' => 'photo'
+                'target_subject' => $ctype['name']
             ), cmsRequest::CTX_INTERNAL));
 
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($photo['user_id'] != $this->cms_user->id);

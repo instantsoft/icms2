@@ -1,6 +1,8 @@
 <?php
 class widgetCommentsList extends cmsWidget {
 
+    public $is_cacheable = false;
+
     public function run(){
 
         $controller_options = cmsController::loadOptions('comments');
