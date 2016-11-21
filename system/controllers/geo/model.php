@@ -23,7 +23,7 @@ class modelGeo extends cmsModel {
             $this->filterEqual('country_id', $country_id);
         }
 
-        return $this->orderBy('name')->get('geo_regions', function($item){
+        return $this->orderBy('ordering, name')->get('geo_regions', function($item){
 
             return $item['name'];
 
@@ -39,7 +39,7 @@ class modelGeo extends cmsModel {
             $this->filterEqual('region_id', $region_id);
         }
 
-        return $this->orderBy('name')->get('geo_cities', function($item){
+        return $this->orderBy('ordering, name')->get('geo_cities', function($item){
 
             return $item['name'];
 
