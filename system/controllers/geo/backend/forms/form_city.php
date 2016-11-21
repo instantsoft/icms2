@@ -41,8 +41,12 @@ class formGeoCity extends cmsForm {
                             'show_symbol_count'=>true
                         ),
                         'rules' => array(array('required'))
-                    ))
+                    )),
 
+					new fieldString('ordering', array(
+                        'title' => LANG_GEO_POSITION,
+                        'rules' => array(array('number'),array('required'))
+                    ))
 				)
 			)
 		);
