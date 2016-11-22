@@ -229,7 +229,7 @@ class admin extends cmsFrontend {
                 }
                 if(!empty($manifest['contents']['system']['config'])){
                     foreach ($manifest['contents']['system']['config'] as $file) {
-                        if(file_exists($this->cms_config->root_path . 'system/config/'.$file)){
+                        if(file_exists($this->cms_config->root_path . 'config/'.$file)){
                             $manifest['notice_system_files'] = LANG_INSTALL_NOTICE_SYSTEM_FILE;
                             break;
                         }

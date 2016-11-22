@@ -116,7 +116,7 @@ class cmsCore {
      */
     public static function getVersionArray(){
 
-        $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+        $file = cmsConfig::get('root_path') . 'config/version.ini';
 
         if (!is_readable($file)){ die('version.ini not found'); }
 

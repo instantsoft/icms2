@@ -26,7 +26,7 @@ class cmsConfig {
 
         self::$mapping = array();
 
-        $map_file = 'system/config/remap.php';
+        $map_file = 'config/remap.php';
         $map_function = 'remap_controllers';
 
         if (!cmsCore::includeFile($map_file)) { return false; }
@@ -144,7 +144,7 @@ class cmsConfig {
 
     public function load($cfg_file='config.php'){
 
-        $cfg_file = PATH . '/system/config/' . $cfg_file;
+        $cfg_file = PATH . '/config/' . $cfg_file;
 
         if(!is_readable($cfg_file)){
             return false;
@@ -175,7 +175,7 @@ class cmsConfig {
 
         $dump .= "\n);\n";
 
-        $file = self::get('root_path').'system/config/' . $cfg_file;
+        $file = self::get('root_path').'config/' . $cfg_file;
 
         $success = false;
 

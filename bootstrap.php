@@ -8,7 +8,7 @@
     mb_internal_encoding('UTF-8');
 
 	// Подключаем автозагрузчик классов
-	require_once PATH . '/system/config/autoload.php';
+	require_once PATH . '/config/autoload.php';
 
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
