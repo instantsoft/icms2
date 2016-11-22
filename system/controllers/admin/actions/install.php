@@ -57,10 +57,7 @@ class actionAdminInstall extends cmsAction {
 
             $package_v = $manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build'];
 
-            $upd = (int)str_pad(str_replace('.', '', $package_v), 6, '0');
-            $inst = (int)str_pad(str_replace('.', '', $manifest['package']['installed_version']), 6, '0');
-
-            if($upd < $inst){
+            if(version_compare($package_v, $manifest['package']['installed_version']) == -1){
 
                 files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
@@ -70,7 +67,7 @@ class actionAdminInstall extends cmsAction {
 
             }
 
-            if($upd == $inst){
+            if(version_compare($package_v, $manifest['package']['installed_version']) == 0){
 
                 files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
@@ -132,18 +129,12 @@ class actionAdminInstall extends cmsAction {
 
         if (isset($manifest['depends']['core'])){
 
-            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['core']), 6, '0');
-            $has = (int)str_pad(str_replace('.', '', cmsCore::getVersion()), 6, '0');
-
-            $results['core'] = ($need <= $has) ? true : false;
+            $results['core'] = (version_compare(cmsCore::getVersion(), $manifest['depends']['core']) >= 0) ? true : false;
 
         }
         if (isset($manifest['depends']['package']) && isset($manifest['package']['installed_version'])){
 
-            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['package']), 6, '0');
-            $has = (int)str_pad(str_replace('.', '', (string)$manifest['package']['installed_version']), 6, '0');
-
-            $results['package'] = ($need <= $has) ? true : false;
+            $results['package'] = (version_compare((string)$manifest['package']['installed_version'], $manifest['depends']['package']) >= 0) ? true : false;
 
         }
         if (isset($manifest['depends']['dependent_type']) && isset($manifest['depends']['dependent_name'])){
@@ -157,10 +148,7 @@ class actionAdminInstall extends cmsAction {
 
             if($valid && isset($manifest['depends']['dependent_version'])){
 
-                $need = (int)str_pad(str_replace('.', '', $manifest['depends']['dependent_version']), 6, '0');
-                $has = (int)str_pad(str_replace('.', '', (string)$installed_version), 6, '0');
-
-                $results['dependent_version'] = ($need <= $has) ? true : false;
+                $results['dependent_version'] = (version_compare((string)$installed_version, $manifest['depends']['dependent_version']) >= 0) ? true : false;
 
             }
 
