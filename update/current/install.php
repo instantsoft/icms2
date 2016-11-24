@@ -7,6 +7,16 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'description')){
+            $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `description` TEXT NULL DEFAULT NULL");
+        }
+
+	}
+
     return true;
 
 }

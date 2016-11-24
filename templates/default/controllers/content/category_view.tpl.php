@@ -126,6 +126,10 @@
     <?php } ?>
 <?php } ?>
 
+<?php if (!empty($category['description'])){?>
+    <div class="category_description"><?php echo $category['description']; ?></div>
+<?php } ?>
+
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon">

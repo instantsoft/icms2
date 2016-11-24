@@ -412,6 +412,7 @@
     define('LANG_CONTENT', 					 'Содержимое');
     define('LANG_CATEGORY',                  'Категория');
     define('LANG_CATEGORY_TITLE',            'Название категории');
+    define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');

@@ -28,6 +28,13 @@ h1 + .content_datasets {
 
 /* ========================================================================== */
 
+.category_description {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+/* ========================================================================== */
+
 .content_categories + .filter-panel {
     margin-top: -21px;
 }
