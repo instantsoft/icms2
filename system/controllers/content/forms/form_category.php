@@ -46,9 +46,12 @@ class formContentCategory extends cmsForm {
                         }
                     )),
 
+                    new fieldHtml('description', array(
+                        'title' => LANG_CATEGORY_DESCRIPTION
+                    )),
+
                 )
             )
-
 
         );
 
