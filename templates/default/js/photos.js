@@ -144,7 +144,7 @@ icms.photos = (function ($) {
         def.done(function(){
             $(selector).owlCarousel({
                 items:3,
-                loop:false,
+                loop:true,
                 margin:10,
                 autoWidth:true,
                 nav:true,
