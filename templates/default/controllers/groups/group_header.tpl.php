@@ -3,7 +3,7 @@
     $user = cmsUser::getInstance();
 
     if(!isset($content_counts)) {
-        $content_counts = $this->controller->model->getGroupContentCounts($group['id']);
+        $content_counts = $this->controller->getGroupContentCounts($group);
     }
 
     $group['content_count'] = 0;

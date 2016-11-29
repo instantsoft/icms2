@@ -722,6 +722,7 @@ class cmsDatabase {
                   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                   `parent_id` int(11) UNSIGNED DEFAULT NULL,
                   `title` varchar(200) NULL DEFAULT NULL,
+                  `description` text NULL DEFAULT NULL,
                   `slug` varchar(255) NULL DEFAULT NULL,
                   `slug_key` varchar(255) NULL DEFAULT NULL,
                   `seo_keys` varchar(256) DEFAULT NULL,

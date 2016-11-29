@@ -411,6 +411,7 @@
     define('LANG_CONTENT', 					 'Contents');
     define('LANG_CATEGORY',                  'Category');
     define('LANG_CATEGORY_TITLE',            'Category title');
+    define('LANG_CATEGORY_DESCRIPTION',      'Category description');
     define('LANG_FOLDER',                    'Folder');
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');

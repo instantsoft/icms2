@@ -7,6 +7,24 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        if($ctype['name'] == 'video' && cmsCore::isControllerExists('video')){
+            if(isFieldExists("{$content_model->table_prefix}video_cats", 'desc') &&
+                    !isFieldExists("{$content_model->table_prefix}video_cats", 'description')){
+                $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}video_cats` CHANGE `desc` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
+            }
+            continue;
+        }
+
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'description')){
+            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `description` TEXT NULL DEFAULT NULL");
+        }
+
+	}
+
     return true;
 
 }
