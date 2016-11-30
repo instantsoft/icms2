@@ -18,11 +18,6 @@ class admin extends cmsFrontend {
 
         parent::before($action_name);
 
-        // если для админки свой шаблон
-        if($this->cms_config->template_admin){
-            $this->cms_template->setName($this->cms_config->template_admin);
-        }
-
         $this->cms_template->setLayout('admin');
 
         $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());

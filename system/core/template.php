@@ -6,9 +6,11 @@ class cmsTemplate {
 
     public $name;
     public $path;
-    protected $layout;
+    protected $inherit_names = array();
+    protected $layout = 'main';
     protected $output;
     protected $options;
+    protected $site_config;
 
 	protected $head = array();
 	protected $head_main_css = array();
@@ -35,6 +37,10 @@ class cmsTemplate {
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self;
+            // подключаем хелпер основного шаблона
+            if(!cmsCore::includeFile('templates/'.self::$instance->getName().'/assets/helper.php')){
+                cmsCore::loadLib('template.helper');
+            }
         }
         return self::$instance;
     }
@@ -44,7 +50,7 @@ class cmsTemplate {
 
 	public function __construct($name=''){
 
-		$config = cmsConfig::getInstance();
+		$this->site_config = cmsConfig::getInstance();
 
         if($name){
 
@@ -53,31 +59,37 @@ class cmsTemplate {
         } else {
 
             $device_type = cmsRequest::getDeviceType();
-            $template = $config->template;
+            $template = $this->site_config->template;
 
+            // шаблон в зависимости от девайса
             if($device_type !== 'desktop'){
                 $device_template = cmsConfig::get('template_'.$device_type);
                 if($device_template){
                     $template = $device_template;
                 }
             }
+            // шаблон админки, можем определить только тут
+            $controller = cmsCore::getInstance()->uri_controller;
+            if($controller === 'admin' && $this->site_config->template_admin){
+                $template = $this->site_config->template_admin;
+            }
 
             $this->setName($template);
 
         }
 
-        $this->setLayout('main');
+        $this->options = $this->getOptions();
 
-		$this->title = $config->sitename;
+        $this->setInheritNames($this->getInheritTemplates());
 
-		$is_no_def_meta = isset($config->is_no_meta) ? $config->is_no_meta : false;
+		$this->title = $this->site_config->sitename;
+
+		$is_no_def_meta = isset($this->site_config->is_no_meta) ? $this->site_config->is_no_meta : false;
 
 		if (!$is_no_def_meta){
-			$this->metakeys = $config->metakeys;
-			$this->metadesc = $config->metadesc;
+			$this->metakeys = $this->site_config->metakeys;
+			$this->metadesc = $this->site_config->metadesc;
 		}
-
-        $this->options = $this->getOptions();
 
 	}
 
@@ -131,7 +143,7 @@ class cmsTemplate {
      */
     public function printJavascriptTags() {
 
-        if (!cmsConfig::get('merge_js')){
+        if (!$this->site_config->merge_js){
             foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
             foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
         } else {
@@ -147,7 +159,7 @@ class cmsTemplate {
      */
     public function printCssTags() {
 
-        if (!cmsConfig::get('merge_css')){
+        if (!$this->site_config->merge_css){
             foreach ($this->head_main_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
             foreach ($this->head_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
         } else {
@@ -169,7 +181,7 @@ class cmsTemplate {
 	 * Выводит название сайта
 	 */
 	public function sitename(){
-		echo htmlspecialchars(cmsConfig::get('sitename'));
+		echo htmlspecialchars($this->site_config->sitename);
 	}
 
     /**
@@ -256,8 +268,6 @@ class cmsTemplate {
      */
     public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template = 'menu'){
 
-        $config = cmsConfig::getInstance();
-
         if (!isset($this->menus[$menu_name])) {
 
             $menu = $this->loadMenus($menu_name);
@@ -307,7 +317,7 @@ class cmsTemplate {
                 if (!isset($item['url'])) { continue; }
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : $item['url'];
-                $url = mb_substr($url, mb_strlen($config->root));
+                $url = mb_substr($url, mb_strlen($this->site_config->root));
                 if($href_lang){
                     $url = mb_substr($url, mb_strlen($href_lang));
                 }
@@ -452,11 +462,10 @@ class cmsTemplate {
 	 * @param string $pagetitle Заголовок
 	 */
 	public function setPageTitle($pagetitle){
-		$config = cmsConfig::getInstance();
         if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
         $this->title = $pagetitle;
-        if($config->is_sitename_in_title){
-            $this->title .= ' — '.$config->sitename;
+        if($this->site_config->is_sitename_in_title){
+            $this->title .= ' — '.$this->site_config->sitename;
         }
 	}
 
@@ -633,7 +642,7 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
     }
 
@@ -644,7 +653,7 @@ class cmsTemplate {
      * @return string
      */
     public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
     }
@@ -699,22 +708,36 @@ class cmsTemplate {
         return true;
 	}
 
-    public function addControllerJS($path, $cname = '', $comment='', $allow_merge = true){
-        if(!$cname){$cname = $this->controller->name;}
-        $path = "/controllers/{$cname}/js/{$path}.js";
-        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
-        return $this->addJS($path, $comment, $allow_merge);
+    public function addControllerJS($path, $cname = '', $comment = '', $allow_merge = true){
+
+        if(!$cname){ $cname = $this->controller->name; }
+
+        $js_file = $this->getTplFilePath("controllers/{$cname}/js/{$path}.js", false);
+
+        if($js_file){
+            return $this->addJS($path, $comment, $allow_merge);
+        }
+
+        return false;
+
     }
     public function addControllerCSS($path, $cname = '', $allow_merge = true){
-        if(!$cname){$cname = $this->controller->name;}
-        $path = "/controllers/{$cname}/css/{$path}.css";
-        $path = 'templates/'.(file_exists(cmsConfig::getInstance()->root_path.'templates/'.$this->name.$path) ? $this->name : 'default').$path;
-        return $this->addCSS($path, $allow_merge);
+
+        if(!$cname){ $cname = $this->controller->name; }
+
+        $css_file = $this->getTplFilePath("controllers/{$cname}/css/{$path}.css", false);
+
+        if($css_file){
+            return $this->addCSS($path, $allow_merge);
+        }
+
+        return false;
+
     }
 
 	public function insertJS($file, $comment=''){
 
-        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         // атрибут rel="forceLoad" добавлен для nyroModal
         echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
@@ -723,7 +746,7 @@ class cmsTemplate {
 
     public function insertCSS($file){
 
-        $file = (strpos($file, '://') !== false) ? $file : cmsConfig::get('root') . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
 		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
 
     }
@@ -800,13 +823,11 @@ class cmsTemplate {
      */
     public function getMergedJSPath(){
 
-        $config = cmsConfig::getInstance();
-
         $files = array_merge($this->head_main_js, $this->head_js);
 
         $cache_hash = md5(serialize($files));
         $cache_file = "cache/static/js/scripts.{$cache_hash}.js";
-        $cache_file_path = $config->root_path . $cache_file;
+        $cache_file_path = $this->site_config->root_path . $cache_file;
 
         if (file_exists($cache_file_path)) { return $cache_file; }
 
@@ -814,7 +835,7 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_js_no_merge)) { continue; }
-            $file_path = $config->root_path . $file;
+            $file_path = $this->site_config->root_path . $file;
             $contents = file_get_contents($file_path);
             $merged_contents .= $contents;
         }
@@ -835,13 +856,11 @@ class cmsTemplate {
      */
     public function getMergedCSSPath(){
 
-        $config = cmsConfig::getInstance();
-
         $files = array_merge($this->head_main_css, $this->head_css);
 
         $cache_hash = md5(serialize($files));
         $cache_file = "cache/static/css/styles.{$cache_hash}.css";
-        $cache_file_path = $config->root_path . $cache_file;
+        $cache_file_path = $this->site_config->root_path . $cache_file;
 
         if (file_exists($cache_file_path)) { return $cache_file; }
 
@@ -849,7 +868,7 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_css_no_merge)) { continue; }
-            $file_path = $config->root_path . $file;
+            $file_path = $this->site_config->root_path . $file;
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
             $contents = string_compress($contents);
@@ -877,9 +896,7 @@ class cmsTemplate {
 
         if ($matches){
 
-            $config = cmsConfig::getInstance();
-
-            $css_rel_url = $config->root . dirname($css_file);
+            $css_rel_url = $this->site_config->root . dirname($css_file);
 
             list($fulls, $urls) = $matches;
 
@@ -895,7 +912,7 @@ class cmsTemplate {
 
                 if ($is_root){
 
-                    $abs_url = $config->host . $abs_url;
+                    $abs_url = $this->site_config->host . $abs_url;
 
                 } else
 
@@ -905,7 +922,7 @@ class cmsTemplate {
 
                 } else {
 
-                    $abs_url = $config->host . '/' . files_normalize_path($css_rel_url . '/' . $abs_url);
+                    $abs_url = $this->site_config->host . '/' . files_normalize_path($css_rel_url . '/' . $abs_url);
 
                 }
 
@@ -946,11 +963,9 @@ class cmsTemplate {
      */
     public function getSchemeHTML($name=''){
 
-        $config = cmsConfig::getInstance();
-
         $name = $name ? $name : $this->name;
 
-        $scheme_file = $config->root_path . 'templates/'.$name.'/scheme.html';
+        $scheme_file = $this->site_config->root_path . 'templates/'.$name.'/scheme.html';
 
         if (!file_exists($scheme_file)) { return false; }
 
@@ -982,9 +997,60 @@ class cmsTemplate {
 
         $this->name = $name;
 
-        $this->path = cmsConfig::get('root_path').'templates/'.$this->name;
+        $this->path = $this->site_config->root_path.'templates/'.$this->name;
 
         return $this;
+
+    }
+
+    /**
+     * Устанавливает цепочку наследования шаблона
+     * @param array $names Массив названий шаблонов в приоритетном порядке от меньшего к большему
+     * @return \cmsTemplate
+     */
+    public function setInheritNames($names = array()) {
+
+        $this->inherit_names = array('default');
+
+        if($names){
+            foreach ($names as $name) {
+                $this->inherit_names[] = $name;
+            }
+        }
+
+        if($this->name !== 'default'){
+            $this->inherit_names[] = $this->name;
+        }
+
+        $this->inherit_names = array_reverse($this->inherit_names);
+
+        return $this;
+
+    }
+
+    /**
+     * Возвращает путь к файлу шаблона
+     * @param string $relative_path Путь относительно корня шаблона. Без первого слеша
+     * @param boolean $return_abs_path Возвращать полный путь в файловой системе, по умолчанию true
+     * @return string | boolean
+     */
+    public function getTplFilePath($relative_path, $return_abs_path = true) {
+
+        $exists = false;
+
+        foreach ($this->inherit_names as $name) {
+            $file = 'templates/'.$name.'/'.$relative_path;
+            if(is_readable($this->site_config->root_path.$file)){
+                if($return_abs_path){
+                    $exists = $this->site_config->root_path.$file;
+                } else {
+                    $exists = $file;
+                }
+                break;
+            }
+        }
+
+        return $exists;
 
     }
 
@@ -1018,19 +1084,15 @@ class cmsTemplate {
 
     /**
      * Возвращает путь к tpl-файлу, определяя его наличие в собственном шаблоне
-     * @param str $filename
+     * @param string $filename Путь относительно корня шаблона
+     * @param boolean $is_check Если true, то не выдаст фатальную ошибку в случае отсутствия файла
      * @return string
      */
-    public function getTemplateFileName($filename, $is_check=false){
+    public function getTemplateFileName($filename, $is_check = false){
 
-        $config = cmsConfig::getInstance();
+        $tpl_file = $this->getTplFilePath($filename.'.tpl.php');
 
-        $default    = $config->root_path . 'templates/default/'.$filename.'.tpl.php';
-        $tpl_file   = $config->root_path . 'templates/'.$this->name.'/'.$filename.'.tpl.php';
-
-        if (!file_exists($tpl_file)) { $tpl_file = $default; }
-
-        if (!is_readable($tpl_file)){
+        if (!$tpl_file){
             if (!$is_check){
                 cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
             } else {
@@ -1048,41 +1110,23 @@ class cmsTemplate {
      * @param string $subfolder Подпапка в папке шаблонов контроллера
      * @return string
      */
-    public function getStylesFileName($controller_name='', $subfolder='') {
-
-        $config = cmsConfig::getInstance();
+    public function getStylesFileName($controller_name = '', $subfolder = '') {
 
         if (!$controller_name) { $controller_name = $this->controller->name; }
-        $subfolder = $subfolder ? $subfolder.'/' : '';
+        if ($subfolder) { $subfolder = $subfolder.'/'; }
 
-        $default    = 'templates/default/controllers/'.$controller_name.'/'.$subfolder.'styles.css';
-        $tpl_file   = 'templates/'.$this->name.'/controllers/'.$controller_name.'/'.$subfolder.'styles.css';
-
-        if (!file_exists($config->root_path . $tpl_file)) { $tpl_file = $default; }
-
-        if (!file_exists($config->root_path . $tpl_file)){ return false; }
-
-        return $tpl_file;
+        return $this->getTplFilePath('controllers/'.$controller_name.'/'.$subfolder.'styles.css', false);
 
     }
 
     /**
      * Возвращает путь к CSS-файлу, определяя его наличие в собственном шаблоне
-     * @param str $filename
+     * @param string $filename
      * @return string
      */
     public function getJavascriptFileName($filename){
 
-        $config = cmsConfig::getInstance();
-
-        $default    = 'templates/default/js/'.$filename.'.js';
-        $js_file   = 'templates/'.$this->name.'/js/'.$filename.'.js';
-
-        if (!file_exists($config->root_path . $js_file)) { $js_file = $default; }
-
-        if (!file_exists($config->root_path . $js_file)){ return false; }
-
-        return $js_file;
+        return $this->getTplFilePath('js/'.$filename.'.js', false);
 
     }
 
@@ -1529,7 +1573,7 @@ class cmsTemplate {
 
             $style = !empty($ctype['options']['list_style']) ? '_'.$ctype['options']['list_style'] : '';
 
-            $tpl_file = $this->getTemplateFileName("content/default_list{$style}", true);
+            $tpl_file = $this->getTemplateFileName("content/default_list{$style}");
 
         }
 
@@ -1546,7 +1590,7 @@ class cmsTemplate {
 
         $tpl_file = $this->getTemplateFileName('content/'.$ctype_name.'_item', true);
 
-        if (!$tpl_file){ $tpl_file = $this->getTemplateFileName('content/default_item', true); }
+        if (!$tpl_file){ $tpl_file = $this->getTemplateFileName('content/default_item'); }
 
         if (!$request) { $request = $this->controller->request; }
 
@@ -1562,15 +1606,15 @@ class cmsTemplate {
      */
     public function renderPage(){
 
-        $config = cmsConfig::getInstance();
+        $config = $this->site_config;
 
         $layout = $this->getLayout();
 
-        $template_file = $this->path . '/' . $layout . '.tpl.php';
+        $template_file = $this->getTplFilePath($layout.'.tpl.php');
 
         $device_type = cmsRequest::getDeviceType();
 
-        if(is_readable($template_file)){
+        if($template_file){
 
             if (!$config->min_html){
                 include($template_file);
@@ -1625,6 +1669,13 @@ class cmsTemplate {
 //============================================================================//
 //============================================================================//
 
+    public function getInheritTemplates(){
+        if(file_exists($this->path . '/inherit.php')){
+            return include $this->path . '/inherit.php';
+        }
+        return array();
+    }
+
     public function hasOptions(){
         return file_exists($this->path . '/options.form.php');
     }
@@ -1670,11 +1721,7 @@ class cmsTemplate {
 
 		if (!$this->hasOptions()){ return false; }
 
-        $options = $this->loadOptions();
-
-        $form = $this->getOptionsForm();
-
-        return $form->parse(new cmsRequest($options));
+        return $this->loadOptions();
 
     }
 
@@ -1682,11 +1729,11 @@ class cmsTemplate {
 
         if (!$this->hasOptions()){ return false; }
 
-        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
+        $options_file = $this->site_config->root_path . "system/config/theme_{$this->name}.yml";
 
-        if (!file_exists($options_file)){ return array(); }
+        if (!is_readable($options_file)){ return array(); }
 
-        $options_yaml = @file_get_contents($options_file);
+        $options_yaml = file_get_contents($options_file);
 
         return cmsModel::yamlToArray($options_yaml);
 
@@ -1694,7 +1741,7 @@ class cmsTemplate {
 
     public function saveOptions($options){
 
-        $options_file = cmsConfig::get('root_path') . "system/config/theme_{$this->name}.yml";
+        $options_file = $this->site_config->root_path . "system/config/theme_{$this->name}.yml";
 
         if(file_exists($options_file)){
             if(!is_writable($options_file)){
@@ -1748,7 +1795,7 @@ class cmsTemplate {
 
         if (!$this->hasProfileThemesSupport()){ return false; }
 
-        $config = cmsConfig::getInstance();
+        $config = $this->site_config;
 
         $theme = $profile['theme'];
 
@@ -1774,8 +1821,5 @@ class cmsTemplate {
         return true;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }
