@@ -2,19 +2,23 @@
 
 class actionTagsSearch extends cmsAction {
 
-    public function run($ctype_name=false){
+    public function run($ctype_name=false) {
 
-        $query = $this->request->get('q', '');
+        $query = trim( $this->request->get('q'), ', ' );
         if (!$query) { cmsCore::error404(); }
 
-        $tag_id = $this->model->getTagId($query);
+        $tags = array_map(function($tag) {
+            return trim($tag);
+        }, explode(',', trim($query)) );
 
-        $targets = $tag_id ? $this->model->getTagTargets($tag_id) : false;
+        $tags_ids = $this->model->getTagsIDs($tags);
 
-        if (!$targets || !$tag_id) {
+        $targets = $tags_ids ? $this->model->getTagTargets($tags_ids) : false;
+
+        if (!$targets || !$tags_ids) {
             return $this->cms_template->render('search', array(
                 'is_results' => false,
-                'tag'        => $query
+                'tags'       => $query
             ));
         }
 
@@ -24,15 +28,15 @@ class actionTagsSearch extends cmsAction {
 
         $ctypes = $content_controller->model->getContentTypes();
 
-        foreach($ctypes as $id => $type){
-            if (!$ctype_name){
-                if (in_array($type['name'], $targets['content'])){
+        foreach ($ctypes as $id => $type) {
+            if (!$ctype_name) {
+                if (in_array($type['name'], $targets['content'])) {
                     $ctype_name = $type['name'];
                     $ctype = $type;
                     break;
                 }
             } else {
-                if ($ctype_name == $type['name']){
+                if ($ctype_name == $type['name']) {
                     $ctype = $type;
                     break;
                 }
@@ -41,19 +45,17 @@ class actionTagsSearch extends cmsAction {
 
         if (!$ctype) { cmsCore::error404(); }
 
-        $content_controller->model->
-                join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$ctype_name}' AND t.target_controller = 'content'")->
-                filterEqual('t.tag_id', $tag_id);
-
         $page_url = $is_first_tab ?
                         href_to($this->name, 'search') . "?q={$query}" :
                         href_to($this->name, 'search', array($ctype_name)) . "?q={$query}" ;
 
+        $content_controller->model->filterIn('i.id', $targets['content'][$ctype_name]);
+        
         $html = $content_controller->renderItemsList($ctype, $page_url);
 
         return $this->cms_template->render('search', array(
             'is_results' => true,
-            'tag'        => $query,
+            'tags'       => $query,
             'targets'    => $targets,
             'ctypes'     => $ctypes,
             'ctype'      => $ctype,
