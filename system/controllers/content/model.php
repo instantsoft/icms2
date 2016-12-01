@@ -1959,7 +1959,7 @@ class modelContent extends cmsModel{
 
             $count = $this->getContentItemsCount( $ctype['name'] );
 
-            if ($count) {
+            if ($count && $ctype['options']['profile_on']) {
 
                 $counts[ $ctype['name'] ] = array(
                     'count' => $count,
