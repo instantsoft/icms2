@@ -49,7 +49,7 @@ class actionTagsSearch extends cmsAction {
                         href_to($this->name, 'search') . "?q={$query}" :
                         href_to($this->name, 'search', array($ctype_name)) . "?q={$query}" ;
 
-        $html = $content_controller->renderItemsList($ctype, $page_url);
+        $html = $content_controller->renderItemsList($ctype, $page_url, true);
 
         return $this->cms_template->render('search', array(
             'is_results' => true,

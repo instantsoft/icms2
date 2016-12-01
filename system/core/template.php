@@ -1536,12 +1536,28 @@ class cmsTemplate {
      */
     public function getAvailableContentListStyles(){
 
-        $styles = array();
+        $styles = $files = array();
 
-        $files = cmsCore::getFilesList('templates/'.$this->name.'/content', 'default_list*.tpl.php', true);
-        $default_files = cmsCore::getFilesList('templates/default/content', 'default_list*.tpl.php', true);
+        $inherit_names = array('default');
+        if(file_exists($this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php')){
+            $names = include $this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php';
+            if($names){
+                foreach ($names as $name) {
+                    $inherit_names[] = $name;
+                }
+            }
+        }
+        if($this->site_config->template !== 'default'){
+            $inherit_names[] = $this->site_config->template;
+        }
+        $inherit_names = array_reverse($inherit_names);
 
-        $files = array_unique(array_merge($files, $default_files));
+        foreach ($inherit_names as $name) {
+            $_files = cmsCore::getFilesList('templates/'.$name.'/content', 'default_list*.tpl.php', true);
+            $files = array_merge($files, $_files);
+        }
+
+        $files = array_unique($files);
         if (!$files) { return $styles; }
 
         foreach($files as $file){
