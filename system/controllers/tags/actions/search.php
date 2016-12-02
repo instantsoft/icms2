@@ -2,10 +2,20 @@
 
 class actionTagsSearch extends cmsAction {
 
-    public function run($ctype_name=false){
+    public function run($ctype_name = false){
+
+        $content_controller = cmsCore::getController('content', $this->request);
+
+        $ctypes = $content_controller->model->getContentTypes();
 
         $query = $this->request->get('q', '');
-        if (!$query) { cmsCore::error404(); }
+        if (!$query) {
+            if($ctype_name && $content_controller->model->getContentTypeByName($ctype_name)){
+                $this->redirectTo($ctype_name);
+            } else {
+                cmsCore::error404();
+            }
+        }
 
         $tag_id = $this->model->getTagId($query);
 
@@ -17,12 +27,6 @@ class actionTagsSearch extends cmsAction {
                 'tag'        => $query
             ));
         }
-
-        $is_first_tab = !$ctype_name;
-
-        $content_controller = cmsCore::getController('content', $this->request);
-
-        $ctypes = $content_controller->model->getContentTypes();
 
         foreach($ctypes as $id => $type){
             if (!$ctype_name){
@@ -45,11 +49,18 @@ class actionTagsSearch extends cmsAction {
                 join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$ctype_name}' AND t.target_controller = 'content'")->
                 filterEqual('t.tag_id', $tag_id);
 
-        $page_url = $is_first_tab ?
-                        href_to($this->name, 'search') . "?q={$query}" :
-                        href_to($this->name, 'search', array($ctype_name)) . "?q={$query}" ;
+        $page_url = href_to($this->name, 'search', array($ctype_name));
 
-        $html = $content_controller->renderItemsList($ctype, $page_url, true);
+        $html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('q' => $query), false, array(
+            'q' => array(
+                'is_in_filter' => 1,
+                'is_system'    => 1,
+                'type'         => 'string',
+                'name'         => 'q',
+                'title'        => LANG_TAGS_TAG,
+                'handler'      => new fieldString('q'),
+            )
+        ));
 
         return $this->cms_template->render('search', array(
             'is_results' => true,

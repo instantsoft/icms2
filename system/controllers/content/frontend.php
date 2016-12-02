@@ -125,7 +125,7 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
+    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
 
@@ -158,6 +158,12 @@ class content extends cmsFrontend {
             }
 
 		}
+
+        if($ext_hidden_params){
+            foreach ($ext_hidden_params as $param_name => $param_field) {
+                $fields[$param_name] = $param_field;
+            }
+        }
 
 		// проверяем запросы фильтрации по свойствам
 		if (isset($props) && is_array($props)){
