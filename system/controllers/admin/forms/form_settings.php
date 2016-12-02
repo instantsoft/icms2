@@ -366,7 +366,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldText('allow_ips', array(
                         'title' => LANG_CP_SETTINGS_ALLOW_IPS,
-                        'hint'  => LANG_CP_SETTINGS_ALLOW_IPS_HINT
+                        'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp())
                     ))
 
                 )

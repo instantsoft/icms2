@@ -298,7 +298,7 @@
 
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
-    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified.');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to detect a visitor\'s IP');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'The $_SERVER array key that contains a real user IP address. Do not change this value if you are not sure. The default value fits most needs. For example, enter HTTP_CF_CONNECTING_IP (without quotes) for CloudFlare.');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');

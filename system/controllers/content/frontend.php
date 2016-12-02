@@ -442,7 +442,7 @@ class content extends cmsFrontend {
 
         }
 
-        return $form;
+        return cmsEventsManager::hook('content_cat_form', $form);
 
     }
 

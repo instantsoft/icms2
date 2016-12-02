@@ -91,6 +91,9 @@ article div.content_categories:last-child {
     float: right;
     margin-left: 15px;
 }
+.content_item .field.auto_field{
+    overflow: visible;
+}
 .content_item .field.none_field{
     float: none;
     clear: both;
@@ -467,6 +470,7 @@ article div.content_categories:last-child {
 .content_list.tiled .info_bar { font-size: 12px; color: #7f8c8d; opacity: 0; transition: all 0.5s ease; }
 .content_list.tiled .tile:hover .info_bar { opacity: 1; }
 .content_list.tiled .info_bar .bar_item { float:left; margin-right: 5px; height:18px; line-height: 18px; }
+.content_list.tiled .info_bar .bar_item:last-child { margin-right: 0; }
 .content_list.tiled .info_bar .bi_comments{
     padding-left:25px;
     background: url("../images/icons/comment-small.png") no-repeat 5px center;
@@ -493,7 +497,10 @@ article div.content_categories:last-child {
 .content_list.tiled .tags_bar a:hover {
     color:#d35400;
 }
-
+.content_list.tiled .info_bar .bi_date{
+    padding-left:25px;
+    background: url("../images/icons/clock-small.png") no-repeat 5px center;
+}
 /* ========================================================================== */
 
 .content_item { position: relative; }
