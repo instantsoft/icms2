@@ -828,7 +828,7 @@ class cmsCore {
 
         $matched_pages = array(0);
 
-        $_full_uri = $this->uri.($this->uri_query ? '?'.implode('&', $this->uri_query) : '');
+        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
         //
         // Перебираем все точки привязок и проверяем совпадение
