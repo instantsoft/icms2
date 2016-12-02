@@ -1956,6 +1956,10 @@ class modelContent extends cmsModel{
             if(is_callable($access_callback) && !$access_callback($ctype)){
                 continue;
             }
+		
+	    if(!$ctype['options']['profile_on']){
+                continue;
+            }
 
             $count = $this->getContentItemsCount( $ctype['name'] );
 

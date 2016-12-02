@@ -65,7 +65,7 @@ class actionUsersProfileContent extends cmsAction {
             $page_url = href_to('users', $profile['id'], array('content', $ctype_name));
         }
 
-        $list_html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('user_id' => $profile['id']));
+        $list_html = $content_controller->renderItemsList($ctype, $page_url, true, 0, array('user_id' => $profile['id']));
 
         return $this->cms_template->render('profile_content', array(
             'user'      => $this->cms_user,
