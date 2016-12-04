@@ -60,6 +60,25 @@ class widgetContentList extends cmsWidget {
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
         $model->filterHiddenParents();
 
+        if($this->getOption('widget_type') == 'related'){
+            // мы на странице записи типа контента?
+            $current_ctype_item = cmsModel::getCachedResult('current_ctype_item');
+            if($current_ctype_item){
+
+                $this->disableCache();
+
+                $model->filterRelated('title', $current_ctype_item['title']);
+
+                if($current_ctype_item['ctype_name'] == $ctype['name']){
+                    $model->filterNotEqual('id', $current_ctype_item['id']);
+                }
+
+
+            } else {
+                return false;
+            }
+        }
+
 		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 
