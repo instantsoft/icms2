@@ -785,7 +785,7 @@ class content extends cmsFrontend {
 			}
 		}
 
-        return $form;
+        return cmsEventsManager::hook('content_item_form', $form);
 
     }
 
