@@ -716,7 +716,7 @@ class cmsTemplate {
         $js_file = $this->getTplFilePath("controllers/{$cname}/js/{$path}.js", false);
 
         if($js_file){
-            return $this->addJS($path, $comment, $allow_merge);
+            return $this->addJS($js_file, $comment, $allow_merge);
         }
 
         return false;
@@ -729,7 +729,7 @@ class cmsTemplate {
         $css_file = $this->getTplFilePath("controllers/{$cname}/css/{$path}.css", false);
 
         if($css_file){
-            return $this->addCSS($path, $allow_merge);
+            return $this->addCSS($css_file, $allow_merge);
         }
 
         return false;
