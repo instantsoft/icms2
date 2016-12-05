@@ -1121,7 +1121,7 @@ class cmsTemplate {
     }
 
     /**
-     * Возвращает путь к CSS-файлу, определяя его наличие в собственном шаблоне
+     * Возвращает путь к JavaScript-файлу, определяя его наличие в собственном шаблоне
      * @param string $filename
      * @return string
      */
@@ -1737,6 +1737,8 @@ class cmsTemplate {
     public function getOptions(){
 
 		if (!$this->hasOptions()){ return false; }
+
+        cmsCore::loadTemplateLanguage($this->name);
 
         return $this->loadOptions();
 
