@@ -1,5 +1,5 @@
 <?php
-$this->addCSS('templates/default/controllers/photos/styles.css');
+$this->addCSS($this->getStylesFileName('photos'));
 
 if( $ctype['options']['list_show_filter'] ) {
     $this->renderAsset('ui/filter-panel', array(
@@ -9,6 +9,7 @@ if( $ctype['options']['list_show_filter'] ) {
         'props_fields' => $props_fields,
         'props'        => $props,
         'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
         'is_expanded'  => $ctype['options']['list_expand_filter']
     ));
 }

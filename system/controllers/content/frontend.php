@@ -159,12 +159,6 @@ class content extends cmsFrontend {
 
 		}
 
-        if($ext_hidden_params){
-            foreach ($ext_hidden_params as $param_name => $param_field) {
-                $fields[$param_name] = $param_field;
-            }
-        }
-
 		// проверяем запросы фильтрации по свойствам
 		if (isset($props) && is_array($props)){
 			foreach($props as $prop){
@@ -255,6 +249,7 @@ class content extends cmsFrontend {
             'props'             => $props,
             'props_fields'      => $props_fields,
             'filters'           => $filters,
+            'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
             'perpage'           => $perpage,
             'total'             => $total,
