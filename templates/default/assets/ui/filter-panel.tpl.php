@@ -14,6 +14,7 @@
             <?php if(!empty($ext_hidden_params)){ ?>
                 <?php foreach($ext_hidden_params as $fname => $fvalue){ ?>
                     <?php echo html_input('hidden', $fname, $fvalue); ?>
+                    <?php if($filters){ $filters[$fname] = $fvalue; } ?>
                 <?php } ?>
             <?php } ?>
             <div class="fields">
