@@ -76,10 +76,10 @@ class fieldNumber extends cmsFormField {
         } elseif(!empty($value['from']) || !empty($value['to'])) {
 
             if (!empty($value['from'])){
-                $model->filterGtEqual($this->name, $value['from']);
+                $model->filterGtEqual($this->name.'+0', $value['from']);
             }
             if (!empty($value['to'])){
-                $model->filterLtEqual($this->name, $value['to']);
+                $model->filterLtEqual($this->name.'+0', $value['to']);
             }
 
             return $model;

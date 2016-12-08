@@ -46,11 +46,26 @@ class actionContentItemEdit extends cmsAction {
         }
 
         // Получаем поля для данного типа контента
-        $this->model->orderBy('ordering');
-        $fields = $this->model->getContentFields($ctype['name'], $id);
+        $fields = $this->model->orderBy('ordering')->getContentFields($ctype['name'], $id);
+
+        // Если этот контент можно создавать в группах (сообществах) то получаем список групп
+        $groups_list = array();
+
+        if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
+
+            $groups_model = cmsCore::getModel('groups');
+            $groups = $groups_model->getUserGroups($this->cms_user->id);
+
+            if ($groups){
+                $groups_list = ($ctype['is_in_groups_only']) ? array() : array('0'=>'');
+                $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
+            }
+
+        }
 
         // Строим форму
         $form = $this->getItemForm($ctype, $fields, 'edit', array(
+            'groups_list' => $groups_list,
             'folders_list' => $folders_list
         ), $id, $item);
 
@@ -112,6 +127,21 @@ class actionContentItemEdit extends cmsAction {
 
                 unset($item['ctype_name']);
                 unset($item['ctype_id']);
+
+                if (isset($item['parent_id']) && $groups_list){
+                    if (array_key_exists($item['parent_id'], $groups_list) && $item['parent_id'] > 0){
+                        $group = $groups_model->getGroup($item['parent_id']);
+                        $item['parent_type']      = 'group';
+                        $item['parent_title']     = $groups_list[$item['parent_id']];
+                        $item['parent_url']       = href_to_rel('groups', $item['parent_id'], array('content', $ctype['name']));
+                        $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
+                    } else {
+                        $item['parent_id']    = null;
+                        $item['parent_type']  = null;
+                        $item['parent_title'] = null;
+                        $item['parent_url']   = null;
+                    }
+                }
 
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;
@@ -189,15 +219,6 @@ class actionContentItemEdit extends cmsAction {
                     cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
                 } else {
                     $this->requestModeration($ctype['name'], $item, false);
-                }
-
-                // обновляем приватность комментариев
-                if (isset($item['is_private'])){
-                    cmsCore::getModel('comments')->
-                                filterEqual('target_controller', $this->name)->
-                                filterEqual('target_subject', $ctype['name'])->
-                                filterEqual('target_id', $item['id'])->
-                                updateCommentsPrivacy($item['is_private'] || $item['is_parent_hidden']);
                 }
 
                 $back_url = $this->request->get('back', '');

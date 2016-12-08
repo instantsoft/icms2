@@ -1,15 +1,18 @@
 <?php
-    if( $ctype['options']['list_show_filter'] ) {
-        $this->renderAsset('ui/filter-panel', array(
-            'css_prefix'   => $ctype['name'],
-            'page_url'     => $page_url,
-            'fields'       => $fields,
-            'props_fields' => $props_fields,
-            'props'        => $props,
-            'filters'      => $filters,
-            'is_expanded'  => $ctype['options']['list_expand_filter']
-        ));
-    }
+$this->addCSS($this->getStylesFileName('photos'));
+
+if( $ctype['options']['list_show_filter'] ) {
+    $this->renderAsset('ui/filter-panel', array(
+        'css_prefix'   => $ctype['name'],
+        'page_url'     => $page_url,
+        'fields'       => $fields,
+        'props_fields' => $props_fields,
+        'props'        => $props,
+        'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
+        'is_expanded'  => $ctype['options']['list_expand_filter']
+    ));
+}
 ?>
 
 <?php if ($items){ ?>
@@ -26,26 +29,58 @@
                 $stop = 0;
             ?>
 
-            <div class="tile <?php echo $ctype['name']; ?>_list_item">
+            <div class="tile content_list_item <?php echo $ctype['name']; ?>_list_item">
 
                 <div class="photo">
                     <div class="note">
                         <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?>
-						<?php if ($item['is_public']) { ?>
+						<?php if ($item['is_public'] && !empty($fields['is_public']['is_in_list'])) { ?>
 							/ <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
 						<?php } ?>
                     </div>
                     <?php if ($is_private) { ?>
-                        <?php echo html_image(default_images('private', 'normal'), 'normal', $item['title']); ?>
+                        <?php echo html_image(default_images('private', $ctype['photos_options']['preset_small']), $ctype['photos_options']['preset_small'], $item['title']); ?>
                     <?php } else { ?>
-                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">
-                            <?php if (!empty($item['cover_image'])){ ?>
-                                <?php echo html_image($item['cover_image'], 'normal', $item['title']); ?>
+                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>" <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>style="background-image: url(<?php echo html_image_src($item['cover_image'], $ctype['photos_options']['preset_small'], true); ?>);"<?php } ?>>
+                            <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>
+                                <?php echo html_image($item['cover_image'], $ctype['photos_options']['preset_small'], $item['title']); ?>
                                 <?php unset($item['cover_image']); ?>
                             <?php } ?>
+                            <div class="photos_album_title_wrap">
+                                <?php if (!empty($fields['title']['is_in_list'])) { ?>
+                                    <div class="clear">
+                                        <div class="photos_album_title">
+                                            <?php if ($item['parent_id']){ ?>
+                                                <?php echo htmlspecialchars($item['parent_title']); ?> &rarr;
+                                            <?php } ?>
+
+                                            <?php if ($is_private) { ?>
+                                                <?php html($item['title']); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                            <?php } else { ?>
+                                                <?php html($item['title']); ?>
+                                                <?php if ($item['is_private']) { ?>
+                                                    <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                                <?php if ($item['content'] && !empty($fields['content']['is_in_list'])) { ?>
+                                    <div class="photos_album_description_wrap">
+                                        <div class="photos_album_description">
+                                            <?php if (!$fields['content']['groups_read'] || $user->isInGroups($fields['content']['groups_read'])) { ?>
+                                                <?php if ($is_private) { $stop++; ?>
+                                                <?php } else { ?>
+                                                     <?php echo $fields['content']['handler']->setItem($item)->parseTeaser($item['content']); ?>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
                         </a>
                     <?php } ?>
-                    <?php unset($item['cover_image']); ?>
+                    <?php unset($item['cover_image'], $item['content'], $item['is_public']); ?>
                 </div>
 
                 <div class="fields">
@@ -53,9 +88,9 @@
                 <?php foreach($fields as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if ($field['is_system'] || !$field['is_in_list']) { continue; } ?>
+                    <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']]) || $field['name'] == 'title') { continue; } ?>
                     <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                    <?php if (empty($item[$field['name']]) && $item[$field['name']] !== '0') { continue; } ?>
+                    <?php if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; } ?>
 
                     <?php
                         if (!isset($field['options']['label_in_list'])) {
@@ -72,30 +107,10 @@
                         <?php } ?>
 
                         <div class="value">
-                            <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
-
-                                <?php if ($item['parent_id']){ ?>
-                                    <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
-                                    &rarr;
-                                <?php } ?>
-
-                                <?php if ($is_private) { ?>
-                                    <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-                                <?php } else { ?>
-                                    <a class="title" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
-                                    <?php if ($item['is_private']) { ?>
-                                        <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-                                    <?php } ?>
-                                <?php } ?>
-
+                            <?php if ($is_private) { $stop++; ?>
+                                 <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
                             <?php } else { ?>
-
-                               <?php if ($is_private) { $stop++; ?>
-                                    <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
-                               <?php } else { ?>
-                                    <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
-                               <?php } ?>
-
+                                 <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
                             <?php } ?>
                         </div>
 
@@ -145,6 +160,11 @@
                                         <?php echo intval($item['comments']); ?>
                                     </a>
                                 <?php } ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                            <div class="bar_item bi_date" title="<?php echo $fields['date_pub']['title']; ?>">
+                                <?php echo $fields['date_pub']['handler']->parse($item['date_pub']); ?>
                             </div>
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>

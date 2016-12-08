@@ -12,13 +12,27 @@ class onGroupsContentViewHidden extends cmsAction {
 
         if (!$item['parent_type'] == 'group') { return $data; }
 
-        $user = cmsUser::getInstance();
+        if (!$this->cms_user->is_logged){ $data['viewable'] = false; return $data; }
 
-        if (!$user->is_logged){ $data['viewable'] = false; return $data; }
+        $membership = $this->model->getMembership($item['parent_id'], $this->cms_user->id) || $this->cms_user->is_admin || $is_moderator;
 
-        $membership = $this->model->getMembership($item['parent_id'], $user->id) || $user->is_admin || $is_moderator;
+        if ($membership === false){
 
-        if ($membership === false){ $data['viewable'] = false; return $data; }
+            $group = $this->model->getGroup($item['parent_id']);
+
+            if($group){
+
+                $data['access_text'] = sprintf(LANG_GROUPS_CTYPE_ACCESS, href_to('groups', $group['id']), $group['title']);
+
+                $data['access_redirect_url'] = href_to('groups', $group['id']);
+
+                $data['viewable'] = false;
+
+                return $data;
+
+            }
+
+        }
 
         return $data;
 

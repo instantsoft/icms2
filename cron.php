@@ -10,6 +10,9 @@
     // Инициализация
     require_once "bootstrap.php";
 
+    // Подключаем шаблонизатор, чтобы был подключен хелпер с функциями
+    cmsTemplate::getInstance();
+
     // Подключение модели
     $model = cmsCore::getModel('admin');
 

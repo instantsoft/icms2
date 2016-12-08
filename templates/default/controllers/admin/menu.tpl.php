@@ -1,5 +1,4 @@
 <?php
-    $this->addJS('templates/default/js/jquery-ui.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addCSS('templates/default/css/datatree.css');
@@ -37,7 +36,7 @@
 
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => LANG_SAVE_ORDER,
         'href'  => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('menu', array('items_reorder'))}')"
     ));

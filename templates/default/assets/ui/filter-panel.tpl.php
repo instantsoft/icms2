@@ -11,6 +11,12 @@
         </div>
         <form action="<?php echo $form_url; ?>" method="get">
             <?php echo html_input('hidden', 'page', 1); ?>
+            <?php if(!empty($ext_hidden_params)){ ?>
+                <?php foreach($ext_hidden_params as $fname => $fvalue){ ?>
+                    <?php echo html_input('hidden', $fname, $fvalue); ?>
+                    <?php if($filters){ $filters[$fname] = $fvalue; } ?>
+                <?php } ?>
+            <?php } ?>
             <div class="fields">
                 <?php $fields_count = 0; ?>
                 <?php foreach($fields as $name => $field){ ?>
@@ -52,7 +58,7 @@
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
                         <div class="link">
-                            <a href="<?php echo $form_url; ?>"><?php echo LANG_CANCEL; ?></a>
+                            <a href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>"><?php echo LANG_CANCEL; ?></a>
                         </div>
                         <div class="link">
                             # <a href="<?php echo $form_url.$form_url_sep.http_build_query($filters); ?>"><?php echo LANG_FILTER_URL; ?></a>

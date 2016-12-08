@@ -12,6 +12,16 @@ class modelComments extends cmsModel {
 
     }
 
+    public function approveComment($id){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->update('comments', $id, array(
+            'is_approved' => 1
+        ));
+
+    }
+
     public function updateCommentContent($id, $content, $content_html){
 
         cmsCache::getInstance()->clean('comments.list');
@@ -28,6 +38,17 @@ class modelComments extends cmsModel {
         cmsCache::getInstance()->clean('comments.list');
 
         return $this->updateFiltered('comments', array('is_private' => $is_private));
+
+    }
+
+    public function updateCommentsUrl($target_url, $target_title){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->updateFiltered('comments', array(
+            'target_url' => $target_url,
+            'target_title' => $target_title
+        ));
 
     }
 
@@ -454,6 +475,36 @@ class modelComments extends cmsModel {
                     getFieldFiltered('comments', 'date_pub');
 
         return strtotime($time);
+
+    }
+
+    public function getCommentsModerators() {
+
+        // сначала ищем юзеров, которым разрешено модерировать
+        $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
+        if(!$moderators){
+
+            // не нашли модераторов, получаем администраторов
+            $moderators = $this->filterEqual('is_admin', 1)->
+                selectList(array(
+                    'i.id'             => 'id',
+                    'i.notify_options' => 'notify_options',
+                    'i.email'          => 'email',
+                    'i.nickname'       => 'nickname',
+                    'i.avatar'         => 'avatar'
+                ), true)->
+                get('{users}', function($item, $model){
+
+                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
+                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
+
+                    return $item;
+
+                });
+
+        }
+
+        return $moderators;
 
     }
 

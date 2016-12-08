@@ -450,7 +450,7 @@ class cmsController {
 
         $class_name = 'on' . string_to_camel('_', $this->name) . string_to_camel('_', $event_name);
 
-        if (!class_exists($class_name)){
+        if (!class_exists($class_name, false)){
 
             $hook_file = $this->root_path . 'hooks/' . $event_name . '.php';
 
@@ -476,9 +476,13 @@ class cmsController {
     public function getForm($form_name, $params=false, $path_prefix=''){
 
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
-        $form_name = $this->name . $form_name;
+        $_form_name = $this->name . $form_name;
 
-        return cmsForm::getForm($form_file, $form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params);
+
+        list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));
+
+        return $form;
 
     }
 

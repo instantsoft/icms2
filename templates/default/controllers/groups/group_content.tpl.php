@@ -8,7 +8,7 @@
     $this->addBreadcrumb($group['title'], $this->href_to($group['id']));
     $this->addBreadcrumb($list_header);
 
-    $content_counts = $this->controller->model->getGroupContentCounts($group['id']);
+    $content_counts = $this->controller->getGroupContentCounts($group);
 
     $content_menu = array();
 

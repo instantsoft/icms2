@@ -23,6 +23,11 @@ class formCommentsOptions extends cmsForm {
                         'hint' => LANG_COMMENTS_OPT_IS_GUESTS_HINT,
                     )),
 
+                    new fieldCheckbox('is_guests_moderate', array(
+                        'title' => LANG_COMMENTS_OPT_IS_GUESTS_MODERATE,
+                        'default' => 1
+                    )),
+
                     new fieldNumber('guest_ip_delay', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_DELAY,
                         'units' => LANG_MINUTE10,
@@ -40,6 +45,12 @@ class formCommentsOptions extends cmsForm {
 					new fieldCheckbox('update_user_rating', array(
                         'title' => LANG_COMMENTS_UPDATE_USER_RATING,
                         'hint' => LANG_COMMENTS_UPDATE_USER_RATING_HINT,
+                    )),
+
+                    new fieldNumber('limit_nesting', array(
+                        'title'   => LANG_COMMENTS_LIMIT_NESTING,
+                        'default' => 5,
+                        'rules'   => array(array('required'))
                     )),
 
                     new fieldNumber('limit', array(

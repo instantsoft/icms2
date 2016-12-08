@@ -2,12 +2,23 @@
 
     $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-    $this->setPageTitle($list_header, $profile['nickname']);
-    $this->setPageDescription($profile['nickname'].' — '.$list_header);
-
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
-    $this->addBreadcrumb($list_header);
+    $this->addBreadcrumb($list_header, href_to('users', $profile['id'], array('content', $ctype['name'])));
+
+    if ($folders && $folder_id && isset($folders[$folder_id])){
+
+        $this->addBreadcrumb($folders[$folder_id]['title']);
+
+        $this->setPageTitle($list_header, $folders[$folder_id]['title'], $profile['nickname']);
+        $this->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$folder_id]['title']);
+
+    } else {
+
+        $this->setPageTitle($list_header, $profile['nickname']);
+        $this->setPageDescription($profile['nickname'].' — '.$list_header);
+
+    }
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
@@ -78,7 +89,7 @@
                                 $this->href_to($profile['id'], array('content', $ctype['name']));
                 ?>
                 <li <?php if ($is_selected){ ?>class="active"<?php } ?>>
-                    <?php if ($is_selected){ ?>
+                    <?php if ($is_selected){ $current_folder = $folder; ?>
                         <div><?php echo $folder['title']; ?></div>
                     <?php } else { ?>
                         <a href="<?php echo $url; ?>"><?php echo $folder['title']; ?></a>
@@ -92,3 +103,10 @@
 <div id="user_content_list">
     <?php echo $html; ?>
 </div>
+
+<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('user_view', $ctype, $profile, (!empty($current_folder) ? $current_folder : array()))); ?>
+<?php if ($hooks_html) { ?>
+    <div class="sub_items_list">
+        <?php echo html_each($hooks_html); ?>
+    </div>
+<?php } ?>

@@ -5,6 +5,7 @@ class cmsCore {
     private static $instance;
 
 	public $uri            = '';
+	public $uri_before_remap = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
     public $uri_controller_before_remap = '';
@@ -57,7 +58,7 @@ class cmsCore {
 
         self::$language = $config->language;
 
-        if(!empty($_SERVER['REQUEST_URI'])){
+        if(!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)){
 
             $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
 
@@ -260,7 +261,7 @@ class cmsCore {
 
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
-        if (!class_exists($model_class)) {
+        if (!class_exists($model_class, false)) {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
@@ -302,7 +303,7 @@ class cmsCore {
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
-        if (!class_exists($controller_name)) {
+        if (!class_exists($controller_name, false)) {
             include_once($ctrl_file);
         }
 
@@ -312,7 +313,7 @@ class cmsCore {
             $controller_class = $controller_name;
         } else {
             $controller_class = $controller_name . '_custom';
-            if (!class_exists($controller_class)){
+            if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
         }
@@ -651,7 +652,7 @@ class cmsCore {
 
         }
 
-        $this->uri = $uri;
+        $this->uri = $this->uri_before_remap = $uri;
         $this->uri_absolute = $config->root . $uri;
 
         // разбиваем URL на сегменты
@@ -691,11 +692,10 @@ class cmsCore {
         if ($remap_to) {
             // в uri также меняем
             if($this->uri){
-                $original_uri = $this->uri;
                 $seg = explode('/', $this->uri);
                 $seg[0] = $remap_to;
                 $this->uri = implode('/', $seg);
-                $this->uri_absolute = str_replace($original_uri, $this->uri, $this->uri_absolute);
+                $this->uri_absolute = str_replace($this->uri_before_remap, $this->uri, $this->uri_absolute);
             }
             $this->uri_controller_before_remap = $this->uri_controller;
             $this->uri_controller = $remap_to;
@@ -828,6 +828,8 @@ class cmsCore {
 
         $matched_pages = array(0);
 
+        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
+
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
@@ -842,14 +844,14 @@ class cmsCore {
             foreach($page['url_mask'] as $mask){
                 $regular = string_mask_to_regular($mask);
                 $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                $is_mask_match = $is_mask_match || preg_match($regular, $_full_uri);
             }
 
             if (!empty($page['url_mask_not'])) {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 

@@ -83,7 +83,7 @@
                 <?php } ?>
                 <?php foreach($item['fields'] as $field=>$value){ ?>
                     <?php if (!$value) { continue; } ?>
-                    <div class="field search_field_<?php echo $field; ?>"><?php echo string_short($value, 280); ?></div>
+                    <div class="field search_field_<?php echo $field; ?>"><?php echo ((mb_strlen($value) > 280) ? string_short($value, 280) : $value); ?></div>
                 <?php } ?>
                 <div class="info"><span class="date"><?php echo html_date_time($item['date_pub']); ?></span></div>
             </div>

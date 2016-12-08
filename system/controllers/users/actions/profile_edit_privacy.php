@@ -59,6 +59,8 @@ class actionUsersProfileEditPrivacy extends cmsAction {
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUserPrivacyOptions($profile['id'], $options);
 
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                 $this->redirectTo('users', $profile['id']);
 
             }

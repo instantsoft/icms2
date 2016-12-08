@@ -23,13 +23,18 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input').on('input', function () {
-            $('.datagrid .filter .input').each(function(){
+        $('.datagrid .filter .input, .datagrid .filter .date-input').on('input', function () {
+            $('.datagrid .filter .input, .datagrid .filter .date-input').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name='+filter+']').val($(this).val());
             });
             icms.datagrid.setPage(1);
             icms.datagrid.loadRows();
+        });
+        $('.datagrid .filter .date-input').each(function(){
+            icms.events.on('icms_datepicker_selected_'+$(this).attr('id'), function(inst){
+                $('#'+$(inst).attr('id')).trigger('input');
+            });
         });
     };
 
@@ -389,7 +394,7 @@ icms.datagrid = (function ($) {
 
         icms.datagrid.options.pages_count = result.pages_count;
 
-		$('.datagrid .flag_trigger a').on('click', function(){
+		$('.datagrid .flag_trigger > a').on('click', function(){
 
 			var url = $(this).attr('href');
 			var link = $(this);

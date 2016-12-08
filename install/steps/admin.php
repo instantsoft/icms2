@@ -68,6 +68,8 @@ function create_admin($nickname, $email, $password){
 
     $mysqli = @new mysqli($db['host'], $db['user'], $db['pass'], $db['base']);
 
+    $mysqli->set_charset('utf8');
+
     $password_salt = md5(implode(':', array($password, session_id(), time(), rand(0, 10000))));
     $password_salt = substr($password_salt, rand(1,8), 16);
     $password_hash = md5(md5($password) . $password_salt);

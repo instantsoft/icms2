@@ -4,8 +4,6 @@
     $this->addJS('templates/default/js/admin-dashboard.js');
     $this->addJS('templates/default/js/col-auto-height.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
 ?>
 <h1><?php echo LANG_ADMIN_CONTROLLER; ?></h1>
 

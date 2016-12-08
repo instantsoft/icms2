@@ -6,7 +6,7 @@ class fieldCaption extends cmsFormField {
     public $is_public   = false;
     public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
-    public $allow_index = false;
+    public $allow_index = true;
     public $var_type    = 'string';
 
     public function getOptions(){

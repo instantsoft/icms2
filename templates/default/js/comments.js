@@ -236,6 +236,12 @@ icms.comments = (function ($) {
             return;
         }
 
+		if (result.on_moderate){
+            this.error(result.message);
+            this.restoreForm();
+            return;
+		}
+
 		if (result.html){
 			this.append(result);
 		}
@@ -251,13 +257,15 @@ icms.comments = (function ($) {
 
         if (result == null || typeof(result) == 'undefined' || result.error){
             this.error(result.message);
-            return;
+            return false;
         }
 
 		$('#comments_list #comment_'+result.id+' .text').html( result.html );
 
         this.restoreForm();
         this.show(result.id);
+
+        return true;
 
     };
 
@@ -287,7 +295,7 @@ icms.comments = (function ($) {
         $.post(url, {id: id}, function(result){
 
             if (result == null || typeof(result) == 'undefined' || result.error){
-                this.error(result.message);
+                icms.comments.error(result.message);
                 return;
             }
 
@@ -303,6 +311,27 @@ icms.comments = (function ($) {
     };
 
     //=====================================================================//
+
+    this.approve = function (id){
+
+        $.post($('#comments_urls').data('approve-url'), {id: id}, function(result){
+
+            if (result == null || typeof(result) == 'undefined' || result.error){
+                icms.comments.error(result.message);
+                return false;
+            }
+
+            $('#comments_list #comment_'+result.id+' .text').html(result.html);
+
+            icms.comments.show(result.id);
+
+            $('#comment_'+result.id+' .hide_approved').hide();
+            $('#comment_'+result.id+' .no_approved').fadeIn();
+
+        }, 'json');
+
+        return false;
+    };
 
     this.remove = function (id){
         var c = $('#comments_list #comment_'+id);
@@ -438,7 +467,7 @@ icms.comments = (function ($) {
     //=====================================================================//
 
     this.error = function(message){
-        alert(message);
+        icms.modal.alert(message);
         this.restoreForm(false);
     };
 

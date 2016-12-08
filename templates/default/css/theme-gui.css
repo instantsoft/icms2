@@ -773,7 +773,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 .symbols_count .symbols_num:hover {
     opacity: 0.8;
 }
-.symbols_count .overflowing {
+.symbols_count .overflowing, .symbols_count .overflowing_min {
     background-color: #e74c3c;
     color: #FFF;
     border-color: #c0392b;
@@ -817,7 +817,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 
 /* Ajax Uploader ============================================================ */
 
-.qq-uploader { position:relative; width: 100%;}
+.qq-uploader { position:relative; width: 100%; box-sizing: border-box; height: 100%;}
 
 .qq-upload-button {
 	-moz-box-shadow:inset 0px 1px 0px 0px #FFF;
@@ -857,20 +857,30 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 
 .qq-upload-drop-area {
-    position:absolute; top:0; left:0; width:100%; height:100%; min-height: 70px; z-index:2;
-    background:#B2F44A; text-align:center;
+    position:absolute; top:0; left:0; width:100%; height:100%; min-height: 45px; z-index:2;
+    background:#2ecc71; text-align:center; color: #FFF; display: block;
 }
 .qq-upload-drop-area span {
-    display:block; position:absolute; top: 50%; width:100%; margin-top:-8px; font-size:16px;
+    display:block; position:absolute; top: 50%; width:100%; margin-top:-8px; font-size:14px;
 }
-.qq-upload-drop-area-active {background:#FF7171;}
+.upload .qq-upload-drop-area span {
+    top: 12px;
+    font-size: 12px;
+}
+.qq-upload-drop-area-active {background:#3498db;}
 
-.qq-upload-list {margin:15px 35px; padding:0; list-style:disc;}
-.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px;}
+.qq-upload-list { margin:15px 0 0 0; padding:0; }
+.qq-upload-list li {
+    margin: 10px 0 0 0;
+    padding: 0;
+    line-height: 15px;
+    font-size: 13px;
+    list-style: none;
+}
 .qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
     margin-right: 7px;
 }
-
+.qq-upload-list:empty { display: none; }
 .qq-upload-file {}
 .qq-upload-spinner {display:inline-block; background: url("../images/loading.gif"); width:15px; height:15px; vertical-align:text-bottom;}
 .qq-upload-size,.qq-upload-cancel {font-size:11px;}
@@ -895,6 +905,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 .rating_widget .score.loading > *{
     display: none;
+}
+.rating_widget .score.loading {
+    padding-left: 16px;
 }
 
 .rating_widget .arrow span,
@@ -1055,7 +1068,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_widget #comments_refresh_panel a:hover{
     background-color: #e1ebef;
 }
-
+.no_approved { display: none; }
 #comments_list .comment{
     overflow: hidden;
     border-radius:2px;
@@ -1105,7 +1118,6 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #comments_list .comment .info .rating .buttons{
     float:right;
     margin-left:5px;
-    padding-top:2px;
 }
 
 #comments_list .comment .info .rating a {
@@ -1434,6 +1446,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     min-height: 120px;
     box-sizing: border-box;
     width: 960px;
+    max-width: 100%;
 }
 #pm_window .notice{
     margin: 25px 0;
@@ -1495,8 +1508,10 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 #pm_window .contacts .contact img, #pm_contact .overview a img {
     border-radius: 50%;
+	display:block;
 }
-.peer_online:after {
+.peer_online:after,
+.peer_no_online:after {
     bottom: 0;
     right: 0;
     border: 2px solid #fff;
@@ -1504,8 +1519,13 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     width: 8px;
     content: '';
     position: absolute;
-    background-color: #8ac176;
     border-radius: 50%;
+}
+.peer_online:after {
+    background-color: #8ac176;
+}
+.peer_no_online:after {
+    background-color: #d35400;
 }
 #pm_window .contacts .contact a:hover{
     background:#95a5a6;
@@ -1544,6 +1564,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     padding:9px;
     box-sizing: border-box;
     border-bottom: 1px solid #DDD;
+	height:50px;
 }
 #user_search_panel {
     padding: 10px;
@@ -1567,11 +1588,12 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     color: #AAA;
 }
 #pm_contact .overview a {
-    overflow:hidden;
-    padding:5px;
-    color:#000;
-    border-left:none;
-    border-right: none;
+    border-left: medium none;
+    border-right: medium none;
+    color: #000;
+    float: left;
+	line-height: 32px;
+    overflow: hidden;
 }
 #pm_contact .overview a span, #pm_contact  #contact_toggle {
     float:left;
@@ -1581,9 +1603,15 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     overflow: hidden;
     position: relative;
 }
+#pm_contact  #contact_toggle {
+    width:32px;
+}
 #pm_contact .actions {
     float:right;
     line-height: 28px;
+}
+#pm_contact .toogle-actions{
+	display:none;
 }
 #pm_contact .composer {
     padding:10px;
@@ -1932,6 +1960,10 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     width: 32px !important;
     height: 32px !important;
 }
+.modal_image {
+    position: relative;
+    display: block;
+}
 .background_overlay {
     position: absolute;
     background: #000;
@@ -1939,6 +1971,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     height: 100%;
     opacity: 0;
     transition: all 0.3s;
+    content: '';
+    top: 0;
+    left: 0;
 }
 .gif_image:hover .background_overlay {
     opacity: 0.5;
@@ -2018,14 +2053,39 @@ table.data_list .empty{
 table.data_list .actions{
     width: 70px;
 }
+@media screen and (max-height: 900px) {
+    .layout {
+        height: 595px;
+    }
+}
+@media screen and (max-height: 640px) {
+    .layout {
+        height: 595px;
+    }
+}
 @media screen and (max-height: 600px) {
     .layout {
-        height:510px;
+        height: 545px;
     }
 }
 @media screen and (max-height: 480px) {
     .layout {
-        height:390px;
+        height:435px;
+    }
+}
+@media screen and (max-height: 360px) {
+    .layout {
+        height: 315px;
+    }
+}
+@media screen and (max-height: 335px) {
+    .layout {
+        height: 290px;
+    }
+}
+@media screen and (max-height: 320px) {
+    .layout {
+        height: 275px;
     }
 }
 @media screen and (max-width: 800px) {
@@ -2036,22 +2096,67 @@ table.data_list .actions{
         display: block;
     }
     #pm_window .right-panel{
-        width:100%;
+        width: 100%;
         left: -700px;
         display: none;
     }
     #pm_window .left-panel{
-        width:100%;
+        width: 100%;
         padding-left: 0;
     }
 }
 @media screen and (max-width: 640px) {
-    #pm_window {
-        width: 530px;
+    #comments_widget #comments_refresh_panel { display: none; }
+	#pm_contact .overview{
+		position:relative;
+		padding:9px 0 9px 5px;
+	}
+	#pm_contact .actions {
+		float: none;
+		line-height: 50px;
+		background-color :#fff;
+		display: none;
+		position:absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		padding: 0 0 0 10px;
+		box-sizing: border-box;
+	}
+	#pm_contact .actions.actions-active {
+		display: block;
+	}
+	#pm_contact .toogle-actions{
+		display: block;
+		position: absolute;
+		right: 9px;
+		top: 50%;
+		width: 30px;
+		height: 30px;
+		margin-top: -15px;
+		opacity: .7;
+		background: #7f8c8d url("../images/icons32/menu-icon.svg") no-repeat center center;
+		cursor: pointer;
+        border-radius: 2px;
+	}
+	#pm_contact .toogle-actions.toogle-actions-active{
+		opacity: 1;
+		background-color: #d35400;
+	}
+	#pm_contact .overview .user_date_log{
+		display: none!important;
+	}
+	.nyroModalMessage input.button-small {
+		padding: 4px 7px;
+		font-size:12px;
     }
 }
-@media screen and (max-width: 480px) {
-    #pm_window {
-        width: 370px;
+@media screen and (max-width: 335px) {
+	#pm_window  #pm_contact .markItUpHeader ul a{
+		width:14px!important;
+		height:14px!important;
+	}
+	#pm_contact .chat{
+		height:calc(100% - 214px);
     }
 }

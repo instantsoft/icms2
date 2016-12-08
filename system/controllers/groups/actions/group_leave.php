@@ -11,6 +11,8 @@ class actionGroupsGroupLeave extends cmsAction {
 
         if ($is_member && !$is_owner){
 
+            $group = cmsEventsManager::hook('group_before_leave', $group);
+
             $this->model->deleteMembership($group['id'], $this->cms_user->id);
 
             cmsCore::getController('activity')->addEntry($this->name, 'leave', array(

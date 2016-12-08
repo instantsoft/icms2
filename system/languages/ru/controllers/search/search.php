@@ -4,6 +4,7 @@
     define('LANG_SEARCH_TITLE',             'Поиск');
     define('LANG_SEARCH_ON',                'Поиск на %s');
     define('LANG_SEARCH_IN_CTYPES',         'Искать по контенту');
+    define('LANG_SEARCH_IS_HASH_TAG',       'Включить поддержку хештегов');
     define('LANG_SEARCH_PERPAGE',           'Результатов на странице');
     define('LANG_SEARCH_QUERY_INPUT',        'Что ищем?');
     define('LANG_SEARCH_GO',                 'Найти');

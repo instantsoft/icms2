@@ -12,6 +12,7 @@
 		if (!empty($ctype['seo_title'])){ $seo_title = $ctype['seo_title']; }
 		if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
 		if (!$seo_title) { $seo_title = $page_header; }
+        if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
         $this->setPageTitle($seo_title);
     }
 
@@ -126,6 +127,10 @@
     <?php } ?>
 <?php } ?>
 
+<?php if (!empty($category['description'])){?>
+    <div class="category_description"><?php echo $category['description']; ?></div>
+<?php } ?>
+
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon">
@@ -139,3 +144,10 @@
 <?php } ?>
 
 <?php echo $items_list_html; ?>
+
+<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset)); ?>
+<?php if ($hooks_html) { ?>
+    <div class="sub_items_list">
+        <?php echo html_each($hooks_html); ?>
+    </div>
+<?php } ?>

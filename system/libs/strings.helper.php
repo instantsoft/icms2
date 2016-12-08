@@ -73,11 +73,11 @@ function string_lang($constant, $default=false){
  * @return string
  */
 function string_mask_to_regular($mask){
-    $regular = trim($mask);
-    $regular = str_replace('/', '\/', $regular);
-    $regular = str_replace('*', '(.*)', $regular);
-    $regular = str_replace('%', '([0-9]+)', $regular);
-    return $regular;
+    return str_replace(array(
+        '%','/','*','?'
+    ), array(
+        '([0-9]+)','\/','(.*)','\?'
+    ), trim($mask));
 }
 
 /**

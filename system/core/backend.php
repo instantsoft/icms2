@@ -2,7 +2,11 @@
 
 class cmsBackend extends cmsController {
 
-    function __construct($request){
+    private $h1 = '';
+
+    public $maintained_ctype = false;
+
+    public function __construct($request){
 
         $this->name = str_replace('backend', '', strtolower(get_called_class()));
 
@@ -12,10 +16,26 @@ class cmsBackend extends cmsController {
 
     }
 
+    public function setH1($title) {
+
+        if (is_array($title)){ $title = implode(' -> ', $title); }
+
+        $this->h1 = ' -> '.$title;
+
+    }
+
+    public function getH1() {
+        return $this->h1;
+    }
+
 //============================================================================//
 //============================================================================//
 
     public function getBackendMenu(){
+        return array();
+    }
+
+    public function getOptionsToolbar(){
         return array();
     }
 
@@ -98,8 +118,6 @@ class cmsBackend extends cmsController {
         $form = $this->getForm('options');
         if (!$form) { cmsCore::error404(); }
 
-        $form = cmsEventsManager::hook("form_options_{$this->name}", $form);
-
         $form = $this->addControllerSeoOptions($form);
 
         $options = cmsController::loadOptions($this->name);
@@ -130,6 +148,7 @@ class cmsBackend extends cmsController {
         }
 
         $template_params = array(
+            'toolbar' => $this->getOptionsToolbar(),
             'options' => $options,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false

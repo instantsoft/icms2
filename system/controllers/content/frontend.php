@@ -125,7 +125,7 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
+    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
 
@@ -249,6 +249,7 @@ class content extends cmsFrontend {
             'props'             => $props,
             'props_fields'      => $props_fields,
             'filters'           => $filters,
+            'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
             'perpage'           => $perpage,
             'total'             => $total,
@@ -315,6 +316,10 @@ class content extends cmsFrontend {
             'url_mask_not' => array(
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
+                "{$ctype['name']}/addcat",
+                "{$ctype['name']}/addcat/%",
+                "{$ctype['name']}/editcat/%",
                 "{$ctype['name']}/edit/*",
             )
         ));
@@ -332,6 +337,7 @@ class content extends cmsFrontend {
             'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
             'url_mask' => array(
                 "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
                 "{$ctype['name']}/edit/*"
             )
         ));
@@ -437,7 +443,7 @@ class content extends cmsFrontend {
 
         }
 
-        return $form;
+        return cmsEventsManager::hook('content_cat_form', $form);
 
     }
 
@@ -552,7 +558,7 @@ class content extends cmsFrontend {
 
         // Если этот контент можно создавать в группах (сообществах) то добавляем
         // поле выбора группы
-        if ($action == 'add' && $groups_list && $groups_list != array('0'=>'')){
+        if (($action == 'add' || $this->cms_user->is_admin) && !empty($groups_list) && $groups_list != array('0'=>'')){
 
             $fieldset_id = $form->addFieldset(LANG_GROUP);
             $form->addField($fieldset_id,
@@ -774,7 +780,7 @@ class content extends cmsFrontend {
 			}
 		}
 
-        return $form;
+        return cmsEventsManager::hook('content_item_form', $form);
 
     }
 

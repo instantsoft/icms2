@@ -5,15 +5,19 @@ class actionCommentsCommentsList extends cmsAction {
 
         $grid = $this->loadDataGrid('comments_list');
 
+        $filter     = array();
+        $filter_str = $this->request->get('filter', '');
+
+        if ($filter_str){
+            parse_str($filter_str, $filter);
+            $grid['filter'] = $filter;
+        }
+
         if ($this->request->isAjax()) {
 
             $this->model->setPerPage(admin::perpage);
 
-            $filter     = array();
-            $filter_str = $this->request->get('filter', '');
-
             if ($filter_str){
-                parse_str($filter_str, $filter);
                 $this->model->applyGridFilter($grid, $filter);
             }
 

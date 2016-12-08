@@ -3,7 +3,7 @@
     $user = cmsUser::getInstance();
 
     if(!isset($content_counts)) {
-        $content_counts = $this->controller->model->getGroupContentCounts($group['id']);
+        $content_counts = $this->controller->getGroupContentCounts($group);
     }
 
     $group['content_count'] = 0;
@@ -63,7 +63,7 @@
     if (cmsUser::isAllowed('groups', 'delete', 'all') || (cmsUser::isAllowed('groups', 'delete', 'own') && $is_owner)){
         $this->addToolButton(array(
             'title' => LANG_GROUPS_DELETE,
-            'class' => 'delete',
+            'class' => 'delete ajax-modal',
             'href' => $this->href_to($group['id'], 'delete')
         ));
     }

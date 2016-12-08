@@ -8,7 +8,7 @@ class onPhotosContentAlbumsBeforeList extends cmsAction {
 
         if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-            cmsTemplate::getInstance()->addToolButton(array(
+            $this->cms_template->addToolButton(array(
                 'class' => 'images',
                 'title' => LANG_PHOTOS_UPLOAD,
                 'href'  => href_to($this->name, 'upload')
@@ -16,7 +16,9 @@ class onPhotosContentAlbumsBeforeList extends cmsAction {
 
         }
 
-        return $data;
+        $ctype['photos_options'] = $this->options;
+
+        return array($ctype, $items);
 
     }
 
