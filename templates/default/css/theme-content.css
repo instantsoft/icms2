@@ -119,6 +119,23 @@ article div.content_categories:last-child {
 
 /* ========================================================================== */
 
+.content_item .fields_group:first-child .group_title {
+    margin-top: 0;
+}
+
+.content_item .fields_group {
+    overflow: hidden;
+    clear: both;
+}
+.content_item .fields_group .field {
+    margin: 0 0 5px 15px;
+}
+.content_item .fields_group + .field {
+    padding: 15px 0 0;
+}
+
+/* ========================================================================== */
+
 .content_item .ft_text {
     clear:both;
 }
