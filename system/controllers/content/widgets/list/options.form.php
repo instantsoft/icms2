@@ -38,6 +38,15 @@ class formWidgetContentListOptions extends cmsForm {
                 'title' => LANG_OPTIONS,
                 'childs' => array(
 
+                    new fieldList('options:widget_type', array(
+                        'title' => LANG_WD_CONTENT_WIDGET_TYPE,
+                        'default' => 'list',
+                        'items' => array(
+                            'list'    => LANG_WD_CONTENT_WIDGET_TYPE1,
+                            'related' => LANG_WD_CONTENT_WIDGET_TYPE2
+                        )
+                    )),
+
                     new fieldList('options:ctype_id', array(
                         'title' => LANG_CONTENT_TYPE,
                         'generator' => function($item) {

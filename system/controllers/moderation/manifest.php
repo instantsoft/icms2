@@ -3,7 +3,8 @@
     return array(
 
         'hooks' => array(
-            'menu_moderation',
+            'admin_dashboard_block',
+            'menu_moderation'
         )
 
     );

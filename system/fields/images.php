@@ -9,35 +9,51 @@ class fieldImages extends cmsFormField {
 
     public function getOptions(){
 
-		$presets = cmsCore::getModel('images')->getPresetsList();
-		$presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-
         return array(
             new fieldList('size_teaser', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_TEASER,
                 'default' => 'small',
-                'items' => $presets
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
             )),
             new fieldList('size_full', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_FULL,
                 'default' => 'big',
-                'items' => $presets
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
             )),
             new fieldList('size_small', array(
                 'title'   => LANG_PARSER_SMALL_IMAGE_PRESET,
                 'default' => 'small',
-                'items'   => $presets
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
             )),
             new fieldListMultiple('sizes', array(
                 'title' => LANG_PARSER_IMAGE_SIZE_UPLOAD,
                 'default' => 0,
-                'items' => $presets
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
             )),
             new fieldCheckbox('first_image_emphasize', array(
                 'title' => LANG_PARSER_FIRST_IMAGE_EMPHASIZE
+            )),
+            new fieldNumber('max_photos', array(
+                'title' => LANG_PARSER_IMAGE_MAX_COUNT
             ))
         );
 
@@ -83,17 +99,14 @@ class fieldImages extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-		$config = cmsConfig::getInstance();
-
 		if (!is_array($old_value)){
 			$old_value = cmsModel::yamlToArray($old_value);
 		}
 
-        foreach($old_value as $image){
-            if (!is_array($value) || !in_array($image, $value)){
-                foreach($image as $size => $image_url){
-                    $image_path = $config->upload_path . $image_url;
-                    @unlink($image_path);
+        foreach($old_value as $old_image){
+            if (!is_array($value) || !in_array($old_image, $value)){
+                foreach($old_image as $size => $image_rel_path){
+                    $this->deleteImage($image_rel_path);
                 }
             }
         }
@@ -102,20 +115,37 @@ class fieldImages extends cmsFormField {
 
         if (is_array($value)){
             $result = array();
-            foreach ($value as $idx=>$paths){ $result[] = $paths; }
+            foreach ($value as $paths){ $result[] = $paths; }
         }
 
+        if (empty($result)) { return $result; }
+
         $sizes = $this->getOption('sizes');
+        if (empty($sizes)) {
+            $this->delete($result); return $result;
+        }
 
-        if (empty($sizes) || empty($result)) { return $result; }
-
-        foreach($result as $image){
-            foreach($image as $size => $image_url){
+        foreach($result as $key => $image){
+            foreach($image as $size => $image_rel_path){
+                // удаляем ненужные пресеты, если умельцы правили параметры вручную
                 if (!in_array($size, $sizes)){
-                    $image_path = $config->upload_path . $image_url;
-                    @unlink($image_path);
+                    $this->deleteImage($image_rel_path); unset($image[$size]);
                 }
             }
+            $result[$key] = $image;
+        }
+
+        // удаляем, если вдруг каким-то образом загрузили больше
+        // js тоже регулирует этот параметр
+        if(!empty($this->options['max_photos']) && count($result) > $this->options['max_photos']){
+
+            $chunks = array_chunk($result, $this->options['max_photos'], true);
+            $result = $chunks[0]; unset($chunks[0]);
+
+            foreach ($chunks as $chunk) {
+                $this->delete($chunk);
+            }
+
         }
 
         return $result;
@@ -128,17 +158,18 @@ class fieldImages extends cmsFormField {
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
-        $config = cmsConfig::getInstance();
-
         foreach($value as $images){
-            foreach($images as $image_url){
-                $image_path = $config->upload_path . $image_url;
-                @unlink($image_path);
+            foreach($images as $image_rel_path){
+                $this->deleteImage($image_rel_path);
             }
         }
 
         return true;
 
+    }
+
+    private function deleteImage($image_rel_path) {
+        @unlink(cmsConfig::get('upload_path').$image_rel_path);
     }
 
     public function getFilterInput($value=false) {
@@ -161,6 +192,7 @@ class fieldImages extends cmsFormField {
 
         $this->data['sizes'] = $this->getOption('sizes');
         $this->data['allow_import_link'] = $this->getOption('allow_import_link');
+        $this->data['max_photos'] = $this->getOption('max_photos');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

@@ -163,7 +163,7 @@ class cmsConfig {
 
             if (in_array($key, $this->dynamic)){ continue; }
 
-            $value = "'{$value}'";
+            $value = var_export($value, true);
 
             $tabs = 7 - ceil((mb_strlen($key)+3)/4);
 
@@ -181,7 +181,7 @@ class cmsConfig {
 
         if(is_writable($file)){
             $success = file_put_contents($file, $dump);
-            if (function_exists('opcache_invalidate')) { opcache_invalidate($file, true); }
+            if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
         }
 
         return $success;

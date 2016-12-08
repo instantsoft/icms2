@@ -5,7 +5,9 @@
     define('LANG_IMAGES_PRESET', 'Название пресета');
     define('LANG_IMAGES_PRESET_SIZE', 'Размеры');
     define('LANG_IMAGES_PRESET_SIZE_W', 'Ширина');
+    define('LANG_IMAGES_PRESET_SIZE_W_HINT', 'Не указано - определится пропорционально высоте');
     define('LANG_IMAGES_PRESET_SIZE_H', 'Высота');
+    define('LANG_IMAGES_PRESET_SIZE_H_HINT', 'Не указано - определится пропорционально ширине');
     define('LANG_IMAGES_PRESET_SQUARE', 'Квадратный');
     define('LANG_IMAGES_PRESET_QUALITY', 'Качество');
     define('LANG_IMAGES_PRESET_WM', 'Водяной знак');

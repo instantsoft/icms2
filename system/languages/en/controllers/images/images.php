@@ -5,7 +5,9 @@
     define('LANG_IMAGES_PRESET', 'Preset title');
     define('LANG_IMAGES_PRESET_SIZE', 'Size');
     define('LANG_IMAGES_PRESET_SIZE_W', 'Width');
+    define('LANG_IMAGES_PRESET_SIZE_W_HINT', 'Not set - fit to height');
     define('LANG_IMAGES_PRESET_SIZE_H', 'Height');
+    define('LANG_IMAGES_PRESET_SIZE_H_HINT', 'Not set - fit to width');
     define('LANG_IMAGES_PRESET_SQUARE', 'Square');
     define('LANG_IMAGES_PRESET_QUALITY', 'Quality');
     define('LANG_IMAGES_PRESET_WM', 'Watermark');

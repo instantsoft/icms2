@@ -76,6 +76,10 @@ class cmsUser {
 
         }
 
+        if(!$this->id){
+            $this->id = cmsEventsManager::hook('user_auto_login', 0);
+        }
+
         self::deleteOldSessions($this->id);
 
         //
@@ -135,7 +139,7 @@ class cmsUser {
         // восстанавливаем те поля, которые не должны
         // изменяться в течении сессии
         $this->date_log  = self::sessionGet('user:date_log');
-        $this->perms     = self::getPermissions($user['groups'], $user['id']);
+        $this->perms     = self::getPermissions($user['groups']);
         $this->is_logged = true;
 
         return cmsEventsManager::hook('user_loaded', $user);
@@ -179,7 +183,7 @@ class cmsUser {
             'id'        => $user['id'],
             'groups'    => $user['groups'],
             'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups'], $user['id']),
+            'perms'     => self::getPermissions($user['groups']),
             'is_admin'  => $user['is_admin']
         ));
 
@@ -219,7 +223,7 @@ class cmsUser {
             'id'        => $user['id'],
             'groups'    => $user['groups'],
             'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups'], $user['id']),
+            'perms'     => self::getPermissions($user['groups']),
             'is_admin'  => $user['is_admin']
         ));
 
@@ -429,9 +433,10 @@ class cmsUser {
      * @param int $time Время жизни, в секундах
      * @param string $path Путь на сервере
      * @param bool $http_only Куки недоступны для скриптов
+     * @param string $domain Домен действия. null - только текущий
      * */
-    public static function setCookie($key, $value, $time=3600, $path='/', $http_only=true){
-        setcookie('icms['.$key.']', $value, time()+$time, $path, null, false, $http_only);
+    public static function setCookie($key, $value, $time=3600, $path='/', $http_only=true, $domain = null){
+        setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
         return;
     }
 
@@ -553,11 +558,9 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function getPermissions($groups, $user_id){
+    public static function getPermissions($groups){
 
-        $perms = cmsPermissions::getUserPermissions($groups);
-
-        return $perms;
+        return cmsPermissions::getUserPermissions($groups);
 
     }
 

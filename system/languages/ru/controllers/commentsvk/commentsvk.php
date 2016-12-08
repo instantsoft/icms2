@@ -7,7 +7,6 @@ define('LANG_COM_VK_API_ID_HINT',  'Создайте <a target="_blank" href="ht
 define('LANG_COM_VK_AUTOPUBLISH',  'Автоматическая публикация комментария на странице');
 define('LANG_COM_VK_NOREALTIME',  'Не обновлять ленту комментариев в режиме реального времени');
 define('LANG_COM_VK_MINI',  'Минималистичный вид блока');
-define('LANG_COM_VK_AUTO',  'Авто');
 define('LANG_COM_VK_ATTACH',  'Возможные типы вложений');
 define('LANG_COM_VK_GRAFFITI',  'Графити');
 define('LANG_COM_VK_VIDEO',  'Видео');

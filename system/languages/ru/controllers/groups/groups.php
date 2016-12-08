@@ -6,7 +6,7 @@
     define('LANG_GROUPS_ADD',               'Создать группу');
     define('LANG_GROUPS_EDIT',              'Настройки группы');
     define('LANG_GROUPS_DELETE',            'Удалить группу');
-    define('LANG_GROUPS_DELETE_CONFIRM',    'Вы уверены что хотите удалить группу %s?');
+    define('LANG_GROUPS_DELETE_CONFIRM',    'Удалить группу %s?');
     define('LANG_GROUPS_DELETE_CONTENT',    'Удалить также весь контент группы');
     define('LANG_GROUPS_DELETED',           'Группа %s удалена');
     define('LANG_GROUPS_SETTINGS',          'Настроить группы');
@@ -66,3 +66,4 @@
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'участник|участника|участников');
     define('LANG_GROUPS10',                  'групп');
     define('LANG_GROUPS_CTYPES',             'Типы контента для создания в группах');
+    define('LANG_GROUPS_CTYPE_ACCESS',       'Для просмотра записи вы должны быть участником группы <a href="%s">%s</a>');

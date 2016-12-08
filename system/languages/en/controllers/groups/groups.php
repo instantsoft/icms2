@@ -8,7 +8,7 @@
     define('LANG_GROUPS_ADD',               'New Group');
     define('LANG_GROUPS_EDIT',              'Group settings');
     define('LANG_GROUPS_DELETE',            'Delete Group');
-    define('LANG_GROUPS_DELETE_CONFIRM',    'Are you sure you want to delete the %s group?');
+    define('LANG_GROUPS_DELETE_CONFIRM',    'Delete the %s group?');
     define('LANG_GROUPS_DELETE_CONTENT',    'Delete all group content too');
     define('LANG_GROUPS_DELETED',           'The %s group was deleted');
     define('LANG_GROUPS_SETTINGS',          'Configure Groups');
@@ -82,3 +82,4 @@
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'member|members|members');
     define('LANG_GROUPS_CTYPES',             'Group content types');
     define('LANG_GROUPS10',                  'groups');
+    define('LANG_GROUPS_CTYPE_ACCESS',       'To view a item, you must be a member of the <a href="%s">%s</a> group');

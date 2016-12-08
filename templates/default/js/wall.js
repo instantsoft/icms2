@@ -2,24 +2,6 @@ var icms = icms || {};
 
 icms.wall = (function ($) {
 
-    this.is_binded = false;
-
-    this.bindCancel = function (form){
-
-        if(this.is_binded === true){ return; }
-
-        $(document).on('click', 'html', function(event) {
-            if ($(event.target).closest(form).length) { return; }
-            if ($(event.target).closest($('#wall_add_link')).length) { return; }
-            if ($(event.target).closest($('#wall_widget #entries_list .links > a')).length) { return; }
-            icms.wall.restoreForm();
-            event.stopPropagation();
-        });
-
-        this.is_binded = true;
-
-    };
-
     this.add = function (parent_id) {
 
         var form = $('#wall_add_form');
@@ -50,8 +32,6 @@ icms.wall = (function ($) {
         $('input[name=submit]', form).val( LANG_SEND );
 
         $('textarea', form).val('').focus();
-
-        this.bindCancel(form);
 
         return false;
 
@@ -248,9 +228,7 @@ icms.wall = (function ($) {
 
             $('textarea', form).val(result.html).focus();
 
-            icms.wall.bindCancel(form);
-
-        }, "json");
+        }, 'json');
 
         return false;
     };

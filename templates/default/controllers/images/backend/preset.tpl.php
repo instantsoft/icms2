@@ -21,10 +21,20 @@
         'href'  => $this->href_to('presets')
     ));
 
-?>
-
-<?php
     $this->renderForm($form, $preset, array(
         'action' => '',
         'method' => 'post'
     ), $errors);
+?>
+
+    <script>
+        $(function(){
+            $('#is_square').on('click', function (){
+                if($(this).is(':checked')){
+                    $('#f_width .hint, #f_height .hint').hide();
+                } else {
+                    $('#f_width .hint, #f_height .hint').show();
+                }
+            }).triggerHandler('click');
+        });
+    </script>

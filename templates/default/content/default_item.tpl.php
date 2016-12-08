@@ -23,17 +23,9 @@
         <?php if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { continue; } ?>
         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
-        <?php
-            if (!isset($field['options']['label_in_item'])) {
-                $label_pos = 'none';
-            } else {
-                $label_pos = $field['options']['label_in_item'];
-            }
-        ?>
-
-        <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-            <?php if ($label_pos != 'none'){ ?>
-                <div class="title_<?php echo $label_pos; ?>"><?php html($field['title']); ?>: </div>
+    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
+            <?php if ($field['options']['label_in_item'] != 'none'){ ?>
+                <div class="title_<?php echo $field['options']['label_in_item']; ?>"><?php html($field['title']); ?>: </div>
             <?php } ?>
             <div class="value"><?php echo $field['html']; ?></div>
         </div>

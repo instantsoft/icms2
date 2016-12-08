@@ -140,3 +140,17 @@
 #groups_invite_window { padding:15px; }
 #groups_invite_window h3 { margin-top:0; }
 #groups_invite_window .list { margin-bottom: 10px; }
+
+@media screen and (max-width: 640px) {
+    #group_profile #left_column {
+        float:none;
+        width: 100%;
+    }
+    #group_profile #left_column .block{
+        margin-right: 0;
+    }
+    #group_profile #right_column {
+        overflow: hidden;
+        margin-top: 10px;
+    }
+}

@@ -46,7 +46,16 @@
                 <?php foreach($columns as $name=>$column){ ?>
                     <td>
                         <?php if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){ ?>
-                            <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+
+                            <?php if(strpos($name, 'date_') === 0){ ?>
+
+                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input'), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+
+                            <?php } else { ?>
+
+                                <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+
+                            <?php } ?>
                         <?php } ?>
                     </td>
                 <?php } ?>

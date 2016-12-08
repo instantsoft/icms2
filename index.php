@@ -17,21 +17,23 @@
 
     require_once 'bootstrap.php';
 
-    if (cmsConfig::get('emulate_lag')) { usleep(350000); }
+    if ($config->emulate_lag) { usleep(350000); }
+
+    //Запускаем роутинг
+    $core->route($_SERVER['REQUEST_URI']);
 
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
     if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
-        if (!cmsConfig::get('is_site_on') && !cmsUser::isAdmin()) {
+        if (!$config->is_site_on && !cmsUser::isAdmin()) {
             cmsCore::errorMaintenance();
         }
     }
 
     cmsEventsManager::hook('engine_start');
 
-    //Запускаем роутинг и контроллер
-    $core->route($_SERVER['REQUEST_URI']);
+    //Запускаем контроллер
 	$core->runController();
     $core->runWidgets();
 

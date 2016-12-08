@@ -114,13 +114,17 @@
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
     define('LANG_PARSER_IMAGE',              'Изображение');
+    define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Разрешить добавление по ссылке');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Выделять первое изображение в записи');
+    define('LANG_PARSER_IMAGE_MAX_COUNT',    'Максимальное количество изображений');
+    define('LANG_PARSER_IMAGE_MAX_COUNT_HINT', 'Максимум %s');
 	define('LANG_PARSER_SMALL_IMAGE_PRESET', 'Пресет миниатюр');
     define('LANG_PARSER_IMAGE_SIZE_UPLOAD',  'Создавать превью-изображения');
     define('LANG_PARSER_IMAGE_SIZE_TEASER',  'Размер в списке');
     define('LANG_PARSER_IMAGE_SIZE_FULL',    'Размер в записи');
+    define('LANG_PARSER_IMAGE_SIZE_MODAL',   'Размер в записи при клике');
     define('LANG_PARSER_IMAGE_SIZE_MICRO',   'Микро');
     define('LANG_PARSER_IMAGE_SIZE_SMALL',   'Маленький');
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Средний');
@@ -238,6 +242,9 @@
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
+    define('ERR_SEARCH_TITLE',               'Поиск');
+    define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
+
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');
@@ -405,6 +412,7 @@
     define('LANG_CONTENT', 					 'Содержимое');
     define('LANG_CATEGORY',                  'Категория');
     define('LANG_CATEGORY_TITLE',            'Название категории');
+    define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');
@@ -424,6 +432,7 @@
     define('LANG_ORDER',					 'Порядок');
     define('LANG_ORDER_DOWN',				 'Переместить вниз');
     define('LANG_ORDER_UP',					 'Переместить вверх');
+    define('LANG_HITS_SPELL',                'просмотр|просмотра|просмотров');
     define('LANG_HITS',                      'Просмотры');
     define('LANG_GUEST',                     'Гость');
 
@@ -499,10 +508,11 @@
     define('LANG_SECOND2',                   'секунды');
     define('LANG_SECOND10',                  'секунд');
     define('LANG_DATE_AGO',                  '%s назад');
-
+    define('LANG_AUTO',                      'Авто');
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Для просмотра сообщения требуется почтовый клиент с поддержкой HTML');
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
     define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');
+    define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');

@@ -191,6 +191,14 @@
     define('LANG_CP_FIELD_PRIVATE',             'Show the field only to the entry author');
     define('LANG_CP_FIELD_GROUPS_READ',         'Read access');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Write access');
+    define('LANG_CP_FIELD_WRAP',                'Flow');
+    define('LANG_CP_FIELD_WRAP_TYPE',           'Type');
+    define('LANG_CP_FIELD_WRAP_LTYPE',          'The next field to the right of the current');
+    define('LANG_CP_FIELD_WRAP_RTYPE',          'The next field to the left of the current');
+    define('LANG_CP_FIELD_WRAP_NTYPE',          'Flow none');
+    define('LANG_CP_FIELD_WRAP_ATYPE',          'Auto');
+    define('LANG_CP_FIELD_WRAP_WIDTH',          'Field width');
+    define('LANG_CP_FIELD_WRAP_WIDTH_HINT',     'Not Set - automatic width. Used in conjunction with the unit of measurement, such as 200px, 60%, etc.');
 
     define('LANG_CP_PROPS_NO_CATS',             'Content type &laquo;%s&raquo; has no categories.');
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create Categories</a> to add properties.');
@@ -288,8 +296,9 @@
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
-    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified.');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to detect a visitor\'s IP');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'The $_SERVER array key that contains a real user IP address. Do not change this value if you are not sure. The default value fits most needs. For example, enter HTTP_CF_CONNECTING_IP (without quotes) for CloudFlare.');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
@@ -353,6 +362,7 @@
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Configuration file is not writable!');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Template configuration file is not writable!');
     define('LANG_CP_SAVE_SUCCESS',              'Settings saved successfully');
+    define('LANG_CP_ORDER_SUCCESS',             'The order was successfully saved');
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');

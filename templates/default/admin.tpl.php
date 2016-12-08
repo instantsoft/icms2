@@ -10,12 +10,16 @@
 	<title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $this->addMainCSS("templates/default/css/theme-modal.css"); ?>
-    <?php $this->addMainJS("templates/default/js/jquery.js"); ?>
-    <?php $this->addMainJS("templates/default/js/jquery-modal.js"); ?>
-    <?php $this->addMainJS("templates/default/js/core.js"); ?>
-    <?php $this->addMainJS("templates/default/js/modal.js"); ?>
+    <?php $this->addMainCSS('templates/default/css/theme-modal.css'); ?>
+    <?php $this->addMainCSS('templates/default/css/jquery-ui.css'); ?>
+    <?php $this->addMainJS('templates/default/js/jquery.js'); ?>
+    <?php $this->addMainJS('templates/default/js/jquery-ui.js'); ?>
+    <?php $this->addMainJS('templates/default/js/i18n/jquery-ui/'.cmsCore::getLanguageName().'.js'); ?>
+    <?php $this->addMainJS('templates/default/js/jquery-modal.js'); ?>
+    <?php $this->addMainJS('templates/default/js/core.js'); ?>
+    <?php $this->addMainJS('templates/default/js/modal.js'); ?>
     <?php $this->head(false); ?>
+</head>
 <body>
 
     <div id="wrapper">
@@ -108,7 +112,7 @@
                     return;
                 }
                 this.offset  = (this.toolbar).offset().top;
-                if((+$('#wrapper').height() - +$(this.win).height()) <= this.offset){
+                if((+$('#wrapper').height() - +$(this.win).height()) <= (this.offset + 20)){
                     return;
                 }
                 this.run();

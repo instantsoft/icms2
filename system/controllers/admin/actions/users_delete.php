@@ -14,7 +14,7 @@ class actionAdminUsersDelete extends cmsAction {
 
         if ($user !== false) {
 
-            $users_model->deleteUser($id);
+            $users_model->deleteUser($user);
 
             cmsUser::addSessionMessage(sprintf(LANG_CP_USER_DELETED, $user['nickname']), 'success');
 

@@ -4,13 +4,12 @@ class actionAdminMenuItemsReorder extends cmsAction {
 
     public function run(){
 
-        $items = $this->request->get('items');
-
+        $items = $this->request->get('items', array());
         if (!$items){ cmsCore::error404(); }
 
-        $menu_model = cmsCore::getModel('menu');
+        cmsCore::getModel('menu')->reorderMenuItems($items);
 
-        $menu_model->reorderMenuItems($items);
+        cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 
         $this->redirectBack();
 

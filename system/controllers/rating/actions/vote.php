@@ -8,7 +8,7 @@ class actionRatingVote extends cmsAction{
 
         // включено ли голосование от гостей?
         if(empty($this->options['allow_guest_vote']) && !$this->cms_user->is_logged){
-            $this->cms_template->renderJSON(array(
+            return $this->cms_template->renderJSON(array(
                 'success' => false,
                 'message' => LANG_ERROR
             ));
@@ -26,7 +26,7 @@ class actionRatingVote extends cmsAction{
                     in_array($direction, array('up', 'down'));
 
         if (!$is_valid){
-            $this->cms_template->renderJSON(array(
+            return $this->cms_template->renderJSON(array(
                 'success' => false,
                 'message' => LANG_ERROR
             ));
@@ -42,14 +42,16 @@ class actionRatingVote extends cmsAction{
             'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 
+        $cookie_key = $target_subject.$target_id.$target_controller;
+
         // Этот голос уже учитывался?
         $is_voted = $this->model->isUserVoted($vote, $this->cms_user->is_logged);
         if ($is_voted){
             // если куки нет, ставим
-            if(!empty($this->options['is_hidden']) && !cmsUser::getCookie($target_subject.$target_id)){
-                cmsUser::setCookie($target_subject.$target_id, 1, 2628000); // год
+            if(!empty($this->options['is_hidden']) && !cmsUser::getCookie($cookie_key)){
+                cmsUser::setCookie($cookie_key, 1, 2628000); // год
             }
-            $this->cms_template->renderJSON(array(
+            return $this->cms_template->renderJSON(array(
                 'success' => false,
                 'message' => LANG_RATING_VOTED
             ));
@@ -62,7 +64,7 @@ class actionRatingVote extends cmsAction{
         if (!empty($target['user_id'])){
             if($this->cms_user->is_logged){
                 if ($target['user_id'] == $this->cms_user->id || !cmsUser::isAllowed($target_subject, 'rate')){
-                    $this->cms_template->renderJSON(array(
+                    return $this->cms_template->renderJSON(array(
                         'success' => false,
                         'message' => LANG_RATING_DISABLED
                     ));
@@ -96,10 +98,10 @@ class actionRatingVote extends cmsAction{
 
         // запоминаем в куках
         if(!empty($this->options['is_hidden'])){
-            cmsUser::setCookie($target_subject.$target_id, 1, 2628000); // год
+            cmsUser::setCookie($cookie_key, 1, 2628000); // год
         }
 
-        $this->cms_template->renderJSON($result);
+        return $this->cms_template->renderJSON($result);
 
     }
 

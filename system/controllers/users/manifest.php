@@ -12,7 +12,9 @@
             'auth_login',
             'user_loaded',
             'wall_permissions',
-            'sitemap_sources',
+            'wall_after_add',
+            'wall_after_delete',
+            'sitemap_sources'
         )
 
     );

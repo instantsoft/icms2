@@ -81,6 +81,22 @@ article div.content_categories:last-child {
     margin-bottom: 15px;
     overflow:hidden;
     color:#555;
+    box-sizing: border-box;
+}
+.content_item .field.left_field{
+    float: left;
+    margin-right: 15px;
+}
+.content_item .field.right_field{
+    float: right;
+    margin-left: 15px;
+}
+.content_item .field.auto_field{
+    overflow: visible;
+}
+.content_item .field.none_field{
+    float: none;
+    clear: both;
 }
 
 .private_field_hint {
@@ -247,6 +263,7 @@ article div.content_categories:last-child {
     padding-left:20px;
     background:url("../images/icons/tag.png") no-repeat left center;
     line-height: 16px;
+    clear: both;
 }
 
 .content_item .tags_bar a ,
@@ -425,8 +442,6 @@ article div.content_categories:last-child {
 .content_list.tiled .tile { width:33.33333%; float:left; margin-bottom:20px; padding-right: 10px; box-sizing: border-box; }
 .content_list.tiled .tile:nth-child(3) { padding-right: 0; }
 
-.content_list.tiled .tile .photo img { width:100%; transition: all 1s ease; }
-.content_list.tiled .tile .photo img:hover { width:100%; -webkit-filter: grayscale(30%); }
 .content_list.tiled .tile .photo { display: block; width:100%; height:120px; overflow:hidden; margin-bottom: 10px; position:relative; background:#bdc3c7; }
 .content_list.tiled .tile .photo .note{
     position: absolute;
@@ -455,6 +470,7 @@ article div.content_categories:last-child {
 .content_list.tiled .info_bar { font-size: 12px; color: #7f8c8d; opacity: 0; transition: all 0.5s ease; }
 .content_list.tiled .tile:hover .info_bar { opacity: 1; }
 .content_list.tiled .info_bar .bar_item { float:left; margin-right: 5px; height:18px; line-height: 18px; }
+.content_list.tiled .info_bar .bar_item:last-child { margin-right: 0; }
 .content_list.tiled .info_bar .bi_comments{
     padding-left:25px;
     background: url("../images/icons/comment-small.png") no-repeat 5px center;
@@ -481,29 +497,29 @@ article div.content_categories:last-child {
 .content_list.tiled .tags_bar a:hover {
     color:#d35400;
 }
-
+.content_list.tiled .info_bar .bi_date{
+    padding-left:25px;
+    background: url("../images/icons/clock-small.png") no-repeat 5px center;
+}
 /* ========================================================================== */
 
-.content_item{ position: relative; }
+.content_item { position: relative; }
 
 .content_item .ft_image {
-    float:left;
-    clear:none;
-    margin-right: 10px;
     max-width: 100%;
-}
-.content_item .ft_image + .field {
-    overflow: visible;
 }
 .content_item .ft_image img, .ft_html img {
     display: block;
     margin:0;
 	max-width:100%;
 }
-.content_item .ft_images, .ft_images img {
+.ft_images img {
     display: block;
     margin: 0;
     width: 100%;
+}
+.content_item .ft_images {
+    margin: 0 0 15px 0;
 }
 .first_type_images, .second_type_images {
     margin-right: 10px;
@@ -515,7 +531,10 @@ article div.content_categories:last-child {
 .second_type_images {
     max-width: 100%;
 }
-.first_type_images:after,.second_type_images:after {
+.hover_image {
+    position: relative; display: inline-block;
+}
+.first_type_images:after,.second_type_images:after,.hover_image:after {
     content: '';
     background: #000;
     position: absolute;
@@ -529,7 +548,7 @@ article div.content_categories:last-child {
     background-repeat: no-repeat;
     background-position: center center;
 }
-.first_type_images:hover:after,.second_type_images:hover:after {
+.first_type_images:hover:after,.second_type_images:hover:after,.hover_image:hover:after {
     opacity: 0.4;
 }
 .first_type_images:not(:first-child) {
@@ -584,4 +603,35 @@ article div.content_categories:last-child {
 }
 .content_item_props .value ul li:last-child {
     padding-right: 0;
+}
+a.hashtag {
+    text-decoration: none;
+}
+@media screen and (max-width: 800px) {
+    .content_list.tiled .tile {
+        width: 50%;
+    }
+    .content_list.tiled .tile:nth-child(3) {
+        padding-right: 10px;
+    }
+    .content_list.tiled .tile:nth-child(2) {
+        padding-right: 0;
+    }
+}
+@media screen and (max-width: 640px) {
+    .content_list.tiled .tile {
+        width: 100%;
+    }
+    .content_list.tiled .tile:nth-child(3) {
+        padding-right: 0;
+    }
+    .content_list.tiled .tile:nth-child(2) {
+        padding-right: 0;
+    }
+    .content_item .field.left_field, .content_item .field.right_field {
+        float: none;
+        margin-right: 0;
+        margin-left: 0;
+        width: 100% !important;
+    }
 }

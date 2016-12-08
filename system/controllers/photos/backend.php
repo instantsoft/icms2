@@ -1,19 +1,22 @@
 <?php
 
-class backendPhotos extends cmsBackend{
+class backendPhotos extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
+    public $maintained_ctype = 'albums';
 
     public function actionIndex(){
         $this->redirectToAction('options');
     }
 
-    public function getBackendMenu(){
+    public function getOptionsToolbar(){
+        cmsCore::loadControllerLanguage('images');
         return array(
             array(
-                'title' => LANG_OPTIONS,
-                'url' => href_to($this->root_url, 'options')
-            ),
+                'class'  => 'settings',
+                'title'  => LANG_IMAGES_CONTROLLER,
+                'href'   => href_to('admin', 'controllers', array('edit', 'images'))
+            )
         );
     }
 

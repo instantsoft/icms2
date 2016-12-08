@@ -23,6 +23,7 @@ function check_db(){
     $db['user']   = trim($db['user']);
     $db['base']   = trim($db['base']);
     $db['engine'] = trim($db['engine']);
+    $db['clear_sql_mode'] = 0;
 
     $mysqli = @new mysqli($db['host'], $db['user'], $db['pass'], $db['base']);
 
@@ -31,6 +32,12 @@ function check_db(){
             'error' => true,
             'message' => sprintf(LANG_DATABASE_CONNECT_ERROR, $mysqli->connect_error)
         );
+    }
+
+    if(!empty($mysqli->server_info)){
+        if(strpos($mysqli->server_info, '5.7') === 0){
+            $db['clear_sql_mode'] = 1;
+        }
     }
 
     $mysqli->set_charset("utf8");

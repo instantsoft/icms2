@@ -18,11 +18,6 @@ class admin extends cmsFrontend {
 
         parent::before($action_name);
 
-        // если для админки свой шаблон
-        if($this->cms_config->template_admin){
-            $this->cms_template->setName($this->cms_config->template_admin);
-        }
-
         $this->cms_template->setLayout('admin');
 
         $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
@@ -104,7 +99,7 @@ class admin extends cmsFrontend {
 
     public function getCtypeMenu($do='add', $id=null){
 
-        return cmsEventsManager::hook('admin_ctype_menu', array(
+        $ctype_menu = array(
 
             array(
                 'title' => LANG_CP_CTYPE_SETTINGS,
@@ -141,7 +136,19 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             )
 
-        ));
+        );
+
+        list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
+
+        if($do == 'edit'){
+
+            $ctype = cmsCore::getModel('content')->getContentType($id);
+
+            list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+
+        }
+
+        return $ctype_menu;
 
     }
 

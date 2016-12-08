@@ -205,9 +205,9 @@ function file_get_contents_from_url($url){
 
             $curl = curl_init();
 
-            if(strpos($url, 'https') !== false){
-                curl_setopt(CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt(CURLOPT_SSL_VERIFYPEER, false);
+            if(strpos($url, 'https') === 0){
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             }
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -237,9 +237,9 @@ function file_save_from_url($url, $destination){
     $dest_file = @fopen($destination, "w");
 
     $curl = curl_init();
-    if(strpos($url, 'https') !== false){
-        curl_setopt(CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt(CURLOPT_SSL_VERIFYPEER, false);
+    if(strpos($url, 'https') === 0){
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     }
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -396,16 +396,16 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
     }
 
-    $size = getimagesize($src);
-    if ($size === false) { return false; }
+    $image_params = img_get_params($src);
+    if ($image_params === false) { return false; }
 
-    $new_width  = $size[0];
-    $new_height = $size[1];
+    $new_width  = $image_params['width'];
+    $new_height = $image_params['height'];
 
     // Определяем исходный формат по MIME-информации, предоставленной
     // функцией getimagesize, и выбираем соответствующую формату
     // imagecreatefrom-функцию.
-    $format = strtolower(substr($size['mime'], strpos($size['mime'], '/') + 1));
+    $format = strtolower(substr($image_params['mime'], strpos($image_params['mime'], '/') + 1));
     $icfunc = 'imagecreatefrom'.$format;
     $igfunc = 'image'.$format;
 
@@ -417,6 +417,32 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
     }
 
     $isrc = $icfunc($src);
+
+    // автоповорот изображений
+    if(isset($image_params['exif']['orientation'])) {
+        $actions = array();
+        switch ($image_params['exif']['orientation']) {
+            case 1: break;
+            case 2: $actions = array('img_flip' => 'x'); break;
+            case 3: $actions = array('img_rotate' => -180); break;
+            case 4: $actions = array('img_flip' => 'y'); break;
+            case 5: $actions = array('img_flip' => 'y', 'img_rotate' => 90); break;
+            case 6: $actions = array('img_rotate' => 90); break;
+            case 7: $actions = array('img_flip' => 'x', 'img_rotate' => 90); break;
+            case 8: $actions = array('img_rotate' => -90); break;
+        }
+        if($actions){
+            foreach ($actions as $orient_func => $func_param) {
+
+                $orient_result = $orient_func($func_param, $isrc, $new_width, $new_height);
+
+                $isrc       = $orient_result['image_res'];
+                $new_width  = $image_params['width'] = $orient_result['width'];
+                $new_height = $image_params['height'] = $orient_result['height'];
+
+            }
+        }
+    }
 
     if ($is_square) {
 
@@ -454,21 +480,41 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
     } else {
 
-        if ($new_width > $maxwidth) {
+        if(!$maxwidth || !$maxheight){
 
-            $wscale = $maxwidth / $new_width;
+            $ratio = $new_height / $new_width;
 
-            $new_width  *= $wscale;
-            $new_height *= $wscale;
+            if(!$maxwidth){
 
-        }
+                $new_height = min($maxheight, $new_height);
+                $new_width  = $new_height / $ratio;
 
-        if ($new_height > $maxheight) {
+            } else {
 
-            $hscale = $maxheight / $new_height;
+                $new_width  = min($maxwidth, $new_width);
+                $new_height = $new_width * $ratio;
 
-            $new_width  *= $hscale;
-            $new_height *= $hscale;
+            }
+
+        } else {
+
+            if ($new_width > $maxwidth) {
+
+                $wscale = $maxwidth / $new_width;
+
+                $new_width  *= $wscale;
+                $new_height *= $wscale;
+
+            }
+
+            if ($new_height > $maxheight) {
+
+                $hscale = $maxheight / $new_height;
+
+                $new_width  *= $hscale;
+                $new_height *= $hscale;
+
+            }
 
         }
 
@@ -487,7 +533,7 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
         }
 
-        imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $size[0], $size[1]);
+        imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $image_params['width'], $image_params['height']);
 
     }
 
@@ -517,12 +563,110 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
  * @return boolean|array
  */
 function img_get_params($path){
+
     $s = getimagesize($path);
     if ($s === false) { return false; }
+
+    $exif_data = array();
+    $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg' ? (@exif_read_data($path, null, true)) : null);
+    if($exif){
+        if(isset($exif['COMPUTED']['ApertureFNumber'])){
+            $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'];
+        } elseif(isset($exif['EXIF']['FNumber'])){
+            $num = explode('/', $exif['EXIF']['FNumber']);
+            $exif_data['aperturefnumber'] = 'f/'.($num[0]/$num[1]);
+        }
+        if(isset($exif['EXIF']['ExposureTime'])){
+            $exif_data['exposuretime'] = $exif['EXIF']['ExposureTime'];
+        } elseif(isset($exif['IFD0']['ExposureTime'])){
+            $exif_data['exposuretime'] = $exif['IFD0']['ExposureTime'];
+        }
+        if(isset($exif['IFD0']['Make'])){
+            $exif_data['camera'] = $exif['IFD0']['Make'];
+        }
+        if(isset($exif['IFD0']['Model'])){
+            $exif_data['camera'] = $exif['IFD0']['Model'];
+        }
+        if(isset($exif['IFD0']['DateTime'])){
+            $exif_data['date'] = $exif['IFD0']['DateTime'];
+        } elseif(isset($exif['EXIF']['DateTimeOriginal'])){
+            $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'];
+        } elseif(isset($exif['EXIF']['DateTimeDigitized'])){
+            $exif_data['date'] = $exif['EXIF']['DateTimeDigitized'];
+        }
+        if(isset($exif['EXIF']['ISOSpeedRatings'])){
+            $exif_data['isospeedratings'] = $exif['EXIF']['ISOSpeedRatings'];
+            if(is_array($exif_data['isospeedratings'])){
+                $exif_data['isospeedratings'] = current($exif_data['isospeedratings']);
+            }
+        }
+        if(isset($exif['EXIF']['FocalLength'])){
+            $exif_data['focallength'] = $exif['EXIF']['FocalLength'];
+        }
+        if(isset($exif['IFD0']['Orientation'])){
+            $exif_data['orientation'] = $exif['IFD0']['Orientation'];
+        }
+    }
+
+    $orientation = 'square';
+    if($s[0] > $s[1]){
+        $orientation = 'landscape';
+    }
+    if($s[0] < $s[1]){
+        $orientation = 'portrait';
+    }
+
     return array(
-        'width'=>$s[0],
-        'height'=>$s[1],
-        'mime'=>$s['mime'],
-        'filesize'=>round(filesize($path))
+        'orientation' => $orientation,
+        'width'       => $s[0],
+        'height'      => $s[1],
+        'mime'        => $s['mime'],
+        'exif'        => $exif_data,
+        'filesize'    => round(filesize($path))
     );
+
+}
+function img_flip($direction, $image_res, $width, $height) {
+
+    $new_image_res = imagecreatetruecolor($width, $height);
+
+    imagealphablending($new_image_res, false);
+    imagesavealpha($new_image_res, true);
+
+    switch (strtolower($direction)) {
+        case 'y':
+            for ($y = 0; $y < $height; $y++) {
+                imagecopy($new_image_res, $image_res, 0, $y, 0, $height - $y - 1, $width, 1);
+            }
+            break;
+        default:
+            for ($x = 0; $x < $width; $x++) {
+                imagecopy($new_image_res, $image_res, $x, 0, $width - $x - 1, 0, 1, $height);
+            }
+            break;
+    }
+
+    return array(
+        'width'     => $width,
+        'height'    => $height,
+        'image_res' => $new_image_res
+    );
+
+}
+function img_rotate($angle, $image_res) {
+
+    if ($angle < -360) {
+        $angle = -360;
+    } else if ($angle > 360) {
+        $angle = 360;
+    }
+
+    $new_image_res = imagerotate($image_res, -$angle, 0);
+
+    return array(
+        'width'     => imagesx($new_image_res),
+        'height'    => imagesy($new_image_res),
+        'image_res' => $new_image_res
+    );
+
 }

@@ -16,6 +16,33 @@ class actionGroupsGroupJoin extends cmsAction {
             cmsCore::error404();
         }
 
+        $result = cmsEventsManager::hook('group_before_join', array(
+            'allow'  => true,
+            'group'  => $group,
+            'invite' => $invite
+        ));
+
+        if (!$result['allow']){
+
+            if(isset($result['access_text'])){
+
+                cmsUser::addSessionMessage($result['access_text'], 'error');
+
+                if(isset($result['redirect_url'])){
+                    $this->redirect($result['redirect_url']);
+                } else {
+                    $this->redirectToAction($group['id']);
+                }
+
+            }
+
+            cmsCore::error404();
+
+        }
+
+        $group  = $result['group'];
+        $invite = $result['invite'];
+
         $this->model->addMembership($group['id'], $this->cms_user->id);
 
         if ($invite){ $this->model->deleteInvite($invite['id']); }
