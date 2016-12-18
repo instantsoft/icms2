@@ -140,7 +140,7 @@ class admin extends cmsFrontend {
 
         list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
 
-        if($do == 'edit'){
+        if($do != 'add'){
 
             $ctype = cmsCore::getModel('content')->getContentType($id);
 

@@ -49,17 +49,13 @@ class actionTagsSearch extends cmsAction {
                 join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$ctype_name}' AND t.target_controller = 'content'")->
                 filterEqual('t.tag_id', $tag_id);
 
-        $page_url = href_to($this->name, 'search', array($ctype_name));
+        $page_url = array(
+            'base'   => href_to($this->name, 'search', array($ctype_name)),
+            'cancel' => href_to($this->name, 'search', array($ctype_name)).'?q='.urlencode($query)
+        );
 
-        $html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('q' => $query), false, array(
-            'q' => array(
-                'is_in_filter' => 1,
-                'is_system'    => 1,
-                'type'         => 'string',
-                'name'         => 'q',
-                'title'        => LANG_TAGS_TAG,
-                'handler'      => new fieldString('q'),
-            )
+        $html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array(), false, array(
+            'q' => $query
         ));
 
         return $this->cms_template->render('search', array(
