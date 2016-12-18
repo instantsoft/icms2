@@ -22,6 +22,18 @@ function string_to_camel($delimiter, $string){
 }
 
 /**
+ * Собирает строку по разделителю, из CamelCase
+ * Например "MyOwnString" => "my_own_string", разделитель "_"
+ *
+ * @param string $string Исходная строка
+ * @param char $delimiter Разделитель
+ * @return string
+ */
+function camel_to_string($string, $delimiter = '_') {
+    return mb_strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1'.$delimiter, $string));
+}
+
+/**
  * Вырезает теги <br> из строки
  * @param string $string
  * @return string
