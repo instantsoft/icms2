@@ -194,6 +194,9 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_ITEMVIEW_ON,
                         'default' => true
                     )),
+                    new fieldCheckbox('options:is_show_fields_group', array(
+                        'title' => LANG_CP_ITEMVIEW_FIELDS_GROUP,
+                    )),
                     new fieldCheckbox('options:hits_on', array(
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
                     )),
