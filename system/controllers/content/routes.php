@@ -108,6 +108,14 @@ function routes_content(){
         ),
 
         array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/([a-zA-Z0-9\-\/]+)\/view\-([a-z0-9\-_]+)$/i',
+            'action'    => 'item_view',
+            1           => 'ctype_name',
+            2           => 'slug',
+            3           => 'child_ctype_name'
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9_]+)\-([a-z0-9_]+)\/([a-zA-Z0-9\-\/]+)$/i',
             'action'    => 'category_view',
             1           => 'ctype_name',

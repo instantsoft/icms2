@@ -111,6 +111,75 @@ class actionContentItemView extends cmsAction {
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
+        $childs = array(
+            'relations' => $this->model->getContentTypeChilds($ctype['id']),
+            'to_add' => array(),
+            'tabs' => array(),
+            'items' => array()
+        );
+
+        if ($childs['relations']){
+
+            $model = cmsCore::getModel('content');
+
+            foreach($childs['relations'] as $relation){
+
+                $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
+                $is_allowed_to_add = $perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == cmsUser::get('id')));
+
+                if ($is_allowed_to_add) {
+                    $childs['to_add'][] = $relation;
+                }
+
+                $model->filterEqual("parent_{$ctype['name']}_id", $item['id']);
+
+                $count = $model->getContentItemsCount($relation['child_ctype_name']);
+
+                $is_hide_empty = $relation['options']['is_hide_empty'];
+
+                if (($count || !$is_hide_empty) && $relation['layout'] == 'tab'){
+
+                    $childs['tabs'][] = array(
+                        'title' => $relation['title'],
+                        'url' => href_to($ctype['name'], $item['slug'], "view-{$relation['child_ctype_name']}"),
+                        'counter' => $count
+                    );
+
+                }
+
+                if (($count || !$is_hide_empty) && $relation['layout'] == 'list'){
+
+                    $child_ctype = $model->getContentTypeByName($relation['child_ctype_name']);
+
+                    if (!empty($relation['options']['limit'])){
+                        $child_ctype['options']['limit'] = $relation['options']['limit'];
+                    }
+
+                    if (!empty($relation['options']['is_hide_filter'])){
+                        $child_ctype['options']['list_show_filter'] = false;
+                    }
+
+                    $childs['lists'][] = array(
+                        'title' => empty($relation['options']['hide_title']) ? $relation['title'] : false,
+                        'ctype_name' => $relation['child_ctype_name'],
+                        'html' => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
+                    );
+
+                }
+
+            }
+        }
+
+        if ($this->request->has('child_ctype_name')){
+            $child_ctype_name = $this->request->get('child_ctype_name');
+            return $this->runAction('item_childs_view', array(
+                'ctype' => $ctype,
+                'item' => $item,
+                'child_ctype_name' => $child_ctype_name,
+                'childs' => $childs
+            ));
+        }
+
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
@@ -184,7 +253,8 @@ class actionContentItemView extends cmsAction {
             'props_values' => $props_values,
             'item'         => $item,
             'is_moderator' => $is_moderator,
-            'user'         => $this->cms_user
+            'user'         => $this->cms_user,
+            'childs'       => $childs,
         ));
 
     }

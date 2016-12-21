@@ -257,6 +257,10 @@ class cmsTemplate {
 
     }
 
+    public function hasMenu($menu_name){
+        return !empty($this->menus[$menu_name]);
+    }
+
     /**
      * Выводит меню
      * @param string $menu_name Название меню

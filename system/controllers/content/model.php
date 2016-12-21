@@ -538,13 +538,13 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getContentField($ctype_name, $id){
+    public function getContentField($ctype_name, $id, $by_field = 'id'){
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
         $this->useCache("content.fields.{$ctype_name}");
 
-        return $this->getItemById($table_name, $id, function($item, $model){
+        return $this->getItemByField($table_name, $by_field, $id, function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
@@ -570,6 +570,16 @@ class modelContent extends cmsModel{
 
         });
 
+    }
+
+    public function getContentFieldByName($ctype_name, $name){
+
+        return $this->getContentField($ctype_name, $name, 'name');
+
+    }
+
+    public function isContentFieldExists($ctype_name, $name){
+        return $this->getContentField($ctype_name, $name, 'name') !== false;
     }
 
 //============================================================================//
@@ -770,7 +780,7 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function deleteContentField($ctype_name_or_id, $id){
+    public function deleteContentField($ctype_name_or_id, $id, $by_field='id', $isForced = false){
 
         if (is_numeric($ctype_name_or_id)){
             $ctype = $this->getContentType($ctype_name_or_id);
@@ -779,15 +789,15 @@ class modelContent extends cmsModel{
             $ctype_name = $ctype_name_or_id;
         }
 
-        $field = $this->getContentField($ctype_name, $id);
-        if ($field['is_fixed']) { return false; }
+        $field = $this->getContentField($ctype_name, $id, $by_field);
+        if ($field['is_fixed'] && !$isForced) { return false; }
 
         cmsEventsManager::hook('ctype_field_before_delete', array($field, $ctype_name, $this));
 
         $content_table_name = $this->table_prefix . $ctype_name;
         $fields_table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->delete($fields_table_name, $id);
+        $this->delete($fields_table_name, $id, $by_field);
         $this->reorder($fields_table_name);
 
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
@@ -1136,6 +1146,109 @@ class modelContent extends cmsModel{
         $this->
             filterEqual('item_id', $item_id)->
             deleteFiltered($table_name);
+
+    }
+
+//============================================================================//
+//===============================   СВЯЗИ   ==================================//
+//============================================================================//
+
+    public function getContentRelations($ctype_id=false){
+
+        if ($ctype_id) { $this->filterEqual('ctype_id', $ctype_id); }
+
+        $this->useCache('content.relations');
+
+        $relations = $this->get('content_relations', function($item){
+            $item['options'] = cmsModel::yamlToArray($item['options']);
+            return $item;
+        });
+
+        return $relations;
+
+    }
+
+    public function getContentRelation($id, $by_field = 'id'){
+
+        return $this->getItemByField('content_relations', $by_field, $id, function($item){
+            $item['options'] = cmsModel::yamlToArray($item['options']);
+            return $item;
+        });
+
+    }
+
+    public function getContentRelationByTypes($ctype_id, $child_ctype_id){
+
+        $this->filterEqual('ctype_id', $ctype_id);
+        $this->filterEqual('child_ctype_id', $child_ctype_id);
+
+        return $this->getItem('content_relations', function($item){
+            $item['options'] = cmsModel::yamlToArray($item['options']);
+            return $item;
+        });
+
+    }
+
+    public function addContentRelation($relation){
+
+        return $this->insert('content_relations', $relation);
+
+    }
+
+    public function updateContentRelation($id, $relation){
+
+        $this->update('content_relations', $id, $relation);
+
+    }
+
+    public function deleteContentRelation($id){
+
+        return $this->delete('content_relations', $id);
+
+    }
+
+    public function getContentTypeChilds($ctype_id){
+
+        $this->selectOnly('i.*');
+        $this->select('c.title', 'child_title');
+        $this->select('c.labels', 'child_labels');
+        $this->select('c.name', 'child_ctype_name');
+
+        $this->joinLeft('content_types', 'c', 'c.id = i.child_ctype_id');
+
+        $this->filterEqual('ctype_id', $ctype_id);
+
+        return $this->get('content_relations', function($item, $model){
+
+            $item['child_labels'] = cmsModel::yamlToArray($item['child_labels']);
+            $item['options'] = cmsModel::yamlToArray($item['options']);
+
+            return $item;
+
+        });
+
+    }
+
+    public function getContentTypeParentFieldNames($ctype_id){
+
+        $this->selectOnly('i.*');
+        $this->select('c.name', 'parent_ctype_name');
+
+        $this->joinLeft('content_types', 'c', 'c.id = i.ctype_id');
+
+        $this->filterEqual('child_ctype_id', $ctype_id);
+
+        $parents = $this->get('content_relations');
+
+        if (!$parents) { return false; }
+
+        $result = array();
+
+        foreach ($parents as $relation){
+            $result[$relation['parent_ctype_name']] = "parent_{$relation['parent_ctype_name']}_id";
+        }
+
+        return $result;
 
     }
 

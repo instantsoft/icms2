@@ -219,6 +219,17 @@ class cmsForm {
         }
     }
 
+    public function setFieldAttributeByName($field_name, $attr_name, $value){
+        foreach($this->structure as $fieldset){
+            foreach( $fieldset['childs'] as $field) {
+                if ($field->getName() == $field_name){
+                    $field->setOption($attr_name, $value);
+                    break;
+                }
+            }
+        }
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -237,7 +248,12 @@ class cmsForm {
      * @param string $fieldset_id ID набора полей
      * @param string $field_name Название поля
      */
-    public function hideField($fieldset_id, $field_name){
+    public function hideField($fieldset_id, $field_name = ''){
+
+        if ($fieldset_id && empty($field_name)){
+            $this->setFieldAttributeByName($fieldset_id, 'is_hidden', true);
+            return;
+        }
 
         $this->setFieldAttribute($fieldset_id, $field_name, 'is_hidden', true);
 

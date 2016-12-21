@@ -134,8 +134,12 @@ class admin extends cmsFrontend {
                 'title' => LANG_MODERATORS,
                 'url' => href_to($this->name, 'ctypes', array('moderators', $id)),
                 'disabled' => ($do == 'add')
-            )
-
+            ),
+            array(
+                'title' => LANG_CP_CTYPE_RELATIONS,
+                'url' => href_to($this->name, 'ctypes', array('relations', $id)),
+                'disabled' => ($do == 'add')
+            ),
         );
 
         list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));

@@ -15,6 +15,14 @@
     <?php unset($fields['title']); ?>
 <?php } ?>
 
+<?php if ($this->hasMenu('item-menu')){ ?>
+	<div id="content_item_tabs">
+		<div class="tabs-menu">
+			<?php $this->menu('item-menu', true, 'tabbed'); ?>
+		</div>
+	</div>
+<?php } ?>
+
 <div class="content_item <?php echo $ctype['name']; ?>_item">
 
     <?php foreach($fields as $name=>$field){ ?>

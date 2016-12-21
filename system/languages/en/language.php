@@ -113,6 +113,7 @@
     define('LANG_PARSER_USER',               'User');
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');
     define('LANG_PARSER_USERS',              'User list');
+    define('LANG_PARSER_PARENT',             'Parent');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGES',             'Multiple images');

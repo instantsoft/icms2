@@ -10,7 +10,15 @@ class actionContentItemAdd extends cmsAction {
         $ctype_name = $this->request->get('ctype_name', '');
 
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype_name, 'add')) { cmsCore::error404(); }
+        if (!cmsUser::isAllowed($ctype_name, 'add')) {
+
+            if (!cmsUser::isAllowed($ctype_name, 'add_to_parent')) {
+                cmsCore::error404();
+            }
+
+            $is_check_parent_perm = true;
+
+        }
 
         // Получаем тип контента
         $ctype = $this->model->getContentTypeByName($ctype_name);
@@ -80,6 +88,35 @@ class actionContentItemAdd extends cmsAction {
         foreach($fields as $field){
             if (!empty($field['options']['profile_value'])){
                 $item[$field['name']] = $user->{$field['options']['profile_value']};
+            }
+        }
+
+        $parents = $this->model->getContentTypeParentFieldNames($ctype['id']);
+
+        if ($parents){
+            foreach($parents as $parent_ctype_name => $id_param_name){
+
+                if (!$this->request->has($id_param_name)){
+                    $form->hideField($id_param_name);
+                    continue;
+                }
+
+                $parent_id = $this->request->get($id_param_name, 0, 'integer');
+                $parent_item = $this->model->getContentItem($parent_ctype_name, $parent_id);
+
+                if (!$parent_item) {
+                    $form->hideField($id_param_name);
+                    continue;
+                }
+
+                if (!empty($is_check_parent_perm) && !$user->is_admin){
+                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $user->id){
+                        cmsCore::error404();
+                    }
+                }
+
+                $item[$id_param_name] = $parent_id;
+
             }
         }
 

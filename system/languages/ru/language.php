@@ -113,6 +113,7 @@
     define('LANG_PARSER_USER',               'Пользователь');
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
+    define('LANG_PARSER_PARENT',             'Родитель');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
@@ -216,6 +217,8 @@
     define('LANG_PERM_OPTION_NULL',          'Нет');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
     define('LANG_PERM_OPTION_ALL',           'Все');
+    define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
+    define('LANG_PERM_OPTION_TO_ALL',        'Во всех');
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
 

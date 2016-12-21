@@ -222,6 +222,30 @@
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Удалить набор "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Показывать набор на сайте');
 
+    define('LANG_CP_CTYPE_RELATIONS',           'Связи');
+    define('LANG_CP_RELATION',                  'Связь');
+    define('LANG_CP_RELATION_ADD',              'Добавить связь');
+    define('LANG_CP_RELATION_TITLE',            'Название связи');
+    define('LANG_CP_RELATION_DELETE_CONFIRM',   'Удалить связь?');
+    define('LANG_CP_RELATION_LAYOUT',           'Внешний вид');
+    define('LANG_CP_RELATION_LAYOUT_TYPE',      'Тип вывода');
+    define('LANG_CP_RELATION_LAYOUT_LIST',      'Список');
+    define('LANG_CP_RELATION_LAYOUT_TAB',       'Вкладка');
+    define('LANG_CP_RELATION_LAYOUT_HIDDEN',    'Нет (скрыть)');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_EMPTY','Скрывать если нет записей');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Скрывать заголовок списка');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Скрывать фильтр');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Записей на странице');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Если не указано, используются настройки дочернего типа контента');
+    define('LANG_CP_RELATION_CREATED',          'Связь создана');
+    define('LANG_CP_RELATION_FIELD_CREATED',    'Создано поле для привязки родителя в типе контента "%s"');
+    define('LANG_CP_RELATION_CHILD',            'Дочерний тип контента');
+    define('LANG_CP_RELATION_TAB_OPTS',         'Параметры вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_HINT',     'Можно использовать поля родительской записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
+    define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Тайтл вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Ключевые слова вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_DESC',     'Мета-описание вкладки');
+
     define('LANG_CP_MENU',                      'Меню');
     define('LANG_CP_MENU_ADD',                  'Создать меню');
     define('LANG_CP_MENU_EDIT',                 'Изменить меню');
@@ -487,6 +511,7 @@
     define('LANG_HELP_URL_CTYPES_PROP',             'http://docs.instantcms.ru/manual/ctypes/props/add');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'http://docs.instantcms.ru/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'http://docs.instantcms.ru/manual/ctypes/datasets/add');
+    define('LANG_HELP_URL_CTYPES_RELATIONS',        'http://docs.instantcms.ru/manual/ctypes/relations');
     define('LANG_HELP_URL_CTYPES_PERMS',            'http://docs.instantcms.ru/manual/ctypes/permissions');
     define('LANG_HELP_URL_CTYPES_MODERATORS',       'http://docs.instantcms.ru/manual/ctypes/moderators');
     define('LANG_HELP_URL_MENU',                    'http://docs.instantcms.ru/manual/menu');

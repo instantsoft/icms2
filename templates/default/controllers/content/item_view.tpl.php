@@ -6,8 +6,8 @@
     if (!empty($item['seo_desc'])){ $this->setPageDescription($item['seo_desc']); }
 
 	$seo_title = !empty($item['seo_title']) ? $item['seo_title'] : $item['title'];
-	$this->setPageTitle($seo_title);	
-	
+	$this->setPageTitle($seo_title);
+
     $base_url = $ctype['name'];
 
     if ($ctype['options']['list_on']){
@@ -34,6 +34,17 @@
     }
 
     if ($item['is_approved'] || $is_moderator){
+
+        if ($childs && !empty($childs['to_add'])){
+            foreach($childs['to_add'] as $relation){
+                $this->addToolButton(array(
+                    'class' => 'add',
+                    'title' => sprintf(LANG_CONTENT_ADD_ITEM, $relation['child_labels']['create']),
+                    'href'  => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}"
+                ));
+            }
+        }
+
         if (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
         (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] == $user->id)){
             $this->addToolButton(array(
@@ -54,9 +65,18 @@
         }
     }
 
-?>
+    if (!empty($childs['tabs'])){
 
-<?php
+        $this->addMenuItem('item-menu', array(
+            'title' => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE, 'UTF-8'),
+            'url' => href_to($ctype['name'], $item['slug'] . '.html')
+        ));
+
+        foreach($childs['tabs'] as $child_ctype_name => $title){
+            $this->addMenuItems('item-menu', $childs['tabs']);
+        }
+
+    }
 
     $this->renderContentItem($ctype['name'], array(
         'item' => $item,
@@ -65,6 +85,13 @@
         'props' => $props,
         'props_values' => $props_values,
     ));
+
+    if (!empty($childs['lists'])){
+        foreach($childs['lists'] as $list){
+            if ($list['title']){ ?><h2><?php echo $list['title']; ?></h2><?php }
+            echo $list['html'];
+        }
+    }
 
 ?>
 

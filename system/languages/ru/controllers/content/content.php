@@ -17,6 +17,7 @@
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Публикация отключена по дате');
 
     define('LANG_RULE_CONTENT_ADD',          'Создание записей');
+    define('LANG_RULE_CONTENT_ADD_TO_PARENT','Создание дочерних записей');
     define('LANG_RULE_CONTENT_EDIT',         'Редактирование записей');
     define('LANG_RULE_CONTENT_DELETE',       'Удаление записей');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Создание категорий');
