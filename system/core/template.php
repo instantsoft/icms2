@@ -1186,7 +1186,7 @@ class cmsTemplate {
 
         $css_file = $this->getStylesFileName();
 
-        if ($css_file){ $this->addCSS($css_file); }
+        if ($css_file){ $this->addCSSFromContext($css_file); }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 
