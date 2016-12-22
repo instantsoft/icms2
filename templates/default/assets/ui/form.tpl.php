@@ -102,6 +102,8 @@
                             'ft_'.strtolower(substr(get_class($field), 5))
                         );
 
+                        if($field->getOption('is_required')){ $classes[] = 'reguired_field'; }
+
                         if ($error){
                             $classes[] = 'field_error';
                         }
@@ -179,7 +181,7 @@
 
     <div class="buttons">
         <?php echo html_submit($submit['title'], 'submit', $submit); ?>
-        <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'"); } ?>
+        <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'", array('class'=>'button-cancel')); } ?>
     </div>
 
 </form>
