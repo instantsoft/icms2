@@ -5,6 +5,9 @@
     }
 ?>
 <div class="modal_form" style="">
+	<div style="padding: 10px 0 0 20px;">
+		<h2><?php echo $widget['type']; ?></h2>
+	</div>
 <?php
     $this->renderForm($form, $widget, array(
         'action' => $this->href_to('widgets_update'),
