@@ -34,9 +34,12 @@ icms.images = (function ($) {
 
         $('.data', widget).html('');
 
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
+
         for(var path in result.paths){
             preview_img_src = result.paths[path].url;
-            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+path+']" value="'+result.paths[path].path+'" />');
+            $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+path+']" value="'+result.paths[path].path+'" />');
         }
 
         $('.preview img', widget).attr('src', preview_img_src);
@@ -68,9 +71,12 @@ icms.images = (function ($) {
 
         var image_data = {};
 
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
+
         for(var path in result.paths){
             preview_img_src = result.paths[path].url;
-            $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
+            $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
             image_data[path] = result.paths[path].path;
         }
 
@@ -152,6 +158,8 @@ icms.images = (function ($) {
 
     this.initSortable = function (field_name){
         var widget = $('#widget_image_'+field_name);
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
         $('.previews_list', widget).sortable({
             items: '.preview',
             cursor: 'move',
@@ -171,7 +179,7 @@ icms.images = (function ($) {
                     $(this).attr('rel', index);
                     var paths = $(this).data('paths');
                     for(var path in paths){
-                        $('.data', widget).append('<input type="hidden" name="'+field_name+'['+index+']['+path+']" value="'+paths[path]+'" rel="'+index+'" />');
+                        $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+index+']['+path+']" value="'+paths[path]+'" rel="'+index+'" />');
                     }
 
                 });

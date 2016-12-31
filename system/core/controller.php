@@ -14,8 +14,15 @@ class cmsController {
     public $root_path;
 
     /**
+     * Флаг, что контроллер должен работать только после
+     * регистрации в БД
+     * @var boolean
+     */
+    public $mb_installed = false;
+
+    /**
      * Флаг наличия SEO параметров для index экшена
-     * @var bool
+     * @var boolean
      */
     public $useSeoOptions = false;
 
@@ -143,6 +150,10 @@ class cmsController {
      */
     public function isEnabled() {
         return $this->isControllerEnabled($this->name);
+    }
+
+    public function isControllerInstalled($name) {
+        return isset(self::$controllers[$name]);
     }
 
     public function isControllerEnabled($name) {
