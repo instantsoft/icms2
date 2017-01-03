@@ -111,12 +111,10 @@ class cmsFormField {
 
     public function setName($name) {
         $this->name = $name;
-        if (strpos($name, ':') !== false){
-            list($key, $subkey) = explode(':', $name);
-            $this->element_name = "{$key}[{$subkey}]";
-        } else {
-            $this->element_name = $name;
-        }
+        
+        $keys = explode(':', $name);
+        $this->element_name = count($keys) > 1 ? array_shift($keys) . '[' . implode('][', $keys) . ']' : $name;
+        
         return $this;
     }
 
