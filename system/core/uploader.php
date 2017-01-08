@@ -3,6 +3,9 @@
 class cmsUploader {
 
     private $allow_remote = false;
+    private $file_name = '';
+    private $user_id = 0;
+    private $site_cfg = array();
 
     private $last_error = false;
     private $upload_errors = array();
@@ -18,6 +21,16 @@ class cmsUploader {
             UPLOAD_ERR_CANT_WRITE => LANG_UPLOAD_ERR_CANT_WRITE,
             UPLOAD_ERR_EXTENSION  => LANG_UPLOAD_ERR_EXTENSION
         );
+        $this->user_id = cmsUser::getInstance()->id;
+        $this->site_cfg = cmsConfig::getInstance();
+    }
+
+    public function setFileName($name) {
+        $this->file_name = mb_substr(trim($name), 0, 64); return $this;
+    }
+
+    public function setUserId($id) {
+        $this->user_id = $id; return $this;
     }
 
     public function getLastError() {
@@ -25,10 +38,8 @@ class cmsUploader {
     }
 
 //============================================================================//
-//============================================================================//
-
     /**
-     * Возвращает строку с максимальный размером загружаемых файлов,
+     * Возвращает строку с максимальныйм размером загружаемых файлов,
      * установленным в php.ini
      * @return string
      */
@@ -76,29 +87,42 @@ class cmsUploader {
     public function disableRemoteUpload() {
         $this->allow_remote = false; return $this;
     }
+
+    private function getFileName($path, $file_ext, $file_name = false) {
+
+        if(!$file_name){
+            if($this->file_name){
+                $file_name = str_replace('.'.$file_ext, '', files_sanitize_name($this->file_name.'.'.$file_ext));
+            } else {
+                $file_name = substr(md5(uniqid().microtime(true)), 0, 8);
+            }
+        }
+
+        if (file_exists($path.$file_name.'.'.$file_ext)) {
+            return $this->getFileName($path, $file_ext, $file_name.'_'.uniqid());
+        }
+
+        return $file_name.'.'.$file_ext;
+
+    }
+
 //============================================================================//
 //============================================================================//
 
     public function resizeImage($source_file, $size){
 
-        $cfg = cmsConfig::getInstance();
-        $user = cmsUser::getInstance();
-
         $dest_dir  = $this->getUploadDestinationDirectory();
         $dest_ext  = pathinfo($source_file, PATHINFO_EXTENSION);
-        $dest_file = substr(md5( $user->id . $user->files_count . microtime(true) . $size['width'] ), 0, 8) . '.' . $dest_ext;
-        $dest_file = $dest_dir . '/' . $dest_file;
+        $dest_name = $this->getFileName($dest_dir, $dest_ext);
 
-        $user->increaseFilesCount();
+        $dest_file = $dest_dir . $dest_name;
 
         if (!isset($size['height'])) { $size['height'] = $size['width']; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
         if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {
 
-            $url = str_replace($cfg->upload_path, '', $dest_file);
-
-            return $url;
+            return str_replace($this->site_cfg->upload_path, '', $dest_file);
 
         }
 
@@ -179,9 +203,6 @@ class cmsUploader {
      */
     public function uploadForm($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
 
-        $config = cmsConfig::getInstance();
-        $user   = cmsUser::getInstance();
-
         $source     = $_FILES[$post_filename]['tmp_name'];
         $error_code = $_FILES[$post_filename]['error'];
         $dest_size  = (int)$_FILES[$post_filename]['size'];
@@ -207,20 +228,12 @@ class cmsUploader {
         }
 
         if (!$destination){
-
-            $user->increaseFilesCount();
-
-            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_name;
-
+            $destination = $this->getUploadDestinationDirectory();
         } else {
-
-            $destination = $config->upload_path . $destination . '/' . $dest_name;
-
+            $destination = $this->site_cfg->upload_path . $destination . '/';
         }
 
-        if(file_exists($destination)){
-            $destination = str_replace($dest_name, pathinfo($dest_name, PATHINFO_FILENAME).'_'.uniqid().'.'.$dest_ext, $destination);
-        }
+        $destination .= $this->getFileName($destination, $dest_ext);
 
         return $this->moveUploadedFile($source, $destination, $error_code, $dest_name, $dest_size);
 
@@ -265,17 +278,13 @@ class cmsUploader {
             }
         }
 
-        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
-
         if (!$destination){
-
-            cmsUser::getInstance()->increaseFilesCount();
-
-            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
-
+            $destination = $this->getUploadDestinationDirectory();
         } else {
-            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
+            $destination = $this->site_cfg->upload_path . $destination.'/';
         }
+
+        $destination .= $this->getFileName($destination, $dest_ext);
 
 		$f = fopen($destination, 'w+');
 		fwrite($f, $file_bin);
@@ -284,7 +293,7 @@ class cmsUploader {
         return array(
             'success' => true,
             'path'    => $destination,
-            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
             'name'    => $dest_name,
             'size'    => $image_size
         );
@@ -300,8 +309,6 @@ class cmsUploader {
      * @return array
      */
     public function uploadXHR($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false){
-
-        $user = cmsUser::getInstance();
 
         $dest_name = files_sanitize_name($_GET['qqfile']);
         $dest_ext  = pathinfo($dest_name, PATHINFO_EXTENSION);
@@ -324,19 +331,13 @@ class cmsUploader {
             }
         }
 
-        $dest_file = substr(md5(uniqid().microtime(true)), 0, 8).'.'.$dest_ext;
-
         if (!$destination){
-
-            $user->increaseFilesCount();
-
-            $destination = $this->getUploadDestinationDirectory() . '/' . $dest_file;
-
+            $destination = $this->getUploadDestinationDirectory();
         } else {
-
-            $destination = cmsConfig::get('upload_path') . $destination . '/' . $dest_file;
-
+            $destination = $this->site_cfg->upload_path . $destination . '/';
         }
+
+        $destination .= $this->getFileName($destination, $dest_ext);
 
         return $this->saveXHRFile($destination, $dest_name);
 
@@ -397,7 +398,7 @@ class cmsUploader {
         return array(
             'success' => true,
             'path'    => $destination,
-            'url'     => str_replace(cmsConfig::get('upload_path'), '', $destination),
+            'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
             'name'    => $orig_name,
             'size'    => $real_size
         );
@@ -405,8 +406,6 @@ class cmsUploader {
     }
 
 //============================================================================//
-//============================================================================//
-
     /**
      * Копирует файл из временной папки в целевую и отслеживает ошибки
      * @param string $source
@@ -415,8 +414,6 @@ class cmsUploader {
      * @return bool
      */
     private function moveUploadedFile($source, $destination, $errorCode, $orig_name='', $orig_size=0){
-
-        $cfg = cmsConfig::getInstance();
 
         if($errorCode !== UPLOAD_ERR_OK && isset($this->upload_errors[$errorCode])){
 
@@ -435,16 +432,16 @@ class cmsUploader {
         if (!is_writable($upload_dir)){
             return array(
                 'success' => false,
-                'error' => LANG_UPLOAD_ERR_CANT_WRITE,
-                'name' => $orig_name,
-                'path' => ''
+                'error'   => LANG_UPLOAD_ERR_CANT_WRITE,
+                'name'    => $orig_name,
+                'path'    => ''
             );
         }
 
         return array(
             'success' => @move_uploaded_file($source, $destination),
             'path'    => $destination,
-            'url'     => str_replace($cfg->upload_path, '', $destination),
+            'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
             'name'    => $orig_name,
             'size'    => $orig_size,
             'error'   => $this->upload_errors[$errorCode]
@@ -453,32 +450,36 @@ class cmsUploader {
     }
 
 //============================================================================//
-//============================================================================//
-
+    /**
+     * Удаляет файл
+     * @param string $file_path
+     * @return boolean
+     */
     public function remove($file_path){
-
         return @unlink($file_path);
-
     }
 
 //============================================================================//
-//============================================================================//
-
+    /**
+     * Создаёт дерево директорий для загрузки файла
+     * @return string
+     */
     public function getUploadDestinationDirectory(){
 
-        $cfg = cmsConfig::getInstance();
-        $user = cmsUser::getInstance();
+        $dir_num_user = sprintf('%03d', intval($this->user_id/100));
 
-        $dir_num_user   = sprintf('%03d', intval($user->id/100));
-        $dir_num_file   = sprintf('%03d', intval($user->files_count/100));
-        $dest_dir       = $cfg->upload_path . "{$dir_num_user}/u{$user->id}/{$dir_num_file}";
+        $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
+        $first_dir  = substr($file_name, 0, 2);
+        $second_dir = substr($file_name, 2, 2);
+
+        $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
 
         if(!is_dir($dest_dir)){
-
             @mkdir($dest_dir, 0777, true);
             @chmod($dest_dir, 0777);
             @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
-
+            @chmod($this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}", 0777);
+            @chmod($this->site_cfg->upload_path . "{$dir_num_user}", 0777);
         }
 
         return $dest_dir;
@@ -486,15 +487,16 @@ class cmsUploader {
     }
 
 //============================================================================//
-//============================================================================//
-
+    /**
+     * Проверяет файл, является ли он изображением
+     * @param string $src
+     * @return boolean
+     */
     public function isImage($src){
 
         $size = getimagesize($src);
 
-        if ($size === false) { return false ; }
-
-        return true;
+        return $size !== false;
 
     }
 
@@ -504,8 +506,5 @@ class cmsUploader {
     public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
         return img_resize($src, $dest, $maxwidth, $maxheight, $is_square, $quality);
     }
-
-//============================================================================//
-//============================================================================//
 
 }

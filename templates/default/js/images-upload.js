@@ -119,6 +119,12 @@ icms.images = (function ($) {
             debug: false,
 
             onSubmit: function(id, fileName){
+                var ftitle = $('#title').val();
+                if(ftitle){
+                    this.params = {
+                        file_name: $('#title').val()+' '+field_name
+                    };
+                }
                 icms.images._onSubmit(field_name);
             },
 
@@ -146,6 +152,12 @@ icms.images = (function ($) {
                 if(max_images > 0 && icms.images.uploaded_count > max_images){
                     icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
                     return false;
+                }
+                var ftitle = $('#title').val();
+                if(ftitle){
+                    this.params = {
+                        file_name: $('#title').val()+' '+field_name
+                    };
                 }
                 icms.images._onSubmit(field_name);
             },
