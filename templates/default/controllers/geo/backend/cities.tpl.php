@@ -9,4 +9,11 @@ $this->addToolButton(array(
     'href'  => $this->href_to('city', array(0, $region['id']))
 ));
 
+$this->addToolButton(array(
+    'class' => 'save',
+    'title' => LANG_SAVE_ORDER,
+    'href'  => null,
+    'onclick' => "icms.datagrid.submit('{$this->href_to('cities_reorder')}')"
+));
+
 $this->renderGrid($this->href_to('cities', $region['id']), $grid);
