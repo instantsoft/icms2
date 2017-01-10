@@ -761,7 +761,10 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (28, 'content', 'pub_on', 'flag', NULL),
 (29, 'content', 'disable_comments', 'flag', NULL),
 (30, 'comments', 'add_approved', 'flag', NULL),
-(31, 'comments', 'is_moderator', 'flag', NULL);
+(31, 'comments', 'is_moderator', 'flag', NULL),
+(32, 'content', 'add_to_parent', 'list', 'to_own,to_other,to_all'),
+(33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
+(34, 'content',  'bind_off_parent',  'list',  'own,all');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

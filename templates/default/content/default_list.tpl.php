@@ -21,6 +21,7 @@
 
             <?php
                 $item['ctype'] = $ctype;
+                $item['ctype_name'] = $ctype['name'];
                 $is_private    = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
                 $stop          = 0;
             ?>

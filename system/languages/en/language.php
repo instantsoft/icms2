@@ -9,11 +9,17 @@
     define('LANG_CONTENT_TYPE',              'Content Type');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Configure %s');
     define('LANG_CONTENT_ADD_ITEM',          'Add %s');
+    define('LANG_CONTENT_BIND_ITEM',         'Bind %s');
+    define('LANG_CONTENT_BIND_ITEMS',        'Bind');
+    define('LANG_CONTENT_UNBIND_ITEM',       'Unbind %s');
+    define('LANG_CONTENT_UNBIND_ITEMS',      'Unbind');
     define('LANG_CONTENT_EDIT_ITEM',         'Edit %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Delete %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Are you sure you want to delete %s?');
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
+
+    define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
     define('LANG_FILTER',                    'Filter');
@@ -219,7 +225,18 @@
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');
-
+    define('LANG_PERM_OPTION_TO_OWN',        'Only to own');
+    define('LANG_PERM_OPTION_TO_ALL',        'To all');
+    define('LANG_PERM_OPTION_OWN_TO_OWN',    'Own to own');
+    define('LANG_PERM_OPTION_OWN_TO_OTHER',  'Own to others');
+    define('LANG_PERM_OPTION_OWN_TO_ALL',    'Own to all');
+    define('LANG_PERM_OPTION_OTHER_TO_OWN',  'Others to own');
+    define('LANG_PERM_OPTION_OTHER_TO_OTHER','Others to others');
+    define('LANG_PERM_OPTION_OTHER_TO_ALL',  'Others to all');
+    define('LANG_PERM_OPTION_ALL_TO_OWN',    'All to own');
+    define('LANG_PERM_OPTION_ALL_TO_OTHER',  'All to others');
+    define('LANG_PERM_OPTION_ALL_TO_ALL',    'All to all');
+    
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Login');
     define('LANG_AUTH_PASSWORD',		 'Password');

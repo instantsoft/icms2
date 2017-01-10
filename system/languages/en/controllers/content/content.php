@@ -16,7 +16,12 @@
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
 
+    define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
+
     define('LANG_RULE_CONTENT_ADD',          'Adding entries');
+    define('LANG_RULE_CONTENT_ADD_TO_PARENT','Adding entries to parent');
+    define('LANG_RULE_CONTENT_BIND_TO_PARENT','Bind child entries to parent');
+    define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Unbind child entries from parent');
     define('LANG_RULE_CONTENT_EDIT',         'Editing entries');
     define('LANG_RULE_CONTENT_DELETE',       'Deleting entries');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Adding categories');

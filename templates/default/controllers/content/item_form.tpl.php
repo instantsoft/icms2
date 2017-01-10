@@ -14,16 +14,6 @@
         $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
     }
 
-    if ($parent){
-
-        if ($parent['ctype']['options']['list_on']){
-            $this->addBreadcrumb($parent['ctype']['title'], href_to($parent['ctype']['name']));
-        }
-
-        $this->addBreadcrumb($parent['item']['title'], href_to($parent['ctype']['name'], $parent['item']['slug'].'.html'));
-
-    }
-
     $back_url = $this->controller->request->get('back');
 
     $this->addToolButton(array(

@@ -9,11 +9,18 @@
     define('LANG_CONTENT_TYPE',              'Тип контента');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Настроить %s');
     define('LANG_CONTENT_ADD_ITEM',          'Добавить %s');
+    define('LANG_CONTENT_BIND_ITEM',         'Привязать %s');
+    define('LANG_CONTENT_BIND_ITEMS',        'Привязать');
+    define('LANG_CONTENT_UNBIND_ITEM',       'Отвязать %s');
+    define('LANG_CONTENT_UNBIND_ITEMS',      'Отвязать');
     define('LANG_CONTENT_EDIT_ITEM',         'Редактировать %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
+
+    define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
+    define('LANG_CONTENT_OWN_ITEMS',		  'Только мои');
 
     define('LANG_SHOW_FILTER',               'Показать фильтр');
     define('LANG_FILTER',                    'Фильтр');
@@ -218,7 +225,17 @@
     define('LANG_PERM_OPTION_OWN',           'Только свои');
     define('LANG_PERM_OPTION_ALL',           'Все');
     define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
+    define('LANG_PERM_OPTION_TO_OTHER',      'Только в чужих');
     define('LANG_PERM_OPTION_TO_ALL',        'Во всех');
+    define('LANG_PERM_OPTION_OWN_TO_OWN',    'Свои к своим');
+    define('LANG_PERM_OPTION_OWN_TO_OTHER',  'Свои к чужим');
+    define('LANG_PERM_OPTION_OWN_TO_ALL',    'Свои ко всем');
+    define('LANG_PERM_OPTION_OTHER_TO_OWN',  'Чужие к своим');
+    define('LANG_PERM_OPTION_OTHER_TO_OTHER','Чужие к чужим');
+    define('LANG_PERM_OPTION_OTHER_TO_ALL',  'Чужие ко всем');
+    define('LANG_PERM_OPTION_ALL_TO_OWN',    'Все к своим');
+    define('LANG_PERM_OPTION_ALL_TO_OTHER',  'Все к чужим');
+    define('LANG_PERM_OPTION_ALL_TO_ALL',    'Все ко всем');
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
 

@@ -12,7 +12,21 @@ class actionContentItemChildsView extends cmsAction {
 
         $relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
 
-        $this->model->filterEqual("parent_{$ctype['name']}_id", $item['id']);
+        if (!$relation) {
+            cmsCore::error404();
+        }
+
+        if (!in_array($relation['layout'], array('tab', 'hidden'))) {
+            cmsCore::error404();
+        }
+
+        $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
+                    "r.parent_item_id = {$item['id']} AND ".
+                    "r.child_ctype_id = {$child_ctype['id']} AND ".
+                    "r.child_item_id = i.id";
+
+        $this->model->filterNotNull('r.id');
+        $this->model->join('content_relations_bind', 'r', $filter);
 
         if (!empty($relation['options']['limit'])){
             $child_ctype['options']['limit'] = $relation['options']['limit'];
@@ -24,7 +38,7 @@ class actionContentItemChildsView extends cmsAction {
 
         $html = $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'], "view-{$child_ctype_name}"));
 
-        $seo_title = empty($relation['seo_title']) ? $child_ctype['type'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
+        $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
         $seo_keys = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
         $seo_desc = empty($relation['seo_desc']) ? '' : string_replace_keys_values($relation['seo_desc'], $item);
 

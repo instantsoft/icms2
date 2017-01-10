@@ -15,6 +15,8 @@ class actionContentItemEdit extends cmsAction {
         $item = $this->model->getContentItem($ctype['name'], $id);
         if (!$item) { cmsCore::error404(); }
 
+        $item['ctype_id'] = $ctype['id'];
+
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all')) {
@@ -210,6 +212,8 @@ class actionContentItemEdit extends cmsAction {
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
 
                 $item['ctype_data'] = $ctype;
+
+                $this->bindItemToParents($ctype, $item);
 
                 cmsEventsManager::hook('content_after_update', $item);
                 cmsEventsManager::hook("content_{$ctype['name']}_after_update", $item);

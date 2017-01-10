@@ -114,6 +114,7 @@ class actionContentItemView extends cmsAction {
         $childs = array(
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
             'to_add' => array(),
+            'to_bind' => array(),
             'tabs' => array(),
             'items' => array()
         );
@@ -124,14 +125,31 @@ class actionContentItemView extends cmsAction {
 
             foreach($childs['relations'] as $relation){
 
+                $model->resetFilters();
+
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
                 $is_allowed_to_add = $perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == cmsUser::get('id')));
+
+                $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
+                $is_allowed_to_bind = $perm && (
+                                        ($perm == 'all_to_all' || $perm == 'own_to_all' || $perm == 'other_to_all') ||
+                                        (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && $item['user_id'] == cmsUser::get('id')) ||
+                                        (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && $item['user_id'] != cmsUser::get('id'))
+                                    );
 
                 if ($is_allowed_to_add) {
                     $childs['to_add'][] = $relation;
                 }
+                if ($is_allowed_to_bind) {
+                    $childs['to_bind'][] = $relation;
+                }
 
-                $model->filterEqual("parent_{$ctype['name']}_id", $item['id']);
+                $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
+                            "r.parent_item_id = {$item['id']} AND ".
+                            "r.child_ctype_id = {$relation['child_ctype_id']} AND ".
+                            "r.child_item_id = i.id";
+
+                $model->join('content_relations_bind', 'r', $filter);
 
                 $count = $model->getContentItemsCount($relation['child_ctype_name']);
 
@@ -159,8 +177,16 @@ class actionContentItemView extends cmsAction {
                         $child_ctype['options']['list_show_filter'] = false;
                     }
 
+                    $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
+                                "r.parent_item_id = {$item['id']} AND ".
+                                "r.child_ctype_id = {$child_ctype['id']} AND ".
+                                "r.child_item_id = i.id";
+
+                    $this->model->filterNotNull('r.id');
+                    $this->model->join('content_relations_bind', 'r', $filter);
+
                     $childs['lists'][] = array(
-                        'title' => empty($relation['options']['hide_title']) ? $relation['title'] : false,
+                        'title' => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name' => $relation['child_ctype_name'],
                         'html' => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
                     );

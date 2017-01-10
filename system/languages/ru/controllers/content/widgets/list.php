@@ -1,6 +1,7 @@
 <?php
 
     define('LANG_WD_CONTENT_LIST_DATASET',  'Применить фильтры из набора');
+    define('LANG_WD_CONTENT_LIST_RELATION', 'Применить фильтр по связи');
     define('LANG_WD_CONTENT_LIST_IMAGE',    'Поле изображения');
     define('LANG_WD_CONTENT_LIST_TEASER',   'Поле краткого описания');
     define('LANG_WD_CONTENT_LIST_DETAILS',   'Показывать автора, дату и количество комментариев');

@@ -24,6 +24,7 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         // скроем лишние опции для системных полей
         if ($field['is_system']) {
             $form->hideField('basic', 'hint');
+            $form->hideField('visibility', 'options:relation_id');
             $form->hideFieldset('type');
             $form->hideFieldset('group');
             $form->hideFieldset('format');

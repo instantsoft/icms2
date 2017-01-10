@@ -213,9 +213,10 @@
     <span class="delete"><a class="ajaxlink" href="javascript:" onclick="deleteFilter(this)"><?php echo LANG_DELETE; ?></a></span>
 </div>
 
+
 <select id="fields_list" style="display:none">
     <?php foreach($fields as $field){ ?>
-        <?php if(!$field['handler']->allow_index || $field['handler']->filter_type === false){ continue; } ?>
+        <?php if((!$field['handler']->allow_index || $field['handler']->filter_type === false) && $field['type'] != 'parent'){ continue; } ?>
         <option value="<?php echo $field['name']; ?>" data-type="<?php echo $field['handler']->filter_type; ?>"><?php echo htmlspecialchars($field['title']); ?></option>
     <?php } ?>
     <option value="rating" data-type="int"><?php echo LANG_RATING; ?></option>

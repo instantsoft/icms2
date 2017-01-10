@@ -188,6 +188,7 @@
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');
     define('LANG_CP_FIELD_IN_FILTER',           'Показывать в фильтре');
+    define('LANG_CP_FIELD_IN_RELATION',         'Показывать только в контексте связи');
     define('LANG_CP_FIELD_PRIVACY',             'Приватность');
     define('LANG_CP_FIELD_PRIVATE',             'Показывать поле только автору записи');
     define('LANG_CP_FIELD_GROUPS_READ',         'Доступ для чтения');

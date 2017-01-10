@@ -1,6 +1,7 @@
 <?php
 
     define('LANG_WD_CONTENT_LIST_DATASET',  'Apply dataset filters');
+    define('LANG_WD_CONTENT_LIST_RELATION', 'Apply relation filter');
     define('LANG_WD_CONTENT_LIST_IMAGE',    'Image field');
     define('LANG_WD_CONTENT_LIST_TEASER',   'Short description field');
     define('LANG_WD_CONTENT_LIST_DETAILS',   'Show author, date and comment count');

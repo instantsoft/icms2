@@ -45,6 +45,7 @@ class formAdminCtypesRelation extends cmsForm {
                         'items' => array(
                             'list' => LANG_CP_RELATION_LAYOUT_LIST,
                             'tab' => LANG_CP_RELATION_LAYOUT_TAB,
+                            'hidden' => LANG_CP_RELATION_LAYOUT_HIDDEN,
                         )
                     )),
 

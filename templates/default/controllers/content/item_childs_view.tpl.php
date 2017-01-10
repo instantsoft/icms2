@@ -33,30 +33,33 @@
         'href'  => href_to($child_ctype['name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}"
     ));
 
-    if (!empty($childs['tabs'])){
+    if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
         $this->addMenuItem('item-menu', array(
             'title' => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE, 'UTF-8'),
             'url' => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
-        foreach($childs['tabs'] as $child_ctype_name => $title){
-            $this->addMenuItems('item-menu', $childs['tabs']);
-        }
+        $this->addMenuItems('item-menu', $childs['tabs']);
 
     }
+
 ?>
 
-<h1>
-    <?php html($item['title']); ?>
-    <?php if ($item['is_private']) { ?>
-        <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-    <?php } ?>
-</h1>
-<?php if ($item['parent_id']){ ?>
-    <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
-        <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
-    </h2>
+<?php if ($relation['layout'] == 'tab') { ?>
+    <h1>
+        <?php html($item['title']); ?>
+        <?php if ($item['is_private']) { ?>
+            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+        <?php } ?>
+    </h1>
+<?php } ?>
+
+<?php if ($relation['layout'] == 'hidden') { ?>
+    <h1>
+        <a href="<?php echo href_to($ctype['name'], $item['slug'] . '.html'); ?>"><?php html($item['title']); ?></a> /
+        <?php echo html($child_ctype['title']); ?>
+    </h1>
 <?php } ?>
 
 <div id="content_item_tabs">

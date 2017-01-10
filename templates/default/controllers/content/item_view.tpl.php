@@ -44,6 +44,20 @@
                 ));
             }
         }
+        if ($childs && !empty($childs['to_bind'])){
+            foreach($childs['to_bind'] as $relation){
+                $this->addToolButton(array(
+                    'class' => 'add ajax-modal',
+                    'title' => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
+                    'href'  => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
+                ));
+                $this->addToolButton(array(
+                    'class' => 'delete ajax-modal',
+                    'title' => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),
+                    'href'  => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id'], 'unbind'))
+                ));
+            }
+        }
 
         if (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
         (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] == $user->id)){
@@ -72,9 +86,7 @@
             'url' => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
-        foreach($childs['tabs'] as $child_ctype_name => $title){
-            $this->addMenuItems('item-menu', $childs['tabs']);
-        }
+        $this->addMenuItems('item-menu', $childs['tabs']);
 
     }
 

@@ -752,6 +752,61 @@ form .ft_date select { width:50px; padding:2px; }
 form .ft_listmultiple.field_error .input_checkbox_list {
 	border:solid 1px #c0392b;
 }
+
+form .ft_parent {
+    overflow: hidden;
+}
+
+form .ft_parent ul.items,
+form .ft_parent ul.items li {
+	list-style:none;
+	padding:0;
+	margin:0;
+	overflow:hidden;
+}
+
+form .ft_parent ul.items{
+	float:left;
+	margin-right:10px;
+}
+
+form .ft_parent ul.items li {
+	float:left;
+	margin-right: 2px;
+	margin-bottom:2px;
+	display:inline-block;
+	padding:4px 8px;
+	color:#68809B;
+	background: #F4F8FD;
+	border: solid 1px #B8D6FB;
+	border-radius:4px;
+	text-decoration: none;
+	font-size:12px;
+}
+
+form .ft_parent ul.items li a{
+    width: 16px;
+    height: 12px;
+    margin-right:-4px;
+    display: inline-block;
+    background: url(../images/icons/close.png) no-repeat left top;
+}
+
+form .ft_parent ul.items li a:hover{
+    width: 16px;
+    height: 12px;
+    display: inline-block;
+    background: url(../images/icons/close.png) no-repeat right top;
+}
+
+form .ft_parent a.add {
+	height:24px;
+	line-height:24px;
+	padding-left:20px;
+	background:url("../images/icons/add.png") no-repeat left center;
+	font-size:12px;
+}
+
 .symbols_count {
     font-size: 12px;
     margin: 3px 0 0 0;

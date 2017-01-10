@@ -55,7 +55,7 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldList('fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($field) use($model){
+                        'generator' => function($field) use ($model){
                             $fieldsets = $model->getContentFieldsets($field['ctype_id']);
                             $items = array('');
                             foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
@@ -84,6 +84,26 @@ class formAdminCtypesField extends cmsForm {
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
                     )),
+                    new fieldList('options:relation_id', array(
+                        'title' => LANG_CP_FIELD_IN_RELATION,
+                        'generator' => function() use ($model, $ctype_name) {
+
+                            $ctype = $model->getContentTypeByName($ctype_name);
+
+                            $parents = $model->getContentTypeParents($ctype['id']);
+
+                            $items = array('0' => LANG_NO);
+
+                            if (is_array($parents)){
+                                foreach($parents as $parent){
+                                    $items[$parent['id']] = "{$ctype['title']} > {$parent['ctype_title']}";
+                                };
+                            }
+
+                            return $items;
+
+                        }
+                    ))
                 )
             ),
             'labels' => array(
@@ -176,15 +196,6 @@ class formAdminCtypesField extends cmsForm {
                     ))
                 )
             ),
-//            'privacy' => array(
-//                'type' => 'fieldset',
-//                'title' => LANG_CP_FIELD_PRIVACY,
-//                'childs' => array(
-//                    new fieldCheckbox('is_private', array(
-//                        'title' => LANG_CP_FIELD_PRIVATE,
-//                    )),
-//                )
-//            ),
             'read_access' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_READ,

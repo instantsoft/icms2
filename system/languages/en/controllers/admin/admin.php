@@ -187,6 +187,7 @@
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In entry');
     define('LANG_CP_FIELD_IN_FILTER',           'Show in filter');
+    define('LANG_CP_FIELD_IN_RELATION',         'Show only when parent relation is used');
     define('LANG_CP_FIELD_PRIVACY',             'Privacy');
     define('LANG_CP_FIELD_PRIVATE',             'Show the field only to the entry author');
     define('LANG_CP_FIELD_GROUPS_READ',         'Read access');

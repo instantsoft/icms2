@@ -1229,10 +1229,12 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentTypeParentFieldNames($ctype_id){
+    public function getContentTypeParents($ctype_id){
 
         $this->selectOnly('i.*');
-        $this->select('c.name', 'parent_ctype_name');
+        $this->select('c.name', 'ctype_name');
+        $this->select('c.title', 'ctype_title');
+        $this->select('c.id', 'ctype_id');
 
         $this->joinLeft('content_types', 'c', 'c.id = i.ctype_id');
 
@@ -1240,15 +1242,97 @@ class modelContent extends cmsModel{
 
         $parents = $this->get('content_relations');
 
-        if (!$parents) { return false; }
+        if (!$parents) { return array(); }
 
-        $result = array();
-
-        foreach ($parents as $relation){
-            $result[$relation['parent_ctype_name']] = "parent_{$relation['parent_ctype_name']}_id";
+        foreach ($parents as $id => $parent){
+            $parents[$id]['id_param_name'] = "parent_{$parent['ctype_name']}_id";
         }
 
-        return $result;
+        return $parents;
+
+    }
+
+    public function updateChildItemParentIds($relation){
+
+        $this->selectOnly('parent_item_id', 'id');
+
+        $this->filterEqual('parent_ctype_id', $relation['parent_ctype_id']);
+        $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
+        $this->filterEqual('child_item_id', $relation['child_item_id']);
+
+        $parent_items_ids = $this->get('content_relations_bind', function($item, $model){
+            return $item['id'];
+        }, false);
+
+        if ($parent_items_ids){
+
+            $ids = trim(implode(',', $parent_items_ids));
+
+            if ($ids){
+
+                $item_table = $this->table_prefix . $relation['child_ctype_name'];
+
+                $this->update($item_table, $relation['child_item_id'], array(
+                   "parent_{$relation['parent_ctype_name']}_id" => $ids
+                ));
+
+            }
+
+        }
+
+    }
+
+    public function bindContentItemRelation($relation){
+
+        $id = $this->insert('content_relations_bind', $relation);
+
+        $this->updateChildItemParentIds($relation);
+
+        return $id;
+
+    }
+
+    public function unbindContentItemRelation($relation){
+
+        $this->filterEqual('parent_ctype_id', $relation['parent_ctype_id']);
+        $this->filterEqual('parent_item_id', $relation['parent_item_id']);
+        $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
+        $this->filterEqual('child_item_id', $relation['child_item_id']);
+
+        $this->deleteFiltered('content_relations_bind');
+
+        $this->updateChildItemParentIds($relation);
+
+        return;
+
+    }
+
+    public function deleteContentItemRelations($ctype_id, $item_id){
+
+        $this->filterEqual('child_ctype_id', $ctype_id);
+        $this->filterEqual('child_item_id', $item_id);
+
+        $this->deleteFiltered('content_relations_bind');
+
+    }
+
+    public function getContentItemParents($parent_ctype, $child_ctype_id, $item_id){
+
+        $this->selectOnly('i.*');
+
+        $parent_ctype_table = $this->table_prefix . $parent_ctype['name'];
+
+        $join_on =  "r.parent_ctype_id = {$parent_ctype['id']} AND " .
+                    "r.child_ctype_id = {$child_ctype_id} AND " .
+                    "r.child_item_id = {$item_id} AND " .
+                    "r.parent_item_id = i.id";
+
+        $this->filterNotNull('r.id');
+
+        $this->joinLeft('content_relations_bind', 'r', $join_on);
+
+        return $this->get($parent_ctype_table);
+
 
     }
 
@@ -1328,7 +1412,7 @@ class modelContent extends cmsModel{
         // параметры выборки
         if($dataset['filters']){
             foreach ($dataset['filters'] as $filters) {
-                if($filters && !in_array($filters['condition'], array('gt','lt','ge','le'))){
+                if($filters && !in_array($filters['condition'], array('gt','lt','ge','le','nn','ni'))){
                     $filters_fields[] = $filters['field'];
                 }
             }
@@ -1865,6 +1949,8 @@ class modelContent extends cmsModel{
         $item = $this->getContentItem($ctype_name, $id);
         if(!$item){ return false; }
 
+        $ctype = $this->getContentTypeByName($ctype_name);
+
         cmsEventsManager::hook('content_before_delete', array('ctype_name'=>$ctype_name, 'item'=>$item));
         cmsEventsManager::hook("content_{$ctype_name}_before_delete", $item);
 
@@ -1886,6 +1972,8 @@ class modelContent extends cmsModel{
         $this->closeModeratorTask($ctype_name, $id, false);
 
         $this->deletePropsValues($ctype_name, $id);
+
+        $this->deleteContentItemRelations($ctype['id'], $id);
 
         $this->filterEqual('item_id', $item['id'])->deleteFiltered($table_name.'_cats_bind');
 
@@ -2069,7 +2157,7 @@ class modelContent extends cmsModel{
             if(is_callable($access_callback) && !$access_callback($ctype)){
                 continue;
             }
-		
+
 	    if(!$ctype['options']['profile_on']){
                 continue;
             }

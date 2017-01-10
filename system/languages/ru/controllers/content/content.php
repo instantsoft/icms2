@@ -16,8 +16,12 @@
 	define('LANG_CONTENT_IS_PUB',			 'Публиковать %s на сайте');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Публикация отключена по дате');
 
+    define('LANG_CONTENT_WRONG_PARENT',		 'Выбран неверный родитель');
+
     define('LANG_RULE_CONTENT_ADD',          'Создание записей');
     define('LANG_RULE_CONTENT_ADD_TO_PARENT','Создание дочерних записей');
+    define('LANG_RULE_CONTENT_BIND_TO_PARENT','Привязка дочерних записей');
+    define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Отвязка дочерних записей');
     define('LANG_RULE_CONTENT_EDIT',         'Редактирование записей');
     define('LANG_RULE_CONTENT_DELETE',       'Удаление записей');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Создание категорий');

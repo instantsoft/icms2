@@ -872,4 +872,93 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
+    public function bindItemToParents($ctype, $item, $parents = false){
+
+        if (!$parents){
+            $parents = $this->model->getContentTypeParents($ctype['id']);
+        }
+
+        foreach($parents as $parent){
+
+            $value = isset($item[$parent['id_param_name']]) ? $item[$parent['id_param_name']] : '';
+
+            $ids = array();
+
+            foreach(explode(',', $value) as $id){
+                if (!trim($id)) { continue; }
+                $ids[] = trim($id);
+            }
+
+            $parent_ctype = $this->model->getContentTypeByName($parent['ctype_name']);
+
+            $current_parents = array();
+            $new_parents = array();
+            $parents_to_delete = array();
+            $parents_to_add = array();
+
+            if (!empty($item['id'])){
+                $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype['id'], $item['id']);
+            }
+
+            if ($ids){
+                $this->model->filterIn('id', $ids);
+                $new_parents = $this->model->getContentItems($parent['ctype_name']);
+            }
+
+            if (!$new_parents && $current_parents) {
+                $parents_to_delete = $current_parents;
+            }
+
+            if ($current_parents){
+                foreach($current_parents as $id => $current_parent){
+                    if (isset($new_parents[$id])) { continue; }
+                    if (!in_array($id, $parents_to_delete)){
+                        $parents_to_delete[] = $id;
+                    }
+                }
+            }
+
+            if ($new_parents){
+                foreach($new_parents as $id => $new_parent){
+                    if (isset($current_parents[$id])) { continue; }
+                    if (!in_array($id, $parents_to_add)){
+                        $parents_to_add[] = $id;
+                    }
+                }
+            }
+
+            if ($parents_to_add){
+                foreach ($parents_to_add as $new_parent_id){
+
+                    $this->model->bindContentItemRelation(array(
+                        'parent_ctype_name' => $parent_ctype['name'],
+                        'parent_ctype_id' => $parent_ctype['id'],
+                        'parent_item_id' => $new_parent_id,
+                        'child_ctype_name' => $ctype['name'],
+                        'child_ctype_id' => $ctype['id'],
+                        'child_item_id' => $item['id']
+                    ));
+
+                }
+            }
+
+            if ($parents_to_delete){
+                foreach ($parents_to_delete as $old_parent_id){
+
+                    $this->model->unbindContentItemRelation(array(
+                        'parent_ctype_name' => $parent_ctype['name'],
+                        'parent_ctype_id' => $parent_ctype['id'],
+                        'parent_item_id' => $new_parent_id,
+                        'child_ctype_name' => $ctype['name'],
+                        'child_ctype_id' => $ctype['id'],
+                        'child_item_id' => $item['id']
+                    ));
+
+                }
+            }
+
+        }
+
+    }
+
 }
