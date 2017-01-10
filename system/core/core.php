@@ -844,7 +844,7 @@ class cmsCore {
             foreach($page['url_mask'] as $mask){
                 $regular = string_mask_to_regular($mask);
                 $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $_full_uri);
+                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
             }
 
             if (!empty($page['url_mask_not'])) {

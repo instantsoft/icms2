@@ -33,6 +33,7 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $this->cms_template->renderJSON(array(
             'error' => !(bool) $binded_id,
+            'name' => $widget['title'],
             'id'    => $binded_id
         ));
 

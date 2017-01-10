@@ -60,6 +60,7 @@ class images extends cmsFrontend {
         }
 
 		$sizes = $this->request->get('sizes', '');
+		$file_name = $this->request->get('file_name', '');
 
 		if (!empty($sizes) && preg_match('/([a-z0-9_,]+)$/i', $sizes)){
 			$sizes = explode(',', $sizes);
@@ -87,6 +88,10 @@ class images extends cmsFrontend {
 			if (!in_array($p['name'], $sizes, true)){
 				continue;
 			}
+
+            if($file_name){
+                $this->cms_uploader->setFileName($file_name.' '.$p['name']);
+            }
 
 			$path = $this->cms_uploader->resizeImage($result['path'], array(
 				'width'     => $p['width'],

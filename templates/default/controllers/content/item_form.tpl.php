@@ -41,6 +41,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
+        'cancel' => array('show' => true, 'href' => $back_url ? $back_url : href_to($ctype['name'])),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(

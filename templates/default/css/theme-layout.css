@@ -631,7 +631,7 @@ aside .menu .item, section .menu .item {
         width: 100%;
     }
     #layout header #logo { width:200px; }
-    .tabs-menu ul { display:none; }
+    .tabs-menu > ul { display:none; }
     .tabs-menu select { display:block !important; }
     .widget > .title { font-size:14px !important; }
     .widget > .title .links { display:none; }

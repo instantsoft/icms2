@@ -135,6 +135,7 @@
     define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
+    define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count views (hits)');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Appended HTML code will be shown under each entry');

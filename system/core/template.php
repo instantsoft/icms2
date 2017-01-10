@@ -27,6 +27,7 @@ class cmsTemplate {
     protected $menus = array();
     protected $db_menus = array();
     protected $menu_loaded = false;
+    protected $not_found_tpls = array();
 
     protected $widgets = array();
     protected $widgets_group_index = 0;
@@ -1055,6 +1056,10 @@ class cmsTemplate {
             }
         }
 
+        if(!$exists){
+            $this->not_found_tpls[] = $file;
+        }
+
         return $exists;
 
     }
@@ -1099,7 +1104,8 @@ class cmsTemplate {
 
         if (!$tpl_file){
             if (!$is_check){
-                cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $tpl_file);
+                $last_not_found_tpl = end($this->not_found_tpls);
+                cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->site_config->root.$last_not_found_tpl);
             } else {
                 return false;
             }
@@ -1184,7 +1190,7 @@ class cmsTemplate {
 
         $css_file = $this->getStylesFileName();
 
-        if ($css_file){ $this->addCSS($css_file); }
+        if ($css_file){ $this->addCSSFromContext($css_file); }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 

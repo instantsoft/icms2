@@ -833,6 +833,11 @@ form .ft_parent a.add {
     color: #FFF;
     border-color: #c0392b;
 }
+.field.reguired_field > label::after{
+	content: '*';
+	color: #e74c3c;
+	padding-left: 5px;
+}
 /* ========================================================================== */
 
 .input-users-list{
