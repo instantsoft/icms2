@@ -231,6 +231,7 @@ class cmsUploader {
             $destination = $this->getUploadDestinationDirectory();
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
+            $this->file_name = $dest_name;
         }
 
         $destination .= $this->getFileName($destination, $dest_ext);
@@ -294,7 +295,7 @@ class cmsUploader {
             'success' => true,
             'path'    => $destination,
             'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
-            'name'    => $dest_name,
+            'name'    => basename($destination),
             'size'    => $image_size
         );
 
@@ -399,7 +400,7 @@ class cmsUploader {
             'success' => true,
             'path'    => $destination,
             'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
-            'name'    => $orig_name,
+            'name'    => basename($destination),
             'size'    => $real_size
         );
 
@@ -442,7 +443,7 @@ class cmsUploader {
             'success' => @move_uploaded_file($source, $destination),
             'path'    => $destination,
             'url'     => str_replace($this->site_cfg->upload_path, '', $destination),
-            'name'    => $orig_name,
+            'name'    => basename($destination),
             'size'    => $orig_size,
             'error'   => $this->upload_errors[$errorCode]
         );

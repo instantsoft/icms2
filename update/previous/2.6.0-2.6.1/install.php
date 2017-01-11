@@ -1,29 +1,29 @@
 <?php
 /**
- * 2.6.1 => 2.7.0
+ * 2.6.0 => 2.6.1
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
-    add_perms(array(
-        'content' => array(
-            'add_to_parent'
-        )
-    ), 'list', 'to_own,to_other,to_all');
+    $ctypes = $content_model->getContentTypes();
 
-    add_perms(array(
-        'content' => array(
-            'bind_to_parent'
-        )
-    ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
+	foreach($ctypes as $ctype){
 
-    add_perms(array(
-        'content' => array(
-            'bind_off_parent'
-        )
-    ), 'list', 'own,all');
+        if($ctype['name'] == 'video' && cmsCore::isControllerExists('video')){
+            if(isFieldExists("{$content_model->table_prefix}video_cats", 'desc') &&
+                    !isFieldExists("{$content_model->table_prefix}video_cats", 'description')){
+                $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}video_cats` CHANGE `desc` `description` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
+            }
+            continue;
+        }
+
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}_cats", 'description')){
+            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_cats` ADD `description` TEXT NULL DEFAULT NULL");
+        }
+
+	}
 
     return true;
 

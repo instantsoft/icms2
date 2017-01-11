@@ -48,19 +48,19 @@
 
         var isTitleTyped = $('input#title').val() != '';
 
-        $('input#title').change(function(){
+        $('input#title').on('input', function(){
             isTitleTyped = true;
         });
 
-        $('select#child_ctype_id').change(function(){
+        $('select#child_ctype_id').on('change', function(){
            if (!isTitleTyped){
                $('input#title').val($(this).find('option:selected').text());
            }
-        }).trigger('change');
+        }).triggerHandler('change');
 
-        $('select#layout').change(function(){
+        $('select#layout').on('change', function(){
            $('form #tab-tab-opts fieldset').toggle( $(this).val() == 'tab' );
-        });
+        }).triggerHandler('change');
 
     });
 </script>

@@ -4,8 +4,6 @@ class formAdminCtypesRelation extends cmsForm {
 
     public function init($do, $ctype_id) {
 
-        $ctypes = cmsCore::getModel('content')->getContentTypes();
-
         return array(
             'basic' => array(
                 'type' => 'fieldset',
@@ -76,17 +74,29 @@ class formAdminCtypesRelation extends cmsForm {
                     new fieldString('seo_title', array(
                         'title' => LANG_CP_RELATION_TAB_SEO_TITLE,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
                     )),
 
                     new fieldString('seo_keys', array(
                         'title' => LANG_CP_RELATION_TAB_SEO_KEYS,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
                     )),
 
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_RELATION_TAB_SEO_DESC,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
-                    )),
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
+                    ))
 
                 )
             )
