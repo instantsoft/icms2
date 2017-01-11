@@ -329,7 +329,7 @@
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
     define('LANG_CP_SETTINGS_SITE_ONLY_TO_USERS', 'Сайт доступен только авторизованным пользователям');
-	define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
+    define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
     define('LANG_CP_SETTINGS_SITENAME',         'Название сайта');
