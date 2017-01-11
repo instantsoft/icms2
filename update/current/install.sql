@@ -27,3 +27,6 @@ CREATE TABLE `{#}content_relations_bind` (
   KEY `child_ctype_id` (`child_ctype_id`),
   KEY `child_item_id` (`child_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `{#}geo_cities` ADD `ordering` INT(11) NOT NULL DEFAULT '10000' AFTER `name`;
+ALTER TABLE `{#}geo_regions` ADD `ordering` INT(11) NOT NULL DEFAULT '1000' AFTER `name`;

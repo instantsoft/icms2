@@ -4,6 +4,7 @@ CREATE TABLE `{#}geo_cities` (
   `country_id` int(10) unsigned NOT NULL DEFAULT '0',
   `region_id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(128) NOT NULL DEFAULT '',
+  `ordering` int(11) NOT NULL DEFAULT '10000',
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`),
   KEY `region_id` (`region_id`)
@@ -11115,6 +11116,7 @@ CREATE TABLE `{#}geo_regions` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `country_id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
+  `ordering` int(11) NOT NULL DEFAULT '1000',
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

@@ -6,8 +6,8 @@ function grid_regions($controller){
         'is_sortable'   => true,
         'is_filter'     => true,
         'is_pagination' => true,
-        'is_draggable'  => false,
-        'order_by'      => 'name',
+        'is_draggable'  => true,
+        'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => true
     );
@@ -25,7 +25,11 @@ function grid_regions($controller){
             'editable' => array(
                 'table' => 'geo_regions'
             )
-        )
+        ),
+		'ordering' => array(
+			'title' => LANG_GEO_POSITION,
+			'width' => 60
+		)
     );
 
     $actions = array(
