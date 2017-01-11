@@ -13,7 +13,7 @@ function grid_regions($controller){
     );
 
     $columns = array(
-		'id' => array(
+        'id' => array(
             'title'  => 'ID',
             'width'  => 20,
             'filter' => 'exact'
@@ -26,10 +26,10 @@ function grid_regions($controller){
                 'table' => 'geo_regions'
             )
         ),
-		'ordering' => array(
-			'title' => LANG_GEO_POSITION,
-			'width' => 60
-		)
+        'ordering' => array(
+            'title' => LANG_GEO_POSITION,
+            'width' => 60
+        )
     );
 
     $actions = array(
@@ -53,4 +53,3 @@ function grid_regions($controller){
     );
 
 }
-

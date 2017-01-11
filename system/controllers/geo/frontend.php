@@ -91,12 +91,12 @@ class geo extends cmsFrontend {
             $items = array('0'=>$select_text) + $items;
         }
 
-		foreach ($items as $id => $name){
-			$data[] = array(
-				'id' => $id,
-				'name' => $name,
-			);
-		}
+        foreach ($items as $id => $name){
+            $data[] = array(
+                'id' => $id,
+                'name' => $name,
+            );
+        }
 
         return $this->cms_template->renderJSON(array(
            'error' => $data ? false : true,
@@ -152,4 +152,3 @@ class geo extends cmsFrontend {
     }
 
 }
-
