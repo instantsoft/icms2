@@ -1,4 +1,13 @@
 <?php $core = cmsCore::getInstance(); ?>
+<?php $user = cmsUser::getInstance(); ?>
+<?php 
+    if ($config->is_only_to_users){ 
+	    if ( (!$user->id) && ($core->controller != 'auth') ) {
+            cmsUser::goLogin();
+        } 
+    } 
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,7 +41,7 @@
         <?php if (!$config->is_site_on){ ?>
             <div id="site_off_notice"><?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?></div>
         <?php } ?>
-
+	
         <header>
             <div id="logo">
                 <?php if($core->uri) { ?>

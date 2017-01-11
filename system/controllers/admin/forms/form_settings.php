@@ -16,6 +16,10 @@ class formAdminSettings extends cmsForm {
                 'title' => LANG_CP_SETTINGS_SITE,
                 'childs' => array(
 
+				    new fieldCheckbox('is_only_to_users', array(
+                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
+                    )),
+				
                     new fieldCheckbox('is_site_on', array(
                         'title' => LANG_CP_SETTINGS_SITE_ENABLED,
                     )),
