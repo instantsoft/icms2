@@ -39,23 +39,21 @@ class actionContentItemChildsView extends cmsAction {
         $html = $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'], "view-{$child_ctype_name}"));
 
         $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
-        $seo_keys = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
-        $seo_desc = empty($relation['seo_desc']) ? '' : string_replace_keys_values($relation['seo_desc'], $item);
+        $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
+        $seo_desc  = empty($relation['seo_desc']) ? '' : string_replace_keys_values($relation['seo_desc'], $item);
 
         return $this->cms_template->render('item_childs_view', array(
-            'ctype' => $ctype,
+            'ctype'       => $ctype,
             'child_ctype' => $child_ctype,
-            'item' => $item,
-            'childs' => $childs,
-            'html' => $html,
-            'relation' => $relation,
-            'seo_title' => $seo_title,
-            'seo_keys' => $seo_keys,
-            'seo_desc' => $seo_desc
+            'item'        => $item,
+            'childs'      => $childs,
+            'html'        => $html,
+            'relation'    => $relation,
+            'seo_title'   => $seo_title,
+            'seo_keys'    => $seo_keys,
+            'seo_desc'    => $seo_desc
         ));
 
 	}
-
-
 
 }

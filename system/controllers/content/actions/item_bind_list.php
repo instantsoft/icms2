@@ -6,13 +6,13 @@ class actionContentItemBindList extends cmsAction {
 
         $user = cmsUser::getInstance();
 
-        $ctype_name = $this->request->get('ctype_name', '');
+        $ctype_name       = $this->request->get('ctype_name', '');
         $child_ctype_name = $this->request->get('child_ctype_name', '');
-        $item_id = $this->request->get('id');
-        $authors = $this->request->get('authors', '');
-		$field = $this->request->get('field', '');
-		$text = $this->request->get('text', '');
-		$mode = $this->request->get('mode', 'childs');
+        $item_id          = $this->request->get('id', 0);
+        $authors          = $this->request->get('authors', '');
+        $field            = $this->request->get('field', '');
+        $text             = $this->request->get('text', '');
+        $mode             = $this->request->get('mode', 'childs');
 
         if (!$ctype_name || !$child_ctype_name || !$authors || !$field){
             cmsCore::error404();
@@ -116,12 +116,12 @@ class actionContentItemBindList extends cmsAction {
 
 		}
 
-        return cmsTemplate::getInstance()->render('item_bind_list', array(
-            'mode' => $mode,
-            'ctype' => $ctype,
+        return $this->cms_template->render('item_bind_list', array(
+            'mode'        => $mode,
+            'ctype'       => $ctype,
             'child_ctype' => $child_ctype,
-            'total' => $total,
-            'items' => $items,
+            'total'       => $total,
+            'items'       => $items
         ));
 
     }

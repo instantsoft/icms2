@@ -22,7 +22,7 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 			$list = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
 		}
 
-		cmsTemplate::getInstance()->renderJSON($list);
+		$this->cms_template->renderJSON($list);
 
     }
 

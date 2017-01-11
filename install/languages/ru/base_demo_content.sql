@@ -277,7 +277,7 @@ CREATE TABLE `{#}con_board` (
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
   `photo` text,
   `photos` text,
-  `price` int(11) DEFAULT NULL,
+  `price` float DEFAULT NULL,
   `phone` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),

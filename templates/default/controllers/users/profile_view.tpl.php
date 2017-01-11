@@ -102,7 +102,11 @@
         <?php if ($is_friends_on && $friends) { ?>
             <div class="block">
                 <div class="block-title">
-                    <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php if($show_all_flink){ ?>
+                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php } else { ?>
+                        <?php echo LANG_USERS_FRIENDS; ?>
+                    <?php } ?>
                     (<?php echo $profile['friends_count']; ?>)
                 </div>
                 <div class="friends-list">

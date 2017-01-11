@@ -6,10 +6,10 @@ class actionContentItemBind extends cmsAction {
 
         $user = cmsUser::getInstance();
 
-        $ctype_name = $this->request->get('ctype_name', '');
+        $ctype_name       = $this->request->get('ctype_name', '');
         $child_ctype_name = $this->request->get('child_ctype_name', '');
-        $item_id = $this->request->get('id', '');
-        $selected_ids = explode(',', $this->request->get('selected_ids', ''));
+        $item_id          = $this->request->get('id', 0);
+        $selected_ids     = explode(',', $this->request->get('selected_ids', ''));
 
         if (!$ctype_name || !$child_ctype_name || !$item_id || !$selected_ids){
             cmsCore::error404();
@@ -53,16 +53,16 @@ class actionContentItemBind extends cmsAction {
 									($perm == 'other_to_all' && $child_item['user_id'] != $user->id)
 								) || $user->is_admin;
 
-			if (!$is_allowed_to_bind) { dump($parent_item); continue; }
+			if (!$is_allowed_to_bind) { continue; }
 
 			$this->model->bindContentItemRelation(array(
                 'parent_ctype_name' => $ctype['name'],
-				'parent_ctype_id' => $ctype['id'],
-				'parent_item_id' => $parent_item['id'],
-                'child_ctype_name' => $child_ctype['name'],
-				'child_ctype_id' => $child_ctype['id'],
-				'child_item_id' => $child_item['id']
-			));
+                'parent_ctype_id'   => $ctype['id'],
+                'parent_item_id'    => $parent_item['id'],
+                'child_ctype_name'  => $child_ctype['name'],
+                'child_ctype_id'    => $child_ctype['id'],
+                'child_item_id'     => $child_item['id']
+            ));
 
 		}
 

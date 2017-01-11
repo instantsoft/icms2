@@ -23,7 +23,7 @@ class actionContentWidgetRelationsAjax extends cmsAction {
             };
         }
 
-		cmsTemplate::getInstance()->renderJSON($list);
+		return $this->cms_template->renderJSON($list);
 
     }
 

@@ -69,6 +69,8 @@ class actionUsersProfile extends cmsAction {
 
         }
 
+        $tabs = $this->getProfileMenu($profile);
+
         return $this->cms_template->render('profile_view', array(
             'profile'           => $profile,
             'user'              => $this->cms_user,
@@ -76,11 +78,12 @@ class actionUsersProfile extends cmsAction {
             'is_friends_on'     => $is_friends_on,
             'is_friend_profile' => $is_friend_profile,
             'is_friend_req'     => $is_friend_req,
+            'show_all_flink'    => isset($this->tabs['friends']),
             'friends'           => $friends,
             'content_counts'    => $content_counts,
             'fields'            => $fields,
             'wall_html'         => isset($wall_html) ? $wall_html : false,
-            'tabs'              => $this->getProfileMenu($profile)
+            'tabs'              => $tabs
         ));
 
     }

@@ -113,10 +113,10 @@ class actionContentItemView extends cmsAction {
 
         $childs = array(
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
-            'to_add' => array(),
-            'to_bind' => array(),
-            'tabs' => array(),
-            'items' => array()
+            'to_add'    => array(),
+            'to_bind'   => array(),
+            'tabs'      => array(),
+            'items'     => array()
         );
 
         if ($childs['relations']){
@@ -128,13 +128,13 @@ class actionContentItemView extends cmsAction {
                 $model->resetFilters();
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
-                $is_allowed_to_add = $perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == cmsUser::get('id')));
+                $is_allowed_to_add = $perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id));
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
                 $is_allowed_to_bind = $perm && (
                                         ($perm == 'all_to_all' || $perm == 'own_to_all' || $perm == 'other_to_all') ||
-                                        (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && $item['user_id'] == cmsUser::get('id')) ||
-                                        (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && $item['user_id'] != cmsUser::get('id'))
+                                        (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && $item['user_id'] == $this->cms_user->id) ||
+                                        (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && $item['user_id'] != $this->cms_user->id)
                                     );
 
                 if ($is_allowed_to_add) {
@@ -158,8 +158,8 @@ class actionContentItemView extends cmsAction {
                 if (($count || !$is_hide_empty) && $relation['layout'] == 'tab'){
 
                     $childs['tabs'][] = array(
-                        'title' => $relation['title'],
-                        'url' => href_to($ctype['name'], $item['slug'], "view-{$relation['child_ctype_name']}"),
+                        'title'   => $relation['title'],
+                        'url'     => href_to($ctype['name'], $item['slug'], "view-{$relation['child_ctype_name']}"),
                         'counter' => $count
                     );
 
@@ -194,15 +194,18 @@ class actionContentItemView extends cmsAction {
                 }
 
             }
+
+            list($ctype, $childs) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs));
+
         }
 
         if ($this->request->has('child_ctype_name')){
-            $child_ctype_name = $this->request->get('child_ctype_name');
+            $child_ctype_name = $this->request->get('child_ctype_name', '');
             return $this->runAction('item_childs_view', array(
-                'ctype' => $ctype,
-                'item' => $item,
+                'ctype'            => $ctype,
+                'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
-                'childs' => $childs
+                'childs'           => $childs
             ));
         }
 

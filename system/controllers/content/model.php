@@ -1191,17 +1191,23 @@ class modelContent extends cmsModel{
 
     public function addContentRelation($relation){
 
+        cmsCache::getInstance()->clean('content.relations');
+
         return $this->insert('content_relations', $relation);
 
     }
 
     public function updateContentRelation($id, $relation){
 
-        $this->update('content_relations', $id, $relation);
+        cmsCache::getInstance()->clean('content.relations');
+
+        return $this->update('content_relations', $id, $relation);
 
     }
 
     public function deleteContentRelation($id){
+
+        cmsCache::getInstance()->clean('content.relations');
 
         return $this->delete('content_relations', $id);
 
@@ -1209,12 +1215,14 @@ class modelContent extends cmsModel{
 
     public function getContentTypeChilds($ctype_id){
 
+        $this->useCache('content.relations');
+
         $this->selectOnly('i.*');
         $this->select('c.title', 'child_title');
         $this->select('c.labels', 'child_labels');
         $this->select('c.name', 'child_ctype_name');
 
-        $this->joinLeft('content_types', 'c', 'c.id = i.child_ctype_id');
+        $this->joinInner('content_types', 'c', 'c.id = i.child_ctype_id');
 
         $this->filterEqual('ctype_id', $ctype_id);
 

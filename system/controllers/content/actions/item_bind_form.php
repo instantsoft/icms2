@@ -4,12 +4,12 @@ class actionContentItemBindForm extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
+        cmsUser::getInstance();
 
-        $ctype_name = $this->request->get('ctype_name', '');
+        $ctype_name       = $this->request->get('ctype_name', '');
         $child_ctype_name = $this->request->get('child_ctype_name', '');
-        $item_id = $this->request->get('id', 0);
-		$mode = $this->request->get('mode', 'childs');
+        $item_id          = $this->request->get('id', 0);
+        $mode             = $this->request->get('mode', 'childs');
 
         if (!$ctype_name || !$child_ctype_name){
             cmsCore::error404();
@@ -65,12 +65,12 @@ class actionContentItemBindForm extends cmsAction {
 
 		$filter_fields['id'] = 'ID';
 
-        return cmsTemplate::getInstance()->render('item_bind_form', array(
-			'mode' => $mode,
-            'ctype' => $ctype,
-            'child_ctype' => $child_ctype,
-            'item' => $item,
-			'filter_fields' => $filter_fields
+        return $this->cms_template->render('item_bind_form', array(
+			'mode'          => $mode,
+            'ctype'         => $ctype,
+            'child_ctype'   => $child_ctype,
+            'item'          => $item,
+            'filter_fields' => $filter_fields
         ));
 
     }
