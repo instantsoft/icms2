@@ -90,6 +90,9 @@ class cmsRequest {
     }
 
     public function hasInArray($array_name, $var){
+        if (is_array($var) || strpos($var, ':') !== false) {
+            return cmsForm::isArrayNested($array_name, $var);
+        }
         return isset($this->data[$array_name][$var]);
     }
 
@@ -114,9 +117,8 @@ class cmsRequest {
             if (!$this->has($var)) { return $default; }
             $value = $this->data[$var];
         } else {
-            $name_parts = explode(':', $var);
-            if (!$this->hasInArray($name_parts[0], $name_parts[1])) { return $default; }
-            $value = $this->data[$name_parts[0]][$name_parts[1]];
+            if (!$this->hasInArray($this->data, $var)) { return $default; }
+            $value = cmsForm::arrayNestedValue($this->data, $var);
         }
 
         if($var_type === null){

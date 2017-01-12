@@ -80,20 +80,18 @@
 
                         $default = $field->getDefaultValue();
                         $rel = isset($field->rel) ? $field->rel : null;
+    
+                        $value = $default;
 
-                        if (strpos($name, ':') !== false){
-                            $name_parts = explode(':', $name);
-                            $name       = $name_parts[0].'['.$name_parts[1].']';
-                            if (isset($data[$name_parts[0]]) && @array_key_exists($name_parts[1], $data[$name_parts[0]])){
-                                $value = $data[$name_parts[0]][$name_parts[1]];
-                            } else {
-                                $value = $default;
+                        if (strpos($name, ':') !== false) {
+                            if (cmsForm::isArrayNested($data, $name)) {
+                                $value = cmsForm::arrayNestedValue($data, $name);
                             }
+                            $keys = explode(':', $name);
+                            $name = array_shift($keys) . '[' . implode('][', $keys) . ']';
                         } else {
                             if (is_array($data) && @array_key_exists($name, $data)){
                                 $value = $data[$name];
-                            } else {
-                                $value = $default;
                             }
                         }
 

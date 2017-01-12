@@ -337,8 +337,7 @@ class cmsForm {
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $result[$name_parts[0]][$name_parts[1]] = $value;
+		    self::arrayNestedValue($result, $name, $value);
                 }
 
                 // если нужна денормализация
@@ -349,8 +348,7 @@ class cmsForm {
                     if ($is_array === false){
                         $result[$d_name] = $field->storeCachedValue($value);
                     } else {
-                        $d_name_parts = explode(':', $d_name);
-                        $result[$d_name_parts[0]][$d_name_parts[1]] = $field->storeCachedValue($value);
+                        self::arrayNestedValue($result, $d_name, $field->storeCachedValue($value));
                     }
 
                 }
@@ -416,8 +414,7 @@ class cmsForm {
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $value = isset($data[$name_parts[0]][$name_parts[1]]) ? $data[$name_parts[0]][$name_parts[1]] : '';
+                    $value = self::arrayNestedValue($data, $name);
                 }
 
                 if ($data) { $field->setItem($data); }
@@ -462,6 +459,59 @@ class cmsForm {
         if (!sizeof($errors)) { return false; }
 
         return $errors;
+
+    }
+
+//============================================================================//
+//============================================================================//
+
+    /**
+     * Устанавливает/получает значение во вложенный массив на основе указанного пути
+     *
+     * @param  array        $array      Массив-источник
+     * @param  string|array $path       Путь ключей в глубину
+     * @param  mixed        $value      Конечное значение
+     * @param  string       $delimiter  Разделитель ключей в пути
+     * @return mixed                    Возвращает значение по указанному пути, если не передан параметр $value
+     */
+    public static function arrayNestedValue(&$array, $path, &$value=NULL, $delimiter = ':') {
+
+        $keys = is_array($path) ? $path : explode($delimiter, $path);
+
+        $current = &$array;
+        foreach($keys as $key) {
+            $current = &$current[$key];
+        }
+
+        $backup = $current;
+
+        if (isset($value)) {
+            $current = $value;
+        }
+
+        return $backup;
+
+    }
+
+    /**
+     * Проверяет наличие элементов в массиве по указанному пути ключей в глубину
+     *
+     * @param  array        $array      Массив-источник
+     * @param  string|array $path       Путь ключей в глубину
+     * @param  string       $delimiter  Разделитель ключей в пути
+     * @return boolean
+     */
+    public static function isArrayNested(&$array, $path, $delimiter = ':') {
+
+        $keys = is_array($path) ? $path : explode($delimiter, $path);
+
+        $current = &$array;
+        foreach($keys as $key) {
+            if (!isset($current[$key])) { return false; }
+            $current = &$current[$key];
+        }
+
+        return true;
 
     }
 
