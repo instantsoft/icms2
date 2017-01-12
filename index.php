@@ -32,19 +32,19 @@
         }
     }
 
+    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
+    if (mb_strpos($_SERVER['REQUEST_URI'], href_to('auth')) !== 0) {
+        if ($config->is_only_to_users && !cmsUser::isLogged()) { 
+            cmsUser::goLogin(); 
+        }
+    }
+	
     cmsEventsManager::hook('engine_start');
 
     //Запускаем контроллер
 	$core->runController();
     $core->runWidgets();
 
-    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if ($core->controller != 'auth') {
-        if ($config->is_only_to_users && !cmsUser::isLogged()) { 
-            cmsUser::goLogin(); 
-        }
-    }
-	
     //Выводим готовую страницу
     $template->renderPage();
 
