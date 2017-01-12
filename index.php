@@ -20,20 +20,20 @@
     if ($config->emulate_lag) { usleep(350000); }
 
     //Запускаем роутинг
-    $core->route($_SERVER['REQUEST_URI']);
+    $core->route(href_to_current());
 
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
     // Если сайт выключен, закрываем его от посетителей
-    if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
+    if (href_to('auth', 'login') != href_to_current()){
         if (!$config->is_site_on && !cmsUser::isAdmin()) {
             cmsCore::errorMaintenance();
         }
     }
 
     // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if (mb_strpos($_SERVER['REQUEST_URI'], href_to('auth')) !== 0) {
+    if (mb_strpos(href_to_current(), href_to('auth')) !== 0) {
         if ($config->is_only_to_users && !cmsUser::isLogged()) { 
             cmsUser::goLogin(); 
         }
