@@ -21,7 +21,7 @@ class formGeoCity extends cmsForm {
                     new fieldList('country_id', array(
                         'title' => LANG_COUNTRY,
                         'rules' => array(array('required')),
-                        'items' => $countries,
+                        'items' => $countries
                     )),
 
                     new fieldList('region_id', array(

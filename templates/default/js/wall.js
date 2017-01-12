@@ -19,7 +19,7 @@ icms.wall = (function ($) {
 
         } else {
 
-            $('#wall_widget #entries_list #entry_'+parent_id+' .links .reply').hide();
+            $('#wall_widget #entries_list #entry_'+parent_id+' > .links .reply').hide();
             form.detach().appendTo('#wall_widget #entries_list #entry_'+parent_id);
 
         }
@@ -188,7 +188,7 @@ icms.wall = (function ($) {
             return;
         }
 
-        $('#entries_list #entry_'+result.id+' .text').html( result.html );
+        $('#entries_list #entry_'+result.id+' > .body .text').html( result.html );
 
         this.restoreForm();
 
@@ -203,7 +203,7 @@ icms.wall = (function ($) {
         $('#wall_widget #entries_list .links .reply').show();
         $('#wall_widget #entries_list .links .edit').show();
 
-        $('#wall_widget #entries_list #entry_'+id+' .links .edit').hide();
+        $('#wall_widget #entries_list #entry_'+id+' > .links .edit').hide();
 
         form.detach().appendTo('#wall_widget #entries_list #entry_'+id).show();
 

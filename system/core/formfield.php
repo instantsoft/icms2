@@ -191,7 +191,7 @@ class cmsFormField {
     public function applyFilter($model, $value) { return false; }
 
     public function store($value, $is_submitted, $old_value=null){
-       return $value;
+        return $value;
     }
 
     public function storeCachedValue($value){
