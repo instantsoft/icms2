@@ -7,6 +7,14 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    if(!isFieldExists('geo_cities', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}geo_cities` ADD `ordering` INT(11) unsigned NOT NULL DEFAULT '10000' AFTER `name`");
+    }
+
+    if(!isFieldExists('geo_regions', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}geo_regions` ADD `ordering` INT(11) unsigned NOT NULL DEFAULT '1000' AFTER `name`");
+    }
+
     add_perms(array(
         'content' => array(
             'add_to_parent'
