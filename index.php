@@ -20,7 +20,7 @@
     if ($config->emulate_lag) { usleep(350000); }
 
     //Запускаем роутинг
-    $core->route(href_to_current());
+    $core->route($_SERVER['REQUEST_URI']);
 
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
