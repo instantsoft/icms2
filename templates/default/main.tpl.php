@@ -1,13 +1,4 @@
 <?php $core = cmsCore::getInstance(); ?>
-<?php $user = cmsUser::getInstance(); ?>
-<?php 
-    if ($config->is_only_to_users){ 
-	    if ( (!$user->id) && ($core->controller != 'auth') ) {
-            cmsUser::goLogin();
-        } 
-    } 
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
