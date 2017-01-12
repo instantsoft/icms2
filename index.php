@@ -25,26 +25,26 @@
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
+    // Если сайт выключен, закрываем его от посетителей
     if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
         if (!$config->is_site_on && !cmsUser::isAdmin()) {
             cmsCore::errorMaintenance();
         }
     }
-    
-	// Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    $user = cmsUser::getInstance(); 
-    if ($config->is_only_to_users){ 
-        if ( (!$user->id) && (!$config->is_site_on && !cmsUser::isAdmin()) ) {
-            cmsUser::goLogin();
-        } 
-    } 
-	
+
     cmsEventsManager::hook('engine_start');
 
     //Запускаем контроллер
 	$core->runController();
     $core->runWidgets();
 
+    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
+    if ($core->controller != 'auth') {
+        if ($config->is_only_to_users && !cmsUser::isLogged()) { 
+            cmsUser::goLogin(); 
+        }
+    }
+	
     //Выводим готовую страницу
     $template->renderPage();
 
