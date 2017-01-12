@@ -30,7 +30,15 @@
             cmsCore::errorMaintenance();
         }
     }
-
+    
+	// Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
+    $user = cmsUser::getInstance(); 
+    if ($config->is_only_to_users){ 
+        if ( (!$user->id) && (!$config->is_site_on && !cmsUser::isAdmin()) ) {
+            cmsUser::goLogin();
+        } 
+    } 
+	
     cmsEventsManager::hook('engine_start');
 
     //Запускаем контроллер
