@@ -33,7 +33,7 @@
     }
 
     // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if (mb_strpos(href_to_current(), href_to('auth')) !== 0) {
+    if (strpos(href_to_current(), href_to('auth')) !== 0) {
         if ($config->is_only_to_users && !cmsUser::isLogged()) { 
             cmsUser::goLogin(); 
         }
