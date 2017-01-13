@@ -674,6 +674,10 @@ form .hint {
     height: 100%;
 }
 
+.modal_form .form_title {
+    display: inline-block;
+}
+
 .tabs-menu{
     margin-bottom: 10px;
 }
