@@ -689,13 +689,26 @@ class cmsController {
      * @param str $url
      */
     public function redirect($url, $code=303){
-        if ($code == 301){
-            header('HTTP/1.1 301 Moved Permanently');
+
+        if ($this->request->isAjax()){
+
+            $this->cms_template->renderAsset('ui/redirect_continue', array(
+                'redirect_url' => href_to($url)
+            ));
+
         } else {
-            header('HTTP/1.1 303 See Other');
+
+            if ($code == 301){
+                header('HTTP/1.1 301 Moved Permanently');
+            } else {
+                header('HTTP/1.1 303 See Other');
+            }
+            header('Location: '.$url);
+
         }
-        header('Location: '.$url);
+
         $this->halt();
+
     }
 
     /**

@@ -380,6 +380,14 @@ class modelMessages extends cmsModel {
 
     }
 
+    public function deleteUserNotices($user_id){
+
+         $this->filterIsNull('actions')->filterEqual('user_id', $user_id);
+
+        return $this->deleteFiltered('{users}_notices');
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -392,6 +400,8 @@ class modelMessages extends cmsModel {
     }
 
     public function getNotices($user_id){
+
+        $this->orderBy('date_pub', 'desc');
 
         $this->filterEqual('user_id', $user_id);
 

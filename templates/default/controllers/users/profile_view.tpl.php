@@ -17,13 +17,13 @@
             if ($is_friend_profile){
                 $tool_buttons['friend_delete'] = array(
                     'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete',
+                    'class' => 'user_delete ajax-modal',
                     'href' => $this->href_to('friend_delete', $profile['id'])
                 );
             } else if(!$is_friend_req) {
                 $tool_buttons['friend_add'] = array(
                     'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add',
+                    'class' => 'user_add ajax-modal',
                     'href' => $this->href_to('friend_add', $profile['id'])
                 );
             }

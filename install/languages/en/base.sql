@@ -1264,8 +1264,7 @@ CREATE TABLE `{#}users_notices` (
   `options` text,
   `actions` text,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `date_pub` (`date_pub`)
+  KEY `user_id` (`user_id`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}users_statuses`;

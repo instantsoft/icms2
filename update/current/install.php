@@ -7,6 +7,35 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    $remove_table_indexes = array(
+        '{users}_notices' => array(
+            'user_id', 'date_pub'
+        )
+    );
+
+    $add_table_indexes = array(
+        '{users}_notices' => array(
+            'user_id' => array('user_id', 'date_pub')
+        )
+    );
+
+    // удаляем ненужные индексы
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    // добавляем нужные
+    if($add_table_indexes){
+        foreach ($add_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name);
+            }
+        }
+    }
+
     if(!isFieldExists('geo_cities', 'ordering')){
         $core->db->query("ALTER TABLE `{#}geo_cities` ADD `ordering` INT(11) unsigned NOT NULL DEFAULT '10000' AFTER `name`");
     }

@@ -40,6 +40,8 @@
     padding:0;
 	background: #fff;
     z-index: 101;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 .nyroModalMessage .nyroModalCont {
 	box-sizing: border-box;
@@ -63,10 +65,14 @@
 .nyroModalLink, .nyroModalDom, .nyroModalForm, .nyroModalFormFile {
 	position: relative;
 	max-width: 1000px;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 100%;
 }
 .nyroModalImage, .nyroModalSwf, .nyroModalIframe, .nyroModalIframeForm {
 	position: relative;
 	overflow: hidden;
+    box-sizing: border-box;
 }
 .nyroModalImage img {
     vertical-align: top;

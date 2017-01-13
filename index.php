@@ -26,19 +26,18 @@
     $template = cmsTemplate::getInstance();
 
     // Если сайт выключен, закрываем его от посетителей
-    if (href_to('auth', 'login') != href_to_current()){
-        if (!$config->is_site_on && !cmsUser::isAdmin()) {
+    if (!$config->is_site_on) {
+        if (href_to('auth', 'login') != href_to_current() && !cmsUser::isAdmin()){
             cmsCore::errorMaintenance();
         }
     }
-
     // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if (strpos(href_to_current(), href_to('auth')) !== 0) {
-        if ($config->is_only_to_users && !cmsUser::isLogged()) { 
-            cmsUser::goLogin(); 
+    if (!empty($config->is_site_only_auth_users)) {
+        if (!cmsUser::isLogged() && !in_array($core->uri_controller, array('auth', 'geo'))) {
+            cmsUser::goLogin();
         }
     }
-	
+
     cmsEventsManager::hook('engine_start');
 
     //Запускаем контроллер
