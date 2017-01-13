@@ -303,6 +303,7 @@
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to detect a visitor\'s IP');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'The $_SERVER array key that contains a real user IP address. Do not change this value if you are not sure. The default value fits most needs. For example, enter HTTP_CF_CONNECTING_IP (without quotes) for CloudFlare.');
+    define('LANG_CP_SETTINGS_SITE_ONLY_TO_USERS', 'Site is available only to the authorized users');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Reason why site is offline');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Automatically check for InstantCMS updates when admin logs in');

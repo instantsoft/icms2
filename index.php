@@ -25,12 +25,20 @@
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
-    if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
+    // Если сайт выключен, закрываем его от посетителей
+    if (href_to('auth', 'login') != href_to_current()){
         if (!$config->is_site_on && !cmsUser::isAdmin()) {
             cmsCore::errorMaintenance();
         }
     }
 
+    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
+    if (strpos(href_to_current(), href_to('auth')) !== 0) {
+        if ($config->is_only_to_users && !cmsUser::isLogged()) { 
+            cmsUser::goLogin(); 
+        }
+    }
+	
     cmsEventsManager::hook('engine_start');
 
     //Запускаем контроллер

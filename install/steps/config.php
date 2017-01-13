@@ -39,6 +39,7 @@ function create_config($path, $file){
         'upload_root'			=> $_SESSION['install']['paths']['upload'],
         'upload_host'			=> $_SESSION['install']['hosts']['upload'],
         'cache_root'			=> $_SESSION['install']['paths']['cache'],
+        'is_only_to_users'      => 0,
         'is_site_on'            => 1,
         'off_reason'            => LANG_CFG_OFF_REASON,
         'sitename'				=> $_SESSION['install']['site']['sitename'],
