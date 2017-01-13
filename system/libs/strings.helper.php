@@ -569,6 +569,57 @@ function array_collection_to_list($collection, $key, $value=false){
 
 }
 
+/**
+ * Возвращает значение ячейки массива
+ * по переданной вложенности $needle
+ *
+ * @param array|string $needle Путь до необходимого ключа, например key:subkey:subsubkey
+ * @param array $haystack Массив, в котором ищем
+ * @param string $delimiter Разделитель ключей в пути, если $needle строка
+ * @return mixed Значение или null, если ключ не найден
+ */
+function array_value_recursive($needle, $haystack, $delimiter = ':') {
+
+    $name_parts = !is_array($needle) ? explode($delimiter, $needle) : $needle;
+
+    foreach ($name_parts as $name) {
+        if(!array_key_exists($name, $haystack)){
+            return null;
+        } else {
+            $haystack = $haystack[$name];
+        }
+    }
+
+    return $haystack;
+
+}
+
+/**
+ * Устанавливает значение ключа массив
+ * по переданной вложенности ключей $path
+ *
+ * @param array|string $path Путь до необходимого ключа, например key:subkey:subsubkey
+ * @param array $array Изменяемый массив
+ * @param mixed $value Значение ключа
+ * @param string $delimiter Разделитель ключей в пути, если $path строка
+ * @return mixed Возвращает изменённый массив $array
+ */
+function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
+
+    $name_parts = !is_array($path) ? explode($delimiter, $path) : $path;
+
+    $_array = &$array;
+
+    foreach ($name_parts as $name) {
+        $_array = &$_array[$name];
+    }
+
+    $_array = $value;
+
+    return $array;
+
+}
+
 //============================================================================//
 
 /**
