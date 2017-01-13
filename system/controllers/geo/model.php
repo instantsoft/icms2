@@ -7,9 +7,12 @@ class modelGeo extends cmsModel {
 
         $this->useCache('geo.countries');
 
-        return $this->orderBy('ordering, name')->get('geo_countries', function($item){
+        return $this->orderByList(array(
+                array('by' => 'ordering', 'to' => 'asc'),
+                array('by' => 'name', 'to' => 'asc')
+            ))->get('geo_countries', function($item){
 
-            return $item['name'];
+                return $item['name'];
 
         });
 
@@ -23,9 +26,12 @@ class modelGeo extends cmsModel {
             $this->filterEqual('country_id', $country_id);
         }
 
-        return $this->orderBy('ordering, name')->get('geo_regions', function($item){
+        return $this->orderByList(array(
+                array('by' => 'ordering', 'to' => 'asc'),
+                array('by' => 'name', 'to' => 'asc')
+            ))->get('geo_regions', function($item){
 
-            return $item['name'];
+                return $item['name'];
 
         });
 
@@ -39,9 +45,12 @@ class modelGeo extends cmsModel {
             $this->filterEqual('region_id', $region_id);
         }
 
-        return $this->orderBy('ordering, name')->get('geo_cities', function($item){
+        return $this->orderByList(array(
+                array('by' => 'ordering', 'to' => 'asc'),
+                array('by' => 'name', 'to' => 'asc')
+            ))->get('geo_cities', function($item){
 
-            return $item['name'];
+                return $item['name'];
 
         });
 

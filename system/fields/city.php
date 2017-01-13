@@ -49,6 +49,11 @@ class fieldCity extends cmsFormField {
         return htmlspecialchars($this->item[$this->getDenormalName()]);
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        if(!$value){ return null; }
+        return $value;
+    }
+
     public function storeCachedValue($value){
 
         return $this->getLocationTypeValue($value, $this->getOption('location_type'));
