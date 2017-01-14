@@ -132,7 +132,7 @@ function widgetsSelectPage(key){
 
     }
 
-    if (page_controller!='core'){
+    if (page_controller != 'core' || page_id === '0'){
         var edit_page_url = $('#cp-widgets-layout').data('edit-page-url');
         $('.cp_toolbar .edit').show();
         $('.cp_toolbar .edit a').attr('href', edit_page_url + '/' + page_id);

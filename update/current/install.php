@@ -7,6 +7,18 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    if(!$core->db->getRowsCount('widgets_pages', "controller IS NULL AND name = 'all'", 1)){
+        $id = $content_model->insert('widgets_pages', array(
+            'name'        => 'all',
+            'title_const' => 'LANG_WP_ALL_PAGES'
+        ));
+        if($id){
+            $content_model->update('widgets_pages', $id, array(
+                'id' => 0
+            ));
+        }
+    }
+
     $remove_table_indexes = array(
         '{users}_notices' => array(
             'user_id', 'date_pub'

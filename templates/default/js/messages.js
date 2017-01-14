@@ -232,7 +232,7 @@ icms.messages = (function ($) {
             $('textarea', form).prop('disabled', false);
 
             if (!result.error){
-                $('textarea', form).val('');
+                $('textarea', form).val('').focus();
                 icms.messages.addMessage(result);
             } else {
                 if (result.message.length){

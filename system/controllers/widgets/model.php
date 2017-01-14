@@ -40,6 +40,8 @@ class modelWidgets extends cmsModel {
 
         $this->useCache('widgets.pages');
 
+        $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->select('ct.title', 'title_subject');
+
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
             $item['is_custom'] = !empty($item['title']);

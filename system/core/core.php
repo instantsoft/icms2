@@ -826,7 +826,7 @@ class cmsCore {
             return array(0, 1);
         }
 
-        $matched_pages = array(0);
+        $matched_pages = array();
 
         $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
@@ -836,15 +836,17 @@ class cmsCore {
         //
         foreach($pages as $page){
 
-            if (empty($page['url_mask'])) { continue; }
+            if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
-            $is_mask_match = false;
+            $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
-            foreach($page['url_mask'] as $mask){
-                $regular = string_mask_to_regular($mask);
-                $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+            if (!empty($page['url_mask'])) {
+                foreach($page['url_mask'] as $mask){
+                    $regular = string_mask_to_regular($mask);
+                    $regular = "/^{$regular}$/iu";
+                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                }
             }
 
             if (!empty($page['url_mask_not'])) {
