@@ -114,6 +114,10 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Вручную указывать тайтл для записей');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Автоматическая генерация ключевых слов');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Автоматическая генерация META-описаний');
+    define('LANG_CP_SEOMETA_ITEM_TITLE',        'Шаблон генерации тайтлов страниц');
+    define('LANG_CP_SEOMETA_ITEM_KEYS',         'Шаблон генерации ключевых слов');
+    define('LANG_CP_SEOMETA_ITEM_DESC',         'Шаблон генерации META-описаний');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');
     define('LANG_CP_FIXED_URL',                 'Не изменять URL при редактировании записи');
     define('LANG_CP_URL_PATTERN',               'Шаблон генерации URL');

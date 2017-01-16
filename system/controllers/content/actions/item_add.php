@@ -237,9 +237,6 @@ class actionContentItemAdd extends cmsAction {
                     }
                 }
 
-                if ($ctype['is_auto_keys']){ $item['seo_keys'] = string_get_meta_keywords($item['content']); }
-                if ($ctype['is_auto_desc']){ $item['seo_desc'] = string_get_meta_description($item['content']); }
-
 				$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
 				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
@@ -276,6 +273,25 @@ class actionContentItemAdd extends cmsAction {
 
                 $item = cmsEventsManager::hook("content_before_add", $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
+
+                // SEO параметры
+                if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
+                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                }
+                if ($ctype['is_auto_keys']){
+                    if(!empty($ctype['options']['seo_keys_pattern'])){
+                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                    } else {
+                        $item['seo_keys'] = string_get_meta_keywords($item['content']);
+                    }
+                }
+                if ($ctype['is_auto_desc']){
+                    if(!empty($ctype['options']['seo_desc_pattern'])){
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                    } else {
+                        $item['seo_desc'] = string_get_meta_description($item['content']);
+                    }
+                }
 
                 $item = $this->model->addContentItem($ctype, $item, $fields);
 

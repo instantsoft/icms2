@@ -40,7 +40,7 @@ class actionContentItemChildsView extends cmsAction {
 
         $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
         $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
-        $seo_desc  = empty($relation['seo_desc']) ? '' : string_replace_keys_values($relation['seo_desc'], $item);
+        $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values($relation['seo_desc'], $item));
 
         return $this->cms_template->render('item_childs_view', array(
             'ctype'       => $ctype,

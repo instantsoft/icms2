@@ -114,6 +114,10 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Custom entry title');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Autogenerate keywords');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Autogenerate META-descriptions');
+    define('LANG_CP_SEOMETA_ITEM_TITLE',        'META-title pattern');
+    define('LANG_CP_SEOMETA_ITEM_KEYS',         'META-keys pattern');
+    define('LANG_CP_SEOMETA_ITEM_DESC',         'META-descriptions pattern');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>');
     define('LANG_CP_AUTO_URL',                  'Autogenerate URL');
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');

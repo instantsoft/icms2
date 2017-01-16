@@ -148,9 +148,6 @@ class actionContentItemEdit extends cmsAction {
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;
 
-                if ($ctype['is_auto_keys']){ $item['seo_keys'] = string_get_meta_keywords($item['content']); }
-                if ($ctype['is_auto_desc']){ $item['seo_desc'] = string_get_meta_description($item['content']); }
-
                 if ($ctype['is_tags']){
                     $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                     $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
@@ -208,6 +205,25 @@ class actionContentItemEdit extends cmsAction {
                 //
                 $item = cmsEventsManager::hook('content_before_update', $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_update", $item);
+
+                // SEO параметры
+                if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
+                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                }
+                if ($ctype['is_auto_keys']){
+                    if(!empty($ctype['options']['seo_keys_pattern'])){
+                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                    } else {
+                        $item['seo_keys'] = string_get_meta_keywords($item['content']);
+                    }
+                }
+                if ($ctype['is_auto_desc']){
+                    if(!empty($ctype['options']['seo_desc_pattern'])){
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                    } else {
+                        $item['seo_desc'] = string_get_meta_description($item['content']);
+                    }
+                }
 
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
 

@@ -237,6 +237,18 @@ class formAdminCtypesBasic extends cmsForm {
                             array('required'),
                         )
                     )),
+                    new fieldString('options:seo_title_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_keys_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_desc_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    ))
                 )
             ),
             'seo-cats' => array(
