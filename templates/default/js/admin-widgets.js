@@ -288,6 +288,7 @@ function widgetEdit(id){
             var th = $(this).height();
             if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
         });
+        h = h + $('.modal_form .form_title').height();
         $('.modal_form').parent().css({width: w+'px', height: h+'px'});
         setTimeout(function(){ icms.modal.resize(); }, 10);
     }, widget_dom.data('name'));

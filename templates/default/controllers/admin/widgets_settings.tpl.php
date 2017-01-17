@@ -9,7 +9,8 @@
     $this->renderForm($form, $widget, array(
         'action' => $this->href_to('widgets_update'),
         'method' => 'ajax',
-        'toolbar' => false
+        'toolbar' => false,
+        'prepend_html' => '<div class="form_title"><h2>' . $widget['type'] . '</h2></div>'
     ), $errors);
 ?>
 </div>

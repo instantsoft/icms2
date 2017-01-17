@@ -188,6 +188,7 @@ class modelWidgets extends cmsModel {
 
         $this->select('w.controller', 'controller');
         $this->select('w.name', 'name');
+        $this->select('w.title', 'type');
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
