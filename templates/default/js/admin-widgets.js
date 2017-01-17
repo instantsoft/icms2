@@ -288,7 +288,7 @@ function widgetEdit(id){
             var th = $(this).height();
             if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
         });
-        $('.modal_form').parent().css({width: w+'px', height: h+'px'});
+        $('.modal_form').parent().css({width: w+'px', height: (h + 40)+'px'});
         setTimeout(function(){ icms.modal.resize(); }, 10);
     }, widget_dom.data('name'));
 
