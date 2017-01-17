@@ -1,20 +1,8 @@
 <?php
-
 	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
 	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
     $this->addJS($this->getJavascriptFileName('jquery-ui'));
     $this->addCSS('templates/default/css/jquery-ui.css');
-
-	$config = cmsConfig::getInstance();
-
-    $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
-
-	$upload_url = $this->href_to('upload', $dom_id);
-
-	if (is_array($sizes)) {
-		$upload_url .= '?sizes=' . implode(',', $sizes);
-	}
-
 ?>
 
 <div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_multi">
@@ -34,7 +22,7 @@
             <?php foreach($images as $idx => $paths){ ?>
                 <div class="preview block" rel="<?php echo $idx; ?>" data-paths="<?php html(json_encode($paths)); ?>">
 					<?php  $is_image_exists = !empty($paths); ?>
-					<?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . end($paths); ?>" /><?php } ?>
+					<?php if ($is_image_exists) { ?><img src="<?php echo cmsConfig::get('upload_host') . '/' . reset($paths); ?>" /><?php } ?>
                     <a href="javascript:" onclick="icms.images.removeOne('<?php echo $dom_id; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
                 </div>
             <?php } ?>

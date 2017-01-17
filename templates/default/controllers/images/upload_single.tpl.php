@@ -1,17 +1,6 @@
 <?php
 	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
 	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
-
-    $is_image_exists = !empty($paths);
-
-    $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
-
-	$upload_url = $this->href_to('upload', $dom_id);
-
-	if (is_array($sizes)) {
-		$upload_url .= '?sizes=' . implode(',', $sizes);
-	}
-
 ?>
 <div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single">
 
@@ -24,7 +13,7 @@
     </div>
 
     <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?>>
-        <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . $path; } ?>" />
+        <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . reset($paths); } ?>" />
         <a href="javascript:" onclick="icms.images.remove('<?php echo $dom_id; ?>')"><?php echo LANG_DELETE; ?></a>
     </div>
 
@@ -42,7 +31,7 @@
         </div>
     <?php } ?>
 
-    <script>
+    <script type="text/javascript">
 
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
 

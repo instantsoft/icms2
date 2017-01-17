@@ -154,7 +154,8 @@ icms.datagrid = (function ($) {
                 $(this).closest('tr').find('.inline_submit').trigger('click');
             }
         });
-        $(document).on('click', '.grid_field_value.edit_by_click', function(){
+        $(document).on('click', '.grid_field_value.edit_by_click', function(event){
+            if (event.target.nodeName === 'A') { return true; }
             $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
         });
 

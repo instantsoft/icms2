@@ -30,7 +30,7 @@ icms.images = (function ($) {
             return;
         }
 
-        preview_img_src = null;
+        var preview_img_src = null;
 
         $('.data', widget).html('');
 
@@ -38,7 +38,7 @@ icms.images = (function ($) {
         _input_name = _input_name.replace(/_r_/g, ']');
 
         for(var path in result.paths){
-            preview_img_src = result.paths[path].url;
+            preview_img_src = preview_img_src || result.paths[path].url;
             $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+path+']" value="'+result.paths[path].path+'" />');
         }
 
@@ -67,7 +67,7 @@ icms.images = (function ($) {
 
         var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
 
-        preview_img_src = null;
+        var preview_img_src = null;
 
         var image_data = {};
 
@@ -75,7 +75,7 @@ icms.images = (function ($) {
         _input_name = _input_name.replace(/_r_/g, ']');
 
         for(var path in result.paths){
-            preview_img_src = result.paths[path].url;
+            preview_img_src = preview_img_src || result.paths[path].url;
             $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
             image_data[path] = result.paths[path].path;
         }

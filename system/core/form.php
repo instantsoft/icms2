@@ -230,6 +230,14 @@ class cmsForm {
         }
     }
 
+    public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
+        foreach( $this->structure[ $fieldset_id ]['childs'] as $field) {
+            if ($field->getName() == $field_name){
+                $field->{$attr_name} = $value;
+                break;
+            }
+        }
+    }
 //============================================================================//
 //============================================================================//
 

@@ -8,10 +8,22 @@ class images extends cmsFrontend {
 
     public function getSingleUploadWidget($name, $paths = false, $sizes = false, $allow_import_link = false){
 
+        $is_image_exists = !empty($paths);
+
+        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+
+        $upload_url = href_to('images', 'upload', $dom_id);
+        if (is_array($sizes)) {
+            $upload_url .= '?sizes=' . implode(',', $sizes);
+        }
+
         return $this->cms_template->renderInternal($this, 'upload_single', array(
 			'name'              => $name,
             'paths'             => $paths,
             'sizes'             => $sizes,
+            'upload_url'        => $upload_url,
+            'dom_id'            => $dom_id,
+            'is_image_exists'   => $is_image_exists,
             'allow_import_link' => $allow_import_link
         ));
 
@@ -19,10 +31,19 @@ class images extends cmsFrontend {
 
     public function getMultiUploadWidget($name, $images = false, $sizes = false, $allow_import_link = false, $max_photos = 0){
 
+        $dom_id = str_replace(array('[',']'), array('_l_', '_r_'), $name);
+
+        $upload_url = href_to('images', 'upload', $dom_id);
+        if (is_array($sizes)) {
+            $upload_url .= '?sizes=' . implode(',', $sizes);
+        }
+
         return $this->cms_template->renderInternal($this, 'upload_multi', array(
             'name'              => $name,
             'images'            => $images,
             'sizes'             => $sizes,
+            'upload_url'        => $upload_url,
+            'dom_id'            => $dom_id,
             'max_photos'        => (int)$max_photos,
             'allow_import_link' => $allow_import_link
         ));
