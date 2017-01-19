@@ -360,6 +360,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 
 form.modal{
     margin:15px;
+    box-sizing: border-box;
 }
 
 form fieldset .field{
@@ -670,7 +671,6 @@ form .hint {
 .modal_form {
     min-width:750px;
     overflow: hidden;
-    overflow-y: auto;
     height: 100%;
 }
 
