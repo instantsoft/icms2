@@ -344,6 +344,7 @@ class modelUsers extends cmsModel{
             'lock_reason' => null
         ));
         cmsCache::getInstance()->clean("users.user.{$id}");
+        return $this;
     }
 
 //============================================================================//
