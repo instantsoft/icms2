@@ -285,6 +285,7 @@ CREATE TABLE `{#}con_albums` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   `is_approved` tinyint(1) DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
@@ -296,7 +297,7 @@ CREATE TABLE `{#}con_albums` (
   KEY `category_id` (`category_id`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
@@ -440,6 +441,7 @@ CREATE TABLE `{#}con_pages` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
   `is_approved` tinyint(1) DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
@@ -449,7 +451,7 @@ CREATE TABLE `{#}con_pages` (
   KEY `category_id` (`category_id`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
@@ -794,7 +796,9 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (31, 'comments', 'is_moderator', 'flag', NULL),
 (32, 'content', 'add_to_parent', 'list', 'to_own,to_other,to_all'),
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
-(34, 'content',  'bind_off_parent',  'list',  'own,all');
+(34, 'content',  'bind_off_parent',  'list',  'own,all'),
+(35, 'content', 'move_to_trash', 'list', 'own,all'),
+(36, 'content', 'restore', 'flag', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

@@ -97,6 +97,20 @@ function routes_content(){
         ),
 
         array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/trash_put\/([0-9]+)$/i',
+            'action'    => 'item_trash_put',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/trash_remove\/([0-9]+)$/i',
+            'action'    => 'item_trash_remove',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9\-_]+)\/addcat\/([0-9]+)$/i',
             'action'    => 'category_add',
             1           => 'ctype_name',

@@ -364,7 +364,11 @@
     define('LANG_HIDE', 					 'Скрыть');
     define('LANG_HIDE_SELECTED',			 'Скрыть выделенные');
     define('LANG_CONFIG', 					 'Настройки');
+    define('LANG_RESTORE', 					 'Восстановить');
     define('LANG_DELETE', 					 'Удалить');
+    define('LANG_BASKET_DELETE', 			 'Удалить в корзину');
+    define('LANG_BASKET_DELETE_SUCCESS', 	 'Запись успешно удалена в корзину');
+    define('LANG_ITEM_RESTORE_SUCCESS', 	 'Запись успешно восстановлена');
     define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
     define('LANG_MOVE',                      'Перенести');

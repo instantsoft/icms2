@@ -27,7 +27,12 @@ class actionContentItemEdit extends cmsAction {
 
         $is_premoderation = $ctype['is_premod_edit'];
         $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
+
+        if ($item['is_deleted']){
+            if (!$is_moderator){ cmsCore::error404(); }
+        }
 
         // Получаем родительский тип, если он задан
         if ($this->request->has('parent_type')){

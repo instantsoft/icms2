@@ -1429,6 +1429,7 @@ class modelContent extends cmsModel{
         // добавим условия, которые в каждой выборке
         $filters_fields[] = 'is_pub';
         $filters_fields[] = 'is_parent_hidden';
+        $filters_fields[] = 'is_deleted';
         $filters_fields[] = 'is_approved';
         // сортировка
         if($dataset['sorting']){
@@ -1950,6 +1951,70 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
+    public function restoreContentItem($ctype_name, $id){
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        if(is_numeric($id)){
+            $item = $this->getContentItem($ctype_name, $id);
+            if(!$item){ return false; }
+        } else {
+            $item = $id;
+        }
+
+        cmsCore::getController('activity')->addEntry('content', "add.{$ctype_name}", array(
+            'user_id'          => $item['user_id'],
+            'subject_title'    => $item['title'],
+            'subject_id'       => $item['id'],
+            'subject_url'      => href_to_rel($ctype_name, $item['slug'] . '.html'),
+            'is_private'       => isset($item['is_private']) ? $item['is_private'] : 0,
+            'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
+            'is_parent_hidden' => $item['is_parent_hidden'],
+            'date_pub'         => $item['date_pub'],
+            'is_pub'           => $item['is_pub']
+        ));
+
+        cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id'], null);
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+
+        $this->update($table_name, $item['id'], array('is_deleted' => null));
+
+        cmsEventsManager::hook('content_after_restore', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook("content_{$ctype_name}_after_restore", $item);
+
+        return true;
+
+    }
+
+    public function toTrashContentItem($ctype_name, $id){
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        if(is_numeric($id)){
+            $item = $this->getContentItem($ctype_name, $id);
+            if(!$item){ return false; }
+        } else {
+            $item = $id;
+        }
+
+        cmsCore::getController('activity')->deleteEntry('content', "add.{$ctype_name}", $item['id']);
+
+        cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id']);
+
+        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
+        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+
+        $this->update($table_name, $item['id'], array('is_deleted' => 1));
+
+        cmsEventsManager::hook('content_after_trash_put', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook("content_{$ctype_name}_after_trash_put", $item);
+
+        return true;
+
+    }
+
     public function deleteContentItem($ctype_name, $id){
 
         $table_name = $this->table_prefix . $ctype_name;
@@ -2026,6 +2091,7 @@ class modelContent extends cmsModel{
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
 
         $this->useCache("content.list.{$ctype_name}");
@@ -2051,6 +2117,7 @@ class modelContent extends cmsModel{
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
@@ -2070,6 +2137,7 @@ class modelContent extends cmsModel{
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }

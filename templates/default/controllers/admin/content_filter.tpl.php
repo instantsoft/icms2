@@ -87,6 +87,17 @@
         </fieldset>
         <fieldset>
 
+            <legend><?php echo LANG_CP_TRASH; ?></legend>
+
+            <div>
+                <?php echo html_input('hidden', "filters[{$index}][field]", 'is_deleted'); ?>
+                <?php echo html_input('hidden', "filters[{$index}][condition]", 'eq'); ?>
+                <label><?php echo html_checkbox('filters['.$index.'][value]'); ?> <?php echo LANG_CP_SHOW_ONLY_IN_TRASH; ?></label>
+            </div>
+
+        </fieldset>
+        <fieldset>
+
             <legend><?php echo LANG_CONFIG; ?></legend>
 
             <div>

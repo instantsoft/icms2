@@ -133,6 +133,8 @@
 .icon-transfer, .menu .transfer .item { background-image: url("../images/icons/transfer.png"); }
 .icon-coins_add, .menu .coins_add .item { background-image: url("../images/icons/coins_add.png"); }
 .icon-coins_delete, .menu .coins_delete .item { background-image: url("../images/icons/coins_delete.png"); }
+.icon-basket_put, .menu .basket_put .item { background-image: url("../images/icons/basket_put.png"); }
+.icon-basket_remove, .menu .basket_remove .item { background-image: url("../images/icons/basket_remove.png"); }
 
 /* Misc icons =============================================================== */
 

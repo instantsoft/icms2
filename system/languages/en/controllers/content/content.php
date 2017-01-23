@@ -24,6 +24,8 @@
     define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Unbind child entries from parent');
     define('LANG_RULE_CONTENT_EDIT',         'Editing entries');
     define('LANG_RULE_CONTENT_DELETE',       'Deleting entries');
+    define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Deleting entries to trash');
+    define('LANG_RULE_CONTENT_RESTORE',      'Restore items');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Adding categories');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Editing categories');
     define('LANG_RULE_CONTENT_DELETE_CAT',   'Deleting categories');

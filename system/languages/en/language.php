@@ -236,7 +236,7 @@
     define('LANG_PERM_OPTION_ALL_TO_OWN',    'All to own');
     define('LANG_PERM_OPTION_ALL_TO_OTHER',  'All to others');
     define('LANG_PERM_OPTION_ALL_TO_ALL',    'All to all');
-    
+
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Login');
     define('LANG_AUTH_PASSWORD',		 'Password');
@@ -361,6 +361,10 @@
     define('LANG_HIDE', 					 'Hide');
     define('LANG_HIDE_SELECTED',			 'Hide selected');
     define('LANG_CONFIG', 					 'Settings');
+    define('LANG_RESTORE', 					 'Restore');
+    define('LANG_BASKET_DELETE', 			 'Move to trash');
+    define('LANG_BASKET_DELETE_SUCCESS', 	 'Item successfully deleted to trash');
+    define('LANG_ITEM_RESTORE_SUCCESS', 	 'Item successfully restored');
     define('LANG_DELETE', 					 'Delete');
     define('LANG_DELETE_SELECTED',			 'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');

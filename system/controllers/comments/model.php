@@ -136,6 +136,18 @@ class modelComments extends cmsModel {
 
     }
 
+    public function setCommentsIsDeleted($target_controller, $target_subject, $target_id, $delete = 1){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        $this->filterEqual('target_controller', $target_controller);
+        $this->filterEqual('target_subject', $target_subject);
+    	$this->filterEqual('target_id', $target_id);
+
+        return $this->updateFiltered('comments', array('is_deleted'=>$delete), true);
+
+    }
+
 //============================================================================//
 //============================================================================//
 

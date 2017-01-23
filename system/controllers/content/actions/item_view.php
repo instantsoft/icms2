@@ -57,6 +57,11 @@ class actionContentItemView extends cmsAction {
             if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
         }
 
+        // Проверяем, что не удалено
+        if ($item['is_deleted']){
+            if (!$is_moderator){ cmsCore::error404(); }
+        }
+
         // Проверяем приватность
         if ($item['is_private'] == 1){ // доступ только друзьям
 

@@ -6,6 +6,7 @@
     define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');
 
+    define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
@@ -69,10 +70,15 @@
     define('LANG_CP_CONTENT_CATS_ORDER',        'Порядок');
     define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Перетаскивайте категории');
     define('LANG_CP_CONTENT_CATS_NONE',         'Данный контент не имеет категорий');
+    define('LANG_CP_TRASH',                     'Корзина');
+    define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Показать только удалённые материалы');
+    define('LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM',  'Восстановить страницу "{title}"?');
     define('LANG_CP_CONTENT_ITEM_DELETE_CONFIRM',  'Удалить страницу "{title}"?');
+    define('LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM',  'Переместить страницу "{title}" в корзину?');
     define('LANG_CP_CONTENT_CATS_TITLES',       'Название категории или дерево категорий');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Для создания сразу нескольких категорий каждая из них должна быть на новой строке.<br>Дополнительная вложенность задается знаком дефис перед названием категории<br><a href="http://docs.instantcms.ru/manual/content/cats" target="_blank">Подробная инструкция</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Привязать все свойства родительской категории');
+    define('LANG_CP_SELECT_HINT',               'Кликните на строку, чтобы выделить или ');
 
     define('LANG_CP_BASIC',                     'Общие настройки');
     define('LANG_CP_PUBLICATION',               'Публикация');

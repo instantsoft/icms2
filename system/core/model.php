@@ -25,7 +25,9 @@ class cmsModel{
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
     protected $approved_filter_disabled = false;
+    protected $delete_filter_disabled = false;
     protected $approved_filtered = false;
+    protected $available_filtered = false;
 
     protected static $cached = array();
 
@@ -65,7 +67,7 @@ class cmsModel{
             'seo_desc'           => array('type' => 'varchar', 'size' => 256),
             'seo_title'          => array('type' => 'varchar', 'size' => 256),
             'tags'               => array('type' => 'varchar', 'size' => 1000),
-            'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(3,2,1), 'default_current' => true),
+            'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(4,3,2,1), 'default_current' => true),
             'date_last_modified' => array('type' => 'timestamp'),
             'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
             'is_pub'             => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1),
@@ -81,7 +83,8 @@ class cmsModel{
             'is_comments_on'     => array('type' => 'bool', 'default' => 1),
             'comments'           => array('type' => 'int', 'default' => 0, 'unsigned' => true),
             'rating'             => array('type' => 'int', 'default' => 0),
-            'is_approved'        => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2, 'default' => 1),
+            'is_deleted'         => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2),
+            'is_approved'        => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 3, 'default' => 1),
             'approved_by'        => array('type' => 'int', 'index' => true, 'unsigned' => true),
             'date_approved'      => array('type' => 'timestamp'),
             'is_private'         => array('type' => 'bool', 'default' => 0)
@@ -863,6 +866,16 @@ class cmsModel{
 
     }
 
+    public function enableDeleteFilter(){
+        $this->delete_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableDeleteFilter(){
+        $this->delete_filter_disabled = true;
+        return $this;
+    }
+
     public function enableApprovedFilter(){
         $this->approved_filter_disabled = false;
         return $this;
@@ -871,6 +884,22 @@ class cmsModel{
     public function disableApprovedFilter(){
         $this->approved_filter_disabled = true;
         return $this;
+    }
+
+    public function filterAvailableOnly(){
+
+        if ($this->available_filtered) { return $this; }
+
+        $this->available_filtered = true;
+
+        return $this->filterIsNull('is_deleted');
+
+    }
+
+    public function filterDeleteOnly(){
+
+        return $this->filterEqual('is_deleted', 1);
+
     }
 
     public function filterApprovedOnly(){
@@ -916,6 +945,7 @@ class cmsModel{
 
             foreach($dataset['filters'] as $filter){
 
+                if (!isset($filter['value'])) { continue; }
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }
 

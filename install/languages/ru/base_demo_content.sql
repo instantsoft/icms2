@@ -87,7 +87,8 @@ CREATE TABLE `{#}con_articles` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
@@ -101,13 +102,13 @@ CREATE TABLE `{#}con_articles` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_reviews` (`kind`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
-  KEY `dataset_featured` (`featured`,`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
-  KEY `dataset_rating` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  KEY `dataset_reviews` (`kind`,`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
+  KEY `dataset_featured` (`featured`,`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
+  KEY `dataset_rating` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`rating`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -271,7 +272,8 @@ CREATE TABLE `{#}con_board` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
@@ -284,11 +286,11 @@ CREATE TABLE `{#}con_board` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_cheap` (`is_pub`,`is_parent_hidden`,`is_approved`,`price`),
+  KEY `dataset_cheap` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`price`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -564,7 +566,8 @@ CREATE TABLE `{#}con_news` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
@@ -575,12 +578,12 @@ CREATE TABLE `{#}con_news` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_discussed` (`is_pub`,`is_parent_hidden`,`is_approved`,`comments`),
-  KEY `dataset_popular` (`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  KEY `dataset_discussed` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`comments`),
+  KEY `dataset_popular` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`rating`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -757,7 +760,8 @@ CREATE TABLE `{#}con_posts` (
   `is_comments_on` tinyint(1) unsigned DEFAULT '1',
   `comments` int(11) NOT NULL DEFAULT '0',
   `rating` int(11) NOT NULL DEFAULT '0',
-  `is_approved` tinyint(4) NOT NULL DEFAULT '1',
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL,
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
   `approved_by` int(11) DEFAULT NULL,
   `date_approved` timestamp NULL DEFAULT NULL,
   `is_private` tinyint(1) NOT NULL DEFAULT '0',
@@ -767,11 +771,11 @@ CREATE TABLE `{#}con_posts` (
   KEY `approved_by` (`approved_by`),
   KEY `folder_id` (`folder_id`),
   KEY `slug` (`slug`),
-  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_approved`,`date_pub`),
+  KEY `date_pub` (`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`date_pub`),
   KEY `parent_id` (`parent_id`,`parent_type`,`date_pub`),
   KEY `user_id` (`user_id`,`date_pub`),
   KEY `date_pub_end` (`date_pub_end`),
-  KEY `dataset_daily` (`date_pub`,`is_pub`,`is_parent_hidden`,`is_approved`,`rating`),
+  KEY `dataset_daily` (`date_pub`,`is_pub`,`is_parent_hidden`,`is_deleted`,`is_approved`,`rating`),
   FULLTEXT KEY `title` (`title`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 

@@ -79,6 +79,32 @@
         }
     }
 
+    if ($item['is_approved'] && !$item['is_deleted']){
+
+        if (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'all') ||
+        (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'own') && $item['user_id'] == $user->id)){
+            $this->addToolButton(array(
+                'class' => 'basket_put',
+                'title' => LANG_BASKET_DELETE,
+                'href'  => href_to($ctype['name'], 'trash_put', $item['id']),
+                'onclick' => "if(!confirm('".sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])."')){ return false; }"
+            ));
+        }
+
+    }
+
+    if ($item['is_approved'] && $item['is_deleted']){
+
+        if (cmsUser::isAllowed($ctype['name'], 'restore')){
+            $this->addToolButton(array(
+                'class' => 'basket_remove',
+                'title' => LANG_RESTORE,
+                'href'  => href_to($ctype['name'], 'trash_remove', $item['id'])
+            ));
+        }
+
+    }
+
     if (!empty($childs['tabs'])){
 
         $this->addMenuItem('item-menu', array(

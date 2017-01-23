@@ -27,9 +27,12 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'date_pub' => array(
             'title' => LANG_DATE,
-            'width' => 80,
+            'width' => 110,
             'handler' => function($value, $item){
-                return html_date($value);
+                if($item['is_deleted']){
+                    return '<span rel="set_class" data-class="is_deleted">'.html_date($value, true).'</span>';
+                }
+                return html_date($value, true);
             }
         ),
         'is_approved' => array(
@@ -54,12 +57,30 @@ function grid_content_items($controller, $ctype_name=false){
         array(
             'title' => LANG_VIEW,
             'class' => 'view',
-            'href' => href_to($ctype_name, '{slug}.html')
+            'href'  => href_to($ctype_name, '{slug}.html')
         ),
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href' => href_to($ctype_name, 'edit',  '{id}') . '?back=' . href_to($controller->name, 'content')
+            'href'  => href_to($ctype_name, 'edit',  '{id}') . '?back=' . href_to($controller->name, 'content')
+        ),
+        array(
+            'title' => LANG_RESTORE,
+            'class' => 'basket_remove',
+            'href'  => href_to($ctype_name, 'trash_remove',  '{id}') . '?back=' . href_to($controller->name, 'content'),
+            'confirm' => LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM,
+            'handler' => function($row){
+                return $row['is_deleted'];
+            }
+        ),
+        array(
+            'title' => LANG_BASKET_DELETE,
+            'class' => 'basket_put',
+            'href'  => href_to($ctype_name, 'trash_put',  '{id}') . '?back=' . href_to($controller->name, 'content'),
+            'confirm' => LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM,
+            'handler' => function($row){
+                return !$row['is_deleted'];
+            }
         ),
         array(
             'title' => LANG_DELETE,

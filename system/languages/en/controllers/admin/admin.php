@@ -6,6 +6,7 @@
     define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');
 
+    define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
@@ -69,10 +70,15 @@
     define('LANG_CP_CONTENT_CATS_ORDER',        'Reorder');
     define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Drag categories to reorder');
     define('LANG_CP_CONTENT_CATS_NONE',         'This content has no categories');
+    define('LANG_CP_TRASH',                     'Trash');
+    define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Show only deleted items');
+    define('LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM',  'Restore "{title}"?');
+    define('LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM',  'Move the "{title}" page to trash?');
     define('LANG_CP_CONTENT_ITEM_DELETE_CONFIRM',  'Delete "{title}"?');
     define('LANG_CP_CONTENT_CATS_TITLES',       'Category title or categories tree');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Enter one item per line to create multiple categories<br>Add a hyphen before the title to make a nested category<br><a href="http://docs.instantcms.ru/en/manual/content/cats" target="_blank">Detailed Manual</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Bind parent category properties');
+    define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
 
     define('LANG_CP_BASIC',                     'Basic settings');
     define('LANG_CP_PUBLICATION',               'Publication');

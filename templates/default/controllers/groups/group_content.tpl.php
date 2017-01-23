@@ -1,14 +1,11 @@
 <?php
 
-    $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
-
-    $this->setPageTitle($group['title']);
+    $this->setPageTitle($group['sub_title'], $group['title']);
+    $this->setPageDescription($group['title'].' · '.$group['sub_title']);
 
     $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
     $this->addBreadcrumb($group['title'], $this->href_to($group['id']));
-    $this->addBreadcrumb($list_header);
-
-    $content_counts = $this->controller->getGroupContentCounts($group);
+    $this->addBreadcrumb($group['sub_title']);
 
     $content_menu = array();
 
@@ -25,19 +22,11 @@
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {
 
-        $is_allowed = true;
-
-        if ($is_allowed){
-
-            $href = href_to($ctype['name'], 'add') . "?group_id={$group['id']}";
-
-            $this->addToolButton(array(
-                'class' => 'add',
-                'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
-                'href'  => $href,
-            ));
-
-        }
+        $this->addToolButton(array(
+            'class' => 'add',
+            'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
+            'href'  => href_to($ctype['name'], 'add') . "?group_id={$group['id']}"
+        ));
 
     }
 

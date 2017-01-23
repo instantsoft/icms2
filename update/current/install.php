@@ -7,6 +7,16 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}", 'is_deleted')){
+            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `rating`");
+        }
+
+	}
+
     if(!$core->db->getRowsCount('widgets_pages', "controller IS NULL AND name = 'all'", 1)){
         $id = $content_model->insert('widgets_pages', array(
             'name'        => 'all',
@@ -73,6 +83,18 @@ function install_package(){
             'bind_off_parent'
         )
     ), 'list', 'own,all');
+
+    add_perms(array(
+        'content' => array(
+            'move_to_trash'
+        )
+    ), 'list', 'own,all');
+
+    add_perms(array(
+        'content' => array(
+            'restore'
+        )
+    ), 'flag');
 
     return true;
 

@@ -66,6 +66,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->filterCategory($ctype['name'], $category, true);
 
+        $content_model->disableDeleteFilter();
         $content_model->disableApprovedFilter();
         $content_model->disablePubFilter();
         $content_model->disablePrivacyFilter();

@@ -167,6 +167,11 @@
                         }
 
                     });
+                    icms.datagrid.callback = function (){
+                        $('#datagrid td > span[rel = set_class]').each(function(indx){
+                            $(this).parents('tr').addClass($(this).data('class'));
+                        });
+                    };
                 });
 
             </script>

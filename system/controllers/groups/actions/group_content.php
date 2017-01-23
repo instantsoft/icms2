@@ -27,11 +27,14 @@ class actionGroupsGroupContent extends cmsAction {
 
         $html = $content_controller->renderItemsList($ctype, $page_url);
 
+        $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+
         return $this->cms_template->render('group_content', array(
-            'user'  => $this->cms_user,
-            'group' => $group,
-            'ctype' => $ctype,
-            'html'  => $html
+            'user'           => $this->cms_user,
+            'group'          => $group,
+            'ctype'          => $ctype,
+            'html'           => $html,
+            'content_counts' => $this->getGroupContentCounts($group)
         ));
 
     }

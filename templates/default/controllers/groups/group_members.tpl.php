@@ -1,10 +1,11 @@
 <?php
 
-    $this->setPageTitle(LANG_GROUPS_GROUP_MEMBERS, $group['title']);
+    $this->setPageTitle($group['sub_title'], $group['title']);
+    $this->setPageDescription($group['title'].' · '.$group['sub_title']);
 
     $this->addBreadcrumb(LANG_GROUPS, $this->href_to(''));
     $this->addBreadcrumb($group['title'], $this->href_to($group['id']));
-    $this->addBreadcrumb(LANG_GROUPS_GROUP_MEMBERS);
+    $this->addBreadcrumb($group['sub_title']);
 
 ?>
 
