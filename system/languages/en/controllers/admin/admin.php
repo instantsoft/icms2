@@ -233,6 +233,30 @@
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Delete dataset "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Show dataset on the site');
 
+    define('LANG_CP_CTYPE_RELATIONS',           'Relations');
+    define('LANG_CP_RELATION',                  'Relation');
+    define('LANG_CP_RELATION_ADD',              'Add Relation');
+    define('LANG_CP_RELATION_TITLE',            'Relation Name');
+    define('LANG_CP_RELATION_DELETE_CONFIRM',   'Delete the Relation?');
+    define('LANG_CP_RELATION_LAYOUT',           'Layout');
+    define('LANG_CP_RELATION_LAYOUT_TYPE',      'Layout Type');
+    define('LANG_CP_RELATION_LAYOUT_LIST',      'List');
+    define('LANG_CP_RELATION_LAYOUT_TAB',       'Tab');
+    define('LANG_CP_RELATION_LAYOUT_HIDDEN',    'None (hidden)');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_EMPTY','Hide when empty');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Hide list title');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Hide filter');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Records per page');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content Type default');
+    define('LANG_CP_RELATION_CREATED',          'Relation has been created');
+    define('LANG_CP_RELATION_FIELD_CREATED',    'Parent relation field has been created in the "%s" Content Type');
+    define('LANG_CP_RELATION_CHILD',            'Child Content Type');
+    define('LANG_CP_RELATION_TAB_OPTS',         'Tab Options');
+    define('LANG_CP_RELATION_TAB_SEO_HINT',     'Use curly braces to insert parent item\'s field. Example: <strong>{title}</strong>');
+    define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Tab Title');
+    define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Tab Meta-keywords');
+    define('LANG_CP_RELATION_TAB_SEO_DESC',     'Tab Meta-description');
+
     define('LANG_CP_MENU',                      'Menu');
     define('LANG_CP_MENU_ADD',                  'Add Menu');
     define('LANG_CP_MENU_EDIT',                 'Menu Settings');
@@ -500,6 +524,7 @@
     define('LANG_HELP_URL_CTYPES_PROP',             'http://docs.instantcms.ru/en/manual/ctypes/props/add');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'http://docs.instantcms.ru/en/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'http://docs.instantcms.ru/en/manual/ctypes/datasets/add');
+    define('LANG_HELP_URL_CTYPES_RELATIONS',        'http://docs.instantcms.ru/en/manual/ctypes/relations');
     define('LANG_HELP_URL_CTYPES_PERMS',            'http://docs.instantcms.ru/en/manual/ctypes/permissions');
     define('LANG_HELP_URL_CTYPES_MODERATORS',       'http://docs.instantcms.ru/en/manual/ctypes/moderators');
     define('LANG_HELP_URL_MENU',                    'http://docs.instantcms.ru/en/manual/menu');
