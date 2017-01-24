@@ -40,7 +40,6 @@ class fieldParent extends cmsFormField {
 		$parent_ctype_name = $this->getParentContentTypeName();
 		$parent_items = false;
 
-        $do = isset($this->item['id']) ? 'edit' : 'add';
         $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : cmsUser::get('id');
 
         if ($value){
@@ -61,14 +60,18 @@ class fieldParent extends cmsFormField {
 
         $is_allowed_to_add = ($perm && (($perm == 'to_all') || ($perm == 'to_own'))) || cmsUser::isAdmin();
 
+        if(!$parent_items && !$is_allowed_to_bind){
+            return '';
+        }
+
         return cmsTemplate::getInstance()->renderFormField($this->class, array(
-			'ctype_name' => isset($parent_ctype_name) ? $parent_ctype_name : false,
-			'child_ctype_name' => $this->item ? $this->item['ctype_name'] : false,
-            'field' => $this,
-            'value' => $value,
-            'items' => $parent_items,
-			'is_allowed_to_bind' => $is_allowed_to_bind,
-			'is_allowed_to_add' => $is_allowed_to_add
+			'ctype_name'         => isset($parent_ctype_name) ? $parent_ctype_name : false,
+            'child_ctype_name'   => $this->item ? $this->item['ctype_name'] : false,
+            'field'              => $this,
+            'value'              => $value,
+            'items'              => $parent_items,
+            'is_allowed_to_bind' => $is_allowed_to_bind,
+            'is_allowed_to_add'  => $is_allowed_to_add
         ));
 
     }
@@ -98,9 +101,8 @@ class fieldParent extends cmsFormField {
 
         $content_model = cmsCore::getModel('content');
         $content_model->filterIn('id', $ids);
-        $items = $content_model->getContentItems($parent_ctype_name);
 
-        return $items;
+        return $content_model->getContentItems($parent_ctype_name);
 
     }
 
