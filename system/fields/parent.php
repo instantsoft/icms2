@@ -51,15 +51,15 @@ class fieldParent extends cmsFormField {
 
 		$perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_to_parent');
 
-		$is_allowed_to_bind = $perm && (
+		$is_allowed_to_bind = ($perm && (
 								($perm == 'all_to_all') ||
 								($perm == 'own_to_all' && $author_id == cmsUser::get('id')) ||
 								($perm == 'own_to_own' && $author_id == cmsUser::get('id'))
-							);
+							)) || cmsUser::isAdmin();
 
         $perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'add_to_parent');
 
-        $is_allowed_to_add = $perm && (($perm == 'to_all') || ($perm == 'to_own'));
+        $is_allowed_to_add = ($perm && (($perm == 'to_all') || ($perm == 'to_own'))) || cmsUser::isAdmin();
 
         return cmsTemplate::getInstance()->renderFormField($this->class, array(
 			'ctype_name' => isset($parent_ctype_name) ? $parent_ctype_name : false,

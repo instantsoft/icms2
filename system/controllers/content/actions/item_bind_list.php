@@ -47,6 +47,10 @@ class actionContentItemBindList extends cmsAction {
 
 		$perm = cmsUser::getPermissionValue($child_ctype_name, 'bind_to_parent');
 
+        if ($user->is_admin){
+            $perm = 'all_to_all';
+        }
+
 		if ($mode == 'childs'){
 
             if ($perm == 'own_to_own' || $perm == 'own_to_all' || $authors == 'own'){

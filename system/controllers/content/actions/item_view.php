@@ -133,14 +133,14 @@ class actionContentItemView extends cmsAction {
                 $model->resetFilters();
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
-                $is_allowed_to_add = $perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id));
+                $is_allowed_to_add = ($perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id))) || $user->is_admin;
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
-                $is_allowed_to_bind = $perm && (
+                $is_allowed_to_bind = ($perm && (
                                         ($perm == 'all_to_all' || $perm == 'own_to_all' || $perm == 'other_to_all') ||
                                         (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && $item['user_id'] == $this->cms_user->id) ||
                                         (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && $item['user_id'] != $this->cms_user->id)
-                                    );
+                                    )) || $user->is_admin;
 
                 if ($is_allowed_to_add) {
                     $childs['to_add'][] = $relation;
