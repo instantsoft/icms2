@@ -344,7 +344,7 @@ DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(20) DEFAULT NULL,
+  `name` varchar(30) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -498,7 +498,7 @@ DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(20) DEFAULT NULL,
+  `name` varchar(30) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
