@@ -196,7 +196,25 @@ class modelContent extends cmsModel{
         $this->db->dropTable("{$table_name}_props_bind");
         $this->db->dropTable("{$table_name}_props_values");
 
-        cmsCache::getInstance()->clean("content.types");
+        cmsCache::getInstance()->clean('content.types');
+
+        $relations = $this->getContentRelations($id);
+
+        if($relations){
+            foreach ($relations as $relation) {
+
+                $this->deleteContentRelation($relation['id']);
+
+                $parent_field_name = "parent_{$ctype['name']}_id";
+
+                $target_ctype = $this->getContentType($relation['child_ctype_id']);
+
+                if ($this->isContentFieldExists($target_ctype['name'], $parent_field_name)){
+                    $this->deleteContentField($target_ctype['name'], $parent_field_name, 'name', true);
+                }
+
+            }
+        }
 
         return true;
 

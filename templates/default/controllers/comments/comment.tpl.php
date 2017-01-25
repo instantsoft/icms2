@@ -87,9 +87,13 @@
     </div>
     <div class="body">
         <div <?php if (!empty($entry['user']['is_online'])){ ?>class="avatar comment_user_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="avatar"<?php } ?>>
-            <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+            <?php if ($entry['user_id']) { ?>
+                <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+                    <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
+                </a>
+            <?php } else { ?>
                 <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
-            </a>
+            <?php } ?>
         </div>
         <div class="content">
             <div class="text<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">

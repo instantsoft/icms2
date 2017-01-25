@@ -78,7 +78,7 @@
 
                 <?php if ($this->isBody()){ ?>
                     <article>
-                        <?php if ($config->show_breadcrumbs && $this->isBreadcrumbs()){ ?>
+                        <?php if ($config->show_breadcrumbs && $core->uri && $this->isBreadcrumbs()){ ?>
                             <div id="breadcrumbs">
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
