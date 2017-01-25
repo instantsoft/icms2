@@ -44,17 +44,19 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('frontpage', array(
                         'title' => LANG_CP_SETTINGS_FP_SHOW,
-                        'generator' => function($item) use($ctypes){
+                        'generator' => function($item) {
 
                             $items = array(
                                 'none' => LANG_CP_SETTINGS_FP_SHOW_NONE,
-                                'profile' => LANG_CP_SETTINGS_FP_SHOW_PROFILE,
                             );
 
-                            if ($ctypes) {
-                                foreach ($ctypes as $ctype) {
-                                    if (!$ctype['options']['list_on']) { continue; }
-                                    $items["content:{$ctype['name']}"] = sprintf(LANG_CP_SETTINGS_FP_SHOW_CONTENT, $ctype['title']);
+                            $frontpage_types = cmsEventsManager::hookAll('frontpage_types');
+
+                            if (is_array($frontpage_types)){
+                                foreach($frontpage_types as $frontpage_type){
+                                    foreach($frontpage_type['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
                                 }
                             }
 
