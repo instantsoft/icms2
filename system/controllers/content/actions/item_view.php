@@ -154,7 +154,7 @@ class actionContentItemView extends cmsAction {
                             "r.child_ctype_id = {$relation['child_ctype_id']} AND ".
                             "r.child_item_id = i.id";
 
-                $model->join('content_relations_bind', 'r', $filter);
+                $model->joinInner('content_relations_bind', 'r', $filter);
 
                 $count = $model->getContentItemsCount($relation['child_ctype_name']);
 
@@ -187,8 +187,7 @@ class actionContentItemView extends cmsAction {
                                 "r.child_ctype_id = {$child_ctype['id']} AND ".
                                 "r.child_item_id = i.id";
 
-                    $this->model->filterNotNull('r.id');
-                    $this->model->join('content_relations_bind', 'r', $filter);
+                    $this->model->joinInner('content_relations_bind', 'r', $filter);
 
                     $childs['lists'][] = array(
                         'title' => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,

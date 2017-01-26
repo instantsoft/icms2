@@ -17,7 +17,7 @@ icms.contentBind = (function ($) {
         if (mode != 'childs' && mode != 'unbind'){
             icms.modal.openAjax(options.url, {}, function(){
                 initModal(options);
-            });
+            }, options.modal_title);
         }
 
 		return false;

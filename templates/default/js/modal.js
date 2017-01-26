@@ -39,7 +39,9 @@ icms.modal = (function ($) {
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback}, ajax:{data: data, type: "POST"}});
+        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+        }}, ajax:{data: data, type: "POST"}});
         return false;
 
     };

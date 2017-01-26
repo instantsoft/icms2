@@ -13,6 +13,7 @@ class actionContentItemBindList extends cmsAction {
         $field            = $this->request->get('field', '');
         $text             = $this->request->get('text', '');
         $mode             = $this->request->get('mode', 'childs');
+        $selected_ids     = $this->request->get('selected', '');
 
         if (!$ctype_name || !$child_ctype_name || !$authors || !$field){
             cmsCore::error404();
@@ -49,6 +50,17 @@ class actionContentItemBindList extends cmsAction {
 
         if ($user->is_admin){
             $perm = 'all_to_all';
+        }
+
+        if($selected_ids){
+            $ids = array();
+            foreach(explode(',', $selected_ids) as $id){
+                if (!is_numeric($id)) { continue; }
+                $ids[] = trim($id);
+            }
+            if($ids){
+                $this->model->filterNotIn('id', $ids);
+            }
         }
 
 		if ($mode == 'childs'){
@@ -111,8 +123,8 @@ class actionContentItemBindList extends cmsAction {
                                   "r.child_ctype_id = {$child_ctype['id']} AND " .
                                   "r.child_item_id = i.id";
 
-                $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
-                $this->model->filterNotNull('r.id');
+                $this->model->joinInner('content_relations_bind', 'r', $join_condition);
+
             }
 
 			$total = $this->model->getContentItemsCount($child_ctype_name);

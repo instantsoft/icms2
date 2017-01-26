@@ -8,6 +8,7 @@ class fieldParent extends cmsFormField {
     public $allow_index = false;
     public $var_type    = 'string';
     public $filter_type = 'str';
+    private $input_action = 'bind';
 
     public function parse($value){
 
@@ -67,12 +68,33 @@ class fieldParent extends cmsFormField {
         return cmsTemplate::getInstance()->renderFormField($this->class, array(
 			'ctype_name'         => isset($parent_ctype_name) ? $parent_ctype_name : false,
             'child_ctype_name'   => $this->item ? $this->item['ctype_name'] : false,
+            'parent_ctype'       => isset($parent_ctype_name) ? cmsCore::getModel('content')->getContentTypeByName($parent_ctype_name) : array(),
             'field'              => $this,
+            'input_action'       => $this->input_action,
             'value'              => $value,
             'items'              => $parent_items,
             'is_allowed_to_bind' => $is_allowed_to_bind,
             'is_allowed_to_add'  => $is_allowed_to_add
         ));
+
+    }
+
+    public function getFilterInput($value) {
+
+        $this->input_action = 'select';
+
+        return parent::getFilterInput($value);
+
+    }
+
+    public function applyFilter($model, $values) {
+
+        $ids = $this->idsStringToArray($values);
+        if (!$ids) { return parent::applyFilter($model, $values); }
+
+        $model->joinInner('content_relations_bind', 'r', "r.child_item_id = i.id AND r.child_ctype_id = {$this->ctype_id}");
+
+        return $model->filterIn('r.parent_item_id', $ids);
 
     }
 
@@ -86,17 +108,24 @@ class fieldParent extends cmsFormField {
 
 	}
 
-    private function getParentItemsByIds($ids_list, $parent_ctype_name){
-
-        if (!$ids_list) { return false; }
+	private function idsStringToArray($ids_list){
 
         $ids = array();
 
+        if (!$ids_list) { return $ids; }
+
         foreach(explode(',', $ids_list) as $id){
-            if (!trim($id)) { continue; }
+            if (!is_numeric($id)) { continue; }
             $ids[] = trim($id);
         }
 
+		return $ids;
+
+	}
+
+    private function getParentItemsByIds($ids_list, $parent_ctype_name){
+
+        $ids = $this->idsStringToArray($ids_list);
         if (!$ids) { return false; }
 
         $content_model = cmsCore::getModel('content');

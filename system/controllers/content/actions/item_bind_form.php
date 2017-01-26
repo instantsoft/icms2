@@ -10,6 +10,8 @@ class actionContentItemBindForm extends cmsAction {
         $child_ctype_name = $this->request->get('child_ctype_name', '');
         $item_id          = $this->request->get('id', 0);
         $mode             = $this->request->get('mode', 'childs');
+        $input_action     = $this->request->get('input_action', 'bind');
+        $selected_ids     = $this->request->get('selected', '');
 
         if (!$ctype_name || !$child_ctype_name){
             cmsCore::error404();
@@ -30,7 +32,7 @@ class actionContentItemBindForm extends cmsAction {
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-		$item = false;
+		$item = array('id' => 0);
 
 		if ($item_id){
 			if ($mode == 'childs' || $mode == 'unbind'){
@@ -70,6 +72,8 @@ class actionContentItemBindForm extends cmsAction {
             'ctype'         => $ctype,
             'child_ctype'   => $child_ctype,
             'item'          => $item,
+            'input_action'  => $input_action,
+            'selected_ids'  => $selected_ids,
             'filter_fields' => $filter_fields
         ));
 

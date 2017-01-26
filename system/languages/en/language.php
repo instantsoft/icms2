@@ -8,6 +8,7 @@
     //CONTENT
     define('LANG_CONTENT_TYPE',              'Content Type');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Configure %s');
+    define('LANG_CONTENT_SELECT_ITEM',       'Select %s');
     define('LANG_CONTENT_ADD_ITEM',          'Add %s');
     define('LANG_CONTENT_BIND_ITEM',         'Bind %s');
     define('LANG_CONTENT_BIND_ITEMS',        'Bind');

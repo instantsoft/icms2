@@ -891,10 +891,10 @@ class content extends cmsFrontend {
 
             $parent_ctype = $this->model->getContentTypeByName($parent['ctype_name']);
 
-            $current_parents = array();
-            $new_parents = array();
+            $current_parents   = array();
+            $new_parents       = array();
             $parents_to_delete = array();
-            $parents_to_add = array();
+            $parents_to_add    = array();
 
             if (!empty($item['id'])){
                 $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype['id'], $item['id']);
@@ -903,10 +903,6 @@ class content extends cmsFrontend {
             if ($ids){
                 $this->model->filterIn('id', $ids);
                 $new_parents = $this->model->getContentItems($parent['ctype_name']);
-            }
-
-            if (!$new_parents && $current_parents) {
-                $parents_to_delete = $current_parents;
             }
 
             if ($current_parents){
@@ -932,11 +928,11 @@ class content extends cmsFrontend {
 
                     $this->model->bindContentItemRelation(array(
                         'parent_ctype_name' => $parent_ctype['name'],
-                        'parent_ctype_id' => $parent_ctype['id'],
-                        'parent_item_id' => $new_parent_id,
-                        'child_ctype_name' => $ctype['name'],
-                        'child_ctype_id' => $ctype['id'],
-                        'child_item_id' => $item['id']
+                        'parent_ctype_id'   => $parent_ctype['id'],
+                        'parent_item_id'    => $new_parent_id,
+                        'child_ctype_name'  => $ctype['name'],
+                        'child_ctype_id'    => $ctype['id'],
+                        'child_item_id'     => $item['id']
                     ));
 
                 }
@@ -947,11 +943,11 @@ class content extends cmsFrontend {
 
                     $this->model->unbindContentItemRelation(array(
                         'parent_ctype_name' => $parent_ctype['name'],
-                        'parent_ctype_id' => $parent_ctype['id'],
-                        'parent_item_id' => $new_parent_id,
-                        'child_ctype_name' => $ctype['name'],
-                        'child_ctype_id' => $ctype['id'],
-                        'child_item_id' => $item['id']
+                        'parent_ctype_id'   => $parent_ctype['id'],
+                        'parent_item_id'    => $old_parent_id,
+                        'child_ctype_name'  => $ctype['name'],
+                        'child_ctype_id'    => $ctype['id'],
+                        'child_item_id'     => $item['id']
                     ));
 
                 }

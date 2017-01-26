@@ -55,8 +55,7 @@ class widgetContentList extends cmsWidget {
 
                         $this->disableCache();
 
-                        $model->filterNotNull('r.id');
-                        $model->join('content_relations_bind', 'r', $filter);
+                        $model->joinInner('content_relations_bind', 'r', $filter);
 
                         $this->title = string_replace_keys_values($this->title, $current_ctype_item);
 

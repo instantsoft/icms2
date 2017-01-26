@@ -23,7 +23,7 @@
                     <?php if (!$field['is_in_filter']){ continue; } ?>
                     <?php if (!empty($field['filter_view']) && !$user->isInGroups($field['filter_view'])) { continue; } ?>
                     <?php $value = isset($filters[$name]) ? $filters[$name] : null; ?>
-                    <?php $output = $field['handler']->getFilterInput($value); ?>
+                    <?php $output = $field['handler']->setItem(array('ctype_name' => $css_prefix, 'id' => null))->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>
                     <?php $fields_count++; ?>
                     <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">

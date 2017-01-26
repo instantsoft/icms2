@@ -1353,9 +1353,7 @@ class modelContent extends cmsModel{
                     "r.child_item_id = {$item_id} AND " .
                     "r.parent_item_id = i.id";
 
-        $this->filterNotNull('r.id');
-
-        $this->joinLeft('content_relations_bind', 'r', $join_on);
+        $this->joinInner('content_relations_bind', 'r', $join_on);
 
         return $this->get($parent_ctype_table);
 

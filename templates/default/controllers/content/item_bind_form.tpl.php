@@ -1,28 +1,4 @@
-<?php
-
-    $page_title = sprintf(LANG_CONTENT_BIND_ITEM, $child_ctype['labels']['create']);
-
-	$this->setPageTitle($page_title, $item['title']);
-
-    $base_url = $ctype['name'];
-
-    if ($ctype['options']['list_on']){
-        $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $this->addBreadcrumb($list_header, href_to($base_url));
-    }
-
-    if (isset($item['category'])){
-        foreach($item['category']['path'] as $c){
-            $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
-        }
-    }
-
-    $this->addBreadcrumb($item['title'], href_to($ctype['name'], $item['slug'] . '.html'));
-    $this->addBreadcrumb($page_title);
-
-?>
-
-<div id="content_bind_form" data-filter-url="<?php echo href_to($ctype['name'], 'bind_list', array($child_ctype['name'], $item['id'])); ?>" data-mode="<?php echo $mode; ?>">
+<div id="content_bind_form" data-filter-url="<?php echo href_to($ctype['name'], 'bind_list', array($child_ctype['name'], $item['id'])); ?>?selected=<?php echo $selected_ids; ?>" data-mode="<?php echo $mode; ?>">
 
     <div class="find gui-panel">
         <div class="field">
@@ -48,7 +24,7 @@
 	</div>
 
 	<div class="buttons">
-        <?php $button_title = $mode == 'unbind' ? LANG_CONTENT_UNBIND_ITEMS : LANG_CONTENT_BIND_ITEMS; ?>
+        <?php $button_title = $input_action == 'bind' ? ($mode == 'unbind' ? LANG_CONTENT_UNBIND_ITEMS : LANG_CONTENT_BIND_ITEMS) : LANG_SELECT; ?>
 		<input type="submit" name="submit" class="button-submit" value="<?php echo $button_title; ?>" data-title="<?php echo $button_title; ?>">
 	</div>
 
@@ -63,5 +39,3 @@
     <?php $this->insertJS('templates/default/js/content-bind.js'); ?>
     <script>icms.contentBind.start();</script>
 <?php } ?>
-
-

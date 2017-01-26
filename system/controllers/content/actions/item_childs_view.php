@@ -25,8 +25,7 @@ class actionContentItemChildsView extends cmsAction {
                     "r.child_ctype_id = {$child_ctype['id']} AND ".
                     "r.child_item_id = i.id";
 
-        $this->model->filterNotNull('r.id');
-        $this->model->join('content_relations_bind', 'r', $filter);
+        $this->model->joinInner('content_relations_bind', 'r', $filter);
 
         if (!empty($relation['options']['limit'])){
             $child_ctype['options']['limit'] = $relation['options']['limit'];

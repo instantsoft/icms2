@@ -8,6 +8,7 @@
     //CONTENT
     define('LANG_CONTENT_TYPE',              'Тип контента');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Настроить %s');
+    define('LANG_CONTENT_SELECT_ITEM',       'Выбрать %s');
     define('LANG_CONTENT_ADD_ITEM',          'Добавить %s');
     define('LANG_CONTENT_BIND_ITEM',         'Привязать %s');
     define('LANG_CONTENT_BIND_ITEMS',        'Привязать');

@@ -20,7 +20,7 @@
 
 <?php if ($is_allowed_to_bind) { ?>
 	<?php $url = href_to($ctype_name, 'bind_form', array($child_ctype_name, isset($field->item['id']) ? $field->item['id'] : 0, 'parents')); ?>
-	<a class="add" href="<?php echo $url; ?>"><?php echo LANG_ADD; ?></a>
+	<a class="add" href="<?php echo $url; ?>?input_action=<?php echo $input_action; ?>"><?php echo ($input_action === 'bind' ? LANG_ADD : LANG_SELECT); ?></a>
 <?php } ?>
 
 <?php echo html_input('hidden', $field->element_name, implode(',', $ids), array('id'=>$field->id)); ?>
@@ -28,7 +28,13 @@
 <script>
     $(function(){
 
-        var $container = $('#f_<?php echo $field->element_name; ?>');
+        <?php if($input_action === 'bind'){ ?>
+            var modal_title = '<?php html(sprintf(LANG_CONTENT_BIND_ITEM, $parent_ctype['labels']['create'])); ?>';
+        <?php } else { ?>
+            var modal_title = '<?php html(sprintf(LANG_CONTENT_SELECT_ITEM, $parent_ctype['labels']['create'])); ?>';
+        <?php } ?>
+
+        var $container = $('#<?php echo $field->element_name; ?>').closest('div.field');
 
         $container.find('a.add').click(function(e){
 
@@ -37,7 +43,8 @@
             e.preventDefault();
 
             icms.contentBind.start({
-				url: $link.attr('href'),
+				modal_title: modal_title,
+				url: $link.attr('href')+'&selected='+$('#<?php echo $field->id; ?>').val(),
 				callback: function(items){
 					var $list = $link.siblings('ul');
 					var $input = $link.siblings('input[type=hidden]');
