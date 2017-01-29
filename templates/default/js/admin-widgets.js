@@ -282,14 +282,15 @@ function widgetEdit(id){
         icms.modal.setCallback('close', function(){
             icms.forms.form_changed = false;
         });
-        var w = $('.modal_form').width();
-        var h = 0;
+        var h = 0, m = false;
         $('.modal_form .form-tabs .tab').each(function(indx, element){
-            var th = $(this).height();
-            if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
+            var th = +$(this).height();
+            if (th > h){ if(indx){ h = th; m = true; } }
         });
-        $('.modal_form').css({width: w+'px', height: h+'px'});
-        setTimeout(function(){ icms.modal.resize(); }, 10);
+        if(m){
+            $('.modal_form .form-tabs .tab').first().css({height: h+'px'});
+            setTimeout(function(){ icms.modal.resize(); }, 10);
+        }
     }, widget_dom.data('name'));
 
     return false;

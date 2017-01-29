@@ -15,7 +15,7 @@ class formAdminCtypesField extends cmsForm {
                         'rules' => array(
                             array('required'),
                             array('sysname'),
-                            array('max_length', 20),
+                            array('max_length', 40),
                             $do == 'add' ? array('unique_ctype_field', $ctype_name) : false
                         )
                     )),

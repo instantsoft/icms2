@@ -31,7 +31,11 @@ class actionContentItemEdit extends cmsAction {
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
 
         if ($item['is_deleted']){
-            if (!$is_moderator){ cmsCore::error404(); }
+
+            $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+
+            if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
         }
 
         // Получаем родительский тип, если он задан

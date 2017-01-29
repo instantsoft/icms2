@@ -227,7 +227,7 @@ article div.content_categories:last-child {
 }
 
 /* ========================================================================== */
-
+#trash_content_pills { margin-bottom: 30px; }
 .content_list_item {
     overflow: hidden;
     position: relative;
@@ -591,7 +591,7 @@ article div.content_categories:last-child {
 /* ========================================================================== */
 
 #content_bind_form {
-	padding:15px;	
+	padding:15px;
 }
 #content_bind_form #item-find-field {
     width:20%;
@@ -631,7 +631,7 @@ article div.content_categories:last-child {
 	padding:2px;
 	overflow-x: hidden;
 	overflow-y: auto;
-	position: relative;	
+	position: relative;
 }
 #content_bind_form .result-pane .loading {
 	position:absolute;
@@ -643,11 +643,11 @@ article div.content_categories:last-child {
 #content_bind_form .result-pane ul,
 #content_bind_form .result-pane ul li {
 	list-style: none;
-	margin:0; padding:0;	
+	margin:0; padding:0;
 }
 #content_bind_form .result-pane ul li {
 	padding:10px;
-	border-bottom: solid 1px #EFEFEF;	
+	border-bottom: solid 1px #EFEFEF;
 	position:relative;
 }
 #content_bind_form .result-pane ul li:last-child {
@@ -661,7 +661,7 @@ article div.content_categories:last-child {
 #content_bind_form .result-pane ul li .details,
 #content_bind_form .result-pane ul li .details a {
 	font-size:11px;
-	color:#888;	
+	color:#888;
 }
 #content_bind_form .result-pane ul li .details a:hover {
 	color:#444;

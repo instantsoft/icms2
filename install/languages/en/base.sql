@@ -344,7 +344,7 @@ DROP TABLE IF EXISTS `{#}con_albums_fields`;
 CREATE TABLE `{#}con_albums_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -498,7 +498,7 @@ DROP TABLE IF EXISTS `{#}con_pages_fields`;
 CREATE TABLE `{#}con_pages_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -798,7 +798,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
-(36, 'content', 'restore', 'flag', NULL);
+(36, 'content', 'restore', 'list', 'own,all');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

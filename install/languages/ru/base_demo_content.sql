@@ -172,7 +172,7 @@ DROP TABLE IF EXISTS `{#}con_articles_fields`;
 CREATE TABLE `{#}con_articles_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -351,7 +351,7 @@ DROP TABLE IF EXISTS `{#}con_board_fields`;
 CREATE TABLE `{#}con_board_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -655,7 +655,7 @@ DROP TABLE IF EXISTS `{#}con_news_fields`;
 CREATE TABLE `{#}con_news_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
@@ -825,7 +825,7 @@ DROP TABLE IF EXISTS `{#}con_posts_fields`;
 CREATE TABLE `{#}con_posts_fields` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `ctype_id` int(11) DEFAULT NULL,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,

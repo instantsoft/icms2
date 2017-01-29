@@ -37,6 +37,8 @@ class actionContentItemDelete extends cmsAction {
             $this->notifyAuthor($ctype['name'], $item);
         }
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $back_url = $this->request->get('back', '');
 
         if ($back_url){

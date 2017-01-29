@@ -29,7 +29,10 @@ class actionContentItemTrashPut extends cmsAction {
 
         $this->model->toTrashContentItem($ctype['name'], $item);
 
-        cmsUser::addSessionMessage(LANG_BASKET_DELETE_SUCCESS, 'success');
+        $allow_delete = (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
+            (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $this->cms_user->id));
+
+        cmsUser::addSessionMessage(($allow_delete ? LANG_BASKET_DELETE_SUCCESS : LANG_DELETE_SUCCESS), 'success');
 
         $back_url = $this->request->get('back', '');
 

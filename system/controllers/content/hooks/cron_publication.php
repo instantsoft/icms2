@@ -27,6 +27,8 @@ class onContentCronPublication extends cmsAction {
 
             if($ctype['options']['is_date_range_process'] === 'delete') {
                 $this->model->deleteExpiredContentItems($ctype['name']);
+            } elseif($ctype['options']['is_date_range_process'] === 'in_basket') {
+                $this->model->toTrashExpiredContentItems($ctype['name']);
             } else {
                 $this->model->hideExpiredContentItems($ctype['name']);
             }

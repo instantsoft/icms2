@@ -363,10 +363,12 @@
     define('LANG_HIDE_SELECTED',			 'Hide selected');
     define('LANG_CONFIG', 					 'Settings');
     define('LANG_RESTORE', 					 'Restore');
+    define('LANG_BASKET_TITLE', 			 'Items trash');
     define('LANG_BASKET_DELETE', 			 'Move to trash');
     define('LANG_BASKET_DELETE_SUCCESS', 	 'Item successfully deleted to trash');
     define('LANG_ITEM_RESTORE_SUCCESS', 	 'Item successfully restored');
     define('LANG_DELETE', 					 'Delete');
+    define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');
     define('LANG_DELETE_SELECTED',			 'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');
     define('LANG_MOVE',                      'Move');

@@ -22,7 +22,7 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
 
-    if ($ctype['options']['list_on']){
+    if ($ctype['options']['list_on'] || $back_url){
         $this->addToolButton(array(
             'class' => 'cancel',
             'title' => LANG_CANCEL,
@@ -41,7 +41,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
-        'cancel' => array('show' => true, 'href' => $back_url ? $back_url : href_to($ctype['name'])),
+        'cancel' => array('show' => ($ctype['options']['list_on'] || $back_url), 'href' => $back_url ? $back_url : href_to($ctype['name'])),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(

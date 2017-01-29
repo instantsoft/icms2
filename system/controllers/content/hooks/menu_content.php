@@ -19,6 +19,25 @@ class onContentMenuContent extends cmsAction {
 
             return $this->getMenuPrivateItems($menu_item_id);
 
+        } elseif($action == 'trash') {
+
+            $ctypes = $this->model->getContentTypes();
+            if (!$ctypes) { return false; }
+
+            $allow_restore = false;
+
+            foreach($ctypes as $ctype){
+                if (!cmsUser::isAllowed($ctype['name'], 'restore')) { continue; }
+                $allow_restore = true; break;
+            }
+
+            if(!$allow_restore){ return false; }
+
+            return array(
+                'url' => href_to($this->name, 'trash'),
+                'items' => false
+            );
+
         } else {
 
             $ctype = $this->model->getContentTypeByName($action);

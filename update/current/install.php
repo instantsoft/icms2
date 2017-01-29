@@ -13,7 +13,7 @@ function install_package(){
 
         if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}", 'is_deleted')){
             $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `rating`");
-            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` CHANGE `name` `name` VARCHAR(30) NULL DEFAULT NULL ;");
+            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` CHANGE `name` `name` VARCHAR(40) NULL DEFAULT NULL");
         }
 
 	}
@@ -95,7 +95,7 @@ function install_package(){
         'content' => array(
             'restore'
         )
-    ), 'flag');
+    ), 'list', 'own,all');
 
     return true;
 

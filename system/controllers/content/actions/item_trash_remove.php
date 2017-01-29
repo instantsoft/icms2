@@ -16,6 +16,7 @@ class actionContentItemTrashRemove extends cmsAction {
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'restore')) { cmsCore::error404(); }
+        if (!cmsUser::isAllowed($ctype['name'], 'restore', 'all') && $item['user_id'] != $this->cms_user->id) { cmsCore::error404(); }
 
         $back_action = '';
 

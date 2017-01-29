@@ -2312,6 +2312,18 @@ class modelContent extends cmsModel{
 
 	}
 
+	public function toTrashExpiredContentItems($ctype_name){
+
+        return $this->
+                    filterNotNull('date_pub_end')->
+                    filter('i.date_pub_end <= NOW()')->
+                    get($this->table_prefix.$ctype_name, function($item, $model) use($ctype_name){
+                        $model->toTrashContentItem($ctype_name, $item);
+                        return $item['id'];
+                    });
+
+	}
+
 	public function toggleContentItemPublication($ctype_name, $id, $is_pub){
 
 		$this->update($this->table_prefix.$ctype_name, $id, array(

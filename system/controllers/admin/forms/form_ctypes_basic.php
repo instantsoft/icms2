@@ -52,7 +52,8 @@ class formAdminCtypesBasic extends cmsForm {
                         'default' => 'hide',
                         'items' => array(
                             'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
-                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL
+                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL,
+                            'in_basket' => LANG_BASKET_DELETE
                         )
                     ))
                 )

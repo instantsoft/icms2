@@ -4,7 +4,10 @@
 AddDefaultCharset utf-8
 Options -Indexes
 RewriteEngine on
-RewriteBase /
+
+# HTTPS redirect if available
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 # Hide text files
 RewriteRule ^.htaccess$ - [F]
@@ -17,9 +20,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.+)/$  /$1 [R=301,L]
 
 # Sitemaps
-RewriteRule ^sitemap(.*).xml$ /cache/static/sitemaps/sitemap$1.xml [L]
+RewriteRule ^sitemap(.*).xml$ ./cache/static/sitemaps/sitemap$1.xml [L]
 
 # Engine routing
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /index.php [L]
+RewriteRule ^(.*)$ ./index.php [L]

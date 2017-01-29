@@ -69,7 +69,6 @@
 	position: relative;
 	max-width: 1000px;
     box-sizing: border-box;
-    height: 100%;
 }
 .nyroModalImage, .nyroModalSwf, .nyroModalIframe, .nyroModalIframeForm {
 	position: relative;

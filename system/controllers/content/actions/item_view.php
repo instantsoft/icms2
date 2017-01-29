@@ -59,7 +59,12 @@ class actionContentItemView extends cmsAction {
 
         // Проверяем, что не удалено
         if ($item['is_deleted']){
-            if (!$is_moderator){ cmsCore::error404(); }
+
+            $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+
+            if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
+
         }
 
         // Проверяем приватность

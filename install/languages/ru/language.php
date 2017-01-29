@@ -50,7 +50,6 @@
     define('LANG_PATHS_ROOT_INFO',          'Все пути указываются относительно:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'изменить');
     define('LANG_PATHS_CHANGE_INFO',        'После установки пути можно будет изменить отредактировав файл конфигурации.<br/>Не забудьте сделать это при переносе сайта с локального сервера на хостинг!');
-    define('LANG_PATHS_HTACCESS_INFO',      'Вы устанавливаете InstantCMS не в корневую папку сайта, поэтому необходимо изменить файл .htaccess. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Инструкция</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Должна быть доступна для записи');
     define('LANG_PATHS_NOT_WRITABLE',       'не доступна для записи!');
     define('LANG_PATHS_WRITABLE_HINT',      'Выставьте правильные права на эту папку');

@@ -50,7 +50,6 @@
     define('LANG_PATHS_ROOT_INFO',          'All paths are relative to:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'edit');
     define('LANG_PATHS_CHANGE_INFO',        'You will be able to edit the paths in the configuration file later.<br/>Do not forget to do it after migration from local server to hosting!');
-    define('LANG_PATHS_HTACCESS_INFO',      'You are installing InstantCMS not to the root folder; that is why you need to edit the .htaccess file. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Manual</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Must be writable');
     define('LANG_PATHS_NOT_WRITABLE',       'not writable!');
     define('LANG_PATHS_WRITABLE_HINT',      'Set correct permissions for the folder');

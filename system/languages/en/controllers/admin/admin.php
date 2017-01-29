@@ -256,6 +256,7 @@
     define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Tab Title');
     define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Tab Meta-keywords');
     define('LANG_CP_RELATION_TAB_SEO_DESC',     'Tab Meta-description');
+    define('LANG_CP_RELATION_ERROR_LEN',        'Are too long names are linkable system types. The name length should not be more than 30 characters.');
 
     define('LANG_CP_MENU',                      'Menu');
     define('LANG_CP_MENU_ADD',                  'Add Menu');

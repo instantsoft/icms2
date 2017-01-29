@@ -97,7 +97,7 @@ class cmsModel{
         return array(
             'id'            => array('type' => 'primary'),
             'ctype_id'      => array('type' => 'int', 'unsigned' => true),
-            'name'          => array('type' => 'varchar', 'size' => 30),
+            'name'          => array('type' => 'varchar', 'size' => 40),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
             'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),

@@ -669,9 +669,7 @@ form .hint {
 /*============================================================================*/
 
 .modal_form {
-    min-width:750px;
-    overflow: hidden;
-    height: 100%;
+    box-sizing: border-box;
 }
 
 .tabs-menu{

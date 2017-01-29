@@ -92,9 +92,9 @@ class fieldParent extends cmsFormField {
         $ids = $this->idsStringToArray($values);
         if (!$ids) { return parent::applyFilter($model, $values); }
 
-        $model->joinInner('content_relations_bind', 'r', "r.child_item_id = i.id AND r.child_ctype_id = {$this->ctype_id}");
+        $model->joinInner('content_relations_bind', 'rr', "rr.child_item_id = i.id AND rr.child_ctype_id = {$this->ctype_id}");
 
-        return $model->filterIn('r.parent_item_id', $ids);
+        return $model->filterIn('rr.parent_item_id', $ids);
 
     }
 

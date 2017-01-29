@@ -68,8 +68,9 @@
             ));
         }
 
-        if (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
-        (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $user->id)){
+        $allow_delete = (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
+            (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $user->id));
+        if ($allow_delete){
             $this->addToolButton(array(
                 'class' => 'delete',
                 'title' => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
@@ -85,7 +86,7 @@
         (cmsUser::isAllowed($ctype['name'], 'move_to_trash', 'own') && $item['user_id'] == $user->id)){
             $this->addToolButton(array(
                 'class' => 'basket_put',
-                'title' => LANG_BASKET_DELETE,
+                'title' => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
                 'href'  => href_to($ctype['name'], 'trash_put', $item['id']),
                 'onclick' => "if(!confirm('".sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])."')){ return false; }"
             ));
@@ -95,7 +96,8 @@
 
     if ($item['is_approved'] && $item['is_deleted']){
 
-        if (cmsUser::isAllowed($ctype['name'], 'restore')){
+        if (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
+        (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $user->id)){
             $this->addToolButton(array(
                 'class' => 'basket_remove',
                 'title' => LANG_RESTORE,

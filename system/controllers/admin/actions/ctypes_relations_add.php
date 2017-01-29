@@ -21,6 +21,12 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
             $errors = $form->validate($this,  $relation);
 
+            $parent_field_name = "parent_{$ctype['name']}_id";
+
+            if (mb_strlen($parent_field_name) > 40){
+                $errors['child_ctype_id'] = LANG_CP_RELATION_ERROR_LEN;
+            }
+
             if (!$errors){
 
                 $relation['ctype_id'] = $ctype_id;
@@ -31,19 +37,17 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_RELATION_CREATED, 'success');
 
-                    $parent_field_name = "parent_{$ctype['name']}_id";
-
                     $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
 
                     if (!$content_model->isContentFieldExists($target_ctype['name'], $parent_field_name)){
 
                         $content_model->addContentField($target_ctype['name'], array(
-                            'type' => 'parent',
-                            'ctype_id' => $target_ctype['id'],
-                            'name' => $parent_field_name,
-                            'title' => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE),
-                            'is_fixed' => true,
-                            'is_fixed_type' => true,
+                            'type'          => 'parent',
+                            'ctype_id'      => $target_ctype['id'],
+                            'name'          => $parent_field_name,
+                            'title'         => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE),
+                            'is_fixed'      => true,
+                            'is_fixed_type' => true
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_CP_RELATION_FIELD_CREATED, $target_ctype['title']), 'success');
@@ -63,11 +67,11 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
         }
 
         return $this->cms_template->render('ctypes_relation', array(
-            'do' => 'add',
-            'ctype' => $ctype,
+            'do'       => 'add',
+            'ctype'    => $ctype,
             'relation' => $relation,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'     => $form,
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }
