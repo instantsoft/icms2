@@ -47,12 +47,12 @@
         if ($childs && !empty($childs['to_bind'])){
             foreach($childs['to_bind'] as $relation){
                 $this->addToolButton(array(
-                    'class' => 'add ajax-modal',
+                    'class' => 'newspaper_add ajax-modal',
                     'title' => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
                     'href'  => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
                 ));
                 $this->addToolButton(array(
-                    'class' => 'delete ajax-modal',
+                    'class' => 'newspaper_delete ajax-modal',
                     'title' => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),
                     'href'  => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id'], 'unbind'))
                 ));

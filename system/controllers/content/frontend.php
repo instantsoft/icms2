@@ -363,17 +363,36 @@ class content extends cmsFrontend {
 
         // отправляем письмо модератору
         $messenger = cmsCore::getController('messages');
-        $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
-        $letter = array('name' => 'moderation');
 
-        $messenger->sendEmail($to, $letter, array(
-            'moderator' => $moderator['nickname'],
-            'author' => $author['nickname'],
-            'author_url' => href_to_abs('users', $author['id']),
-            'page_title' => $item['title'],
-            'page_url' => href_to_abs($ctype_name, $item['slug'] . ".html"),
-            'date' => html_date_time(),
-        ));
+        // личное сообщение
+        if($moderator['is_online']){
+            $messenger->addRecipient($moderator['id'])->sendNoticePM(array(
+                'content' => LANG_MODERATION_NOTIFY,
+                'actions' => array(
+                    'view' => array(
+                        'title' => LANG_SHOW,
+                        'href'  => href_to($ctype_name, $item['slug'] . '.html')
+                    )
+                )
+            ));
+        }
+
+        // EMAIL уведомление, если не онлайн
+        if(!$moderator['is_online']){
+
+            $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
+            $letter = array('name' => 'moderation');
+
+            $messenger->sendEmail($to, $letter, array(
+                'moderator'  => $moderator['nickname'],
+                'author'     => $author['nickname'],
+                'author_url' => href_to_abs('users', $author['id']),
+                'page_title' => $item['title'],
+                'page_url'   => href_to_abs($ctype_name, $item['slug'] . '.html'),
+                'date'       => html_date_time()
+            ));
+
+        }
 
         cmsUser::addSessionMessage(sprintf(LANG_MODERATION_IDLE, $moderator['nickname']), 'info');
 
@@ -744,7 +763,10 @@ class content extends cmsFrontend {
 					'hint' => LANG_CONTENT_DATE_PUB_END_HINT,
 				)));
 			}
-			if (($action=='add' && $is_pub_end_days) || ($action=='edit' && $is_pub_ext && $is_pub_end_days)){
+            if($action=='edit'){
+                $is_expired = (strtotime($item['date_pub_end']) - time()) <= 0;
+            }
+			if (($action=='add' && $is_pub_end_days) || ($action=='edit' && $is_expired && $is_pub_ext && $is_pub_end_days)){
 				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
 				$title = $action=='add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
 				$hint = $action=='add'? false : sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end']));
@@ -756,8 +778,6 @@ class content extends cmsFrontend {
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
                     $rules[] = array('max', $pub_max_days);
-                    if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
-                    if ($action == 'edit'){ $min = 0; }
                     for($d=$min; $d<=$pub_max_days; $d++) { $days[$d] = $d; }
 					$form->addField($pub_fieldset_id, new fieldList('pub_days', array(
 						'title' => $title,

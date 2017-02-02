@@ -65,15 +65,17 @@ class cmsBackend extends cmsController {
 			));
 		}
 
-        $active = $i[$field] ? false : true;
+        $i[$field] = $i[$field] ? false : true;
 
 		$this->model->update($table, $item_id, array(
-			$field => $active
+			$field => $i[$field]
 		));
+
+        $this->processCallback('actiontoggle_'.$table.'_'.$field, array($i));
 
 		$this->cms_template->renderJSON(array(
 			'error' => false,
-			'is_on' => $active
+			'is_on' => $i[$field]
 		));
 
     }

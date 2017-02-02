@@ -79,6 +79,13 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->setPerPage($perpage);
 
+        $content_model->joinLeft(
+                'moderators_logs',
+                'mlog',
+                "mlog.target_id = i.id AND mlog.target_controller = 'content' AND mlog.target_subject = '{$ctype['name']}' AND mlog.date_expired IS NOT NULL"
+        );
+        $content_model->select('mlog.date_expired', 'trash_date_expired');
+
         $items = $content_model->getContentItems($ctype['name']);
 
         $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);

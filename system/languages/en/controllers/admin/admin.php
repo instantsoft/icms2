@@ -460,6 +460,7 @@
 
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
+    define('LANG_CP_FTP_PORT',                  'Port');
     define('LANG_CP_FTP_USER',                  'Username');
     define('LANG_CP_FTP_PASS',                  'Password');
     define('LANG_CP_FTP_PATH',                  'Site root path');
@@ -486,7 +487,14 @@
     define('LANG_MODERATOR_DELETED_COUNT',   'Deleted');
     define('LANG_MODERATOR_IDLE_COUNT',      'Idle');
     define('LANG_MODERATOR_ASSIGNED_DATE',   'Assigned');
+    define('LANG_MODERATOR_TRASH_LEFT_TIME', 'Trash items lifetime');
     define('LANG_MODERATOR_ALREADY',         'User %s is already a moderator');
+    define('LANG_MODERATORATION_OPTIONS',    'Moderation options');
+    define('LANG_MODERATION_TRASH_NO_REMOVE', 'Evermore');
+    define('LANG_MODERATION_NOT_NEEDED',      'Not needed');
+    define('LANG_MODERATION_IN_TRASH',        'In the trash');
+    define('LANG_MODERATION_IN_TRASH_TIME',   'Is in the trash, will be deleted through %s');
+    define('LANG_MODERATION_LOGS',            'Moderation logs');
 
     define('LANG_CP_SCHEDULER',                     'Scheduler');
     define('LANG_CP_SCHEDULER_TASK',                'Task');
@@ -541,6 +549,7 @@
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/en/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/en/manual/components/images');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/en/manual/components/users');
+    define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/en/manual/components/moderation');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/en/manual/components/users/migrations');
     define('LANG_HELP_URL_COM_MARKITUP',            'http://docs.instantcms.ru/en/manual/components/markitup');
     define('LANG_HELP_URL_COM_RATING',              'http://docs.instantcms.ru/en/manual/components/rating');

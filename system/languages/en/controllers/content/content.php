@@ -25,6 +25,8 @@
     define('LANG_RULE_CONTENT_EDIT',         'Editing entries');
     define('LANG_RULE_CONTENT_DELETE',       'Deleting entries');
     define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Deleting entries to trash');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME', 'Trash items lifetime, hours');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME_HINT', 'After this time, the item will be completely deleted. It may be overridden individually for each a moderator.. 0 - do not remove.');
     define('LANG_RULE_CONTENT_RESTORE',      'Restore items');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Adding categories');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Editing categories');

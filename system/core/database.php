@@ -101,6 +101,10 @@ class cmsDatabase {
             $this->mysqli->query("SET sql_mode=''");
         }
 
+        if(defined('LC_LANGUAGE_TERRITORY')){
+            $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
+        }
+
         $this->setTimezone();
 
 		$this->prefix = $config->db_prefix;

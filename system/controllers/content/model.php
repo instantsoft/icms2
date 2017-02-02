@@ -432,7 +432,7 @@ class modelContent extends cmsModel{
 
             }
 
-            if ($field['is_in_filter'] && $field_parser->allow_index){
+            if (!empty($field['is_in_filter']) && $field_parser->allow_index){
                 $this->db->addIndex($content_table_name, $field['name']);
             }
 
@@ -1997,7 +1997,7 @@ class modelContent extends cmsModel{
 
         $this->update($table_name, $item['id'], array('is_deleted' => null));
 
-        cmsEventsManager::hook('content_after_restore', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook('content_after_restore', array($ctype_name, $item));
         cmsEventsManager::hook("content_{$ctype_name}_after_restore", $item);
 
         return true;
@@ -2024,7 +2024,7 @@ class modelContent extends cmsModel{
 
         $this->update($table_name, $item['id'], array('is_deleted' => 1));
 
-        cmsEventsManager::hook('content_after_trash_put', array('ctype_name'=>$ctype_name, 'item'=>$item));
+        cmsEventsManager::hook('content_after_trash_put', array($ctype_name, $item));
         cmsEventsManager::hook("content_{$ctype_name}_after_trash_put", $item);
 
         return true;

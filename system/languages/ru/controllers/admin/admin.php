@@ -460,6 +460,7 @@
 
     define('LANG_CP_FTP_ACCOUNT',               'Реквизиты FTP');
     define('LANG_CP_FTP_HOST',                  'Сервер');
+    define('LANG_CP_FTP_PORT',                  'Порт');
     define('LANG_CP_FTP_USER',                  'Имя пользователя');
     define('LANG_CP_FTP_PASS',                  'Пароль');
     define('LANG_CP_FTP_PATH',                  'Путь папки сайта');
@@ -486,7 +487,14 @@
     define('LANG_MODERATOR_DELETED_COUNT',   'Удалено');
     define('LANG_MODERATOR_IDLE_COUNT',      'В процессе');
     define('LANG_MODERATOR_ASSIGNED_DATE',   'Назначен');
+    define('LANG_MODERATOR_TRASH_LEFT_TIME', 'Время жизни записей в корзине');
     define('LANG_MODERATOR_ALREADY',         'Пользователь %s уже является модератором');
+    define('LANG_MODERATORATION_OPTIONS',    'Настройка модерации');
+    define('LANG_MODERATION_TRASH_NO_REMOVE', 'Бессрочно');
+    define('LANG_MODERATION_NOT_NEEDED',      'Не требовалась');
+    define('LANG_MODERATION_IN_TRASH',        'В корзине');
+    define('LANG_MODERATION_IN_TRASH_TIME',   'В корзине, будет удалён через %s');
+    define('LANG_MODERATION_LOGS',            'Лог модераций');
 
     define('LANG_CP_SCHEDULER',                     'Планировщик');
     define('LANG_CP_SCHEDULER_TASK',                'Задача');
@@ -535,6 +543,7 @@
     define('LANG_HELP_URL_COMPONENTS',              'http://docs.instantcms.ru/manual/components');
     define('LANG_HELP_URL_INSTALL',                 'http://docs.instantcms.ru/manual/addons');
     define('LANG_HELP_URL_COM_AUTH',                'http://docs.instantcms.ru/manual/components/auth');
+    define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/manual/components/moderation');
     define('LANG_HELP_URL_COM_ACTIVITY',            'http://docs.instantcms.ru/manual/components/activity');
     define('LANG_HELP_URL_COM_GROUPS',              'http://docs.instantcms.ru/manual/components/groups');
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/manual/components/recaptcha');

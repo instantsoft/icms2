@@ -1370,8 +1370,15 @@ class cmsTemplate {
                     // если из значения нужно сделать ссылку, то парсим шаблон
                     // адреса, заменяя значения полей
                     if (isset($column['href'])){
-						$column['href'] = string_replace_keys_values($column['href'], $row);
-                        $value = '<a href="'.$column['href'].'">'.$value.'</a>';
+                        if (isset($column['href_handler'])){
+                            $is_active = $column['href_handler']($row);
+                        } else {
+                            $is_active = true;
+                        }
+                        if($is_active){
+                            $column['href'] = string_replace_keys_values($column['href'], $row);
+                            $value = '<a href="'.$column['href'].'">'.$value.'</a>';
+                        }
                     }
 
                     if(!empty($column['editable']['table'])){

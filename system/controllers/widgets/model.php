@@ -146,6 +146,7 @@ class modelWidgets extends cmsModel {
 
         return $this->get('widgets_pages', function($item, $model){
 
+            if (!$item['id']) { return false; }
             if (!$item['controller']) { $item['controller'] = 'custom'; }
 
             $item['title'] = !empty($item['title']) ?

@@ -7,7 +7,7 @@
 
 <form action="<?php echo $submit_url; ?>" method="post">
 
-    <div class="datagrid_wrapper">
+    <div class="datagrid_wrapper perms_grid">
         <table id="datagrid" class="datagrid" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>

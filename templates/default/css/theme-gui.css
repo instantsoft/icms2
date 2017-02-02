@@ -136,6 +136,8 @@
 .icon-basket_put, .menu .basket_put .item { background-image: url("../images/icons/basket_put.png"); }
 .icon-basket_remove, .menu .basket_remove .item { background-image: url("../images/icons/basket_remove.png"); }
 .icon-basket, .menu .basket .item { background-image: url("../images/icons/basket.png"); }
+.icon-newspaper_add, .menu .newspaper_add .item { background-image: url("../images/icons/newspaper_add.png"); }
+.icon-newspaper_delete, .menu .newspaper_delete .item { background-image: url("../images/icons/newspaper_delete.png"); }
 
 /* Misc icons =============================================================== */
 

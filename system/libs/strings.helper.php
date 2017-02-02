@@ -519,7 +519,7 @@ function string_short($text, $limit=0){
     if (!$matches){
         return $text;
     } else {
-        return $matches[1];
+        return $matches[1].$matches[2];
     }
 
     return $text;

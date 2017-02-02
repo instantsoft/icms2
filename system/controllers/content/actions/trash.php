@@ -16,12 +16,14 @@ class actionContentTrash extends cmsAction {
 
         if(!$ctypes){ cmsCore::error404(); }
 
-
-
         $counts = $this->getDeletedCounts($ctypes);
 
         foreach($counts as $_ctype_name => $count){
             if(!$count){ unset($ctypes[$_ctype_name]); }
+        }
+
+        if(empty($ctypes)){
+            return $this->cms_template->render('trash_empty', array(), $this->request);
         }
 
         $is_index = false;

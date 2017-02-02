@@ -62,7 +62,7 @@
 
 <?php if ($is_multi_cats) { ?>
 	<div class="content_multi_cats_data">
-        <?php echo html_select('add_cats[]', array(), '', array('multiple'=>true)); ?>
+        <?php echo html_select('add_cats', array(), '', array('multiple'=>true)); ?>
 	</div>
 <?php } ?>
 

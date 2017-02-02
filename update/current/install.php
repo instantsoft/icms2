@@ -7,6 +7,12 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    if(!isFieldExists('moderators', 'trash_left_time')){
+        $content_model->db->query("ALTER TABLE `{#}moderators` ADD `trash_left_time` INT(5) NULL DEFAULT NULL");
+    }
+
+    $core->db->query("UPDATE `{#}controllers` SET `is_backend` =  '1' WHERE `name` = 'moderation'");
+
     $ctypes = $content_model->getContentTypes();
 
 	foreach($ctypes as $ctype){
@@ -96,6 +102,12 @@ function install_package(){
             'restore'
         )
     ), 'list', 'own,all');
+
+    add_perms(array(
+        'content' => array(
+            'trash_left_time'
+        )
+    ), 'number');
 
     return true;
 

@@ -210,6 +210,7 @@
     define('LANG_MODERATION',                'Moderation');
     define('LANG_MODERATOR',                 'Moderator');
     define('LANG_MODERATORS',                'Moderators');
+    define('LANG_MODERATION_SUCCESS',        'Approved');
     define('LANG_MODERATION_APPROVE',        'Approve');
     define('LANG_MODERATION_APPROVED',       'Page published');
     define('LANG_MODERATION_APPROVED_BY',    'Approved by moderator');
@@ -217,6 +218,7 @@
     define('LANG_MODERATION_NOTICE',         'The entry will be published after moderator\'s approval');
     define('LANG_MODERATION_IDLE',           'Notification was sent to moderator %s');
     define('LANG_MODERATION_NO_TASKS',       'No entries require approval');
+    define('LANG_MODERATION_NOTIFY',         'A new page awaits your approval');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
@@ -366,6 +368,7 @@
     define('LANG_BASKET_TITLE', 			 'Items trash');
     define('LANG_BASKET_DELETE', 			 'Move to trash');
     define('LANG_BASKET_DELETE_SUCCESS', 	 'Item successfully deleted to trash');
+    define('LANG_BASKET_DELETE_LEFT_TIME', 	 'The material will be %s in the trash and then permanently deleted');
     define('LANG_ITEM_RESTORE_SUCCESS', 	 'Item successfully restored');
     define('LANG_DELETE', 					 'Delete');
     define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');

@@ -13,9 +13,12 @@ function grid_controllers($controller){
 
     $columns = array(
         'title' => array(
-            'title' => LANG_TITLE,
-            'href' => href_to($controller->name, 'controllers', array('edit', '{name}')),
-            'filter' => 'like'
+            'title'        => LANG_TITLE,
+            'href'         => href_to($controller->name, 'controllers', array('edit', '{name}')),
+            'filter'       => 'like',
+            'href_handler' => function($item) {
+                return $item['is_backend'];
+            }
         ),
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,

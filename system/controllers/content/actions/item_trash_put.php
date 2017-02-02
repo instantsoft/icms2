@@ -34,6 +34,26 @@ class actionContentItemTrashPut extends cmsAction {
 
         cmsUser::addSessionMessage(($allow_delete ? LANG_BASKET_DELETE_SUCCESS : LANG_DELETE_SUCCESS), 'success');
 
+        // Уведомляем того, кто удаляет о времени жизни в корзине, если она есть
+        // общее для всех значение
+        $trash_left_time = intval(cmsUser::getPermissionValue($ctype['name'], 'trash_left_time'));
+
+        // если удаляет модератор, проверяем его значение
+        $moderator = $this->model->filterEqual('ctype_name', $ctype['name'])->
+                filterEqual('user_id', $this->cms_user->id)->
+                getItem('moderators');
+        if($moderator){
+            if($moderator['trash_left_time'] !== null){
+                $trash_left_time = intval($moderator['trash_left_time']);
+            }
+        }
+
+        if((cmsUser::isAllowed($ctype['name'], 'restore') || $moderator) && $trash_left_time){
+
+            cmsUser::addSessionMessage(sprintf(LANG_BASKET_DELETE_LEFT_TIME, html_spellcount($trash_left_time, LANG_HOUR1, LANG_HOUR2, LANG_HOUR10)), 'info');
+
+        }
+
         $back_url = $this->request->get('back', '');
 
         if ($back_url){

@@ -27,3 +27,22 @@ CREATE TABLE `{#}content_relations_bind` (
   KEY `child_ctype_id` (`child_ctype_id`),
   KEY `child_item_id` (`child_item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `{#}moderators_logs`;
+CREATE TABLE `{#}moderators_logs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `moderator_id` int(11) unsigned DEFAULT NULL,
+  `author_id` int(11) unsigned DEFAULT NULL,
+  `action` tinyint(1) unsigned DEFAULT NULL,
+  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_expired` timestamp NULL DEFAULT NULL,
+  `target_id` int(11) unsigned DEFAULT NULL,
+  `target_controller` varchar(32) DEFAULT NULL,
+  `target_subject` varchar(32) DEFAULT NULL,
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `moderator_id` (`moderator_id`),
+  KEY `target_id` (`target_id`,`target_subject`,`target_controller`),
+  KEY `author_id` (`author_id`),
+  KEY `date_expired` (`date_expired`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

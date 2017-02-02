@@ -84,3 +84,8 @@ function lang_setlocale() {
     return true;
 
 }
+
+/**
+ * Locale name
+ */
+define('LC_LANGUAGE_TERRITORY', 'ru_RU');

@@ -46,7 +46,9 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                             'ctype_id'      => $target_ctype['id'],
                             'name'          => $parent_field_name,
                             'title'         => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE),
+                            'options'       => array(),
                             'is_fixed'      => true,
+                            'is_in_filter'  => false,
                             'is_fixed_type' => true
                         ));
 

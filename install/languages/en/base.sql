@@ -248,7 +248,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (10, 'Rating', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (11, 'Wall', 'wall', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
 (12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key: 6LdgRuESAAAAAKsuQoDeT_wPZ0YN6T0jGjKuHZRI\nprivate_key: 6LdgRuESAAAAAFaKHgCjfQlHVYh8v3aeYirFM0ow\ntheme: clean\nlang: en\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
+(13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (16, 'Sitemap generator', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
@@ -724,6 +724,7 @@ CREATE TABLE `{#}moderators` (
   `count_approved` int(11) unsigned NOT NULL DEFAULT '0',
   `count_deleted` int(11) unsigned NOT NULL DEFAULT '0',
   `count_idle` int(11) unsigned NOT NULL DEFAULT '0',
+  `trash_left_time` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `ctype_name` (`ctype_name`),
@@ -750,6 +751,24 @@ CREATE TABLE `{#}moderators_tasks` (
   KEY `is_new` (`is_new_item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `{#}moderators_logs`;
+CREATE TABLE `{#}moderators_logs` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `moderator_id` int(11) unsigned DEFAULT NULL,
+  `author_id` int(11) unsigned DEFAULT NULL,
+  `action` tinyint(1) unsigned DEFAULT NULL,
+  `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_expired` timestamp NULL DEFAULT NULL,
+  `target_id` int(11) unsigned DEFAULT NULL,
+  `target_controller` varchar(32) DEFAULT NULL,
+  `target_subject` varchar(32) DEFAULT NULL,
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `moderator_id` (`moderator_id`),
+  KEY `target_id` (`target_id`,`target_subject`,`target_controller`),
+  KEY `author_id` (`author_id`),
+  KEY `date_expired` (`date_expired`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}perms_rules`;
 CREATE TABLE `{#}perms_rules` (
@@ -798,7 +817,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
-(36, 'content', 'restore', 'list', 'own,all');
+(36, 'content', 'restore', 'list', 'own,all'),
+(37, 'content', 'trash_left_time', 'number', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

@@ -17,6 +17,14 @@ class formAdminFtp extends cmsForm {
                         )
                     )),
 
+                    new fieldString('port', array(
+                        'title'   => LANG_CP_FTP_PORT,
+                        'default' => 21,
+                        'rules' => array(
+                            array('required'),
+                        )
+                    )),
+
                     new fieldString('user', array(
                         'title' => LANG_CP_FTP_USER,
                         'rules' => array(

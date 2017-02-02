@@ -37,8 +37,29 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'is_approved' => array(
             'title' => LANG_MODERATION,
-            'width' => 75,
-            'flag' => true
+            'width' => 150,
+            'handler' => function($value, $item) use ($controller, $ctype_name){
+                if($item['is_deleted']){
+                    $string = '<a href="'.href_to($controller->name, 'controllers', array('edit', 'moderation', 'logs', 'content', $ctype_name, $item['id'])).'">';
+                    if($item['trash_date_expired']){
+                        $expired = ((time() - strtotime($item['trash_date_expired'])) > 0) ? true : false;
+                        $string .= sprintf(LANG_MODERATION_IN_TRASH_TIME, ($expired ? '-' : '').string_date_age_max($item['trash_date_expired']));
+                    } else {
+                        $string .= LANG_MODERATION_IN_TRASH;
+                    }
+                    $string .= '</a>';
+                    return $string;
+                }
+                if($item['is_approved']){
+                    if($item['approved_by']){
+                        return html_bool_span(LANG_MODERATION_SUCCESS, true);
+                    } else {
+                        return html_bool_span(LANG_MODERATION_NOT_NEEDED, true);
+                    }
+                } else {
+                    return html_bool_span(LANG_CONTENT_NOT_APPROVED, false);
+                }
+            }
         ),
         'is_pub' => array(
             'title' => LANG_ON,

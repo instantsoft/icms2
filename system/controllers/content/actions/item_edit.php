@@ -177,7 +177,7 @@ class actionContentItemEdit extends cmsAction {
 					$is_pub = $is_pub && ($days_from_pub < 1);
 				} else if ($is_date_pub_ext_allowed && !$this->cms_user->is_admin) {
 					$days = $item['pub_days'];
-					$date_pub_end_time = $date_pub_end_time + 60*60*24*$days;
+					$date_pub_end_time = (($date_pub_end_time - $now_time) > 0 ? $date_pub_end_time : $now_time) + 60*60*24*$days;
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
