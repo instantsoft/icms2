@@ -8,10 +8,8 @@ class onModerationContentAfterRestore extends cmsAction {
 
         list($ctype_name, $item) = $data;
 
-        $is_author = $this->cms_user->id == $item['user_id'];
-
         $this->model->log(modelModeration::LOG_RESTORE_ACTION, array(
-            'moderator_id'      => (($this->cms_user->is_logged && !$is_author) ? $this->cms_user->id : null),
+            'moderator_id'      => ($this->cms_user->is_logged ? $this->cms_user->id : null),
             'author_id'         => $item['user_id'],
             'target_id'         => $item['id'],
             'target_controller' => 'content',
