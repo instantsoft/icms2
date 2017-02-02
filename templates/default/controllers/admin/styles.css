@@ -1910,7 +1910,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding:15px;
 }
 #dashboard .links {
-    margin: 0 0 10px;
+    margin: 0 0 20px;
     list-style: none;
     padding: 0;
 }

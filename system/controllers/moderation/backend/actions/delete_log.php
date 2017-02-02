@@ -9,6 +9,20 @@ class actionModerationDeleteLog extends cmsAction {
         $sub_url      = array();
         $delete_title = '';
 
+        $action = $this->request->get('action', -1);
+        $only_to_delete = $this->request->get('only_to_delete', 0);
+        if($action > -1){
+
+            $model->filterEqual('action', $action);
+
+            if($only_to_delete){
+                $model->filterNotNull('date_expired');
+            }
+
+            $delete_title = string_lang('LANG_MODERATION_ACTION_'.$action);
+
+        }
+
         if(!empty($target_controller)){
 
             $model->filterEqual('target_controller', $target_controller);

@@ -10,9 +10,30 @@ class actionModerationLogs extends cmsAction {
 
         $model = cmsCore::getModel('content');
 
-        $url = href_to($this->root_url, 'logs');
-        $sub_url = array();
+        $url           = href_to($this->root_url, 'logs');
+        $sub_url       = array();
+        $url_query     = array();
         $additional_h1 = array();
+
+        $action = $this->request->get('action', -1);
+        $only_to_delete = $this->request->get('only_to_delete', 0);
+        if($action > -1){
+
+            $model->filterEqual('action', $action);
+
+            if($only_to_delete){
+
+                $model->filterNotNull('date_expired');
+
+                $url_query['only_to_delete'] = $only_to_delete;
+
+            }
+
+            $additional_h1[] = string_lang('LANG_MODERATION_ACTION_'.$action);
+
+            $url_query['action'] = $action;
+
+        }
 
         if(!empty($target_controller)){
 
@@ -131,9 +152,10 @@ class actionModerationLogs extends cmsAction {
         $model->resetFilters();
 
 		return $this->cms_template->render('backend/logs', array(
-            'grid'    => $grid,
-            'sub_url' => $sub_url,
-            'url'     => $url.($sub_url ? '/'.implode('/', $sub_url) : '')
+            'grid'      => $grid,
+            'sub_url'   => $sub_url,
+            'url_query' => $url_query,
+            'url'       => $url.($sub_url ? '/'.implode('/', $sub_url) : '').(($action > -1) ? '?'.http_build_query($url_query) : '')
         ));
 
     }

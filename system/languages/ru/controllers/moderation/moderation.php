@@ -2,6 +2,8 @@
 
 define('LANG_MODERATION_CONTROLLER', 'Модерация');
 define('LANG_MODERATION_TITLE', 'Материалы на модерации (%s)');
+define('LANG_MODERATION_CLEAR_TITLE', 'Материалы к удалению (%s)');
+define('LANG_MODERATION_CLEAR_THROUGH', 'Будет удалён через %s');
 define('LANG_MODERATION_ALL_LIST', 'Весь список');
 define('LANG_MODERATION_LOG_DELETE', 'Вести лог удалений');
 define('LANG_MODERATION_LOG_RESTORE', 'Вести лог восстановлений из корзины');
