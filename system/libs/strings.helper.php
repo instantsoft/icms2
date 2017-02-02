@@ -506,7 +506,7 @@ function string_short($text, $limit=0){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $text = str_replace(array("\n", "\r", '<br>', '<br/>'), ' ', $text);
+    $text = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $text);
     $text = strip_tags($text);
 
     if (!$limit || mb_strlen($text) <= $limit) { return $text; }

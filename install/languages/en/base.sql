@@ -978,7 +978,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, NULL, 1, 0),
 (4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, 1, 1),
 (5, 'Cleaning deleted private messages', 'messages', 'clean', 1440, NULL, 1, 1),
-(6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1);
+(6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
+(7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

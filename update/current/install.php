@@ -13,6 +13,10 @@ function install_package(){
 
     $core->db->query("UPDATE `{#}controllers` SET `is_backend` =  '1' WHERE `name` = 'moderation'");
 
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'moderation' AND hook = 'trash'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Удаление просроченных записей из корзины', 'moderation', 'trash', '30', '1');");
+    }
+
     $ctypes = $content_model->getContentTypes();
 
 	foreach($ctypes as $ctype){
