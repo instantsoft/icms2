@@ -71,6 +71,9 @@ class actionContentCategoryView extends cmsAction {
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
+            
+            list($current_dataset, $this->model) = cmsEventsManager::hook('content_dataset_filter', array($current_dataset, $this->model));
+            list($current_dataset, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_dataset_filter", array($current_dataset, $this->model));
         }
 
         // Фильтр по категории
