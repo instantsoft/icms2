@@ -1,7 +1,7 @@
 <?php
 
     $base_url = $this->controller->name;
-    $base_ds_url = $this->controller->name . '/index/%s';
+    $base_ds_url = href_to_rel($this->controller->name) . '/index/%s';
 
     $this->setPageTitle(LANG_GROUPS);
     $this->addBreadcrumb(LANG_GROUPS, href_to($base_url));
@@ -34,7 +34,7 @@
                 <?php $ds_selected = ($dataset_name == $set['name'] || (!$dataset_name && $ds_counter==0)); ?>
                 <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
 
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(href_to($base_ds_url), $set['name']); } ?>
+                    <?php if ($ds_counter > 0) { $ds_url = sprintf(rel_to_href($base_ds_url), $set['name']); } ?>
                     <?php if ($ds_counter == 0) { $ds_url = href_to($base_url); } ?>
 
                     <?php if ($ds_selected){ ?>

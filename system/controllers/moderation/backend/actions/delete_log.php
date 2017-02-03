@@ -9,6 +9,8 @@ class actionModerationDeleteLog extends cmsAction {
         $sub_url      = array();
         $delete_title = '';
 
+        $model->filterEqual('1', 1);
+
         $action = $this->request->get('action', -1);
         $only_to_delete = $this->request->get('only_to_delete', 0);
         if($action > -1){
