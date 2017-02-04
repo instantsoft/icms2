@@ -27,6 +27,13 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                 $errors['child_ctype_id'] = LANG_CP_RELATION_ERROR_LEN;
             }
 
+            if($relation['layout'] == 'list' && $content_model->filterEqual('ctype_id', $ctype['id'])->
+                    filterEqual('layout', 'list')->
+                    getCount('content_relations')){
+                $errors['layout'] = LANG_CP_RELATION_LAYOUT_LIST_ERROR;
+            }
+            $content_model->resetFilters();
+
             if (!$errors){
 
                 $relation['ctype_id'] = $ctype_id;

@@ -28,11 +28,20 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
 
             $errors = $form->validate($this,  $relation);
 
+            if($relation['layout'] == 'list' && $content_model->filterEqual('ctype_id', $ctype['id'])->
+                    filterEqual('layout', 'list')->filterNotEqual('id', $relation['id'])->
+                    getCount('content_relations')){
+                $errors['layout'] = LANG_CP_RELATION_LAYOUT_LIST_ERROR;
+            }
+            $content_model->resetFilters();
+
             if (!$errors){
 
                 $relation['ctype_id'] = $ctype_id;
 
                 $content_model->updateContentRelation($relation_id, $relation);
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 $this->redirectToAction('ctypes', array('relations', $ctype['id']));
 
@@ -45,11 +54,11 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
         }
 
         return $this->cms_template->render('ctypes_relation', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
+            'do'       => 'edit',
+            'ctype'    => $ctype,
             'relation' => $relation,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'     => $form,
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }

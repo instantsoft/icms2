@@ -261,6 +261,7 @@
     define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Ключевые слова вкладки');
     define('LANG_CP_RELATION_TAB_SEO_DESC',     'Мета-описание вкладки');
     define('LANG_CP_RELATION_ERROR_LEN',        'Слишком длинные системные имена у связываемых типов. Суммарное значение имён не должно быть больше 30 символов.');
+    define('LANG_CP_RELATION_LAYOUT_LIST_ERROR', 'Можно создать только одну связь с типом вывода "Список"');
 
     define('LANG_CP_MENU',                      'Меню');
     define('LANG_CP_MENU_ADD',                  'Создать меню');
