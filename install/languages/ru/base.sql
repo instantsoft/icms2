@@ -121,6 +121,8 @@ CREATE TABLE `{#}content_datasets` (
   `groups_hide` text COMMENT 'Скрывать от групп',
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
+  `cats_view` text COMMENT 'Показывать в категориях',
+  `cats_hide` text COMMENT 'Не показывать в категориях',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),

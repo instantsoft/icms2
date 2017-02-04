@@ -618,6 +618,14 @@ form .hint {
     background:#EDEDED;
 }
 
+.select_deselct {
+    margin: 10px 0 0 5px;
+}
+.select_deselct a {
+    text-decoration: none;
+    margin: 0 10px 0 0;
+    font-size: 13px;
+}
 /*============================================================================*/
 
 .gui-panel {

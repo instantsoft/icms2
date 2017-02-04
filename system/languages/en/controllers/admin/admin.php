@@ -233,6 +233,9 @@
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Delete dataset "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Show dataset on the site');
 
+    define('LANG_CP_CATS_VIEW',        'Show in categories');
+    define('LANG_CP_CATS_HIDE',        'Do not show in categories');
+
     define('LANG_CP_CTYPE_RELATIONS',           'Relations');
     define('LANG_CP_RELATION',                  'Relation');
     define('LANG_CP_RELATION_ADD',              'Add Relation');

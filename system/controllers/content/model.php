@@ -1364,7 +1364,7 @@ class modelContent extends cmsModel{
 //==============================   НАБОРЫ   ==================================//
 //============================================================================//
 
-    public function getContentDatasets($ctype_id=false, $only_visible=false){
+    public function getContentDatasets($ctype_id=false, $only_visible=false, $item_callback=false){
 
         if ($ctype_id) { $this->filterEqual('ctype_id', $ctype_id); }
 
@@ -1374,12 +1374,19 @@ class modelContent extends cmsModel{
 
         $this->useCache('content.datasets');
 
-        $datasets = $this->get('content_datasets', function($item, $model){
+        $datasets = $this->get('content_datasets', function($item, $model) use($item_callback){
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            $item['cats_view'] = cmsModel::yamlToArray($item['cats_view']);
+            $item['cats_hide'] = cmsModel::yamlToArray($item['cats_hide']);
             $item['filters'] = cmsModel::yamlToArray($item['filters']);
             $item['sorting'] = cmsModel::yamlToArray($item['sorting']);
+
+            if (is_callable($item_callback)){
+                $item = call_user_func_array($item_callback, array($item, $model));
+                if ($item === false){ return false; }
+            }
 
             return $item;
 
@@ -1404,6 +1411,8 @@ class modelContent extends cmsModel{
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            $item['cats_view'] = cmsModel::yamlToArray($item['cats_view']);
+            $item['cats_hide'] = cmsModel::yamlToArray($item['cats_hide']);
             $item['filters'] = cmsModel::yamlToArray($item['filters']);
             $item['sorting'] = cmsModel::yamlToArray($item['sorting']);
 

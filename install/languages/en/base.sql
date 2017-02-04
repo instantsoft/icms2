@@ -119,6 +119,8 @@ CREATE TABLE `{#}content_datasets` (
   `index` varchar(40) DEFAULT NULL COMMENT 'Index title',
   `groups_view` text COMMENT 'Show to groups',
   `groups_hide` text COMMENT 'Hide from groups',
+  `cats_view` text COMMENT 'Show to cats',
+  `cats_hide` text COMMENT 'Hide from cats',
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),

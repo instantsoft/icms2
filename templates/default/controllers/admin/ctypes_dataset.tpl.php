@@ -160,6 +160,44 @@
 
     </fieldset>
 
+    <?php if ($ctype['is_cats'] && $cats){ ?>
+
+        <fieldset>
+
+            <legend><?php echo LANG_CP_CATS_VIEW; ?></legend>
+
+            <?php
+                $name = 'cats_view';
+                if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+                if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = false; }
+            ?>
+            <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_groups_view">
+                <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+                <?php $widget = new fieldList($name, array('is_chosen_multiple' => true, 'items' => $cats)); ?>
+                <?php echo $widget->getInput($value); ?>
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+
+            <legend><?php echo LANG_CP_CATS_HIDE; ?></legend>
+
+            <?php
+                $name = 'cats_hide';
+                if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+                if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = false; }
+            ?>
+            <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_groups_view">
+                <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+                <?php $widget = new fieldList($name, array('is_chosen_multiple' => true, 'items' => $cats)); ?>
+                <?php echo $widget->getInput($value); ?>
+            </div>
+
+        </fieldset>
+
+    <?php } ?>
+
     <fieldset>
 
         <legend><?php echo LANG_SORTING; ?></legend>

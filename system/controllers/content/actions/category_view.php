@@ -42,7 +42,15 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Получаем список наборов
-        $datasets = $this->model->getContentDatasets($ctype['id'], true);
+        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($category) {
+
+            $is_view = !$item['cats_view'] || in_array($category['id'], $item['cats_view']);
+            $is_user_hide = $item['cats_hide'] && in_array($category['id'], $item['cats_hide']);
+
+            if (!$is_view || $is_user_hide) { return false; }
+
+            return $item;
+        });
 
         // Текущий набор
         $dataset = $this->request->get('dataset', '');

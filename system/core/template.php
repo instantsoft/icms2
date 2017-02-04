@@ -763,8 +763,9 @@ class cmsTemplate {
      * @param string $comment
      * @return bool
      */
-    public function addJSFromContext($file, $comment='') {
-        if(cmsCore::getInstance()->request->isAjax()){
+    public function addJSFromContext($file, $comment='', $request = false) {
+        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if($request->isAjax()){
             return $this->insertJS($file, $comment);
         } else {
             return $this->addJS($file, $comment, false);
@@ -776,8 +777,9 @@ class cmsTemplate {
      * @param string $file
      * @return bool
      */
-    public function addCSSFromContext($file) {
-        if(cmsCore::getInstance()->request->isAjax()){
+    public function addCSSFromContext($file, $request = false) {
+        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if($request->isAjax()){
             return $this->insertCSS($file);
         } else {
             return $this->addCSS($file, false);
@@ -1190,7 +1192,7 @@ class cmsTemplate {
 
         $css_file = $this->getStylesFileName();
 
-        if ($css_file){ $this->addCSSFromContext($css_file); }
+        if ($css_file){ $this->addCSSFromContext($css_file, $request); }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 

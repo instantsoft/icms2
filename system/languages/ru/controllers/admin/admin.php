@@ -234,6 +234,9 @@
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Удалить набор "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Показывать набор на сайте');
 
+    define('LANG_CP_CATS_VIEW',        'Показывать в категориях');
+    define('LANG_CP_CATS_HIDE',        'Не показывать в категориях');
+
     define('LANG_CP_CTYPE_RELATIONS',           'Связи');
     define('LANG_CP_RELATION',                  'Связь');
     define('LANG_CP_RELATION_ADD',              'Добавить связь');

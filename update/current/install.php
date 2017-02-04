@@ -7,6 +7,14 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $content_model = cmsCore::getModel('content');
 
+    if(!isFieldExists('content_datasets', 'cats_view')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `cats_view` TEXT NULL DEFAULT NULL COMMENT 'Показывать в категориях'");
+    }
+
+    if(!isFieldExists('content_datasets', 'cats_hide')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `cats_hide` TEXT NULL DEFAULT NULL COMMENT 'Не показывать в категориях'");
+    }
+
     if(!isFieldExists('moderators', 'trash_left_time')){
         $content_model->db->query("ALTER TABLE `{#}moderators` ADD `trash_left_time` INT(5) NULL DEFAULT NULL");
     }

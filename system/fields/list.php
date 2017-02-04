@@ -93,6 +93,9 @@ class fieldList extends cmsFormField {
         if($this->getProperty('is_multiple')){
             $this->var_type = 'array';
         }
+        if($this->getProperty('is_chosen_multiple')){
+            $this->var_type = 'array';
+        }
 
         return parent::getDefaultVarType($is_filter);
 
@@ -116,6 +119,8 @@ class fieldList extends cmsFormField {
 
         $this->data['items']       = $this->getListItems();
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
+        $this->data['multiple_select_deselct'] = $this->getProperty('multiple_select_deselct');
+        $this->data['is_chosen_multiple'] = $this->getProperty('is_chosen_multiple');
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');
         $this->data['dom_attr']    = array('id' => $this->id);

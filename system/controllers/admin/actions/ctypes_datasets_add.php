@@ -15,6 +15,8 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         $fields  = $content_model->getContentFields($ctype['name']);
 
+        $cats = $content_model->getSubCategories($ctype['name']);
+
 		$dataset = array('sorting' => array(array('by'=>'date_pub', 'to'=>'desc')));
 
         if ($this->request->has('submit')){
@@ -47,6 +49,7 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
             'ctype'   => $ctype,
             'dataset' => $dataset,
             'fields'  => $fields,
+            'cats'    => array_collection_to_list($cats, 'id', 'title'),
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
         ));
