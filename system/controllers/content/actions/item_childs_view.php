@@ -35,7 +35,7 @@ class actionContentItemChildsView extends cmsAction {
             $child_ctype['options']['list_show_filter'] = false;
         }
 
-        $html = $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'], "view-{$child_ctype_name}"));
+        $html = $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'].'/view-'.$child_ctype_name));
 
         $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
         $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);

@@ -169,13 +169,13 @@ class actionContentItemView extends cmsAction {
 
                     $childs['tabs'][] = array(
                         'title'   => $relation['title'],
-                        'url'     => href_to($ctype['name'], $item['slug'], "view-{$relation['child_ctype_name']}"),
+                        'url'     => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
                         'counter' => $count
                     );
 
                 }
 
-                if (($count || !$is_hide_empty) && $relation['layout'] == 'list'){
+                if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] == 'list'){
 
                     $child_ctype = $model->getContentTypeByName($relation['child_ctype_name']);
 
@@ -195,9 +195,9 @@ class actionContentItemView extends cmsAction {
                     $this->model->joinInner('content_relations_bind', 'r', $filter);
 
                     $childs['lists'][] = array(
-                        'title' => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
+                        'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name' => $relation['child_ctype_name'],
-                        'html' => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
+                        'html'       => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
                     );
 
                 }

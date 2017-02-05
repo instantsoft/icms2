@@ -809,7 +809,7 @@ class cmsCore {
 
         if (isset($result['_wd_template'])) { $widget_object->setTemplate($result['_wd_template']); }
 
-        cmsTemplate::getInstance()->renderWidget($widget_object, $result);
+        return cmsTemplate::getInstance()->renderWidget($widget_object, $result);
 
     }
 

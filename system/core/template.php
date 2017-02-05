@@ -1683,7 +1683,7 @@ class cmsTemplate {
 
         $html = ob_get_clean();
 
-        if (!$html){ return true; }
+        if (!$html){ return $this; }
 
         if (empty($widget->is_tab_prev)){
             $this->widgets_group_index++;
@@ -1699,6 +1699,8 @@ class cmsTemplate {
             'class_wrap' => isset($widget->css_class_wrap) ? $widget->css_class_wrap : false,
             'body' => $html
         );
+
+        return $this;
 
     }
 
