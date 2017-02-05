@@ -79,6 +79,11 @@ class actionContentCategoryView extends cmsAction {
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
+            // если набор всего один, например для изменения сортировки по умолчанию,
+            // не показываем его на сайте
+            if(count($datasets) == 1){
+                unset($current_dataset); $datasets = false;
+            }
         }
 
         // Фильтр по категории
