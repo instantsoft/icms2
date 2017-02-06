@@ -43,7 +43,7 @@ class actionGroupsGroup extends cmsAction {
         }
 
         // Контент
-        $content_counts = $this->model->getGroupContentCounts($group['id']);
+        $content_counts = $this->getGroupContentCounts($group);
 
         return $this->cms_template->render('group_view', array(
             'group'          => $group,

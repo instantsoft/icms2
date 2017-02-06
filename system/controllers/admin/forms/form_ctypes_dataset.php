@@ -52,6 +52,12 @@ class formAdminCtypesDataset extends cmsForm {
                         'show_all' => false,
                         'show_guests' => true
                     )),
+                    new fieldList('cats_view', array(
+                        'is_chosen_multiple' => true
+                    )),
+                    new fieldList('cats_hide', array(
+                        'is_chosen_multiple' => true
+                    ))
                 )
             ),
         );

@@ -133,6 +133,11 @@
 .icon-transfer, .menu .transfer .item { background-image: url("../images/icons/transfer.png"); }
 .icon-coins_add, .menu .coins_add .item { background-image: url("../images/icons/coins_add.png"); }
 .icon-coins_delete, .menu .coins_delete .item { background-image: url("../images/icons/coins_delete.png"); }
+.icon-basket_put, .menu .basket_put .item { background-image: url("../images/icons/basket_put.png"); }
+.icon-basket_remove, .menu .basket_remove .item { background-image: url("../images/icons/basket_remove.png"); }
+.icon-basket, .menu .basket .item { background-image: url("../images/icons/basket.png"); }
+.icon-newspaper_add, .menu .newspaper_add .item { background-image: url("../images/icons/newspaper_add.png"); }
+.icon-newspaper_delete, .menu .newspaper_delete .item { background-image: url("../images/icons/newspaper_delete.png"); }
 
 /* Misc icons =============================================================== */
 
@@ -752,6 +757,61 @@ form .ft_date select { width:50px; padding:2px; }
 form .ft_listmultiple.field_error .input_checkbox_list {
 	border:solid 1px #c0392b;
 }
+
+form .ft_parent {
+    overflow: hidden;
+}
+
+form .ft_parent ul.items,
+form .ft_parent ul.items li {
+	list-style:none;
+	padding:0;
+	margin:0;
+	overflow:hidden;
+}
+
+form .ft_parent ul.items{
+	float:left;
+	margin-right:10px;
+}
+
+form .ft_parent ul.items li {
+	float:left;
+	margin-right: 2px;
+	margin-bottom:2px;
+	display:inline-block;
+	padding:4px 8px;
+	color:#68809B;
+	background: #F4F8FD;
+	border: solid 1px #B8D6FB;
+	border-radius:4px;
+	text-decoration: none;
+	font-size:12px;
+}
+
+form .ft_parent ul.items li a{
+    width: 16px;
+    height: 12px;
+    margin-right:-4px;
+    display: inline-block;
+    background: url(../images/icons/close.png) no-repeat left top;
+}
+
+form .ft_parent ul.items li a:hover{
+    width: 16px;
+    height: 12px;
+    display: inline-block;
+    background: url(../images/icons/close.png) no-repeat right top;
+}
+
+form .ft_parent a.add {
+	height:24px;
+	line-height:24px;
+	padding-left:20px;
+	background:url("../images/icons/add.png") no-repeat left center;
+	font-size:12px;
+}
+
 .symbols_count {
     font-size: 12px;
     margin: 3px 0 0 0;
@@ -777,6 +837,19 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     background-color: #e74c3c;
     color: #FFF;
     border-color: #c0392b;
+}
+.field.reguired_field > label::after{
+	content: '*';
+	color: #e74c3c;
+	padding-left: 5px;
+}
+.select_deselct {
+    margin: 10px 0 0 5px;
+}
+.select_deselct a {
+    text-decoration: none;
+    margin: 0 10px 0 0;
+    font-size: 13px;
 }
 /* ========================================================================== */
 
@@ -905,6 +978,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 .rating_widget .score.loading > *{
     display: none;
+}
+.rating_widget .score.loading {
+    padding-left: 16px;
 }
 
 .rating_widget .arrow span,
@@ -1443,6 +1519,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     min-height: 120px;
     box-sizing: border-box;
     width: 960px;
+    max-width: 100%;
 }
 #pm_window .notice{
     margin: 25px 0;
@@ -1504,8 +1581,10 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 }
 #pm_window .contacts .contact img, #pm_contact .overview a img {
     border-radius: 50%;
+	display:block;
 }
-.peer_online:after {
+.peer_online:after,
+.peer_no_online:after {
     bottom: 0;
     right: 0;
     border: 2px solid #fff;
@@ -1513,8 +1592,13 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     width: 8px;
     content: '';
     position: absolute;
-    background-color: #8ac176;
     border-radius: 50%;
+}
+.peer_online:after {
+    background-color: #8ac176;
+}
+.peer_no_online:after {
+    background-color: #d35400;
 }
 #pm_window .contacts .contact a:hover{
     background:#95a5a6;
@@ -1553,6 +1637,7 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     padding:9px;
     box-sizing: border-box;
     border-bottom: 1px solid #DDD;
+	height:50px;
 }
 #user_search_panel {
     padding: 10px;
@@ -1576,11 +1661,12 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     color: #AAA;
 }
 #pm_contact .overview a {
-    overflow:hidden;
-    padding:5px;
-    color:#000;
-    border-left:none;
-    border-right: none;
+    border-left: medium none;
+    border-right: medium none;
+    color: #000;
+    float: left;
+	line-height: 32px;
+    overflow: hidden;
 }
 #pm_contact .overview a span, #pm_contact  #contact_toggle {
     float:left;
@@ -1590,9 +1676,15 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     overflow: hidden;
     position: relative;
 }
+#pm_contact  #contact_toggle {
+    width:32px;
+}
 #pm_contact .actions {
     float:right;
     line-height: 28px;
+}
+#pm_contact .toogle-actions{
+	display:none;
 }
 #pm_contact .composer {
     padding:10px;
@@ -1800,7 +1892,9 @@ form .ft_listmultiple.field_error .input_checkbox_list {
     background: url("../images/loader16.gif") no-repeat center center #EDEDED;
 }
 #pm_notices_window {
-    width:450px;
+    width:550px;
+    overflow: auto;
+    height: 100%;
 }
 #pm_notices_list {
     padding:5px;
@@ -1847,7 +1941,11 @@ form .ft_listmultiple.field_error .input_checkbox_list {
 #pm_notices_list .item .buttons .button{
     border-color:#BDC3C7;
 }
-
+#pm_notices_window > input.button {
+    border-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
 /* City Selection Window ================================================= */
 
 #geo_window {
@@ -2034,14 +2132,39 @@ table.data_list .empty{
 table.data_list .actions{
     width: 70px;
 }
+@media screen and (max-height: 900px) {
+    .layout {
+        height: 595px;
+    }
+}
+@media screen and (max-height: 640px) {
+    .layout {
+        height: 595px;
+    }
+}
 @media screen and (max-height: 600px) {
     .layout {
-        height:510px;
+        height: 545px;
     }
 }
 @media screen and (max-height: 480px) {
     .layout {
-        height:390px;
+        height:435px;
+    }
+}
+@media screen and (max-height: 360px) {
+    .layout {
+        height: 315px;
+    }
+}
+@media screen and (max-height: 335px) {
+    .layout {
+        height: 290px;
+    }
+}
+@media screen and (max-height: 320px) {
+    .layout {
+        height: 275px;
     }
 }
 @media screen and (max-width: 800px) {
@@ -2052,22 +2175,67 @@ table.data_list .actions{
         display: block;
     }
     #pm_window .right-panel{
-        width:100%;
+        width: 100%;
         left: -700px;
         display: none;
     }
     #pm_window .left-panel{
-        width:100%;
+        width: 100%;
         padding-left: 0;
     }
 }
 @media screen and (max-width: 640px) {
-    #pm_window {
-        width: 530px;
+    #comments_widget #comments_refresh_panel { display: none; }
+	#pm_contact .overview{
+		position:relative;
+		padding:9px 0 9px 5px;
+	}
+	#pm_contact .actions {
+		float: none;
+		line-height: 50px;
+		background-color :#fff;
+		display: none;
+		position:absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		padding: 0 0 0 10px;
+		box-sizing: border-box;
+	}
+	#pm_contact .actions.actions-active {
+		display: block;
+	}
+	#pm_contact .toogle-actions{
+		display: block;
+		position: absolute;
+		right: 9px;
+		top: 50%;
+		width: 30px;
+		height: 30px;
+		margin-top: -15px;
+		opacity: .7;
+		background: #7f8c8d url("../images/icons32/menu-icon.svg") no-repeat center center;
+		cursor: pointer;
+        border-radius: 2px;
+	}
+	#pm_contact .toogle-actions.toogle-actions-active{
+		opacity: 1;
+		background-color: #d35400;
+	}
+	#pm_contact .overview .user_date_log{
+		display: none!important;
+	}
+	.nyroModalMessage input.button-small {
+		padding: 4px 7px;
+		font-size:12px;
     }
 }
-@media screen and (max-width: 480px) {
-    #pm_window {
-        width: 370px;
+@media screen and (max-width: 335px) {
+	#pm_window  #pm_contact .markItUpHeader ul a{
+		width:14px!important;
+		height:14px!important;
+	}
+	#pm_contact .chat{
+		height:calc(100% - 214px);
     }
 }

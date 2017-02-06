@@ -20,6 +20,10 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_SITE_ENABLED,
                     )),
 
+                    new fieldCheckbox('is_site_only_auth_users', array(
+                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
+                    )),
+
                     new fieldString('off_reason', array(
                         'title' => LANG_CP_SETTINGS_SITE_REASON,
                     )),
@@ -40,17 +44,19 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('frontpage', array(
                         'title' => LANG_CP_SETTINGS_FP_SHOW,
-                        'generator' => function($item) use($ctypes){
+                        'generator' => function($item) {
 
                             $items = array(
                                 'none' => LANG_CP_SETTINGS_FP_SHOW_NONE,
-                                'profile' => LANG_CP_SETTINGS_FP_SHOW_PROFILE,
                             );
 
-                            if ($ctypes) {
-                                foreach ($ctypes as $ctype) {
-                                    if (!$ctype['options']['list_on']) { continue; }
-                                    $items["content:{$ctype['name']}"] = sprintf(LANG_CP_SETTINGS_FP_SHOW_CONTENT, $ctype['title']);
+                            $frontpage_types = cmsEventsManager::hookAll('frontpage_types');
+
+                            if (is_array($frontpage_types)){
+                                foreach($frontpage_types as $frontpage_type){
+                                    foreach($frontpage_type['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
                                 }
                             }
 
@@ -366,7 +372,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldText('allow_ips', array(
                         'title' => LANG_CP_SETTINGS_ALLOW_IPS,
-                        'hint'  => LANG_CP_SETTINGS_ALLOW_IPS_HINT
+                        'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp())
                     ))
 
                 )

@@ -61,7 +61,8 @@
     margin-bottom: 10px;
 }
 .album-photos-wrap .photo img {
-    display:block; height: 100%; width: auto;
+    display:block;
+	max-width: 100%;
 }
 .album-photos-wrap .photo .info{
     position: absolute;
@@ -239,7 +240,7 @@ span.album_user img {
 }
 /* ========================================================================== */
 .photo_filter {
-    height: 50px;
+    min-height: 50px;
     font-size: 13px;
     background-color: #ecf0f1;
     margin: -10px 0 15px 0;
@@ -324,7 +325,7 @@ span.album_user img {
     width: 210px;
 }
 .box_menu.box_menu_select {
-    font-weight: bold;
+	color: #d35400;
 }
 /* ========================================================================== */
 .content_list.tiled.albums_list .tile {
@@ -777,9 +778,39 @@ span.album_user img {
         display: block;
     }
 }
-
+@media screen and (max-width: 640px) {
+	.photo_filter {
+		overflow: hidden;
+	}
+	.photo_filter .box_menu {
+		display: block;
+		margin-right: 0;
+		border-top: 1px solid #fff;
+	}
+	.photo_filter .box_menu:first-child {
+		border-width: 0;
+	}
+	.photo_filter .box_menu::after {
+		right: -5px;
+	}
+	.photo_filter .box_menu.clear_filter {
+		border-radius: 0;
+		text-align: center;
+		line-height: 30px;
+		margin: 0 0 20px;
+	}
+	.box_menu_dd {
+		position: static;
+	}
+	.box_menu_dd:last-child {
+		margin-bottom: 20px;
+	}
+}
 @media screen and (min-width:0\0) {
 	.fullscreen_now #photo_container img {
-		height:100%;
+		height: 100%;
+	}
+	.photo_filter .box_menu.clear_filter:after {
+		display: none;
 	}
 }

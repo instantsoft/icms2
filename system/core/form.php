@@ -219,6 +219,25 @@ class cmsForm {
         }
     }
 
+    public function setFieldAttributeByName($field_name, $attr_name, $value){
+        foreach($this->structure as $fieldset){
+            foreach( $fieldset['childs'] as $field) {
+                if ($field->getName() == $field_name){
+                    $field->setOption($attr_name, $value);
+                    break;
+                }
+            }
+        }
+    }
+
+    public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
+        foreach( $this->structure[ $fieldset_id ]['childs'] as $field) {
+            if ($field->getName() == $field_name){
+                $field->{$attr_name} = $value;
+                break;
+            }
+        }
+    }
 //============================================================================//
 //============================================================================//
 
@@ -237,7 +256,12 @@ class cmsForm {
      * @param string $fieldset_id ID набора полей
      * @param string $field_name Название поля
      */
-    public function hideField($fieldset_id, $field_name){
+    public function hideField($fieldset_id, $field_name = ''){
+
+        if ($fieldset_id && empty($field_name)){
+            $this->setFieldAttributeByName($fieldset_id, 'is_hidden', true);
+            return;
+        }
 
         $this->setFieldAttribute($fieldset_id, $field_name, 'is_hidden', true);
 
@@ -321,8 +345,7 @@ class cmsForm {
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $result[$name_parts[0]][$name_parts[1]] = $value;
+                    $result = set_array_value_recursive($name, $result, $value);
                 }
 
                 // если нужна денормализация
@@ -333,8 +356,7 @@ class cmsForm {
                     if ($is_array === false){
                         $result[$d_name] = $field->storeCachedValue($value);
                     } else {
-                        $d_name_parts = explode(':', $d_name);
-                        $result[$d_name_parts[0]][$d_name_parts[1]] = $field->storeCachedValue($value);
+                        $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
                     }
 
                 }
@@ -400,8 +422,7 @@ class cmsForm {
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $value = isset($data[$name_parts[0]][$name_parts[1]]) ? $data[$name_parts[0]][$name_parts[1]] : '';
+                    $value = (string)array_value_recursive($name, $data);
                 }
 
                 if ($data) { $field->setItem($data); }

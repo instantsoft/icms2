@@ -18,7 +18,7 @@ class actionContentWidgetDatasetsAjax extends cmsAction {
 			$list = array('0'=>'') + array_collection_to_list($datasets, 'id', 'title');
 		}
 
-		cmsTemplate::getInstance()->renderJSON($list);
+		return $this->cms_template->renderJSON($list);
 
     }
 

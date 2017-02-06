@@ -30,7 +30,7 @@ class actionModerationIndex extends cmsAction {
 
         $page_url = $is_index ? href_to($this->name) : href_to($this->name, $ctype_name);
 
-        $content_controller->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter();
+        $content_controller->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter()->disableDeleteFilter();
 
         $list_html = $content_controller->renderItemsList($ctype, $page_url, true);
 

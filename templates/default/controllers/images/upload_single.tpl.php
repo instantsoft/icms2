@@ -1,17 +1,8 @@
 <?php
 	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
 	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
-
-    $is_image_exists = !empty($paths);
-
-	$upload_url = $this->href_to('upload', $name);
-
-	if (is_array($sizes)) {
-		$upload_url .= '?sizes=' . implode(',', $sizes);
-	}
-
 ?>
-<div id="widget_image_<?php echo $name; ?>" class="widget_image_single">
+<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single">
 
     <div class="data" style="display:none">
         <?php if ($is_image_exists) { ?>
@@ -22,12 +13,12 @@
     </div>
 
     <div class="preview block" <?php if (!$is_image_exists) { ?>style="display:none"<?php } ?>>
-        <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . $path; } ?>" />
-        <a href="javascript:" onclick="icms.images.remove('<?php echo $name; ?>')"><?php echo LANG_DELETE; ?></a>
+        <img src="<?php if ($is_image_exists) { echo cmsConfig::get('upload_host') . '/' . reset($paths); } ?>" />
+        <a href="javascript:" onclick="icms.images.remove('<?php echo $dom_id; ?>')"><?php echo LANG_DELETE; ?></a>
     </div>
 
     <div class="upload block" <?php if ($is_image_exists) { ?>style="display:none"<?php } ?>>
-        <div id="file-uploader-<?php echo $name; ?>"></div>
+        <div id="file-uploader-<?php echo $dom_id; ?>"></div>
     </div>
 
     <div class="loading block" style="display:none">
@@ -40,17 +31,17 @@
         </div>
     <?php } ?>
 
-    <script>
+    <script type="text/javascript">
 
         <?php echo $this->getLangJS('LANG_SELECT_UPLOAD', 'LANG_DROP_TO_UPLOAD', 'LANG_CANCEL', 'LANG_ERROR'); ?>
 
         $(document).ready(function(){
-            icms.images.upload('<?php echo $name; ?>', '<?php echo $upload_url; ?>');
+            icms.images.upload('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>');
             <?php if($allow_import_link){ ?>
-                $('#widget_image_<?php echo $name; ?> .image_link a').on('click', function (){
+                $('#widget_image_<?php echo $dom_id; ?> .image_link a').on('click', function (){
                     link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
                     if(link){
-                        icms.images.uploadByLink('<?php echo $name; ?>', '<?php echo $upload_url; ?>', link);
+                        icms.images.uploadByLink('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', link);
                     }
                     return false;
                 });

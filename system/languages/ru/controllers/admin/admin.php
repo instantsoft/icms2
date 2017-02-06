@@ -6,6 +6,7 @@
     define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');
 
+    define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
@@ -69,10 +70,15 @@
     define('LANG_CP_CONTENT_CATS_ORDER',        'Порядок');
     define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Перетаскивайте категории');
     define('LANG_CP_CONTENT_CATS_NONE',         'Данный контент не имеет категорий');
+    define('LANG_CP_TRASH',                     'Корзина');
+    define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Показать только удалённые материалы');
+    define('LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM',  'Восстановить страницу "{title}"?');
     define('LANG_CP_CONTENT_ITEM_DELETE_CONFIRM',  'Удалить страницу "{title}"?');
+    define('LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM',  'Переместить страницу "{title}" в корзину?');
     define('LANG_CP_CONTENT_CATS_TITLES',       'Название категории или дерево категорий');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Для создания сразу нескольких категорий каждая из них должна быть на новой строке.<br>Дополнительная вложенность задается знаком дефис перед названием категории<br><a href="http://docs.instantcms.ru/manual/content/cats" target="_blank">Подробная инструкция</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Привязать все свойства родительской категории');
+    define('LANG_CP_SELECT_HINT',               'Кликните на строку, чтобы выделить или ');
 
     define('LANG_CP_BASIC',                     'Общие настройки');
     define('LANG_CP_PUBLICATION',               'Публикация');
@@ -114,6 +120,10 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Вручную указывать тайтл для записей');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Автоматическая генерация ключевых слов');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Автоматическая генерация META-описаний');
+    define('LANG_CP_SEOMETA_ITEM_TITLE',        'Шаблон генерации тайтлов страниц');
+    define('LANG_CP_SEOMETA_ITEM_KEYS',         'Шаблон генерации ключевых слов');
+    define('LANG_CP_SEOMETA_ITEM_DESC',         'Шаблон генерации META-описаний');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');
     define('LANG_CP_FIXED_URL',                 'Не изменять URL при редактировании записи');
     define('LANG_CP_URL_PATTERN',               'Шаблон генерации URL');
@@ -140,6 +150,7 @@
 
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Просмотр записи');
     define('LANG_CP_ITEMVIEW_ON',               'Просмотр записи включен');
+    define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Группировать поля');
     define('LANG_CP_ITEMVIEW_HITS_ON',			'Считать количество просмотров');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Выводить HTML в конце записи');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Введенный здесь HTML код будет выводиться под каждой записью');
@@ -188,6 +199,7 @@
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');
     define('LANG_CP_FIELD_IN_FILTER',           'Показывать в фильтре');
+    define('LANG_CP_FIELD_IN_RELATION',         'Показывать только в контексте связи');
     define('LANG_CP_FIELD_PRIVACY',             'Приватность');
     define('LANG_CP_FIELD_PRIVATE',             'Показывать поле только автору записи');
     define('LANG_CP_FIELD_GROUPS_READ',         'Доступ для чтения');
@@ -221,6 +233,35 @@
     define('LANG_CP_DATASET_CREATED',           'Набор &laquo;%s&raquo; создан');
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Удалить набор "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Показывать набор на сайте');
+
+    define('LANG_CP_CATS_VIEW',        'Показывать в категориях');
+    define('LANG_CP_CATS_HIDE',        'Не показывать в категориях');
+
+    define('LANG_CP_CTYPE_RELATIONS',           'Связи');
+    define('LANG_CP_RELATION',                  'Связь');
+    define('LANG_CP_RELATION_ADD',              'Добавить связь');
+    define('LANG_CP_RELATION_TITLE',            'Название связи');
+    define('LANG_CP_RELATION_DELETE_CONFIRM',   'Удалить связь?');
+    define('LANG_CP_RELATION_LAYOUT',           'Внешний вид');
+    define('LANG_CP_RELATION_LAYOUT_TYPE',      'Тип вывода');
+    define('LANG_CP_RELATION_LAYOUT_LIST',      'Список');
+    define('LANG_CP_RELATION_LAYOUT_TAB',       'Вкладка');
+    define('LANG_CP_RELATION_LAYOUT_HIDDEN',    'Нет (скрыть)');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_EMPTY','Скрывать если нет записей');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Скрывать заголовок списка');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Скрывать фильтр');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Записей на странице');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Если не указано, используются настройки дочернего типа контента');
+    define('LANG_CP_RELATION_CREATED',          'Связь создана');
+    define('LANG_CP_RELATION_FIELD_CREATED',    'Создано поле для привязки родителя в типе контента "%s"');
+    define('LANG_CP_RELATION_CHILD',            'Дочерний тип контента');
+    define('LANG_CP_RELATION_TAB_OPTS',         'Параметры вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_HINT',     'Можно использовать поля родительской записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
+    define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Тайтл вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Ключевые слова вкладки');
+    define('LANG_CP_RELATION_TAB_SEO_DESC',     'Мета-описание вкладки');
+    define('LANG_CP_RELATION_ERROR_LEN',        'Слишком длинные системные имена у связываемых типов. Суммарное значение имён не должно быть больше 30 символов.');
+    define('LANG_CP_RELATION_LAYOUT_LIST_ERROR', 'Можно создать только одну связь с типом вывода "Список"');
 
     define('LANG_CP_MENU',                      'Меню');
     define('LANG_CP_MENU_ADD',                  'Создать меню');
@@ -299,9 +340,10 @@
 
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
-    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем.');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем. Текущий ip адрес: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'Как определять ip посетителя');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'Ключ массива $_SERVER, содержащий реальный ip адрес посетителя. Не меняйте это значение, если не уверены. Значение по умолчанию подходит для большинства. Но, например, для CloudFlare необходимо указать HTTP_CF_CONNECTING_IP');
+    define('LANG_CP_SETTINGS_SITE_ONLY_TO_USERS', 'Сайт доступен только авторизованным пользователям');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Сайт включен');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
@@ -422,6 +464,7 @@
 
     define('LANG_CP_FTP_ACCOUNT',               'Реквизиты FTP');
     define('LANG_CP_FTP_HOST',                  'Сервер');
+    define('LANG_CP_FTP_PORT',                  'Порт');
     define('LANG_CP_FTP_USER',                  'Имя пользователя');
     define('LANG_CP_FTP_PASS',                  'Пароль');
     define('LANG_CP_FTP_PATH',                  'Путь папки сайта');
@@ -448,7 +491,14 @@
     define('LANG_MODERATOR_DELETED_COUNT',   'Удалено');
     define('LANG_MODERATOR_IDLE_COUNT',      'В процессе');
     define('LANG_MODERATOR_ASSIGNED_DATE',   'Назначен');
+    define('LANG_MODERATOR_TRASH_LEFT_TIME', 'Время жизни записей в корзине');
     define('LANG_MODERATOR_ALREADY',         'Пользователь %s уже является модератором');
+    define('LANG_MODERATORATION_OPTIONS',    'Настройка модерации');
+    define('LANG_MODERATION_TRASH_NO_REMOVE', 'Бессрочно');
+    define('LANG_MODERATION_NOT_NEEDED',      'Не требовалась');
+    define('LANG_MODERATION_IN_TRASH',        'В корзине');
+    define('LANG_MODERATION_IN_TRASH_TIME',   'В корзине, будет удалён через %s');
+    define('LANG_MODERATION_LOGS',            'Лог модераций');
 
     define('LANG_CP_SCHEDULER',                     'Планировщик');
     define('LANG_CP_SCHEDULER_TASK',                'Задача');
@@ -487,6 +537,7 @@
     define('LANG_HELP_URL_CTYPES_PROP',             'http://docs.instantcms.ru/manual/ctypes/props/add');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'http://docs.instantcms.ru/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'http://docs.instantcms.ru/manual/ctypes/datasets/add');
+    define('LANG_HELP_URL_CTYPES_RELATIONS',        'http://docs.instantcms.ru/manual/ctypes/relations');
     define('LANG_HELP_URL_CTYPES_PERMS',            'http://docs.instantcms.ru/manual/ctypes/permissions');
     define('LANG_HELP_URL_CTYPES_MODERATORS',       'http://docs.instantcms.ru/manual/ctypes/moderators');
     define('LANG_HELP_URL_MENU',                    'http://docs.instantcms.ru/manual/menu');
@@ -496,6 +547,7 @@
     define('LANG_HELP_URL_COMPONENTS',              'http://docs.instantcms.ru/manual/components');
     define('LANG_HELP_URL_INSTALL',                 'http://docs.instantcms.ru/manual/addons');
     define('LANG_HELP_URL_COM_AUTH',                'http://docs.instantcms.ru/manual/components/auth');
+    define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/manual/components/moderation');
     define('LANG_HELP_URL_COM_ACTIVITY',            'http://docs.instantcms.ru/manual/components/activity');
     define('LANG_HELP_URL_COM_GROUPS',              'http://docs.instantcms.ru/manual/components/groups');
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/manual/components/recaptcha');

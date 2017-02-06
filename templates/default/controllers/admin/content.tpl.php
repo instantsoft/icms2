@@ -31,6 +31,12 @@
     ));
 
     $this->addToolButton(array(
+        'class' => 'logs',
+        'title' => LANG_MODERATION_LOGS,
+        'href'  => $this->href_to('controllers', array('edit', 'moderation', 'logs', 'content'))
+    ));
+
+    $this->addToolButton(array(
         'class' => 'add_folder',
         'title' => LANG_CP_CONTENT_CATS_ADD,
         'href'  => $this->href_to('content', array('cats_add'))
@@ -142,6 +148,7 @@
                             $('.cp_toolbar .tree_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_order')); ?>/" + key[0]);
                             $('.cp_toolbar .move a').data('url', "<?php echo $this->href_to('content', array('item_move')); ?>/" + key[0] + "/" + key[1]);
                             $('.cp_toolbar .delete a').data('url', "<?php echo $this->href_to('content', array('item_delete')); ?>/" + key[0]);
+                            $('.cp_toolbar .logs a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'moderation', 'logs', 'content')); ?>/" + key[0]);
                             if (key[1] == 1){
                                 $('.cp_toolbar .edit_folder a').hide();
                                 $('.cp_toolbar .delete_folder a').hide();
@@ -167,6 +174,11 @@
                         }
 
                     });
+                    icms.datagrid.callback = function (){
+                        $('#datagrid td > span[rel = set_class]').each(function(indx){
+                            $(this).parents('tr').addClass($(this).data('class'));
+                        });
+                    };
                 });
 
             </script>

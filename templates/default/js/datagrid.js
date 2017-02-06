@@ -80,6 +80,19 @@ icms.datagrid = (function ($) {
                     try{$('#datagrid').enableSelection();}catch(e){}
                 }
             });
+            var checkSelectedCount = function (){
+                $('.datagrid_select_actions .shint, .datagrid_select_actions .sall').show();
+                var _total  = +$('#datagrid > tbody > tr:not(.filter)').length;
+                var _totals = +$('#datagrid > tbody > tr:not(.filter).selected').length;
+                if(_totals > 0){
+                    $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').show();
+                } else {
+                    $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').hide();
+                }
+                if(_total === _totals){
+                    $('.datagrid_select_actions .shint, .datagrid_select_actions .sall, .datagrid_select_actions .sinvert').hide();
+                }
+            };
             $(document).on('click', '#datagrid > tbody > tr:not(.filter) > td', function(){
                 var tr = $(this).parent();
                 if(shift){
@@ -95,6 +108,17 @@ icms.datagrid = (function ($) {
                     tr.toggleClass('selected');
                 }
                 last = tr;
+                checkSelectedCount();
+            });
+            $('.datagrid_select_actions .shint, .datagrid_select_actions .sall').show();
+            $('.datagrid_select_actions .sall').on('click', function (){
+                $('#datagrid > tbody > tr:not(.filter)').addClass('selected'); checkSelectedCount();
+            });
+            $('.datagrid_select_actions .sremove').on('click', function (){
+                $('#datagrid > tbody > tr:not(.filter)').removeClass('selected'); checkSelectedCount();
+            });
+            $('.datagrid_select_actions .sinvert').on('click', function (){
+                $('#datagrid > tbody > tr:not(.filter) > td').trigger('click');
             });
         }
 
@@ -154,7 +178,8 @@ icms.datagrid = (function ($) {
                 $(this).closest('tr').find('.inline_submit').trigger('click');
             }
         });
-        $(document).on('click', '.grid_field_value.edit_by_click', function(){
+        $(document).on('click', '.grid_field_value.edit_by_click', function(event){
+            if (event.target.nodeName === 'A') { return true; }
             $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
         });
 

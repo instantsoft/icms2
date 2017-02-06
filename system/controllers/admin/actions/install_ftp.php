@@ -10,7 +10,9 @@ class actionAdminInstallFtp extends cmsAction {
 
         $form = $this->getForm('ftp');
 
-        $account = cmsUser::isSessionSet('ftp_account') ? cmsUser::sessionGet('ftp_account') : array();
+        $ftp_account = cmsUser::getUPS('admin.install.ftp');
+
+        $account = cmsUser::isSessionSet('ftp_account') ? cmsUser::sessionGet('ftp_account') : ($ftp_account ? $ftp_account : array());
 
         if ($this->request->has('submit')){
 
@@ -19,8 +21,10 @@ class actionAdminInstallFtp extends cmsAction {
             if($account['save_to_session']){
                 cmsUser::sessionSet('ftp_account', $account);
             } else {
-                cmsUser::sessionSet('ftp_account', array(
+                cmsUser::sessionUnset('ftp_account');
+                cmsUser::setUPS('admin.install.ftp', array(
                     'host'    => $account['host'],
+                    'port'    => $account['port'],
                     'path'    => $account['path'],
                     'is_pasv' => $account['is_pasv']
                 ));
@@ -65,7 +69,7 @@ class actionAdminInstallFtp extends cmsAction {
 
     private function uploadPackageToFTP($account){
 
-        $connection = @ftp_connect($account['host']);
+        $connection = @ftp_connect($account['host'], $account['port'], 30);
         if (!$connection){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }
 
         $session = @ftp_login($connection, $account['user'], $account['pass']);

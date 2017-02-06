@@ -62,6 +62,12 @@
     define('LANG_REG_SUCCESS_VERIFIED',      'Адрес e-mail успешно подтвержден. Вы можете авторизоваться на сайте');
 	define('LANG_REG_SUCCESS_VERIFIED_AND_AUTH', 'Адрес e-mail успешно подтвержден. Добро пожаловать!');
 
+    define('LANG_VERIFY_EMAIL_ERROR',        'Пользователя с таким кодом подтверждения нет, возможно аккаунт уже активирован или вышло время активации');
+    define('LANG_VERIFY_EMAIL_CODE',         'Код подтверждения регистрации');
+    define('LANG_PROCESS_VERIFY_EMAIL',      'Подтверждение регистрации');
+    define('LANG_RESTORE_TOKEN_EXPIRED',     'Запрос на восстановление пароля истёк');
+    define('LANG_RESTORE_TOKEN_IS_SEND',     'Инструкция по восстановлению пароля уже была отправлена, проверьте папку "Спам"');
+    define('LANG_RESTORE_BLOCK',             'Аккаунт заблокирован');
     define('LANG_PASS_RESTORE',              'Восстановление пароля');
     define('LANG_EMAIL_NOT_FOUND',           'Указанный E-mail не найден в нашей базе');
     define('LANG_TOKEN_SENDED',              'На указанный адрес E-mail отправлены инструкции по восстановлению пароля');

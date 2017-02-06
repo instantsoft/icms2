@@ -15,6 +15,8 @@ class actionContentItemEdit extends cmsAction {
         $item = $this->model->getContentItem($ctype['name'], $id);
         if (!$item) { cmsCore::error404(); }
 
+        $item['ctype_id'] = $ctype['id'];
+
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all')) {
@@ -25,7 +27,16 @@ class actionContentItemEdit extends cmsAction {
 
         $is_premoderation = $ctype['is_premod_edit'];
         $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
+
+        if ($item['is_deleted']){
+
+            $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+
+            if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
+        }
 
         // Получаем родительский тип, если он задан
         if ($this->request->has('parent_type')){
@@ -146,9 +157,6 @@ class actionContentItemEdit extends cmsAction {
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;
 
-                if ($ctype['is_auto_keys']){ $item['seo_keys'] = string_get_meta_keywords($item['content']); }
-                if ($ctype['is_auto_desc']){ $item['seo_desc'] = string_get_meta_description($item['content']); }
-
                 if ($ctype['is_tags']){
                     $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                     $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
@@ -169,7 +177,7 @@ class actionContentItemEdit extends cmsAction {
 					$is_pub = $is_pub && ($days_from_pub < 1);
 				} else if ($is_date_pub_ext_allowed && !$this->cms_user->is_admin) {
 					$days = $item['pub_days'];
-					$date_pub_end_time = $date_pub_end_time + 60*60*24*$days;
+					$date_pub_end_time = (($date_pub_end_time - $now_time) > 0 ? $date_pub_end_time : $now_time) + 60*60*24*$days;
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
@@ -207,9 +215,30 @@ class actionContentItemEdit extends cmsAction {
                 $item = cmsEventsManager::hook('content_before_update', $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_update", $item);
 
+                // SEO параметры
+                if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
+                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                }
+                if ($ctype['is_auto_keys']){
+                    if(!empty($ctype['options']['seo_keys_pattern'])){
+                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                    } else {
+                        $item['seo_keys'] = string_get_meta_keywords($item['content']);
+                    }
+                }
+                if ($ctype['is_auto_desc']){
+                    if(!empty($ctype['options']['seo_desc_pattern'])){
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                    } else {
+                        $item['seo_desc'] = string_get_meta_description($item['content']);
+                    }
+                }
+
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
 
                 $item['ctype_data'] = $ctype;
+
+                $this->bindItemToParents($ctype, $item);
 
                 cmsEventsManager::hook('content_after_update', $item);
                 cmsEventsManager::hook("content_{$ctype['name']}_after_update", $item);

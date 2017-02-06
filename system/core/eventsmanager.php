@@ -28,6 +28,10 @@ class cmsEventsManager {
 
             $controller = cmsCore::getController( $listener, $request );
 
+            if($controller->mb_installed && !$controller->isControllerInstalled($listener)){
+                unset($controller); continue;
+            }
+
             $data = $controller->runHook($event_name, array($data));
 
         }
@@ -67,6 +71,10 @@ class cmsEventsManager {
             $controller = null;
 
             $controller = cmsCore::getController( $listener, $request );
+
+            if($controller->mb_installed && !$controller->isControllerInstalled($listener)){
+                unset($controller); continue;
+            }
 
             $result = $controller->runHook($event_name, array($data));
 

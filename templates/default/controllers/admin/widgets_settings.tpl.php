@@ -4,7 +4,7 @@
         $this->addJSFromContext($options_js_file);
     }
 ?>
-<div class="modal_form" style="">
+<div class="modal_form">
 <?php
     $this->renderForm($form, $widget, array(
         'action' => $this->href_to('widgets_update'),

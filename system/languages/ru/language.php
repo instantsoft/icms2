@@ -8,12 +8,20 @@
     //CONTENT
     define('LANG_CONTENT_TYPE',              'Тип контента');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Настроить %s');
+    define('LANG_CONTENT_SELECT_ITEM',       'Выбрать %s');
     define('LANG_CONTENT_ADD_ITEM',          'Добавить %s');
+    define('LANG_CONTENT_BIND_ITEM',         'Привязать %s');
+    define('LANG_CONTENT_BIND_ITEMS',        'Привязать');
+    define('LANG_CONTENT_UNBIND_ITEM',       'Отвязать %s');
+    define('LANG_CONTENT_UNBIND_ITEMS',      'Отвязать');
     define('LANG_CONTENT_EDIT_ITEM',         'Редактировать %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
+
+    define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
+    define('LANG_CONTENT_OWN_ITEMS',		  'Только мои');
 
     define('LANG_SHOW_FILTER',               'Показать фильтр');
     define('LANG_FILTER',                    'Фильтр');
@@ -113,6 +121,7 @@
     define('LANG_PARSER_USER',               'Пользователь');
     define('LANG_PARSER_USER_FILTER_HINT',   'ID пользователя');
     define('LANG_PARSER_USERS',              'Список пользователей');
+    define('LANG_PARSER_PARENT',             'Родитель');
     define('LANG_PARSER_IMAGE',              'Изображение');
     define('LANG_PARSER_IMAGE_SPELL',        'изображение|изображения|изображений');
     define('LANG_PARSER_IMAGES',             'Набор изображений');
@@ -202,6 +211,7 @@
     define('LANG_MODERATION',                'Модерация');
     define('LANG_MODERATOR',                 'Модератор');
     define('LANG_MODERATORS',                'Модераторы');
+    define('LANG_MODERATION_SUCCESS',        'Проверено');
     define('LANG_MODERATION_APPROVE',        'Разрешить публикацию');
     define('LANG_MODERATION_APPROVED',       'Страница опубликована');
     define('LANG_MODERATION_APPROVED_BY',    'Проверено модератором');
@@ -209,6 +219,7 @@
     define('LANG_MODERATION_NOTICE',         'Материал будет опубликован после проверки модератором');
     define('LANG_MODERATION_IDLE',           'Отправлено уведомление модератору %s');
     define('LANG_MODERATION_NO_TASKS',       'Нет материалов требующих проверки');
+    define('LANG_MODERATION_NOTIFY',         'Новая страница ожидает вашей проверки');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');
@@ -216,6 +227,18 @@
     define('LANG_PERM_OPTION_NULL',          'Нет');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
     define('LANG_PERM_OPTION_ALL',           'Все');
+    define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
+    define('LANG_PERM_OPTION_TO_OTHER',      'Только в чужих');
+    define('LANG_PERM_OPTION_TO_ALL',        'Во всех');
+    define('LANG_PERM_OPTION_OWN_TO_OWN',    'Свои к своим');
+    define('LANG_PERM_OPTION_OWN_TO_OTHER',  'Свои к чужим');
+    define('LANG_PERM_OPTION_OWN_TO_ALL',    'Свои ко всем');
+    define('LANG_PERM_OPTION_OTHER_TO_OWN',  'Чужие к своим');
+    define('LANG_PERM_OPTION_OTHER_TO_OTHER','Чужие к чужим');
+    define('LANG_PERM_OPTION_OTHER_TO_ALL',  'Чужие ко всем');
+    define('LANG_PERM_OPTION_ALL_TO_OWN',    'Все к своим');
+    define('LANG_PERM_OPTION_ALL_TO_OTHER',  'Все к чужим');
+    define('LANG_PERM_OPTION_ALL_TO_ALL',    'Все ко всем');
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
 
@@ -344,7 +367,14 @@
     define('LANG_HIDE', 					 'Скрыть');
     define('LANG_HIDE_SELECTED',			 'Скрыть выделенные');
     define('LANG_CONFIG', 					 'Настройки');
+    define('LANG_RESTORE', 					 'Восстановить');
     define('LANG_DELETE', 					 'Удалить');
+    define('LANG_DELETE_SUCCESS', 	         'Запись успешно удалена');
+    define('LANG_BASKET_TITLE', 			 'Корзина материалов');
+    define('LANG_BASKET_DELETE', 			 'Удалить в корзину');
+    define('LANG_BASKET_DELETE_SUCCESS', 	 'Запись успешно удалена в корзину');
+    define('LANG_BASKET_DELETE_LEFT_TIME', 	 'Материал будет в корзине %s, после чего удалится окончательно');
+    define('LANG_ITEM_RESTORE_SUCCESS', 	 'Запись успешно восстановлена');
     define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
     define('LANG_MOVE',                      'Перенести');
@@ -412,6 +442,7 @@
     define('LANG_CONTENT', 					 'Содержимое');
     define('LANG_CATEGORY',                  'Категория');
     define('LANG_CATEGORY_TITLE',            'Название категории');
+    define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');

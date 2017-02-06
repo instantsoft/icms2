@@ -20,7 +20,7 @@ class formDefaultTemplateOptions extends cmsForm {
 
             array(
                 'type' => 'fieldset',
-                'title' => LANG_THEME_COPYRIGHT,
+                'title' => LANG_DEFAULT_THEME_COPYRIGHT,
                 'childs' => array(
 
                     new fieldString('owner_name', array(
@@ -28,13 +28,13 @@ class formDefaultTemplateOptions extends cmsForm {
                     )),
 
                     new fieldString('owner_url', array(
-                        'title' => LANG_THEME_COPYRIGHT_URL,
-                        'hint' => LANG_THEME_COPYRIGHT_URL_HINT
+                        'title' => LANG_DEFAULT_THEME_COPYRIGHT_URL,
+                        'hint' => LANG_DEFAULT_THEME_COPYRIGHT_URL_HINT
                     )),
 
                     new fieldString('owner_year', array(
-                        'title' => LANG_THEME_COPYRIGHT_YEAR,
-                        'hint' => LANG_THEME_COPYRIGHT_YEAR_HINT
+                        'title' => LANG_DEFAULT_THEME_COPYRIGHT_YEAR,
+                        'hint' => LANG_DEFAULT_THEME_COPYRIGHT_YEAR_HINT
                     )),
 
                 )
@@ -42,21 +42,20 @@ class formDefaultTemplateOptions extends cmsForm {
 
             array(
                 'type' => 'fieldset',
-                'title' => LANG_THEME_LAYOUT_COLUMNS,
+                'title' => LANG_DEFAULT_THEME_LAYOUT_COLUMNS,
                 'childs' => array(
 
                     new fieldList('aside_pos', array(
-                        'title' => LANG_THEME_LAYOUT_SIDEBAR_POS,
+                        'title' => LANG_DEFAULT_THEME_LAYOUT_SIDEBAR_POS,
                         'default' => 'right',
                         'items' => array(
-                            'left' => LANG_THEME_LAYOUT_LEFT,
-                            'right' => LANG_THEME_LAYOUT_RIGHT,
+                            'left'  => LANG_DEFAULT_THEME_LAYOUT_LEFT,
+                            'right' => LANG_DEFAULT_THEME_LAYOUT_RIGHT
                         )
-                    )),
+                    ))
 
                 )
-            ),
-
+            )
 
         );
 

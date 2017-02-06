@@ -1,5 +1,5 @@
 <?php
-$this->addCSS('templates/default/controllers/photos/styles.css');
+$this->addCSS($this->getStylesFileName('photos'));
 
 if( $ctype['options']['list_show_filter'] ) {
     $this->renderAsset('ui/filter-panel', array(
@@ -9,6 +9,7 @@ if( $ctype['options']['list_show_filter'] ) {
         'props_fields' => $props_fields,
         'props'        => $props,
         'filters'      => $filters,
+        'ext_hidden_params' => $ext_hidden_params,
         'is_expanded'  => $ctype['options']['list_expand_filter']
     ));
 }
@@ -33,36 +34,38 @@ if( $ctype['options']['list_show_filter'] ) {
                 <div class="photo">
                     <div class="note">
                         <?php echo html_spellcount($item['photos_count'], LANG_PHOTOS_PHOTO_SPELLCOUNT); ?>
-						<?php if ($item['is_public']) { ?>
+						<?php if ($item['is_public'] && !empty($fields['is_public']['is_in_list'])) { ?>
 							/ <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
 						<?php } ?>
                     </div>
                     <?php if ($is_private) { ?>
                         <?php echo html_image(default_images('private', $ctype['photos_options']['preset_small']), $ctype['photos_options']['preset_small'], $item['title']); ?>
                     <?php } else { ?>
-                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>" style="background-image: url(<?php echo html_image_src($item['cover_image'], $ctype['photos_options']['preset_small'], true); ?>);">
-                            <?php if (!empty($item['cover_image'])){ ?>
+                        <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>" <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>style="background-image: url(<?php echo html_image_src($item['cover_image'], $ctype['photos_options']['preset_small'], true); ?>);"<?php } ?>>
+                            <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>
                                 <?php echo html_image($item['cover_image'], $ctype['photos_options']['preset_small'], $item['title']); ?>
                                 <?php unset($item['cover_image']); ?>
                             <?php } ?>
                             <div class="photos_album_title_wrap">
-                                <div class="clear">
-                                    <div class="photos_album_title">
-                                        <?php if ($item['parent_id']){ ?>
-                                            <?php echo htmlspecialchars($item['parent_title']); ?> &rarr;
-                                        <?php } ?>
-
-                                        <?php if ($is_private) { ?>
-                                            <?php html($item['title']); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
-                                        <?php } else { ?>
-                                            <?php html($item['title']); ?>
-                                            <?php if ($item['is_private']) { ?>
-                                                <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                <?php if (!empty($fields['title']['is_in_list'])) { ?>
+                                    <div class="clear">
+                                        <div class="photos_album_title">
+                                            <?php if ($item['parent_id']){ ?>
+                                                <?php echo htmlspecialchars($item['parent_title']); ?> &rarr;
                                             <?php } ?>
-                                        <?php } ?>
+
+                                            <?php if ($is_private) { ?>
+                                                <?php html($item['title']); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                            <?php } else { ?>
+                                                <?php html($item['title']); ?>
+                                                <?php if ($item['is_private']) { ?>
+                                                    <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        </div>
                                     </div>
-                                </div>
-                                <?php if ($item['content']) { ?>
+                                <?php } ?>
+                                <?php if ($item['content'] && !empty($fields['content']['is_in_list'])) { ?>
                                     <div class="photos_album_description_wrap">
                                         <div class="photos_album_description">
                                             <?php if (!$fields['content']['groups_read'] || $user->isInGroups($fields['content']['groups_read'])) { ?>
@@ -77,7 +80,7 @@ if( $ctype['options']['list_show_filter'] ) {
                             </div>
                         </a>
                     <?php } ?>
-                    <?php unset($item['cover_image'], $item['content']); ?>
+                    <?php unset($item['cover_image'], $item['content'], $item['is_public']); ?>
                 </div>
 
                 <div class="fields">
@@ -157,6 +160,11 @@ if( $ctype['options']['list_show_filter'] ) {
                                         <?php echo intval($item['comments']); ?>
                                     </a>
                                 <?php } ?>
+                            </div>
+                        <?php } ?>
+                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                            <div class="bar_item bi_date" title="<?php echo $fields['date_pub']['title']; ?>">
+                                <?php echo $fields['date_pub']['handler']->parse($item['date_pub']); ?>
                             </div>
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>

@@ -16,7 +16,7 @@ class actionAdminContentItemsAjax extends cmsAction {
         $grid = $this->loadDataGrid('content_items', $ctype['name']);
 
         $filter     = array();
-        $filter_str = $this->request->get('filter');
+        $filter_str = $this->request->get('filter', '');
 
         // Одновременно смениться и тип контента, и настройка diff_order не могут
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
@@ -64,8 +64,9 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         }
 
-        $content_model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+        $content_model->filterCategory($ctype['name'], $category, true);
 
+        $content_model->disableDeleteFilter();
         $content_model->disableApprovedFilter();
         $content_model->disablePubFilter();
         $content_model->disablePrivacyFilter();
@@ -78,9 +79,16 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->setPerPage($perpage);
 
+        $content_model->joinLeft(
+                'moderators_logs',
+                'mlog',
+                "mlog.target_id = i.id AND mlog.target_controller = 'content' AND mlog.target_subject = '{$ctype['name']}' AND mlog.date_expired IS NOT NULL"
+        );
+        $content_model->select('mlog.date_expired', 'trash_date_expired');
+
         $items = $content_model->getContentItems($ctype['name']);
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $items, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);
 
         $this->halt();
 

@@ -13,7 +13,9 @@
             'sitemap_sources',
             'rss_feed_list',
             'rss_content_controller_form',
-            'rss_content_controller_after_update'
+            'rss_content_controller_after_update',
+            'frontpage',
+            'frontpage_types'
         )
 
     );

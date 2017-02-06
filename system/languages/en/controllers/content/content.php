@@ -16,9 +16,18 @@
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
 
+    define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
+
     define('LANG_RULE_CONTENT_ADD',          'Adding entries');
+    define('LANG_RULE_CONTENT_ADD_TO_PARENT','Adding entries to parent');
+    define('LANG_RULE_CONTENT_BIND_TO_PARENT','Bind child entries to parent');
+    define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Unbind child entries from parent');
     define('LANG_RULE_CONTENT_EDIT',         'Editing entries');
     define('LANG_RULE_CONTENT_DELETE',       'Deleting entries');
+    define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Deleting entries to trash');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME', 'Trash items lifetime, hours');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME_HINT', 'After this time, the item will be completely deleted. It may be overridden individually for each a moderator.. 0 - do not remove.');
+    define('LANG_RULE_CONTENT_RESTORE',      'Restore items');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Adding categories');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Editing categories');
     define('LANG_RULE_CONTENT_DELETE_CAT',   'Deleting categories');

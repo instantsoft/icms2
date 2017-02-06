@@ -3,7 +3,7 @@
     $user = cmsUser::getInstance();
 
     if(!isset($content_counts)) {
-        $content_counts = $this->controller->model->getGroupContentCounts($group['id']);
+        $content_counts = $this->controller->getGroupContentCounts($group);
     }
 
     $group['content_count'] = 0;
@@ -75,6 +75,9 @@
 		<span class="logo"><?php echo html_image($group['logo'], 'micro', $group['title']); ?></span>
 	<?php } ?>
     <?php html($group['title']); ?>
+    <?php if (!empty($group['sub_title'])) { ?>
+        <span>/ <?php html($group['sub_title']); ?></span>
+    <?php } ?>
     <?php if ($group['is_closed']) { ?>
         <span class="is_closed" title="<?php html(LANG_GROUP_IS_CLOSED_ICON); ?>"></span>
     <?php } ?>

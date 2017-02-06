@@ -15,7 +15,9 @@ class actionGroupsGroupMembers extends cmsAction {
         $page_url = href_to($this->name, $group['id'], 'members');
         $profiles_list_html = $users_controller->renderProfilesList($page_url);
 
-        return cmsTemplate::getInstance()->render('group_members', array(
+        $group['sub_title'] = LANG_GROUPS_GROUP_MEMBERS;
+
+        return $this->cms_template->render('group_members', array(
             'user'               => $this->cms_user,
             'group'              => $group,
             'profiles_list_html' => $profiles_list_html

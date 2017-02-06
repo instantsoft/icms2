@@ -23,7 +23,6 @@ function step($is_submit){
         'html' => render('step_paths', array(
             'doc_root' => DOC_ROOT,
             'root' => $root,
-            'is_subfolder' => ($root != ''),
             'paths' => $paths,
             'hosts' => $hosts
         ))

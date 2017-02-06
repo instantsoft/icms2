@@ -30,7 +30,7 @@ class actionContentWidgetCatsAjax extends cmsAction {
 			}
 		}
 
-		cmsTemplate::getInstance()->renderJSON($cats_list);
+		return $this->cms_template->renderJSON($cats_list);
 
     }
 

@@ -37,7 +37,7 @@ class actionUsersFieldsEdit extends cmsAction {
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
             if (!$field['is_system'] && !$field['is_fixed_type']){
-                $field_type = $this->request->get('type');
+                $field_type = $this->request->get('type', '');
                 $field_class = "field" . string_to_camel('_', $field_type);
                 $field_object = new $field_class(null, null);
                 $field_options = $field_object->getOptions();

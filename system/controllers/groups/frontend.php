@@ -88,6 +88,21 @@ class groups extends cmsFrontend{
 
     }
 
+    public function getGroupContentCounts($group) {
+        return $this->model->getGroupContentCounts($group['id'],
+                ($this->cms_user->is_admin || ($this->cms_user->id == $group['owner_id'])),
+                function ($ctype, $content_model){
+                    $content_model->enablePrivacyFilter();
+                    if (!empty($ctype['options']['privacy_type']) &&
+                            in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+                        $content_model->disablePrivacyFilter();
+                    }
+                    if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
+                        $content_model->disablePrivacyFilter();
+                    }
+                });
+    }
+
     public function getGroupTabs($group){
 
         $menu = array();

@@ -26,6 +26,8 @@ class actionAdminWidgets extends cmsAction {
             $template_name = cmsConfig::get('template');
         }
 
+        cmsCore::loadTemplateLanguage($template_name);
+
         foreach ($tpls as $tpl) {
             $templates[$tpl] = $tpl;
         }

@@ -73,6 +73,13 @@
                 icms.modal.resize();
             };
             $(window).on('resize', resize_func);
+            $('#pm_window').on('click', '.toogle-actions', function(){
+                $('.actions').toggleClass('actions-active');
+                $(this).toggleClass('toogle-actions-active');
+            });
+            icms.modal.setCallback('close', function (){
+                $('#popup-manager').removeClass('nyroModalMessage');
+            });
         </script>
 
     <?php } ?>

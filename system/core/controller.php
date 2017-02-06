@@ -14,8 +14,15 @@ class cmsController {
     public $root_path;
 
     /**
+     * Флаг, что контроллер должен работать только после
+     * регистрации в БД
+     * @var boolean
+     */
+    public $mb_installed = false;
+
+    /**
      * Флаг наличия SEO параметров для index экшена
-     * @var bool
+     * @var boolean
      */
     public $useSeoOptions = false;
 
@@ -143,6 +150,10 @@ class cmsController {
      */
     public function isEnabled() {
         return $this->isControllerEnabled($this->name);
+    }
+
+    public function isControllerInstalled($name) {
+        return isset(self::$controllers[$name]);
     }
 
     public function isControllerEnabled($name) {
@@ -450,7 +461,7 @@ class cmsController {
 
         $class_name = 'on' . string_to_camel('_', $this->name) . string_to_camel('_', $event_name);
 
-        if (!class_exists($class_name)){
+        if (!class_exists($class_name, false)){
 
             $hook_file = $this->root_path . 'hooks/' . $event_name . '.php';
 
@@ -476,9 +487,13 @@ class cmsController {
     public function getForm($form_name, $params=false, $path_prefix=''){
 
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
-        $form_name = $this->name . $form_name;
+        $_form_name = $this->name . $form_name;
 
-        return cmsForm::getForm($form_file, $form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params);
+
+        list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));
+
+        return $form;
 
     }
 
@@ -674,13 +689,26 @@ class cmsController {
      * @param str $url
      */
     public function redirect($url, $code=303){
-        if ($code == 301){
-            header('HTTP/1.1 301 Moved Permanently');
+
+        if ($this->request->isAjax()){
+
+            $this->cms_template->renderAsset('ui/redirect_continue', array(
+                'redirect_url' => href_to($url)
+            ));
+
         } else {
-            header('HTTP/1.1 303 See Other');
+
+            if ($code == 301){
+                header('HTTP/1.1 301 Moved Permanently');
+            } else {
+                header('HTTP/1.1 303 See Other');
+            }
+            header('Location: '.$url);
+
         }
-        header('Location: '.$url);
+
         $this->halt();
+
     }
 
     /**

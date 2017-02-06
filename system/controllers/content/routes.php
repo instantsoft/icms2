@@ -10,6 +10,52 @@ function routes_content(){
         ),
 
         array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/bind_form\/([a-z0-9\-_]+)\/([0-9]+)$/i',
+            'action'    => 'item_bind_form',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+            3           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/bind_form\/([a-z0-9\-_]+)\/([0-9]+)\/(childs|parents|unbind)$/i',
+            'action'    => 'item_bind_form',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+            3           => 'id',
+			4			=> 'mode'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/bind\/([a-z0-9\-_]+)$/i',
+            'action'    => 'item_bind',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/unbind\/([a-z0-9\-_]+)$/i',
+            'action'    => 'item_unbind',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/bind_list\/([a-z0-9\-_]+)\/([0-9]+)$/i',
+            'action'    => 'item_bind_list',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+            3           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/bind_list\/([a-z0-9\-_]+)$/i',
+            'action'    => 'item_bind_list',
+            1           => 'ctype_name',
+            2           => 'child_ctype_name',
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9\-_]+)\/add\/([0-9]+)$/i',
             'action'    => 'item_add',
             1           => 'ctype_name',
@@ -46,6 +92,20 @@ function routes_content(){
         array(
             'pattern'   => '/^([a-z0-9\-_]+)\/delete\/([0-9]+)$/i',
             'action'    => 'item_delete',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/trash_put\/([0-9]+)$/i',
+            'action'    => 'item_trash_put',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/trash_remove\/([0-9]+)$/i',
+            'action'    => 'item_trash_remove',
             1           => 'ctype_name',
             2           => 'id'
         ),
@@ -105,6 +165,14 @@ function routes_content(){
             'action'    => 'item_view',
             'ctype_name' => cmsConfig::get('ctype_default'),
             1           => 'slug'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/([a-zA-Z0-9\-\/]+)\/view\-([a-z0-9\-_]+)$/i',
+            'action'    => 'item_view',
+            1           => 'ctype_name',
+            2           => 'slug',
+            3           => 'child_ctype_name'
         ),
 
         array(

@@ -16,9 +16,18 @@
 	define('LANG_CONTENT_IS_PUB',			 'Публиковать %s на сайте');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Публикация отключена по дате');
 
+    define('LANG_CONTENT_WRONG_PARENT',		 'Выбран неверный родитель');
+
     define('LANG_RULE_CONTENT_ADD',          'Создание записей');
+    define('LANG_RULE_CONTENT_ADD_TO_PARENT','Создание дочерних записей');
+    define('LANG_RULE_CONTENT_BIND_TO_PARENT','Привязка дочерних записей');
+    define('LANG_RULE_CONTENT_BIND_OFF_PARENT','Отвязка дочерних записей');
     define('LANG_RULE_CONTENT_EDIT',         'Редактирование записей');
     define('LANG_RULE_CONTENT_DELETE',       'Удаление записей');
+    define('LANG_RULE_CONTENT_RESTORE',      'Восстановление записей из корзины');
+    define('LANG_RULE_CONTENT_MOVE_TO_TRASH', 'Удаление записей в корзину');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME', 'Время жизни записей в корзине, часов');
+    define('LANG_RULE_CONTENT_TRASH_LEFT_TIME_HINT', 'По истечении указанного времени записи будут полностью удалены. Может быть переопределено для каждого модератора отдельно. 0 — не удалять.');
     define('LANG_RULE_CONTENT_ADD_CAT',      'Создание категорий');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Редактирование категорий');
     define('LANG_RULE_CONTENT_DELETE_CAT',   'Удаление категорий');

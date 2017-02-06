@@ -6,6 +6,7 @@
     define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');
 
+    define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
@@ -69,10 +70,15 @@
     define('LANG_CP_CONTENT_CATS_ORDER',        'Reorder');
     define('LANG_CP_CONTENT_CATS_ORDER_DRAG',   'Drag categories to reorder');
     define('LANG_CP_CONTENT_CATS_NONE',         'This content has no categories');
+    define('LANG_CP_TRASH',                     'Trash');
+    define('LANG_CP_SHOW_ONLY_IN_TRASH',        'Show only deleted items');
+    define('LANG_CP_CONTENT_ITEM_RESTORE_CONFIRM',  'Restore "{title}"?');
+    define('LANG_CP_CONTENT_ITEM_BASKET_DELETE_CONFIRM',  'Move the "{title}" page to trash?');
     define('LANG_CP_CONTENT_ITEM_DELETE_CONFIRM',  'Delete "{title}"?');
     define('LANG_CP_CONTENT_CATS_TITLES',       'Category title or categories tree');
     define('LANG_CP_CONTENT_CATS_TITLES_HINT',  'Enter one item per line to create multiple categories<br>Add a hyphen before the title to make a nested category<br><a href="http://docs.instantcms.ru/en/manual/content/cats" target="_blank">Detailed Manual</a>');
     define('LANG_CP_CONTENT_CATS_BIND',         'Bind parent category properties');
+    define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
 
     define('LANG_CP_BASIC',                     'Basic settings');
     define('LANG_CP_PUBLICATION',               'Publication');
@@ -114,6 +120,10 @@
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Custom entry title');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Autogenerate keywords');
     define('LANG_CP_SEOMETA_AUTO_DESC',         'Autogenerate META-descriptions');
+    define('LANG_CP_SEOMETA_ITEM_TITLE',        'META-title pattern');
+    define('LANG_CP_SEOMETA_ITEM_KEYS',         'META-keys pattern');
+    define('LANG_CP_SEOMETA_ITEM_DESC',         'META-descriptions pattern');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>');
     define('LANG_CP_AUTO_URL',                  'Autogenerate URL');
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');
@@ -135,6 +145,7 @@
     define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
+    define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count views (hits)');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Appended HTML code will be shown under each entry');
@@ -187,6 +198,7 @@
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In entry');
     define('LANG_CP_FIELD_IN_FILTER',           'Show in filter');
+    define('LANG_CP_FIELD_IN_RELATION',         'Show only when parent relation is used');
     define('LANG_CP_FIELD_PRIVACY',             'Privacy');
     define('LANG_CP_FIELD_PRIVATE',             'Show the field only to the entry author');
     define('LANG_CP_FIELD_GROUPS_READ',         'Read access');
@@ -220,6 +232,35 @@
     define('LANG_CP_DATASET_CREATED',           'Dataset &laquo;%s&raquo; has been created');
     define('LANG_CP_DATASET_DELETE_CONFIRM',    'Delete dataset "{title}"?');
     define('LANG_CP_DATASET_IS_VISIBLE',        'Show dataset on the site');
+
+    define('LANG_CP_CATS_VIEW',        'Show in categories');
+    define('LANG_CP_CATS_HIDE',        'Do not show in categories');
+
+    define('LANG_CP_CTYPE_RELATIONS',           'Relations');
+    define('LANG_CP_RELATION',                  'Relation');
+    define('LANG_CP_RELATION_ADD',              'Add Relation');
+    define('LANG_CP_RELATION_TITLE',            'Relation Name');
+    define('LANG_CP_RELATION_DELETE_CONFIRM',   'Delete the Relation?');
+    define('LANG_CP_RELATION_LAYOUT',           'Layout');
+    define('LANG_CP_RELATION_LAYOUT_TYPE',      'Layout Type');
+    define('LANG_CP_RELATION_LAYOUT_LIST',      'List');
+    define('LANG_CP_RELATION_LAYOUT_TAB',       'Tab');
+    define('LANG_CP_RELATION_LAYOUT_HIDDEN',    'None (hidden)');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_EMPTY','Hide when empty');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Hide list title');
+    define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Hide filter');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Records per page');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content Type default');
+    define('LANG_CP_RELATION_CREATED',          'Relation has been created');
+    define('LANG_CP_RELATION_FIELD_CREATED',    'Parent relation field has been created in the "%s" Content Type');
+    define('LANG_CP_RELATION_CHILD',            'Child Content Type');
+    define('LANG_CP_RELATION_TAB_OPTS',         'Tab Options');
+    define('LANG_CP_RELATION_TAB_SEO_HINT',     'Use curly braces to insert parent item\'s field. Example: <strong>{title}</strong>');
+    define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Tab Title');
+    define('LANG_CP_RELATION_TAB_SEO_KEYS',     'Tab Meta-keywords');
+    define('LANG_CP_RELATION_TAB_SEO_DESC',     'Tab Meta-description');
+    define('LANG_CP_RELATION_ERROR_LEN',        'Are too long names are linkable system types. The name length should not be more than 30 characters.');
+    define('LANG_CP_RELATION_LAYOUT_LIST_ERROR', 'You can create only a single relation with "List" type');
 
     define('LANG_CP_MENU',                      'Menu');
     define('LANG_CP_MENU_ADD',                  'Add Menu');
@@ -298,9 +339,10 @@
 
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
-    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified.');
+    define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY',    'How to detect a visitor\'s IP');
     define('LANG_CP_SETTINGS_DETECT_IP_KEY_HINT', 'The $_SERVER array key that contains a real user IP address. Do not change this value if you are not sure. The default value fits most needs. For example, enter HTTP_CF_CONNECTING_IP (without quotes) for CloudFlare.');
+    define('LANG_CP_SETTINGS_SITE_ONLY_TO_USERS', 'Site is available only to the authorized users');
     define('LANG_CP_SETTINGS_SITE_ENABLED',     'Site is online');
     define('LANG_CP_SETTINGS_SITE_REASON',      'Reason why site is offline');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Automatically check for InstantCMS updates when admin logs in');
@@ -422,6 +464,7 @@
 
     define('LANG_CP_FTP_ACCOUNT',               'FTP account');
     define('LANG_CP_FTP_HOST',                  'Server');
+    define('LANG_CP_FTP_PORT',                  'Port');
     define('LANG_CP_FTP_USER',                  'Username');
     define('LANG_CP_FTP_PASS',                  'Password');
     define('LANG_CP_FTP_PATH',                  'Site root path');
@@ -448,7 +491,14 @@
     define('LANG_MODERATOR_DELETED_COUNT',   'Deleted');
     define('LANG_MODERATOR_IDLE_COUNT',      'Idle');
     define('LANG_MODERATOR_ASSIGNED_DATE',   'Assigned');
+    define('LANG_MODERATOR_TRASH_LEFT_TIME', 'Trash items lifetime');
     define('LANG_MODERATOR_ALREADY',         'User %s is already a moderator');
+    define('LANG_MODERATORATION_OPTIONS',    'Moderation options');
+    define('LANG_MODERATION_TRASH_NO_REMOVE', 'Evermore');
+    define('LANG_MODERATION_NOT_NEEDED',      'Not needed');
+    define('LANG_MODERATION_IN_TRASH',        'In the trash');
+    define('LANG_MODERATION_IN_TRASH_TIME',   'Is in the trash, will be deleted through %s');
+    define('LANG_MODERATION_LOGS',            'Moderation logs');
 
     define('LANG_CP_SCHEDULER',                     'Scheduler');
     define('LANG_CP_SCHEDULER_TASK',                'Task');
@@ -487,6 +537,7 @@
     define('LANG_HELP_URL_CTYPES_PROP',             'http://docs.instantcms.ru/en/manual/ctypes/props/add');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'http://docs.instantcms.ru/en/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'http://docs.instantcms.ru/en/manual/ctypes/datasets/add');
+    define('LANG_HELP_URL_CTYPES_RELATIONS',        'http://docs.instantcms.ru/en/manual/ctypes/relations');
     define('LANG_HELP_URL_CTYPES_PERMS',            'http://docs.instantcms.ru/en/manual/ctypes/permissions');
     define('LANG_HELP_URL_CTYPES_MODERATORS',       'http://docs.instantcms.ru/en/manual/ctypes/moderators');
     define('LANG_HELP_URL_MENU',                    'http://docs.instantcms.ru/en/manual/menu');
@@ -502,6 +553,7 @@
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/en/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/en/manual/components/images');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/en/manual/components/users');
+    define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/en/manual/components/moderation');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/en/manual/components/users/migrations');
     define('LANG_HELP_URL_COM_MARKITUP',            'http://docs.instantcms.ru/en/manual/components/markitup');
     define('LANG_HELP_URL_COM_RATING',              'http://docs.instantcms.ru/en/manual/components/rating');

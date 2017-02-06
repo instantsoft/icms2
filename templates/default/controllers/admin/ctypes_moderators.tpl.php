@@ -11,6 +11,12 @@
     $this->addMenuItems('ctype', $this->controller->getCtypeMenu('moderators', $ctype['id']));
 
 	$this->addToolButton(array(
+		'class'  => 'settings',
+        'title'  => LANG_MODERATORATION_OPTIONS,
+        'href'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options'))
+    ));
+
+	$this->addToolButton(array(
 		'class'  => 'help',
         'title'  => LANG_HELP,
         'target' => '_blank',
@@ -33,11 +39,12 @@
 <div id="ctype_moderators_list" class="striped-list list-32" <?php if (!$moderators){ ?>style="display:none"<?php } ?>>
 
     <div class="datagrid_wrapper">
-        <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?>" cellpadding="0" cellspacing="0" border="0">
+        <table id="datagrid" class="datagrid" cellpadding="0" cellspacing="0">
             <thead>
                 <tr>
                     <th colspan="2"><?php echo LANG_MODERATOR; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_ASSIGNED_DATE; ?></th>
+                    <th class="center"><?php echo LANG_MODERATOR_TRASH_LEFT_TIME; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_APPROVED_COUNT; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_DELETED_COUNT; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_IDLE_COUNT; ?></th>

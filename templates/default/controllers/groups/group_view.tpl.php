@@ -9,7 +9,7 @@
 ?>
 
 <div id="group_profile_header">
-    <?php $this->renderChild('group_header', array('group'=>$group)); ?>
+    <?php $this->renderChild('group_header', array('group'=>$group, 'content_counts' => $content_counts)); ?>
 </div>
 
 <div id="group_profile">

@@ -17,21 +17,30 @@
 
     require_once 'bootstrap.php';
 
-    if (cmsConfig::get('emulate_lag')) { usleep(350000); }
+    if ($config->emulate_lag) { usleep(350000); }
+
+    //Запускаем роутинг
+    $core->route($_SERVER['REQUEST_URI']);
 
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
-    if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
-        if (!cmsConfig::get('is_site_on') && !cmsUser::isAdmin()) {
+    // Если сайт выключен, закрываем его от посетителей
+    if (!$config->is_site_on) {
+        if (href_to('auth', 'login') != href_to_current() && !cmsUser::isAdmin()){
             cmsCore::errorMaintenance();
+        }
+    }
+    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
+    if (!empty($config->is_site_only_auth_users)) {
+        if (!cmsUser::isLogged() && !in_array($core->uri_controller, array('auth', 'geo'))) {
+            cmsUser::goLogin();
         }
     }
 
     cmsEventsManager::hook('engine_start');
 
-    //Запускаем роутинг и контроллер
-    $core->route($_SERVER['REQUEST_URI']);
+    //Запускаем контроллер
 	$core->runController();
     $core->runWidgets();
 

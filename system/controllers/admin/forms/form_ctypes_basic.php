@@ -52,7 +52,8 @@ class formAdminCtypesBasic extends cmsForm {
                         'default' => 'hide',
                         'items' => array(
                             'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
-                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL
+                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL,
+                            'in_basket' => LANG_BASKET_DELETE
                         )
                     ))
                 )
@@ -194,6 +195,9 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_ITEMVIEW_ON,
                         'default' => true
                     )),
+                    new fieldCheckbox('options:is_show_fields_group', array(
+                        'title' => LANG_CP_ITEMVIEW_FIELDS_GROUP,
+                    )),
                     new fieldCheckbox('options:hits_on', array(
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
                     )),
@@ -234,6 +238,18 @@ class formAdminCtypesBasic extends cmsForm {
                             array('required'),
                         )
                     )),
+                    new fieldString('options:seo_title_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_keys_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_desc_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    ))
                 )
             ),
             'seo-cats' => array(

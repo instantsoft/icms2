@@ -1,6 +1,7 @@
 <?php // Шаблон одного комментария // ?>
 
 <?php
+	$limit_nesting = !empty($this->controller->options['limit_nesting']) ? $this->controller->options['limit_nesting'] : 0;
 	$dim_negative = !empty($this->controller->options['dim_negative']);
 	$is_guests_allowed = !empty($this->controller->options['is_guests']);
     $is_can_add = ($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed);
@@ -27,9 +28,11 @@
 
     $is_selected = $is_highlight_new && ((int)strtotime($entry['date_pub']) > (int)strtotime($user->date_log));
 
+    $level = (($limit_nesting && $entry['level'] > $limit_nesting) ? $limit_nesting : ($entry['level']-1))*30;
+
 ?>
 
-<div id="comment_<?php echo $entry['id']; ?>" class="comment<?php if($is_selected){ ?> selected-comment<?php } ?><?php if($target_user_id == $entry['user_id']){ ?> is_topic_starter<?php } ?>" <?php if ($is_levels) { ?>style="margin-left: <?php echo ($entry['level']-1)*30; ?>px" data-level="<?php echo $entry['level']; ?>"<?php } ?>>
+<div id="comment_<?php echo $entry['id']; ?>" class="comment<?php if($is_selected){ ?> selected-comment<?php } ?><?php if($target_user_id == $entry['user_id']){ ?> is_topic_starter<?php } ?>" <?php if ($is_levels) { ?>style="margin-left: <?php echo $level; ?>px" data-level="<?php echo $entry['level']; ?>"<?php } ?>>
     <?php if($entry['is_deleted']){ ?>
         <span class="deleted"><?php echo LANG_COMMENT_DELETED; ?></span>
         <span class="nav">
@@ -84,9 +87,13 @@
     </div>
     <div class="body">
         <div <?php if (!empty($entry['user']['is_online'])){ ?>class="avatar comment_user_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="avatar"<?php } ?>>
-            <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+            <?php if ($entry['user_id']) { ?>
+                <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+                    <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
+                </a>
+            <?php } else { ?>
                 <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
-            </a>
+            <?php } ?>
         </div>
         <div class="content">
             <div class="text<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">

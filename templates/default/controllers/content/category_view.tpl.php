@@ -12,6 +12,7 @@
 		if (!empty($ctype['seo_title'])){ $seo_title = $ctype['seo_title']; }
 		if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
 		if (!$seo_title) { $seo_title = $page_header; }
+        if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
         $this->setPageTitle($seo_title);
     }
 
@@ -124,6 +125,10 @@
         <?php echo $current_dataset['description']; ?>
     </div>
     <?php } ?>
+<?php } ?>
+
+<?php if (!empty($category['description'])){?>
+    <div class="category_description"><?php echo $category['description']; ?></div>
 <?php } ?>
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>

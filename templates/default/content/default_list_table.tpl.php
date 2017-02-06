@@ -7,6 +7,7 @@
             'props_fields' => $props_fields,
             'props'        => $props,
             'filters'      => $filters,
+            'ext_hidden_params' => $ext_hidden_params,
             'is_expanded'  => $ctype['options']['list_expand_filter']
         ));
     }

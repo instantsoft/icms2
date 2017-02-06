@@ -20,13 +20,21 @@ class actionGroupsGroupContent extends cmsAction {
 
         $page_url = href_to($this->name, $group['id'], array('content', $ctype_name));
 
+        if (($this->cms_user->id == $group['owner_id']) || $this->cms_user->is_admin){
+            $content_controller->model->disableApprovedFilter();
+			$content_controller->model->disablePubFilter();
+        }
+
         $html = $content_controller->renderItemsList($ctype, $page_url);
 
+        $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+
         return $this->cms_template->render('group_content', array(
-            'user'  => $this->cms_user,
-            'group' => $group,
-            'ctype' => $ctype,
-            'html'  => $html
+            'user'           => $this->cms_user,
+            'group'          => $group,
+            'ctype'          => $ctype,
+            'html'           => $html,
+            'content_counts' => $this->getGroupContentCounts($group)
         ));
 
     }
