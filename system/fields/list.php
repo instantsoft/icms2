@@ -24,7 +24,7 @@ class fieldList extends cmsFormField {
 
          if (!$this->getOption('filter_multiple')){
 
-            $items = array(''=>'') + $items;// array_pad($items, (sizeof($items)+1)*-1, '');
+            $items = array(''=>'') + $items;
             return html_select($this->name, $items, $value);
 
          } else {

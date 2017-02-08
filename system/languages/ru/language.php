@@ -393,6 +393,7 @@
     define('LANG_BACK',					 	 'Назад');
     define('LANG_IN_QUEUE',					 'Объектов на очереди');
     define('LANG_SELECT',                    'Выбрать');
+    define('LANG_SELECT_MULTIPLE',           'Выбрать несколько');
     define('LANG_SELECT_ALL',				 'Выделить все');
     define('LANG_DESELECT_ALL',				 'Снять все');
     define('LANG_INVERT_ALL',				 'Инвертировать');
