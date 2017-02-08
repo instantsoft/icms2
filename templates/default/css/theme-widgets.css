@@ -703,7 +703,7 @@ section .widget.fixed_actions_menu {
 section .widget.fixed_actions_menu:before {
     content: '';
     width: 32px;
-    background:url("../images/icons/settings.png") no-repeat center center;
+    background:url("../images/icons/menu.png") no-repeat center center;
     height: 32px;
     position: absolute;
     top: 0;

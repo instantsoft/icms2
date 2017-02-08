@@ -1413,7 +1413,9 @@ form .ft_parent a.add {
     z-index: 2;
     margin-left: 37px;
 }
-
+#wall_widget #entries_list .entry .content .text img {
+    max-width: 100%;
+}
 #wall_widget #entries_list .entry .links{
     font-size:12px;
     margin-top:10px;

@@ -1426,6 +1426,7 @@ class cmsTemplate {
                         }
 
                         if ($is_active){
+
                             foreach($row as $cell_id=>$cell_value){
 
                                 if (is_array($cell_value) || is_object($cell_value)) { continue; }
@@ -1443,7 +1444,13 @@ class cmsTemplate {
 
                             }
 
+                            // все действия с подтверждением снабжаем csrf_token
+                            if ($confirm_attr && !empty($action['href'])){
+                                $action['href'] .= (strpos($action['href'], '?') !== false ? '&' : '?').'csrf_token='.cmsForm::getCSRFToken();
+                            }
+
                             $actions_html .= '<a class="'.$action['class'].'" href="'.$action['href'].'" title="'.$action['title'].'" '.$confirm_attr.'></a>';
+
                         }
 
                     }

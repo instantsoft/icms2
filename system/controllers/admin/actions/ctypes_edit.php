@@ -55,21 +55,12 @@ class actionAdminCtypesEdit extends cmsAction {
 
         }
 
-        // проверяем, есть ли нативный контроллер и есть ли у него опции
-        $is_controller = false;
-        if(cmsCore::isControllerExists($ctype['name'])){
-            if(cmsCore::getController($ctype['name'])->options){
-                $is_controller = true;
-            }
-        }
-
         return $this->cms_template->render('ctypes_basic', array(
-            'is_controller' => $is_controller,
-            'id'            => $id,
-            'do'            => 'edit',
-            'ctype'         => $ctype,
-            'form'          => $form,
-            'errors'        => isset($errors) ? $errors : false
+            'id'     => $id,
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'form'   => $form,
+            'errors' => isset($errors) ? $errors : false
         ));
 
     }
