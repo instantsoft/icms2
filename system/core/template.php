@@ -20,8 +20,11 @@ class cmsTemplate {
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
 	protected $title;
+	protected $title_item;
 	protected $metadesc;
+	protected $metadesc_item;
 	protected $metakeys;
+	protected $metakeys_item;
 
     protected $breadcrumbs = array();
     protected $menus = array();
@@ -120,10 +123,10 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta name="keywords" content="'.htmlspecialchars($this->metakeys).'">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.htmlspecialchars(!empty($this->metakeys_item) ? string_replace_keys_values($this->metakeys, $this->metakeys_item) : $this->metakeys).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta name="description" content="'.htmlspecialchars($this->metadesc).'">' ."\n";
+				echo "\t". '<meta name="description" content="'.htmlspecialchars(!empty($this->metadesc_item) ? string_replace_keys_values($this->metadesc, $this->metadesc_item) : $this->metadesc).'">' ."\n";
 			}
         }
 
@@ -175,7 +178,7 @@ class cmsTemplate {
 	 * Выводит заголовок текущей страницы
 	 */
 	public function title(){
-    	echo htmlspecialchars($this->title);
+    	echo htmlspecialchars(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
 	}
 
 	/**
@@ -473,10 +476,15 @@ class cmsTemplate {
         if($this->site_config->is_sitename_in_title){
             $this->title .= ' — '.$this->site_config->sitename;
         }
+        return $this;
+	}
+
+	public function setPageTitleItem($item){
+        $this->title_item = $item; return $this;
 	}
 
 	public function setFrontPageTitle($pagetitle){
-		$this->title = $pagetitle;
+		$this->title = $pagetitle; return $this;
 	}
 
 	/**
@@ -487,6 +495,7 @@ class cmsTemplate {
 	public function setMeta($keywords, $description){
 		$this->metakeys = $keywords;
 		$this->metadesc = $description;
+        return $this;
 	}
 
 	/**
@@ -494,16 +503,24 @@ class cmsTemplate {
 	 * @param string $keywords Ключевые слова
 	 */
     public function setPageKeywords($keywords){
-        $this->metakeys = $keywords;
+        $this->metakeys = $keywords; return $this;
     }
+
+	public function setPageKeywordsItem($item){
+        $this->metakeys_item= $item; return $this;
+	}
 
 	/**
 	 * Устанавливает описание страницы
 	 * @param string $description Описание
 	 */
     public function setPageDescription($description){
-        $this->metadesc = $description;
+        $this->metadesc = $description; return $this;
     }
+
+	public function setPageDescriptionItem($item){
+        $this->metadesc= $item; return $this;
+	}
 
 // ========================================================================== //
 // ========================================================================== //

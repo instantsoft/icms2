@@ -580,13 +580,16 @@ function array_collection_to_list($collection, $key, $value=false){
  */
 function array_value_recursive($needle, $haystack, $delimiter = ':') {
 
+    if(!is_array($haystack)){ return null; }
+
     $name_parts = !is_array($needle) ? explode($delimiter, $needle) : $needle;
 
     foreach ($name_parts as $name) {
-        if(!array_key_exists($name, $haystack)){
+        if(!is_array($haystack) || !array_key_exists($name, $haystack)){
             return null;
         } else {
             $haystack = $haystack[$name];
+            if($haystack === null){ $haystack = false; }
         }
     }
 

@@ -14,19 +14,17 @@
         $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
     }
 
-    $back_url = $this->controller->request->get('back');
-
     $this->addToolButton(array(
         'class' => 'save',
         'title' => LANG_SAVE,
         'href'  => "javascript:icms.forms.submit()"
     ));
 
-    if ($ctype['options']['list_on'] || $back_url){
+    if ($cancel_url){
         $this->addToolButton(array(
             'class' => 'cancel',
             'title' => LANG_CANCEL,
-            'href'  => $back_url ? $back_url : href_to($ctype['name'])
+            'href'  => $cancel_url
         ));
     }
 
@@ -41,7 +39,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
-        'cancel' => array('show' => ($ctype['options']['list_on'] || $back_url), 'href' => $back_url ? $back_url : href_to($ctype['name'])),
+        'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(
