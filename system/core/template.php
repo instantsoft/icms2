@@ -519,7 +519,7 @@ class cmsTemplate {
     }
 
 	public function setPageDescriptionItem($item){
-        $this->metadesc= $item; return $this;
+        $this->metadesc_item= $item; return $this;
 	}
 
 // ========================================================================== //

@@ -161,7 +161,7 @@ class cmsDatabase {
 	 * @return string
 	 */
 	public function escape($string){
-		return @$this->mysqli->real_escape_string($string);
+		return $this->mysqli->real_escape_string($string);
 	}
 
     /**
@@ -414,15 +414,13 @@ class cmsDatabase {
 	 * @param array $update_data Массив данных для обновления при совпадении ключей
 	 * @return bool
 	 */
-	public function insertOrUpdate($table, $data, $update_data=false){
+	public function insertOrUpdate($table, $data, $update_data = false){
 
         $fields = array();
         $values = array();
         $set    = array();
 
-        if (!$update_data) { $update_data = $data; }
-
-        if (is_array($data) && is_array($update_data)){
+        if (is_array($data)){
 
 			foreach ($data as $field => $value){
 
@@ -431,6 +429,10 @@ class cmsDatabase {
                 $fields[] = "`$field`";
                 $values[] = $value;
 
+                if($update_data === false){
+                    $set[] = "`{$field}` = {$value}";
+                }
+
 			}
 
             $fields = implode(', ', $fields);
@@ -438,12 +440,14 @@ class cmsDatabase {
 
 			$sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
-            foreach ($update_data as $field=>$value) {
+            if(is_array($update_data)){
+                foreach ($update_data as $field=>$value) {
 
-                $value = $this->prepareValue($field, $value);
+                    $value = $this->prepareValue($field, $value);
 
-                $set[] = "`{$field}` = {$value}";
+                    $set[] = "`{$field}` = {$value}";
 
+                }
             }
 
             $set = implode(', ', $set);

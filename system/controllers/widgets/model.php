@@ -67,7 +67,7 @@ class modelWidgets extends cmsModel {
 
             return $item;
 
-        });
+        }, false);
 
     }
 
