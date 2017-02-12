@@ -33,7 +33,7 @@ class actionWallDelete extends cmsAction {
             'profile_id'   => $entry['profile_id']
         ));
 
-        if (!$permissions || !is_array($permissions) || !$permissions['delete']){
+        if (!$permissions || !is_array($permissions) || (!$permissions['delete'] && $entry['user']['id'] != $this->cms_user->id)){
             return $this->cms_template->renderJSON(array(
                 'error'   => true,
                 'message' => LANG_ERROR
@@ -45,7 +45,7 @@ class actionWallDelete extends cmsAction {
         cmsEventsManager::hook('wall_after_delete', $entry);
 
         $this->cms_template->renderJSON(array(
-            'error' => false,
+            'error'   => false,
             'message' => LANG_WALL_ENTRY_DELETED
         ));
 

@@ -583,13 +583,6 @@ CREATE TABLE `{#}events` (
   KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Binding hooks to events';
 
-INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`) VALUES
-(1, 'user_logged', 'users', 1),
-(2, 'menu_content', 'content', 1),
-(3, 'menu_admin', 'admin', 1),
-(4, 'menu_users', 'users', 1),
-(5, 'menu_messages', 'messages', 1);
-
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -682,7 +675,8 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (1, 'main', 'Main menu', 1),
 (2, 'personal', 'Personal Menu', 1),
 (4, 'toolbar', 'Actions menu', 1),
-(5, 'header', 'Header menu', NULL);
+(5, 'header', 'Header menu', NULL),
+(6, 'notices', 'Notifications', NULL);
 
 DROP TABLE IF EXISTS `{#}menu_items`;
 CREATE TABLE `{#}menu_items` (
@@ -708,7 +702,7 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (24, 2, 0, 'Add', '{content:add}', 6, '---\ntarget: _self\nclass: add', '---\n- 0\n', NULL),
 (25, 2, 0, 'Control panel', '{admin:menu}', 7, '---\ntarget: _self\nclass: cpanel', '---\n- 6\n', NULL),
 (29, 1, 0, 'Users', 'users', 8, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(30, 2, 0, 'Notifications', '{messages:notices}', 3, '---\ntarget: _self\nclass: info notices-counter ajax-modal', '---\n- 0\n', NULL),
+(30, 6, 0, 'Notifications', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\n', '---\n- 0\n', '---\n- 1\n'),
 (31, 1, 0, 'Activity', 'activity', 6, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (32, 1, 0, 'Groups', 'groups', 5, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (33, 2, 0, 'My groups', '{groups:my}', 5, '---\ntarget: _self\nclass: group', '---\n- 0\n', NULL),
@@ -1428,7 +1422,8 @@ INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, 
 (2, 'default', 3, 'Auth menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 1\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
 (5, 'default', 3, 'Actions menu', NULL, NULL, NULL, 'fixed_actions_menu', NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'left-top', 1, 'menu', 'wrapper'),
 (20, 'default', 12, 'Log in', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
-(3, 'default', 9, 'User menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'header', 3, 'avatar', 'wrapper');
+(3, 'default', 9, 'User menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'header', 3, 'avatar', 'wrapper'),
+(23, 'default', 3, 'Notifications', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: notices\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'header', 3, 'menu', 'wrapper');
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (

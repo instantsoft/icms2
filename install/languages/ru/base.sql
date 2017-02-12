@@ -583,13 +583,6 @@ CREATE TABLE `{#}events` (
   KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка хуков к событиям';
 
-INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`) VALUES
-(1, 'user_logged', 'users', 1),
-(2, 'menu_content', 'content', 1),
-(3, 'menu_admin', 'admin', 1),
-(4, 'menu_users', 'users', 1),
-(5, 'menu_messages', 'messages', 1);
-
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -682,7 +675,8 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (1, 'main', 'Главное меню', 1),
 (2, 'personal', 'Персональное меню', 1),
 (4, 'toolbar', 'Меню действий', 1),
-(5, 'header', 'Верхнее меню', NULL);
+(5, 'header', 'Верхнее меню', NULL),
+(6, 'notices', 'Уведомления', NULL);
 
 DROP TABLE IF EXISTS `{#}menu_items`;
 CREATE TABLE `{#}menu_items` (
@@ -707,7 +701,7 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (24, 2, 0, 'Создать', '{content:add}', 6, '---\nclass: add\n', NULL, NULL),
 (25, 2, 0, 'Панель управления', '{admin:menu}', 7, '---\nclass: cpanel\n', '---\n- 6\n', NULL),
 (29, 1, 0, 'Люди', 'users', 9, '---\nclass: \n', '---\n- 0\n', NULL),
-(30, 2, 0, 'Уведомления', '{messages:notices}', 3, '---\nclass: info notices-counter ajax-modal\n', '---\n- 0\n', NULL),
+(30, 6, 0, 'Уведомления', '{messages:notices}', 1, '---\ntarget: _self\nclass: bell ajax-modal notices-counter\n', '---\n- 0\n', '---\n- 1\n'),
 (31, 1, 0, 'Активность', 'activity', 7, '---\nclass:', '---\n- 0\n', NULL),
 (32, 1, 0, 'Группы', 'groups', 6, '---\nclass:', '---\n- 0\n', NULL),
 (33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
@@ -1427,7 +1421,8 @@ INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, 
 (2, 'default', 3, 'Меню авторизации', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 1\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
 (5, 'default', 3, 'Меню действий', NULL, NULL, NULL, 'fixed_actions_menu', NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'left-top', 1, 'menu', 'wrapper'),
 (20, 'default', 12, 'Войти на сайт', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
-(22, 'default', 9, 'Меню пользователя', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'header', 3, 'avatar', 'wrapper');
+(22, 'default', 9, 'Меню пользователя', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'header', 3, 'avatar', 'wrapper'),
+(23, 'default', 3, 'Уведомления', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: notices\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'header', 3, 'menu', 'wrapper');
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (
