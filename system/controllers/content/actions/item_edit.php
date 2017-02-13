@@ -221,7 +221,7 @@ class actionContentItemEdit extends cmsAction {
                 if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
                     $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
                 } else {
-                    $item['seo_title'] = null;
+                    $item['seo_title'] = empty($ctype['options']['is_manual_title']) ? null : $item['seo_title'];
                 }
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
@@ -229,8 +229,6 @@ class actionContentItemEdit extends cmsAction {
                     } else {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
-                } else {
-                    $item['seo_keys'] = null;
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
@@ -238,8 +236,6 @@ class actionContentItemEdit extends cmsAction {
                     } else {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
-                } else {
-                    $item['seo_desc'] = null;
                 }
 
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
