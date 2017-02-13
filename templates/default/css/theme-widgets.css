@@ -708,9 +708,9 @@ section .widget.fixed_actions_menu:before {
     position: absolute;
     top: 0;
     right: 0;
-    cursor: context-menu;
+    cursor: pointer;
 }
-section .widget.fixed_actions_menu:hover .body {
+section .widget.fixed_actions_menu:hover .body, section .widget.fixed_actions_menu.clicked .body {
     display: block;
 }
 section .widget.fixed_actions_menu .body {
