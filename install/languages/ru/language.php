@@ -69,6 +69,7 @@
     define('LANG_DATABASE_USER',            'Пользователь');
     define('LANG_DATABASE_PASS',            'Пароль');
     define('LANG_DATABASE_BASE',            'База данных');
+    define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
     define('LANG_DATABASE_ENGINE',          'Движок базы данных');
     define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
@@ -77,6 +78,8 @@
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Использовать имеющуюся');
     define('LANG_DATABASE_INSTALL_DEMO',    'Установить демо данные');
 
+    define('LANG_DATABASE_PREFIX_ERROR',    'Префикс БД может содержать только латинские буквы, цифры и знак подчёркивания');
+    define('LANG_DATABASE_SELECT_ERROR',    'Невозможно выбрать базу данных %s');
     define('LANG_DATABASE_CONNECT_ERROR',   "Ошибка подключения MySQL:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Ошибка импорта базы данных\nПроверьте правильность реквизитов");
     define('LANG_DATABASE_ENGINE_NO',       'Выбранный движок БД не поддерживается');

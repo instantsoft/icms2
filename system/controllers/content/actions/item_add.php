@@ -4,7 +4,7 @@ class actionContentItemAdd extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
+        $back_url = $this->request->get('back', '');
 
         // Получаем название типа контента
         $ctype_name = $this->request->get('ctype_name', '');
@@ -24,7 +24,7 @@ class actionContentItemAdd extends cmsAction {
         if (!$ctype) { cmsCore::error404(); }
 
         // проверяем что не превышен лимит на число записей
-        $user_items_count = $this->model->getUserContentItemsCount($ctype_name, $user->id, false);
+        $user_items_count = $this->model->getUserContentItemsCount($ctype_name, $this->cms_user->id, false);
 
         if (cmsUser::isPermittedLimitReached($ctype_name, 'limit', $user_items_count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT, $ctype['labels']['many']), 'error');
@@ -32,7 +32,7 @@ class actionContentItemAdd extends cmsAction {
         }
 
         // Проверяем ограничение по карме
-        if (cmsUser::isPermittedLimitHigher($ctype_name, 'karma', $user->karma)){
+        if (cmsUser::isPermittedLimitHigher($ctype_name, 'karma', $this->cms_user->karma)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_KARMA_LIMIT, cmsUser::getPermissionValue($ctype_name, 'karma')), 'error');
             $this->redirectBack();
         }
@@ -53,7 +53,7 @@ class actionContentItemAdd extends cmsAction {
         if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
 
             $groups_model = cmsCore::getModel('groups');
-            $groups = $groups_model->getUserGroups($user->id);
+            $groups = $groups_model->getUserGroups($this->cms_user->id);
 
             if (!$groups && $ctype['is_in_groups_only']){
                 cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
@@ -69,7 +69,7 @@ class actionContentItemAdd extends cmsAction {
         $folders_list = array();
 
         if ($ctype['is_folders']){
-            $folders_list = $this->model->getContentFolders($ctype['id'], $user->id);
+            $folders_list = $this->model->getContentFolders($ctype['id'], $this->cms_user->id);
             $folders_list = array_collection_to_list($folders_list, 'id', 'title');
         }
 
@@ -90,11 +90,11 @@ class actionContentItemAdd extends cmsAction {
                     continue;
                 }
 
-                if (!empty($is_check_parent_perm) && !$user->is_admin){
-                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $user->id){
+                if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
+                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
                         cmsCore::error404();
                     }
-                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_other') && $parent_item['user_id'] == $user->id){
+                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_other') && $parent_item['user_id'] == $this->cms_user->id){
                         cmsCore::error404();
                     }
                 }
@@ -120,7 +120,7 @@ class actionContentItemAdd extends cmsAction {
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
             if (!empty($field['options']['profile_value'])){
-                $item[$field['name']] = $user->{$field['options']['profile_value']};
+                $item[$field['name']] = $this->cms_user->{$field['options']['profile_value']};
             }
             if (!empty($field['options']['relation_id']) && !empty($relation_id)){
                 if ($field['options']['relation_id'] != $relation_id){
@@ -129,10 +129,10 @@ class actionContentItemAdd extends cmsAction {
             }
         }
 
-        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $user->id);
+        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $this->cms_user->id);
         $is_premoderation = $ctype['is_premod_add'];
 
-		cmsEventsManager::hook("content_add", $ctype);
+		cmsEventsManager::hook('content_add', $ctype);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
@@ -179,11 +179,11 @@ class actionContentItemAdd extends cmsAction {
                         $parent_items = $this->model->getContentItems($parent['ctype_name']);
                         if ($parent_items){
                             foreach($parent_items as $parent_item){
-                                if ($perm == 'to_own' && $parent_item['user']['id'] != $user->id) {
+                                if ($perm == 'to_own' && $parent_item['user']['id'] != $this->cms_user->id) {
                                     $errors[$parent['id_param_name']] = LANG_CONTENT_WRONG_PARENT;
                                     break;
                                 }
-                                if ($perm == 'to_other' && $parent_item['user']['id'] == $user->id) {
+                                if ($perm == 'to_other' && $parent_item['user']['id'] == $this->cms_user->id) {
                                     $errors[$parent['id_param_name']] = LANG_CONTENT_WRONG_PARENT;
                                     break;
                                 }
@@ -256,7 +256,7 @@ class actionContentItemAdd extends cmsAction {
 					$date_pub_end_time = strtotime($item['date_pub_end']);
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
-				} else if ($is_date_pub_days_allowed && !$user->is_admin) {
+				} else if ($is_date_pub_days_allowed && !$this->cms_user->is_admin) {
 					$days = $item['pub_days'];
 					$date_pub_end_time = $date_pub_time + 60*60*24*$days;
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
@@ -314,8 +314,6 @@ class actionContentItemAdd extends cmsAction {
                     $this->requestModeration($ctype_name, $item);
                 }
 
-                $back_url = $this->request->get('back', '');
-
                 if ($back_url){
                     $this->redirect($back_url);
                 } else {
@@ -334,18 +332,19 @@ class actionContentItemAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('item_form', array(
-            'do' => 'add',
-            'parent' => isset($parent) ? $parent : false,
-            'ctype' => $ctype,
-            'item' => $item,
-            'form' => $form,
-            'props' => $props,
-            'is_moderator' => $is_moderator,
+        return $this->cms_template->render('item_form', array(
+            'do'               => 'add',
+            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : false)),
+            'parent'           => isset($parent) ? $parent : false,
+            'ctype'            => $ctype,
+            'item'             => $item,
+            'form'             => $form,
+            'props'            => $props,
+            'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
-            'is_load_props' => !isset($errors),
-            'add_cats' => isset($add_cats) ? $add_cats : array(),
-            'errors' => isset($errors) ? $errors : false
+            'is_load_props'    => !isset($errors),
+            'add_cats'         => isset($add_cats) ? $add_cats : array(),
+            'errors'           => isset($errors) ? $errors : false
         ));
 
     }

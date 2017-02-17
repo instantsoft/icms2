@@ -401,7 +401,7 @@ nav select { display: none; }
 
 #body aside .menu, #body aside .menu li,
 #body section .menu, #body section .menu li
-{ margin:0; padding:0; list-style: none; background:#FFF; }
+{ margin:0; padding:0; list-style: none; background:#FFF; display: block; }
 
 #body aside .menu ul,
 #body section .menu ul{

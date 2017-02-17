@@ -1,125 +1,18 @@
 <?php
 /**
- * 2.6.1 => 2.7.0
+ * 2.7.0 => 2.7.1
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
-    $content_model = cmsCore::getModel('content');
 
-    if(!isFieldExists('content_datasets', 'cats_view')){
-        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `cats_view` TEXT NULL DEFAULT NULL COMMENT 'Показывать в категориях'");
+    if(!isFieldExists('content_datasets', 'seo_title')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_title` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_desc`");
     }
 
-    if(!isFieldExists('content_datasets', 'cats_hide')){
-        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `cats_hide` TEXT NULL DEFAULT NULL COMMENT 'Не показывать в категориях'");
-    }
-
-    if(!isFieldExists('moderators', 'trash_left_time')){
-        $content_model->db->query("ALTER TABLE `{#}moderators` ADD `trash_left_time` INT(5) NULL DEFAULT NULL");
-    }
-
-    $core->db->query("UPDATE `{#}controllers` SET `is_backend` =  '1' WHERE `name` = 'moderation'");
-
-    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'moderation' AND hook = 'trash'")){
-        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Удаление просроченных записей из корзины', 'moderation', 'trash', '30', '1');");
-    }
-
-    $ctypes = $content_model->getContentTypes();
-
-	foreach($ctypes as $ctype){
-
-        if(!isFieldExists("{$content_model->table_prefix}{$ctype['name']}", 'is_deleted')){
-            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `rating`");
-            $content_model->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` CHANGE `name` `name` VARCHAR(40) NULL DEFAULT NULL");
-        }
-
-	}
-
-    if(!$core->db->getRowsCount('widgets_pages', "controller IS NULL AND name = 'all'", 1)){
-        $id = $content_model->insert('widgets_pages', array(
-            'name'        => 'all',
-            'title_const' => 'LANG_WP_ALL_PAGES'
-        ));
-        if($id){
-            $content_model->update('widgets_pages', $id, array(
-                'id' => 0
-            ));
-        }
-    }
-
-    $remove_table_indexes = array(
-        '{users}_notices' => array(
-            'user_id', 'date_pub'
-        )
-    );
-
-    $add_table_indexes = array(
-        '{users}_notices' => array(
-            'user_id' => array('user_id', 'date_pub')
-        )
-    );
-
-    // удаляем ненужные индексы
-    if($remove_table_indexes){
-        foreach ($remove_table_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name) {
-                $core->db->dropIndex($table, $index_name);
-            }
-        }
-    }
-    // добавляем нужные
-    if($add_table_indexes){
-        foreach ($add_table_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name => $fields) {
-                $core->db->addIndex($table, $fields, $index_name);
-            }
-        }
-    }
-
-    if(!isFieldExists('geo_cities', 'ordering')){
-        $core->db->query("ALTER TABLE `{#}geo_cities` ADD `ordering` INT(11) unsigned NOT NULL DEFAULT '10000' AFTER `name`");
-    }
-
-    if(!isFieldExists('geo_regions', 'ordering')){
-        $core->db->query("ALTER TABLE `{#}geo_regions` ADD `ordering` INT(11) unsigned NOT NULL DEFAULT '1000' AFTER `name`");
-    }
-
-    add_perms(array(
-        'content' => array(
-            'add_to_parent'
-        )
-    ), 'list', 'to_own,to_other,to_all');
-
-    add_perms(array(
-        'content' => array(
-            'bind_to_parent'
-        )
-    ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
-
-    add_perms(array(
-        'content' => array(
-            'bind_off_parent'
-        )
-    ), 'list', 'own,all');
-
-    add_perms(array(
-        'content' => array(
-            'move_to_trash'
-        )
-    ), 'list', 'own,all');
-
-    add_perms(array(
-        'content' => array(
-            'restore'
-        )
-    ), 'list', 'own,all');
-
-    add_perms(array(
-        'content' => array(
-            'trash_left_time'
-        )
-    ), 'number');
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_keys` `seo_keys` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Ключевые слова'");
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_desc` `seo_desc` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Описание'");
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_title` `seo_title` VARCHAR(256) NULL DEFAULT NULL");
 
     return true;
 

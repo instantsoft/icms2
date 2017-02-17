@@ -138,6 +138,7 @@
 .icon-basket, .menu .basket .item { background-image: url("../images/icons/basket.png"); }
 .icon-newspaper_add, .menu .newspaper_add .item { background-image: url("../images/icons/newspaper_add.png"); }
 .icon-newspaper_delete, .menu .newspaper_delete .item { background-image: url("../images/icons/newspaper_delete.png"); }
+.icon-bell, .menu .bell .item { background-image: url("../images/icons/bell.png"); }
 
 /* Misc icons =============================================================== */
 
@@ -1413,7 +1414,9 @@ form .ft_parent a.add {
     z-index: 2;
     margin-left: 37px;
 }
-
+#wall_widget #entries_list .entry .content .text img {
+    max-width: 100%;
+}
 #wall_widget #entries_list .entry .links{
     font-size:12px;
     margin-top:10px;

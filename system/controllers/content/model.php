@@ -174,6 +174,9 @@ class modelContent extends cmsModel{
 
         if ($ctype['is_fixed']) { return false; }
 
+        $this->disableDeleteFilter()->disableApprovedFilter()->
+                disablePubFilter()->disablePrivacyFilter();
+
 		$items = $this->getContentItems($ctype['name']);
 		if ($items){
 			foreach($items as $item){
@@ -369,6 +372,9 @@ class modelContent extends cmsModel{
         }
 
         if ($is_delete_content){
+
+            $this->disableDeleteFilter()->disableApprovedFilter()->
+                    disablePubFilter()->disablePrivacyFilter();
 
             $items = $this->getContentItems($ctype['name']);
 
@@ -2092,6 +2098,9 @@ class modelContent extends cmsModel{
 
         foreach($ctypes as $ctype){
 
+            $this->disableDeleteFilter()->disableApprovedFilter()->
+                    disablePubFilter()->disablePrivacyFilter();
+
             $items = $this->filterEqual('user_id', $user_id)->getContentItems($ctype['name']);
 
             if (is_array($items)){
@@ -2369,6 +2378,9 @@ class modelContent extends cmsModel{
         }
 
         if ($is_delete_content){
+
+            $this->disableDeleteFilter()->disableApprovedFilter()->
+                    disablePubFilter()->disablePrivacyFilter();
 
             $items = $this->getContentItems($ctype_name);
 

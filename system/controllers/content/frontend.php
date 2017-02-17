@@ -314,6 +314,7 @@ class content extends cmsFrontend {
                 "{$ctype['name']}/*",
             ),
             'url_mask_not' => array(
+                "{$ctype['name']}/*/view-*",
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
                 "{$ctype['name']}/add/%",

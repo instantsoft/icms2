@@ -10,6 +10,7 @@
 	<title><?php $this->title(); ?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <?php $this->addMainCSS('templates/default/css/theme-modal.css'); ?>
     <?php $this->addMainCSS('templates/default/css/jquery-ui.css'); ?>
     <?php $this->addMainJS('templates/default/js/jquery.js'); ?>

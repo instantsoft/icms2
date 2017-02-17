@@ -62,7 +62,7 @@
                                 newValues.push($item.data('id'));
                             });
                             $input.val(newValues.length > 0 ? newValues.join(',') : '');
-                        })
+                        });
 						newValues.push(id);
 					});
 					if (newValues.length > 0){
@@ -87,7 +87,7 @@
                 newValues.push($item.data('id'));
             });
             $input.val(newValues.length > 0 ? newValues.join(',') : '');
-        })
+        });
 
     });
 </script>

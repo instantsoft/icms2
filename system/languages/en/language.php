@@ -390,6 +390,7 @@
     define('LANG_BACK',					 	 'Back');
     define('LANG_IN_QUEUE',					 'Items in queue');
     define('LANG_SELECT',                    'Select');
+    define('LANG_SELECT_MULTIPLE',           'Select multiple');
     define('LANG_SELECT_ALL',				 'Select all');
     define('LANG_DESELECT_ALL',				 'Deselect all');
     define('LANG_INVERT_ALL',				 'Invert');

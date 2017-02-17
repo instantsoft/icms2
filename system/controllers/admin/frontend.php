@@ -148,7 +148,21 @@ class admin extends cmsFrontend {
 
             $ctype = cmsCore::getModel('content')->getContentType($id);
 
-            list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+            if($ctype){
+
+                // проверяем, есть ли нативный контроллер и есть ли у него опции
+                if(cmsCore::isControllerExists($ctype['name'])){
+                    if(cmsCore::getController($ctype['name'])->options){
+                        $ctype_menu[] = array(
+                            'title' => LANG_CP_CONTROLLERS_OPTIONS,
+                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options'))
+                        );
+                    }
+                }
+
+                list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+
+            }
 
         }
 

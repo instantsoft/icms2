@@ -105,7 +105,7 @@ function write_config($file, $config){
 
     foreach($config as $key=>$value){
 
-        $value = "'{$value}'";
+        $value = var_export($value, true);
 
         $tabs = 7 - ceil((mb_strlen($key)+3)/4);
 

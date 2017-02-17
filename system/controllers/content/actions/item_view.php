@@ -204,7 +204,7 @@ class actionContentItemView extends cmsAction {
 
             }
 
-            list($ctype, $childs) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs));
+            list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs, $item));
 
         }
 

@@ -101,6 +101,22 @@
         <legend><?php echo LANG_SEO; ?></legend>
 
         <?php
+            $name = 'seo_title';
+            if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+            if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
+        ?>
+        <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_seo_title">
+            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+            <label for="<?php echo $name; ?>"><?php echo LANG_SEO_TITLE; ?></label>
+            <?php echo html_input('text', $name, $value, array('id'=>$name, 'class'=>$error?'error':'')); ?>
+        </div>
+        <script type="text/javascript">
+            $(function(){
+                icms.forms.initSymbolCount('<?php echo $name; ?>', 256, 0);
+            });
+        </script>
+
+        <?php
             $name = 'seo_keys';
             if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
             if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
@@ -111,6 +127,11 @@
             <?php echo html_input('text', $name, $value, array('id'=>$name, 'class'=>$error?'error':'')); ?>
             <div class="hint"><?php echo LANG_SEO_KEYS_HINT; ?></div>
         </div>
+        <script type="text/javascript">
+            $(function(){
+                icms.forms.initSymbolCount('<?php echo $name; ?>', 256, 0);
+            });
+        </script>
 
         <?php
             $name = 'seo_desc';
@@ -123,6 +144,11 @@
             <?php echo html_textarea($name, $value, array('rows'=>5, 'id'=>$name)); ?>
             <div class="hint"><?php echo LANG_SEO_DESC_HINT; ?></div>
         </div>
+        <script type="text/javascript">
+            $(function(){
+                icms.forms.initSymbolCount('<?php echo $name; ?>', 256, 0);
+            });
+        </script>
 
     </fieldset>
 
@@ -300,6 +326,8 @@
 </select>
 
 <script type="text/javascript">
+
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
 
     function addSorting(){
         $('#add_sorting select').html($('#fields_list').html()).show();

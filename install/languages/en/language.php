@@ -69,6 +69,7 @@
     define('LANG_DATABASE_USER',            'Username');
     define('LANG_DATABASE_PASS',            'Password');
     define('LANG_DATABASE_BASE',            'Database');
+    define('LANG_DATABASE_BASE_HINT',       'Create if not exists');
     define('LANG_DATABASE_ENGINE',          'Database engine');
     define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
@@ -77,6 +78,8 @@
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Use an existing table');
     define('LANG_DATABASE_INSTALL_DEMO',    'Install demo content');
 
+    define('LANG_DATABASE_PREFIX_ERROR',    'Database prefix can contain only letters, numbers, and underscores');
+    define('LANG_DATABASE_SELECT_ERROR',    'Unable to select the "%s" database');
     define('LANG_DATABASE_CONNECT_ERROR',   "MySQL Connection Error:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Database import error\nCheck provided details");
     define('LANG_DATABASE_ENGINE_NO',       'Database engine is not supported');

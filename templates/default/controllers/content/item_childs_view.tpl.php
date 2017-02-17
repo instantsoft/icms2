@@ -25,13 +25,19 @@
     $this->addBreadcrumb($item['title'], href_to($ctype['name'], $item['slug'] . '.html'));
     $this->addBreadcrumb($child_ctype['title']);
 
-    $user = cmsUser::getInstance();
-
-    $this->addToolButton(array(
-        'class' => 'add',
-        'title' => sprintf(LANG_CONTENT_ADD_ITEM, $child_ctype['labels']['create']),
-        'href'  => href_to($child_ctype['name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}"
-    ));
+    if ($item['is_approved']){
+        if ($childs && !empty($childs['to_add'])){
+            foreach($childs['to_add'] as $rel){
+                if($rel['child_ctype_name'] == $child_ctype['name']){
+                    $this->addToolButton(array(
+                        'class' => 'add',
+                        'title' => sprintf(LANG_CONTENT_ADD_ITEM, $rel['child_labels']['create']),
+                        'href'  => href_to($rel['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}"
+                    ));
+                }
+            }
+        }
+    }
 
     if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
