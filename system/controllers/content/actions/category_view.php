@@ -42,7 +42,15 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Получаем список наборов
-        $datasets = $this->model->getContentDatasets($ctype['id'], true);
+        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($category) {
+
+            $is_view = !$item['cats_view'] || in_array($category['id'], $item['cats_view']);
+            $is_user_hide = $item['cats_hide'] && in_array($category['id'], $item['cats_hide']);
+
+            if (!$is_view || $is_user_hide) { return false; }
+
+            return $item;
+        });
 
         // Текущий набор
         $dataset = $this->request->get('dataset', '');
@@ -71,11 +79,20 @@ class actionContentCategoryView extends cmsAction {
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
+            // если набор всего один, например для изменения сортировки по умолчанию,
+            // не показываем его на сайте
+            if(count($datasets) == 1){
+                unset($current_dataset); $datasets = false;
+            }
         }
 
         // Фильтр по категории
-        if ($ctype['is_cats'] && $slug != 'index') {
-            $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+        if ($ctype['is_cats']) {
+            if($slug != 'index'){
+                $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
+            } elseif(!$ctype['is_cats_recursive']){
+                $this->model->filterCategory($ctype['name'], array('id' => 1));
+            }
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)

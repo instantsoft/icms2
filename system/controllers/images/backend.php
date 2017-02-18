@@ -22,7 +22,7 @@ class backendImages extends cmsBackend{
 
     public function createDefaultImages($preset) {
 
-        if ($preset['is_internal']){
+        if (!empty($preset['is_internal'])){
             return false;
         }
 
@@ -73,4 +73,5 @@ class backendImages extends cmsBackend{
         }
 
     }
+
 }

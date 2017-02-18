@@ -39,6 +39,7 @@ function create_config($path, $file){
         'upload_root'			=> $_SESSION['install']['paths']['upload'],
         'upload_host'			=> $_SESSION['install']['hosts']['upload'],
         'cache_root'			=> $_SESSION['install']['paths']['cache'],
+        'is_site_only_auth_users' => 0,
         'is_site_on'            => 1,
         'off_reason'            => LANG_CFG_OFF_REASON,
         'sitename'				=> $_SESSION['install']['site']['sitename'],
@@ -104,7 +105,7 @@ function write_config($file, $config){
 
     foreach($config as $key=>$value){
 
-        $value = "'{$value}'";
+        $value = var_export($value, true);
 
         $tabs = 7 - ceil((mb_strlen($key)+3)/4);
 

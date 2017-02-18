@@ -27,16 +27,21 @@ icms.modal = (function ($) {
 
     //====================================================================//
 
-    this.openAjax = function(url, data, open_callback){
+    this.openAjax = function(url, data, open_callback, title){
 
         open_callback = open_callback || function(){};
+        title = title || '';
 
         if (typeof(data)=='undefined'){
-            $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback}});
+            $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+            }}});
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback}, ajax:{data: data, type: "POST"}});
+        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+        }}, ajax:{data: data, type: "POST"}});
         return false;
 
     };

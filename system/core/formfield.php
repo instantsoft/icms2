@@ -110,14 +110,14 @@ class cmsFormField {
     public function getDenormalName() { return $this->name.self::FIELD_CACHE_POSTFIX; }
 
     public function setName($name) {
+
         $this->name = $name;
-        if (strpos($name, ':') !== false){
-            list($key, $subkey) = explode(':', $name);
-            $this->element_name = "{$key}[{$subkey}]";
-        } else {
-            $this->element_name = $name;
-        }
+
+        $keys = explode(':', $name);
+        $this->element_name = count($keys) > 1 ? array_shift($keys) . '[' . implode('][', $keys) . ']' : $name;
+
         return $this;
+
     }
 
     public function getElementName() { return $this->element_name; }
@@ -191,7 +191,7 @@ class cmsFormField {
     public function applyFilter($model, $value) { return false; }
 
     public function store($value, $is_submitted, $old_value=null){
-       return $value;
+        return $value;
     }
 
     public function storeCachedValue($value){

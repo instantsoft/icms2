@@ -89,3 +89,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
     screenfull
         by Sindre Sorhus
         https://github.com/sindresorhus/screenfull.js
+
+    jQuery-flexImages
+        by Pixabay.com
+        https://github.com/Pixabay/jQuery-flexImages

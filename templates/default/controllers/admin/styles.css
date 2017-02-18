@@ -300,7 +300,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     left: 0;
     width: 100%;
     border-radius: 0;
-    z-index: 1;
+    z-index: 101;
     box-shadow: 0px 2px 10px #B3C2C9;
     padding: 10px 21px;
     box-sizing: border-box;
@@ -354,12 +354,14 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 .cp_toolbar .refresh .item { background: url("../../images/icons/refresh.png") no-repeat left center; }
 .cp_toolbar .help .item { background: url("../../images/icons/help.png") no-repeat left center; }
 .cp_toolbar .install .item { background: url("../../images/icons/install.png") no-repeat left center; }
+.cp_toolbar .logs .item { background: url("../../images/icons/logs.png") no-repeat left center; }
 
 /* ========================================================================== */
 /* ========================================================================== */
 
 form.modal{
     margin:15px;
+    box-sizing: border-box;
 }
 
 form fieldset .field{
@@ -616,6 +618,14 @@ form .hint {
     background:#EDEDED;
 }
 
+.select_deselct {
+    margin: 10px 0 0 5px;
+}
+.select_deselct a {
+    text-decoration: none;
+    margin: 0 10px 0 0;
+    font-size: 13px;
+}
 /*============================================================================*/
 
 .gui-panel {
@@ -668,10 +678,7 @@ form .hint {
 /*============================================================================*/
 
 .modal_form {
-    min-width:750px;
-    overflow: hidden;
-    overflow-y: auto;
-    height: 100%;
+    box-sizing: border-box;
 }
 
 .tabs-menu{
@@ -1081,7 +1088,58 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid .actions a.rss { background-image: url("../../images/icons/rss.png"); }
 .datagrid .actions a.play { background-image: url("../../images/icons/play.png"); }
 .datagrid .actions a.accept { background-image: url("../../images/icons/accept.png"); }
-
+.datagrid .actions a.basket_put { background-image: url("../../images/icons/basket_put.png"); }
+.datagrid .actions a.basket_remove { background-image: url("../../images/icons/basket_remove.png"); }
+.datagrid .is_deleted td, .datagrid .is_deleted td a {
+    color: #CCC;
+}
+.datagrid .is_deleted .flag_trigger, .datagrid .is_deleted .flag_trigger a {
+    opacity: 0.2;
+}
+.datagrid_select_actions {
+    float: right;
+    font-size: small;
+    z-index: 2;
+    margin: 0 15px 0 0;
+    line-height: 32px;
+    position: relative;
+}
+.datagrid_select_actions > strong {
+    font-weight: normal;
+    display: none;
+    color: #AAA;
+    margin-right: 5px;
+}
+.datagrid_select_actions > span {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 100%;
+    margin: 0 2px 0 0;
+    padding: 6px 10px;
+    line-height: 100%;
+    border-radius: 5px;
+    text-shadow: 0 1px 3px #FFF;
+    color: #333;
+    border: 1px solid #CCCCCC;
+    background: #FFF;
+    background: -moz-linear-gradient(top, #FFF 0%, #EDEDED 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFF), color-stop(100%,#EDEDED));
+    background: -webkit-linear-gradient(top, #FFF 0%,#EDEDED 100%);
+    background: -o-linear-gradient(top, #FFF 0%,#EDEDED 100%);
+    background: -ms-linear-gradient(top, #FFF 0%,#EDEDED 100%);
+    background: linear-gradient(to bottom, #FFF 0%,#EDEDED 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#EDEDED',GradientType=0 );
+    box-shadow: inset 0 -1px 1px #fff, 0 1px 1px #CCCCCC;
+    transition: all .3s;
+    display: none;
+}
+.datagrid_select_actions > span:hover {
+    box-shadow:
+        0 0 3px #3498db,
+        inset 0 -1px 1px #fff,
+        0 1px 1px #CCCCCC;
+    color: #069;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 
@@ -1860,7 +1918,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding:15px;
 }
 #dashboard .links {
-    margin: 0 0 10px;
+    margin: 0 0 20px;
     list-style: none;
     padding: 0;
 }
@@ -2029,6 +2087,12 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     vertical-align: middle;
     margin: 0 0 0 10px;
     cursor: pointer;
+}
+.perms_grid table thead th:first-child {
+    width: 360px;
+}
+.width_320 {
+    width: 320px;
 }
 @media screen and (max-width: 980px) {
     #dashboard .col1 {

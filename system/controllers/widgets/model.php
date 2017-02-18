@@ -40,6 +40,8 @@ class modelWidgets extends cmsModel {
 
         $this->useCache('widgets.pages');
 
+        $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")->select('ct.title', 'title_subject');
+
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
             $item['is_custom'] = !empty($item['title']);
@@ -65,7 +67,7 @@ class modelWidgets extends cmsModel {
 
             return $item;
 
-        });
+        }, false);
 
     }
 
@@ -144,6 +146,7 @@ class modelWidgets extends cmsModel {
 
         return $this->get('widgets_pages', function($item, $model){
 
+            if (!$item['id']) { return false; }
             if (!$item['controller']) { $item['controller'] = 'custom'; }
 
             $item['title'] = !empty($item['title']) ?
@@ -211,6 +214,8 @@ class modelWidgets extends cmsModel {
                         filterOr()->
                         filterEqual('position', '_unused')->
                     filterEnd()->
+                    select('w.title', 'name')->
+                    joinInner('widgets', 'w', 'w.id = i.widget_id')->
                     orderBy('page_id, ordering')->
                     get('widgets_bind');
 
@@ -219,11 +224,12 @@ class modelWidgets extends cmsModel {
         foreach($binds as $bind){
 
             $positions[ $bind['position'] ][] = array(
-                'id' => $bind['id'],
-                'title' => $bind['title'],
-                'is_tab_prev' => (bool)$bind['is_tab_prev'],
-                'is_enabled'  => (bool)$bind['is_enabled'],
-                'is_disabled' => $bind['page_id'] != $page_id && $bind['position'] != '_unused'
+                'id'          => $bind['id'],
+                'title'       => $bind['title'],
+                'name'        => $bind['name'],
+                'is_tab_prev' => (bool) $bind['is_tab_prev'],
+                'is_enabled'  => (bool) $bind['is_enabled'],
+                'is_disabled' => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
             );
 
         }

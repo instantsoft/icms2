@@ -54,7 +54,7 @@ $(document).ready(function(){
 
             var tabs = $(this);
 
-            var dropdown = $("<select>").appendTo(tabs);
+            var dropdown = $("<select>").prependTo(tabs);
             $("ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
@@ -74,6 +74,25 @@ $(document).ready(function(){
         });
 
     }
+
+	$('.messages.ajax-modal a').on('click', function(){
+        $('#popup-manager').addClass('nyroModalMessage');
+	});
+
+    if($('div.widget.fixed_actions_menu').length){
+        $('#breadcrumbs').prepend($('div.widget.fixed_actions_menu'));
+        $('div.widget.fixed_actions_menu').on('click', function (){
+            if($(this).hasClass('clicked')){ return; }
+            var __menu = $(this).addClass('clicked');
+            var hide_func = function (){
+                $(document).one('click', function(event) {
+                    if ($(event.target).closest(__menu).length) { hide_func(); return; }
+                    $(__menu).removeClass('clicked');
+                });
+            };
+            hide_func();
+        });
+    };
 
 });
 
@@ -351,5 +370,8 @@ function initTabs(selector){
         if($(element).hasClass('field_error')){
             $(selector+' ul.tabbed > li > a[href = "#'+$(element).parents('.tab').attr('id')+'"]').trigger('click');
         }
+    });
+    $('> select', selector).change(function() {
+        $(selector+' ul.tabbed > li > a[href = "'+$(this).find("option:selected").val()+'"]').trigger('click');
     });
 }

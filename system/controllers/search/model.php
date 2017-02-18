@@ -76,7 +76,13 @@ class modelSearch extends cmsModel{
 
     public function getSearchSQL($table_name, $match_fields, $select_fields, $filters){
 
-        $match_fields  = implode(', ', $match_fields);
+        $match_fields  = '`'.implode('`, `', $match_fields).'`';
+        $select_fields = array_map(function($v){
+            if(is_numeric($v)){
+                return $v;
+            }
+            return '`'.$v.'`';
+        }, $select_fields);
         $select_fields = implode(', ', $select_fields);
 
         $query = $this->getFullTextQuery();

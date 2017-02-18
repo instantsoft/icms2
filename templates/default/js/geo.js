@@ -53,8 +53,8 @@ icms.geo = (function ($) {
                         child_list.html('');
 
                         for(var item_id in result.items){
-                            var item_name = result.items[item_id];
-                            child_list.append( '<option value="'+ item_id +'">' + item_name +'</option>' );
+                            var item = result.items[item_id];
+                            child_list.append( '<option value="'+ item.id +'">' + item.name +'</option>' );
                         }
 
                         $(child_list).val(selected_id);
@@ -106,9 +106,9 @@ icms.geo = (function ($) {
 
             for(var item_id in result.items){
 
-                var item_name = result.items[item_id];
+                var item = result.items[item_id];
 
-                child_list.append( '<option value="'+ item_id +'">' + item_name +'</option>' );
+                child_list.append( '<option value="'+ item.id +'">' + item.name +'</option>' );
 
             }
 

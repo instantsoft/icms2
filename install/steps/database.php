@@ -6,8 +6,14 @@ function step($is_submit){
         return check_db();
     }
 
+    $db_list = get_db_list();
+
+    $cfg = get_site_config();
+
     $result = array(
         'html' => render('step_database', array(
+            'cfg'     => $cfg,
+            'db_list' => $db_list
         ))
     );
 
@@ -25,7 +31,14 @@ function check_db(){
     $db['engine'] = trim($db['engine']);
     $db['clear_sql_mode'] = 0;
 
-    $mysqli = @new mysqli($db['host'], $db['user'], $db['pass'], $db['base']);
+    if (!preg_match('#^[a-z0-9\_]+$#i', $db['prefix'])) {
+        return array(
+            'error'   => true,
+            'message' => LANG_DATABASE_PREFIX_ERROR
+        );
+    }
+
+    $mysqli = @new mysqli($db['host'], $db['user'], $db['pass']);
 
     if ($mysqli->connect_error) {
         return array(
@@ -41,6 +54,19 @@ function check_db(){
     }
 
     $mysqli->set_charset("utf8");
+
+    if (!empty($db['create_db'])) {
+
+        $mysqli->query("CREATE DATABASE IF NOT EXISTS `{$db['base']}` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci");
+
+    }
+
+    if (!$mysqli->select_db($db['base'])) {
+        return array(
+            'error' => true,
+            'message' => sprintf(LANG_DATABASE_SELECT_ERROR, $db['base'])
+        );
+    }
 
     $check_engine = check_db_engine($mysqli, $db['engine']);
 

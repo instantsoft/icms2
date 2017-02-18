@@ -151,6 +151,15 @@ class actionCommentsSubmit extends cmsAction {
                 // проверяем модерацию
                 $comment['is_approved'] = $this->isApproved($comment);
 
+                list($comment, $permissions) = cmsEventsManager::hook('comment_add_permissions', array(
+                    $comment,
+                    array('error'=>false, 'message'=>'')
+                ));
+
+                if($permissions['error']){
+                    return $this->cms_template->renderJSON($permissions);
+                }
+
                 // Сохраняем комментарий
                 $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
 
@@ -198,6 +207,8 @@ class actionCommentsSubmit extends cmsAction {
 
                     // Уведомляем об ответе на комментарий
                     if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
+
+                    $comment = cmsEventsManager::hook('comment_after_add', $comment);
 
                 }
 

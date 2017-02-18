@@ -207,7 +207,7 @@ class actionAuthRegister extends cmsAction {
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
 
-                        $this->options['verify_exp'] = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
+                        $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
 
                         $messenger = cmsCore::getController('messages');
                         $to = array('email' => $user['email'], 'name' => $user['nickname']);
@@ -217,7 +217,7 @@ class actionAuthRegister extends cmsAction {
                             'nickname'    => $user['nickname'],
                             'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
                             'pass_token'  => $user['pass_token'],
-                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true)
+                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($verify_exp * 3600)), true)
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');

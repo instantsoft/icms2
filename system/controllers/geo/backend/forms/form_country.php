@@ -43,6 +43,5 @@ class formGeoCountry extends cmsForm {
 				)
 			)
 		);
-
 	}
 }

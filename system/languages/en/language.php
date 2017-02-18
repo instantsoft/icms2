@@ -8,12 +8,19 @@
     //CONTENT
     define('LANG_CONTENT_TYPE',              'Content Type');
     define('LANG_CONTENT_TYPE_SETTINGS',     'Configure %s');
+    define('LANG_CONTENT_SELECT_ITEM',       'Select %s');
     define('LANG_CONTENT_ADD_ITEM',          'Add %s');
+    define('LANG_CONTENT_BIND_ITEM',         'Bind %s');
+    define('LANG_CONTENT_BIND_ITEMS',        'Bind');
+    define('LANG_CONTENT_UNBIND_ITEM',       'Unbind %s');
+    define('LANG_CONTENT_UNBIND_ITEMS',      'Unbind');
     define('LANG_CONTENT_EDIT_ITEM',         'Edit %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Delete %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Are you sure you want to delete %s?');
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
+
+    define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
     define('LANG_FILTER',                    'Filter');
@@ -113,6 +120,7 @@
     define('LANG_PARSER_USER',               'User');
     define('LANG_PARSER_USER_FILTER_HINT',   'User ID');
     define('LANG_PARSER_USERS',              'User list');
+    define('LANG_PARSER_PARENT',             'Parent');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
     define('LANG_PARSER_IMAGES',             'Multiple images');
@@ -202,6 +210,7 @@
     define('LANG_MODERATION',                'Moderation');
     define('LANG_MODERATOR',                 'Moderator');
     define('LANG_MODERATORS',                'Moderators');
+    define('LANG_MODERATION_SUCCESS',        'Approved');
     define('LANG_MODERATION_APPROVE',        'Approve');
     define('LANG_MODERATION_APPROVED',       'Page published');
     define('LANG_MODERATION_APPROVED_BY',    'Approved by moderator');
@@ -209,6 +218,7 @@
     define('LANG_MODERATION_NOTICE',         'The entry will be published after moderator\'s approval');
     define('LANG_MODERATION_IDLE',           'Notification was sent to moderator %s');
     define('LANG_MODERATION_NO_TASKS',       'No entries require approval');
+    define('LANG_MODERATION_NOTIFY',         'A new page awaits your approval');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
@@ -218,6 +228,17 @@
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');
+    define('LANG_PERM_OPTION_TO_OWN',        'Only to own');
+    define('LANG_PERM_OPTION_TO_ALL',        'To all');
+    define('LANG_PERM_OPTION_OWN_TO_OWN',    'Own to own');
+    define('LANG_PERM_OPTION_OWN_TO_OTHER',  'Own to others');
+    define('LANG_PERM_OPTION_OWN_TO_ALL',    'Own to all');
+    define('LANG_PERM_OPTION_OTHER_TO_OWN',  'Others to own');
+    define('LANG_PERM_OPTION_OTHER_TO_OTHER','Others to others');
+    define('LANG_PERM_OPTION_OTHER_TO_ALL',  'Others to all');
+    define('LANG_PERM_OPTION_ALL_TO_OWN',    'All to own');
+    define('LANG_PERM_OPTION_ALL_TO_OTHER',  'All to others');
+    define('LANG_PERM_OPTION_ALL_TO_ALL',    'All to all');
 
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Login');
@@ -343,7 +364,14 @@
     define('LANG_HIDE', 					 'Hide');
     define('LANG_HIDE_SELECTED',			 'Hide selected');
     define('LANG_CONFIG', 					 'Settings');
+    define('LANG_RESTORE', 					 'Restore');
+    define('LANG_BASKET_TITLE', 			 'Items trash');
+    define('LANG_BASKET_DELETE', 			 'Move to trash');
+    define('LANG_BASKET_DELETE_SUCCESS', 	 'Item successfully deleted to trash');
+    define('LANG_BASKET_DELETE_LEFT_TIME', 	 'The material will be %s in the trash and then permanently deleted');
+    define('LANG_ITEM_RESTORE_SUCCESS', 	 'Item successfully restored');
     define('LANG_DELETE', 					 'Delete');
+    define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');
     define('LANG_DELETE_SELECTED',			 'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');
     define('LANG_MOVE',                      'Move');
@@ -362,6 +390,7 @@
     define('LANG_BACK',					 	 'Back');
     define('LANG_IN_QUEUE',					 'Items in queue');
     define('LANG_SELECT',                    'Select');
+    define('LANG_SELECT_MULTIPLE',           'Select multiple');
     define('LANG_SELECT_ALL',				 'Select all');
     define('LANG_DESELECT_ALL',				 'Deselect all');
     define('LANG_INVERT_ALL',				 'Invert');
@@ -411,6 +440,7 @@
     define('LANG_CONTENT', 					 'Contents');
     define('LANG_CATEGORY',                  'Category');
     define('LANG_CATEGORY_TITLE',            'Category title');
+    define('LANG_CATEGORY_DESCRIPTION',      'Category description');
     define('LANG_FOLDER',                    'Folder');
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');

@@ -1,7 +1,11 @@
 <?php
 
-    return array(
+return array(
 
-        'hooks' => array( 'user_profile_update' )
+    'hooks' => array(
+        'user_profile_update',
+        'frontpage',
+        'frontpage_types'
+    )
 
-    );
+);

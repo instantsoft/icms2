@@ -7,6 +7,7 @@ class formWidgetContentListOptions extends cmsForm {
 		$cats_list = array();
 		$datasets_list = array('0'=>'');
 		$fields_list = array(''=>'');
+		$parents_list = array(''=>'');
 
 		if (!empty($options['ctype_id'])){
 			$content_model = cmsCore::getModel('content');
@@ -29,6 +30,14 @@ class formWidgetContentListOptions extends cmsForm {
 			$fields = $content_model->getContentFields($ctype['name']);
 			if ($fields){ $fields_list = array(''=>'') + array_collection_to_list($fields, 'name', 'title'); }
 
+            $parents = $content_model->getContentTypeParents($options['ctype_id']);
+
+            if (is_array($parents)){
+                foreach($parents as $parent){
+                    $parents_list[$parent['id']] = "{$ctype['title']} > {$parent['ctype_title']}";
+                };
+            }
+
 		}
 
         return array(
@@ -37,6 +46,15 @@ class formWidgetContentListOptions extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_OPTIONS,
                 'childs' => array(
+
+                    new fieldList('options:widget_type', array(
+                        'title' => LANG_WD_CONTENT_WIDGET_TYPE,
+                        'default' => 'list',
+                        'items' => array(
+                            'list'    => LANG_WD_CONTENT_WIDGET_TYPE1,
+                            'related' => LANG_WD_CONTENT_WIDGET_TYPE2
+                        )
+                    )),
 
                     new fieldList('options:ctype_id', array(
                         'title' => LANG_CONTENT_TYPE,
@@ -74,6 +92,15 @@ class formWidgetContentListOptions extends cmsForm {
 							'url' => href_to('content', 'widget_datasets_ajax')
 						),
 						'items' => $datasets_list
+                    )),
+
+                    new fieldList('options:relation_id', array(
+                        'title' => LANG_WD_CONTENT_LIST_RELATION,
+						'parent' => array(
+							'list' => 'options:ctype_id',
+							'url' => href_to('content', 'widget_relations_ajax')
+						),
+						'items' => $parents_list
                     )),
 
                     new fieldList('options:image_field', array(

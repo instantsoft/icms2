@@ -627,15 +627,19 @@ class cmsUser {
 
     /**
      * Увеличивает счетчик загруженных пользователем файлов
-     * @return bool
+     * @param integer $user_id
+     * @return boolean
      */
-    public function increaseFilesCount(){
+    public function increaseFilesCount($user_id = 0){
 
-        $this->files_count++;
+        if(!$user_id){
+            $this->files_count++;
+            $user_id = $this->id;
+        }
 
         $model = new cmsModel();
 
-        $model->filterEqual('id', $this->id);
+        $model->filterEqual('id', $user_id);
 
         return $model->increment('{users}', 'files_count');
 

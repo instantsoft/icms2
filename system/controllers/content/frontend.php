@@ -125,7 +125,7 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false){
+    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
 
@@ -249,6 +249,7 @@ class content extends cmsFrontend {
             'props'             => $props,
             'props_fields'      => $props_fields,
             'filters'           => $filters,
+            'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
             'perpage'           => $perpage,
             'total'             => $total,
@@ -313,6 +314,7 @@ class content extends cmsFrontend {
                 "{$ctype['name']}/*",
             ),
             'url_mask_not' => array(
+                "{$ctype['name']}/*/view-*",
                 "{$ctype['name']}/*.html",
                 "{$ctype['name']}/add",
                 "{$ctype['name']}/add/%",
@@ -362,17 +364,36 @@ class content extends cmsFrontend {
 
         // отправляем письмо модератору
         $messenger = cmsCore::getController('messages');
-        $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
-        $letter = array('name' => 'moderation');
 
-        $messenger->sendEmail($to, $letter, array(
-            'moderator' => $moderator['nickname'],
-            'author' => $author['nickname'],
-            'author_url' => href_to_abs('users', $author['id']),
-            'page_title' => $item['title'],
-            'page_url' => href_to_abs($ctype_name, $item['slug'] . ".html"),
-            'date' => html_date_time(),
-        ));
+        // личное сообщение
+        if($moderator['is_online']){
+            $messenger->addRecipient($moderator['id'])->sendNoticePM(array(
+                'content' => LANG_MODERATION_NOTIFY,
+                'actions' => array(
+                    'view' => array(
+                        'title' => LANG_SHOW,
+                        'href'  => href_to($ctype_name, $item['slug'] . '.html')
+                    )
+                )
+            ));
+        }
+
+        // EMAIL уведомление, если не онлайн
+        if(!$moderator['is_online']){
+
+            $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
+            $letter = array('name' => 'moderation');
+
+            $messenger->sendEmail($to, $letter, array(
+                'moderator'  => $moderator['nickname'],
+                'author'     => $author['nickname'],
+                'author_url' => href_to_abs('users', $author['id']),
+                'page_title' => $item['title'],
+                'page_url'   => href_to_abs($ctype_name, $item['slug'] . '.html'),
+                'date'       => html_date_time()
+            ));
+
+        }
 
         cmsUser::addSessionMessage(sprintf(LANG_MODERATION_IDLE, $moderator['nickname']), 'info');
 
@@ -442,7 +463,7 @@ class content extends cmsFrontend {
 
         }
 
-        return $form;
+        return cmsEventsManager::hook('content_cat_form', $form);
 
     }
 
@@ -743,7 +764,10 @@ class content extends cmsFrontend {
 					'hint' => LANG_CONTENT_DATE_PUB_END_HINT,
 				)));
 			}
-			if (($action=='add' && $is_pub_end_days) || ($action=='edit' && $is_pub_ext && $is_pub_end_days)){
+            if($action=='edit'){
+                $is_expired = (strtotime($item['date_pub_end']) - time()) <= 0;
+            }
+			if (($action=='add' && $is_pub_end_days) || ($action=='edit' && $is_expired && $is_pub_ext && $is_pub_end_days)){
 				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
 				$title = $action=='add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
 				$hint = $action=='add'? false : sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end']));
@@ -755,8 +779,6 @@ class content extends cmsFrontend {
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
                     $rules[] = array('max', $pub_max_days);
-                    if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
-                    if ($action == 'edit'){ $min = 0; }
                     for($d=$min; $d<=$pub_max_days; $d++) { $days[$d] = $d; }
 					$form->addField($pub_fieldset_id, new fieldList('pub_days', array(
 						'title' => $title,
@@ -779,7 +801,7 @@ class content extends cmsFrontend {
 			}
 		}
 
-        return $form;
+        return cmsEventsManager::hook('content_item_form', $form);
 
     }
 
@@ -870,5 +892,90 @@ class content extends cmsFrontend {
 
 //============================================================================//
 //============================================================================//
+
+    public function bindItemToParents($ctype, $item, $parents = false){
+
+        if (!$parents){
+            $parents = $this->model->getContentTypeParents($ctype['id']);
+        }
+
+        foreach($parents as $parent){
+
+            $value = isset($item[$parent['id_param_name']]) ? $item[$parent['id_param_name']] : '';
+
+            $ids = array();
+
+            foreach(explode(',', $value) as $id){
+                if (!trim($id)) { continue; }
+                $ids[] = trim($id);
+            }
+
+            $parent_ctype = $this->model->getContentTypeByName($parent['ctype_name']);
+
+            $current_parents   = array();
+            $new_parents       = array();
+            $parents_to_delete = array();
+            $parents_to_add    = array();
+
+            if (!empty($item['id'])){
+                $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype['id'], $item['id']);
+            }
+
+            if ($ids){
+                $this->model->filterIn('id', $ids);
+                $new_parents = $this->model->getContentItems($parent['ctype_name']);
+            }
+
+            if ($current_parents){
+                foreach($current_parents as $id => $current_parent){
+                    if (isset($new_parents[$id])) { continue; }
+                    if (!in_array($id, $parents_to_delete)){
+                        $parents_to_delete[] = $id;
+                    }
+                }
+            }
+
+            if ($new_parents){
+                foreach($new_parents as $id => $new_parent){
+                    if (isset($current_parents[$id])) { continue; }
+                    if (!in_array($id, $parents_to_add)){
+                        $parents_to_add[] = $id;
+                    }
+                }
+            }
+
+            if ($parents_to_add){
+                foreach ($parents_to_add as $new_parent_id){
+
+                    $this->model->bindContentItemRelation(array(
+                        'parent_ctype_name' => $parent_ctype['name'],
+                        'parent_ctype_id'   => $parent_ctype['id'],
+                        'parent_item_id'    => $new_parent_id,
+                        'child_ctype_name'  => $ctype['name'],
+                        'child_ctype_id'    => $ctype['id'],
+                        'child_item_id'     => $item['id']
+                    ));
+
+                }
+            }
+
+            if ($parents_to_delete){
+                foreach ($parents_to_delete as $old_parent_id){
+
+                    $this->model->unbindContentItemRelation(array(
+                        'parent_ctype_name' => $parent_ctype['name'],
+                        'parent_ctype_id'   => $parent_ctype['id'],
+                        'parent_item_id'    => $old_parent_id,
+                        'child_ctype_name'  => $ctype['name'],
+                        'child_ctype_id'    => $ctype['id'],
+                        'child_item_id'     => $item['id']
+                    ));
+
+                }
+            }
+
+        }
+
+    }
 
 }

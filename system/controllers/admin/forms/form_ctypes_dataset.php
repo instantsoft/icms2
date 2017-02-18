@@ -31,6 +31,11 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldHtml('description', array(
                         'options' => array('editor' => cmsConfig::get('default_editor'))
                     )),
+                    new fieldText('seo_title', array(
+                        'options'=>array(
+                            'max_length'=> 256
+                        )
+                    )),
                     new fieldString('seo_keys', array(
                         'options'=>array(
                             'max_length'=> 256
@@ -52,6 +57,12 @@ class formAdminCtypesDataset extends cmsForm {
                         'show_all' => false,
                         'show_guests' => true
                     )),
+                    new fieldList('cats_view', array(
+                        'is_chosen_multiple' => true
+                    )),
+                    new fieldList('cats_hide', array(
+                        'is_chosen_multiple' => true
+                    ))
                 )
             ),
         );

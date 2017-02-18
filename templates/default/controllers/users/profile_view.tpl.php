@@ -17,13 +17,13 @@
             if ($is_friend_profile){
                 $tool_buttons['friend_delete'] = array(
                     'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete',
+                    'class' => 'user_delete ajax-modal',
                     'href' => $this->href_to('friend_delete', $profile['id'])
                 );
             } else if(!$is_friend_req) {
                 $tool_buttons['friend_add'] = array(
                     'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add',
+                    'class' => 'user_add ajax-modal',
                     'href' => $this->href_to('friend_add', $profile['id'])
                 );
             }
@@ -102,7 +102,11 @@
         <?php if ($is_friends_on && $friends) { ?>
             <div class="block">
                 <div class="block-title">
-                    <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php if($show_all_flink){ ?>
+                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php } else { ?>
+                        <?php echo LANG_USERS_FRIENDS; ?>
+                    <?php } ?>
                     (<?php echo $profile['friends_count']; ?>)
                 </div>
                 <div class="friends-list">

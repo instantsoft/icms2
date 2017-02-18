@@ -50,7 +50,6 @@
     define('LANG_PATHS_ROOT_INFO',          'Все пути указываются относительно:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'изменить');
     define('LANG_PATHS_CHANGE_INFO',        'После установки пути можно будет изменить отредактировав файл конфигурации.<br/>Не забудьте сделать это при переносе сайта с локального сервера на хостинг!');
-    define('LANG_PATHS_HTACCESS_INFO',      'Вы устанавливаете InstantCMS не в корневую папку сайта, поэтому необходимо изменить файл .htaccess. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Инструкция</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Должна быть доступна для записи');
     define('LANG_PATHS_NOT_WRITABLE',       'не доступна для записи!');
     define('LANG_PATHS_WRITABLE_HINT',      'Выставьте правильные права на эту папку');
@@ -70,6 +69,7 @@
     define('LANG_DATABASE_USER',            'Пользователь');
     define('LANG_DATABASE_PASS',            'Пароль');
     define('LANG_DATABASE_BASE',            'База данных');
+    define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
     define('LANG_DATABASE_ENGINE',          'Движок базы данных');
     define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
@@ -78,6 +78,8 @@
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Использовать имеющуюся');
     define('LANG_DATABASE_INSTALL_DEMO',    'Установить демо данные');
 
+    define('LANG_DATABASE_PREFIX_ERROR',    'Префикс БД может содержать только латинские буквы, цифры и знак подчёркивания');
+    define('LANG_DATABASE_SELECT_ERROR',    'Невозможно выбрать базу данных %s');
     define('LANG_DATABASE_CONNECT_ERROR',   "Ошибка подключения MySQL:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Ошибка импорта базы данных\nПроверьте правильность реквизитов");
     define('LANG_DATABASE_ENGINE_NO',       'Выбранный движок БД не поддерживается');

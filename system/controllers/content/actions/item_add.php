@@ -4,20 +4,27 @@ class actionContentItemAdd extends cmsAction {
 
     public function run(){
 
-        $user = cmsUser::getInstance();
+        $back_url = $this->request->get('back', '');
 
         // Получаем название типа контента
         $ctype_name = $this->request->get('ctype_name', '');
 
+        $is_check_parent_perm = false;
+
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype_name, 'add')) { cmsCore::error404(); }
+        if (!cmsUser::isAllowed($ctype_name, 'add')) {
+            if (!cmsUser::isAllowed($ctype_name, 'add_to_parent')) {
+                cmsCore::error404();
+            }
+            $is_check_parent_perm = true;
+        }
 
         // Получаем тип контента
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
         // проверяем что не превышен лимит на число записей
-        $user_items_count = $this->model->getUserContentItemsCount($ctype_name, $user->id, false);
+        $user_items_count = $this->model->getUserContentItemsCount($ctype_name, $this->cms_user->id, false);
 
         if (cmsUser::isPermittedLimitReached($ctype_name, 'limit', $user_items_count)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT, $ctype['labels']['many']), 'error');
@@ -25,7 +32,7 @@ class actionContentItemAdd extends cmsAction {
         }
 
         // Проверяем ограничение по карме
-        if (cmsUser::isPermittedLimitHigher($ctype_name, 'karma', $user->karma)){
+        if (cmsUser::isPermittedLimitHigher($ctype_name, 'karma', $this->cms_user->karma)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_KARMA_LIMIT, cmsUser::getPermissionValue($ctype_name, 'karma')), 'error');
             $this->redirectBack();
         }
@@ -46,7 +53,7 @@ class actionContentItemAdd extends cmsAction {
         if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
 
             $groups_model = cmsCore::getModel('groups');
-            $groups = $groups_model->getUserGroups($user->id);
+            $groups = $groups_model->getUserGroups($this->cms_user->id);
 
             if (!$groups && $ctype['is_in_groups_only']){
                 cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
@@ -62,8 +69,42 @@ class actionContentItemAdd extends cmsAction {
         $folders_list = array();
 
         if ($ctype['is_folders']){
-            $folders_list = $this->model->getContentFolders($ctype['id'], $user->id);
+            $folders_list = $this->model->getContentFolders($ctype['id'], $this->cms_user->id);
             $folders_list = array_collection_to_list($folders_list, 'id', 'title');
+        }
+
+        $parents = $this->model->getContentTypeParents($ctype['id']);
+
+        if ($parents){
+            foreach($parents as $parent_ctype_name => $parent){
+
+                if (!$this->request->has($parent['id_param_name'])){
+                    continue;
+                }
+
+                $parent_id = $this->request->get($parent['id_param_name'], 0, 'integer');
+                $parent_item = $parent_id ? $this->model->getContentItem($parent['ctype_name'], $parent_id) : false;
+
+                if (!cmsUser::isAllowed($ctype_name, 'add_to_parent') && !cmsUser::isAllowed($ctype_name, 'bind_to_parent')) {
+                    $form->hideField($parent['id_param_name']);
+                    continue;
+                }
+
+                if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
+                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
+                        cmsCore::error404();
+                    }
+                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_other') && $parent_item['user_id'] == $this->cms_user->id){
+                        cmsCore::error404();
+                    }
+                }
+
+                $item[$parent['id_param_name']] = $parent_id;
+                $relation_id = $parent['id'];
+
+                break;
+
+            }
         }
 
         // Получаем поля для данного типа контента
@@ -79,14 +120,19 @@ class actionContentItemAdd extends cmsAction {
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
             if (!empty($field['options']['profile_value'])){
-                $item[$field['name']] = $user->{$field['options']['profile_value']};
+                $item[$field['name']] = $this->cms_user->{$field['options']['profile_value']};
+            }
+            if (!empty($field['options']['relation_id']) && !empty($relation_id)){
+                if ($field['options']['relation_id'] != $relation_id){
+                    $form->hideField($field['name']);
+                }
             }
         }
 
-        $is_moderator = $user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $user->id);
+        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $this->cms_user->id);
         $is_premoderation = $ctype['is_premod_add'];
 
-		cmsEventsManager::hook("content_add", $ctype);
+		cmsEventsManager::hook('content_add', $ctype);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
@@ -119,6 +165,34 @@ class actionContentItemAdd extends cmsAction {
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $item);
+
+            if ($parents && $is_check_parent_perm){
+
+                $is_wrong_parent = false;
+
+                $perm = cmsUser::getPermissionValue($ctype_name, 'add_to_parent');
+
+                foreach($parents as $parent){
+                    if (!empty($item[$parent['id_param_name']])){
+                        $ids = explode(',', $item[$parent['id_param_name']]);
+                        $this->model->filterIn('id', $ids);
+                        $parent_items = $this->model->getContentItems($parent['ctype_name']);
+                        if ($parent_items){
+                            foreach($parent_items as $parent_item){
+                                if ($perm == 'to_own' && $parent_item['user']['id'] != $this->cms_user->id) {
+                                    $errors[$parent['id_param_name']] = LANG_CONTENT_WRONG_PARENT;
+                                    break;
+                                }
+                                if ($perm == 'to_other' && $parent_item['user']['id'] == $this->cms_user->id) {
+                                    $errors[$parent['id_param_name']] = LANG_CONTENT_WRONG_PARENT;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
 
 			if (!$errors){
 				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
@@ -163,9 +237,6 @@ class actionContentItemAdd extends cmsAction {
                     }
                 }
 
-                if ($ctype['is_auto_keys']){ $item['seo_keys'] = string_get_meta_keywords($item['content']); }
-                if ($ctype['is_auto_desc']){ $item['seo_desc'] = string_get_meta_description($item['content']); }
-
 				$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
 				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
@@ -185,7 +256,7 @@ class actionContentItemAdd extends cmsAction {
 					$date_pub_end_time = strtotime($item['date_pub_end']);
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
-				} else if ($is_date_pub_days_allowed && !$user->is_admin) {
+				} else if ($is_date_pub_days_allowed && !$this->cms_user->is_admin) {
 					$days = $item['pub_days'];
 					$date_pub_end_time = $date_pub_time + 60*60*24*$days;
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
@@ -203,7 +274,28 @@ class actionContentItemAdd extends cmsAction {
                 $item = cmsEventsManager::hook("content_before_add", $item);
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
 
+                // SEO параметры
+                if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
+                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                }
+                if ($ctype['is_auto_keys']){
+                    if(!empty($ctype['options']['seo_keys_pattern'])){
+                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                    } else {
+                        $item['seo_keys'] = string_get_meta_keywords($item['content']);
+                    }
+                }
+                if ($ctype['is_auto_desc']){
+                    if(!empty($ctype['options']['seo_desc_pattern'])){
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                    } else {
+                        $item['seo_desc'] = string_get_meta_description($item['content']);
+                    }
+                }
+
                 $item = $this->model->addContentItem($ctype, $item, $fields);
+
+                $this->bindItemToParents($ctype, $item, $parents);
 
                 if ($ctype['is_tags']){
                     $tags_model = cmsCore::getModel('tags');
@@ -221,8 +313,6 @@ class actionContentItemAdd extends cmsAction {
                 } else {
                     $this->requestModeration($ctype_name, $item);
                 }
-
-                $back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);
@@ -242,18 +332,19 @@ class actionContentItemAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('item_form', array(
-            'do' => 'add',
-            'parent' => isset($parent) ? $parent : false,
-            'ctype' => $ctype,
-            'item' => $item,
-            'form' => $form,
-            'props' => $props,
-            'is_moderator' => $is_moderator,
+        return $this->cms_template->render('item_form', array(
+            'do'               => 'add',
+            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : false)),
+            'parent'           => isset($parent) ? $parent : false,
+            'ctype'            => $ctype,
+            'item'             => $item,
+            'form'             => $form,
+            'props'            => $props,
+            'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
-            'is_load_props' => !isset($errors),
-            'add_cats' => isset($add_cats) ? $add_cats : array(),
-            'errors' => isset($errors) ? $errors : false
+            'is_load_props'    => !isset($errors),
+            'add_cats'         => isset($add_cats) ? $add_cats : array(),
+            'errors'           => isset($errors) ? $errors : false
         ));
 
     }

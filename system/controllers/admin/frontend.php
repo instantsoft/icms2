@@ -18,11 +18,6 @@ class admin extends cmsFrontend {
 
         parent::before($action_name);
 
-        // если для админки свой шаблон
-        if($this->cms_config->template_admin){
-            $this->cms_template->setName($this->cms_config->template_admin);
-        }
-
         $this->cms_template->setLayout('admin');
 
         $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
@@ -139,17 +134,35 @@ class admin extends cmsFrontend {
                 'title' => LANG_MODERATORS,
                 'url' => href_to($this->name, 'ctypes', array('moderators', $id)),
                 'disabled' => ($do == 'add')
-            )
-
+            ),
+            array(
+                'title' => LANG_CP_CTYPE_RELATIONS,
+                'url' => href_to($this->name, 'ctypes', array('relations', $id)),
+                'disabled' => ($do == 'add')
+            ),
         );
 
         list($ctype_menu, $do, $id) = cmsEventsManager::hook('admin_ctype_menu', array($ctype_menu, $do, $id));
 
-        if($do == 'edit'){
+        if($do != 'add'){
 
             $ctype = cmsCore::getModel('content')->getContentType($id);
 
-            list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+            if($ctype){
+
+                // проверяем, есть ли нативный контроллер и есть ли у него опции
+                if(cmsCore::isControllerExists($ctype['name'])){
+                    if(cmsCore::getController($ctype['name'])->options){
+                        $ctype_menu[] = array(
+                            'title' => LANG_CP_CONTROLLERS_OPTIONS,
+                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options'))
+                        );
+                    }
+                }
+
+                list($ctype_menu, $ctype) = cmsEventsManager::hook('admin_'.$ctype['name'].'_ctype_menu', array($ctype_menu, $ctype));
+
+            }
 
         }
 

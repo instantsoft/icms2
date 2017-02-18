@@ -44,6 +44,7 @@ class actionAdminIndex extends cmsAction {
         $extensions = get_loaded_extensions();
 
         $sysinfo = array(
+            LANG_CP_DASHBOARD_SI_ICMS  => cmsCore::getVersion(),
             LANG_CP_DASHBOARD_SI_PHP   => phpversion(),
             LANG_CP_DASHBOARD_SI_ML    => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),

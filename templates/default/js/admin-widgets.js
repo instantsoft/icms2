@@ -132,7 +132,7 @@ function widgetsSelectPage(key){
 
     }
 
-    if (page_controller!='core'){
+    if (page_controller != 'core' || page_id === '0'){
         var edit_page_url = $('#cp-widgets-layout').data('edit-page-url');
         $('.cp_toolbar .edit').show();
         $('.cp_toolbar .edit a').attr('href', edit_page_url + '/' + page_id);
@@ -160,7 +160,7 @@ function widgetsLoad(page_id){
             for (var idx in result.scheme[pos]){
 
                 var widget = result.scheme[pos][idx];
-                var widget_dom = $(document.createElement('li')).attr('bind-id', widget.id).html(widget.title);
+                var widget_dom = $(document.createElement('li')).attr('bind-id', widget.id).data('name', widget.name).html(widget.title);
 
                 if (widget.is_tab_prev){
                     widget_dom.addClass('is_tab_prev');
@@ -259,6 +259,7 @@ function widgetsAdd(id, position, widget_dom){
         }
 
         widget_dom.attr('bind-id', result.id);
+        widget_dom.data('name', result.name);
 
         widgetAddActionButtons(widget_dom);
 
@@ -275,20 +276,22 @@ function widgetsAdd(id, position, widget_dom){
 function widgetEdit(id){
 
     var edit_url = $('#cp-widgets-layout').data('edit-url');
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + ']');
 
     icms.modal.openAjax(edit_url + '/' + id, undefined, function (){
         icms.modal.setCallback('close', function(){
             icms.forms.form_changed = false;
         });
-        var w = $('.modal_form').width();
-        var h = 0;
+        var h = 0, m = false;
         $('.modal_form .form-tabs .tab').each(function(indx, element){
-            var th = $(this).height();
-            if (th > h){ if(indx){ h = (th + 125); } else { h = (th + 121); } }
+            var th = +$(this).height();
+            if (th > h){ if(indx){ h = th; m = true; } }
         });
-        $('.modal_form').parent().css({width: w+'px', height: h+'px'});
-        setTimeout(function(){ icms.modal.resize(); }, 10);
-    });
+        if(m){
+            $('.modal_form .form-tabs .tab').first().css({height: h+'px'});
+            setTimeout(function(){ icms.modal.resize(); }, 10);
+        }
+    }, widget_dom.data('name'));
 
     return false;
 

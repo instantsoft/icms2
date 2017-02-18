@@ -1,21 +1,11 @@
 <?php
-
 	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
 	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
     $this->addJS($this->getJavascriptFileName('jquery-ui'));
     $this->addCSS('templates/default/css/jquery-ui.css');
-
-	$config = cmsConfig::getInstance();
-
-	$upload_url = $this->href_to('upload', $name);
-
-	if (is_array($sizes)) {
-		$upload_url .= '?sizes=' . implode(',', $sizes);
-	}
-
 ?>
 
-<div id="widget_image_<?php echo $name; ?>" class="widget_image_multi">
+<div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_multi">
 
     <div class="data" style="display:none">
         <?php if ($images){ ?>
@@ -32,8 +22,8 @@
             <?php foreach($images as $idx => $paths){ ?>
                 <div class="preview block" rel="<?php echo $idx; ?>" data-paths="<?php html(json_encode($paths)); ?>">
 					<?php  $is_image_exists = !empty($paths); ?>
-					<?php if ($is_image_exists) { ?><img src="<?php echo $config->upload_host . '/' . end($paths); ?>" /><?php } ?>
-                    <a href="javascript:" onclick="icms.images.removeOne('<?php echo $name; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
+					<?php if ($is_image_exists) { ?><img src="<?php echo cmsConfig::get('upload_host') . '/' . reset($paths); ?>" /><?php } ?>
+                    <a href="javascript:" onclick="icms.images.removeOne('<?php echo $dom_id; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
                 </div>
             <?php } ?>
         <?php } ?>
@@ -45,7 +35,7 @@
     </div>
 
     <div class="upload block">
-        <div id="file-uploader-<?php echo $name; ?>"></div>
+        <div id="file-uploader-<?php echo $dom_id; ?>"></div>
     </div>
 
     <?php if($allow_import_link){ ?>
@@ -69,20 +59,20 @@
         <?php if($max_photos && $images && count($images)){ ?>
             icms.images.uploaded_count = <?php echo count($images); ?>;
         <?php } ?>
-        icms.images.createUploader('<?php echo $name; ?>', '<?php echo $upload_url; ?>', <?php echo $max_photos; ?>);
+        icms.images.createUploader('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', <?php echo $max_photos; ?>);
         <?php if($allow_import_link){ ?>
             $(function(){
-                $('#widget_image_<?php echo $name; ?> .image_link a').on('click', function (){
+                $('#widget_image_<?php echo $dom_id; ?> .image_link a').on('click', function (){
                     link = prompt('<?php echo LANG_PARSER_ENTER_IMAGE_LINK; ?>');
                     if(link){
-                        icms.images.uploadMultyByLink('<?php echo $name; ?>', '<?php echo $upload_url; ?>', link, <?php echo $max_photos; ?>);
+                        icms.images.uploadMultyByLink('<?php echo $dom_id; ?>', '<?php echo $upload_url; ?>', link, <?php echo $max_photos; ?>);
                     }
                     return false;
                 });
             });
         <?php } ?>
         $(function(){
-            icms.images.initSortable('<?php echo $name; ?>');
+            icms.images.initSortable('<?php echo $dom_id; ?>');
         });
     </script>
 

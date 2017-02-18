@@ -60,9 +60,9 @@ if (is_ajax_request()){
 $step_result = run_step($steps[$current_step], false);
 
 echo render('main', array(
-    'steps' => $steps,
+    'steps'            => $steps,
     'is_lang_selected' => $is_lang_selected,
-    'lang' => LANG,
-    'current_step' => $current_step,
-    'step_html' => $step_result['html']
+    'lang'             => LANG,
+    'current_step'     => $current_step,
+    'step_html'        => $step_result['html']
 ));

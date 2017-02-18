@@ -14,7 +14,9 @@ class actionGroupsGroupActivity extends cmsAction {
 
         $html = $activity_controller->renderActivityList($page_url);
 
-        return cmsTemplate::getInstance()->render('group_activity', array(
+        $group['sub_title'] = LANG_GROUPS_PROFILE_ACTIVITY;
+
+        return $this->cms_template->render('group_activity', array(
             'user'  => $this->cms_user,
             'group' => $group,
             'html'  => $html

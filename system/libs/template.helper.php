@@ -367,11 +367,13 @@ function html_gif_image($image, $size_preset='small', $alt='', $attributes = arr
  * Генерирует список опций
  * @param string $name Имя списка
  * @param array $items Массив элементов списка (значение => заголовок)
- * @param string $selected Значение выбранного элемента
+ * @param string|array $selected Значение выбранного(ых) элемента
  * @param array $attributes Массив аттрибутов тега
- * @return html
+ * @return string HTML
  */
 function html_select($name, $items, $selected = '', $attributes = array()){
+
+    $name = isset($attributes['multiple']) ? $name . '[]' : $name;
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
@@ -392,8 +394,14 @@ function html_select($name, $items, $selected = '', $attributes = array()){
                 continue;
             }
 
-            $sel = ((string) $selected === (string) $value) ? 'selected' : '';
+            if (is_array($selected)){
+                $sel = in_array($value, $selected, true) ? 'selected' : '';
+            } else {
+                $sel = ((string) $selected === (string) $value) ? 'selected' : '';
+            }
+
             $html .= "\t".'<option value="'.htmlspecialchars($value).'" '.$sel.'>'.htmlspecialchars($title).'</option>'."\n";
+
         }
     }
 

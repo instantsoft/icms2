@@ -89,8 +89,9 @@ class cmsRequest {
         return isset($this->data[$var]);
     }
 
-    public function hasInArray($array_name, $var){
-        return isset($this->data[$array_name][$var]);
+    public function hasInArray(){
+        $keys = func_get_args(); if(count($keys) === 1){ $keys = $keys[0]; }
+        return (bool)array_value_recursive($keys, $this->data);
     }
 
     public function hasInQuery($var){
@@ -114,9 +115,8 @@ class cmsRequest {
             if (!$this->has($var)) { return $default; }
             $value = $this->data[$var];
         } else {
-            $name_parts = explode(':', $var);
-            if (!$this->hasInArray($name_parts[0], $name_parts[1])) { return $default; }
-            $value = $this->data[$name_parts[0]][$name_parts[1]];
+            $value = array_value_recursive($var, $this->data);
+            if ($value === null) { return $default; }
         }
 
         if($var_type === null){

@@ -261,7 +261,7 @@ class cmsCore {
 
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
-        if (!class_exists($model_class)) {
+        if (!class_exists($model_class, false)) {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
@@ -303,7 +303,7 @@ class cmsCore {
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
-        if (!class_exists($controller_name)) {
+        if (!class_exists($controller_name, false)) {
             include_once($ctrl_file);
         }
 
@@ -313,7 +313,7 @@ class cmsCore {
             $controller_class = $controller_name;
         } else {
             $controller_class = $controller_name . '_custom';
-            if (!class_exists($controller_class)){
+            if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
         }
@@ -809,7 +809,7 @@ class cmsCore {
 
         if (isset($result['_wd_template'])) { $widget_object->setTemplate($result['_wd_template']); }
 
-        cmsTemplate::getInstance()->renderWidget($widget_object, $result);
+        return cmsTemplate::getInstance()->renderWidget($widget_object, $result);
 
     }
 
@@ -826,7 +826,9 @@ class cmsCore {
             return array(0, 1);
         }
 
-        $matched_pages = array(0);
+        $matched_pages = array();
+
+        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
         //
         // Перебираем все точки привязок и проверяем совпадение
@@ -834,22 +836,24 @@ class cmsCore {
         //
         foreach($pages as $page){
 
-            if (empty($page['url_mask'])) { continue; }
+            if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
-            $is_mask_match = false;
+            $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
-            foreach($page['url_mask'] as $mask){
-                $regular = string_mask_to_regular($mask);
-                $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+            if (!empty($page['url_mask'])) {
+                foreach($page['url_mask'] as $mask){
+                    $regular = string_mask_to_regular($mask);
+                    $regular = "/^{$regular}$/iu";
+                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                }
             }
 
             if (!empty($page['url_mask_not'])) {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 

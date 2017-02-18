@@ -24,6 +24,7 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         // скроем лишние опции для системных полей
         if ($field['is_system']) {
             $form->hideField('basic', 'hint');
+            $form->hideField('visibility', 'options:relation_id');
             $form->hideFieldset('type');
             $form->hideFieldset('group');
             $form->hideFieldset('format');
@@ -53,20 +54,20 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
 
-            $field = array_merge($defaults, $form->parse($this->request, true));
-            $errors = $form->validate($this,  $field);
+            $_field = array_merge($defaults, $form->parse($this->request, true));
+            $errors = $form->validate($this,  $_field);
 
             if (!$errors){
 
                 // если не выбрана группа, обнуляем поле группы
-                if (!$field['fieldset']) { $field['fieldset'] = null; }
+                if (!$_field['fieldset']) { $_field['fieldset'] = null; }
 
                 // если создается новая группа, то выбираем ее
-                if ($field['new_fieldset']) { $field['fieldset'] = $field['new_fieldset']; }
-                unset($field['new_fieldset']);
+                if ($_field['new_fieldset']) { $_field['fieldset'] = $_field['new_fieldset']; }
+                unset($_field['new_fieldset']);
 
                 // сохраняем поле
-                $content_model->updateContentField($ctype['name'], $field_id, $field);
+                $content_model->updateContentField($ctype['name'], $field_id, $_field);
 
                 $this->redirectToAction('ctypes', array('fields', $ctype['id']));
 
@@ -75,6 +76,8 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
             if ($errors){
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+
+                $field = array_merge($field, $_field);
 
             }
 

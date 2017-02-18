@@ -284,7 +284,7 @@ class comments extends cmsFrontend {
 
         foreach ($moderators as $moderator) {
 
-            $messenger->addRecipient($moderator['id']);
+            $messenger->clearRecipients()->addRecipient($moderator['id']);
 
             $messenger->sendNoticePM(array(
                 'content' => LANG_COMMENTS_MODERATE_NOTIFY,

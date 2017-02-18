@@ -28,7 +28,7 @@ class actionAdminUsersGroupEdit extends cmsAction {
             }
 
             if ($errors){
-            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }

@@ -28,6 +28,8 @@ class actionAdminInlineSave extends cmsAction {
 			));
 		}
 
+        $_data = array();
+
         foreach ($data as $field => $value) {
             if(!array_key_exists($field, $i)){
                 unset($data[$field]);
@@ -35,6 +37,8 @@ class actionAdminInlineSave extends cmsAction {
                 $_data[$field] = htmlspecialchars($value);
             }
         }
+
+        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save', array($data, $_data, $i));
 
         if(empty($data)){
 			$this->cms_template->renderJSON(array(

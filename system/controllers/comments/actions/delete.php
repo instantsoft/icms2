@@ -34,6 +34,8 @@ class actionCommentsDelete extends cmsAction {
             }
         }
 
+        $comment = cmsEventsManager::hook('comments_before_delete', $comment);
+
         // можем ли полностью удалять
         $is_comment_child = $this->model->getItemByField('comments', 'parent_id', $comment['id']);
         $full_delete = !$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true);

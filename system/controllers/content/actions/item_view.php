@@ -57,6 +57,16 @@ class actionContentItemView extends cmsAction {
             if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
         }
 
+        // Проверяем, что не удалено
+        if ($item['is_deleted']){
+
+            $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+
+            if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
+
+        }
+
         // Проверяем приватность
         if ($item['is_private'] == 1){ // доступ только друзьям
 
@@ -109,6 +119,103 @@ class actionContentItemView extends cmsAction {
 
         if ($ctype['is_cats'] && $item['category_id'] > 1){
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+        }
+
+        $childs = array(
+            'relations' => $this->model->getContentTypeChilds($ctype['id']),
+            'to_add'    => array(),
+            'to_bind'   => array(),
+            'tabs'      => array(),
+            'items'     => array()
+        );
+
+        if ($childs['relations']){
+
+            $model = cmsCore::getModel('content');
+
+            foreach($childs['relations'] as $relation){
+
+                $model->resetFilters();
+
+                $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
+                $is_allowed_to_add = ($perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id))) || $this->cms_user->is_admin;
+
+                $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'bind_to_parent');
+                $is_allowed_to_bind = ($perm && (
+                                        ($perm == 'all_to_all' || $perm == 'own_to_all' || $perm == 'other_to_all') ||
+                                        (($perm == 'all_to_own' || $perm == 'own_to_own' || $perm == 'other_to_own') && $item['user_id'] == $this->cms_user->id) ||
+                                        (($perm == 'all_to_other' || $perm == 'own_to_other' || $perm == 'other_to_other') && $item['user_id'] != $this->cms_user->id)
+                                    )) || $this->cms_user->is_admin;
+
+                if ($is_allowed_to_add) {
+                    $childs['to_add'][] = $relation;
+                }
+                if ($is_allowed_to_bind) {
+                    $childs['to_bind'][] = $relation;
+                }
+
+                $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
+                            "r.parent_item_id = {$item['id']} AND ".
+                            "r.child_ctype_id = {$relation['child_ctype_id']} AND ".
+                            "r.child_item_id = i.id";
+
+                $model->joinInner('content_relations_bind', 'r', $filter);
+
+                $count = $model->getContentItemsCount($relation['child_ctype_name']);
+
+                $is_hide_empty = $relation['options']['is_hide_empty'];
+
+                if (($count || !$is_hide_empty) && $relation['layout'] == 'tab'){
+
+                    $childs['tabs'][] = array(
+                        'title'   => $relation['title'],
+                        'url'     => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
+                        'counter' => $count
+                    );
+
+                }
+
+                if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] == 'list'){
+
+                    $child_ctype = $model->getContentTypeByName($relation['child_ctype_name']);
+
+                    if (!empty($relation['options']['limit'])){
+                        $child_ctype['options']['limit'] = $relation['options']['limit'];
+                    }
+
+                    if (!empty($relation['options']['is_hide_filter'])){
+                        $child_ctype['options']['list_show_filter'] = false;
+                    }
+
+                    $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
+                                "r.parent_item_id = {$item['id']} AND ".
+                                "r.child_ctype_id = {$child_ctype['id']} AND ".
+                                "r.child_item_id = i.id";
+
+                    $this->model->joinInner('content_relations_bind', 'r', $filter);
+
+                    $childs['lists'][] = array(
+                        'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
+                        'ctype_name' => $relation['child_ctype_name'],
+                        'html'       => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
+                    );
+
+                }
+
+            }
+
+            list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs, $item));
+
+        }
+
+        if ($this->request->has('child_ctype_name')){
+            $child_ctype_name = $this->request->get('child_ctype_name', '');
+            return $this->runAction('item_childs_view', array(
+                'ctype'            => $ctype,
+                'item'             => $item,
+                'child_ctype_name' => $child_ctype_name,
+                'childs'           => $childs
+            ));
         }
 
         // Получаем поля для данного типа контента
@@ -184,7 +291,8 @@ class actionContentItemView extends cmsAction {
             'props_values' => $props_values,
             'item'         => $item,
             'is_moderator' => $is_moderator,
-            'user'         => $this->cms_user
+            'user'         => $this->cms_user,
+            'childs'       => $childs,
         ));
 
     }

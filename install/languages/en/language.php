@@ -50,7 +50,6 @@
     define('LANG_PATHS_ROOT_INFO',          'All paths are relative to:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'edit');
     define('LANG_PATHS_CHANGE_INFO',        'You will be able to edit the paths in the configuration file later.<br/>Do not forget to do it after migration from local server to hosting!');
-    define('LANG_PATHS_HTACCESS_INFO',      'You are installing InstantCMS not to the root folder; that is why you need to edit the .htaccess file. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Manual</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Must be writable');
     define('LANG_PATHS_NOT_WRITABLE',       'not writable!');
     define('LANG_PATHS_WRITABLE_HINT',      'Set correct permissions for the folder');
@@ -70,6 +69,7 @@
     define('LANG_DATABASE_USER',            'Username');
     define('LANG_DATABASE_PASS',            'Password');
     define('LANG_DATABASE_BASE',            'Database');
+    define('LANG_DATABASE_BASE_HINT',       'Create if not exists');
     define('LANG_DATABASE_ENGINE',          'Database engine');
     define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
@@ -78,6 +78,8 @@
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Use an existing table');
     define('LANG_DATABASE_INSTALL_DEMO',    'Install demo content');
 
+    define('LANG_DATABASE_PREFIX_ERROR',    'Database prefix can contain only letters, numbers, and underscores');
+    define('LANG_DATABASE_SELECT_ERROR',    'Unable to select the "%s" database');
     define('LANG_DATABASE_CONNECT_ERROR',   "MySQL Connection Error:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Database import error\nCheck provided details");
     define('LANG_DATABASE_ENGINE_NO',       'Database engine is not supported');

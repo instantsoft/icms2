@@ -14,29 +14,17 @@
         $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
     }
 
-    if ($parent){
-
-        if ($parent['ctype']['options']['list_on']){
-            $this->addBreadcrumb($parent['ctype']['title'], href_to($parent['ctype']['name']));
-        }
-
-        $this->addBreadcrumb($parent['item']['title'], href_to($parent['ctype']['name'], $parent['item']['slug'].'.html'));
-
-    }
-
-    $back_url = $this->controller->request->get('back');
-
     $this->addToolButton(array(
         'class' => 'save',
         'title' => LANG_SAVE,
         'href'  => "javascript:icms.forms.submit()"
     ));
 
-    if ($ctype['options']['list_on']){
+    if ($cancel_url){
         $this->addToolButton(array(
             'class' => 'cancel',
             'title' => LANG_CANCEL,
-            'href'  => $back_url ? $back_url : href_to($ctype['name'])
+            'href'  => $cancel_url
         ));
     }
 
@@ -51,6 +39,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
+        'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(
@@ -71,7 +60,7 @@
 
 <?php if ($is_multi_cats) { ?>
 	<div class="content_multi_cats_data">
-        <?php echo html_select('add_cats[]', array(), '', array('multiple'=>true)); ?>
+        <?php echo html_select('add_cats', array(), '', array('multiple'=>true)); ?>
 	</div>
 <?php } ?>
 

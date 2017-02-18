@@ -12,7 +12,13 @@ class onContentCronPublication extends cmsAction {
 
 			if (!$ctype['is_date_range']) { continue; }
 
-            $pub_items = $this->model->filterNotEqual('is_pub', 1)->filter('i.date_pub <= NOW()')->get($this->model->table_prefix.$ctype['name']);
+            $pub_items = $this->model->filterNotEqual('is_pub', 1)->filter('i.date_pub <= NOW()')->
+                    filterStart()->
+                        filter('i.date_pub_end > NOW()')->
+                        filterOr()->
+                        filterIsNull('i.date_pub_end')->
+                    filterEnd()->
+                    get($this->model->table_prefix.$ctype['name']);
 
             if($pub_items){
                 $this->model->publishDelayedContentItems($ctype['name']);
@@ -21,6 +27,8 @@ class onContentCronPublication extends cmsAction {
 
             if($ctype['options']['is_date_range_process'] === 'delete') {
                 $this->model->deleteExpiredContentItems($ctype['name']);
+            } elseif($ctype['options']['is_date_range_process'] === 'in_basket') {
+                $this->model->toTrashExpiredContentItems($ctype['name']);
             } else {
                 $this->model->hideExpiredContentItems($ctype['name']);
             }

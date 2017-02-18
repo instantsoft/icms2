@@ -53,12 +53,6 @@
 
 </form>
 
-<?php if ($is_subfolder){ ?>
-    <p class="warning">
-        <?php echo LANG_PATHS_HTACCESS_INFO ?>
-    </p>
-<?php } ?>
-
 <p><?php echo LANG_PATHS_CHANGE_INFO ?></p>
 
 <div class="buttons">

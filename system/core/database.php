@@ -101,6 +101,10 @@ class cmsDatabase {
             $this->mysqli->query("SET sql_mode=''");
         }
 
+        if(defined('LC_LANGUAGE_TERRITORY')){
+            $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
+        }
+
         $this->setTimezone();
 
 		$this->prefix = $config->db_prefix;
@@ -157,7 +161,7 @@ class cmsDatabase {
 	 * @return string
 	 */
 	public function escape($string){
-		return @$this->mysqli->real_escape_string($string);
+		return $this->mysqli->real_escape_string($string);
 	}
 
     /**
@@ -410,15 +414,13 @@ class cmsDatabase {
 	 * @param array $update_data Массив данных для обновления при совпадении ключей
 	 * @return bool
 	 */
-	public function insertOrUpdate($table, $data, $update_data=false){
+	public function insertOrUpdate($table, $data, $update_data = false){
 
         $fields = array();
         $values = array();
         $set    = array();
 
-        if (!$update_data) { $update_data = $data; }
-
-        if (is_array($data) && is_array($update_data)){
+        if (is_array($data)){
 
 			foreach ($data as $field => $value){
 
@@ -427,6 +429,10 @@ class cmsDatabase {
                 $fields[] = "`$field`";
                 $values[] = $value;
 
+                if($update_data === false){
+                    $set[] = "`{$field}` = {$value}";
+                }
+
 			}
 
             $fields = implode(', ', $fields);
@@ -434,12 +440,14 @@ class cmsDatabase {
 
 			$sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
-            foreach ($update_data as $field=>$value) {
+            if(is_array($update_data)){
+                foreach ($update_data as $field=>$value) {
 
-                $value = $this->prepareValue($field, $value);
+                    $value = $this->prepareValue($field, $value);
 
-                $set[] = "`{$field}` = {$value}";
+                    $set[] = "`{$field}` = {$value}";
 
+                }
             }
 
             $set = implode(', ', $set);
@@ -722,6 +730,7 @@ class cmsDatabase {
                   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                   `parent_id` int(11) UNSIGNED DEFAULT NULL,
                   `title` varchar(200) NULL DEFAULT NULL,
+                  `description` text NULL DEFAULT NULL,
                   `slug` varchar(255) NULL DEFAULT NULL,
                   `slug_key` varchar(255) NULL DEFAULT NULL,
                   `seo_keys` varchar(256) DEFAULT NULL,

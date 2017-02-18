@@ -232,7 +232,7 @@ icms.messages = (function ($) {
             $('textarea', form).prop('disabled', false);
 
             if (!result.error){
-                $('textarea', form).val('');
+                $('textarea', form).val('').focus();
                 icms.messages.addMessage(result);
             } else {
                 if (result.message.length){
@@ -515,6 +515,38 @@ icms.messages = (function ($) {
 
     };
 
+    this.noticeClear = function(){
+
+        this.confirm(LANG_PM_CLEAR_NOTICE_CONFIRM, function (success){
+
+            if(!success){ return false; }
+
+            var pm_notices_window = $('#pm_notices_window');
+            var url = pm_notices_window.data('action-url');
+
+            $.post(url, {action_name: 'clear_notice'}, function(result) {
+
+                if (result.error) {
+                    return false;
+                }
+
+                $('.item', pm_notices_window).not('.has_actions').fadeOut('fast', function(){
+                    $(this).remove();
+                    var count = $('.item', pm_notices_window).length;
+                    icms.messages.setNoticesCounter(count);
+                    if (count==0){icms.modal.close();} else {icms.modal.resize();}
+                });
+
+            }, 'json');
+
+            return true;
+
+        });
+
+        return false;
+
+    };
+
     this.setNoticesCounter = function(value){
 
         var button = $('li.notices-counter');
@@ -524,6 +556,8 @@ icms.messages = (function ($) {
         if (value > 0){
             var html = '<span class="counter">' + value + '</span>';
             $('a', button).append(html);
+        } else {
+            $(button).remove();
         }
 
     };

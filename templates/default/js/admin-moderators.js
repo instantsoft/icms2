@@ -33,13 +33,15 @@ icms.adminModerators = (function ($) {
             $('#ctype_moderators_list #datagrid tr').removeClass('odd');
             $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
 
+            icms.modal.bind('a.ajax-modal');
+
             icms.events.run('admin_moderators_add', result);
 
         }, 'json');
 
         return false;
 
-    }
+    };
 
     //====================================================================//
 
@@ -58,7 +60,7 @@ icms.adminModerators = (function ($) {
                 return false;
             }
 
-            list_item.fadeOut(500, function(){
+            list_item.fadeOut('fast', function(){
                 $(this).remove();
                 $('#ctype_moderators_list #datagrid tr').removeClass('odd');
                 $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
@@ -70,7 +72,7 @@ icms.adminModerators = (function ($) {
 
         }, 'json');
 
-    }
+    };
 
     //====================================================================//
 

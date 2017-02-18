@@ -16,12 +16,6 @@
     if ($do=='edit'){
         $this->addBreadcrumb($ctype['title']);
         $this->addMenuItems('ctype', $this->controller->getCtypeMenu('edit', $id));
-        if($is_controller){
-            $this->addMenuItem('ctype', array(
-                'title' => LANG_CP_CONTROLLERS_OPTIONS,
-                'url'   => $this->href_to('controllers', array('edit', $ctype['name'], 'options'))
-            ));
-        }
     }
 
     $this->addToolButton(array(
@@ -59,5 +53,26 @@
             $('#f_url_pattern .prefix').html('/'+$(this).val()+'/');
         });
         $('#f_url_pattern .prefix').html('/'+$('#f_name .input').val()+'/');
+        $('#options_is_manual_title').on('click', function (){
+            if($(this).is(':checked')){
+                $('#f_options_seo_title_pattern').hide();
+            } else {
+                $('#f_options_seo_title_pattern').show();
+            }
+        }).triggerHandler('click');
+        $('#is_auto_keys').on('click', function (){
+            if($(this).is(':checked')){
+                $('#f_options_seo_keys_pattern').show();
+            } else {
+                $('#f_options_seo_keys_pattern').hide();
+            }
+        }).triggerHandler('click');
+        $('#is_auto_desc').on('click', function (){
+            if($(this).is(':checked')){
+                $('#f_options_seo_desc_pattern').show();
+            } else {
+                $('#f_options_seo_desc_pattern').hide();
+            }
+        }).triggerHandler('click');
     });
 </script>

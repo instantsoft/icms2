@@ -20,9 +20,9 @@ class actionAdminWidgetsLoad extends cmsAction {
 
         $scheme = $widgets_model->getWidgetBindingsScheme($page_id, $template);
 
-        cmsTemplate::getInstance()->renderJSON(array(
-            'is_exists' => ($scheme!==false),
-            'scheme' => $scheme
+        $this->cms_template->renderJSON(array(
+            'is_exists' => ($scheme !== false),
+            'scheme'    => $scheme
         ));
 
     }
