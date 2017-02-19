@@ -90,7 +90,7 @@ class actionUsersProfileEdit extends cmsAction {
                 $this->model->updateUser($profile['id'], $profile);
 
                 // Отдельно обновляем часовой пояс в сессии
-                cmsUser::sessionSet('user_data:time_zone', $profile['time_zone']);
+                cmsUser::sessionSet('user:time_zone', $profile['time_zone']);
 
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){

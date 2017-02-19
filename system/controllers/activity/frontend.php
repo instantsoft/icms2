@@ -42,15 +42,17 @@ class activity extends cmsFrontend {
             $entry['type_id'] = $type['id'];
         }
 
+        $hook_start_name = 'activity_'.$controller.'_'.str_replace('.', '_', $name);
+
         $entry = cmsEventsManager::hook('activity_before_add', $entry);
         if($entry === false){ return false; }
-        $entry = cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_before_add', $entry);
+        $entry = cmsEventsManager::hook($hook_start_name.'_before_add', $entry);
         if($entry === false){ return false; }
 
         $entry['id'] = $this->model->addEntry($entry);
 
         cmsEventsManager::hook('activity_after_add', $entry);
-        cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_after_add', $entry);
+        cmsEventsManager::hook($hook_start_name.'_after_add', $entry);
 
         return $entry['id'];
 

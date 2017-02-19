@@ -827,8 +827,8 @@ class cmsTemplate {
         $output = '';
 
         foreach($phrases as $phrase){
-            $value = htmlspecialchars(constant($phrase));
-            $output .= "var {$phrase} = '{$value}';";
+            $value = var_export(htmlspecialchars(constant($phrase)), true);
+            $output .= "var {$phrase} = {$value};";
         }
 
         return $output;

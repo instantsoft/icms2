@@ -14,6 +14,9 @@ class actionContentItemAdd extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype_name, 'add')) {
             if (!cmsUser::isAllowed($ctype_name, 'add_to_parent')) {
+                if(!$this->cms_user->is_logged){
+                    cmsUser::goLogin();
+                }
                 cmsCore::error404();
             }
             $is_check_parent_perm = true;
