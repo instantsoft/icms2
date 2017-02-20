@@ -231,8 +231,9 @@ class cmsUploader {
             $destination = $this->getUploadDestinationDirectory();
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
-            $this->file_name = $dest_name;
         }
+
+        $this->file_name = pathinfo($dest_name, PATHINFO_FILENAME);
 
         $destination .= $this->getFileName($destination, $dest_ext);
 
