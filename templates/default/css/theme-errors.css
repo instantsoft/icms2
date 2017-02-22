@@ -12,7 +12,7 @@ button, input, select, textarea {
 a, a.ajaxlink { color: #2980b9; }
 a:hover, a.ajaxlink:hover { color: #d35400; }
 
-#error404{
+#error404, #error403 {
     width:300px;
     height:300px;
     background:#EDEDED;
@@ -26,17 +26,23 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
 }
 
 #error404 h1,
-#error404 h2{
+#error404 h2,
+#error403 h1,
+#error403 h2 {
     margin:0;
     padding: 0;
 }
 
-#error404 h1{
+#error404 h1 {
     font-size:150px;
     color:#bbb;
 }
 
-#error404 h2{
+#error403 h1 {
+    font-size:150px;
+}
+
+#error404 h2 {
     color:#666;
 }
 
@@ -47,11 +53,34 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
     color:#333;
 }
 
+#error403 a {
+    color:#bdc3c7;
+}
+#error403 a:hover {
+    color:#ecf0f1;
+}
+
 #error404 form {
     margin-top: 15px;
 }
-#error404 p {
+#error404 p, #error403 p {
     margin-top: 10px;
+}
+
+#error403 h3 {
+    font-size: 16px;
+    margin: 20px 0 15px;
+}
+
+#error403 {
+    background: #3498db;
+    color: #fff;
+    height: 350px;
+    width: 350px;
+}
+
+#body403 .login_form > h3 {
+    display: none;
 }
 
 #error-maintenance{

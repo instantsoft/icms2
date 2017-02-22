@@ -573,6 +573,7 @@ aside .menu .item, section .menu .item {
 }
 .modal_padding h3, .modal_padding h2  {
     margin-top: 5px;
+    white-space: nowrap;
 }
 /* Media Queries ============================================================ */
 

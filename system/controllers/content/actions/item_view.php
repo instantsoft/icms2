@@ -49,7 +49,8 @@ class actionContentItemView extends cmsAction {
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
         if (!$item['is_approved']){
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
+            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
         }
 
         // Проверяем публикацию

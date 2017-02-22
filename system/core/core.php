@@ -895,6 +895,28 @@ class cmsCore {
     }
 
     /**
+     * Показывает сообщение об ошибке 403 и завершает работу
+     */
+    public static function errorForbidden($message = '', $show_login_link = false){
+
+		cmsEventsManager::hook('error_403', self::getInstance()->uri);
+
+        if(ob_get_length()) { ob_end_clean(); }
+
+        header("HTTP/1.0 403 Forbidden");
+        header("HTTP/1.1 403 Forbidden");
+        header("Status: 403 Forbidden");
+
+        cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
+            'message'         => $message,
+            'show_login_link' => $show_login_link
+        ));
+
+        die();
+
+    }
+
+    /**
      * Показывает сообщение об ошибке 404 и завершает работу
      */
     public static function error404(){

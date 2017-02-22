@@ -25,12 +25,12 @@
                 $item['ctype'] = $ctype;
                 $is_private    = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
                 $stop = 0;
-                $preset = $fields['photo']['options']['size_teaser'];
             ?>
 
             <div class="tile <?php echo $ctype['name']; ?>_list_item<?php if (!empty($item['is_vip'])){ ?> is_vip<?php } ?>">
 
                 <?php if (isset($fields['photo']) && $fields['photo']['is_in_list'] && !empty($item['photo'])){ ?>
+                    <?php $preset = $fields['photo']['options']['size_teaser']; ?>
                     <div class="photo">
                         <?php if ($fields['date_pub']['is_in_list']){ ?>
                             <div class="note" title="<?php echo $fields['date_pub']['title']; ?>">
