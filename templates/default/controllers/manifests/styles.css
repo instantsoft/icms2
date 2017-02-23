@@ -1,0 +1,45 @@
+.hooks_delete,
+.hooks_add {
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.hooks_add {
+    border: 1px solid green;
+}
+.hooks_delete {
+    border: 1px solid red;
+}
+
+.hooks_delete_title,
+.hooks_add_title {
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.hooks_add_title {
+    color: green;
+}
+
+.hooks_delete_title {
+    color: red;
+}
+
+.allow_hooks {
+    margin-bottom: 15px;
+    color: green;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.controller_name {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+
+}
+
+.event_name {
+    padding-left: 25px;
+}
