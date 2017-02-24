@@ -1,8 +1,8 @@
 <?php
-    $config = cmsConfig::getInstance();
     $user = cmsUser::getInstance();
     $updater = new cmsUpdater();
     $update = $updater->checkUpdate(true);
+    $notices_count = cmsCore::getModel('messages')->getNoticesCount($user->id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,6 +19,7 @@
     <?php $this->addMainJS('templates/default/js/jquery-modal.js'); ?>
     <?php $this->addMainJS('templates/default/js/core.js'); ?>
     <?php $this->addMainJS('templates/default/js/modal.js'); ?>
+    <?php $this->addMainJS("templates/default/js/messages.js"); ?>
     <?php $this->head(false); ?>
 </head>
 <body>
@@ -42,6 +43,13 @@
             </ul>
             <ul id="right_links">
                 <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
+                <?php if($notices_count){ ?>
+                    <li class="bell ajax-modal notices-counter">
+                        <a href="<?php echo href_to('messages', 'notices'); ?>">
+                            <span class="wrap"><?php echo LANG_ADMIN_NOTICES; ?><span class="counter"><?php echo $notices_count; ?></span></span>
+                        </a>
+                    </li>
+                <?php } ?>
                 <li><a href="<?php echo LANG_HELP_URL; ?>"><?php echo LANG_HELP; ?></a></li>
                 <li><a href="<?php echo href_to_home(); ?>"><?php echo LANG_CP_BACK_TO_SITE; ?></a></li>
                 <li><a href="<?php echo href_to('auth', 'logout'); ?>" class="logout"><?php echo LANG_LOG_OUT; ?></a></li>

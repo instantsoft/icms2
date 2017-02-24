@@ -12,9 +12,11 @@ class admin extends cmsFrontend {
 
     public function before($action_name) {
 
+        if (!cmsUser::isLogged()) { cmsCore::errorForbidden('', true); }
+
         if (!cmsUser::isAdmin()) { cmsCore::error404(); }
 
-        if(!$this->isAllowByIp()){ cmsCore::error404(); }
+        if(!$this->isAllowByIp()){ cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP); }
 
         parent::before($action_name);
 

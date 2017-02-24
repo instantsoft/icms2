@@ -100,6 +100,18 @@ icms.forms = (function ($) {
 
     this.submitted = false;
     this.form_changed = false;
+    this.csrf_token = false;
+
+    this.getCsrfToken = function (){
+        if(this.csrf_token === false){
+            this.csrf_token = $('meta[name="csrf-token"]').attr('content');
+        }
+        return this.csrf_token;
+    };
+
+    this.setCsrfToken = function (csrf_token){
+        this.csrf_token = csrf_token;
+    };
 
     this.initUnsaveNotice = function(){
 

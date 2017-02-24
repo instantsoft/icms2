@@ -40,6 +40,11 @@ function grid_users($controller){
             'width' => 130,
             'filter' => 'like',
             'handler' => function($value){
+                if(!$value){
+                    return '';
+                } elseif(strpos($value, '127.') === 0){
+                    return $value;
+                }
                 return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
             }
         ),

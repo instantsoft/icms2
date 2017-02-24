@@ -6,6 +6,10 @@ class actionAdminCtypesRelationsDelete extends cmsAction {
 
         if (!$relation_id) { cmsCore::error404(); }
 
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
+
         $content_model = cmsCore::getModel('content');
 
         $relation = $content_model->getContentRelation($relation_id);

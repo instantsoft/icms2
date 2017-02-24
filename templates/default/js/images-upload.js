@@ -117,7 +117,9 @@ icms.images = (function ($) {
             action: upload_url,
             multiple: false,
             debug: false,
-
+            showMessage: function(message){
+                icms.modal.alert(message);
+            },
             onSubmit: function(id, fileName){
                 var ftitle = $('#title').val();
                 if(ftitle){

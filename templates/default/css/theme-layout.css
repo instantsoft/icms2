@@ -75,7 +75,15 @@ header .menu > li > a {
     text-decoration: none;
     font-size: 12px;
 }
-
+header .menu > li > a span.wrap > span.counter {
+    margin: 0 0 0 5px;
+}
+header .menu > li > a span.wrap > span.counter:before {
+    content: '(';
+}
+header .menu > li > a span.wrap > span.counter:after {
+    content: ')';
+}
 header .menu > li > a:hover {
     color:#FFF;
 }

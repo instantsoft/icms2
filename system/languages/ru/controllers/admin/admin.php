@@ -579,3 +579,5 @@
     define('LANG_ZIP_ERROR_5', 'Ошибка чтения');
     define('LANG_ZIP_ERROR_4', 'Ошибка поиска');
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Внимание! Пакет заменяет некоторые системные файлы CMS. Не рекомендуется продолжать установку, если разработчик пакета Вам неизвестен.');
+    define('LANG_ADMIN_NOTICES', 'Уведомления');
+    define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Доступ с вашего ip адреса ограничен');

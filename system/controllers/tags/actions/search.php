@@ -51,6 +51,7 @@ class actionTagsSearch extends cmsAction {
 
         $page_url = array(
             'base'   => href_to($this->name, 'search', array($ctype_name)),
+            'first'  => href_to($this->name, 'search', array($ctype_name)),
             'cancel' => href_to($this->name, 'search', array($ctype_name)).'?q='.urlencode($query)
         );
 

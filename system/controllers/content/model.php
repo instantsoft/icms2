@@ -2156,7 +2156,7 @@ class modelContent extends cmsModel{
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
 
-        return $this->get($table_name);
+        return $this->get($table_name, false, false);
 
     }
 

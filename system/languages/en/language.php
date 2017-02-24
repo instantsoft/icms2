@@ -109,6 +109,10 @@
     define('LANG_PARSER_URL',                'Link');
     define('LANG_PARSER_URL_REDIRECT',       'Links through a redirect');
     define('LANG_PARSER_URL_AUTO_HTTP',      'Add http:// automatically');
+    define('LANG_PARSER_URL_NOFOLLOW',       'Add rel="nofollow" attribute');
+    define('LANG_PARSER_URL_CSS_CLASS',      'Link CSS class');
+    define('LANG_PARSER_URL_TITLE',          'Set link title option');
+    define('LANG_PARSER_URL_TITLE_HINT',     'To display the link title, enter its name through the sign "|", for example: http://google.com|Google');
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');

@@ -139,8 +139,8 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 #cp_top_line ul li:hover { background-color: #444; }
 #cp_top_line ul li:last-child { border:none; }
 
-#cp_top_line ul li a{ color:#999; }
-#cp_top_line ul li a:hover { color:#F90; }
+#cp_top_line ul li a{ color:#999; display: inline-block; height: 100%; text-decoration: none; }
+#cp_top_line ul li a:hover, #cp_top_line ul li.notices-counter a { color:#F90; }
 
 #cp_top_line #left_links{ float:left; }
 #cp_top_line #right_links{ float:right; }
@@ -148,7 +148,15 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 #cp_top_line a.logout {
     color:#6FB8F1;
 }
-
+span.wrap > span.counter {
+    margin: 0 0 0 5px;
+}
+span.wrap > span.counter:before {
+    content: '(';
+}
+span.wrap > span.counter:after {
+    content: ')';
+}
 #cp_top_line a.user{
     display: block;
     height: 35px;
@@ -1673,7 +1681,62 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     color:#666;
     line-height: 21px;
 }
-
+/* notices */
+#pm_notices_window {
+    width:550px;
+    overflow: auto;
+    height: 100%;
+}
+#pm_notices_list {
+    padding:5px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+#pm_notices_list .item{
+    overflow: hidden;
+    border: solid 1px #BDC3C7;
+    background:#e1ebef;
+    padding:5px;
+    color:#34495e;
+    margin-bottom: 6px;
+}
+#pm_notices_list .item:last-child{
+    margin-bottom: 0;
+}
+#pm_notices_list .item .date{
+    color:#BDC3C7;
+    font-size:11px;
+    padding-left:10px;
+    padding-top:10px;
+}
+#pm_notices_list .item .content{
+    padding:10px;
+    padding-top:3px;
+}
+#pm_notices_list .item .close-button {
+    float:right;
+}
+#pm_notices_list .item .close-button a {
+    display:block;
+    width:16px;
+    height:16px;
+    background: url("../../images/icons/close.png") no-repeat;
+}
+#pm_notices_list .item .close-button a:hover {
+    background-position-x: -16px;
+}
+#pm_notices_list .item .buttons{
+    padding:10px;
+    padding-top: 0;
+}
+#pm_notices_list .item .buttons .button{
+    border-color:#BDC3C7;
+}
+#pm_notices_window > input.button {
+    border-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
 
 /* City Selection Window ================================================= */
 

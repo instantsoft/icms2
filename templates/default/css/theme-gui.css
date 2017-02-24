@@ -1301,7 +1301,16 @@ form .ft_parent a.add {
 	font-size:12px;
 	color:#666;
 }
-
+#comments_list .content ul li, #comments_list .preview_box ul li {
+    list-style-type: disc;
+    margin-left:25px;
+}
+#comments_list .content ol, #comments_list .preview_box ol {
+    padding-left: 25px;
+}
+#comments_list .content ol li, #comments_list .preview_box ol li {
+    list-style-type: decimal;
+}
 /* Profile Wall Widget ====================================================== */
 
 #wall_widget {

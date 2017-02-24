@@ -579,3 +579,5 @@
     define('LANG_ZIP_ERROR_5', 'Read error');
     define('LANG_ZIP_ERROR_4', 'Seek error');
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');
+    define('LANG_ADMIN_NOTICES', 'Notifications');
+    define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Access from your ip address is restricted');

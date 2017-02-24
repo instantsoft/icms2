@@ -6,6 +6,10 @@ class actionAdminControllersDelete extends cmsAction {
 
         if (!$controller_name) { cmsCore::error404(); }
 
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
+
         $controller_info = $this->model->getControllerInfo($controller_name);
         if (!$controller_info || !$controller_info['is_external']) { cmsCore::error404(); }
 
