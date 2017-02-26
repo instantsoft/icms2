@@ -75,7 +75,7 @@ class images extends cmsFrontend {
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $this->cms_template->renderJSON($result);
         }
@@ -137,7 +137,7 @@ class images extends cmsFrontend {
 		}
 
 		if (!in_array('original', $sizes, true)){
-			unlink($result['path']);
+			files_delete_file($result['path'], 2);
 		}
 
         if ($this->request->isInternal()){
@@ -166,7 +166,7 @@ class images extends cmsFrontend {
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $result;
         }
@@ -198,7 +198,7 @@ class images extends cmsFrontend {
 
 		$result['image'] = $image;
 
-		@unlink($result['path']);
+		files_delete_file($result['path'], 2);
         unset($result['path']);
 
         return $result;

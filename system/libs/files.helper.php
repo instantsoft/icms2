@@ -56,6 +56,38 @@ function files_clear_directory($directory){
 }
 
 /**
+ * Удаляет файл и его родительские директории
+ * @param string $file_path Отностительный или полный путь к файлу
+ * @param integer $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
+ * @return boolean
+ */
+function files_delete_file($file_path, $delete_parent_dir = 0) {
+
+    if(!is_file($file_path)){
+        $file_path = cmsConfig::get('upload_path') . $file_path;
+    }
+
+    $success = @unlink($file_path);
+
+    if($delete_parent_dir && $success){
+
+        $parent_dir = pathinfo($file_path, PATHINFO_DIRNAME);
+
+        for ($i = 1; $i <= $delete_parent_dir; $i++) {
+
+            if(!@rmdir($parent_dir)){ break; }
+
+            $parent_dir = pathinfo($parent_dir, PATHINFO_DIRNAME);
+
+        }
+
+    }
+
+    return $success;
+
+}
+
+/**
  * Возвращает дерево каталогов и файлов по указанному пути в виде
  * рекурсивного массива
  * @param string $path

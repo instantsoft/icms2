@@ -106,7 +106,7 @@ class fieldImages extends cmsFormField {
         foreach($old_value as $old_image){
             if (!is_array($value) || !in_array($old_image, $value)){
                 foreach($old_image as $size => $image_rel_path){
-                    $this->deleteImage($image_rel_path);
+                    files_delete_file($image_rel_path, 2);
                 }
             }
         }
@@ -129,7 +129,7 @@ class fieldImages extends cmsFormField {
             foreach($image as $size => $image_rel_path){
                 // удаляем ненужные пресеты, если умельцы правили параметры вручную
                 if (!in_array($size, $sizes)){
-                    $this->deleteImage($image_rel_path); unset($image[$size]);
+                    files_delete_file($image_rel_path, 2); unset($image[$size]);
                 }
             }
             $result[$key] = $image;
@@ -160,16 +160,12 @@ class fieldImages extends cmsFormField {
 
         foreach($value as $images){
             foreach($images as $image_rel_path){
-                $this->deleteImage($image_rel_path);
+                files_delete_file($image_rel_path, 2);
             }
         }
 
         return true;
 
-    }
-
-    private function deleteImage($image_rel_path) {
-        @unlink(cmsConfig::get('upload_path').$image_rel_path);
     }
 
     public function getFilterInput($value=false) {

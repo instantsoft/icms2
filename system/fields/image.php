@@ -101,16 +101,13 @@ class fieldImage extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $config = cmsConfig::getInstance();
-
         if (!is_null($old_value) && !is_array($old_value)){
 
             $old_value = cmsModel::yamlToArray($old_value);
 
             if ($old_value != $value){
                 foreach($old_value as $image_url){
-                    $image_path = $config->upload_path . $image_url;
-                    @unlink($image_path);
+                    files_delete_file($image_url, 2);
                 }
             }
 
@@ -122,8 +119,7 @@ class fieldImage extends cmsFormField {
 
         foreach($value as $size => $image_url){
             if (!in_array($size, $sizes)){
-                $image_path = $config->upload_path . $image_url;
-                @unlink($image_path);
+                files_delete_file($image_url, 2);
             }
         }
 
@@ -137,11 +133,8 @@ class fieldImage extends cmsFormField {
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
-        $config = cmsConfig::getInstance();
-
         foreach($value as $image_url){
-            $image_path = $config->upload_path . $image_url;
-            @unlink($image_path);
+            files_delete_file($image_url, 2);
         }
 
         return true;
