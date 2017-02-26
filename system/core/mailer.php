@@ -12,6 +12,7 @@ class cmsMailer {
 
         $this->mailer = new PHPMailer();
         $this->mailer->CharSet = 'UTF-8';
+        $this->mailer->setLanguage($config->language);
 
         $this->
             initTransport()->

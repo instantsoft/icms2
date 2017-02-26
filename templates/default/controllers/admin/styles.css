@@ -363,6 +363,7 @@ span.wrap > span.counter:after {
 .cp_toolbar .help .item { background: url("../../images/icons/help.png") no-repeat left center; }
 .cp_toolbar .install .item { background: url("../../images/icons/install.png") no-repeat left center; }
 .cp_toolbar .logs .item { background: url("../../images/icons/logs.png") no-repeat left center; }
+.cp_toolbar .transfer .item { background: url("../../images/icons/transfer.png") no-repeat left center; }
 
 /* ========================================================================== */
 /* ========================================================================== */
@@ -2157,6 +2158,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 .width_320 {
     width: 320px;
 }
+#mail_check {
+    width: 460px;
+}
 @media screen and (max-width: 980px) {
     #dashboard .col1 {
         width: calc(50% - 20px);
@@ -2211,6 +2215,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     }
 }
 @media screen and (max-width: 640px) {
+    #mail_check {
+        width: 320px;
+    }
     #dashboard .col {
         width: calc(100% - 20px);
     }

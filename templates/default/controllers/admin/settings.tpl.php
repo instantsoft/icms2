@@ -9,11 +9,17 @@
     $this->addMenuItems('settings', $this->controller->getSettingsMenu());
 
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_SETTINGS_GLOBAL
+		'class' => 'transfer ajax-modal',
+		'title' => LANG_MAILCHECK_MENU,
+		'href'  => $this->href_to('settings', array('mail_check'))
 	));
+
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_SETTINGS_GLOBAL
+    ));
 
 ?>
 

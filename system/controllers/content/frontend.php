@@ -978,4 +978,36 @@ class content extends cmsFrontend {
 
     }
 
+    public function prepareItemSeo($item, $fields, $ctype) {
+
+        $_item = array();
+
+        foreach ($fields as $field) {
+
+            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { continue; }
+
+            if (!$field['is_in_item']) { continue; }
+
+            if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
+                $_item[$field['name']] =''; continue;
+            }
+
+            $_item[$field['name']] = $field['handler']->getStringValue($item[$field['name']]);
+
+        }
+
+        if(!isset($item['category'])){
+            $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+        }
+
+        if($item['category']){
+            $_item['category'] = $item['category']['title'];
+        } else {
+            $_item['category'] = '';
+        }
+
+        return $_item;
+
+    }
+
 }

@@ -123,7 +123,7 @@
     define('LANG_CP_SEOMETA_ITEM_TITLE',        'Шаблон генерации тайтлов страниц');
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'Шаблон генерации ключевых слов');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'Шаблон генерации META-описаний');
-    define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>, <strong>{category}</strong> и т.п.');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');
     define('LANG_CP_FIXED_URL',                 'Не изменять URL при редактировании записи');
     define('LANG_CP_URL_PATTERN',               'Шаблон генерации URL');
@@ -581,3 +581,9 @@
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Внимание! Пакет заменяет некоторые системные файлы CMS. Не рекомендуется продолжать установку, если разработчик пакета Вам неизвестен.');
     define('LANG_ADMIN_NOTICES', 'Уведомления');
     define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Доступ с вашего ip адреса ограничен');
+    define('LANG_MAILCHECK_ERROR', 'При отправке письма произошла ошибка: <br><b>%s</b>');
+    define('LANG_MAILCHECK_SUCCESS', 'Письмо успешно отправлено');
+    define('LANG_MAILCHECK_MENU', 'Проверить настройки почты');
+    define('LANG_MAILCHECK_TO', 'Кому');
+    define('LANG_MAILCHECK_SUBJECT', 'Тема');
+    define('LANG_MAILCHECK_BODY', 'Сообщение');

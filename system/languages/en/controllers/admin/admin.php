@@ -581,3 +581,9 @@
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');
     define('LANG_ADMIN_NOTICES', 'Notifications');
     define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Access from your ip address is restricted');
+    define('LANG_MAILCHECK_ERROR', 'When sending a letter error occurred: <br><b>%s</b>');
+    define('LANG_MAILCHECK_SUCCESS', 'A letter has been sent successfully');
+    define('LANG_MAILCHECK_MENU', 'Check mail settings');
+    define('LANG_MAILCHECK_TO', 'Send message to');
+    define('LANG_MAILCHECK_SUBJECT', 'Message subject');
+    define('LANG_MAILCHECK_BODY', 'Message contents');

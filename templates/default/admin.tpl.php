@@ -16,6 +16,7 @@
     <?php $this->addMainJS('templates/default/js/jquery.js'); ?>
     <?php $this->addMainJS('templates/default/js/jquery-ui.js'); ?>
     <?php $this->addMainJS('templates/default/js/i18n/jquery-ui/'.cmsCore::getLanguageName().'.js'); ?>
+    <?php $this->addMainJS('templates/default/js/jquery-ui.touch-punch.js'); ?>
     <?php $this->addMainJS('templates/default/js/jquery-modal.js'); ?>
     <?php $this->addMainJS('templates/default/js/core.js'); ?>
     <?php $this->addMainJS('templates/default/js/modal.js'); ?>

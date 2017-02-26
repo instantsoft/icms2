@@ -278,19 +278,20 @@ class actionContentItemAdd extends cmsAction {
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_add", $item);
 
                 // SEO параметры
+                $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
                 if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
-                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item_seo);
                 }
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
-                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item_seo);
                     } else {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
-                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item_seo));
                     } else {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
