@@ -1,12 +1,18 @@
 <?php
 /**
- * 2.7.1 => 2.7.2
+ * 2.7.0 => 2.7.1
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
 
-    $core->db->query("UPDATE `{#}controllers` SET `is_external` =  '1' WHERE `name` = 'commentsvk'");
+    if(!isFieldExists('content_datasets', 'seo_title')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_title` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_desc`");
+    }
+
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_keys` `seo_keys` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Ключевые слова'");
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_desc` `seo_desc` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Описание'");
+    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_title` `seo_title` VARCHAR(256) NULL DEFAULT NULL");
 
     return true;
 

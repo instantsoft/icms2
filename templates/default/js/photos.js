@@ -73,7 +73,7 @@ icms.photos = (function ($) {
                 }
             });
         } else {
-            $('#photo_container').addClass('full_in_modal').on('click', function (){
+            $('#photo_container').addClass('full_in_modal').find('.fullscreen_click').show().on('click', function (){
                 if(icms.photos.big_img){
                     icms.modal.openAjax(icms.photos.big_img);
                 }

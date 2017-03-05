@@ -632,7 +632,7 @@ span.album_user img {
 .photo_details dd {
     padding: 0 0 0 5px;
 }
-.full_in_modal:after {
+.full_in_modal .fullscreen_click {
     content: '';
     background: #000;
     position: absolute;
@@ -646,8 +646,9 @@ span.album_user img {
     background-repeat: no-repeat;
     background-position: center center;
     cursor: pointer;
+    display: none;
 }
-.full_in_modal:hover:after {
+.full_in_modal:hover .fullscreen_click {
     opacity: 0.4;
 }
 #fullscreen_photo {
@@ -687,6 +688,7 @@ span.album_user img {
     top: 0;
     cursor: pointer;
     transition: left .3s,right .3s;
+    z-index: 1;
 }
 .prev_item {
     left: -40px;

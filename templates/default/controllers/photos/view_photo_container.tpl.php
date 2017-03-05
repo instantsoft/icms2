@@ -11,4 +11,7 @@
 <?php } ?>
 <?php if($next_photo && $next_photo['slug']){ ?>
     <a href="<?php echo  href_to('photos', $next_photo['slug'].'.html'); ?>" class="photo_navigation next_item" title="<?php html($next_photo['title']); ?>"></a>
+<?php } ?>
+<?php if (!$request->isAjax()) { ?>
+    <div class="fullscreen_click"></div>
 <?php }
