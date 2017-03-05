@@ -4,8 +4,8 @@ class cmsCore {
 
     private static $instance;
 
-	public $uri            = '';
-	public $uri_before_remap = '';
+    public $uri            = '';
+    public $uri_before_remap = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
     public $uri_controller_before_remap = '';
@@ -18,8 +18,8 @@ class cmsCore {
 
     public $controller = '';
 
-	public $link;
-	public $request;
+    public $link;
+    public $request;
 
     public $db;
 
@@ -348,23 +348,41 @@ class cmsCore {
 
     }
 
-    public static function getControllersManifests(){
+    public static function getControllersManifests($is_debug=false){
 
         $manifests = array();
 
-        $controllers = self::getDirsList('system/controllers', true);
+        $controllers_manifests = cmsDatabase::getInstance()->getRows('controllers_hooks', '`is_enabled` = 1', '*', 'name ASC, ordering ASC');
 
-        foreach($controllers as $controller_name){
+        foreach($controllers_manifests as $controller){
 
-            $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
+            $manifests[ $controller['controller'] ][] = $controller['name'];
 
-            if (!file_exists($manifest_file)){ continue; }
+        }
 
-            $manifest = include $manifest_file;
+        if ($is_debug){
 
-            if (!$manifest) { continue; }
+            $controllers = self::getDirsList('system/controllers', true);
 
-            $manifests[ $controller_name ] = $manifest;
+            foreach($controllers as $controller_name){
+
+                $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
+
+                if (!file_exists($manifest_file)){ continue; }
+
+                $manifest = include $manifest_file;
+
+                if (!$manifest || !isset($manifest['hooks'])) { continue; }
+
+                foreach ($manifest['hooks'] as $event_name){
+
+                    if (!empty($manifests[ $controller_name ]) && in_array($event_name, $manifests[ $controller_name ])) { continue; }
+
+                    $manifests[ $controller_name ][] = $event_name;
+
+                }
+
+            }
 
         }
 
@@ -391,7 +409,7 @@ class cmsCore {
 
         $template = $template ? $template : cmsConfig::get('template');
 
-		$widget_path = self::getWidgetPath($widget_name, $controller_name);
+        $widget_path = self::getWidgetPath($widget_name, $controller_name);
 
         $path = cmsConfig::get('system_path') . $widget_path;
 
@@ -404,10 +422,10 @@ class cmsCore {
 
         $form->is_tabbed = true;
 
-		//
-		// Опции внешнего вида
-		//
-		$design_fieldset_id = $form->addFieldset(LANG_DESIGN);
+        //
+        // Опции внешнего вида
+        //
+        $design_fieldset_id = $form->addFieldset(LANG_DESIGN);
 
             $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
                 'title' => LANG_CSS_CLASS_WRAP,
@@ -423,7 +441,7 @@ class cmsCore {
 
             $form->addField($design_fieldset_id, new fieldList('tpl_wrap', array(
                 'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
+                'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
                 'generator' => function($item) use ($template){
                     $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', '*.tpl.php');
                     $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
@@ -440,7 +458,7 @@ class cmsCore {
 
             $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+                'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
                 'generator' => function($item) use ($template){
                     $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
                     $current_tpls = cmsCore::getFilesList('templates/'.$template.'/'.$w_path, '*.tpl.php');
@@ -513,7 +531,7 @@ class cmsCore {
                 'hint' => LANG_WIDGET_TITLE_LINKS_HINT,
             )));
 
-		return $form;
+        return $form;
 
     }
 
@@ -621,10 +639,10 @@ class cmsCore {
      */
     public function route($uri){
 
-		$config = cmsConfig::getInstance();
+        $config = cmsConfig::getInstance();
 
         $uri = trim(urldecode($uri));
-		$uri = mb_substr($uri, mb_strlen( $config->root ));
+        $uri = mb_substr($uri, mb_strlen( $config->root ));
 
         if (!$uri) { return; }
 
@@ -895,33 +913,11 @@ class cmsCore {
     }
 
     /**
-     * Показывает сообщение об ошибке 403 и завершает работу
-     */
-    public static function errorForbidden($message = '', $show_login_link = false){
-
-		cmsEventsManager::hook('error_403', self::getInstance()->uri);
-
-        if(ob_get_length()) { ob_end_clean(); }
-
-        header("HTTP/1.0 403 Forbidden");
-        header("HTTP/1.1 403 Forbidden");
-        header("Status: 403 Forbidden");
-
-        cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
-            'message'         => $message,
-            'show_login_link' => $show_login_link
-        ));
-
-        die();
-
-    }
-
-    /**
      * Показывает сообщение об ошибке 404 и завершает работу
      */
     public static function error404(){
 
-		cmsEventsManager::hook('error_404', self::getInstance()->uri);
+        cmsEventsManager::hook('error_404', self::getInstance()->uri);
 
         if(ob_get_length()) { ob_end_clean(); }
 
