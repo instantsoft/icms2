@@ -588,3 +588,10 @@
     define('LANG_MAILCHECK_TO', 'Send message to');
     define('LANG_MAILCHECK_SUBJECT', 'Message subject');
     define('LANG_MAILCHECK_BODY', 'Message contents');
+
+    define('LANG_EVENTS_MANAGEMENT', 'Events management');
+    define('LANG_EVENTS_REFRESH',    'Update events in the database');
+    define('LANG_EVENTS_DELETED',    'These events are no longer available');
+    define('LANG_EVENTS_LISTENER',   'Component');
+    define('LANG_EVENTS_EVENT_NAME', 'Event');
+    define('LANG_EVENTS_ALLOW_NEW',  'Available new events');

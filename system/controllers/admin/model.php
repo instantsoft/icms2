@@ -35,6 +35,49 @@ class modelAdmin extends cmsModel{
     }
 
 //============================================================================//
+//============================================================================//
+
+    public function getEvents(){
+
+        return $this->get('events');
+
+    }
+
+    public function reorderEvents($ids_list){
+
+        $this->reorderByList('events', $ids_list);
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
+    }
+
+    public function addEvent($listener, $event) {
+
+        $this->insert('events', array(
+            'listener' => $listener, 'event' => $event
+        ));
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
+    }
+
+    public function deleteEvent($listener, $event) {
+
+        $this->filterEqual('listener', $listener);
+        $this->filterEqual('event', $event);
+        $this->deleteFiltered('events');
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
+    }
+
+//============================================================================//
 //==========================    ПЛАНИРОВЩИК    ===============================//
 //============================================================================//
 
@@ -57,22 +100,22 @@ class modelAdmin extends cmsModel{
 
         if($tasks){
 	        foreach($tasks as $task){
-	
+
 	            if ($task['is_new']) {
 	                $pending[] = $task;
 	                continue;
 	            }
-	
+
 	            $time_last_run = strtotime($task['date_last_run']);
 	            $time_now = time();
-	
+
 	            $minutes_ago = floor(($time_now - $time_last_run) / 60);
-	
+
 	            if ($minutes_ago >= $task['period']){
 	                $pending[] = $task;
 	                continue;
 	            }
-	
+
 	        }
         }
 

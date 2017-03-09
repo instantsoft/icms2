@@ -348,11 +348,31 @@ class cmsCore {
 
     }
 
-    public static function getControllersManifests(){
+    public static function getControllersManifests($is_debug = false){
 
-        $manifests = array();
+        $events = array();
 
-        $controllers = self::getDirsList('system/controllers', true);
+        $controllers_events = cmsDatabase::getInstance()->getRows('events', '`is_enabled` = 1', '*', 'event ASC, ordering ASC');
+
+        foreach($controllers_events as $event){
+
+            $events[ $event['listener'] ][] = $event['event'];
+
+        }
+
+        if ($is_debug){
+            $events = self::getManifestsEvents($events);
+        }
+
+        return $events;
+
+    }
+
+    public static function getManifestsEvents($events = false){
+
+        $manifests_events = array();
+
+        $controllers = cmsCore::getDirsList('system/controllers', true);
 
         foreach($controllers as $controller_name){
 
@@ -362,13 +382,24 @@ class cmsCore {
 
             $manifest = include $manifest_file;
 
-            if (!$manifest) { continue; }
+            if (!$manifest || empty($manifest['hooks'])) { continue; }
 
-            $manifests[ $controller_name ] = $manifest;
+            if (!$events){
+                $manifests_events[ $controller_name ] = $manifest['hooks'];
+                continue;
+            }
+
+            foreach ($manifest['hooks'] as $event_name){
+
+                if (!empty($events[ $controller_name ]) && in_array($event_name, $events[ $controller_name ])) { continue; }
+
+                $events[ $controller_name ][] = $event_name;
+
+            }
 
         }
 
-        return $manifests;
+        return !$events ? $manifests_events : $events;
 
     }
 

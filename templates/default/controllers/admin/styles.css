@@ -2161,6 +2161,47 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #mail_check {
     width: 460px;
 }
+
+.events_delete,
+.events_add {
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.events_add {
+    border: 1px solid green;
+}
+.events_delete {
+    border: 1px solid red;
+}
+.events_delete_title,
+.events_add_title {
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.events_add_title {
+    color: green;
+}
+.events_delete_title {
+    color: red;
+}
+.allow_events {
+    margin-bottom: 15px;
+    color: green;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.controller_name {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+
+}
+.event_name {
+    padding-left: 25px;
+}
+
 @media screen and (max-width: 980px) {
     #dashboard .col1 {
         width: calc(50% - 20px);
