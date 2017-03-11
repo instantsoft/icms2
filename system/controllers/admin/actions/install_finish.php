@@ -252,8 +252,8 @@ class actionAdminInstallFinish extends cmsAction {
         $model = new cmsModel();
 
         $hooks_in_bd = $model->
-                filterEqual('controller', $controller_name)->
-                get('controllers_hooks', false, 'name');
+                filterEqual('listener', $controller_name)->
+                get('events', false, 'event');
 
         if ($hooks_in_bd){
             foreach ($hooks_in_bd as $name => $hook){
@@ -271,9 +271,9 @@ class actionAdminInstallFinish extends cmsAction {
 
                 foreach ($hooks_in_bd as $name => $hook){
 
-                    $model->filterEqual('controller', $controller_name)->
-                            filterEqual('name', $name)->
-                            deleteFiltered('controllers_hooks');
+                    $model->filterEqual('listener', $controller_name)->
+                            filterEqual('event', $name)->
+                            deleteFiltered('events');
 
                 }
 
@@ -285,9 +285,9 @@ class actionAdminInstallFinish extends cmsAction {
 
             foreach ($hooks as $hook){
 
-                $model->insert('controllers_hooks', array(
-                    'controller' => $controller_name,
-                    'name' => $hook
+                $model->insert('events', array(
+                    'listener' => $controller_name,
+                    'event' => $hook
                 ));
 
             }
