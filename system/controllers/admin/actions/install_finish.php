@@ -109,6 +109,19 @@ class actionAdminInstallFinish extends cmsAction {
             'is_external' => 1
         ));
 
+        // проверяем наличие хуков в компоненте
+        $hooks_manifest = $controller_root_path.'manifest.php';
+        if(is_readable($hooks_manifest)){
+
+            $hooks = include $hooks_manifest;
+
+            if (!empty($hooks['hooks'])){
+
+                $this->updateHooks($manifest['package']['name'], $hooks['hooks']);
+            }
+
+        }
+
         return 'controllers';
 
     }
@@ -138,6 +151,19 @@ class actionAdminInstallFinish extends cmsAction {
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
             'is_backend' => file_exists($controller_root_path.'backend.php')
         ));
+
+        // проверяем наличие хуков в компоненте
+        $hooks_manifest = $controller_root_path.'manifest.php';
+
+        if(is_readable($hooks_manifest)){
+
+            $hooks = include $hooks_manifest;
+
+            if (!empty($hooks['hooks'])){
+                $this->updateHooks($manifest['package']['name'], $hooks['hooks']);
+            }
+
+        }
 
         return 'controllers';
 
@@ -219,6 +245,56 @@ class actionAdminInstallFinish extends cmsAction {
 
         return $db->importDump($file);
 
+    }
+
+    private function updateHooks($controller_name, $hooks) {
+
+        $model = new cmsModel();
+
+        $hooks_in_bd = $model->
+                filterEqual('controller', $controller_name)->
+                get('controllers_hooks', false, 'name');
+
+        if ($hooks_in_bd){
+            foreach ($hooks_in_bd as $name => $hook){
+
+                $key = array_search($name, $hooks);
+                
+                if ($key !== false){
+                    unset($hooks[$key]);
+                    unset($hooks_in_bd[$name]);
+                }
+
+            }
+
+            if (!empty($hooks_in_bd)){
+
+                foreach ($hooks_in_bd as $name => $hook){
+
+                    $model->filterEqual('controller', $controller_name)->
+                            filterEqual('name', $name)->
+                            deleteFiltered('controllers_hooks');
+
+                }
+
+            }
+
+        }
+
+        if ($hooks){
+
+            foreach ($hooks as $hook){
+
+                $model->insert('controllers_hooks', array(
+                    'controller' => $controller_name,
+                    'name' => $hook
+                ));
+
+            }
+
+        }
+
+        return true;
     }
 
 }
