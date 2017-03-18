@@ -1704,15 +1704,16 @@ class cmsModel{
         return $this->increment($table, $field, $step * -1);
     }
 
-    public function deleteController($id) {
+    public function deleteController($name) {
 
-		if(is_numeric($id)){
-            $field = 'id';
-		} else {
-			$field = 'name';
+		if(is_numeric($name)){
+            $controller = $this->getItemById('controllers', $name);
+            $name = $controller['name'];
 		}
 
-        return $this->filterEqual($field, $id)->deleteFiltered('controllers');
+        $this->filterEqual('controller', $name)->deleteFiltered('controllers_hooks');
+
+        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
 
     }
 //============================================================================//

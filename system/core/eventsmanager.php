@@ -128,7 +128,9 @@ class cmsEventsManager {
             return $structure;
         }
 
-        $manifests = cmsCore::getControllersManifests();
+        $is_debug = cmsConfig::get('debug');
+
+        $manifests = cmsCore::getControllersManifests($is_debug);
 
         if (!$manifests) { return false; }
 
@@ -136,11 +138,11 @@ class cmsEventsManager {
 
         foreach($manifests as $controller_name => $manifest){
 
-            if (!isset($manifest['hooks'])) { continue; }
-            if (!is_array($manifest['hooks'])) { continue; }
+            if (empty($manifest)) { continue; }
+            if (!is_array($manifest)) { continue; }
             if (!cmsController::enabled($controller_name)) { continue; }
 
-            foreach($manifest['hooks'] as $event_name){
+            foreach($manifest as $event_name){
 
                 $structure[ $event_name ][] = $controller_name;
 

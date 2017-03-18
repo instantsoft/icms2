@@ -11,6 +11,12 @@
 	));
 
 	$this->addToolButton(array(
+		'class' => 'logs',
+		'title' => LANG_EVENTS_MANAGEMENT,
+		'href'  => $this->href_to('controllers', array('events'))
+	));
+
+	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,
 		'target' => '_blank',

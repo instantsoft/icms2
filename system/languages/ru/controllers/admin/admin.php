@@ -588,3 +588,10 @@
     define('LANG_MAILCHECK_TO', 'Кому');
     define('LANG_MAILCHECK_SUBJECT', 'Тема');
     define('LANG_MAILCHECK_BODY', 'Сообщение');
+
+    define('LANG_EVENTS_MANAGEMENT', 'Управление событиями');
+    define('LANG_EVENTS_REFRESH',    'Обновить события в БД');
+    define('LANG_EVENTS_DELETED',    'Эти события уже не доступны');
+    define('LANG_EVENTS_LISTENER',   'Компонент');
+    define('LANG_EVENTS_EVENT_NAME', 'Событие');
+    define('LANG_EVENTS_ALLOW_NEW',  'Доступны новые события');
