@@ -119,7 +119,7 @@ class fieldList extends cmsFormField {
 
         $this->data['items']       = $this->getListItems();
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
-        $this->data['multiple_select_deselct'] = $this->getProperty('multiple_select_deselct');
+        $this->data['multiple_select_deselect'] = $this->getProperty('multiple_select_deselect');
         $this->data['is_chosen_multiple'] = $this->getProperty('is_chosen_multiple');
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');

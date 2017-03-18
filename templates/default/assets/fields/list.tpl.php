@@ -5,8 +5,8 @@
 
         echo html_select_multiple($field->element_name, $field->data['items'], $value, $field->data['dom_attr'], $field->data['is_tree']); ?>
 
-        <?php if($field->data['multiple_select_deselct']){ ?>
-            <div class="select_deselct">
+        <?php if($field->data['multiple_select_deselect']){ ?>
+            <div class="select_deselect">
                 <a href="#" onclick="$('#<?php echo $field->element_name; ?> input:checkbox').prop('checked', true); return false;">
                     <?php echo LANG_SELECT_ALL; ?>
                 </a>

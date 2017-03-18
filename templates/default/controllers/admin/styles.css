@@ -627,10 +627,10 @@ form .hint {
     background:#EDEDED;
 }
 
-.select_deselct {
+.select_deselect {
     margin: 10px 0 0 5px;
 }
-.select_deselct a {
+.select_deselect a {
     text-decoration: none;
     margin: 0 10px 0 0;
     font-size: 13px;
