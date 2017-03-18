@@ -996,11 +996,11 @@ class content extends cmsFrontend {
 
         }
 
-        if(!isset($item['category'])){
+        if(isset($item['category_id']) && !isset($item['category'])){
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
-        if($item['category']){
+        if(isset($item['category'])){
             $_item['category'] = $item['category']['title'];
         } else {
             $_item['category'] = '';
