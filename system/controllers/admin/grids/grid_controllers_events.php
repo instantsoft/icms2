@@ -5,12 +5,12 @@ function grid_controllers_events ($controller){
     cmsCore::loadAllControllersLanguages();
 
     $options = array(
-        'is_sortable' => true,
-        'is_filter' => false,
-        'is_draggable' => true,
+        'is_sortable'   => false,
+        'is_filter'     => true,
+        'is_draggable'  => true,
         'is_pagination' => false,
-        'order_by' => 'event',
-        'order_to' => 'asc'
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc'
     );
 
     $columns = array(
@@ -19,11 +19,13 @@ function grid_controllers_events ($controller){
             'width' => 30
         ),
         'event' => array(
-            'title' => LANG_EVENTS_EVENT_NAME,
+            'title'  => LANG_EVENTS_EVENT_NAME,
+            'filter' => 'like'
         ),
         'listener' => array(
-            'title' => LANG_EVENTS_LISTENER,
-            'width' => 200,
+            'title'  => LANG_EVENTS_LISTENER,
+            'width'  => 200,
+            'filter' => 'like',
             'handler' => function($val, $row){
                 return string_lang($val.'_CONTROLLER', $val);
             }
@@ -33,10 +35,10 @@ function grid_controllers_events ($controller){
             'width' => 70
         ),
         'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-            'flag' => true,
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
             'flag_toggle' => href_to($controller->name, 'controllers', array('events_toggle', '{id}')),
-            'width' => 80
+            'width'       => 80
         )
     );
 

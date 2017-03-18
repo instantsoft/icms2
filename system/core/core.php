@@ -348,27 +348,39 @@ class cmsCore {
 
     }
 
+    /**
+     * Возвращает массив хуков контроллеров
+     * @param boolean $is_debug Если передано true, то массив формируется из файлов манифестов, иначе - из БД
+     * @return array
+     */
     public static function getControllersManifests($is_debug = false){
+
+        if ($is_debug){
+            return self::getManifestsEvents();
+        }
 
         $events = array();
 
-        $controllers_events = cmsDatabase::getInstance()->getRows('events', '`is_enabled` = 1', '*', 'event ASC, ordering ASC');
+        $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC');
 
-        foreach($controllers_events as $event){
+        if($controllers_events){
+            foreach($controllers_events as $event){
 
-            $events[ $event['listener'] ][] = $event['event'];
+                $events[ $event['listener'] ][] = $event['event'];
 
-        }
-
-        if ($is_debug){
-            $events = self::getManifestsEvents($events);
+            }
         }
 
         return $events;
 
     }
 
-    public static function getManifestsEvents($events = false){
+    /**
+     * Возвращает массив хуков контроллеров
+     * из файлов манифестов
+     * @return array
+     */
+    public static function getManifestsEvents(){
 
         $manifests_events = array();
 
@@ -378,28 +390,17 @@ class cmsCore {
 
             $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
 
-            if (!file_exists($manifest_file)){ continue; }
+            if (!is_readable($manifest_file)){ continue; }
 
             $manifest = include $manifest_file;
 
-            if (!$manifest || empty($manifest['hooks'])) { continue; }
+            if (empty($manifest['hooks']) || !is_array($manifest['hooks'])) { continue; }
 
-            if (!$events){
-                $manifests_events[ $controller_name ] = $manifest['hooks'];
-                continue;
-            }
-
-            foreach ($manifest['hooks'] as $event_name){
-
-                if (!empty($events[ $controller_name ]) && in_array($event_name, $events[ $controller_name ])) { continue; }
-
-                $events[ $controller_name ][] = $event_name;
-
-            }
+            $manifests_events[ $controller_name ] = $manifest['hooks'];
 
         }
 
-        return !$events ? $manifests_events : $events;
+        return $manifests_events;
 
     }
 

@@ -109,18 +109,8 @@ class actionAdminInstallFinish extends cmsAction {
             'is_external' => 1
         ));
 
-        // проверяем наличие хуков в компоненте
-        $hooks_manifest = $controller_root_path.'manifest.php';
-        if(is_readable($hooks_manifest)){
-
-            $hooks = include $hooks_manifest;
-
-            if (!empty($hooks['hooks'])){
-
-                $this->updateHooks($manifest['package']['name'], $hooks['hooks']);
-            }
-
-        }
+        // добавляем эвенты в БД
+        $this->updateEvents($manifest['package']['name']);
 
         return 'controllers';
 
@@ -152,18 +142,8 @@ class actionAdminInstallFinish extends cmsAction {
             'is_backend' => file_exists($controller_root_path.'backend.php')
         ));
 
-        // проверяем наличие хуков в компоненте
-        $hooks_manifest = $controller_root_path.'manifest.php';
-
-        if(is_readable($hooks_manifest)){
-
-            $hooks = include $hooks_manifest;
-
-            if (!empty($hooks['hooks'])){
-                $this->updateHooks($manifest['package']['name'], $hooks['hooks']);
-            }
-
-        }
+        // обновляем эвенты в БД
+        $this->updateEvents($manifest['package']['name']);
 
         return 'controllers';
 
@@ -247,54 +227,28 @@ class actionAdminInstallFinish extends cmsAction {
 
     }
 
-    private function updateHooks($controller_name, $hooks) {
+    private function updateEvents($controller_name) {
 
-        $model = new cmsModel();
+        $diff_events = $this->getEventsDifferences($controller_name);
 
-        $hooks_in_bd = $model->
-                filterEqual('listener', $controller_name)->
-                get('events', false, 'event');
-
-        if ($hooks_in_bd){
-            foreach ($hooks_in_bd as $name => $hook){
-
-                $key = array_search($name, $hooks);
-                
-                if ($key !== false){
-                    unset($hooks[$key]);
-                    unset($hooks_in_bd[$name]);
+        if($diff_events['added']){
+            foreach ($diff_events['added'] as $controller => $events) {
+                foreach ($events as $event){
+                    $this->model->addEvent($controller, $event);
                 }
-
             }
-
-            if (!empty($hooks_in_bd)){
-
-                foreach ($hooks_in_bd as $name => $hook){
-
-                    $model->filterEqual('listener', $controller_name)->
-                            filterEqual('event', $name)->
-                            deleteFiltered('events');
-
-                }
-
-            }
-
         }
 
-        if ($hooks){
-
-            foreach ($hooks as $hook){
-
-                $model->insert('events', array(
-                    'listener' => $controller_name,
-                    'event' => $hook
-                ));
-
+        if($diff_events['deleted']){
+            foreach ($diff_events['deleted'] as $controller => $events) {
+                foreach ($events as $event){
+                    $this->model->deleteEvent($controller, $event);
+                }
             }
-
         }
 
         return true;
+
     }
 
 }

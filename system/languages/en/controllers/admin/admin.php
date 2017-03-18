@@ -570,6 +570,7 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
+    define('LANG_HELP_URL_EVENTS',                  'http://docs.instantcms.ru/en/manual/settings/events');
     define('LANG_ZIP_ERROR_10', 'File already exists');
     define('LANG_ZIP_ERROR_21', 'Inconsistent ZIP-archive');
     define('LANG_ZIP_ERROR_18', 'Invalid argument');
@@ -588,10 +589,10 @@
     define('LANG_MAILCHECK_TO', 'Send message to');
     define('LANG_MAILCHECK_SUBJECT', 'Message subject');
     define('LANG_MAILCHECK_BODY', 'Message contents');
-
     define('LANG_EVENTS_MANAGEMENT', 'Events management');
     define('LANG_EVENTS_REFRESH',    'Update events in the database');
     define('LANG_EVENTS_DELETED',    'These events are no longer available');
     define('LANG_EVENTS_LISTENER',   'Component');
     define('LANG_EVENTS_EVENT_NAME', 'Event');
     define('LANG_EVENTS_ALLOW_NEW',  'Available new events');
+    define('LANG_EVENTS_SUCCESS',  'Events in the database are updated');

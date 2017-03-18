@@ -2165,13 +2165,15 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 .events_delete,
 .events_add {
     padding: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 .events_add {
-    border: 1px solid green;
+    border: 1px solid #9fc974;
+    background-color: #e5fccf;
 }
 .events_delete {
-    border: 1px solid red;
+    border: 1px solid #e8b2b2;
+    background-color: #ffeded;
 }
 .events_delete_title,
 .events_add_title {
@@ -2193,13 +2195,12 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 .controller_name {
     font-weight: bold;
-    font-size: 16px;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 5px;
-
 }
 .event_name {
     padding-left: 25px;
+    color: #333;
 }
 
 @media screen and (max-width: 980px) {

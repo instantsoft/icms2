@@ -318,4 +318,63 @@ class admin extends cmsFrontend {
 
     }
 
+    public function getEventsDifferences($event_controller = false) {
+
+        $result = array(
+            'added'   => array(),
+            'deleted' => array()
+        );
+
+        $manifests_events = cmsCore::getManifestsEvents();
+        $database_events  = cmsCore::getControllersManifests();
+
+        if($event_controller){
+            if(isset($manifests_events[$event_controller])){
+                $manifests_events = array(
+                    $event_controller => $manifests_events[$event_controller]
+                );
+            } else {
+                $manifests_events = array();
+            }
+            if(isset($database_events[$event_controller])){
+                $database_events = array(
+                    $event_controller => $database_events[$event_controller]
+                );
+            } else {
+                $database_events = array();
+            }
+        }
+
+        // добавленные: есть в $manifests_events, нет в $database_events
+        if($manifests_events){
+            foreach ($manifests_events as $controller => $events){
+                foreach ($events as $event){
+                    if(empty($database_events[$controller])){
+                        $result['added'][$controller][] = $event;
+                    }
+                    if(!empty($database_events[$controller]) && !in_array($event, $database_events[$controller])){
+                        $result['added'][$controller][] = $event;
+                    }
+                }
+            }
+        }
+
+        // удалённые: есть в $database_events, нет в $manifests_events
+        if($database_events){
+            foreach ($database_events as $controller => $events){
+                foreach ($events as $event){
+                    if(empty($manifests_events[$controller])){
+                        $result['deleted'][$controller][] = $event;
+                    }
+                    if(!empty($manifests_events[$controller]) && !in_array($event, $manifests_events[$controller])){
+                        $result['deleted'][$controller][] = $event;
+                    }
+                }
+            }
+        }
+
+        return $result;
+
+    }
+
 }

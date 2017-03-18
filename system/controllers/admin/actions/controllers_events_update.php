@@ -4,59 +4,27 @@ class actionAdminControllersEventsUpdate extends cmsAction {
 
     public function run(){
 
-        $events = array();
+        $diff_events = $this->getEventsDifferences();
 
-        $controllers_events = $this->model->getEvents();
-
-        foreach($controllers_events as $controller){
-
-            $events[ $controller['listener'] ][] = $controller['event'];
-
-        }
-
-        $manifests_events = cmsCore::getManifestsEvents();
-
-        foreach ($manifests_events as $controller => $hooks){
-
-            foreach ($hooks as $event){
-
-                if (!empty($events[$controller])){
-
-                    $key = array_search($event, $events[$controller]);
-
-                    if ($key !== false){
-
-                        unset($events[$controller][$key]);
-                        continue;
-
-                    }
-
+        if($diff_events['added']){
+            foreach ($diff_events['added'] as $controller => $events) {
+                foreach ($events as $event){
+                    $this->model->addEvent($controller, $event);
                 }
-
-                $this->model->addEvent($controller, $event);
-
             }
-
-            if (empty($events[$controller])){ unset($events[$controller]); }
-
         }
 
-        if (!empty($events)){
-
-            foreach ($events as $controller => $hooks){
-
-                foreach ($hooks as $event){
-
+        if($diff_events['deleted']){
+            foreach ($diff_events['deleted'] as $controller => $events) {
+                foreach ($events as $event){
                     $this->model->deleteEvent($controller, $event);
-
                 }
-
             }
-
         }
+
+        cmsUser::addSessionMessage(LANG_EVENTS_SUCCESS, 'success');
 
         $this->redirectBack();
-        $this->halt();
 
     }
 

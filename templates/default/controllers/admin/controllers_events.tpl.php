@@ -10,12 +10,20 @@
     if (!empty($events_add) || !empty($events_delete)){
 
         $this->addToolButton(array(
-            'class' => 'add',
+            'class' => 'refresh',
             'title' => LANG_EVENTS_REFRESH,
             'href'  => $this->href_to('controllers', array('events_update'))
         ));
 
     }
+
+	$this->addToolButton(array(
+		'class' => 'help',
+		'title' => LANG_HELP,
+		'target' => '_blank',
+		'href'  => LANG_HELP_URL_EVENTS
+	));
+
 ?>
 
 <h1><?php echo LANG_EVENTS_MANAGEMENT; ?></h1>

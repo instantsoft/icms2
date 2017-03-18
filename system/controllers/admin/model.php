@@ -39,6 +39,8 @@ class modelAdmin extends cmsModel{
 
     public function getEvents(){
 
+        $this->limit = false;
+
         return $this->get('events');
 
     }
@@ -55,13 +57,15 @@ class modelAdmin extends cmsModel{
 
     public function addEvent($listener, $event) {
 
-        $this->insert('events', array(
-            'listener' => $listener, 'event' => $event
+        $id = $this->insert('events', array(
+            'listener' => $listener,
+            'event'    => $event,
+            'ordering' => $this->getNextOrdering('events')
         ));
 
         cmsCache::getInstance()->clean('events');
 
-        return true;
+        return $id;
 
     }
 

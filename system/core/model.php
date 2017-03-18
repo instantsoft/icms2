@@ -1711,7 +1711,9 @@ class cmsModel{
             $name = $controller['name'];
 		}
 
-        $this->filterEqual('controller', $name)->deleteFiltered('controllers_hooks');
+        $this->filterEqual('listener', $name)->deleteFiltered('events');
+
+        cmsCache::getInstance()->clean('events');
 
         return $this->filterEqual('name', $name)->deleteFiltered('controllers');
 

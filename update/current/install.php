@@ -8,6 +8,26 @@ function install_package(){
 
     $core->db->query("UPDATE `{#}controllers` SET `is_external` =  '1' WHERE `name` = 'commentsvk'");
 
+    $admin = cmsCore::getController('admin');
+
+    $diff_events = $admin->getEventsDifferences();
+
+    if($diff_events['added']){
+        foreach ($diff_events['added'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->addEvent($controller, $event);
+            }
+        }
+    }
+
+    if($diff_events['deleted']){
+        foreach ($diff_events['deleted'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->deleteEvent($controller, $event);
+            }
+        }
+    }
+
     return true;
 
 }
