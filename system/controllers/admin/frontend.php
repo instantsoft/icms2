@@ -280,6 +280,33 @@ class admin extends cmsFrontend {
 
             }
 
+        // иначе проверяем наличие манифестов, вдруг кто-то не читает http://docs.instantcms.ru/dev/packages
+        } else {
+
+            $dir = $path.'/package/system/controllers';
+
+            if (is_dir($dir)) {
+
+                $dir_context = opendir($dir);
+                $controllers = array();
+
+                while ($next = readdir($dir_context)){
+                    if (in_array($next, array('.', '..'))){ continue; }
+                    if (strpos($next, '.') === 0){ continue; }
+                    if (!is_dir($dir.'/'.$next)) { continue; }
+                    $controllers[] = $next;
+                }
+
+                if($controllers){
+
+                    asort($controllers);
+
+                    $manifest['package_controllers'] = $controllers;
+
+                }
+
+            }
+
         }
 
         return $manifest;

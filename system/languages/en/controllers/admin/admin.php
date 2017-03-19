@@ -39,7 +39,7 @@
     define('LANG_CP_SECTION_USERS',             'Users');
     define('LANG_CP_SECTION_GROUPS',            'Groups');
     define('LANG_CP_SECTION_MENU',              'Menu');
-    define('LANG_CP_SECTION_WIDGETS',           'Widgets');
+    define('LANG_CP_SECTION_WIDGETS',           'Widgets and pages');
     define('LANG_CP_SECTION_CONTROLLERS',       'Components');
     define('LANG_CP_SECTION_SETTINGS',          'Settings');
     define('LANG_CP_SECTION_UPDATE',            'Updates');

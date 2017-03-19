@@ -39,7 +39,7 @@
     define('LANG_CP_SECTION_USERS',             'Пользователи');
     define('LANG_CP_SECTION_GROUPS',            'Группы');
     define('LANG_CP_SECTION_MENU',              'Меню');
-    define('LANG_CP_SECTION_WIDGETS',           'Виджеты');
+    define('LANG_CP_SECTION_WIDGETS',           'Виджеты и страницы');
     define('LANG_CP_SECTION_CONTROLLERS',       'Компоненты');
     define('LANG_CP_SECTION_SETTINGS',          'Настройки');
     define('LANG_CP_SECTION_UPDATE',            'Обновления');

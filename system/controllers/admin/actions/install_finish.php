@@ -69,6 +69,12 @@ class actionAdminInstallFinish extends cmsAction {
 
             return call_user_func(array($this, $manifest['package']['type'].$manifest['package']['action']), $manifest);
 
+        } elseif(!empty($manifest['package_controllers'])) {
+
+            foreach ($manifest['package_controllers'] as $package_controller) {
+                $this->updateEvents($package_controller);
+            }
+
         }
 
         $cache = cmsCache::getInstance();

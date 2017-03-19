@@ -1588,6 +1588,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     background-position: 9px 3px;
     margin-right: 5px;
 }
+#cp-widgets-layout .position li.disabled.hide{
+    background-image: url("../../images/icons/admin/widget_disabled.png");
+}
 #cp-widgets-layout .position .placeholder{
     background:#e1ebef;
     border:solid 1px #A3CAE0;
