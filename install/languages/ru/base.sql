@@ -682,7 +682,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (96, 'sitemap_sources', 'users', 96, 1),
 (97, 'admin_dashboard_chart', 'wall', 97, 1),
 (98, 'user_notify_types', 'wall', 98, 1),
-(99, 'user_delete', 'wall', 99, 1);
+(99, 'user_delete', 'wall', 99, 1),
+(100, 'page_is_allowed', 'auth', 100, 1),
+(101, 'admin_confirm_login', 'admin', 101, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

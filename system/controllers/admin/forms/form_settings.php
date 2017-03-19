@@ -373,6 +373,15 @@ class formAdminSettings extends cmsForm {
                     new fieldText('allow_ips', array(
                         'title' => LANG_CP_SETTINGS_ALLOW_IPS,
                         'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp())
+                    )),
+
+                    new fieldList('check_spoofing_type', array(
+                        'title' => LANG_CP_CHECK_SPOOFING_TYPE,
+                        'items' => array(
+                            0 => LANG_NO,
+                            1 => LANG_CP_CHECK_SPOOFING_TYPE_OPT1,
+                            2 => LANG_CP_CHECK_SPOOFING_TYPE_OPT2
+                        )
                     ))
 
                 )

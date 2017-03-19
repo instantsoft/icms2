@@ -7,8 +7,30 @@ class admin extends cmsFrontend {
 
     public $installer_upload_path = 'installer';
 
-//============================================================================//
-//============================================================================//
+	public function routeAction($action_name) {
+
+        $result = cmsEventsManager::hook('admin_confirm_login', array(
+            'allow'     => true,
+            'form'      => null,
+            'errors'    => null,
+            'pagetitle' => null,
+            'title'     => null,
+            'hint'      => null
+        ));
+
+        if (!$result['allow']){
+
+            unset($result['allow']);
+
+            $this->current_params = $result;
+
+			return 'confirm_login';
+
+		}
+
+		return $action_name;
+
+	}
 
     public function before($action_name) {
 

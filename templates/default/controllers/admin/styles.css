@@ -65,13 +65,6 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     background-position: center center;
     z-index: 100;
 }
-.loading-overlay ~ #wrapper, .loading-overlay ~ #wrapper ~ #cp_footer  {
-    -webkit-filter:blur(1px);
-    -moz-filter:blur(1px);
-    -ms-filter:blur(1px);
-    -o-filter:blur(1px);
-    filter:blur(1px);
-}
 /* ========================================================================== */
 /* ========================================================================== */
 
@@ -87,7 +80,7 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     min-height: 100%;
     display:block;
 }
-#popup-manager.popup-show ~ #wrapper, #popup-manager.popup-show ~ #cp_footer {
+#popup-manager.popup-show ~ #wrapper, #popup-manager.popup-show ~ #cp_footer, .blur_block {
     -webkit-filter:blur(2px);
     -moz-filter:blur(2px);
     -ms-filter:blur(2px);
@@ -2205,6 +2198,17 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding-left: 25px;
     color: #333;
 }
+#confirm_login {
+    width: 640px;
+    margin: 0 auto;
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 1px 1px 5px #CCC;
+    box-sizing: border-box;
+}
+.confirm_login_info {
+    margin-bottom: 15px;
+}
 
 @media screen and (max-width: 980px) {
     #dashboard .col1 {
@@ -2260,6 +2264,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     }
 }
 @media screen and (max-width: 640px) {
+    #confirm_login {
+        width: 100%;
+    }
     #mail_check {
         width: 320px;
     }

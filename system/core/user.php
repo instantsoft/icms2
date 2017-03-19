@@ -92,6 +92,34 @@ class cmsUser {
     }
 
     /**
+     * Проверяет изменился ли ip адрес сессии
+     * @param boolean $strict Если true, то проверяется целый ip адрес, иначе проверка по подсети
+     * @return boolean
+     */
+    public function checkSpoofingSession($strict = false) {
+
+        if (!self::isSessionSet('user_ip')){
+
+            self::sessionSet('user_ip', $this->ip);
+
+            $octets = explode('.', $this->ip);
+            $end_okets = end($octets);
+
+            self::sessionSet('user_net', rtrim($this->ip, $end_okets));
+
+            return true;
+
+        }
+
+        if(!$strict){
+            return mb_strstr($this->ip, self::sessionGet('user_net'));
+        }
+
+		return $this->ip === self::sessionGet('user_ip');
+
+    }
+
+    /**
      * Загружает данные для авторизованного пользователя
      * @param integer $user_id id пользователя, прошедшего авторизацию
      * @return array

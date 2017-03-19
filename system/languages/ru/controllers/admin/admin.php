@@ -338,6 +338,9 @@
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_CHECK_SPOOFING_TYPE', 'Контроль изменения IP адреса при входе в админку');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Строго по ip адресу');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Разрешить смену языка пользователями (подстановкой префикса в URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'Разрешенные ip адреса для доступа в админку');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'Каждый с новой строки. Не указано - разрешено всем. Текущий ip адрес: %s');
@@ -596,3 +599,6 @@
     define('LANG_EVENTS_EVENT_NAME', 'Событие');
     define('LANG_EVENTS_ALLOW_NEW',  'Доступны новые события');
     define('LANG_EVENTS_SUCCESS',  'События в базе данных обновлены');
+    define('LANG_CONFIRM_LOGIN',  'Проверка безопасности');
+    define('LANG_CONFIRM_LOGIN_HINT',  'Вы пытаетесь зайти под именем "%s" из необычного места.');
+    define('LANG_CONFIRM_LOGIN_HINT1',  'Чтобы подтвердить, что Вы действительно являетесь владельцем аккаунта, пожалуйста, введите пароль.');

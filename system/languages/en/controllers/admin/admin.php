@@ -337,6 +337,9 @@
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Strictly for ip address');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
@@ -596,3 +599,6 @@
     define('LANG_EVENTS_EVENT_NAME', 'Event');
     define('LANG_EVENTS_ALLOW_NEW',  'Available new events');
     define('LANG_EVENTS_SUCCESS',  'Events in the database are updated');
+    define('LANG_CONFIRM_LOGIN',  'Security Check');
+    define('LANG_CONFIRM_LOGIN_HINT',  'You are trying to log in under the name of "%s" from an unusual location');
+    define('LANG_CONFIRM_LOGIN_HINT1',  'In order to confirm ownership of the accaunt, we ask you to enter the password');

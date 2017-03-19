@@ -87,7 +87,8 @@ function create_config($path, $file){
         'detect_ip_key'		    => 'REMOTE_ADDR',
         'allow_ips'		        => '',
         'default_editor'		=> 'redactor',
-        'show_breadcrumbs'		=> 1
+        'show_breadcrumbs'		=> 1,
+        'check_spoofing_type'   => 1
     );
 
     write_config($file, $config);

@@ -25,23 +25,17 @@
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
-    // Если сайт выключен, закрываем его от посетителей
-    if (!$config->is_site_on) {
-        if (href_to('auth', 'login') != href_to_current() && !cmsUser::isAdmin()){
-            cmsCore::errorMaintenance();
-        }
-    }
-    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if (!empty($config->is_site_only_auth_users)) {
-        if (!cmsUser::isLogged() && !in_array($core->uri_controller, array('auth', 'geo'))) {
-            cmsUser::goLogin();
-        }
-    }
-
     cmsEventsManager::hook('engine_start');
 
-    //Запускаем контроллер
-	$core->runController();
+    // Проверяем доступ
+    if(cmsEventsManager::hook('page_is_allowed', true)){
+
+        //Запускаем контроллер
+        $core->runController();
+
+    }
+
+    // формируем виджеты
     $core->runWidgets();
 
     //Выводим готовую страницу
