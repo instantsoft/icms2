@@ -44,6 +44,9 @@ class modelWidgets extends cmsModel {
 
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
+            $item['groups'] = cmsModel::yamlToArray($item['groups']);
+            $item['countries'] = cmsModel::yamlToArray($item['countries']);
+
             $item['is_custom'] = !empty($item['title']);
 
             $item['title'] = !empty($item['title']) ?
@@ -61,6 +64,9 @@ class modelWidgets extends cmsModel {
         $this->useCache('widgets.pages');
 
         return $this->get('widgets_pages', function($item, $model){
+
+            $item['groups'] = cmsModel::yamlToArray($item['groups']);
+            $item['countries'] = cmsModel::yamlToArray($item['countries']);
 
             if ($item['url_mask']) { $item['url_mask'] = explode("\n", $item['url_mask']); }
             if ($item['url_mask_not']) { $item['url_mask_not'] = explode("\n", $item['url_mask_not']); }

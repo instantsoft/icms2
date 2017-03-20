@@ -164,6 +164,10 @@ class actionAuthRegister extends cmsAction {
 
             }
 
+            if (!$errors){
+                list($errors, $user) = cmsEventsManager::hook('registration_validation', array(false, $user));
+            }
+
             //
             // Проверяем капчу
             //

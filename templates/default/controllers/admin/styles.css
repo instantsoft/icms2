@@ -2209,7 +2209,17 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 .confirm_login_info {
     margin-bottom: 15px;
 }
-
+#countries_view, #countries_hide {
+    border: 1px solid #ccc;
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 260px;
+    background: #FFF;
+}
+form .field .input_checkbox_list#countries_view label, form .field .input_checkbox_list#countries_hide label  {
+    display: block;
+}
 @media screen and (max-width: 980px) {
     #dashboard .col1 {
         width: calc(50% - 20px);

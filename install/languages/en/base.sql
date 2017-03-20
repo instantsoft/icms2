@@ -1538,6 +1538,8 @@ CREATE TABLE `{#}widgets_pages` (
   `title` varchar(64) DEFAULT NULL,
   `url_mask` text COMMENT 'URL mask',
   `url_mask_not` text COMMENT 'Negative mask',
+  `groups` text COMMENT 'Access groups',
+  `countries` text COMMENT 'Access countries',
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)

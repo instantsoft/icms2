@@ -245,6 +245,11 @@
     define('LANG_PERM_OPTION_ALL_TO_ALL',    'Все ко всем');
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
+    define('LANG_SHOW_TO_COUNTRIES',         'Показывать для стран');
+    define('LANG_HIDE_TO_COUNTRIES',         'Не показывать для стран');
+    define('LANG_ACCESS_DENIED',             'Доступ запрещён');
+    define('LANG_ACCESS_GROUP_HINT',         'Группам, к которым вы принадлежите, запрещён доступ к этой странице');
+    define('LANG_ACCESS_COUNTRY_HINT',       'Эта страница недоступна для просмотра в вашей стране');
 
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Логин');

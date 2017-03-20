@@ -8,6 +8,14 @@ function install_package(){
 
     $core->db->query("UPDATE `{#}controllers` SET `is_external` =  '1' WHERE `name` = 'commentsvk'");
 
+    if(!isFieldExists('widgets_pages', 'groups')){
+        $core->db->query("ALTER TABLE `{#}widgets_pages` ADD `groups` TEXT NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('widgets_pages', 'countries')){
+        $core->db->query("ALTER TABLE `{#}widgets_pages` ADD `countries` TEXT NULL DEFAULT NULL");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();

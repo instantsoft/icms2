@@ -12,6 +12,7 @@ class cmsCore {
     public $uri_action     = '';
     public $uri_params     = array();
     public $uri_query      = array();
+    private $matched_pages = null;
 
     private static $language = 'ru';
     private static $language_href_prefix = '';
@@ -760,6 +761,33 @@ class cmsCore {
 
     }
 
+    /**
+     * Определяет и загружает id страниц, которые определены для текущего uri
+     * @return \cmsCore
+     */
+    public function loadMatchedPages() {
+
+        if($this->matched_pages !== null){
+            return $this;
+        }
+
+        $widgets_model = cmsCore::getModel('widgets');
+        $pages = $widgets_model->getPages();
+
+        $this->matched_pages = $this->detectMatchedWidgetPages($pages);
+
+        return $this;
+
+    }
+
+    public function getMatchedPages() {
+        return $this->matched_pages;
+    }
+
+    public function setMatchedPages($matched_pages) {
+        return $this->matched_pages = $matched_pages;
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -771,15 +799,11 @@ class cmsCore {
         // в админке нам виджеты не нужны
         if ($this->controller == 'admin') { return; }
 
-        $widgets_model = cmsCore::getModel('widgets');
-        $pages = $widgets_model->getPages();
+        $matched_pages = $this->loadMatchedPages()->getMatchedPages();
 
-        $matched_pages = $this->detectMatchedWidgetPages($pages);
+        if (!$matched_pages) { return; }
 
-        if (!is_array($matched_pages)) { return; }
-        if (sizeof($matched_pages)==0) { return; }
-
-        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages, cmsTemplate::getInstance()->getName());
+        $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), cmsTemplate::getInstance()->getName());
 
         if (is_array($widgets_list)){
             foreach ($widgets_list as $widget){
@@ -890,7 +914,7 @@ class cmsCore {
             }
 
             if ($is_mask_match && !$is_stop_match){
-                $matched_pages[] = $page['id'];
+                $matched_pages[$page['id']] = $page;
             }
 
         }

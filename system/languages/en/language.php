@@ -243,6 +243,11 @@
     define('LANG_PERM_OPTION_ALL_TO_OWN',    'All to own');
     define('LANG_PERM_OPTION_ALL_TO_OTHER',  'All to others');
     define('LANG_PERM_OPTION_ALL_TO_ALL',    'All to all');
+    define('LANG_SHOW_TO_COUNTRIES',         'Show for countries');
+    define('LANG_HIDE_TO_COUNTRIES',         'Do not show for countries');
+    define('LANG_ACCESS_DENIED',             'Access is denied');
+    define('LANG_ACCESS_GROUP_HINT',         'The groups you belong to are access denied to this page');
+    define('LANG_ACCESS_COUNTRY_HINT',       'This page is not viewable in your country');
 
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Login');

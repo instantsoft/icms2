@@ -1537,6 +1537,8 @@ CREATE TABLE `{#}widgets_pages` (
   `title` varchar(64) DEFAULT NULL,
   `url_mask` text COMMENT 'Маска URL',
   `url_mask_not` text COMMENT 'Отрицательная маска',
+  `groups` text COMMENT 'Группы доступа',
+  `countries` text COMMENT 'Страны доступа',
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
