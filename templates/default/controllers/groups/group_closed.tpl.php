@@ -25,8 +25,14 @@
 
         <div id="information" class="content_item block">
 
+            <div class="sess_messages">
+                <div class="message_info">
+                    <?php echo LANG_GROUP_IS_CLOSED; ?>
+                </div>
+            </div>
+
             <div class="group_description">
-                <?php echo LANG_GROUP_IS_CLOSED; ?>
+                <?php echo cmsEventsManager::hook('html_filter', $group['description']); ?>
             </div>
 
         </div>
