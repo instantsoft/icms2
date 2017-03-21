@@ -831,6 +831,8 @@ class content extends cmsFrontend {
                         'rules' => $rules
                     ));
 
+                    if (!empty($prop['options']['is_filter_multi'])){ $field->setOption('filter_multiple', true); }
+
                     break;
 
                 case 'list_multiple':
@@ -877,6 +879,8 @@ class content extends cmsFrontend {
                         'units' => !empty($prop['options']['units']) ? $prop['options']['units'] : false,
                         'rules' => $rules
                     ));
+
+                    if (!empty($prop['options']['is_filter_range'])){ $field->setOption('filter_range', true); }
 
                     break;
 
