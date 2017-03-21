@@ -107,6 +107,11 @@ class activity extends cmsFrontend {
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
+
         $items = cmsEventsManager::hook('activity_before_list', $items);
 
         return $this->cms_template->renderInternal($this, 'list', array(

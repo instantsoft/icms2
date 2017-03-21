@@ -382,6 +382,8 @@ nav select { display: none; }
     padding: 20px;
     background:#FFF;
     margin-bottom: 10px;
+    position: relative;
+    z-index: 0;
 }
 
 #body section h1{

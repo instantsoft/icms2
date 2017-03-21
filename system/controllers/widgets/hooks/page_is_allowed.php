@@ -4,8 +4,13 @@ class onWidgetsPageIsAllowed extends cmsAction {
 
     private $denied_type;
     private $country;
+    private $strict = false;
 
     public function run($allowed){
+
+        if(!$this->strict && $this->cms_user->is_admin){
+            return $allowed;
+        }
 
         $matched_pages = $this->cms_core->loadMatchedPages()->getMatchedPages();
 

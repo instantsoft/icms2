@@ -4,8 +4,6 @@ class actionActivityIndex extends cmsAction{
 
     public function run($tab='all'){
 
-        $user = cmsUser::getInstance();
-
         $dataset_name = false;
         $datasets = $this->getDatasets();
 
@@ -26,17 +24,17 @@ class actionActivityIndex extends cmsAction{
             'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
         );
 
-        $this->model->filterHiddenParents();		
+        $this->model->filterHiddenParents();
 
         // Получаем HTML списка записей
         $items_list_html = $this->renderActivityList($page_url, $dataset_name);
 
-        return cmsTemplate::getInstance()->render('index', array(
-            'datasets' => $datasets,
-            'dataset_name' => $dataset_name,
-            'dataset' => $dataset,
-            'user' => $user,
-            'items_list_html' => $items_list_html,
+        return $this->cms_template->render('index', array(
+            'datasets'        => $datasets,
+            'dataset_name'    => $dataset_name,
+            'dataset'         => $dataset,
+            'user'            => $this->cms_user,
+            'items_list_html' => $items_list_html
         ), $this->request);
 
     }

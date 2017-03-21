@@ -2297,7 +2297,7 @@ class modelContent extends cmsModel{
 
 	public function publishDelayedContentItems($ctype_name){
 
-		return $this->
+		return $this->filterIsNull('is_deleted')->
 					filterNotEqual('is_pub', 1)->
 					filter('i.date_pub <= NOW()')->
 					updateFiltered($this->table_prefix.$ctype_name, array(
@@ -2308,7 +2308,7 @@ class modelContent extends cmsModel{
 
 	public function hideExpiredContentItems($ctype_name){
 
-		return $this->
+		return $this->filterIsNull('is_deleted')->
 					filterEqual('is_pub', 1)->
 					filterNotNull('date_pub_end')->
 					filter('i.date_pub_end <= NOW()')->
