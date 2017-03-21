@@ -684,7 +684,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (98, 'user_notify_types', 'wall', 98, 1),
 (99, 'user_delete', 'wall', 99, 1),
 (100, 'page_is_allowed', 'auth', 100, 1),
-(101, 'admin_confirm_login', 'admin', 101, 1);
+(101, 'admin_confirm_login', 'admin', 101, 1),
+(102, 'page_is_allowed', 'widgets', 102, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

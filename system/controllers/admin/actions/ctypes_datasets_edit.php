@@ -13,7 +13,15 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
         $form = $this->getForm('ctypes_dataset', array('edit', $ctype['id']));
 
-        $cats = $content_model->getSubCategories($ctype['name']);
+        $cats = $content_model->getCategoriesTree($ctype['name'], false);
+
+        $cats_list = array();
+
+        if ($cats){
+            foreach($cats as $c){
+                $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level']-1).' '.$c['title'];
+            }
+        }
 
         $dataset = $old_dataset = $content_model->getContentDataset($dataset_id);
         $fields  = $content_model->getContentFields($ctype['name']);
@@ -46,7 +54,7 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
             'ctype'   => $ctype,
             'dataset' => $dataset,
             'fields'  => $fields,
-            'cats'    => array_collection_to_list($cats, 'id', 'title'),
+            'cats'    => $cats_list,
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
         ));

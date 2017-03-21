@@ -1,6 +1,3 @@
 <?php
 
-class widgets extends cmsFrontend {
-
-
-}
+class widgets extends cmsFrontend {}
