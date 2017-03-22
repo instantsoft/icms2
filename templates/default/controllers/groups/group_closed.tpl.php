@@ -13,6 +13,12 @@
 
 <div id="group_profile">
 
+    <div class="sess_messages">
+		<div class="message_info">
+			<?php echo LANG_GROUP_IS_CLOSED; ?>
+		</div>
+	</div>
+
     <div id="left_column" class="column">
 
         <div id="logo" class="block">
@@ -26,7 +32,7 @@
         <div id="information" class="content_item block">
 
             <div class="group_description">
-                <?php echo LANG_GROUP_IS_CLOSED; ?>
+                <?php echo cmsEventsManager::hook('html_filter', $group['description']); ?>
             </div>
 
         </div>
