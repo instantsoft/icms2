@@ -2241,7 +2241,7 @@ form .field .input_checkbox_list#countries_view label, form .field .input_checkb
         padding-left: 10px;
     }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 815px) {
     table.layout td.sidebar,
     table.layout-no-fit td.sidebar {
         display: none;
@@ -2270,7 +2270,7 @@ form .field .input_checkbox_list#countries_view label, form .field .input_checkb
         left: 10px;
     }
     #cp_header {
-        padding: 0;
+        padding: 0 5px;
     }
 }
 @media screen and (max-width: 640px) {
@@ -2287,5 +2287,13 @@ form .field .input_checkbox_list#countries_view label, form .field .input_checkb
         padding-right: 5px;
         padding-left: 5px;
         font-size: 0.95em;
+    }
+}
+@media screen and (max-width: 495px) {
+    #dashboard #chart select {
+        width: 185px;
+    }
+    #dashboard #chart .toolbar .pills-menu {
+        margin-left: 5px;
     }
 }

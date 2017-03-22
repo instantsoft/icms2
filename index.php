@@ -7,13 +7,12 @@
 //                        LICENSED BY GNU/GPL v2                              //
 //                                                                            //
 /******************************************************************************/
-	session_start();
+    session_start();
 
-	define('VALID_RUN', true);
+    define('VALID_RUN', true);
 
-	// Устанавливаем кодировку
-	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS 2');
+    // Устанавливаем кодировку
+    header('Content-type:text/html; charset=utf-8');
 
     require_once 'bootstrap.php';
 

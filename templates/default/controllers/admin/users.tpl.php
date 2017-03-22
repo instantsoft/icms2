@@ -23,6 +23,12 @@
     ));
 
     $this->addToolButton(array(
+        'class' => 'settings',
+        'title' => LANG_CONFIG,
+        'href'  => $this->href_to('controllers', array('edit', 'users'))
+    ));
+
+    $this->addToolButton(array(
         'class' => 'add',
         'title' => LANG_CP_USER_ADD,
         'href'  => $this->href_to('users', 'add')

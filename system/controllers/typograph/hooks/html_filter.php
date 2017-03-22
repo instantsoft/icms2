@@ -7,6 +7,7 @@ class onTypographHtmlFilter extends cmsAction {
         $errors              = null;
         $is_auto_br          = true;
         $build_redirect_link = true;
+        $build_smiles        = true;
 
         if (is_array($data)){
             $text                = $data['text'];
@@ -14,11 +15,20 @@ class onTypographHtmlFilter extends cmsAction {
             if(isset($data['build_redirect_link'])){
                 $build_redirect_link = $data['build_redirect_link'];
             }
+            if(isset($data['build_smiles'])){
+                $build_smiles = $data['build_smiles'];
+            }
         } else {
             $text = $data;
         }
 
-        return $this->getJevix($is_auto_br, $build_redirect_link)->parse($text, $errors);
+        $text = $this->getJevix($is_auto_br, $build_redirect_link)->parse($text, $errors);
+
+        if($build_smiles){
+            $text = $this->replaceEmotionToSmile($text);
+        }
+
+        return $text;
 
     }
 

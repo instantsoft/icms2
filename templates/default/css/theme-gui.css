@@ -1958,6 +1958,16 @@ form .ft_parent a.add {
     width: 100%;
     box-sizing: border-box;
 }
+#pm_contact .smilepanel {
+    position: absolute;
+    bottom: 137px;
+    background: #FFF;
+    box-sizing: border-box;
+    width: 80%;
+    right: 0;
+    border-top: 1px solid #DDD;
+    border-left: 1px solid #DDD;
+}
 /* City Selection Window ================================================= */
 
 #geo_window {

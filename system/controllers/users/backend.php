@@ -33,6 +33,10 @@ class backendUsers extends cmsBackend {
             array(
                 'title' => LANG_USERS_CFG_MIGRATION,
                 'url' => href_to($this->root_url, 'migrations')
+            ),
+            array(
+                'title' => LANG_USERS,
+                'url' => href_to('admin', 'users')
             )
         );
     }

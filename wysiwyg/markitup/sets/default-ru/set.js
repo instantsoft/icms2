@@ -1,14 +1,3 @@
-// ----------------------------------------------------------------------------
-// markItUp!
-// ----------------------------------------------------------------------------
-// Copyright (C) 2011 Jay Salvat
-// http://markitup.jaysalvat.com/
-// ----------------------------------------------------------------------------
-// Html tags
-// http://en.wikipedia.org/wiki/html
-// ----------------------------------------------------------------------------
-// Basic set. Feel free to add more tags
-// ----------------------------------------------------------------------------
 var mySettings = {
     resizeHandle: false,
 	onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},
@@ -27,6 +16,7 @@ var mySettings = {
 		{name:'Фото с компьютера', className: 'btnImgUpload', beforeInsert: function(markItUp) { InlineUpload.display(markItUp) }},
 		{name:'Видео YouTube', openWith:'<youtube>[![Ссылка на ролик YouTube]!]', closeWith:'</youtube>', className: 'btnVideoYoutube'},
 		{name:'Видео Facebook', openWith:'<facebook>[![Ссылка на ролик Facebook]!]', closeWith:'</facebook>', className: 'btnVideoFacebook'},
-        {name:'Код', openWith:'<code>', closeWith:'</code>', className: 'btnCode'}
+        {name:'Код', openWith:'<code>', closeWith:'</code>', className: 'btnCode'},
+        {name:'Смайлы', className: 'btnSmiles', key: 'Z', beforeInsert: function(markItUp) { insertSmiles.displayPanel(markItUp); }}
 	]
-}
+};

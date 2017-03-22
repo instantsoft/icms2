@@ -50,6 +50,7 @@ class fieldHtml extends cmsFormField {
             $value = cmsEventsManager::hook('html_filter', array(
                 'text'                => $value,
                 'is_auto_br'          => false,
+                'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
         }
