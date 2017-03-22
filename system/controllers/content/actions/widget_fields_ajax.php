@@ -16,13 +16,15 @@ class actionContentWidgetFieldsAjax extends cmsAction {
 
 		$fields = $this->model->getContentFields($ctype['name']);
 
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
 		$list = array();
 
 		if ($fields){
 			$list = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
 		}
 
-		$this->cms_template->renderJSON($list);
+		return $this->cms_template->renderJSON($list);
 
     }
 

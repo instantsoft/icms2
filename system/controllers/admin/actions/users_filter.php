@@ -30,8 +30,8 @@ class actionAdminUsersFilter extends cmsAction {
 
 		$fields = cmsEventsManager::hook('admin_users_filter', $fields);
 
-        return cmsTemplate::getInstance()->render('users_filter', array(
-            'ctype' => $ctype,
+        return $this->cms_template->render('users_filter', array(
+            'ctype'  => $ctype,
             'fields' => $fields
         ));
 

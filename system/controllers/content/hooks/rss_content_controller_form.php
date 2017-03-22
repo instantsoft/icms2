@@ -7,6 +7,9 @@ class onContentRssContentControllerForm extends cmsAction {
 		list($form, $feed) = $data;
 
         $fields = $this->model->getContentFields($feed['ctype_name']);
+
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
         $fields = array(''=>'') + array_collection_to_list($fields, 'name', 'title');
 
         $form->addFieldset(LANG_RSS_FEED_MAPPING, 'mapping', array(

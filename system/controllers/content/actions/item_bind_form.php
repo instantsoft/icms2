@@ -57,6 +57,8 @@ class actionContentItemBindForm extends cmsAction {
 			$fields = $this->model->getContentFields($ctype_name);
 		}
 
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
 		$filter_fields = array();
 
 		foreach($fields as $field){

@@ -353,6 +353,48 @@ function real_date_diff($date1, $date2 = NULL){
 }
 
 /**
+ * Форматирует дату в формат "сегодня", "вчера", "1 января 2017"
+ *
+ * @param string $date Исходная дата. Может быть как отформатированном виде, так и timestamp
+ * @param boolean $is_time Дополнять часом и минутами
+ * @return string
+ */
+function string_date_format($date, $is_time = false){
+
+    if(!$date){
+        return '';
+    }
+
+    if(!is_numeric($date)){
+        $timestamp = strtotime($date);
+    } else {
+        $timestamp = $date;
+    }
+
+    $item_date = date('j F Y', $timestamp);
+
+    $today_date     = date('j F Y');
+    $yesterday_date = date('j F Y', time()-3600*24);
+
+    switch($item_date){
+        case $today_date: $result = LANG_TODAY;
+            break;
+        case $yesterday_date: $result = LANG_YESTERDAY;
+            break;
+        default: $result = lang_date($item_date);
+    }
+
+    if ($is_time){
+
+        $result .= ' '.LANG_IN.' ' . date('H:i', $timestamp);
+
+    }
+
+    return $result;
+
+}
+
+/**
  * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser
  *

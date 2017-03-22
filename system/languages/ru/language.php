@@ -417,6 +417,7 @@
     define('LANG_IS_ENABLED',                'Активность');
     define('LANG_HELP',                      'Помощь');
     define('LANG_HELP_URL',                  'http://docs.instantcms.ru');
+    define('LANG_IN',                        'в');
 
     //NAVIGATION
     define('LANG_HOME',                      'Главная');

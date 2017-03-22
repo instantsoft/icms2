@@ -24,7 +24,10 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
         }
 
         $dataset = $old_dataset = $content_model->getContentDataset($dataset_id);
+
         $fields  = $content_model->getContentFields($ctype['name']);
+
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         if ($this->request->has('submit')){
 

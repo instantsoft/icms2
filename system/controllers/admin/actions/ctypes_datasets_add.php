@@ -15,6 +15,8 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         $fields  = $content_model->getContentFields($ctype['name']);
 
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
         $cats = $content_model->getCategoriesTree($ctype['name'], false);
 
         $cats_list = array();
