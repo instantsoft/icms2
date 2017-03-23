@@ -65,6 +65,11 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     background-position: center center;
     z-index: 100;
 }
+.anim_tooltip{
+    color: #ddd;
+    display: block;
+    font-size: 12px;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 

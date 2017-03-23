@@ -2,6 +2,8 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Панель управления');
 
+    define('LANG_CP_TOOLTIP_HELP',              'Полезная документация к разделу');
+    define('LANG_CP_TOOLTIP_HELP_HINT',         'Отключить анимацию можно в настройках шаблона');
     define('LANG_CP_DASHBOARD_STATS',           'Статистика');
     define('LANG_CP_DASHBOARD_SYSINFO',         'Информация о системе');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Полезные ресурсы');

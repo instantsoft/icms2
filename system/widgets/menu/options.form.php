@@ -34,6 +34,7 @@ class formWidgetMenuOptions extends cmsForm {
                     new fieldList('options:template', array(
                         'title' => LANG_WD_MENU_TEMPLATE,
                         'hint'  => LANG_WD_MENU_TEMPLATE_HINT,
+                        'default' => 'menu',
                         'generator' => function($item) use ($template_name) {
 
                             $default_tpls = cmsCore::getFilesList('templates/default/assets/ui/', 'menu*.tpl.php');
@@ -48,6 +49,8 @@ class formWidgetMenuOptions extends cmsForm {
                                     $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
                                 }
                             }
+
+                            asort($items);
 
                             return $items;
 

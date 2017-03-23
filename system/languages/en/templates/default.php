@@ -29,3 +29,4 @@ define('LANG_DEFAULT_THEME_COPYRIGHT_URL', 'Copyright URL');
 define('LANG_DEFAULT_THEME_COPYRIGHT_URL_HINT', 'Homepage by default');
 define('LANG_DEFAULT_THEME_COPYRIGHT_YEAR', 'Copyright year');
 define('LANG_DEFAULT_THEME_COPYRIGHT_YEAR_HINT', 'Current year by default');
+define('LANG_DEFAULT_THEME_DISABLE_HELP_ANIM', 'Disable "Help" button animation');

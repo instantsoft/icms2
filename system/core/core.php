@@ -474,6 +474,7 @@ class cmsCore {
             $form->addField($design_fieldset_id, new fieldList('tpl_body', array(
                 'title' => LANG_WIDGET_BODY_TPL,
 				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path),
+                'default' => $widget_name,
                 'generator' => function($item) use ($template){
                     $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
                     $current_tpls = cmsCore::getFilesList('templates/'.$template.'/'.$w_path, '*.tpl.php');
@@ -484,6 +485,7 @@ class cmsCore {
                         foreach ($tpls as $tpl) {
                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
                         }
+                        asort($items);
                     }
                     return $items;
                }

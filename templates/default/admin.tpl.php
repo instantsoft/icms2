@@ -13,6 +13,7 @@
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <?php $this->addMainCSS('templates/default/css/theme-modal.css'); ?>
     <?php $this->addMainCSS('templates/default/css/jquery-ui.css'); ?>
+    <?php $this->addMainCSS('templates/default/css/animate.css'); ?>
     <?php $this->addMainJS('templates/default/js/jquery.js'); ?>
     <?php $this->addMainJS('templates/default/js/jquery-ui.js'); ?>
     <?php $this->addMainJS('templates/default/js/i18n/jquery-ui/'.cmsCore::getLanguageName().'.js'); ?>
@@ -152,6 +153,23 @@
             });
             toolbarScroll.init();
             fitLayout();
+            <?php if(empty($this->options['disable_help_anim'])){ ?>
+                setTimeout(function(){
+                    $('.cp_toolbar li.help').addClass('animated shake');
+                    $(document).tooltip({
+                        items: '.cp_toolbar li.help',
+                        show: { duration: 0 },
+                        hide: { duration: 0 },
+                        content: function() {
+                            return '<?php echo LANG_CP_TOOLTIP_HELP; ?><span class="anim_tooltip"><?php echo LANG_CP_TOOLTIP_HELP_HINT; ?></span>';
+                        },
+                        position: {
+                            my: "center",
+                            at: "top-40"
+                        }
+                    });
+                }, 1000);
+            <?php } ?>
         });
 
     </script>

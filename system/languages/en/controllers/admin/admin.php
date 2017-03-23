@@ -2,6 +2,8 @@
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
 
+    define('LANG_CP_TOOLTIP_HELP',              'Useful documentation for the section');
+    define('LANG_CP_TOOLTIP_HELP_HINT',         'Disable animations can be in the template settings');
     define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
     define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');

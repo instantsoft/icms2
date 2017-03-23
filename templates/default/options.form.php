@@ -55,6 +55,19 @@ class formDefaultTemplateOptions extends cmsForm {
                     ))
 
                 )
+            ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_ADMIN_CONTROLLER,
+                'childs' => array(
+
+                    new fieldCheckbox('disable_help_anim', array(
+                        'title' => LANG_DEFAULT_THEME_DISABLE_HELP_ANIM,
+                        'default' => 0
+                    ))
+
+                )
             )
 
         );
