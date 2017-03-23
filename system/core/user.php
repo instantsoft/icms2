@@ -91,25 +91,29 @@ class cmsUser {
 
     }
 
+    private static function restrictSessionToIp($ip = false) {
+
+        if(!$ip){ $ip = self::getIp(); }
+
+        if (!self::isSessionSet('user_ip')){
+
+            self::sessionSet('user_ip', $ip);
+
+            $octets = explode('.', $ip);
+            $end_okets = end($octets);
+
+            self::sessionSet('user_net', rtrim($ip, $end_okets));
+
+        }
+
+    }
+
     /**
      * Проверяет изменился ли ip адрес сессии
      * @param boolean $strict Если true, то проверяется целый ip адрес, иначе проверка по подсети
      * @return boolean
      */
     public function checkSpoofingSession($strict = false) {
-
-        if (!self::isSessionSet('user_ip')){
-
-            self::sessionSet('user_ip', $this->ip);
-
-            $octets = explode('.', $this->ip);
-            $end_okets = end($octets);
-
-            self::sessionSet('user_net', rtrim($this->ip, $end_okets));
-
-            return true;
-
-        }
 
         if(!$strict){
             return mb_strstr($this->ip, self::sessionGet('user_net'));
@@ -177,6 +181,20 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function setUserSession($user, $last_ip = false){
+
+        self::sessionSet('user', array(
+            'id'        => $user['id'],
+            'groups'    => $user['groups'],
+            'time_zone' => $user['time_zone'],
+            'perms'     => self::getPermissions($user['groups']),
+            'is_admin'  => $user['is_admin']
+        ));
+
+        self::restrictSessionToIp($last_ip);
+
+    }
+
     /**
      * Авторизует пользователя по кукису
      * @param str $auth_token
@@ -207,13 +225,7 @@ class cmsUser {
 
         $user = cmsEventsManager::hook('user_login', $user);
 
-        self::sessionSet('user', array(
-            'id'        => $user['id'],
-            'groups'    => $user['groups'],
-            'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups']),
-            'is_admin'  => $user['is_admin']
-        ));
+        self::setUserSession($user, $user['ip']);
 
         return $user['id'];
 
@@ -247,13 +259,7 @@ class cmsUser {
 
         $user = cmsEventsManager::hook('user_login', $user);
 
-        self::sessionSet('user', array(
-            'id'        => $user['id'],
-            'groups'    => $user['groups'],
-            'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups']),
-            'is_admin'  => $user['is_admin']
-        ));
+        self::setUserSession($user);
 
         if ($remember){
 

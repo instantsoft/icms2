@@ -40,13 +40,7 @@ class actionAuthVerify extends cmsAction {
 
                     $user = cmsEventsManager::hook('user_login', $user);
 
-                    cmsUser::sessionSet('user', array(
-                        'id'        => $user['id'],
-                        'groups'    => $user['groups'],
-                        'time_zone' => $user['time_zone'],
-                        'perms'     => cmsUser::getPermissions($user['groups']),
-                        'is_admin'  => $user['is_admin']
-                    ));
+                    cmsUser::setUserSession($user);
 
                     $update_data = array(
                         'ip' => cmsUser::getIp()
