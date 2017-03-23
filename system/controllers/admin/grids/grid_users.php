@@ -90,7 +90,7 @@ function grid_users($controller){
         array(
             'title' => LANG_EDIT,
             'class' => 'edit tooltip',
-            'href' => href_to($controller->name, 'users', array('edit', '{id}'))
+            'href'  => href_to('users', '{id}', array('edit')) . '?back=' . href_to($controller->name, 'users')
         ),
         array(
             'title' => LANG_DELETE,

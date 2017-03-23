@@ -14,6 +14,8 @@ class actionUsersProfileEdit extends cmsAction {
             return;
         }
 
+        $back_url = $this->request->get('back', '');
+
         // проверяем наличие доступа
         if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
@@ -117,7 +119,11 @@ class actionUsersProfileEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-                $this->redirectTo('users', $profile['id']);
+                if ($back_url){
+                    $this->redirect($back_url);
+                } else {
+                    $this->redirectTo('users', $profile['id']);
+                }
 
             }
 
@@ -128,11 +134,12 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         return $this->cms_template->render('profile_edit', array(
-            'do'      => 'edit',
-            'id'      => $profile['id'],
-            'profile' => $profile,
-            'form'    => $form,
-            'errors'  => isset($errors) ? $errors : false
+            'do'         => 'edit',
+            'cancel_url' => ($back_url ? $back_url : href_to('users', $profile['id'])),
+            'id'         => $profile['id'],
+            'profile'    => $profile,
+            'form'       => $form,
+            'errors'     => isset($errors) ? $errors : false
         ));
 
     }

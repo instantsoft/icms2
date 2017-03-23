@@ -494,7 +494,7 @@ class content extends cmsFrontend {
 
                             $content_model = cmsCore::getModel('content');
                             $ctype = $content_model->getContentTypeByName($item['ctype_name']);
-                            $tree = $content_model->getCategoriesTree($item['ctype_name']);
+                            $tree = $content_model->limit(0)->getCategoriesTree($item['ctype_name']);
                             $level_offset = 0;
                             $last_header_id = false;
                             $items = array('' => '' );

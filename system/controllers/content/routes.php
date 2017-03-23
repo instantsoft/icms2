@@ -176,6 +176,14 @@ function routes_content(){
         ),
 
         array(
+            'pattern'    => '/^([a-zA-Z0-9\-\/]+)\/view\-([a-z0-9\-_]+)$/i',
+            'action'     => 'item_view',
+            'ctype_name' => cmsConfig::get('ctype_default'),
+            1            => 'slug',
+            2            => 'child_ctype_name'
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9_]+)\-([a-z0-9_]+)\/([a-zA-Z0-9\-\/]+)$/i',
             'action'    => 'category_view',
             1           => 'ctype_name',

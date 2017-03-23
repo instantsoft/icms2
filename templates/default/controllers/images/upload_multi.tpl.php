@@ -23,7 +23,7 @@
                 <div class="preview block" rel="<?php echo $idx; ?>" data-paths="<?php html(json_encode($paths)); ?>">
 					<?php  $is_image_exists = !empty($paths); ?>
 					<?php if ($is_image_exists) { ?><img src="<?php echo cmsConfig::get('upload_host') . '/' . reset($paths); ?>" /><?php } ?>
-                    <a href="javascript:" onclick="icms.images.removeOne('<?php echo $dom_id; ?>', <?php echo $idx; ?>)"><?php echo LANG_DELETE; ?></a>
+                    <a href="#" data-id="<?php echo $idx; ?>" onclick="return icms.images.removeOne('<?php echo $dom_id; ?>', this);"><?php echo LANG_DELETE; ?></a>
                 </div>
             <?php } ?>
         <?php } ?>

@@ -6,6 +6,7 @@ class fieldString extends cmsFormField {
     public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
     public $filter_type = 'str';
     public $var_type    = 'string';
+    public $type        = 'text';
 
     public function getOptions(){
         return array(
@@ -57,7 +58,7 @@ class fieldString extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['type']         = $this->getProperty('is_password') ? 'password' : 'text';
+        $this->data['type']         = $this->getProperty('is_password') ? 'password' : $this->getProperty('type');
         $this->data['autocomplete'] = $this->getProperty('autocomplete');
 
         return parent::getInput($value);
