@@ -35,11 +35,16 @@ class onWidgetsPageIsAllowed extends cmsAction {
 
                 $this->detectUserCountry();
 
-                if (!$this->isInCountry($page['countries']['view'])) {
-                    $allowed = false;
+                if (!empty($page['countries']['view']) && $page['countries']['view'] != array(0)) {
+                    if (!$this->isInCountry($page['countries']['view'])) {
+                        $allowed = false;
+                    }
                 }
-                if ($this->isInCountry($page['countries']['hide'])) {
-                    $allowed = false;
+
+                if(!empty($page['countries']['hide'])){
+                    if ($this->isInCountry($page['countries']['hide'])) {
+                        $allowed = false;
+                    }
                 }
 
             }
