@@ -10,7 +10,11 @@
 <div id="group_profile_header">
     <?php $this->renderChild('group_header', array('group'=>$group)); ?>
 </div>
-
+<div class="sess_messages">
+    <div class="message_info">
+        <?php echo LANG_GROUP_IS_CLOSED; ?>
+    </div>
+</div>
 <div id="group_profile">
 
     <div id="left_column" class="column">
@@ -26,7 +30,7 @@
         <div id="information" class="content_item block">
 
             <div class="group_description">
-                <?php echo LANG_GROUP_IS_CLOSED; ?>
+                <?php echo $group['description']; ?>
             </div>
 
         </div>

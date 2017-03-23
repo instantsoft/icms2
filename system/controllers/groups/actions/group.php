@@ -45,6 +45,8 @@ class actionGroupsGroup extends cmsAction {
         // Контент
         $content_counts = $this->getGroupContentCounts($group);
 
+        $group['description'] = cmsEventsManager::hook('html_filter', $group['description']);
+
         return $this->cms_template->render('group_view', array(
             'group'          => $group,
             'content_counts' => $content_counts,

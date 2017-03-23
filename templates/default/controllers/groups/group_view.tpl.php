@@ -71,7 +71,7 @@
         <div id="information" class="content_item block">
 
             <div class="group_description">
-                <?php echo cmsEventsManager::hook('html_filter', $group['description']); ?>
+                <?php echo $group['description']; ?>
             </div>
 
         </div>
