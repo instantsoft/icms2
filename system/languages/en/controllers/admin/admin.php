@@ -1,7 +1,7 @@
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
-
+    define('LANG_CP_INSTALL_FOLDER_EXISTS',     'Attention! The installation directory <b>/install</b> has not been deleted.');
     define('LANG_CP_TOOLTIP_HELP',              'Useful documentation for the section');
     define('LANG_CP_TOOLTIP_HELP_HINT',         'Disable animations can be in the template settings');
     define('LANG_CP_DASHBOARD_STATS',           'Site Stats');

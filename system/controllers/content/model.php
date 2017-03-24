@@ -352,7 +352,10 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentFolderByTitle($title){
+    public function getContentFolderByTitle($title, $ctype_id, $user_id){
+
+        $this->filterEqual('ctype_id', $ctype_id)->
+            filterEqual('user_id', $user_id);
 
         return $this->getItemByField('content_folders', 'title', $title);
 
@@ -1701,7 +1704,7 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_exists = $this->getContentFolderByTitle($item['new_folder']);
+            $folder_exists = $this->getContentFolderByTitle($item['new_folder'], $ctype['id'], $item['user_id']);
             if(!$folder_exists){
                 $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
             } else {
@@ -1772,7 +1775,7 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_exists = $this->getContentFolderByTitle($item['new_folder']);
+            $folder_exists = $this->getContentFolderByTitle($item['new_folder'], $ctype['id'], $item['user_id']);
             if(!$folder_exists){
                 $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
             } else {

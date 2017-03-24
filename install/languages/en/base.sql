@@ -139,7 +139,7 @@ CREATE TABLE `{#}content_folders` (
   `user_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`ctype_id`)
+  KEY `user_id` (`user_id`,`ctype_id`,`title`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_relations`;

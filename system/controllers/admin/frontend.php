@@ -7,26 +7,32 @@ class admin extends cmsFrontend {
 
     public $installer_upload_path = 'installer';
 
+    public $install_folder_exists = false;
+
 	public function routeAction($action_name) {
 
-        $result = cmsEventsManager::hook('admin_confirm_login', array(
-            'allow'     => true,
-            'form'      => null,
-            'errors'    => null,
-            'pagetitle' => null,
-            'title'     => null,
-            'hint'      => null
-        ));
+        if(!$this->request->isInternal()){
 
-        if (!$result['allow']){
+            $result = cmsEventsManager::hook('admin_confirm_login', array(
+                'allow'     => true,
+                'form'      => null,
+                'errors'    => null,
+                'pagetitle' => null,
+                'title'     => null,
+                'hint'      => null
+            ));
 
-            unset($result['allow']);
+            if (!$result['allow']){
 
-            $this->current_params = $result;
+                unset($result['allow']);
 
-			return 'confirm_login';
+                $this->current_params = $result;
 
-		}
+                return 'confirm_login';
+
+            }
+
+        }
 
 		return $action_name;
 
@@ -34,17 +40,24 @@ class admin extends cmsFrontend {
 
     public function before($action_name) {
 
-        if (!cmsUser::isLogged()) { cmsCore::errorForbidden('', true); }
-
-        if (!cmsUser::isAdmin()) { cmsCore::error404(); }
-
-        if(!$this->isAllowByIp()){ cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP); }
-
         parent::before($action_name);
 
-        $this->cms_template->setLayout('admin');
+        if(!$this->request->isInternal()){
 
-        $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+            if (!cmsUser::isLogged()) { cmsCore::errorForbidden('', true); }
+
+            if (!cmsUser::isAdmin()) { cmsCore::error404(); }
+
+            if(!$this->isAllowByIp()){ cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP); }
+
+            $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+
+            $this->cms_template->setLayout('admin');
+
+            $this->install_folder_exists = file_exists($this->cms_config->root_path . 'install/');
+
+        }
+
 
     }
 

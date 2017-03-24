@@ -36,6 +36,31 @@ function install_package(){
         }
     }
 
+    $remove_table_indexes = array(
+        'content_folders' => array(
+            'user_id'
+        )
+    );
+    $add_table_indexes = array(
+        'content_folders' => array(
+            'user_id' => array('user_id', 'ctype_id', 'title')
+        )
+    );
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    if($add_table_indexes){
+        foreach ($add_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name);
+            }
+        }
+    }
+
     return true;
 
 }
