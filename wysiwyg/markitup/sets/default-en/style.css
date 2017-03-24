@@ -44,6 +44,9 @@
 .markItUp .btnSmiles a {
 	background-image:url(images/smiles.png);
 }
+.markItUp .btnSpoiler a {
+	background-image:url(images/spoiler.png);
+}
 .smilepanel {
     display: none;
     padding: 0 5px 10px 5px !important;

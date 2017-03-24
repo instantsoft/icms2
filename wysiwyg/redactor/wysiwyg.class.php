@@ -33,7 +33,7 @@ class cmsWysiwygRedactor{
                         replaceDivs: false,
                         removeComments: true,
                         convertLinks: false,
-                        pastePlainText: true,
+                        pastePlainText: false,
 						<?php if (!$user->is_admin) { ?>
                             buttonsHide: ['html']
 						<?php } ?>

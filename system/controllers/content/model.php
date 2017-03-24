@@ -352,6 +352,12 @@ class modelContent extends cmsModel{
 
     }
 
+    public function getContentFolderByTitle($title){
+
+        return $this->getItemByField('content_folders', 'title', $title);
+
+    }
+
     public function updateContentFolder($id, $folder){
 
         return $this->update('content_folders', $id, $folder);
@@ -1695,8 +1701,12 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_id = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
-            $item['folder_id'] = $folder_id;
+            $folder_exists = $this->getContentFolderByTitle($item['new_folder']);
+            if(!$folder_exists){
+                $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
+            } else {
+                $item['folder_id'] = $folder_exists['id'];
+            }
         }
 
         unset($item['new_folder']);
@@ -1762,8 +1772,12 @@ class modelContent extends cmsModel{
         unset($item['new_category']);
 
         if (!empty($item['new_folder'])){
-            $folder_id = $this->addContentFolder($ctype['id'], (empty($item['user_id']) ? cmsUser::getInstance()->id : $item['user_id']), $item['new_folder']);
-            $item['folder_id'] = $folder_id;
+            $folder_exists = $this->getContentFolderByTitle($item['new_folder']);
+            if(!$folder_exists){
+                $item['folder_id'] = $this->addContentFolder($ctype['id'], $item['user_id'], $item['new_folder']);
+            } else {
+                $item['folder_id'] = $folder_exists['id'];
+            }
         }
 
         unset($item['new_folder']);

@@ -74,6 +74,9 @@ class actionContentItemAdd extends cmsAction {
         if ($ctype['is_folders']){
             $folders_list = $this->model->getContentFolders($ctype['id'], $this->cms_user->id);
             $folders_list = array_collection_to_list($folders_list, 'id', 'title');
+            if($this->request->has('folder_id')){
+                $item['folder_id'] = $this->request->get('folder_id', 0);
+            }
         }
 
         $parents = $this->model->getContentTypeParents($ctype['id']);

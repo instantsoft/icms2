@@ -25,7 +25,7 @@
         $this->addToolButton(array(
             'class' => 'add',
             'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
-            'href'  => href_to($ctype['name'], 'add'),
+            'href'  => href_to($ctype['name'], 'add').(($folder_id  && is_numeric($folder_id) && ($user->id == $profile['id'] || $user->is_admin)) ? '?folder_id='.$folder_id : ''),
         ));
 
     }

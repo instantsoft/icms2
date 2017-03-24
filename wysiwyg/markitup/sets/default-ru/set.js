@@ -17,6 +17,7 @@ var mySettings = {
 		{name:'Видео YouTube', openWith:'<youtube>[![Ссылка на ролик YouTube]!]', closeWith:'</youtube>', className: 'btnVideoYoutube'},
 		{name:'Видео Facebook', openWith:'<facebook>[![Ссылка на ролик Facebook]!]', closeWith:'</facebook>', className: 'btnVideoFacebook'},
         {name:'Код', openWith:'<code>', closeWith:'</code>', className: 'btnCode'},
+        {name:'Спойлер', openWith:'<spoiler title="[![Название спойлера:!:Спойлер]!]">', placeHolder:'\n\n', closeWith:'</spoiler>', className: 'btnSpoiler'},
         {name:'Смайлы', className: 'btnSmiles', key: 'Z', beforeInsert: function(markItUp) { insertSmiles.displayPanel(markItUp); }}
 	]
 };

@@ -48,7 +48,7 @@ class onTypographHtmlFilter extends cmsAction {
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote',
             'video', 'audio', 'youtube','facebook',
-            'object', 'param', 'embed', 'iframe'
+            'object', 'param', 'embed', 'iframe','spoiler'
         ));
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
@@ -83,6 +83,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('th', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
         $jevix->cfgAllowTagParams('p', array('style' => '#text'));
         $jevix->cfgAllowTagParams('div', array('style' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('spoiler', array('title' => '#text'));
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
@@ -127,6 +128,9 @@ class onTypographHtmlFilter extends cmsAction {
         // Ставим колбэк для кода
         $jevix->cfgSetTagCallback('code', array($this, 'parseCode'));
 
+        // Ставим колбэк для спойлеров
+        $jevix->cfgSetTagCallbackFull('spoiler', array($this, 'parseSpoiler'));
+
         return $jevix;
 
     }
@@ -155,6 +159,19 @@ class onTypographHtmlFilter extends cmsAction {
         $tag_string .= '>'.$content.'</a>';
 
         return $tag_string;
+
+    }
+
+    public function parseSpoiler($tag, $params, $content) {
+
+        if(empty($content)){
+            return '';
+        }
+
+        $id = uniqid();
+        $title = !empty($params['title']) ? htmlspecialchars($params['title']) : '';
+
+        return '<div class="spoiler"><input tabindex="-1" type="checkbox" id="'.$id.'"><label for="'.$id.'">'.$title.'</label><div class="spoiler_body">'.$content.'</div></div>';
 
     }
 

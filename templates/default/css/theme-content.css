@@ -719,6 +719,31 @@ article div.content_categories:last-child {
 a.hashtag {
     text-decoration: none;
 }
+.spoiler > input + label:before {
+    content: '+';
+    float: left;
+    font-weight: bold;
+    width: 15px;
+}
+.spoiler > input:checked + label:before {
+    content: '-';
+}
+.spoiler > input, .spoiler > input + label + .spoiler_body { display:none; }
+.spoiler > input + label , .spoiler > .spoiler_body {
+    background:#ecf0f1;
+    padding:5px 10px;
+    overflow:hidden;
+    width:100%;
+    box-sizing: border-box;
+    display: block;
+}
+.spoiler > input + label { cursor: pointer; }
+.spoiler > input:checked + label + .spoiler_body{ display: block; }
+.spoiler > .spoiler_body {
+    border: 2px solid #ecf0f1;
+    border-top: none;
+    background-color: transparent;
+}
 @media screen and (max-width: 980px) {
 	.share .ya-share2__container_size_s .ya-share2__item {
 		margin-right: 10px;
