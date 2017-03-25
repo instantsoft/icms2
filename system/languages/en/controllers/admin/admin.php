@@ -83,6 +83,7 @@
     define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
 
     define('LANG_CP_BASIC',                     'Basic settings');
+    define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');
     define('LANG_CP_PREMOD_ADD',                'Pre-moderate new entries');
     define('LANG_CP_PREMOD_EDIT',               'Pre-moderate edited entries');

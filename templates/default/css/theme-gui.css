@@ -852,6 +852,41 @@ form .ft_parent a.add {
     margin: 0 10px 0 0;
     font-size: 13px;
 }
+.is_collapsed {
+    transition: all 0.3s ease;
+}
+.is_collapse {
+    position: relative;
+    background: #ecf0f1;
+    height: 30px;
+    box-sizing: border-box;
+    line-height: 30px;
+    cursor: pointer;
+    padding-left: 10px;
+}
+.is_collapse > legend {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    left: 0;
+}
+.is_collapsed > legend:before {
+    content: '+';
+    display: inline-block;
+    margin: 0 10px 0 10px;
+    font-size: 16px;
+}
+.is_collapsed.do_expand > legend:before {
+    content: '-';
+}
+.is_collapsed.do_expand > legend {
+    cursor: pointer;
+}
+.is_collapse > .field {
+    display: none;
+}
 /* ========================================================================== */
 
 .input-users-list{

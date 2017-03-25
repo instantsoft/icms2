@@ -1,3 +1,4 @@
+<?php $this->addJS($this->getJavascriptFileName('jquery-cookie')); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
@@ -55,8 +56,7 @@
         <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
 
             <div id="tab-<?php echo $fieldset_id; ?>" class="tab" <?php if($form->is_tabbed && $index){ ?>style="display: none;"<?php } ?>>
-            <fieldset id="fset_<?php echo $fieldset_id; ?>"
-            <?php if (isset($fieldset['class'])){ ?>class="<?php echo $fieldset['class']; ?>"<?php } ?>
+            <fieldset id="fset_<?php echo $fieldset_id; ?>" class="<?php if (!empty($fieldset['is_collapsed'])){ ?>is_collapsed <?php if (!empty($fieldset['collapse_open'])){ ?>do_expand<?php } else { ?>is_collapse<?php } ?><?php } ?><?php if (isset($fieldset['class'])){ ?><?php echo $fieldset['class']; ?><?php } ?>"
             <?php if (isset($fieldset['is_hidden'])){ ?>style="display:none"<?php } ?>>
 
                 <?php if (!empty($fieldset['title']) && !$form->is_tabbed){ ?>
@@ -163,6 +163,16 @@
             <?php if ($form->is_tabbed){ ?>
                 initTabs('#<?php echo $form_id; ?>');
             <?php } ?>
+                $('.is_collapsed legend').on('click', function (){
+                    var _fieldset = $(this).closest('.is_collapsed');
+                    $(_fieldset).toggleClass('is_collapse do_expand');
+                    $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
+                });
+                $('.is_collapsed').each(function (){
+                    if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
+                        $(this).addClass('do_expand').removeClass('is_collapse'); return;
+                    }
+                });
             });
         </script>
 

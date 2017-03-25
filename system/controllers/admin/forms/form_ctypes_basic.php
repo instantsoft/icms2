@@ -299,6 +299,44 @@ class formAdminCtypesBasic extends cmsForm {
                         )
                     ))
                 )
+            ),
+            'seo' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_IS_COLLAPSED,
+                'childs' => array(
+                    new fieldListMultiple('options:is_collapsed', array(
+                        'generator' => function ($ctype) use($do){
+
+                            $items = array(
+                                'folder' => LANG_CP_FOLDERS,
+                                'group_wrap' => LANG_CP_CT_GROUPS
+                            );
+
+                            if($do != 'add'){
+
+                                $model = cmsCore::getModel('content');
+
+                                $fieldset_titles = $model->orderBy('ordering')->getContentFieldsets($ctype['id']);
+
+                                if($fieldset_titles){
+                                    foreach ($fieldset_titles as $fieldset) {
+                                        $items[md5($fieldset)] = $fieldset;
+                                    }
+                                }
+
+                            }
+
+                            return $items + array(
+                                'tags_wrap'    => LANG_TAGS,
+                                'privacy_wrap' => LANG_CP_FIELD_PRIVACY,
+                                'is_comment'   => LANG_CP_COMMENTS,
+                                'seo_wrap'     => LANG_SEO,
+                                'pub_wrap'     => LANG_CP_PUBLICATION,
+                            );
+
+                        }
+                    ))
+                )
             )
         );
 

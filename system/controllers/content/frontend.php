@@ -554,7 +554,7 @@ class content extends cmsFrontend {
 
         // Если включены личные папки, добавляем в форму поле выбора личной папки
         if ($ctype['is_folders']){
-            $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder');
+            $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('folder', $ctype['options']['is_collapsed'])));
             $folders = array('0'=>'');
             if ($folders_list) { $folders = $folders + $folders_list; }
             $form->addField($fieldset_id,
@@ -580,7 +580,7 @@ class content extends cmsFrontend {
         // поле выбора группы
         if (($action == 'add' || $this->cms_user->is_admin) && !empty($groups_list) && $groups_list != array('0'=>'')){
 
-            $fieldset_id = $form->addFieldset(LANG_GROUP);
+            $fieldset_id = $form->addFieldset(LANG_GROUP, 'group_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('group_wrap', $ctype['options']['is_collapsed'])));
             $form->addField($fieldset_id,
                 new fieldList('parent_id', array(
                         'items' => $groups_list
@@ -606,7 +606,11 @@ class content extends cmsFrontend {
         // Добавляем поля в форму
         foreach($fieldsets as $fieldset){
 
-            $fieldset_id = $form->addFieldset($fieldset['title']);
+            $fid = $fieldset['title'] ? md5($fieldset['title']) : null;
+
+            $fieldset_id = $form->addFieldset($fieldset['title'], $fid, array(
+                'is_collapsed' => !empty($ctype['options']['is_collapsed']) && $fid && in_array($fid, $ctype['options']['is_collapsed'])
+            ));
 
             foreach($fieldset['fields'] as $field){
 
@@ -621,7 +625,7 @@ class content extends cmsFrontend {
         // Если включены теги, то добавляем поле для них
         //
         if ($ctype['is_tags']){
-            $fieldset_id = $form->addFieldset(LANG_TAGS);
+            $fieldset_id = $form->addFieldset(LANG_TAGS, 'tags_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('tags_wrap', $ctype['options']['is_collapsed'])));
             $form->addField($fieldset_id, new fieldString('tags', array(
                 'hint' => LANG_TAGS_HINT,
                 'options'=>array(
@@ -655,7 +659,7 @@ class content extends cmsFrontend {
         // Если разрешено управление видимостью, то добавляем поле
         if (cmsUser::isAllowed($ctype['name'], 'privacy')) {
 
-            $fieldset_id = $form->addFieldset( LANG_PRIVACY );
+            $fieldset_id = $form->addFieldset( LANG_PRIVACY, 'privacy_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('privacy_wrap', $ctype['options']['is_collapsed'])));
             $form->addField($fieldset_id, new fieldList('is_private', array(
                 'items' => array(
                     0 => LANG_PRIVACY_PUBLIC,
@@ -669,7 +673,7 @@ class content extends cmsFrontend {
         // если разрешено отключать комментарии к записи
         if(cmsUser::isAllowed($ctype['name'], 'disable_comments') && $ctype['is_comments']){
 
-            $fieldset_id = $form->addFieldset(LANG_RULE_CONTENT_COMMENT, 'is_comment');
+            $fieldset_id = $form->addFieldset(LANG_RULE_CONTENT_COMMENT, 'is_comment', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('is_comment', $ctype['options']['is_collapsed'])));
             $form->addField($fieldset_id, new fieldList('is_comments_on', array(
 				'default' => 1,
 				'items' => array(
@@ -684,7 +688,7 @@ class content extends cmsFrontend {
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
         //
         if (!empty($ctype['options']['is_manual_title']) || !$ctype['is_auto_keys'] || !$ctype['is_auto_desc']){
-            $fieldset_id = $form->addFieldset( LANG_SEO );
+            $fieldset_id = $form->addFieldset( LANG_SEO, 'seo_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('seo_wrap', $ctype['options']['is_collapsed'])));
             if ($ctype['options']['is_manual_title']){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,
@@ -730,8 +734,10 @@ class content extends cmsFrontend {
 
         if ($this->cms_user->is_admin){ $is_pub_end_days = false; }
 
+        $is_pub_collapsed = !empty($ctype['options']['is_collapsed']) && in_array('pub_wrap', $ctype['options']['is_collapsed']);
+
 		if ($is_pub_control){
-			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
+			$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB, 'pub_wrap', array('is_collapsed' => $is_pub_collapsed));
 			$form->addField($pub_fieldset_id, new fieldList('is_pub', array(
 				'title' => sprintf(LANG_CONTENT_IS_PUB, $ctype['labels']['create']),
 				'default' => 1,
@@ -744,7 +750,7 @@ class content extends cmsFrontend {
 
         if ($is_dates){
 			if ($is_pub_start_date){
-				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
+				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB, 'pub_wrap', array('is_collapsed' => $is_pub_collapsed));
                 $m = date('i');
 				$form->addField($pub_fieldset_id, new fieldDate('date_pub', array(
 					'title' => LANG_CONTENT_DATE_PUB,
@@ -758,7 +764,7 @@ class content extends cmsFrontend {
 				)));
 			}
 			if ($is_pub_end_date){
-				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
+				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB, 'pub_wrap', array('is_collapsed' => $is_pub_collapsed));
 				$form->addField($pub_fieldset_id, new fieldDate('date_pub_end', array(
 					'title' => LANG_CONTENT_DATE_PUB_END,
 					'hint' => LANG_CONTENT_DATE_PUB_END_HINT,
@@ -768,7 +774,7 @@ class content extends cmsFrontend {
                 $is_expired = (strtotime($item['date_pub_end']) - time()) <= 0;
             }
 			if (($action=='add' && $is_pub_end_days) || ($action=='edit' && $is_expired && $is_pub_ext && $is_pub_end_days)){
-				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB );
+				$pub_fieldset_id = $pub_fieldset_id ? $pub_fieldset_id : $form->addFieldset( LANG_CONTENT_PUB, 'pub_wrap', array('is_collapsed' => $is_pub_collapsed));
 				$title = $action=='add' ? LANG_CONTENT_PUB_LONG : LANG_CONTENT_PUB_LONG_EXT;
 				$hint = $action=='add'? false : sprintf(LANG_CONTENT_PUB_LONG_NOW, html_date($item['date_pub_end']));
 				if ($pub_max_days){

@@ -862,7 +862,8 @@ class modelContent extends cmsModel{
         $this->useCache("content.fields.{$ctype_name}");
 
         $this->groupBy('fieldset');
-        $this->orderBy('fieldset');
+
+        if (!$this->order_by){ $this->orderBy('fieldset'); }
 
         $fieldsets = $this->get($table_name, function($item, $model){
             $item = $item['fieldset'];
