@@ -795,8 +795,10 @@ class cmsCore {
 
     /**
      * Запускает все виджеты, привязанные к текущей странице
+     * или виджеты в указанной позиции
+     * @param string $position Имя позиции для обработки
      */
-    public function runWidgets(){
+    public function runWidgets($position = ''){
 
         // в админке нам виджеты не нужны
         if ($this->controller == 'admin') { return; }
@@ -812,7 +814,7 @@ class cmsCore {
                 if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
                     continue;
                 }
-                $this->runWidget($widget);
+                if (!$position || $widget['position'] == $position) { $this->runWidget($widget); }
             }
         }
 
