@@ -70,6 +70,10 @@
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File title is taken from the <b>widgets</b> folder of your theme, without the <b>.tpl.php</b> extension');
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
+    define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
+    define('LANG_TABLET_DEVICES',  'Tablets');
+    define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
     define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');

@@ -10,6 +10,7 @@ class actionAdminWidgetsEdit extends cmsAction {
         $widgets_model = cmsCore::getModel('widgets');
 
         $widget = $widgets_model->getWidgetBinding($binded_id);
+        if (!$widget){ cmsCore::error404(); }
 
         if(!$widget['tpl_wrap']){
             $widget['tpl_wrap'] = 'wrapper';

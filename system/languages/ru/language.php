@@ -71,6 +71,10 @@
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'Название файла из папки <b>widgets</b> вашего шаблона, без расширения <b>.tpl.php</b>');
     define('LANG_WIDGET_BODY_TPL',			 'Шаблон виджета');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');
+    define('LANG_WIDGET_DEVICE',			 'На каких устройствах показывать виджет');
+    define('LANG_DESKTOP_DEVICES',  'Настольные ПК');
+    define('LANG_TABLET_DEVICES',  'Планшеты');
+    define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
     define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');

@@ -1515,6 +1515,7 @@ CREATE TABLE `{#}widgets_bind` (
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Order number',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
+  `device_types` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `position` (`position`),
   KEY `widget_id` (`widget_id`),

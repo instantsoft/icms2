@@ -204,6 +204,7 @@ class modelWidgets extends cmsModel {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
             return $item;
         });
 
@@ -227,17 +228,29 @@ class modelWidgets extends cmsModel {
 
         $positions = array();
 
-        foreach($binds as $bind){
+        if($binds){
+            foreach($binds as $bind){
 
-            $positions[ $bind['position'] ][] = array(
-                'id'          => $bind['id'],
-                'title'       => $bind['title'],
-                'name'        => $bind['name'],
-                'is_tab_prev' => (bool) $bind['is_tab_prev'],
-                'is_enabled'  => (bool) $bind['is_enabled'],
-                'is_disabled' => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
-            );
+                $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
+                if($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3){
+                    foreach ($bind['device_types'] as $dt) {
+                        $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
+                    }
+                } else {
+                    $device_types = false;
+                }
 
+                $positions[ $bind['position'] ][] = array(
+                    'id'           => $bind['id'],
+                    'title'        => $bind['title'],
+                    'device_types' => $device_types,
+                    'name'         => $bind['name'],
+                    'is_tab_prev'  => (bool) $bind['is_tab_prev'],
+                    'is_enabled'   => (bool) $bind['is_enabled'],
+                    'is_disabled'  => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
+                );
+
+            }
         }
 
         return $positions ? $positions : false;
@@ -322,6 +335,10 @@ class modelWidgets extends cmsModel {
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+                        $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+                        if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
+                            $item['device_types'] = array();
+                        }
                         return $item;
                     });
 

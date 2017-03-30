@@ -88,7 +88,7 @@ function create_config($path, $file){
         'allow_ips'		        => '',
         'default_editor'		=> 'redactor',
         'show_breadcrumbs'		=> 1,
-        'check_spoofing_type'   => 1
+        'check_spoofing_type'   => 0
     );
 
     write_config($file, $config);

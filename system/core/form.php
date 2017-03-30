@@ -271,6 +271,14 @@ class cmsForm {
 //============================================================================//
 
     /**
+     * Убирает из набора все поля
+     * @param string $fieldset_id ID набора полей
+     */
+    public function clearFieldset($fieldset_id){
+        $this->structure[ $fieldset_id ]['childs'] = array();
+    }
+
+    /**
      * Удаляет набор полей из формы
      * @param string $fieldset_id ID набора полей
      */

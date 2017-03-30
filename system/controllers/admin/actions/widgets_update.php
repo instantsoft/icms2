@@ -7,12 +7,12 @@ class actionAdminWidgetsUpdate extends cmsAction {
         if (!$this->request->isAjax()){ cmsCore::error404(); }
         if (!$this->request->has('id')){ cmsCore::error404(); }
 
-        $template = cmsTemplate::getInstance();
         $widgets_model = cmsCore::getModel('widgets');
 
         $widget_id = $this->request->get('id', 0);
 
         $widget = $widgets_model->getWidgetBinding($widget_id);
+        if (!$widget){ cmsCore::error404(); }
 
         cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
 
@@ -26,20 +26,28 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
             $widgets_model->updateWidgetBinding($widget_id, $widget);
 
-            $template->renderJSON(array(
-                'errors' => false,
-                'callback' => 'widgetUpdated'
+            $widget = $widgets_model->getWidgetBinding($widget_id);
+
+            if($widget['device_types'] && $widget['device_types'] !== array(0) && count($widget['device_types']) < 3){
+                foreach ($widget['device_types'] as $dt) {
+                    $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
+                }
+            } else {
+                $device_types = false;
+            }
+            $widget['device_types'] = $device_types;
+
+            return $this->cms_template->renderJSON(array(
+                'errors'   => false,
+                'callback' => 'widgetUpdated',
+                'widget'   => $widget
             ));
 
         }
 
-        if ($errors){
-
-            $template->renderJSON(array(
-                'errors' => $errors
-            ));
-
-        }
+        return $this->cms_template->renderJSON(array(
+            'errors' => $errors
+        ));
 
     }
 

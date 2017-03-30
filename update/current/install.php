@@ -16,6 +16,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets_pages` ADD `countries` TEXT NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('widgets_bind', 'device_types')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `device_types` VARCHAR(50) NULL DEFAULT NULL");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();

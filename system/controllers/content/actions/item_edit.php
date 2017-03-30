@@ -98,7 +98,13 @@ class actionContentItemEdit extends cmsAction {
         $item['ctype_id'] = $ctype['id'];
 
         if ($ctype['props']){
-            $item_props = $this->model->getContentProps($ctype['name'], $item['category_id']);
+
+            $category_id = !$is_submitted ? $item['category_id'] :
+                (($this->request->has('category_id') && $ctype['options']['is_cats_change']) ?
+                    $this->request->get('category_id', 0) :
+                    $item['category_id']);
+
+            $item_props = $this->model->getContentProps($ctype['name'], $category_id);
             $item_props_fields = $this->getPropsFields($item_props);
             $item['props'] = $this->model->getPropsValues($ctype['name'], $id);
             foreach($item_props_fields as $field){

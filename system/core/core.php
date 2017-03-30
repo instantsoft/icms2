@@ -510,6 +510,17 @@ class cmsCore {
                 'show_guests' => true,
             )));
 
+            $form->addField($access_fieldset_id, new fieldListMultiple('device_types', array(
+                'title'   => LANG_WIDGET_DEVICE,
+                'default' => 0,
+                'show_all'=> true,
+                'items'   => array(
+                    'tablet'  => LANG_TABLET_DEVICES,
+                    'mobile'  => LANG_MOBILE_DEVICES,
+                    'desktop' => LANG_DESKTOP_DEVICES
+                )
+            )));
+
         //
         // Опции заголовка
         //
@@ -808,12 +819,32 @@ class cmsCore {
         $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), cmsTemplate::getInstance()->getName());
 
         if (is_array($widgets_list)){
+
+            $device_type = cmsRequest::getDeviceType();
+            $user = cmsUser::getInstance();
+
             foreach ($widgets_list as $widget){
+
+                // не выводим виджеты контроллеров, которые отключены
                 if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
                     continue;
                 }
+
+                // проверяем доступ для виджетов
+                if (!$user->isInGroups($widget['groups_view'])) { continue; }
+                if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
+                    continue;
+                }
+
+                // проверяем для каких устройств показывать
+                if($widget['device_types'] && !in_array($device_type, $widget['device_types'])){
+                    continue;
+                }
+
                 $this->runWidget($widget);
+
             }
+
         }
 
     }
@@ -821,14 +852,6 @@ class cmsCore {
     public function runWidget($widget){
 
         $result = false;
-
-        $user = cmsUser::getInstance();
-
-        $is_user_view = $user->isInGroups($widget['groups_view']);
-        $is_user_hide = !empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin;
-
-        if ($is_user_hide) { return false; }
-        if (!$is_user_view) { return false; }
 
         $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
@@ -863,7 +886,7 @@ class cmsCore {
             }
         }
 
-        if ($result===false) { return false; }
+        if ($result === false) { return false; }
 
         if (isset($result['_wd_template'])) { $widget_object->setTemplate($result['_wd_template']); }
 

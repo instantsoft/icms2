@@ -300,7 +300,7 @@ class formAdminCtypesBasic extends cmsForm {
                     ))
                 )
             ),
-            'seo' => array(
+            'collapsed' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_IS_COLLAPSED,
                 'childs' => array(

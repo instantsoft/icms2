@@ -1423,7 +1423,7 @@ class modelContent extends cmsModel{
 
     public function getContentDataset($id){
 
-        return $this->getItemById('content_datasets', $id, function($item, $model){
+        return cmsEventsManager::hook('ctype_dataset_get', $this->getItemById('content_datasets', $id, function($item, $model){
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
@@ -1434,7 +1434,7 @@ class modelContent extends cmsModel{
 
             return $item;
 
-        });
+        }));
 
     }
 

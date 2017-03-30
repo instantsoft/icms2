@@ -180,6 +180,11 @@ class comments extends cmsFrontend {
         $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();
         $items = $this->model->getComments();
 
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
+
         $items = cmsEventsManager::hook('comments_before_list', $items);
 
         return $this->cms_template->renderInternal($this, 'list_index', array(

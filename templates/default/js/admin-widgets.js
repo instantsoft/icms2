@@ -166,6 +166,11 @@ function widgetsLoad(page_id){
                     widget_dom.addClass('is_tab_prev');
                 }
 
+                if (widget.device_types){
+                    widget_dom.addClass('device_restrictions');
+                    widget_dom.append('<span class="wd_device_types">'+widget.device_types.join(', ')+'</span>');
+                }
+
                 $('#cp-widgets-layout #pos-'+pos).append(widget_dom);
                 if (widget.is_disabled) {
                     widget_dom.addClass('disabled');
@@ -297,11 +302,15 @@ function widgetEdit(id){
 
 }
 
-function widgetUpdated(widget){
+function widgetUpdated(widget, result){
 
-    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + widget.id + ']');
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + result.widget.id + ']');
 
-    widget_dom.html(widget.title);
+    widget_dom.html(result.widget.title);
+
+    if (result.widget.device_types){
+        widget_dom.append('<span class="wd_device_types">'+result.widget.device_types.join(', ')+'</span>');
+    }
 
     widgetAddActionButtons(widget_dom);
 
@@ -309,6 +318,12 @@ function widgetUpdated(widget){
         widget_dom.addClass('is_tab_prev');
     } else {
         widget_dom.removeClass('is_tab_prev');
+    }
+
+    if (result.widget.device_types){
+        widget_dom.addClass('device_restrictions');
+    } else {
+        widget_dom.removeClass('device_restrictions');
     }
 
     widgetsMarkTabbed();
