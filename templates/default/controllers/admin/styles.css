@@ -496,7 +496,7 @@ form select { width:300px; }
 #site_settings #fset_4 .chosen-container { width:300px !important; }
 
 form .field .input-number,
-form .field .input-small { width:70px; }
+form .field .input-small { width:80px; }
 form .field .input-number-units { color:#999; padding-left: 5px; }
 
 form.modal .textarea { resize:none; }

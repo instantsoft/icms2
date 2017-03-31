@@ -24,6 +24,13 @@ function grid_ctype_datasets($controller){
                 'table' => 'content_datasets'
             )
         ),
+        'max_count' => array(
+            'title' => LANG_LIST_LIMIT,
+            'width' => 130,
+            'handler' => function($value, $row){
+                return $value ? $value : '&mdash;';
+            }
+        ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
             'width' => 150,

@@ -124,6 +124,7 @@ CREATE TABLE `{#}content_datasets` (
   `seo_title` varchar(256) DEFAULT NULL,
   `cats_view` text COMMENT 'Показывать в категориях',
   `cats_hide` text COMMENT 'Не показывать в категориях',
+  `max_count` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),

@@ -3,6 +3,8 @@ class content extends cmsFrontend {
 
     const perpage = 15;
 
+    public $max_items_count = 0;
+
 //============================================================================//
 //============================================================================//
 
@@ -209,6 +211,14 @@ class content extends cmsFrontend {
         // Получаем количество и список записей
         $total = $this->model->getContentItemsCount($ctype['name']);
         $items = $this->model->getContentItems($ctype['name']);
+        // если задано максимальное кол-во, ограничиваем им
+        if($this->max_items_count){
+            $total = min($total, $this->max_items_count);
+            $pages = ceil($total / $perpage);
+            if($page > $pages){
+                $items = false;
+            }
+        }
 
         // если запрос через URL
         if($this->request->isStandard()){

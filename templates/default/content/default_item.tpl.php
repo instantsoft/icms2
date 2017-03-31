@@ -34,12 +34,12 @@
             return true;
         } ); ?>
 
-        <?php foreach ($fields_fieldsets as $fieldset) { ?>
+        <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 
             <?php $is_fields_group = !empty($ctype['options']['is_show_fields_group']) && $fieldset['title']; ?>
 
             <?php if ($is_fields_group) { ?>
-                <div class="fields_group">
+                <div class="fields_group fields_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
                     <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
             <?php } ?>
 

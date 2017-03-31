@@ -2,13 +2,27 @@
 
 class fieldParent extends cmsFormField {
 
-    public $title       = LANG_PARSER_PARENT;
-    public $is_public   = false;
-    public $sql         = 'varchar(1024) NULL DEFAULT NULL';
-    public $allow_index = false;
-    public $var_type    = 'string';
-    public $filter_type = 'str';
+    public $title         = LANG_PARSER_PARENT;
+    public $is_public     = false;
+    public $sql           = 'varchar(1024) NULL DEFAULT NULL';
+    public $allow_index   = false;
+    public $var_type      = 'string';
+    public $filter_type   = 'str';
     private $input_action = 'bind';
+
+    public function setItem($item) {
+
+        parent::setItem($item);
+
+        $this->item = $item;
+
+        if(!empty($item['ctype']['name'])){
+            $this->item['ctype_name'] = $item['ctype']['name'];
+        }
+
+        return $this;
+
+    }
 
     public function parse($value){
 

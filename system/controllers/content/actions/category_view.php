@@ -79,6 +79,10 @@ class actionContentCategoryView extends cmsAction {
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
+            // устанавливаем максимальное количество записей для набора, если задано
+            if(!empty($current_dataset['max_count'])){
+                $this->max_items_count = $current_dataset['max_count'];
+            }
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if(count($datasets) == 1){

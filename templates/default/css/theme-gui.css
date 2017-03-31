@@ -623,7 +623,7 @@ select { width:100%; }
 .date-input { width: 90px; }
 
 .input-small { width: 65px !important; }
-.input-number { width: 100px !important; }
+.input-number { width: 110px !important; }
 .input-number-units { margin-left: 5px; }
 
 .city-input {

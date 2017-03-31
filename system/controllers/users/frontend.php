@@ -157,12 +157,14 @@ class users extends cmsFrontend {
             'params' => array('edit', 'notices'),
         );
 
-        $menu[] = array(
-            'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'privacy'),
-        );
+        if (!empty($this->options['is_friends_on'])){
+            $menu[] = array(
+                'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
+                'controller' => $this->name,
+                'action' => $profile['id'],
+                'params' => array('edit', 'privacy'),
+            );
+        }
 
         $menu[] = array(
             'title' => LANG_PASSWORD,

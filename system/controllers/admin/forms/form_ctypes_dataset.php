@@ -31,6 +31,12 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldHtml('description', array(
                         'options' => array('editor' => cmsConfig::get('default_editor'))
                     )),
+                    new fieldNumber('max_count', array(
+                        'default' => 0,
+                        'rules' => array(
+                            array('max', 65535)
+                        )
+                    )),
                     new fieldText('seo_title', array(
                         'options'=>array(
                             'max_length'=> 256

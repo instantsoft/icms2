@@ -20,6 +20,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `device_types` VARCHAR(50) NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('content_datasets', 'max_count')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `max_count` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();

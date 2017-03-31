@@ -83,6 +83,17 @@
         </div>
 
         <?php
+            $name = 'max_count';
+            if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
+            if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = null; }
+        ?>
+        <div class="field <?php if ($error){ ?>field_error<?php } ?>" id="f_max_count">
+            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+            <label for="<?php echo $name; ?>"><?php echo LANG_LIST_LIMIT; ?></label>
+            <?php echo html_input('number', $name, $value, array('id'=>$name, 'size'=>5, 'class'=>'input-number')); ?>
+        </div>
+
+        <?php
             $name = 'is_visible';
             if (is_array($errors) && isset($errors[$name])){ $error = $errors[$name]; } else { $error = false; }
             if (array_key_exists($name, $dataset)){ $value = $dataset[$name]; } else { $value = false; }
