@@ -206,7 +206,7 @@ class cmsUser {
         $model = cmsCore::getModel('users');
 
         $user = $model->joinInner('{users}_auth_tokens', 'au', 'au.user_id = i.id')->
-                filterEqual('au.auth_token', $auth_token)->select('au.date_auth')->getUser();
+                filterEqual('au.auth_token', $auth_token)->filterIsNull('is_deleted')->select('au.date_auth')->getUser();
         if (!$user){ return 0; }
         // проверяем не истек ли срок действия токена
         if((time() - strtotime($user['date_auth'])) > AUTH_TOKEN_EXPIRATION_INT){
@@ -246,6 +246,7 @@ class cmsUser {
 
         $model = cmsCore::getModel('users');
 
+        $model->filterIsNull('is_deleted');
         $model->filterEqual('email', $email);
         $model->filterFunc('password', "MD5(CONCAT(MD5('{$password}'), i.password_salt))");
 

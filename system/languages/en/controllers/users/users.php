@@ -8,6 +8,17 @@
     define('LANG_USERS_EDIT_PROFILE',       'Edit Profile');
     define('LANG_USERS_EDIT_USER',          'Edit User');
 
+    define('LANG_USERS_RESTORE_PROFILE',    'Restore profile');
+    define('LANG_USERS_DELETE_PROFILE',     'Delete profile');
+    define('LANG_RULE_USERS_DELETE',        'Delete profile');
+    define('LANG_PERM_OPTION_MY',           'Only own');
+    define('LANG_PERM_OPTION_ANY',          'Any');
+    define('LANG_USERS_DELETE_CONFIRM',     'Delete the %s\'profile?');
+    define('LANG_USERS_DELETE_SUCCESS',     'Profile successfully deleted');
+    define('LANG_USERS_RESTORE_SUCCESS',    'Profile successfully restored');
+    define('LANG_USERS_DELETE_ADMIN_ERROR', 'You can not delete administrator profiles');
+    define('LANG_USERS_IS_DELETED',         'Profile is deleted');
+
     define('LANG_USERS_EDIT_PROFILE_MAIN',  'Info');
     define('LANG_USERS_EDIT_PROFILE_THEME', 'Theme');
     define('LANG_USERS_EDIT_PROFILE_NOTICES', 'Notifications');

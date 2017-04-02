@@ -605,3 +605,4 @@
     define('LANG_CONFIRM_LOGIN',  'Проверка безопасности');
     define('LANG_CONFIRM_LOGIN_HINT',  'Вы пытаетесь зайти под именем "%s" из необычного места.');
     define('LANG_CONFIRM_LOGIN_HINT1',  'Чтобы подтвердить, что Вы действительно являетесь владельцем аккаунта, пожалуйста, введите пароль.');
+    define('LANG_ADMIN_IS_DELETED', 'Удалён?');

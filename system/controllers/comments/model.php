@@ -130,6 +130,8 @@ class modelComments extends cmsModel {
 
             cmsCache::getInstance()->clean('comments.list');
 
+            cmsCore::getController('activity')->deleteEntry('comments', 'vote.comment', $ids);
+
         }
 
         return $ids ? true : false;

@@ -36,4 +36,7 @@ $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
             $('#geo_window .list > select').first().triggerHandler('change');
         <?php } ?>
     });
+    icms.modal.setCallback('open', function (){
+        setTimeout(function(){ $('.nyroModalCont').css('overflow', 'visible'); }, 300);
+    });
 </script>

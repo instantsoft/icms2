@@ -9,60 +9,6 @@
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
 
-    $tool_buttons = array();
-
-    if ($user->is_logged) {
-
-        if ($is_friends_on && !$is_own_profile){
-            if ($is_friend_profile){
-                $tool_buttons['friend_delete'] = array(
-                    'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete ajax-modal',
-                    'href' => $this->href_to('friend_delete', $profile['id'])
-                );
-            } else if(!$is_friend_req) {
-                $tool_buttons['friend_add'] = array(
-                    'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add ajax-modal',
-                    'href' => $this->href_to('friend_add', $profile['id'])
-                );
-            }
-        }
-
-        if ($is_own_profile && $profile['invites_count']){
-            $tool_buttons['invites'] = array(
-                'title' => LANG_USERS_MY_INVITES,
-                'class' => 'invites',
-                'counter' => $profile['invites_count'],
-                'href' => $this->href_to($profile['id'], 'invites')
-            );
-        }
-
-        if ($is_own_profile || $user->is_admin){
-            $tool_buttons['settings'] = array(
-                'title' => LANG_USERS_EDIT_PROFILE,
-                'class' => 'settings',
-                'href' => $this->href_to($profile['id'], 'edit')
-            );
-        }
-
-        if ($user->is_admin){
-            $tool_buttons['edit'] = array(
-                'title' => LANG_USERS_EDIT_USER,
-                'class' => 'edit',
-                'href' => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . $this->href_to($profile['id'])
-            );
-        }
-
-    }
-
-    $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
-        'profile' => $profile,
-        'buttons' => $tool_buttons
-    ));
-
-    $tool_buttons = $buttons_hook['buttons'];
-
     if (is_array($tool_buttons)){
         foreach($tool_buttons as $button){
             $this->addToolButton($button);

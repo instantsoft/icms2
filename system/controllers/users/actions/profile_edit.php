@@ -17,7 +17,7 @@ class actionUsersProfileEdit extends cmsAction {
         $back_url = $this->request->get('back', '');
 
         // проверяем наличие доступа
-        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         // Получаем поля
         $content_model = cmsCore::getModel('content');
@@ -133,13 +133,17 @@ class actionUsersProfileEdit extends cmsAction {
 
         }
 
+        $allow_delete_profile = (cmsUser::isAllowed('users', 'delete', 'any') ||
+            (cmsUser::isAllowed('users', 'delete', 'my') && $this->is_own_profile));
+
         return $this->cms_template->render('profile_edit', array(
-            'do'         => 'edit',
-            'cancel_url' => ($back_url ? $back_url : href_to('users', $profile['id'])),
-            'id'         => $profile['id'],
-            'profile'    => $profile,
-            'form'       => $form,
-            'errors'     => isset($errors) ? $errors : false
+            'do'                   => 'edit',
+            'cancel_url'           => ($back_url ? $back_url : href_to('users', $profile['id'])),
+            'id'                   => $profile['id'],
+            'profile'              => $profile,
+            'form'                 => $form,
+            'allow_delete_profile' => $allow_delete_profile,
+            'errors'               => isset($errors) ? $errors : false
         ));
 
     }

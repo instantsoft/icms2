@@ -7,7 +7,7 @@ class actionUsersProfileInvites extends cmsAction {
     public function run($profile){
 
         // проверяем наличие доступа
-        if ($profile['id'] != $this->cms_user->id) { cmsCore::error404(); }
+        if (!$this->is_own_profile) { cmsCore::error404(); }
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');

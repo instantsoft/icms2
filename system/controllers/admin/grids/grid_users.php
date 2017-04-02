@@ -79,6 +79,13 @@ function grid_users($controller){
                 return '<div class="tooltip" title="'.$title.'">'.$value.'</div>';
             }
         ),
+        'is_deleted' => array(
+            'title' => LANG_ADMIN_IS_DELETED,
+            'width' => 24,
+            'handler' => function($value, $user){
+                return '<div class="'.($value ? 'negative' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+            }
+        )
     );
 
     $actions = array(

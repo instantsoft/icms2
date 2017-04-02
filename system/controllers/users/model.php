@@ -35,6 +35,8 @@ class modelUsers extends cmsModel{
 
         $this->useCache('users.list');
 
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
+
         return $this->get('{users}', function($user){
 
             $user['groups']    = cmsModel::yamlToArray($user['groups']);
@@ -334,8 +336,21 @@ class modelUsers extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function setUserIsDeleted($id){
+        $this->update('{users}', $id, array(
+            'is_deleted' => 1
+        ));
+        cmsCache::getInstance()->clean("users.user.{$id}");
+        return $this;
+    }
+
+    public function restoreUser($id){
+        $this->update('{users}', $id, array(
+            'is_deleted' => null
+        ));
+        cmsCache::getInstance()->clean("users.user.{$id}");
+        return $this;
+    }
 
     public function unlockUser($id){
         $this->update('{users}', $id, array(
@@ -506,7 +521,7 @@ class modelUsers extends cmsModel{
 
         $this->join('{users}_groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$id}'");
 
-        $members = $this->getUsers();
+        $members = $this->disableDeleteFilter()->getUsers();
 
         if ($members){
 

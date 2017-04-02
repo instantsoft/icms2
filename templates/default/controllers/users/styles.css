@@ -320,14 +320,20 @@
     background-position:-16px 0;
 }
 
-/* ========================================================================== */
-
 #groups_invite_window{ padding:20px; }
 #groups_invite_window h3 { margin:0; }
 #groups_invite_window .list { margin:10px 0; }
 #groups_invite_window .list select { width:300px; }
 
-/* Media Queries ============================================================ */
+.buttons_delete_profile {
+    float: right;
+}
+input.button.delete_profile {
+    background: #c0392b;
+}
+input.button.delete_profile:hover {
+    background: #e74c3c;
+}
 
 @media screen and (max-width: 640px) {
     #user_profile #left_column { float:none; }

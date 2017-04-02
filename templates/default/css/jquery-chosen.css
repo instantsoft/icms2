@@ -3,8 +3,9 @@
   display: inline-block;
   vertical-align: middle;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .chosen-container * {
   -webkit-box-sizing: border-box;
@@ -50,9 +51,8 @@
   padding: 0 0 0 8px;
   height: 27px;
   border: 1px solid #aaa;
-  background-color: #fff;
-  background: #EEE;
-  box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
+  background-color: #EEE;
+  box-shadow: 0 0 3px #fff inset, 0 1px 1px rgba(0, 0, 0, 0.1);
   color: #444;
   text-decoration: none;
   white-space: nowrap;
@@ -78,14 +78,14 @@
   display: block;
   width: 12px;
   height: 12px;
-  background: url('../images/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../images/chosen-sprite.png') -42px 2px no-repeat;
   font-size: 1px;
 }
 .chosen-container-single .chosen-single abbr:hover {
-  background-position: -42px -10px;
+  background-position: -42px -9px;
 }
 .chosen-container-single.chosen-disabled .chosen-single abbr:hover {
-  background-position: -42px -10px;
+  background-position: -42px -9px;
 }
 .chosen-container-single .chosen-single div {
   position: absolute;
@@ -115,8 +115,7 @@
   height: auto;
   outline: 0;
   border: 1px solid #aaa;
-  background: white url('../images/chosen-sprite.png') no-repeat 100% -20px;
-  background: url('../images/chosen-sprite.png') no-repeat 100% -20px;
+  background: #fff url('../images/chosen-sprite.png') no-repeat 100% -20px;
   font-size: 1em;
   font-family: sans-serif;
   line-height: normal;
@@ -222,6 +221,7 @@
   font-family: sans-serif;
   line-height: normal;
   border-radius: 0;
+  width: 25px;
 }
 .chosen-container-multi .chosen-choices li.search-choice {
   position: relative;
@@ -382,8 +382,7 @@
 }
 .chosen-rtl .chosen-search input[type="text"] {
   padding: 4px 5px 4px 20px;
-  background: white url('../images/chosen-sprite.png') no-repeat -30px -20px;
-  background: url('../images/chosen-sprite.png') no-repeat -30px -20px;
+  background: #fff url('../images/chosen-sprite.png') no-repeat -30px -20px;
   direction: rtl;
 }
 .chosen-rtl.chosen-container-single .chosen-single div b {

@@ -5,6 +5,24 @@ class users extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
+    /**
+     * Профиль текущего авторизованного пользователя
+     * @var boolean
+     */
+    public $is_own_profile = false;
+
+    /**
+     * Просматриваемый профиль в дружбе с текущим пользователем
+     * @var boolean
+     */
+    public $is_friend_profile = false;
+
+    /**
+     * Текущий просматриваемый профиль
+     * @var array
+     */
+    public $profile = array();
+
     public $tabs = array();
     public $tabs_controllers = array();
 
@@ -15,21 +33,48 @@ class users extends cmsFrontend {
         // разблокируем вызов экшенов, которым запрещено вызываться напрямую
         $this->lock_explicit_call = false;
 
-        $user_id   = $action_name;
-        $is_logged = $this->cms_user->is_logged;
-
-        $profile = $this->model->getUser($user_id);
+        // $action_name это id пользователя
+        $profile = $this->model->getUser($action_name);
         if (!$profile) { cmsCore::error404(); }
 
-        if (!$is_logged && $this->options['is_auth_only']){
+        $this->setCurrentProfile($profile);
+
+        if (!$this->cms_user->is_logged && $this->options['is_auth_only']){
             cmsUser::goLogin();
         }
 
         if ($this->options['is_themes_on']){
-            $this->cms_template->applyProfileStyle($profile);
+            $this->cms_template->applyProfileStyle($this->profile);
         }
 
         $this->current_params = $this->cms_core->uri_params;
+
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_profile', $this->profile);
+
+        // Нет параметров после названия экшена (/users/id) - значит
+        // это главная страница профиля, первым параметром добавляем
+        // сам профиль
+        if (!$this->cms_core->uri_params){
+            array_unshift($this->current_params, $this->profile);
+            return 'profile';
+        }
+
+        // Ищем экшен внутри профиля
+        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
+            $this->current_params[0] = $this->profile;
+            return 'profile_'.$this->cms_core->uri_params[0];
+        }
+
+        // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
+        // от другого контроллера, тогда первым параметром добавляем
+        // сам профиль
+        array_unshift($this->current_params, $this->profile);
+        return 'profile_tab';
+
+    }
+
+    public function setCurrentProfile($profile) {
 
         // Статус
         if ($this->options['is_status']) {
@@ -37,33 +82,17 @@ class users extends cmsFrontend {
         }
 
         // Репутация
-        $profile['is_can_vote_karma'] = $is_logged &&
+        $profile['is_can_vote_karma'] = $this->cms_user->is_logged &&
                                         cmsUser::isAllowed('users', 'vote_karma') &&
                                         ($this->cms_user->id != $profile['id']) &&
                                         $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
 
-        // кешируем запись для получения ее в виджетах
-        cmsModel::cacheResult('current_profile', $profile);
+        $this->profile = $profile;
 
-        // Нет параметров после названия экшена (/users/id) - значит
-        // это главная страница профиля, первым параметром добавляем
-        // сам профиль
-        if (!$this->cms_core->uri_params){
-            array_unshift($this->current_params, $profile);
-            return 'profile';
-        }
+        $this->is_own_profile = $this->cms_user->id == $profile['id'];
+        $this->is_friend_profile = $this->cms_user->isFriend($profile['id']);
 
-        // Ищем экшен внутри профиля
-        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
-            $this->current_params[0] = $profile;
-            return 'profile_'.$this->cms_core->uri_params[0];
-        }
-
-        // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
-        // от другого контроллера, тогда первым параметром добавляем
-        // сам профиль
-        array_unshift($this->current_params, $profile);
-        return 'profile_tab';
+        return $this;
 
     }
 
@@ -71,11 +100,15 @@ class users extends cmsFrontend {
 
         $menu = array(
             array(
-                'title' => LANG_USERS_PROFILE_INDEX,
-                'url' => href_to($this->name, $profile['id']),
-                'url_mask' => href_to($this->name, $profile['id']),
+                'title'    => LANG_USERS_PROFILE_INDEX,
+                'url'      => href_to($this->name, $profile['id']),
+                'url_mask' => href_to($this->name, $profile['id'])
             )
         );
+
+        if ($profile['is_deleted']){
+            return $menu;
+        }
 
         $this->tabs = $this->model->getUsersProfilesTabs(true, 'name');
 

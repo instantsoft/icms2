@@ -919,7 +919,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
 (36, 'content', 'restore', 'list', 'own,all'),
-(37, 'content', 'trash_left_time', 'number', NULL);
+(37, 'content', 'trash_left_time', 'number', NULL),
+(38, 'users', 'delete', 'list', 'my,any');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
@@ -1140,6 +1141,7 @@ CREATE TABLE `{#}users` (
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Удалён',
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',

@@ -13,7 +13,7 @@ class actionAdminUsersAjax extends cmsAction {
         $users_model->setPerPage(admin::perpage);
 
         $filter     = array();
-        $filter_str = $this->request->get('filter');
+        $filter_str = $this->request->get('filter', '');
 
         $filter_str = cmsUser::getUPSActual('admin.grid_filter.users', $filter_str);
 
@@ -35,10 +35,11 @@ class actionAdminUsersAjax extends cmsAction {
 
         }
 
-
         if ($group_id){
             $users_model->filterGroup($group_id);
         }
+
+        $users_model->disableDeleteFilter();
 
         $total = $users_model->getUsersCount();
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
@@ -46,7 +47,7 @@ class actionAdminUsersAjax extends cmsAction {
 
         $users = $users_model->getUsers();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $users, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $users, $total, $pages);
 
         $this->halt();
 

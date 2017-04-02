@@ -8,6 +8,17 @@
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
 
+    define('LANG_USERS_RESTORE_PROFILE',    'Восстановить профиль');
+    define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
+    define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
+    define('LANG_PERM_OPTION_MY',           'Только свой');
+    define('LANG_PERM_OPTION_ANY',          'Любой');
+    define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');
+    define('LANG_USERS_DELETE_SUCCESS',     'Профиль успешно удалён');
+    define('LANG_USERS_RESTORE_SUCCESS',    'Профиль успешно восстановлен');
+    define('LANG_USERS_DELETE_ADMIN_ERROR', 'Вы не можете удалять профили администраторов');
+    define('LANG_USERS_IS_DELETED',         'Профиль удалён');
+
     define('LANG_USERS_EDIT_PROFILE_MAIN',  'Содержание');
     define('LANG_USERS_EDIT_PROFILE_THEME', 'Оформление');
     define('LANG_USERS_EDIT_PROFILE_NOTICES', 'Уведомления');

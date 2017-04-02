@@ -24,6 +24,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_datasets` ADD `max_count` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0'");
     }
 
+    if(!isFieldExists('{users}', 'is_deleted')){
+        $core->db->query("ALTER TABLE `{users}` ADD `is_deleted` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `ip`");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -68,6 +72,12 @@ function install_package(){
             }
         }
     }
+
+    add_perms(array(
+        'users' => array(
+            'delete'
+        )
+    ), 'list', 'my,any');
 
     return true;
 
