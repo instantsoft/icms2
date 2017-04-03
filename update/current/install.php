@@ -77,7 +77,7 @@ function install_package(){
         'users' => array(
             'delete'
         )
-    ), 'list', 'my,any');
+    ), 'list', 'my,anyuser');
 
     return true;
 

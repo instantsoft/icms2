@@ -12,7 +12,7 @@
     define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
     define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
     define('LANG_PERM_OPTION_MY',           'Только свой');
-    define('LANG_PERM_OPTION_ANY',          'Любой');
+    define('LANG_PERM_OPTION_ANYUSER',      'Любой');
     define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');
     define('LANG_USERS_DELETE_SUCCESS',     'Профиль успешно удалён');
     define('LANG_USERS_RESTORE_SUCCESS',    'Профиль успешно восстановлен');

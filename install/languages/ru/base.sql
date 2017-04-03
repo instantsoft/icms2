@@ -920,7 +920,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
 (36, 'content', 'restore', 'list', 'own,all'),
 (37, 'content', 'trash_left_time', 'number', NULL),
-(38, 'users', 'delete', 'list', 'my,any');
+(38, 'users', 'delete', 'list', 'my,anyuser');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

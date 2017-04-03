@@ -12,7 +12,7 @@
     define('LANG_USERS_DELETE_PROFILE',     'Delete profile');
     define('LANG_RULE_USERS_DELETE',        'Delete profile');
     define('LANG_PERM_OPTION_MY',           'Only own');
-    define('LANG_PERM_OPTION_ANY',          'Any');
+    define('LANG_PERM_OPTION_ANYUSER',      'Any');
     define('LANG_USERS_DELETE_CONFIRM',     'Delete the %s\'profile?');
     define('LANG_USERS_DELETE_SUCCESS',     'Profile successfully deleted');
     define('LANG_USERS_RESTORE_SUCCESS',    'Profile successfully restored');
