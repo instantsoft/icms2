@@ -362,7 +362,7 @@ class cmsCore {
 
         $events = array();
 
-        $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC');
+        $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
 
         if($controllers_events){
             foreach($controllers_events as $event){

@@ -484,9 +484,9 @@ class cmsDatabase {
      * @param string $order
      * @return boolean|array
      */
-    public function getRows($table_name, $where='1', $fields='*', $order='id ASC'){
+    public function getRows($table_name, $where='1', $fields='*', $order='id ASC', $quiet = false){
 		$sql = "SELECT {$fields} FROM {#}{$table_name} WHERE {$where} ORDER BY {$order}";
-		$result = $this->query($sql);
+		$result = $this->query($sql, false, $quiet);
 		if(!$this->mysqli->errno){
 			$data=array();
 			while($item = $this->fetchAssoc($result)){
