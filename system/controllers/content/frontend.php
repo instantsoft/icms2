@@ -1004,12 +1004,12 @@ class content extends cmsFrontend {
 
         foreach ($fields as $field) {
 
-            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { continue; }
+            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { $_item[$field['name']] = ''; continue; }
 
-            if (!$field['is_in_item']) { continue; }
+            if (!$field['is_in_item'] || !isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
-                $_item[$field['name']] =''; continue;
+                $_item[$field['name']] = ''; continue;
             }
 
             $_item[$field['name']] = $field['handler']->getStringValue($item[$field['name']]);
