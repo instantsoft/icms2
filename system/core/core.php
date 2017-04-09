@@ -798,7 +798,8 @@ class cmsCore {
     }
 
     public function setMatchedPages($matched_pages) {
-        return $this->matched_pages = $matched_pages;
+        $this->matched_pages = $matched_pages;
+        return $this;
     }
 
 //============================================================================//
@@ -911,6 +912,8 @@ class cmsCore {
 
         $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
+        $ctype_default = cmsConfig::get('ctype_default');
+
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
@@ -919,6 +922,11 @@ class cmsCore {
 
             if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
+            $prefix = '';
+            if($page['controller'] == 'content' && $ctype_default && $page['name'] == $ctype_default.'.item'){
+                $prefix = $ctype_default .'/';
+            }
+
             $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
@@ -926,7 +934,7 @@ class cmsCore {
                 foreach($page['url_mask'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+                    $is_mask_match = $is_mask_match || preg_match($regular, $prefix.$this->uri);
                 }
             }
 
@@ -934,7 +942,7 @@ class cmsCore {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $prefix.$_full_uri);
                 }
             }
 
