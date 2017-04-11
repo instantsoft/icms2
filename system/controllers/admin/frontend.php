@@ -315,30 +315,35 @@ class admin extends cmsFrontend {
 
             }
 
-        // иначе проверяем наличие манифестов, вдруг кто-то не читает http://docs.instantcms.ru/dev/packages
+
+        }
+
+        // проверяем наличие контроллеров и манифестов
+        if(!empty($manifest['package_controllers']['controller'])){
+            $manifest['package_controllers'] = $manifest['package_controllers']['controller'];
         } else {
+            $manifest['package_controllers'] = false;
+        }
 
-            $dir = $path.'/package/system/controllers';
+        $dir = $path.'/package/system/controllers';
 
-            if (is_dir($dir)) {
+        if (!$manifest['package_controllers'] && is_dir($dir)) {
 
-                $dir_context = opendir($dir);
-                $controllers = array();
+            $dir_context = opendir($dir);
+            $controllers = array();
 
-                while ($next = readdir($dir_context)){
-                    if (in_array($next, array('.', '..'))){ continue; }
-                    if (strpos($next, '.') === 0){ continue; }
-                    if (!is_dir($dir.'/'.$next)) { continue; }
-                    $controllers[] = $next;
-                }
+            while ($next = readdir($dir_context)){
+                if (in_array($next, array('.', '..'))){ continue; }
+                if (strpos($next, '.') === 0){ continue; }
+                if (!is_dir($dir.'/'.$next)) { continue; }
+                $controllers[] = $next;
+            }
 
-                if($controllers){
+            if($controllers){
 
-                    asort($controllers);
+                asort($controllers);
 
-                    $manifest['package_controllers'] = $controllers;
-
-                }
+                $manifest['package_controllers'] = $controllers;
 
             }
 

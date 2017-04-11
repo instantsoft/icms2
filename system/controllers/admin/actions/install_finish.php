@@ -65,11 +65,15 @@ class actionAdminInstallFinish extends cmsAction {
 
         $manifest = $this->parsePackageManifest();
 
+        $success = '';
+
         if(isset($manifest['package'])) {
 
-            return call_user_func(array($this, $manifest['package']['type'].$manifest['package']['action']), $manifest);
+            $success = call_user_func(array($this, $manifest['package']['type'].$manifest['package']['action']), $manifest);
 
-        } elseif(!empty($manifest['package_controllers'])) {
+        }
+
+        if(!empty($manifest['package_controllers'])) {
 
             foreach ($manifest['package_controllers'] as $package_controller) {
                 $this->updateEvents($package_controller);
@@ -82,7 +86,7 @@ class actionAdminInstallFinish extends cmsAction {
         $cache->clean('controllers');
         $cache->clean('events');
 
-        return '';
+        return $success;
 
     }
 
@@ -115,9 +119,6 @@ class actionAdminInstallFinish extends cmsAction {
             'is_external' => 1
         ));
 
-        // добавляем эвенты в БД
-        $this->updateEvents($manifest['package']['name']);
-
         return 'controllers';
 
     }
@@ -147,9 +148,6 @@ class actionAdminInstallFinish extends cmsAction {
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
             'is_backend' => file_exists($controller_root_path.'backend.php')
         ));
-
-        // обновляем эвенты в БД
-        $this->updateEvents($manifest['package']['name']);
 
         return 'controllers';
 

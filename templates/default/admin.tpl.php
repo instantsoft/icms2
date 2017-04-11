@@ -173,6 +173,10 @@
                     });
                 }, 1000);
             <?php } ?>
+            icms.events.on('datagrid_rows_loaded', function (result){
+                fitLayout();
+                toolbarScroll.init();
+            });
         });
 
     </script>

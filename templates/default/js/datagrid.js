@@ -449,9 +449,9 @@ icms.datagrid = (function ($) {
 
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
 
-        fitLayout();
+        icms.events.run('datagrid_rows_loaded', result);
 
-    }
+    };
 
     //====================================================================//
 

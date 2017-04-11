@@ -62,7 +62,10 @@ class formAdminUser extends cmsForm {
                 'childs' => array(
 
                     new fieldListGroups('groups', array(
-                        'show_all' => false
+                        'show_all' => false,
+                        'rules' => array(
+                            array('required')
+                        )
                     ))
 
                 )

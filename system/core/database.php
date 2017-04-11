@@ -787,9 +787,6 @@ class cmsDatabase {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function dropTableField($table_name, $field_name){
 
         $sql = "ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`";
@@ -797,6 +794,16 @@ class cmsDatabase {
         $this->query($sql);
 
     }
+
+	public function isTableExists($table_name){
+
+		$this->query("SELECT 1 FROM `{#}{$table_name}` LIMIT 1", false, true);
+
+		if ($this->mysqli->errno){ return false; }
+
+		return true;
+
+	}
 
 //============================================================================//
 //============================================================================//

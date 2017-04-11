@@ -1,6 +1,6 @@
 <div class="widget_content_filter">
 	<div class="filter-container">
-		<form action="<?php echo cmsCore::getInstance()->uri_absolute; ?>" method="post">
+		<form action="<?php echo cmsCore::getInstance()->uri_absolute; ?>" method="get">
 			<?php echo html_input('hidden', 'page', 1); ?>
 			<div class="fields">
 				<?php foreach($fields as $name => $field){ ?>
@@ -35,10 +35,10 @@
 				<?php } ?>
 			</div>
 			<div class="buttons">
-				<?php echo html_submit(LANG_FILTER_APPLY); ?>					
+				<?php echo html_submit(LANG_FILTER_APPLY); ?>
 				<?php if (sizeof($filters)){ ?>
 						<a href="<?php echo is_array($page_url) ? $page_url['base'] : $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
-				<?php } ?>				
+				<?php } ?>
 			</div>
 		</form>
 	</div>
