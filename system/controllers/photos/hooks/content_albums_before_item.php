@@ -28,6 +28,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
         $album['filter_values'] = array(
             'ordering'    => $this->cms_core->request->get('ordering', $this->options['ordering']),
+            'orderto'     => $this->cms_core->request->get('orderto', $this->options['orderto']),
             'types'       => $this->cms_core->request->get('types', ''),
             'orientation' => $this->cms_core->request->get('orientation', ''),
             'width'       => $this->cms_core->request->get('width', 0) ?: '',
@@ -38,9 +39,25 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
         $album['filter_selected'] = $album['url_params'];
         if($album['filter_selected']['ordering'] == $this->options['ordering']){ unset($album['filter_selected']['ordering']); }
+        if($album['filter_selected']['orderto'] == $this->options['orderto']){ unset($album['filter_selected']['orderto']); }
+
+        $album['photos_url_params'] = array();
+        if(!empty($album['filter_selected']['ordering'])){
+            $album['photos_url_params']['ordering'] = $album['filter_selected']['ordering'];
+        }
+        if(!empty($album['filter_selected']['orderto'])){
+            $album['photos_url_params']['orderto'] = $album['filter_selected']['orderto'];
+        }
+        if($album['photos_url_params']){
+            $album['photos_url_params'] = http_build_query($album['photos_url_params']);
+        }
 
         if(!in_array($album['filter_values']['ordering'], array_keys($album['filter_panel']['ordering']))){
             $album['filter_values']['ordering'] = 'date_pub';
+        }
+
+        if(!in_array($album['filter_values']['orderto'], array('asc', 'desc'))){
+            $album['filter_values']['orderto'] = 'desc';
         }
 
         if($album['filter_values']['types'] && !in_array($album['filter_values']['types'], array_keys($album['filter_panel']['types']))){

@@ -17,7 +17,7 @@ Is a free open source CMS (content management system) that allows you to build w
 * Easy-to-install core updates.
 
 ## Requirements ##
-* PHP 5.3+
+* PHP 5.3+ (PHP 7 supported too)
 * PHP register_globals off
 * PHP magic_quotes_gpc off
 * GD, iconv, mbstring, simplexml, json and filter PHP extension
@@ -28,5 +28,6 @@ Is a free open source CMS (content management system) that allows you to build w
 
 * [Official site](http://www.instantcms.ru/)
 * [Add-ons for CMS](http://addons.instantcms.ru/)
-* [Documentation](http://docs.instantcms.ru/)
+* [Documentation](http://docs.instantcms.ru/en)
+* [Russian documentation](http://docs.instantcms.ru/)
 * [Russian README](https://github.com/instantsoft/icms2/blob/master/README.RU.md)

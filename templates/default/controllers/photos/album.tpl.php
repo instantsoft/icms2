@@ -4,6 +4,7 @@
 <div class="album-photos-wrap" id="album-photos-list"<?php if ($is_owner || !empty($item['is_public'])) { ?> data-delete-url="<?php echo $this->href_to('delete'); ?>"<?php } ?>>
     <?php echo $this->renderChild('photos', array(
         'photos'   => $photos,
+        'item'     => $item,
         'is_owner' => $is_owner,
         'user'     => $user,
         'has_next' => $has_next,

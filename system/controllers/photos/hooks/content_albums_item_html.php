@@ -7,11 +7,11 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
         $this->model->orderByList(array(
             array(
                 'by' => $album['filter_values']['ordering'],
-                'to' => 'desc'
+                'to' => $album['filter_values']['orderto']
             ),
             array(
                 'by' => 'id',
-                'to' => 'desc'
+                'to' => $album['filter_values']['orderto']
             )
         ));
 

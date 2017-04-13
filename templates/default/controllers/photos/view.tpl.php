@@ -46,6 +46,7 @@
             <div class="inside_wrap orientation_<?php echo $photo['orientation']; ?>" id="fullscreen_cont">
                 <div id="photo_container" <?php if($full_size_img){?>data-full-size-img="<?php echo $full_size_img; ?>"<?php } ?>>
                     <?php echo $this->renderChild('view_photo_container', array(
+                        'photos_url_params' => $photos_url_params,
                         'photo'      => $photo,
                         'preset'     => $preset,
                         'prev_photo' => $prev_photo,

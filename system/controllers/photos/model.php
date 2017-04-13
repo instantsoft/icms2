@@ -160,7 +160,7 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getPrevPhoto($item, $order_field) {
+    public function getPrevPhoto($item, $order_field, $orderto) {
 
         $this->filterStart()->
             filterGt($order_field, $item[$order_field])->
@@ -175,11 +175,11 @@ class modelPhotos extends cmsModel{
         $this->orderByList(array(
             array(
                 'by' => $order_field,
-                'to' => 'asc'
+                'to' => $orderto
             ),
             array(
                 'by' => 'id',
-                'to' => 'asc'
+                'to' => $orderto
             )
         ));
 
@@ -191,7 +191,7 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getNextPhoto($item, $order_field) {
+    public function getNextPhoto($item, $order_field, $orderto) {
 
         $this->filterStart()->
             filterLt($order_field, $item[$order_field])->
@@ -206,11 +206,11 @@ class modelPhotos extends cmsModel{
         $this->orderByList(array(
             array(
                 'by' => $order_field,
-                'to' => 'desc'
+                'to' => $orderto
             ),
             array(
                 'by' => 'id',
-                'to' => 'desc'
+                'to' => $orderto
             )
         ));
 

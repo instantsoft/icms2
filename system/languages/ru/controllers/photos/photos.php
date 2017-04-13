@@ -44,7 +44,7 @@
     define('LANG_PHOTOS_SIZE_H',                'Высота');
     define('LANG_PHOTOS_MORE_THAN',             'Больше чем');
     define('LANG_PHOTOS_CLEAR_FILTER',          'Очистить фильтр');
-    define('LANG_PHOTOS_DATE_PUB',              'Последние загрузки');
+    define('LANG_PHOTOS_DATE_PUB',              'По дате добавления');
     define('LANG_PHOTOS_DATE_PHOTO',            'По дате съёмки');
     define('LANG_PHOTOS_RATING',                'По рейтингу');
     define('LANG_PHOTOS_COMMENTS',              'Комментируемые');
@@ -72,3 +72,4 @@
     define('LANG_PHOTOS_OTHER_IN_ALBUM',        'Другие фотографии альбома');
     define('LANG_PHOTOS_RELATED_LIMIT',         'Количество похожих фото на странице');
     define('LANG_PHOTOS_CAMERA_TITLE',          'Фотографии, сделанные на фотоаппарат %s');
+    define('LANG_PHOTOS_SORT_ORDERTO',          'Направление сортировки');

@@ -1,5 +1,6 @@
 /.idea
 /system/config/config.php
+/system/config/theme_default.yml
 /upload/u1/
 /upload/000/
 /upload/default/

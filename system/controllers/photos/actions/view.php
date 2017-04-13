@@ -162,10 +162,35 @@ class actionPhotosView extends cmsAction {
             $full_size_img_preset = $this->getMaxSizePresetName($download_photo_sizes);
         }
 
-        $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                getNextPhoto($photo, $this->options['ordering']);
-        $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                getPrevPhoto($photo, $this->options['ordering']);
+        $ordering = $this->request->get('ordering', $this->options['ordering']);
+        $orderto  = $this->request->get('orderto', $this->options['orderto']);
+
+        $photos_url_params = array();
+        if($ordering != $this->options['ordering']){
+            $photos_url_params['ordering'] = $ordering;
+        }
+        if($orderto != $this->options['orderto']){
+            $photos_url_params['orderto'] = $orderto;
+        }
+        if($photos_url_params){
+            $photos_url_params = http_build_query($photos_url_params);
+        }
+
+        if($orderto == 'asc'){
+
+            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getNextPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
+            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getPrevPhoto($photo, $ordering, $orderto);
+
+        } else {
+
+            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getNextPhoto($photo, $ordering, $orderto);
+            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getPrevPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
+
+        }
 
         $tpl    = 'view';
         $preset = $this->getBigPreset($photo['sizes']);
@@ -179,6 +204,7 @@ class actionPhotosView extends cmsAction {
         }
 
         return $this->cms_template->render($tpl, array(
+            'photos_url_params' => $photos_url_params,
             'next_photo'    => $next_photo,
             'prev_photo'    => $prev_photo,
             'downloads'     => $downloads,

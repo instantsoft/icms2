@@ -91,6 +91,15 @@ class formPhotosOptions extends cmsForm {
                         'items'   => modelPhotos::getOrderList()
                     )),
 
+                    new fieldList('orderto', array(
+                        'title'   => LANG_PHOTOS_SORT_ORDERTO,
+                        'default' => 'desc',
+                        'items'   => array(
+                            'asc'  => LANG_SORTING_ASC,
+                            'desc' => LANG_SORTING_DESC
+                        )
+                    )),
+
                     new fieldNumber('limit', array(
                         'title'   => LANG_LIST_LIMIT,
                         'default' => 16,
