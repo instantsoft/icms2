@@ -25,6 +25,9 @@ class formUsersOptions extends cmsForm {
                     new fieldCheckbox('is_filter', array(
                         'title' => LANG_USERS_OPT_FILTER_SHOW,
                     )),
+                    new fieldCheckbox('is_users_listview', array(
+                        'title' => LANG_USERS_OPT_USERS_LIST_SHOW,
+                    )),
                     new fieldNumber('limit', array(
                         'title' => LANG_LIST_LIMIT,
                         'default' => 15,

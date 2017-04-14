@@ -6,7 +6,9 @@
     $this->setPageTitle($profile['nickname']);
     $this->setPageDescription($profile['nickname'].' — '.mb_strtolower(LANG_USERS_PROFILE_INDEX));
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if(!$this->controller->options['is_users_listview']){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname']);
 
     if (is_array($tool_buttons)){

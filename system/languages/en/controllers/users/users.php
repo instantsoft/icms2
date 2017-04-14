@@ -74,6 +74,8 @@
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Show filter');
 
+    define('LANG_USERS_OPT_USERS_LIST_SHOW', 'Disable the display of the user list');
+
     define('LANG_USERS_FIELD_PRIVATE',      'Show field only to the profile owner');
 
     define('LANG_USERS_PROFILE_INDEX',      'Profile');
