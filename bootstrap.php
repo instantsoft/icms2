@@ -30,6 +30,11 @@
         $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath(ROOT)), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
         header('location:'.$root.'/install/');
         die();
+    } else { // Удаляем папку /install, если система уже установлена
+        cmsCore::loadLib('files.helper');
+        if (is_dir($config->root_path.'install')) {
+            files_remove_directory($config->root_path.'install');
+        }
     }
 
     // Устанавливаем часовую зону
@@ -38,7 +43,6 @@
     // Подключаем все необходимые классы и библиотеки
 	cmsCore::loadLib('html.helper');
 	cmsCore::loadLib('strings.helper');
-	cmsCore::loadLib('files.helper');
     cmsCore::loadLib('spyc.class');
 
     // Инициализируем ядро
