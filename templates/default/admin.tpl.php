@@ -50,7 +50,7 @@
                 <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>
                 <?php if($notices_count){ ?>
                     <li class="bell ajax-modal notices-counter">
-                        <a href="<?php echo href_to('messages', 'notices'); ?>">
+                        <a href="<?php echo href_to('messages', 'notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>">
                             <span class="wrap"><?php echo LANG_ADMIN_NOTICES; ?><span class="counter"><?php echo $notices_count; ?></span></span>
                         </a>
                     </li>

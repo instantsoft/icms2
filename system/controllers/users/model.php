@@ -433,8 +433,12 @@ class modelUsers extends cmsModel{
 
             if ($options_only){
 
-                if (empty($user['notify_options'][$notice_type])){
+                if (!isset($user['notify_options'][$notice_type])){
                     $user['notify_options'][$notice_type] = 'email';
+                }
+
+                if (empty($user['notify_options'][$notice_type])){
+                    continue;
                 }
 
                 if (!in_array($user['notify_options'][$notice_type], $options_only)){

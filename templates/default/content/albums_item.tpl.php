@@ -75,6 +75,21 @@ $show_bar = $is_tags || $item['parent_id'] ||
             </a>
         <?php } ?>
     </div>
+    <span title="<?php echo LANG_PHOTOS_SORT_ORDERTO; ?>" class="box_menu <?php echo !isset($item['filter_selected']['orderto']) ?'': 'box_menu_select'; ?>">
+        <?php echo $item['filter_panel']['orderto'][$item['filter_values']['orderto']]; ?>
+    </span>
+    <div class="box_menu_dd">
+        <?php foreach($item['filter_panel']['orderto'] as $value => $name){ ?>
+            <?php $url_params = $item['url_params']; $url_params['orderto'] = $value; ?>
+            <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html?'.http_build_query($url_params)); ?>">
+                <?php echo $name; ?>
+                <?php if($item['filter_values']['orderto'] == $value){ ?>
+                    <input type="hidden" name="orderto" value="<?php echo $value; ?>">
+                    <i class="check">&larr;</i>
+                <?php } ?>
+            </a>
+        <?php } ?>
+    </div>
     <?php if($item['filter_panel']['types']){ ?>
         <span class="box_menu <?php echo !isset($item['filter_selected']['types']) ?'': 'box_menu_select'; ?>">
             <?php echo $item['filter_panel']['types'][$item['filter_values']['types']]; ?>
@@ -119,11 +134,11 @@ $show_bar = $is_tags || $item['parent_id'] ||
             <fieldset>
                 <legend><?php echo LANG_PHOTOS_MORE_THAN; ?></legend>
                 <div class="field">
-                    <label for="birth_date"><?php echo LANG_PHOTOS_SIZE_W; ?></label>
+                    <label><?php echo LANG_PHOTOS_SIZE_W; ?></label>
                     <input type="text" name="width" value="<?php html($item['filter_values']['width']); ?>" placeholder="px" class="input">
                 </div>
                 <div class="field">
-                    <label for="birth_date"><?php echo LANG_PHOTOS_SIZE_H; ?></label>
+                    <label><?php echo LANG_PHOTOS_SIZE_H; ?></label>
                     <input type="text" name="height" value="<?php html($item['filter_values']['height']); ?>" placeholder="px" class="input">
                 </div>
             </fieldset>

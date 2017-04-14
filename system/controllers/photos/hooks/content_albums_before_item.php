@@ -20,6 +20,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
         $album['filter_panel'] = array(
             'ordering'    => modelPhotos::getOrderList(),
+            'orderto'     => array('asc' => LANG_SORTING_ASC, 'desc' => LANG_SORTING_DESC),
             'types'       => (!empty($this->options['types']) ? (array('' => LANG_PHOTOS_ALL) + $this->options['types']) : array()),
             'orientation' => modelPhotos::getOrientationList(),
             'width'       => '',
