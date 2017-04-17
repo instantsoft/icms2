@@ -77,7 +77,11 @@ class actionMessagesSend extends cmsAction {
         $user_to = cmsCore::getModel('users')->getUser($contact_id);
 
         if (!$user_to['is_online']) {
-            $this->sendNoticeEmail('messages_new');
+
+            if($this->model->getNewMessagesCount($user_to['id']) == 1){
+                $this->sendNoticeEmail('messages_new');
+            }
+
         }
 
         //

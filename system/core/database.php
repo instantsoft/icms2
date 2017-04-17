@@ -11,15 +11,9 @@ class cmsDatabase {
 	public $prefix;
 
     /**
-     * Суммарное количество запросов
-     * @var int
+     * deprecated, use cmsDebugging
      */
     public $query_count = 0;
-
-    /**
-     * Массив отладки, содержащий в себе выполняемые запросы и их время
-     * @var array
-     */
     public $query_list = array();
 
     /**
@@ -53,6 +47,12 @@ class cmsDatabase {
      */
     private $connect_error = false;
 
+    /**
+     * Настройки базы данных
+     * @var array
+     */
+    private $options = array();
+
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new self;
@@ -64,8 +64,17 @@ class cmsDatabase {
 //============================================================================//
 
 	public function __construct(){
+        $this->setOptions(cmsConfig::getInstance()->getAll());
         $this->connect();
 	}
+
+    public function setOptions($options) {
+        $this->options = $options;
+    }
+
+    public function setOption($key, $value) {
+        $this->options[$key] = $value;
+    }
 
 	public function __destruct(){
         if($this->ready()){
@@ -82,12 +91,14 @@ class cmsDatabase {
 
     private function connect() {
 
-		$config = cmsConfig::getInstance();
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointStart('db');
+        }
 
         mysqli_report(MYSQLI_REPORT_STRICT);
 
         try {
-            $this->mysqli = new mysqli($config->db_host, $config->db_user, $config->db_pass, $config->db_base);
+            $this->mysqli = new mysqli($this->options['db_host'], $this->options['db_user'], $this->options['db_pass'], $this->options['db_base']);
         } catch (Exception $e) {
 
             $this->connect_error = $e->getMessage();
@@ -97,7 +108,7 @@ class cmsDatabase {
 
         $this->mysqli->set_charset('utf8');
 
-        if(!empty($config->clear_sql_mode)){
+        if(!empty($this->options['clear_sql_mode'])){
             $this->mysqli->query("SET sql_mode=''");
         }
 
@@ -105,9 +116,15 @@ class cmsDatabase {
             $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
         }
 
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointProcess('db', array(
+                'data' => 'Database connection'
+            ), 3);
+        }
+
         $this->setTimezone();
 
-		$this->prefix = $config->db_prefix;
+		$this->prefix = $this->options['db_prefix'];
 
         $this->init_start_time = time();
 
@@ -173,14 +190,14 @@ class cmsDatabase {
      */
 	public function query($sql, $params=false, $quiet=false){
 
-        $start_time = microtime(true);
-
-        $config = cmsConfig::getInstance();
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointStart('db');
+        }
 
         $sql = str_replace(array(
             '{#}{users}', '{users}', '{#}'
         ), array(
-            $config->db_users_table, $config->db_users_table, $this->prefix
+            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
         ), $sql);
 
         if ($params){
@@ -205,21 +222,10 @@ class cmsDatabase {
 
         $result = $this->mysqli->query($sql);
 
-        if ($config->debug){
-
-            $this->query_count++;
-
-            $trace = debug_backtrace();
-
-            if (isset($trace[1]['file']) && isset($trace[1]['function'])){
-                $src = $trace[1]['file'] .' => '. $trace[1]['line'] .' => '. $trace[1]['function'] . '()';
-                $src = str_replace($config->root_path, '', $src);
-            } else {
-                $src = '';
-            }
-
-            $this->query_list[] = array('sql'=>$sql, 'src'=>$src, 'time'=>(microtime(true) - $start_time));
-
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointProcess('db', array(
+                'data' => $sql
+            ));
         }
 
 		if(!$this->mysqli->errno) { return $result; }
@@ -724,8 +730,6 @@ class cmsDatabase {
 
     public function createCategoriesTable($table_name) {
 
-        $config = cmsConfig::getInstance();
-
         $sql = "CREATE TABLE `{#}{$table_name}` (
                   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                   `parent_id` int(11) UNSIGNED DEFAULT NULL,
@@ -748,7 +752,7 @@ class cmsDatabase {
                   KEY `parent_id` (`parent_id`,`ns_left`),
                   KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
                   KEY `ordering` (`ordering`)
-                ) ENGINE={$config->db_engine} DEFAULT CHARSET=utf8";
+                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
 
         $this->query($sql);
 
@@ -761,14 +765,12 @@ class cmsDatabase {
 
     public function createCategoriesBindsTable($table_name) {
 
-        $config = cmsConfig::getInstance();
-
         $sql = "CREATE TABLE `{#}{$table_name}` (
 				  `item_id` int(11) UNSIGNED DEFAULT NULL,
 				  `category_id` int(11) UNSIGNED DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
-				) ENGINE={$config->db_engine} DEFAULT CHARSET=utf8";
+				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
 
         $this->query($sql);
 
@@ -961,7 +963,7 @@ class cmsDatabase {
 
                 $query = trim(implode('', $query));
 
-                $result = $this->query(str_replace('InnoDB', cmsConfig::get('db_engine'), $query));
+                $result = $this->query(str_replace('InnoDB', $this->options['db_engine'], $query));
 
                 if ($result === false) {
                     return false;

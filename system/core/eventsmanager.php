@@ -32,16 +32,19 @@ class cmsEventsManager {
                 unset($controller); continue;
             }
 
-            $data = $controller->runHook($event_name, array($data));
+            cmsDebugging::pointStart('events');
+
+                $data = $controller->runHook($event_name, array($data));
+
+            cmsDebugging::pointProcess('events', array(
+                'data' => 'hook :: '.$listener.' => '.$event_name
+            ), 1);
 
         }
 
         return $data;
 
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Оповещает слушателей о произошедшем событии
@@ -76,11 +79,17 @@ class cmsEventsManager {
                 unset($controller); continue;
             }
 
-            $result = $controller->runHook($event_name, array($data));
+            cmsDebugging::pointStart('events');
 
-            if ($result !== false){
-                $results[] = $result;
-            }
+                $result = $controller->runHook($event_name, array($data));
+
+                if ($result !== false){
+                    $results[] = $result;
+                }
+
+            cmsDebugging::pointProcess('events', array(
+                'data' => 'hookAll :: '.$listener.' => '.$event_name
+            ), 1);
 
         }
 
@@ -128,7 +137,7 @@ class cmsEventsManager {
             return $structure;
         }
 
-        $manifests = cmsCore::getControllersManifests(cmsConfig::get('debug'));
+        $manifests = cmsCore::getControllersManifests(cmsConfig::get('manifest_from_files'));
 
         if (!$manifests) { return false; }
 
@@ -151,8 +160,5 @@ class cmsEventsManager {
         return $structure;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

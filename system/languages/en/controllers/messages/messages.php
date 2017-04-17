@@ -10,7 +10,7 @@
     define('LANG_PM_ACTION_FORGIVE',        'Unignore');
     define('LANG_PM_DELETE_CONTACT',        'Delete contact');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Delete the contact from the list?');
-    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Add the contact to the blacklist?\nYou will not receive messages from this user');
+    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Add the contact to the blacklist? You will not receive messages from this user');
     define('LANG_PM_SEND_TO_USER',          'Write a message');
     define('LANG_PM_SEND_ERROR',            'Message send error');
     define('LANG_PM_YOU_ARE_IGNORED',       'This user added you to the blacklist');

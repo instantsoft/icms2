@@ -358,6 +358,10 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_DEBUG_MODE,
                     )),
 
+                    new fieldCheckbox('manifest_from_files', array(
+                        'title' => LANG_CP_SETTINGS_MANIFEST_FROM_FILES,
+                    )),
+
                     new fieldCheckbox('emulate_lag', array(
                         'title' => LANG_CP_SETTINGS_EMULATE_LAG,
                     )),

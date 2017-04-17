@@ -10,7 +10,7 @@
     define('LANG_PM_ACTION_FORGIVE',        'Прекратить игнор');
     define('LANG_PM_DELETE_CONTACT',        'Удалить контакт');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Удалить контакт из списка?');
-    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Добавить контакт в черный список?\nВы не будете получать от него сообщения после этого');
+    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Добавить контакт в черный список? Вы не будете получать от него сообщения после этого');
     define('LANG_PM_SEND_TO_USER',          'Написать сообщение');
     define('LANG_PM_SEND_ERROR',            'Ошибка отправки сообщения');
     define('LANG_PM_YOU_ARE_IGNORED',       'Собеседник добавил вас в черный список');

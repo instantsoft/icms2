@@ -527,38 +527,60 @@ aside .menu .item, section .menu .item {
 
 /* Footer SQL Debug ======================================================== */
 
-#sql_debug{
+#debug_block{
     display:none;
 }
 
-#sql_queries .query{
+.queries_wrap .query{
     padding:10px;
     margin:10px;
     background:#FFF;
     border:solid 1px #DDD;
 }
 
-#sql_queries .query .src{
+.queries_wrap .query .src{
     font-size:12px;
     color:#999;
-    margin-bottom:4px;
 }
-#sql_queries .query_time {
+.queries_wrap .query .debug_data{
+    margin-top:4px;
+}
+.queries_wrap .query_time {
     color: #999;
     font-size: 12px;
     margin: 4px 0 0;
 }
-#sql_queries .red_query {
+.queries_wrap .red_query {
     color: #c0392b;
 }
-#sql_queries .green_query {
+.queries_wrap .green_query {
     color: #27ae60;
 }
-#sql_stat {
-    margin: 10px;
-    font-size: 11px;
-    color: #AAA;
+#debug_widget.tabs-menu > ul {
+    border-bottom: none;
+    height: 32px;
+    background: #B3C2C9;
+    min-width: 600px;
 }
+#debug_widget.tabs-menu .tabbed li {
+    background: none;
+}
+#debug_widget.tabs-menu .tabbed li a {
+    border: none;
+}
+#debug_widget.tabs-menu .tabbed li a:not(:hover) {
+    color: #EFEFEF;
+}
+#debug_widget.tabs-menu .tabbed li.active a, #debug_widget.tabs-menu .tabbed li.active a:hover {
+    border: none;
+    margin: 0;
+    color: #495358;
+}
+#debug_widget ol {
+    padding: 0;
+    margin: 0;
+}
+
 /* Footer Navigation ======================================================== */
 
 #layout footer #nav {

@@ -560,5 +560,12 @@
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-    define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');
     define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');
+
+    define('LANG_DEBUG_QUERY_TIME',          'Время выполнения');
+    define('LANG_DEBUG',                     'Отладка');
+    define('LANG_DEBUG_TAB_DB',              'SQL');
+    define('LANG_DEBUG_TAB_CACHE',           'Кэш');
+    define('LANG_DEBUG_TAB_EVENTS',          'События');
+    define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
+    define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');

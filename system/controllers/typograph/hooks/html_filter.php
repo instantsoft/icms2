@@ -84,6 +84,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('p', array('style' => '#text'));
         $jevix->cfgAllowTagParams('div', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('spoiler', array('title' => '#text'));
+        $jevix->cfgAllowTagParams('code', array('type' => '#text'));
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
@@ -126,7 +127,7 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetTagCallbackFull('iframe', array($this, 'parseIframe'));
 
         // Ставим колбэк для кода
-        $jevix->cfgSetTagCallback('code', array($this, 'parseCode'));
+        $jevix->cfgSetTagCallbackFull('code', array($this, 'parseCode'));
 
         // Ставим колбэк для спойлеров
         $jevix->cfgSetTagCallbackFull('spoiler', array($this, 'parseSpoiler'));
@@ -225,11 +226,11 @@ class onTypographHtmlFilter extends cmsAction {
 
     }
 
-    public function parseCode($content){
+    public function parseCode($tag, $params, $content){
 
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
-        $geshi = new GeSHi(trim($content), 'php');
+        $geshi = new GeSHi(trim(str_replace('<br/>', '', $content)), (isset($params['type']) ? $params['type'] : 'php'));
 
         return $geshi->parse_code();
 

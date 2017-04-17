@@ -13,16 +13,21 @@
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
 
-    cmsCore::startTimer();
-
 	// Инициализируем конфиг
 	$config = cmsConfig::getInstance();
 
     // дебаг отключен - скрываем все сообщения об ошибках
     if(!$config->debug){
+
         error_reporting(0);
+
     } else {
+
         error_reporting(E_ALL);
+
+        // включаем отладку
+        cmsDebugging::enable();
+
     }
 
     // Проверяем, что система установлена

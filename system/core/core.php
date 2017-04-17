@@ -25,7 +25,6 @@ class cmsCore {
     public $db;
 
     private static $includedFiles = array();
-    private static $start_time;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -42,10 +41,13 @@ class cmsCore {
 
     }
 
+    /*
+     * deprecated, use cmsDebugging
+     */
+    private static $start_time;
     public static function startTimer() {
         self::$start_time = microtime(true);
     }
-
     public static function getTime() {
         return microtime(true) - self::$start_time;
     }
@@ -842,7 +844,13 @@ class cmsCore {
                     continue;
                 }
 
+                cmsDebugging::pointStart('widgets');
+
                 $this->runWidget($widget);
+
+                cmsDebugging::pointProcess('widgets', array(
+                    'data' => $widget['title'].' => /system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php'
+                ), 0);
 
             }
 
@@ -1170,4 +1178,13 @@ class cmsCore {
 //============================================================================//
 //============================================================================//
 
+}
+
+/**
+ * В случае, если отладка отключена, не загружаем файл класса
+ */
+if(!class_exists('cmsDebugging', false)){
+    class cmsDebugging {
+        public static function __callStatic($name, $arguments) {}
+    }
 }

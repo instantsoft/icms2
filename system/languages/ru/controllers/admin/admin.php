@@ -415,6 +415,7 @@
     define('LANG_CP_PERMISSIONS_SUCCESS',       'Правила доступа успешно сохранены');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Включить режим отладки');
+    define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Загружать события из файлов manifest.php');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Имитировать сетевые задержки');
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Очистить кеш');

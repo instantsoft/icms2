@@ -414,6 +414,7 @@
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
+    define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Load events from manifest.php files');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');

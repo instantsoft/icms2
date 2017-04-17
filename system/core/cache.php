@@ -5,9 +5,6 @@ class cmsCache {
 
     private $cacher;
     private $cache_ttl;
-    private $is_debug = false;
-
-    public $query_count = 0;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -27,7 +24,6 @@ class cmsCache {
             $this->cacher = new $cacher_class();
 
             $this->cache_ttl = $config->cache_ttl;
-            $this->is_debug  = $config->debug;
 
         }
 
@@ -65,11 +61,13 @@ class cmsCache {
 
         if (!$this->cacher->has($key)){ return false; }
 
-        $value = $this->cacher->get($key);
+        cmsDebugging::pointStart('cache');
 
-        if ($this->is_debug && $value) {
-            $this->query_count++;
-        }
+            $value = $this->cacher->get($key);
+
+        cmsDebugging::pointProcess('cache', array(
+            'data' => $key
+        ), 5);
 
         return $value;
 

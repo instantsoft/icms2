@@ -206,8 +206,12 @@ icms.messages = (function ($) {
     };
 
     this.scrollChat = function(){
-        var chat = document.getElementById("pm_chat");
-        chat.scrollTop = chat.scrollHeight;
+        $('#pm_chat').stop().animate({
+            scrollTop: $('#pm_chat')[0].scrollHeight
+        }, 500);
+        $('.nyroModalCont').stop().animate({
+            scrollTop: $('.nyroModalCont')[0].scrollHeight
+        }, 500);
     };
 
     //====================================================================//
@@ -224,12 +228,10 @@ icms.messages = (function ($) {
         var url = form.attr('action');
 
         $('.buttons', form).addClass('sending').find('.button').prop('disabled', true);
-        $('textarea', form).prop('disabled', true);
 
         $.post(url, form_data, function(result){
 
             $('.buttons', form).removeClass('sending').find('.button').prop('disabled', false);
-            $('textarea', form).prop('disabled', false);
 
             if (!result.error){
                 $('textarea', form).val('').focus();
