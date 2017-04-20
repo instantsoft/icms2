@@ -35,16 +35,18 @@
 
         var field_type = $(field).val();
 
-        $.post('<?php echo $this->href_to('fields_options'); ?>', {
-            <?php if ($do=='edit') { ?>
-                field_id: '<?php echo $field['id']; ?>',
-            <?php } ?>
-            type: field_type
-        }, function( html ){
-            if (!html) { return; }
-            $('#f_type').after( html );
-            icms.events.run('loaduserfieldtypeoptions', html);
-        }, 'html')
+        if(field_type){
+            $.post('<?php echo $this->href_to('fields_options'); ?>', {
+                <?php if ($do=='edit') { ?>
+                    field_id: '<?php echo $field['id']; ?>',
+                <?php } ?>
+                type: field_type
+            }, function( html ){
+                if (!html) { return; }
+                $('#f_type').after( html );
+                icms.events.run('loaduserfieldtypeoptions', html);
+            }, 'html');
+        }
 
     }
 

@@ -10,6 +10,8 @@ class actionAdminCtypesFieldsOptions extends cmsAction {
         $field_id   = $this->request->get('field_id', 0);
         $field_type = $this->request->get('type', '');
 
+        if(!$field_type){ $this->halt(); }
+
         $field_class = 'field' . string_to_camel('_',  $field_type );
         if(!class_exists($field_class)){ cmsCore::error404(); }
 
