@@ -207,7 +207,7 @@ class cmsUser {
 
         $user = $model->joinInner('{users}_auth_tokens', 'au', 'au.user_id = i.id')->
                 filterEqual('au.auth_token', $auth_token)->filterIsNull('is_deleted')->select('au.date_auth')->getUser();
-        if (!$user){ return 0; }
+        if (!$user || $user['is_locked']){ return 0; }
         // проверяем не истек ли срок действия токена
         if((time() - strtotime($user['date_auth'])) > AUTH_TOKEN_EXPIRATION_INT){
             $model->deleteAuthToken($auth_token);

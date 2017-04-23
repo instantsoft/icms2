@@ -746,6 +746,8 @@ class modelContent extends cmsModel{
                             }
                         }
 
+                    } elseif($field['options']['in_fulltext_search']) {
+                        $this->createFullTextIndex($ctype_name, $field['name']);
                     }
                 }
             }
@@ -779,7 +781,7 @@ class modelContent extends cmsModel{
 
         foreach ($fields as $field) {
 
-            $is_text = in_array($field['type'], array('caption', 'text', 'html')) && ($field['handler']->getOption('in_fulltext_search') || $field['name'] == $add_field);
+            $is_text = $field['handler']->getOption('in_fulltext_search') || $field['name'] == $add_field;
             if(!$is_text){ continue; }
 
             $index_fields[] = $field['name'];
@@ -1741,6 +1743,7 @@ class modelContent extends cmsModel{
         ));
 
         cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
+        cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
 
         return $item;
 
