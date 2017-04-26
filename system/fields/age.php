@@ -101,10 +101,7 @@ class fieldAge extends cmsFormField {
     public function store($value, $is_submitted, $old_value=null){
 
         if ($value){
-            $date = DateTime::createFromFormat(cmsConfig::get('date_format'), $value);
-            if($date){
-                return $date->format('Y-m-d');
-            }
+            return date('Y-m-d', strtotime($value));
         }
 
         return null;
@@ -113,7 +110,7 @@ class fieldAge extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['date'] = $value ? date(cmsConfig::get('date_format'), strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         return parent::getInput($value);
 

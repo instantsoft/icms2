@@ -29,8 +29,8 @@ class fieldDate extends cmsFormField {
 
         if ($this->getOption('filter_range')){
 
-            $from = !empty($value['from']) ? date(cmsConfig::get('date_format'), strtotime($value['from'])) : false;
-            $to = !empty($value['to']) ? date(cmsConfig::get('date_format'), strtotime($value['to'])) : false;
+            $from = !empty($value['from']) ? date('d.m.Y', strtotime($value['from'])) : false;
+            $to = !empty($value['to']) ? date('d.m.Y', strtotime($value['to'])) : false;
 
             $this->title = false;
 
@@ -119,7 +119,7 @@ class fieldDate extends cmsFormField {
 
         $this->data['show_time'] = $this->getOption('show_time');
 
-        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         if($this->data['show_time']){
             if(!$value){
