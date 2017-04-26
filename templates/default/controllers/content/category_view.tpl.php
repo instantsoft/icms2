@@ -143,8 +143,14 @@
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon">
             <?php foreach($subcats as $c){ ?>
+
+            <?php
+                $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
+                $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
+            ?>
+
                 <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
-                    <a href="<?php echo href_to($base_url . ($dataset ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
+                    <a href="<?php echo href_to($base_url . (($dataset && $is_ds_view && !$is_ds_hide) ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
                 </li>
             <?php } ?>
         </ul>
