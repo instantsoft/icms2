@@ -362,6 +362,7 @@ span.wrap > span.counter:after {
 .cp_toolbar .install .item { background: url("../../images/icons/install.png") no-repeat left center; }
 .cp_toolbar .logs .item { background: url("../../images/icons/logs.png") no-repeat left center; }
 .cp_toolbar .transfer .item { background: url("../../images/icons/transfer.png") no-repeat left center; }
+.cp_toolbar .view_list .item { background: url("../../images/icons/view_list.png") no-repeat left center; }
 
 /* ========================================================================== */
 /* ========================================================================== */

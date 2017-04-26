@@ -616,6 +616,18 @@ class cmsTemplate {
 
     }
 
+    public function applyMenuItemsHook($menu_name, $event_name){
+
+        $this->menus[$menu_name] = cmsEventsManager::hook($event_name, (isset($this->menus[$menu_name]) ? $this->menus[$menu_name] : array()));
+
+        return $this;
+
+    }
+
+    public function applyToolbarHook($event_name){
+        return $this->applyMenuItemsHook('toolbar', $event_name);
+    }
+
 // ========================================================================== //
 // ========================================================================== //
     /**

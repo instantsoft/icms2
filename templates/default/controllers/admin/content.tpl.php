@@ -3,9 +3,7 @@
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addJS('templates/default/js/admin-content.js');
-?>
 
-<?php
     $this->setPageTitle(LANG_CP_SECTION_CONTENT);
 
     $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
@@ -88,6 +86,8 @@
         'target' => '_blank',
         'href'  => LANG_HELP_URL_CONTENT,
     ));
+
+    $this->applyToolbarHook('admin_content_toolbar');
 
 ?>
 

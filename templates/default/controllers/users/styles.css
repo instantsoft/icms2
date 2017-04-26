@@ -276,7 +276,19 @@
 #user_profile #information .fieldset .field .title{
     color:#68809B;
 }
+#users_profiles_list .field {
+    line-height: 18px;
+    color: #666;
+}
+#users_profiles_list .title_left {
+    display: inline-block;
+    margin-right: 10px;
+}
+#users_profiles_list .title_left + .value {
+    display: inline-block;
+}
 
+#users_profiles_list .title_top { margin-bottom:5px; }
 /* ========================================================================== */
 
 #users_karma_log_list .date{

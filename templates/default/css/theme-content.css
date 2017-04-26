@@ -117,6 +117,27 @@ article div.content_categories:last-child {
 .content_list .field .title_top
 { margin-bottom:5px; }
 
+.ft_listbitmask > .value > ul {
+    margin: 0;
+    overflow: hidden;
+}
+.ft_listbitmask > .value > ul > li {
+    margin: 0 0 0 20px;
+    padding: 0;
+}
+.ft_listbitmask > .value > ul.multiple_tags_list {
+    margin-bottom: -5px;
+}
+.ft_listbitmask > .value > ul.multiple_tags_list li {
+    display: inline-block;
+    margin: 0 5px 5px 0;
+    padding: 4px 8px;
+    color: #68809B;
+    background: #F4F8FD;
+    border: solid 1px #B8D6FB;
+    border-radius: 4px;
+}
+
 /* ========================================================================== */
 
 .content_item .fields_group:first-child .group_title {

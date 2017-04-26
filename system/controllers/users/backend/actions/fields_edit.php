@@ -64,6 +64,8 @@ class actionUsersFieldsEdit extends cmsAction {
                 // сохраняем поле
                 $content_model->updateContentField('{users}', $field_id, $field);
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('fields');
 
             }

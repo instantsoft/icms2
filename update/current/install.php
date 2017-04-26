@@ -8,6 +8,9 @@ function install_package(){
 
     save_controller_options(array('photos'));
 
+    $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'nickname'");
+    $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'avatar'");
+
     return true;
 
 }

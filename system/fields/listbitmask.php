@@ -10,6 +10,14 @@ class fieldListBitmask extends cmsFormField {
 
     public function getOptions(){
         return array(
+            new fieldCheckbox('is_checkbox_multiple', array(
+                'title'   => LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE,
+                'default' => true
+            )),
+            new fieldString('list_class', array(
+                'title'   => LANG_PARSER_BITMASK_LIST_CLASS,
+                'default' => 'multiple_tags_list'
+            )),
             new fieldNumber('max_length', array(
                 'title'   => LANG_PARSER_BITMASK_MAX,
                 'hint'    => LANG_PARSER_BITMASK_MAX_HINT,
@@ -47,7 +55,7 @@ class fieldListBitmask extends cmsFormField {
 
 		if ($items) {
 			$pos = 0;
-			$html .= '<ul>';
+			$html .= '<ul class="'.$this->getOption('list_class').'">';
 			foreach($items as $key => $item){
 				if (mb_substr($value, $pos, 1) == 1){
 					$html .= '<li>' . htmlspecialchars($item) . '</li>';

@@ -36,6 +36,8 @@
 		'href'  => LANG_HELP_URL_WIDGETS
 	));
 
+    $this->applyToolbarHook('admin_widgets_toolbar');
+    
 ?>
 
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>

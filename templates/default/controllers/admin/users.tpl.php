@@ -66,6 +66,8 @@
 		'href'  => LANG_HELP_URL_USERS
 	));
 
+    $this->applyToolbarHook('admin_users_toolbar');
+
 ?>
 
 <h1><?php echo LANG_CP_SECTION_USERS; ?></h1>

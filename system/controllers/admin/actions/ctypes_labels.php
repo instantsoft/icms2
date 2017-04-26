@@ -6,11 +6,9 @@ class actionAdminCtypesLabels extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $wizard_mode = $this->request->get('wizard_mode');
+        $wizard_mode = $this->request->get('wizard_mode', 0);
 
         $form = $this->getForm('ctypes_labels');
-
-        $is_submitted = $this->request->has('submit');
 
         $content_model = cmsCore::getModel('content');
 
@@ -19,9 +17,9 @@ class actionAdminCtypesLabels extends cmsAction {
 
         cmsCore::loadControllerLanguage('content');
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $ctype = array_merge($ctype, $form->parse($this->request, $is_submitted));
+            $ctype = array_merge($ctype, $form->parse($this->request, true));
 
             $errors = $form->validate($this,  $ctype);
 
@@ -52,23 +50,25 @@ class actionAdminCtypesLabels extends cmsAction {
                 if ($wizard_mode){
                     $this->redirectToAction('ctypes', array('fields', $id), array('wizard_mode'=>true));
                 } else {
-                    $this->redirectToAction('ctypes');
+
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
+                    $this->redirectToAction('ctypes', array('labels', $ctype['id']));
+
                 }
 
             }
 
             if ($errors){
-
-            cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
+                cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_labels', array(
-            'id' => $id,
-            'ctype' => $ctype,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_labels', array(
+            'id'     => $id,
+            'ctype'  => $ctype,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

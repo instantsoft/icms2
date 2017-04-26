@@ -76,6 +76,8 @@
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Multi-selection by checkboxes');
+    define('LANG_PARSER_BITMASK_LIST_CLASS', 'List css class');
     define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');

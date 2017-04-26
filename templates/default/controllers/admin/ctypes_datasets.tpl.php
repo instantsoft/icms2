@@ -18,13 +18,13 @@
     ));
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => LANG_SAVE_ORDER,
         'href'  => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('datasets_reorder', $ctype['id']))}')"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
 	$this->addToolButton(array(

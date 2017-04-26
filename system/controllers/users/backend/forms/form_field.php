@@ -77,6 +77,9 @@ class formUsersField extends cmsForm {
                         'title' => LANG_CP_FIELD_IN_PROFILE,
                         'default' => true
                     )),
+                    new fieldCheckbox('is_in_list', array(
+                        'title' => LANG_CP_FIELD_IN_LIST,
+                    )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
                     ))
@@ -86,6 +89,15 @@ class formUsersField extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_LABELS,
                 'childs' => array(
+                    new fieldList('options:label_in_list', array(
+                        'title' => LANG_CP_FIELD_LABELS_IN_LIST,
+                        'default' => 'none',
+                        'items' => array(
+                            'left' => LANG_CP_FIELD_LABEL_LEFT,
+                            'top' => LANG_CP_FIELD_LABEL_TOP,
+                            'none' => LANG_CP_FIELD_LABEL_NONE
+                        )
+                    )),
                     new fieldList('options:label_in_item', array(
                         'title' => LANG_CP_FIELD_LABELS_IN_ITEM,
                         'default' => 'left',
@@ -94,7 +106,7 @@ class formUsersField extends cmsForm {
                             'top' => LANG_CP_FIELD_LABEL_TOP,
                             'none' => LANG_CP_FIELD_LABEL_NONE
                         )
-                    )),
+                    ))
                 )
             ),
             'format' => array(

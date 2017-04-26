@@ -43,7 +43,7 @@ class actionAdminCtypesEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('ctypes');
+                $this->redirectToAction('ctypes', array('edit', $ctype['id']));
 
             }
 

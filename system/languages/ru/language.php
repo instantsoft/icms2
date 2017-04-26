@@ -77,6 +77,8 @@
     define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Мультивыбор чекбоксами');
+    define('LANG_PARSER_BITMASK_LIST_CLASS', 'Класс списка');
     define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
     define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');

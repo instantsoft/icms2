@@ -55,6 +55,7 @@
     define('LANG_CP_CTYPE_CREATED',             'Тип контента &laquo;%s&raquo; создан');
     define('LANG_CP_CTYPE_DELETE_CONFIRM',      'Удалить тип контента "{title}"?');
     define('LANG_CP_CTYPE_ERROR_NAME',          'Не должно называться именем существующего компонента');
+    define('LANG_CP_CTYPE_TO_LIST',             'К списку типов контента');
 
     define('LANG_CP_CTYPE_SETTINGS',            'Настройки');
     define('LANG_CP_CTYPE_LABELS',              'Заголовки');

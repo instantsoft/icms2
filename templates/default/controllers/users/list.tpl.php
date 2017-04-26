@@ -33,12 +33,45 @@
                     </div>
                 <?php } ?>
 
-                <div class="icon">
-					<a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
-                </div>
+                <?php if ($fields['avatar']['is_in_list']){ ?>
+                    <div class="icon">
+                        <a href="<?php echo $this->href_to($profile['id']); ?>">
+                            <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?>
+                        </a>
+                    </div>
+                <?php } ?>
 
                 <div class="title">
-                    <a href="<?php echo $this->href_to($profile['id']); ?>"><?php html($profile['nickname']); ?></a>
+                    <?php if ($fields['nickname']['is_in_list']){ ?>
+                        <a href="<?php echo $this->href_to($profile['id']); ?>">
+                            <?php html($profile['nickname']); ?>
+                        </a>
+                    <?php } ?>
+                    <div class="fields">
+                        <?php foreach($fields as $field){ ?>
+
+                            <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($profile[$field['name']])) { continue; } ?>
+                            <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
+                            <?php if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; } ?>
+
+                            <?php
+                                if (!isset($field['options']['label_in_list'])) {
+                                    $label_pos = 'none';
+                                } else {
+                                    $label_pos = $field['options']['label_in_list'];
+                                }
+                            ?>
+
+                            <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                                <?php if ($label_pos != 'none'){ ?>
+                                    <div class="title_<?php echo $label_pos; ?>"><?php echo $field['title'] . ($label_pos=='left' ? ': ' : ''); ?></div>
+                                <?php } ?>
+                                <div class="value">
+                                    <?php echo $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]); ?>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
                 </div>
 
                 <div class="actions">
@@ -76,4 +109,4 @@
         <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
     <?php } ?>
 
-<?php } ?>
+<?php }
