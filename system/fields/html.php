@@ -65,10 +65,11 @@ class fieldHtml extends cmsFormField {
 
         if ($max_len){
 
-            $url = href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
-
             $value = string_short($value, $max_len);
-            $value .= '<a class="read-more" href="'.$url.'">'.LANG_MORE.'</a>';
+
+            if(!empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
+                $value .= '<a class="read-more" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
+            }
 
         }
 

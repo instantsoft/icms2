@@ -18,7 +18,7 @@ class actionGroupsGroupLeave extends cmsAction {
             cmsCore::getController('activity')->addEntry($this->name, 'leave', array(
                 'subject_title' => $group['title'],
                 'subject_id'    => $group['id'],
-                'subject_url'   => href_to_rel($this->name, $group['id']),
+                'subject_url'   => href_to_rel($this->name, $group['slug']),
                 'group_id'      => $group['id']
             ));
 
@@ -26,7 +26,7 @@ class actionGroupsGroupLeave extends cmsAction {
 
         cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
 
-        $this->redirectToAction($group['id']);
+        $this->redirectToAction($group['slug']);
 
     }
 

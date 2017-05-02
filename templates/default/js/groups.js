@@ -5,8 +5,6 @@ icms.groups = (function ($) {
     this.url_submit = '';
     this.url_delete = '';
 
-    //====================================================================//
-
     this.addStaff = function(){
 
         var name = $('#staff-username').val();
@@ -34,9 +32,7 @@ icms.groups = (function ($) {
 
         return false;
 
-    }
-
-    //====================================================================//
+    };
 
     this.deleteStaff = function(id){
 
@@ -59,9 +55,7 @@ icms.groups = (function ($) {
 
         }, 'json');
 
-    }
-
-    //====================================================================//
+    };
 
 	return this;
 

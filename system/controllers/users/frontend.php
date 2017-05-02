@@ -261,6 +261,10 @@ class users extends cmsFrontend {
         $total    = $this->model->getUsersCount();
         $profiles = $this->model->getUsers();
 
+        if($this->request->isStandard()){
+            if(!$profiles && $page > 1){ cmsCore::error404(); }
+        }
+
         return $this->cms_template->renderInternal($this, 'list', array(
             'page_url'     => $page_url,
             'fields'       => $fields,

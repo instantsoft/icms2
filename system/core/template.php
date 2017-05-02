@@ -528,6 +528,7 @@ class cmsTemplate {
     /**
      * Добавляет кнопку на глобальный тулбар
      * @param array $button
+     * @return \cmsTemplate
      */
     public function addToolButton($button){
 
@@ -546,6 +547,25 @@ class cmsTemplate {
         );
 
         $this->addMenuItem('toolbar', $item);
+
+        return $this;
+
+    }
+
+    /**
+     * Добавляет кнопки на глобальный тулбар
+     * @param array $buttons
+     * @return \cmsTemplate
+     */
+    public function addToolButtons($buttons){
+
+        if (is_array($buttons)){
+            foreach($buttons as $button){
+                $this->addToolButton($button);
+            }
+        }
+
+        return $this;
 
     }
 
@@ -1167,9 +1187,16 @@ class cmsTemplate {
      * @return string
      */
     public function getJavascriptFileName($filename){
-
         return $this->getTplFilePath('js/'.$filename.'.js', false);
+    }
 
+    /**
+     * Возвращает путь к CSS-файлу, определяя его наличие в собственном шаблоне
+     * @param string $filename
+     * @return string
+     */
+    public function getTemplateStylesFileName($filename){
+        return $this->getTplFilePath('css/'.$filename.'.css', false);
     }
 
 //============================================================================//

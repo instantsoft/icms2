@@ -6,15 +6,21 @@ class actionGroupsAdd extends cmsAction {
 
         if (!cmsUser::isAllowed('groups', 'add')) { cmsCore::error404(); }
 
-        $form = $this->getForm('group');
+        $form = $this->getGroupForm();
 
-        if (!$this->options['is_wall']){
-            $form->removeField('basic', 'wall_policy');
-        }
+        $fields = $this->getGroupsFields();
 
         $is_submitted = $this->request->has('submit');
 
         $group = $form->parse($this->request, $is_submitted);
+
+        // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
+        // (для тех полей, в которых это включено)
+        foreach($fields as $field){
+            if (!empty($field['options']['profile_value'])){
+                $group[$field['name']] = $this->cms_user->{$field['options']['profile_value']};
+            }
+        }
 
         if ($is_submitted){
 
@@ -22,25 +28,35 @@ class actionGroupsAdd extends cmsAction {
 
             if (!$errors){
 
+                $group['owner_id'] = $this->cms_user->id;
+
                 $id = $this->model->addGroup($group);
 
-                $this->redirectToAction($id);
+                $group = $this->model->getGroup($id);
+
+                $this->redirectToAction($group['slug']);
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('group_edit', array(
-            'do' => 'add',
-            'group' => $group,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+        $page_title = LANG_GROUPS_ADD;
+
+        $this->cms_template->setPageTitle($page_title);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($page_title);
+
+        return $this->cms_template->render('group_edit', array(
+            'do'         => 'add',
+            'page_title' => $page_title,
+            'group'      => $group,
+            'form'       => $form,
+            'errors'     => isset($errors) ? $errors : false
         ));
 
     }

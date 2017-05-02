@@ -10,11 +10,18 @@ class actionGroupsGroupActivity extends cmsAction {
 
         $activity_controller->model->filterEqual('group_id', $group['id']);
 
-        $page_url = href_to($this->name, $group['id'], 'activity');
+        $page_url = href_to($this->name, $group['slug'], 'activity');
 
         $html = $activity_controller->renderActivityList($page_url);
 
         $group['sub_title'] = LANG_GROUPS_PROFILE_ACTIVITY;
+
+        $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
+        $this->cms_template->setPageDescription($group['title'].' · '.$group['sub_title']);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        $this->cms_template->addBreadcrumb($group['sub_title']);
 
         return $this->cms_template->render('group_activity', array(
             'user'  => $this->cms_user,

@@ -14,27 +14,22 @@ class actionGroupsGroup extends cmsAction {
             $wall_title = LANG_GROUPS_WALL;
 
             $wall_target = array(
-                'controller' => 'groups',
+                'controller'   => 'groups',
                 'profile_type' => 'group',
-                'profile_id' => $group['id']
+                'profile_id'   => $group['id']
             );
-
-            $is_owner = $this->cms_user->id == $group['owner_id'];
-            $membership = $this->model->getMembership($group['id'], $this->cms_user->id);
-            $is_member = ($membership !== false);
-            $member_role = $is_member ? $membership['role'] : groups::ROLE_NONE;
 
             $wall_permissions = array(
 
                 'add' =>$this->cms_user->is_admin || (
-                            $membership && (
+                            $group['access']['is_member'] && (
                                 ($group['wall_policy'] == groups::WALL_POLICY_MEMBERS) ||
-                                ($group['wall_policy'] == groups::WALL_POLICY_STAFF && $member_role==groups::ROLE_STAFF) ||
-                                $is_owner
+                                ($group['wall_policy'] == groups::WALL_POLICY_STAFF && $group['access']['member_role']==groups::ROLE_STAFF) ||
+                                $group['access']['is_owner']
                             )
                         ),
 
-                'delete' => ($this->cms_user->is_admin || $is_owner),
+                'delete' => ($this->cms_user->is_admin || $group['access']['is_owner']),
 
             );
 
@@ -42,16 +37,31 @@ class actionGroupsGroup extends cmsAction {
 
         }
 
-        // Контент
-        $content_counts = $this->getGroupContentCounts($group);
+        // Парсим значения полей
+        foreach($group['fields'] as $name => $field){
+            $group['fields'][$name]['html'] = $field['handler']->setItem($group)->parse($group[$name]);
+        }
 
-        $group['description'] = cmsEventsManager::hook('html_filter', $group['description']);
+        list($group, $group['fields']) = cmsEventsManager::hook('group_before_view', array($group, $group['fields']));
+
+        $fields_fieldsets = cmsForm::mapFieldsToFieldsets($group['fields'], function($field, $user) use ($group) {
+            if (!$field['is_in_item'] || $field['is_system']) { return false; }
+            if ((empty($group[$field['name']]) || empty($field['html'])) && $group[$field['name']] !== '0') { return false; }
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { return false; }
+            return true;
+        });
+
+        $this->cms_template->setPageTitle($group['title']);
+        $this->cms_template->setPageDescription($group['description'] ? string_get_meta_description($group['description']): $group['title']);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title']);
 
         return $this->cms_template->render('group_view', array(
-            'group'          => $group,
-            'content_counts' => $content_counts,
-            'user'           => $this->cms_user,
-            'wall_html'      => isset($wall_html) ? $wall_html : false
+            'group'            => $group,
+            'fields_fieldsets' => $fields_fieldsets,
+            'user'             => $this->cms_user,
+            'wall_html'        => isset($wall_html) ? $wall_html : false
         ));
 
     }

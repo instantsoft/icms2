@@ -1,24 +1,18 @@
 <?php
 
-class modelGroups extends cmsModel{
-
-//============================================================================//
-//============================================================================//
+class modelGroups extends cmsModel {
 
     public function addGroup($group){
 
-        $user = cmsUser::getInstance();
-
-        $group['owner_id'] = $user->id;
         $group['date_pub'] = null;
 
         $group_id = $this->insert('groups', $group);
 
         if ($group_id){
-            $this->addMembership($group_id, $user->id, groups::ROLE_STAFF);
+            $this->addMembership($group_id, $group['owner_id'], groups::ROLE_STAFF);
         }
 
-        cmsCache::getInstance()->clean("groups.list");
+        cmsCache::getInstance()->clean('groups.list');
 
         return $group_id;
 
@@ -26,37 +20,45 @@ class modelGroups extends cmsModel{
 
     public function updateGroup($id, $group){
 
-        unset($group['owner_nickname']);
-
         $result = $this->update('groups', $id, $group);
 
         cmsCore::getModel('content')->toggleParentVisibility('group', $id, $group['is_closed']);
 
-        cmsCache::getInstance()->clean("groups.list");
+        cmsCache::getInstance()->clean('groups.list');
 
-        $this->updateGroupContentTitles($id, $group['title']);
+        $this->updateGroupContentParams($id, $group);
+
+        $update = array('subject_title' => $group['title']);
+        if(!empty($group['slug'])){
+            $update['subject_url'] = href_to_rel('groups', $group['slug']);
+        }
+
+        $activity = cmsCore::getController('activity');
+
+        $activity->updateEntry('groups', 'join', $id, $update);
+        $activity->updateEntry('groups', 'leave', $id, $update);
 
         return $result;
 
     }
 
-    public function updateGroupContentTitles($id, $new_group_title){
+    public function updateGroupContentParams($id, $group){
 
         $counts = $this->getGroupContentCounts($id, true);
-
         if (!$counts) { return true; }
 
         $content_model = cmsCore::getModel('content');
 
         foreach(array_keys($counts) as $ctype_name){
 
-            $content_model->
-                    filterEqual('parent_id', $id)->
-                    filterEqual('parent_type', 'group');
+            $content_model->filterEqual('parent_id', $id)->filterEqual('parent_type', 'group');
 
-                $content_model->updateFiltered($content_model->getContentTypeTableName($ctype_name), array(
-                    'parent_title' => $new_group_title,
-                ));
+            $update = array('parent_title' => $group['title']);
+            if(!empty($group['slug'])){
+                $update['parent_url'] = href_to_rel('groups', $group['slug'], array('content', $ctype_name));
+            }
+
+            $content_model->updateFiltered($content_model->getContentTypeTableName($ctype_name), $update);
 
         }
 
@@ -91,10 +93,10 @@ class modelGroups extends cmsModel{
             if (!$is_delete){
 
                 $content_model->updateFiltered($content_model->getContentTypeTableName($ctype_name), array(
-                    'parent_id' => null,
-                    'parent_type' => null,
+                    'parent_id'    => null,
+                    'parent_type'  => null,
                     'parent_title' => null,
-                    'parent_url' => null,
+                    'parent_url'   => null
                 ));
 
             }
@@ -110,22 +112,19 @@ class modelGroups extends cmsModel{
         $this->deleteGroupMemberships($group['id']);
         $this->deleteGroupInvites($group['id']);
 
-        cmsCache::getInstance()->clean('groups.list');
-
-        if($group['logo']){
-
-            if (!is_array($group['logo'])){ $group['logo'] = cmsModel::yamlToArray($group['logo']); }
-
-            $config = cmsConfig::getInstance();
-
-            foreach($group['logo'] as $image_url){
-                $image_path = $config->upload_path . $image_url;
-                @unlink($image_path);
-            }
-
+        foreach($group['fields'] as $field){
+            $field['handler']->delete($group[$field['name']]);
         }
 
-        return $this->delete('groups', $group['id']);
+        $this->filterEqual('group_id', $group['id'])->deleteFiltered('activity');
+
+        cmsCache::getInstance()->clean('activity.entries');
+
+        $success = $this->delete('groups', $group['id']);
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return $success;
 
     }
 
@@ -153,7 +152,7 @@ class modelGroups extends cmsModel{
             filterEqual('id', $group_id)->
             increment('groups', 'rating', $score);
 
-        cmsCache::getInstance()->clean("groups.list");
+        cmsCache::getInstance()->clean('groups.list');
 
     }
 
@@ -162,7 +161,9 @@ class modelGroups extends cmsModel{
 
     public function filterByMember($user_id){
 
-        return $this->join('groups_members', 'm', "i.id = m.group_id AND m.user_id = '{$user_id}'");
+        $this->filterEqual('m.user_id', $user_id);
+
+        return $this->join('groups_members', 'm', 'i.id = m.group_id');
 
     }
 
@@ -179,27 +180,34 @@ class modelGroups extends cmsModel{
 
         $this->useCache('groups.list');
 
-        return $this->get('groups');
+        return $this->get('groups', function($group, $model){
+
+            $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
+
+            return $group;
+
+        });
 
     }
 
-    public function getGroupsIds(){
-
-        $this->selectOnly('i.id', 'id');
-		$this->filterNotEqual('i.is_closed', 1);
-
-        return $this->get('groups');
-
-    }
-
-    public function getGroup($id){
+    public function getGroup($id, $field_name = 'id'){
 
         $this->select('u.nickname', 'owner_nickname');
 
         $this->join('{users}', 'u', 'u.id = i.owner_id');
 
-        return $this->getItemById('groups', $id);
+        $group = $this->getItemByField('groups', $field_name, $id);
 
+        if($group){
+            $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
+        }
+
+        return $group;
+
+    }
+
+    public function getGroupBySlug($slug){
+        return $this->getGroup($slug, 'slug');
     }
 
     public function getUserGroups($user_id){
@@ -215,7 +223,13 @@ class modelGroups extends cmsModel{
             $this->orderBy('g.title');
         }
 
-        return $this->get('groups_members');
+        return $this->get('groups_members', function($group, $model){
+
+            $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
+
+            return $group;
+
+        });
 
     }
 
@@ -226,15 +240,15 @@ class modelGroups extends cmsModel{
 
         $id = $this->insert('groups_members', array(
             'group_id' => $group_id,
-            'user_id' => $user_id,
-            'role' => $role,
+            'user_id'  => $user_id,
+            'role'     => $role
         ));
 
         if ($id){
             $this->filterEqual('id', $group_id)->increment('groups', 'members_count');
         }
 
-        cmsCache::getInstance()->clean("groups.members");
+        cmsCache::getInstance()->clean('groups.members');
 
         return $id;
 
@@ -251,7 +265,7 @@ class modelGroups extends cmsModel{
             $this->filterEqual('id', $group_id)->decrement('groups', 'members_count');
         }
 
-        cmsCache::getInstance()->clean("groups.members");
+        cmsCache::getInstance()->clean('groups.members');
 
         return $result;
 
@@ -282,7 +296,7 @@ class modelGroups extends cmsModel{
 
     public function deleteGroupMemberships($group_id){
 
-        cmsCache::getInstance()->clean("groups.members");
+        cmsCache::getInstance()->clean('groups.members');
 
         return $this->delete('groups_members', $group_id, 'group_id');
 
@@ -290,7 +304,7 @@ class modelGroups extends cmsModel{
 
     public function deleteUserMemberships($user_id){
 
-        cmsCache::getInstance()->clean("groups.members");
+        cmsCache::getInstance()->clean('groups.members');
 
         $groups_ids = array_collection_to_list($this->getUserGroups($user_id), 'id', 'id');
 
@@ -345,7 +359,7 @@ class modelGroups extends cmsModel{
 
     public function updateMembershipRole($group_id, $user_id, $new_role){
 
-        cmsCache::getInstance()->clean("groups.members");
+        cmsCache::getInstance()->clean('groups.members');
 
         return $this->
                     filterEqual('group_id', $group_id)->
@@ -403,6 +417,26 @@ class modelGroups extends cmsModel{
 
     }
 
+    public function getInvitableUsers($group_id){
+
+        $users_model = cmsCore::getModel('users');
+
+        $users = $users_model->orderBy('email')->getUsers();
+
+        if (!$users) { return false; }
+
+        $group_members = $this->getMembersIds($group_id);
+
+        foreach($users as $user){
+            if (in_array($user['id'], $group_members)){
+                unset($users[$user['id']]);
+            }
+        }
+
+        return $users;
+
+    }
+
     public function addInvite($invite){
 
         return $this->insert('groups_invites', $invite);
@@ -414,6 +448,15 @@ class modelGroups extends cmsModel{
         return $this->
                     filterEqual('group_id', $group_id)->
                     filterEqual('invited_id', $invited_id)->
+                    getItem('groups_invites');
+
+    }
+
+    public function getInviteRequest($group_id, $user_id){
+
+        return $this->
+                    filterEqual('group_id', $group_id)->
+                    filterEqual('user_id', $user_id)->
                     getItem('groups_invites');
 
     }
@@ -468,7 +511,8 @@ class modelGroups extends cmsModel{
             $content_model->filterEqual('parent_type', 'group');
 
             if(is_callable($filter_callback)){
-                $filter_callback($ctype, $content_model);
+                $res = $filter_callback($ctype, $content_model);
+                if($res === false){ continue; }
             }
 
             $count = $content_model->getContentItemsCount( $ctype['name'] );
@@ -488,10 +532,6 @@ class modelGroups extends cmsModel{
         return $counts;
 
     }
-
-//============================================================================//
-//============================================================================//
-
 
 }
 

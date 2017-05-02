@@ -140,7 +140,7 @@
 
                         <?php } else { ?>
 
-                            <?php echo html_input('hidden', $name, $value); ?>
+                            <?php echo html_input('hidden', $name, $value, array('id' => $name)); ?>
 
                         <?php } ?>
 

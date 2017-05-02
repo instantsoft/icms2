@@ -15,6 +15,7 @@
             'menu_groups',
             'sitemap_sources',
             'sitemap_urls',
+            'fulltext_search'
         )
 
     );

@@ -127,16 +127,19 @@ class messages extends cmsFrontend {
     /**
      * Отправляет email-уведомления указанного типа всем
      * подписанным пользователям
-     * @param string $notice_type
+     * @param string $letter_name
      * @param string $notice Массив ключей и значений для замены в тексте письма
+     * @param string $notice_type
      * @return boolean
      */
-    public function sendNoticeEmail($notice_type, $notice=array()){
+    public function sendNoticeEmail($letter_name, $notice = array(), $notice_type = false){
 
         if (!$this->recipients){ return; }
 
-        $letter_text = cmsCore::getLanguageTextFile("letters/{$notice_type}");
+        $letter_text = cmsCore::getLanguageTextFile("letters/{$letter_name}");
         if (!$letter_text){ return false; }
+
+        if(!$notice_type){ $notice_type = $letter_name; }
 
         $options_only = $this->is_ignore_options ? false : array('email', 'both');
         $recipients = cmsCore::getModel('users')->getNotifiedUsers($notice_type, $this->recipients, $options_only);

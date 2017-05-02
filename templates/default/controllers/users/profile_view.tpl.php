@@ -9,11 +9,7 @@
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
 
-    if (is_array($tool_buttons)){
-        foreach($tool_buttons as $button){
-            $this->addToolButton($button);
-        }
-    }
+    $this->addToolButtons($tool_buttons);
 
 ?>
 

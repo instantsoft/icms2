@@ -686,7 +686,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (99, 'user_delete', 'wall', 99, 1),
 (100, 'page_is_allowed', 'auth', 100, 1),
 (101, 'admin_confirm_login', 'admin', 101, 1),
-(102, 'page_is_allowed', 'widgets', 102, 1);
+(102, 'page_is_allowed', 'widgets', 102, 1),
+(103, 'fulltext_search', 'groups', 103, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -702,14 +703,49 @@ CREATE TABLE `{#}groups` (
   `edit_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Edit policy',
   `wall_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Wall policy',
   `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Private?',
+  `cover` text COMMENT 'Group cover',
+  `slug` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `owner_id` (`owner_id`),
+  KEY `members_count` (`members_count`),
   KEY `date_pub` (`date_pub`),
   KEY `rating` (`rating`),
-  KEY `is_public` (`join_policy`),
-  KEY `is_closed` (`is_closed`),
-  KEY `members_count` (`members_count`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Groups (communities)';
+  KEY `owner_id` (`owner_id`,`members_count`),
+  KEY `slug` (`slug`),
+  FULLTEXT KEY `title` (`title`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Groups (communities)';
+
+DROP TABLE IF EXISTS `{#}groups_fields`;
+CREATE TABLE `{#}groups_fields` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hint` varchar(200) DEFAULT NULL,
+  `ordering` int(11) unsigned DEFAULT NULL,
+  `fieldset` varchar(32) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `is_in_list` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_item` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_filter` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_closed` tinyint(3) unsigned DEFAULT NULL,
+  `is_private` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed_type` tinyint(1) unsigned DEFAULT NULL,
+  `is_system` tinyint(1) unsigned DEFAULT NULL,
+  `values` text,
+  `options` text,
+  `groups_read` text,
+  `groups_edit` text,
+  `filter_view` text,
+  PRIMARY KEY (`id`),
+  KEY `ordering` (`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Groups fields';
+
+INSERT INTO `{#}groups_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_in_closed`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`, `filter_view`) VALUES
+(1, NULL, 'title', 'Title', NULL, 1, 'Summary', 'caption', 1, 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nmin_length: 3\nmax_length: 128\nin_fulltext_search: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(2, NULL, 'description', 'Group description', NULL, 2, 'Summary', 'html', 1, 1, NULL, 1, NULL, 1, 1, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nbuild_redirect_link: 1\nteaser_len: 200\nin_fulltext_search: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(3, NULL, 'logo', 'Group logo', NULL, 3, 'Summary', 'image', 1, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: micro\nsize_modal:\nsizes:\n  - micro\n  - small\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(5, NULL, 'cover', 'Group cover', NULL, 4, 'Summary', 'image', NULL, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: original\nsize_modal:\nsizes:\n  - small\n  - original\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n');
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
@@ -731,9 +767,8 @@ CREATE TABLE `{#}groups_members` (
   `role` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'User role in a group',
   `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Role update date',
   PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
   KEY `user_id` (`user_id`),
-  KEY `date_updated` (`date_updated`)
+  KEY `group_id` (`group_id`,`date_updated`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Group (community) members';
 
 DROP TABLE IF EXISTS `{#}images_presets`;
@@ -921,7 +956,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
 (36, 'content', 'restore', 'list', 'own,all'),
 (37, 'content', 'trash_left_time', 'number', NULL),
-(38, 'users', 'delete', 'list', 'my,anyuser');
+(38, 'users', 'delete', 'list', 'my,anyuser'),
+(39, 'groups', 'invite_users', 'flag', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

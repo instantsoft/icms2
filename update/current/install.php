@@ -11,6 +11,86 @@ function install_package(){
     $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'nickname'");
     $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'avatar'");
 
+    $core->db->query("ALTER TABLE `{#}groups` ENGINE = MYISAM");
+
+    if(!isFieldExists('groups', 'cover')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `cover` TEXT NULL DEFAULT NULL COMMENT 'Обложка группы'");
+    }
+
+    if(!isFieldExists('groups', 'slug')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `slug` VARCHAR(100) NULL DEFAULT NULL , ADD INDEX (`slug`);");
+    }
+
+    $admin = cmsCore::getController('admin');
+
+    $diff_events = $admin->getEventsDifferences();
+
+    if($diff_events['added']){
+        foreach ($diff_events['added'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->addEvent($controller, $event);
+            }
+        }
+    }
+
+    if($diff_events['deleted']){
+        foreach ($diff_events['deleted'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->deleteEvent($controller, $event);
+            }
+        }
+    }
+
+    $remove_table_indexes = array(
+        'groups' => array(
+            'owner_id', 'is_public', 'is_closed'
+        ),
+        'groups_members' => array(
+            'date_updated', 'group_id'
+        )
+    );
+    $add_table_indexes = array(
+        'groups' => array(
+            'owner_id' => array('owner_id', 'members_count')
+        ),
+        'groups_members' => array(
+            'group_id' => array('group_id', 'date_updated')
+        )
+    );
+    $add_table_ft_indexes = array(
+        'groups' => array(
+            'title' => array('title')
+        )
+    );
+
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    if($add_table_indexes){
+        foreach ($add_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name);
+            }
+        }
+    }
+    if($add_table_ft_indexes){
+        foreach ($add_table_ft_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'FULLTEXT');
+            }
+        }
+    }
+
+    add_perms(array(
+        'groups' => array(
+            'invite_users'
+        )
+    ), 'flag');
+
     return true;
 
 }

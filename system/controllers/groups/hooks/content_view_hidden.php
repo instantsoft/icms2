@@ -22,9 +22,9 @@ class onGroupsContentViewHidden extends cmsAction {
 
             if($group){
 
-                $data['access_text'] = sprintf(LANG_GROUPS_CTYPE_ACCESS, href_to('groups', $group['id']), $group['title']);
+                $data['access_text'] = sprintf(LANG_GROUPS_CTYPE_ACCESS, href_to('groups', $group['slug']), $group['title']);
 
-                $data['access_redirect_url'] = href_to('groups', $group['id']);
+                $data['access_redirect_url'] = href_to('groups', $group['slug']);
 
                 $data['viewable'] = false;
 

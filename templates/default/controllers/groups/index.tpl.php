@@ -1,29 +1,3 @@
-<?php
-
-    $base_url = $this->controller->name;
-    $base_ds_url = href_to_rel($this->controller->name) . '/index/%s';
-
-    $this->setPageTitle(LANG_GROUPS);
-    $this->addBreadcrumb(LANG_GROUPS, href_to($base_url));
-
-    if (cmsUser::isAllowed('groups', 'add')) {
-        $this->addToolButton(array(
-            'class' => 'add',
-            'title' => LANG_GROUPS_ADD,
-            'href'  => $this->href_to('add'),
-        ));
-    }
-
-    if (cmsUser::isAdmin()){
-        $this->addToolButton(array(
-            'class' => 'page_gear',
-            'title' => LANG_GROUPS_SETTINGS,
-            'href'  => href_to('admin', 'controllers', array('edit', 'groups'))
-        ));
-    }
-
-?>
-
 <h1><?php echo LANG_GROUPS; ?></h1>
 
 <?php if (sizeof($datasets)>1){ ?>
@@ -35,7 +9,7 @@
                 <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
 
                     <?php if ($ds_counter > 0) { $ds_url = sprintf(rel_to_href($base_ds_url), $set['name']); } ?>
-                    <?php if ($ds_counter == 0) { $ds_url = href_to($base_url); } ?>
+                    <?php if ($ds_counter == 0) { $ds_url = href_to('groups'); } ?>
 
                     <?php if ($ds_selected){ ?>
                         <div><?php echo $set['title']; ?></div>

@@ -67,20 +67,22 @@ class actionUsersProfile extends cmsAction {
 
         }
 
+        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
+
         $tabs = $this->getProfileMenu($profile);
 
         return $this->cms_template->render('profile_view', array(
-            'profile'           => $profile,
-            'user'              => $this->cms_user,
-            'is_own_profile'    => $this->is_own_profile,
-            'is_friends_on'     => $this->options['is_friends_on'],
-            'tool_buttons'      => $this->getToolButtons($profile),
-            'show_all_flink'    => isset($this->tabs['friends']),
-            'friends'           => $friends,
-            'content_counts'    => $content_counts,
-            'fields'            => $fields,
-            'wall_html'         => isset($wall_html) ? $wall_html : false,
-            'tabs'              => $tabs
+            'profile'        => $profile,
+            'user'           => $this->cms_user,
+            'is_own_profile' => $this->is_own_profile,
+            'is_friends_on'  => $this->options['is_friends_on'],
+            'tool_buttons'   => $this->getToolButtons($profile),
+            'show_all_flink' => isset($this->tabs['friends']),
+            'friends'        => $friends,
+            'content_counts' => $content_counts,
+            'fields'         => $fields,
+            'wall_html'      => isset($wall_html) ? $wall_html : false,
+            'tabs'           => $tabs
         ));
 
     }

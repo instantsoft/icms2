@@ -4,22 +4,10 @@ class actionGroupsGroupEdit extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($group, $do=false){
+    public function run($group, $do = false){
 
-        if (!cmsUser::isAllowed('groups', 'edit')) { cmsCore::error404(); }
-
-        $is_owner = $group['owner_id'] == $this->cms_user->id || $this->cms_user->is_admin;
-
-        $membership = $this->model->getMembership($group['id'], $this->cms_user->id);
-        $is_member = ($membership !== false);
-        $member_role = $is_member ? $membership['role'] : groups::ROLE_NONE;
-
-        if (!cmsUser::isAllowed('groups', 'edit', 'all')) {
-            if (cmsUser::isAllowed('groups', 'edit', 'own')) {
-                if ($member_role != groups::ROLE_STAFF || ($group['edit_policy']==groups::EDIT_POLICY_OWNER && !$is_owner)){
-                    cmsCore::error404();
-                }
-            }
+        if(!$group['access']['is_can_edit']){
+            cmsCore::error404();
         }
 
         // если нужно, передаем управление другому экшену
@@ -28,24 +16,19 @@ class actionGroupsGroupEdit extends cmsAction {
             return;
         }
 
-        $form = $this->getForm('group');
+        $form = $this->getGroupForm($group['id']);
 
-        if (!$is_owner){
-            $form->removeField('basic', 'join_policy');
-            $form->removeField('basic', 'edit_policy');
-            $form->removeField('basic', 'wall_policy');
-            $form->removeField('basic', 'is_closed');
+        if (!$group['access']['is_owner']){
+            $form->removeField('group_options', 'join_policy');
+            $form->removeField('group_options', 'edit_policy');
+            $form->removeField('group_options', 'wall_policy');
+            $form->removeField('group_options', 'is_closed');
+            $form->removeField('group_options', 'slug');
         }
 
-        if ($is_owner && !$this->options['is_wall']){
-            $form->removeField('basic', 'wall_policy');
-        }
+        if ($this->request->has('submit')){
 
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
-
-            $group = array_merge($group, $form->parse($this->request, $is_submitted, $group));
+            $group = array_merge($group, $form->parse($this->request, true, $group));
 
             $errors = $form->validate($this, $group);
 
@@ -53,7 +36,11 @@ class actionGroupsGroupEdit extends cmsAction {
 
                 $this->model->updateGroup($group['id'], $group);
 
-                $this->redirectToAction($group['id']);
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
+                $group = $this->model->getGroup($group['id']);
+
+                $this->redirectToAction($group['slug']);
 
             }
 
@@ -65,11 +52,20 @@ class actionGroupsGroupEdit extends cmsAction {
 
         }
 
+        $page_title = LANG_GROUPS_EDIT;
+
+        $this->cms_template->setPageTitle($page_title);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['id']));
+        $this->cms_template->addBreadcrumb($page_title);
+
         return $this->cms_template->render('group_edit', array(
-            'do'     => 'edit',
-            'group'  => $group,
-            'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'do'         => 'edit',
+            'page_title' => $page_title,
+            'group'      => $group,
+            'form'       => $form,
+            'errors'     => isset($errors) ? $errors : false
         ));
 
     }

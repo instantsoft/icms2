@@ -152,7 +152,7 @@ class actionContentItemEdit extends cmsAction {
                         $group = $groups_model->getGroup($item['parent_id']);
                         $item['parent_type']      = 'group';
                         $item['parent_title']     = $groups_list[$item['parent_id']];
-                        $item['parent_url']       = href_to_rel('groups', $item['parent_id'], array('content', $ctype['name']));
+                        $item['parent_url']       = href_to_rel('groups', $group['slug'], array('content', $ctype['name']));
                         $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
                     } else {
                         $item['parent_id']    = null;

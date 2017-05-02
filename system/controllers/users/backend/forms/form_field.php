@@ -139,15 +139,7 @@ class formUsersField extends cmsForm {
                     ))
                 )
             ),
-//            'privacy' => array(
-//                'type' => 'fieldset',
-//                'title' => LANG_CP_FIELD_PRIVACY,
-//                'childs' => array(
-//                    new fieldCheckbox('is_private', array(
-//                        'title' => LANG_CP_FIELD_PRIVATE,
-//                    )),
-//                )
-//            ),
+
             'read_access' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_READ,

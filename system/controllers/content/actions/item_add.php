@@ -236,7 +236,7 @@ class actionContentItemAdd extends cmsAction {
                         $group = $groups_model->getGroup($item['parent_id']);
                         $item['parent_type'] = 'group';
                         $item['parent_title'] = $groups_list[$item['parent_id']];
-                        $item['parent_url'] = href_to_rel('groups', $item['parent_id'], array('content', $ctype_name));
+                        $item['parent_url'] = href_to_rel('groups', $group['slug'], array('content', $ctype_name));
                         $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
                     } else {
                         $item['parent_id'] = null;
@@ -347,6 +347,7 @@ class actionContentItemAdd extends cmsAction {
             'item'             => $item,
             'form'             => $form,
             'props'            => $props,
+            'group'            => ((!empty($item['parent_id']) && !empty($groups[$item['parent_id']])) ? $groups[$item['parent_id']] : array()),
             'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
             'is_load_props'    => !isset($errors),

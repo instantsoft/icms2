@@ -31,17 +31,20 @@ class fieldListBitmask extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $items = $this->getListItems();
+        $this->data['items']    = $this->getListItems();
+        $this->data['selected'] = array();
 
         if(is_array($value)){
             foreach ($value as $k => $v) {
-                if(is_numeric($v)){ $value[$k] = intval($v); }
+                if(is_numeric($v)){ $this->data['selected'][$k] = intval($v); }
             }
         } else {
-            $value = array();
+            $this->data['selected'] = array();
         }
 
-		return html_select_multiple($this->name, $items, $value);
+        $this->element_title = '';
+
+        return parent::getInput($value);
 
     }
 

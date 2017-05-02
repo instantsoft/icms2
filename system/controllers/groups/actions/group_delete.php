@@ -6,8 +6,9 @@ class actionGroupsGroupDelete extends cmsAction {
 
     public function run($group){
 
-        if (!cmsUser::isAllowed('groups', 'delete')) { cmsCore::error404(); }
-        if (!cmsUser::isAllowed('groups', 'delete', 'all') && $group['owner_id'] != $this->cms_user->id) { cmsCore::error404(); }
+        if(!$group['access']['is_can_delete']){
+            cmsCore::error404();
+        }
 
         if ($this->request->has('submit')){
 
@@ -31,6 +32,12 @@ class actionGroupsGroupDelete extends cmsAction {
         } else {
 
             // спрашиваем подтверждение
+
+            $this->cms_template->setPageTitle(LANG_GROUPS_DELETE);
+
+            $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+            $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+            $this->cms_template->addBreadcrumb(LANG_GROUPS_DELETE);
 
             return $this->cms_template->render('group_delete', array(
                 'user'  => $this->cms_user,

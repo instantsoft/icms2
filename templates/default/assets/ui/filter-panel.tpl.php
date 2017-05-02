@@ -69,3 +69,10 @@
         </form>
     </div>
 </div>
+<?php if (!$fields_count) { ?>
+<script type="text/javascript">
+    $(function (){
+        $('.filter-panel.groups-filter').hide();
+    });
+</script>
+<?php } ?>

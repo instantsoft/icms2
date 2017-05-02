@@ -7,7 +7,7 @@ class actionGroupsGroupJoin extends cmsAction {
     public function run($group){
 
         if ($this->model->getMembership($group['id'], $this->cms_user->id)){
-            $this->redirectToAction($group['id']);
+            $this->redirectToAction($group['slug']);
         }
 
         $invite = $this->model->getInvite($group['id'], $this->cms_user->id);
@@ -31,7 +31,7 @@ class actionGroupsGroupJoin extends cmsAction {
                 if(isset($result['redirect_url'])){
                     $this->redirect($result['redirect_url']);
                 } else {
-                    $this->redirectToAction($group['id']);
+                    $this->redirectToAction($group['slug']);
                 }
 
             }
@@ -50,13 +50,13 @@ class actionGroupsGroupJoin extends cmsAction {
         cmsCore::getController('activity')->addEntry($this->name, 'join', array(
             'subject_title' => $group['title'],
             'subject_id'    => $group['id'],
-            'subject_url'   => href_to_rel($this->name, $group['id']),
+            'subject_url'   => href_to_rel($this->name, $group['slug']),
             'group_id'      => $group['id']
         ));
 
         cmsUser::addSessionMessage(LANG_GROUPS_JOIN_MESSAGE, 'success');
 
-        $this->redirectToAction($group['id']);
+        $this->redirectToAction($group['slug']);
 
     }
 

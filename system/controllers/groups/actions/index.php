@@ -4,8 +4,6 @@ class actionGroupsIndex extends cmsAction {
 
     public function run($tab=false){
 
-        $user = cmsUser::getInstance();
-
         $dataset_name = false;
         $datasets = $this->getDatasets();
 
@@ -25,7 +23,7 @@ class actionGroupsIndex extends cmsAction {
         } else if ($tab) { cmsCore::error404(); }
 
         // Сортировка
-        if ($dataset_name){
+        if ($dataset_name && !empty($datasets[$dataset_name]['order'])){
             $this->model->orderBy( $datasets[$dataset_name]['order'][0], $datasets[$dataset_name]['order'][1] );
         }
 
@@ -38,12 +36,32 @@ class actionGroupsIndex extends cmsAction {
         // Получаем HTML списка записей
         $groups_list_html = $this->renderGroupsList($page_url, $dataset_name);
 
-        return cmsTemplate::getInstance()->render('index', array(
-            'datasets' => $datasets,
-            'dataset_name' => $dataset_name,
-            'dataset' => $dataset,
-            'user' => $user,
-            'groups_list_html' => $groups_list_html,
+        $this->cms_template->setPageTitle(LANG_GROUPS);
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+
+        if (cmsUser::isAllowed('groups', 'add')) {
+            $this->cms_template->addToolButton(array(
+                'class' => 'add',
+                'title' => LANG_GROUPS_ADD,
+                'href'  => href_to('groups', 'add'),
+            ));
+        }
+
+        if (cmsUser::isAdmin()){
+            $this->cms_template->addToolButton(array(
+                'class' => 'page_gear',
+                'title' => LANG_GROUPS_SETTINGS,
+                'href'  => href_to('admin', 'controllers', array('edit', 'groups'))
+            ));
+        }
+
+        return $this->cms_template->render('index', array(
+            'datasets'         => $datasets,
+            'base_ds_url'      => href_to_rel('groups') . '/index/%s',
+            'dataset_name'     => $dataset_name,
+            'dataset'          => $dataset,
+            'user'             => $this->cms_user,
+            'groups_list_html' => $groups_list_html
         ), $this->request);
 
     }
