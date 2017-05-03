@@ -340,6 +340,43 @@
 
 .tabs-menu > select { display:none; }
 
+.controller_actions_menu {
+    float: right;
+    position: relative;
+
+}
+#body .controller_actions_menu ul.menu {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    width: 300px;
+    right: 0;
+    border: 1px solid #dfe6ed;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+}
+#body .controller_actions_menu ul.menu li {
+    padding: 3px 0;
+}
+.group_menu_title {
+    background-color: #e5ebf1;
+    background-image: url(../images/icons/menu.png);
+    background-repeat: no-repeat;
+    background-position: center right 11px;
+    border-radius: 2px;
+    color: #55677d;
+    padding: 11px 39px 11px 16px;
+    cursor: pointer;
+    display: block;
+}
+.group_menu_title:hover, #body .controller_actions_menu > input:checked + .group_menu_title {
+    background-color: #dfe6ed;
+    border-radius: 2px 2px 0 0;
+}
+.controller_actions_menu > input { display:none; }
+#body .controller_actions_menu > input:checked + label + ul.menu {
+    display: block;
+}
+
 /* Panels =================================================================== */
 
 .gui-panel {

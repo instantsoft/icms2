@@ -49,7 +49,9 @@ class modelGroups extends cmsModel {
 
         $content_model = cmsCore::getModel('content');
 
-        foreach(array_keys($counts) as $ctype_name){
+        foreach($counts as $ctype_name => $count){
+
+            if (!$count['count']) { continue; }
 
             $content_model->filterEqual('parent_id', $id)->filterEqual('parent_type', 'group');
 
@@ -69,12 +71,13 @@ class modelGroups extends cmsModel {
     public function removeContentFromGroup($id, $is_delete=false){
 
         $counts = $this->getGroupContentCounts($id, true);
-
         if (!$counts) { return true; }
 
         $content_model = cmsCore::getModel('content');
 
-        foreach(array_keys($counts) as $ctype_name){
+        foreach($counts as $ctype_name => $count){
+
+            if (!$count['count']) { continue; }
 
             $content_model->
                     filterEqual('parent_id', $id)->
@@ -517,15 +520,12 @@ class modelGroups extends cmsModel {
 
             $count = $content_model->getContentItemsCount( $ctype['name'] );
 
-            if ($count) {
-
-                $counts[ $ctype['name'] ] = array(
-                    'count' => $count,
-                    'is_in_list' => $ctype['options']['list_on'],
-                    'title' => empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']
-                );
-
-            }
+            $counts[ $ctype['name'] ] = array(
+                'count'      => $count,
+                'is_in_list' => $ctype['options']['list_on'],
+                'title'      => empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'],
+                'title_add'  => $ctype['labels']['create']
+            );
 
         }
 

@@ -3,7 +3,7 @@
     $user = cmsUser::getInstance();
 
     $this->addMenuItems('group_tabs', $this->controller->getGroupTabs($group));
-    $this->addToolButtons($this->controller->getToolButtons($group));
+    $this->addMenuItems('controller_actions_menu', $this->controller->getToolButtons($group));
 
 ?>
 
@@ -32,6 +32,7 @@
     </div>
 </div>
 <?php } ?>
+<?php $this->actionsToolbar(LANG_GROUPS_MENU); ?>
 <h1 id="group_profile_title">
 	<?php if (!empty($group['fields']['logo']['is_in_item']) && $group['logo']){ ?>
 		<span class="logo"><?php echo html_image($group['logo'], $group['fields']['logo']['handler']->getOption('size_full'), $group['title']); ?></span>

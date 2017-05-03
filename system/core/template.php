@@ -196,6 +196,11 @@ class cmsTemplate {
         $this->menu('toolbar', false);
     }
 
+    public function actionsToolbar($menu_title){
+        if (empty($this->menus['controller_actions_menu'])){ return; }
+        $this->menu('controller_actions_menu', false, 'menu', 0, false, 'controller_actions_menu', $menu_title);
+    }
+
     /**
      * Выводит виджеты на указанной позиции
      * @param string $position Название позиции
@@ -273,8 +278,9 @@ class cmsTemplate {
      * @param int $max_items Максимальное количество видимых пунктов
      * @param bool $is_allow_multiple_active Определять все активные пункты меню
      * @param string $template Название файла шаблона меню в assets/ui/
+     * @param string $menu_name Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template = 'menu'){
+    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template='menu', $menu_title=''){
 
         if (!isset($this->menus[$menu_name])) {
 
@@ -392,7 +398,7 @@ class cmsTemplate {
             $active_ids = array($active_ids[count($active_ids)-1]);
         }
 
-        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template);
+        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
 
     }
 
@@ -1583,7 +1589,7 @@ class cmsTemplate {
      * @param int $max_items Максимальное количество видимых пунктов
      * @param string $template Название файла шаблона меню в assets/ui/
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu'){
+    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu', $menu_title=''){
 
         $tpl_file = $this->getTemplateFileName('assets/ui/'.$template);
 

@@ -36,24 +36,6 @@ class actionGroupsGroupContent extends cmsAction {
         $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
         $this->cms_template->addBreadcrumb($group['sub_title']);
 
-        if (cmsUser::isAllowed($ctype['name'], 'add')) {
-
-            $this->cms_template->addToolButton(array(
-                'class' => 'add',
-                'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
-                'href'  => href_to($ctype['name'], 'add') . "?group_id={$group['id']}"
-            ));
-
-        }
-
-        if (cmsUser::isAdmin()){
-            $this->cms_template->addToolButton(array(
-                'class' => 'page_gear',
-                'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
-                'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
-            ));
-        }
-
         return $this->cms_template->render('group_content', array(
             'user'  => $this->cms_user,
             'group' => $group,

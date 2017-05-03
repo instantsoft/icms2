@@ -76,3 +76,4 @@
     define('LANG_GROUPS_FIELDS',             'Group fields');
     define('ERR_VALIDATE_GROUP_SLUG',        'Only letters (lowercase), numbers and hyphen');
     define('ERR_VALIDATE_GROUP_SLUG_NUM',    'Can not contain only numbers');
+    define('LANG_GROUPS_MENU',               'Group menu');

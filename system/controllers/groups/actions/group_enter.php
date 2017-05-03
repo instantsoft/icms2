@@ -6,6 +6,8 @@ class actionGroupsGroupEnter extends cmsAction {
 
     public function run($group){
 
+        if(!$this->cms_user->is_logged){ cmsCore::error404(); }
+
         if($group['access']['is_member'] || !$group['is_closed']){
             $this->redirectToAction($group['slug']);
         }

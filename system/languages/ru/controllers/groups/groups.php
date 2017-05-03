@@ -76,3 +76,4 @@
     define('LANG_GROUPS_FIELDS',             'Поля групп');
     define('ERR_VALIDATE_GROUP_SLUG',        'Только латинские буквы (в нижнем регистре), цифры и дефис');
     define('ERR_VALIDATE_GROUP_SLUG_NUM',    'Не может состоять только из цифр');
+    define('LANG_GROUPS_MENU',               'Меню группы');

@@ -6,20 +6,18 @@ class actionGroupsGroupJoin extends cmsAction {
 
     public function run($group){
 
-        if ($this->model->getMembership($group['id'], $this->cms_user->id)){
+        if ($group['access']['is_member']){
             $this->redirectToAction($group['slug']);
         }
 
-        $invite = $this->model->getInvite($group['id'], $this->cms_user->id);
-
-        if ($group['join_policy'] != groups::JOIN_POLICY_FREE && !$invite){
+        if (!$group['access']['is_can_join']){
             cmsCore::error404();
         }
 
         $result = cmsEventsManager::hook('group_before_join', array(
             'allow'  => true,
             'group'  => $group,
-            'invite' => $invite
+            'invite' => $group['access']['invite']
         ));
 
         if (!$result['allow']){

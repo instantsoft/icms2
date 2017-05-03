@@ -60,8 +60,8 @@ class groups extends cmsFrontend {
             $group['first_ctype_name'] = false;
 
             if ($group['content_counts']){
-                foreach($group['content_counts'] as $ctype_name=>$count){
-                    if (!$count['is_in_list']) { continue; }
+                foreach($group['content_counts'] as $ctype_name => $count){
+                    if (!$count['is_in_list'] || !$count['count']) { continue; }
                     if (!$group['first_ctype_name']) { $group['first_ctype_name'] = $ctype_name; }
                     $group['content_count'] += $count['count'];
                 }
@@ -350,7 +350,7 @@ class groups extends cmsFrontend {
 
         if ($group['content_counts']){
             foreach($group['content_counts'] as $ctype_name => $count){
-                if (!$count['is_in_list']) { continue; }
+                if (!$count['is_in_list'] || !$count['count']) { continue; }
                 $menu[] = array(
                     'title'      => $count['title'],
                     'controller' => $this->name,
@@ -469,59 +469,68 @@ class groups extends cmsFrontend {
 
         if ($group['access']['is_can_edit']){
             $tool_buttons['groups_edit'] = array(
-                'title' => LANG_GROUPS_EDIT,
-                'class' => 'settings',
-                'href'  => href_to('groups', $group['slug'], array('edit'))
+                'title'   => LANG_GROUPS_EDIT,
+                'options' => array('class' => 'settings'),
+                'url'     => href_to('groups', $group['slug'], array('edit'))
             );
         }
 
         if ($group['access']['is_can_invite']){
             $tool_buttons['groups_invite'] = array(
-                'title' => LANG_GROUPS_INVITE_FR,
-                'class' => 'group_add ajax-modal',
-                'href'  => href_to('groups', 'invite_friends', $group['id'])
+                'title'   => LANG_GROUPS_INVITE_FR,
+                'options' => array('class' => 'group_add ajax-modal'),
+                'url'     => href_to('groups', 'invite_friends', $group['id'])
             );
         }
 
         if ($group['access']['is_can_invite_users']){
             $tool_buttons['groups_invite_users'] = array(
-                'title' => LANG_GROUPS_INVITE,
-                'class' => 'group_add ajax-modal',
-                'href'  => href_to('groups', 'invite_users', $group['id'])
+                'title'   => LANG_GROUPS_INVITE,
+                'options' => array('class' => 'group_add ajax-modal'),
+                'url'     => href_to('groups', 'invite_users', $group['id'])
             );
         }
 
         if ($group['access']['is_can_join']){
             $tool_buttons['groups_join'] = array(
                 'title'   => LANG_GROUPS_JOIN,
-                'class'   => 'user_add',
-                'href'    => href_to('groups', $group['slug'], 'join'),
-                'confirm' => LANG_GROUPS_JOIN . '?'
+                'options' => array('class' => 'user_add', 'confirm' => LANG_GROUPS_JOIN . '?'),
+                'url'     => href_to('groups', $group['slug'], 'join'),
             );
-        } elseif(!$group['access']['is_member'] && $group['is_closed']){
+        } elseif($this->cms_user->is_logged && !$group['access']['is_member'] && $group['is_closed']){
             $tool_buttons['groups_enter'] = array(
                 'title'   => LANG_GROUPS_ENTER,
-                'class'   => 'invites',
-                'href'    => href_to('groups', $group['slug'], 'enter'),
-                'confirm' => LANG_GROUPS_ENTER_CONFIRM
+                'options' => array('class' => 'invites', 'confirm' => LANG_GROUPS_ENTER_CONFIRM),
+                'url'     => href_to('groups', $group['slug'], 'enter'),
             );
         }
 
         if ($group['access']['is_member'] && !$group['access']['is_owner']){
             $tool_buttons['groups_leave'] = array(
                 'title'   => LANG_GROUPS_LEAVE,
-                'class'   => 'user_delete',
-                'href'    => href_to('groups', $group['slug'], 'leave'),
-                'confirm' => LANG_GROUPS_LEAVE . '?'
+                'options' => array('class' => 'user_delete', 'confirm' => LANG_GROUPS_LEAVE . '?'),
+                'url'     => href_to('groups', $group['slug'], 'leave'),
             );
         }
 
         if ($group['access']['is_can_delete']){
             $tool_buttons['groups_delete'] = array(
-                'title' => LANG_GROUPS_DELETE,
-                'class' => 'delete ajax-modal',
-                'href'  => href_to('groups', $group['slug'], 'delete')
+                'title'   => LANG_GROUPS_DELETE,
+                'options' => array('class' => 'delete ajax-modal'),
+                'url'     => href_to('groups', $group['slug'], 'delete')
             );
+        }
+
+        if ($group['content_counts'] && $group['access']['is_member']){
+            foreach($group['content_counts'] as $ctype_name => $count){
+                if (!$count['is_in_list']) { continue; }
+                if (!cmsUser::isAllowed($ctype_name, 'add')) { continue; }
+                $tool_buttons['groups_add_'.$ctype_name] = array(
+                    'options' => array('class' => 'add'),
+                    'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $count['title_add']),
+                    'url'     => href_to($ctype_name, 'add') . "?group_id={$group['id']}"
+                );
+            }
         }
 
         $buttons_hook = cmsEventsManager::hook('group_view_buttons', array(
