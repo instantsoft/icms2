@@ -480,9 +480,13 @@ class cmsController {
 
     /**
      * Загружает и возвращает описание структуры формы
-     * @param type $form_name
-     * @param type $params
-     * @return cmsForm
+     * в контексте текущего контроллера и, в свою очередь,
+     * его контекста - Frontend или Backend
+     *
+     * @param string $form_name Название формы
+     * @param array $params Параметры формы
+     * @param string $path_prefix Префикс путь к файлу формы относительно директории контроллера
+     * @return \cmsForm
      */
     public function getForm($form_name, $params=false, $path_prefix=''){
 
@@ -492,6 +496,19 @@ class cmsController {
         $form = cmsForm::getForm($form_file, $_form_name, $params);
 
         list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));
+
+        return $form;
+
+    }
+
+    public function getControllerForm($controller, $form_name, $params = false){
+
+        $form_file = $this->cms_config->root_path.'system/controllers/'.$controller.'/forms/form_'.$form_name.'.php';
+        $_form_name = $controller . $form_name;
+
+        $form = cmsForm::getForm($form_file, $_form_name, $params);
+
+        list($form, $params) = cmsEventsManager::hook('form_'.$controller.'_'.$form_name, array($form, $params));
 
         return $form;
 

@@ -560,7 +560,7 @@ class groups extends cmsFrontend {
             // Личное сообщение
             //
             $sender_link = '<a href="'.href_to('users', $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
-            $group_link = '<a href="'.href_to('groups', $group['slug']).'">'.$group['title'].'</a>';
+            $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
 
             $notice = array(
                 'content' => sprintf(LANG_GROUPS_INVITE_NOTICE, $sender_link, $group_link),
@@ -590,7 +590,7 @@ class groups extends cmsFrontend {
                 'user_nickname' => $this->cms_user->nickname,
                 'user_url'      => href_to_abs('users', $this->cms_user->id),
                 'group_title'   => $group['title'],
-                'group_url'     => href_to_abs('groups', $group['slug'])
+                'group_url'     => href_to_abs('groups', $group['id'])
             ));
 
             $this->model->addInvite(array(
