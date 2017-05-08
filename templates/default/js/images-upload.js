@@ -213,7 +213,7 @@ icms.images = (function ($) {
         $('.data', widget).html('');
 
         if (typeof(icms.images.removeCallback) == 'function'){
-            icms.images.removeCallback(field_name, result);
+            icms.images.removeCallback(field_name);
         }
 
         return false;
