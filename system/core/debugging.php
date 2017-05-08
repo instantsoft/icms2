@@ -33,6 +33,15 @@ class cmsDebugging {
         }
 
         $call = $backtrace[$offset];
+
+        if(empty($call['file'])){
+
+            $_offset = $offset;
+
+            $call = $backtrace[$offset-1];
+
+        }
+
         if (isset($backtrace[$_offset])) {
             if (isset($backtrace[$_offset]['class'])) {
                 $call['function'] = $backtrace[$_offset]['class'] . $backtrace[$_offset]['type'] . $backtrace[$_offset]['function'] . '()';

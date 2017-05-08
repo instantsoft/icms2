@@ -1012,7 +1012,7 @@ class content extends cmsFrontend {
                 $_item[$field['name']] = ''; continue;
             }
 
-            $_item[$field['name']] = $field['handler']->getStringValue($item[$field['name']]);
+            $_item[$field['name']] = $field['handler']->setItem($item)->getStringValue($item[$field['name']]);
 
         }
 

@@ -8,6 +8,7 @@ class cmsUser {
 
     private static $instance;
     private static $_ip;
+    private static $auth_token;
 
     public $id = 0;
     public $email;
@@ -269,6 +270,8 @@ class cmsUser {
             $model->setAuthToken($user['id'], $auth_token);
             $model->deleteExpiredToken($user['id'], AUTH_TOKEN_EXPIRATION_INT);
 
+            self::$auth_token = $auth_token;
+
         }
 
         $model->update('{users}', $user['id'], array(
@@ -296,13 +299,21 @@ class cmsUser {
 
         if (self::getCookie('auth')) {
 
-            self::unsetCookie('auth');
-
             if (preg_match('/^[0-9a-f]{32}$/i', self::getCookie('auth'))){
                 $model->deleteAuthToken(self::getCookie('auth'));
             }
 
+            self::unsetCookie('auth');
+
         }
+
+        // если login и logout выполняются в пределах
+        // одной загрузки страницы
+        if(self::$auth_token){
+            $model->deleteAuthToken(self::$auth_token);
+            self::$auth_token = null;
+        }
+
         self::sessionUnset('user');
 
         self::deleteSession($userSession['id']);

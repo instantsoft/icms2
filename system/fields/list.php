@@ -73,7 +73,7 @@ class fieldList extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = $this->parseListItems($this->getDefaultValue());
+            $items = array('' => '') + $this->parseListItems($this->getDefaultValue());
 
         }
 
