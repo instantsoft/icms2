@@ -25,6 +25,8 @@ class comments extends cmsFrontend {
             $this->model->disableApprovedFilter();
         }
 
+        cmsEventsManager::hook('comments_list_filter', $this->model);
+
         $comments = $this->model->filterCommentTarget(
                 $this->target_controller,
                 $this->target_subject,
@@ -175,6 +177,8 @@ class comments extends cmsFrontend {
 
         // Скрываем удаленные
         $this->model->filterIsNull('is_deleted');
+
+        cmsEventsManager::hook('comments_list_filter', $this->model);
 
         // Получаем количество и список записей
         $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();

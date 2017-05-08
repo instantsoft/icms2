@@ -898,7 +898,7 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_js_no_merge)) { continue; }
-            $file_path = $this->site_config->root_path . $file;
+            $file_path = $this->site_config->root_path . strtok($file, '?');
             $contents = file_get_contents($file_path);
             $merged_contents .= $contents;
         }
