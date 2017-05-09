@@ -17,7 +17,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
             <a href="<?php echo href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id'])); ?>"><?php echo $item['folder_title']; ?></a>&nbsp;&rarr;&nbsp;
         <?php } ?>
         <?php html($item['title']); ?>
-        <?php if ($item['is_private']) { ?>
+        <?php if ($item['is_private'] == 1) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>

@@ -10,15 +10,27 @@
 
     $base_url = $ctype['name'];
 
-    if ($ctype['options']['list_on']){
-        $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $this->addBreadcrumb($list_header, href_to($base_url));
-    }
+    if ($item['parent_id']){
 
-    if (isset($item['category'])){
-        foreach($item['category']['path'] as $c){
-            $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+        $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
+        if ($ctype['options']['list_on']){
+            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), rel_to_href($item['parent_url']));
         }
+
+    } else {
+
+        if ($ctype['options']['list_on']){
+            $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
+            $this->addBreadcrumb($list_header, href_to($base_url));
+        }
+
+        if (isset($item['category'])){
+            foreach($item['category']['path'] as $c){
+                $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+            }
+        }
+
     }
 
     $this->addBreadcrumb($item['title']);

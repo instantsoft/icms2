@@ -670,12 +670,24 @@ class content extends cmsFrontend {
         if (cmsUser::isAllowed($ctype['name'], 'privacy')) {
 
             $fieldset_id = $form->addFieldset( LANG_PRIVACY, 'privacy_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('privacy_wrap', $ctype['options']['is_collapsed'])));
+
+            $items = array(
+                0 => LANG_PRIVACY_PUBLIC
+            );
+
+            $privacy_types = cmsEventsManager::hookAll('content_privacy_types', array($ctype, $fields, $action, $item));
+
+            if (is_array($privacy_types)){
+                foreach($privacy_types as $privacy_type){
+                    foreach($privacy_type['types'] as $name => $title){
+                        $items[$name] = $title;
+                    }
+                }
+            }
+
             $form->addField($fieldset_id, new fieldList('is_private', array(
-                'items' => array(
-                    0 => LANG_PRIVACY_PUBLIC,
-                    1 => LANG_PRIVACY_PRIVATE,
-                ),
-                'rules' => array( array('number') )
+                'items' => $items,
+                'rules' => array(array('number'))
             )));
 
         }

@@ -77,3 +77,5 @@
     define('ERR_VALIDATE_GROUP_SLUG',        'Only letters (lowercase), numbers and hyphen');
     define('ERR_VALIDATE_GROUP_SLUG_NUM',    'Can not contain only numbers');
     define('LANG_GROUPS_MENU',               'Group menu');
+    define('LANG_PRIVACY_GROUPS',            'Show only group members');
+    define('LANG_PRIVACY_GROUPS_ADD',        'Show only group members who have the right to add the %s');

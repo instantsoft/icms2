@@ -15,6 +15,7 @@
             'menu_groups',
             'sitemap_sources',
             'sitemap_urls',
+            'content_privacy_types',
             'fulltext_search'
         )
 

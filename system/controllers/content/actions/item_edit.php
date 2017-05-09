@@ -277,6 +277,7 @@ class actionContentItemEdit extends cmsAction {
 
         return $this->cms_template->render('item_form', array(
             'do'               => 'edit',
+            'group'            => ((!empty($item['parent_id']) && !empty($groups[$item['parent_id']])) ? $groups[$item['parent_id']] : array()),
             'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['item_on'] ? href_to($ctype['name'], $item['slug'] . '.html') : false)),
             'ctype'            => $ctype,
             'parent'           => isset($parent) ? $parent : false,

@@ -87,11 +87,12 @@ class actionPhotosView extends cmsAction {
         }
 
         // Проверяем ограничения доступа из других контроллеров
-        if ($album['is_parent_hidden']){
+        if ($album['is_parent_hidden'] || $album['is_private']){
             $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', array(
                 'viewable'     => true,
                 'item'         => $album,
-                'is_moderator' => $is_moderator
+                'is_moderator' => $is_moderator,
+                'ctype'        => $ctype
             ));
             if (!$is_parent_viewable_result['viewable']){
 

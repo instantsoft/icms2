@@ -322,20 +322,50 @@ class groups extends cmsFrontend {
     }
 
     public function getGroupContentCounts($group) {
-        return $this->model->getGroupContentCounts($group['id'],
+        return $this->model->getGroupContentCounts($group,
                 ($this->cms_user->is_admin || ($this->cms_user->id == $group['owner_id'])),
-                function ($ctype, $content_model){
-                    if(empty($ctype['is_in_groups'])){ return false; }
-                    $content_model->enablePrivacyFilter();
-                    if (!empty($ctype['options']['privacy_type']) &&
-                            in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
-                        $content_model->disablePrivacyFilter();
-                    }
-                    if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
-                        $content_model->disablePrivacyFilter();
-                    }
-                    return true;
-                });
+                array($this, 'filterPrivacyGroupsContent'));
+    }
+
+
+    public function filterPrivacyGroupsContent($ctype, $content_model, $group) {
+
+        if(empty($ctype['is_in_groups'])){ return false; }
+
+        $content_model->enablePrivacyFilter();
+
+        if (!empty($ctype['options']['privacy_type']) &&
+                in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+
+            $content_model->disablePrivacyFilter();
+
+        }
+        if($group['access']['member_role'] == groups::ROLE_STAFF){
+
+            $content_model->disablePrivacyFilter();
+
+        }
+        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
+
+            $content_model->disablePrivacyFilter();
+
+        }
+        if($group['access']['is_member'] && $content_model->isEnablePrivacyFilter()){
+
+            $content_model->disablePrivacyFilter();
+
+            $privacy = array(0, 3);
+
+            if(cmsUser::isAllowed($ctype['name'], 'add')){
+                $privacy[] = 4;
+            }
+
+            $content_model->filterIn('i.is_private', $privacy);
+
+        }
+
+        return true;
+
     }
 
     public function getGroupTabs($group){

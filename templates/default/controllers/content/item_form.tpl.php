@@ -13,9 +13,9 @@
     if(!empty($group)){
 
         $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-        $this->addBreadcrumb($group['title'], href_to('groups', $group['id']));
+        $this->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
         if ($ctype['options']['list_on']){
-            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['id'], array('content', $ctype['name'])));
+            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], array('content', $ctype['name'])));
         }
 
     } else {

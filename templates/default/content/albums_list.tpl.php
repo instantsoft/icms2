@@ -58,7 +58,7 @@ if( $ctype['options']['list_show_filter'] ) {
                                                 <?php html($item['title']); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                                             <?php } else { ?>
                                                 <?php html($item['title']); ?>
-                                                <?php if ($item['is_private']) { ?>
+                                                <?php if ($item['is_private'] == 1) { ?>
                                                     <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                                                 <?php } ?>
                                             <?php } ?>

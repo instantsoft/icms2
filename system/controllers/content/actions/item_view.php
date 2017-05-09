@@ -63,36 +63,16 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        // Проверяем приватность
-        if ($item['is_private'] == 1){ // доступ только друзьям
-
-            $is_friend           = $this->cms_user->isFriend($item['user_id']);
-            $is_can_view_private = cmsUser::isAllowed($ctype['name'], 'view_all');
-
-            if (!$is_friend && !$is_can_view_private && !$is_moderator){
-                // если в настройках указано скрывать, 404
-                if(empty($ctype['options']['privacy_type']) || $ctype['options']['privacy_type'] == 'hide'){
-                    cmsCore::error404();
-                }
-                // иначе пишем, к кому в друзья нужно проситься
-                cmsUser::addSessionMessage(sprintf(
-                    LANG_CONTENT_PRIVATE_FRIEND_INFO,
-                    (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : LANG_PAGE),
-                    href_to('users', $item['user_id']),
-                    htmlspecialchars($item['user']['nickname'])
-                ), 'info');
-                $this->redirect(href_to($ctype['name']));
-            }
-
-        }
-
         // Проверяем ограничения доступа из других контроллеров
-        if ($item['is_parent_hidden']){
+        if ($item['is_parent_hidden'] || $item['is_private']){
+
             $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', array(
                 'viewable'     => true,
                 'item'         => $item,
-                'is_moderator' => $is_moderator
+                'is_moderator' => $is_moderator,
+                'ctype'        => $ctype
             ));
+
             if (!$is_parent_viewable_result['viewable']){
 
                 if(isset($is_parent_viewable_result['access_text'])){

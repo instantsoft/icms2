@@ -77,3 +77,5 @@
     define('ERR_VALIDATE_GROUP_SLUG',        'Только латинские буквы (в нижнем регистре), цифры и дефис');
     define('ERR_VALIDATE_GROUP_SLUG_NUM',    'Не может состоять только из цифр');
     define('LANG_GROUPS_MENU',               'Меню группы');
+    define('LANG_PRIVACY_GROUPS',            'Показывать только одногруппникам');
+    define('LANG_PRIVACY_GROUPS_ADD',        'Показывать только одногруппникам, имеющим право добавления %s');

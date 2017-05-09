@@ -23,7 +23,10 @@ class actionGroupsGroupContent extends cmsAction {
         if (($this->cms_user->id == $group['owner_id']) || $this->cms_user->is_admin){
             $content_controller->model->disableApprovedFilter();
 			$content_controller->model->disablePubFilter();
+            $content_controller->model->disablePrivacyFilter();
         }
+
+        $this->filterPrivacyGroupsContent($ctype, $content_controller->model, $group);
 
         $html = $content_controller->renderItemsList($ctype, $page_url);
 

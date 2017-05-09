@@ -495,30 +495,41 @@ class modelGroups extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getGroupContentCounts($id, $is_owner=false, $filter_callback = false){
+    public function getGroupContentCounts($id, $is_owner = false, $filter_callback = false){
+
+        if(!is_array($id)){
+            $group = array('id' => $id);
+        } else {
+            $group = $id;
+        }
 
         $counts = array();
 
         $content_model = cmsCore::getModel('content');
 
-        if ($is_owner){
-            $content_model->disableApprovedFilter();
-			$content_model->disablePubFilter();
-        }
-
         $ctypes = $content_model->getContentTypes();
 
         foreach($ctypes as $ctype){
 
-            $content_model->filterEqual('parent_id', $id);
-            $content_model->filterEqual('parent_type', 'group');
+            $content_model = cmsCore::getModel('content');
 
             if(is_callable($filter_callback)){
-                $res = $filter_callback($ctype, $content_model);
+                $res = call_user_func_array($filter_callback, array($ctype, $content_model, $group));
                 if($res === false){ continue; }
             }
 
+            $content_model->filterEqual('parent_id', $group['id']);
+            $content_model->filterEqual('parent_type', 'group');
+
+            if ($is_owner){
+                $content_model->disableApprovedFilter();
+                $content_model->disablePubFilter();
+                $content_model->disablePrivacyFilter();
+            }
+
             $count = $content_model->getContentItemsCount( $ctype['name'] );
+
+            unset($content_model);
 
             $counts[ $ctype['name'] ] = array(
                 'count'      => $count,
@@ -534,4 +545,3 @@ class modelGroups extends cmsModel {
     }
 
 }
-

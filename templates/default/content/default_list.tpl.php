@@ -76,7 +76,7 @@
                                 <?php html($item[$field['name']]); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                             <?php } else { ?>
                                 <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
-                                <?php if ($item['is_private']) { ?>
+                                <?php if ($item['is_private'] == 1) { ?>
                                     <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                                 <?php } ?>
                             <?php } ?>

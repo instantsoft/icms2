@@ -687,7 +687,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (100, 'page_is_allowed', 'auth', 100, 1),
 (101, 'admin_confirm_login', 'admin', 101, 1),
 (102, 'page_is_allowed', 'widgets', 102, 1),
-(103, 'fulltext_search', 'groups', 103, 1);
+(103, 'fulltext_search', 'groups', 103, 1),
+(104, 'content_privacy_types', 'users', 104, 1),
+(105, 'content_privacy_types', 'groups', 105, 1),
+(106, 'content_view_hidden', 'users', 106, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

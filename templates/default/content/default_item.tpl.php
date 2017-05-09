@@ -3,7 +3,7 @@
 <?php if ($fields['title']['is_in_item']){ ?>
     <h1>
         <?php html($item['title']); ?>
-        <?php if ($item['is_private']) { ?>
+        <?php if ($item['is_private'] == 1) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>

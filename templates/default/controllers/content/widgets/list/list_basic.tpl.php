@@ -32,7 +32,7 @@
                         <?php } else { ?>
                             <?php html($item['title']); ?>
                         <?php } ?>
-                        <?php if ($item['is_private']) { ?>
+                        <?php if ($item['is_private'] == 1) { ?>
                             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                         <?php } ?>
                     </div>

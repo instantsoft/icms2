@@ -853,6 +853,10 @@ class cmsModel{
         return $this;
     }
 
+    public function isEnablePrivacyFilter(){
+        return $this->privacy_filter_disabled === false;
+    }
+
     public function filterPrivacy(){
 
         if ($this->privacy_filtered) { return $this; }
