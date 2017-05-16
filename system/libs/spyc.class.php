@@ -602,9 +602,15 @@ class Spyc {
     }
 
     if (is_numeric($value)) {
-      if ($value === '0') return 0;
-      if (rtrim ($value, 0) === $value)
-        $value = (float)$value;
+      if ($value === '0') { return 0; }
+      if (rtrim ($value, 0) === $value){
+          $__value = (float)$value;
+          if(is_infinite($__value)){
+              $value = (string)$value;
+          } else {
+              $value = $__value;
+          }
+      }
       return $value;
     }
 

@@ -1227,9 +1227,17 @@ class cmsTemplate {
             header('Content-type: application/json; charset=utf-8');
         }
 
-        echo json_encode($data);
+        $json = json_encode($data);
 
-        $this->controller->halt();
+        if($json === false){
+            $json = json_encode(array(
+                'success' => false,
+                'errors'  => true,
+                'error'   => json_last_error_msg()
+            ));
+        }
+
+        $this->controller->halt($json);
 
     }
 
