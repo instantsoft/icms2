@@ -13,6 +13,12 @@ class groups extends cmsFrontend {
     const WALL_POLICY_STAFF = 1;
     const WALL_POLICY_OWNER = 2;
 
+    const CTYPE_POLICY_MEMBERS = 0;
+    const CTYPE_POLICY_STAFF = 1;
+    const CTYPE_POLICY_OWNER = 2;
+    const CTYPE_POLICY_GROUPS = 3;
+    const CTYPE_POLICY_ROLES = 4;
+
     const ROLE_NONE = 0;
     const ROLE_MEMBER = 1;
     const ROLE_STAFF = 2;
@@ -145,7 +151,19 @@ class groups extends cmsFrontend {
         return $this;
     }
 
-    public function getGroupForm($group_id = false){
+    public function getGroupForm($group = false){
+
+        if($group === false){
+
+            $group_id = false;
+
+        } else {
+
+            $group_id = $group['id'];
+
+            $group['content_counts'] = $this->getGroupContentCounts($group);
+
+        }
 
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
@@ -220,7 +238,49 @@ class groups extends cmsFrontend {
             )));
         }
 
-        // Если ручной ввод SLUG, то добавляем поле для этого
+        if(!empty($group['content_counts'])){
+            $roles = !empty($group['roles']) ? $group['roles'] : array();
+            foreach($group['content_counts'] as $ctype_name => $count){
+                $form->addField($fieldset_id, new fieldList('content_policy:'.$ctype_name, array(
+                    'title' => sprintf(LANG_GROUPS_GROUP_CTYPE_POLICY, $count['title_add']),
+                    'items' => array(
+                        groups::CTYPE_POLICY_MEMBERS => LANG_GROUPS_GROUP_CTYPE_MEMBERS,
+                        groups::CTYPE_POLICY_STAFF   => LANG_GROUPS_GROUP_WALL_STAFF,
+                        groups::CTYPE_POLICY_OWNER   => LANG_GROUPS_GROUP_WALL_OWNER,
+                        groups::CTYPE_POLICY_GROUPS  => LANG_GROUPS_GROUP_CTYPE_GROUPS,
+                        groups::CTYPE_POLICY_ROLES   => LANG_GROUPS_GROUP_CTYPE_ROLES
+                    )
+                )));
+                $form->addField($fieldset_id, new fieldList('content_groups:'.$ctype_name, array(
+                    'is_chosen_multiple' => true,
+                    'is_visible' => false,
+                    'generator' => function ($item){
+                        $users_model = cmsCore::getModel('users');
+                        $groups = $users_model->getGroups();
+                        $items = array(0 => '');
+                        foreach($groups as $group){
+                            $items[$group['id']] = $group['title'];
+                        }
+                        return $items;
+                    }
+                )));
+                $form->addField($fieldset_id, new fieldList('content_roles:'.$ctype_name, array(
+                    'is_chosen_multiple' => true,
+                    'is_visible' => false,
+                    'generator' => function ($group) use ($roles){
+                        $items = array(0 => '');
+                        if(!empty($roles)){
+                            foreach($roles as $role_id => $role){
+                                $items[$role_id] = $role;
+                            }
+                        }
+                        return $items;
+                    }
+                )));
+            }
+        }
+
+        // ручной ввод SLUG, добавляем поле для этого
         $slug_field_rules = array( array('slug') );
 
         if (!$group_id){ $slug_field_rules[] = array('unique', 'groups', 'slug'); }
@@ -386,7 +446,6 @@ class groups extends cmsFrontend {
                     'controller' => $this->name,
                     'action'     => $group['slug'],
                     'params'     => array('content', $ctype_name),
-                    'url_mask'   => href_to($this->name, $group['slug'], 'content'),
                     'counter'    => $count['count']
                 );
             }
@@ -483,7 +542,13 @@ class groups extends cmsFrontend {
                 'title'      => LANG_GROUPS_EDIT_STAFF,
                 'controller' => $this->name,
                 'action'     => $group['slug'],
-                'params'     => array('edit', 'staff'),
+                'params'     => array('edit', 'staff')
+            );
+            $menu[] = array(
+                'title'      => LANG_GROUPS_EDIT_ROLES,
+                'controller' => $this->name,
+                'action'     => $group['slug'],
+                'params'     => array('edit', 'roles')
             );
         }
 
@@ -554,7 +619,7 @@ class groups extends cmsFrontend {
         if ($group['content_counts'] && $group['access']['is_member']){
             foreach($group['content_counts'] as $ctype_name => $count){
                 if (!$count['is_in_list']) { continue; }
-                if (!cmsUser::isAllowed($ctype_name, 'add')) { continue; }
+                if (!$this->isContentAddAllowed($ctype_name, $group)) { continue; }
                 $tool_buttons['groups_add_'.$ctype_name] = array(
                     'options' => array('class' => 'add'),
                     'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $count['title_add']),
@@ -569,6 +634,47 @@ class groups extends cmsFrontend {
         ));
 
         return $buttons_hook['buttons'];
+
+    }
+
+    public function isContentAddAllowed($ctype_name, $group) {
+
+        if($this->cms_user->is_admin || $group['access']['is_owner']){ return true; }
+
+        // всем, кому разрешено общими правами
+        if(empty($group['content_policy'][$ctype_name])){
+            return cmsUser::isAllowed($ctype_name, 'add');
+        }
+
+        // только администраторам
+        if($group['content_policy'][$ctype_name] == self::CTYPE_POLICY_STAFF){
+            return $group['access']['member_role'] == self::ROLE_STAFF;
+        }
+
+        // только владельцам группы
+        if($group['content_policy'][$ctype_name] == self::CTYPE_POLICY_OWNER){
+            return $group['access']['is_owner'];
+        }
+
+        // только заданным группам пользователей
+        if($group['content_policy'][$ctype_name] == self::CTYPE_POLICY_GROUPS){
+            if(empty($group['content_groups'][$ctype_name])){
+                return cmsUser::isAllowed($ctype_name, 'add');
+            }
+            return $this->cms_user->isInGroups($group['content_groups'][$ctype_name]);
+        }
+
+        // только заданным ролям
+        if($group['content_policy'][$ctype_name] == self::CTYPE_POLICY_ROLES){
+            if(empty($group['content_roles'][$ctype_name])){
+                return cmsUser::isAllowed($ctype_name, 'add');
+            }
+
+            $roles = $this->model->getUserRoles($group['id'], $this->cms_user->id);
+
+            return $roles && $this->cms_user->isUserInGroups($roles, $group['content_roles'][$ctype_name]);
+
+        }
 
     }
 

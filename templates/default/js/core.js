@@ -96,6 +96,24 @@ $(document).ready(function(){
 
 });
 
+icms.menu = (function ($) {
+
+    this.onDocumentReady = function(){
+
+        $(document).on('click', function(event) {
+            if ($(event.target).closest('.dropdown_menu').length) {
+                $('.dropdown_menu > input').not($(event.target).closest('.dropdown_menu > input')).prop('checked', false);
+                return;
+            }
+            $('.dropdown_menu > input').prop('checked', false);
+        });
+
+    };
+
+    return this;
+
+}).call(icms.menu || {},jQuery);
+
 icms.forms = (function ($) {
 
     this.submitted = false;

@@ -203,6 +203,10 @@ class modelGroups extends cmsModel {
 
         if($group){
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
+            $group['content_policy'] = cmsModel::yamlToArray($group['content_policy']);
+            $group['content_groups'] = cmsModel::yamlToArray($group['content_groups']);
+            $group['roles'] = cmsModel::yamlToArray($group['roles']);
+            $group['content_roles'] = cmsModel::yamlToArray($group['content_roles']);
         }
 
         return $group;
@@ -236,6 +240,96 @@ class modelGroups extends cmsModel {
 
     }
 
+    public function addRole($group, $role) {
+
+        $role_id = 1;
+
+        $roles = array();
+
+        if($group['roles']){
+
+            $ids = array_keys($group['roles']);
+
+            $role_id = max($ids) + 1;
+
+            $roles = $group['roles'];
+
+        }
+
+        $roles[$role_id] = $role;
+
+        $this->update('groups', $group['id'], array('roles' => $roles));
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return $role_id;
+
+    }
+
+    public function deleteRole($group, $role_id) {
+
+        if(!isset($group['roles'][$role_id])){
+            return false;
+        }
+
+        unset($group['roles'][$role_id]);
+
+        $this->update('groups', $group['id'], array('roles' => $group['roles']));
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return true;
+
+    }
+
+    public function editRole($group, $role, $role_id) {
+
+        if(!isset($group['roles'][$role_id])){
+            return false;
+        }
+
+        $group['roles'][$role_id] = $role;
+
+        $this->update('groups', $group['id'], array('roles' => $group['roles']));
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return true;
+
+    }
+
+    public function setUserRoles($group_id, $role_ids, $user_id) {
+
+        $this->filterEqual('group_id', $group_id);
+        $this->filterEqual('user_id', $user_id);
+        $this->deleteFiltered('groups_member_roles');
+
+        if(!$role_ids){ return false; }
+
+        if(!is_array($role_ids)){
+            $role_ids = array($role_ids);
+        }
+
+        foreach ($role_ids as $role_id) {
+            $this->insert('groups_member_roles', array(
+                'group_id' => $group_id,
+                'user_id'  => $user_id,
+                'role_id'  => $role_id
+            ));
+        }
+
+        return true;
+
+    }
+
+    public function getUserRoles($group_id, $user_id) {
+        return $this->filterEqual('group_id', $group_id)->
+                filterEqual('user_id', $user_id)->
+                get('groups_member_roles', function($item, $model){
+                    return $item['role_id'];
+                }, false);
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -258,6 +352,10 @@ class modelGroups extends cmsModel {
     }
 
     public function deleteMembership($group_id, $user_id){
+
+        $this->filterEqual('group_id', $group_id);
+        $this->filterEqual('user_id', $user_id);
+        $this->deleteFiltered('groups_member_roles');
 
         $result = $this->
                     filterEqual('group_id', $group_id)->
@@ -299,6 +397,9 @@ class modelGroups extends cmsModel {
 
     public function deleteGroupMemberships($group_id){
 
+        $this->filterEqual('group_id', $group_id);
+        $this->deleteFiltered('groups_member_roles');
+
         cmsCache::getInstance()->clean('groups.members');
 
         return $this->delete('groups_members', $group_id, 'group_id');
@@ -312,6 +413,9 @@ class modelGroups extends cmsModel {
         $groups_ids = array_collection_to_list($this->getUserGroups($user_id), 'id', 'id');
 
         if (!$groups_ids) { return false; }
+
+        $this->filterEqual('user_id', $user_id);
+        $this->deleteFiltered('groups_member_roles');
 
         $this->filterIn('id', $groups_ids);
 
@@ -488,7 +592,9 @@ class modelGroups extends cmsModel {
 
     public function filterUsersMembers($group_id, $users_model){
 
-        $users_model->joinInner('groups_members', 'm', "user_id = i.id AND m.group_id = '{$group_id}'");
+        $users_model->select('m.role', 'member_role');
+
+        $users_model->joinInner('groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$group_id}'");
 
     }
 

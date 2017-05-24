@@ -861,7 +861,15 @@ class cmsController {
     }
 
     public function validate_array_key($array, $value){
-        if (is_array($value)) { return ERR_VALIDATE_INVALID; }
+        if (is_array($value)) {
+            $result = true;
+            foreach ($value as $val) {
+                if(!isset($array[$val])){
+                    $result = ERR_VALIDATE_INVALID; break;
+                }
+            }
+            return $result;
+        }
         if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
         return true;
     }

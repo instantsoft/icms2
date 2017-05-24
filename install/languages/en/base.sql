@@ -690,7 +690,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (103, 'fulltext_search', 'groups', 103, 1),
 (104, 'content_privacy_types', 'users', 104, 1),
 (105, 'content_privacy_types', 'groups', 105, 1),
-(106, 'content_view_hidden', 'users', 106, 1);
+(106, 'content_view_hidden', 'users', 106, 1),
+(107, 'content_add_permissions', 'groups', 107, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -708,6 +709,10 @@ CREATE TABLE `{#}groups` (
   `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Private?',
   `cover` text COMMENT 'Group cover',
   `slug` varchar(100) DEFAULT NULL,
+  `content_policy` varchar(500) DEFAULT NULL COMMENT 'Group content policy',
+  `content_groups` varchar(1000) DEFAULT NULL COMMENT 'Users groups that are allowed to add content',
+  `roles` varchar(2000) DEFAULT NULL,
+  `content_roles` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `members_count` (`members_count`),
   KEY `date_pub` (`date_pub`),
@@ -773,6 +778,15 @@ CREATE TABLE `{#}groups_members` (
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`,`date_updated`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Group (community) members';
+
+DROP TABLE IF EXISTS `{#}groups_member_roles`;
+CREATE TABLE `{#}groups_member_roles` (
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `group_id` int(11) unsigned DEFAULT NULL,
+  `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  KEY `user_id` (`user_id`),
+  KEY `group_id` (`group_id`,`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (

@@ -217,7 +217,7 @@ class users extends cmsFrontend {
 
     }
 
-    public function renderProfilesList($page_url, $dataset_name=false){
+    public function renderProfilesList($page_url, $dataset_name = false, $actions = false){
 
         if ($this->request->isInternal()){
             if ($this->useOptions){
@@ -259,7 +259,7 @@ class users extends cmsFrontend {
 
         // Получаем количество и список записей
         $total    = $this->model->getUsersCount();
-        $profiles = $this->model->getUsers();
+        $profiles = $this->model->getUsers($actions);
 
         if($this->request->isStandard()){
             if(!$profiles && $page > 1){ cmsCore::error404(); }

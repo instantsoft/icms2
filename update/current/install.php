@@ -21,6 +21,22 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}groups` ADD `slug` VARCHAR(100) NULL DEFAULT NULL , ADD INDEX (`slug`);");
     }
 
+    if(!isFieldExists('groups', 'content_policy')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `content_policy` VARCHAR(500) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('groups', 'content_groups')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `content_groups` VARCHAR(1000) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('groups', 'content_roles')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `content_roles` VARCHAR(1000) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('groups', 'roles')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `roles` VARCHAR(2000) NULL DEFAULT NULL");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();

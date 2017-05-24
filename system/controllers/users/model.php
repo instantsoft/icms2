@@ -10,6 +10,8 @@ class modelUsers extends cmsModel{
 
         $this->useCache('users.list');
 
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
+
         return $this->getCount('{users}');
 
     }
@@ -31,17 +33,41 @@ class modelUsers extends cmsModel{
         return $this->join('{users}_groups', 'g', "g.id = m.group_id AND g.name = '{$group_name}'");
     }
 
-    public function getUsers(){
+    public function getUsers($actions = false){
 
         $this->useCache('users.list');
 
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
 
-        return $this->get('{users}', function($user){
+        return $this->get('{users}', function($user) use ($actions){
 
             $user['groups']    = cmsModel::yamlToArray($user['groups']);
             $user['theme']     = cmsModel::yamlToArray($user['theme']);
             $user['is_online'] = cmsUser::userIsOnline($user['id']);
+
+            if (is_array($actions)){
+                foreach($actions as $key => $action){
+
+                    if (isset($action['handler'])){
+                        $is_active = $action['handler']($user);
+                    } else {
+                        $is_active = true;
+                    }
+
+                    if (!$is_active){ continue; }
+
+                    foreach($user as $cell_id => $cell_value){
+
+                        if (is_array($cell_value) || is_object($cell_value)) { continue; }
+
+                        $action['href']  = str_replace('{'.$cell_id.'}', $cell_value, $action['href']);
+                        $action['title'] = str_replace('{'.$cell_id.'}', $cell_value, $action['title']);
+                        $action['class'] = (isset($action['class']) ? $action['class'] : '');
+
+                    }
+                    $user['actions'][$key] = $action;
+                }
+            }
 
             return $user;
 

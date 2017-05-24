@@ -341,7 +341,16 @@ class cmsForm {
 
                 if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
 
-                $old_value = $item ? (isset($item[$name]) ? $item[$name] : null) : null;
+                $old_value = null;
+
+                if($item){
+                    if ($is_array === false){
+                        $old_value = array_key_exists($name, $item) ? $item[$name] : null;
+                    }
+                    if ($is_array !== false){
+                        $old_value = array_value_recursive($name, $item);
+                    }
+                }
 
                 $field->setItem($item);
 
@@ -426,11 +435,11 @@ class cmsForm {
                 // получаем значение поля из массива данных
                 //
                 if ($is_array === false){
-                    $value = isset($data[$name]) ? $data[$name] : '';
+                    $value = array_key_exists($name, $data) ? $data[$name] : '';
                 }
 
                 if ($is_array !== false){
-                    $value = (string)array_value_recursive($name, $data);
+                    $value = array_value_recursive($name, $data);
                 }
 
                 if ($data) { $field->setItem($data); }

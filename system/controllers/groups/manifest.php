@@ -16,6 +16,7 @@
             'sitemap_sources',
             'sitemap_urls',
             'content_privacy_types',
+            'content_add_permissions',
             'fulltext_search'
         )
 

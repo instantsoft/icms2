@@ -1,4 +1,4 @@
-<div class="controller_actions_menu">
+<div class="controller_actions_menu dropdown_menu">
     <input tabindex="-1" type="checkbox" id="controller_actions_menu_label">
     <label for="controller_actions_menu_label" class="group_menu_title"><?php echo $menu_title; ?></label>
     <ul class="<?php echo $css_class; ?>">
@@ -57,12 +57,4 @@
     <?php for ($i=0; $i<$last_level; $i++) { ?>
         </li></ul>
     <?php } ?>
-    <script type="text/javascript">
-        $(function (){
-            $(document).on('click', function(event) {
-                if ($(event.target).closest('.controller_actions_menu').length) { return; }
-                $('.controller_actions_menu > input').prop('checked', false);
-            });
-        });
-    </script>
 </div>

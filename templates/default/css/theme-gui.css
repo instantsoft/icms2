@@ -356,6 +356,7 @@
 }
 #body .controller_actions_menu ul.menu li {
     padding: 3px 0;
+    line-height: 100%;
 }
 .group_menu_title {
     background-color: #e5ebf1;
@@ -376,7 +377,16 @@
 #body .controller_actions_menu > input:checked + label + ul.menu {
     display: block;
 }
-
+#body section .list_actions_menu .menu a {
+    padding: 4px 10px;
+}
+.list_actions_menu .group_menu_title {
+    padding: 0;
+    display: block;
+    width: 38px;
+    height: 28px;
+    margin: 0 0 0 10px;
+}
 /* Panels =================================================================== */
 
 .gui-panel {
@@ -482,7 +492,9 @@
     padding: 10px 0;
     border-bottom: dashed 1px #EDEDED;
     clear: both;
-    overflow: hidden;
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
 }
 
 .striped-list .item:last-child{

@@ -9,10 +9,19 @@ class actionContentItemAdd extends cmsAction {
         // Получаем название типа контента
         $ctype_name = $this->request->get('ctype_name', '');
 
+        // Получаем тип контента
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if (!$ctype) { cmsCore::error404(); }
+
+        $permissions = cmsEventsManager::hook('content_add_permissions', array(
+            'can_add' => false,
+            'ctype'   => $ctype
+        ));
+
         $is_check_parent_perm = false;
 
         // проверяем наличие доступа
-        if (!cmsUser::isAllowed($ctype_name, 'add')) {
+        if (!cmsUser::isAllowed($ctype_name, 'add') && !$permissions['can_add']) {
             if (!cmsUser::isAllowed($ctype_name, 'add_to_parent')) {
                 if(!$this->cms_user->is_logged){
                     cmsUser::goLogin();
@@ -21,10 +30,6 @@ class actionContentItemAdd extends cmsAction {
             }
             $is_check_parent_perm = true;
         }
-
-        // Получаем тип контента
-        $ctype = $this->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
 
         // проверяем что не превышен лимит на число записей
         $user_items_count = $this->model->getUserContentItemsCount($ctype_name, $this->cms_user->id, false);
@@ -65,6 +70,12 @@ class actionContentItemAdd extends cmsAction {
 
             $groups_list = ($ctype['is_in_groups_only']) ? array() : array('0'=>'');
             $groups_list = $groups_list + array_collection_to_list($groups, 'id', 'title');
+
+            $group_id = $this->request->get('group_id', 0);
+            // если вне групп добавление записей запрещено, даём выбор только одной группы
+            if(!cmsUser::isAllowed($ctype_name, 'add') && isset($groups_list[$group_id])){
+                $groups_list = array($group_id => $groups_list[$group_id]);
+            }
 
         }
 

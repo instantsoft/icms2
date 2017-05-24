@@ -12,18 +12,19 @@ class actionGroupsGroupEdit extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('group_edit_'.$do, array($group) + array_slice($this->params, 2));
+
+            $this->current_params = array($group) + array_slice($this->params, 2);
+
+            $this->runExternalAction('group_edit_'.$do, $this->current_params);
+
             return;
+
         }
 
-        $form = $this->getGroupForm($group['id']);
+        $form = $this->getGroupForm($group);
 
         if (!$group['access']['is_owner']){
-            $form->removeField('group_options', 'join_policy');
-            $form->removeField('group_options', 'edit_policy');
-            $form->removeField('group_options', 'wall_policy');
-            $form->removeField('group_options', 'is_closed');
-            $form->removeField('group_options', 'slug');
+            $form->removeFieldset('group_options');
         }
 
         if ($this->request->has('submit')){

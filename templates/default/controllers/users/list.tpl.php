@@ -76,6 +76,22 @@
 
                 <div class="actions">
 
+                    <?php if (!empty($profile['actions'])){ ?>
+                        <div class="list_actions_menu controller_actions_menu dropdown_menu">
+                            <input tabindex="-1" type="checkbox" id="menu_label_<?php echo $profile['id']; ?>">
+                            <label for="menu_label_<?php echo $profile['id']; ?>" class="group_menu_title"></label>
+                            <ul class="list_actions menu">
+                                <?php foreach($profile['actions'] as $action){ ?>
+                                    <li>
+                                        <a class="<?php echo $action['class']; ?>" href="<?php echo $action['href']; ?>" title="<?php html($action['title']); ?>">
+                                            <?php echo $action['title']; ?>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    <?php } ?>
+
                     <?php if ($dataset_name == 'popular') { ?>
 
                         <?php echo $profile['friends_count'] ? html_spellcount($profile['friends_count'], LANG_USERS_FRIENDS_SPELLCOUNT) : '&mdash;'; ?>
@@ -109,4 +125,4 @@
         <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
     <?php } ?>
 
-<?php }
+<?php } else { echo LANG_LIST_EMPTY; } ?>

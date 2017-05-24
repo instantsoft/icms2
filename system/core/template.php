@@ -196,6 +196,11 @@ class cmsTemplate {
         $this->menu('toolbar', false);
     }
 
+    /**
+     * Выводит меню действий контроллера
+     * @param string $menu_title Название меню
+     * @return
+     */
     public function actionsToolbar($menu_title){
         if (empty($this->menus['controller_actions_menu'])){ return; }
         $this->menu('controller_actions_menu', false, 'menu', 0, false, 'controller_actions_menu', $menu_title);

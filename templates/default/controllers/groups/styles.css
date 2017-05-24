@@ -66,7 +66,7 @@
     color:#B3C2C9;
 }
 
-#group_staff_add .field .input {
+#group_staff_add .field .input, #group_role_add .field .input {
     margin-bottom: 5px;
 }
 
@@ -103,6 +103,18 @@
 #invite_users_form {
     width: 620px;
     height: 200px;
+}
+.role_title_edit {
+    display: none;
+}
+.role_title_edit > .input {
+    width: 70%;
+}
+.inline_submit {
+    display: inline-block;
+}
+#group_roles_list .item .title {
+    width: 320px;
 }
 @media screen and (max-width: 640px) {
     #invite_users_form {

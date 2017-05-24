@@ -30,3 +30,12 @@ INSERT INTO `{#}groups_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `orde
 (2, NULL, 'description', 'Описание группы', NULL, 2, 'Основная информация', 'html', 1, 1, NULL, 1, NULL, 1, 1, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nbuild_redirect_link: 1\nteaser_len: 200\nin_fulltext_search: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
 (3, NULL, 'logo', 'Логотип группы', NULL, 3, 'Основная информация', 'image', 1, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: micro\nsize_modal:\nsizes:\n  - micro\n  - small\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
 (5, NULL, 'cover', 'Обложка группы', NULL, 4, 'Основная информация', 'image', NULL, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: original\nsize_modal:\nsizes:\n  - small\n  - original\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n');
+
+DROP TABLE IF EXISTS `{#}groups_member_roles`;
+CREATE TABLE `{#}groups_member_roles` (
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `group_id` int(11) unsigned DEFAULT NULL,
+  `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  KEY `user_id` (`user_id`),
+  KEY `group_id` (`group_id`,`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

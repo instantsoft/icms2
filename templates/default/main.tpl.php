@@ -19,8 +19,8 @@
         <?php $this->addMainJS("templates/{$this->name}/js/messages.js"); ?>
     <?php } ?>
     <!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/livingston-css3-mediaqueries-js/1.0.0/css3-mediaqueries.min.js"></script>
     <![endif]-->
     <?php $this->head(); ?>
     <style><?php include('options.css.php'); ?></style>
