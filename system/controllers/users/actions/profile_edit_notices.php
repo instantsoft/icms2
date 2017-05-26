@@ -9,47 +9,24 @@ class actionUsersProfileEditNotices extends cmsAction {
         // проверяем наличие доступа
         if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
-        $notify_types = cmsEventsManager::hookAll('user_notify_types');
+        $notify_types = $this->model->getUserNotifyTypes();
 
         $form = new cmsForm();
 
         $fieldset_id = $form->addFieldset();
 
-        $default_options = array('', 'email', 'pm', 'both');
+        foreach($notify_types as $name => $field_options){
 
-        foreach($notify_types as $list){
-            foreach($list as $name=>$type){
+            $form->addField($fieldset_id, new fieldList($name, $field_options));
 
-                $options = array();
-
-                if(!isset($type['options'])) { $type['options'] = $default_options; }
-
-                foreach($type['options'] as $option){
-                    if (!$option){
-                        $options[''] = LANG_USERS_NOTIFY_VIA_NONE;
-                    } else {
-                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_'.mb_strtoupper($option));
-                    }
-                }
-
-                $form->addField($fieldset_id, new fieldList($name, array(
-                    'title' => $type['title'],
-                    'default' => 'email',
-                    'items' => $options
-                )));
-
-            }
         }
-
-        // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
 
         $options = $this->model->getUserNotifyOptions($profile['id']);
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $options = array_merge($options, $form->parse($this->request, $is_submitted, $options));
+            $options = array_merge($options, $form->parse($this->request, true, $options));
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $options);

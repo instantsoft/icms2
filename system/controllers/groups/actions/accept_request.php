@@ -33,6 +33,21 @@ class actionGroupsAcceptRequest extends cmsAction {
             'user_id'       => $invited_id
         ));
 
+        $messenger = cmsCore::getController('messages');
+
+        $messenger->addRecipient($invited_id);
+
+        $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
+
+        $notice = array(
+            'content' => sprintf(LANG_GROUPS_REQUEST_NOTICE_ACCEPT, $group_link),
+            'options' => array(
+                'is_closeable' => true
+            )
+        );
+
+        $messenger->sendNoticePM($notice, 'groups_invite');
+
         return true;
 
     }

@@ -6,8 +6,9 @@ class onGroupsUserNotifyTypes extends cmsAction {
 
         return array(
             'groups_invite' => array(
-                'title'=>LANG_GROUPS_NOTIFY_INVITE
-            ),
+                'title'   => LANG_GROUPS_NOTIFY_INVITE,
+                'default' => 'both'
+            )
         );
 
     }

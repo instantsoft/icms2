@@ -25,6 +25,20 @@ class actionGroupsGroupMembers extends cmsAction {
 
         $page_url = href_to($this->name, $group['slug'], 'members');
 
+        $group['sub_title'] = LANG_GROUPS_GROUP_MEMBERS;
+        if($role_id == -1){
+            $group['sub_title'] = LANG_GROUPS_EDIT_STAFF;
+        } elseif(isset($group['roles'][$role_id])){
+            $group['sub_title'] = $group['roles'][$role_id];
+        }
+
+        $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
+        $this->cms_template->setPageDescription($group['title'].' · '.$group['sub_title']);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        $this->cms_template->addBreadcrumb($group['sub_title']);
+
         $profiles_list_html = $users_controller->renderProfilesList($page_url, false, array(
             array(
                 'title'   => LANG_GROUPS_SET_ROLES,
@@ -59,20 +73,6 @@ class actionGroupsGroupMembers extends cmsAction {
                 }
             )
         ));
-
-        $group['sub_title'] = LANG_GROUPS_GROUP_MEMBERS;
-        if($role_id == -1){
-            $group['sub_title'] = LANG_GROUPS_EDIT_STAFF;
-        } elseif(isset($group['roles'][$role_id])){
-            $group['sub_title'] = $group['roles'][$role_id];
-        }
-
-        $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
-        $this->cms_template->setPageDescription($group['title'].' · '.$group['sub_title']);
-
-        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
-        $this->cms_template->addBreadcrumb($group['sub_title']);
 
         return $this->cms_template->render('group_members', array(
             'user'               => $this->cms_user,

@@ -33,9 +33,6 @@ class actionGroupsIndex extends cmsAction {
             'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
         );
 
-        // Получаем HTML списка записей
-        $groups_list_html = $this->renderGroupsList($page_url, $dataset_name);
-
         $this->cms_template->setPageTitle(LANG_GROUPS);
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
 
@@ -61,7 +58,7 @@ class actionGroupsIndex extends cmsAction {
             'dataset_name'     => $dataset_name,
             'dataset'          => $dataset,
             'user'             => $this->cms_user,
-            'groups_list_html' => $groups_list_html
+            'groups_list_html' => $this->renderGroupsList($page_url, $dataset_name)
         ), $this->request);
 
     }

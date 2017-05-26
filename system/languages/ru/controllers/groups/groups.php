@@ -19,6 +19,7 @@
     define('LANG_GROUPS_ADD_STAFF_HINT',    'Введите email члена группы, которого вы хотите назначить администратором');
     define('LANG_GROUPS_STAFF_NOT_MEMBER',  'Пользователь %s не является членом группы либо уже назначен администратором');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была отклонена администратором %s.');
+    define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была принята.');
     define('LANG_GROUPS_REQ_SUCCESS',       'Заявка отправлена администраторам группы');
     define('LANG_GROUPS_REQ_ERROR',         'Ваша заявка на вступление уже на рассмотрении');
     define('LANG_GROUPS_ENTER',             'Подать заявку');
@@ -72,7 +73,7 @@
     define('LANG_GROUPS_STAFF_SET_SUCCESS', 'Участник <b>%s</b> добавлен в список администраторов');
     define('LANG_GROUPS_STAFF_SET',         'Сделать администратором');
     define('LANG_GROUPS_STAFF_REMOVE',      'Убрать из администраторов');
-    define('LANG_GROUPS_MEMBER_EXPEL',      'Выгнать');
+    define('LANG_GROUPS_MEMBER_EXPEL',      'Исключить');
     define('LANG_GROUPS_STAFF_EXPEL_CONFIRM', 'Вы действительно хотите убрать <b>%s</b> из списка участников?');
     define('LANG_GROUPS_STAFF_EXPEL_SUCCESS', 'Участник <b>%s</b> убран из группы');
     define('LANG_GROUPS_GROUP_PUBLIC',      'Свободное');

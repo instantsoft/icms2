@@ -6,16 +6,17 @@ class onUsersUserNotifyTypes extends cmsAction {
 
         return array(
             'users_friend_add' => array(
-                'title' => LANG_USERS_NOTIFY_FRIEND_ADD,
+                'title'   => LANG_USERS_NOTIFY_FRIEND_ADD,
                 'options' => array('both', 'pm')
             ),
             'users_friend_accept' => array(
-                'title' => LANG_USERS_NOTIFY_FRIEND_ACCEPT,
-                'options' => array('', 'pm')
+                'title'   => LANG_USERS_NOTIFY_FRIEND_ACCEPT,
+                'options' => array('', 'pm'),
+                'default' => 'pm'
             ),
             'users_friend_delete' => array(
                 'title' => LANG_USERS_NOTIFY_FRIEND_DELETE,
-            ),
+            )
         );
 
     }

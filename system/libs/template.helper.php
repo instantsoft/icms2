@@ -448,7 +448,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $html .= "\t" . '<label '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    htmlspecialchars($title) . '</label><br>' . "\n";
+                    '<span>'.htmlspecialchars($title).'</span></label><br>' . "\n";
 
         } else {
 

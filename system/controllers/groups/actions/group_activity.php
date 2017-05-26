@@ -12,8 +12,6 @@ class actionGroupsGroupActivity extends cmsAction {
 
         $page_url = href_to($this->name, $group['slug'], 'activity');
 
-        $html = $activity_controller->renderActivityList($page_url);
-
         $group['sub_title'] = LANG_GROUPS_PROFILE_ACTIVITY;
 
         $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
@@ -26,7 +24,7 @@ class actionGroupsGroupActivity extends cmsAction {
         return $this->cms_template->render('group_activity', array(
             'user'  => $this->cms_user,
             'group' => $group,
-            'html'  => $html
+            'html'  => $activity_controller->renderActivityList($page_url)
         ));
 
     }

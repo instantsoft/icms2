@@ -20,6 +20,7 @@
     define('LANG_GROUPS_STAFF_NOT_MEMBER',  'User %s is either not a group member, or has already been assigned as administrator');
     define('LANG_GROUPS_INVITE_FR',         'Invite friends to Group');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Your request to join in &laquo;%s&raquo; was rejected by the administrator group: %s.');
+    define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Your request to join in &laquo;%s&raquo; group has been accepted');
     define('LANG_GROUPS_REQ_SUCCESS',       'Request sent to group administrators');
     define('LANG_GROUPS_REQ_ERROR',         'Your request to join in the group already pending');
     define('LANG_GROUPS_ENTER',             'Send a request');

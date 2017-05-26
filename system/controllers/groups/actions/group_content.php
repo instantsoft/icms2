@@ -28,8 +28,6 @@ class actionGroupsGroupContent extends cmsAction {
 
         $this->filterPrivacyGroupsContent($ctype, $content_controller->model, $group);
 
-        $html = $content_controller->renderItemsList($ctype, $page_url);
-
         $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
         $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
@@ -43,7 +41,7 @@ class actionGroupsGroupContent extends cmsAction {
             'user'  => $this->cms_user,
             'group' => $group,
             'ctype' => $ctype,
-            'html'  => $html
+            'html'  => $content_controller->renderItemsList($ctype, $page_url)
         ));
 
     }

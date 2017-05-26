@@ -1,6 +1,6 @@
 <?php
 
-class modelUsers extends cmsModel{
+class modelUsers extends cmsModel {
 
 //============================================================================//
 //========================    ПОЛЬЗОВАТЕЛИ   =================================//
@@ -205,12 +205,13 @@ class modelUsers extends cmsModel{
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
         $user = array_merge($user, array(
-            'groups'        => $groups,
-            'password'      => $password_hash,
-            'password_salt' => $password_salt,
-            'date_reg'      => $date_reg,
-            'date_log'      => $date_log,
-            'time_zone'     => cmsConfig::get('time_zone')
+            'groups'         => $groups,
+            'password'       => $password_hash,
+            'password_salt'  => $password_salt,
+            'date_reg'       => $date_reg,
+            'date_log'       => $date_log,
+            'time_zone'      => cmsConfig::get('time_zone'),
+            'notify_options' => $this->getUserNotifyTypes(true)
         ));
 
         $id = $this->insert('{users}', $user);
@@ -421,6 +422,46 @@ class modelUsers extends cmsModel{
 //============================================================================//
 //=========================    УВЕДОМЛЕНИЯ   =================================//
 //============================================================================//
+
+    public function getUserNotifyTypes($only_default_values = false) {
+
+        $notify_types = cmsEventsManager::hookAll('user_notify_types');
+
+        $default_options = array('', 'email', 'pm', 'both');
+
+        $types = array();
+
+        foreach($notify_types as $list){
+            foreach($list as $name => $type){
+
+                $options = array();
+
+                if(!isset($type['options'])) { $type['options'] = $default_options; }
+
+                foreach($type['options'] as $option){
+                    if (!$option){
+                        $options[''] = LANG_USERS_NOTIFY_VIA_NONE;
+                    } else {
+                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_'.strtoupper($option));
+                    }
+                }
+
+                if(!$only_default_values){
+                    $types[$name] = array(
+                        'title'   => $type['title'],
+                        'default' => (isset($type['default']) ? $type['default'] : 'email'),
+                        'items'   => $options
+                    );
+                } else {
+                    $types[$name] = (isset($type['default']) ? $type['default'] : 'email');
+                }
+
+            }
+        }
+
+        return $types;
+
+    }
 
     public function getUserNotifyOptions($id){
 
