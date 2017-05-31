@@ -46,7 +46,7 @@ class actionUsersProfile extends cmsAction {
         //
         // Стена
         //
-        if ($this->options['is_wall']){
+        if ($this->options['is_wall'] && $this->isControllerEnabled('wall')){
 
             $wall_controller = cmsCore::getController('wall', $this->request);
 
