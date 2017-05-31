@@ -313,9 +313,9 @@ class cmsCore {
         $custom_file = $config->root_path . 'system/controllers/'.$controller_name.'/custom.php';
 
         if(!file_exists($custom_file)){
-            $controller_class = $controller_name;
+            $controller_class = string_to_camel('_', $controller_name);
         } else {
-            $controller_class = $controller_name . '_custom';
+            $controller_class = string_to_camel('_', $controller_name . '_custom');
             if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
