@@ -4,21 +4,17 @@ class actionGroupsAcceptRequest extends cmsAction {
 
     public function run($group_id, $invited_id){
 
-        if (!$this->request->isInternal()){ cmsCore::error404(); }
-
         $group = $this->model->getGroup($group_id);
-        if (!$group) { return false; }
+        if (!$group) { return $this->successRequest(false); }
 
         $group['access'] = $this->getGroupAccess($group);
 
-        if ($group['access']['member_role'] != groups::ROLE_STAFF){
-            return false;
+        if ($group['access']['member_role'] != groups::ROLE_STAFF && !$this->cms_user->is_admin){
+            return $this->successRequest(false);
         }
 
-        if(!$group['is_closed']){ return false; }
-
         $send_request = $this->model->getInviteRequest($group['id'], $invited_id);
-        if(!$send_request){ return false; }
+        if(!$send_request){ return $this->successRequest(false); }
 
         $this->model->filterEqual('user_id', $invited_id)->filterIsNull('invited_id');
         $this->model->deleteFiltered('groups_invites');
@@ -48,7 +44,25 @@ class actionGroupsAcceptRequest extends cmsAction {
 
         $messenger->sendNoticePM($notice, 'groups_invite');
 
-        return true;
+        return $this->successRequest(true);
+
+    }
+
+    private function successRequest($success) {
+
+        if ($this->request->isInternal()){ return $success; }
+
+        if($success){
+
+            return $this->cms_template->renderJSON(array(
+                'error' => false
+            ));
+
+        } else {
+
+            cmsCore::error404();
+
+        }
 
     }
 

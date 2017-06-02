@@ -1,9 +1,20 @@
 <?php
-class cmsModel{
+class cmsModel {
 
     public $name;
 
     public $db;
+
+	const LEFT_JOIN = 'LEFT JOIN';
+	const RIGHT_JOIN = 'RIGHT JOIN';
+	const INNER_JOIN = 'INNER JOIN';
+	const STRAIGHT_JOIN = 'STRAIGHT_JOIN';
+	const LEFT_OUTER_JOIN = 'LEFT OUTER JOIN';
+	const RIGHT_OUTER_JOIN = 'RIGHT OUTER JOIN';
+	const NATURAL_LEFT_JOIN = 'NATURAL LEFT JOIN';
+	const NATURAL_LEFT_OUTER_JOIN = 'NATURAL LEFT OUTER JOIN';
+	const NATURAL_RIGHT_JOIN = 'NATURAL RIGHT JOIN';
+	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
     //условия для выборок
     public $table      = '';
@@ -170,7 +181,7 @@ class cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         $category = $this->getItemByField($table_name, $by_field, $id);
 
@@ -219,7 +230,7 @@ class cmsModel{
 
         $this->orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
@@ -261,7 +272,7 @@ class cmsModel{
 
         $this->orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name);
 
@@ -285,7 +296,7 @@ class cmsModel{
             filterGt('ns_level', 0)->
             orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name);
 
@@ -316,7 +327,7 @@ class cmsModel{
             'slug' => $category['slug']
         ));
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         return $category;
 
@@ -327,7 +338,7 @@ class cmsModel{
 
     public function updateCategory($ctype_name, $id, $category){
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
@@ -367,7 +378,7 @@ class cmsModel{
 
     public function updateCategoryTree($ctype_name, $tree, $categories_count){
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
@@ -457,7 +468,7 @@ class cmsModel{
         $this->db->nestedSets->setTable($table_name);
         $this->db->nestedSets->deleteNode($id);
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         return true;
 
@@ -538,7 +549,7 @@ class cmsModel{
     }
 
     public function setStraightJoin() {
-        $this->straight_join = 'STRAIGHT_JOIN'; return $this;
+        $this->straight_join = self::STRAIGHT_JOIN; return $this;
     }
 
     public function distinctSelect() {
@@ -547,9 +558,9 @@ class cmsModel{
 
     public function filter($condition){
         if ($this->filter_on){
-            $this->where .= " {$this->where_separator} ({$condition})";
+            $this->where .= ' '.$this->where_separator.' ('.$condition.')';
         } else {
-            $this->where .= "({$condition})";
+            $this->where .= '('.$condition.')';
             $this->filter_on = true;
         }
         $this->where_separator = ' AND ';
@@ -558,9 +569,9 @@ class cmsModel{
 
     public function filterStart(){
         if ($this->filter_on){
-            $this->where .= " {$this->where_separator} (";
+            $this->where .= ' '.$this->where_separator.' (';
         } else {
-            $this->where .= "(";
+            $this->where .= '(';
         }
         $this->filter_on = false;
         return $this;
@@ -583,20 +594,20 @@ class cmsModel{
 
     public function filterNotNull($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field IS NOT NULL");
+        $this->filter($field.' IS NOT NULL');
         return $this;
     }
 
     public function filterIsNull($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field IS NULL");
+        $this->filter($field.' IS NULL');
         return $this;
     }
 
     public function filterEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field IS NULL");
+            $this->filter($field.' IS NULL');
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field = '$value'");
@@ -613,7 +624,7 @@ class cmsModel{
     public function filterNotEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field IS NOT NULL");
+            $this->filter($field.' IS NOT NULL');
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field <> '$value'");
@@ -779,7 +790,7 @@ class cmsModel{
 
         $this->select($search_param, 'fsort');
 
-        $this->order_by = "fsort desc";
+        $this->order_by = 'fsort desc';
 
         return $this->filter($search_param);
 
@@ -812,7 +823,7 @@ class cmsModel{
             // $this->distinctSelect();
 
             $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
-            $this->joinInner($table_name, 'c', "c.id = b.category_id");
+            $this->joinInner($table_name, 'c', 'c.id = b.category_id');
             $this->filterGtEqual('c.ns_left', $category['ns_left']);
             $this->filterLtEqual('c.ns_right', $category['ns_right']);
 
@@ -1002,13 +1013,13 @@ class cmsModel{
     }
 
     public function select($field, $as=false){
-        $this->select[] = $as ? "{$field} as {$as}" : $field;
+        $this->select[] = $as ? $field.' as '.$as : $field;
         return $this;
     }
 
     public function selectOnly($field, $as=false){
         $this->select = array();
-        $this->select[] = $as ? "{$field} as {$as}" : $field;
+        $this->select[] = $as ? $field.' as '.$as : $field;
         return $this;
     }
 
@@ -1016,43 +1027,40 @@ class cmsModel{
         return $this->joinInner($table_name, $as, $on);
     }
 
+    public function joinInner($table_name, $as, $on){
+        $this->join .= self::INNER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
+        return $this;
+    }
+
     public function joinLeft($table_name, $as, $on){
-        $this->join .= "LEFT JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
-    public function joinLeftInner($table_name, $as, $on){
-        $this->join .= "LEFT INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinLeftOuter($table_name, $as, $on){
-        $this->join .= "LEFT OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+    public function joinExcludingLeft($table_name, $as, $right_key, $left_key, $join_where = ''){
+        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
+        $this->filter($right_key.' IS NULL');
         return $this;
     }
 
     public function joinRight($table_name, $as, $on){
-        $this->join .= "RIGHT JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
-    public function joinRightInner($table_name, $as, $on){
-        $this->join .= "RIGHT INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+    public function joinExcludingRight($table_name, $as, $right_key, $left_key, $join_where = ''){
+        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
+        $this->filter($left_key.' IS NULL');
+        return $this;
+    }
+
+    public function joinLeftOuter($table_name, $as, $on){
+        $this->join .= self::LEFT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
     public function joinRightOuter($table_name, $as, $on){
-        $this->join .= "RIGHT OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinInner($table_name, $as, $on){
-        $this->join .= "INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinOuter($table_name, $as, $on){
-        $this->join .= "OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::RIGHT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
@@ -1072,15 +1080,15 @@ class cmsModel{
 		switch ($join_direction){
 
 			case 'left':
-				$this->joinLeft('{users}', 'u', "u.id = i.{$on_field}");
+				$this->joinLeft('{users}', 'u', 'u.id = i.'.$on_field);
 				break;
 
 			case 'right':
-				$this->joinRight('{users}', 'u', "u.id = i.{$on_field}");
+				$this->joinRight('{users}', 'u', 'u.id = i.'.$on_field);
 				break;
 
 			default:
-				$this->join('{users}', 'u', "u.id = i.{$on_field}");
+				$this->join('{users}', 'u', 'u.id = i.'.$on_field);
 				break;
 
 		}
@@ -1147,7 +1155,7 @@ class cmsModel{
             $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
         }
         if (strpos($field, '.') === false){ $field = 'i.'.$field; }
-        $this->order_by = "{$field} {$direction}";
+        $this->order_by = $field.' '.$direction;
         return $this;
     }
 
@@ -1166,7 +1174,7 @@ class cmsModel{
 
                 if (strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
-				$this->order_by .= "{$field} {$direction}";
+				$this->order_by .= $field.' '.$direction;
 
 			}
 
@@ -1220,7 +1228,7 @@ class cmsModel{
 
     public function getFieldFiltered($table_name, $field_name){
 
-        $this->select = array("i.{$field_name} as {$field_name}");
+        $this->select = array('i.'.$field_name.' as '.$field_name);
 
         $this->table = $table_name;
 
@@ -1255,11 +1263,11 @@ class cmsModel{
 
         if ($this->join){ $sql .= $this->join; }
 
-		if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-		if ($this->order_by){ $sql .= "ORDER BY {$this->order_by}\n"; }
+        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
 
-        $sql .= "LIMIT 1";
+        $sql .= 'LIMIT 1';
 
         $this->resetFilters();
 
@@ -1321,9 +1329,9 @@ class cmsModel{
 
         if ($this->join){ $sql .= $this->join; }
 
-        if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
+        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
@@ -1478,13 +1486,13 @@ class cmsModel{
 
         if ($this->join){ $sql .= $this->join; }
 
-        if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
+        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
 
-        if ($this->order_by){ $sql .= "ORDER BY {$this->order_by}\n"; }
+        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
 
-        if ($this->limit){ $sql .= "LIMIT {$this->limit}\n"; }
+        if ($this->limit){ $sql .= 'LIMIT '.$this->limit.PHP_EOL; }
 
         return $sql;
 
@@ -1499,7 +1507,7 @@ class cmsModel{
                 FROM {#}{$table} i
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
         $sql .= "ORDER BY i.{$field} DESC
                  LIMIT 1";
@@ -1554,9 +1562,9 @@ class cmsModel{
                 FROM {#}{$table_name} i
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        $sql .= "ORDER BY ordering";
+        $sql .= 'ORDER BY ordering';
 
         $result = $this->db->query($sql);
 
@@ -1572,7 +1580,7 @@ class cmsModel{
         while($item = $this->db->fetchAssoc($result)){
 
             $ordering += 1;
-            $this->db->query("UPDATE {#}{$table_name} SET ordering = {$ordering} WHERE id = {$item['id']}");
+            $this->db->query("UPDATE {#}{$table_name} SET ordering = {$ordering} WHERE id = '{$item['id']}'");
 
         }
 
@@ -1696,7 +1704,7 @@ class cmsModel{
                 SET i.{$field} = i.{$field} {$sign} {$step}
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where; }
 
         $this->resetFilters();
 
@@ -1798,4 +1806,3 @@ class cmsModel{
     }
 
 }
-

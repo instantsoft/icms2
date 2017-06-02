@@ -8,7 +8,7 @@ class actionGroupsGroupEnter extends cmsAction {
 
         if(!$this->cms_user->is_logged){ cmsCore::error404(); }
 
-        if($group['access']['is_member'] || !$group['is_closed']){
+        if($group['access']['is_member'] || $group['join_policy'] == groups::JOIN_POLICY_FREE){
             $this->redirectToAction($group['slug']);
         }
 
@@ -75,7 +75,8 @@ class actionGroupsGroupEnter extends cmsAction {
                 'user_nickname' => $this->cms_user->nickname,
                 'user_url'      => href_to_abs('users', $this->cms_user->id),
                 'group_title'   => $group['title'],
-                'group_url'     => href_to_abs('groups', $group['id'])
+                'group_url'     => href_to_abs('groups', $group['id']),
+                'requests_url'  => href_to_abs('groups', $group['id'], array('edit', 'requests'))
             ), 'groups_invite');
 
         }

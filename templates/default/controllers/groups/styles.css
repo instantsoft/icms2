@@ -116,6 +116,9 @@
 #group_roles_list .item .title {
     width: 320px;
 }
+#ivite_users_list #users_profiles_list .item .actions > span {
+    display: none;
+}
 @media screen and (max-width: 640px) {
     #invite_users_form {
         width: 580px;

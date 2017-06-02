@@ -272,6 +272,7 @@
     define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found or cannot be read');
     define('ERR_FILE_NOT_FOUND',             'File not found');
     define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
+    define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
     define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Database connection error');

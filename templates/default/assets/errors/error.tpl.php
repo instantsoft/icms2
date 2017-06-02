@@ -32,9 +32,15 @@
 
                 <?php $row = $stack[$i]; ?>
                 <li>
-                    <b><?php echo $row['function']; ?>()</b>
+                    <b>
+                        <?php if (isset($row['class'])) { ?>
+                            <?php echo $row['class'] . $row['type'] . $row['function'] . '()'; ?>
+                        <?php } else { ?>
+                            <?php echo $row['function'] . '()'; ?>
+                        <?php } ?>
+                    </b>
                     <?php if (isset($row['file'])) { ?>
-                    <span>@ <?php echo $row['file']; ?></span> : <span><?php echo $row['line']; ?></span>
+                        <span>@ <?php echo str_replace(cmsConfig::get('root_path'), '/', $row['file']); ?></span> : <span><?php echo $row['line']; ?></span>
                     <?php } ?>
                 </li>
 

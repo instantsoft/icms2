@@ -219,12 +219,6 @@ class users extends cmsFrontend {
 
     public function renderProfilesList($page_url, $dataset_name = false, $actions = false){
 
-        if ($this->request->isInternal()){
-            if ($this->useOptions){
-                $this->options = $this->getOptions();
-            }
-        }
-
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 

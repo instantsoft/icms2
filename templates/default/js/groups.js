@@ -5,6 +5,24 @@ icms.groups = (function ($) {
     this.url_submit = '';
     this.url_delete = '';
 
+    this.onDocumentReady = function() {
+        $('.ajax-request').on('click', function(){
+            var current_user = $(this).closest('.item');
+            $(current_user).find('.group_menu_title').addClass('loading').css('background-image', false);
+            $('body').trigger('click');
+            $.post($(this).attr('href'), {}, function(result){
+                if (result.error){
+                    return false;
+                }
+                if ('callback' in result){
+                    return window[result.callback](current_user, result);
+                }
+                $(current_user).fadeOut();
+            }, 'json');
+            return false;
+        });
+	};
+
     this.addRole = function(){
 
         var role = $('#role_input').val();

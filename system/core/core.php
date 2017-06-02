@@ -985,6 +985,7 @@ class cmsCore {
             ));
         } else {
             echo '<h1>503 Service Unavailable</h1>';
+            echo '<h2>Please, enable debug mode in the site settings</h2>';
         }
 
         die();

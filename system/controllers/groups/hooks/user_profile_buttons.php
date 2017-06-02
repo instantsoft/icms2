@@ -6,6 +6,10 @@ class onGroupsUserProfileButtons extends cmsAction {
 
         if ($data['profile']['id'] == $this->cms_user->id || $data['profile']['is_deleted']) { return $data; }
 
+        if (!$this->cms_user->isPrivacyAllowed($data['profile'], 'invite_group_users')){
+            return $data;
+        }
+
         $my_groups = $this->model->getUserMemberships($this->cms_user->id);
 
         if ($my_groups){

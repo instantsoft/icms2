@@ -14,7 +14,7 @@ class actionGroupsInviteFriends extends cmsAction {
         $is_can_invite = ($membership && ($group['join_policy'] != groups::JOIN_POLICY_PRIVATE)) || $is_owner;
         if (!$is_can_invite) { cmsCore::error404(); }
 
-        $friends = $this->model->getInvitableFriends($group_id);
+        $friends = $this->model->getInvitableFriends($group_id, $this->cms_user->id);
 
         if ($this->request->has('submit') && $friends){
 

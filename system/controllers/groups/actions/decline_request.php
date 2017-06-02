@@ -4,31 +4,22 @@ class actionGroupsDeclineRequest extends cmsAction {
 
     public function run($group_id, $invited_id){
 
-        if (!$this->request->isInternal()){ cmsCore::error404(); }
-
         $group = $this->model->getGroup($group_id);
-        if (!$group) { return false; }
+        if (!$group) { return $this->successRequest(false); }
 
         $group['access'] = $this->getGroupAccess($group);
 
-        if ($group['access']['member_role'] != groups::ROLE_STAFF){
-            return false;
-        }
-
-        if(!$group['is_closed']){
-            return false;
+        if ($group['access']['member_role'] != groups::ROLE_STAFF && !$this->cms_user->is_admin){
+            return $this->successRequest(false);
         }
 
         $send_request = $this->model->getInviteRequest($group['id'], $invited_id);
-        if(!$send_request){ return false; }
+        if(!$send_request){ return $this->successRequest(false); }
 
         $messenger = cmsCore::getController('messages');
 
-        $messenger->clearRecipients()->addRecipient($invited_id);
+        $messenger->addRecipient($invited_id);
 
-        //
-        // Личное сообщение
-        //
         $admin_link = '<a href="'.href_to('users', $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
         $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
 
@@ -41,9 +32,6 @@ class actionGroupsDeclineRequest extends cmsAction {
 
         $messenger->sendNoticePM($notice, 'groups_invite');
 
-        //
-        // E-mail
-        //
         $messenger->sendNoticeEmail('groups_request_decline', array(
             'user_nickname' => $this->cms_user->nickname,
             'user_url'      => href_to_abs('users', $this->cms_user->id),
@@ -54,7 +42,25 @@ class actionGroupsDeclineRequest extends cmsAction {
         $this->model->filterEqual('user_id', $invited_id)->filterIsNull('invited_id');
         $this->model->deleteFiltered('groups_invites');
 
-        return true;
+        return $this->successRequest(true);
+
+    }
+
+    private function successRequest($success) {
+
+        if ($this->request->isInternal()){ return $success; }
+
+        if($success){
+
+            return $this->cms_template->renderJSON(array(
+                'error' => false
+            ));
+
+        } else {
+
+            cmsCore::error404();
+
+        }
 
     }
 

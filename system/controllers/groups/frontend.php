@@ -552,6 +552,26 @@ class groups extends cmsFrontend {
             );
         }
 
+        if ($group['join_policy'] != groups::JOIN_POLICY_FREE && ($group['access']['member_role'] == groups::ROLE_STAFF || $this->cms_user->is_admin)){
+
+            $users_model = cmsCore::getModel('users');
+
+            $rcount = $this->model->filterUsersRequests($group['id'], $users_model)->getUsersCount();
+
+            if($rcount){
+
+                $menu[] = array(
+                    'title'      => LANG_GROUPS_REQUESTS,
+                    'counter'    => $rcount,
+                    'controller' => $this->name,
+                    'action'     => $group['slug'],
+                    'params'     => array('edit', 'requests')
+                );
+
+            }
+
+        }
+
         list($menu, $group) = cmsEventsManager::hook('group_edit_menu', array($menu, $group));
 
         return $menu;
@@ -581,7 +601,7 @@ class groups extends cmsFrontend {
         if ($group['access']['is_can_invite_users']){
             $tool_buttons['groups_invite_users'] = array(
                 'title'   => LANG_GROUPS_INVITE,
-                'options' => array('class' => 'group_add ajax-modal'),
+                'options' => array('class' => 'group_add'),
                 'url'     => href_to('groups', 'invite_users', $group['id'])
             );
         }
@@ -592,7 +612,7 @@ class groups extends cmsFrontend {
                 'options' => array('class' => 'user_add', 'confirm' => LANG_GROUPS_JOIN . '?'),
                 'url'     => href_to('groups', $group['slug'], 'join'),
             );
-        } elseif($this->cms_user->is_logged && !$group['access']['is_member'] && $group['is_closed']){
+        } elseif($this->cms_user->is_logged && !$group['access']['is_member'] && $group['join_policy'] != groups::JOIN_POLICY_FREE){
             $tool_buttons['groups_enter'] = array(
                 'title'   => LANG_GROUPS_ENTER,
                 'options' => array('class' => 'invites', 'confirm' => LANG_GROUPS_ENTER_CONFIRM),

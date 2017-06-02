@@ -43,7 +43,10 @@ class modelUsers extends cmsModel {
 
             $user['groups']    = cmsModel::yamlToArray($user['groups']);
             $user['theme']     = cmsModel::yamlToArray($user['theme']);
+            $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
             $user['is_online'] = cmsUser::userIsOnline($user['id']);
+            $user['item_css_class'] = array();
+            $user['notice_title']   = array();
 
             if (is_array($actions)){
                 foreach($actions as $key => $action){
@@ -55,6 +58,11 @@ class modelUsers extends cmsModel {
                     }
 
                     if (!$is_active){ continue; }
+
+                    if(!empty($action['item_css_class'])){ $user['item_css_class'][] = $action['item_css_class']; }
+                    if(!empty($action['notice_title'])){ $user['notice_title'][] = $action['notice_title']; }
+
+                    if(empty($action['href'])){ continue; }
 
                     foreach($user as $cell_id => $cell_value){
 
@@ -88,9 +96,9 @@ class modelUsers extends cmsModel {
 
     public function getUser($id=false){
 
-        $this->useCache("users.user.{$id}");
+        $this->useCache('users.user.'.$id);
 
-        $this->select("u.nickname", 'inviter_nickname');
+        $this->select('u.nickname', 'inviter_nickname');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
 
         if ($id){
@@ -646,7 +654,16 @@ class modelUsers extends cmsModel {
             $this->orderBy('u.date_log', 'desc');
         }
 
-        return $this->get('{users}_friends');
+        return $this->get('{users}_friends', function($user){
+
+            $user['groups']          = cmsModel::yamlToArray($user['groups']);
+            $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
+            $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
+            $user['is_online']       = cmsUser::userIsOnline($user['id']);
+
+            return $user;
+
+        });
 
     }
 
@@ -842,7 +859,7 @@ class modelUsers extends cmsModel {
 
     public function updateUsersProfilesTab($id, $tab){
 
-        cmsCache::getInstance()->clean("users.tabs");
+        cmsCache::getInstance()->clean('users.tabs');
 
         return $this->update('{users}_tabs', $id, $tab);
 
@@ -852,7 +869,7 @@ class modelUsers extends cmsModel {
 
         $this->reorderByList('{users}_tabs', $fields_ids_list);
 
-        cmsCache::getInstance()->clean("users.tabs");
+        cmsCache::getInstance()->clean('users.tabs');
 
         return true;
 
@@ -903,7 +920,7 @@ class modelUsers extends cmsModel {
 
     public function increaseUserStatusRepliesCount($status_id){
 
-        cmsCache::getInstance()->clean("users.status");
+        cmsCache::getInstance()->clean('users.status');
 
         $this->filterEqual('id', $status_id)->increment('{users}_statuses', 'replies_count');
 
@@ -919,7 +936,7 @@ class modelUsers extends cmsModel {
         $this->filterEqual('profile_id', $profile_id);
         $this->filterDateYounger('date_pub', $voting_days);
 
-        $this->useCache("users.karma");
+        $this->useCache('users.karma');
 
         $votes_count = $this->getCount('{users}_karma');
 
@@ -931,7 +948,7 @@ class modelUsers extends cmsModel {
 
     public function addKarmaVote($vote){
 
-        cmsCache::getInstance()->clean("users.karma");
+        cmsCache::getInstance()->clean('users.karma');
 
         $result = $this->insert('{users}_karma', $vote);
 
@@ -995,8 +1012,8 @@ class modelUsers extends cmsModel {
             $this->decrement('{users}', 'rating', abs($score));
 		}
 
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$user_id}");
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
 
     }
 
@@ -1089,8 +1106,5 @@ class modelUsers extends cmsModel {
 
         return $ret;
     }
-
-//============================================================================//
-//============================================================================//
 
 }

@@ -387,7 +387,15 @@ class cmsController {
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
+        if (!is_readable($action_file)){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(ROOT, '', $action_file));
+        }
+
         include_once $action_file;
+
+        if(!class_exists($class_name, false)){
+            cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(ROOT, '', $action_file), $class_name));
+        }
 
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){

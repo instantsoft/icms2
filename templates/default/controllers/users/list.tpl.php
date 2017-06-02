@@ -20,7 +20,7 @@
 
         <?php foreach($profiles as $profile){ ?>
 
-            <div class="item">
+            <div class="item<?php if (!empty($profile['item_css_class'])) { ?> <?php echo implode(' ', $profile['item_css_class']); ?><?php } ?>">
 
                 <?php if ($dataset_name == 'rating') { ?>
                     <div class="position">
@@ -74,7 +74,7 @@
                     </div>
                 </div>
 
-                <div class="actions">
+                <div class="actions" <?php if (!empty($profile['notice_title'])) { ?>data-notice_title="<?php echo implode(', ', $profile['notice_title']); ?>"<?php } ?>>
 
                     <?php if (!empty($profile['actions'])){ ?>
                         <div class="list_actions_menu controller_actions_menu dropdown_menu">
@@ -104,7 +104,7 @@
                     <?php } else { ?>
 
                         <?php if (!$profile['is_online']){ ?>
-                            <?php echo string_date_age_max($profile['date_log'], true); ?>
+                            <span><?php echo string_date_age_max($profile['date_log'], true); ?></span>
                         <?php } else { ?>
                             <span class="is_online"><?php echo LANG_ONLINE; ?></span>
                         <?php } ?>

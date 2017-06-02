@@ -4,6 +4,14 @@ class actionGroupsInvite extends cmsAction {
 
     public function run($invited_id){
 
+        // профиль приглашаемого
+        $profile = cmsCore::getModel('users')->getUser($invited_id);
+        if (!$profile || $profile['id'] == $this->cms_user->id) { cmsCore::error404(); }
+
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'invite_group_users')){
+            cmsCore::error404();
+        }
+
         // Группы, в которые можно приглашать
         $my_groups = $this->model->getInvitableGroups($this->cms_user->id);
 

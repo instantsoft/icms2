@@ -2,7 +2,7 @@
 
 class actionGroupsInviteUsers extends cmsAction {
 
-    public function run($group_id){
+    public function run($group_id, $dataset = null, $invite_user_id = null){
 
         $group = $this->model->getGroup($group_id);
         if (!$group) { cmsCore::error404(); }
@@ -13,49 +13,122 @@ class actionGroupsInviteUsers extends cmsAction {
             cmsCore::error404();
         }
 
-        $form = $this->getForm('invite_users', array($group));
+        if(is_numeric($invite_user_id)){
+            return $this->sendUserInvite($group, $invite_user_id);
+        }
 
-        $data = array();
+        $users_controller = cmsCore::getController('users', $this->request);
 
-        if ($this->request->has('is_submit')){
+        $this->model->filterExcludeUsersMembers($group['id'], $users_controller->model);
 
-            $data = $form->parse($this->request, true);
+        $datasets = $this->getInviteUsersDatasets();
 
-            $errors = $form->validate($this,  $data);
+        if ($dataset && isset($datasets[$dataset])) {
 
-            // с required в форме не работало, надо разобраться
-            if(!$data['users_list']){
-                $errors['users_list'] = ERR_VALIDATE_REQUIRED;
+            if (isset($datasets[$dataset]['filter']) && is_callable($datasets[$dataset]['filter'])){
+                $this->model = $datasets[$dataset]['filter']($users_controller->model, $datasets[$dataset]);
             }
 
-            if (!$errors){
+        } else if ($dataset) { cmsCore::error404(); }
 
-                $invited_list = array();
+        $page_url = href_to($this->name, 'invite_users', $group['id']);
 
-                foreach($data['users_list'] as $user_id){
-                    if (!$this->model->getInvite($group_id, $user_id)){
-                        $invited_list[] = $user_id;
+        $this->cms_template->setPageTitle(LANG_GROUPS_INVITE);
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        $this->cms_template->addBreadcrumb(LANG_GROUPS_INVITE);
+
+        $profiles_list_html = $users_controller->renderProfilesList($page_url, false, array(
+            array(
+                'title' => LANG_GROUPS_SEND_INVITE,
+                'class' => 'ajax-request',
+                'href'  => href_to('groups', 'invite_users', array($group['id'], 0, '{id}')),
+                'handler' => function($user){
+                    if (!empty($user['is_send_invite'])){
+                        return false;
                     }
+                    return cmsUser::getInstance()->isPrivacyAllowed($user, 'invite_group_users');
                 }
+            ),
+            array(
+                'item_css_class' => 'disable_invite',
+                'handler' => function($user){
+                    if (!empty($user['is_send_invite'])){
+                        return false;
+                    }
+                    return !cmsUser::getInstance()->isPrivacyAllowed($user, 'invite_group_users');
+                }
+            ),
+            array(
+                'item_css_class' => 'invite_sended',
+                'notice_title'   => LANG_GROUPS_INVITE_SENT,
+                'handler' => function($user){
+                    if (!empty($user['is_send_invite'])){
+                        return true;
+                    }
+                    return false;
+                }
+            )
+        ));
 
-                return $this->sendInvite($invited_list, $group_id);
+        return $this->cms_template->render('invite_users', array(
+            'group'              => $group,
+            'dataset'            => $dataset,
+            'datasets'           => $datasets,
+            'profiles_list_html' => $profiles_list_html,
+        ));
 
+    }
+
+    private function getInviteUsersDatasets(){
+
+        $datasets = array();
+
+        $datasets[''] = array(
+                'name' => '',
+                'title' => LANG_ALL
+        );
+
+        $datasets['friends'] = array(
+            'name' => 'friends',
+            'title' => LANG_USERS_FRIENDS,
+            'filter' => function($model, $dset){
+                return $model->filterFriends(cmsUser::getInstance()->id);
             }
+        );
 
-            if ($errors){
-                return $this->cms_template->renderJSON(array(
-                    'errors' => $errors
-                ));
-            }
+        return cmsEventsManager::hook('group_invite_users_datasets', $datasets);
+
+    }
+
+    private function sendUserInvite($group, $invite_user_id) {
+
+        $profile = cmsCore::getModel('users')->getUser($invite_user_id);
+        if (!$profile || $profile['id'] == $this->cms_user->id) { cmsCore::error404(); }
+
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'invite_group_users')){
+            cmsCore::error404();
+        }
+
+        $membership = $this->model->getMembership($group['id'], $invite_user_id);
+        if ($membership) {
+
+            return $this->cms_template->renderJSON(array(
+                'errors' => true
+            ));
 
         }
 
-        return $this->cms_template->render('invite_users', array(
-            'data'   => $data,
-            'form'   => $form,
-            'errors' => (isset($errors) ? $errors : false),
-            'group'  => $group
-        ));
+        if ($this->model->getInvite($group['id'], $invite_user_id)){
+
+            return $this->cms_template->renderJSON(array(
+                'errors' => true
+            ));
+
+        }
+
+        return $this->sendInvite($invite_user_id, $group['id']);
 
     }
 

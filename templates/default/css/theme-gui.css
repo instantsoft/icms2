@@ -369,6 +369,9 @@
     cursor: pointer;
     display: block;
 }
+.group_menu_title.loading {
+    background-image: url(../images/loader16.gif);
+}
 .group_menu_title:hover, #body .controller_actions_menu > input:checked + .group_menu_title {
     background-color: #dfe6ed;
     border-radius: 2px 2px 0 0;
@@ -522,6 +525,16 @@
     float:right;
     margin-right: 0;
     color:#666;
+}
+
+.striped-list .item .actions:before {
+    content: attr(data-notice_title);
+    background-color: #2980b9;
+    color: #FFF;
+    display: inline-block;
+    font-size: 12px;
+    border-radius: 2px;
+    padding: 0 10px;
 }
 
 .striped-list.list-16 .item { min-height: 16px; line-height: 16px; }

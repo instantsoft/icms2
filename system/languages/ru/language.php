@@ -274,6 +274,7 @@
     define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
     define('ERR_FILE_NOT_FOUND',             'Файл не найден');
     define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
+    define('ERR_CLASS_NOT_DEFINED', 		 'В файле %s не определён класс <b>%s</b>');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
     define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');

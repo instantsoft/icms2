@@ -18,10 +18,12 @@
     define('LANG_GROUPS_ADD_STAFF',         'Добавить администратора');
     define('LANG_GROUPS_ADD_STAFF_HINT',    'Введите email члена группы, которого вы хотите назначить администратором');
     define('LANG_GROUPS_STAFF_NOT_MEMBER',  'Пользователь %s не является членом группы либо уже назначен администратором');
+    define('LANG_GROUPS_REQUESTS',          'Заявки');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была отклонена администратором %s.');
     define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Ваша заявка на вступление в группу &laquo;%s&raquo; была принята.');
     define('LANG_GROUPS_REQ_SUCCESS',       'Заявка отправлена администраторам группы');
     define('LANG_GROUPS_REQ_ERROR',         'Ваша заявка на вступление уже на рассмотрении');
+    define('LANG_GROUPS_INVITE_GROUP_USERS', 'Кто может приглашать вас в группы');
     define('LANG_GROUPS_ENTER',             'Подать заявку');
     define('LANG_GROUPS_ENTER_CONFIRM',     'Подать заявку на вступление в группу?');
     define('LANG_GROUPS_INVITE_FR',         'Пригласить друзей в группу');
@@ -29,6 +31,7 @@
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Выберите пользователей');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s желает вступить в группу &laquo;%s&raquo;');
     define('LANG_GROUPS_INVITE_NOTICE',     '%s приглашает вас вступить в группу &laquo;%s&raquo;');
+    define('LANG_GROUPS_SEND_INVITE',       'Отправить приглашение');
     define('LANG_GROUPS_INVITE_SENT',       'Приглашение отправлено');
     define('LANG_GROUPS_INVITE_PENDING',    'Приглашение уже было отправлено ранее и ожидает рассмотрения');
     define('LANG_GROUPS_NOTIFY_INVITE',     'Уведомлять о приглашениях в группы');

@@ -6,9 +6,7 @@ class actionGroupsGroupMembers extends cmsAction {
 
     public function run($group, $role_id = null){
 
-        $users_request = new cmsRequest($this->request->getData(), cmsRequest::CTX_INTERNAL);
-
-        $users_controller = cmsCore::getController('users', $users_request);
+        $users_controller = cmsCore::getController('users', $this->request);
 
         $this->model->filterUsersMembers($group['id'], $users_controller->model);
 

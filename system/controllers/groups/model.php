@@ -502,13 +502,11 @@ class modelGroups extends cmsModel {
 
     }
 
-    public function getInvitableFriends($group_id){
-
-        $user = cmsUser::getInstance();
+    public function getInvitableFriends($group_id, $for_user_id){
 
         $users_model = cmsCore::getModel('users');
 
-        $friends = $users_model->orderBy('u.nickname')->getFriends($user->id);
+        $friends = $users_model->orderBy('u.nickname')->getFriends($for_user_id);
 
         if (!$friends) { return false; }
 
@@ -518,29 +516,12 @@ class modelGroups extends cmsModel {
             if (in_array($id, $group_members)){
                 unset($friends[$id]);
             }
-        }
-
-        return $friends;
-
-    }
-
-    public function getInvitableUsers($group_id){
-
-        $users_model = cmsCore::getModel('users');
-
-        $users = $users_model->orderBy('email')->getUsers();
-
-        if (!$users) { return false; }
-
-        $group_members = $this->getMembersIds($group_id);
-
-        foreach($users as $user){
-            if (in_array($user['id'], $group_members)){
-                unset($users[$user['id']]);
+            if (empty($friend['privacy_options']['invite_group_users'])){
+                unset($friends[$id]);
             }
         }
 
-        return $users;
+        return $friends;
 
     }
 
@@ -590,11 +571,32 @@ class modelGroups extends cmsModel {
 //============================================================================//
 //============================================================================//
 
+    public function filterExcludeUsersMembers($group_id, $users_model){
+
+        $users_model->select('mr.id', 'is_send_invite');
+
+        $users_model->joinLeft('groups_invites', 'mr', "mr.invited_id = i.id AND mr.group_id = '{$group_id}'");
+
+        return $users_model->joinExcludingLeft('groups_members', 'm', 'm.user_id', 'i.id', "m.group_id = '{$group_id}'");
+
+    }
+
     public function filterUsersMembers($group_id, $users_model){
 
         $users_model->select('m.role', 'member_role');
+        $users_model->joinInner('groups_members', 'm', 'm.user_id = i.id');
+        $users_model->filterEqual('m.group_id', $group_id);
 
-        $users_model->joinInner('groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$group_id}'");
+        return $users_model;
+
+    }
+
+    public function filterUsersRequests($group_id, $users_model){
+
+        $users_model->joinInner('groups_invites', 'mr', 'mr.user_id = i.id');
+        $users_model->filterEqual('mr.group_id', $group_id);
+
+        return $users_model;
 
     }
 
