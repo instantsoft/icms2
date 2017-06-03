@@ -28,6 +28,7 @@
     define('LANG_GROUPS_ENTER_CONFIRM',     'Подать заявку на вступление в группу?');
     define('LANG_GROUPS_INVITE_FR',         'Пригласить друзей в группу');
     define('LANG_GROUPS_INVITE',            'Пригласить пользователей в группу');
+    define('LANG_GROUPS_INVITE_USER',       'Пригласить пользователя в группу');
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Выберите пользователей');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s желает вступить в группу &laquo;%s&raquo;');
     define('LANG_GROUPS_INVITE_NOTICE',     '%s приглашает вас вступить в группу &laquo;%s&raquo;');
@@ -54,6 +55,7 @@
     define('LANG_RULE_GROUPS_EDIT',         'Редактирование групп');
     define('LANG_RULE_GROUPS_DELETE',       'Удаление групп');
     define('LANG_RULE_GROUPS_INVITE_USERS', 'Приглашать в группу любого пользователя сайта');
+    define('LANG_RULE_GROUPS_INVITE_USERS_HINT', 'Если это разрешено в самой группе');
     define('LANG_GROUPS_GROUP_JOIN_POLICY', 'Вступление в группу');
     define('LANG_GROUPS_GROUP_EDIT_POLICY', 'Редактирование описания группы');
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Только владелец');
@@ -74,6 +76,8 @@
     define('LANG_GROUPS_STAFF_REMOVE_SUCCESS', 'Участник <b>%s</b> убран из списка администраторов');
     define('LANG_GROUPS_STAFF_SET_CONFIRM', 'Вы действительно хотите добавить <b>%s</b> в список администраторов?');
     define('LANG_GROUPS_STAFF_SET_SUCCESS', 'Участник <b>%s</b> добавлен в список администраторов');
+    define('LANG_GROUPS_STAFF_SUCCESS_NOTICE', 'Вас назначили администратором группы <b>%s</b>');
+    define('LANG_GROUPS_STAFF_REMOVE_NOTICE', 'Вас убрали из списка администраторов группы <b>%s</b>');
     define('LANG_GROUPS_STAFF_SET',         'Сделать администратором');
     define('LANG_GROUPS_STAFF_REMOVE',      'Убрать из администраторов');
     define('LANG_GROUPS_MEMBER_EXPEL',      'Исключить');

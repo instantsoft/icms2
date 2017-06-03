@@ -28,6 +28,7 @@
     define('LANG_GROUPS_ENTER',             'Send a request');
     define('LANG_GROUPS_ENTER_CONFIRM',     'Send a request for membership?');
     define('LANG_GROUPS_INVITE',            'Invite users to Group');
+    define('LANG_GROUPS_INVITE_USER',       'Invite current user to Group');
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Select users');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s wants to join the &laquo;%s&raquo; group');
     define('LANG_GROUPS_INVITE_NOTICE',     '%s invites you to join the &laquo;%s&raquo; group');
@@ -54,6 +55,7 @@
     define('LANG_RULE_GROUPS_EDIT',         'Editing groups');
     define('LANG_RULE_GROUPS_DELETE',       'Deleting groups');
     define('LANG_RULE_GROUPS_INVITE_USERS', 'Invite any user to the group');
+    define('LANG_RULE_GROUPS_INVITE_USERS_HINT', 'If this is allowed in the group itself');
     define('LANG_GROUPS_GROUP_JOIN_POLICY', 'Who can join');
     define('LANG_GROUPS_GROUP_EDIT_POLICY', 'Who can edit the group\'s description');
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Only owner');
@@ -74,6 +76,8 @@
     define('LANG_GROUPS_STAFF_REMOVE_SUCCESS', 'The <b>%s</b> member is removed from the administrators list');
     define('LANG_GROUPS_STAFF_SET_CONFIRM', 'Are you sure you want to add <b>%s</b> to the list of administrators?');
     define('LANG_GROUPS_STAFF_SET_SUCCESS', 'A member <b>%s</b> was added to the list of administrators');
+    define('LANG_GROUPS_STAFF_SUCCESS_NOTICE', 'You have been assigned as a group administrator <b>%s</b>');
+    define('LANG_GROUPS_STAFF_REMOVE_NOTICE', 'You were removed from the <b>%s</b> group administrators');
     define('LANG_GROUPS_STAFF_SET',         'Set member administrator');
     define('LANG_GROUPS_STAFF_REMOVE',      'Remove from administrators');
     define('LANG_GROUPS_MEMBER_EXPEL',      'To expel');

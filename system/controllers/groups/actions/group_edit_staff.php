@@ -61,6 +61,21 @@ class actionGroupsGroupEditStaff extends cmsAction {
 
         $this->model->updateMembershipRole($group['id'], $member['id'], groups::ROLE_STAFF);
 
+        $messenger = cmsCore::getController('messages');
+
+        $messenger->addRecipient($member['id']);
+
+        $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
+
+        $notice = array(
+            'content' => sprintf(LANG_GROUPS_STAFF_SUCCESS_NOTICE, $group_link),
+            'options' => array(
+                'is_closeable' => true
+            )
+        );
+
+        $messenger->sendNoticePM($notice, 'groups_invite');
+
         return $this->cms_template->renderJSON(array(
             'error' => false,
             'name'  => $member['nickname'],

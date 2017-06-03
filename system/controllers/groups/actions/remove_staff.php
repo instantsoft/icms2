@@ -26,6 +26,21 @@ class actionGroupsRemoveStaff extends cmsAction {
 
             cmsUser::addSessionMessage(sprintf(LANG_GROUPS_STAFF_REMOVE_SUCCESS, $member['nickname']));
 
+            $messenger = cmsCore::getController('messages');
+
+            $messenger->addRecipient($member['id']);
+
+            $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
+
+            $notice = array(
+                'content' => sprintf(LANG_GROUPS_STAFF_REMOVE_NOTICE, $group_link),
+                'options' => array(
+                    'is_closeable' => true
+                )
+            );
+
+            $messenger->sendNoticePM($notice, 'groups_invite');
+
             $this->redirectToAction($group['slug'], 'members');
 
         } else {

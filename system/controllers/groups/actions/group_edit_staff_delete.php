@@ -24,6 +24,21 @@ class actionGroupsGroupEditStaffDelete extends cmsAction {
 
         $this->model->updateMembershipRole($group['id'], $staff_id, groups::ROLE_MEMBER);
 
+        $messenger = cmsCore::getController('messages');
+
+        $messenger->addRecipient($staff_id);
+
+        $group_link = '<a href="'.href_to('groups', $group['id']).'">'.$group['title'].'</a>';
+
+        $notice = array(
+            'content' => sprintf(LANG_GROUPS_STAFF_REMOVE_NOTICE, $group_link),
+            'options' => array(
+                'is_closeable' => true
+            )
+        );
+
+        $messenger->sendNoticePM($notice, 'groups_invite');
+
         return $this->cms_template->renderJSON(array(
             'error' => false
         ));

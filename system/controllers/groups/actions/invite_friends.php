@@ -4,15 +4,14 @@ class actionGroupsInviteFriends extends cmsAction {
 
     public function run($group_id){
 
-        $membership = $this->model->getMembership($group_id, $this->cms_user->id);
-        if (!$membership) { cmsCore::error404(); }
-
         $group = $this->model->getGroup($group_id);
         if (!$group) { cmsCore::error404(); }
 
-        $is_owner = $this->cms_user->id == $group['owner_id'];
-        $is_can_invite = ($membership && ($group['join_policy'] != groups::JOIN_POLICY_PRIVATE)) || $is_owner;
-        if (!$is_can_invite) { cmsCore::error404(); }
+        $group['access'] = $this->getGroupAccess($group);
+
+        if (!$group['access']['is_can_invite']){
+            cmsCore::error404();
+        }
 
         $friends = $this->model->getInvitableFriends($group_id, $this->cms_user->id);
 

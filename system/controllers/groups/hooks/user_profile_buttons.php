@@ -15,7 +15,7 @@ class onGroupsUserProfileButtons extends cmsAction {
         if ($my_groups){
 
             $data['buttons'][] = array(
-                'title' => LANG_GROUPS_INVITE,
+                'title' => LANG_GROUPS_INVITE_USER,
                 'class' => 'group_add ajax-modal',
                 'href'  => href_to($this->name, 'invite', $data['profile']['id'])
             );

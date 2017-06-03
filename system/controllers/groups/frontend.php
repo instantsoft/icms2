@@ -112,6 +112,10 @@ class groups extends cmsFrontend {
             'is_can_invite_users' => false
         );
 
+        if ($access['member_role'] == groups::ROLE_STAFF) {
+            $access['is_can_invite'] = true;
+        }
+
         if (cmsUser::isAllowed('groups', 'invite_users') && $access['is_can_invite']) {
             $access['is_can_invite_users'] = true;
         }
