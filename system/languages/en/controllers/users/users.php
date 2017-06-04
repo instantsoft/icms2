@@ -116,6 +116,7 @@
 
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Who can view your profile?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Who can write on your wall?');
+    define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Who can comment on my wall posts?');
     define('LANG_USERS_PRIVACY_PROFILE_CTYPE',  'Who can view your %s list?');
 
     define('LANG_USERS_FRIENDS_SPELLCOUNT', 'friend|friends|friends');

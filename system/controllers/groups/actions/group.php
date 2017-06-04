@@ -9,31 +9,11 @@ class actionGroupsGroup extends cmsAction {
         // Стена
         if ($this->options['is_wall']){
 
-            $wall_controller = cmsCore::getController('wall', $this->request);
-
-            $wall_title = LANG_GROUPS_WALL;
-
-            $wall_target = array(
+            $wall_html = cmsCore::getController('wall', $this->request)->getWidget(LANG_GROUPS_WALL, array(
                 'controller'   => 'groups',
                 'profile_type' => 'group',
                 'profile_id'   => $group['id']
-            );
-
-            $wall_permissions = array(
-
-                'add' =>$this->cms_user->is_admin || (
-                            $group['access']['is_member'] && (
-                                ($group['wall_policy'] == groups::WALL_POLICY_MEMBERS) ||
-                                ($group['wall_policy'] == groups::WALL_POLICY_STAFF && $group['access']['member_role']==groups::ROLE_STAFF) ||
-                                $group['access']['is_owner']
-                            )
-                        ),
-
-                'delete' => ($this->cms_user->is_admin || $group['access']['is_owner']),
-
-            );
-
-            $wall_html = $wall_controller->getWidget($wall_title, $wall_target, $wall_permissions);
+            ), $group['access']['wall']);
 
         }
 

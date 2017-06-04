@@ -109,8 +109,35 @@ class groups extends cmsFrontend {
             'member_role'   => ($is_member ? $membership['role'] : groups::ROLE_NONE),
             'invite'        => $this->model->getInvite($group['id'], $this->cms_user->id),
             'is_can_invite' => (($is_member && ($group['join_policy'] != groups::JOIN_POLICY_PRIVATE)) || $is_owner),
-            'is_can_invite_users' => false
+            'is_can_invite_users' => false,
+            'wall' => array(
+                'add'    => false,
+                'reply'  => false,
+                'delete' => false
+            )
         );
+
+        if ($this->cms_user->is_admin || (
+                $access['is_member'] && (
+                    ($group['wall_policy'] == groups::WALL_POLICY_MEMBERS) ||
+                    ($group['wall_policy'] == groups::WALL_POLICY_STAFF && $access['member_role']==groups::ROLE_STAFF) ||
+                    $access['is_owner']
+                )
+            )) {
+            $access['wall']['add'] = true;
+        }
+        if ($this->cms_user->is_admin || (
+                $access['is_member'] && (
+                    ($group['wall_reply_policy'] == groups::WALL_POLICY_MEMBERS) ||
+                    ($group['wall_reply_policy'] == groups::WALL_POLICY_STAFF && $access['member_role']==groups::ROLE_STAFF) ||
+                    $access['is_owner']
+                )
+            )) {
+            $access['wall']['reply'] = true;
+        }
+        if ($this->cms_user->is_admin || $access['is_owner']) {
+            $access['wall']['delete'] = true;
+        }
 
         if ($access['member_role'] == groups::ROLE_STAFF) {
             $access['is_can_invite'] = true;
@@ -234,6 +261,14 @@ class groups extends cmsFrontend {
         if ($this->options['is_wall']){
             $form->addField($fieldset_id, new fieldList('wall_policy', array(
                 'title' => LANG_GROUPS_GROUP_WALL_POLICY,
+                'items' => array(
+                    groups::WALL_POLICY_MEMBERS => LANG_GROUPS_GROUP_WALL_MEMBERS,
+                    groups::WALL_POLICY_STAFF => LANG_GROUPS_GROUP_WALL_STAFF,
+                    groups::WALL_POLICY_OWNER => LANG_GROUPS_GROUP_WALL_OWNER,
+                )
+            )));
+            $form->addField($fieldset_id, new fieldList('wall_reply_policy', array(
+                'title' => LANG_GROUPS_GROUP_WALL_REPLY_POLICY,
                 'items' => array(
                     groups::WALL_POLICY_MEMBERS => LANG_GROUPS_GROUP_WALL_MEMBERS,
                     groups::WALL_POLICY_STAFF => LANG_GROUPS_GROUP_WALL_STAFF,

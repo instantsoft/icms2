@@ -50,8 +50,6 @@ class actionUsersProfile extends cmsAction {
 
             $wall_controller = cmsCore::getController('wall', $this->request);
 
-            $wall_title = LANG_USERS_PROFILE_WALL;
-
             $wall_target = array(
                 'controller' => 'users',
                 'profile_type' => 'user',
@@ -59,11 +57,12 @@ class actionUsersProfile extends cmsAction {
             );
 
             $wall_permissions = array(
-                'add' => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
+                'add'    => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
+                'reply'  => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall_reply'),
                 'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id'])),
             );
 
-            $wall_html = $wall_controller->getWidget($wall_title, $wall_target, $wall_permissions);
+            $wall_html = $wall_controller->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
 
         }
 

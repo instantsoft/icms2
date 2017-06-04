@@ -706,6 +706,7 @@ CREATE TABLE `{#}groups` (
   `join_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Join policy',
   `edit_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Edit policy',
   `wall_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Wall policy',
+  `wall_reply_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Wall reply policy',
   `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Private?',
   `cover` text COMMENT 'Group cover',
   `slug` varchar(100) DEFAULT NULL,

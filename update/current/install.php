@@ -37,6 +37,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}groups` ADD `roles` VARCHAR(2000) NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('groups', 'wall_reply_policy')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `wall_reply_policy` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Политика комментирования стены' AFTER  `wall_policy`");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();

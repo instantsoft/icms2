@@ -61,6 +61,7 @@
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Только владелец');
     define('LANG_GROUPS_GROUP_EDIT_STAFF',  'Владелец и администраторы');
     define('LANG_GROUPS_GROUP_WALL_POLICY', 'Кто может писать на стене группы');
+    define('LANG_GROUPS_GROUP_WALL_REPLY_POLICY', 'Кто может комментировать записи на стене группы?');
     define('LANG_GROUPS_GROUP_WALL_OWNER',  'Только владелец');
     define('LANG_GROUPS_GROUP_WALL_STAFF',  'Администраторы');
     define('LANG_GROUPS_GROUP_WALL_MEMBERS','Все участники');

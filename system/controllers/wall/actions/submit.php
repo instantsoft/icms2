@@ -87,7 +87,11 @@ class actionWallSubmit extends cmsAction {
         if ($action=='add'){
 
             // проверяем права на добавление
-            if (!$permissions['add']){ return $this->error(); }
+            if(!$parent_id){
+                if (empty($permissions['add'])){ return $this->error(); }
+            } else {
+                if (empty($permissions['reply'])){ return $this->error(); }
+            }
 
             // Собираем данные записи
             $entry = array(

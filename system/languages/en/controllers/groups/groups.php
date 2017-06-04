@@ -61,6 +61,7 @@
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Only owner');
     define('LANG_GROUPS_GROUP_EDIT_STAFF',  'Owner and administrators');
     define('LANG_GROUPS_GROUP_WALL_POLICY', 'Who can write on the group wall');
+    define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Who can comment on my group wall posts?');
     define('LANG_GROUPS_GROUP_WALL_OWNER',  'Only owner');
     define('LANG_GROUPS_GROUP_WALL_STAFF',  'Owner and administrators');
     define('LANG_GROUPS_GROUP_WALL_MEMBERS','All group members');

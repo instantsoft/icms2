@@ -10,6 +10,7 @@ class onUsersWallPermissions extends cmsAction {
 
         return array(
             'add'    => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
+            'reply'  => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall_reply'),
             'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id']))
         );
 
