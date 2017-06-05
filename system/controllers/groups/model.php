@@ -516,7 +516,7 @@ class modelGroups extends cmsModel {
             if (in_array($id, $group_members)){
                 unset($friends[$id]);
             }
-            if (empty($friend['privacy_options']['invite_group_users'])){
+            if (isset($friend['privacy_options']['invite_group_users']) && !$friend['privacy_options']['invite_group_users']){
                 unset($friends[$id]);
             }
         }

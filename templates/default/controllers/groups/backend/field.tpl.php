@@ -54,7 +54,6 @@
         var select_type = $('#type');
         if($(select_type).val() == 'caption'){
             $('#fset_type').hide();
-            return true;
         }
         $(select_type).on('change', function(){
             loadFieldTypeOptions(this);

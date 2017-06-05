@@ -425,8 +425,11 @@ class cmsForm {
                 // если поле отключено, пропускаем поле
                 if (in_array($name, $this->disabled_fields)){ continue; }
 
+                // правила
+                $rules = $field->getRules();
+
                 // если нет правил, пропускаем поле
-                if (!$field->getRules()){ continue; }
+                if (!$rules){ continue; }
 
                 // проверяем является ли поле элементом массива
                 $is_array = strpos($name, ':');
@@ -448,7 +451,7 @@ class cmsForm {
                 // перебираем правила для поля
                 // и проверяем каждое из них
                 //
-                foreach($field->getRules() as $rule){
+                foreach($rules as $rule){
 
                     if (!$rule) { continue; }
 

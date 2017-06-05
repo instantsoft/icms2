@@ -31,6 +31,9 @@ class fieldCaption extends cmsFormField {
     public function getRules() {
 
         if ($this->getOption('min_length')){
+            if(array_search(array('required'), $this->rules) === false){
+                $this->rules[] = array('required');
+            }
             $this->rules[] = array('min_length', $this->getOption('min_length'));
         }
 
