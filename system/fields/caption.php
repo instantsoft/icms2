@@ -9,6 +9,8 @@ class fieldCaption extends cmsFormField {
     public $allow_index = true;
     public $var_type    = 'string';
 
+    private $is_set_rules = false;
+
     public function getOptions(){
 
         return array(
@@ -30,15 +32,18 @@ class fieldCaption extends cmsFormField {
 
     public function getRules() {
 
-        if ($this->getOption('min_length')){
-            if(array_search(array('required'), $this->rules) === false){
-                $this->rules[] = array('required');
+        if(!$this->is_set_rules){
+            if ($this->getOption('min_length')){
+                if(array_search(array('required'), $this->rules) === false){
+                    $this->rules[] = array('required');
+                }
+                $this->rules[] = array('min_length', $this->getOption('min_length'));
             }
-            $this->rules[] = array('min_length', $this->getOption('min_length'));
-        }
 
-        if ($this->getOption('max_length')){
-            $this->rules[] = array('max_length', $this->getOption('max_length'));
+            if ($this->getOption('max_length')){
+                $this->rules[] = array('max_length', $this->getOption('max_length'));
+            }
+            $this->is_set_rules = true;
         }
 
         return $this->rules;

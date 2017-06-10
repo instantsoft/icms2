@@ -13,9 +13,19 @@ class actionAdminCtypesRelations extends cmsAction {
 
         $grid = $this->loadDataGrid('ctype_relations');
 
-        return cmsTemplate::getInstance()->render('ctypes_relations', array(
+        if ($this->request->isAjax()) {
+
+            $relations = $content_model->getContentRelations($ctype_id);
+
+            $this->cms_template->renderGridRowsJSON($grid, $relations);
+
+            $this->halt();
+
+        }
+
+        return $this->cms_template->render('ctypes_relations', array(
             'ctype' => $ctype,
-            'grid' => $grid
+            'grid'  => $grid
         ));
 
     }

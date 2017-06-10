@@ -56,6 +56,7 @@
     define('LANG_RULE_GROUPS_DELETE',       'Deleting groups');
     define('LANG_RULE_GROUPS_INVITE_USERS', 'Invite any user to the group');
     define('LANG_RULE_GROUPS_INVITE_USERS_HINT', 'If this is allowed in the group itself');
+    define('LANG_RULE_GROUPS_BIND_TO_PARENT', 'Bind content type items');
     define('LANG_GROUPS_GROUP_JOIN_POLICY', 'Who can join');
     define('LANG_GROUPS_GROUP_EDIT_POLICY', 'Who can edit the group\'s description');
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Only owner');

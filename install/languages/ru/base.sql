@@ -147,6 +147,7 @@ DROP TABLE IF EXISTS `{#}content_relations`;
 CREATE TABLE `{#}content_relations` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(256) DEFAULT NULL,
+  `target_controller` varchar(32) NOT NULL DEFAULT 'content',
   `ctype_id` int(11) unsigned DEFAULT NULL,
   `child_ctype_id` int(11) unsigned DEFAULT NULL,
   `layout` varchar(32) DEFAULT NULL,
@@ -156,7 +157,7 @@ CREATE TABLE `{#}content_relations` (
   `seo_title` varchar(256) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ctype_id` (`ctype_id`),
-  KEY `child_ctype_id` (`child_ctype_id`)
+  KEY `child_ctype_id` (`child_ctype_id`,`target_controller`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_relations_bind`;
@@ -166,11 +167,12 @@ CREATE TABLE `{#}content_relations_bind` (
   `parent_item_id` int(11) unsigned DEFAULT NULL,
   `child_ctype_id` int(11) unsigned DEFAULT NULL,
   `child_item_id` int(11) unsigned DEFAULT NULL,
+  `target_controller` varchar(32) NOT NULL DEFAULT 'content',
   PRIMARY KEY (`id`),
   KEY `parent_ctype_id` (`parent_ctype_id`),
-  KEY `parent_item_id` (`parent_item_id`),
   KEY `child_ctype_id` (`child_ctype_id`),
-  KEY `child_item_id` (`child_item_id`)
+  KEY `parent_item_id` (`parent_item_id`,`target_controller`),
+  KEY `child_item_id` (`child_item_id`,`target_controller`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_types`;
@@ -691,7 +693,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (104, 'content_privacy_types', 'users', 104, 1),
 (105, 'content_privacy_types', 'groups', 105, 1),
 (106, 'content_view_hidden', 'users', 106, 1),
-(107, 'content_add_permissions', 'groups', 107, 1);
+(107, 'content_add_permissions', 'groups', 107, 1),
+(108, 'ctype_relation_childs', 'content', 108, 1),
+(109, 'ctype_relation_childs', 'groups', 109, 1),
+(110, 'content_before_childs', 'groups', 110, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -974,7 +979,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (36, 'content', 'restore', 'list', 'own,all'),
 (37, 'content', 'trash_left_time', 'number', NULL),
 (38, 'users', 'delete', 'list', 'my,anyuser'),
-(39, 'groups', 'invite_users', 'flag', NULL);
+(39, 'groups', 'invite_users', 'flag', NULL),
+(40, 'groups', 'bind_to_parent', 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (

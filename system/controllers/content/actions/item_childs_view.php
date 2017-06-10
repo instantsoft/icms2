@@ -10,9 +10,9 @@ class actionContentItemChildsView extends cmsAction {
             cmsCore::error404();
         }
 
-        $relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
-
-        if (!$relation) {
+        if(!empty($childs['tabs'][$child_ctype_name]['relation_id'])){
+            $relation = $childs['relations'][$childs['tabs'][$child_ctype_name]['relation_id']];
+        } else {
             cmsCore::error404();
         }
 

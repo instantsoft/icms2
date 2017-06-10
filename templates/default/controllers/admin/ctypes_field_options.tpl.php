@@ -23,13 +23,16 @@
 <?php } ?>
 <script type="text/javascript">
     if($('#fset_visibility > .field').length == 1){
-        id_name = '#tab-visibility';
+        var id_name = '#tab-visibility';
     } else {
-        id_name = '#f_is_in_filter';
+        var id_name = '#f_is_in_filter';
     }
     <?php if(!$is_can_in_filter){ ?>
         $(id_name).hide(); $('#is_in_filter').prop('checked', false)
     <?php } else { ?>
         $(id_name).show();
+    <?php } ?>
+    <?php if(!$options){ ?>
+        $('#tab-type').hide();
     <?php } ?>
 </script>

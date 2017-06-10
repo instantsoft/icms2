@@ -17,6 +17,10 @@ class actionContentItemBindForm extends cmsAction {
             cmsCore::error404();
         }
 
+        if ($this->validate_sysname($ctype_name) !== true || $this->validate_sysname($child_ctype_name) !== true){
+            cmsCore::error404();
+        }
+
         $is_allowed_to_add = cmsUser::isAllowed($child_ctype_name, 'add_to_parent');
         $is_allowed_to_bind = cmsUser::isAllowed($child_ctype_name, 'bind_to_parent');
         $is_allowed_to_unbind = cmsUser::isAllowed($child_ctype_name, 'bind_off_parent');
@@ -29,32 +33,73 @@ class actionContentItemBindForm extends cmsAction {
             cmsCore::error404();
         }
 
+        // родительский тип контента
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
+        // дочерний контроллер
+        $target_controller = 'content';
+
+        // дочерний тип контента
+        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
+        // если нет, проверяем по контроллеру
+        if (!$child_ctype) {
+            if (cmsCore::isControllerExists($child_ctype) && cmsController::enabled($child_ctype)){
+
+                if ($mode != 'parents') {
+                    cmsCore::error404();
+                }
+
+                $child_ctype = array(
+                    'name' => $child_ctype_name,
+                    'id'   => null
+                );
+
+                $target_controller = $child_ctype_name;
+
+            } else {
+                cmsCore::error404();
+            }
+        }
+
+        // связь
+		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id'], $target_controller);
+		if (!$relation) { cmsCore::error404(); }
+
+        // сама запись
 		$item = array('id' => 0);
 
 		if ($item_id){
 			if ($mode == 'childs' || $mode == 'unbind'){
 				$item = $this->model->getContentItem($ctype_name, $item_id);
 			} else {
-				$item = $this->model->getContentItem($child_ctype_name, $item_id);
+
+                if($relation['target_controller'] != 'content'){
+                    $item = cmsCore::getModel($relation['target_controller'])->getContentItem($item_id);
+                } else {
+                    $item = $this->model->getContentItem($child_ctype_name, $item_id);
+                }
+
 			}
 			if (!$item) { cmsCore::error404(); }
 		}
 
-        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
-        if (!$child_ctype) { cmsCore::error404(); }
-
-		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
-		if (!$relation) { cmsCore::error404(); }
-
 		if ($mode == 'childs' || $mode == 'unbind'){
+
+            if($relation['target_controller'] != 'content'){
+                $this->model->setTablePrefix('');
+            }
+
 			$fields = $this->model->getContentFields($child_ctype_name);
+
 		}
 
 		if ($mode == 'parents'){
+
+            $this->model->setTablePrefix('con_');
+
 			$fields = $this->model->getContentFields($ctype_name);
+
 		}
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);

@@ -17,7 +17,9 @@
             'sitemap_urls',
             'content_privacy_types',
             'content_add_permissions',
-            'fulltext_search'
+            'fulltext_search',
+            'content_before_childs',
+            'ctype_relation_childs'
         )
 
     );

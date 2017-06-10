@@ -127,6 +127,12 @@ class modelGroups extends cmsModel {
 
         cmsCache::getInstance()->clean('groups.list');
 
+        $this->filterEqual('child_ctype_id', null);
+        $this->filterEqual('child_item_id', $group['id']);
+        $this->filterEqual('target_controller', 'groups');
+
+        $this->deleteFiltered('content_relations_bind');
+
         return $success;
 
     }
@@ -187,6 +193,10 @@ class modelGroups extends cmsModel {
 
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
 
+            // для связи с типами контента
+            $group['ctype_name'] = 'groups';
+            $group['user_id'] = $group['owner_id'];
+
             return $group;
 
         });
@@ -207,10 +217,22 @@ class modelGroups extends cmsModel {
             $group['content_groups'] = cmsModel::yamlToArray($group['content_groups']);
             $group['roles'] = cmsModel::yamlToArray($group['roles']);
             $group['content_roles'] = cmsModel::yamlToArray($group['content_roles']);
+            // для связи с типами контента
+            $group['ctype_name'] = 'groups';
+            $group['user_id'] = $group['owner_id'];
         }
 
         return $group;
 
+    }
+
+    /**
+     * Псевдоним для связей
+     * @param integer $id
+     * @return array
+     */
+    public function getContentItem($id){
+        return $this->getGroup($id);
     }
 
     public function getGroupBySlug($slug){

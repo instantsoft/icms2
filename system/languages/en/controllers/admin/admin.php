@@ -254,10 +254,10 @@
     define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Hide list title');
     define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Hide filter');
     define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Records per page');
-    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content Type default');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content default');
     define('LANG_CP_RELATION_CREATED',          'Relation has been created');
     define('LANG_CP_RELATION_FIELD_CREATED',    'Parent relation field has been created in the "%s" Content Type');
-    define('LANG_CP_RELATION_CHILD',            'Child Content Type');
+    define('LANG_CP_RELATION_CHILD',            'Child Content');
     define('LANG_CP_RELATION_TAB_OPTS',         'Tab Options');
     define('LANG_CP_RELATION_TAB_SEO_HINT',     'Use curly braces to insert parent item\'s field. Example: <strong>{title}</strong>');
     define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Tab Title');

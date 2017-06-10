@@ -185,22 +185,9 @@ class content extends cmsFrontend {
 
 		}
 
-        // Приватность
+        // применяем приватность
         // флаг показа только названий
-        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
-
-        // Сначала проверяем настройки типа контента
-        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
-            $this->model->disablePrivacyFilter();
-            if($ctype['options']['privacy_type'] != 'show_title'){
-                $hide_except_title = false;
-            }
-        }
-
-        // А потом, если разрешено правами доступа, отключаем фильтр приватности
-        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
-            $this->model->disablePrivacyFilter(); $hide_except_title = false;
-        }
+        $hide_except_title = $this->model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
@@ -976,6 +963,12 @@ class content extends cmsFrontend {
                 }
             }
 
+            if($parent['target_controller'] != 'content'){
+                $this->model->setTablePrefix('');
+            } else {
+                $this->model->setTablePrefix('con_');
+            }
+
             if ($parents_to_add){
                 foreach ($parents_to_add as $new_parent_id){
 
@@ -985,7 +978,8 @@ class content extends cmsFrontend {
                         'parent_item_id'    => $new_parent_id,
                         'child_ctype_name'  => $ctype['name'],
                         'child_ctype_id'    => $ctype['id'],
-                        'child_item_id'     => $item['id']
+                        'child_item_id'     => $item['id'],
+                        'target_controller' => $parent['target_controller']
                     ));
 
                 }
@@ -1000,7 +994,8 @@ class content extends cmsFrontend {
                         'parent_item_id'    => $old_parent_id,
                         'child_ctype_name'  => $ctype['name'],
                         'child_ctype_id'    => $ctype['id'],
-                        'child_item_id'     => $item['id']
+                        'child_item_id'     => $item['id'],
+                        'target_controller' => $parent['target_controller']
                     ));
 
                 }

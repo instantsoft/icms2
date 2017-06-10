@@ -90,22 +90,32 @@ class actionContentItemAdd extends cmsAction {
             }
         }
 
+        // Получаем поля для данного типа контента
+        $fields = $this->model->orderBy('ordering')->getContentFields($ctype['name']);
+
+        $form = $this->getItemForm($ctype, $fields, 'add', array(
+            'groups_list' => $groups_list,
+            'folders_list' => $folders_list
+        ));
+
         $parents = $this->model->getContentTypeParents($ctype['id']);
 
         if ($parents){
-            foreach($parents as $parent_ctype_name => $parent){
+            foreach($parents as $parent){
 
                 if (!$this->request->has($parent['id_param_name'])){
+                    continue;
+                }
+
+                if (!cmsUser::isAllowed($ctype_name, 'add_to_parent') && !cmsUser::isAllowed($ctype_name, 'bind_to_parent')) {
+                    $form->hideField($parent['id_param_name']);
                     continue;
                 }
 
                 $parent_id = $this->request->get($parent['id_param_name'], 0, 'integer');
                 $parent_item = $parent_id ? $this->model->getContentItem($parent['ctype_name'], $parent_id) : false;
 
-                if (!cmsUser::isAllowed($ctype_name, 'add_to_parent') && !cmsUser::isAllowed($ctype_name, 'bind_to_parent')) {
-                    $form->hideField($parent['id_param_name']);
-                    continue;
-                }
+                if(!$parent_item){ cmsCore::error404(); }
 
                 if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
                     if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
@@ -123,15 +133,6 @@ class actionContentItemAdd extends cmsAction {
 
             }
         }
-
-        // Получаем поля для данного типа контента
-        $this->model->orderBy('ordering');
-        $fields = $this->model->getContentFields($ctype['name']);
-
-        $form = $this->getItemForm($ctype, $fields, 'add', array(
-            'groups_list' => $groups_list,
-            'folders_list' => $folders_list
-        ));
 
         // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
@@ -184,8 +185,6 @@ class actionContentItemAdd extends cmsAction {
             $errors = $form->validate($this,  $item);
 
             if ($parents && $is_check_parent_perm){
-
-                $is_wrong_parent = false;
 
                 $perm = cmsUser::getPermissionValue($ctype_name, 'add_to_parent');
 

@@ -106,7 +106,7 @@ class fieldParent extends cmsFormField {
         $ids = $this->idsStringToArray($values);
         if (!$ids) { return parent::applyFilter($model, $values); }
 
-        $model->joinInner('content_relations_bind', 'rr', "rr.child_item_id = i.id AND rr.child_ctype_id = {$this->ctype_id}");
+        $model->joinInner('content_relations_bind', 'rr', 'rr.child_item_id = i.id AND rr.child_ctype_id '.($this->ctype_id ? '='.$this->ctype_id : 'IS NULL'));
 
         return $model->filterIn('rr.parent_item_id', $ids);
 
@@ -170,11 +170,21 @@ class fieldParent extends cmsFormField {
 			}
 		}
 
-		if (!$parent_ctype || !$child_ctype) { return false; }
+		if (!$parent_ctype) { return false; }
+		if (!$child_ctype) {
+            if (cmsController::enabled($child_ctype)){
+                $child_ctype = array(
+                    'name' => $child_ctype,
+                    'id'   => null
+                );
+            } else {
+                return false;
+            }
+        }
 
         $filter =  "r.parent_ctype_id = {$parent_ctype['id']} AND ".
                    "r.child_item_id = {$this->item['id']} AND ".
-                   "r.child_ctype_id = {$child_ctype['id']} AND ".
+                   'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND '.
                    "r.parent_item_id = i.id";
 
         $content_model->join('content_relations_bind', 'r', $filter);

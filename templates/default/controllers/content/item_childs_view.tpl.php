@@ -55,10 +55,15 @@
 <?php if ($relation['layout'] == 'tab') { ?>
     <h1>
         <?php html($item['title']); ?>
-        <?php if ($item['is_private']) { ?>
+        <?php if ($item['is_private'] == 1) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
     </h1>
+    <?php if ($item['parent_id']){ ?>
+        <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
+            <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
+        </h2>
+    <?php } ?>
 <?php } ?>
 
 <?php if ($relation['layout'] == 'hidden') { ?>

@@ -393,7 +393,7 @@ class admin extends cmsFrontend {
         );
 
         $manifests_events = cmsCore::getManifestsEvents();
-        $database_events  = cmsCore::getControllersManifests();
+        $database_events  = cmsCore::getControllersManifests(false, false);
 
         if($event_controller){
             if(isset($manifests_events[$event_controller])){

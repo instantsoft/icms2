@@ -143,6 +143,9 @@ class cmsController {
         return (array)self::loadOptions($this->name);
 
     }
+    public function setOption($key, $val){
+        $this->options[$key] = $val; return $this;
+    }
 
     /**
      * Проверяет включен ли текущий контроллер

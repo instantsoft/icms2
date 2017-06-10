@@ -41,6 +41,14 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}groups` ADD `wall_reply_policy` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Политика комментирования стены' AFTER  `wall_policy`");
     }
 
+    if(!isFieldExists('content_relations', 'target_controller')){
+        $core->db->query("ALTER TABLE  `{#}content_relations` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content' AFTER `title`");
+    }
+
+    if(!isFieldExists('content_relations_bind', 'target_controller')){
+        $core->db->query("ALTER TABLE `{#}content_relations_bind` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content'");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -67,6 +75,12 @@ function install_package(){
         ),
         'groups_members' => array(
             'date_updated', 'group_id'
+        ),
+        'content_relations' => array(
+            'child_ctype_id'
+        ),
+        'content_relations_bind' => array(
+            'parent_item_id', 'child_item_id'
         )
     );
     $add_table_indexes = array(
@@ -75,6 +89,15 @@ function install_package(){
         ),
         'groups_members' => array(
             'group_id' => array('group_id', 'date_updated')
+        ),
+        'content_relations' => array(
+            'child_ctype_id' => array('child_ctype_id', 'target_controller')
+        ),
+        'content_relations_bind' => array(
+            'parent_item_id' => array('parent_item_id', 'target_controller')
+        ),
+        'content_relations_bind' => array(
+            'child_item_id' => array('child_item_id', 'target_controller')
         )
     );
     $add_table_ft_indexes = array(
@@ -110,6 +133,12 @@ function install_package(){
             'invite_users'
         )
     ), 'flag');
+
+    add_perms(array(
+        'groups' => array(
+            'bind_to_parent'
+        )
+    ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
 
     return true;
 

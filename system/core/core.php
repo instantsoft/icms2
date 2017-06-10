@@ -354,9 +354,10 @@ class cmsCore {
     /**
      * Возвращает массив хуков контроллеров
      * @param boolean $is_debug Если передано true, то массив формируется из файлов манифестов, иначе - из БД
+     * @param boolean $is_enabled
      * @return array
      */
-    public static function getControllersManifests($is_debug = false){
+    public static function getControllersManifests($is_debug = false, $is_enabled = true){
 
         if ($is_debug){
             return self::getManifestsEvents();
@@ -364,7 +365,11 @@ class cmsCore {
 
         $events = array();
 
-        $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+        if($is_enabled){
+            $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+        } else {
+            $controllers_events = cmsDatabase::getInstance()->getRows('events', '1', '*', 'ordering ASC', true);
+        }
 
         if($controllers_events){
             foreach($controllers_events as $event){

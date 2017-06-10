@@ -14,6 +14,8 @@ class actionGroupsAdd extends cmsAction {
 
         $group = $form->parse($this->request, $is_submitted);
 
+        $group['ctype_name'] = 'groups';
+
         // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
@@ -33,6 +35,14 @@ class actionGroupsAdd extends cmsAction {
                 $id = $this->model->addGroup($group);
 
                 $group = $this->model->getGroup($id);
+
+                $content = cmsCore::getController('content', $this->request);
+
+                $parents = $content->model->getContentTypeParents(null, 'groups');
+
+                if($parents){
+                    $content->bindItemToParents(array('id' => null, 'name' => 'groups'), $group, $parents);
+                }
 
                 $this->redirectToAction($group['slug']);
 

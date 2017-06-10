@@ -20,7 +20,19 @@ class actionAdminCtypesRelationsDelete extends cmsAction {
 
         $parent_field_name = "parent_{$ctype['name']}_id";
 
-        $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+        if($relation['target_controller'] != 'content'){
+
+            $content_model->setTablePrefix('');
+
+            $target_ctype = array(
+                'name' => $relation['target_controller']
+            );
+
+        } else {
+
+            $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+
+        }
 
         if ($content_model->isContentFieldExists($target_ctype['name'], $parent_field_name)){
 

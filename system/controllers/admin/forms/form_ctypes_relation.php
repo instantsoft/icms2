@@ -13,11 +13,17 @@ class formAdminCtypesRelation extends cmsForm {
                         'title' => LANG_CP_RELATION_CHILD,
                         'generator' => function() use ($ctype_id) {
 
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
+                            $items = array();
 
-                            $items =  array_collection_to_list($ctypes, 'id', 'title');
+                            $relation_childs = cmsEventsManager::hookAll('ctype_relation_childs', $ctype_id);
 
-                            unset($items[$ctype_id]);
+                            if (is_array($relation_childs)){
+                                foreach($relation_childs as $relation_child){
+                                    foreach($relation_child['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
 
                             return $items;
 

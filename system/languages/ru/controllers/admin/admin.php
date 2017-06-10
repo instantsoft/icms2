@@ -255,10 +255,10 @@
     define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Скрывать заголовок списка');
     define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Скрывать фильтр');
     define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Записей на странице');
-    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Если не указано, используются настройки дочернего типа контента');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Если не указано, используются настройки дочернего контента');
     define('LANG_CP_RELATION_CREATED',          'Связь создана');
     define('LANG_CP_RELATION_FIELD_CREATED',    'Создано поле для привязки родителя в типе контента "%s"');
-    define('LANG_CP_RELATION_CHILD',            'Дочерний тип контента');
+    define('LANG_CP_RELATION_CHILD',            'Дочерний контент');
     define('LANG_CP_RELATION_TAB_OPTS',         'Параметры вкладки');
     define('LANG_CP_RELATION_TAB_SEO_HINT',     'Можно использовать поля родительской записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');
     define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Тайтл вкладки');

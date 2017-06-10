@@ -38,7 +38,7 @@ class cmsFormField {
 
     public $data = array(); // массив для данных в шаблоне
 
-	function __construct($name, $options=false){
+	public function __construct($name, $options=false){
 
         $this->setName($name);
 

@@ -19,13 +19,38 @@ class actionContentItemBindList extends cmsAction {
             cmsCore::error404();
         }
 
+        if ($this->validate_sysname($ctype_name) !== true || $this->validate_sysname($child_ctype_name) !== true){
+            cmsCore::error404();
+        }
+
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
-        if (!$child_ctype) { cmsCore::error404(); }
+        // дочерний контроллер
+        $target_controller = 'content';
 
-		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
+        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
+        // если нет, проверяем по контроллеру
+        if (!$child_ctype) {
+            if (cmsCore::isControllerExists($child_ctype) && cmsController::enabled($child_ctype)){
+
+                if ($mode != 'parents') {
+                    cmsCore::error404();
+                }
+
+                $child_ctype = array(
+                    'name' => $child_ctype_name,
+                    'id'   => null
+                );
+
+                $target_controller = $child_ctype_name;
+
+            } else {
+                cmsCore::error404();
+            }
+        }
+
+		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id'], $target_controller);
 		if (!$relation) { cmsCore::error404(); }
 
         $is_allowed_to_add = cmsUser::isAllowed($child_ctype_name, 'add_to_parent');
@@ -72,7 +97,7 @@ class actionContentItemBindList extends cmsAction {
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = {$item_id} AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
                                   "r.child_item_id = i.id";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
@@ -97,7 +122,7 @@ class actionContentItemBindList extends cmsAction {
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = i.id AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
                                   "r.child_item_id = {$item_id}";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
@@ -120,7 +145,7 @@ class actionContentItemBindList extends cmsAction {
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = {$item_id} AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
                                   "r.child_item_id = i.id";
 
                 $this->model->joinInner('content_relations_bind', 'r', $join_condition);

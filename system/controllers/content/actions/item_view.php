@@ -97,6 +97,7 @@ class actionContentItemView extends cmsAction {
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
+        // формируем связи (дочерние списки)
         $childs = array(
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
             'to_add'    => array(),
@@ -107,11 +108,13 @@ class actionContentItemView extends cmsAction {
 
         if ($childs['relations']){
 
-            $model = cmsCore::getModel('content');
-
             foreach($childs['relations'] as $relation){
 
-                $model->resetFilters();
+                // пропускаем все не контентные связи
+                // их должен обработать хук content_before_childs
+                if($relation['target_controller'] != 'content'){
+                    continue;
+                }
 
                 $perm = cmsUser::getPermissionValue($relation['child_ctype_name'], 'add_to_parent');
                 $is_allowed_to_add = ($perm && ($perm == 'to_all' || ($perm == 'to_own' && $item['user_id'] == $this->cms_user->id))) || $this->cms_user->is_admin;
@@ -130,30 +133,34 @@ class actionContentItemView extends cmsAction {
                     $childs['to_bind'][] = $relation;
                 }
 
+                $child_ctype = $this->model->getContentTypeByName($relation['child_ctype_name']);
+
                 $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
                             "r.parent_item_id = {$item['id']} AND ".
                             "r.child_ctype_id = {$relation['child_ctype_id']} AND ".
                             "r.child_item_id = i.id";
 
-                $model->joinInner('content_relations_bind', 'r', $filter);
+                $this->model->joinInner('content_relations_bind', 'r', $filter);
 
-                $count = $model->getContentItemsCount($relation['child_ctype_name']);
+                // применяем приватность
+                $this->model->applyPrivacyFilter($child_ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
+
+                $count = $this->model->getContentItemsCount($relation['child_ctype_name']);
 
                 $is_hide_empty = $relation['options']['is_hide_empty'];
 
                 if (($count || !$is_hide_empty) && $relation['layout'] == 'tab'){
 
-                    $childs['tabs'][] = array(
-                        'title'   => $relation['title'],
-                        'url'     => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
-                        'counter' => $count
+                    $childs['tabs'][$relation['child_ctype_name']] = array(
+                        'title'       => $relation['title'],
+                        'url'         => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
+                        'counter'     => $count,
+                        'relation_id' => $relation['id']
                     );
 
                 }
 
                 if (!$this->request->has('child_ctype_name') && ($count || !$is_hide_empty) && $relation['layout'] == 'list'){
-
-                    $child_ctype = $model->getContentTypeByName($relation['child_ctype_name']);
 
                     if (!empty($relation['options']['limit'])){
                         $child_ctype['options']['limit'] = $relation['options']['limit'];
@@ -163,13 +170,6 @@ class actionContentItemView extends cmsAction {
                         $child_ctype['options']['list_show_filter'] = false;
                     }
 
-                    $filter =   "r.parent_ctype_id = {$ctype['id']} AND ".
-                                "r.parent_item_id = {$item['id']} AND ".
-                                "r.child_ctype_id = {$child_ctype['id']} AND ".
-                                "r.child_item_id = i.id";
-
-                    $this->model->joinInner('content_relations_bind', 'r', $filter);
-
                     $childs['lists'][] = array(
                         'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name' => $relation['child_ctype_name'],
@@ -178,20 +178,44 @@ class actionContentItemView extends cmsAction {
 
                 }
 
+                $this->model->resetFilters();
+
             }
 
             list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs, $item));
 
         }
 
+        // показываем вкладку связи, если передана
         if ($this->request->has('child_ctype_name')){
+
             $child_ctype_name = $this->request->get('child_ctype_name', '');
+
+            // если связь с контроллером, а не с типом контента
+            if ($this->isControllerInstalled($child_ctype_name) && $this->isControllerEnabled($child_ctype_name)){
+
+                $child_controller = cmsCore::getController($child_ctype_name);
+
+                if($child_controller->isActionExists('item_childs_view')){
+
+                    return $child_controller->runAction('item_childs_view', array(
+                        'ctype'   => $ctype,
+                        'item'    => $item,
+                        'childs'  => $childs,
+                        'content_controller' => $this
+                    ));
+
+                }
+
+            }
+
             return $this->runAction('item_childs_view', array(
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
                 'childs'           => $childs
             ));
+
         }
 
         // Получаем поля для данного типа контента

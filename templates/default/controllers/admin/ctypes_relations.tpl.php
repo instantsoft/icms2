@@ -29,4 +29,4 @@
     <?php $this->menu('ctype'); ?>
 </div>
 
-<?php $this->renderGrid($this->href_to('ctypes', array('relations_ajax', $ctype['id'])), $grid);
+<?php $this->renderGrid($this->href_to('ctypes', array('relations', $ctype['id'])), $grid);

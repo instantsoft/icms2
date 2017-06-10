@@ -36,6 +36,11 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
             if (!$errors){
 
+                list($target_controller, $child_ctype_id) = explode(':', $relation['child_ctype_id']);
+
+                $relation['child_ctype_id'] = $child_ctype_id ? $child_ctype_id : null;
+                $relation['target_controller'] = $target_controller;
+
                 $relation['ctype_id'] = $ctype_id;
 
                 $relation_id = $content_model->addContentRelation($relation);
@@ -44,7 +49,23 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_RELATION_CREATED, 'success');
 
-                    $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+                    if($relation['target_controller'] != 'content'){
+
+                        $content_model->setTablePrefix('');
+
+                        cmsCore::loadControllerLanguage($relation['target_controller']);
+
+                        $target_ctype = array(
+                            'title' => string_lang('LANG_'.strtoupper($relation['target_controller']).'_CONTROLLER'),
+                            'name' => $relation['target_controller'],
+                            'id'  => null
+                        );
+
+                    } else {
+
+                        $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+
+                    }
 
                     if (!$content_model->isContentFieldExists($target_ctype['name'], $parent_field_name)){
 

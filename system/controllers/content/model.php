@@ -148,7 +148,7 @@ class modelContent extends cmsModel{
             )
         ), true);
 
-        cmsCache::getInstance()->clean("content.types");
+        cmsCache::getInstance()->clean('content.types');
 
         return $id;
 
@@ -159,7 +159,7 @@ class modelContent extends cmsModel{
 
     public function updateContentType($id, $item){
 
-        cmsCache::getInstance()->clean("content.types");
+        cmsCache::getInstance()->clean('content.types');
 
         return $this->update('content_types', $id, $item);
 
@@ -210,7 +210,21 @@ class modelContent extends cmsModel{
 
                 $parent_field_name = "parent_{$ctype['name']}_id";
 
-                $target_ctype = $this->getContentType($relation['child_ctype_id']);
+                if($relation['target_controller'] != 'content'){
+
+                    $this->setTablePrefix('');
+
+                    $target_ctype = array(
+                        'name' => $relation['target_controller']
+                    );
+
+                } else {
+
+                    $this->setTablePrefix('con_');
+
+                    $target_ctype = $this->getContentType($relation['child_ctype_id']);
+
+                }
 
                 if ($this->isContentFieldExists($target_ctype['name'], $parent_field_name)){
                     $this->deleteContentField($target_ctype['name'], $parent_field_name, 'name', true);
@@ -493,7 +507,7 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache("content.fields.{$ctype_name}");
+        $this->useCache('content.fields.'.$ctype_name);
 
         return $this->getCount($table_name);
 
@@ -506,7 +520,7 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache("content.fields.{$ctype_name}");
+        $this->useCache('content.fields.'.$ctype_name);
 
         $this->orderBy('ordering');
 
@@ -536,7 +550,7 @@ class modelContent extends cmsModel{
 
             $item['rules'] = $rules;
 
-            $field_class = "field" . string_to_camel('_', $item['type']);
+            $field_class = 'field' . string_to_camel('_', $item['type']);
 
             $handler = new $field_class($item['name']);
 
@@ -575,7 +589,7 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache("content.fields.{$ctype_name}");
+        $this->useCache('content.fields.'.$ctype_name);
 
         return $this->getItemByField($table_name, $by_field, $id, function($item, $model){
 
@@ -589,7 +603,7 @@ class modelContent extends cmsModel{
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
 
-            $field_class = "field" . string_to_camel('_', $item['type']);
+            $field_class = 'field' . string_to_camel('_', $item['type']);
 
             $handler = new $field_class($item['name']);
 
@@ -861,7 +875,7 @@ class modelContent extends cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
-        $this->useCache("content.fields.{$ctype_name}");
+        $this->useCache('content.fields.'.$ctype_name);
 
         $this->groupBy('fieldset');
 
@@ -1213,10 +1227,11 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentRelationByTypes($ctype_id, $child_ctype_id){
+    public function getContentRelationByTypes($ctype_id, $child_ctype_id, $target_controller = 'content'){
 
         $this->filterEqual('ctype_id', $ctype_id);
         $this->filterEqual('child_ctype_id', $child_ctype_id);
+        $this->filterEqual('target_controller', $target_controller);
 
         return $this->getItem('content_relations', function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -1258,7 +1273,7 @@ class modelContent extends cmsModel{
         $this->select('c.labels', 'child_labels');
         $this->select('c.name', 'child_ctype_name');
 
-        $this->joinInner('content_types', 'c', 'c.id = i.child_ctype_id');
+        $this->joinLeft('content_types', 'c', 'c.id = i.child_ctype_id');
 
         $this->filterEqual('ctype_id', $ctype_id);
 
@@ -1266,6 +1281,9 @@ class modelContent extends cmsModel{
 
             $item['child_labels'] = cmsModel::yamlToArray($item['child_labels']);
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            if(empty($item['child_ctype_name'])){
+                $item['child_ctype_name'] = $item['target_controller'];
+            }
 
             return $item;
 
@@ -1273,7 +1291,7 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentTypeParents($ctype_id){
+    public function getContentTypeParents($ctype_id, $target_controller = 'content'){
 
         $this->selectOnly('i.*');
         $this->select('c.name', 'ctype_name');
@@ -1283,13 +1301,14 @@ class modelContent extends cmsModel{
         $this->joinLeft('content_types', 'c', 'c.id = i.ctype_id');
 
         $this->filterEqual('child_ctype_id', $ctype_id);
+        $this->filterEqual('target_controller', $target_controller);
 
         $parents = $this->get('content_relations');
 
         if (!$parents) { return array(); }
 
         foreach ($parents as $id => $parent){
-            $parents[$id]['id_param_name'] = "parent_{$parent['ctype_name']}_id";
+            $parents[$id]['id_param_name'] = 'parent_'.$parent['ctype_name'].'_id';
         }
 
         return $parents;
@@ -1303,6 +1322,7 @@ class modelContent extends cmsModel{
         $this->filterEqual('parent_ctype_id', $relation['parent_ctype_id']);
         $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
         $this->filterEqual('child_item_id', $relation['child_item_id']);
+        $this->filterEqual('target_controller', (isset($relation['target_controller']) ? $relation['target_controller'] : 'content'));
 
         $parent_items_ids = $this->get('content_relations_bind', function($item, $model){
             return $item['id'];
@@ -1317,7 +1337,7 @@ class modelContent extends cmsModel{
                 $item_table = $this->table_prefix . $relation['child_ctype_name'];
 
                 $this->update($item_table, $relation['child_item_id'], array(
-                   "parent_{$relation['parent_ctype_name']}_id" => $ids
+                   'parent_'.$relation['parent_ctype_name'].'_id' => $ids
                 ));
 
             }
@@ -1342,6 +1362,7 @@ class modelContent extends cmsModel{
         $this->filterEqual('parent_item_id', $relation['parent_item_id']);
         $this->filterEqual('child_ctype_id', $relation['child_ctype_id']);
         $this->filterEqual('child_item_id', $relation['child_item_id']);
+        $this->filterEqual('target_controller', (isset($relation['target_controller']) ? $relation['target_controller'] : 'content'));
 
         $this->deleteFiltered('content_relations_bind');
 
@@ -1366,10 +1387,10 @@ class modelContent extends cmsModel{
 
         $parent_ctype_table = $this->table_prefix . $parent_ctype['name'];
 
-        $join_on =  "r.parent_ctype_id = {$parent_ctype['id']} AND " .
-                    "r.child_ctype_id = {$child_ctype_id} AND " .
-                    "r.child_item_id = {$item_id} AND " .
-                    "r.parent_item_id = i.id";
+        $join_on =  "r.parent_ctype_id = '{$parent_ctype['id']}' AND " .
+                    'r.child_ctype_id '.($child_ctype_id ? '='.$child_ctype_id : 'IS NULL' ).' AND ' .
+                    "r.child_item_id = '{$item_id}' AND " .
+                    'r.parent_item_id = i.id';
 
         $this->joinInner('content_relations_bind', 'r', $join_on);
 
@@ -1900,7 +1921,7 @@ class modelContent extends cmsModel{
 
 	public function getContentItemCategories($ctype_name, $id){
 
-		$table_name = $this->table_prefix . $ctype_name . "_cats_bind";
+		$table_name = $this->table_prefix . $ctype_name . '_cats_bind';
 
 		return $this->filterEqual('item_id', $id)->get($table_name, function($item, $model){
 			return $item['category_id'];
@@ -1911,20 +1932,20 @@ class modelContent extends cmsModel{
     public function moveContentItemsToCategory($ctype, $category_id, $items_ids, $fields){
 
         $table_name = $this->table_prefix . $ctype['name'];
-        $binds_table_name = $this->table_prefix . $ctype['name'] . "_cats_bind";
+        $binds_table_name = $this->table_prefix . $ctype['name'] . '_cats_bind';
 
 		$items = $this->filterIn('id', $items_ids)->get($table_name);
 
 		foreach($items as $item){
 
 			$this->
-				filterEqual("item_id", $item['id'])->
-				filterEqual("category_id", $item['category_id'])->
+				filterEqual('item_id', $item['id'])->
+				filterEqual('category_id', $item['category_id'])->
 				deleteFiltered($binds_table_name);
 
 			$is_bind_exists = $this->
-								filterEqual("item_id", $item['id'])->
-								filterEqual("category_id", $category_id)->
+								filterEqual('item_id', $item['id'])->
+								filterEqual('category_id', $category_id)->
 								getCount($binds_table_name, 'item_id');
 
 			$this->resetFilters();
@@ -1960,7 +1981,7 @@ class modelContent extends cmsModel{
 
 	public function updateContentItemCategories($ctype_name, $id, $category_id, $add_cats){
 
-		$table_name = $this->table_prefix . $ctype_name . "_cats_bind";
+		$table_name = $this->table_prefix . $ctype_name . '_cats_bind';
 
 		$new_cats = empty($add_cats) ? array() : $add_cats;
 
@@ -1971,7 +1992,7 @@ class modelContent extends cmsModel{
 		}
 
 		$current_cats = $this->
-							filterEqual("item_id", $id)->
+							filterEqual('item_id', $id)->
 							get($table_name, function($item, $model){
 								return $item['category_id'];
 							}, false);
@@ -1981,8 +2002,8 @@ class modelContent extends cmsModel{
 
 				if (!in_array($current_cat_id, $new_cats)){
 					$this->
-						filterEqual("item_id", $id)->
-						filterEqual("category_id", $current_cat_id)->
+						filterEqual('item_id', $id)->
+						filterEqual('category_id', $current_cat_id)->
 						deleteFiltered($table_name);
 				}
 
@@ -2140,6 +2161,27 @@ class modelContent extends cmsModel{
 //============================================================================//
 //============================================================================//
 
+    public function applyPrivacyFilter($ctype, $allow_view_all = false) {
+
+        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
+
+        // Сначала проверяем настройки типа контента
+        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
+            $this->disablePrivacyFilter();
+            if($ctype['options']['privacy_type'] != 'show_title'){
+                $hide_except_title = false;
+            }
+        }
+
+        // А потом, если разрешено правами доступа, отключаем фильтр приватности
+        if ($allow_view_all) {
+            $this->disablePrivacyFilter(); $hide_except_title = false;
+        }
+
+        return $hide_except_title;
+
+    }
+
     public function getContentItemsCount($ctype_name){
 
         $table_name = $this->table_prefix . $ctype_name;
@@ -2154,9 +2196,6 @@ class modelContent extends cmsModel{
         return $this->getCount($table_name);
 
     }
-
-//============================================================================//
-//============================================================================//
 
     public function getContentItemsForSitemap($ctype_name, $fields = array()){
 
