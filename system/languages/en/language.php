@@ -76,6 +76,9 @@
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
     define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Multi-selection by checkboxes');
     define('LANG_PARSER_BITMASK_LIST_CLASS', 'List css class');
     define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
@@ -149,6 +152,13 @@
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Big');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Original');
     define('LANG_PARSER_COLOR',              'Colorpicker');
+    define('LANG_PARSER_COLOR_CT',           'Color selection block type');
+    define('LANG_PARSER_COLOR_CT_HUE',       'Hue');
+    define('LANG_PARSER_COLOR_CT_SATURATION', 'Saturation');
+    define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Brightness');
+    define('LANG_PARSER_COLOR_CT_WHEEL',     'Wheel');
+    define('LANG_PARSER_COLOR_CT_SWATCHES',  'Only preset values');
+    define('LANG_PARSER_COLOR_CT_SWATCHES_OPT', 'Preset values');
     define('LANG_PARSER_FILE',               'File');
     define('LANG_PARSER_FILE_LABEL',         'File link label');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Filename');

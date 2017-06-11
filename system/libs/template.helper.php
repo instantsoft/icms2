@@ -528,21 +528,23 @@ function html_array_to_list($array){
 
 }
 
+function html_search_bar($list, $href, $link_class = ''){
+
+    if (!$list) { return ''; }
+
+    if (!is_array($list)){
+        $list = explode(',', $list);
+    }
+
+    foreach($list as $id => $letter){
+        $letter = trim($letter);
+        $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.htmlspecialchars($letter).'</a>';
+    }
+
+    return implode(', ', $list);
+
+}
+
 function html_tags_bar($tags){
-
-    if (!$tags) { return ''; }
-
-    if (!is_array($tags)){
-        $tags = explode(',', $tags);
-    }
-
-    foreach($tags as $id=>$tag){
-        $tag = trim($tag);
-        $tags[$id] = '<a href="'.href_to('tags', 'search').'?q='.urlencode($tag).'">'.$tag.'</a>';
-    }
-
-    $tags_bar = implode(', ', $tags);
-
-    return $tags_bar;
-
+    return html_search_bar($tags, href_to('tags', 'search').'?q=', 'tags_bar_link');
 }

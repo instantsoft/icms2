@@ -47,6 +47,7 @@ class modelUsers extends cmsModel {
             $user['is_online'] = cmsUser::userIsOnline($user['id']);
             $user['item_css_class'] = array();
             $user['notice_title']   = array();
+            $user['ctype_name']     = 'users';
 
             if (is_array($actions)){
                 foreach($actions as $key => $action){
@@ -114,6 +115,7 @@ class modelUsers extends cmsModel {
         $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
         $user['is_online']       = cmsUser::userIsOnline($user['id']);
+        $user['ctype_name']      = 'users';
 
         return $user;
 

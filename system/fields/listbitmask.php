@@ -25,6 +25,11 @@ class fieldListBitmask extends cmsFormField {
                 'rules' => array(
                     array('min', 1)
                 )
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
             ))
         );
     }
@@ -57,14 +62,19 @@ class fieldListBitmask extends cmsFormField {
 		$html = '';
 
 		if ($items) {
+            $is_autolink = $this->getOption('is_autolink');
 			$pos = 0;
 			$html .= '<ul class="'.$this->getOption('list_class').'">';
 			foreach($items as $key => $item){
-				if (mb_substr($value, $pos, 1) == 1){
-					$html .= '<li>' . htmlspecialchars($item) . '</li>';
+				if (substr($value, $pos, 1) == 1){
+                    if($is_autolink){
+                        $html .= '<li><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
+                    } else {
+                        $html .= '<li>' . htmlspecialchars($item) . '</li>';
+                    }
 				}
 				$pos++;
-				if ($pos+1 > mb_strlen($value)) { break; }
+				if ($pos+1 > strlen($value)) { break; }
 			}
 			$html .= '</ul>';
 		}

@@ -21,9 +21,11 @@
 
     <div id="left_column" class="column">
 
-        <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
-        </div>
+        <?php if ($fields['avatar']['is_in_item']){ ?>
+            <div id="avatar" class="block">
+                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+            </div>
+        <?php } ?>
 
         <?php if ($content_counts) { ?>
             <div class="block">

@@ -26,6 +26,7 @@ class cmsFormField {
 
     public $rules = array();
     public $options = array();
+    protected $default_options_loaded = false;
 
     /**
      * Тип переменной поля
@@ -79,13 +80,27 @@ class cmsFormField {
             return $this->options[$key];
         }
 
-        $options = $this->getOptions();
+        if($this->default_options_loaded !== true){
 
-        foreach($options as $field){
-            if ($field->getName() == $key && $field->hasDefaultValue()){
-                return $field->getDefaultValue();
+            $options = $this->getOptions();
+
+            $field_options = array();
+
+            foreach($options as $field){
+                $field_options[$field->getName()] = $field->getDefaultValue();
             }
+
+            $this->options = array_merge($field_options, $this->options);
+
+            $this->default_options_loaded = true;
+
         }
+
+        if(array_key_exists($key, $this->options)){
+            return $this->options[$key];
+        }
+
+        return null;
 
     }
 

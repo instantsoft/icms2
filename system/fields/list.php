@@ -15,12 +15,17 @@ class fieldList extends cmsFormField {
                 'title' => LANG_PARSER_LIST_FILTER_MULTI,
                 'default' => false
             )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
+            ))
         );
     }
 
     public function getFilterInput($value) {
 
-        $items = $this->getListItems();
+        $items = $this->getListItems(false);
 
          if (!$this->getOption('filter_multiple')){
 
@@ -33,7 +38,6 @@ class fieldList extends cmsFormField {
              return html_select_multiple($this->name, $items, $value);
 
          }
-
 
     }
 
@@ -54,11 +58,15 @@ class fieldList extends cmsFormField {
 
         if (isset($items[$value])) { $item = $items[$value]; }
 
+        if ($this->getOption('is_autolink')){
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.htmlspecialchars($item).'</a>';
+        }
+
         return htmlspecialchars($item);
 
     }
 
-    public function getListItems(){
+    public function getListItems($show_empty_value = true){
 
         $items = array();
 
@@ -73,7 +81,7 @@ class fieldList extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = array('' => '') + $this->parseListItems($this->getDefaultValue());
+            $items = ($show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
 
         }
 

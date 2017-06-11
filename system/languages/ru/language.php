@@ -77,6 +77,9 @@
     define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Должен быть включен показ поля в фильтре.');
     define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Мультивыбор чекбоксами');
     define('LANG_PARSER_BITMASK_LIST_CLASS', 'Класс списка');
     define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
@@ -150,6 +153,13 @@
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Большой');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Оригинальный');
     define('LANG_PARSER_COLOR',              'Цвет');
+    define('LANG_PARSER_COLOR_CT',           'Тип блока выбора цвета');
+    define('LANG_PARSER_COLOR_CT_HUE',       'Оттенок');
+    define('LANG_PARSER_COLOR_CT_SATURATION', 'Насыщенность');
+    define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Яркость');
+    define('LANG_PARSER_COLOR_CT_WHEEL',     'Круг');
+    define('LANG_PARSER_COLOR_CT_SWATCHES',  'Только предустановленные значения');
+    define('LANG_PARSER_COLOR_CT_SWATCHES_OPT', 'Предустановленные значения');
     define('LANG_PARSER_FILE',               'Файл');
     define('LANG_PARSER_FILE_LABEL',         'Заголовок ссылки на файл');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Имя файла');

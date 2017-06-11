@@ -137,7 +137,16 @@ article div.content_categories:last-child {
     border: solid 1px #B8D6FB;
     border-radius: 4px;
 }
-
+.ft_listbitmask > .value > ul.multiple_tags_list li > a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    margin: -4px -8px;
+    padding: inherit;
+}
+.ft_listbitmask > .value > ul.multiple_tags_list li > a:hover {
+    background: #deebfb;
+}
 /* ========================================================================== */
 
 .content_item .fields_group:first-child .group_title {

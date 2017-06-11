@@ -67,10 +67,8 @@ class actionAuthRegister extends cmsAction {
             foreach($fieldset['fields'] as $field){
 
                 if ($field['name'] == 'nickname') {
-                    $form->addFieldToBeginning('basic', $field['handler']);
+                    $form->addFieldToBeginning('basic', $field['handler']); continue;
                 }
-
-                if ($field['is_system']) { continue; }
 
                 $form->addField($fieldset_id, $field['handler']);
 
@@ -129,6 +127,11 @@ class actionAuthRegister extends cmsAction {
             $errors = $form->validate($this,  $user);
 
             if (!$errors){
+
+                // если поле nickname убрано из обязательных
+                if(!isset($user['nickname'])){
+                    $user['nickname'] = strstr($user['email'], '@', true);
+                }
 
                 //
                 // проверяем код приглашения

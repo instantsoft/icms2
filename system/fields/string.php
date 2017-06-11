@@ -23,6 +23,11 @@ class fieldString extends cmsFormField {
             )),
             new fieldCheckbox('show_symbol_count', array(
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_HINT.LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
             ))
         );
     }
@@ -42,7 +47,15 @@ class fieldString extends cmsFormField {
     }
 
     public function parse($value){
+
+        if ($this->getOption('is_autolink')){
+
+            return html_search_bar($value, href_to($this->item['ctype_name']).'?'.$this->name.'=', 'string_autolink '.$this->item['ctype_name'].'_string_autolink');
+
+        }
+
         return htmlspecialchars($value);
+
     }
 
     public function applyFilter($model, $value) {
@@ -53,7 +66,7 @@ class fieldString extends cmsFormField {
         if($this->getProperty('is_clean_disable') === true){
             return trim($value);
         }
-        return strip_tags($value);
+        return strip_tags(trim($value));
     }
 
     public function getInput($value){

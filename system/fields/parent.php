@@ -14,8 +14,6 @@ class fieldParent extends cmsFormField {
 
         parent::setItem($item);
 
-        $this->item = $item;
-
         if(!empty($item['ctype']['name'])){
             $this->item['ctype_name'] = $item['ctype']['name'];
         }

@@ -21,46 +21,10 @@
         'href'  => $this->href_to('')
     ));
 
-    $this->renderForm($form, $field, array(
-        'action' => '',
-        'method' => 'post'
-    ), $errors);
-?>
-
-<script type="text/javascript">
-
-    function loadFieldTypeOptions(field){
-
-        $('#fset_type > div[id!=f_type]').remove();
-
-        var field_type = $(field).val();
-
-        if(field_type){
-            $.post('<?php echo $this->href_to('fields_options'); ?>', {
-                <?php if ($do=='edit') { ?>
-                    field_id: '<?php echo $field['id']; ?>',
-                <?php } ?>
-                type: field_type
-            }, function( html ){
-                if (!html) { return; }
-                $('#f_type').after( html );
-                icms.events.run('loadgroupfieldtypeoptions', html);
-            }, 'html');
-        }
-
-    }
-
-    $(function(){
-        var select_type = $('#type');
-        if($(select_type).val() == 'caption'){
-            $('#fset_type').hide();
-        }
-        $(select_type).on('change', function(){
-            loadFieldTypeOptions(this);
-        });
-        if ($('#fset_type > div[id!=f_type]').length == 0){
-            loadFieldTypeOptions(select_type);
-        }
-    });
-
-</script>
+    $this->renderControllerChild('admin', 'form_field', array(
+        'fields_options_link' => $this->href_to('fields_options'),
+        'do'                  => $do,
+        'errors'              => $errors,
+        'form'                => $form,
+        'field'               => $field
+    ));

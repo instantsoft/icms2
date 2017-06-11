@@ -645,6 +645,13 @@ form .field label {
     font-size:14px;
     color:#68809B;
 }
+form .field label > input[type=checkbox] {
+    position: relative;
+    bottom: -1.3px;
+}
+.filter-panel form .field label > input[type=checkbox] {
+    bottom: -1.5px;
+}
 
 form .field_error .error_text{ font-size:12px; color:#c0392b; float:right; margin-top: 8px; }
 form #f_slug.field_error .error_text { float:none; }

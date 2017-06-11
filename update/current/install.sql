@@ -39,3 +39,5 @@ CREATE TABLE `{#}groups_member_roles` (
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+UPDATE `{users}_fields` SET `values` = NULL WHERE `name` = 'avatar';
