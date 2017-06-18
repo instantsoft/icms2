@@ -152,6 +152,7 @@
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Средний');
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Большой');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Оригинальный');
+    define('LANG_PARSER_IMAGE_DELETE',       'Удалить изображение с сервера?');
     define('LANG_PARSER_COLOR',              'Цвет');
     define('LANG_PARSER_COLOR_CT',           'Тип блока выбора цвета');
     define('LANG_PARSER_COLOR_CT_HUE',       'Оттенок');
@@ -164,6 +165,7 @@
     define('LANG_PARSER_FILE_LABEL',         'Заголовок ссылки на файл');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Имя файла');
     define('LANG_PARSER_FILE_LABEL_GET',     'Скачать');
+    define('LANG_PARSER_FILE_LABEL_COUNTER', 'скачан');
     define('LANG_PARSER_FILE_EXTS',          'Допустимые расширения');
     define('LANG_PARSER_FILE_EXTS_HINT',     'Список расширений через запятую');
     define('LANG_PARSER_FILE_EXTS_FIELD_HINT',     'Допустимые типы файлов: %s');
@@ -171,6 +173,7 @@
     define('LANG_PARSER_FILE_MAX_SIZE',      'Максимальный размер, Мб');
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
+    define('LANG_PARSER_FILE_SHOW_COUNTER',  'Показывать счетчик скачиваний');
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
@@ -521,6 +524,9 @@
     define('LANG_CH1',                       'символ');
     define('LANG_CH2',                       'символа');
     define('LANG_CH10',                      'символов');
+    define('LANG_TIME1',                     'раз');
+    define('LANG_TIME2',                     'раза');
+    define('LANG_TIME10',                    'раз');
 
     define('LANG_ISLEFT',                    'осталось');
 

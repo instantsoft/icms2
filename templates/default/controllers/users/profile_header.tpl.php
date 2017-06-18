@@ -1,9 +1,9 @@
 <?php $this->addJS('templates/default/js/users.js'); ?>
 <?php $user = cmsUser::getInstance(); ?>
-<h1 id="user_profile_title">
+<div id="user_profile_title">
 
     <div class="avatar">
-        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
+        <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?>
     </div>
 
     <?php if (!$profile['is_deleted']){ ?>
@@ -30,7 +30,13 @@
 
     <div class="name<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
 
-        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php html($profile['nickname']); ?></a>
+        <h1>
+            <?php if (!empty($this->controller->options['tag_h1'])) { ?>
+                <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $profile); ?>
+            <?php } else { ?>
+                <?php html($profile['nickname']); ?>
+            <?php } ?>
+        </h1>
         <?php if ($profile['is_locked']){ ?>
             <span class="is_locked"><?php echo LANG_USERS_LOCKED_NOTICE_PUBLIC; ?></span>
         <?php } ?>
@@ -66,7 +72,7 @@
 
     </div>
 
-</h1>
+</div>
 
 <?php if ($this->controller->options['is_status'] && $profile['id'] == $user->id) { ?>
     <script><?php

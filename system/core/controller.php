@@ -25,6 +25,11 @@ class cmsController {
      * @var boolean
      */
     public $useSeoOptions = false;
+    /**
+     * Флаг наличия SEO паттернов для страниц записей
+     * @var boolean
+     */
+    public $useItemSeoOptions = false;
 
     /**
      * Флаг блокировки прямого вызова экшена

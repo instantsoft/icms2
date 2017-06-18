@@ -136,6 +136,7 @@
     define('LANG_PARSER_PARENT',             'Parent');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
+    define('LANG_PARSER_IMAGE_DELETE',       'Delete the image from the server?');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
@@ -163,6 +164,7 @@
     define('LANG_PARSER_FILE_LABEL',         'File link label');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Filename');
     define('LANG_PARSER_FILE_LABEL_GET',     'Download');
+    define('LANG_PARSER_FILE_LABEL_COUNTER', 'downloaded');
     define('LANG_PARSER_FILE_EXTS',          'Allowed file extensions');
     define('LANG_PARSER_FILE_EXTS_HINT',     'List of extensions separated by commas');
     define('LANG_PARSER_FILE_EXTS_FIELD_HINT',     'Allowed file types: %s');
@@ -170,6 +172,7 @@
     define('LANG_PARSER_FILE_MAX_SIZE',      'Maximum file size, Mb');
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Not more than %d Mb (allowed in PHP settings)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Show file size');
+    define('LANG_PARSER_FILE_SHOW_COUNTER',  'Show download count');
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Include in full-text index');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Attention! Index will be rebuilt, once the option is changed. It can take a long time in respect of large tables.');
@@ -518,6 +521,9 @@
     define('LANG_CH1',                       'character');
     define('LANG_CH2',                       'characters');
     define('LANG_CH10',                      'characters');
+    define('LANG_TIME1',                     'time');
+    define('LANG_TIME2',                     'times');
+    define('LANG_TIME10',                    'times');
 
     define('LANG_ISLEFT',                    'left');
 

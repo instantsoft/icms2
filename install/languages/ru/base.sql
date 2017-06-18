@@ -1179,14 +1179,20 @@ CREATE TABLE `{#}tags_bind` (
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `url_key` varchar(32) DEFAULT NULL,
-  `path` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `counter` int(11) unsigned NOT NULL DEFAULT '0',
+  `path` varchar(255) DEFAULT NULL COMMENT 'Путь к файлу',
+  `name` varchar(255) DEFAULT NULL COMMENT 'Имя файла',
+  `size` int(11) unsigned DEFAULT NULL COMMENT 'Размер файла',
+  `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Счетчик скачиваний',
+  `type` enum('file','image','audio','video') NOT NULL DEFAULT 'file' COMMENT 'Тип файла',
+  `target_controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер привязки',
+  `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект привязки',
+  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID владельца',
   PRIMARY KEY (`id`),
-  KEY `url_key` (`url_key`),
-  KEY `counter` (`counter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `path` (`path`),
+  KEY `user_id` (`user_id`),
+  KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}users`;
 CREATE TABLE `{#}users` (

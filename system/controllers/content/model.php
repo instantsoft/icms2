@@ -1766,6 +1766,8 @@ class modelContent extends cmsModel{
         cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
         cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
 
+        $this->fieldsAfterStore($item, $fields, 'add');
+
         return $item;
 
     }
@@ -1838,6 +1840,8 @@ class modelContent extends cmsModel{
 
         cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
         cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
+
+        $this->fieldsAfterStore($item, $fields, 'edit');
 
         return $item;
 

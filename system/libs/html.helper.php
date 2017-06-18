@@ -254,22 +254,15 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
 
 }
 
-function html_wysiwyg($field_id, $content='', $wysiwyg=false){
+function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
 
-    $config = cmsConfig::getInstance();
-
-    if (!$wysiwyg){
-        $config = cmsConfig::getInstance();
-        $wysiwyg = $config->wysiwyg;
-    }
+    if (!$wysiwyg){ $wysiwyg = cmsConfig::get('wysiwyg'); }
 
 	$connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
-	if (!file_exists($config->root_path . $connector)){
-		return '<textarea id="'.$field_id.'" name="'.$field_id.'">'.$content.'</textarea>';
+	if (!cmsCore::includeFile($connector)){
+		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.htmlspecialchars($content).'</textarea>';
 	}
-
-    cmsCore::includeFile($connector);
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 

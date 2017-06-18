@@ -3,6 +3,8 @@ class images extends cmsFrontend {
 
 	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp';
 
+	private $file_context = null;
+
 //============================================================================//
 //============================================================================//
 
@@ -201,6 +203,8 @@ class images extends cmsFrontend {
 		files_delete_file($result['path'], 2);
         unset($result['path']);
 
+        $this->registerFile($image);
+
         return $result;
 
 	}
@@ -223,6 +227,27 @@ class images extends cmsFrontend {
             $this->allowed_extensions = $exts;
         }
 		return $this;
+	}
+
+	public function registerUploadFile($file_context){
+        $this->file_context = $file_context; return $this;
+	}
+
+	private function registerFile($image){
+
+        if($this->file_context === null){ return false; }
+
+        $file_id = cmsCore::getModel('files')->registerFile(array_merge($this->file_context, array(
+            'path'    => $image['path'],
+            'type'    => 'image',
+            'name'    => pathinfo($image['path'], PATHINFO_BASENAME),
+            'user_id' => cmsUser::get('id')
+        )));
+
+        $this->file_context = null;
+
+        return $file_id;
+
 	}
 
 }

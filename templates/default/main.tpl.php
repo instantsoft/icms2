@@ -23,6 +23,7 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/livingston-css3-mediaqueries-js/1.0.0/css3-mediaqueries.min.js"></script>
     <![endif]-->
     <?php $this->head(); ?>
+    <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <style><?php include('options.css.php'); ?></style>
 </head>
 <body id="<?php echo $device_type; ?>_device_type">

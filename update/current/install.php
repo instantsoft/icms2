@@ -49,6 +49,34 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_relations_bind` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content'");
     }
 
+    if(!isFieldExists('uploaded_files', 'type')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `type` ENUM( 'file', 'image', 'audio', 'video') NOT NULL DEFAULT 'file'");
+    }
+
+    if(!isFieldExists('uploaded_files', 'target_controller')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_controller` VARCHAR(32) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('uploaded_files', 'target_subject')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_subject` VARCHAR(32) NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('uploaded_files', 'target_id')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_id` INT(11) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('uploaded_files', 'user_id')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `user_id` INT(11) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!isFieldExists('uploaded_files', 'size')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `size` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `name`");
+    }
+
+    if(isFieldExists('uploaded_files', 'url_key')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` DROP `url_key`");
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -81,6 +109,9 @@ function install_package(){
         ),
         'content_relations_bind' => array(
             'parent_item_id', 'child_item_id'
+        ),
+        'uploaded_files' => array(
+            'counter'
         )
     );
     $add_table_indexes = array(
@@ -98,11 +129,20 @@ function install_package(){
         ),
         'content_relations_bind' => array(
             'child_item_id' => array('child_item_id', 'target_controller')
+        ),
+        'uploaded_files' => array(
+            'user_id' => array('user_id'),
+            'target_controller' => array('target_controller', 'target_subject', 'target_id'),
         )
     );
     $add_table_ft_indexes = array(
         'groups' => array(
             'title' => array('title')
+        )
+    );
+    $add_table_uq_indexes = array(
+        'uploaded_files' => array(
+            'path' => array('path')
         )
     );
 
@@ -124,6 +164,13 @@ function install_package(){
         foreach ($add_table_ft_indexes as $table=>$indexes) {
             foreach ($indexes as $index_name => $fields) {
                 $core->db->addIndex($table, $fields, $index_name, 'FULLTEXT');
+            }
+        }
+    }
+    if($add_table_uq_indexes){
+        foreach ($add_table_uq_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
             }
         }
     }

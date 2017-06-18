@@ -2,7 +2,7 @@ var icms = icms || {};
 
 icms.files = (function ($) {
 
-    //====================================================================//
+    this.url_delete = '';
 
     this.remove = function(file_id){
 
@@ -15,7 +15,14 @@ icms.files = (function ($) {
 
     };
 
-    //====================================================================//
+    this.deleteByPath = function(path){
+        $.post(this.url_delete, {path: path, csrf_token: icms.forms.getCsrfToken()}, function(result){
+            if (result.error){
+                alert(result.message);
+                return false;
+            }
+        }, 'json');
+    };
 
 	return this;
 

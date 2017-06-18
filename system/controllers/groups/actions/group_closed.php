@@ -20,9 +20,6 @@ class actionGroupsGroupClosed extends cmsAction {
             return true;
         });
 
-        $this->cms_template->setPageTitle($group['title']);
-        $this->cms_template->setPageDescription($group['title']);
-
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title']);
 

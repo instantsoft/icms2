@@ -30,9 +30,6 @@ class actionGroupsGroupContent extends cmsAction {
 
         $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-        $this->cms_template->setPageTitle($group['sub_title'], $group['title']);
-        $this->cms_template->setPageDescription($group['title'].' · '.$group['sub_title']);
-
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
         $this->cms_template->addBreadcrumb($group['sub_title']);

@@ -1180,14 +1180,20 @@ CREATE TABLE `{#}tags_bind` (
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `url_key` varchar(32) DEFAULT NULL,
-  `path` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `counter` int(11) unsigned NOT NULL DEFAULT '0',
+  `path` varchar(255) DEFAULT NULL COMMENT 'File path',
+  `name` varchar(255) DEFAULT NULL COMMENT 'File name',
+  `size` int(11) unsigned DEFAULT NULL COMMENT 'File size',
+  `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Download counter',
+  `type` enum('file','image','audio','video') NOT NULL DEFAULT 'file' COMMENT 'File type',
+  `target_controller` varchar(32) DEFAULT NULL COMMENT 'Controller',
+  `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject',
+  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'Owner ID',
   PRIMARY KEY (`id`),
-  KEY `url_key` (`url_key`),
-  KEY `counter` (`counter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `path` (`path`),
+  KEY `user_id` (`user_id`),
+  KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}users_auth_tokens`;
 CREATE TABLE `{#}users_auth_tokens` (

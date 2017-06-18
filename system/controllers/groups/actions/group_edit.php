@@ -37,6 +37,8 @@ class actionGroupsGroupEdit extends cmsAction {
 
                 $this->model->updateGroup($group['id'], $group);
 
+                $this->model->fieldsAfterStore($group, $this->getGroupsFields());
+
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 $group = $this->model->getGroup($group['id']);

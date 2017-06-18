@@ -5,6 +5,9 @@
     $this->addMenuItems('group_tabs', $this->controller->getGroupTabs($group));
     $this->addMenuItems('controller_actions_menu', $this->controller->getToolButtons($group));
 
+    $this->setPagePatternTitle($group);
+    $this->setPagePatternDescription($group);
+
 ?>
 
 <?php if(!empty($group['fields']['cover']['is_in_item']) && $group['cover']){ ?>
@@ -38,7 +41,11 @@
 		<span class="logo"><?php echo html_image($group['logo'], $group['fields']['logo']['handler']->getOption('size_full'), $group['title']); ?></span>
 	<?php } ?>
     <?php if (!empty($group['fields']['title']['is_in_item'])){ ?>
-        <?php html($group['title']); ?>
+        <?php if (!empty($this->controller->options['tag_h1'])) { ?>
+            <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $group); ?>
+        <?php } else { ?>
+            <?php html($group['title']); ?>
+        <?php } ?>
         <?php if (!empty($group['sub_title'])) { ?>
             <span>/ <?php html($group['sub_title']); ?></span>
         <?php } ?>

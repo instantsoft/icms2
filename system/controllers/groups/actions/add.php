@@ -36,6 +36,8 @@ class actionGroupsAdd extends cmsAction {
 
                 $group = $this->model->getGroup($id);
 
+                $this->model->fieldsAfterStore($group, $fields);
+
                 $content = cmsCore::getController('content', $this->request);
 
                 $parents = $content->model->getContentTypeParents(null, 'groups');

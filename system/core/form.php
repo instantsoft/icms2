@@ -90,6 +90,10 @@ class cmsForm {
 //============================================================================//
 //============================================================================//
 
+    public function isFieldsetExists($id) {
+        return isset($this->structure[$id]);
+    }
+
     /**
      * Добавляет набор полей в форму.
      * Возращает id набора полей
@@ -102,6 +106,8 @@ class cmsForm {
         if (is_null($id)){
             $id = sizeof($this->structure);
         }
+
+        if($this->isFieldsetExists($id)){ return $id; }
 
         $fieldset = array(
             'type' => 'fieldset',

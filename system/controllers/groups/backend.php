@@ -6,6 +6,7 @@ class backendGroups extends cmsBackend {
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
     public $useSeoOptions = true;
+    public $useItemSeoOptions = true;
 
     public function routeAction($action_name){
         if($action_name == 'index'){

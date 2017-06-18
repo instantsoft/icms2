@@ -31,9 +31,6 @@ class actionGroupsGroup extends cmsAction {
             return true;
         });
 
-        $this->cms_template->setPageTitle($group['title']);
-        $this->cms_template->setPageDescription($group['description'] ? string_get_meta_description($group['description']): $group['title']);
-
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title']);
 

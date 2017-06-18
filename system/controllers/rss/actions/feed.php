@@ -39,7 +39,7 @@ class actionRssFeed extends cmsAction {
 
         $data = $controller->runHook('rss_feed_list', array($feed));
 
-        if($data === $this->request){
+        if(!$data || $data === $this->request->getData()){
             cmsCore::error404();
         }
 

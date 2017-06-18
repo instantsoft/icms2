@@ -112,6 +112,7 @@ class widgetContentFilter extends cmsWidget {
 
         return array(
 			'ctype_name'   => $ctype_name,
+			'category'     => $category,
             'page_url'     => $core->uri_absolute,
             'fields'       => $fields,
             'props_fields' => $props_fields,

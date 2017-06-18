@@ -8,8 +8,6 @@ class fieldHtml extends cmsFormField {
     public $allow_index = false;
     public $var_type    = 'string';
 
-    public function hasOptions(){ return true; }
-
     public function getOptions(){
         return array(
             new fieldList('editor', array(
@@ -79,6 +77,80 @@ class fieldHtml extends cmsFormField {
 
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
+    }
+
+    public function afterStore($item, $model, $action){
+
+        if($action == 'add' && !empty($item[$this->name])){
+
+            $paths = $this->getImagesPath($item[$this->name]);
+
+            if($paths){
+                foreach($paths as $path){
+
+                    $model->filterEqual('path', $path)->filterIsNull('target_id');
+                    $model->updateFiltered('uploaded_files', array('target_id' => $item['id']), true);
+
+                }
+            }
+
+        }
+
+        return;
+
+    }
+
+    public function delete($value){
+
+        $paths = $this->getImagesPath($value);
+
+        if($paths){
+
+            $files_model = cmsCore::getModel('files');
+
+            foreach($paths as $path){
+
+                @unlink(cmsConfig::get('upload_path').$path);
+
+                $files_model->filterEqual('path', $path);
+
+                $files_model->deleteFiltered('uploaded_files');
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    private function getImagesPath($text) {
+
+        $upload_root = cmsConfig::get('upload_root');
+
+        $matches = $paths = array();
+
+        preg_match_all('#<img src="([^"]+)"#uis', $text, $matches, PREG_SET_ORDER);
+
+        if($matches){
+            foreach($matches as $match){
+
+                if(empty($match[1])){ continue; }
+                if(strpos($match[1], 'http') === 0){ continue; }
+
+                $path = $match[1];
+
+                if(strpos($path, $upload_root) === 0){
+                    $path = str_replace($upload_root, '', $path);
+                }
+
+                $paths[] = $path;
+
+            }
+        }
+
+        return $paths;
+
     }
 
 }

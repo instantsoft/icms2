@@ -726,6 +726,14 @@ class cmsCore {
 
     }
 
+    public function getUriData() {
+        return array(
+            'controller' => $this->uri_controller,
+            'action'     => $this->uri_action,
+            'params'     => $this->uri_params
+        );
+    }
+
 //============================================================================//
 //============================================================================//
 

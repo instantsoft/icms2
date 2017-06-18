@@ -123,10 +123,10 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta name="keywords" content="'.htmlspecialchars(!empty($this->metakeys_item) ? string_replace_keys_values($this->metakeys, $this->metakeys_item) : $this->metakeys).'">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.htmlspecialchars(!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta name="description" content="'.htmlspecialchars(!empty($this->metadesc_item) ? string_replace_keys_values($this->metadesc, $this->metadesc_item) : $this->metadesc).'">' ."\n";
+				echo "\t". '<meta name="description" content="'.htmlspecialchars(!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc).'">' ."\n";
 			}
         }
 
@@ -490,6 +490,22 @@ class cmsTemplate {
         return $this;
 	}
 
+    /**
+     * Устанавливает заголовок странице по паттерну в настройках контроллера
+     *
+     * @param array $item Массив записи
+     * @param string $default Ключ по умолчанию, если паттерн не задан
+     * @return \cmsTemplate
+     */
+	public function setPagePatternTitle($item, $default = 'title'){
+        if (!empty($this->controller->options['tag_title'])) {
+            $this->setPageTitle(string_replace_keys_values_extended($this->controller->options['tag_title'], $item));
+        } else {
+            $this->setPageTitle($item[$default]);
+        }
+        return $this;
+	}
+
 	public function setPageTitleItem($item){
         $this->title_item = $item; return $this;
 	}
@@ -531,6 +547,18 @@ class cmsTemplate {
 
 	public function setPageDescriptionItem($item){
         $this->metadesc_item= $item; return $this;
+	}
+
+	public function setPagePatternDescription($item, $default = 'description'){
+
+        if (!empty($this->controller->options['tag_desc'])) {
+            $this->setPageDescription(string_replace_keys_values_extended($this->controller->options['tag_desc'], $item));
+        } else {
+            $this->setPageDescription(string_get_meta_description($item[$default]));
+        }
+
+        return $this;
+
 	}
 
 // ========================================================================== //

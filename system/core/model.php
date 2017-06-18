@@ -1730,6 +1730,16 @@ class cmsModel {
         return $this->filterEqual('name', $name)->deleteFiltered('controllers');
 
     }
+
+    public function fieldsAfterStore($item, $fields, $action = 'add') {
+
+        foreach($fields as $field){
+            $field['handler']->afterStore($item, $this, $action);
+        }
+
+        return $this;
+
+    }
 //============================================================================//
 //============================================================================//
 

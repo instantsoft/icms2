@@ -213,6 +213,10 @@ class cmsFormField {
         return null;
     }
 
+    public function afterStore($item, $model, $action){
+        return;
+    }
+
     public function delete($value){
         return true;
     }

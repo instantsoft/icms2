@@ -127,7 +127,8 @@
     define('LANG_CP_SEOMETA_ITEM_TITLE',        'META-title pattern');
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'META-keys pattern');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'META-descriptions pattern');
-    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>');
+    define('LANG_CP_SEOMETA_ITEM_H1',           'h1 tag pattern');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>. You can use the processing of values, more details in <a target="_blank" href="http://docs.instantcms.ru/en/manual/settings/seo-patterns">the documentation</a>');
     define('LANG_CP_AUTO_URL',                  'Autogenerate URL');
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');

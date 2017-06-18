@@ -3,6 +3,7 @@
 class backendUsers extends cmsBackend {
 
     public $useSeoOptions = true;
+    public $useItemSeoOptions = true;
     protected $useOptions = true;
 
     public $useDefaultOptionsAction = true;

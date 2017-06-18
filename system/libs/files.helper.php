@@ -201,6 +201,17 @@ function files_format_bytes($bytes) {
 }
 
 /**
+ * Возвращает 32-х символьный хэш, привязанный к ip адресу
+ * используется для защиты от хотлинка
+ *
+ * @param string $file_path Путь к файлу
+ * @return string
+ */
+function files_user_file_hash($file_path = ''){
+    return md5(cmsUser::getIp().md5($file_path.cmsConfig::get('root_path')));
+}
+
+/**
  * Очищает имя файла от специальных символов
  *
  * @param string $filename
