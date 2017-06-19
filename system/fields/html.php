@@ -110,9 +110,12 @@ class fieldHtml extends cmsFormField {
 
             foreach($paths as $path){
 
-                @unlink(cmsConfig::get('upload_path').$path);
+                $file = $files_model->getFileByPath($path);
+                if(!$file){ continue; }
 
-                $files_model->filterEqual('path', $path);
+                @unlink(cmsConfig::get('upload_path').$file['path']);
+
+                $files_model->filterEqual('path', $file['path']);
 
                 $files_model->deleteFiltered('uploaded_files');
 

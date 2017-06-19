@@ -13,9 +13,11 @@
 			<li class="active">
 				<a href="#own" data-mode="own"><?php echo LANG_CONTENT_OWN_ITEMS; ?></a>
 			</li>
-			<li>
-				<a href="#all" data-mode="all"><?php echo LANG_ALL; ?></a>
-			</li>
+            <?php if(!in_array($perm_bind_to_parent, array('all_to_own', 'own_to_own', 'other_to_own'))){ ?>
+                <li>
+                    <a href="#all" data-mode="all"><?php echo LANG_ALL; ?></a>
+                </li>
+            <?php } ?>
 		</ul>
 	</div>
 

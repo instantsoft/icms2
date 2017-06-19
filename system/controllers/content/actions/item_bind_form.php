@@ -66,6 +66,8 @@ class actionContentItemBindForm extends cmsAction {
 		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id'], $target_controller);
 		if (!$relation) { cmsCore::error404(); }
 
+        $perm_bind_to_parent = cmsUser::getPermissionValue($child_ctype_name, 'bind_to_parent');
+
         // сама запись
 		$item = array('id' => 0);
 
@@ -115,6 +117,7 @@ class actionContentItemBindForm extends cmsAction {
 		$filter_fields['id'] = 'ID';
 
         return $this->cms_template->render('item_bind_form', array(
+			'perm_bind_to_parent' => $perm_bind_to_parent,
 			'mode'          => $mode,
             'ctype'         => $ctype,
             'child_ctype'   => $child_ctype,
