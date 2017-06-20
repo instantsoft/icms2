@@ -16,7 +16,9 @@
             'wall_after_delete',
             'content_privacy_types',
             'content_view_hidden',
-            'sitemap_sources'
+            'sitemap_sources',
+            'content_before_childs',
+            'ctype_relation_childs'
         )
 
     );

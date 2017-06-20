@@ -80,7 +80,11 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                             'is_fixed_type' => true
                         ));
 
-                        cmsUser::addSessionMessage(sprintf(LANG_CP_RELATION_FIELD_CREATED, $target_ctype['title']), 'success');
+                        if ($content_model->getContentTypeByName($target_ctype['name'])) {
+                            cmsUser::addSessionMessage(sprintf(LANG_CP_RELATION_FIELD_CREATED, $target_ctype['title']), 'info');
+                        } else {
+                            cmsUser::addSessionMessage(sprintf(LANG_CP_CONTR_RELATION_FIELD_CREATED, $target_ctype['title']), 'info');
+                        }
 
                     }
 

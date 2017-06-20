@@ -696,7 +696,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (107, 'content_add_permissions', 'groups', 107, 1),
 (108, 'ctype_relation_childs', 'content', 108, 1),
 (109, 'ctype_relation_childs', 'groups', 109, 1),
-(110, 'content_before_childs', 'groups', 110, 1);
+(110, 'content_before_childs', 'groups', 110, 1),
+(111, 'content_before_childs', 'users', 111, 1),
+(112, 'ctype_relation_childs', 'users', 112, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

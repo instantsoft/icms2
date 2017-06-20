@@ -258,6 +258,7 @@
     define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content default');
     define('LANG_CP_RELATION_CREATED',          'Relation has been created');
     define('LANG_CP_RELATION_FIELD_CREATED',    'Parent relation field has been created in the "%s" Content Type');
+    define('LANG_CP_CONTR_RELATION_FIELD_CREATED', 'Parent relation field has been created in the "%s" Component');
     define('LANG_CP_RELATION_CHILD',            'Child Content');
     define('LANG_CP_RELATION_TAB_OPTS',         'Tab Options');
     define('LANG_CP_RELATION_TAB_SEO_HINT',     'Use curly braces to insert parent item\'s field. Example: <strong>{title}</strong>');

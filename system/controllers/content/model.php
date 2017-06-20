@@ -1336,6 +1336,8 @@ class modelContent extends cmsModel{
 
                 $item_table = $this->table_prefix . $relation['child_ctype_name'];
 
+                if($item_table == 'users'){ $item_table = '{users}'; }
+
                 $this->update($item_table, $relation['child_item_id'], array(
                    'parent_'.$relation['parent_ctype_name'].'_id' => $ids
                 ));
@@ -1381,16 +1383,24 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentItemParents($parent_ctype, $child_ctype_id, $item_id){
+    public function getContentItemParents($parent_ctype, $child_ctype, $item_id){
+
+        if(empty($child_ctype['controller'])){
+            $child_ctype['controller'] = 'content';
+        }
 
         $this->selectOnly('i.*');
 
         $parent_ctype_table = $this->table_prefix . $parent_ctype['name'];
 
+        if($parent_ctype_table == 'users'){
+            $parent_ctype_table = '{users}';
+        }
+
         $join_on =  "r.parent_ctype_id = '{$parent_ctype['id']}' AND " .
-                    'r.child_ctype_id '.($child_ctype_id ? '='.$child_ctype_id : 'IS NULL' ).' AND ' .
+                    'r.child_ctype_id '.(!empty($child_ctype['id']) ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
                     "r.child_item_id = '{$item_id}' AND " .
-                    'r.parent_item_id = i.id';
+                    "r.parent_item_id = i.id AND r.target_controller = '{$child_ctype['controller']}'";
 
         $this->joinInner('content_relations_bind', 'r', $join_on);
 

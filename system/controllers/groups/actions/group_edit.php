@@ -45,10 +45,10 @@ class actionGroupsGroupEdit extends cmsAction {
 
                 $content = cmsCore::getController('content', $this->request);
 
-                $parents = $content->model->getContentTypeParents(null, 'groups');
+                $parents = $content->model->getContentTypeParents(null, $this->name);
 
                 if($parents){
-                    $content->bindItemToParents(array('id' => null, 'name' => 'groups'), $group, $parents);
+                    $content->bindItemToParents(array('id' => null, 'name' => $this->name, 'controller' => $this->name), $group, $parents);
                 }
 
                 $this->redirectToAction($group['slug']);

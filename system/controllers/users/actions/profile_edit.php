@@ -41,7 +41,9 @@ class actionUsersProfileEdit extends cmsAction {
         // Добавляем поля в форму
         foreach($fieldsets as $fieldset){
 
-            $fieldset_id = $form->addFieldset($fieldset['title']);
+            $fid = $fieldset['title'] ? md5($fieldset['title']) : null;
+
+            $fieldset_id = $form->addFieldset($fieldset['title'], $fid);
 
             foreach($fieldset['fields'] as $field){
 
@@ -115,6 +117,14 @@ class actionUsersProfileEdit extends cmsAction {
                             'images_count'  => 1
                         ));
 					}
+                }
+
+                $content = cmsCore::getController('content', $this->request);
+
+                $parents = $content->model->getContentTypeParents(null, $this->name);
+
+                if($parents){
+                    $content->bindItemToParents(array('id' => null, 'name' => $this->name, 'controller' => $this->name), $profile, $parents);
                 }
 
                 cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');

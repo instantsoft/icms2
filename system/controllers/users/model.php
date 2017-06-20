@@ -127,6 +127,15 @@ class modelUsers extends cmsModel {
 
     }
 
+    /**
+     * Псевдоним для связей
+     * @param integer $id
+     * @return array
+     */
+    public function getContentItem($id){
+        return $this->getUser($id);
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -368,6 +377,12 @@ class modelUsers extends cmsModel {
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
         $inCache->clean('users.user.'.$user['id']);
+
+        $this->filterEqual('child_ctype_id', null);
+        $this->filterEqual('child_item_id', $user['id']);
+        $this->filterEqual('target_controller', 'users');
+
+        $this->deleteFiltered('content_relations_bind');
 
         return true;
 

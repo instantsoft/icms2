@@ -259,6 +259,7 @@
     define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Если не указано, используются настройки дочернего контента');
     define('LANG_CP_RELATION_CREATED',          'Связь создана');
     define('LANG_CP_RELATION_FIELD_CREATED',    'Создано поле для привязки родителя в типе контента "%s"');
+    define('LANG_CP_CONTR_RELATION_FIELD_CREATED', 'Создано поле для привязки родителя в компоненте "%s"');
     define('LANG_CP_RELATION_CHILD',            'Дочерний контент');
     define('LANG_CP_RELATION_TAB_OPTS',         'Параметры вкладки');
     define('LANG_CP_RELATION_TAB_SEO_HINT',     'Можно использовать поля родительской записи, вставляя их названия в фигурных скобках. Например: <strong>{title}</strong>');

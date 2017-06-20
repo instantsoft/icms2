@@ -1,6 +1,6 @@
 <?php
 
-class onGroupsContentBeforeChilds extends cmsAction {
+class onUsersContentBeforeChilds extends cmsAction {
 
     public function run($data){
 
@@ -8,7 +8,6 @@ class onGroupsContentBeforeChilds extends cmsAction {
 
         foreach($childs['relations'] as $relation){
 
-            // здесь нам нужны только связи с группами
             if($relation['target_controller'] != $this->name){
                 continue;
             }
@@ -20,7 +19,7 @@ class onGroupsContentBeforeChilds extends cmsAction {
 
             $this->model->joinInner('content_relations_bind', 'r', $filter);
 
-            $count = $this->model->getGroupsCount();
+            $count = $this->model->getUsersCount();
 
             $is_hide_empty = $relation['options']['is_hide_empty'];
 
@@ -48,7 +47,7 @@ class onGroupsContentBeforeChilds extends cmsAction {
                 $childs['lists'][] = array(
                     'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                     'ctype_name' => $relation['child_ctype_name'],
-                    'html'       => $this->renderGroupsList(href_to($ctype['name'], $item['slug'] . '.html'))
+                    'html'       => $this->renderProfilesList(href_to($ctype['name'], $item['slug'] . '.html'))
                 );
 
             }

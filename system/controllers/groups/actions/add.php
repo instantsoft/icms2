@@ -14,7 +14,7 @@ class actionGroupsAdd extends cmsAction {
 
         $group = $form->parse($this->request, $is_submitted);
 
-        $group['ctype_name'] = 'groups';
+        $group['ctype_name'] = $this->name;
 
         // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
@@ -40,10 +40,10 @@ class actionGroupsAdd extends cmsAction {
 
                 $content = cmsCore::getController('content', $this->request);
 
-                $parents = $content->model->getContentTypeParents(null, 'groups');
+                $parents = $content->model->getContentTypeParents(null, $this->name);
 
                 if($parents){
-                    $content->bindItemToParents(array('id' => null, 'name' => 'groups'), $group, $parents);
+                    $content->bindItemToParents(array('id' => null, 'name' => $this->name, 'controller' => $this->name), $group, $parents);
                 }
 
                 $this->redirectToAction($group['slug']);
@@ -60,7 +60,7 @@ class actionGroupsAdd extends cmsAction {
 
         $this->cms_template->setPageTitle($page_title);
 
-        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to($this->name));
         $this->cms_template->addBreadcrumb($page_title);
 
         return $this->cms_template->render('group_edit', array(

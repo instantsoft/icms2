@@ -937,7 +937,7 @@ class content extends cmsFrontend {
             $parents_to_add    = array();
 
             if (!empty($item['id'])){
-                $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype['id'], $item['id']);
+                $current_parents = $this->model->getContentItemParents($parent_ctype, $ctype, $item['id']);
             }
 
             if ($ids){

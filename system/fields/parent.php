@@ -170,20 +170,23 @@ class fieldParent extends cmsFormField {
 
 		if (!$parent_ctype) { return false; }
 		if (!$child_ctype) {
-            if (cmsController::enabled($child_ctype)){
+            if (cmsController::enabled($this->item['ctype_name'])){
                 $child_ctype = array(
-                    'name' => $child_ctype,
-                    'id'   => null
+                    'name'       => $this->item['ctype_name'],
+                    'controller' => $this->item['ctype_name'],
+                    'id'         => null
                 );
             } else {
                 return false;
             }
+        } else {
+            $child_ctype['controller'] = 'content';
         }
 
         $filter =  "r.parent_ctype_id = {$parent_ctype['id']} AND ".
                    "r.child_item_id = {$this->item['id']} AND ".
                    'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND '.
-                   "r.parent_item_id = i.id";
+                   "r.parent_item_id = i.id AND r.target_controller = '{$child_ctype['controller']}'";
 
         $content_model->join('content_relations_bind', 'r', $filter);
 

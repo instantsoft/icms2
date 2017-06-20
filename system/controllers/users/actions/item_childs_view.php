@@ -1,6 +1,6 @@
 <?php
 
-class actionGroupsItemChildsView extends cmsAction {
+class actionUsersItemChildsView extends cmsAction {
 
     public function run($ctype, $item, $childs, $content_controller){
 
@@ -29,9 +29,9 @@ class actionGroupsItemChildsView extends cmsAction {
             $this->setOption('is_filter', false);
         }
 
-        $html = $this->renderGroupsList(href_to($ctype['name'], $item['slug'].'/view-'.$this->name));
+        $html = $this->renderProfilesList(href_to($ctype['name'], $item['slug'].'/view-'.$this->name));
 
-        $seo_title = empty($relation['seo_title']) ? LANG_GROUPS . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
+        $seo_title = empty($relation['seo_title']) ? LANG_USERS . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
         $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
         $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values($relation['seo_desc'], $item));
 
@@ -39,7 +39,7 @@ class actionGroupsItemChildsView extends cmsAction {
 
         return $this->cms_template->render('item_childs_view', array(
             'ctype'       => $ctype,
-            'child_ctype' => array('name' => $this->name, 'title' => LANG_GROUPS),
+            'child_ctype' => array('name' => $this->name, 'title' => LANG_USERS),
             'item'        => $item,
             'childs'      => $childs,
             'html'        => $html,
