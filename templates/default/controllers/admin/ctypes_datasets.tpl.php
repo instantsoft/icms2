@@ -40,7 +40,7 @@
     <?php $this->menu('ctype'); ?>
 </div>
 
-<?php $this->renderGrid($this->href_to('ctypes', array('datasets_ajax', $ctype['id'])), $grid); ?>
+<?php $this->renderGrid($this->href_to('ctypes', array('datasets', $ctype['id'])), $grid); ?>
 
 <div class="buttons">
     <?php echo html_button(LANG_SAVE_ORDER, 'save_button', "icms.datagrid.submit('{$this->href_to('ctypes', array('datasets_reorder', $ctype['id']))}')"); ?>

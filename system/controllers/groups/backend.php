@@ -22,6 +22,10 @@ class backendGroups extends cmsBackend {
                 'url'   => href_to($this->root_url)
             ),
             array(
+                'title' => LANG_CP_CTYPE_DATASETS,
+                'url'   => href_to($this->root_url, 'datasets')
+            ),
+            array(
                 'title' => LANG_OPTIONS,
                 'url'   => href_to($this->root_url, 'options')
             ),

@@ -189,6 +189,8 @@ class modelGroups extends cmsModel {
 
         $this->useCache('groups.list');
 
+        if (!$this->order_by){ $this->orderBy('date_pub', 'desc'); }
+
         return $this->get('groups', function($group, $model){
 
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];

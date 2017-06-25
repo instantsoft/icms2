@@ -16,7 +16,8 @@
             'rss_content_controller_after_update',
             'frontpage',
             'frontpage_types',
-            'ctype_relation_childs'
+            'ctype_relation_childs',
+            'admin_content_dataset_fields_list'
         )
 
     );

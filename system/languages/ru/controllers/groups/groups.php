@@ -46,9 +46,6 @@
     define('LANG_GROUP_INFO_OWNER',         'Владелец');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Показывать стену группы');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Показывать вкладку "%s"');
-    define('LANG_GROUPS_DS_LATEST',         'Новые');
-    define('LANG_GROUPS_DS_POPULAR',        'Популярные');
-    define('LANG_GROUPS_DS_RATED',          'Рейтинг');
     define('LANG_GROUPS_DS_MEMBER',         'Участие в группах');
     define('LANG_GROUPS_DS_MY',             'Мои группы');
     define('LANG_RULE_GROUPS_ADD',          'Создание групп');

@@ -13,9 +13,21 @@ class actionAdminCtypesDatasets extends cmsAction {
 
         $grid = $this->loadDataGrid('ctype_datasets');
 
-        return cmsTemplate::getInstance()->render('ctypes_datasets', array(
+        if ($this->request->isAjax()) {
+
+            $content_model->orderBy('ordering', 'asc');
+
+            $datasets = $content_model->getContentDatasets($ctype_id);
+
+            $this->cms_template->renderGridRowsJSON($grid, $datasets);
+
+            $this->halt();
+
+        }
+
+        return $this->cms_template->render('ctypes_datasets', array(
             'ctype' => $ctype,
-            'grid' => $grid
+            'grid'  => $grid
         ));
 
     }

@@ -985,14 +985,15 @@ class cmsController {
     public function validate_unique_ctype_dataset($ctype_id, $value){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
-        $ctype_id = (int)$ctype_id;
         $value = $this->cms_core->db->escape($value);
-        $result = !$this->cms_core->db->getRow('content_datasets', "ctype_id='{$ctype_id}' AND name='{$value}'");
+        if(is_numeric($ctype_id)){
+            $where = "ctype_id='{$ctype_id}' AND name='{$value}'";
+        } else {
+            $where = "target_controller='{$ctype_id}' AND name='{$value}'";
+        }
+        $result = !$this->cms_core->db->getRow('content_datasets', $where);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }
-
-//============================================================================//
-//============================================================================//
 
 }

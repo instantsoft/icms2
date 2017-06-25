@@ -1415,7 +1415,13 @@ class modelContent extends cmsModel{
 
     public function getContentDatasets($ctype_id=false, $only_visible=false, $item_callback=false){
 
-        if ($ctype_id) { $this->filterEqual('ctype_id', $ctype_id); }
+        if ($ctype_id) {
+            if(is_numeric($ctype_id)){
+                $this->filterEqual('ctype_id', $ctype_id);
+            } else {
+                $this->filterEqual('target_controller', $ctype_id);
+            }
+        }
 
         if ($only_visible) { $this->filterEqual('is_visible', 1); }
 
@@ -1501,10 +1507,13 @@ class modelContent extends cmsModel{
             $filters_fields = array_unique($filters_fields);
         }
         // добавим условия, которые в каждой выборке
-        $filters_fields[] = 'is_pub';
-        $filters_fields[] = 'is_parent_hidden';
-        $filters_fields[] = 'is_deleted';
-        $filters_fields[] = 'is_approved';
+        // только для записей типов контента
+        if($this->table_prefix){
+            $filters_fields[] = 'is_pub';
+            $filters_fields[] = 'is_parent_hidden';
+            $filters_fields[] = 'is_deleted';
+            $filters_fields[] = 'is_approved';
+        }
         // сортировка
         if($dataset['sorting']){
             foreach ($dataset['sorting'] as $sorting) {
@@ -1525,6 +1534,8 @@ class modelContent extends cmsModel{
         }
 
         $fields = array_merge($filters_fields, $sorting_fields);
+
+        if(!$fields){ return null; }
 
         if($fields == array('date_pub')){
             $index_name = 'date_pub';
@@ -1629,8 +1640,17 @@ class modelContent extends cmsModel{
         $dataset = $this->getContentDataset($id);
         if(!$dataset){ return false; }
 
-        $ctype = $this->getContentType($dataset['ctype_id']);
-        if (!$ctype) { return false; }
+        if($dataset['ctype_id']){
+            $ctype = $this->getContentType($dataset['ctype_id']);
+            if (!$ctype) { return false; }
+        } else {
+            $ctype = array(
+                'title' => string_lang($dataset['target_controller'].'_controller'),
+                'name'  => $dataset['target_controller'],
+                'id'    => null
+            );
+            $this->setTablePrefix('');
+        }
 
         cmsEventsManager::hook('ctype_dataset_before_delete', array($dataset, $ctype, $this));
 

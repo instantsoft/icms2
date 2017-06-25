@@ -46,9 +46,6 @@
     define('LANG_GROUP_INFO_OWNER',         'Owner');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Show group wall');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Show the "%s" tab');
-    define('LANG_GROUPS_DS_LATEST',         'Latest');
-    define('LANG_GROUPS_DS_POPULAR',        'Popular');
-    define('LANG_GROUPS_DS_RATED',          'Rating');
     define('LANG_GROUPS_DS_MEMBER',         'Group Memberships');
     define('LANG_GROUPS_DS_MY',             'My groups');
     define('LANG_RULE_GROUPS_ADD',          'Adding groups ');

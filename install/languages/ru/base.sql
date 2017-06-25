@@ -125,12 +125,12 @@ CREATE TABLE `{#}content_datasets` (
   `cats_view` text COMMENT 'Показывать в категориях',
   `cats_hide` text COMMENT 'Не показывать в категориях',
   `max_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `target_controller` varchar(32) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
-  KEY `ordering` (`ordering`),
-  KEY `is_visible` (`is_visible`),
   KEY `ctype_id` (`ctype_id`,`ordering`),
-  KEY `index` (`index`)
+  KEY `index` (`index`),
+  KEY `target_controller` (`target_controller`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Наборы для типов контента';
 
 DROP TABLE IF EXISTS `{#}content_folders`;
@@ -698,7 +698,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (109, 'ctype_relation_childs', 'groups', 109, 1),
 (110, 'content_before_childs', 'groups', 110, 1),
 (111, 'content_before_childs', 'users', 111, 1),
-(112, 'ctype_relation_childs', 'users', 112, 1);
+(112, 'ctype_relation_childs', 'users', 112, 1),
+(113, 'admin_content_dataset_fields_list', 'content', 113, 1),
+(114, 'admin_groups_dataset_fields_list', 'groups', 114, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

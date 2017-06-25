@@ -573,7 +573,10 @@ input.button {
         0 1px 1px #CCCCCC;
     transition: all .3s;
 }
-
+form .ft_date select {
+    width: 50px;
+    padding: 2px;
+}
 input.button-submit:hover,
 input.button:hover {
     box-shadow:

@@ -19,7 +19,8 @@
             'content_add_permissions',
             'fulltext_search',
             'content_before_childs',
-            'ctype_relation_childs'
+            'ctype_relation_childs',
+            'admin_groups_dataset_fields_list'
         )
 
     );
