@@ -125,6 +125,10 @@ class fieldList extends cmsFormField {
 
     public function getInput($value){
 
+        if($this->getDefaultVarType() === 'array' && $value && !is_array($value)){
+            $value = cmsModel::yamlToArray($value);
+        }
+
         $this->data['items']       = $this->getListItems();
         $this->data['is_multiple'] = $this->getProperty('is_multiple');
         $this->data['multiple_select_deselect'] = $this->getProperty('multiple_select_deselect');

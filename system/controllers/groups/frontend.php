@@ -464,7 +464,7 @@ class groups extends cmsFrontend {
 
             $content_model->disablePrivacyFilter();
 
-            $privacy = array(0, 3);
+            $privacy = array(0, 3, 5);
 
             if(cmsUser::isAllowed($ctype['name'], 'add')){
                 $privacy[] = 4;

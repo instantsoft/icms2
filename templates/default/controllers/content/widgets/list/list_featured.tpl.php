@@ -69,8 +69,8 @@
                         <?php } else { ?>
                             <?php html($item['title']); ?>
                         <?php } ?>
-                        <?php if ($item['is_private'] == 1) { ?>
-                            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                        <?php if ($item['is_private']) { ?>
+                            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
                         <?php } ?>
                     </div>
                     <?php if ($teaser_field && !empty($item[$teaser_field])) { ?>

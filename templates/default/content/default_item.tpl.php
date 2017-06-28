@@ -3,8 +3,8 @@
 <?php if ($fields['title']['is_in_item']){ ?>
     <h1>
         <?php html($item['title']); ?>
-        <?php if ($item['is_private'] == 1) { ?>
-            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+        <?php if ($item['is_private']) { ?>
+            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
         <?php } ?>
     </h1>
     <?php if ($item['parent_id']){ ?>
@@ -100,13 +100,7 @@
         if ($hooks_html) { echo html_each($hooks_html); }
     ?>
 
-    <?php
-        $is_tags = $ctype['is_tags'] &&
-                   !empty($ctype['options']['is_tags_in_item']) &&
-                   $item['tags'];
-    ?>
-
-    <?php if ($is_tags){ ?>
+    <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_list']) &&  $item['tags']){ ?>
         <div class="tags_bar">
             <?php echo html_tags_bar($item['tags']); ?>
         </div>

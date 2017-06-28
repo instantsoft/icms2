@@ -5,6 +5,7 @@
         'hooks' => array(
             'admin_dashboard_chart',
             'content_view_hidden',
+            'content_before_list',
             'rating_vote',
             'user_privacy_types',
             'user_profile_buttons',

@@ -2254,7 +2254,7 @@ class modelContent extends cmsModel{
 
     }
 
-    public function getContentItems($ctype_name){
+    public function getContentItems($ctype_name, $callback = null){
 
         $table_name = $this->table_prefix . $ctype_name;
 
@@ -2274,13 +2274,17 @@ class modelContent extends cmsModel{
 
         $user = cmsUser::getInstance();
 
-        return $this->get($table_name, function($item, $model) use ($user){
+        return $this->get($table_name, function($item, $model) use ($user, $callback){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
                 'is_friend' => $user->isFriend($item['user_id'])
             );
+
+            if (is_callable($callback)){
+                $item = $callback($item, $model);
+            }
 
             return $item;
 

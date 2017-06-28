@@ -700,7 +700,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (111, 'content_before_childs', 'users', 111, 1),
 (112, 'ctype_relation_childs', 'users', 112, 1),
 (113, 'admin_content_dataset_fields_list', 'content', 113, 1),
-(114, 'admin_groups_dataset_fields_list', 'groups', 114, 1);
+(114, 'admin_groups_dataset_fields_list', 'groups', 114, 1),
+(115, 'content_before_list', 'rating', 115, 1),
+(116, 'content_before_list', 'groups', 116, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

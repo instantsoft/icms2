@@ -487,6 +487,7 @@
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
+    define('LANG_PRIVACY_HINT',              'Это приватная запись');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
     define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
     define('LANG_ON_FRONT',				 	 'На главной');

@@ -415,7 +415,7 @@ class modelGroups extends cmsModel {
 
         return $this->
                     filterEqual('user_id', $user_id)->
-                    get('groups_members');
+                    get('groups_members', false, 'group_id');
 
     }
 

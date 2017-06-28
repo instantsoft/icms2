@@ -95,7 +95,9 @@
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'участник|участника|участников');
     define('LANG_GROUPS10',                  'групп');
     define('LANG_GROUPS_CTYPES',             'Типы контента для создания в группах');
-    define('LANG_GROUPS_CTYPE_ACCESS',       'Для просмотра записи вы должны быть участником группы <a href="%s">%s</a>');
+    define('LANG_GROUPS_CTYPE_ACCESS',       'Для просмотра записи вы должны быть участником группы %s');
+    define('LANG_GROUPS_ROLES_ACCESS',       'Запись доступна только для участников группы %s с ролями %s');
+    define('LANG_GROUPS_ROLES_LIST_ACCESS',  'У вас нет роли для просмотра этой записи');
     define('LANG_CP_FIELD_IS_IN_CLOSED',     'Гостям закрытой группы');
     define('LANG_GROUPS_FIELDS',             'Поля групп');
     define('ERR_VALIDATE_GROUP_SLUG',        'Только латинские буквы (в нижнем регистре), цифры и дефис');
@@ -103,3 +105,4 @@
     define('LANG_GROUPS_MENU',               'Меню группы');
     define('LANG_PRIVACY_GROUPS',            'Показывать только одногруппникам');
     define('LANG_PRIVACY_GROUPS_ADD',        'Показывать только одногруппникам, имеющим право добавления %s');
+    define('LANG_PRIVACY_GROUPS_ROLES',      'Показывать только одногруппникам с заданными ролями');

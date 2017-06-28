@@ -484,6 +484,7 @@
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Privacy');
     define('LANG_PRIVACY_PUBLIC',            'For everyone');
+    define('LANG_PRIVACY_HINT',              'This is private item');
     define('LANG_PRIVACY_PRIVATE',           'Show only to friends');
     define('LANG_PRIVACY_PRIVATE_HINT',      'This is a private item. Only author\'s friends can view it.');
     define('LANG_ON_FRONT',				 	 'On the home page');

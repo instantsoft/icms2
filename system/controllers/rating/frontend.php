@@ -16,6 +16,13 @@ class rating extends cmsFrontend {
 
     }
 
+    public function setContext($target_controller, $target_subject) {
+
+        $this->target_controller = $target_controller;
+        $this->target_subject    = $target_subject;
+
+    }
+
     public function getWidget($target_id, $current_rating, $is_enabled=true){
 
         // разрешено ли голосование гостям
