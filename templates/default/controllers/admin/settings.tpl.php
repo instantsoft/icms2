@@ -44,6 +44,10 @@
                 setThemeConfigURL(this);
             }).triggerHandler('change');
         });
+        $('.auto_copy_value').on('click', function (){
+            $(this).parents('.input-prefix-suffix').find('input').val($(this).data('value'));
+            return false;
+        });
     });
 
     function setThemeConfigURL(obj){

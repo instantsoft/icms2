@@ -146,7 +146,7 @@ function href_to_current($add_host=false){
  * @return string
  */
 function href_to_home(){
-    return cmsConfig::get('host').'/'.cmsCore::getLanguageHrefPrefix();
+    return cmsConfig::get('root').cmsCore::getLanguageHrefPrefix();
 }
 
 /**

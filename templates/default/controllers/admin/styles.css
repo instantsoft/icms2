@@ -33,7 +33,13 @@ a:hover, a.ajaxlink:hover { color: #f90; }
 
 a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #34495e; }
 a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
-
+.auto_copy_value {
+    cursor: pointer;
+    border-bottom: dashed 1px;
+}
+.auto_copy_value:hover {
+    color: #27ae60;
+}
 .positive { color:green; }
 .negative { color:red; }
 

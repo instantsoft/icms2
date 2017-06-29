@@ -406,6 +406,9 @@
     define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached server');
     define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached port');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Minify HTML');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Cookie Domain');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Your site\'s cookies will be distributed to the specified domain and all of its subdomains. End-to-end authentication will be available. If not specified, the cookie will be valid within the current domain.');
+    define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Current domain: ');
 
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Memcached module not found');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Cannot connect to Memcached - check server and port');

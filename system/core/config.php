@@ -123,6 +123,10 @@ class cmsConfig {
 
         $this->set('protocol', $protocol);
 
+        if(!empty($_SERVER['HTTP_HOST'])){
+            $this->set('current_domain', $_SERVER['HTTP_HOST']);
+        }
+
         return true;
 
     }
