@@ -1,7 +1,7 @@
 <?php $index = 0; ?>
 <div id="comments_widget" class="tabs-menu">
 
-    <a name="comments"></a>
+    <span id="comments"></span>
 
     <ul class="tabbed">
         <?php foreach ($comment_systems as $comment_system) { ?>
