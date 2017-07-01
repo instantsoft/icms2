@@ -2358,6 +2358,7 @@ class modelContent extends cmsModel{
         if (!$is_filter_hidden){
             $this->disableApprovedFilter();
 			$this->disablePubFilter();
+            $this->disablePrivacyFilter();
         }
 
         foreach($ctypes as $ctype){
@@ -2366,7 +2367,7 @@ class modelContent extends cmsModel{
                 continue;
             }
 
-	    if(!$ctype['options']['profile_on']){
+            if(!$ctype['options']['profile_on']){
                 continue;
             }
 

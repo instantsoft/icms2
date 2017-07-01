@@ -39,7 +39,7 @@
 <script type="text/javascript">
     <?php if ($field->data['parent']) { ?>
         $('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
-            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val());
+            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val(), "<?php html($value); ?>");
         });
     <?php } ?>
     <?php if (!$field->native_tag && ($field->data['is_chosen_multiple'] || !$field->data['is_multiple'])) { ?>

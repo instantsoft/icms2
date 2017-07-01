@@ -10,7 +10,7 @@ class onGroupsContentBeforeList extends cmsAction {
 
         if ($items){
 
-            $items_to_groups = $groups_ids = $access_by_roles = $group_roles = array();
+            $items_to_groups = $groups_ids = $access_by_roles = $group_roles = $groups_access_by_roles = array();
 
             // сначала смотрим есть ли записи групп
             foreach($items as $id => $item){

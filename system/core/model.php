@@ -1001,7 +1001,7 @@ class cmsModel {
         }
 
         if(!empty($dataset['index'])){
-            $this->forceIndex($dataset['index']);
+            $this->forceIndex($dataset['index'], 2);
         }
 
         return true;

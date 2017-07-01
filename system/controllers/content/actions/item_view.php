@@ -170,6 +170,17 @@ class actionContentItemView extends cmsAction {
                         $child_ctype['options']['list_show_filter'] = false;
                     }
 
+
+                    if (!empty($relation['options']['dataset_id'])){
+
+                        $dataset = cmsCore::getModel('content')->getContentDataset($relation['options']['dataset_id']);
+
+                        if ($dataset){
+                            $this->model->applyDatasetFilters($dataset);
+                        }
+
+                    }
+
                     $childs['lists'][] = array(
                         'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name' => $relation['child_ctype_name'],

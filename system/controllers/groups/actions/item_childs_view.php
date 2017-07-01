@@ -14,6 +14,16 @@ class actionGroupsItemChildsView extends cmsAction {
             cmsCore::error404();
         }
 
+        if (!empty($relation['options']['dataset_id'])){
+
+            $dataset = cmsCore::getModel('content')->getContentDataset($relation['options']['dataset_id']);
+
+            if ($dataset){
+                $this->model->applyDatasetFilters($dataset);
+            }
+
+        }
+
         $filter =   "r.parent_ctype_id = '{$ctype['id']}' AND ".
                     "r.parent_item_id = '{$item['id']}' AND ".
                     'r.child_ctype_id IS NULL AND '.

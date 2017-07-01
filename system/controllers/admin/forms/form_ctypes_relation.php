@@ -37,6 +37,15 @@ class formAdminCtypesRelation extends cmsForm {
                         )
                     )),
 
+                    new fieldList('options:dataset_id', array(
+                        'title' => LANG_CP_CTYPE_DATASET,
+						'parent' => array(
+							'list' => 'child_ctype_id',
+							'url'  => href_to('content', 'widget_datasets_ajax')
+						),
+						'items' => array('0'=>'')
+                    ))
+
                 )
             ),
             'layout' => array(

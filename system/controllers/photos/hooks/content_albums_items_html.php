@@ -18,12 +18,14 @@ class onPhotosContentAlbumsItemsHtml extends cmsAction {
 
         $this->model->orderBy($this->options['ordering'], 'desc');
 
-        if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $profile['user_id']) {
+        if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $profile['id']) {
             $this->model->disablePrivacyFilter();
         }
 
         $profile['url_params'] = array('photo_page' => 1);
         $profile['base_url']   = href_to('users', $profile['id'], array('content', $ctype['name']));
+
+        $profile['user_id'] = $profile['id']; // для проверки прав доступа
 
         return $this->renderPhotosList($profile, 'user_id', $this->cms_core->request->get('photo_page', 1));
 

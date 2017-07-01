@@ -175,7 +175,7 @@ icms.forms = (function ($) {
 
     //====================================================================//
 
-	this.updateChildList = function (child_id, url, value){
+	this.updateChildList = function (child_id, url, value, current_value){
 
 		var child_list = $('#'+child_id);
 
@@ -185,10 +185,13 @@ icms.forms = (function ($) {
 
 		child_list.html('');
 
+        current_value = current_value || '';
+
 		$.post(url, {value: value}, function(result){
 
 			for(var k in result){
-				child_list.append('<option value="'+k+'">'+result[k]+'</option>');
+                var __selected = (k === current_value ? ' selected' : '');
+				child_list.append('<option value="'+k+'"'+__selected+'>'+result[k]+'</option>');
 			}
 
             $(child_list).trigger('chosen:updated');

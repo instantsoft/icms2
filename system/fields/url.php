@@ -41,7 +41,7 @@ class fieldUrl extends cmsFormField {
 
     public function parse($value){
 
-        if (!$this->getOption('title') && strpos('|', $value) === false){
+        if (!$this->getOption('title') && strpos( $value, '|') === false){
 
             $href = $value;
 

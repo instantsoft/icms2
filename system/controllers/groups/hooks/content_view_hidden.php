@@ -17,7 +17,11 @@ class onGroupsContentViewHidden extends cmsAction {
 
             if (!$this->cms_user->is_logged){ $data['viewable'] = false; return $data; }
 
-            $membership = $this->model->getMembership($item['parent_id'], $this->cms_user->id) || $this->cms_user->is_admin || $is_moderator;
+            $membership = $this->model->getMembership($item['parent_id'], $this->cms_user->id);
+
+            if($this->cms_user->is_admin || $is_moderator || $this->cms_user->id == $item['user_id']){
+                return $data;
+            }
 
             if ($membership === false ||
                     ($item['is_private'] == 4 && !cmsUser::isAllowed($ctype['name'], 'add')) ||

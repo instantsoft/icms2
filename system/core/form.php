@@ -4,20 +4,9 @@ class cmsForm {
 
     public $is_tabbed = false;
 
-    private $params = array();
-    private $structure = array();
+    private $params          = array();
+    private $structure       = array();
     private $disabled_fields = array();
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Заполняет массив полей формы
-     * Должен быть переопределен в наследуемом классе
-     */
-//    public function init(){
-//        return array();
-//    }
 
     public function setStructure($structure=array()){
         $this->structure = $structure;
