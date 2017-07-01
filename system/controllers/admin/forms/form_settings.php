@@ -108,6 +108,12 @@ class formAdminSettings extends cmsForm {
                         'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
                         'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
                         'default' => 'REMOTE_ADDR'
+                    )),
+
+                    new fieldString('cookie_domain', array(
+                        'title' => LANG_CP_SETTINGS_COOKIE_DOMAIN,
+                        'hint'  => LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT,
+                        'suffix' => '<span class="auto_copy_value ajaxlink" data-value="'.str_replace('www.', '', $_SERVER['HTTP_HOST']).'">'.LANG_CP_SETTINGS_CURRENT_DOMAIN.$_SERVER['HTTP_HOST'].'</span>'
                     ))
 
                 )

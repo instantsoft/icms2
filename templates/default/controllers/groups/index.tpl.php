@@ -1,6 +1,6 @@
-<h1><?php echo LANG_GROUPS; ?></h1>
+<h1><?php echo $h1_title; ?></h1>
 
-<?php if (sizeof($datasets)>1){ ?>
+<?php if ($datasets){ ?>
     <div class="content_datasets">
         <ul class="pills-menu">
             <?php $ds_counter = 0; ?>
@@ -22,6 +22,11 @@
             <?php } ?>
         </ul>
     </div>
+    <?php if (!empty($dataset['description'])){ ?>
+        <div class="content_datasets_description">
+            <?php echo $dataset['description']; ?>
+        </div>
+    <?php } ?>
 <?php } ?>
 
 <?php echo $groups_list_html;

@@ -73,6 +73,26 @@ class admin extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
+    public function buildDatasetFieldsList($controller_name, $fields) {
+
+        $fields_list = array();
+
+        foreach($fields as $field){
+
+            if((!$field['handler']->allow_index || $field['handler']->filter_type === false) && $field['type'] != 'parent'){ continue; }
+
+            $fields_list[] = array(
+                'value' => $field['name'],
+                'type'  => $field['handler']->filter_type,
+                'title' => $field['title']
+            );
+
+        }
+
+        return cmsEventsManager::hook('admin_'.$controller_name.'_dataset_fields_list', $fields_list);
+
+    }
+
     public function getAdminMenu(){
 
         return cmsEventsManager::hook('adminpanel_menu', array(

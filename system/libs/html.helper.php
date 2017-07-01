@@ -146,7 +146,7 @@ function href_to_current($add_host=false){
  * @return string
  */
 function href_to_home(){
-    return cmsConfig::get('host').'/'.cmsCore::getLanguageHrefPrefix();
+    return cmsConfig::get('root').cmsCore::getLanguageHrefPrefix();
 }
 
 /**
@@ -340,55 +340,43 @@ function html_csrf_token(){
  * @param string $one
  * @param string $two
  * @param string $many
+ * @param string $zero_text
  * @return string
  */
-function html_spellcount($num, $one, $two=false, $many=false) {
+function html_spellcount($num, $one, $two = false, $many = false, $zero_text = LANG_NO) {
 
     if (!$two && !$many){
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (mb_strstr($num, '.')){
-		return $num.' '.$two;
+	if (!$num){
+		return $zero_text.' '.$many;
 	}
 
-	if ($num==0){
-		return LANG_NO . ' ' . $many;
-	}
-
-    if ($num%10==1 && $num%100!=11){
-        return $num.' '.$one;
-    }
-    elseif($num%10>=2 && $num%10<=4 && ($num%100<10 || $num%100>=20)){
-        return $num.' '.$two;
-    }
-    else{
-        return $num.' '.$many;
-    }
-
-    return $num.' '.$one;
+    return $num.' '.html_spellcount_only($num, $one, $two, $many);
 
 }
 
-function html_spellcount_only($num, $one, $two=false, $many=false) {
+function html_spellcount_only($num, $one, $two = false, $many = false) {
 
     if (!$two && !$many){
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (mb_strstr($num, '.')){
+	if (strpos($num, '.') !== false){
 		return $two;
 	}
 
-    if ($num%10==1 && $num%100!=11){
+    if ($num%10 == 1 && $num%100 != 11){
         return $one;
     }
-    elseif($num%10>=2 && $num%10<=4 && ($num%100<10 || $num%100>=20)){
+    elseif($num%10 >= 2 && $num%10 <= 4 && ($num%100 < 10 || $num%100 >= 20)){
         return $two;
     }
     else{
         return $many;
     }
+
     return $one;
 
 }

@@ -46,6 +46,11 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`
 (14, 9, 'cheap', 'Сначала дешевые', 2, 1, '0', '---\n- \n  by: price\n  to: asc\n', 'dataset_cheap', '---\n- 0\n', NULL),
 (15, 9, 'expensive', 'Сначала дорогие', 3, 1, '0', '---\n- \n  by: price\n  to: desc\n', 'dataset_cheap', '---\n- 0\n', NULL);
 
+INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `description`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`, `seo_keys`, `seo_desc`, `seo_title`, `cats_view`, `cats_hide`, `max_count`, `target_controller`) VALUES
+(16, NULL, 'rating', 'Лучшие группы', NULL, 3, 1, '0', '---\n- \n  by: rating\n  to: desc\n', 'rating', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
+(17, NULL, 'all', 'Новые группы', NULL, 2, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
+(18, NULL, 'popular', 'Популярные', NULL, 1, 1, '0', '---\n- \n  by: members_count\n  to: desc\n', 'members_count', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups');
+
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'Личное');
 

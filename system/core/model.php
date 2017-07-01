@@ -960,6 +960,10 @@ class cmsModel {
 
             foreach($dataset['filters'] as $filter){
 
+                if (isset($filter['callback']) && is_callable($filter['callback'])){
+                    $filter['callback']($this, $dataset); continue;
+                }
+
                 if (!isset($filter['value'])) { continue; }
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }

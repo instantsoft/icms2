@@ -77,6 +77,60 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}uploaded_files` DROP `url_key`");
     }
 
+    if(!isFieldExists('content_datasets', 'target_controller')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `target_controller` VARCHAR(32) NULL DEFAULT NULL");
+    }
+
+    $groups_options = cmsController::loadOptions('groups');
+    if(!$core->db->getRowsCount('content_datasets', "name = 'rating' AND target_controller = 'groups'", 1)){
+        $core->db->insert('content_datasets', array(
+            'name'              => 'rating',
+            'title'             => 'Лучшие группы',
+            'ordering'          => 3,
+            'is_visible'        => !empty($groups_options['is_ds_rating']),
+            'sorting'           => array(
+                array(
+                    'by' => 'rating',
+                    'to' => 'desc'
+                )
+            ),
+            'index'             => 'rating',
+            'target_controller' => 'groups'
+        ));
+    }
+    if(!$core->db->getRowsCount('content_datasets', "name = 'all' AND target_controller = 'groups'", 1)){
+        $core->db->insert('content_datasets', array(
+            'name'              => 'all',
+            'title'             => 'Новые группы',
+            'ordering'          => 2,
+            'is_visible'        => 1,
+            'sorting'           => array(
+                array(
+                    'by' => 'date_pub',
+                    'to' => 'desc'
+                )
+            ),
+            'index'             => 'date_pub',
+            'target_controller' => 'groups'
+        ));
+    }
+    if(!$core->db->getRowsCount('content_datasets', "name = 'popular' AND target_controller = 'groups'", 1)){
+        $core->db->insert('content_datasets', array(
+            'name'              => 'popular',
+            'title'             => 'Популярные',
+            'ordering'          => 1,
+            'is_visible'        => !empty($groups_options['is_ds_popular']),
+            'sorting'           => array(
+                array(
+                    'by' => 'members_count',
+                    'to' => 'desc'
+                )
+            ),
+            'index'             => 'members_count',
+            'target_controller' => 'groups'
+        ));
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -112,6 +166,9 @@ function install_package(){
         ),
         'uploaded_files' => array(
             'counter'
+        ),
+        'content_datasets' => array(
+            'ordering','is_visible'
         )
     );
     $add_table_indexes = array(
@@ -133,6 +190,9 @@ function install_package(){
         'uploaded_files' => array(
             'user_id' => array('user_id'),
             'target_controller' => array('target_controller', 'target_subject', 'target_id'),
+        ),
+        'content_datasets' => array(
+            'target_controller' => array('target_controller', 'ordering'),
         )
     );
     $add_table_ft_indexes = array(

@@ -11,12 +11,6 @@ class formGroupsOptions extends cmsForm {
                 'title' => LANG_GROUPS_LIST,
                 'childs' => array(
 
-                    new fieldCheckbox('is_ds_rating', array(
-                        'title' => sprintf(LANG_GROUPS_OPT_DS_SHOW, LANG_GROUPS_DS_RATED),
-                    )),
-                    new fieldCheckbox('is_ds_popular', array(
-                        'title' => sprintf(LANG_GROUPS_OPT_DS_SHOW, LANG_GROUPS_DS_POPULAR),
-                    )),
                     new fieldCheckbox('is_filter', array(
                         'title' => LANG_CP_LISTVIEW_FILTER,
                     ))

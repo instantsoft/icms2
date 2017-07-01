@@ -46,9 +46,6 @@
     define('LANG_GROUP_INFO_OWNER',         'Owner');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Show group wall');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Show the "%s" tab');
-    define('LANG_GROUPS_DS_LATEST',         'Latest');
-    define('LANG_GROUPS_DS_POPULAR',        'Popular');
-    define('LANG_GROUPS_DS_RATED',          'Rating');
     define('LANG_GROUPS_DS_MEMBER',         'Group Memberships');
     define('LANG_GROUPS_DS_MY',             'My groups');
     define('LANG_RULE_GROUPS_ADD',          'Adding groups ');
@@ -98,7 +95,9 @@
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'member|members|members');
     define('LANG_GROUPS_CTYPES',             'Group content types');
     define('LANG_GROUPS10',                  'groups');
-    define('LANG_GROUPS_CTYPE_ACCESS',       'To view a item, you must be a member of the <a href="%s">%s</a> group');
+    define('LANG_GROUPS_CTYPE_ACCESS',       'To view a item, you must be a member of the %s group');
+    define('LANG_GROUPS_ROLES_ACCESS',       'To view a item, you must be a member of the  %s group with the %s roles');
+    define('LANG_GROUPS_ROLES_LIST_ACCESS',  'You do not have a role to view this item.');
     define('LANG_CP_FIELD_IS_IN_CLOSED',     'Closed group guests');
     define('LANG_GROUPS_FIELDS',             'Group fields');
     define('ERR_VALIDATE_GROUP_SLUG',        'Only letters (lowercase), numbers and hyphen');
@@ -106,3 +105,4 @@
     define('LANG_GROUPS_MENU',               'Group menu');
     define('LANG_PRIVACY_GROUPS',            'Show only group members');
     define('LANG_PRIVACY_GROUPS_ADD',        'Show only group members who have the right to add the %s');
+    define('LANG_PRIVACY_GROUPS_ROLES',      'Show only group members with given roles');

@@ -407,6 +407,9 @@
     define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached Сервер');
     define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached Порт');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Минифицировать HTML');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Домен cookie');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Cookie вашего сайта будут распространяться на указанный домен и все его поддомены. Будет доступна сквозная авторизации. Если не указан, то cookie будут действовать в пределах текущего домена.');
+    define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Текущий домен: ');
 
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Модуль Memcached не найден');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');

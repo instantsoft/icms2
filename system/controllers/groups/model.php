@@ -189,6 +189,8 @@ class modelGroups extends cmsModel {
 
         $this->useCache('groups.list');
 
+        if (!$this->order_by){ $this->orderBy('date_pub', 'desc'); }
+
         return $this->get('groups', function($group, $model){
 
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
@@ -413,7 +415,7 @@ class modelGroups extends cmsModel {
 
         return $this->
                     filterEqual('user_id', $user_id)->
-                    get('groups_members');
+                    get('groups_members', false, 'group_id');
 
     }
 

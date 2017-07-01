@@ -6,18 +6,39 @@
     if ($do=='add') { $this->setPageTitle(LANG_CP_DATASET_ADD, $ctype['title']); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_DATASET . ': ' . $dataset['title']); }
 
-    $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
+    if($ctype['id']){
+        $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
+    } else {
+        $this->addBreadcrumb(LANG_CP_SECTION_CONTROLLERS, $this->href_to('controllers'));
+        $this->addBreadcrumb($ctype['title'], $this->href_to('controllers', 'edit/'.$ctype['name']));
+    }
+
+    if($ctype['id']){
+        $cancel_url = $this->href_to('ctypes', array('datasets', $ctype['id']));
+    } else {
+        $cancel_url = $this->href_to('controllers', 'edit/'.$ctype['name'].'/datasets');
+    }
 
     if ($do=='add'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
-        $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $this->href_to('ctypes', array('datasets', $ctype['id'])));
+
+        if($ctype['id']){
+            $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+        }
+
+        $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $cancel_url);
         $this->addBreadcrumb(LANG_CP_DATASET_ADD);
+
     }
 
     if ($do=='edit'){
-        $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
-        $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $this->href_to('ctypes', array('datasets', $ctype['id'])));
+
+        if($ctype['id']){
+            $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
+        }
+
+        $this->addBreadcrumb(LANG_CP_CTYPE_DATASETS, $cancel_url);
         $this->addBreadcrumb($dataset['title']);
+
     }
 
     $this->addToolButton(array(
@@ -28,16 +49,14 @@
     $this->addToolButton(array(
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => $this->href_to('ctypes', array('datasets', $ctype['id']))
+        'href'  => $cancel_url
     ));
     $this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
+		'class'  => 'help',
+		'title'  => LANG_HELP,
 		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_DATASET
+		'href'   => LANG_HELP_URL_CTYPES_DATASET
 	));
-
-    unset($fields['user']);
 
 ?>
 
@@ -197,7 +216,7 @@
 
     </fieldset>
 
-    <?php if ($ctype['is_cats'] && $cats){ ?>
+    <?php if (!empty($ctype['is_cats']) && $cats){ ?>
 
         <fieldset>
 
@@ -288,16 +307,10 @@
     <span class="delete"><a class="ajaxlink" href="javascript:" onclick="deleteFilter(this)"><?php echo LANG_DELETE; ?></a></span>
 </div>
 
-
 <select id="fields_list" style="display:none">
-    <?php foreach($fields as $field){ ?>
-        <?php if((!$field['handler']->allow_index || $field['handler']->filter_type === false) && $field['type'] != 'parent'){ continue; } ?>
-        <option value="<?php echo $field['name']; ?>" data-type="<?php echo $field['handler']->filter_type; ?>"><?php echo htmlspecialchars($field['title']); ?></option>
+    <?php foreach($fields_list as $field){ ?>
+        <option value="<?php echo $field['value']; ?>" data-type="<?php echo $field['type']; ?>"><?php echo htmlspecialchars($field['title']); ?></option>
     <?php } ?>
-    <option value="rating" data-type="int"><?php echo LANG_RATING; ?></option>
-    <option value="comments" data-type="int"><?php echo LANG_COMMENTS; ?></option>
-    <option value="hits_count" data-type="int"><?php echo LANG_HITS; ?></option>
-    <option value="user_id" data-type="int"><?php echo LANG_AUTHOR; ?></option>
 </select>
 
 <select id="sorting_tos" style="display:none">

@@ -182,7 +182,6 @@ class content extends cmsFrontend {
                 }
 
 			}
-
 		}
 
         // применяем приватность
@@ -197,7 +196,23 @@ class content extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = $this->model->getContentItemsCount($ctype['name']);
-        $items = $this->model->getContentItems($ctype['name']);
+        $items = $this->model->getContentItems($ctype['name'], function ($item, $model) use ($ctype, $hide_except_title){
+
+            $item['ctype'] = $ctype;
+            $item['ctype_name'] = $ctype['name'];
+            $item['is_private_item'] = $item['is_private'] && $hide_except_title;
+            $item['private_item_hint'] = LANG_PRIVACY_HINT;
+
+            // для приватности друзей
+            // другие проверки приватности (например для групп) в хуках content_before_list
+            if($item['is_private'] == 1){
+                $item['is_private_item'] = $item['is_private_item'] && !$item['user']['is_friend'];
+                $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
+            }
+
+            return $item;
+
+        });
         // если задано максимальное кол-во, ограничиваем им
         if($this->max_items_count){
             $total = min($total, $this->max_items_count);
@@ -210,23 +225,6 @@ class content extends cmsFrontend {
         // если запрос через URL
         if($this->request->isStandard()){
             if(!$items && $page > 1){ cmsCore::error404(); }
-        }
-
-        // Рейтинг
-        if ($ctype['is_rating'] && $items &&  $this->isControllerEnabled('rating')){
-
-            $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name']
-            ), cmsRequest::CTX_INTERNAL));
-
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');
-
-            foreach($items as $id=>$item){
-                $is_rating_enabled = $is_rating_allowed && ($item['user_id'] != $this->cms_user->id);
-                $items[$id]['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_enabled);
-            }
-
         }
 
         list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
@@ -669,13 +667,20 @@ class content extends cmsFrontend {
                     foreach($privacy_type['types'] as $name => $title){
                         $items[$name] = $title;
                     }
+                    if(!empty($privacy_type['fields'])){
+                        foreach ($privacy_type['fields'] as $privacy_field) {
+                            $form->addField($fieldset_id, $privacy_field);
+                        }
+                    }
                 }
             }
 
-            $form->addField($fieldset_id, new fieldList('is_private', array(
-                'items' => $items,
-                'rules' => array(array('number'))
-            )));
+            if(count($items) > 1){
+                $form->addFieldToBeginning($fieldset_id, new fieldList('is_private', array(
+                    'items' => $items,
+                    'rules' => array(array('number'))
+                )));
+            }
 
         }
 

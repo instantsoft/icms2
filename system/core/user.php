@@ -482,17 +482,23 @@ class cmsUser {
      * @param string $domain Домен действия. null - только текущий
      * */
     public static function setCookie($key, $value, $time=3600, $path='/', $http_only=true, $domain = null){
-        setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
-        return;
+
+        $cookie_domain = cmsConfig::get('cookie_domain');
+
+        if(!$domain && $cookie_domain){
+            $domain = $cookie_domain;
+        }
+
+        return setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
+
     }
 
     public static function setCookiePublic($key, $value, $time=3600, $path='/'){
         return self::setCookie($key, $value, $time, $path, false);
     }
 
-    public static function unsetCookie($key){
-        setcookie('icms['.$key.']', '', time()-3600, '/');
-        return;
+    public static function unsetCookie($key, $path='/', $domain = null){
+        return self::setCookie($key, '', -3600, $path, true, $domain);
     }
 
     /**

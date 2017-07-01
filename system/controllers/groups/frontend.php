@@ -28,6 +28,8 @@ class groups extends cmsFrontend {
 
     private static $groups_fields = null;
 
+    public $max_items_count = 0;
+
     public function routeAction($action_name){
 
         if (is_numeric($action_name)) {
@@ -373,6 +375,15 @@ class groups extends cmsFrontend {
         $total  = $this->model->getGroupsCount();
         $groups = $this->model->getGroups();
 
+        // если задано максимальное кол-во, ограничиваем им
+        if($this->max_items_count){
+            $total = min($total, $this->max_items_count);
+            $pages = ceil($total / $perpage);
+            if($page > $pages){
+                $groups = false;
+            }
+        }
+
         if($this->request->isStandard()){
             if(!$groups && $page > 1){ cmsCore::error404(); }
         }
@@ -453,7 +464,7 @@ class groups extends cmsFrontend {
 
             $content_model->disablePrivacyFilter();
 
-            $privacy = array(0, 3);
+            $privacy = array(0, 3, 5);
 
             if(cmsUser::isAllowed($ctype['name'], 'add')){
                 $privacy[] = 4;
@@ -513,52 +524,47 @@ class groups extends cmsFrontend {
 
     public function getDatasets(){
 
-        $datasets = array();
+        $datasets = cmsCore::getModel('content')->getContentDatasets($this->name, true);
 
-        // Популярные
-        if ($this->options['is_ds_popular']){
-            $datasets['popular'] = array(
-                'name' => 'popular',
-                'title' => LANG_GROUPS_DS_POPULAR,
-                'order' => array('members_count', 'desc')
-            );
-        }
+        if ($this->cms_user->is_logged){
 
-        // Все (новые)
-        $datasets['all'] = array(
-                'name' => 'all',
-                'title' => LANG_GROUPS_DS_LATEST,
-                'order' => array('date_pub', 'desc')
-        );
+            $logged_user_id = $this->cms_user->id;
 
-        // Рейтинг
-        if ($this->options['is_ds_rating']){
-            $datasets['rating'] = array(
-                'name' => 'rating',
-                'title' => LANG_GROUPS_DS_RATED,
-                'order' => array('rating', 'desc')
-            );
-        }
-
-        // Мои
-        if (cmsUser::isLogged()){
+            if(!$datasets){
+                $datasets = array('all' => array(
+                        'name' => 'all',
+                        'title' => LANG_ALL
+                ));
+            }
             $datasets['memberships'] = array(
-                'name' => 'memberships',
-                'title' => LANG_GROUPS_DS_MEMBER,
-                'filter' => function($model, $dset){
-                    $user = cmsUser::getInstance();
-                    return $model->filterByMember($user->id);
-                }
+                'name'    => 'memberships',
+                'title'   => LANG_GROUPS_DS_MEMBER,
+                'filters' => array(
+                    array(
+                        'callback' => function($model, $dataset) use ($logged_user_id){
+                            return $model->filterByMember($logged_user_id);
+                        }
+                    )
+                )
             );
             $datasets['my'] = array(
-                'name' => 'my',
-                'title' => LANG_GROUPS_DS_MY,
-                'order' => array('members_count', 'desc'),
-                'filter' => function($model, $dset){
-                    $user = cmsUser::getInstance();
-                    return $model->filterEqual('owner_id', $user->id);
-                }
+                'name'    => 'my',
+                'title'   => LANG_GROUPS_DS_MY,
+                'sorting' => array(
+                    array(
+                        'by' => 'members_count',
+                        'to' => 'desc'
+                    )
+                ),
+                'filters' => array(
+                    array(
+                        'field'     => 'owner_id',
+                        'condition' => 'eq',
+                        'value'     => $logged_user_id
+                    )
+                )
             );
+
         }
 
         return cmsEventsManager::hook('group_datasets', $datasets);
