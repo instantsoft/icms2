@@ -346,4 +346,16 @@ class modelWidgets extends cmsModel {
 
     }
 
+    public function copyWidget($id){
+        $widget             = $this->getItemById('widgets_bind', $id);
+        $widget['ordering'] = $this->filterEqual('page_id', $widget['page_id'])
+            ->filterEqual('position', $widget['position'])
+            ->getMaxOrdering('widgets_bind');
+
+        unset($widget['id']);
+
+        $this->insert('widgets_bind', $widget);
+
+        return $widget;
+    }
 }

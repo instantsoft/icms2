@@ -1629,6 +1629,12 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     margin-right: 5px;
 }
 
+#cp-widgets-layout li .actions a.copy ,
+#cp-widgets-list li .actions a.copy {
+    background-image: url("../../images/icons/item.png");
+    margin-right: 5px;
+}
+
 #cp-widgets-layout li .actions a.delete ,
 #cp-widgets-list li .actions a.delete {
     background-image: url("../../images/icons/delete.png");

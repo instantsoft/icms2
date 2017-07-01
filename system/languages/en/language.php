@@ -74,6 +74,8 @@
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
     define('LANG_MOBILE_DEVICES',  'Phones');
+    define('LANG_COPY', 'Copy');
+    define('LANG_CP_WIDGET_COPY_CONFIRM', 'Do you want to copy the widget?');
 
     //PARSERS
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');

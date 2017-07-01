@@ -224,7 +224,26 @@ function widgetAddActionButtons(widget_dom){
         return widgetToggle(widget_id);
     });
 
+    $('.actions .copy', widget_dom).click(function(){
+        var widget_id = $(this).parent('span').parent('li').attr('bind-id');
+        return widgetCopy(widget_id);
+    });
 }
+
+function widgetCopy(id){
+
+    if (!confirm(LANG_CP_WIDGET_COPY_CONFIRM)){return false;}
+
+    var copy_url = $('#cp-widgets-layout').data('copy-url') + '/' + id;
+
+    $.post(copy_url, {}, function(response){
+        location.reload();
+    });
+
+    return false;
+
+}
+
 
 function widgetToggle(id){
 
