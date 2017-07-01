@@ -37,7 +37,7 @@
 	));
 
     $this->applyToolbarHook('admin_widgets_toolbar');
-    
+
 ?>
 
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>
@@ -78,6 +78,7 @@
                  data-load-url="<?php echo $this->href_to('widgets', 'load'); ?>"
                  data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
                  data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"
+                 data-copy-url="<?php echo $this->href_to('widgets', 'copy'); ?>"
                  data-delete-url="<?php echo $this->href_to('widgets', 'delete'); ?>"
                  data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
                  data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
@@ -127,6 +128,7 @@
                     <span class="actions">
                         <a class="hide" href="#" title="<?php echo LANG_HIDE; ?>"></a>
                         <a class="edit" href="#" title="<?php echo LANG_EDIT; ?>"></a>
+                        <a class="copy" href="#" title="<?php echo LANG_COPY; ?>"></a>
                         <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
                 </div>
@@ -138,5 +140,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM','LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>
 </script>

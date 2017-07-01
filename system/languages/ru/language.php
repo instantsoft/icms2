@@ -75,6 +75,8 @@
     define('LANG_DESKTOP_DEVICES',  'Настольные ПК');
     define('LANG_TABLET_DEVICES',  'Планшеты');
     define('LANG_MOBILE_DEVICES',  'Телефоны');
+    define('LANG_COPY', 'Копировать');
+    define('LANG_CP_WIDGET_COPY_CONFIRM', 'Вы хотите скопировать виджет?');
 
     //PARSERS
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
