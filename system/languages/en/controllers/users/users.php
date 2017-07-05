@@ -11,6 +11,7 @@
     define('LANG_USERS_RESTORE_PROFILE',    'Restore profile');
     define('LANG_USERS_DELETE_PROFILE',     'Delete profile');
     define('LANG_RULE_USERS_DELETE',        'Delete profile');
+    define('LANG_RULE_USERS_BIND_TO_PARENT', 'Bind content type items');
     define('LANG_PERM_OPTION_MY',           'Only own');
     define('LANG_PERM_OPTION_ANYUSER',      'Any');
     define('LANG_USERS_DELETE_CONFIRM',     'Delete the %s\'profile?');

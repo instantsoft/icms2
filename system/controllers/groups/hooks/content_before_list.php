@@ -25,6 +25,12 @@ class onGroupsContentBeforeList extends cmsAction {
                         continue;
                     }
 
+                    // авторам всё показываем
+                    if($this->cms_user->id == $item['user_id']){
+                        $items[$id]['is_private_item'] = false;
+                        continue;
+                    }
+
                     $items_to_groups[] = $id;
                     $groups_ids[] = $item['parent_id'];
 

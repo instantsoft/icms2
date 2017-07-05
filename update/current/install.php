@@ -244,6 +244,9 @@ function install_package(){
     add_perms(array(
         'groups' => array(
             'bind_to_parent'
+        ),
+        'users' => array(
+            'bind_to_parent'
         )
     ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
 
