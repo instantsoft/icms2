@@ -820,7 +820,7 @@ class cmsModel {
              * Для малых БД, где повсеместно используется принадлежность к нескольким категориям ниже второго уровня
              * имеет смысл раскомментировать строку ниже
              */
-            // $this->distinctSelect();
+            //$this->distinctSelect();
 
             $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
             $this->joinInner($table_name, 'c', 'c.id = b.category_id');
@@ -1327,7 +1327,7 @@ class cmsModel {
 
     public function getCount($table_name, $by_field='id'){
 
-        $sql = "SELECT {$this->distinct} {$this->straight_join} COUNT(i.{$by_field}) as count
+        $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
                 FROM {#}{$table_name} i
                 {$this->index_action}";
 

@@ -115,19 +115,21 @@ class actionContentItemAdd extends cmsAction {
                 $parent_id = $this->request->get($parent['id_param_name'], 0, 'integer');
                 $parent_item = $parent_id ? $this->model->getContentItem($parent['ctype_name'], $parent_id) : false;
 
-                if(!$parent_item){ cmsCore::error404(); }
+                if($parent_item){
 
-                if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
-                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
-                        cmsCore::error404();
+                    if (!empty($is_check_parent_perm) && !$this->cms_user->is_admin){
+                        if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_own') && $parent_item['user_id'] != $this->cms_user->id){
+                            cmsCore::error404();
+                        }
+                        if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_other') && $parent_item['user_id'] == $this->cms_user->id){
+                            cmsCore::error404();
+                        }
                     }
-                    if (cmsUser::isAllowed($ctype_name, 'add_to_parent', 'to_other') && $parent_item['user_id'] == $this->cms_user->id){
-                        cmsCore::error404();
-                    }
+
+                    $item[$parent['id_param_name']] = $parent_id;
+                    $relation_id = $parent['id'];
+
                 }
-
-                $item[$parent['id_param_name']] = $parent_id;
-                $relation_id = $parent['id'];
 
                 break;
 
