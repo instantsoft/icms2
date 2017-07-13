@@ -1389,7 +1389,13 @@ class cmsTemplate {
      */
     public function renderForm($form, $data, $attributes=array(), $errors=false){
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/form');
+        $form_tpl_file = 'form';
+
+        if(!empty($attributes['form_tpl_file'])){
+            $form_tpl_file = $attributes['form_tpl_file'];
+        }
+
+        $tpl_file = $this->getTemplateFileName('assets/ui/'.$form_tpl_file);
 
         include($tpl_file);
 

@@ -1,10 +1,9 @@
 <div class="widget_content_filter">
 	<div class="filter-container">
-		<form action="<?php echo cmsCore::getInstance()->uri_absolute; ?>" method="get">
+		<form action="<?php echo $page_url; ?>" method="get">
 			<?php echo html_input('hidden', 'page', 1); ?>
 			<div class="fields">
 				<?php foreach($fields as $name => $field){ ?>
-					<?php if (!$field['is_in_filter']){ continue; } ?>
 					<?php $value = isset($filters[$name]) ? $filters[$name] : null; ?>
 					<?php $output = $field['handler']->setItem(array('ctype_name' => $ctype_name, 'id' => null, 'category' => $category))->getFilterInput($value); ?>
 					<?php if (!$output){ continue; } ?>
@@ -18,7 +17,6 @@
 				<?php if (!empty($props_fields)){ ?>
 					<?php foreach($props as $prop){ ?>
 						<?php
-							if (!$prop['is_in_filter']){ continue; }
 							$field = $props_fields[$prop['id']];
 							$field->setName("p{$prop['id']}");
 							if ($prop['type'] == 'list' && !empty($prop['options']['is_filter_multi'])){ $field->setOption('filter_multiple', true); }
@@ -37,7 +35,7 @@
 			<div class="buttons">
 				<?php echo html_submit(LANG_FILTER_APPLY); ?>
 				<?php if (sizeof($filters)){ ?>
-						<a href="<?php echo is_array($page_url) ? $page_url['base'] : $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
+                    <a href="<?php echo $page_url; ?>"><?php echo LANG_CANCEL; ?></a>
 				<?php } ?>
 			</div>
 		</form>

@@ -62,15 +62,23 @@ class widgetContentFilter extends cmsWidget {
 
 		$fields_count = 0;
 
-		foreach($fields as $field){
-			if ($field['is_in_filter'] && (empty($field['filter_view']) || $user->isInGroups($field['filter_view']))) {
-                $fields_count++; break;
+        if($fields){
+            foreach($fields as $field){
+                if ($field['is_in_filter'] && (empty($field['filter_view']) || $user->isInGroups($field['filter_view']))) {
+                    $fields_count++;
+                } else {
+                    unset($fields[$field['name']]);
+                }
             }
-		}
+        }
 
-		if (!$fields_count && !empty($props_fields)){
+		if (!empty($props_fields)){
 			foreach($props as $prop){
-				if ($prop['is_in_filter']) { $fields_count++; break; }
+				if ($prop['is_in_filter']) {
+                    $fields_count++;
+                } else {
+                    unset($props[$prop['id']]);
+                }
 			}
 		}
 
@@ -82,7 +90,6 @@ class widgetContentFilter extends cmsWidget {
 
 		foreach($fields as $name => $field){
 
-			if (!$field['is_in_filter']) { continue; }
 			if (!$core->request->has($name)){ continue; }
 
 			$value = $core->request->get($name, false, $field['handler']->getDefaultVarType(true));
@@ -95,9 +102,8 @@ class widgetContentFilter extends cmsWidget {
 		if (!empty($props)){
 			foreach($props as $prop){
 
-				$name = "p{$prop['id']}";
+				$name = 'p'.$prop['id'];
 
-				if (!$prop['is_in_filter']) { continue; }
 				if (!$core->request->has($name)){ continue; }
 
                 $prop['handler'] = $props_fields[$prop['id']];
