@@ -944,7 +944,10 @@ class cmsCore {
             if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
             $prefix = '';
-            if($page['controller'] == 'content' && $ctype_default && $page['name'] == $ctype_default.'.item'){
+            if($page['controller'] == 'content' &&
+                    $ctype_default &&
+                    strpos($this->uri_action, '.html') !== false &&
+                    $page['name'] == $ctype_default.'.item'){
                 $prefix = $ctype_default .'/';
             }
 
