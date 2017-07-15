@@ -365,6 +365,7 @@
     define('LANG_LIST_LIMIT',                'Entries in list');
     define('LANG_LIST_ALL',					 'Show all');
     define('LANG_LIST_EMPTY',                'No items to display');
+    define('LANG_TARGET_LIST_EMPTY',         'No %s to display');
     define('LANG_LIST_NONE_SELECTED',        'Nothing selected');
     define('LANG_DOWNLOAD',                  'Download');
     define('LANG_UPLOAD',                    'Upload');
@@ -404,6 +405,7 @@
     define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');
     define('LANG_DELETE_SELECTED',			 'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');
+    define('LANG_TRASH_DELETE_SELECTED_CONFIRM', 'Are you sure you want to delete the selected items in the trash?');
     define('LANG_MOVE',                      'Move');
     define('LANG_MOVE_TO_CATEGORY',          'Move to category');
     define('LANG_ON',	 					 'On');

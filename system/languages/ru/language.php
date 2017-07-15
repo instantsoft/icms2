@@ -368,6 +368,7 @@
     define('LANG_LIST_LIMIT',                'Записей в списке');
     define('LANG_LIST_ALL',					 'Показать все');
     define('LANG_LIST_EMPTY',                'Нет элементов для отображения');
+    define('LANG_TARGET_LIST_EMPTY',         'Нет %s для отображения');
     define('LANG_LIST_NONE_SELECTED',        'Ничего не выделено');
     define('LANG_DOWNLOAD',                  'Скачать');
     define('LANG_UPLOAD',                    'Загрузить');
@@ -407,6 +408,7 @@
     define('LANG_ITEM_RESTORE_SUCCESS', 	 'Запись успешно восстановлена');
     define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
+    define('LANG_TRASH_DELETE_SELECTED_CONFIRM', 'Удалить выделенные элементы в корзину?');
     define('LANG_MOVE',                      'Перенести');
     define('LANG_MOVE_TO_CATEGORY',          'Перенести в категорию');
     define('LANG_ON',	 					 'Вкл.');

@@ -356,6 +356,7 @@ span.wrap > span.counter:after {
 .cp_toolbar .tree_folder .item { background: url("../../images/icons/folders_explorer.png") no-repeat left center; }
 .cp_toolbar .edit .item { background: url("../../images/icons/edit.png") no-repeat left center; }
 .cp_toolbar .delete .item { background: url("../../images/icons/delete.png") no-repeat left center; }
+.cp_toolbar .basket_put .item { background: url("../../images/icons/basket_put.png") no-repeat left center; }
 .cp_toolbar .move .item { background: url("../../images/icons/move_to_folder.png") no-repeat left center; }
 .cp_toolbar .save .item { background: url("../../images/icons/save.png") no-repeat left center; }
 .cp_toolbar .cancel .item { background: url("../../images/icons/cancel.png") no-repeat left center; }

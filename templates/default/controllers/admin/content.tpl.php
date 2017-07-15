@@ -81,6 +81,13 @@
     ));
 
     $this->addToolButton(array(
+        'class' => 'basket_put',
+        'title' => LANG_BASKET_DELETE,
+        'href'  => null,
+        'onclick' => "return icms.datagrid.submit($(this), '".LANG_TRASH_DELETE_SELECTED_CONFIRM."')",
+    ));
+
+    $this->addToolButton(array(
         'class' => 'help',
         'title' => LANG_HELP,
         'target' => '_blank',
@@ -148,6 +155,7 @@
                             $('.cp_toolbar .tree_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_order')); ?>/" + key[0]);
                             $('.cp_toolbar .move a').data('url', "<?php echo $this->href_to('content', array('item_move')); ?>/" + key[0] + "/" + key[1]);
                             $('.cp_toolbar .delete a').data('url', "<?php echo $this->href_to('content', array('item_delete')); ?>/" + key[0] + '?csrf_token='+icms.forms.getCsrfToken());
+                            $('.cp_toolbar .basket_put a').data('url', "<?php echo $this->href_to('content', array('item_trash_put')); ?>/" + key[0] + '?csrf_token='+icms.forms.getCsrfToken());
                             $('.cp_toolbar .logs a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'moderation', 'logs', 'content')); ?>/" + key[0]);
                             if (key[1] == 1){
                                 $('.cp_toolbar .edit_folder a').hide();

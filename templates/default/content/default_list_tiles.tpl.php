@@ -156,4 +156,12 @@
         <?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
     <?php } ?>
 
-<?php } else { echo LANG_LIST_EMPTY; } ?>
+<?php } else {
+
+    if(!empty($ctype['labels']['many'])){
+        echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']);
+    } else {
+        echo LANG_LIST_EMPTY;
+    }
+
+}
