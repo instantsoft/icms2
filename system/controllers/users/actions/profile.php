@@ -92,7 +92,7 @@ class actionUsersProfile extends cmsAction {
 
         if ($this->cms_user->is_logged && !$profile['is_deleted']) {
 
-            if ($this->options['is_friends_on'] && !$this->is_own_profile){
+            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
                 if ($this->is_friend_profile){
                     $tool_buttons['friend_delete'] = array(
                         'title' => LANG_USERS_FRIENDS_DELETE,

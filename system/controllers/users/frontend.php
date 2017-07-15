@@ -344,9 +344,7 @@ class users extends cmsFrontend {
             return;
         }
 
-        $notice_text = array();
-
-        $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE);
+        $notice_text = array(sprintf(LANG_USERS_LOCKED_NOTICE));
 
         if($user['lock_until']) {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_UNTIL, html_date($user['lock_until']));
@@ -356,9 +354,13 @@ class users extends cmsFrontend {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_REASON, $user['lock_reason']);
         }
 
-        $notice_text = implode('<br>', $notice_text);
+        if($user['lock_reason']){
+            $this->model->update('{users}', $user['id'], array(
+                'ip' => null
+            ), true);
+        }
 
-        cmsUser::addSessionMessage($notice_text, 'error');
+        cmsUser::addSessionMessage(implode('<br>', $notice_text), 'error');
 
         cmsUser::logout();
 

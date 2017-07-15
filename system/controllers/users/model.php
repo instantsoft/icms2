@@ -508,6 +508,9 @@ class modelUsers extends cmsModel {
 
         $this->filterIn('id', $id_list);
 
+        $this->filterIsNull('is_locked');
+        $this->filterIsNull('is_deleted');
+
         $users = $this->get('{users}', function($user, $model){
 
             return array(

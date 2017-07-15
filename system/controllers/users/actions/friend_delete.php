@@ -11,7 +11,7 @@ class actionUsersFriendDelete extends cmsAction {
         if (!$this->model->isFriendshipExists($this->cms_user->id, $friend_id)){ return false; }
 
         $friend = $this->model->getUser($friend_id);
-        if (!$friend){ cmsCore::error404(); }
+        if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
 
         //
         // Запрос по ссылке из профиля

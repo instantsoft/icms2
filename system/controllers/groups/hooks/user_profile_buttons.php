@@ -12,7 +12,7 @@ class onGroupsUserProfileButtons extends cmsAction {
 
         $my_groups = $this->model->getUserMemberships($this->cms_user->id);
 
-        if ($my_groups){
+        if ($my_groups && !$data['profile']['is_deleted'] && !$data['profile']['is_locked']){
 
             $data['buttons'][] = array(
                 'title' => LANG_GROUPS_INVITE_USER,

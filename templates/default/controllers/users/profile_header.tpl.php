@@ -36,13 +36,13 @@
             <?php } else { ?>
                 <?php html($profile['nickname']); ?>
             <?php } ?>
+            <?php if ($profile['is_locked']){ ?>
+                <span class="is_locked"><?php echo LANG_USERS_LOCKED_NOTICE_PUBLIC; ?></span>
+            <?php } ?>
+            <?php if ($profile['is_deleted']){ ?>
+                <span class="is_locked"><?php echo LANG_USERS_IS_DELETED; ?></span>
+            <?php } ?>
         </h1>
-        <?php if ($profile['is_locked']){ ?>
-            <span class="is_locked"><?php echo LANG_USERS_LOCKED_NOTICE_PUBLIC; ?></span>
-        <?php } ?>
-        <?php if ($profile['is_deleted']){ ?>
-            <span class="is_locked"><?php echo LANG_USERS_IS_DELETED; ?></span>
-        <?php } ?>
 
         <?php if ($this->controller->options['is_status']) { ?>
             <div class="status" <?php if (!$profile['status']){ ?>style="display:none"<?php } ?>>

@@ -11,7 +11,7 @@ class actionUsersFriendAdd extends cmsAction {
         if ($this->cms_user->isFriend($friend_id)){ return false; }
 
         $friend = $this->model->getUser($friend_id);
-        if (!$friend){ cmsCore::error404(); }
+        if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
 
         //
         // Запрос по ссылке из профиля
