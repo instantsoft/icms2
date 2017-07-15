@@ -50,7 +50,6 @@ icms.content = (function ($) {
             no_results_text: LANG_LIST_EMPTY,
             placeholder_text_multiple: LANG_CONTENT_SELECT_CATEGORIES,
             search_contains: true,
-            add_new_options: true,
             hide_results_on_select: false
         });
 
