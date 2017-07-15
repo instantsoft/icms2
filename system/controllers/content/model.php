@@ -1244,6 +1244,8 @@ class modelContent extends cmsModel{
 
         cmsCache::getInstance()->clean('content.relations');
 
+        $relation['ordering'] = $this->getNextOrdering('content_relations');
+
         return $this->insert('content_relations', $relation);
 
     }
@@ -1277,6 +1279,8 @@ class modelContent extends cmsModel{
 
         $this->filterEqual('ctype_id', $ctype_id);
 
+        $this->orderBy('ordering', 'asc');
+
         return $this->get('content_relations', function($item, $model){
 
             $item['child_labels'] = cmsModel::yamlToArray($item['child_labels']);
@@ -1303,8 +1307,9 @@ class modelContent extends cmsModel{
         $this->filterEqual('child_ctype_id', $ctype_id);
         $this->filterEqual('target_controller', $target_controller);
 
-        $parents = $this->get('content_relations');
+        $this->orderBy('ordering', 'asc');
 
+        $parents = $this->get('content_relations');
         if (!$parents) { return array(); }
 
         foreach ($parents as $id => $parent){
@@ -1406,6 +1411,16 @@ class modelContent extends cmsModel{
 
         return $this->get($parent_ctype_table);
 
+
+    }
+
+    public function reorderContentRelation($fields_ids_list){
+
+        $this->reorderByList('content_relations', $fields_ids_list);
+
+        cmsCache::getInstance()->clean('content.relations');
+
+        return true;
 
     }
 

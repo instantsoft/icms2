@@ -29,7 +29,8 @@ class onUsersContentBeforeChilds extends cmsAction {
                     'title'       => $relation['title'],
                     'url'         => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
                     'counter'     => $count,
-                    'relation_id' => $relation['id']
+                    'relation_id' => $relation['id'],
+                    'ordering'    => $relation['ordering']
                 );
 
             }
@@ -45,9 +46,11 @@ class onUsersContentBeforeChilds extends cmsAction {
                 }
 
                 $childs['lists'][] = array(
-                    'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
-                    'ctype_name' => $relation['child_ctype_name'],
-                    'html'       => $this->renderProfilesList(href_to($ctype['name'], $item['slug'] . '.html'))
+                    'title'       => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
+                    'ctype_name'  => $relation['child_ctype_name'],
+                    'html'        => $this->renderProfilesList(href_to($ctype['name'], $item['slug'] . '.html')),
+                    'relation_id' => $relation['id'],
+                    'ordering'    => $relation['ordering']
                 );
 
             }

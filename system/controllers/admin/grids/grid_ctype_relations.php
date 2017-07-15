@@ -5,13 +5,13 @@ function grid_ctype_relations($controller){
     cmsCore::loadAllControllersLanguages();
 
     $options = array(
-        'is_sortable' => true,
-        'is_filter' => false,
+        'is_sortable'   => false,
+        'is_filter'     => false,
         'is_pagination' => false,
-        'is_draggable' => false,
-        'order_by' => 'id',
-        'order_to' => 'asc',
-        'show_id' => false
+        'is_draggable'  => true,
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc',
+        'show_id'       => false
     );
 
     $columns = array(

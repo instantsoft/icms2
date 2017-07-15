@@ -748,6 +748,54 @@ function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
 
 }
 
+/**
+ * Сортирует двумерный ассоциативный массив по полю (полям)
+ *
+ * $fields может содержать как просто имя поля для сортировки,
+ * так и массив полей с направлениями сортировок, например:
+ * array(array('by' => 'ordering', 'to' => 'asc'), array('by' => 'title', 'to' => 'desc'))
+ *
+ * @param array &$array
+ * @param string | array $fields
+ * @param string $direction
+ * @return boolean
+ */
+function array_order_by(&$array, $fields, $direction = 'asc') {
+
+    if(!$array){ return false; }
+
+    if(is_string($fields)){
+        $list = array(array(
+            'by' => $fields,
+            'to' => $direction
+        ));
+    } else {
+        $list = $fields;
+    }
+
+    $args = array();
+
+    foreach ($array as $k => $item) {
+
+        $key = 0;
+
+        foreach ($list as $order) {
+
+            $args[$key][$k] = $item[$order['by']]; 
+                $key++;
+            $args[$key] = constant('SORT_'.strtoupper($order['to']));
+                $key++;
+
+        }
+
+    }
+
+    $args[] = &$array;
+
+    return call_user_func_array('array_multisort', $args);
+
+}
+
 //============================================================================//
 
 /**

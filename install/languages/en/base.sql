@@ -155,9 +155,10 @@ CREATE TABLE `{#}content_relations` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `ordering` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `ctype_id` (`ctype_id`),
-  KEY `child_ctype_id` (`child_ctype_id`,`target_controller`)
+  KEY `ctype_id` (`ctype_id`,`ordering`),
+  KEY `child_ctype_id` (`child_ctype_id`,`target_controller`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_relations_bind`;

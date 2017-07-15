@@ -155,7 +155,8 @@ class actionContentItemView extends cmsAction {
                         'title'       => $relation['title'],
                         'url'         => href_to($ctype['name'], $item['slug'].'/view-'.$relation['child_ctype_name']),
                         'counter'     => $count,
-                        'relation_id' => $relation['id']
+                        'relation_id' => $relation['id'],
+                        'ordering'    => $relation['ordering']
                     );
 
                 }
@@ -182,9 +183,11 @@ class actionContentItemView extends cmsAction {
                     }
 
                     $childs['lists'][] = array(
-                        'title'      => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
-                        'ctype_name' => $relation['child_ctype_name'],
-                        'html'       => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html'))
+                        'title'       => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
+                        'ctype_name'  => $relation['child_ctype_name'],
+                        'html'        => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
+                        'relation_id' => $relation['id'],
+                        'ordering'    => $relation['ordering']
                     );
 
                 }
@@ -196,6 +199,9 @@ class actionContentItemView extends cmsAction {
             list($ctype, $childs, $item) = cmsEventsManager::hook('content_before_childs', array($ctype, $childs, $item));
 
         }
+
+        array_order_by($childs['tabs'], 'ordering');
+        array_order_by($childs['lists'], 'ordering');
 
         // показываем вкладку связи, если передана
         if ($this->request->has('child_ctype_name')){

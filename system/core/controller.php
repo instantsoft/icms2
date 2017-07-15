@@ -719,7 +719,8 @@ class cmsController {
 
     /**
      * Редирект на указанный адрес
-     * @param str $url
+     * @param string $url
+     * @param integer $code
      */
     public function redirect($url, $code=303){
 
@@ -754,8 +755,8 @@ class cmsController {
 
     /**
      * Редирект на другой контроллер
-     * @param str $controller
-     * @param str $action
+     * @param string $controller
+     * @param string $action
      * @param array $params
      * @param array $query
      */
@@ -774,14 +775,13 @@ class cmsController {
 
     /**
      * Редирект на собственный экшен
-     * @param str $controller
-     * @param str $action
+     * @param string $action
      * @param array $params
      * @param array $query
      */
-    public function redirectToAction($action, $params=array(), $query=array()){
+    public function redirectToAction($action='', $params=array(), $query=array()){
 
-        if ($action=='index') {
+        if (!$action || $action=='index') {
             $location = $this->root_url;
         } else {
             $location = $this->root_url . '/' . $action;
@@ -800,7 +800,7 @@ class cmsController {
 
     /**
      * Возвращает предыдущий URL текущего сайта
-     * @return str
+     * @return string
      */
     public function getBackURL() {
 

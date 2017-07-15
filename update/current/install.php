@@ -45,6 +45,10 @@ function install_package(){
         $core->db->query("ALTER TABLE  `{#}content_relations` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content' AFTER `title`");
     }
 
+    if(!isFieldExists('content_relations', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}content_relations` ADD `ordering` INT(11) UNSIGNED NOT NULL DEFAULT '0'");
+    }
+
     if(!isFieldExists('content_relations_bind', 'target_controller')){
         $core->db->query("ALTER TABLE `{#}content_relations_bind` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content'");
     }
@@ -159,7 +163,7 @@ function install_package(){
             'date_updated', 'group_id'
         ),
         'content_relations' => array(
-            'child_ctype_id'
+            'child_ctype_id', 'ctype_id'
         ),
         'content_relations_bind' => array(
             'parent_item_id', 'child_item_id'
@@ -179,7 +183,8 @@ function install_package(){
             'group_id' => array('group_id', 'date_updated')
         ),
         'content_relations' => array(
-            'child_ctype_id' => array('child_ctype_id', 'target_controller')
+            'child_ctype_id' => array('child_ctype_id', 'target_controller', 'ordering'),
+            'ctype_id' => array('ctype_id', 'ordering')
         ),
         'content_relations_bind' => array(
             'parent_item_id' => array('parent_item_id', 'target_controller')
