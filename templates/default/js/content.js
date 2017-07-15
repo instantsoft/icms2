@@ -48,7 +48,10 @@ icms.content = (function ($) {
         $(select_custom).chosen({
             width: '100%',
             no_results_text: LANG_LIST_EMPTY,
-            placeholder_text_multiple: LANG_CONTENT_SELECT_CATEGORIES
+            placeholder_text_multiple: LANG_CONTENT_SELECT_CATEGORIES,
+            search_contains: true,
+            add_new_options: true,
+            hide_results_on_select: false
         });
 
         $(select_base).on('change', function (){

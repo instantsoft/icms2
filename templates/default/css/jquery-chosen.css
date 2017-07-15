@@ -391,6 +391,22 @@
 .chosen-rtl.chosen-container-single.chosen-with-drop .chosen-single div b {
   background-position: -12px 2px;
 }
+.chosen-add-option-button {
+    background: #2980b9 none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    height: 25px;
+    line-height: 50%;
+    margin-left: 10px;
+    padding: auto 10px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 white;
+}
+
 /* @end */
 /* @group Retina compatibility */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 144dpi), only screen and (min-resolution: 1.5dppx) {
