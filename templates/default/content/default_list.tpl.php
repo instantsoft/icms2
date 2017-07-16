@@ -41,10 +41,13 @@
                 <?php foreach($fields as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; } ?>
-                    <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                    <?php if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; } ?>
+                    <?php if ($field['is_system'] || !$field['is_in_list']) { continue; } ?>
 
+                    <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
+
+                    <?php if (empty($item[$field['name']]) && $item[$field['name']] !== '0') { continue; } ?>
+                    <?php $field['html'] = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                    <?php if (!$field['html']) { continue; } ?>
                     <?php
                         if (!isset($field['options']['label_in_list'])) {
                             $label_pos = 'none';
@@ -81,7 +84,7 @@
                                 <?php if (!empty($item['is_private_item'])) { ?>
                                     <div class="private_field_hint"><?php echo $item['private_item_hint']; ?></div>
                                 <?php } else { ?>
-                                    <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                                    <?php echo $field['html']; ?>
                                 <?php } ?>
                             </div>
                         <?php } ?>
