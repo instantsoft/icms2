@@ -21,6 +21,7 @@ class fieldNumber extends cmsFormField {
     public function getRules() {
 
         $this->rules[] = array('number');
+        $this->rules[] = array('max_length', 7);
 
         return $this->rules;
 

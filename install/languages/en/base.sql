@@ -1197,6 +1197,7 @@ CREATE TABLE `{#}uploaded_files` (
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID',
   `user_id` int(11) unsigned DEFAULT NULL COMMENT 'Owner ID',
+  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `path` (`path`),
   KEY `user_id` (`user_id`),

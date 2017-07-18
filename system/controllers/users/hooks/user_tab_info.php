@@ -6,6 +6,10 @@ class onUsersUserTabInfo extends cmsAction {
 
         if ($tab_name == 'friends'){
 
+            if(empty($this->options['is_friends_on'])){
+                return false;
+            }
+
             // Проверяем наличие друзей
             $this->friends_count = $this->model->getFriendsCount($profile['id']);
             if (!$this->friends_count) { return false; }

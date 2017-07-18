@@ -625,6 +625,8 @@ class groups extends cmsFrontend {
 
     public function getToolButtons($group) {
 
+        $users_options = cmsController::loadOptions('users');
+
         $tool_buttons = array();
 
         if ($group['access']['is_can_edit']){
@@ -635,7 +637,7 @@ class groups extends cmsFrontend {
             );
         }
 
-        if ($group['access']['is_can_invite']){
+        if ($group['access']['is_can_invite'] && !empty($users_options['is_friends_on'])){
             $tool_buttons['groups_invite'] = array(
                 'title'   => LANG_GROUPS_INVITE_FR,
                 'options' => array('class' => 'group_add ajax-modal'),

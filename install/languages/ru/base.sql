@@ -1196,6 +1196,7 @@ CREATE TABLE `{#}uploaded_files` (
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект привязки',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта',
   `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID владельца',
+  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата добавления',
   PRIMARY KEY (`id`),
   UNIQUE KEY `path` (`path`),
   KEY `user_id` (`user_id`),

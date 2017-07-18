@@ -77,6 +77,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `size` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `name`");
     }
 
+    if(!isFieldExists('uploaded_files', 'date_add')){
+        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `date_add` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
+    }
+
     if(isFieldExists('uploaded_files', 'url_key')){
         $core->db->query("ALTER TABLE `{#}uploaded_files` DROP `url_key`");
     }
