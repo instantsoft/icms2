@@ -526,4 +526,8 @@ class modelComments extends cmsModel {
 
     }
 
+    public function isRssFeedEnable() {
+        return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
+    }
+
 }

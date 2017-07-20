@@ -48,7 +48,7 @@ class comments extends cmsFrontend {
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
         $rss_link = '';
-        if ($this->isControllerEnabled('rss')){
+        if ($this->isControllerEnabled('rss') && $this->model->isRssFeedEnable()){
             $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query(array(
                 'tc' => $this->target_controller,
                 'ts' => $this->target_subject,

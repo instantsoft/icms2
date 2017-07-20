@@ -317,6 +317,7 @@ function save_controller_options($controllers) {
         $form_file = $controller_root_path.'backend/forms/form_options.php';
         $form_name = $controller.'options';
         cmsCore::loadControllerLanguage($controller);
+        cmsCore::includeFile('system/controllers/'.$controller.'/model.php');
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
             $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));

@@ -31,7 +31,13 @@ class actionCommentsIndex extends cmsAction{
         // Получаем HTML списка комментариев
         $items_list_html = $this->renderCommentsList($page_url, $dataset_name);
 
+        $rss_link = '';
+        if ($this->isControllerEnabled('rss') && $dataset_name == 'all' && $this->model->isRssFeedEnable()){
+            $rss_link = href_to('rss', 'feed', 'comments');
+        }
+
         return $this->cms_template->render('index', array(
+            'rss_link'        => $rss_link,
             'datasets'        => $datasets,
             'dataset_name'    => $dataset_name,
             'dataset'         => $dataset,
