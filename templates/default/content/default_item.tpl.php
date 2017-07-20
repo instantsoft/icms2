@@ -7,7 +7,7 @@
             <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
         <?php } ?>
     </h1>
-    <?php if ($item['parent_id']){ ?>
+    <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
         <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
             <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
         </h2>
@@ -100,7 +100,7 @@
         if ($hooks_html) { echo html_each($hooks_html); }
     ?>
 
-    <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_list']) &&  $item['tags']){ ?>
+    <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_item']) &&  $item['tags']){ ?>
         <div class="tags_bar">
             <?php echo html_tags_bar($item['tags']); ?>
         </div>

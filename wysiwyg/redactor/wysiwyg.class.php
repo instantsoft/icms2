@@ -61,6 +61,9 @@ class cmsWysiwygRedactor {
         //отмена конвертирования дивов в параграфы
         $options['convertDivs'] = false;
 
+        // прилипание тулбара
+        $options['toolbarFixed'] = true;
+
         if (!$user->is_admin) {
             $options['buttonSource'] = false;
         }

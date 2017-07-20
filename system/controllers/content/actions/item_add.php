@@ -112,7 +112,7 @@ class actionContentItemAdd extends cmsAction {
                     continue;
                 }
 
-                $parent_id = $this->request->get($parent['id_param_name'], 0, 'integer');
+                $parent_id = $this->request->get($parent['id_param_name'], 0);
                 $parent_item = $parent_id ? $this->model->getContentItem($parent['ctype_name'], $parent_id) : false;
 
                 if($parent_item){
@@ -134,6 +134,10 @@ class actionContentItemAdd extends cmsAction {
                 break;
 
             }
+        }
+
+        if (!empty($is_check_parent_perm) && empty($relation_id)){
+            cmsCore::error404();
         }
 
         // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя

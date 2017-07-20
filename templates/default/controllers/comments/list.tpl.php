@@ -6,7 +6,11 @@ $is_guests_allowed =  !empty($this->controller->options['is_guests']);
 $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma);
 
 ?>
-
+<?php if ($rss_link){ ?>
+    <div class="content_list_rss_icon">
+        <a href="<?php echo $rss_link; ?>">RSS</a>
+    </div>
+<?php } ?>
 <?php if ($user->is_logged){ ?>
     <?php if ($is_karma_allowed){ ?>
         <div class="track">

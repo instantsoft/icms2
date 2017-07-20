@@ -10,7 +10,7 @@
 
     $base_url = $ctype['name'];
 
-    if ($item['parent_id']){
+    if ($item['parent_id'] && !empty($ctype['is_in_groups'])){
 
         $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
@@ -63,6 +63,10 @@
                     'title' => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
                     'href'  => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
                 ));
+            }
+        }
+        if ($childs && !empty($childs['to_unbind'])){
+            foreach($childs['to_unbind'] as $relation){
                 $this->addToolButton(array(
                     'class' => 'newspaper_delete ajax-modal',
                     'title' => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),

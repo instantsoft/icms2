@@ -10,7 +10,7 @@
 		<?php foreach($items as $item) { ?>
 			<li data-id="<?php echo $item['id']; ?>">
 				<?php echo $item['title']; ?>
-                <?php if ($is_allowed_to_bind) { ?>
+                <?php if ($allowed_to_unbind_perm && ($allowed_to_unbind_perm == 'all' || $item['user_id'] == $auth_user_id)) { ?>
                     <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
                 <?php } ?>
 			</li>

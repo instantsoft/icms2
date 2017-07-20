@@ -52,8 +52,9 @@ class fieldParent extends cmsFormField {
 
 		$parent_ctype_name = $this->getParentContentTypeName();
 		$parent_items = false;
+        $auth_user_id = cmsUser::get('id');
 
-        $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : cmsUser::get('id');
+        $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : $auth_user_id;
 
         if ($value){
             $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
@@ -62,16 +63,23 @@ class fieldParent extends cmsFormField {
         }
 
 		$perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_to_parent');
-
 		$is_allowed_to_bind = ($perm && (
-								($perm == 'all_to_all') ||
-								($perm == 'own_to_all' && $author_id == cmsUser::get('id')) ||
-								($perm == 'own_to_own' && $author_id == cmsUser::get('id'))
+								($perm == 'all_to_all') || ($perm == 'all_to_own') || ($perm == 'all_to_other') ||
+								($perm == 'own_to_all' && $author_id == $auth_user_id) ||
+								($perm == 'own_to_other' && $author_id == $auth_user_id) ||
+								($perm == 'own_to_own' && $author_id == $auth_user_id) ||
+								($perm == 'other_to_own' && $author_id != $auth_user_id) ||
+								($perm == 'other_to_other' && $author_id != $auth_user_id) ||
+								($perm == 'other_to_all' && $author_id != $auth_user_id)
 							)) || cmsUser::isAdmin();
 
         $perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'add_to_parent');
-
         $is_allowed_to_add = ($perm && (($perm == 'to_all') || ($perm == 'to_own'))) || cmsUser::isAdmin();
+
+        $allowed_to_unbind_perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_off_parent');
+        if(cmsUser::isAdmin()){
+            $allowed_to_unbind_perm = 'all';
+        }
 
         if(!$parent_items && !$is_allowed_to_bind){
             return '';
@@ -85,6 +93,8 @@ class fieldParent extends cmsFormField {
             'input_action'       => $this->input_action,
             'value'              => $value,
             'items'              => $parent_items,
+            'auth_user_id'       => $auth_user_id,
+            'allowed_to_unbind_perm' => $allowed_to_unbind_perm,
             'is_allowed_to_bind' => $is_allowed_to_bind,
             'is_allowed_to_add'  => $is_allowed_to_add
         ));

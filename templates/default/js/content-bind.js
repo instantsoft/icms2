@@ -35,8 +35,9 @@ icms.contentBind = (function ($) {
 		var $resultPane = $form.find('.result-pane');
 		var $loading = $resultPane.find('.loading');
 
-		values = {}, valuesCount = 0, authors = 'own';
+		values = {}, valuesCount = 0;
         mode = $form.data('mode');
+        authors = $form.find('.pills-menu .active a').data('mode');
 
 		$input.keyup(function(e){
 			if (e.keyCode == 13){

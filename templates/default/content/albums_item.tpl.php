@@ -47,7 +47,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
                     <?php echo html_spellcount($item['hits_count'], LANG_HITS_SPELL); ?>
                 </span>
             <?php } ?>
-            <?php if ($item['parent_id']){ ?>
+            <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
                 <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
             <?php } ?>
             <?php if ($is_tags){ ?>

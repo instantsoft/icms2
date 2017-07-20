@@ -71,3 +71,4 @@ define('LANG_COMMENTS_ALL_LIST', 'Весь список');
 define('LANG_COMMENTS_APPROVE', 'Одобрить');
 define('LANG_COMMENTS_MODERATE_HINT', 'Комментарий будет опубликован после проверки модератором');
 define('LANG_COMMENTS_LIMIT_NESTING', 'Максимальный уровень вложенности');
+define('LANG_COMMENTS_RSS_TITLE', 'Комментарий для %s');

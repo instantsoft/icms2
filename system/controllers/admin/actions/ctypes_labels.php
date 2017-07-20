@@ -39,9 +39,10 @@ class actionAdminCtypesLabels extends cmsAction {
                 } else {
 
                     $activity_controller->addType(array(
-                        'controller' => 'content',
-                        'name' => "add.{$ctype['name']}",
-                        'title' => sprintf(LANG_CONTENT_ACTIVITY_ADD, $ctype['labels']['many']),
+                        'controller'  => 'content',
+                        'name'        => "add.{$ctype['name']}",
+                        'is_enabled'  => 0,
+                        'title'       => sprintf(LANG_CONTENT_ACTIVITY_ADD, $ctype['labels']['many']),
                         'description' => sprintf(LANG_CONTENT_ACTIVITY_ADD_DESC, $ctype['labels']['create'], '%s')
                     ));
 

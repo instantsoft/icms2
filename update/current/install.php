@@ -139,6 +139,19 @@ function install_package(){
         ));
     }
 
+    if(!$core->db->getRowsCount('rss_feeds', "ctype_name = 'comments'", 1)){
+        $core->db->insert('rss_feeds', array(
+            'ctype_name' => 'comments',
+            'title' => 'Комментарии',
+            'mapping' => array(
+                'title' => 'target_title',
+                'description' => 'content_html',
+                'pubDate' => 'date_pub'
+            ),
+            'is_enabled' => 1
+        ));
+    }
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -258,6 +271,15 @@ function install_package(){
             'bind_to_parent'
         )
     ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
+
+    add_perms(array(
+        'groups' => array(
+            'bind_off_parent'
+        ),
+        'users' => array(
+            'bind_off_parent'
+        )
+    ), 'list', 'own,all');
 
     return true;
 

@@ -404,7 +404,9 @@ article div.content_categories:last-child {
     text-indent: 20px;
     background:url("../images/icons/rss.png") no-repeat left center;
 }
-
+#comments_widget .content_list_rss_icon {
+    margin: 6px 0 0 15px;
+}
 /* ========================================================================== */
 
 .content_list {

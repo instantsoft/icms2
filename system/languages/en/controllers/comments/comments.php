@@ -69,3 +69,4 @@ define('LANG_COMMENTS_ALL_LIST', 'All comments on moderation');
 define('LANG_COMMENTS_APPROVE', 'Approve');
 define('LANG_COMMENTS_MODERATE_HINT', 'The comment will be published after being moderated');
 define('LANG_COMMENTS_LIMIT_NESTING', 'The maximum comments nesting level');
+define('LANG_COMMENTS_RSS_TITLE', 'Comment on %s');

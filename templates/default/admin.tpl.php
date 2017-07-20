@@ -79,7 +79,7 @@
                     $messages = cmsUser::getSessionMessages();
                     if ($messages){
                         ?>
-                        <div class="sess_messages">
+                        <div class="sess_messages animated fadeIn">
                             <?php
                                 foreach($messages as $message){
                                     echo $message;

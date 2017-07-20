@@ -116,8 +116,27 @@ class actionContentItemBindForm extends cmsAction {
 
 		$filter_fields['id'] = 'ID';
 
+        $show_all_tab = $show_my_tab = $is_allowed_to_bind;
+
+        // показываем родительские записи
+        if ($mode == 'parents'){
+            $show_all_tab = !in_array($perm_bind_to_parent, array('all_to_own', 'own_to_own', 'other_to_own'));
+            $show_my_tab  = !in_array($perm_bind_to_parent, array('own_to_other', 'other_to_other', 'all_to_other'));
+        }
+
+        // показываем дочерние записи
+        if ($mode == 'childs'){
+            $show_all_tab = !in_array($perm_bind_to_parent, array('own_to_all', 'own_to_own', 'own_to_other'));
+            $show_my_tab  = !in_array($perm_bind_to_parent, array('other_to_own', 'other_to_other', 'other_to_all'));
+        }
+
+        if($this->cms_user->is_admin){
+            $show_all_tab = true;
+        }
+
         return $this->cms_template->render('item_bind_form', array(
-			'perm_bind_to_parent' => $perm_bind_to_parent,
+			'show_all_tab'  => $show_all_tab,
+			'show_my_tab'   => $show_my_tab,
 			'mode'          => $mode,
             'ctype'         => $ctype,
             'child_ctype'   => $child_ctype,

@@ -12,6 +12,7 @@
     define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
     define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
     define('LANG_RULE_USERS_BIND_TO_PARENT', 'Привязка записей типов контента');
+    define('LANG_RULE_USERS_BIND_OFF_PARENT', 'Отвязка записей типов контента');
     define('LANG_PERM_OPTION_MY',           'Только свой');
     define('LANG_PERM_OPTION_ANYUSER',      'Любой');
     define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');

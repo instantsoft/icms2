@@ -10,11 +10,13 @@
 
 	<div class="filter-tabs">
 		<ul class="pills-menu">
-			<li class="active">
-				<a href="#own" data-mode="own"><?php echo LANG_CONTENT_OWN_ITEMS; ?></a>
-			</li>
-            <?php if(!in_array($perm_bind_to_parent, array('all_to_own', 'own_to_own', 'other_to_own'))){ ?>
-                <li>
+            <?php if($show_my_tab){ ?>
+                <li class="active">
+                    <a href="#own" data-mode="own"><?php echo LANG_CONTENT_OWN_ITEMS; ?></a>
+                </li>
+            <?php } ?>
+            <?php if($show_all_tab){ ?>
+                <li <?php if(!$show_my_tab){ ?>class="active"<?php } ?>>
                     <a href="#all" data-mode="all"><?php echo LANG_ALL; ?></a>
                 </li>
             <?php } ?>

@@ -1012,7 +1012,7 @@ class content extends cmsFrontend {
 
     public function prepareItemSeo($item, $fields, $ctype) {
 
-        $_item = array();
+        $_item = $item;
 
         foreach ($fields as $field) {
 

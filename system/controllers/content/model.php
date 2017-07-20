@@ -2285,11 +2285,11 @@ class modelContent extends cmsModel{
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
 
-        $this->useCache("content.list.{$ctype_name}");
+        $this->useCache('content.list.'.$ctype_name);
 
         $user = cmsUser::getInstance();
 
-        return $this->get($table_name, function($item, $model) use ($user, $callback){
+        return $this->get($table_name, function($item, $model) use ($user, $callback, $ctype_name){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
@@ -2298,7 +2298,7 @@ class modelContent extends cmsModel{
             );
 
             if (is_callable($callback)){
-                $item = $callback($item, $model);
+                $item = $callback($item, $model, $ctype_name);
             }
 
             return $item;

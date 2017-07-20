@@ -94,11 +94,15 @@ class actionContentItemBindList extends cmsAction {
                 $this->model->filterEqual('user_id', $user->id);
             }
 
+            if ($perm == 'other_to_own' || $perm == 'other_to_other'){
+                $this->model->filterNotEqual('user_id', $user->id);
+            }
+
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = {$item_id} AND " .
                                   'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
-                                  "r.child_item_id = i.id";
+                                  "r.child_item_id = i.id AND r.target_controller = '{$target_controller}'";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
                 $this->model->filterIsNull('r.id');
@@ -123,7 +127,7 @@ class actionContentItemBindList extends cmsAction {
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = i.id AND " .
                                   'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
-                                  "r.child_item_id = {$item_id}";
+                                  "r.child_item_id = {$item_id} AND r.target_controller = '{$target_controller}'";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
                 $this->model->filterIsNull('r.id');

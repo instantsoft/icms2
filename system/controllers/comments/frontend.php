@@ -47,6 +47,15 @@ class comments extends cmsFrontend {
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
+        $rss_link = '';
+        if ($this->isControllerEnabled('rss')){
+            $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query(array(
+                'tc' => $this->target_controller,
+                'ts' => $this->target_subject,
+                'ti' => $this->target_id
+            ));
+        }
+
         return array(
             'name'  => 'icms',
             'title' => ($comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS),
@@ -60,6 +69,7 @@ class comments extends cmsFrontend {
                 'is_highlight_new'  => $is_highlight_new,
                 'comments'          => $comments,
                 'csrf_token_seed'   => $csrf_token_seed,
+                'rss_link'          => $rss_link,
                 'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
             ))
         );

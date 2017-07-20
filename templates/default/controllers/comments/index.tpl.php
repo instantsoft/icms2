@@ -6,7 +6,11 @@
     $this->addBreadcrumb(LANG_COMMENTS, href_to($base_url));
 
 ?>
-
+<?php if ($this->controller->isControllerEnabled('rss') && $dataset_name == 'all'){ ?>
+    <div class="content_list_rss_icon">
+        <a href="<?php echo href_to('rss', 'feed', 'comments'); ?>">RSS</a>
+    </div>
+<?php } ?>
 <h1><?php echo LANG_COMMENTS; ?></h1>
 
 <?php if (sizeof($datasets)>1){ ?>

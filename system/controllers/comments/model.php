@@ -261,7 +261,7 @@ class modelComments extends cmsModel {
 
     }
 
-    public function getComments(){
+    public function getComments($callback = null){
 
         $user = cmsUser::getInstance();
 
@@ -278,7 +278,7 @@ class modelComments extends cmsModel {
 
         $this->useCache('comments.list');
 
-        return $this->get('comments', function($item, $model){
+        return $this->get('comments', function($item, $model) use ($callback){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
@@ -286,6 +286,10 @@ class modelComments extends cmsModel {
                 'is_online' => cmsUser::userIsOnline($item['user_id']),
                 'avatar'    => $item['user_avatar']
             );
+
+            if (is_callable($callback)){
+                $item = $callback($item, $model);
+            }
 
             return $item;
 

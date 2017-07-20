@@ -26,7 +26,7 @@
                     <?php if(!empty($feed['mapping']['title'])) { ?>
                         <title><?php html($item[$feed['mapping']['title']]); ?></title>
                     <?php } ?>
-                    <link><?php echo href_to_abs($feed['ctype_name'], $item['slug'].'.html'); ?></link>
+                    <link><?php echo $item['page_url']; ?></link>
                     <?php if(!empty($feed['mapping']['description'])) { ?>
                         <description><?php html(html_clean($item[$feed['mapping']['description']], 150)); ?></description>
                         <yandex:full-text><?php html(html_clean($item[$feed['mapping']['description']])); ?></yandex:full-text>
