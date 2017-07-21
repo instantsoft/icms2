@@ -103,10 +103,11 @@ class cmsConfig {
 			$this->upload_host = str_replace($host, '', $this->upload_host); $replace_upload_host_protocol = true;
 		}
 
-        $this->set('root_path', ROOT . $this->root);
+        $this->set('document_root', rtrim(PATH, $this->root));
+        $this->set('root_path', PATH . DIRECTORY_SEPARATOR);
         $this->set('system_path', $this->root_path . 'system/');
-        $this->set('upload_path', ROOT . $this->upload_root);
-        $this->set('cache_path', ROOT . $this->cache_root);
+        $this->set('upload_path', $this->document_root . $this->upload_root);
+        $this->set('cache_path', $this->document_root . $this->cache_root);
 
         $protocol = 'http://';
         if(

@@ -5,10 +5,8 @@
     // Если планируете запускать задачи CRON через curl или иные http запросы, закомментируйте строку ниже
     if(PHP_SAPI != 'cli') { die('Access denied'); }
 
-	$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__);
-
     // Инициализация
-    require_once "bootstrap.php";
+    require_once 'bootstrap.php';
 
     // Подключаем шаблонизатор, чтобы был подключен хелпер с функциями
     cmsTemplate::getInstance();

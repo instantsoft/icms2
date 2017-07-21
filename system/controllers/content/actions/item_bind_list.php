@@ -94,7 +94,7 @@ class actionContentItemBindList extends cmsAction {
                 $this->model->filterEqual('user_id', $user->id);
             }
 
-            if ($perm == 'other_to_own' || $perm == 'other_to_other'){
+            if ($perm == 'other_to_own' || $perm == 'other_to_other' || $perm == 'other_to_all'){
                 $this->model->filterNotEqual('user_id', $user->id);
             }
 

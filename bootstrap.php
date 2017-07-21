@@ -2,19 +2,22 @@
 
     // Определяем корень
     define('PATH', dirname(__FILE__));
-	define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
+
+    // оставлено для совместимости, если кто-то использовал эту константу
+    // в CMS не используется нигде
+    define('ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DIRECTORY_SEPARATOR));
 
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
 
 	// Подключаем автозагрузчик классов
-	require_once PATH . '/system/config/autoload.php';
+    require_once PATH . '/system/config/autoload.php';
 
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
 
 	// Инициализируем конфиг
-	$config = cmsConfig::getInstance();
+    $config = cmsConfig::getInstance();
 
     // дебаг отключен - скрываем все сообщения об ошибках
     if(!$config->debug){
@@ -32,7 +35,7 @@
 
     // Проверяем, что система установлена
     if (!$config->isReady()){
-        $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath(ROOT)), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
+        $root = str_replace(str_replace(DIRECTORY_SEPARATOR, '/', realpath($_SERVER['DOCUMENT_ROOT'])), '', str_replace(DIRECTORY_SEPARATOR, '/', PATH));
         header('location:'.$root.'/install/');
         die();
     }
@@ -41,9 +44,9 @@
     date_default_timezone_set( $config->time_zone );
 
     // Подключаем все необходимые классы и библиотеки
-	cmsCore::loadLib('html.helper');
-	cmsCore::loadLib('strings.helper');
-	cmsCore::loadLib('files.helper');
+    cmsCore::loadLib('html.helper');
+    cmsCore::loadLib('strings.helper');
+    cmsCore::loadLib('files.helper');
     cmsCore::loadLib('spyc.class');
 
     // Инициализируем ядро

@@ -49,7 +49,7 @@ class actionAdminIndex extends cmsAction {
             LANG_CP_DASHBOARD_SI_ML    => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),
             LANG_CP_DASHBOARD_SI_IP    => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
-            LANG_CP_DASHBOARD_SI_ROOT  => ROOT,
+            LANG_CP_DASHBOARD_SI_ROOT  => PATH,
             LANG_CP_DASHBOARD_SI_SESSION => session_save_path(),
             LANG_CP_DASHBOARD_SI_ION   => in_array('ionCube Loader', $extensions),
             LANG_CP_DASHBOARD_SI_ZEND  => in_array('Zend Optimizer', $extensions),

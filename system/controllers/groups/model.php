@@ -196,8 +196,11 @@ class modelGroups extends cmsModel {
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
 
             // для связи с типами контента
-            $group['ctype_name'] = 'groups';
-            $group['user_id'] = $group['owner_id'];
+            // проверка для выборки при генерации сайтмапа
+            if(isset($group['owner_id'])){
+                $group['ctype_name'] = 'groups';
+                $group['user_id'] = $group['owner_id'];
+            }
 
             return $group;
 
