@@ -45,7 +45,6 @@
             </thead>
             <tbody>
                 <?php foreach($items as $item){ ?>
-                    <?php $item['ctype'] = $ctype; ?>
                     <tr<?php if (!empty($item['is_vip'])){ ?> class="is_vip"<?php } ?>>
                         <?php if (isset($fields['photo']) && $fields['photo']['is_in_list']){ ?>
                             <td class="photo">

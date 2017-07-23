@@ -196,7 +196,8 @@ class content extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = $this->model->getContentItemsCount($ctype['name']);
-        $items = $this->model->getContentItems($ctype['name'], function ($item, $model) use ($ctype, $hide_except_title){
+        $items = $this->model->getContentItems($ctype['name'], function ($item, $model, $ctype_name, $user)
+                use ($ctype, $hide_except_title, $fields){
 
             $item['ctype'] = $ctype;
             $item['ctype_name'] = $ctype['name'];
@@ -208,6 +209,32 @@ class content extends cmsFrontend {
             if($item['is_private'] == 1){
                 $item['is_private_item'] = $item['is_private_item'] && !$item['user']['is_friend'];
                 $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
+            }
+
+            // строим поля списка
+            foreach($fields as $field){
+
+                if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; }
+                if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; }
+                if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
+
+                if (!isset($field['options']['label_in_list'])) {
+                    $label_pos = 'none';
+                } else {
+                    $label_pos = $field['options']['label_in_list'];
+                }
+
+                $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
+                if (!$field_html) { continue; }
+
+                $item['fields'][$field['name']] = array(
+                    'label_pos' => $label_pos,
+                    'type'      => $field['type'],
+                    'name'      => $field['name'],
+                    'title'     => $field['title'],
+                    'html'      => $field_html
+                );
+
             }
 
             return $item;

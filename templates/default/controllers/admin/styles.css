@@ -2040,6 +2040,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding:10px 10px;
     background:#F9F9F9;
     margin:0;
+    height: 20px;
+    line-height: 20px;
 }
 #dashboard .actions-toolbar {
     padding: 5px 0;
@@ -2064,6 +2066,8 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 #dashboard .col .col-body{
     padding:15px;
+    height: calc(100% - 40px);
+    box-sizing: border-box;
 }
 #dashboard .links {
     margin: 0 0 20px;
@@ -2081,7 +2085,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     padding-bottom: 0;
 }
 #dashboard .adb_list li > div {
-    margin:5px 0;
+    margin:5px 0; clear: both;
+}
+#dashboard .adb_list li > div > .image {
+    float: left;
+    margin: 5px 10px 0 0;
 }
 #dashboard .adb_list li .date {
     text-align: right;
@@ -2168,6 +2176,36 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     font-size: 10px;
     background:#09c;
     font-weight: bold;
+}
+ul.news_targets_tabs {
+    margin: 0 0 15px 0;
+    padding: 0;
+    list-style: none;
+    line-height: 20px;
+    height: 20px;
+}
+ul.news_targets_tabs > li {
+    display: inline-block;
+    color: #97A5A6;
+    cursor: pointer;
+    margin: 0 10px 0 0;
+}
+ul.news_targets_tabs > li:last-child {
+    margin-right: 0;
+}
+ul.news_targets_tabs > li.active_news {
+    color: inherit;
+}
+#news-loading {
+    display: none;
+}
+#icms_news_wrap {
+    height: calc(100% - 35px);
+    box-sizing: border-box;
+}
+#icms_news_wrap .icms_news_wrap {
+    height: 100%;
+    box-sizing: border-box;
 }
 .grid_field_edit > .button {
     line-height: 23px;
@@ -2308,6 +2346,41 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 form .field .input_checkbox_list#countries_view label, form .field .input_checkbox_list#countries_hide label  {
     display: block;
 }
+.spinner {
+  margin: 100px auto 0;
+  width: 70px;
+  text-align: center;
+}
+.spinner > div {
+  width: 18px;
+  height: 18px;
+  background-color: #B3C2C9;
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
 @media screen and (max-width: 980px) {
     #dashboard .col1 {
         width: calc(50% - 20px);
@@ -2385,3 +2458,126 @@ form .field .input_checkbox_list#countries_view label, form .field .input_checkb
         margin-left: 5px;
     }
 }
+.scroll-wrapper {
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: relative;
+}
+.scroll-wrapper > .scroll-content {
+    border: none !important;
+    box-sizing: content-box !important;
+    height: auto;
+    left: 0;
+    margin: 0;
+    max-height: none;
+    max-width: none !important;
+    overflow: scroll !important;
+    padding: 0;
+    position: relative !important;
+    top: 0;
+    width: auto !important;
+}
+.scroll-wrapper > .scroll-content::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+.scroll-element {
+    display: none;
+}
+.scroll-element, .scroll-element div {
+    box-sizing: content-box;
+}
+.scroll-element.scroll-x.scroll-scrollx_visible,
+.scroll-element.scroll-y.scroll-scrolly_visible {
+    display: block;
+}
+.scroll-element .scroll-bar,
+.scroll-element .scroll-arrow {
+    cursor: default;
+}
+.scroll-textarea {
+    border: 1px solid #cccccc;
+    border-top-color: #999999;
+}
+.scroll-textarea > .scroll-content {
+    overflow: hidden !important;
+}
+.scroll-textarea > .scroll-content > textarea {
+    border: none !important;
+    box-sizing: border-box;
+    height: 100% !important;
+    margin: 0;
+    max-height: none !important;
+    max-width: none !important;
+    overflow: scroll !important;
+    outline: none;
+    padding: 2px;
+    position: relative !important;
+    top: 0;
+    width: 100% !important;
+}
+.scroll-textarea > .scroll-content > textarea::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+}
+.scrollbar-macosx > .scroll-element,
+.scrollbar-macosx > .scroll-element div {
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    z-index: 10;
+}
+.scrollbar-macosx > .scroll-element div {
+    display: block;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+.scrollbar-macosx > .scroll-element .scroll-element_track { display: none; }
+.scrollbar-macosx > .scroll-element .scroll-bar {
+    background-color: #6C6E71;
+    display: block;
+     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    opacity: 0;
+     -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+     -webkit-transition: opacity 0.2s linear;
+    -moz-transition: opacity 0.2s linear;
+    -o-transition: opacity 0.2s linear;
+    -ms-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+}
+.scrollbar-macosx:hover > .scroll-element .scroll-bar,
+.scrollbar-macosx > .scroll-element.scroll-draggable .scroll-bar {
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+    filter: alpha(opacity=80);
+    opacity: 0.8;
+}
+.scrollbar-macosx > .scroll-element.scroll-x {
+    bottom: 0px;
+    height: 0px;
+    left: 0;
+    min-width: 100%;
+    overflow: visible;
+    width: 100%;
+}
+.scrollbar-macosx > .scroll-element.scroll-y {
+    height: 100%;
+    min-height: 100%;
+    right: 0px;
+    top: 0;
+    width: 0px;
+}
+.scrollbar-macosx > .scroll-element.scroll-x .scroll-bar { height: 7px; min-width: 10px; top: -9px; }
+.scrollbar-macosx > .scroll-element.scroll-y .scroll-bar { left: -7px; min-height: 10px; width: 7px; }
+.scrollbar-macosx > .scroll-element.scroll-x .scroll-element_outer { left: 2px; }
+.scrollbar-macosx > .scroll-element.scroll-x .scroll-element_size { left: -4px; }
+.scrollbar-macosx > .scroll-element.scroll-y .scroll-element_outer { top: 2px; }
+.scrollbar-macosx > .scroll-element.scroll-y .scroll-element_size { top: -4px; }
+.scrollbar-macosx > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -11px; }
+.scrollbar-macosx > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -11px; }

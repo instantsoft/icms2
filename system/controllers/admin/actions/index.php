@@ -57,6 +57,11 @@ class actionAdminIndex extends cmsAction {
         );
 
         $dashboard_blocks[] = array(
+            'title' => LANG_CP_DASHBOARD_NEWS,
+            'html'  => $this->cms_template->getRenderedChild('index_news', array())
+        );
+
+        $dashboard_blocks[] = array(
             'title' => LANG_CP_DASHBOARD_SYSINFO,
             'html'  => $this->cms_template->getRenderedChild('index_sysinfo', array(
                 'sysinfo' => $sysinfo

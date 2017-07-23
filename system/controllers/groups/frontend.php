@@ -405,12 +405,15 @@ class groups extends cmsFrontend {
                         $label_pos = $field['options']['label_in_list'];
                     }
 
-                    $groups[$key]['fields'][] = array(
+                    $field_html = $field['handler']->setItem($group)->parseTeaser($group[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $groups[$key]['fields'][$field['name']] = array(
                         'label_pos' => $label_pos,
                         'type'      => $field['type'],
                         'name'      => $field['name'],
                         'title'     => $field['title'],
-                        'html'      => $field['handler']->setItem($group)->parseTeaser($group[$field['name']])
+                        'html'      => $field_html
                     );
 
                 }

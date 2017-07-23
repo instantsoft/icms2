@@ -2298,7 +2298,7 @@ class modelContent extends cmsModel{
             );
 
             if (is_callable($callback)){
-                $item = $callback($item, $model, $ctype_name);
+                $item = $callback($item, $model, $ctype_name, $user);
             }
 
             return $item;

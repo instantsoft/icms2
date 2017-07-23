@@ -97,3 +97,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
     jQuery UI Touch Punch
         by David Furfero
         http://touchpunch.furf.com/
+
+    jQuery CSS Customizable Scrollbar
+        by Yuriy Khabarov
+        https://github.com/gromo/jquery.scrollbar/

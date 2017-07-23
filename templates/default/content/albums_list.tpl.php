@@ -40,7 +40,6 @@ if( $ctype['options']['list_show_filter'] ) {
                         <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>" <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>style="background-image: url(<?php echo html_image_src($item['cover_image'], $ctype['photos_options']['preset_small'], true); ?>);"<?php } ?>>
                             <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>
                                 <?php echo html_image($item['cover_image'], $ctype['photos_options']['preset_small'], $item['title']); ?>
-                                <?php unset($item['cover_image']); ?>
                             <?php } ?>
                             <div class="photos_album_title_wrap">
                                 <?php if (!empty($fields['title']['is_in_list'])) { ?>
@@ -61,52 +60,38 @@ if( $ctype['options']['list_show_filter'] ) {
                                         </div>
                                     </div>
                                 <?php } ?>
-                                <?php if ($item['content'] && !empty($fields['content']['is_in_list'])) { ?>
+                                <?php if (!empty($item['fields']['content'])) { ?>
                                     <div class="photos_album_description_wrap">
                                         <div class="photos_album_description">
-                                            <?php if (!$fields['content']['groups_read'] || $user->isInGroups($fields['content']['groups_read'])) { ?>
-                                                <?php if (!empty($item['is_private_item'])) { $stop++; ?>
-                                                <?php } else { ?>
-                                                     <?php echo $fields['content']['handler']->setItem($item)->parseTeaser($item['content']); ?>
-                                                <?php } ?>
-                                            <?php } ?>
+                                            <?php echo $item['fields']['content']['html']; ?>
                                         </div>
                                     </div>
                                 <?php } ?>
                             </div>
                         </a>
                     <?php } ?>
-                    <?php unset($item['cover_image'], $item['content'], $item['is_public']); ?>
+                    <?php unset($item['fields']['cover_image'], $item['fields']['content'], $item['fields']['is_public']); ?>
                 </div>
 
                 <div class="fields">
 
-                <?php foreach($fields as $field){ ?>
+                <?php foreach($item['fields'] as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']]) || $field['name'] == 'title') { continue; } ?>
-                    <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                    <?php if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; } ?>
-
-                    <?php
-                        if (!isset($field['options']['label_in_list'])) {
-                            $label_pos = 'none';
-                        } else {
-                            $label_pos = $field['options']['label_in_list'];
-                        }
-                    ?>
 
                     <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
 
-                        <?php if ($label_pos != 'none'){ ?>
-                            <div class="title_<?php echo $label_pos; ?>"><?php echo $field['title'] . ($label_pos=='left' ? ': ' : ''); ?></div>
+                        <?php if ($field['label_pos'] != 'none'){ ?>
+                            <div class="title_<?php echo $field['label_pos']; ?>">
+                                <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            </div>
                         <?php } ?>
 
                         <div class="value">
                             <?php if (!empty($item['is_private_item'])) { $stop++; ?>
                                 <div class="private_field_hint"><?php echo $item['private_item_hint']; ?></div>
                             <?php } else { ?>
-                                 <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                                 <?php echo $field['html']; ?>
                             <?php } ?>
                         </div>
 

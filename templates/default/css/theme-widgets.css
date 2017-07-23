@@ -115,7 +115,7 @@ aside .widget > .title {
     padding-right:15px;
 }
 
-.widget_tabbed > .tabs .links a{
+.widget_tabbed > .tabs .links a {
     display:inline;
     padding: 3px 8px;
     background: #27ae60;
@@ -123,9 +123,13 @@ aside .widget > .title {
     font-size: 12px;
     font-weight: normal;
     text-decoration: none;
+    margin: 0 5px 0 0;
+}
+.widget_tabbed > .tabs .links a:last-child {
+    margin-right: 0;
 }
 
-.widget_tabbed > .tabs .links  a:hover{
+.widget_tabbed > .tabs .links  a:hover {
     background:#2ecc71;
 }
 

@@ -8,7 +8,6 @@
         <img src="<?php echo href_to('templates/default/images/'); ?>">
     </a>
 </div>
-*/ ?>
 
 <ul class="links">
     <li><a href="http://instantcms.ru/" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_SITE; ?></a><div>instantcms.ru</div></li>
@@ -17,6 +16,7 @@
     <li><a href="http://instantcms.ru/forum/" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_FORUMS; ?></a><div>instantcms.ru/forum</div></li>
 </ul>
 
+*/ ?>
 <ul class="links">
     <li><a href="http://instantcms.ru/donate.html" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_DONATE; ?></a></li>
     <li><a href="http://instantcms.ru/sponsorship.html" target="_blank"><?php echo LANG_CP_DASHBOARD_LINKS_SPONSORS; ?></a></li>
