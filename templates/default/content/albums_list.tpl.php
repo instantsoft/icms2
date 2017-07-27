@@ -108,7 +108,7 @@ if( $ctype['options']['list_show_filter'] ) {
                 <?php } ?>
 
                 <?php
-                    $show_bar = $ctype['is_rating'] ||
+                    $show_bar = !empty($item['rating_widget']) ||
                                 $fields['date_pub']['is_in_list'] ||
                                 $fields['user']['is_in_list'] ||
                                 ($ctype['is_comments'] && $item['is_comments_on']) ||
@@ -117,7 +117,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
                 <?php if ($show_bar){ ?>
                     <div class="info_bar">
-                        <?php if ($ctype['is_rating']){ ?>
+                        <?php if (!empty($item['rating_widget'])){ ?>
                             <div class="bar_item bi_rating">
                                 <?php echo $item['rating_widget']; ?>
                             </div>

@@ -178,8 +178,8 @@ span.wrap > span.counter:after {
 }
 
 #cp_top_line #is_update a {
-    padding-left:18px;
-    background: url("../../images/icons/info.png") no-repeat left 1px;
+    padding-left:24px;
+    background: url("../../images/icons/info.png") no-repeat left 9px;
     text-decoration: none;
     color:#DDD;
 }

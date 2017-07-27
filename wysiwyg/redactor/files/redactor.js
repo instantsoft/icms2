@@ -1230,9 +1230,8 @@
 		{
 			var event = e.originalEvent || e;
 			this.clipboardFilePaste = false;
-			if (typeof(event.clipboardData) === 'undefined') return false;
-                        var clipboard = event.clipboardData;
-                        var text = e.originalEvent.clipboardData.GetType();
+			if (typeof(event.clipboardData) === 'undefined') { return false; }
+            var clipboard = event.clipboardData;
 			if (clipboard.items)
 			{
 				var file = event.clipboardData.items[0].getAsFile();

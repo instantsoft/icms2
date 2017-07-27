@@ -32,7 +32,7 @@
     define('LANG_LICENSE_TRANSLATION',      'Russian');
 
     define('LANG_PHP_VERSION',              'PHP version');
-    define('LANG_PHP_VERSION_REQ',          'PHP 5.3 or higher is required');
+    define('LANG_PHP_VERSION_REQ',          'PHP 5.4 or higher is required');
     define('LANG_PHP_VERSION_DESC',         'Installed version');
 	define('LANG_PHP_VARIABLES',            'PHP configuration');
 	define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked gray');

@@ -41,3 +41,5 @@ CREATE TABLE `{#}groups_member_roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 UPDATE `{users}_fields` SET `values` = NULL WHERE `name` = 'avatar';
+
+UPDATE `{#}controllers` SET `options` = NULL WHERE `name` = 'admin';

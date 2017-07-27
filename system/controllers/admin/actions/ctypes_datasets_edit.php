@@ -58,8 +58,8 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
 
             $dataset = $form->parse($this->request, true);
 
-            $dataset['filters'] = $this->request->get('filters');
-            $dataset['sorting'] = $this->request->get('sorting');
+            $dataset['filters'] = $this->request->get('filters', array());
+            $dataset['sorting'] = $this->request->get('sorting', array());
 
             $errors = $form->validate($this,  $dataset);
 
