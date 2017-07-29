@@ -28,6 +28,10 @@ icms.messages = (function ($) {
         return $('#msg_last_date').val();
     };
 
+    this.showLoader = function (){
+        $('#pm_window .left-panel').html('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+    };
+
     this.initUserSearch = function (){
         var user_list = $('#pm_window .right-panel .contacts .contact');
         $('#user_search_panel input').on('input', function() {
@@ -144,7 +148,7 @@ icms.messages = (function ($) {
 
         $('a', contact).addClass('selected');
 
-        $('.left-panel', pm_window).html('').removeClass('loading-panel').addClass('loading-panel');
+        icms.messages.showLoader();
 
         var url = pm_window.data('contact-url');
         var form_data = {contact_id: id};
@@ -161,7 +165,7 @@ icms.messages = (function ($) {
                 $('.right-panel').hide().css({left: ''});
             }
 
-            $('.left-panel', pm_window).hide().html(result).removeClass('loading-panel').fadeIn('fast');
+            $('.left-panel', pm_window).html(result);
 
             $('.left-panel textarea', pm_window).focus();
 
@@ -359,7 +363,7 @@ icms.messages = (function ($) {
 
             if(!success){ return false; }
 
-            $('.left-panel', pm_window).html('').removeClass('loading-panel').addClass('loading-panel');
+            icms.messages.showLoader();
 
             var url = $(pm_window).data('delete-url');
             var form_data = {contact_id: id};
@@ -393,7 +397,7 @@ icms.messages = (function ($) {
 
             if(!success){ return false; }
 
-            $('.left-panel', pm_window).html('').removeClass('loading-panel').addClass('loading-panel');
+            icms.messages.showLoader();
 
             var url = $(pm_window).data('ignore-url');
             var form_data = {contact_id: id};

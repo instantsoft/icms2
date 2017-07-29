@@ -71,6 +71,7 @@
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
     define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
     define('LANG_MOBILE_DEVICES',  'Phones');

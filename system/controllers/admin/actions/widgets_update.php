@@ -16,7 +16,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
         cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
 
-        $form = cmsCore::getWidgetOptionsForm($widget['name'], $widget['controller'], false, $widget['template']);
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], false, $widget['template']);
 
         $widget = $form->parse($this->request, true);
 

@@ -23,9 +23,8 @@
 		</ul>
 	</div>
 
-	<div class="result-pane">
-		<div class="loading"></div>
-	</div>
+    <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
+	<div class="result-pane"></div>
 
 	<div class="buttons">
         <?php $button_title = $input_action == 'bind' ? ($mode == 'unbind' ? LANG_CONTENT_UNBIND_ITEMS : LANG_CONTENT_BIND_ITEMS) : LANG_SELECT; ?>

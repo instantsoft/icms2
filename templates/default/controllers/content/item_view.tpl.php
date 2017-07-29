@@ -52,7 +52,7 @@
                 $this->addToolButton(array(
                     'class' => 'add',
                     'title' => sprintf(LANG_CONTENT_ADD_ITEM, $relation['child_labels']['create']),
-                    'href'  => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}"
+                    'href'  => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}".($item['parent_type']=='group' ? '&group_id='.$item['parent_id'] : '')
                 ));
             }
         }

@@ -26,7 +26,7 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         cmsCore::loadWidgetLanguage($bind_widget['name'], $bind_widget['controller']);
 
-        $form = cmsCore::getWidgetOptionsForm($bind_widget['name'], $bind_widget['controller'], false, $bind_widget['template']);
+        $form = $this->getWidgetOptionsForm($bind_widget['name'], $bind_widget['controller'], false, $bind_widget['template']);
         $data = $form->parse(new cmsRequest($bind_widget));
 
         $widgets_model->updateWidgetBinding($binded_id, $data);

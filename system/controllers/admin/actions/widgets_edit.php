@@ -18,7 +18,7 @@ class actionAdminWidgetsEdit extends cmsAction {
 
         cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
 
-        $form = cmsCore::getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $widget['template']);
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $widget['template']);
 
         return $this->cms_template->render('widgets_settings', array(
             'form'   => $form,

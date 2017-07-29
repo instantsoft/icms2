@@ -685,13 +685,19 @@ article div.content_categories:last-child {
 	overflow-y: auto;
 	position: relative;
 }
-#content_bind_form .result-pane .loading {
-	position:absolute;
-	left:0; top:0;
-	width:100%; height:100%;
-	background:url("../images/loader24.gif") no-repeat center center rgba(255,255,255,0.75);
+#content_bind_form .spinner {
+    display: none;
 }
-
+#content_bind_form .spinner.show {
+    display: block;
+}
+#content_bind_form .spinner.show + .result-pane {
+    -webkit-filter:blur(1px);
+    -moz-filter:blur(1px);
+    -ms-filter:blur(1px);
+    -o-filter:blur(1px);
+    filter:blur(1px);
+}
 #content_bind_form .result-pane ul,
 #content_bind_form .result-pane ul li {
 	list-style: none;

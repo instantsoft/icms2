@@ -33,7 +33,7 @@ icms.contentBind = (function ($) {
 		var $button = $form.find('.find .button');
 		var $submitButton = $form.find('.buttons .button-submit');
 		var $resultPane = $form.find('.result-pane');
-		var $loading = $resultPane.find('.loading');
+		var $loading = $form.find('.spinner');
 
 		values = {}, valuesCount = 0;
         mode = $form.data('mode');
@@ -82,7 +82,7 @@ icms.contentBind = (function ($) {
 
 		function findItems(){
 
-			$loading.show();
+			$loading.addClass('show');
 
 			var text = $input.val();
 
@@ -126,7 +126,7 @@ icms.contentBind = (function ($) {
 					}
 				});
 
-				$loading.hide();
+				$loading.removeClass('show');
 
 			});
 

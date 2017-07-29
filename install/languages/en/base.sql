@@ -1579,6 +1579,7 @@ DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `template` varchar(30) DEFAULT NULL COMMENT 'Template binding',
+  `template_layouts` varchar(500) DEFAULT NULL,
   `widget_id` int(11) unsigned NOT NULL,
   `title` varchar(128) NOT NULL COMMENT 'Title',
   `links` text,

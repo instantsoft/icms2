@@ -145,10 +145,10 @@ class modelUsers extends cmsModel {
 
         return $this->insert('{users}_auth_tokens', array(
             'ip'          => sprintf('%u', ip2long(cmsUser::getIp())),
-            'access_type' => cmsModel::arrayToYaml(array(
+            'access_type' => array(
                 'type' => $type,
                 'subj' => $subj
-            )),
+            ),
             'auth_token'  => $auth_token,
             'user_id'     => $user_id
         ));

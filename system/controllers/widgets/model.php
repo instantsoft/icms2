@@ -205,6 +205,7 @@ class modelWidgets extends cmsModel {
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
             $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+            $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
             return $item;
         });
 
@@ -335,6 +336,10 @@ class modelWidgets extends cmsModel {
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+                        $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
+                        if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
+                            $item['template_layouts'] = array();
+                        }
                         $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
                         if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
                             $item['device_types'] = array();

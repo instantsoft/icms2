@@ -1,155 +1,13 @@
 <?php
 /**
- * 2.7.2 => 2.7.3
+ * 2.8.0 => 2.8.1
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
 
-    save_controller_options(array('photos'));
-
-    $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'nickname'");
-    $core->db->query("UPDATE `{users}_fields` SET `is_in_list` =  '1' WHERE `name` = 'avatar'");
-
-    $core->db->query("ALTER TABLE `{#}groups` ENGINE = MYISAM");
-
-    if(!isFieldExists('groups', 'cover')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `cover` TEXT NULL DEFAULT NULL COMMENT 'Обложка группы'");
-    }
-
-    if(!isFieldExists('groups', 'slug')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `slug` VARCHAR(100) NULL DEFAULT NULL , ADD INDEX (`slug`);");
-    }
-
-    if(!isFieldExists('groups', 'content_policy')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `content_policy` VARCHAR(500) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('groups', 'content_groups')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `content_groups` VARCHAR(1000) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('groups', 'content_roles')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `content_roles` VARCHAR(1000) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('groups', 'roles')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `roles` VARCHAR(2000) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('groups', 'wall_reply_policy')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `wall_reply_policy` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Политика комментирования стены' AFTER  `wall_policy`");
-    }
-
-    if(!isFieldExists('content_relations', 'target_controller')){
-        $core->db->query("ALTER TABLE  `{#}content_relations` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content' AFTER `title`");
-    }
-
-    if(!isFieldExists('content_relations', 'ordering')){
-        $core->db->query("ALTER TABLE `{#}content_relations` ADD `ordering` INT(11) UNSIGNED NOT NULL DEFAULT '0'");
-    }
-
-    if(!isFieldExists('content_relations_bind', 'target_controller')){
-        $core->db->query("ALTER TABLE `{#}content_relations_bind` ADD `target_controller` VARCHAR(32) NOT NULL DEFAULT 'content'");
-    }
-
-    if(!isFieldExists('uploaded_files', 'type')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `type` ENUM( 'file', 'image', 'audio', 'video') NOT NULL DEFAULT 'file'");
-    }
-
-    if(!isFieldExists('uploaded_files', 'target_controller')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_controller` VARCHAR(32) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('uploaded_files', 'target_subject')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_subject` VARCHAR(32) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('uploaded_files', 'target_id')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `target_id` INT(11) UNSIGNED NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('uploaded_files', 'user_id')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `user_id` INT(11) UNSIGNED NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('uploaded_files', 'size')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `size` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `name`");
-    }
-
-    if(!isFieldExists('uploaded_files', 'date_add')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` ADD `date_add` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-    }
-
-    if(isFieldExists('uploaded_files', 'url_key')){
-        $core->db->query("ALTER TABLE `{#}uploaded_files` DROP `url_key`");
-    }
-
-    if(!isFieldExists('content_datasets', 'target_controller')){
-        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `target_controller` VARCHAR(32) NULL DEFAULT NULL");
-    }
-
-    $groups_options = cmsController::loadOptions('groups');
-    if(!$core->db->getRowsCount('content_datasets', "name = 'rating' AND target_controller = 'groups'", 1)){
-        $core->db->insert('content_datasets', array(
-            'name'              => 'rating',
-            'title'             => 'Лучшие группы',
-            'ordering'          => 3,
-            'is_visible'        => !empty($groups_options['is_ds_rating']),
-            'sorting'           => array(
-                array(
-                    'by' => 'rating',
-                    'to' => 'desc'
-                )
-            ),
-            'index'             => 'rating',
-            'target_controller' => 'groups'
-        ));
-    }
-    if(!$core->db->getRowsCount('content_datasets', "name = 'all' AND target_controller = 'groups'", 1)){
-        $core->db->insert('content_datasets', array(
-            'name'              => 'all',
-            'title'             => 'Новые группы',
-            'ordering'          => 2,
-            'is_visible'        => 1,
-            'sorting'           => array(
-                array(
-                    'by' => 'date_pub',
-                    'to' => 'desc'
-                )
-            ),
-            'index'             => 'date_pub',
-            'target_controller' => 'groups'
-        ));
-    }
-    if(!$core->db->getRowsCount('content_datasets', "name = 'popular' AND target_controller = 'groups'", 1)){
-        $core->db->insert('content_datasets', array(
-            'name'              => 'popular',
-            'title'             => 'Популярные',
-            'ordering'          => 1,
-            'is_visible'        => !empty($groups_options['is_ds_popular']),
-            'sorting'           => array(
-                array(
-                    'by' => 'members_count',
-                    'to' => 'desc'
-                )
-            ),
-            'index'             => 'members_count',
-            'target_controller' => 'groups'
-        ));
-    }
-
-    if(!$core->db->getRowsCount('rss_feeds', "ctype_name = 'comments'", 1)){
-        $core->db->insert('rss_feeds', array(
-            'ctype_name' => 'comments',
-            'title' => 'Комментарии',
-            'mapping' => array(
-                'title' => 'target_title',
-                'description' => 'content_html',
-                'pubDate' => 'date_pub'
-            ),
-            'is_enabled' => 1
-        ));
+    if(!isFieldExists('widgets_bind', 'template_layouts')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `template_layouts` VARCHAR(500) NULL DEFAULT NULL AFTER `template`");
     }
 
     $admin = cmsCore::getController('admin');
@@ -171,115 +29,6 @@ function install_package(){
             }
         }
     }
-
-    $remove_table_indexes = array(
-        'groups' => array(
-            'owner_id', 'is_public', 'is_closed'
-        ),
-        'groups_members' => array(
-            'date_updated', 'group_id'
-        ),
-        'content_relations' => array(
-            'child_ctype_id', 'ctype_id'
-        ),
-        'content_relations_bind' => array(
-            'parent_item_id', 'child_item_id'
-        ),
-        'uploaded_files' => array(
-            'counter'
-        ),
-        'content_datasets' => array(
-            'ordering','is_visible'
-        )
-    );
-    $add_table_indexes = array(
-        'groups' => array(
-            'owner_id' => array('owner_id', 'members_count')
-        ),
-        'groups_members' => array(
-            'group_id' => array('group_id', 'date_updated')
-        ),
-        'content_relations' => array(
-            'child_ctype_id' => array('child_ctype_id', 'target_controller', 'ordering'),
-            'ctype_id' => array('ctype_id', 'ordering')
-        ),
-        'content_relations_bind' => array(
-            'parent_item_id' => array('parent_item_id', 'target_controller')
-        ),
-        'content_relations_bind' => array(
-            'child_item_id' => array('child_item_id', 'target_controller')
-        ),
-        'uploaded_files' => array(
-            'user_id' => array('user_id'),
-            'target_controller' => array('target_controller', 'target_subject', 'target_id'),
-        ),
-        'content_datasets' => array(
-            'target_controller' => array('target_controller', 'ordering'),
-        )
-    );
-    $add_table_ft_indexes = array(
-        'groups' => array(
-            'title' => array('title')
-        )
-    );
-    $add_table_uq_indexes = array(
-        'uploaded_files' => array(
-            'path' => array('path')
-        )
-    );
-
-    if($remove_table_indexes){
-        foreach ($remove_table_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name) {
-                $core->db->dropIndex($table, $index_name);
-            }
-        }
-    }
-    if($add_table_indexes){
-        foreach ($add_table_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name => $fields) {
-                $core->db->addIndex($table, $fields, $index_name);
-            }
-        }
-    }
-    if($add_table_ft_indexes){
-        foreach ($add_table_ft_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name => $fields) {
-                $core->db->addIndex($table, $fields, $index_name, 'FULLTEXT');
-            }
-        }
-    }
-    if($add_table_uq_indexes){
-        foreach ($add_table_uq_indexes as $table=>$indexes) {
-            foreach ($indexes as $index_name => $fields) {
-                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
-            }
-        }
-    }
-
-    add_perms(array(
-        'groups' => array(
-            'invite_users'
-        )
-    ), 'flag');
-
-    add_perms(array(
-        'groups' => array(
-            'bind_to_parent'
-        ),
-        'users' => array(
-            'bind_to_parent'
-        )
-    ), 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all');
-
-    add_perms(array(
-        'groups' => array(
-            'bind_off_parent'
-        ),
-        'users' => array(
-            'bind_off_parent'
-        )
-    ), 'list', 'own,all');
 
     return true;
 
@@ -342,3 +91,90 @@ function getTableFields($table) {
     }
     return $fields;
 }
+/**
+function convert_yaml_to_json($data) {
+
+    $data = array(
+        'activity' => array(
+            'images'
+        ),
+        'content_datasets' => array(
+            'filters', 'sorting', 'groups_view', 'groups_hide', 'cats_view', 'cats_hide'
+        ),
+        'content_relations' => array(
+            'options'
+        ),
+        'content_types' => array(
+            'options', 'labels'
+        ),
+        'controllers' => array(
+            'options'
+        ),
+        'menu_items' => array(
+            'options', 'groups_view', 'groups_hide'
+        ),
+        'widgets_bind' => array(
+            'template_layouts', 'groups_view', 'groups_hide', 'options', 'device_types'
+        ),
+        'con_albums' => array(
+            'cover_image', 'allow_groups_roles'
+        ),
+        'con_albums_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+        'con_articles' => array(
+            'file'
+        ),
+        'con_articles_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+        'con_board' => array(
+            'photo', 'photos'
+        ),
+        'con_board_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+        'con_news' => array(
+            'photo'
+        ),
+        'con_news_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+        'con_posts' => array(
+            'picture', 'allow_groups_roles'
+        ),
+        'con_posts_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+        'users' => array(
+            'theme', 'notify_options', 'privacy_options', 'groups', 'avatar'
+        ),
+        'users_fields' => array(
+            'options', 'groups_read', 'groups_edit', 'filter_view'
+        ),
+    );
+
+    $db = cmsDatabase::getInstance();
+
+    foreach ($data as $table => $fields) {
+
+        $fields_string = '`'.implode('`, `', $fields).'`';
+
+        $result = $db->query("SELECT `id`, {$fields_string} FROM `{#}{$table}`");
+
+        if($db->mysqli->errno){ continue; }
+
+        while($data = $db->fetchAssoc($result)){
+
+            foreach ($fields as $field) {
+                $data[$field] = json_encode(cmsModel::yamlToArray($data[$field]));
+            }
+
+            $db->update($table, "id = '{$data['id']}'", $data, true);
+
+        }
+
+    }
+
+}
+**/
