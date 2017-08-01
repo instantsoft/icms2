@@ -18,7 +18,7 @@
 * [API](https://github.com/instantsoft/icms2-json-api-component) для подключения мобильных приложений.
 
 ## Cистемные требования ##
-* Интерпретатор PHP версии 5.3 или выше;
+* Интерпретатор PHP версии 5.4 или выше;
 * Опции PHP register_globals и magic_quotes_gpc должны быть выключены;
 * Модули для PHP: GD, iconv, mbstring, simplexml, json, filter;
 * СУБД MySQL версии 5 или выше;
