@@ -41,12 +41,66 @@ class actionPhotosMore extends cmsAction{
 
             $item = array(
                 'id'         => 0,
-                'user_id'    => 0,
+                'user_id'    => -1,
                 'url_params' => array('camera' => $camera),
                 'base_url'   => href_to('photos', 'camera-' . urlencode($camera))
             );
 
             return $this->renderPhotosList($item, '', $this->request->get('photo_page', 1));
+
+        } elseif(!$target){
+
+            if (cmsUser::isAllowed('albums', 'view_all')) {
+                $this->model->disablePrivacyFilter();
+            }
+
+            $album = array(
+                'id'       => 0,
+                'user_id'  => -1,
+                'base_url' => href_to('photos')
+            );
+
+            $album['filter_values'] = array(
+                'ordering'    => $this->request->get('ordering', $this->options['ordering']),
+                'orderto'     => $this->request->get('orderto', $this->options['orderto']),
+                'types'       => $this->request->get('types', ''),
+                'orientation' => $this->request->get('orientation', ''),
+                'width'       => $this->request->get('width', 0) ?: '',
+                'height'      => $this->request->get('height', 0) ?: ''
+            );
+
+            $this->model->orderByList(array(
+                array(
+                    'by' => $album['filter_values']['ordering'],
+                    'to' => $album['filter_values']['orderto']
+                ),
+                array(
+                    'by' => 'id',
+                    'to' => $album['filter_values']['orderto']
+                )
+            ));
+
+            if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $album['user_id']) {
+                $this->model->disablePrivacyFilter();
+            }
+
+            if($album['filter_values']['types']){
+                $this->model->filterEqual('type', $album['filter_values']['types']);
+            }
+
+            if($album['filter_values']['orientation']){
+                $this->model->filterEqual('orientation', $album['filter_values']['orientation']);
+            }
+
+            if($album['filter_values']['width']){
+                $this->model->filterGtEqual('width', $album['filter_values']['width']);
+            }
+
+            if($album['filter_values']['height']){
+                $this->model->filterGtEqual('height', $album['filter_values']['height']);
+            }
+
+            return $this->renderPhotosList($album, 0, $this->request->get('photo_page', 1));
 
         }
 

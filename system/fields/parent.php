@@ -8,7 +8,7 @@ class fieldParent extends cmsFormField {
     public $allow_index   = false;
     public $var_type      = 'string';
     public $filter_type   = 'str';
-    private $input_action = 'bind';
+    protected $input_action = 'bind';
 
     public function setItem($item) {
 

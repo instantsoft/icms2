@@ -9,7 +9,7 @@ class fieldCaption extends cmsFormField {
     public $allow_index = true;
     public $var_type    = 'string';
 
-    private $is_set_rules = false;
+    protected $is_set_rules = false;
 
     public function getOptions(){
 

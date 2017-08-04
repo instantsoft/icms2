@@ -18,6 +18,7 @@
     <span data-to-first="<?php echo LANG_PHOTOS_RETURN_TO_FIRST; ?>">
         <?php if($has_next){ echo LANG_PHOTOS_SHOW_MORE; } else { echo LANG_PHOTOS_RETURN_TO_FIRST; } ?>
     </span>
+    <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
 </a>
 
 <script type="text/javascript">

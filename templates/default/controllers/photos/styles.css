@@ -196,16 +196,27 @@
     height: 26px;
     box-sizing: border-box;
     line-height: 12px;
+    position: relative;
 }
-.show-more.loading{
+.show-more.show_spinner{
     background-color: #FFF;
 }
-.show-more.loading > span{
+.show-more.show_spinner > span{
     display: none;
 }
 .show-more:hover{
     background-color: #bed4de;
     color: #FFF;
+}
+.show-more .spinner {
+    display: none;
+}
+.show-more.show_spinner .spinner {
+    display: block;
+    margin-top: 0px;
+}
+.show-more.show_spinner:hover{
+    background-color: inherit;
 }
 span.tags_bar {
     padding-left: 20px;

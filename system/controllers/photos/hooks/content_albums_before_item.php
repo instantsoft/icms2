@@ -69,7 +69,11 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
             $album['filter_values']['orientation'] = '';
         }
 
-        $album['base_url'] = href_to($ctype['name'], $album['slug'].'.html').'?'.http_build_query($album['url_params']);
+        if(!empty($album['slug'])){
+            $album['base_url'] = href_to($ctype['name'], $album['slug'].'.html').'?'.http_build_query($album['url_params']);
+        } else {
+            $album['base_url'] = href_to('photos').'?'.http_build_query($album['url_params']);
+        }
 
         foreach ($album['filter_selected'] as $key => $value) {
             if(isset($album['filter_panel'][$key][$value])){

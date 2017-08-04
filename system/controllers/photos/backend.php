@@ -4,6 +4,7 @@ class backendPhotos extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
     public $maintained_ctype = 'albums';
+    public $useSeoOptions = true;
 
     public function actionIndex(){
         $this->redirectToAction('options');

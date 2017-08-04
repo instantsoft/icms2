@@ -5,6 +5,7 @@ class photos extends cmsFrontend {
     public static $preset_small = null;
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     public function route($uri){
 

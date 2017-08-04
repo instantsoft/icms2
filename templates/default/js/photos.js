@@ -276,7 +276,7 @@ icms.photos = (function ($) {
             return false;
         }
 
-        $(link).addClass('loading');
+        $(link).addClass('show_spinner');
 
         icms.photos.page += 1;
 
@@ -287,7 +287,7 @@ icms.photos = (function ($) {
 
             var first_page_url = $(link).data('first-page-url');
 
-            $(link).removeClass('loading');
+            $(link).removeClass('show_spinner');
 
             if (!html) { return; }
 
