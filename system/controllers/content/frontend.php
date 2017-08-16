@@ -952,6 +952,8 @@ class content extends cmsFrontend {
 
         foreach($parents as $parent){
 
+            $this->model->setTablePrefix('con_');
+
             $value = isset($item[$parent['id_param_name']]) ? $item[$parent['id_param_name']] : '';
 
             $ids = array();

@@ -874,10 +874,15 @@ class cmsCore {
 
     /**
      * Показывает сообщение об ошибке 403 и завершает работу
+     * @param string $message Текстовое сообщение к ошибке
+     * @param boolean $show_login_link Показывать ссылку на авторизацию
+     * @return die
      */
     public static function errorForbidden($message = '', $show_login_link = false){
 
-		cmsEventsManager::hook('error_403', self::getInstance()->uri);
+		$result = cmsEventsManager::hook('error_403', self::getInstance()->uri);
+
+        if($result === true){ return false; }
 
         if(ob_get_length()) { ob_end_clean(); }
 
@@ -899,7 +904,9 @@ class cmsCore {
      */
     public static function error404(){
 
-		cmsEventsManager::hook('error_404', self::getInstance()->uri);
+		$result = cmsEventsManager::hook('error_404', self::getInstance()->uri);
+
+        if($result === true){ return false; }
 
         if(ob_get_length()) { ob_end_clean(); }
 

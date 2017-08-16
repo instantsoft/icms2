@@ -15,10 +15,10 @@ class actionContentItemView extends cmsAction {
 		if (!$ctype) {
 			if ($this->cms_config->ctype_default){
 				$ctype = $this->model->getContentTypeByName($this->cms_config->ctype_default);
-				if (!$ctype) { cmsCore::error404(); }
+				if (!$ctype) { return cmsCore::error404(); }
 				$slug = $ctype['name'] . '/' . $slug;
 			} else {
-				cmsCore::error404();
+				return cmsCore::error404();
 			}
 		} else {
 			if ($this->cms_config->ctype_default && $this->cms_config->ctype_default == $this->cms_core->uri_action){
@@ -35,22 +35,22 @@ class actionContentItemView extends cmsAction {
             }
 		}
 
-		if (!$ctype['options']['item_on']) { cmsCore::error404(); }
+		if (!$ctype['options']['item_on']) { return cmsCore::error404(); }
 
         // Получаем запись
         $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
-        if (!$item) { cmsCore::error404(); }
+        if (!$item) { return cmsCore::error404(); }
 
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
         if (!$item['is_approved']){
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
             cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
         }
 
         // Проверяем публикацию
         if (!$item['is_pub']){
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::error404(); }
         }
 
         // Проверяем, что не удалено
@@ -59,7 +59,7 @@ class actionContentItemView extends cmsAction {
             $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
                 (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
 
-            if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
+            if (!$is_moderator && !$allow_restore){ return cmsCore::error404(); }
 
         }
 
