@@ -61,10 +61,11 @@
                             <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
                         <?php } ?>
                     </div>
-                    <?php if ($teaser_field && !empty($item[$teaser_field])) { ?>
+                    <?php $teaser = !empty($fields[$teaser_field]) ? $fields[$teaser_field]['handler']->setItem($item)->parse($item[$teaser_field]) : false; ?>
+                    <?php if ($teaser_field && !empty($teaser)) { ?>
                         <div class="teaser">
                             <?php if (!$is_private) { ?>
-                                <?php echo string_short($item[$teaser_field], $teaser_len); ?>
+                                <?php echo !empty($teaser_len) ? string_short($teaser, $teaser_len) : $teaser; ?>
                             <?php } else { ?>
                                 <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
                             <?php } ?>

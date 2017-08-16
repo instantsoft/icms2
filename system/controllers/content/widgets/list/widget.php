@@ -28,6 +28,9 @@ class widgetContentList extends cmsWidget {
 			$category = false;
 		}
 
+        // Получаем поля для данного типа контента
+        $fields = $model->getContentFields($ctype['name']);
+
         if ($dataset_id){
 
             $dataset = $model->getContentDataset($dataset_id);
@@ -100,9 +103,17 @@ class widgetContentList extends cmsWidget {
 		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 
-        $items = $model->
-                    limit($limit)->
-                    getContentItems($ctype['name']);
+        $items = $model->limit($limit)->getContentItems($ctype['name'], function ($item, $model, $ctype_name, $user) use ($ctype, $hide_except_title){
+
+            $item['ctype'] = $ctype;
+            $item['ctype_name'] = $ctype['name'];
+            $item['is_private_item'] = $item['is_private'] && $hide_except_title;
+            $item['private_item_hint'] = LANG_PRIVACY_HINT;
+
+            return $item;
+
+        });
+
         if (!$items) { return false; }
 
         list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
@@ -116,6 +127,7 @@ class widgetContentList extends cmsWidget {
 
         return array(
             'ctype'             => $ctype,
+            'fields'            => $fields,
             'hide_except_title' => $hide_except_title,
             'teaser_len'        => $teaser_len,
             'image_field'       => $image_field,
