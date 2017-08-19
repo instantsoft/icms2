@@ -1,10 +1,10 @@
 <?php
     if( $this->controller->options['is_filter'] ) {
         $this->renderAsset('ui/filter-panel', array(
-            'css_prefix' => 'profiles',
-            'page_url' => $page_url,
-            'fields' => $fields,
-            'filters' => $filters,
+            'css_prefix' => 'users',
+            'page_url'   => $page_url,
+            'fields'     => $fields,
+            'filters'    => $filters
         ));
     }
 ?>

@@ -35,6 +35,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'pub' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_PUBLICATION,
                 'childs' => array(
                     new fieldCheckbox('is_premod_add', array(
@@ -60,6 +61,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'categories' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_CATEGORIES,
                 'childs' => array(
                     new fieldCheckbox('is_cats', array(
@@ -91,6 +93,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'folders' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_FOLDERS,
                 'childs' => array(
                     new fieldCheckbox('is_folders', array(
@@ -101,6 +104,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'groups' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_CT_GROUPS,
                 'childs' => array(
                     new fieldCheckbox('is_in_groups', array(
@@ -113,6 +117,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'comments' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_COMMENTS,
                 'childs' => array(
                     new fieldCheckbox('is_comments', array(
@@ -122,6 +127,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'ratings' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_RATING,
                 'childs' => array(
                     new fieldCheckbox('is_rating', array(
@@ -131,6 +137,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'tags' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_TAGS,
                 'childs' => array(
                     new fieldCheckbox('is_tags', array(
@@ -146,6 +153,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'listview' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_LISTVIEW_OPTIONS,
                 'childs' => array(
                     new fieldCheckbox('options:list_on', array(
@@ -189,6 +197,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'itemview' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_ITEMVIEW_OPTIONS,
                 'childs' => array(
                     new fieldCheckbox('options:item_on', array(
@@ -209,6 +218,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'seo-items' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA,
                 'childs' => array(
                     new fieldCheckbox('options:is_manual_title', array(
@@ -254,6 +264,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'seo-cats' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA_CATS,
                 'childs' => array(
                     new fieldCheckbox('options:is_cats_title', array(
@@ -273,6 +284,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'seo' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA_DEFAULT,
                 'childs' => array(
                     new fieldString('seo_title', array(
@@ -302,6 +314,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'collapsed' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_IS_COLLAPSED,
                 'childs' => array(
                     new fieldListMultiple('options:is_collapsed', array(

@@ -459,9 +459,13 @@ aside .widget_tabbed > .tabs .links a {
 }
 
 .widget_profiles_list.list .item {
-    height:32px;
     line-height:32px;
     margin-bottom: 5px;
+    padding: 0 0 10px 0;
+    clear: both;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .widget_profiles_list.list .item:last-child { margin-bottom: 0; }
@@ -471,6 +475,13 @@ aside .widget_tabbed > .tabs .links a {
 .widget_profiles_list.list .item .info { float:left; }
 
 .widget_profiles_list.tiles .item, .widget_online_list .item, .widget_user_avatar .default_avatar { display:inline-block; }
+
+.widget_profiles_list.list .item:last-child {
+    padding: 0;
+}
+.widget_profiles_list.list .item .field {
+    line-height: 18px;
+}
 
 /* ========================================================================== */
 

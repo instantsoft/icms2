@@ -49,7 +49,10 @@ class actionPhotosUpload extends cmsAction{
 					))->getContentItems('albums');
 
         if (!$albums){
-            $this->redirect(href_to('albums', 'add'));
+
+            $group_id = $this->request->get('group_id', 0);
+
+            $this->redirect(href_to('albums', 'add').($group_id ? '?group_id='.$group_id : ''));
         }
 
         $album_id = $album_id ? (int)$album_id : $this->request->get('album_id', 0);

@@ -810,7 +810,7 @@ class cmsCore {
             $prefix = '';
             if($page['controller'] == 'content' &&
                     $ctype_default &&
-                    strpos($this->uri_action, '.html') !== false &&
+                    (strpos($this->uri_action, '.html') !== false || (!$this->uri_action && strpos($this->uri_controller, '.html') !== false)) &&
                     $page['name'] == $ctype_default.'.item'){
                 $prefix = $ctype_default .'/';
             }

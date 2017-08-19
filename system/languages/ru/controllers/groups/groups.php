@@ -107,3 +107,4 @@
     define('LANG_PRIVACY_GROUPS',            'Показывать только одногруппникам');
     define('LANG_PRIVACY_GROUPS_ADD',        'Показывать только одногруппникам, имеющим право добавления %s');
     define('LANG_PRIVACY_GROUPS_ROLES',      'Показывать только одногруппникам с заданными ролями');
+    define('LANG_GROUPS_ERROR_PARENT_ID',    'Вы не можете добавлять контент в эту группу');

@@ -703,7 +703,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (113, 'admin_content_dataset_fields_list', 'content', 113, 1),
 (114, 'admin_groups_dataset_fields_list', 'groups', 114, 1),
 (115, 'content_before_list', 'rating', 115, 1),
-(116, 'content_before_list', 'groups', 116, 1);
+(116, 'content_before_list', 'groups', 116, 1),
+(117, 'content_validate', 'groups', 117, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

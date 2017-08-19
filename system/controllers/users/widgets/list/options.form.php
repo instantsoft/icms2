@@ -40,6 +40,32 @@ class formWidgetUsersListOptions extends cmsForm {
                         )
                     )),
 
+                    new fieldList('options:list_fields', array(
+                        'title' => LANG_WD_USERS_LIST_LIST_FIELDS,
+                        'is_chosen_multiple' => true,
+                        'generator' => function($item) {
+
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+                            $model->orderBy('ordering');
+                            $fields = $model->getContentFields('{users}');
+
+                            $items = array();
+
+                            if ($fields) {
+                                foreach ($fields as $field) {
+                                    if(in_array($field['name'], array('nickname', 'avatar'))){
+                                        continue;
+                                    }
+                                    $items[$field['id']] = $field['title'];
+                                }
+                            }
+
+                            return $items;
+
+                        },
+                    )),
+
                     new fieldListGroups('options:groups', array(
                         'title' => LANG_WD_USERS_LIST_GROUPS,
                     )),
@@ -50,10 +76,10 @@ class formWidgetUsersListOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

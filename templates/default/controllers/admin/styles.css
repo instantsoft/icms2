@@ -682,7 +682,7 @@ form .hint {
     cursor: pointer;
 }
 .is_collapse > .field {
-    display: none;
+    display: none !important;
 }
 /*============================================================================*/
 

@@ -21,7 +21,8 @@
             'fulltext_search',
             'content_before_childs',
             'ctype_relation_childs',
-            'admin_groups_dataset_fields_list'
+            'admin_groups_dataset_fields_list',
+            'content_validate'
         )
 
     );

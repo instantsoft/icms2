@@ -107,3 +107,4 @@
     define('LANG_PRIVACY_GROUPS',            'Show only group members');
     define('LANG_PRIVACY_GROUPS_ADD',        'Show only group members who have the right to add the %s');
     define('LANG_PRIVACY_GROUPS_ROLES',      'Show only group members with given roles');
+    define('LANG_GROUPS_ERROR_PARENT_ID',    'You can not add content to this group');

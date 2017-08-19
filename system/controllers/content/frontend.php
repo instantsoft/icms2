@@ -848,7 +848,9 @@ class content extends cmsFrontend {
 			}
 		}
 
-        return cmsEventsManager::hook('content_item_form', $form);
+        list($form, $item) = cmsEventsManager::hook('content_item_form', array($form, $item));
+
+        return $form;
 
     }
 

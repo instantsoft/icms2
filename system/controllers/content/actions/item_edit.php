@@ -147,21 +147,6 @@ class actionContentItemEdit extends cmsAction {
                 unset($item['ctype_name']);
                 unset($item['ctype_id']);
 
-                if (isset($item['parent_id']) && $groups_list){
-                    if (array_key_exists($item['parent_id'], $groups_list) && $item['parent_id'] > 0){
-                        $group = $groups_model->getGroup($item['parent_id']);
-                        $item['parent_type']      = 'group';
-                        $item['parent_title']     = $groups_list[$item['parent_id']];
-                        $item['parent_url']       = href_to_rel('groups', $group['slug'], array('content', $ctype['name']));
-                        $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
-                    } else {
-                        $item['parent_id']    = null;
-                        $item['parent_type']  = null;
-                        $item['parent_title'] = null;
-                        $item['parent_url']   = null;
-                    }
-                }
-
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;
 

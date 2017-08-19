@@ -239,23 +239,6 @@ class actionContentItemAdd extends cmsAction {
 
                 $item['is_approved'] = !$ctype['is_premod_add'] || $is_moderator;
 
-                $item['parent_type'] = null;
-                $item['parent_title'] = null;
-                $item['parent_url'] = null;
-                $item['is_parent_hidden'] = null;
-
-                if (isset($item['parent_id'])){
-                    if (array_key_exists($item['parent_id'], $groups_list) && $item['parent_id'] > 0){
-                        $group = $groups_model->getGroup($item['parent_id']);
-                        $item['parent_type'] = 'group';
-                        $item['parent_title'] = $groups_list[$item['parent_id']];
-                        $item['parent_url'] = href_to_rel('groups', $group['slug'], array('content', $ctype_name));
-                        $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
-                    } else {
-                        $item['parent_id'] = null;
-                    }
-                }
-
 				$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
 				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
