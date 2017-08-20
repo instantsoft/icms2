@@ -53,6 +53,22 @@ class fieldListBitmask extends cmsFormField {
 
     }
 
+    public function getStringValue($value){
+
+        if (!$value) { return LANG_NO; }
+
+        $items = $this->getListItems();
+
+        $string = '';
+
+		if ($items) {
+            $string = implode(', ', $items);
+		}
+
+        return $string;
+
+    }
+
     public function parse($value){
 
 		if (!$value) { return LANG_NO; }

@@ -279,7 +279,7 @@ class groups extends cmsFrontend {
             )));
         }
 
-        if(!empty($group['content_counts'])){
+        if(cmsUser::isAllowed('groups', 'content_access') && !empty($group['content_counts'])){
             $roles = !empty($group['roles']) ? $group['roles'] : array();
             foreach($group['content_counts'] as $ctype_name => $count){
                 $form->addField($fieldset_id, new fieldList('content_policy:'.$ctype_name, array(

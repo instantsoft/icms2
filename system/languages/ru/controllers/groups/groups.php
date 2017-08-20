@@ -55,6 +55,8 @@
     define('LANG_RULE_GROUPS_INVITE_USERS_HINT', 'Если это разрешено в самой группе');
     define('LANG_RULE_GROUPS_BIND_TO_PARENT', 'Привязка записей типов контента');
     define('LANG_RULE_GROUPS_BIND_OFF_PARENT', 'Отвязка записей типов контента');
+    define('LANG_RULE_GROUPS_CONTENT_ACCESS', 'Управление правами добавления контента');
+    define('LANG_RULE_GROUPS_CONTENT_ACCESS_HINT', 'Пользователь сможет в настройках своих групп регулировать права добавления контента');
     define('LANG_GROUPS_GROUP_JOIN_POLICY', 'Вступление в группу');
     define('LANG_GROUPS_GROUP_EDIT_POLICY', 'Редактирование описания группы');
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Только владелец');

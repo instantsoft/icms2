@@ -10,6 +10,12 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `template_layouts` VARCHAR(500) NULL DEFAULT NULL AFTER `template`");
     }
 
+    add_perms(array(
+        'groups' => array(
+            'content_access'
+        )
+    ), 'flag');
+
     $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
@@ -92,6 +98,7 @@ function getTableFields($table) {
     return $fields;
 }
 /**
+ * готовимся к отказу от YAML (слишком большие накладные расходы при преобразовании) и массивы будем хранить в json
 function convert_yaml_to_json($data) {
 
     $data = array(

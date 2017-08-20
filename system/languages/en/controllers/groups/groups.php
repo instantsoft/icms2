@@ -55,6 +55,8 @@
     define('LANG_RULE_GROUPS_INVITE_USERS_HINT', 'If this is allowed in the group itself');
     define('LANG_RULE_GROUPS_BIND_TO_PARENT', 'Bind content type items');
     define('LANG_RULE_GROUPS_BIND_OFF_PARENT', 'Unbind content type items');
+    define('LANG_RULE_GROUPS_CONTENT_ACCESS', 'Manage content add rights');
+    define('LANG_RULE_GROUPS_CONTENT_ACCESS_HINT', 'The user will be able to adjust the rights to add content in the own group settings.');
     define('LANG_GROUPS_GROUP_JOIN_POLICY', 'Who can join');
     define('LANG_GROUPS_GROUP_EDIT_POLICY', 'Who can edit the group\'s description');
     define('LANG_GROUPS_GROUP_EDIT_OWNER',  'Only owner');

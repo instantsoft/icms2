@@ -69,6 +69,10 @@ class fieldString extends cmsFormField {
         return strip_tags(trim($value));
     }
 
+    public function getStringValue($value){
+        return $value;
+    }
+
     public function getInput($value){
 
         $this->data['type']         = $this->getProperty('is_password') ? 'password' : $this->getProperty('type');

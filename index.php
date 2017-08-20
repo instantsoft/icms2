@@ -10,7 +10,6 @@
 
     define('VALID_RUN', true);
 
-    // Устанавливаем кодировку
     header('Content-type:text/html; charset=utf-8');
 
     require_once 'bootstrap.php';
