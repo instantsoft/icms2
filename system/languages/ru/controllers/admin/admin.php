@@ -537,7 +537,7 @@
     define('LANG_CP_UPDATE_DOWNLOAD_FAIL',          'Не удалось скачать пакет обновления');
     define('LANG_CP_UPDATE_INSTALL',                'Установить обновление');
     define('LANG_CP_UPDATE_AVAILABLE',              'Доступно обновление %s');
-    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'Нет обновлений. Вы используете последнюю версию');
+    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'Нет обновлений. Вы используете актуальную версию %s от %s.');
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Не удалось проверить наличие обновлений');
     define('LANG_CP_UPDATE_MANUAL_1',               'Автоматическая загрузка не возможна, поскольку на сервере отсутствует CURL.');
     define('LANG_CP_UPDATE_MANUAL_2',               'Скачайте архив с обновлением вручную и установите через <a href="'.href_to('admin', 'install').'">установку дополнений</a>');

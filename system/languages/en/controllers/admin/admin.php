@@ -537,7 +537,7 @@
     define('LANG_CP_UPDATE_DOWNLOAD_FAIL',          'Unable to download the update package');
     define('LANG_CP_UPDATE_INSTALL',                'Install Update');
     define('LANG_CP_UPDATE_AVAILABLE',              '%s is available for update');
-    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'No updates. You are using the latest version');
+    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'No updates. You are using the latest version %s of %s.');
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Unable to check for updates');
     define('LANG_CP_UPDATE_MANUAL_1',               'Automatic download failed because CURL is not available on the server.');
     define('LANG_CP_UPDATE_MANUAL_2',               'Download the update archive manually and <a href="'.href_to('admin', 'install').'">Install</a> it');

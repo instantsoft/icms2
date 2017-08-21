@@ -12,8 +12,9 @@ class actionAdminUpdate extends cmsAction {
 
         $updater = new cmsUpdater();
 
-        return cmsTemplate::getInstance()->render('update', array(
-            'updater' => $updater,
+        return $this->cms_template->render('update', array(
+            'update'          => $updater->checkUpdate(),
+            'current_version' => cmsCore::getVersionArray()
         ));
 
     }

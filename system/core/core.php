@@ -16,6 +16,7 @@ class cmsCore {
 
     private static $language = 'ru';
     private static $language_href_prefix = '';
+    private static $core_version = null;
 
     public $controller = '';
 
@@ -95,37 +96,51 @@ class cmsCore {
 //============================================================================//
 
     /**
-     * Возвращает информацию о версии ядра
-     * @return type
+     * Возвращает информацию о версии CMS
+     * в виде строки
+     * @param boolean $show_date Показывать дату версии
+     * @return string
      */
-    public static function getVersion($show_date=false){
+    public static function getVersion($show_date = false){
 
         $version = self::getVersionArray();
 
         if (!$show_date && isset($version['date'])) { unset($version['date']); }
 
-        return implode('.', $version);
+        return $version['version'].($show_date ? ' '.LANG_FROM.' '.$version['date'] : '');
 
     }
 
     /**
-     * Возвращает информацию о версии ядра
+     * Возвращает информацию о версии CMS
      * в виде массива с ключами:
-     *  - major
-     *  - minor
-     *  - build
-     *  - date
-     * @return type
+     *  - date Дата релиза
+     *  - version Полная версия CMS
+     *  - raw
+     *  -- major
+     *  -- minor
+     *  -- build
+     *  -- date
+     * @return array
      */
     public static function getVersionArray(){
 
-        $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+        if(self::$core_version === null){
 
-        if (!is_readable($file)){ die('version.ini not found'); }
+            $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+            if (!is_readable($file)){ die('system/config/version.ini not found'); }
 
-        $version = parse_ini_file($file);
+            $version = parse_ini_file($file);
 
-        return $version;
+            self::$core_version = array(
+                'date'    => $version['date'],
+                'version' => $version['major'] .'.'. $version['minor'] .'.'. $version['build'],
+                'raw'     => $version
+            );
+
+        }
+
+        return self::$core_version;
 
     }
 
