@@ -709,7 +709,7 @@ class groups extends cmsFrontend {
 
     public function isContentAddAllowed($ctype_name, $group) {
 
-        if($this->cms_user->is_admin || $group['access']['is_owner']){ return true; }
+        if($this->cms_user->is_admin || ($group['access']['is_owner'] && cmsUser::isAllowed('groups', 'content_access'))){ return true; }
 
         // всем, кому разрешено общими правами
         if(empty($group['content_policy'][$ctype_name])){
