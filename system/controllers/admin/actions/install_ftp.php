@@ -70,7 +70,7 @@ class actionAdminInstallFtp extends cmsAction {
     private function uploadPackageToFTP($account){
 
         $connection = @ftp_connect($account['host'], $account['port'], 30);
-        if (!$connection){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }
+        if (!$connection){ cmsUser::addSessionMessage(LANG_CP_FTP_CONNECT_FAILED, 'error'); return false; }
 
         $session = @ftp_login($connection, $account['user'], $account['pass']);
         if (!$session){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }

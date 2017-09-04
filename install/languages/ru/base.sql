@@ -236,6 +236,8 @@ CREATE TABLE `{#}controllers` (
   `version` varchar(8) NOT NULL COMMENT 'Версия',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Есть админка?',
   `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сторонний компонент',
+  `files` varchar(4000) DEFAULT NULL COMMENT 'Список файлов контроллера (для стороних компонентов)',
+  `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `enabled` (`is_enabled`),
@@ -1552,29 +1554,32 @@ CREATE TABLE `{#}widgets` (
   `author` varchar(128) DEFAULT NULL COMMENT 'Имя автора',
   `url` varchar(250) DEFAULT NULL COMMENT 'Сайт автора',
   `version` varchar(8) DEFAULT NULL COMMENT 'Версия',
+  `is_external` tinyint(1) DEFAULT '1',
+  `files` varchar(4000) DEFAULT NULL COMMENT 'Список файлов виджета (для стороних виджетов)',
+  `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
   KEY `name` (`name`),
   KEY `controller` (`controller`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`) VALUES
-(1, NULL, 'text', 'Текстовый блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(2, 'users', 'list', 'Список пользователей', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(6, 'activity', 'list', 'Лента активности', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(10, 'tags', 'cloud', 'Облако тегов', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(12, NULL, 'auth', 'Авторизация', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
+INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES
+(1, NULL, 'text', 'Текстовый блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(2, 'users', 'list', 'Список пользователей', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(6, 'activity', 'list', 'Лента активности', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(10, 'tags', 'cloud', 'Облако тегов', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(12, NULL, 'auth', 'Авторизация', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

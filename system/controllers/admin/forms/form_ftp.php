@@ -41,23 +41,19 @@ class formAdminFtp extends cmsForm {
                         'title' => LANG_CP_FTP_PATH,
 						'hint' => LANG_CP_FTP_PATH_HINT,
                         'default' => '/',
+                        'suffix' => '<a id="check_ftp" href="'.href_to('admin', 'check_ftp').'" class="ajaxlink">'.LANG_CP_CHECK.'</a>',
                         'rules' => array(
                             array('required'),
                         )
                     )),
 
-                )
-            ),
-
-            array(
-                'type' => 'fieldset',
-                'childs' => array(
 					new fieldCheckbox('is_pasv', array(
                         'title' => LANG_CP_FTP_IS_PASV,
                         'default' => true,
-                    )),
-				)
-			),
+                    ))
+
+                )
+            ),
 
             array(
                 'type' => 'fieldset',
@@ -79,11 +75,10 @@ class formAdminFtp extends cmsForm {
                         'default' => false
                     ))
 				)
-			),
+			)
 
         );
 
     }
-
 
 }

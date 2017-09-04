@@ -92,6 +92,10 @@ class cmsCore {
         return self::$language;
     }
 
+    public static function changeLanguage($new_lang){
+        self::$language = $new_lang;
+    }
+
 //============================================================================//
 //============================================================================//
 

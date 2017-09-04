@@ -24,8 +24,6 @@ define('LANG_PHOTOS_DELETE_PHOTO', 'Delete Photo');
 define('LANG_PHOTOS_DELETE_PHOTO_CONFIRM', 'Delete this photo?');
 define('LANG_PHOTOS_TYPES', 'Photos types');
 define('LANG_PHOTOS_TYPES_HINT', 'Each type on a new line, you can specify the sequence numbers in the format: 1 | Type name');
-define('LANG_PHOTOS_SHOW_MORE', 'Show more');
-define('LANG_PHOTOS_RETURN_TO_FIRST', 'Back to top');
 define('LANG_PHOTOS_DATE', 'Photo date');
 define('LANG_PHOTOS_SIZES', 'Converting image presets');
 define('LANG_PHOTOS_DOWNLOAD_VIEW', 'Allow download <b>«%s»</b> preset');

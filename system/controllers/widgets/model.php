@@ -293,6 +293,18 @@ class modelWidgets extends cmsModel {
 
     }
 
+    public function deleteWidget($id){
+
+        $this->filterEqual('widget_id', $id);
+
+        $this->deleteFiltered('widgets_bind');
+
+        cmsCache::getInstance()->clean('widgets.bind');
+
+        return $this->delete('widgets', $id);
+
+    }
+
     public function reorderWidgetsBindings($position, $items, $page_id=0){
 
         cmsCache::getInstance()->clean('widgets.bind');

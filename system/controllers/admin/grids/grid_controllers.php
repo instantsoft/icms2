@@ -47,6 +47,14 @@ function grid_controllers($controller){
 
     $actions = array(
         array(
+            'title' => LANG_CP_PACKAGE_CONTENTS,
+            'class' => 'view ajax-modal',
+            'href' => href_to($controller->name, 'package_files_list', array('controllers', '{id}')),
+            'handler' => function($row){
+                return $row['files'];
+            }
+        ),
+        array(
             'title' => LANG_CONFIG,
             'class' => 'config',
             'href' => href_to($controller->name, 'controllers', array('edit', '{name}')),
@@ -72,4 +80,3 @@ function grid_controllers($controller){
     );
 
 }
-

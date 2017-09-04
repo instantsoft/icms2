@@ -189,6 +189,13 @@ class cmsController {
 
             $model = new cmsModel();
 
+            $model->selectList(array(
+                'i.id'         => 'id',
+                'i.is_enabled' => 'is_enabled',
+                'i.options'    => 'options',
+                'i.name'       => 'name'
+            ), true);
+
             self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
                 $item['options'] = cmsModel::yamlToArray($item['options']);
                 return $item;

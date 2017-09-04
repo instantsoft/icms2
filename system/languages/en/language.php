@@ -289,7 +289,6 @@
     define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
     define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <p>%s</p>');
-    define('ERR_DATABASE_CONNECT', 		 	 'Database connection error');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
     define('ERR_FORBIDDEN', 		 	     'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
@@ -453,6 +452,8 @@
     define('LANG_PAGE_CURRENT_DELETE',       'Delete current page');
     define('LANG_PAGES_SHOWN',               'Items %d-%d of %d');
     define('LANG_PAGES_SHOW_PERPAGE',        'Show');
+    define('LANG_SHOW_MORE',                 'Show more');
+    define('LANG_RETURN_TO_FIRST',           'Back to top');
 
     //FORMS
     define('LANG_SUBMIT', 					 'Submit');
@@ -528,6 +529,8 @@
     define('LANG_TIME1',                     'time');
     define('LANG_TIME2',                     'times');
     define('LANG_TIME10',                    'times');
+    define('LANG_SUBSCRIBERS_SPELL',         'subscriber |subscriber|subscribers');
+    define('LANG_DOWNLOAD_SPELL',            'download|download|downloads');
 
     define('LANG_ISLEFT',                    'left');
 

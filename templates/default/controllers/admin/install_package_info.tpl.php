@@ -157,7 +157,7 @@
 
         <div class="buttons">
             <?php if ($depends_pass){ echo html_button(LANG_INSTALL, 'cancel', "location.href='".$this->href_to('install', 'ftp')."'", array('class'=>'button-submit')); } ?>
-            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('')."'"); ?>
+            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
         </div>
 
     </form>

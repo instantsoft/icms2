@@ -303,6 +303,7 @@
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from their positions?\nThe widgets will be moved to the Unused Widgets section');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
+    define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Are you sure you want to permanently remove the widget from the system?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
     define('LANG_CP_WIDGET_PAGE_URLS',          'URL binding');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
@@ -428,7 +429,27 @@
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');
 
+    define('LANG_CP_ADDONS_DATA_ERROR',         'Error getting data, try again later.');
+    define('LANG_CP_ADDONS_CURL_ERROR',         'Browse the add-ons catalog failed, because CURL is not available on the server. You can select addons from a <a target="_blank" href="http://addons.instantcms.ru/">official add-ons catalog</a>.');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'For example, by copying a download link from the <a target="_blank" href="http://addons.instantcms.ru/">official add-ons catalog</a>');
+    define('LANG_CP_INSTALL_BY_LINK',           'Install from URL');
+    define('LANG_CP_OFICIAL_ADDONS',            'Add-ons catalog');
     define('LANG_CP_INSTALL_PACKAGE',           'Install Extension Package');
+    define('LANG_CP_DO_INSTALL',                'Install');
+    define('LANG_CP_DO_UPDATE',                 'Update');
+    define('LANG_CP_LAST_UPDATE',               'Last update');
+    define('LANG_CP_INSTALL_COMPATIBILITY_YES', 'Compatible with your InstantCMS version');
+    define('LANG_CP_INSTALL_COMPATIBILITY_NO',  'Not tested with your InstantCMS version');
+    define('LANG_CP_PACKAGE_VIDEO',             'Video');
+    define('LANG_CP_PACKAGE_VIDEO_TITLE',       'Video review');
+    define('LANG_CP_PACKAGE_DEMO',              'Demo');
+    define('LANG_CP_PACKAGE_BUY',               'Buy for %s');
+    define('LANG_CP_PACKAGE_BUY_UPDATE',        'Update available');
+    define('LANG_CP_PACKAGE_INSTALLED_HINT',    '%s installed');
+    define('LANG_CP_ADDDONS_DS_INSTALLED',      'Installed');
+    define('LANG_CP_PACKAGE_DELETE_CONTROLLERS', 'Deleting a «%s» component files');
+    define('LANG_CP_PACKAGE_DELETE_WIDGETS',     'Deleting a «%s» widget files');
+    define('LANG_CP_PACKAGE_DELETE_HINT',       'We strongly recommend that you manually delete all the files listed below, they are no longer used. InstantCMS does not have permission to delete (and should not).');
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Installation completed');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Extension package has been successfully installed');
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'The <b>%s</b> folder has not been cleared due to lack of permissions, clear it manually');
@@ -485,12 +506,18 @@
     define('LANG_CP_FTP_PASS',                  'Password');
     define('LANG_CP_FTP_PATH',                  'Site root path');
 	define('LANG_CP_FTP_PATH_HINT',             '<a href="http://docs.instantcms.ru/en/manual/addons/ftppath" target="_blank">How to specify correct path?</a>');
+    define('LANG_CP_CHECK',                     'Check');
     define('LANG_CP_FTP_IS_PASV',               'Passive transfer mode');
-    define('LANG_CP_FTP_AUTH_FAILED',           'Connection failed. Verify the specified details');
+    define('LANG_CP_FTP_CONNECT_FAILED',        'Connection failed. Verify that the host and port are correct');
+    define('LANG_CP_FTP_AUTH_FAILED',           'Connection failed. Verify the username and password are correct');
     define('LANG_CP_FTP_UPLOAD_FAILED',         'File copy error. Make sure the path and permissions are correct');
     define('LANG_CP_FTP_MKDIR_FAILED',          'Failed to create the folder. Make sure the path and permissions are correct');
 	define('LANG_CP_FTP_NO_ROOT',				'Error: the %s folder not found on the server');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in <strong>%s</strong>');
+    define('LANG_CP_FTP_CHECK',				    'Checking the FTP connection');
+    define('LANG_CP_FTP_CONNECTION_INFO',       'Connection to %s');
+    define('LANG_CP_FTP_NO_ERRORS',             'The connection is established and configured correctly.');
+    define('LANG_CP_FTP_ROOT_LIST_TITLE',       'List of connection files and directories');
 
     define('LANG_CP_FTP_SAVE_TO_SESSION',   'Remember FTP details for the current session');
     define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Not safe if the extension is not from a trusted author');
@@ -531,7 +558,7 @@
     define('LANG_CP_SCHEDULER_TASK_RAN',            'Task &laquo;%s&raquo; was executed %s');
     define('LANG_CP_SCHEDULER_TASK_RUN_FAIL',       'Failed to execute task &laquo;%s&raquo;');
 
-    define('LANG_CP_UPDATE_CHECK',                  'Check for updates');
+    define('LANG_CP_UPDATE_CHECK',                  'Check for InstantCMS updates');
     define('LANG_CP_UPDATE_DATE',                   'Release date');
     define('LANG_CP_UPDATE_DOWNLOAD',               'Download package');
     define('LANG_CP_UPDATE_DOWNLOAD_FAIL',          'Unable to download the update package');

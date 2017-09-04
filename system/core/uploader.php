@@ -246,8 +246,37 @@ class cmsUploader {
 
     public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
-        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST[$post_filename]), PHP_URL_PATH), PATHINFO_EXTENSION));
-        $dest_name = files_sanitize_name($_POST[$post_filename]);
+        $link = $file_name = trim($_POST[$post_filename]);
+
+        // проверяем редирект и имя файла
+        if (function_exists('curl_init')){
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $link);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, true);
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            $headers = curl_exec($curl);
+            curl_close($curl);
+            $matches = array();
+            if(preg_match("/(?:Location:|URI:)([^\n]+)*/is", $headers, $matches)){
+                $url = trim($matches[1]);
+                if(strpos($url, 'http') !== 0){
+                    $url_data = parse_url($link);
+                    $link = $url_data['scheme'].'://'.$url_data['host'].$url;
+                } else {
+                    $link = $url;
+                }
+                $_POST[$post_filename] = $link;
+                return $this->uploadFromLink($post_filename, $allowed_ext, $allowed_size, $destination);
+            }
+            if(preg_match('#filename="([^"]+)#uis', $headers, $matches)){
+                $file_name = trim($matches[1]);
+            }
+        }
+
+        $dest_ext  = strtolower(pathinfo(parse_url($file_name, PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($file_name);
 
         if(!$this->checkExt($dest_ext, $allowed_ext)){
             return array(
@@ -257,7 +286,7 @@ class cmsUploader {
             );
         }
 
-        $file_bin = file_get_contents_from_url($_POST[$post_filename]);
+        $file_bin = file_get_contents_from_url($link);
 
         if(!$file_bin){
             return array(

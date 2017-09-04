@@ -112,10 +112,6 @@ class cmsDatabase {
             $this->mysqli->query("SET sql_mode=''");
         }
 
-        if(defined('LC_LANGUAGE_TERRITORY')){
-            $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
-        }
-
         if (!empty($this->options['debug'])){
             cmsDebugging::pointProcess('db', array(
                 'data' => 'Database connection'
@@ -140,9 +136,9 @@ class cmsDatabase {
         return $this->connect_error;
     }
 
-	public function reconnect(){
+	public function reconnect($is_force = false){
 
-        if (!$this->mysqli->ping()){
+        if ($is_force || !$this->mysqli->ping()){
 
             $this->mysqli->close();
 
@@ -165,7 +161,14 @@ class cmsDatabase {
 	}
 
     public function setTimezone(){
-        $this->query("SET `time_zone` = '%s'", date('P'));
+        $this->query("SET `time_zone` = '%s'", date('P')); return $this;
+    }
+
+    public function setLcMessages(){
+        if(defined('LC_LANGUAGE_TERRITORY')){
+            $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
+        }
+        return $this;
     }
 
 //============================================================================//

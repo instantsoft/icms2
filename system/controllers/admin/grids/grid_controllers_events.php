@@ -26,6 +26,17 @@ function grid_controllers_events ($controller){
             'title'  => LANG_EVENTS_LISTENER,
             'width'  => 200,
             'filter' => 'like',
+            'filter_select' => array(
+                'items' => function($name){
+                    $admin_model = cmsCore::getModel('admin');
+                    $controllers = $admin_model->getInstalledControllers();
+                    $items = array('' => '');
+                    foreach($controllers as $controller){
+                        $items[$controller['name']] = $controller['title'];
+                    }
+                    return $items;
+                }
+            ),
             'handler' => function($val, $row){
                 return string_lang($val.'_CONTROLLER', $val);
             }

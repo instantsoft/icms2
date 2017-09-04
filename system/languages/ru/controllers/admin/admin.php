@@ -304,6 +304,7 @@
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Отвязать все виджеты с позиций для данного шаблона?\nВиджеты переместятся в неиспользуемые');
     define('LANG_CP_WIDGETS_MISC',              'Общие');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
+    define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Вы действительно хотите окончательно удалить виджет из системы?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
     define('LANG_CP_WIDGET_PAGE_URLS',          'Фильтрация URL');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');
@@ -429,7 +430,27 @@
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Очистить кеш');
 
+    define('LANG_CP_ADDONS_DATA_ERROR',         'Ошибка получения данных, попробуйте повторить позже.');
+    define('LANG_CP_ADDONS_CURL_ERROR',         'Просмотр каталога невозможен, поскольку на сервере отсутствует CURL. Вы можете выбрать дополнения из <a target="_blank" href="http://addons.instantcms.ru/">официального каталога</a>.');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'Например, скопировав ссылку на скачивание с <a target="_blank" href="http://addons.instantcms.ru/">официального каталога дополнений</a>');
+    define('LANG_CP_INSTALL_BY_LINK',           'Установите с URL-адреса');
+    define('LANG_CP_OFICIAL_ADDONS',            'Каталог дополнений');
     define('LANG_CP_INSTALL_PACKAGE',           'Установить пакет дополнения');
+    define('LANG_CP_DO_INSTALL',                'Установить');
+    define('LANG_CP_DO_UPDATE',                 'Обновить');
+    define('LANG_CP_LAST_UPDATE',               'Последнее обновление');
+    define('LANG_CP_INSTALL_COMPATIBILITY_YES', 'Совместимо с вашей версией InstantCMS');
+    define('LANG_CP_INSTALL_COMPATIBILITY_NO',  'Не тестировался с вашей версией InstantCMS');
+    define('LANG_CP_PACKAGE_VIDEO',             'Видео');
+    define('LANG_CP_PACKAGE_VIDEO_TITLE',       'Видео обзор');
+    define('LANG_CP_PACKAGE_DEMO',              'Демо');
+    define('LANG_CP_PACKAGE_BUY',               'Купить за %s');
+    define('LANG_CP_PACKAGE_BUY_UPDATE',        'Доступно обновление');
+    define('LANG_CP_PACKAGE_INSTALLED_HINT',    '%s установлен');
+    define('LANG_CP_PACKAGE_DELETE_CONTROLLERS', 'Удаление файлов компонента «%s»');
+    define('LANG_CP_PACKAGE_DELETE_WIDGETS',     'Удаление файлов вижета «%s»');
+    define('LANG_CP_PACKAGE_DELETE_HINT',       'Настоятельно рекомендуем вручную удалить все файлы, указанные ниже, они больше не используются. У InstantCMS нет прав доступа для удаления (и не должно быть).');
+    define('LANG_CP_ADDDONS_DS_INSTALLED',      'Установленные');
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Установка завершена');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Пакет дополнения был успешно установлен');
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Папка <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
@@ -485,12 +506,18 @@
     define('LANG_CP_FTP_PASS',                  'Пароль');
     define('LANG_CP_FTP_PATH',                  'Путь папки сайта');
     define('LANG_CP_FTP_PATH_HINT',             '<a href="http://docs.instantcms.ru/manual/addons/ftppath" target="_blank">Как правильно указать путь?</a>');
+    define('LANG_CP_CHECK',                     'Проверить');
     define('LANG_CP_FTP_IS_PASV',               'Пассивный режим передачи');
-    define('LANG_CP_FTP_AUTH_FAILED',           'Ошибка подключения. Проверьте правильность указанных реквизитов');
+    define('LANG_CP_FTP_CONNECT_FAILED',        'Ошибка подключения. Проверьте правильность хоста и порта');
+    define('LANG_CP_FTP_AUTH_FAILED',           'Ошибка подключения. Проверьте правильность имени пользователя и пароля');
     define('LANG_CP_FTP_UPLOAD_FAILED',         'Ошибка копирования файлов. Проверьте правильность пути и наличие прав');
     define('LANG_CP_FTP_MKDIR_FAILED',          'Ошибка создания директории. Проверьте правильность пути и наличие прав');
 	define('LANG_CP_FTP_NO_ROOT',				'Ошибка: папка %s не найдена на сервере');
 	define('LANG_CP_FTP_BAD_ROOT',				'Ошибка пути: InstantCMS 2 не найдена в <strong>%s</strong>');
+	define('LANG_CP_FTP_CHECK',				    'Проверка FTP соединения');
+	define('LANG_CP_FTP_CONNECTION_INFO',       'Соединение с %s');
+	define('LANG_CP_FTP_NO_ERRORS',             'Соединение установлено и настроено коректно.');
+	define('LANG_CP_FTP_ROOT_LIST_TITLE',       'Список файлов и директорий соединения');
 
     define('LANG_CP_FTP_SAVE_TO_SESSION',   'Запомнить реквизиты ftp в сессии');
     define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Это небезопасно в случае если дополнение не от надежного автора');
@@ -531,7 +558,7 @@
     define('LANG_CP_SCHEDULER_TASK_RAN',            'Задача &laquo;%s&raquo; была выполнена %s');
     define('LANG_CP_SCHEDULER_TASK_RUN_FAIL',       'Не удалось выполнить задачу &laquo;%s&raquo;');
 
-    define('LANG_CP_UPDATE_CHECK',                  'Проверить обновления');
+    define('LANG_CP_UPDATE_CHECK',                  'Проверить обновления InstantCMS');
     define('LANG_CP_UPDATE_DATE',                   'Дата релиза');
     define('LANG_CP_UPDATE_DOWNLOAD',               'Скачать обновление');
     define('LANG_CP_UPDATE_DOWNLOAD_FAIL',          'Не удалось скачать пакет обновления');

@@ -23,8 +23,8 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input, .datagrid .filter .date-input').on('input', function () {
-            $('.datagrid .filter .input, .datagrid .filter .date-input').each(function(){
+        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').on('input change', function () {
+            $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name='+filter+']').val($(this).val());
             });
@@ -450,6 +450,8 @@ icms.datagrid = (function ($) {
         if (icms.datagrid.callback) { icms.datagrid.callback(); }
 
         icms.events.run('datagrid_rows_loaded', result);
+
+        icms.modal.bind('a.ajax-modal');
 
     };
 

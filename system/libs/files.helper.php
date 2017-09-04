@@ -220,7 +220,7 @@ function files_user_file_hash($file_path = ''){
 function files_sanitize_name($filename){
 
 	$path_parts = pathinfo($filename);
-    $filename = lang_slug($path_parts['filename']) . '.' . $path_parts['extension'];
+    $filename = lang_slug($path_parts['filename']) . '.' . (isset($path_parts['extension']) ? $path_parts['extension'] : '');
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
     $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
@@ -255,7 +255,7 @@ function file_get_contents_from_url($url){
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
             $data = curl_exec($curl);
             curl_close($curl);
 

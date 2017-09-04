@@ -454,7 +454,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $html .= "\t" . '<label>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    htmlspecialchars($title) . '</label>' . "\n";
+                    '<span>'.htmlspecialchars($title) . '</span></label>' . "\n";
 
         }
 

@@ -331,7 +331,7 @@ class comments extends cmsFrontend {
                         'page_url'   => $page_url,
                         'comment'    => strip_tags($comment['content_html']),
                         'nickname'   => $moderator['nickname'],
-                        'list_url'   => href_to_abs('comments', 'index', 'moderate')
+                        'list_url'   => href_to_abs('comments', 'index', 'moderation')
                     )
                 );
 

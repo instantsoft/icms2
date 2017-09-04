@@ -39,6 +39,18 @@ class actionAdminControllersDelete extends cmsAction {
 
         cmsUser::addSessionMessage(sprintf(LANG_CP_COMPONENT_IS_DELETED, $controller_info['title']), 'success');
 
+        if($controller_info['files']){
+
+            $controller_info['files'] = cmsModel::yamlToArray($controller_info['files']);
+
+            return $this->cms_template->render('install_package_files', array(
+                'type'        => 'controllers',
+                'addon_title' => $controller_info['title'],
+                'files'       => $controller_info['files']
+            ));
+
+        }
+
         $this->redirectToAction('controllers');
 
     }

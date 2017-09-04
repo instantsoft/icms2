@@ -21,8 +21,11 @@ icms.modal = (function ($) {
 
     //====================================================================//
 
-	this.openHtml = function(html) {
-		$.nmData(html, {autoSizable: true, anim: {def: 'show'}});
+	this.openHtml = function(html, title) {
+        title = title || '';
+		$.nmData(html, {autoSizable: true, anim: {def: 'show'}, callbacks: {initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+            }}});
 	};
 
     //====================================================================//

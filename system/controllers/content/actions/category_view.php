@@ -52,6 +52,9 @@ class actionContentCategoryView extends cmsAction {
             return $item;
         });
 
+        list($datasets, $ctype) = cmsEventsManager::hook('content_datasets', array($datasets, $ctype));
+        list($datasets, $ctype) = cmsEventsManager::hook('content_'.$ctype['name'].'_datasets', array($datasets, $ctype));
+
         // Текущий набор
         $dataset = $this->request->get('dataset', '');
 

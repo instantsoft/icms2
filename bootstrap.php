@@ -10,13 +10,13 @@
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
 
-	// Подключаем автозагрузчик классов
+    // Подключаем автозагрузчик классов
     require_once PATH . '/system/config/autoload.php';
 
     // Устанавливаем обработчик автозагрузки классов
     spl_autoload_register('autoLoadCoreClass');
 
-	// Инициализируем конфиг
+    // Инициализируем конфиг
     $config = cmsConfig::getInstance();
 
     // дебаг отключен - скрываем все сообщения об ошибках
@@ -52,6 +52,15 @@
     // Инициализируем ядро
     $core = cmsCore::getInstance();
 
+    // Подключаем базу
+    $core->connectDB();
+
+    if(!$core->db->ready()){
+        cmsCore::error($core->db->connectError());
+    }
+
+    cmsEventsManager::hook('core_start');
+
     // Загружаем локализацию
     cmsCore::loadLanguage();
 
@@ -60,12 +69,8 @@
         lang_setlocale();
     }
 
-    // Подключаем базу
-    $core->connectDB();
-
-    if(!$core->db->ready()){
-        cmsCore::error(ERR_DATABASE_CONNECT, $core->db->connectError());
-    }
+    // устанавливаем локаль MySQL
+    $core->db->setLcMessages();
 
     // Запускаем кеш
     cmsCache::getInstance()->start();

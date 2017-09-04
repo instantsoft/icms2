@@ -35,6 +35,25 @@ class modelAdmin extends cmsModel{
     }
 
 //============================================================================//
+//===========================    Дополнения    ===============================//
+//============================================================================//
+
+    public function getInstalledAddonsIds() {
+
+        $controllers_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('controllers', function($item, $model){ return $item['addon_id']; }, false);
+
+        $widgets_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('widgets', function($item, $model){ return $item['addon_id']; }, false);
+
+        return array_merge($widgets_addons, $controllers_addons);
+
+    }
+
+//============================================================================//
+//============================    События    =================================//
 //============================================================================//
 
     public function getEvents(){
@@ -167,8 +186,5 @@ class modelAdmin extends cmsModel{
 		));
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

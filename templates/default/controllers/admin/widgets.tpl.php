@@ -37,7 +37,7 @@
 	));
 
     $this->applyToolbarHook('admin_widgets_toolbar');
-    
+
 ?>
 
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>
@@ -79,6 +79,8 @@
                  data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
                  data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"
                  data-delete-url="<?php echo $this->href_to('widgets', 'delete'); ?>"
+                 data-remove-url="<?php echo $this->href_to('widgets', 'remove'); ?>"
+                 data-files-url="<?php echo $this->href_to('package_files_list', 'widgets'); ?>"
                  data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
                  data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
                  data-reorder-url="<?php echo $this->href_to('widgets', 'reorder'); ?>"
@@ -111,6 +113,11 @@
                                     <?php foreach($widgets as $widget){ ?>
                                         <li rel="new" data-id="<?php echo $widget['id']; ?>">
                                             <?php echo $widget['title']; ?>
+                                            <?php if($widget['is_external']){ ?>
+                                                <span class="actions">
+                                                    <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
+                                                </span>
+                                            <?php } ?>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -138,5 +145,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
 </script>

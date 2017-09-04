@@ -24,8 +24,6 @@
 	define('LANG_PHOTOS_DELETE_PHOTO_CONFIRM',  'Удалить эту фотографию?');
 	define('LANG_PHOTOS_TYPES',                 'Типы фотографий');
 	define('LANG_PHOTOS_TYPES_HINT',            'Каждый тип с новой строки, можно задавать порядковые номера в формате: 1 | Название типа');
-	define('LANG_PHOTOS_SHOW_MORE',             'Показать больше');
-	define('LANG_PHOTOS_RETURN_TO_FIRST',       'Вернуться к началу');
 	define('LANG_PHOTOS_DATE',                  'Дата съёмки');
 	define('LANG_PHOTOS_SIZES',                 'Пресеты для конвертации изображений');
 	define('LANG_PHOTOS_DOWNLOAD_VIEW',         'Разрешено скачивание пресета <b>«%s»</b> группам');

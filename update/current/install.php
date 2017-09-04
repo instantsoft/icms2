@@ -5,9 +5,59 @@
 function install_package(){
 
 	$core = cmsCore::getInstance();
+    $admin = cmsCore::getController('admin');
 
     if(!isFieldExists('widgets_bind', 'template_layouts')){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `template_layouts` VARCHAR(500) NULL DEFAULT NULL AFTER `template`");
+    }
+
+    if(!isFieldExists('widgets', 'is_external')){
+
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `is_external` TINYINT(1) NULL DEFAULT '1' AFTER `version`");
+
+        $native_widgets = array(
+            array(null, 'text'), array(null, 'menu'), array(null, 'auth'),
+            array(null, 'html'), array('users', 'list'), array('users', 'online'),
+            array('users', 'avatar'), array('tags', 'cloud'), array('search', 'search'),
+            array('photos', 'list'), array('content', 'filter'), array('content', 'slider'),
+            array('content', 'categories'), array('content', 'list'), array('comments', 'list'),
+            array('activity', 'list')
+        );
+
+        foreach ($native_widgets as $widget) {
+            $admin->model->filterEqual('controller', $widget[0])->filterEqual('name', $widget[1])->updateFiltered('widgets', array(
+                'is_external' => null
+            ));
+        }
+
+    }
+
+    if(!isFieldExists('widgets', 'files')){
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `files` VARCHAR(4000) NULL DEFAULT NULL AFTER `is_external`");
+    }
+
+    if(!isFieldExists('controllers', 'files')){
+        $core->db->query("ALTER TABLE `{#}controllers` ADD `files` VARCHAR(4000) NULL DEFAULT NULL AFTER `is_external`");
+    }
+
+    if(!isFieldExists('controllers', 'addon_id')){
+
+        $core->db->query("ALTER TABLE `{#}controllers` ADD `addon_id` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `files`");
+
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '544' WHERE `name` = 'commentsvk'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '279' WHERE `name` = 'video'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '124' WHERE `name` = 'opengraph'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '325' WHERE `name` = 'ping'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '329' WHERE `name` = 'hidetext'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '364' WHERE `name` = 'loadaverage'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '533' WHERE `name` = 'stopblock'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '6' WHERE `name` = 'places'");
+        $core->db->query("UPDATE `{#}controllers` SET `addon_id` = '8' WHERE `name` = 'billing'");
+
+    }
+
+    if(!isFieldExists('widgets', 'addon_id')){
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `addon_id` INT(11) UNSIGNED NULL DEFAULT NULL AFTER `files`");
     }
 
     add_perms(array(
@@ -15,8 +65,6 @@ function install_package(){
             'content_access'
         )
     ), 'flag');
-
-    $admin = cmsCore::getController('admin');
 
     $diff_events = $admin->getEventsDifferences();
 

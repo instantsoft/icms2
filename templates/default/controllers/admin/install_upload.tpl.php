@@ -9,6 +9,12 @@
         'href'   => LANG_HELP_URL_INSTALL
     ));
 
+    $this->addToolButton(array(
+        'class' => 'addons',
+        'title' => LANG_CP_OFICIAL_ADDONS,
+        'href'  => $this->href_to('addons_list')
+    ));
+
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE; ?></h1>
@@ -56,6 +62,14 @@
                 <?php echo html_file_input('package'); ?>
                 <div class="hint">
                     <?php echo LANG_CP_INSTALL_PACKAGE_FILE_HINT; ?>
+                </div>
+            </div>
+            <p><?php echo mb_strtoupper(LANG_OR); ?></p>
+            <div class="field">
+                <label><?php echo LANG_CP_INSTALL_BY_LINK; ?></label>
+                <?php echo html_input('text', 'package', ''); ?>
+                <div class="hint">
+                    <?php echo LANG_CP_INSTALL_PACKAGE_LINK_HINT; ?>
                 </div>
             </div>
 

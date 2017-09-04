@@ -19,10 +19,8 @@
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
-
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
     define('LANG_CONTENT_OWN_ITEMS',		  'Только мои');
-
     define('LANG_SHOW_FILTER',               'Показать фильтр');
     define('LANG_FILTER',                    'Фильтр');
     define('LANG_FILTERS',                   'Фильтры');
@@ -291,14 +289,12 @@
     define('ERR_CLASS_NOT_DEFINED', 		 'В файле %s не определён класс <b>%s</b>');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
-    define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
     define('ERR_FORBIDDEN', 		 	     'Доступ запрещён');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
     define('ERR_SEARCH_TITLE',               'Поиск');
     define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
-
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');
@@ -329,14 +325,12 @@
     define('ERR_VALIDATE_NUMBER',            'Введите число');
     define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
     define('ERR_VALIDATE_INVALID',           'Указано недопустимое значение');
-
     define('LANG_VALIDATE_REQUIRED',         'Поле должно быть заполнено');
     define('LANG_VALIDATE_DIGITS',           'Только целые числа');
     define('LANG_VALIDATE_NUMBER',           'Только числа');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
     define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
     define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
-
     define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
     define('ERR_EMPTY_FIELDS', 			 	 'Обнаружены пустые поля!');
     define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');
@@ -456,6 +450,8 @@
     define('LANG_PAGE_CURRENT_DELETE',       'Удалить текущую страницу');
     define('LANG_PAGES_SHOWN',               'Показаны %d-%d из %d');
     define('LANG_PAGES_SHOW_PERPAGE',        'Показывать по');
+	define('LANG_SHOW_MORE',                 'Показать больше');
+	define('LANG_RETURN_TO_FIRST',           'Вернуться к началу');
 
     //FORMS
     define('LANG_SUBMIT', 					 'Отправить');
@@ -531,6 +527,8 @@
     define('LANG_TIME1',                     'раз');
     define('LANG_TIME2',                     'раза');
     define('LANG_TIME10',                    'раз');
+    define('LANG_SUBSCRIBERS_SPELL',         'подписчик|подписчика|подписчиков');
+    define('LANG_DOWNLOAD_SPELL',            'скачивание|скачивания|скачиваний');
 
     define('LANG_ISLEFT',                    'осталось');
 
