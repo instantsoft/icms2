@@ -46,6 +46,24 @@ class widgetContentFilter extends cmsWidget {
             }
 
         } else {
+		
+	    if(strpos($core->uri, '.html') === false){
+
+                $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
+                if(!empty($current_ctype_category['id'])){
+                    $category = $current_ctype_category;
+                }
+
+            } else {
+
+                $item = cmsModel::getCachedResult('current_ctype_item');
+                if(!$item){ return false; }
+
+                if(!empty($item['category'])){
+                    $category = $item['category'];
+                }
+
+            }
 
             $content_controller = cmsCore::getController('content');
 
