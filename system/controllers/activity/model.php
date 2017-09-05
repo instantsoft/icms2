@@ -124,7 +124,7 @@ class modelActivity extends cmsModel{
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
-        $this->join('{users}', 'u', 'u.id = i.user_id');
+        $this->join('{users}', 'u', 'u.id = i.user_id AND u.is_deleted IS NULL');
 
         $this->select('t.description', 'description');
         $this->join('activity_types', 't', 't.id = i.type_id');

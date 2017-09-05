@@ -11,6 +11,25 @@ class widgetContentFilter extends cmsWidget {
         $user = cmsUser::getInstance();
 
         $category = array('id' => 1);
+        $item     = array();
+
+        if(strpos($core->uri, '.html') === false){
+
+            $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
+            if(!empty($current_ctype_category['id'])){
+                $category = $current_ctype_category;
+            }
+
+        } else {
+
+            $item = cmsModel::getCachedResult('current_ctype_item');
+            if($item){
+                if(!empty($item['category'])){
+                    $category = $item['category'];
+                }
+            }
+
+        }
 
         if (!$ctype_name){
 
@@ -19,22 +38,8 @@ class widgetContentFilter extends cmsWidget {
 
             $ctype_name = $ctype['name'];
 
-            if(strpos($core->uri, '.html') === false){
-
-                $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
-                if(!empty($current_ctype_category['id'])){
-                    $category = $current_ctype_category;
-                }
-
-            } else {
-
-                $item = cmsModel::getCachedResult('current_ctype_item');
+            if(strpos($core->uri, '.html') !== false){
                 if(!$item){ return false; }
-
-                if(!empty($item['category'])){
-                    $category = $item['category'];
-                }
-
             }
 
             $fields       = cmsModel::getCachedResult('current_ctype_fields');
@@ -119,7 +124,7 @@ class widgetContentFilter extends cmsWidget {
         return array(
 			'ctype_name'   => $ctype_name,
 			'category'     => $category,
-            'page_url'     => $core->uri_absolute,
+            'page_url'     => href_to($ctype_name),
             'fields'       => $fields,
             'props_fields' => $props_fields,
             'props'        => $props,
