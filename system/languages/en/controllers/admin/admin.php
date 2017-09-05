@@ -440,6 +440,11 @@
     define('LANG_CP_LAST_UPDATE',               'Last update');
     define('LANG_CP_INSTALL_COMPATIBILITY_YES', 'Compatible with your InstantCMS version');
     define('LANG_CP_INSTALL_COMPATIBILITY_NO',  'Not tested with your InstantCMS version');
+    define('LANG_CP_NO_ADDONS',                 'No add-ons for your request');
+    define('LANG_CP_FIND_ADDON_TITLE',          'Search by name of the add-on');
+    define('LANG_CP_FIND_ADDON_FREE',           'Only free');
+    define('LANG_CP_FIND_ADDON_BUY',            'Only paid');
+    define('LANG_CP_FIND_FOUND',                'Total on request');
     define('LANG_CP_PACKAGE_VIDEO',             'Video');
     define('LANG_CP_PACKAGE_VIDEO_TITLE',       'Video review');
     define('LANG_CP_PACKAGE_DEMO',              'Demo');

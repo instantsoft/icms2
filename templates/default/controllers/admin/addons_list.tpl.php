@@ -50,6 +50,33 @@
             <div class="cp_toolbar" id="addons_toolbar">
                 <?php $this->toolbar(); ?>
             </div>
+            <div id="filter_toolbar">
+                <div class="left">
+                    <div class="field">
+                        <?php echo html_input('text', 'title', '', array('id' => 'search_addon_title', 'placeholder' => LANG_CP_FIND_ADDON_TITLE, 'autocomplete' => 'off')); ?>
+                    </div>
+                    <div class="field">
+                        <ul class="radio_buttons_list row_radio" id="is_paid">
+                            <li>
+                                <input checked type="radio" id="a-all" name="is_paid" value="0">
+                                <label for="a-all"><?php echo LANG_ALL; ?></label>
+                                <div class="check"><div class="inside"></div></div>
+                            </li>
+                            <li>
+                                <input type="radio" id="a-pay" name="is_paid" value="1">
+                                <label for="a-pay"><?php echo LANG_CP_FIND_ADDON_FREE; ?></label>
+                                <div class="check"><div class="inside"></div></div>
+                            </li>
+                            <li>
+                                <input type="radio" id="a-nopay" name="is_paid" value="2">
+                                <label for="a-nopay"><?php echo LANG_CP_FIND_ADDON_BUY; ?></label>
+                                <div class="check"><div class="inside"></div></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="right" id="addons_count"><?php echo LANG_CP_FIND_FOUND; ?>: <span></span></div>
+            </div>
             <div id="addons_list_wrap">
                 <div id="addons_list"></div>
                 <div id="show_more" data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>" data-more="<?php echo LANG_SHOW_MORE; ?>">
@@ -69,6 +96,9 @@
     var current_ds_id  = <?php echo $dataset_id; ?>;
     var current_page   = 1;
     var has_next       = 0;
+    var addons_count   = 0;
+    var addon_title    = '';
+    var addon_is_paid  = 0;
     $(function() {
         $('#addons_list').on('click', '.button-video > a', function(e){
             var id = $(this).data('id');
@@ -80,6 +110,18 @@
             $(this).html($('#addons_list_wrap #addons_list ~ .spinner').clone().show());
             $(this).prev().find('input[type=submit]').trigger('click');
             return false;
+        });
+        $('#search_addon_title').on('keyup', function(e){
+            if(e.keyCode==13){
+                addon_title = $(this).val();
+                current_page = 1;
+                loadAddons();
+            }
+        });
+        $('#is_paid input').on('click', function(e){
+            addon_is_paid = $(this).val();
+            current_page = 1;
+            loadAddons();
         });
         $('#addons_toolbar .addons_dataset a').on('click', function(e){
             current_ds_id = $(this).data('id');
@@ -131,8 +173,14 @@
             $('#show_more').hide().html($('#show_more').data('more'));
             $('#addons_list').html('');
         }
-        $('#addons_list_wrap > .spinner').show();
-        $.post('<?php echo $this->href_to('addons_list'); ?>', {dataset_id: current_ds_id, cat_id: current_cat_id, page: current_page}, function(result){
+        $('#addons_list_wrap > .spinner').show(); $('#addons_count').hide();
+        $.post('<?php echo $this->href_to('addons_list'); ?>', {
+            dataset_id: current_ds_id,
+            cat_id: current_cat_id,
+            is_paid: addon_is_paid,
+            title: addon_title,
+            page: current_page
+        }, function(result){
             $('#addons_list_wrap > .spinner').hide();
             $('#addons_list').append(result);
             if(has_next == 1){
@@ -146,6 +194,7 @@
                 }
                 current_page = 1;
             }
+            $('#addons_count').fadeIn().find('span').html(addons_count);
             $(window).triggerHandler('resize');
             icms.modal.bind('a.ajax-modal');
         });

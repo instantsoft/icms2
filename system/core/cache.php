@@ -21,7 +21,7 @@ class cmsCache {
 
             $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
 
-            $this->cacher = new $cacher_class();
+            $this->cacher = new $cacher_class($config);
 
             $this->cache_ttl = $config->cache_ttl;
 
@@ -35,6 +35,7 @@ class cmsCache {
         if(!isset($this->cacher)){
             return false;
         }
+
         // есть метод здесь, вызываем его
         if(method_exists($this, '_'.$method_name)){
             return call_user_func_array(array($this, '_'.$method_name), $arguments);
@@ -45,6 +46,7 @@ class cmsCache {
         }
         // ничего нет
         trigger_error('not defined method name '.$method_name, E_USER_NOTICE);
+
         return false;
 
     }

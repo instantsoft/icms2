@@ -48,7 +48,7 @@ class modelAdmin extends cmsModel{
                 filterNotNull('addon_id')->
                 get('widgets', function($item, $model){ return $item['addon_id']; }, false);
 
-        return array_merge($widgets_addons, $controllers_addons);
+        return array_filter(array_merge($widgets_addons, $controllers_addons));
 
     }
 

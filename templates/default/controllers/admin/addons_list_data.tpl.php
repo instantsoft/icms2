@@ -1,3 +1,10 @@
+<script>
+    has_next = <?php echo $has_next; ?>;
+    addons_count = <?php echo $count; ?>;
+</script>
+<?php if(empty($items)){ ?>
+    <p><?php echo LANG_CP_NO_ADDONS; ?></p>
+<?php return; } ?>
 <?php foreach ($items as $item) { ?>
 <?php
     $latest_version = reset($item['versions']);
@@ -125,6 +132,3 @@
     </div>
 </div>
 <?php } ?>
-<script>
-    has_next = <?php echo $has_next; ?>;
-</script>

@@ -252,6 +252,8 @@ class cmsModel {
         $this->filterEqual('parent_id', $parent_id);
         $this->orderBy('ns_left');
 
+        $this->useCache('content.categories');
+
         return $this->get($table_name);
 
     }

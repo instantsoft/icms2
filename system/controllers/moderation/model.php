@@ -101,6 +101,7 @@ class modelModeration extends cmsModel {
                     filter('i.date_expired <= NOW()')->
                     get('moderators_logs', function($item, $model) {
                         cmsCore::getModel($item['target_controller'])->deleteContentItem($item['target_subject'], $item['target_id']);
+                        $model->delete('moderators_logs', $item['id']);
                         return $item['id'];
                     });
 

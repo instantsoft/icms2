@@ -59,6 +59,9 @@
         cmsCore::error($core->db->connectError());
     }
 
+    // Запускаем кеш
+    cmsCache::getInstance()->start();
+
     cmsEventsManager::hook('core_start');
 
     // Загружаем локализацию
@@ -71,6 +74,3 @@
 
     // устанавливаем локаль MySQL
     $core->db->setLcMessages();
-
-    // Запускаем кеш
-    cmsCache::getInstance()->start();

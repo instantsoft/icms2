@@ -15,6 +15,8 @@ class actionAdminAddonsList extends cmsAction {
         $dataset_id = $this->request->get('dataset_id', 0);
         $cat_id     = $this->request->get('cat_id', 0);
         $page       = $this->request->get('page', 0);
+        $is_paid    = $this->request->get('is_paid', 0);
+        $title      = $this->request->get('title', '');
 
         if ($this->request->isAjax()) {
 
@@ -29,7 +31,13 @@ class actionAdminAddonsList extends cmsAction {
                 $installed_ids = $this->model->getInstalledAddonsIds();
 
                 if(!$installed_ids){
-                    $this->halt(LANG_NO_ITEMS);
+
+                    return $this->cms_template->renderPlain('addons_list_data', array(
+                        'count'        => 0,
+                        'has_next'     => 0,
+                        'items'        => false
+                    ));
+
                 }
 
                 $params['ids'] = implode(',', $installed_ids);
@@ -44,10 +52,22 @@ class actionAdminAddonsList extends cmsAction {
                 $params['page'] = $page;
             }
 
+            if($title){
+                $params['title'] = $title;
+            }
+
+            if($is_paid){
+                $params['is_paid'][] = $is_paid - 1;
+            }
+
             $items = $this->getAddonsMethod('content.get.addons', $params);
 
             if(empty($items['response']['items'])){
-                $this->halt(LANG_NO_ITEMS);
+                return $this->cms_template->renderPlain('addons_list_data', array(
+                    'count'        => 0,
+                    'has_next'     => 0,
+                    'items'        => false
+                ));
             }
 
             $items['response']['items'] = $this->checkInstalledPackages($items['response']['items']);

@@ -441,6 +441,11 @@
     define('LANG_CP_LAST_UPDATE',               'Последнее обновление');
     define('LANG_CP_INSTALL_COMPATIBILITY_YES', 'Совместимо с вашей версией InstantCMS');
     define('LANG_CP_INSTALL_COMPATIBILITY_NO',  'Не тестировался с вашей версией InstantCMS');
+    define('LANG_CP_NO_ADDONS',                 'По вашему запросу нет дополнений');
+    define('LANG_CP_FIND_ADDON_TITLE',          'Поиск по названию дополнения');
+    define('LANG_CP_FIND_ADDON_FREE',           'Только бесплатные');
+    define('LANG_CP_FIND_ADDON_BUY',            'Только платные');
+    define('LANG_CP_FIND_FOUND',                'Всего по запросу');
     define('LANG_CP_PACKAGE_VIDEO',             'Видео');
     define('LANG_CP_PACKAGE_VIDEO_TITLE',       'Видео обзор');
     define('LANG_CP_PACKAGE_DEMO',              'Демо');

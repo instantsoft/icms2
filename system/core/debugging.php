@@ -24,13 +24,17 @@ class cmsDebugging {
 
         if(!self::$is_enable){ return false; }
 
-        $_offset = $offset + 1;
-
         $backtrace = debug_backtrace();
 
         while (($backtrace && !isset($backtrace[0]['line']))) {
             array_shift($backtrace);
         }
+
+        if(!isset($backtrace[$offset])){
+            $offset -= 1;
+        }
+
+        $_offset = $offset + 1;
 
         $call = $backtrace[$offset];
 
@@ -49,7 +53,13 @@ class cmsDebugging {
                 $call['function'] = $backtrace[$_offset]['function'] . '()';
             }
         } else {
-            $call['function'] = '';
+            if (isset($backtrace[$offset]['class'])) {
+                $call['function'] = $backtrace[$offset]['class'] . $backtrace[$offset]['type'] . $backtrace[$offset]['function'] . '()';
+            } elseif(isset($backtrace[$offset]['function'])) {
+                $call['function'] = $backtrace[$offset]['function'] . '()';
+            } else {
+                $call['function'] = '';
+            }
         }
 
         $src = str_replace(cmsConfig::get('root_path'), '/', $call['file']).' => '.$call['line'].($call['function'] ? ' => '.$call['function'] : '');
