@@ -28,7 +28,7 @@ class actionModerationIndex extends cmsAction {
 
         $content_controller->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
 
-        $page_url = $is_index ? href_to($this->name) : href_to($this->name, $ctype_name);
+        $page_url = $is_index ? href_to($this->name) : href_to($this->name, 'index', $ctype_name);
 
         $content_controller->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter()->disableDeleteFilter();
 
