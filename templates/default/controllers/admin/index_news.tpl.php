@@ -1,8 +1,8 @@
 <?php $this->addJS('templates/default/js/jquery.scrollbar.js'); ?>
 <ul class="news_targets_tabs">
     <li class="active_news" data-target="icms"><?php echo LANG_CP_DASHBOARD_NEWS_O; ?></li>
+    <li data-target="icms_blogs"><?php echo LANG_CP_DASHBOARD_NEWS_A; ?></li>
     <li data-target="icms_docs"><?php echo LANG_CP_DASHBOARD_LINKS_DOCS; ?></li>
-    <li data-target="icms_addons"><?php echo LANG_CP_DASHBOARD_NEWS_A; ?></li>
 </ul>
 <div id="icms_news_wrap">
     <div id="news-loading">
