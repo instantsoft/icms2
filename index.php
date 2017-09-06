@@ -30,6 +30,9 @@
 
     cmsEventsManager::hook('engine_start');
 
+    // загружаем и устанавливаем страницы для текущего URI
+    $core->loadMatchedPages();
+
     // Проверяем доступ
     if(cmsEventsManager::hook('page_is_allowed', true)){
 
