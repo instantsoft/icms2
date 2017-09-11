@@ -472,6 +472,9 @@
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Automatic extraction is impossible');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Request your hoster to install the <b>ZipArchive</b> class for PHP on your server');
     define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Change file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Server does not support the function parse_ini_file');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Installing add-ons is not possible');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Please contact the hoster to enable the <b>parse_ini_file</b> function for PHP on your server');
     define('LANG_CP_INSTALL_ERROR',             'Package installation error');
     define('LANG_CP_INSTALL_PERM_ERROR',        'The "%s" file is not readable');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Package extraction error');

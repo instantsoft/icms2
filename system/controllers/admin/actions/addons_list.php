@@ -178,7 +178,18 @@ class actionAdminAddonsList extends cmsAction {
 
                 if($version_compare > 0){
 
-                    $versions = array_keys($item['versions']); $prev_key = array_search($installed['version'], $versions) - 1;
+                    $versions = array_keys($item['versions']);
+
+                    $installed_key = array_search($installed['version'], $versions);
+
+                    // версию нашли
+                    if($installed_key !== false){
+                        $prev_key = $installed_key - 1;
+                    } else {
+                        // версия есть, но её нет :)
+                        // значит у автора дополнения версия в манифесте и версия в каталоге не совпадают
+                        $prev_key = 0;
+                    }
 
                     $next_version = $item['versions'][$versions[$prev_key]];
 

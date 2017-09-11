@@ -28,6 +28,10 @@ class actionAdminInstall extends cmsAction {
 
         $manifest = $this->parsePackageManifest();
 
+        if(!$manifest){
+            $this->redirectToAction('install');
+        }
+
         $manifest['depends_results'] = $this->checkManifestDepends($manifest);
 
         // если пакет уже установлен, а мы пытаемся его еще раз установить, показываем сообщение
@@ -116,6 +120,14 @@ class actionAdminInstall extends cmsAction {
                 'hint' => LANG_CP_INSTALL_NOT_ZIP_HINT,
                 'fix'  => LANG_CP_INSTALL_NOT_ZIP_FIX,
                 'workaround' => sprintf(LANG_CP_INSTALL_NOT_ZIP_WA, $config->upload_root . $this->installer_upload_path),
+            );
+        }
+
+        if (!function_exists('parse_ini_file')){
+            $errors[] = array(
+                'text' => LANG_CP_INSTALL_NOT_PARSE_INI_FILE,
+                'hint' => LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT,
+                'fix'  => LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX
             );
         }
 

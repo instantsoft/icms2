@@ -940,15 +940,15 @@ ul.errors, ul.errors li {
     margin: 0; padding:0; list-style: none;
 }
 
-ul.errors{ margin-bottom: 20px; }
+ul.errors { margin: 20px 0; }
 
 ul.errors li {
     padding-left:25px;
-    background:url("../../images/icons/message_error.png") no-repeat left top;
-    margin-bottom:5px;
+    background:url("../../images/icons/error.png") no-repeat left top;
+    margin-bottom:15px;
 }
 
-ul.errors li .text{ color:red; margin-bottom: 2px; }
+ul.errors li .text{ color:red; margin-bottom: 10px; }
 ul.errors li .hint{ color:#999; }
 ul.errors li .hint strong { color:#666666; }
 

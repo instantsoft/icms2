@@ -77,6 +77,11 @@
 
     <?php } ?>
 
-    <?php echo html_submit(LANG_CONTINUE); ?>
+    <div class="buttons">
+        <?php if (!$errors){ ?>
+            <?php echo html_submit(LANG_CONTINUE); ?>
+        <?php } ?>
+        <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
+    </div>
 
 </form>
