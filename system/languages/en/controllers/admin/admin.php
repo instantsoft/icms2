@@ -450,6 +450,7 @@
     define('LANG_CP_PACKAGE_DEMO',              'Demo');
     define('LANG_CP_PACKAGE_BUY',               'Buy for %s');
     define('LANG_CP_PACKAGE_BUY_UPDATE',        'Update available');
+    define('LANG_CP_PACKAGE_INSTALLEDT',        'Installed');
     define('LANG_CP_PACKAGE_INSTALLED_HINT',    '%s installed');
     define('LANG_CP_ADDDONS_DS_INSTALLED',      'Installed');
     define('LANG_CP_PACKAGE_DELETE_CONTROLLERS', 'Deleting a «%s» component files');

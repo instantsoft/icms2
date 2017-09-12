@@ -451,6 +451,7 @@
     define('LANG_CP_PACKAGE_DEMO',              'Демо');
     define('LANG_CP_PACKAGE_BUY',               'Купить за %s');
     define('LANG_CP_PACKAGE_BUY_UPDATE',        'Доступно обновление');
+    define('LANG_CP_PACKAGE_INSTALLEDT',        'Установлено');
     define('LANG_CP_PACKAGE_INSTALLED_HINT',    '%s установлен');
     define('LANG_CP_PACKAGE_DELETE_CONTROLLERS', 'Удаление файлов компонента «%s»');
     define('LANG_CP_PACKAGE_DELETE_WIDGETS',     'Удаление файлов вижета «%s»');

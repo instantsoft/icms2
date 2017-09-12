@@ -234,7 +234,7 @@ span.wrap > span.counter:after {
 
 #cp_header #menu li .wrap {
     display: block;
-    padding:0 20px;
+    padding:0 17px;
     background:url("../../images/icons32/page.png") no-repeat center 14px;
     padding-top:50px;
     padding-bottom:12px;
@@ -246,6 +246,7 @@ span.wrap > span.counter:after {
 #cp_header #menu .item-ctypes .wrap { background-image: url("../../images/icons32/form_edit.png"); }
 #cp_header #menu .item-widgets .wrap { background-image: url("../../images/icons32/layout.png"); }
 #cp_header #menu .item-controllers .wrap { background-image: url("../../images/icons32/brick.png"); }
+#cp_header #menu .item-addons .wrap { background-image: url("../../images/icons32/package_go.png"); }
 #cp_header #menu .item-users .wrap { background-image: url("../../images/icons32/user.png"); }
 #cp_header #menu .item-settings .wrap { background-image: url("../../images/icons32/settings.png"); }
 
@@ -2594,7 +2595,7 @@ input#search_addon_title {
     z-index: 9;
     cursor: pointer;
     transition: all 0.2s linear;
-    margin: 0 0 0 20px;
+    padding: 0 0 0 20px;
 }
 .radio_buttons_list li:hover label{
 	color: #333;

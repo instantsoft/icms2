@@ -136,6 +136,13 @@ class admin extends cmsFrontend {
                 )
             ),
             array(
+                'title' => LANG_CP_OFICIAL_ADDONS,
+                'url' => href_to($this->name, 'addons_list'),
+                'options' => array(
+                    'class' => 'item-addons'
+                )
+            ),
+            array(
                 'title' => LANG_CP_SECTION_USERS,
                 'url' => href_to($this->name, 'users'),
                 'options' => array(

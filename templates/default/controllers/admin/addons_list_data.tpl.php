@@ -124,8 +124,8 @@
             </div>
         <?php } else {?>
             <div class="button-installed">
-                <a href="<?php echo $item['install']['installed_url']; ?>">
-                    <?php echo sprintf(LANG_CP_PACKAGE_INSTALLED_HINT, $item['type']); ?>
+                <a href="<?php echo $item['install']['installed_url']; ?>" title="<?php echo sprintf(LANG_CP_PACKAGE_INSTALLED_HINT, $item['type']); ?>">
+                    <?php echo LANG_CP_PACKAGE_INSTALLEDT; ?>
                 </a>
             </div>
         <?php } ?>
