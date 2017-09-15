@@ -70,7 +70,7 @@ if( $ctype['options']['list_show_filter'] ) {
                             </div>
                         </a>
                     <?php } ?>
-                    <?php unset($item['fields']['cover_image'], $item['fields']['content'], $item['fields']['is_public']); ?>
+                    <?php unset($item['fields']['cover_image'], $item['fields']['content'], $item['fields']['is_public'], $item['fields']['title']); ?>
                 </div>
 
                 <div class="fields">
