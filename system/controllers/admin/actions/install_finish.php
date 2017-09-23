@@ -157,14 +157,34 @@ class actionAdminInstallFinish extends cmsAction {
             $options = null;
         }
 
-        $model->filterEqual('name', $manifest['package']['name'])->updateFiltered('controllers', array(
+        $update_data = array(
             'title'      => $manifest['info']['title'],
             'options'    => $options,
             'author'     => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'        => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
             'is_backend' => file_exists($controller_root_path.'backend.php')
-        ));
+        );
+
+        $installed_controller = $this->model->getControllerInfo($manifest['package']['name']);
+
+        if(!empty($manifest['contents'])){
+            if(!empty($installed_controller['files'])){
+
+                $update_data['files'] = multi_array_unique(array_merge_recursive($installed_controller['files'], $manifest['contents']));
+
+            } else {
+
+                $update_data['files'] = $manifest['contents'];
+
+            }
+        }
+
+        if(!empty($manifest['info']['addon_id'])){
+            $update_data['files'] = (int)$manifest['info']['addon_id'];
+        }
+
+        $model->filterEqual('name', $manifest['package']['name'])->updateFiltered('controllers', $update_data);
 
         return 'controllers';
 
@@ -194,14 +214,39 @@ class actionAdminInstallFinish extends cmsAction {
 
         $model = new cmsModel();
 
-        $model->filterEqual('name', $manifest['package']['name'])->
-                filterEqual('controller', $manifest['package']['controller'])->
-                updateFiltered('widgets', array(
+        $update_data = array(
             'title'      => $manifest['info']['title'],
             'author'     => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'        => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build']
-        ));
+        );
+
+        $installed_widget = $model->filterEqual('name', $manifest['package']['name'])->
+                filterEqual('controller', $manifest['package']['controller'])->
+                getItem('widgets', function($item){
+            $item['files'] = cmsModel::yamlToArray($item['files']);
+            return $item;
+        });
+
+        if(!empty($manifest['contents'])){
+            if(!empty($installed_widget['files'])){
+
+                $update_data['files'] = multi_array_unique(array_merge_recursive($installed_widget['files'], $manifest['contents']));
+
+            } else {
+
+                $update_data['files'] = $manifest['contents'];
+
+            }
+        }
+
+        if(!empty($manifest['info']['addon_id'])){
+            $update_data['files'] = (int)$manifest['info']['addon_id'];
+        }
+
+        $model->filterEqual('name', $manifest['package']['name'])->
+                filterEqual('controller', $manifest['package']['controller'])->
+                updateFiltered('widgets', $update_data);
 
         return 'widgets';
 

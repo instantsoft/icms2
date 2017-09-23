@@ -14,7 +14,7 @@ class fieldImages extends cmsFormField {
                 'title' => LANG_PARSER_IMAGE_SIZE_TEASER,
                 'default' => 'small',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
                 }
@@ -23,7 +23,7 @@ class fieldImages extends cmsFormField {
                 'title' => LANG_PARSER_IMAGE_SIZE_FULL,
                 'default' => 'big',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
                 }
@@ -32,7 +32,7 @@ class fieldImages extends cmsFormField {
                 'title'   => LANG_PARSER_SMALL_IMAGE_PRESET,
                 'default' => 'small',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
                 }

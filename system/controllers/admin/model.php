@@ -29,6 +29,7 @@ class modelAdmin extends cmsModel{
     public function getControllerInfo($controller_name){
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            $item['files'] = cmsModel::yamlToArray($item['files']);
             $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
             return $item;
         });

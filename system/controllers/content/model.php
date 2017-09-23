@@ -453,6 +453,8 @@ class modelContent extends cmsModel{
             $sql = "ALTER TABLE {#}{$content_table_name} ADD `{$field['name']}` {$field_parser->getSQL()}";
             $this->db->query($sql);
 
+            $field_parser->hookAfterAdd($content_table_name, $field, $this);
+
             if($field_parser->is_denormalization){
 
                 $cfield_name = $field['name'].cmsFormField::FIELD_CACHE_POSTFIX;
@@ -669,6 +671,8 @@ class modelContent extends cmsModel{
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
 
+                $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
+
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
 
                     // поля денормализации
@@ -852,6 +856,8 @@ class modelContent extends cmsModel{
         cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
 
         $this->db->dropTableField($content_table_name, $field['name']);
+
+        $field['parser']->hookAfterRemove($content_table_name, $field, $this);
 
         if($field['parser']->is_denormalization){
             $this->db->dropTableField($content_table_name, $field['parser']->getDenormalName());

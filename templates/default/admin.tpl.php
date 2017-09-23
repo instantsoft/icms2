@@ -108,17 +108,18 @@
     </div>
 
     <script type="text/javascript">
-
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
             var h2 = $('#cp_footer').offset().top;
             $('table.layout').height(h2 - h1 - 2);
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
-
         toolbarScroll = {
             win: null,
             toolbar: null,
+            spacer: null,
+            spacer_init: false,
+            offset: 0,
             init: function (){
                 this.win     = $(window);
                 this.toolbar = $('.cp_toolbar');
@@ -128,6 +129,11 @@
                 this.offset  = (this.toolbar).offset().top;
                 if((+$('#wrapper').height() - +$(this.win).height()) <= (this.offset + 20)){
                     return;
+                }
+                if(this.spacer_init === false){
+                    $(this.toolbar).after($('<div id="fixed_toolbar_spacer" />').height(40).hide());
+                    this.spacer = $('#fixed_toolbar_spacer');
+                    this.spacer_init = true;
                 }
                 this.run();
             },
@@ -142,13 +148,14 @@
                 if (scroll_top > this.offset) {
                     if(!$(this.toolbar).hasClass('fixed_toolbar')){
                         $(this.toolbar).addClass('fixed_toolbar');
+                        $(this.spacer).show();
                     }
                 } else {
                     $(this.toolbar).removeClass('fixed_toolbar');
+                    $(this.spacer).hide();
                 }
             }
         };
-
         $(function(){
             $(window).on('resize', function (){
                 toolbarScroll.init();
@@ -180,6 +187,5 @@
         });
 
     </script>
-
 </body>
 </html>

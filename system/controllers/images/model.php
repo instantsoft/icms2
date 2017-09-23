@@ -13,10 +13,13 @@ class modelImages extends cmsModel{
 		});
 	}
 
-	public function getPresetsList(){
+	public function getPresetsList($with_params = false){
 		return $this->filterIsNull('is_internal')->
 				orderBy('width')->
-				get('images_presets', function($item, $model){
+				get('images_presets', function($item, $model) use($with_params){
+                    if($with_params){
+                        return $item['title'].', '.$item['name'].', '.($item['width'] ? $item['width'] : LANG_AUTO).'X'.($item['height'] ? $item['height'] : LANG_AUTO).'px';
+                    }
 					return $item['title'];
 				}, 'name');
 	}

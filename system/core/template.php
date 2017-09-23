@@ -283,7 +283,7 @@ class cmsTemplate {
      * @param int $max_items Максимальное количество видимых пунктов
      * @param bool $is_allow_multiple_active Определять все активные пункты меню
      * @param string $template Название файла шаблона меню в assets/ui/
-     * @param string $menu_name Название(подпись) меню
+     * @param string $menu_title Название(подпись) меню
      */
     public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template='menu', $menu_title=''){
 
@@ -1635,6 +1635,7 @@ class cmsTemplate {
      * @param string $css_class CSS класс контейнера пунктов меню
      * @param int $max_items Максимальное количество видимых пунктов
      * @param string $template Название файла шаблона меню в assets/ui/
+     * @param string $menu_title Название(подпись) меню
      */
     public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu', $menu_title=''){
 

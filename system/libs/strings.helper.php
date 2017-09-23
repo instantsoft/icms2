@@ -781,7 +781,7 @@ function array_order_by(&$array, $fields, $direction = 'asc') {
 
         foreach ($list as $order) {
 
-            $args[$key][$k] = $item[$order['by']]; 
+            $args[$key][$k] = $item[$order['by']];
                 $key++;
             $args[$key] = constant('SORT_'.strtoupper($order['to']));
                 $key++;
@@ -793,6 +793,20 @@ function array_order_by(&$array, $fields, $direction = 'asc') {
     $args[] = &$array;
 
     return call_user_func_array('array_multisort', $args);
+
+}
+
+function multi_array_unique($array) {
+
+    $result = array_map('unserialize', array_unique(array_map('serialize', $array)));
+
+    foreach ($result as $key => $value) {
+        if (is_array($value)) {
+            $result[$key] = multi_array_unique($value);
+        }
+    }
+
+    return $result;
 
 }
 

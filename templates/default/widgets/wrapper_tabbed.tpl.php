@@ -1,5 +1,17 @@
-<?php if(!isset($widgets)){ $widgets = array($widget); } ?>
-<div class="widget_tabbed">
+<?php
+
+    if(!isset($widgets)){ $widgets = array($widget); }
+
+    $wrap_class = array('widget_tabbed');
+
+    foreach($widgets as $widget) {
+        if ($widget['class_wrap']) {
+            $wrap_class[] = $widget['class_wrap'];
+        }
+    }
+
+?>
+<div class="<?php echo implode(' ', $wrap_class); ?>">
     <div class="tabs">
         <ul>
             <?php foreach($widgets as $index => $widget) { ?>

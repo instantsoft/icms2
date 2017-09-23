@@ -2,29 +2,93 @@
 
 class cmsFormField {
 
+    /**
+     * Префикс названия ячейки БД поля для кэширования
+     */
     const FIELD_CACHE_POSTFIX = '_cache';
 
+    /**
+     * Имя поля, как было задано в форме
+     * @var string
+     */
     public $name;
+    /**
+     * Имя поля, как должно быть в HTML теге
+     * @var string
+     */
     public $element_name = '';
+    /**
+     * Тип фильтрации для поля
+     * true, false, int, str или date
+     * @var string || boolean
+     */
     public $filter_type = false;
+    /**
+     * Краткое описания поля фильтрации для простых фильтров в админке
+     * @var string
+     */
     public $filter_hint  = false;
-
+    /**
+     * Название поля
+     * @var string
+     */
     public $title;
     public $element_title = '';
-
+    /**
+     * Флаг, указывающий, что поле может быть использовано для создания в полях типов контента, конструкторе форм и т.п.
+     * @var boolean
+     */
     public $is_public = true;
-
+    /**
+     * Последняя часть строки SQL запроса для создания поля в базе данных
+     * @var string
+     */
     public $sql;
+    /**
+     * Последняя часть строки SQL запроса для создания поля в базе данных, в котором будет храниться кэшированное значение
+     * @var string
+     */
     public $cache_sql;
+    /**
+     * Флаг, указывающий, что при создании поля в базе данных (например, при добавлении поля в типах контента)
+     * необходимо также добавить SQL индекс к этому полю
+     * @var boolean
+     */
     public $allow_index = true;
+    /**
+     * Флаг, указывающий, что нам нужна денормализация данных, полученных из поля формы
+     * @var boolean
+     */
     public $is_denormalization = false;
-
+    /**
+     * Массив записи, в которой это поле используется
+     * @var array
+     */
     public $item = null;
-
+    /**
+     * ID поля, если запись о нём есть в таблице
+     * @var integer
+     */
+    public $field_id = 0;
+    /**
+     * Флаг, что поле виртуальное
+     * @var boolean
+     */
     public $is_virtual = false;
+    /**
+     * Флаг скрытого поля
+     * @var boolean
+     */
     public $is_hidden = false;
-
+    /**
+     * Массив правил валидации
+     * @var array
+     */
     public $rules = array();
+    /**
+     * Массив опций поля
+     * @var array
+     */
     public $options = array();
     protected $default_options_loaded = false;
 
@@ -36,8 +100,11 @@ class cmsFormField {
      * @var string
      */
     public $var_type = null;
-
-    public $data = array(); // массив для данных в шаблоне
+    /**
+     * Массив для данных в шаблоне
+     * @var array
+     */
+    public $data = array();
 
 	public function __construct($name, $options=false){
 
@@ -107,7 +174,10 @@ class cmsFormField {
     public function setOptions($options){
         if (is_array($options)){
             foreach($options as $option=>$value){
-				if ($option == 'id') { continue; }
+				if ($option == 'id') {
+                    $this->field_id = $value;
+                    continue;
+                }
                 $this->{$option} = $value;
             }
             if (isset($options['title'])){
@@ -219,6 +289,18 @@ class cmsFormField {
 
     public function delete($value){
         return true;
+    }
+
+    public function hookAfterAdd($content_table_name, $field, $model){
+        return $this;
+    }
+
+    public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
+        return $this;
+    }
+
+    public function hookAfterRemove($content_table_name, $field, $model){
+        return $this;
     }
 
 }
