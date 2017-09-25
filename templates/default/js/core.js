@@ -412,3 +412,17 @@ function initTabs(selector){
         $(selector+' ul.tabbed > li > a[href = "'+$(this).find("option:selected").val()+'"]').trigger('click');
     });
 }
+function insertJavascript(filepath, onloadCallback) {
+    if ($('head script[src="'+filepath+'"]').length > 0){
+        return;
+    }
+    var el = document.createElement('script');
+    el.setAttribute('type', 'text/javascript');
+    el.setAttribute('src', filepath);
+    if (typeof(onloadCallback) == 'function') {
+        el.setAttribute('onload', function() {
+            onloadCallback();
+        });
+    }
+    $('head').append(el);
+}

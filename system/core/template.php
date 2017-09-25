@@ -17,6 +17,8 @@ class cmsTemplate {
 	protected $head_css = array();
 	protected $head_main_js = array();
 	protected $head_js = array();
+	protected $insert_js = array();
+	protected $insert_css = array();
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
 	protected $title;
@@ -831,17 +833,29 @@ class cmsTemplate {
 
 	public function insertJS($file, $comment=''){
 
+        $hash = md5($file);
+        if (isset($this->insert_js[$hash])) { return false; }
+		$this->insert_js[$hash] = $file;
+
         $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         // атрибут rel="forceLoad" добавлен для nyroModal
         echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
 
+        return true;
+
 	}
 
     public function insertCSS($file){
 
+        $hash = md5($file);
+        if (isset($this->insert_css[$hash])) { return false; }
+		$this->insert_css[$hash] = $file;
+
         $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
 		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+
+        return true;
 
     }
 
@@ -1499,9 +1513,19 @@ class cmsTemplate {
                         if(!empty($column['editable']['save_action'])){
                             $save_action = string_replace_keys_values($column['editable']['save_action'], $row);
                         }
+                        $attributes = array();
+                        if(!empty($column['editable']['attributes'])){
+                            foreach ($column['editable']['attributes'] as $akey => $avalue) {
+                                if(is_string($avalue)){
+                                    $attributes[$akey] = string_replace_keys_values($avalue, $row);
+                                } else {
+                                    $attributes[$akey] = $avalue;
+                                }
+                            }
+                        }
                         if(!empty($save_action)){
                             $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
-                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field]);
+                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field], $attributes);
                             if($editable_index == $editable_count){
                                 $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit'));
                             }

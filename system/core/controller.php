@@ -2,6 +2,7 @@
 class cmsController {
 
     private static $controllers;
+    private static $mapping;
 
     public $name;
     public $title;
@@ -13,6 +14,14 @@ class cmsController {
     public $root_url;
     public $root_path;
 
+    /**
+     * Если для контроллера задан ремап
+     * и это свойство установлено в true
+     * редиректа со старого адреса не будет
+     * 
+     * @var boolean
+     */
+    public $disallow_mapping_redirect = false;
     /**
      * Флаг, что контроллер должен работать только после
      * регистрации в БД
@@ -164,6 +173,10 @@ class cmsController {
         return isset(self::$controllers[$name]);
     }
 
+    public function hasSlug() {
+        return !empty(self::$controllers[$this->name]['slug']) ? self::$controllers[$this->name]['slug'] : false;
+    }
+
     public function isControllerEnabled($name) {
 
         // проверяем только те, которые зарегистрированы в базе
@@ -183,6 +196,24 @@ class cmsController {
         return true;
     }
 
+    public static function getControllersMapping() {
+
+        if (self::$mapping !== null) { return self::$mapping; }
+
+        self::$mapping = array();
+
+        self::loadControllers();
+
+        foreach (self::$controllers as $controller) {
+            if($controller['slug']){
+                self::$mapping[$controller['name']] = $controller['slug'];
+            }
+        }
+
+        return self::$mapping;
+
+    }
+
     private static function loadControllers() {
 
         if(!isset(self::$controllers)){
@@ -193,7 +224,8 @@ class cmsController {
                 'i.id'         => 'id',
                 'i.is_enabled' => 'is_enabled',
                 'i.options'    => 'options',
-                'i.name'       => 'name'
+                'i.name'       => 'name',
+                'i.slug'       => 'slug'
             ), true);
 
             self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
@@ -767,16 +799,16 @@ class cmsController {
      * @param array $params
      * @param array $query
      */
-    public function redirectTo($controller, $action='', $params=array(), $query=array()){
+    public function redirectTo($controller, $action='', $params=array(), $query=array(), $code=303){
 
         $href_lang = cmsCore::getLanguageHrefPrefix();
 
-        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . '/' . $action;
+        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . ($action ? '/'.$action : '');
 
         if ($params){ $location .= '/' . implode('/', $params); }
-        if ($query){ $location .= '?' . http_build_query($query); }
+        if ($query){ $location .= '?' . http_build_query($query, '', '&'); }
 
-        $this->redirect($location);
+        $this->redirect($location, $code);
 
     }
 

@@ -29,13 +29,13 @@ class cmsConfig {
         $map_file = 'system/config/remap.php';
         $map_function = 'remap_controllers';
 
-        if (!cmsCore::includeFile($map_file)) { return false; }
+        if (!cmsCore::includeFile($map_file)) { return self::$mapping; }
 
-        if (!function_exists($map_function)){ return false; }
+        if (!function_exists($map_function)){ return self::$mapping; }
 
         self::$mapping = call_user_func($map_function);
 
-        if (!is_array(self::$mapping)){ return false; }
+        if (!is_array(self::$mapping)){ return array(); }
 
         return self::$mapping;
 
@@ -93,6 +93,10 @@ class cmsConfig {
 
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
+        }
+
+        if(!isset($this->data['controllers_without_widgets'])){
+            $this->data['controllers_without_widgets'] = array('admin');
         }
 
 		$this->upload_host_abs = $this->upload_host;

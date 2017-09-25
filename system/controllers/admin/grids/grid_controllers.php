@@ -20,6 +20,20 @@ function grid_controllers($controller){
                 return $item['is_backend'];
             }
         ),
+        'slug' => array(
+            'title' => LANG_ADMIN_CONTROLLER_SLUG,
+            'width' => 300,
+            'editable' => array(
+                'table' => 'controllers',
+                'attributes' => array('placeholder' => '{name}')
+            ),
+            'handler' => function ($v, $row){
+                if(!$v){
+                    return $row['name'];
+                }
+                return $v;
+            }
+        ),
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,
 			'flag' => true,

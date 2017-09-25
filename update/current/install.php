@@ -7,6 +7,10 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!isFieldExists('controllers', 'slug')){
+        $core->db->query("ALTER TABLE `{#}controllers` ADD `slug` VARCHAR(64) NULL DEFAULT NULL AFTER `name`");
+    }
+
     $core->db->query("ALTER TABLE `{#}controllers` CHANGE `files` `files` VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
     $core->db->query("ALTER TABLE `{#}widgets` CHANGE `files` `files` VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
 

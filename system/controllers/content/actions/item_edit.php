@@ -18,6 +18,7 @@ class actionContentItemEdit extends cmsAction {
         if (!$item) { cmsCore::error404(); }
 
         $item['ctype_id'] = $ctype['id'];
+        $item['ctype_name'] = $ctype['name'];
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
@@ -94,9 +95,6 @@ class actionContentItemEdit extends cmsAction {
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
 
-        $item['ctype_name'] = $ctype['name'];
-        $item['ctype_id'] = $ctype['id'];
-
         if ($ctype['props']){
 
             $category_id = !$is_submitted ? $item['category_id'] :
@@ -143,9 +141,6 @@ class actionContentItemEdit extends cmsAction {
 			}
 
             if (!$errors){
-
-                unset($item['ctype_name']);
-                unset($item['ctype_id']);
 
                 $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
                 $item['approved_by'] = null;

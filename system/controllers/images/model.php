@@ -18,7 +18,7 @@ class modelImages extends cmsModel{
 				orderBy('width')->
 				get('images_presets', function($item, $model) use($with_params){
                     if($with_params){
-                        return $item['title'].', '.$item['name'].', '.($item['width'] ? $item['width'] : LANG_AUTO).'X'.($item['height'] ? $item['height'] : LANG_AUTO).'px';
+                        return $item['title'].' ('.$item['name'].', '.($item['width'] ? $item['width'] : LANG_AUTO).' x '.($item['height'] ? $item['height'] : LANG_AUTO).')';
                     }
 					return $item['title'];
 				}, 'name');

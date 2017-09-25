@@ -229,6 +229,7 @@ CREATE TABLE `{#}controllers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'System name',
+  `slug` varchar(64) DEFAULT NULL,
   `is_enabled` tinyint(1) unsigned DEFAULT '1' COMMENT 'Enabled?',
   `options` text COMMENT 'Settings array',
   `author` varchar(128) NOT NULL COMMENT 'Author name',
@@ -239,9 +240,7 @@ CREATE TABLE `{#}controllers` (
   `files` varchar(10000) DEFAULT NULL,
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `name` (`name`),
-  KEY `enabled` (`is_enabled`),
-  KEY `is_backend` (`is_backend`)
+  KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Components';
 
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES

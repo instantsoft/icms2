@@ -4,6 +4,8 @@ class admin extends cmsFrontend {
     const addons_api_key   = '8e13cb202f8bdc27dc765e0448e50d11';
     const addons_api_point = 'http://addons.instantcms.ru/api/method/';
 
+    public $disallow_mapping_redirect = true;
+
     protected $useOptions = true;
 
     const perpage = 30;
@@ -275,7 +277,10 @@ class admin extends cmsFrontend {
         $backend = new $controller_class($request);
 
         // Устанавливаем корень для URL внутри бакенда
-        $backend->setRootURL($this->name.'/controllers/edit/'.$controller_name);
+        $admin_controller_url = $this->name;
+        $controller_alias = cmsCore::getControllerAliasByName($admin_controller_url);
+        if ($controller_alias) { $admin_controller_url = $controller_alias; }
+        $backend->setRootURL($admin_controller_url.'/controllers/edit/'.$controller_name);
 
         return $backend;
 

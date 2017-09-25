@@ -169,7 +169,8 @@ class actionContentItemAdd extends cmsAction {
 		}
 
         $item['ctype_name'] = $ctype['name'];
-		$item['ctype_id'] = $ctype['id'];
+		$item['ctype_id']   = $ctype['id'];
+        $item['ctype_data'] = $ctype;
 
         if ($is_submitted){
 

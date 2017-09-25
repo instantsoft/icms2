@@ -652,3 +652,4 @@
     define('LANG_CONFIRM_LOGIN_HINT',  'You are trying to log in under the name of "%s" from an unusual location');
     define('LANG_CONFIRM_LOGIN_HINT1',  'In order to confirm ownership of the accaunt, we ask you to enter the password');
     define('LANG_ADMIN_IS_DELETED', 'Deleted?');
+    define('LANG_ADMIN_CONTROLLER_SLUG', 'Controller Url');

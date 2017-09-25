@@ -1,6 +1,7 @@
 <?php
 	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
 	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
+    $this->addCSSFromContext( $this->getStylesFileName('images') );
 ?>
 <div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single">
 

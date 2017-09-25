@@ -348,8 +348,10 @@ class cmsCore {
 
     public static function getControllerNameByAlias($controller_alias){
 
-        $mapping = cmsConfig::getControllersMapping();
+        $config_mapping      = cmsConfig::getControllersMapping();
+        $controllers_mapping = cmsController::getControllersMapping();
 
+        $mapping = array_merge($controllers_mapping, $config_mapping);
         if (!$mapping) { return false; }
 
         foreach($mapping as $name=>$alias){
@@ -364,9 +366,13 @@ class cmsCore {
 
         $mapping = cmsConfig::getControllersMapping();
 
-        if (!$mapping || !isset($mapping[$controller_name])){ return false; }
+        if (!empty($mapping[$controller_name])){ return $mapping[$controller_name]; }
 
-        return $mapping[$controller_name];
+        $cmapping = cmsController::getControllersMapping();
+
+        if (!empty($cmapping[$controller_name])){ return $cmapping[$controller_name]; }
+
+        return false;
 
     }
 
@@ -654,7 +660,18 @@ class cmsCore {
 
         // контроллер включен?
         if(!$controller->isEnabled()){
-            self::error404();
+            return self::error404();
+        }
+
+        // редирект 301, если настроен ремап
+        if(!$remap_to && $slug = $controller->hasSlug()){
+
+            // если контроллер запрещает редирект, то 404
+            if($controller->disallow_mapping_redirect){
+                return self::error404();
+            }
+
+            $controller->redirectTo($slug, $this->uri_action, $this->uri_params, $this->uri_query, 301);
         }
 
         // сохраняем в контроллере название текущего экшена
@@ -701,8 +718,9 @@ class cmsCore {
      */
     public function runWidgets(){
 
-        // в админке нам виджеты не нужны
-        if ($this->controller == 'admin') { return; }
+        $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
+
+        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) { return; }
 
         $matched_pages = $this->loadMatchedPages()->getMatchedPages();
         if (!$matched_pages) { return; }
