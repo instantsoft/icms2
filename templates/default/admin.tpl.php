@@ -108,10 +108,11 @@
     </div>
 
     <script type="text/javascript">
+        var fit_layout_delta = 0;
         function fitLayout(){
             var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
             var h2 = $('#cp_footer').offset().top;
-            $('table.layout').height(h2 - h1 - 2);
+            $('table.layout').height(h2 - h1 - 2 + fit_layout_delta);
             $('table.layout').width( $('#cp_body').width() + 40 );
         }
         toolbarScroll = {
@@ -149,10 +150,12 @@
                     if(!$(this.toolbar).hasClass('fixed_toolbar')){
                         $(this.toolbar).addClass('fixed_toolbar');
                         $(this.spacer).show();
+                        fit_layout_delta = 30; fitLayout();
                     }
                 } else {
                     $(this.toolbar).removeClass('fixed_toolbar');
                     $(this.spacer).hide();
+                    fit_layout_delta = 0; fitLayout();
                 }
             }
         };

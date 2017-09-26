@@ -59,18 +59,6 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
     display: inline-block;
     margin-bottom: 10px;
 }
-
-.loading-overlay{
-    position: fixed;
-    width:100%;
-    height:100%;
-    left:0;
-    top:0;
-    background-image: url("../../images/admin/ajax-loader.gif");
-    background-repeat: no-repeat;
-    background-position: center center;
-    z-index: 100;
-}
 .anim_tooltip{
     color: #ddd;
     display: block;
@@ -1022,7 +1010,7 @@ ul.errors li .hint strong { color:#666666; }
 }
 
 .datagrid tr.selected td:first-child{
-    background: url("../../images/icons/check_small.png") no-repeat 7px center #fcf2cf;
+    background: url("../../images/icons/check_small.png") no-repeat 5px center #fcf2cf;
 }
 
 .datagrid tr.dragged td {
@@ -1296,18 +1284,6 @@ span.jPag-snext-img{
     width:16px;
      text-align:right;
 }
-ul.jPag-pages li span.jPag-previous-img{
-    background:transparent url("../../images/pagination/previous.png") no-repeat center right;
-            }
-ul.jPag-pages li span.jPag-next-img{
-    background:transparent url("../../images/pagination/next.png") no-repeat center left;
-            }
-span.jPag-sprevious-img{
-    background:transparent url("../../images/pagination/sprevious.png") no-repeat center right;
-            }
-span.jPag-snext-img{
-    background:transparent url("../../images/pagination/snext.png") no-repeat center left;
-            }
 
 /* ========================================================================== */
 /* ========================================================================== */

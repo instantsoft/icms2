@@ -580,7 +580,7 @@
     define('LANG_MAIL_DEFAULT_ALT',          'Для просмотра сообщения требуется почтовый клиент с поддержкой HTML');
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
-    define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
+    define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="https://ru.icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');
 
     define('LANG_DEBUG_QUERY_TIME',          'Время выполнения');

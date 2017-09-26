@@ -125,8 +125,8 @@
     define('LANG_FINISH_TO_SITE',           'Перейти на сайт');
 
     define('LANG_CFG_OFF_REASON',           'Идут технические работы');
-    define('LANG_CFG_SITENAME',             'InstantCMS 2.0');
-    define('LANG_CFG_HOMETITLE',            'InstantCMS 2.0');
+    define('LANG_CFG_SITENAME',             'InstantCMS 2');
+    define('LANG_CFG_HOMETITLE',            'InstantCMS 2');
     define('LANG_CFG_DATE_FORMAT',          'd.m.Y');
     define('LANG_CFG_DATE_FORMAT_JS',       'dd.mm.yy');
     define('LANG_CFG_TIME_ZONE',            'Europe/Moscow');
