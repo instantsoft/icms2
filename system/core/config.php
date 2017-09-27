@@ -174,7 +174,7 @@ class cmsConfig {
 
             $value = var_export($value, true);
 
-            $tabs = 7 - ceil((mb_strlen($key)+3)/4);
+            $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
             $dump .= "\t'{$key}'";
             $dump .= str_repeat("\t", $tabs);

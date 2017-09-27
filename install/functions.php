@@ -164,7 +164,7 @@ function copy_folder($dir_source, $dir_target) {
         $d->close();
 
     } else {
-        copy($dir_source, $dir_target);
+        @copy($dir_source, $dir_target);
     }
 
 }

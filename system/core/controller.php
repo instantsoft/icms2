@@ -18,7 +18,7 @@ class cmsController {
      * Если для контроллера задан ремап
      * и это свойство установлено в true
      * редиректа со старого адреса не будет
-     * 
+     *
      * @var boolean
      */
     public $disallow_mapping_redirect = false;
@@ -205,7 +205,7 @@ class cmsController {
         self::loadControllers();
 
         foreach (self::$controllers as $controller) {
-            if($controller['slug']){
+            if(!empty($controller['slug'])){
                 self::$mapping[$controller['name']] = $controller['slug'];
             }
         }
