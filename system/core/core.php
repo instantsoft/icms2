@@ -789,7 +789,7 @@ class cmsCore {
 
         $widget_object = new $class($widget);
 
-        $cache_key = "widgets.{$widget['id']}";
+        $cache_key = 'widgets'.$widget['id'];
         $cache = cmsCache::getInstance();
 
         if($widget_object->isCacheable()){
@@ -798,11 +798,13 @@ class cmsCore {
 
         if ($result === false){
             $result = call_user_func_array(array($widget_object, 'run'), array());
-            if ($result){
-                // Отдельно кешируем имя шаблона виджета, поскольку оно могло быть
-                // изменено внутри виджета, а в кеш у нас попадает только тот массив
+            if ($result !== false){
+                // Отдельно кешируем имя шаблона виджета, заголовок и враппер, поскольку они могли быть
+                // изменены внутри виджета, а в кеш у нас попадает только тот массив
                 // который возвращается кодом виджета (без самих свойств $widget_object)
                 $result['_wd_template'] = $widget_object->getTemplate();
+                $result['_wd_title']    = $widget_object->title;
+                $result['_wd_wrapper']  = $widget_object->getWrapper();
             }
             if($widget_object->isCacheable()){
                 $cache->set($cache_key, $result);
@@ -812,6 +814,8 @@ class cmsCore {
         if ($result === false) { return false; }
 
         if (isset($result['_wd_template'])) { $widget_object->setTemplate($result['_wd_template']); }
+        if (isset($result['_wd_title'])) { $widget_object->title = $result['_wd_title']; }
+        if (isset($result['_wd_wrapper'])) { $widget_object->setWrapper($result['_wd_wrapper']); }
 
         return cmsTemplate::getInstance()->renderWidget($widget_object, $result);
 
