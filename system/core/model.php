@@ -43,6 +43,7 @@ class cmsModel {
     protected static $cached = array();
 
     private $cache_key = false;
+    private $cache_ttl = false;
 
     public function __construct(){
 
@@ -55,8 +56,11 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function useCache($key){
-        $this->cache_key = $key; return $this;
+    public function useCache($key, $ttl = 180){
+        $this->cache_key = $key;
+	$this->cache_ttl = $ttl;
+	    
+	    return $this;
     }
 
     protected function stopCache(){
@@ -1304,7 +1308,7 @@ class cmsModel {
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
         if ($this->cache_key){
-            $cache->set($cache_key, $item);
+            $cache->set($cache_key, $item, $this->cache_ttl);
             $this->stopCache();
         }
 
@@ -1365,7 +1369,7 @@ class cmsModel {
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
         if ($this->cache_key){
-            $cache->set($cache_key, $count);
+            $cache->set($cache_key, $count, $this->cache_ttl);
             $this->stopCache();
         }
 
@@ -1468,7 +1472,7 @@ class cmsModel {
         // то сохраняем результаты в кеше
         // сохраняем не обработанный коллбэком массив
         if ($this->cache_key){
-            $cache->set($cache_key, $_items);
+            $cache->set($cache_key, $_items, $this->cache_ttl);
             $this->stopCache();
         }
 
