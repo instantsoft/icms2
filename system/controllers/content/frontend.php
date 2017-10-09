@@ -4,6 +4,7 @@ class content extends cmsFrontend {
     const perpage = 15;
 
     public $max_items_count = 0;
+    public $request_page_name = 'page';
 
 //============================================================================//
 //============================================================================//
@@ -134,7 +135,7 @@ class content extends cmsFrontend {
         // Получаем поля для данного типа контента
         $fields = cmsCore::getModel('content')->getContentFields($ctype['name']);
 
-        $page = $this->request->get('page', 1);
+        $page = $this->request->get($this->request_page_name, 1);
 
         $perpage = (empty($ctype['options']['limit']) ? self::perpage : $ctype['options']['limit']);
 

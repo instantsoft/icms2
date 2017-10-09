@@ -646,23 +646,18 @@ article div.content_categories:last-child {
 	padding:15px;
 }
 #content_bind_form #item-find-field {
-    width:20%;
+    width:35%;
+    float: left;
 }
 #content_bind_form #item-find-input {
-    width:70%;
-	min-width:300px;
+    width:65%;
+    float: left;
+    border-left: none;
+    min-width: 300px;
 }
 #content_bind_form .find {
     overflow:hidden;
 	margin:0;
-}
-#content_bind_form .find .field {
-    float:left;
-    margin-right:10px;
-}
-#content_bind_form .loading-icon {
-    float: left;
-    margin-top: 5px;
 }
 #content_bind_form .filter-tabs {
 	margin-top: 10px;

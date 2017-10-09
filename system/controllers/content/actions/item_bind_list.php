@@ -65,9 +65,44 @@ class actionContentItemBindList extends cmsAction {
             cmsCore::error404();
         }
 
-        if ($text){
-			$this->model->filterLike($field, "%{$text}%");
-		}
+        if ($text) {
+
+            if ($mode == 'childs' || $mode == 'unbind') {
+
+                if ($relation['target_controller'] != 'content') {
+                    $this->model->setTablePrefix('');
+                }
+
+                $fields = $this->model->getContentFields($child_ctype_name);
+
+                $this->model->setTablePrefix('con_');
+
+            } else if ($mode == 'parents') {
+
+                $fields = $this->model->getContentFields($ctype_name);
+            }
+
+            if (!$fields) {
+                cmsCore::error404();
+            }
+
+            $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
+            $filter_fields = array('id');
+
+            foreach ($fields as $_field) {
+                if ($_field['handler']->filter_type == 'str') {
+                    $filter_fields[] = $_field['name'];
+                }
+            }
+
+            if (!in_array($field, $filter_fields)) {
+                cmsCore::error404();
+            }
+
+            $this->model->filterLike($field, "%{$text}%");
+
+        }
 
         $this->model->limit(10);
 

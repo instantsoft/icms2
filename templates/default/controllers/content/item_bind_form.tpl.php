@@ -5,7 +5,6 @@
 			<?php echo html_select('item-find-field', $filter_fields, '', array('id'=>'item-find-field')); ?>
             <?php echo html_input('text', 'item-find-input', '', array('id'=>'item-find-input', 'placeholder' => LANG_CONTENT_BIND_ITEM_FIND_HINT)); ?>
         </div>
-        <div class="loading-icon" style="display: none"></div>
     </div>
 
 	<div class="filter-tabs">

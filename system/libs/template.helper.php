@@ -11,13 +11,14 @@ function html_link($title, $href){
 /**
  * Возвращает панель со страницами
  *
- * @param int $page Текущая страница
- * @param int $perpage Записей на одной странице
- * @param int $total Количество записей
- * @param str $base_uri Базовый URL, может быть массивом из элементов first и base
- * @param str $query Массив параметров запроса
+ * @param integer $page Текущая страница
+ * @param integer $perpage Записей на одной странице
+ * @param integer $total Количество записей
+ * @param string|array $base_uri Базовый URL, может быть массивом из элементов first и base
+ * @param array $query Массив параметров запроса
+ * @param string $page_param_name Название параметра номера страницы
  */
-function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
+function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array(), $page_param_name = 'page'){
 
 	if (!$total){ return; }
 
@@ -56,20 +57,20 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
 		$html .= '<span class="pagebar_nav">';
 
 		if ($page > 1){
-			$query['page'] = ($page-1);
-			$uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+			$query[$page_param_name] = ($page-1);
+			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
 			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query['page'] == 1) { unset($query['page']); }
+			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
 			$html .= ' <a href="'. $uri . ($query ? $sep .http_build_query($query) : '') . $anchor . '" class="pagebar_page">&larr; '.LANG_PAGE_PREV.'</a> ';
 		} else {
 			$html .= ' <span class="pagebar_page disabled">&larr; '.LANG_PAGE_PREV.'</span> ';
 		}
 
 		if ($page < $pages){
-			$query['page'] = ($page+1);
-			$uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+			$query[$page_param_name] = ($page+1);
+			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
 			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query['page'] == 1) { unset($query['page']); }
+			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
 			$html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_NEXT.' &rarr;</a> ';
 		} else {
 			$html .= ' <span class="pagebar_page disabled">'.LANG_PAGE_NEXT.' &rarr;</span> ';
@@ -86,19 +87,19 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
 	$html .= '<span class="pagebar_pages">';
 
 	if ($page > $span+1){
-        $query['page'] = 1;
-        $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+        $query[$page_param_name] = 1;
+        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
         $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query['page'] == 1) { unset($query['page']); }
+        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
         $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_FIRST.'</a> ';
 	}
 
     for ($p=$p_start; $p<=$p_end; $p++){
         if ($p != $page) {
-            $query['page'] = $p;
-            $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+            $query[$page_param_name] = $p;
+            $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
             $sep = mb_strstr($uri, '?') ? '&' : '?';
-            if ($query['page'] == 1) { unset($query['page']); }
+            if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
             $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.$p.'</a> ';
         } else {
             $html .= '<span class="pagebar_current">'.$p.'</span>';
@@ -106,10 +107,10 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
     }
 
 	if ($page < $pages - $span){
-        $query['page'] = $pages;
-        $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+        $query[$page_param_name] = $pages;
+        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
         $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query['page'] == 1) { unset($query['page']); }
+        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
         $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_LAST.'</a> ';
 	}
 

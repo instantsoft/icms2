@@ -55,7 +55,7 @@ class cmsWysiwygRedactor {
         //конвертирование ссылок vimeo и youtube
         $options['convertVideoLinks'] = true;
 
-        //авторесайз поля вводя
+        //авторесайз поля ввода
         $options['autoresize'] = true;
 
         //отмена конвертирования дивов в параграфы

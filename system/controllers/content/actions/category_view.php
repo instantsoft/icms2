@@ -139,7 +139,10 @@ class actionContentCategoryView extends cmsAction {
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_category', $category);
 
-        return $this->cms_template->render('category_view', array(
+        $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/category_view_'.$ctype['name'], true) ?
+                'category_view_'.$ctype['name'] : 'category_view';
+
+        return $this->cms_template->render($tpl_file, array(
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,
             'parent'          => isset($parent) ? $parent : false,
