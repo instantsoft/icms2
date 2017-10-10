@@ -111,7 +111,7 @@ class actionUsersProfileEdit extends cmsAction {
                             'images'        => array(
                                 array(
                                     'url' => href_to_rel('users', $profile['id']),
-                                    'src' => html_image_src($new['avatar'], 'normal')
+                                    'src' => html_image_src($new['avatar'], $fields['avatar']['options']['size_full'])
                                 )
                             ),
                             'images_count'  => 1
