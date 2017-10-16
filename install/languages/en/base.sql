@@ -182,6 +182,7 @@ CREATE TABLE `{#}content_types` (
   `title` varchar(100) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'System name',
   `description` varchar(255) DEFAULT NULL COMMENT 'Description',
+  `ordering` int(11) DEFAULT NULL,
   `is_date_range` tinyint(1) unsigned DEFAULT NULL,
   `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Pre-moderate new content?',
   `is_premod_edit` tinyint(1) unsigned DEFAULT NULL COMMENT 'Pre-moderate edited content',
@@ -209,15 +210,7 @@ CREATE TABLE `{#}content_types` (
   `is_fixed` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
-  KEY `is_cats` (`is_cats`),
-  KEY `is_comments` (`is_comments`),
-  KEY `is_comments_tree` (`is_comments_tree`),
-  KEY `is_rating` (`is_rating`),
-  KEY `is_rating_pos` (`is_rating_pos`),
-  KEY `is_auto_keys` (`is_auto_keys`),
-  KEY `is_auto_url` (`is_auto_url`),
-  KEY `is_in_groups` (`is_in_groups`),
-  KEY `is_in_groups_only` (`is_in_groups_only`)
+  KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Content types';
 
 INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_premod_add`, `is_premod_edit`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES

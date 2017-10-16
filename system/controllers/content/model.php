@@ -259,8 +259,6 @@ class modelContent extends cmsModel{
             return $this;
         }
 
-        $this->orderBy('ordering');
-
         self::$all_ctypes = $this->getContentTypesFiltered();
 
         return $this;
@@ -279,6 +277,8 @@ class modelContent extends cmsModel{
     public function getContentTypesFiltered(){
 
         $this->useCache('content.types');
+
+        if (!$this->order_by){ $this->orderBy('ordering'); }
 
         return $this->get('content_types', function($item, $model){
 

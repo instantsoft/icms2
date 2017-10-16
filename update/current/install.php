@@ -23,6 +23,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}groups` ADD `date_approved` TIMESTAMP NULL DEFAULT NULL");
     }
 
+    if(!isFieldExists('content_types', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}content_types` ADD `ordering` INT(11) NULL DEFAULT NULL AFTER `description`, ADD INDEX (`ordering`)");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Обновляем события ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
