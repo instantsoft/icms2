@@ -1,31 +1,19 @@
 <?php
 /**
- * 2.8.2 => 2.8.3
+ * 2.8.1 => 2.8.2
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
-    if(!isFieldExists('groups', 'join_roles')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `join_roles` VARCHAR(1000) NULL DEFAULT NULL COMMENT 'Роли при вступлении в группу'");
+    if(!isFieldExists('controllers', 'slug')){
+        $core->db->query("ALTER TABLE `{#}controllers` ADD `slug` VARCHAR(64) NULL DEFAULT NULL AFTER `name`");
     }
 
-    if(!isFieldExists('groups', 'is_approved')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `is_approved` TINYINT(1) NOT NULL DEFAULT '1'");
-    }
+    $core->db->query("ALTER TABLE `{#}controllers` CHANGE `files` `files` VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL");
+    $core->db->query("ALTER TABLE `{#}widgets` CHANGE `files` `files` VARCHAR(10000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
 
-    if(!isFieldExists('groups', 'approved_by')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `approved_by` INT(11) NULL DEFAULT NULL");
-    }
-
-    if(!isFieldExists('groups', 'date_approved')){
-        $core->db->query("ALTER TABLE `{#}groups` ADD `date_approved` TIMESTAMP NULL DEFAULT NULL");
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////// Обновляем события ///////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
     $diff_events = $admin->getEventsDifferences();
 
     if($diff_events['added']){

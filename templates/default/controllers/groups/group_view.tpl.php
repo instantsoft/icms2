@@ -39,6 +39,11 @@
             <div class="bar_item bi_user">
                 <?php echo LANG_GROUP_INFO_OWNER; ?> <a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a>
             </div>
+            <?php if (!$group['is_approved']){ ?>
+                <div class="bar_item bi_not_approved">
+                    <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                </div>
+            <?php } else { ?>
             <div class="bar_item bi_share">
                 <div class="share">
                     <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
@@ -46,6 +51,7 @@
                     <div class="ya-share2" data-title="<?php html($group['title']); ?><?php if (!empty($group['sub_title'])) { ?> / <?php html($group['sub_title']); ?><?php } ?>" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-description="<?php html(string_short($group['description'], 200)); ?>" data-size="s"></div>
                 </div>
             </div>
+            <?php } ?>
         </div>
     <?php } ?>
 

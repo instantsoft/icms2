@@ -3,6 +3,7 @@
     define('LANG_GROUPS_CONTROLLER',        'Группы');
     define('LANG_GROUPS_LIST',              'Список групп');
     define('LANG_GROUPS_VIEW',              'Просмотр группы');
+    define('LANG_GROUPS_REFUSE',            'Отклонить и удалить группу');
     define('LANG_GROUPS_ADD',               'Создать группу');
     define('LANG_GROUPS_EDIT',              'Настройки группы');
     define('LANG_GROUPS_DELETE',            'Удалить группу');
@@ -110,3 +111,4 @@
     define('LANG_PRIVACY_GROUPS_ADD',        'Показывать только одногруппникам, имеющим право добавления %s');
     define('LANG_PRIVACY_GROUPS_ROLES',      'Показывать только одногруппникам с заданными ролями');
     define('LANG_GROUPS_ERROR_PARENT_ID',    'Вы не можете добавлять контент в эту группу');
+    define('LANG_GROUPS_JOIN_ROLES', 'Роли участников при вступлении');

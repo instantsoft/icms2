@@ -113,7 +113,7 @@ class cmsController {
 
     protected function loadCmsObj($name) {
 
-        if(strpos($name, 'cms') === 0){
+        if(strpos($name, 'cms_') === 0){
 
             $class_name = string_to_camel('_', $name);
 
@@ -134,6 +134,16 @@ class cmsController {
     public function __get($name) {
 
         if($this->loadCmsObj($name)){
+            return $this->{$name};
+        }
+
+        if(strpos($name, 'controller_') === 0){
+            $this->{$name} = cmsCore::getController(str_replace('controller_', '', $name), $this->request);
+            return $this->{$name};
+        }
+
+        if(strpos($name, 'model_') === 0){
+            $this->{$name} = cmsCore::getModel(str_replace('model_', '', $name));
             return $this->{$name};
         }
 

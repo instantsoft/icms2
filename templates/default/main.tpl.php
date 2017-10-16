@@ -59,19 +59,14 @@
             ?>
 
             <?php
-                $messages = cmsUser::getSessionMessages();
-                if ($messages){
-                    ?>
-                    <div class="sess_messages">
-                        <?php
-                            foreach($messages as $message){
-                                echo $message;
-                            }
-                        ?>
-                    </div>
-                    <?php
-                }
-            ?>
+            $messages = cmsUser::getSessionMessages();
+            if ($messages){ ?>
+                <div class="sess_messages">
+                    <?php foreach($messages as $message){ ?>
+                        <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                     <?php } ?>
+                </div>
+            <?php } ?>
 
             <section style="width:<?php echo $section_width; ?>">
 

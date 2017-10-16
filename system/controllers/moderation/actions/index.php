@@ -2,7 +2,7 @@
 
 class actionModerationIndex extends cmsAction {
 
-    public function run($ctype_name=false){
+    public function run($ctype_name = false){
 
         $counts = $this->model->getTasksCounts($this->cms_user->id, $this->cms_user->is_admin);
 
@@ -19,29 +19,56 @@ class actionModerationIndex extends cmsAction {
 
         if (!$ctype_name) { $ctype_name = $ctypes_list[0]; $is_index = true; }
 
-        $content_controller = cmsCore::getController('content', $this->request);
-
-        $ctypes = $content_controller->model->filterIn('name', $ctypes_list)->getContentTypesFiltered();
-        $ctypes = array_collection_to_list($ctypes, 'name', 'title');
-
-        $ctype = $content_controller->model->getContentTypeByName($ctype_name);
-
-        $content_controller->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
-
         $page_url = $is_index ? href_to($this->name) : href_to($this->name, 'index', $ctype_name);
 
-        $content_controller->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter()->disableDeleteFilter();
+        $titles = array(); $list_html = '';
 
-        $list_html = $content_controller->renderItemsList($ctype, $page_url, true);
+        $moderations = cmsEventsManager::hookAll('moderation_list', array($counts, $ctype_name, $page_url), array(), $this->request);
+
+        foreach ($moderations as $moderation) {
+
+            $titles = array_merge($titles, $moderation['titles']);
+
+            if(!empty($moderation['list_html'])){
+                $list_html = $moderation['list_html'];
+            }
+
+        }
+
+        if(!isset($titles[$ctype_name])){ cmsCore::error404(); }
+
+        if (!$is_index){
+
+            $this->cms_template->addBreadcrumb(LANG_MODERATION, href_to($this->name));
+            $this->cms_template->addBreadcrumb($titles[$ctype_name]);
+
+            $this->cms_template->setPageTitle(LANG_MODERATION, $titles[$ctype_name]);
+
+        } else {
+
+            $this->cms_template->setPageTitle(LANG_MODERATION);
+
+            $this->cms_template->addBreadcrumb(LANG_MODERATION);
+
+        }
+
+        $content_menu = array();
+
+        $is_first = true;
+
+        foreach($counts as $c_name => $count){
+            $content_menu[] = array(
+                'title'   => $titles[$c_name],
+                'url'     => $is_first ? href_to($this->name) : href_to($this->name, 'index', $c_name),
+                'counter' => $count
+            );
+            $is_first = false;
+        }
+
+        $this->cms_template->addMenuItems('moderation_content_types', $content_menu);
 
         return $this->cms_template->render('index', array(
-            'is_index'   => $is_index,
-            'counts'     => $counts,
-            'ctype'      => $ctype,
-            'ctypes'     => $ctypes,
-            'ctype_name' => $ctype_name,
-            'list_html'  => $list_html,
-            'user'       => $this->cms_user
+            'list_html' => $list_html
         ));
 
     }

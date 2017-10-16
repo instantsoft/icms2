@@ -705,7 +705,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (114, 'admin_groups_dataset_fields_list', 'groups', 114, 1),
 (115, 'content_before_list', 'rating', 115, 1),
 (116, 'content_before_list', 'groups', 116, 1),
-(117, 'content_validate', 'groups', 117, 1);
+(117, 'content_validate', 'groups', 117, 1),
+(118, 'moderation_list', 'content', 118, 1),
+(119, 'moderation_list', 'groups', 119, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -728,6 +730,10 @@ CREATE TABLE `{#}groups` (
   `content_groups` varchar(1000) DEFAULT NULL COMMENT 'Группы, которым разрешено добавление контента',
   `roles` varchar(2000) DEFAULT NULL,
   `content_roles` varchar(1000) DEFAULT NULL,
+  `join_roles` varchar(1000) DEFAULT NULL COMMENT 'Роли при вступлении в группу',
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
+  `approved_by` int(11) DEFAULT NULL,
+  `date_approved` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `members_count` (`members_count`),
   KEY `date_pub` (`date_pub`),
@@ -964,7 +970,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
 (14, 'comments', 'view_all', 'flag', NULL),
-(15, 'groups', 'add', 'flag', NULL),
+(15, 'groups', 'add', 'list', 'yes,premod'),
 (16, 'groups', 'edit', 'list', 'own,all'),
 (17, 'groups', 'delete', 'list', 'own,all'),
 (18, 'content', 'limit', 'number', NULL),
@@ -1008,7 +1014,7 @@ CREATE TABLE `{#}perms_users` (
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (10, 4, 'comments', '1'),
 (11, 4, 'comments', 'own'),
-(15, 4, 'groups', '1'),
+(15, 4, 'groups', 'yes'),
 (17, 4, 'groups', 'own'),
 (16, 4, 'groups', 'own'),
 (19, 4, 'users', '1'),
@@ -1016,7 +1022,7 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (12, 5, 'comments', 'all'),
 (11, 5, 'comments', 'all'),
 (14, 5, 'comments', '1'),
-(15, 5, 'groups', '1'),
+(15, 5, 'groups', 'yes'),
 (17, 5, 'groups', 'all'),
 (16, 5, 'groups', 'all'),
 (19, 5, 'users', '1'),

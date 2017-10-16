@@ -16,7 +16,7 @@ class actionContentItemView extends cmsAction {
 			if ($this->cms_config->ctype_default){
 				$ctype = $this->model->getContentTypeByName($this->cms_config->ctype_default);
 				if (!$ctype) { return cmsCore::error404(); }
-				$slug = $ctype['name'] . '/' . $slug;
+                $slug = str_replace('.html', '', $this->cms_core->uri);
 			} else {
 				return cmsCore::error404();
 			}
@@ -42,7 +42,10 @@ class actionContentItemView extends cmsAction {
         if (!$item) { return cmsCore::error404(); }
 
         // Проверяем прохождение модерации
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->cms_user->is_admin;
+        if(!$is_moderator && $this->cms_user->id){
+            $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
+        }
         if (!$item['is_approved']){
             if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
             cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');

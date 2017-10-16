@@ -236,6 +236,8 @@
     define('LANG_MODERATORS',                'Moderators');
     define('LANG_MODERATION_SUCCESS',        'Approved');
     define('LANG_MODERATION_APPROVE',        'Approve');
+    define('LANG_MODERATION_REFUSE',         'Refuse and delete %s');
+    define('LANG_MODERATION_REFUSE_REASON',  'What is the reason for the rejection?');
     define('LANG_MODERATION_APPROVED',       'Page published');
     define('LANG_MODERATION_APPROVED_BY',    'Approved by moderator');
     define('LANG_MODERATION_PM_AUTHOR',      'Send a message to the author');
@@ -243,11 +245,15 @@
     define('LANG_MODERATION_IDLE',           'Notification was sent to moderator %s');
     define('LANG_MODERATION_NO_TASKS',       'No entries require approval');
     define('LANG_MODERATION_NOTIFY',         'A new page awaits your approval');
+    define('LANG_PM_MODERATION_APPROVED',    'Moderator approved the <b><a href="%2$s">%1$s</a></b> publication%3$s');
+    define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Причина отклонения: %3$s');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
     define('LANG_PERM_RULE',                 'Permission rule');
     define('LANG_PERM_OPTION_NULL',          'No');
+    define('LANG_PERM_OPTION_YES',           'Yes');
+    define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');

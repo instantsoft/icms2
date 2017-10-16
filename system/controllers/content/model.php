@@ -2170,8 +2170,6 @@ class modelContent extends cmsModel{
         cmsCache::getInstance()->clean("content.list.{$ctype_name}");
         cmsCache::getInstance()->clean("content.item.{$ctype_name}");
 
-        $this->closeModeratorTask($ctype_name, $id, false);
-
         $this->deletePropsValues($ctype_name, $id);
 
         $this->deleteContentItemRelations($ctype['id'], $id);
@@ -2594,86 +2592,6 @@ class modelContent extends cmsModel{
 
     }
 
-//============================================================================//
-//=========================    МОДЕРАТОРЫ   ==================================//
-//============================================================================//
-
-    public function getContentTypeModerators($ctype_name){
-
-        $this->joinUser();
-
-        $this->filterEqual('ctype_name', $ctype_name);
-
-        $this->orderBy('id');
-
-        return $this->get('moderators', false, 'user_id');
-
-    }
-
-    public function getContentTypeModerator($id){
-
-        $this->joinUser();
-
-        return $this->getItemById('moderators', $id);
-
-    }
-
-    public function userIsContentTypeModerator($ctype_name, $user_id){
-
-        $this->filterEqual('ctype_name', $ctype_name);
-        $this->filterEqual('user_id', $user_id);
-
-        $is_moderator = (bool)$this->getCount('moderators');
-
-        $this->resetFilters();
-
-        return $is_moderator;
-
-    }
-
-    public function addContentTypeModerator($ctype_name, $user_id){
-
-        $id = $this->insert('moderators', array(
-            'ctype_name' => $ctype_name,
-            'user_id' => $user_id,
-            'date_assigned' => ''
-        ));
-
-        return $this->getContentTypeModerator($id);
-
-    }
-
-    public function deleteContentTypeModerator($ctype_name, $user_id){
-
-        return $this->
-                    filterEqual('ctype_name', $ctype_name)->
-                    filterEqual('user_id', $user_id)->
-                    deleteFiltered('moderators');
-
-    }
-
-    public function getNextModeratorId($ctype_name){
-
-        $id = $this->filterEqual('ctype_name', $ctype_name)->
-                    orderBy('count_idle', 'asc')->
-                    getFieldFiltered('moderators', 'user_id');
-
-        if (!$id){
-
-            $id = $this->filterEqual('is_admin', 1)->
-                        getFieldFiltered('{users}', 'id');
-            // проверяем наличие администратора в таблице модераторов
-            // и если его там нет, добавляем
-            if(!$this->getItemById('moderators', $id)){
-                $this->addContentTypeModerator($ctype_name, $id);
-            }
-
-        }
-
-        return $id;
-
-    }
-
     public function approveContentItem($ctype_name, $id, $moderator_user_id){
 
         $table_name = $this->table_prefix . $ctype_name;
@@ -2690,63 +2608,5 @@ class modelContent extends cmsModel{
         return true;
 
     }
-
-    public function getModeratorTask($ctype_name, $id){
-
-        return $this->
-                    filterEqual('ctype_name', $ctype_name)->
-                    filterEqual('item_id', $id)->
-                    getItem('moderators_tasks');
-
-    }
-
-    public function addModeratorTask($ctype_name, $user_id, $is_new_item, $item){
-
-        $this->
-            filterEqual('user_id', $user_id)->
-            filterEqual('ctype_name', $ctype_name)->
-            increment('moderators', 'count_idle');
-
-        return $this->insert('moderators_tasks', array(
-            'moderator_id' => $user_id,
-            'author_id'    => $item['user_id'],
-            'item_id'      => $item['id'],
-            'ctype_name'   => $ctype_name,
-            'title'        => $item['title'],
-            'url'          => href_to_rel($ctype_name, $item['slug'] . '.html'),
-            'date_pub'     => '',
-            'is_new_item'  => $is_new_item
-        ));
-
-    }
-
-    public function closeModeratorTask($ctype_name, $id, $is_approved){
-
-        $user = cmsUser::getInstance();
-
-        $counter_field = $is_approved ? 'count_approved' : 'count_deleted';
-
-        $task = $this->getModeratorTask($ctype_name, $id);
-
-        $this->
-            filterEqual('user_id', $user->id)->
-            filterEqual('ctype_name', $ctype_name)->
-            increment('moderators', $counter_field);
-
-        $this->
-            filterEqual('user_id', $task['moderator_id'])->
-            filterEqual('ctype_name', $ctype_name)->
-            filterGt('count_idle', 0)->
-            decrement('moderators', 'count_idle');
-
-        return $this->
-                filterEqual('ctype_name', $ctype_name)->
-                filterEqual('item_id', $id)->
-                deleteFiltered('moderators_tasks');
-
-    }
-
-//============================================================================//
-//============================================================================//
 
 }

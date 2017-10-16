@@ -493,22 +493,22 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function update($table_name, $id, $data, $skip_check_fields = false){
+    public function update($table_name, $id, $data, $skip_check_fields = false, $array_as_json = false){
         $this->filterEqual('id', $id);
-        return $this->updateFiltered($table_name, $data, $skip_check_fields);
+        return $this->updateFiltered($table_name, $data, $skip_check_fields, $array_as_json);
     }
 
-    public function updateFiltered($table_name, $data, $skip_check_fields = false){
+    public function updateFiltered($table_name, $data, $skip_check_fields = false, $array_as_json = false){
         $where = $this->where;
         $this->resetFilters();
-        return $this->db->update($table_name, $where, $data, $skip_check_fields);
+        return $this->db->update($table_name, $where, $data, $skip_check_fields, $array_as_json);
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function insert($table_name, $data){
-        return $this->db->insert($table_name, $data);
+    public function insert($table_name, $data, $array_as_json = false){
+        return $this->db->insert($table_name, $data, false, $array_as_json);
     }
 
     public function insertOrUpdate($table_name, $insert_data, $update_data = false){
@@ -1775,7 +1775,9 @@ class cmsModel {
 
     /**
      * Преобразует массив в YAML
-     * @param array $array
+     * @param array $input_array
+     * @param integer $indent
+     * @param integer $word_wrap
      * @return string
      */
     public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
@@ -1804,6 +1806,25 @@ class cmsModel {
 
         return Spyc::YAMLLoadString($yaml);
 
+    }
+
+    /**
+     * Преобразует массив в строку
+     * @param array $input_array
+     * @return string
+     */
+    public static function arrayToString($input_array) {
+        return json_encode($input_array);
+    }
+
+    /**
+     * Преобразует строку в массив
+     * @param string $string
+     * @return array
+     */
+    public static function stringToArray($string) {
+        if(!$string){ return array(); }
+        return (array)json_decode($string, true);
     }
 
     /**

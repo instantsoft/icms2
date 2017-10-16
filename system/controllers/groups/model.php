@@ -42,6 +42,20 @@ class modelGroups extends cmsModel {
 
     }
 
+    public function approveGroup($id, $moderator_user_id){
+
+        $this->update('groups', $id, array(
+            'is_approved'   => 1,
+            'approved_by'   => $moderator_user_id,
+            'date_approved' => ''
+        ));
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return true;
+
+    }
+
     public function updateGroupContentParams($id, $group){
 
         $counts = $this->getGroupContentCounts($id, true);
@@ -112,6 +126,8 @@ class modelGroups extends cmsModel {
 
     public function deleteGroup($group){
 
+        cmsEventsManager::hook('content_groups_before_delete', $group);
+
         $this->deleteGroupMemberships($group['id']);
         $this->deleteGroupInvites($group['id']);
 
@@ -132,6 +148,8 @@ class modelGroups extends cmsModel {
         $this->filterEqual('target_controller', 'groups');
 
         $this->deleteFiltered('content_relations_bind');
+
+        cmsEventsManager::hook('content_groups_after_delete', $group);
 
         return $success;
 
@@ -181,6 +199,8 @@ class modelGroups extends cmsModel {
 
     public function getGroupsCount(){
 
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
+
         return $this->getCount('groups');
 
     }
@@ -188,6 +208,8 @@ class modelGroups extends cmsModel {
     public function getGroups(){
 
         $this->useCache('groups.list');
+
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc'); }
 
@@ -220,8 +242,9 @@ class modelGroups extends cmsModel {
             $group['slug'] = $group['slug'] ? $group['slug'] : $group['id'];
             $group['content_policy'] = cmsModel::yamlToArray($group['content_policy']);
             $group['content_groups'] = cmsModel::yamlToArray($group['content_groups']);
-            $group['roles'] = cmsModel::yamlToArray($group['roles']);
-            $group['content_roles'] = cmsModel::yamlToArray($group['content_roles']);
+            $group['roles']          = cmsModel::yamlToArray($group['roles']);
+            $group['content_roles']  = cmsModel::yamlToArray($group['content_roles']);
+            $group['join_roles']     = cmsModel::yamlToArray($group['join_roles']);
             // для связи с типами контента
             $group['ctype_name'] = 'groups';
             $group['user_id'] = $group['owner_id'];
@@ -624,6 +647,22 @@ class modelGroups extends cmsModel {
         $users_model->filterEqual('mr.group_id', $group_id);
 
         return $users_model;
+
+    }
+
+    public function filterByModeratorTask($moderator_id, $is_admin = false){
+
+        if($is_admin){
+
+            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
+
+            return $this->filterEqual('m.ctype_name', 'groups');
+
+        } else {
+
+            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='groups' AND item_id=i.id))");
+
+        }
 
     }
 

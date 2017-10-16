@@ -21,6 +21,11 @@ class actionGroupsAcceptRequest extends cmsAction {
 
         $this->model->addMembership($group['id'], $invited_id);
 
+        // роли по умолчанию
+        if(!empty($group['join_roles'])){
+            $this->model->setUserRoles($group['id'], $group['join_roles'], $invited_id);
+        }
+
         cmsCore::getController('activity')->addEntry($this->name, 'join', array(
             'subject_title' => $group['title'],
             'subject_id'    => $group['id'],

@@ -43,6 +43,11 @@ class actionGroupsGroupJoin extends cmsAction {
 
         $this->model->addMembership($group['id'], $this->cms_user->id);
 
+        // роли по умолчанию
+        if(!empty($group['join_roles'])){
+            $this->model->setUserRoles($group['id'], $group['join_roles'], $this->cms_user->id);
+        }
+
         if ($invite){ $this->model->deleteInvite($invite['id']); }
 
         cmsCore::getController('activity')->addEntry($this->name, 'join', array(

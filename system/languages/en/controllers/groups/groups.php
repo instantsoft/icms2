@@ -4,6 +4,7 @@
     define('LANG_GROUPS_LIST',              'Group list');
     define('LANG_GROUPS_VIEW',              'View group');
     define('LANG_GROUPS_ADD',               'New Group');
+    define('LANG_GROUPS_REFUSE',            'Refuse and delete the group');
     define('LANG_GROUPS_EDIT',              'Group settings');
     define('LANG_GROUPS_DELETE',            'Delete Group');
     define('LANG_GROUPS_DELETE_CONFIRM',    'Delete the %s group?');
@@ -110,3 +111,4 @@
     define('LANG_PRIVACY_GROUPS_ADD',        'Show only group members who have the right to add the %s');
     define('LANG_PRIVACY_GROUPS_ROLES',      'Show only group members with given roles');
     define('LANG_GROUPS_ERROR_PARENT_ID',    'You can not add content to this group');
+    define('LANG_GROUPS_JOIN_ROLES', 'Members roles when joining to the group');

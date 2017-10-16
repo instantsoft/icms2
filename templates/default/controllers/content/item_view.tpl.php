@@ -87,12 +87,21 @@
         $allow_delete = (cmsUser::isAllowed($ctype['name'], 'delete', 'all') ||
             (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $user->id));
         if ($allow_delete){
-            $this->addToolButton(array(
-                'class' => 'delete',
-                'title' => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
-                'href'  => href_to($ctype['name'], 'delete', $item['id']),
-                'onclick' => "if(!confirm('".sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])."')){ return false; }"
-            ));
+            if ($item['is_approved']){
+                $this->addToolButton(array(
+                    'class' => 'delete',
+                    'title' => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
+                    'href'  => href_to($ctype['name'], 'delete', $item['id']),
+                    'onclick' => "if(!confirm('".sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])."')){ return false; }"
+                ));
+            } else {
+                $this->addToolButton(array(
+                    'class' => 'delete ajax-modal',
+                    'title' => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
+                    'href'  => href_to($ctype['name'], 'delete', $item['id'])
+                ));
+            }
+
         }
     }
 

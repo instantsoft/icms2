@@ -501,7 +501,7 @@ class admin extends cmsFrontend {
 		//
 		// Опции внешнего вида
 		//
-		$design_fieldset_id = $form->addFieldset(LANG_DESIGN);
+		$design_fieldset_id = $form->addFieldset(LANG_DESIGN, 'design');
 
             $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
                 'title' => LANG_CSS_CLASS_WRAP
@@ -555,7 +555,7 @@ class admin extends cmsFrontend {
         //
         // Опции доступа
         //
-        $access_fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
+        $access_fieldset_id = $form->addFieldset(LANG_PERMISSIONS, 'permissions');
 
             // Показывать группам
             $form->addField($access_fieldset_id, new fieldListGroups('groups_view', array(
@@ -604,7 +604,7 @@ class admin extends cmsFrontend {
         //
         // Опции заголовка
         //
-        $title_fieldset_id = $form->addFieldsetToBeginning(LANG_BASIC_OPTIONS);
+        $title_fieldset_id = $form->addFieldsetToBeginning(LANG_BASIC_OPTIONS, 'basic_options');
 
             // ID виджета
             $form->addField($title_fieldset_id, new fieldNumber('id', array(

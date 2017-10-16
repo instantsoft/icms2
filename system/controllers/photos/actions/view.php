@@ -40,7 +40,7 @@ class actionPhotosView extends cmsAction {
         // Проверяем прохождение модерации
         $is_moderator = false;
         if (!$album['is_approved']){
-            $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('content')->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+            $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
             if (!$is_moderator && $this->cms_user->id != $album['user_id']){ cmsCore::error404(); }
         }
 

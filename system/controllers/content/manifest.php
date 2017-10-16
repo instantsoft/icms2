@@ -17,7 +17,8 @@
             'frontpage',
             'frontpage_types',
             'ctype_relation_childs',
-            'admin_content_dataset_fields_list'
+            'admin_content_dataset_fields_list',
+            'moderation_list'
         )
 
     );

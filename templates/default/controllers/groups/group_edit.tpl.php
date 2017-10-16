@@ -18,6 +18,11 @@
         )
     ), $errors);
 ?>
+<?php if ($is_premoderation) { ?>
+    <div class="content_moderation_notice icon-info">
+        <?php echo LANG_MODERATION_NOTICE; ?>
+    </div>
+<?php } ?>
 <script type="text/javascript">
     $(function (){
         $('select[id ^= "content_policy_"]').each(function (){

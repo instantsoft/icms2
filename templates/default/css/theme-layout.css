@@ -607,6 +607,10 @@ aside .menu .item, section .menu .item {
     margin-top: 5px;
     white-space: nowrap;
 }
+
+.width_480 {
+    width: 480px;
+}
 /* Media Queries ============================================================ */
 
 @media screen and (max-width: 980px) {

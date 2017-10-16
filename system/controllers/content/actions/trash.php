@@ -74,7 +74,7 @@ class actionContentTrash extends cmsAction {
 
     private function filterDeleted($ctype){
 
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
         if($is_moderator){
             $this->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter();

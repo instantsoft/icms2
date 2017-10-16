@@ -103,6 +103,7 @@ class groups extends cmsFrontend {
         $is_owner = ($this->cms_user->id == $group['owner_id']);
 
         $access = array(
+            'is_moderator'  => $this->cms_user->is_admin,
             'is_can_edit'   => false,
             'is_can_join'   => false,
             'is_can_delete' => false,
@@ -126,7 +127,7 @@ class groups extends cmsFrontend {
                     $access['is_owner']
                 )
             )) {
-            $access['wall']['add'] = true;
+            $access['wall']['add'] = (bool)$group['is_approved'];
         }
         if ($this->cms_user->is_admin || (
                 $access['is_member'] && (
@@ -142,11 +143,11 @@ class groups extends cmsFrontend {
         }
 
         if ($access['member_role'] == groups::ROLE_STAFF) {
-            $access['is_can_invite'] = true;
+            $access['is_can_invite'] = (bool)$group['is_approved'];
         }
 
         if (cmsUser::isAllowed('groups', 'invite_users') && $access['is_can_invite']) {
-            $access['is_can_invite_users'] = true;
+            $access['is_can_invite_users'] = (bool)$group['is_approved'];
         }
         if (cmsUser::isAllowed('groups', 'edit', 'all')) {
 
@@ -156,17 +157,17 @@ class groups extends cmsFrontend {
             if (($access['member_role'] == groups::ROLE_STAFF && $group['edit_policy'] == groups::EDIT_POLICY_STAFF) ||
                     $access['is_owner'] || cmsUser::isAllowed('groups', 'edit', 'all')){
 
-                $access['is_can_edit'] = true;
+                $access['is_can_edit'] = (bool)$group['is_approved'];
 
             }
         }
 
         if ($this->cms_user->id && !$access['is_member'] && ($group['join_policy'] == groups::JOIN_POLICY_FREE || $access['invite'])){
-            $access['is_can_join'] = true;
+            $access['is_can_join'] = (bool)$group['is_approved'];
         }
 
         if (cmsUser::isAllowed('groups', 'delete', 'all') || (cmsUser::isAllowed('groups', 'delete', 'own') && $access['is_owner'])){
-            $access['is_can_delete'] = true;
+            $access['is_can_delete'] = $group['is_approved'] ? (bool)$group['is_approved'] : cmsUser::isAllowed('groups', 'delete', 'all');
         }
 
         return cmsEventsManager::hook('group_item_access', $access);
@@ -246,6 +247,13 @@ class groups extends cmsFrontend {
                 groups::JOIN_POLICY_PRIVATE => LANG_GROUPS_GROUP_PRIVATE_HARD,
             )
         )));
+        if(!empty($group['roles'])){
+            $form->addField($fieldset_id, new fieldList('join_roles', array(
+                'title'              => LANG_GROUPS_JOIN_ROLES,
+                'items'              => (array(null => '') + $group['roles']),
+                'is_chosen_multiple' => true
+            )));
+        }
         $form->addField($fieldset_id, new fieldList('is_closed', array(
             'title' => LANG_GROUPS_GROUP_IS_CLOSED,
             'items' => array(
@@ -632,6 +640,14 @@ class groups extends cmsFrontend {
 
         $tool_buttons = array();
 
+        if (!$group['is_approved'] && $group['access']['is_moderator']){
+            $tool_buttons['groups_accept'] = array(
+                'title'   => LANG_MODERATION_APPROVE,
+                'options' => array('class' => 'accept'),
+                'url'     => href_to('groups', $group['slug'], array('approve'))
+            );
+        }
+
         if ($group['access']['is_can_edit']){
             $tool_buttons['groups_edit'] = array(
                 'title'   => LANG_GROUPS_EDIT,
@@ -679,11 +695,19 @@ class groups extends cmsFrontend {
         }
 
         if ($group['access']['is_can_delete']){
-            $tool_buttons['groups_delete'] = array(
-                'title'   => LANG_GROUPS_DELETE,
-                'options' => array('class' => 'delete ajax-modal'),
-                'url'     => href_to('groups', $group['slug'], 'delete')
-            );
+            if ($group['is_approved']){
+                $tool_buttons['groups_delete'] = array(
+                    'title'   => LANG_GROUPS_DELETE,
+                    'options' => array('class' => 'delete ajax-modal'),
+                    'url'     => href_to('groups', $group['slug'], 'delete')
+                );
+            } else {
+                $tool_buttons['groups_delete'] = array(
+                    'title'   => LANG_GROUPS_REFUSE,
+                    'options' => array('class' => 'delete ajax-modal'),
+                    'url'     => href_to('groups', $group['slug'], 'delete')
+                );
+            }
         }
 
         if ($group['content_counts'] && $group['access']['is_member']){
@@ -708,6 +732,9 @@ class groups extends cmsFrontend {
     }
 
     public function isContentAddAllowed($ctype_name, $group) {
+
+        // пока группа не промодерирована, контент нельзя добавлять никому
+        if(!$group['is_approved']){ return false; }
 
         if($this->cms_user->is_admin || ($group['access']['is_owner'] && cmsUser::isAllowed('groups', 'content_access'))){ return true; }
 

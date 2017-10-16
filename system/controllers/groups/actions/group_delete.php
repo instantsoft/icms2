@@ -12,8 +12,6 @@ class actionGroupsGroupDelete extends cmsAction {
 
         if ($this->request->has('submit')){
 
-            // подтвержение получено
-
             $csrf_token = $this->request->get('csrf_token', '');
             $is_delete_content = $this->request->get('is_delete_content', 0);
 
@@ -25,13 +23,21 @@ class actionGroupsGroupDelete extends cmsAction {
 
             $this->model->deleteGroup($group);
 
+            if (!$group['is_approved']){
+
+                $this->controller_moderation->model->closeModeratorTask('groups', $group['id'], false, $this->cms_user->id);
+
+                $group['reason'] = trim(strip_tags($this->request->get('reason', '')));
+
+                $this->controller_moderation->moderationNotifyAuthor($group, 'moderation_refused');
+
+            }
+
             cmsUser::addSessionMessage(sprintf(LANG_GROUPS_DELETED, $group['title']));
 
             $this->redirectToAction('');
 
         } else {
-
-            // спрашиваем подтверждение
 
             $this->cms_template->setPageTitle(LANG_GROUPS_DELETE);
 

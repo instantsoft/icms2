@@ -7,6 +7,8 @@ class onModerationContentBeforeDelete extends cmsAction {
         $ctype_name = $data['ctype_name'];
         $item       = $data['item'];
 
+        $this->model->closeModeratorTask($ctype_name, $item['id'], false, $this->cms_user->id);
+
         if(!empty($this->options['clear_log_after_delete'])){
             $this->model->logDeleteTarget('content', $ctype_name, $item['id']);
         }

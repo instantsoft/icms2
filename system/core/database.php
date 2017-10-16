@@ -309,13 +309,20 @@ class cmsDatabase {
      * Подготавливает значение $value поля $field для вставки в запрос
      * @param string $field
      * @param string $value
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return string
      */
-    public function prepareValue($field, $value){
+    public function prepareValue($field, $value, $array_as_json = false){
 
         // если значение поля - массив,
         // то преобразуем его в YAML
-        if (is_array($value)){ $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'"; } else
+        if (is_array($value)){
+            if($array_as_json){
+                $value = "'". $this->escape(cmsModel::arrayToString($value)) ."'";
+            } else {
+                $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'";
+            }
+        } else
 
         // если это поле даты публикации и оно не установлено,
         // то используем текущее время
@@ -350,9 +357,10 @@ class cmsDatabase {
      * @param string $where Критерии запроса
 	 * @param array $data Массив[Название поля] = значение поля
 	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return boolean
      */
-	public function update($table, $where, $data, $skip_check_fields = false){
+	public function update($table, $where, $data, $skip_check_fields = false, $array_as_json = false){
 
 		if(empty($data)){ return false; }
 
@@ -364,7 +372,7 @@ class cmsDatabase {
             if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
             }
-            $value = $this->prepareValue($field, $value);
+            $value = $this->prepareValue($field, $value, $array_as_json);
 			$set[] = "`{$field}` = {$value}";
 		}
 
@@ -382,9 +390,10 @@ class cmsDatabase {
 	 * @param string $table Таблица
 	 * @param array $data Массив[Название поля] = значение поля
 	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
 	 * @return bool
 	 */
-	public function insert($table, $data, $skip_check_fields = false){
+	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false){
 
         if(empty($data) || !is_array($data)) { return false; }
 
@@ -399,7 +408,7 @@ class cmsDatabase {
             }
 
             $fields[] = "`$field`";
-            $values[] = $this->prepareValue($field, $value);
+            $values[] = $this->prepareValue($field, $value, $array_as_json);
 
         }
 

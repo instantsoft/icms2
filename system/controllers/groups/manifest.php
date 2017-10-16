@@ -22,7 +22,8 @@
             'content_before_childs',
             'ctype_relation_childs',
             'admin_groups_dataset_fields_list',
-            'content_validate'
+            'content_validate',
+            'moderation_list'
         )
 
     );

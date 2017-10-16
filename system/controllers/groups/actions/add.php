@@ -24,6 +24,8 @@ class actionGroupsAdd extends cmsAction {
             }
         }
 
+        $is_premoderation = cmsUser::isAllowed('groups', 'add', 'premod') && !$this->cms_user->is_admin;
+
         if ($is_submitted){
 
             $errors = $form->validate($this, $group);
@@ -32,18 +34,29 @@ class actionGroupsAdd extends cmsAction {
 
                 $group['owner_id'] = $this->cms_user->id;
 
+                $group['is_approved'] = !$is_premoderation;
+
                 $id = $this->model->addGroup($group);
 
                 $group = $this->model->getGroup($id);
 
                 $this->model->fieldsAfterStore($group, $fields);
 
-                $content = cmsCore::getController('content', $this->request);
-
-                $parents = $content->model->getContentTypeParents(null, $this->name);
+                $parents = $this->controller_content->model->getContentTypeParents(null, $this->name);
 
                 if($parents){
-                    $content->bindItemToParents(array('id' => null, 'name' => $this->name, 'controller' => $this->name), $group, $parents);
+                    $this->controller_content->bindItemToParents(array(
+                        'id'         => null,
+                        'name'       => $this->name,
+                        'controller' => $this->name
+                    ), $group, $parents);
+                }
+
+                if (!$group['is_approved']){
+                    $group['page_url'] = href_to_abs('groups', $group['slug']);
+                    cmsCore::getController('moderation')->requestModeration('groups', $group);
+                } else {
+                    cmsEventsManager::hook('content_groups_after_add_approve', $group);
                 }
 
                 $this->redirectToAction($group['slug']);
@@ -64,6 +77,7 @@ class actionGroupsAdd extends cmsAction {
         $this->cms_template->addBreadcrumb($page_title);
 
         return $this->cms_template->render('group_edit', array(
+            'is_premoderation' => $is_premoderation,
             'do'         => 'add',
             'page_title' => $page_title,
             'group'      => $group,

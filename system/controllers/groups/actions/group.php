@@ -31,6 +31,12 @@ class actionGroupsGroup extends cmsAction {
             return true;
         });
 
+        // Проверяем прохождение модерации
+        if (!$group['is_approved']){
+            if (!$group['access']['is_moderator'] && !$group['access']['is_owner']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
+            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
+        }
+
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title']);
 

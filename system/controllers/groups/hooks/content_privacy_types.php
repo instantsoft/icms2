@@ -38,7 +38,7 @@ class onGroupsContentPrivacyTypes extends cmsAction {
                         'is_chosen_multiple' => true,
                         'is_visible' => false,
                         'generator' => function ($group) use ($roles){
-                            $items = array(0 => '');
+                            $items = array(null => '');
                             foreach($roles as $role_id => $role){
                                 $items[$role_id] = $role;
                             }

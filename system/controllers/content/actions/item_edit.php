@@ -29,7 +29,7 @@ class actionContentItemEdit extends cmsAction {
         }
 
         $is_premoderation = $ctype['is_premod_edit'];
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
 
@@ -238,7 +238,8 @@ class actionContentItemEdit extends cmsAction {
                     cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
                     cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
                 } else {
-                    $this->requestModeration($ctype['name'], $item, false);
+                    $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
+                    cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
                 }
 
                 if ($back_url){

@@ -153,10 +153,10 @@ class actionContentItemAdd extends cmsAction {
             }
         }
 
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype_name, $this->cms_user->id);
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype_name, $this->cms_user->id);
         $is_premoderation = $ctype['is_premod_add'];
 
-		cmsEventsManager::hook('content_add', $ctype);
+		$ctype = cmsEventsManager::hook('content_add', $ctype);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
@@ -315,7 +315,8 @@ class actionContentItemAdd extends cmsAction {
                     cmsEventsManager::hook("content_after_add_approve", array('ctype_name'=>$ctype_name, 'item'=>$item));
                     cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
                 } else {
-                    $this->requestModeration($ctype_name, $item);
+                    $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
+                    cmsCore::getController('moderation')->requestModeration($ctype_name, $item);
                 }
 
                 if ($back_url){

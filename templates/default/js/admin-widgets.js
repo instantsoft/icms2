@@ -295,7 +295,7 @@ function widgetEdit(id){
         var h = 0, m = false;
         $('.modal_form .form-tabs .tab').each(function(indx, element){
             var th = +$(this).height();
-            if (th > h){ if(indx){ h = th; m = true; } }
+            if (th > h){ h = th; m = true; }
         });
         if(m){
             $('.modal_form .form-tabs .tab').first().css({height: h+'px'});

@@ -373,57 +373,13 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function requestModeration($ctype_name, $item, $is_new_item=true){
-
-        $moderator_id = $this->model->getNextModeratorId($ctype_name);
-
-        $users_model = cmsCore::getModel('users');
-
-        $moderator = $users_model->getUser($moderator_id);
-        $author = $users_model->getUser($item['user_id']);
-
-        // добавляем задачу модератору
-        $this->model->addModeratorTask($ctype_name, $moderator_id, $is_new_item, $item);
-
-        // отправляем письмо модератору
-        $messenger = cmsCore::getController('messages');
-
-        // личное сообщение
-        if($moderator['is_online']){
-            $messenger->addRecipient($moderator['id'])->sendNoticePM(array(
-                'content' => LANG_MODERATION_NOTIFY,
-                'actions' => array(
-                    'view' => array(
-                        'title' => LANG_SHOW,
-                        'href'  => href_to($ctype_name, $item['slug'] . '.html')
-                    )
-                )
-            ));
-        }
-
-        // EMAIL уведомление, если не онлайн
-        if(!$moderator['is_online']){
-
-            $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
-            $letter = array('name' => 'moderation');
-
-            $messenger->sendEmail($to, $letter, array(
-                'moderator'  => $moderator['nickname'],
-                'author'     => $author['nickname'],
-                'author_url' => href_to_abs('users', $author['id']),
-                'page_title' => $item['title'],
-                'page_url'   => href_to_abs($ctype_name, $item['slug'] . '.html'),
-                'date'       => html_date_time()
-            ));
-
-        }
-
-        cmsUser::addSessionMessage(sprintf(LANG_MODERATION_IDLE, $moderator['nickname']), 'info');
-
+    /**
+     * DEPRECATED
+     * use cmsCore::getController('moderation')->requestModeration($ctype_name, $item, $is_new_item);
+     */
+    public function requestModeration($ctype_name, $item, $is_new_item = true){
+        return cmsCore::getController('moderation')->requestModeration($ctype_name, $item, $is_new_item);
     }
-
-//============================================================================//
-//============================================================================//
 
     public function getCategoryForm($ctype, $action){
 

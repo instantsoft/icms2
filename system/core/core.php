@@ -290,7 +290,7 @@ class cmsCore {
             if (is_readable($model_file)){
                 include_once($model_file);
             } else {
-                self::error(ERR_MODEL_NOT_FOUND . ': '. $model_file);
+                return self::error(ERR_MODEL_NOT_FOUND . ': '. str_replace(cmsConfig::get('root_path'), '', $model_file));
             }
 
         }
@@ -315,7 +315,7 @@ class cmsCore {
 
     /**
      * Создает и возвращает объект контроллера
-     * @param str $controller_name
+     * @param string $controller_name
      * @param cmsRequest $request
      * @return controller_class
      */
@@ -331,13 +331,17 @@ class cmsCore {
 
         $custom_file = $config->root_path . 'system/controllers/'.$controller_name.'/custom.php';
 
-        if(!file_exists($custom_file)){
+        if(!is_readable($custom_file)){
             $controller_class = $controller_name;
         } else {
             $controller_class = $controller_name . '_custom';
             if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
+        }
+
+        if (!class_exists($controller_class, false)) {
+            return self::error(ERR_COMPONENT_NOT_FOUND . ': '. str_replace($config->root_path, '', $ctrl_file));
         }
 
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }

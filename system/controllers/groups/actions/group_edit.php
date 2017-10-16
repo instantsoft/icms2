@@ -73,6 +73,7 @@ class actionGroupsGroupEdit extends cmsAction {
 
         return $this->cms_template->render('group_edit', array(
             'do'         => 'edit',
+            'is_premoderation' => false,
             'page_title' => $page_title,
             'group'      => $group,
             'form'       => $form,

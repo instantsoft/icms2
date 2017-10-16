@@ -234,19 +234,25 @@
     define('LANG_MODERATOR',                 'Модератор');
     define('LANG_MODERATORS',                'Модераторы');
     define('LANG_MODERATION_SUCCESS',        'Проверено');
-    define('LANG_MODERATION_APPROVE',        'Разрешить публикацию');
+    define('LANG_MODERATION_APPROVE',        'Одобрить запись');
+    define('LANG_MODERATION_REFUSE',         'Отклонить и удалить %s');
+    define('LANG_MODERATION_REFUSE_REASON',  'Укажите причину отклонения');
     define('LANG_MODERATION_APPROVED',       'Страница опубликована');
     define('LANG_MODERATION_APPROVED_BY',    'Проверено модератором');
     define('LANG_MODERATION_PM_AUTHOR',      'Написать автору');
-    define('LANG_MODERATION_NOTICE',         'Материал будет опубликован после проверки модератором');
+    define('LANG_MODERATION_NOTICE',         'Будет опубликовано после проверки модератором');
     define('LANG_MODERATION_IDLE',           'Отправлено уведомление модератору %s');
     define('LANG_MODERATION_NO_TASKS',       'Нет материалов требующих проверки');
     define('LANG_MODERATION_NOTIFY',         'Новая страница ожидает вашей проверки');
+    define('LANG_PM_MODERATION_APPROVED',    'Модератор одобрил размещение страницы <b><a href="%2$s">%1$s</a></b>%3$s');
+    define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');
     define('LANG_PERM_RULE',                 'Правило доступа');
     define('LANG_PERM_OPTION_NULL',          'Нет');
+    define('LANG_PERM_OPTION_YES',           'Да');
+    define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
     define('LANG_PERM_OPTION_ALL',           'Все');
     define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
