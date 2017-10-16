@@ -259,6 +259,8 @@ class modelContent extends cmsModel{
             return $this;
         }
 
+        $this->orderBy('ordering');
+
         self::$all_ctypes = $this->getContentTypesFiltered();
 
         return $this;
@@ -304,6 +306,16 @@ class modelContent extends cmsModel{
         }
 
         return $names;
+
+    }
+
+    public function reorderContentTypes($ctypes_ids_list){
+
+        $this->reorderByList('content_types', $ctypes_ids_list);
+
+        cmsCache::getInstance()->clean('content.types');
+
+        return true;
 
     }
 

@@ -19,7 +19,10 @@ class actionAdminCtypesAjax extends cmsAction {
 
         if ($filter_str){
             parse_str($filter_str, $filter);
-            $content_model->applyGridFilter($grid, $filter);
+            $new_filter = array(); // далее сброс всех ранее сохранённых фильтров
+            $new_filter['page'] = isset($filter['page']) ? $filter['page'] : 1;
+            $new_filter['perpage'] = isset($filter['perpage']) ? $filter['perpage'] : 30;
+            $content_model->applyGridFilter($grid, $new_filter);
         }
 
         $total = $content_model->getContentTypesCountFiltered();
