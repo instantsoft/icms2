@@ -241,6 +241,8 @@ class actionContentItemEdit extends cmsAction {
                     $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
                     cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
                 }
+		    
+		$back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);
