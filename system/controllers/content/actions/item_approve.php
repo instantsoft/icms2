@@ -37,7 +37,7 @@ class actionContentItemApprove extends cmsAction {
         
         $back_url = $this->request->get('back', '');
 
-        if ($back_url != FALSE)
+        if ($back_url)
         {
             $this->redirect($back_url);
         }
