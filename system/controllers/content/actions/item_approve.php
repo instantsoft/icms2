@@ -34,8 +34,17 @@ class actionContentItemApprove extends cmsAction {
         $this->controller_moderation->moderationNotifyAuthor($item, 'moderation_approved');
 
         cmsUser::addSessionMessage(LANG_MODERATION_APPROVED, 'success');
+        
+        $back_url = $this->request->get('back', '');
 
-        $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+        if ($back_url != FALSE)
+        {
+            $this->redirect($back_url);
+        }
+        else
+        {
+            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+        }
 
     }
 
