@@ -37,12 +37,9 @@ class actionContentItemApprove extends cmsAction {
         
         $back_url = $this->request->get('back', '');
 
-        if ($back_url)
-        {
+        if ($back_url) {
             $this->redirect($back_url);
-        }
-        else
-        {
+        } else {
             $this->redirectTo($ctype['name'], $item['slug'] . '.html');
         }
 
