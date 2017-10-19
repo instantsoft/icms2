@@ -3,9 +3,7 @@
 class actionContentItemEdit extends cmsAction {
 
     public function run(){
-
-        $back_url = $this->request->get('back', '');
-
+	    
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) { cmsCore::error404(); }
@@ -241,6 +239,8 @@ class actionContentItemEdit extends cmsAction {
                     $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
                     cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
                 }
+		    
+		$back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);
@@ -255,6 +255,8 @@ class actionContentItemEdit extends cmsAction {
             }
 
         }
+	    
+	$back_url = $this->request->get('back', '');
 
         return $this->cms_template->render('item_form', array(
             'do'               => 'edit',
