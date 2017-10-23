@@ -1826,8 +1826,8 @@ class modelContent extends cmsModel{
             'date_last_modified' => null
         ));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
-        cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
+        cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
 
         $this->fieldsAfterStore($item, $fields, 'add');
 
@@ -1901,8 +1901,8 @@ class modelContent extends cmsModel{
 
 		$this->updateContentItemCategories($ctype['name'], $id, $item['category_id'], $add_cats);
 
-        cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
-        cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
+        cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
 
         $this->fieldsAfterStore($item, $fields, 'edit');
 
@@ -1918,8 +1918,8 @@ class modelContent extends cmsModel{
             'tags' => $tags
         ));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
     }
 
@@ -2039,8 +2039,8 @@ class modelContent extends cmsModel{
             'category_id' => $category_id
         ));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype['name']}");
-        cmsCache::getInstance()->clean("content.item.{$ctype['name']}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype['name']);
+        cmsCache::getInstance()->clean('content.item.'.$ctype['name']);
 
         return true;
 
@@ -2116,8 +2116,8 @@ class modelContent extends cmsModel{
 
         cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id'], null);
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         $this->update($table_name, $item['id'], array('is_deleted' => null));
 
@@ -2143,8 +2143,8 @@ class modelContent extends cmsModel{
 
         cmsCore::getModel('comments')->setCommentsIsDeleted('content', $ctype_name, $item['id']);
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         $this->update($table_name, $item['id'], array('is_deleted' => 1));
 
@@ -2179,8 +2179,8 @@ class modelContent extends cmsModel{
         cmsCore::getModel('rating')->deleteVotes('content', $ctype_name, $id);
         cmsCore::getModel('tags')->deleteTags('content', $ctype_name, $id);
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         $this->deletePropsValues($ctype_name, $id);
 
@@ -2478,8 +2478,8 @@ class modelContent extends cmsModel{
 			'is_pub' => $is_pub
 		));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return true;
 
@@ -2547,8 +2547,8 @@ class modelContent extends cmsModel{
 
         $this->update($table_name, $id, array('rating' => $rating));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
     }
 
@@ -2561,8 +2561,8 @@ class modelContent extends cmsModel{
 
         $this->update($table_name, $id, array('comments' => $comments_count));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return true;
 
@@ -2600,6 +2600,9 @@ class modelContent extends cmsModel{
                 filterEqual('parent_id', $parent_id)->
                 updateFiltered($table_name, array('is_parent_hidden' => $is_hidden));
 
+            cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+            cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
         }
 
     }
@@ -2609,13 +2612,32 @@ class modelContent extends cmsModel{
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->update($table_name, $id, array(
-            'is_approved' => 1,
-            'approved_by' => $moderator_user_id,
+            'is_approved'   => 1,
+            'approved_by'   => $moderator_user_id,
             'date_approved' => ''
         ));
 
-        cmsCache::getInstance()->clean("content.list.{$ctype_name}");
-        cmsCache::getInstance()->clean("content.item.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
+        return true;
+
+    }
+
+    public function unbindParent($ctype_name, $id){
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        $this->update($table_name, $id, array(
+            'parent_id'        => null,
+            'parent_type'      => null,
+            'parent_title'     => null,
+            'parent_url'       => null,
+            'is_parent_hidden' => null
+        ));
+
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return true;
 

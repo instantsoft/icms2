@@ -81,6 +81,27 @@ class formAdminCtypesField extends cmsForm {
                     new fieldCheckbox('is_in_list', array(
                         'title' => LANG_CP_FIELD_IN_LIST,
                     )),
+                    new fieldListMultiple('options:context_list', array(
+                        'title' => LANG_CP_FIELD_IN_LIST_CONTEXT,
+                        'default'   => 0,
+                        'show_all'  => true,
+                        'is_vertical' => true,
+                        'generator' => function() {
+
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context');
+
+                            $items = array();
+
+                            if($lists){
+                                foreach ($lists as $list) {
+                                    $items = array_merge($items, $list);
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
                     )),

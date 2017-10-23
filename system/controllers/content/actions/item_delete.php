@@ -44,7 +44,7 @@ class actionContentItemDelete extends cmsAction {
 
         $this->model->deleteContentItem($ctype['name'], $item['id']);
 
-        if (!$item['is_approved']){
+        if (!$item['is_approved'] && $item['user_id'] != $this->cms_user->id){
 
             $item['reason'] = trim(strip_tags($this->request->get('reason', '')));
 

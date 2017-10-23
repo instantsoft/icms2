@@ -49,6 +49,13 @@
                 $('#is_autolink').prop('disabled', true);
             }
         });
+        $('#is_in_list').on('click', function(){
+            if($(this).is(':checked')){
+                $('#f_options_context_list').show().addClass('parent_field');
+            } else {
+                $('#f_options_context_list').hide().removeClass('parent_field');
+            }
+        }).triggerHandler('click');
         icms.events.on('loadfieldtypeoptions', function(){
             $('#is_in_filter').triggerHandler('click');
         });

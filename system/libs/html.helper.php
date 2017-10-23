@@ -57,6 +57,18 @@ function rel_to_href($rel_link){
 
 }
 
+function href_to_profile($user){
+
+    if(is_array($user)){
+        return href_to('users', (empty($user['slug']) ? $user['id'] : $user['slug']));
+    } elseif(is_object($user)){
+        return href_to('users', (empty($user->slug) ? $user->id : $user->slug));
+    }
+
+    return href_to('users', $user);
+
+}
+
 /**
  * Возвращает ссылку на указанное действие контроллера
  * с добавлением пути от корня сайта

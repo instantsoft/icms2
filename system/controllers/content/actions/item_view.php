@@ -43,12 +43,21 @@ class actionContentItemView extends cmsAction {
 
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin;
-        if(!$is_moderator && $this->cms_user->id){
+        if(!$is_moderator && $this->cms_user->is_logged){
             $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
         }
         if (!$item['is_approved']){
             if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
             cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
+        }
+
+        // общие права доступа на просмотр
+        if(!$is_moderator && $this->cms_user->id != $item['user_id']){
+
+            if(!$this->checkListPerm($ctype['name'])){
+                return cmsCore::errorForbidden();
+            }
+
         }
 
         // Проверяем публикацию
@@ -198,7 +207,8 @@ class actionContentItemView extends cmsAction {
                     $childs['lists'][] = array(
                         'title'       => empty($relation['options']['is_hide_title']) ? $relation['title'] : false,
                         'ctype_name'  => $relation['child_ctype_name'],
-                        'html'        => $this->renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
+                        'html'        => $this->setListContext('item_view_relation_list')->
+                            renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'] . '.html')),
                         'relation_id' => $relation['id'],
                         'ordering'    => $relation['ordering']
                     );

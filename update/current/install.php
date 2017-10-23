@@ -27,6 +27,25 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_types` ADD `ordering` INT(11) NULL DEFAULT NULL AFTER `description`, ADD INDEX (`ordering`)");
     }
 
+    if(!isFieldExists('perms_rules', 'show_for_guest_group')){
+        $core->db->query("ALTER TABLE `{#}perms_rules` ADD `show_for_guest_group` TINYINT(1) NULL DEFAULT NULL AFTER `options`");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////// Новые правила доступа ///////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    add_perms(array(
+        'auth' => array(
+            'view_closed'
+        )
+    ), 'flag');
+
+    add_perms(array(
+        'content' => array(
+            'view_list'
+        )
+    ), 'list', 'other,all');
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Обновляем события ///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

@@ -23,7 +23,7 @@ class onContentModerationList extends cmsAction {
 
             $this->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter()->disableDeleteFilter();
 
-            $list_html = $this->renderItemsList($ctype, $page_url, true);
+            $list_html = $this->disableCheckListPerm()->setListContext('moderation_list')->renderItemsList($ctype, $page_url, true);
 
         }
 

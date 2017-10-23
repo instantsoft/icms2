@@ -23,7 +23,9 @@
             'ctype_relation_childs',
             'admin_groups_dataset_fields_list',
             'content_validate',
-            'moderation_list'
+            'moderation_list',
+            'content_before_item',
+            'ctype_lists_context'
         )
 
     );

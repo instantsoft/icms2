@@ -38,7 +38,7 @@ class actionGroupsGroupContent extends cmsAction {
             'user'  => $this->cms_user,
             'group' => $group,
             'ctype' => $ctype,
-            'html'  => $content_controller->renderItemsList($ctype, $page_url)
+            'html'  => $content_controller->setListContext('group_content')->renderItemsList($ctype, $page_url)
         ));
 
     }

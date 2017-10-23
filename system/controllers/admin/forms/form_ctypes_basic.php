@@ -170,13 +170,6 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('options:list_expand_filter', array(
                         'title' => LANG_CP_LISTVIEW_FILTER_EXPAND
                     )),
-                    new fieldList('options:list_style', array(
-                        'title' => LANG_CP_LISTVIEW_STYLE,
-                        'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
-                        'generator' => function() use($template){
-                            return $template->getAvailableContentListStyles();
-                        }
-                    )),
                     new fieldList('options:privacy_type', array(
                         'title'   => LANG_CP_PRIVACY_TYPE,
                         'default' => 'hide',
@@ -192,6 +185,36 @@ class formAdminCtypesBasic extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
+                    )),
+                    new fieldList('options:list_style', array(
+                        'title' => LANG_CP_LISTVIEW_STYLE,
+                        'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
+                        'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
+                        }
+                    )),
+                    new fieldList('options:context_list_style', array(
+                        'title'        => LANG_CP_CONTEXT_LIST_STYLE,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'single_select' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'generator' => function(){
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context');
+
+                            $items = array();
+
+                            if($lists){
+                                foreach ($lists as $list) {
+                                    $items = array_merge($items, $list);
+                                }
+                            }
+
+                            return $items;
+                        },
+                        'values_generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
+                        }
                     ))
                 )
             ),

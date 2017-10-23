@@ -6,6 +6,9 @@ class content extends cmsFrontend {
     public $max_items_count = 0;
     public $request_page_name = 'page';
 
+    private $check_list_perm = true;
+    private $list_type = 'category_view';
+
 //============================================================================//
 //============================================================================//
 
@@ -128,6 +131,52 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
+    public function setListContext($list_type) {
+        $this->list_type = $list_type; return $this;
+    }
+
+    public function getListContext() {
+        return $this->list_type;
+    }
+
+    public function enableCheckListPerm() {
+        $this->check_list_perm = true; return $this;
+    }
+
+    public function disableCheckListPerm() {
+        $this->check_list_perm = false; return $this;
+    }
+
+    public function checkListPerm($ctype_name) {
+
+        $result = true;
+
+        if($this->check_list_perm){
+
+            if(!$this->cms_user->is_logged){
+                if(cmsPermissions::getRuleSubjectPermissions('content', $ctype_name, 'view_list')){
+                    $result = false;
+                }
+            } else {
+
+                if (cmsUser::isForbidden($ctype_name, 'view_list')) {
+
+                    if (cmsUser::isForbidden($ctype_name, 'view_list', 'other')) {
+                        $result = false;
+                    } else {
+                        $result = null;
+                    }
+
+                }
+
+            }
+
+        }
+
+        return $result;
+
+    }
+
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
@@ -195,10 +244,22 @@ class content extends cmsFrontend {
 		list($ctype, $this->model) = cmsEventsManager::hook('content_list_filter', array($ctype, $this->model));
 		list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $this->model));
 
+        // правила доступа на просмотр списка записей
+        $check_list_perm_result = $this->checkListPerm($ctype['name']);
+        if($check_list_perm_result === false){
+            $this->model->filterEqual('user_id', $this->cms_user->id);
+        }
+        if($check_list_perm_result === null){
+            $items = false; $total = 0;
+        }
+
+        // контекст списка
+        $list_type = $this->list_type;
+
         // Получаем количество и список записей
-        $total = $this->model->getContentItemsCount($ctype['name']);
-        $items = $this->model->getContentItems($ctype['name'], function ($item, $model, $ctype_name, $user)
-                use ($ctype, $hide_except_title, $fields){
+        $total = isset($total) ? $total : $this->model->getContentItemsCount($ctype['name']);
+        $items = isset($items) ? $items : $this->model->getContentItems($ctype['name'], function ($item, $model, $ctype_name, $user)
+                use ($ctype, $hide_except_title, $fields, $list_type){
 
             $item['ctype'] = $ctype;
             $item['ctype_name'] = $ctype['name'];
@@ -216,6 +277,14 @@ class content extends cmsFrontend {
             foreach($fields as $field){
 
                 if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; }
+
+                // разрешен показ в списке, проверяем в каких именно
+                if(!empty($field['options']['context_list']) && array_search('0', $field['options']['context_list']) === false){
+                    if(!in_array($list_type, $field['options']['context_list'])){
+                        continue;
+                    }
+                }
+
                 if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; }
                 if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
 
@@ -805,7 +874,7 @@ class content extends cmsFrontend {
 			}
 		}
 
-        list($form, $item) = cmsEventsManager::hook('content_item_form', array($form, $item));
+        list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', array($form, $item, $ctype), null, $this->request);
 
         return $form;
 

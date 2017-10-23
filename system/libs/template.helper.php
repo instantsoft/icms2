@@ -426,7 +426,8 @@ function html_select($name, $items, $selected = '', $attributes = array()){
  */
 function html_select_multiple($name, $items, $selected=array(), $attributes=array(), $is_tree=false){
     $attr_str = html_attr_str($attributes);
-	$html = '<div class="input_checkbox_list" '.$attr_str.'>'."\n";
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+	$html = '<div class="input_checkbox_list '.$class.'" '.$attr_str.'>'."\n";
     $start_level = false;
     if(is_array($selected) && $selected){
         foreach ($selected as $k => $v) {

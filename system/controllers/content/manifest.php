@@ -7,8 +7,6 @@
             'admin_dashboard_chart',
             'menu_content',
             'user_delete',
-            'user_tab_info',
-            'user_tab_show',
             'user_privacy_types',
             'sitemap_sources',
             'rss_feed_list',
@@ -18,7 +16,8 @@
             'frontpage_types',
             'ctype_relation_childs',
             'admin_content_dataset_fields_list',
-            'moderation_list'
+            'moderation_list',
+            'ctype_lists_context'
         )
 
     );

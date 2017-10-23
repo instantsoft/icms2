@@ -18,6 +18,16 @@ class modelGroups extends cmsModel {
 
     }
 
+    public function updateGroupOwner($id, $owner_id){
+
+        cmsCache::getInstance()->clean('groups.list');
+
+        return $this->update('groups', $id, array(
+            'owner_id' => $owner_id
+        ));
+
+    }
+
     public function updateGroup($id, $group){
 
         $result = $this->update('groups', $id, $group);

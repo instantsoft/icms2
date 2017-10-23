@@ -29,7 +29,3 @@
 <h1><?php echo LANG_CP_SECTION_CTYPES; ?></h1>
 
 <?php $this->renderGrid($this->href_to('ctypes', array('ajax')), $grid); ?>
-
-<div class="buttons">
-    <?php echo html_button(LANG_SAVE_ORDER, 'save_button', "icms.datagrid.submit('{$this->href_to('ctypes', array('reorder'))}')"); ?>
-</div>

@@ -6,8 +6,13 @@
     define('LANG_GROUPS_ADD',               'New Group');
     define('LANG_GROUPS_REFUSE',            'Refuse and delete the group');
     define('LANG_GROUPS_EDIT',              'Group settings');
+    define('LANG_GROUPS_CHANGE_OWNER',      'Transfer the group');
     define('LANG_GROUPS_DELETE',            'Delete Group');
     define('LANG_GROUPS_DELETE_CONFIRM',    'Delete the %s group?');
+    define('LANG_GROUPS_UNBIND',            'Unbind from group');
+    define('LANG_GROUPS_UNBIND_CONFIRM',    'Unbind the %s from the &laquo;%s&raquo; group?');
+    define('LANG_GROUPS_UNBIND_SUCCESS',    'Item detached from the &laquo;%s&raquo; group');
+    define('LANG_GROUPS_UNBIND_PM',         'Administrator <a href="%s">%s</a> of your &laquo;%s&raquo; group unbind the %s &laquo;<a href="%s">%s</a>&raquo;');
     define('LANG_GROUPS_DELETE_CONTENT',    'Delete all group content too');
     define('LANG_GROUPS_DELETED',           'The %s group was deleted');
     define('LANG_GROUPS_SETTINGS',          'Configure Groups');
@@ -23,6 +28,8 @@
     define('LANG_GROUPS_REQUESTS',          'Requests');
     define('LANG_GROUPS_REQUEST_NOTICE_DECLINE', 'Your request to join in &laquo;%s&raquo; was rejected by the administrator group: %s.');
     define('LANG_GROUPS_REQUEST_NOTICE_ACCEPT', 'Your request to join in &laquo;%s&raquo; group has been accepted');
+    define('LANG_GROUPS_CHOWNR_NOTICE_ACCEPT', 'Your proposal to transfer the rights to the &laquo;%s&raquo; group was accepted %s');
+    define('LANG_GROUPS_CHOWNR_NOTICE_DECLINE', 'Your proposal to transfer the rights to the &laquo;%s&raquo; group was rejected %s');
     define('LANG_GROUPS_REQ_SUCCESS',       'Request sent to group administrators');
     define('LANG_GROUPS_REQ_ERROR',         'Your request to join in the group already pending');
     define('LANG_GROUPS_INVITE_GROUP_USERS', 'Who can invite you to a group');
@@ -33,6 +40,7 @@
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Select users');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s wants to join the &laquo;%s&raquo; group');
     define('LANG_GROUPS_INVITE_NOTICE',     '%s invites you to join the &laquo;%s&raquo; group');
+    define('LANG_GROUPS_CHANGE_OWNER_NOTICE', '%s invites you to become a group owner &laquo;%s&raquo; group');
     define('LANG_GROUPS_SEND_INVITE',       'Send an invitation');
     define('LANG_GROUPS_INVITE_SENT',       'The invite has been sent');
     define('LANG_GROUPS_INVITE_PENDING',    'The invite has already been sent and pending consideration');
@@ -46,6 +54,11 @@
     define('LANG_GROUP_INFO_CREATED_DATE',  'Created');
     define('LANG_GROUP_INFO_OWNER',         'Owner');
     define('LANG_GROUPS_OPT_WALL_ENABLED',  'Show group wall');
+    define('LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL', 'E-mail for notifications when changing a group owner');
+    define('LANG_GROUPS_OWNER_NEW_EMAIL',   'E-mail address of the new owner');
+    define('LANG_GROUPS_OWNER_NEW_EMAIL_HINT',   'Attention! This action is irreversible.');
+    define('LANG_GROUPS_CHANGE_OWNER_SEND',   'The owner change offer was sent to the user');
+    define('LANG_GROUPS_CHANGE_OWNER_SUCCESS',   'You became the owner of the &laquo;%s&raquo; group');
     define('LANG_GROUPS_OPT_DS_SHOW',       'Show the "%s" tab');
     define('LANG_GROUPS_DS_MEMBER',         'Group Memberships');
     define('LANG_GROUPS_DS_MY',             'My groups');
@@ -112,3 +125,4 @@
     define('LANG_PRIVACY_GROUPS_ROLES',      'Show only group members with given roles');
     define('LANG_GROUPS_ERROR_PARENT_ID',    'You can not add content to this group');
     define('LANG_GROUPS_JOIN_ROLES', 'Members roles when joining to the group');
+    define('LANG_GROUPS_CONTEXT_LT_GROUP_CONTENT', 'In the group content lists');

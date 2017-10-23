@@ -434,11 +434,14 @@ icms.datagrid = (function ($) {
 				var flag_class = flag.data('class');
 				var flag_class_on = flag_class + '_on';
 				var flag_class_off = flag_class + '_off';
+				var flag_class_middle = flag_class + '_middle';
 
-				if (result.is_on){
-					flag.removeClass(flag_class_off).addClass(flag_class_on);
+				if (result.is_on > 0){
+					flag.removeClass(flag_class_off+' '+flag_class_middle).addClass(flag_class_on);
+				} else if(result.is_on === 0) {
+                    flag.removeClass(flag_class_on+' '+flag_class_middle).addClass(flag_class_off);
 				} else {
-					flag.removeClass(flag_class_on).addClass(flag_class_off);
+					flag.removeClass(flag_class_on+' '+flag_class_off).addClass(flag_class_middle);
 				}
 
 			}, 'json');

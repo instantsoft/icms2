@@ -228,7 +228,10 @@ icms.forms = (function ($) {
 
             if (result.errors == false){
                 if ("callback" in result){
-                    window[result.callback](form_data, result);
+                    window[result.callback](form_data, result); return;
+                }
+                if (result.success_text){
+                    icms.modal.alert(result.success_text);
                 }
                 return;
             }

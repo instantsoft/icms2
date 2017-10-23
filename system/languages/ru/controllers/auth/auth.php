@@ -4,6 +4,7 @@
 
     define('LANG_AUTHORIZATION',            'Авторизация');
 
+    define('LANG_RULE_AUTH_VIEW_CLOSED',        'Доступ к отключенному сайту');
     define('LANG_AUTH_RESTRICTIONS',            'Ограничения и запреты');
     define('LANG_AUTH_RESTRICTED_EMAILS',       'Запрещенные адреса e-mail');
     define('LANG_AUTH_RESTRICTED_EMAILS_HINT',  'Один адрес на строке, можно использовать символ * для подстановки любого значения');

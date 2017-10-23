@@ -203,7 +203,7 @@
     define('LANG_USER_IS_ADMIN',             'Administrator');
     define('LANG_LOGIN_ERROR',               'Failed to log in. Verify your e-mail and password.');
     define('LANG_LOGIN_REQUIRED',            'Log in to see the requested page');
-    define('LANG_LOGIN_ADMIN_ONLY',          'Only administrator can log in when site is offline');
+    define('LANG_LOGIN_ADMIN_ONLY',          'You can\'t log in when site is offline');
     define('LANG_NICKNAME',                  'Nickname');
     define('LANG_ADMIN',                     'Administrator');
     define('LANG_EMAIL_FIND',                'Find by e-mail');
@@ -255,6 +255,7 @@
     define('LANG_PERM_OPTION_YES',           'Yes');
     define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
+    define('LANG_PERM_OPTION_OTHER',         'Only others');
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');
@@ -301,6 +302,7 @@
     define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a href="%s">Enable</a>');
     define('ERR_SEARCH_TITLE',               'Search');
     define('ERR_SEARCH_QUERY_INPUT',         'What?');
+    define('ERR_USER_NOT_FOUND',             'User does not exist');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');

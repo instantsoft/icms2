@@ -55,7 +55,7 @@ class actionTagsSearch extends cmsAction {
             'cancel' => href_to($this->name, 'search', array($ctype_name)).'?q='.urlencode($query)
         );
 
-        $html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array(), false, array(
+        $html = $content_controller->setListContext('search')->renderItemsList($ctype, $page_url, false, 0, array(), false, array(
             'q' => $query
         ));
 

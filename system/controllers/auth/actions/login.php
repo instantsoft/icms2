@@ -31,7 +31,7 @@ class actionAuthLogin extends cmsAction {
 
                     if ($is_site_offline){
 						$userSession = cmsUser::sessionGet('user');
-                        if (!$userSession['is_admin']){
+                        if (empty($userSession['perms']['auth']['view_closed'])){
                             cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
                             cmsUser::logout();
                             $this->redirectBack();

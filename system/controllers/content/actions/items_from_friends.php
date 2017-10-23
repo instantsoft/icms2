@@ -18,7 +18,7 @@ class actionContentItemsFromFriends extends cmsAction {
         $this->model->filterFriendsPrivateOnly($this->cms_user->id);
 
 		// Получаем HTML списка записей
-		$items_list_html = $this->renderItemsList($ctype, href_to($ctype['name'], 'from_friends'), true);
+		$items_list_html = $this->setListContext('items_from_friends')->renderItemsList($ctype, href_to($ctype['name'], 'from_friends'), true);
 
         return $this->cms_template->render('from_friends', array(
             'ctype'           => $ctype,

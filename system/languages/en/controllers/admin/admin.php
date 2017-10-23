@@ -145,7 +145,9 @@
     define('LANG_CP_LISTVIEW_ON',               'List view enabled');
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
-    define('LANG_CP_LISTVIEW_STYLE',            'List style');
+    define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
+    define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
+    define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Basic list');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
@@ -201,6 +203,7 @@
     define('LANG_CP_FIELD_LABEL_LEFT',          'Left');
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
+    define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'Which lists show the field');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in entry view');
     define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');

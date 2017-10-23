@@ -145,7 +145,9 @@
     define('LANG_CP_LISTVIEW_ON',               'Просмотр списка на сайте включен');
     define('LANG_CP_LISTVIEW_FILTER',           'Показывать фильтр');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
-    define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка');
+    define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
+    define('LANG_CP_CONTEXT_LIST_STYLE',        'Стили для других списков');
+    define('LANG_CP_CONTEXT_SELECT_LIST',       'Выберите список');
     define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/templates/%s/content</b>');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Обычный');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Журнальный');
@@ -202,6 +204,7 @@
     define('LANG_CP_FIELD_LABEL_LEFT',          'Слева');
     define('LANG_CP_FIELD_LABEL_TOP',           'Сверху');
     define('LANG_CP_FIELD_IN_LIST',             'Показывать в списке');
+    define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'Для каких списков показывать');
     define('LANG_CP_FIELD_IN_ITEM',             'Показывать в записи');
     define('LANG_CP_FIELD_IN_PROFILE',          'Показывать в профиле');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');

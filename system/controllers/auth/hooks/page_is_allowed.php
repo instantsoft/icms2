@@ -6,7 +6,7 @@ class onAuthPageIsAllowed extends cmsAction {
 
         // Если сайт выключен, закрываем его от посетителей
         if (!$this->cms_config->is_site_on) {
-            if (href_to('auth', 'login') != href_to_current() && !$this->cms_user->is_admin){
+            if (href_to('auth', 'login') != href_to_current() && !cmsUser::isAllowed('auth', 'view_closed')){
                 return cmsCore::errorMaintenance();
             }
         }

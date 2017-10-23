@@ -1,11 +1,9 @@
 <?php
 
     define('LANG_CONTENT_CONTROLLER',       'Content');
-
     define('LANG_CONTENT_IS_IN_GROUPS_ONLY', 'You must be a member of any group');
     define('LANG_CONTENT_COUNT_LIMIT',       'You have already added the maximum number of %s allowed');
     define('LANG_CONTENT_KARMA_LIMIT',       'Not enough reputation points. Required: %s');
-
 	define('LANG_CONTENT_PUB',				 'Publication settings');
 	define('LANG_CONTENT_DATE_PUB',			 'Publication start date');
 	define('LANG_CONTENT_DATE_PUB_END',		 'Publication end date');
@@ -15,9 +13,9 @@
 	define('LANG_CONTENT_PUB_LONG_NOW',		 'Currently published till %s');
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
-
     define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
-
+    define('LANG_RULE_CONTENT_VIEW_LIST',    'View a item list');
+    define('LANG_RULE_CONTENT_VIEW_LIST_HINT', 'If this rule is set for at least one of the groups, the items list is not displayed to the guests');
     define('LANG_RULE_CONTENT_ADD',          'Adding entries');
     define('LANG_RULE_CONTENT_ADD_TO_PARENT','Adding entries to parent');
     define('LANG_RULE_CONTENT_BIND_TO_PARENT','Bind child entries to parent');
@@ -45,22 +43,24 @@
     define('LANG_RULE_CONTENT_PUB_ON',		 'Disabling publication');
     define('LANG_PERM_OPTION_DAYS', 'Days');
     define('LANG_PERM_OPTION_ANY', 'Any date');
-
     define('LANG_CONTENT_CATS_ALLOW_ADD',     'Groups whose members can add entries in this category');
     define('LANG_CONTENT_CATS_ALLOW_ADD_HINT', 'Selected groups should have permission to add entries');
-
     define('LANG_CONTENT_ACTIVITY_ADD',     'Adding %s');
     define('LANG_CONTENT_ACTIVITY_ADD_DESC','adds %s %s');
-
     define('LANG_CONTENT_SELECT_CATEGORY',  '-- select category --');
     define('LANG_CONTENT_SELECT_CATEGORIES', 'Click to select additional categories');
     define('LANG_CONTENT_SELECT_FOLDER',    '-- select folder --');
-
     define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Private %s of friends');
     define('LANG_CONTENT_PRIVATE_FRIEND_INFO', '%s available only to author\'s friends <a href="%s">%s</a>');
-
     //WIDGETS
     define('LANG_WP_CONTENT_ALL_PAGES',     '%s: All pages');
     define('LANG_WP_CONTENT_LIST',          '%s: List view');
     define('LANG_WP_CONTENT_ITEM',          '%s: Entry view');
     define('LANG_WP_CONTENT_ITEM_EDIT',     '%s: Editing');
+    define('LANG_CONTENT_CONTEXT_LT_CATEGORY_VIEW', 'In categories');
+    define('LANG_CONTENT_CONTEXT_LT_ITEM_VIEW_RELATION_TAB', 'In relations, in the tab');
+    define('LANG_CONTENT_CONTEXT_LT_ITEM_VIEW_RELATION_LIST', 'In lists, in the tab');
+    define('LANG_CONTENT_CONTEXT_LT_ITEMS_FROM_FRIENDS', 'In private friends items');
+    define('LANG_CONTENT_CONTEXT_LT_TRASH', 'In the trash');
+    define('LANG_CONTENT_CONTEXT_LT_MODERATION_LIST', 'In the moderation list');
+    define('LANG_CONTENT_CONTEXT_LT_PROFILE_CONTENT', 'In profile');

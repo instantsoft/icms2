@@ -7,6 +7,7 @@ class fieldListMultiple extends cmsFormField {
     public $sql         = 'text NULL DEFAULT NULL';
     public $allow_index = false;
     public $var_type    = 'array';
+    public $is_vertical = false;
 
     public function getOptions(){
         return array(

@@ -27,6 +27,13 @@ class formGroupsOptions extends cmsForm {
                         'title' => LANG_GROUPS_OPT_WALL_ENABLED,
                     )),
 
+                    new fieldString('change_owner_email', array(
+                        'title' => LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL,
+                        'rules' => array(
+                            array('email')
+                        )
+                    ))
+
                 )
             ),
 

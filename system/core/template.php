@@ -1181,6 +1181,14 @@ class cmsTemplate {
     }
 
     /**
+     * Возвращает объект текущего контроллера
+     * @return object
+     */
+    public function getContext(){
+        return $this->controller;
+    }
+
+    /**
      * Восстанавливает ссылку на предыдущий контроллер
      */
     public function restoreContext(){
@@ -1468,10 +1476,14 @@ class cmsTemplate {
 
                     if (isset($column['flag']) && $column['flag']){
 
+                        if (isset($column['flag_handler'])){
+                            $value = $column['flag_handler']($value, $row);
+                        }
+
 						if (isset($column['flag_on'])){
 							$is_flag_on = $value == $column['flag_on'];
 						} else {
-							$is_flag_on = (bool)$value;
+							$is_flag_on = (int)$value;
 						}
 
                         $flag_class = $column['flag']===true ? 'flag' : $column['flag'];
@@ -1484,7 +1496,7 @@ class cmsTemplate {
 
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
 
-                        $value = '<div class="flag_trigger '.($is_flag_on ? "{$flag_class}_on" : "{$flag_class}_off").'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
+                        $value = '<div class="flag_trigger '.($is_flag_on > 0 ? "{$flag_class}_on" : ($is_flag_on < 0 ? "{$flag_class}_middle" : "{$flag_class}_off")).'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
 
                     }
 
@@ -1749,6 +1761,12 @@ class cmsTemplate {
         if (!$tpl_file){
 
             $style = !empty($ctype['options']['list_style']) ? '_'.$ctype['options']['list_style'] : '';
+
+            $list_type = $this->controller->getListContext();
+
+            if(isset($ctype['options']['context_list_style'][$list_type])){
+                $style = $ctype['options']['context_list_style'][$list_type] ? '_'.$ctype['options']['context_list_style'][$list_type] : '';
+            }
 
             $tpl_file = $this->getTemplateFileName("content/default_list{$style}");
 

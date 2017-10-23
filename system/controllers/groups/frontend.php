@@ -656,6 +656,14 @@ class groups extends cmsFrontend {
             );
         }
 
+        if ($group['access']['is_owner'] || $group['access']['is_moderator']){
+            $tool_buttons['change_owner'] = array(
+                'title'   => LANG_GROUPS_CHANGE_OWNER,
+                'options' => array('class' => 'transfer ajax-modal'),
+                'url'     => href_to('groups', $group['slug'], 'change_owner'),
+            );
+        }
+
         if ($group['access']['is_can_invite'] && !empty($users_options['is_friends_on'])){
             $tool_buttons['groups_invite'] = array(
                 'title'   => LANG_GROUPS_INVITE_FR,

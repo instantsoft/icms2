@@ -417,7 +417,9 @@ form .field .input_checkbox_list label {
     display: inline-table;
     color:#666;
 }
-
+form .field .input_checkbox_list.block_labels > label {
+    display: block;
+}
 form .ft_list .loading{
 	display:inline-block;
 	width:16px;
@@ -428,7 +430,9 @@ form .ft_list label .loading{
 	width:13px;
 	height:13px;
 }
-
+.parent_field {
+    margin-left: 25px;
+}
 .input,
 .textarea,
 .date-input,
@@ -1114,6 +1118,7 @@ ul.errors li .hint strong { color:#666666; }
 
 .datagrid .flag_on { background-image: url("../../images/icons/flag_check.png"); background-position: 0 0; }
 .datagrid .flag_off { background-image: url("../../images/icons/flag_check.png");  background-position: -16px 0; }
+.datagrid .flag_middle { background-image: url("../../images/icons/flag_check.png");  background-position: -32px 0; }
 
 .datagrid .flag_lock_on { background-image: url("../../images/icons/flag_lock.png"); background-position: 0 0; }
 .datagrid .flag_lock_off { background-image: url("../../images/icons/flag_lock.png");  background-position: -16px 0; }
@@ -1323,15 +1328,21 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 #dataset_form a { font-size:12px; }
 
 #dataset_form #sortings .sorting .title,
+.dynamic_list_wrap .list_wrap .title,
 #dataset_form #filters .filter .title { display:inline-block; width:160px; }
 
 #dataset_form #sortings .sorting .to select,
+.dynamic_list_wrap .list_wrap .to select,
 #dataset_form #filters .filter .condition select { padding:3px; width:160px; }
+.dynamic_list_wrap .list_wrap .to select{ width:270px; }
+.dynamic_list_wrap .list_wrap .title { width:200px; }
 
 #dataset_form #sortings .sorting .to select,
+.dynamic_list_wrap .list_wrap .to select,
 #dataset_form #filters .filter .value { margin-right: 10px; }
 
 #dataset_form #sortings,
+.dynamic_list_wrap .list_wrap,
 #dataset_form #filters { margin-bottom:10px; }
 
 #dataset_form #A3CAE0_filter {

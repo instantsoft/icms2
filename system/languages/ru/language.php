@@ -202,7 +202,7 @@
     define('LANG_USER_IS_ADMIN',             'Администратор');
     define('LANG_LOGIN_ERROR',               'Вход не выполнен. Проверьте правильность адреса e-mail и пароля.');
     define('LANG_LOGIN_REQUIRED',            'Для доступа к запрошенной странице необходима авторизация');
-    define('LANG_LOGIN_ADMIN_ONLY',          'Войти на отключенный сайт может только администратор');
+    define('LANG_LOGIN_ADMIN_ONLY',          'Вы не можете войти на отключенный сайт');
     define('LANG_NICKNAME',                  'Никнейм');
     define('LANG_ADMIN',                     'Администратор');
     define('LANG_EMAIL_FIND',                'Найти по фрагменту e-mail');
@@ -254,6 +254,7 @@
     define('LANG_PERM_OPTION_YES',           'Да');
     define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
+    define('LANG_PERM_OPTION_OTHER',         'Только чужие');
     define('LANG_PERM_OPTION_ALL',           'Все');
     define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
     define('LANG_PERM_OPTION_TO_OTHER',      'Только в чужих');
@@ -301,6 +302,7 @@
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
     define('ERR_SEARCH_TITLE',               'Поиск');
     define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
+    define('ERR_USER_NOT_FOUND',             'Такого пользователя не существует');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');

@@ -23,7 +23,10 @@ class actionAdminCtypesEdit extends cmsAction {
         // Если есть собственный шаблон для типа контента
         // то удаляем поле выбора стиля
         $tpl_file = $this->cms_template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
-        if ($tpl_file) { $form->removeField('listview', 'options:list_style'); }
+        if ($tpl_file) {
+            $form->removeField('listview', 'options:list_style');
+            $form->removeField('listview', 'options:context_list_style');
+        }
 
         if ($this->request->has('submit')){
 

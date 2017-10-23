@@ -8,6 +8,8 @@ class fieldList extends cmsFormField {
     public $filter_hint = LANG_PARSER_LIST_FILTER_HINT;
     public $var_type    = 'string';
     public $native_tag  = false;
+    public $dynamic_list = false;
+    public $single_select = false;
 
     public function getOptions(){
         return array(
@@ -100,6 +102,25 @@ class fieldList extends cmsFormField {
 
     }
 
+    public function getListValuesItems(){
+
+        $items = array();
+
+        if (isset($this->value_items)){
+
+            $items = $this->value_items;
+
+        } else if (isset($this->values_generator)) {
+
+            $generator = $this->values_generator;
+            $items = $generator($this->item);
+
+        }
+
+        return $items;
+
+    }
+
     public function parseListItems($string){
         return string_explode_list($string);
     }
@@ -147,6 +168,12 @@ class fieldList extends cmsFormField {
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');
         $this->data['dom_attr']    = array('id' => $this->id);
+
+        if($this->dynamic_list){
+            $this->data['value_items'] = $this->getListValuesItems();
+            $this->class = 'list_dynamic';
+            if(!$value){ $value = new stdClass(); }
+        }
 
         return parent::getInput($value);
 
