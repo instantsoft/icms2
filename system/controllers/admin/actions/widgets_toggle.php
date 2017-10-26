@@ -12,7 +12,7 @@ class actionAdminWidgetsToggle extends cmsAction {
 
         $i = $this->model->getItemByField('widgets_bind', 'id', $id);
 
-		$is_active = $i['is_enabled'] ? null : 1;
+		$is_active = $i['is_enabled'] ? 0 : 1;
 
         $this->model->update('widgets_bind', $id, array('is_enabled'=> $is_active));
 

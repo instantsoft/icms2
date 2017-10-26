@@ -11,14 +11,13 @@ class actionAdminControllersEventsToggle extends cmsAction {
         }
 
         $item = $this->model->getItemByField('events', 'id', $id);
-
         if (!$item){
             return $this->cms_template->renderJSON(array(
                 'error' => true
             ));
         }
 
-        $is_pub = $item['is_enabled'] ? false : true;
+        $is_pub = $item['is_enabled'] ? 0 : 1;
 
         $this->model->update('events', $id, array(
             'is_enabled' => $is_pub

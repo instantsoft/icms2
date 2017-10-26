@@ -65,7 +65,7 @@ class cmsBackend extends cmsController {
 			));
 		}
 
-        $i[$field] = $i[$field] ? false : true;
+        $i[$field] = $i[$field] ? 0 : 1;
 
 		$this->model->update($table, $item_id, array(
 			$field => $i[$field]
