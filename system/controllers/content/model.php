@@ -1,12 +1,6 @@
 <?php
 
-class modelContent extends cmsModel{
-
-//============================================================================//
-//===================    ПРЕФИКС ТАБЛИЦ КОНТЕНТА   ===========================//
-//============================================================================//
-
-    public $table_prefix = 'con_';
+class modelContent extends cmsModel {
 
     protected $pub_filter_disabled = false;
     protected $pub_filtered = false;
@@ -19,11 +13,6 @@ class modelContent extends cmsModel{
 
         $this->loadAllCtypes();
 
-    }
-
-    public function setTablePrefix($prefix){
-        $this->table_prefix = $prefix;
-        return $this;
     }
 
 //============================================================================//
@@ -220,7 +209,7 @@ class modelContent extends cmsModel{
 
                 } else {
 
-                    $this->setTablePrefix('con_');
+                    $this->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
                     $target_ctype = $this->getContentType($relation['child_ctype_id']);
 
@@ -342,10 +331,6 @@ class modelContent extends cmsModel{
 
     public function getContentTypeByName($name){
         return $this->getContentType($name, 'name');
-    }
-
-    public function getContentTypeTableName($name){
-        return $this->table_prefix . $name;
     }
 
 //============================================================================//
@@ -1466,10 +1451,11 @@ class modelContent extends cmsModel{
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
-            $item['cats_view'] = cmsModel::yamlToArray($item['cats_view']);
-            $item['cats_hide'] = cmsModel::yamlToArray($item['cats_hide']);
-            $item['filters'] = cmsModel::yamlToArray($item['filters']);
-            $item['sorting'] = cmsModel::yamlToArray($item['sorting']);
+            $item['cats_view']   = cmsModel::yamlToArray($item['cats_view']);
+            $item['cats_hide']   = cmsModel::yamlToArray($item['cats_hide']);
+            $item['filters']     = $item['filters'] ? cmsModel::yamlToArray($item['filters']) : array();
+            $item['sorting']     = $item['sorting'] ? cmsModel::yamlToArray($item['sorting']) : array();
+            $item['list']        = cmsModel::stringToArray($item['list']);
 
             if (is_callable($item_callback)){
                 $item = call_user_func_array($item_callback, array($item, $model));
@@ -1499,10 +1485,11 @@ class modelContent extends cmsModel{
 
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
-            $item['cats_view'] = cmsModel::yamlToArray($item['cats_view']);
-            $item['cats_hide'] = cmsModel::yamlToArray($item['cats_hide']);
-            $item['filters'] = cmsModel::yamlToArray($item['filters']);
-            $item['sorting'] = cmsModel::yamlToArray($item['sorting']);
+            $item['cats_view']   = cmsModel::yamlToArray($item['cats_view']);
+            $item['cats_hide']   = cmsModel::yamlToArray($item['cats_hide']);
+            $item['filters']     = $item['filters'] ? cmsModel::yamlToArray($item['filters']) : array();
+            $item['sorting']     = $item['sorting'] ? cmsModel::yamlToArray($item['sorting']) : array();
+            $item['list']        = cmsModel::stringToArray($item['list']);
 
             return $item;
 
@@ -1613,6 +1600,8 @@ class modelContent extends cmsModel{
 
         $dataset['index'] = $this->addContentDatasetIndex($dataset, $ctype['name']);
 
+        $dataset['list'] = cmsModel::arrayToString($dataset['list']);
+
         $dataset['id'] = $this->insert($table_name, $dataset);
 
         cmsEventsManager::hook('ctype_dataset_add', array($dataset, $ctype, $this));
@@ -1626,6 +1615,8 @@ class modelContent extends cmsModel{
     public function updateContentDataset($id, $dataset, $ctype, $old_dataset){
 
         $dataset['ctype_id'] = $ctype['id'];
+
+        $dataset['list'] = cmsModel::arrayToString($dataset['list']);
 
         $success = $this->update('content_datasets', $id, $dataset);
 

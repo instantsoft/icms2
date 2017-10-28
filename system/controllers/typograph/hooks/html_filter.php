@@ -2,27 +2,39 @@
 
 class onTypographHtmlFilter extends cmsAction {
 
+    private $build_redirect_link = true;
+    private $is_auto_br = true;
+
     public function run($data){
 
-        $errors              = null;
-        $is_auto_br          = true;
-        $build_redirect_link = true;
-        $build_smiles        = true;
+        $errors       = null;
+        $build_smiles = true;
 
         if (is_array($data)){
-            $text                = $data['text'];
-            $is_auto_br          = $data['is_auto_br'];
-            if(isset($data['build_redirect_link'])){
-                $build_redirect_link = $data['build_redirect_link'];
+
+            $text = $data['text'];
+
+            if(isset($data['is_auto_br'])){
+                $this->is_auto_br = $data['is_auto_br'];
             }
+
+            if(isset($data['build_redirect_link'])){
+                $this->build_redirect_link = $data['build_redirect_link'];
+            }
+
             if(isset($data['build_smiles'])){
                 $build_smiles = $data['build_smiles'];
             }
+
         } else {
             $text = $data;
         }
 
-        $text = $this->getJevix($is_auto_br, $build_redirect_link)->parse($text, $errors);
+        if(!cmsController::enabled('redirect')){
+            $this->build_redirect_link = false;
+        }
+
+        $text = $this->getJevix()->parse($text, $errors);
 
         if($build_smiles){
             $text = $this->replaceEmotionToSmile($text);
@@ -32,7 +44,7 @@ class onTypographHtmlFilter extends cmsAction {
 
     }
 
-    private function getJevix($is_auto_br, $build_redirect_link){
+    private function getJevix(){
 
         cmsCore::loadLib('jevix.class', 'Jevix');
 
@@ -104,15 +116,13 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetAutoReplace(array('+/-', '(c)', '(с)', '(r)', '(C)', '(С)', '(R)'), array('±', '©', '©', '®', '©', '©', '®'));
 
         // включаем режим замены переноса строк на тег <br/>
-        $jevix->cfgSetAutoBrMode($is_auto_br);
+        $jevix->cfgSetAutoBrMode($this->is_auto_br);
 
         // включаем режим автоматического определения ссылок
         $jevix->cfgSetAutoLinkMode(true);
 
-        // если нужно обрабатывать внешние ссылки в редирект
-        if($build_redirect_link){
-            $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
-        }
+        // обрабатываем внешние ссылки
+        $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
 
         // Отключаем типографирование в определенном теге
         $jevix->cfgSetTagNoTypography('pre','youtube', 'iframe');
@@ -143,10 +153,15 @@ class onTypographHtmlFilter extends cmsAction {
         $is_external_link = !empty($href_params['host']) && !strstr($params['href'], parse_url($this->cms_config->host, PHP_URL_HOST));
 
         if($is_external_link){
+
             $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
             $params['target'] = '_blank';
-            $params['href']   = href_to('redirect').'?url='.urlencode($params['href']);
             $params['rel']    = 'nofollow';
+
+            if($this->build_redirect_link){
+                $params['href'] = href_to('redirect').'?url='.urlencode($params['href']);
+            }
+
         }
 
         $tag_string = '<a';

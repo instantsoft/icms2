@@ -13,9 +13,17 @@
 
             $field->setName($name);
 
+            $styles = array();
+
+            if (isset($field->is_visible)){
+                if (!$field->is_visible){
+                    $styles[] = 'display:none';
+                }
+            }
+
         ?>
 
-        <div class="field" id="f_<?php echo $field->id; ?>">
+        <div class="field" id="f_<?php echo $field->id; ?>" <?php if ($styles) { ?>style="<?php echo implode(';', $styles); ?>"<?php } ?>>
                 <?php echo $field->getInput($value); ?>
                 <?php if(!empty($field->hint)) { ?><div class="hint"><?php echo $field->hint; ?></div><?php } ?>
         </div>

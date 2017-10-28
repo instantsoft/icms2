@@ -239,6 +239,65 @@ class admin extends cmsFrontend {
 
     }
 
+
+    public function addCtypeWidgetsPages($ctype){
+
+        $widgets_model = cmsCore::getModel('widgets');
+
+        $widgets_model->addPage(array(
+            'controller' => 'content',
+            'name' => "{$ctype['name']}.all",
+            'title_const' => 'LANG_WP_CONTENT_ALL_PAGES',
+            'url_mask' => array(
+                "{$ctype['name']}",
+                "{$ctype['name']}-*",
+                "{$ctype['name']}/*",
+            )
+        ));
+
+        $widgets_model->addPage(array(
+            'controller' => 'content',
+            'name' => "{$ctype['name']}.list",
+            'title_const' => 'LANG_WP_CONTENT_LIST',
+            'url_mask' => array(
+                "{$ctype['name']}",
+                "{$ctype['name']}-*",
+                "{$ctype['name']}/*",
+            ),
+            'url_mask_not' => array(
+                "{$ctype['name']}/*/view-*",
+                "{$ctype['name']}/*.html",
+                "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
+                "{$ctype['name']}/addcat",
+                "{$ctype['name']}/addcat/%",
+                "{$ctype['name']}/editcat/%",
+                "{$ctype['name']}/edit/*",
+            )
+        ));
+
+        $widgets_model->addPage(array(
+            'controller' => 'content',
+            'name' => "{$ctype['name']}.item",
+            'title_const' => 'LANG_WP_CONTENT_ITEM',
+            'url_mask' => "{$ctype['name']}/*.html"
+        ));
+
+        $widgets_model->addPage(array(
+            'controller' => 'content',
+            'name' => "{$ctype['name']}.edit",
+            'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
+            'url_mask' => array(
+                "{$ctype['name']}/add",
+                "{$ctype['name']}/add/%",
+                "{$ctype['name']}/edit/*"
+            )
+        ));
+
+        return true;
+
+    }
+
 //============================================================================//
 //============================================================================//
 

@@ -98,7 +98,7 @@ class actionContentItemBindForm extends cmsAction {
 
 		if ($mode == 'parents'){
 
-            $this->model->setTablePrefix('con_');
+            $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
 			$fields = $this->model->getContentFields($ctype_name);
 

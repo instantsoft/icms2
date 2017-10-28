@@ -4,16 +4,41 @@ class actionGroupsGroupContent extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($group, $ctype_name = false){
+    public function run($group, $ctype_name = false, $dataset = false){
 
         if (!$ctype_name) { cmsCore::error404(); }
 
-        $content_controller = cmsCore::getController('content', $this->request);
-
-        $ctype = $content_controller->model->getContentTypeByName($ctype_name);
+        $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
         if (!$ctype || empty($ctype['is_in_groups'])) { cmsCore::error404(); }
 
-        $content_controller->model->
+        $this->controller_content->setListContext('group_content');
+
+        // Получаем список наборов
+        $datasets = $this->controller_content->getCtypeDatasets($ctype, array(
+            'cat_id' => 0
+        ));
+
+        // Если есть наборы, применяем фильтры текущего
+        if ($datasets){
+
+            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
+
+            $keys = array_keys($datasets);
+            $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+            $this->controller_content->model->applyDatasetFilters($current_dataset);
+            // устанавливаем максимальное количество записей для набора, если задано
+            if(!empty($current_dataset['max_count'])){
+                $this->controller_content->max_items_count = $current_dataset['max_count'];
+            }
+            // если набор всего один, например для изменения сортировки по умолчанию,
+            // не показываем его на сайте
+            if(count($datasets) == 1){
+                unset($current_dataset); $datasets = false;
+            }
+
+        }
+
+        $this->controller_content->model->
                 filterEqual('parent_id', $group['id'])->
                 filterEqual('parent_type', 'group')->
                 orderBy('date_pub', 'desc')->forceIndex('parent_id');
@@ -21,24 +46,32 @@ class actionGroupsGroupContent extends cmsAction {
         $page_url = href_to($this->name, $group['slug'], array('content', $ctype_name));
 
         if (($this->cms_user->id == $group['owner_id']) || $this->cms_user->is_admin){
-            $content_controller->model->disableApprovedFilter();
-			$content_controller->model->disablePubFilter();
-            $content_controller->model->disablePrivacyFilter();
+            $this->controller_content->model->disableApprovedFilter();
+			$this->controller_content->model->disablePubFilter();
+            $this->controller_content->model->disablePrivacyFilter();
         }
 
-        $this->filterPrivacyGroupsContent($ctype, $content_controller->model, $group);
+        $this->filterPrivacyGroupsContent($ctype, $this->controller_content->model, $group);
 
         $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+
+        if(isset($current_dataset) && $dataset){
+            $group['sub_title'] .= ' / '.$current_dataset['title'];
+        }
 
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
         $this->cms_template->addBreadcrumb($group['sub_title']);
 
         return $this->cms_template->render('group_content', array(
-            'user'  => $this->cms_user,
-            'group' => $group,
-            'ctype' => $ctype,
-            'html'  => $content_controller->setListContext('group_content')->renderItemsList($ctype, $page_url)
+            'user'            => $this->cms_user,
+            'group'           => $group,
+            'ctype'           => $ctype,
+            'datasets'        => $datasets,
+            'dataset'         => $dataset,
+            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'base_ds_url'     => $page_url . '%s',
+            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''))
         ));
 
     }

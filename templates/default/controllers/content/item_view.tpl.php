@@ -135,8 +135,8 @@
     if (!empty($childs['tabs'])){
 
         $this->addMenuItem('item-menu', array(
-            'title' => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE, 'UTF-8'),
-            'url' => href_to($ctype['name'], $item['slug'] . '.html')
+            'title' => string_ucfirst($ctype['labels']['one']),
+            'url'   => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
         $this->addMenuItems('item-menu', $childs['tabs']);

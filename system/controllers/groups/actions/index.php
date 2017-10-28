@@ -48,10 +48,6 @@ class actionGroupsIndex extends cmsAction {
                 $this->cms_template->setPageDescription($current_dataset['seo_desc']);
             }
 
-            if($dataset_name){
-                $h1_title .= ' / '.$current_dataset['title'];
-            }
-
         }
 
         if (cmsUser::isAllowed('groups', 'add')) {
@@ -72,7 +68,7 @@ class actionGroupsIndex extends cmsAction {
 
         return $this->cms_template->render('index', array(
             'datasets'         => $datasets,
-            'base_ds_url'      => href_to_rel('groups') . '/index/%s',
+            'base_ds_url'      => href_to_rel('groups') . '/index%s',
             'dataset_name'     => $dataset_name,
             'dataset'          => $current_dataset,
             'h1_title'         => $h1_title,

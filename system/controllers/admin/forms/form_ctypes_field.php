@@ -86,9 +86,9 @@ class formAdminCtypesField extends cmsForm {
                         'default'   => 0,
                         'show_all'  => true,
                         'is_vertical' => true,
-                        'generator' => function() {
+                        'generator' => function() use($ctype_name) {
 
-                            $lists = cmsEventsManager::hookAll('ctype_lists_context');
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template:'.$ctype_name);
 
                             $items = array();
 

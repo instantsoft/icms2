@@ -9,23 +9,21 @@
 
 	$this->setPageTitle($seo_title);
 
-    $base_url = $ctype['name'];
-
     if ($ctype['options']['list_on']){
         $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $this->addBreadcrumb($list_header, href_to($base_url));
+        $this->addBreadcrumb($list_header, href_to($ctype['name']));
     }
 
-    if (isset($item['category'])){
+    if (isset($item['category']['path'])){
         foreach($item['category']['path'] as $c){
-            $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+            $this->addBreadcrumb($c['title'], href_to($ctype['name'], $c['slug']));
         }
     }
 
     $this->addBreadcrumb($item['title'], href_to($ctype['name'], $item['slug'] . '.html'));
     $this->addBreadcrumb($child_ctype['title']);
 
-    if ($item['is_approved']){
+    if (!empty($item['is_approved'])){
         if ($childs && !empty($childs['to_add'])){
             foreach($childs['to_add'] as $rel){
                 if($rel['child_ctype_name'] == $child_ctype['name']){
@@ -42,8 +40,8 @@
     if (!empty($childs['tabs']) && $relation['layout'] == 'tab'){
 
         $this->addMenuItem('item-menu', array(
-            'title' => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE, 'UTF-8'),
-            'url' => href_to($ctype['name'], $item['slug'] . '.html')
+            'title' => string_ucfirst($ctype['labels']['one']),
+            'url'   => href_to($ctype['name'], $item['slug'] . '.html')
         ));
 
         $this->addMenuItems('item-menu', $childs['tabs']);
@@ -54,7 +52,8 @@
 
 <?php if ($relation['layout'] == 'tab') { ?>
     <h1>
-        <?php html($item['title']); ?>
+        <?php html($item['title']); ?> / <span><?php echo $relation['title']; ?></span>
+        <?php if (!empty($current_dataset['title']) && $dataset){ ?><span> / <?php echo $current_dataset['title']; ?></span><?php } ?>
         <?php if ($item['is_private'] == 1) { ?>
             <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
         <?php } ?>
@@ -78,5 +77,12 @@
         <?php $this->menu('item-menu', true, 'tabbed'); ?>
     </div>
 </div>
-
-<?php echo $html; ?>
+<?php if (!empty($datasets)){
+    $this->renderAsset('ui/datasets-panel', array(
+        'datasets'        => $datasets,
+        'dataset_name'    => $dataset,
+        'current_dataset' => $current_dataset,
+        'base_ds_url'     => rel_to_href($base_ds_url)
+    ));
+} ?>
+<?php echo $html;

@@ -84,8 +84,8 @@ class modelSearch extends cmsModel{
 
                 } else {
 
-                    $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <';
-                    $ft_query .= '+' . implode(' +', $this->query);
+                    $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <(';
+                    $ft_query .= '+' . implode(' +', $this->query).')';
 
                 }
 

@@ -7,7 +7,6 @@ class content extends cmsFrontend {
     public $request_page_name = 'page';
 
     private $check_list_perm = true;
-    private $list_type = 'category_view';
 
 //============================================================================//
 //============================================================================//
@@ -42,21 +41,20 @@ class content extends cmsFrontend {
         $result = array('url' => '#', 'items' => false);
 
         $ctypes = $this->model->getContentTypes();
-
         if (!$ctypes) { return $result; }
 
-        foreach($ctypes as $id=>$ctype){
+        foreach($ctypes as $ctype){
 
             if (!cmsUser::isAllowed($ctype['name'], 'add')) { continue; }
 
             if (!empty($ctype['labels']['create'])){
 
                 $result['items'][] = array(
-                    'id' => 'content_add' . $ctype['id'],
-                    'parent_id' =>  $menu_item_id,
-                    'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
+                    'id'           => 'content_add' . $ctype['id'],
+                    'parent_id'    => $menu_item_id,
+                    'title'        => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
                     'childs_count' => 0,
-                    'url' => href_to($ctype['name'], 'add')
+                    'url'          => href_to($ctype['name'], 'add')
                 );
 
             }
@@ -79,11 +77,11 @@ class content extends cmsFrontend {
             if (!$ctype['options']['list_on']) { continue; }
 
             $result['items'][] = array(
-                'id' => 'private_list'.$ctype['id'],
-                'parent_id' =>  $menu_item_id,
-                'title' => sprintf(LANG_CONTENT_PRIVATE_FRIEND_ITEMS, mb_strtolower($ctype['title'])),
+                'id'           => 'private_list' . $ctype['id'],
+                'parent_id'    => $menu_item_id,
+                'title'        => sprintf(LANG_CONTENT_PRIVATE_FRIEND_ITEMS, mb_strtolower($ctype['title'])),
                 'childs_count' => 0,
-                'url' => href_to($ctype['name'], 'from_friends')
+                'url'          => href_to($ctype['name'], 'from_friends')
             );
 
         }
@@ -92,9 +90,6 @@ class content extends cmsFrontend {
 
     }
 
-
-//============================================================================//
-
     public function getMenuCategoriesItems($menu_item_id, $ctype){
 
         $result = array('url' => href_to($ctype['name']), 'items' => false);
@@ -102,19 +97,18 @@ class content extends cmsFrontend {
         if (!$ctype['is_cats']) { return $result; }
 
         $tree = $this->model->getCategoriesTree($ctype['name']);
-
         if (!$tree) { return $result; }
 
-        foreach($tree as $id=>$cat){
+        foreach($tree as $cat){
 
             if ($cat['id']==1) { continue; }
 
-            $item_id = "content.{$ctype['name']}.{$cat['id']}";
-            $parent_id = "content.{$ctype['name']}.{$cat['parent_id']}";
+            $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'];
+            $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
 
             $result['items'][] = array(
                 'id' => $item_id,
-                'parent_id' =>  $cat['parent_id']==1 ?
+                'parent_id' =>  $cat['parent_id'] == 1 ?
                                 $menu_item_id :
                                 $parent_id,
                 'title' => $cat['title'],
@@ -130,14 +124,6 @@ class content extends cmsFrontend {
 
 //============================================================================//
 //============================================================================//
-
-    public function setListContext($list_type) {
-        $this->list_type = $list_type; return $this;
-    }
-
-    public function getListContext() {
-        return $this->list_type;
-    }
 
     public function enableCheckListPerm() {
         $this->check_list_perm = true; return $this;
@@ -159,9 +145,9 @@ class content extends cmsFrontend {
                 }
             } else {
 
-                if (cmsUser::isForbidden($ctype_name, 'view_list')) {
+                if (cmsUser::isDenied($ctype_name, 'view_list')) {
 
-                    if (cmsUser::isForbidden($ctype_name, 'view_list', 'other')) {
+                    if (cmsUser::isDenied($ctype_name, 'view_list', 'other')) {
                         $result = false;
                     } else {
                         $result = null;
@@ -254,7 +240,7 @@ class content extends cmsFrontend {
         }
 
         // контекст списка
-        $list_type = $this->list_type;
+        $list_type = $this->getListContext();
 
         // Получаем количество и список записей
         $total = isset($total) ? $total : $this->model->getContentItemsCount($ctype['name']);
@@ -374,68 +360,6 @@ class content extends cmsFrontend {
         }
 
         return $subjects;
-
-    }
-
-
-//============================================================================//
-//============================================================================//
-
-    public function addWidgetsPages($ctype){
-
-        $widgets_model = cmsCore::getModel('widgets');
-
-        $widgets_model->addPage(array(
-            'controller' => 'content',
-            'name' => "{$ctype['name']}.all",
-            'title_const' => 'LANG_WP_CONTENT_ALL_PAGES',
-            'url_mask' => array(
-                "{$ctype['name']}",
-                "{$ctype['name']}-*",
-                "{$ctype['name']}/*",
-            )
-        ));
-
-        $widgets_model->addPage(array(
-            'controller' => 'content',
-            'name' => "{$ctype['name']}.list",
-            'title_const' => 'LANG_WP_CONTENT_LIST',
-            'url_mask' => array(
-                "{$ctype['name']}",
-                "{$ctype['name']}-*",
-                "{$ctype['name']}/*",
-            ),
-            'url_mask_not' => array(
-                "{$ctype['name']}/*/view-*",
-                "{$ctype['name']}/*.html",
-                "{$ctype['name']}/add",
-                "{$ctype['name']}/add/%",
-                "{$ctype['name']}/addcat",
-                "{$ctype['name']}/addcat/%",
-                "{$ctype['name']}/editcat/%",
-                "{$ctype['name']}/edit/*",
-            )
-        ));
-
-        $widgets_model->addPage(array(
-            'controller' => 'content',
-            'name' => "{$ctype['name']}.item",
-            'title_const' => 'LANG_WP_CONTENT_ITEM',
-            'url_mask' => "{$ctype['name']}/*.html"
-        ));
-
-        $widgets_model->addPage(array(
-            'controller' => 'content',
-            'name' => "{$ctype['name']}.edit",
-            'title_const' => 'LANG_WP_CONTENT_ITEM_EDIT',
-            'url_mask' => array(
-                "{$ctype['name']}/add",
-                "{$ctype['name']}/add/%",
-                "{$ctype['name']}/edit/*"
-            )
-        ));
-
-        return true;
 
     }
 
@@ -980,7 +904,7 @@ class content extends cmsFrontend {
 
         foreach($parents as $parent){
 
-            $this->model->setTablePrefix('con_');
+            $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
             $value = isset($item[$parent['id_param_name']]) ? $item[$parent['id_param_name']] : '';
 
@@ -1028,7 +952,7 @@ class content extends cmsFrontend {
             if($parent['target_controller'] != 'content'){
                 $this->model->setTablePrefix('');
             } else {
-                $this->model->setTablePrefix('con_');
+                $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
             }
 
             if ($parents_to_add){
@@ -1096,6 +1020,33 @@ class content extends cmsFrontend {
         }
 
         return $_item;
+
+    }
+
+    public function getCtypeDatasets($ctype, $params) {
+
+        $list_type = $this->getListContext();
+
+        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($params, $list_type) {
+
+            $is_view = !$item['cats_view'] || in_array($params['cat_id'], $item['cats_view']);
+            $is_user_hide = $item['cats_hide'] && in_array($params['cat_id'], $item['cats_hide']);
+
+            if (!$is_view || $is_user_hide) { return false; }
+
+            $is_view = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
+            $is_user_hide = !empty($item['list']['hide']) && in_array($list_type, $item['list']['hide']);
+
+            if (!$is_view || $is_user_hide) { return false; }
+
+            return $item;
+
+        });
+
+        list($datasets, $ctype) = cmsEventsManager::hook('content_datasets', array($datasets, $ctype));
+        list($datasets, $ctype) = cmsEventsManager::hook('content_'.$ctype['name'].'_datasets', array($datasets, $ctype));
+
+        return $datasets;
 
     }
 

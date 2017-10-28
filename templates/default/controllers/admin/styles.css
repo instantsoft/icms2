@@ -1325,35 +1325,21 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 /* ========================================================================== */
 /* ========================================================================== */
 
-#dataset_form a { font-size:12px; }
+.dynamic_list_wrap a { font-size:12px; }
+.dynamic_list_wrap .list_fields_list a.unset_value { display: none; }
+.dynamic_list_wrap .list_fields_list:last-child a.unset_value { display: inline-block; }
 
-#dataset_form #sortings .sorting .title,
-.dynamic_list_wrap .list_wrap .title,
-#dataset_form #filters .filter .title { display:inline-block; width:160px; }
+.dynamic_list_wrap .list_wrap .title { display:inline-block; width:160px; }
 
-#dataset_form #sortings .sorting .to select,
 .dynamic_list_wrap .list_wrap .to select,
-#dataset_form #filters .filter .condition select { padding:3px; width:160px; }
-.dynamic_list_wrap .list_wrap .to select{ width:270px; }
+.dynamic_list_wrap .list_wrap .to select{ width:270px; padding:3px; }
 .dynamic_list_wrap .list_wrap .title { width:200px; }
+.dynamic_list_wrap .list_wrap .value input { width:200px; }
 
-#dataset_form #sortings .sorting .to select,
 .dynamic_list_wrap .list_wrap .to select,
-#dataset_form #filters .filter .value { margin-right: 10px; }
+.dynamic_list_wrap .list_wrap .value { margin-right: 10px; }
 
-#dataset_form #sortings,
-.dynamic_list_wrap .list_wrap,
-#dataset_form #filters { margin-bottom:10px; }
-
-#dataset_form #A3CAE0_filter {
-    color:#666;
-    background:#EDEDED;
-    padding:4px 10px;
-    border-radius: 6px;
-}
-#dataset_form #A3CAE0_filter select{
-    margin:0 15px;
-}
+.dynamic_list_wrap .list_wrap { margin-bottom:10px; }
 
 /* ========================================================================== */
 /* ========================================================================== */
@@ -1608,7 +1594,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 #cp-widgets-layout .position li.hide .actions a.hide{
     background-image: url("../../images/icons/flag_check.png");
-    background-position: -16px 3px;
+    background-position: -31px 3px;
     width: 18px;
 }
 
@@ -1624,7 +1610,7 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 #cp-widgets-layout li .actions a.hide {
     background-image: url("../../images/icons/flag_check.png");
-    background-position: 9px 3px;
+    background-position: 8px 3px;
     margin-right: 5px;
 }
 #cp-widgets-layout .position li.disabled.hide{

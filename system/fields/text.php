@@ -27,6 +27,7 @@ class fieldText extends cmsFormField {
             )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
+                'is_visible' => cmsController::enabled('redirect')
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,

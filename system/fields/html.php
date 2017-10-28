@@ -25,6 +25,7 @@ class fieldHtml extends cmsFormField {
             )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
+                'is_visible' => cmsController::enabled('redirect')
             )),
             new fieldNumber('teaser_len', array(
                 'title' => LANG_PARSER_HTML_TEASER_LEN,

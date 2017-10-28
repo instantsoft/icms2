@@ -16,6 +16,17 @@ class cmsModel {
 	const NATURAL_RIGHT_JOIN = 'NATURAL RIGHT JOIN';
 	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
+    /**
+     * Префикс по умолчанию таблиц контента
+     */
+    const DEFAULT_TABLE_PREFIX = 'con_';
+
+    /**
+     * Префикс таблиц контента
+     * @var string
+     */
+    public $table_prefix = cmsModel::DEFAULT_TABLE_PREFIX;
+
     //условия для выборок
     public $table      = '';
     public $select     = array('i.*');
@@ -65,6 +76,15 @@ class cmsModel {
 
 //============================================================================//
 //============================================================================//
+
+    public function getContentTypeTableName($name){
+        return $this->table_prefix . $name;
+    }
+
+    public function setTablePrefix($prefix){
+        $this->table_prefix = $prefix;
+        return $this;
+    }
 
     public function getContentTableStruct(){
 
@@ -782,8 +802,8 @@ class cmsModel {
             });
             $query = array_slice($query, 0, 5);
 
-            $ft_query  = '>\"' . $this->db->escape($value).'\" <';
-            $ft_query .= implode(' ', $query);
+            $ft_query  = '>\"' . $this->db->escape($value).'\" <(';
+            $ft_query .= implode(' ', $query).')';
         }
 
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
@@ -1804,6 +1824,10 @@ class cmsModel {
      */
     public static function yamlToArray($yaml) {
 
+        if(!$yaml){ return array(); }
+
+        if($yaml === "---\n- 0\n"){ return array(); }
+
         return Spyc::YAMLLoadString($yaml);
 
     }
@@ -1814,6 +1838,9 @@ class cmsModel {
      * @return string
      */
     public static function arrayToString($input_array) {
+        if(!is_array($input_array)){
+            return null;
+        }
         return json_encode($input_array);
     }
 

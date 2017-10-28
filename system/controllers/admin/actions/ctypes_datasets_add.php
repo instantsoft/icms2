@@ -35,11 +35,7 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         }
 
-
-        $form = $this->getForm('ctypes_dataset', array('add', ($ctype['id'] ? $ctype['id'] : $ctype['name'])));
-
         $fields  = $content_model->getContentFields($ctype['name']);
-
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $cats_list = array();
@@ -56,14 +52,13 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         }
 
-        $dataset = array('is_visible' => 1);
+        $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
+
+        $form = $this->getForm('ctypes_dataset', array('add', $ctype, $cats_list, $fields_list));
 
         if ($this->request->has('submit')){
 
 			$dataset = $form->parse($this->request, true);
-
-            $dataset['filters'] = $this->request->get('filters', array());
-            $dataset['sorting'] = $this->request->get('sorting', array());
 
             $errors = $form->validate($this,  $dataset);
 
@@ -92,13 +87,11 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
         }
 
         return $this->cms_template->render('ctypes_dataset', array(
-            'do'          => 'add',
-            'ctype'       => $ctype,
-            'dataset'     => $dataset,
-            'fields_list' => $this->buildDatasetFieldsList($controller_name, $fields),
-            'cats'        => $cats_list,
-            'form'        => $form,
-            'errors'      => isset($errors) ? $errors : false
+            'do'      => 'add',
+            'ctype'   => $ctype,
+            'dataset' => isset($dataset) ? $dataset : array(),
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

@@ -25,7 +25,7 @@ class onGroupsContentPrivacyTypes extends cmsAction {
             if(!empty($group['roles'])){
 
                 $field_name = 'allow_groups_roles';
-                $table_name = 'con_'.$ctype['name'];
+                $table_name = $this->model->getContentTypeTableName($ctype['name']);
 
                 if(!$this->model->db->isFieldExists($table_name, $field_name)){
                     $this->model->db->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` VARCHAR(200) NULL DEFAULT NULL");

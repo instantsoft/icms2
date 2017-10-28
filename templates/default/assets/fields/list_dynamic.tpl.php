@@ -11,21 +11,45 @@
         <a class="ajaxlink cancel" href="#"><?php echo LANG_CANCEL; ?></a>
     </div>
 
-    <a class="ajaxlink add_link" href="#"><?php echo LANG_ADD; ?></a>
+    <a class="ajaxlink add_link" href="#"><?php echo isset($field->add_title) ? $field->add_title : LANG_ADD; ?></a>
 
     <div class="list_template" style="display:none">
-        <span class="title"></span>
+        <span class="title"><input type="hidden" name="" value=""></span>
         <span class="to"><select name=""></select></span>
+        <span class="value"><input style="display:none" class="input" type="text" name="" value=""></span>
         <span class="delete"><a class="ajaxlink unset_value" href="#"><?php echo LANG_CANCEL; ?></a></span>
     </div>
-    <select class="value_items_list" style="display:none">
-        <?php foreach($field->data['value_items'] as $k => $v){ ?>
-            <option value="<?php echo $k; ?>"><?php html($v); ?></option>
+    <?php if (!$field->data['is_ns_value_items']) { ?>
+        <select class="value_items_list" style="display:none">
+            <?php foreach($field->data['value_items'] as $k => $v){ ?>
+                <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+            <?php } ?>
+        </select>
+    <?php } else { ?>
+        <?php foreach($field->data['value_items'] as $wrap_key => $value_items){ ?>
+            <select class="value_items_list <?php echo $wrap_key; ?>" style="display:none">
+                <?php foreach($value_items as $k => $v){ ?>
+                    <option value="<?php echo $k; ?>"><?php echo $v; ?></option>
+                <?php } ?>
+            </select>
         <?php } ?>
-    </select>
+    <?php } ?>
     <select class="key_items_list" style="display:none">
         <?php foreach($field->data['items'] as $k => $v){ ?>
-            <option id="key_option_<?php echo $k; ?>" value="<?php echo $k; ?>"><?php html($v); ?></option>
+            <?php
+                $data_attr = ''; $title = $v;
+                if(is_array($v)){
+                    $title = $v['title'];
+                    if (!empty($v['data'])) {
+                        foreach ($v['data'] as $key => $val) {
+                            $data_attr .= 'data-'.$key.'="'.htmlspecialchars($val).'" ';
+                        }
+                    }
+                }
+            ?>
+            <option id="key_option_<?php echo $field->id; ?>_<?php echo $k; ?>" value="<?php echo $k; ?>" <?php echo $data_attr; ?>>
+                <?php echo $title; ?>
+            </option>
         <?php } ?>
     </select>
 
@@ -33,6 +57,6 @@
 
 <script type="text/javascript">
     $(function(){
-        new icms.dynamicList('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo (int)$field->single_select; ?>);
+        new icms.dynamicList('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->multiple_keys); ?>);
     });
 </script>

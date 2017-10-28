@@ -7,20 +7,13 @@
     <?php } ?>
 </h1>
 
-<div class="content_datasets">
-    <ul class="pills-menu">
-        <?php foreach($datasets as $set){ ?>
-            <?php $ds_selected = ($dataset == $set['name']); ?>
-            <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
-                <?php if ($ds_selected){ ?>
-                    <div><?php echo $set['title']; ?></div>
-                <?php } else { ?>
-                    <a href="<?php echo href_to('groups', 'invite_users', array($group['id'], $set['name'])); ?>"><?php echo $set['title']; ?></a>
-                <?php } ?>
-            </li>
-        <?php } ?>
-    </ul>
-</div>
+<?php if (!empty($datasets)){
+    $this->renderAsset('ui/datasets-panel', array(
+        'datasets'     => $datasets,
+        'dataset_name' => $dataset,
+        'base_ds_url'  => href_to('groups', 'invite_users', array($group['id'])) . '%s'
+    ));
+} ?>
 
 <div id="ivite_users_list"><?php echo $profiles_list_html; ?></div>
 

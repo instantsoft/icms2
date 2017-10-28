@@ -234,7 +234,7 @@ class actionContentItemView extends cmsAction {
             // если связь с контроллером, а не с типом контента
             if ($this->isControllerInstalled($child_ctype_name) && $this->isControllerEnabled($child_ctype_name)){
 
-                $child_controller = cmsCore::getController($child_ctype_name);
+                $child_controller = cmsCore::getController($child_ctype_name, $this->request);
 
                 if($child_controller->isActionExists('item_childs_view')){
 

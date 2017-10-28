@@ -57,15 +57,22 @@ function rel_to_href($rel_link){
 
 }
 
-function href_to_profile($user){
+/**
+ * Возвращает ссылку на профиль пользователя
+ *
+ * @param mixed $user Массив данных пользователя
+ * @param mixed $params
+ * @return string
+ */
+function href_to_profile($user, $params = false){
 
     if(is_array($user)){
-        return href_to('users', (empty($user['slug']) ? $user['id'] : $user['slug']));
+        return href_to('users', (empty($user['slug']) ? $user['id'] : $user['slug']), $params);
     } elseif(is_object($user)){
-        return href_to('users', (empty($user->slug) ? $user->id : $user->slug));
+        return href_to('users', (empty($user->slug) ? $user->id : $user->slug), $params);
     }
 
-    return href_to('users', $user);
+    return href_to('users', $user, $params);
 
 }
 

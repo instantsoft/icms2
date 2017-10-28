@@ -535,46 +535,59 @@ class groups extends cmsFrontend {
 
     public function getDatasets(){
 
-        $datasets = cmsCore::getModel('content')->getContentDatasets($this->name, true);
+        $list_type = $this->getListContext();
+
+        $datasets = cmsCore::getModel('content')->getContentDatasets($this->name, true, function ($item, $model) use ($list_type) {
+
+            $is_view = empty($item['list']['show']) || in_array($list_type, $item['list']['show']);
+            $is_user_hide = !empty($item['list']['hide']) && in_array($list_type, $item['list']['hide']);
+
+            if (!$is_view || $is_user_hide) { return false; }
+
+            return $item;
+
+        });
 
         if ($this->cms_user->is_logged){
 
             $logged_user_id = $this->cms_user->id;
 
-            if(!$datasets){
+            if(!$datasets && $list_type == 'category_view'){
                 $datasets = array('all' => array(
                         'name' => 'all',
                         'title' => LANG_ALL
                 ));
             }
-            $datasets['memberships'] = array(
-                'name'    => 'memberships',
-                'title'   => LANG_GROUPS_DS_MEMBER,
-                'filters' => array(
-                    array(
-                        'callback' => function($model, $dataset) use ($logged_user_id){
-                            return $model->filterByMember($logged_user_id);
-                        }
+            if($list_type == 'category_view'){
+                $datasets['memberships'] = array(
+                    'name'    => 'memberships',
+                    'title'   => LANG_GROUPS_DS_MEMBER,
+                    'filters' => array(
+                        array(
+                            'callback' => function($model, $dataset) use ($logged_user_id){
+                                return $model->filterByMember($logged_user_id);
+                            }
+                        )
                     )
-                )
-            );
-            $datasets['my'] = array(
-                'name'    => 'my',
-                'title'   => LANG_GROUPS_DS_MY,
-                'sorting' => array(
-                    array(
-                        'by' => 'members_count',
-                        'to' => 'desc'
+                );
+                $datasets['my'] = array(
+                    'name'    => 'my',
+                    'title'   => LANG_GROUPS_DS_MY,
+                    'sorting' => array(
+                        array(
+                            'by' => 'members_count',
+                            'to' => 'desc'
+                        )
+                    ),
+                    'filters' => array(
+                        array(
+                            'field'     => 'owner_id',
+                            'condition' => 'eq',
+                            'value'     => $logged_user_id
+                        )
                     )
-                ),
-                'filters' => array(
-                    array(
-                        'field'     => 'owner_id',
-                        'condition' => 'eq',
-                        'value'     => $logged_user_id
-                    )
-                )
-            );
+                );
+            }
 
         }
 

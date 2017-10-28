@@ -1,7 +1,9 @@
 var icms = icms || {};
-icms.dynamicList = function(field_id, element_name, current_values, single_select){
+icms.dynamicList = function(field_id, element_name, current_values, fields_mapping){
 
-    single_select = single_select || 0;
+    fields_mapping = fields_mapping || {};
+
+    var mapping_data = {};
 
     var wrap = $('#list_wrap_'+field_id);
 
@@ -20,47 +22,97 @@ icms.dynamicList = function(field_id, element_name, current_values, single_selec
 
     var unsetValue = function (link){
         var wrap_value = $(link).parent('span').parent('div');
-        if(single_select > 0){
-            $('.key_items_list option[id=key_option_'+$(wrap_value).data('field')+']', wrap).prop('disabled', false);
-        }
+        $('.key_items_list option[id=key_option_'+field_id+'_'+$(wrap_value).data('field')+']', wrap).prop('disabled', false);
         $(wrap_value).remove();
         cancelValue();
         return false;
     };
 
+    var buildData = function (data){
+
+        if(data && Object.keys(fields_mapping).length > 0){
+            for(var name in data) {
+                if(fields_mapping.hasOwnProperty(name)){
+                    mapping_data[fields_mapping[name]] = data[name];
+                }
+            }
+        } else {
+            mapping_data = data || {};
+        }
+
+        var default_data = {field: false, field_select: false, field_value: false};
+
+        return $.extend(default_data, mapping_data);
+
+    };
+
     var submitValue = function (data){
 
-        if (typeof(data) == 'undefined') {
-            data = {field: false, field_value: false};
-        }
+        data = buildData(data);
 
         if (data.field){
             var field = data.field;
         } else {
             var field = $('.add_list select', wrap).val();
+            data.field = field || false;
         }
 
-        var list_template = $('.list_template', wrap).clone(true).removeClass('list_template');
+        var list_template = $('.list_template', wrap).clone(true).removeClass('list_template').addClass('list_fields_list');
 
         var field_title = $('.key_items_list option[value='+field+']', wrap).html();
-        if(single_select > 0){
-            $('.key_items_list option[id=key_option_'+field+']', wrap).prop('disabled', true);
-        }
+        $('.key_items_list option[id=key_option_'+field_id+'_'+field+']', wrap).prop('disabled', true);
+
+        var ns = $('.key_items_list option[value='+field+']', wrap).data('ns');
 
         $('.title', list_template).append(field_title);
-        $('.to select', list_template).html( $('.value_items_list', wrap).html() );
+        $('.to select', list_template).html( $('.value_items_list'+(ns ? '.'+ns : ''), wrap).html() );
 
-        $('.to select', list_template).attr('name', element_name+'['+field+']').data('field', field);
+        if(Object.keys(fields_mapping).length > 0){
 
-        if (data.field_value !== false) {
-            $('.to select', list_template).val(data.field_value);
+            var reversed_fields_mapping = {};
+            for (var key in fields_mapping) {
+                reversed_fields_mapping[fields_mapping[key]] = key;
+            }
+
+            var element_id = $('.list_wrap > div', wrap).length;
+
+            $('.title input', list_template).attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field']+']');
+            $('.to select', list_template).attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field_select']+']').data('field', field);
+
+            if(reversed_fields_mapping.hasOwnProperty('field_value')){
+
+                $('.value input', list_template).show().attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field_value']+']');
+
+                if (data.field_value !== false) {
+                    $('.value input', list_template).val(data.field_value);
+                }
+
+            } else {
+                $('.value input', list_template).remove();
+            }
+
+            if (data.field !== false) {
+                $('.title input', list_template).val(data.field);
+            }
+
+        } else {
+
+            $('.to select', list_template).attr('name', element_name+'['+field+']').data('field', field);
+
+            $('.value input', list_template).remove();
+            $('.title input', list_template).remove();
+
+        }
+
+        if (data.field_select !== false) {
+            $('.to select', list_template).val(data.field_select);
         }
 
         $('.list_wrap', wrap).append($(list_template).show().data('field', field));
 
         return cancelValue();
 
-    }
+    };
 
     $('.add_link', wrap).on('click', function (){
         return addValue();
@@ -80,7 +132,11 @@ icms.dynamicList = function(field_id, element_name, current_values, single_selec
 
     for(var field in current_values) {
         if(current_values.hasOwnProperty(field)){
-            submitValue({field: field, field_value: current_values[field]});
+            if($.isNumeric(field)){
+                submitValue(current_values[field]);
+            } else {
+                submitValue({field: field, field_select: current_values[field]});
+            }
         }
     }
 

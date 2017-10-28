@@ -20,6 +20,18 @@ class modelGroups extends cmsModel {
 
     public function updateGroupOwner($id, $owner_id){
 
+        $membership = $this->getMembership($id, $owner_id);
+
+        if (!$membership) {
+
+            $this->addMembership($id, $owner_id, groups::ROLE_STAFF);
+
+        } elseif($membership['role'] != groups::ROLE_STAFF){
+
+            $this->updateMembershipRole($id, $owner_id, groups::ROLE_STAFF);
+
+        }
+
         cmsCache::getInstance()->clean('groups.list');
 
         return $this->update('groups', $id, array(

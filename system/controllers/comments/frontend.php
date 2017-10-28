@@ -19,6 +19,18 @@ class comments extends cmsFrontend {
 
     }
 
+    public function routeAction($action_name){
+
+        if($this->isActionExists($action_name)){
+            return $action_name;
+        }
+
+        array_unshift($this->current_params, $action_name);
+
+        return 'index';
+
+    }
+
     public function getNativeComments() {
 
         if(cmsUser::isAllowed('comments', 'is_moderator')){

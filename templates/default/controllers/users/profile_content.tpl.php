@@ -1,10 +1,8 @@
 <?php
 
-    $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
-
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
-    $this->addBreadcrumb($list_header, href_to('users', $profile['id'], array('content', $ctype['name'])));
+    $this->addBreadcrumb($profile['nickname'], href_to_profile($profile));
+    $this->addBreadcrumb($list_header, href_to_profile($profile, array('content', $ctype['name'])));
 
     if ($folders && $folder_id && isset($folders[$folder_id])){
 
@@ -55,28 +53,35 @@
         ));
     }
 
-    $rss_query = "?user={$profile['id']}";
-
 ?>
 
 <h1 id="user_profile_title">
 
     <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
         <div class="content_list_rss_icon">
-            <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">RSS</a>
+            <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>">RSS</a>
         </div>
     <?php } ?>
 
     <div class="avatar">
-        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
+        <a href="<?php echo href_to_profile($profile); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
     </div>
 
     <div class="name">
-        <a href="<?php echo $this->href_to($profile['id']); ?>"><?php html($profile['nickname']); ?></a> /
+        <a href="<?php echo href_to_profile($profile); ?>"><?php html($profile['nickname']); ?></a> /
         <span><?php echo $list_header; ?></span>
     </div>
 
 </h1>
+
+<?php if (!empty($datasets)){
+    $this->renderAsset('ui/datasets-panel', array(
+        'datasets'        => $datasets,
+        'dataset_name'    => $dataset,
+        'current_dataset' => $current_dataset,
+        'base_ds_url'     => $base_ds_url
+    ));
+} ?>
 
 <?php if ($folders){ ?>
     <div id="user_content_folders">
@@ -85,8 +90,8 @@
                 <?php
                     $is_selected = $folder['id'] == $folder_id;
                     $url = $folder['id'] ?
-                                $this->href_to($profile['id'], array('content', $ctype['name'], $folder['id'])) :
-                                $this->href_to($profile['id'], array('content', $ctype['name']));
+                                href_to_profile($profile, array('content', $ctype['name'], $folder['id'])) :
+                                href_to_profile($profile, array('content', $ctype['name']));
                 ?>
                 <li <?php if ($is_selected){ ?>class="active"<?php } ?>>
                     <?php if ($is_selected){ $current_folder = $folder; ?>

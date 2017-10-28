@@ -666,6 +666,16 @@ function string_compress($string){
 
 }
 
+/**
+ * Преобразует первый символ строки в верхний регистр
+ * multi-bytes ucfirst
+ *
+ * @param string $str
+ * @return string
+ */
+function string_ucfirst($string) {
+    return mb_strtoupper(mb_substr($string, 0, 1)).mb_substr($string, 1);
+}
 //============================================================================//
 
 /**

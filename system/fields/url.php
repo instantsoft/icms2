@@ -12,7 +12,8 @@ class fieldUrl extends cmsFormField {
         return array(
             new fieldCheckbox('redirect', array(
                 'title' => LANG_PARSER_URL_REDIRECT,
-                'default' => false
+                'default' => false,
+                'is_visible' => cmsController::enabled('redirect')
             )),
             new fieldCheckbox('auto_http', array(
                 'title' => LANG_PARSER_URL_AUTO_HTTP,
@@ -61,8 +62,8 @@ class fieldUrl extends cmsFormField {
             if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) { $href = 'http://' . $href; }
         }
 
-        if ($this->getOption('redirect')){
-            $href = cmsConfig::get('root') . 'redirect?url=' . urlencode($href);
+        if ($this->getOption('redirect') && cmsController::enabled('redirect')){
+            $href = href_to('redirect').'?url='.urlencode($href);
         }
 
         $nofollow = $class = '';

@@ -453,6 +453,8 @@ class modelUsers extends cmsModel {
 
         $notify_types = cmsEventsManager::hookAll('user_notify_types');
 
+        $notify_types = cmsEventsManager::hook('update_user_notify_types', $notify_types);
+
         $default_options = array('', 'email', 'pm', 'both');
 
         $types = array();
@@ -720,6 +722,8 @@ class modelUsers extends cmsModel {
     }
 
     public function isFriendshipRequested($user_id, $friend_id){
+
+        if(!$user_id){ return false; }
 
         $this->useCache('users.friends');
 

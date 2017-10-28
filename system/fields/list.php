@@ -9,7 +9,6 @@ class fieldList extends cmsFormField {
     public $var_type    = 'string';
     public $native_tag  = false;
     public $dynamic_list = false;
-    public $single_select = false;
 
     public function getOptions(){
         return array(
@@ -168,11 +167,15 @@ class fieldList extends cmsFormField {
         $this->data['is_tree']     = $this->getProperty('is_tree');
         $this->data['parent']      = $this->getProperty('parent');
         $this->data['dom_attr']    = array('id' => $this->id);
+        $this->data['is_ns_value_items'] = false;
 
         if($this->dynamic_list){
             $this->data['value_items'] = $this->getListValuesItems();
+            $first_value_item = reset($this->data['value_items']);
+            $this->data['is_ns_value_items'] = is_array($first_value_item);
             $this->class = 'list_dynamic';
             if(!$value){ $value = new stdClass(); }
+            if(!isset($this->multiple_keys)){ $this->multiple_keys = new stdClass(); }
         }
 
         return parent::getInput($value);

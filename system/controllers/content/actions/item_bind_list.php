@@ -75,7 +75,7 @@ class actionContentItemBindList extends cmsAction {
 
                 $fields = $this->model->getContentFields($child_ctype_name);
 
-                $this->model->setTablePrefix('con_');
+                $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
             } else if ($mode == 'parents') {
 

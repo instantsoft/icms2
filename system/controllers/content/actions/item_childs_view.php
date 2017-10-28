@@ -20,12 +20,43 @@ class actionContentItemChildsView extends cmsAction {
             cmsCore::error404();
         }
 
-        if (!empty($relation['options']['dataset_id'])){
+        // Текущий набор
+        $dataset = $this->request->get('dataset', '');
 
-            $dataset = $this->model->getContentDataset($relation['options']['dataset_id']);
+        // устанавливаем контекст списка
+        $this->setListContext('item_view_relation_tab');
 
-            if ($dataset){
-                $this->model->applyDatasetFilters($dataset);
+        // Получаем список наборов
+        $datasets = $this->getCtypeDatasets($child_ctype, array(
+            'cat_id' => 0
+        ));
+
+        // Если есть наборы, применяем фильтры текущего
+        if ($datasets){
+
+            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
+
+            if (!$dataset && !empty($relation['options']['dataset_id'])){
+
+                $relation_dataset = $this->model->getContentDataset($relation['options']['dataset_id']);
+
+                if ($relation_dataset){
+                    $dataset = $relation_dataset['name'];
+                }
+
+            }
+
+            $keys = array_keys($datasets);
+            $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+            $this->model->applyDatasetFilters($current_dataset);
+            // устанавливаем максимальное количество записей для набора, если задано
+            if(!empty($current_dataset['max_count'])){
+                $this->max_items_count = $current_dataset['max_count'];
+            }
+            // если набор всего один, например для изменения сортировки по умолчанию,
+            // не показываем его на сайте
+            if(count($datasets) == 1){
+                unset($current_dataset); $datasets = false;
             }
 
         }
@@ -45,8 +76,9 @@ class actionContentItemChildsView extends cmsAction {
             $child_ctype['options']['list_show_filter'] = false;
         }
 
-        $html = $this->setListContext('item_view_relation_tab')->
-                renderItemsList($child_ctype, href_to($ctype['name'], $item['slug'].'/view-'.$child_ctype_name));
+        $base_ds_url = href_to_rel($ctype['name'], $item['slug'].'/view-'.$child_ctype_name);
+
+        $html = $this->renderItemsList($child_ctype, rel_to_href($base_ds_url).($dataset ? '/'.$dataset : ''));
 
         $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
         $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
@@ -56,15 +88,19 @@ class actionContentItemChildsView extends cmsAction {
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook("content_{$ctype['name']}_childs_view", array($ctype, $item, $child_ctype, $childs));
 
         return $this->cms_template->render('item_childs_view', array(
-            'ctype'       => $ctype,
-            'child_ctype' => $child_ctype,
-            'item'        => $item,
-            'childs'      => $childs,
-            'html'        => $html,
-            'relation'    => $relation,
-            'seo_title'   => $seo_title,
-            'seo_keys'    => $seo_keys,
-            'seo_desc'    => $seo_desc
+            'ctype'           => $ctype,
+            'child_ctype'     => $child_ctype,
+            'item'            => $item,
+            'childs'          => $childs,
+            'html'            => $html,
+            'relation'        => $relation,
+            'datasets'        => $datasets,
+            'dataset'         => $dataset,
+            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'base_ds_url'     => $base_ds_url . '%s',
+            'seo_title'       => $seo_title,
+            'seo_keys'        => $seo_keys,
+            'seo_desc'        => $seo_desc
         ));
 
 	}

@@ -15,6 +15,11 @@ class cmsController {
     public $root_path;
 
     /**
+     * Контекст списка записей
+     * @var string
+     */
+    private $list_type = 'category_view';
+    /**
      * Если для контроллера задан ремап
      * и это свойство установлено в true
      * редиректа со старого адреса не будет
@@ -153,6 +158,17 @@ class cmsController {
 
     public function setRootURL($root_url){
         $this->root_url = $root_url;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function setListContext($list_type) {
+        $this->list_type = $list_type; return $this;
+    }
+
+    public function getListContext() {
+        return $this->list_type;
     }
 
 //============================================================================//

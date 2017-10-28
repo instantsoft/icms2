@@ -203,7 +203,8 @@
     define('LANG_CP_FIELD_LABEL_LEFT',          'Left');
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
-    define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'Which lists show the field');
+    define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'For which lists should this be shown');
+    define('LANG_CP_FIELD_NOT_IN_LIST_CONTEXT', 'For which lists do not show');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in entry view');
     define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');

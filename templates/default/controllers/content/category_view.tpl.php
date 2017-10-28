@@ -5,7 +5,7 @@
     $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
-    $base_ds_url = href_to_rel($ctype['name']) . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
+    $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
     if (!$is_frontpage){
 
@@ -106,34 +106,15 @@
     <h1><?php echo $page_header; ?></h1>
 <?php } ?>
 
-<?php if ($datasets && !$is_hide_items){ ?>
-    <div class="content_datasets">
-        <ul class="pills-menu">
-            <?php $ds_counter = 0; ?>
-            <?php foreach($datasets as $set){ ?>
-                <?php $ds_selected = ($dataset == $set['name'] || (!$dataset && $ds_counter==0)); ?>
-                <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
-
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(rel_to_href($base_ds_url), $set['name']); } ?>
-                    <?php if ($ds_counter == 0) { $ds_url = href_to($base_url, isset($category['slug']) ? $category['slug'] : ''); } ?>
-
-                    <?php if ($ds_selected){ ?>
-                        <div><?php echo $set['title']; ?></div>
-                    <?php } else { ?>
-                        <a href="<?php echo $ds_url; ?>"><?php echo $set['title']; ?></a>
-                    <?php } ?>
-
-                </li>
-                <?php $ds_counter++; ?>
-            <?php } ?>
-        </ul>
-    </div>
-    <?php if (!empty($current_dataset['description'])){ ?>
-    <div class="content_datasets_description">
-        <?php echo $current_dataset['description']; ?>
-    </div>
-    <?php } ?>
-<?php } ?>
+<?php if ($datasets && !$is_hide_items){
+    $this->renderAsset('ui/datasets-panel', array(
+        'datasets'        => $datasets,
+        'dataset_name'    => $dataset,
+        'current_dataset' => $current_dataset,
+        'ds_prefix'       => '-',
+        'base_ds_url'     => rel_to_href($base_ds_url)
+    ));
+} ?>
 
 <?php if (!empty($category['description'])){?>
     <div class="category_description"><?php echo $category['description']; ?></div>

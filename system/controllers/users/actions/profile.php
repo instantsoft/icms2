@@ -24,23 +24,25 @@ class actionUsersProfile extends cmsAction {
             ));
         }
 
+        $content = cmsCore::getController('content', $this->request);
+
         // Получаем поля
-        $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('{users}');
+        $fields = $content->model->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
         // Друзья
         $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : false;
 
         // Контент
-		$content_model = cmsCore::getModel('content');
+		$content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
 		$is_filter_hidden = (!$this->is_own_profile && !$this->cms_user->is_admin);
 
-        $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile){
-            return cmsUser::isAllowed($ctype['name'], 'add') ||
-                    cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name']);
+        $content_counts = $content->model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile, $content){
+            if(!cmsUser::isAllowed($ctype['name'], 'add') &&
+                    !cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
+                return false;
+            }
+            return cmsUser::get('id') == $profile['id'] ? true : $content->checkListPerm($ctype['name']);
         });
 
         //
@@ -48,27 +50,23 @@ class actionUsersProfile extends cmsAction {
         //
         if ($this->options['is_wall']){
 
-            $wall_controller = cmsCore::getController('wall', $this->request);
-
             $wall_target = array(
-                'controller' => 'users',
+                'controller'   => 'users',
                 'profile_type' => 'user',
-                'profile_id' => $profile['id']
+                'profile_id'   => $profile['id']
             );
 
             $wall_permissions = array(
                 'add'    => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
                 'reply'  => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall_reply'),
-                'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id'])),
+                'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id']))
             );
 
-            $wall_html = $wall_controller->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
+            $wall_html = $this->controller_wall->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
 
         }
 
         list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
-
-        $tabs = $this->getProfileMenu($profile);
 
         return $this->cms_template->render('profile_view', array(
             'profile'        => $profile,
@@ -81,7 +79,7 @@ class actionUsersProfile extends cmsAction {
             'content_counts' => $content_counts,
             'fields'         => $fields,
             'wall_html'      => isset($wall_html) ? $wall_html : false,
-            'tabs'           => $tabs
+            'tabs'           => $this->getProfileMenu($profile)
         ));
 
     }

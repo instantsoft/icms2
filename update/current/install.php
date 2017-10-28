@@ -7,28 +7,32 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
-    if(!isFieldExists('groups', 'join_roles')){
+    if(!$core->db->isFieldExists('groups', 'join_roles')){
         $core->db->query("ALTER TABLE `{#}groups` ADD `join_roles` VARCHAR(1000) NULL DEFAULT NULL COMMENT 'Роли при вступлении в группу'");
     }
 
-    if(!isFieldExists('groups', 'is_approved')){
+    if(!$core->db->isFieldExists('groups', 'is_approved')){
         $core->db->query("ALTER TABLE `{#}groups` ADD `is_approved` TINYINT(1) NOT NULL DEFAULT '1'");
     }
 
-    if(!isFieldExists('groups', 'approved_by')){
+    if(!$core->db->isFieldExists('groups', 'approved_by')){
         $core->db->query("ALTER TABLE `{#}groups` ADD `approved_by` INT(11) NULL DEFAULT NULL");
     }
 
-    if(!isFieldExists('groups', 'date_approved')){
+    if(!$core->db->isFieldExists('groups', 'date_approved')){
         $core->db->query("ALTER TABLE `{#}groups` ADD `date_approved` TIMESTAMP NULL DEFAULT NULL");
     }
 
-    if(!isFieldExists('content_types', 'ordering')){
+    if(!$core->db->isFieldExists('content_types', 'ordering')){
         $core->db->query("ALTER TABLE `{#}content_types` ADD `ordering` INT(11) NULL DEFAULT NULL AFTER `description`, ADD INDEX (`ordering`)");
     }
 
-    if(!isFieldExists('perms_rules', 'show_for_guest_group')){
-        $core->db->query("ALTER TABLE `{#}perms_rules` ADD `show_for_guest_group` TINYINT(1) NULL DEFAULT NULL AFTER `options`");
+    if(!$core->db->isFieldExists('perms_rules', 'show_for_guest_group')){
+        $core->db->query("ALTER TABLE `{#}perms_rules` ADD `show_for_guest_group` TINYINT(1) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('content_datasets', 'list')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `list` TEXT NULL DEFAULT NULL");
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -113,18 +117,4 @@ function save_controller_options($controllers) {
         }
     }
 
-}
-
-function isFieldExists($table_name, $field) {
-    $table_fields = getTableFields($table_name);
-    return in_array($field, $table_fields, true);
-}
-function getTableFields($table) {
-    $db = cmsDatabase::getInstance();
-    $fields = array();
-    $result = $db->query("SHOW COLUMNS FROM `{#}{$table}`");
-    while($data = $db->fetchAssoc($result)){
-        $fields[] = $data['Field'];
-    }
-    return $fields;
 }

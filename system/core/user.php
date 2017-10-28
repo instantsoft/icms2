@@ -630,7 +630,7 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function isForbidden($subject, $permission, $value=true, $is_admin_strict=false){
+    public static function isDenied($subject, $permission, $value=true, $is_admin_strict=false){
 
         $user = self::getInstance();
 

@@ -88,6 +88,11 @@ class cmsFormField {
      */
     public $rules = array();
     /**
+     * Значение поля из массива конвертировать в json
+     * @var boolean
+     */
+    public $store_array_as_json = false;
+    /**
      * Массив опций поля
      * @var array
      */
@@ -418,6 +423,9 @@ class cmsFormField {
      * @return string | array
      */
     public function store($value, $is_submitted, $old_value=null){
+        if($this->store_array_as_json && is_array($value)){
+            return cmsModel::arrayToString($value);
+        }
         return $value;
     }
 

@@ -4,6 +4,23 @@ class activity extends cmsFrontend {
 
     protected $useOptions = true;
 
+    /**
+     * Избавляемся от index в url
+     * @param string $action_name
+     * @return string
+     */
+    public function routeAction($action_name){
+
+        if($this->isActionExists($action_name)){
+            return $action_name;
+        }
+
+        array_unshift($this->current_params, $action_name);
+
+        return 'index';
+
+    }
+
     public function addType($type){
         return $this->model->addType($type);
     }

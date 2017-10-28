@@ -197,10 +197,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'title'        => LANG_CP_CONTEXT_LIST_STYLE,
                         'is_multiple'  => true,
                         'dynamic_list' => true,
-                        'single_select' => true,
                         'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
-                        'generator' => function(){
-                            $lists = cmsEventsManager::hookAll('ctype_lists_context');
+                        'generator' => function($ctype) use ($do){
+
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template'.($do != 'add' ? ':'.$ctype['name'] : ''));
 
                             $items = array();
 
