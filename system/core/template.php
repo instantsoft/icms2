@@ -1768,7 +1768,7 @@ class cmsTemplate {
 
             if(!empty($ctype['options']['list_style'])){
                 if(is_array($ctype['options']['list_style'])){
-                    $style = '_'.$ctype['options']['list_style'][0];
+                    $style = $ctype['options']['list_style'][0] ? '_'.$ctype['options']['list_style'][0] : '';
                 } else {
                     $style = '_'.$ctype['options']['list_style'];
                 }

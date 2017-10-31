@@ -57,7 +57,7 @@ class cmsModel {
 
     public function __construct(){
 
-        $this->name = str_replace('model_', '', get_called_class());
+        $this->name = strtolower(str_replace('model', '', get_called_class()));
 
         $this->db = cmsCore::getInstance()->db;
 
