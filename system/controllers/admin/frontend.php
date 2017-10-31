@@ -708,7 +708,7 @@ class admin extends cmsFrontend {
             return false;
         }
 
-        $cache_file = cmsConfig::get('cache_path').md5($name.serialize($params));
+        $cache_file = cmsConfig::get('cache_path').md5($name.serialize($params)).'_addons.dat';
 
         if($cacheable && is_readable($cache_file)){
 

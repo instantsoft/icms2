@@ -50,7 +50,7 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
 
         data = buildData(data);
 
-        if (data.field){
+        if (data.field !== false){
             var field = data.field;
         } else {
             var field = $('.add_list select', wrap).val();
@@ -59,10 +59,10 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
 
         var list_template = $('.list_template', wrap).clone(true).removeClass('list_template').addClass('list_fields_list');
 
-        var field_title = $('.key_items_list option[value='+field+']', wrap).html();
+        var field_title = $('.key_items_list option[value="'+field+'"]', wrap).html();
         $('.key_items_list option[id=key_option_'+field_id+'_'+field+']', wrap).prop('disabled', true);
 
-        var ns = $('.key_items_list option[value='+field+']', wrap).data('ns');
+        var ns = $('.key_items_list option[value="'+field+'"]', wrap).data('ns');
 
         $('.title', list_template).append(field_title);
         $('.to select', list_template).html( $('.value_items_list'+(ns ? '.'+ns : ''), wrap).html() );
@@ -77,7 +77,14 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
             var element_id = $('.list_wrap > div', wrap).length;
 
             $('.title input', list_template).attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field']+']');
-            $('.to select', list_template).attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field_select']+']').data('field', field);
+
+            if(reversed_fields_mapping.hasOwnProperty('field_select')){
+
+                $('.to select', list_template).attr('name', element_name+'['+element_id+']['+reversed_fields_mapping['field_select']+']').data('field', field);
+
+            } else {
+                $('.to select', list_template).remove();
+            }
 
             if(reversed_fields_mapping.hasOwnProperty('field_value')){
 

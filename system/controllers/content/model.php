@@ -274,6 +274,18 @@ class modelContent extends cmsModel {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['labels'] = cmsModel::yamlToArray($item['labels']);
 
+            // YAML некорректно преобразовывает пустые значения массива
+            // убрать после перевода всего на JSON
+            if(!empty($item['options']['list_style'])){
+                if(is_array($item['options']['list_style'])){
+                    $list_styles = array();
+                    foreach ($item['options']['list_style'] as $key => $value) {
+                        $list_styles[$key] = is_array($value) ? '' : $value;
+                    }
+                    $item['options']['list_style'] = $list_styles;
+                }
+            }
+
             return $item;
 
         });

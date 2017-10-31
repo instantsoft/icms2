@@ -28,3 +28,13 @@
     define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Restore</a>');
     define('LANG_PM_CLEAR_NOTICE',          'Clear all notifications');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Really clear all notifications?');
+    define('LANG_PM_PMAILING',              'Mass send messages');
+    define('LANG_PM_PMAILING_GROUPS',       'User groups for mailing');
+    define('LANG_PM_PMAILING_TYPE',         'How to send a message');
+    define('LANG_PM_PMAILING_TYPE_NOTIFY',  'As notification');
+    define('LANG_PM_PMAILING_TYPE_MESSAGE', 'As a private message');
+    define('LANG_PM_PMAILING_SENDED',       '%s sended');
+    define('LANG_PM_NOTIFY',                'notification|notification|notifications');
+    define('LANG_PM_MESSAGE',               'message|message|messages');
+    define('LANG_PM_SENDER_USER_ID',        'From whose name should I send');
+    define('LANG_PM_SENDER_USER_ID_HINT',   'Enter the user email. If not specified, the message will be sent from you.');

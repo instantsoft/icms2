@@ -146,13 +146,14 @@
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
+    define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Basic list');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Table');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
@@ -316,6 +317,7 @@
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
 
+    define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
     define('LANG_CP_USER_DELETE_CONFIRM',       'Delete a user {nickname}?\nAll his content and all his uploaded files will be also deleted');

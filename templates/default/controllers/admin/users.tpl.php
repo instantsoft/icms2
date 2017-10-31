@@ -22,6 +22,14 @@
         'onclick' => "return contentCancelFilter()"
     ));
 
+    if(cmsController::enabled('messages')){
+        $this->addToolButton(array(
+            'class' => 'transfer',
+            'title' => LANG_CP_USER_PMAILING,
+            'href'  => $this->href_to('controllers', array('edit', 'messages', 'pmailing'))
+        ));
+    }
+
     $this->addToolButton(array(
         'class' => 'settings',
         'title' => LANG_CONFIG,
@@ -120,9 +128,10 @@
                             node.expand();
                             $.cookie('icms[users_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
                             var key = node.data.key;
-                            icms.datagrid.setURL("<?php echo $this->href_to('users', array('ajax')); ?>/" + key);
+                            icms.datagrid.setURL("<?php echo $this->href_to('users'); ?>/" + key);
                             $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
                             $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
+                            $('.cp_toolbar .transfer a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'messages', 'pmailing')); ?>/" + key);
                             if (key == 0){
                                 $('.cp_toolbar .edit a').hide();
                                 $('.cp_toolbar .permissions a').hide();
@@ -142,9 +151,8 @@
         </td>
         <td class="main" valign="top">
 
-            <?php $this->renderGrid($this->href_to('users', array('ajax', 2)), $grid); ?>
+            <?php $this->renderGrid($this->href_to('users'), $grid); ?>
 
         </td>
     </tr>
 </table>
-

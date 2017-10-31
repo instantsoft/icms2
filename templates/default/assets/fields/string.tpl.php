@@ -79,7 +79,6 @@ $(function(){
             },
             select: function( event, ui ) {
                 icms.events.run('autocomplete_select', this);
-                return false;
             }
         });
     <?php } ?>

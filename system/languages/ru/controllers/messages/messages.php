@@ -28,3 +28,13 @@
     define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Восстановить</a>');
     define('LANG_PM_CLEAR_NOTICE',          'Очистить все уведомления');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Очистить все уведомления, уверены?');
+    define('LANG_PM_PMAILING',              'Массовая рассылка');
+    define('LANG_PM_PMAILING_GROUPS',       'Группы пользователей для рассылки');
+    define('LANG_PM_PMAILING_TYPE',         'Как отправлять сообщение');
+    define('LANG_PM_PMAILING_TYPE_NOTIFY',  'Как уведомление');
+    define('LANG_PM_PMAILING_TYPE_MESSAGE', 'Как личное сообщение');
+    define('LANG_PM_PMAILING_SENDED',       'Отправлено %s');
+    define('LANG_PM_NOTIFY',                'уведомление|уведомления|уведомлений');
+    define('LANG_PM_MESSAGE',               'сообщение|сообщения|сообщений');
+    define('LANG_PM_SENDER_USER_ID',        'От чьего имени отправлять');
+    define('LANG_PM_SENDER_USER_ID_HINT',   'Введите email пользователя. Если не указан, сообщение будет отправлено от вас.');

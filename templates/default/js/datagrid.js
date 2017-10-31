@@ -8,13 +8,9 @@ icms.datagrid = (function ($) {
     this.callback = false;
 	this.was_init = false;
 
-    //====================================================================//
-
     this.setOptions = function(options){
         this.options = options;
-    }
-
-    //====================================================================//
+    };
 
     this.bind_sortable = function(){
         $('.datagrid th.sortable').click(function(){
@@ -37,8 +33,6 @@ icms.datagrid = (function ($) {
             });
         });
     };
-
-    //====================================================================//
 
     this.init = function(){
 
@@ -183,9 +177,7 @@ icms.datagrid = (function ($) {
             $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
         });
 
-    }
-
-    //====================================================================//
+    };
 
     this.submit = function(url, confirm_message){
 
@@ -219,9 +211,7 @@ icms.datagrid = (function ($) {
 
         return false;
 
-    }
-
-    //====================================================================//
+    };
 
     this.submitAjax = function (url, confirm_message){
 
@@ -243,9 +233,7 @@ icms.datagrid = (function ($) {
 
         return false;
 
-    }
-
-    //====================================================================//
+    };
 
     this.selectedRowsCount = function(){
 
@@ -260,9 +248,7 @@ icms.datagrid = (function ($) {
 
         return selected_rows_count;
 
-    }
-
-    //====================================================================//
+    };
 
     this.clickHeader = function(name){
 
@@ -276,14 +262,12 @@ icms.datagrid = (function ($) {
         this.setOrdering();
         this.loadRows();
 
-    }
-
-    //====================================================================//
+    };
 
     this.setURL = function(url){
         this.options.url = url;
         this.setPage(1);
-    }
+    };
 
     this.setOrdering = function(){
         if (!this.options.is_sortable) {return;}
@@ -293,7 +277,7 @@ icms.datagrid = (function ($) {
 
         $('.datagrid th').removeClass('sort_asc').removeClass('sort_desc');
         $('.datagrid th[rel='+this.options.order_by+']').addClass('sort_'+this.options.order_to);
-    }
+    };
 
     this.setPage = function(page, perpage){
         if (!this.options.is_pagination) {return;}
@@ -303,9 +287,7 @@ icms.datagrid = (function ($) {
 
         $('#datagrid_filter input[name=page]').val(this.options.page);
         $('#datagrid_filter input[name=perpage]').val(this.options.perpage);
-    }
-
-    //====================================================================//
+    };
 
     this.loadRows = function (callback){
 		if(!this.was_init){return false;}
@@ -328,9 +310,7 @@ icms.datagrid = (function ($) {
             }
         }, 'json');
 
-    }
-
-    //====================================================================//
+    };
 
     this.rowsLoaded = function(result){
 
@@ -458,8 +438,6 @@ icms.datagrid = (function ($) {
 
     };
 
-    //====================================================================//
-
     this.showLoadIndicator = function(){
         if (!this.is_loading) {return;}
         $('.datagrid_loading').show();
@@ -476,10 +454,7 @@ icms.datagrid = (function ($) {
 			.replace(/>/g, "&gt;")
 			.replace(/"/g, "&quot;")
 			.replace(/'/g, "&#039;");
-	}
-
-    //====================================================================//
-
+	};
 
 	return this;
 

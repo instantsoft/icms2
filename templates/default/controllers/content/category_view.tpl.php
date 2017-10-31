@@ -98,12 +98,21 @@
 ?>
 
 <?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
-    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-        <div class="content_list_rss_icon">
-            <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">RSS</a>
+    <?php if (!empty($list_styles)){ ?>
+        <div class="content_list_styles">
+            <?php foreach ($list_styles as $list_style) { ?>
+                <a rel="nofollow" href="<?php echo $list_style['url']; ?>" class="style_switch <?php echo $list_style['class']; ?>">
+                    <?php echo $list_style['title']; ?>
+                </a>
+            <?php } ?>
         </div>
     <?php } ?>
-    <h1><?php echo $page_header; ?></h1>
+    <h1>
+        <?php echo $page_header; ?>
+        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+            <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
+        <?php } ?>
+    </h1>
 <?php } ?>
 
 <?php if ($datasets && !$is_hide_items){

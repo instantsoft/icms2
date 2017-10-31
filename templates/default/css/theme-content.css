@@ -394,9 +394,9 @@ article div.content_categories:last-child {
 
 /* ========================================================================== */
 
-.content_list_rss_icon{ float:right; }
+.content_list_rss_icon, .content_list_styles { float:right; }
 
-.content_list_rss_icon a {
+.content_list_rss_icon a, .inline_rss_icon {
     width:16px;
     height:16px;
     display: block;
@@ -404,8 +404,35 @@ article div.content_categories:last-child {
     text-indent: 20px;
     background:url("../images/icons/rss.png") no-repeat left center;
 }
+.inline_rss_icon {
+    display: inline-block;
+}
 #comments_widget .content_list_rss_icon {
     margin: 6px 0 0 15px;
+}
+.content_list_styles .style_switch {
+    display: inline-block;
+    height: 32px;
+    min-width: 32px;
+    background-image: url("../images/icons32/list_switch.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    padding: 0 4px 0 34px;
+    line-height: 32px;
+    text-decoration: none;
+    color: #839aa4;
+}
+.content_list_styles .style_switch:hover, .content_list_styles .style_switch.active {
+    background-color: #ecf0f1;
+}
+.content_list_styles .style_switch.featured {
+    background-position: left -96px;
+}
+.content_list_styles .style_switch.tiles {
+    background-position: left -64px;
+}
+.content_list_styles .style_switch.table {
+    background-position: left -32px;
 }
 /* ========================================================================== */
 

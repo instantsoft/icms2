@@ -1753,14 +1753,26 @@ class cmsTemplate {
 
     /**
      * Рендерит шаблон списка записей контента
+     * @param array $ctype Массив данных типа контента
+     * @param array $data Массив данных для шаблона
+     * @param mixed $request Объект запроса
+     * @return string
      */
-    public function renderContentList($ctype, $data=array(), $request=false){
+    public function renderContentList($ctype, $data = array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('content/'.$ctype['name'].'_list', true);
 
         if (!$tpl_file){
 
-            $style = !empty($ctype['options']['list_style']) ? '_'.$ctype['options']['list_style'] : '';
+            $style = '';
+
+            if(!empty($ctype['options']['list_style'])){
+                if(is_array($ctype['options']['list_style'])){
+                    $style = '_'.$ctype['options']['list_style'][0];
+                } else {
+                    $style = '_'.$ctype['options']['list_style'];
+                }
+            }
 
             $list_type = $this->controller->getListContext();
 
@@ -1768,7 +1780,7 @@ class cmsTemplate {
                 $style = $ctype['options']['context_list_style'][$list_type] ? '_'.$ctype['options']['context_list_style'][$list_type] : '';
             }
 
-            $tpl_file = $this->getTemplateFileName("content/default_list{$style}");
+            $tpl_file = $this->getTemplateFileName('content/default_list'.$style);
 
         }
 
@@ -1780,8 +1792,12 @@ class cmsTemplate {
 
     /**
      * Рендерит шаблон просмотра записи контента
+     * @param string $ctype_name Имя типа контента
+     * @param array $data Массив данных для шаблона
+     * @param mixed $request Объект запроса
+     * @return string
      */
-    public function renderContentItem($ctype_name, $data=array(), $request=false){
+    public function renderContentItem($ctype_name, $data = array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('content/'.$ctype_name.'_item', true);
 

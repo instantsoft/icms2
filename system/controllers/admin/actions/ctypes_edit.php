@@ -52,6 +52,8 @@ class actionAdminCtypesEdit extends cmsAction {
 
             if ($errors){
 
+                $ctype['id'] = $id;
+
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
             }

@@ -4,9 +4,14 @@
 /upload/u1/
 /upload/000/
 /upload/default/
+/upload/installer/
 /upgrade/
 /system/controllers/api/
 /system/languages/ru/controllers/api/
 /system/languages/en/controllers/api/
 /templates/default/controllers/api/
 /cache/rsscache/
+/cache/*.dat
+/cache/*.js
+/cache/*.css
+/cache/*.xml

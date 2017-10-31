@@ -3,7 +3,7 @@ class formAdminCtypesBasic extends cmsForm {
 
     public function init($do) {
 
-        $template = cmsTemplate::getInstance();
+        $template = new cmsTemplate(cmsConfig::get('template'));
 
         return array(
             'titles' => array(
@@ -188,8 +188,21 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,
+                        'is_chosen_multiple' => true,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
                         'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
+                        }
+                    )),
+                    new fieldList('options:list_style_names', array(
+                        'title'        => LANG_CP_LIST_STYLE_NAMES,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'multiple_keys' => array(
+                            'name' => 'field', 'value' => 'field_value'
+                        ),
+                        'generator' => function($ctype) use ($template){
                             return $template->getAvailableContentListStyles();
                         }
                     )),

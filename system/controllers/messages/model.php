@@ -332,6 +332,8 @@ class modelMessages extends cmsModel {
 
         $count = $this->getCount('{users}_messages');
 
+        $this->resetFilters();
+
         return $count;
 
     }

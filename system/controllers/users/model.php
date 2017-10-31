@@ -89,7 +89,9 @@ class modelUsers extends cmsModel {
 
         $this->selectOnly('i.id', 'id');
 
-        return $this->get('{users}');
+        return $this->get('{users}', function($user){
+            return (int)cmsUser::userIsOnline($user['id']);
+        });
 
     }
 
