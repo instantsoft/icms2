@@ -1090,7 +1090,7 @@ class cmsModel {
         return $this;
     }
 
-    public function joinUser($on_field='user_id', $user_fields=array(), $join_direction=false){
+    public function joinUser($on_field='user_id', $user_fields = array(), $join_direction = false, $as = 'u'){
 
         if (!$user_fields){
             $user_fields = array(
@@ -1106,15 +1106,15 @@ class cmsModel {
 		switch ($join_direction){
 
 			case 'left':
-				$this->joinLeft('{users}', 'u', 'u.id = i.'.$on_field);
+				$this->joinLeft('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 			case 'right':
-				$this->joinRight('{users}', 'u', 'u.id = i.'.$on_field);
+				$this->joinRight('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 			default:
-				$this->join('{users}', 'u', 'u.id = i.'.$on_field);
+				$this->join('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 		}
