@@ -13,17 +13,20 @@
 		if (!empty($ctype['seo_title'])){ $seo_title = $ctype['seo_title']; }
 		if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
 		if (!$seo_title) { $seo_title = $page_header; }
-        if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
-        if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
+	    	if (!empty($current_dataset['seo_title'])){
+			$seo_title .= ' · '.$current_dataset['seo_title'];
+		} else if (!empty($current_dataset['title'])){
+			$seo_title .= ' · '.$current_dataset['title'];
+		}
 
         $this->setPageTitle($seo_title);
 
         if (!empty($ctype['seo_keys'])){ $this->setPageKeywords($ctype['seo_keys']); }
         if (!empty($ctype['seo_desc'])){ $this->setPageDescription($ctype['seo_desc']); }
+	if (!empty($current_dataset['seo_keys'])){ $this->setPageKeywords($current_dataset['seo_keys']); }
+        if (!empty($current_dataset['seo_desc'])){ $this->setPageDescription($current_dataset['seo_desc']); }
         if (!empty($category['seo_keys'])){ $this->setPageKeywords($category['seo_keys']); }
         if (!empty($category['seo_desc'])){ $this->setPageDescription($category['seo_desc']); }
-        if (!empty($current_dataset['seo_keys'])){ $this->setPageKeywords($current_dataset['seo_keys']); }
-        if (!empty($current_dataset['seo_desc'])){ $this->setPageDescription($current_dataset['seo_desc']); }
 
         $meta_item = !empty($category['id']) ? $category : (!empty($current_dataset['id']) ? $current_dataset : array());
 
