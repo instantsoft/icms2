@@ -21,6 +21,9 @@ class formAdminUser extends cmsForm {
 
                     new fieldString('nickname', array(
                         'title' => LANG_NICKNAME,
+                        'options'=>array(
+                            'max_length'=> 100
+                        ),
                         'rules' => array(
                             array('required'),
                         )
@@ -29,6 +32,9 @@ class formAdminUser extends cmsForm {
                     new fieldString('password1', array(
                         'title' => LANG_NEW_PASS,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6
+                        ),
                         'rules' => array(
                             $do=='add' ? array('required') : false,
                         )
@@ -37,10 +43,13 @@ class formAdminUser extends cmsForm {
                     new fieldString('password2', array(
                         'title' => LANG_RETYPE_NEW_PASS,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6
+                        ),
                         'rules' => array(
                             $do=='add' ? array('required') : false,
                         )
-                    )),
+                    ))
 
                 )
             ),
@@ -52,11 +61,11 @@ class formAdminUser extends cmsForm {
                     new fieldCheckbox('is_admin', array(
                         'title' => LANG_USER_IS_ADMIN,
                         'default' => false
-                    )),
+                    ))
                 )
             ),
 
-            array(
+            'groups' => array(
                 'type' => 'fieldset',
                 'title' => LANG_USER_GROUP,
                 'childs' => array(
@@ -71,7 +80,7 @@ class formAdminUser extends cmsForm {
                 )
             ),
 
-            array(
+            'locked' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_USER_LOCKING,
                 'childs' => array(
@@ -89,10 +98,10 @@ class formAdminUser extends cmsForm {
                         'rules' => array(
                             array('max_length', 250)
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

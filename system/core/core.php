@@ -649,6 +649,7 @@ class cmsCore {
         }
 
         if (!self::isControllerExists($this->uri_controller)) {
+            array_unshift($this->uri_params, $this->uri_action);
             $this->uri_action     = $this->uri_controller;
             $this->uri_controller = $config->ct_default;
         }
