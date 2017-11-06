@@ -22,6 +22,8 @@
 
     session_start();
 
+    $config->setData();
+
     //Запускаем роутинг
     $core->route($_SERVER['REQUEST_URI']);
 
