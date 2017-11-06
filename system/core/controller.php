@@ -847,9 +847,9 @@ class cmsController {
     public function redirectToAction($action='', $params=array(), $query=array()){
 
         if (!$action || $action=='index') {
-            $location = $this->root_url;
+            $location = href_to($this->root_url);
         } else {
-            $location = $this->root_url . '/' . $action;
+            $location = href_to($this->root_url, $action);
         }
 
 		if ($params){
@@ -859,7 +859,7 @@ class cmsController {
 
         if ($query){ $location .= '?' . http_build_query($query); }
 
-        $this->redirect(href_to($location));
+        $this->redirect($location);
 
     }
 

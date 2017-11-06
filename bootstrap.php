@@ -40,8 +40,23 @@
         die();
     }
 
+    // Стартуем сессию если константа SESSION_START объявлена
+    if(defined('SESSION_START')){
+
+        cmsUser::sessionStart($config->cookie_domain);
+
+        // таймзона сессии
+        $session_time_zone = cmsUser::sessionGet('user:time_zone');
+
+        // если таймзона в сессии отличается от дефолтной
+        if($session_time_zone && $session_time_zone != $config->time_zone){
+            $config->set('time_zone', $session_time_zone);
+        }
+
+    }
+
     // Устанавливаем часовую зону
-    date_default_timezone_set( $config->time_zone );
+    date_default_timezone_set($config->time_zone);
 
     // Подключаем все необходимые классы и библиотеки
     cmsCore::loadLib('html.helper');

@@ -60,8 +60,15 @@ class cmsConfig {
     }
 
     public function set($key, $value){
+
+        if(!isset($this->data[$key])){
+            $this->dynamic[] = $key;
+        }
+
         $this->data[$key] = $value;
-        $this->dynamic[] = $key;
+
+        return $this;
+
     }
 
     public function getAll(){
@@ -85,11 +92,8 @@ class cmsConfig {
         $this->data = $this->load($cfg_file);
         if(!$this->data){ return false; }
 
+        // таймзона может быть изменена в процессе работы
         $this->set('cfg_time_zone', $this->data['time_zone']);
-
-        if (isset($_SESSION['user']['time_zone'])){
-            $this->data['time_zone'] = $_SESSION['user']['time_zone'];
-        }
 
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
@@ -133,18 +137,6 @@ class cmsConfig {
         }
 
         return true;
-
-    }
-
-    public function updateTimezone(){
-
-        if (isset($_SESSION['user']['time_zone'])){
-            $this->data['time_zone'] = $_SESSION['user']['time_zone'];
-        }
-
-        date_default_timezone_set( $this->data['time_zone'] );
-
-        cmsDatabase::getInstance()->setTimezone();
 
     }
 

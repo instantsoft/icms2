@@ -422,6 +422,16 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function sessionStart($cookie_domain = false){
+
+        if($cookie_domain){
+            session_set_cookie_params(0, '/', '.'.$cookie_domain, false, true);
+        }
+
+        session_start();
+
+    }
+
     public static function sessionSet($key, $value){
 
         if (strpos($key, ':') === false){
