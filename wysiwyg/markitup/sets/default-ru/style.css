@@ -35,10 +35,34 @@
 .markItUp .btnVideoYoutube a {
 	background-image:url(images/youtube.png);
 }
+.markItUp .btnVideoFacebook a {
+	background-image:url(images/facebook.png);
+}
 .markItUp .btnCode a {
 	background-image:url(images/code.png);
 }
-
+.markItUp .btnSmiles a {
+	background-image:url(images/smiles.png);
+}
+.markItUp .btnSpoiler a {
+	background-image:url(images/spoiler.png);
+}
+.smilepanel {
+    display: none;
+    padding: 0 5px 10px 5px !important;
+    box-sizing: border-box;
+}
+.smilepanel > img {
+    cursor: pointer;
+    padding: 3px !important;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 2px;
+}
+.smilepanel > img:hover {
+    background-color: #FFF;
+    box-shadow: 0px 0px 9px 3px #FFF;
+}
 .markItUpInlineUpload
 {
 	position: absolute;

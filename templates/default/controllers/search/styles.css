@@ -1,17 +1,23 @@
-#search_form .input { width:320px; padding:5px; }
-#search_form select { width:140px; }
-#search_form .button-submit { padding: 6px 10px; }
+#search_form .input { width:320px; padding:5px; vertical-align: top; }
+#search_form select { width:140px; vertical-align: top; }
+#search_form .button-submit { padding: 6px 10px; vertical-align: top; }
 
 #search_results_pills { margin:20px 0; }
 
 #search_results_list .item {
     margin-bottom: 15px;
+    clear: both;
+    overflow: hidden;
 }
 
-#search_results_list .item .title {  margin-bottom:5px;  }
-#search_results_list .item .title a { font-size:16px;}
+#search_results_list .item .title {  margin:0 0 5px;  }
+#search_results_list .item .title a { font-size:16px; text-decoration: none; }
 
 #search_results_list .item .field {  margin-bottom:5px;  }
+#search_results_list .item .field.search_field_image {
+    float: left;
+    margin: 2px 12px 0 0;
+}
 #search_results_list .item .info .date {  font-size:12px; color: #7f8c8d; }
 
-#search_results_list .item .field em { color:#c0392b; }
+#search_results_list .item .field em, #search_results_list .item .title a em { color:#c0392b; }

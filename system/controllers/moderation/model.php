@@ -1,32 +1,92 @@
 <?php
 
-class modelModeration extends cmsModel{
+class modelModeration extends cmsModel {
 
-    public function getTasksCounts($moderator_id){
+    const LOG_TRASH_ACTION = 0;
+    const LOG_DELETE_ACTION = 1;
+    const LOG_RESTORE_ACTION = 2;
 
-       $tasks = $this->filterEqual('moderator_id', $moderator_id)->getTasks();
+    public function getTasksCounts($moderator_id, $is_admin = false){
 
-       if (!$tasks) { return false; }
+        if(!$is_admin){
+            $this->filterEqual('moderator_id', $moderator_id);
+        }
 
-       $counts = array();
+        $tasks = $this->getTasks();
+        if (!$tasks) { return false; }
 
-       foreach($tasks as $task){
+        $counts = array();
 
-           if (!isset($counts[$task['ctype_name']])){
-               $counts[$task['ctype_name']] = 1;
-           } else {
-               $counts[$task['ctype_name']]++;
-           }
+        foreach($tasks as $task){
 
-       }
+            if (!isset($counts[$task['ctype_name']])){
+                $counts[$task['ctype_name']] = 1;
+            } else {
+                $counts[$task['ctype_name']]++;
+            }
 
-       return $counts;
+        }
+
+        return $counts;
+
+    }
+
+    public function getTasksCount(){
+
+        return $this->getCount('moderators_tasks');
 
     }
 
     public function getTasks(){
 
-        return $this->get('moderators_tasks');
+        return $this->get('moderators_tasks', function ($item, $model){
+            $item['url'] = rel_to_href($item['url']);
+            return $item;
+        });
+
+    }
+
+    public function getModeratorTask($controller_name, $id){
+
+        return $this->filterEqual('ctype_name', $controller_name)->
+                    filterEqual('item_id', $id)->
+                    getItem('moderators_tasks');
+
+    }
+
+    public function closeModeratorTask($controller_name, $id, $is_approved, $moderator_user_id){
+
+        $counter_field = $is_approved ? 'count_approved' : 'count_deleted';
+
+        $task = $this->getModeratorTask($controller_name, $id);
+        if(!$task){ return false;}
+
+        $this->
+            filterEqual('user_id', $moderator_user_id)->
+            filterEqual('ctype_name', $controller_name)->
+            increment('moderators', $counter_field);
+
+        $this->
+            filterEqual('user_id', $task['moderator_id'])->
+            filterEqual('ctype_name', $controller_name)->
+            filterGt('count_idle', 0)->
+            decrement('moderators', 'count_idle');
+
+        return $this->
+                filterEqual('ctype_name', $controller_name)->
+                filterEqual('item_id', $id)->
+                deleteFiltered('moderators_tasks');
+
+    }
+
+    public function userIsContentModerator($ctype_name, $user_id){
+
+        if(!$user_id){ return false; }
+
+        $this->filterEqual('ctype_name', $ctype_name);
+        $this->filterEqual('user_id', $user_id);
+
+        return (bool)$this->getFieldFiltered('moderators', 'id');
 
     }
 
@@ -34,11 +94,139 @@ class modelModeration extends cmsModel{
 
         $this->filterEqual('user_id', $user_id);
 
-        $is_moderator = (bool)$this->getCount('moderators');
+        return (bool)$this->getFieldFiltered('moderators', 'id');
 
-        $this->resetFilters();
+    }
 
-        return $is_moderator;
+    public function getTargetModeratorData($id){
+
+        return $this->getItemById('moderators', $id);
+
+    }
+
+    public function log($action, $data){
+
+        $data['action'] = $action;
+
+        return $this->insert('moderators_logs', $data);
+
+    }
+
+    public function logUpdateTarget($target_controller, $target_subject, $target_id, $data){
+
+        $this->filterEqual('target_controller', $target_controller);
+        $this->filterEqual('target_subject', $target_subject);
+        $this->filterEqual('target_id', $target_id);
+
+        return $this->updateFiltered('moderators_logs', $data, true);
+
+
+    }
+
+    public function logDeleteTarget($target_controller, $target_subject, $target_id){
+
+        $this->filterEqual('target_controller', $target_controller);
+        $this->filterEqual('target_subject', $target_subject);
+        $this->filterEqual('target_id', $target_id);
+
+        return $this->deleteFiltered('moderators_logs');
+
+
+    }
+
+	public function deleteExpiredTrashContentItems(){
+
+        return $this->filterNotNull('date_expired')->
+                    filterEqual('i.action', self::LOG_TRASH_ACTION)->
+                    filter('i.date_expired <= NOW()')->
+                    get('moderators_logs', function($item, $model) {
+                        cmsCore::getModel($item['target_controller'])->deleteContentItem($item['target_subject'], $item['target_id']);
+                        $model->delete('moderators_logs', $item['id']);
+                        return $item['id'];
+                    });
+
+	}
+
+    public function getNextModeratorId($controller_name){
+
+        $id = $this->filterEqual('ctype_name', $controller_name)->
+                    orderBy('count_idle', 'asc')->
+                    getFieldFiltered('moderators', 'user_id');
+
+        if (!$id){
+
+            $id = $this->filterEqual('is_admin', 1)->
+                        getFieldFiltered('{users}', 'id');
+            // проверяем наличие администратора в таблице модераторов
+            // и если его там нет, добавляем
+            if(!$this->getItemById('moderators', $id)){
+                $this->addContentTypeModerator($controller_name, $id);
+            }
+
+        }
+
+        return $id;
+
+    }
+
+    public function addModeratorTask($controller_name, $user_id, $is_new_item, $item){
+
+        $this->
+            filterEqual('user_id', $user_id)->
+            filterEqual('ctype_name', $controller_name)->
+            increment('moderators', 'count_idle');
+
+        return $this->insert('moderators_tasks', array(
+            'moderator_id' => $user_id,
+            'author_id'    => $item['user_id'],
+            'item_id'      => $item['id'],
+            'ctype_name'   => $controller_name,
+            'title'        => $item['title'],
+            'url'          => href_to_rel($controller_name, $item['slug'] . '.html'),
+            'date_pub'     => '',
+            'is_new_item'  => $is_new_item
+        ));
+
+    }
+
+    public function getContentTypeModerators($ctype_name){
+
+        $this->joinUser();
+
+        $this->filterEqual('ctype_name', $ctype_name);
+
+        $this->orderBy('id');
+
+        return $this->get('moderators', false, 'user_id');
+
+    }
+
+    public function getContentTypeModerator($id){
+
+        $this->joinUser();
+
+        return $this->getItemById('moderators', $id);
+
+    }
+
+    public function addContentTypeModerator($ctype_name, $user_id){
+
+        $id = $this->insert('moderators', array(
+            'ctype_name'    => $ctype_name,
+            'user_id'       => $user_id,
+            'date_assigned' => ''
+        ));
+
+        return $this->getContentTypeModerator($id);
+
+    }
+
+    public function deleteContentTypeModerator($ctype_name, $user_id){
+
+        return $this->
+                    filterEqual('ctype_name', $ctype_name)->
+                    filterEqual('user_id', $user_id)->
+                    deleteFiltered('moderators');
 
     }
 

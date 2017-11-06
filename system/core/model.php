@@ -1,18 +1,43 @@
 <?php
-class cmsModel{
+class cmsModel {
 
     public $name;
 
     public $db;
 
+	const LEFT_JOIN = 'LEFT JOIN';
+	const RIGHT_JOIN = 'RIGHT JOIN';
+	const INNER_JOIN = 'INNER JOIN';
+	const STRAIGHT_JOIN = 'STRAIGHT_JOIN';
+	const LEFT_OUTER_JOIN = 'LEFT OUTER JOIN';
+	const RIGHT_OUTER_JOIN = 'RIGHT OUTER JOIN';
+	const NATURAL_LEFT_JOIN = 'NATURAL LEFT JOIN';
+	const NATURAL_LEFT_OUTER_JOIN = 'NATURAL LEFT OUTER JOIN';
+	const NATURAL_RIGHT_JOIN = 'NATURAL RIGHT JOIN';
+	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
+
+    /**
+     * Префикс по умолчанию таблиц контента
+     */
+    const DEFAULT_TABLE_PREFIX = 'con_';
+
+    /**
+     * Префикс таблиц контента
+     * @var string
+     */
+    public $table_prefix = cmsModel::DEFAULT_TABLE_PREFIX;
+
     //условия для выборок
     public $table      = '';
     public $select     = array('i.*');
+    public $distinct   = '';
+    public $straight_join = '';
     public $join       = '';
     public $where      = '';
     public $where_separator  = 'AND';
     public $group_by   = '';
     public $order_by   = '';
+    public $index_action = '';
     public $limit      = 1000;
     public $perpage    = 50;
 
@@ -21,12 +46,18 @@ class cmsModel{
 
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
+    protected $approved_filter_disabled = false;
+    protected $delete_filter_disabled = false;
+    protected $approved_filtered = false;
+    protected $available_filtered = false;
+
+    protected static $cached = array();
 
     private $cache_key = false;
 
     public function __construct(){
 
-        $this->name = str_replace('model_', '', get_called_class());
+        $this->name = strtolower(str_replace('model', '', get_called_class()));
 
         $this->db = cmsCore::getInstance()->db;
 
@@ -35,49 +66,59 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    protected function useCache($key){
-        $this->cache_key = $key;
+    public function useCache($key){
+        $this->cache_key = $key; return $this;
     }
 
     protected function stopCache(){
-        $this->cache_key = false;
+        $this->cache_key = false;  return $this;
     }
 
 //============================================================================//
 //============================================================================//
+
+    public function getContentTypeTableName($name){
+        return $this->table_prefix . $name;
+    }
+
+    public function setTablePrefix($prefix){
+        $this->table_prefix = $prefix;
+        return $this;
+    }
 
     public function getContentTableStruct(){
 
         return array(
-            'id'                    => array('type' => 'primary'),
-            'title'                 => array('type' => 'varchar', 'size' => 100),
-            'content'               => array('type' => 'text'),
-            'photo'                 => array('type' => 'text'),
-            'slug'                  => array('type' => 'varchar', 'index'=>true, 'size' => 100),
-            'seo_keys'              => array('type' => 'text'),
-            'seo_desc'              => array('type' => 'text'),
-            'seo_title'             => array('type' => 'varchar', 'size' => 256),
-            'tags'                  => array('type' => 'varchar', 'size' => 1000),
-            'date_pub'              => array('type' => 'timestamp', 'default_current' => true),
-            'date_last_modified'    => array('type' => 'timestamp'),
-            'date_pub_end'			=> array('type' => 'timestamp'),
-            'is_pub'				=> array('type' => 'bool', 'index'=>true, 'default' => 1),
-            'hits_count'            => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'user_id'               => array('type' => 'int', 'index'=>true),
-            'parent_id'             => array('type' => 'int', 'index'=>true),
-            'parent_type'           => array('type' => 'varchar', 'size'=>32, 'index'=>true),
-            'parent_title'          => array('type' => 'varchar', 'size' => 100),
-            'parent_url'            => array('type' => 'varchar', 'size' => 255),
-            'is_parent_hidden'      => array('type' => 'bool', 'index'=>true),
-            'category_id'           => array('type' => 'int', 'index'=>true, 'default' => 1),
-            'folder_id'             => array('type' => 'int', 'index'=>true),
-            'is_comments_on'        => array('type' => 'bool'),
-            'comments'              => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'rating'                => array('type' => 'int', 'index'=>true, 'default' => 0),
-            'is_approved'           => array('type' => 'tinyint', 'index'=>true, 'default' => 1),
-            'approved_by'           => array('type' => 'int', 'index'=>true),
-            'date_approved'         => array('type' => 'timestamp'),
-            'is_private'            => array('type' => 'bool', 'index'=>true, 'default' => 0),
+            'id'                 => array('type' => 'primary'),
+            'title'              => array('type' => 'varchar', 'size' => 100, 'fulltext' => true),
+            'content'            => array('type' => 'text'),
+            'photo'              => array('type' => 'text'),
+            'slug'               => array('type' => 'varchar', 'index' => true, 'size' => 100),
+            'seo_keys'           => array('type' => 'varchar', 'size' => 256),
+            'seo_desc'           => array('type' => 'varchar', 'size' => 256),
+            'seo_title'          => array('type' => 'varchar', 'size' => 256),
+            'tags'               => array('type' => 'varchar', 'size' => 1000),
+            'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(4,3,2,1), 'default_current' => true),
+            'date_last_modified' => array('type' => 'timestamp'),
+            'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
+            'is_pub'             => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 0, 'default' => 1),
+            'hits_count'         => array('type' => 'int', 'default' => 0, 'unsigned' => true),
+            'user_id'            => array('type' => 'int', 'index' => 'user_id', 'composite_index' => 0, 'unsigned' => true),
+            'parent_id'          => array('type' => 'int', 'index' => 'parent_id', 'composite_index' => 0, 'unsigned' => true),
+            'parent_type'        => array('type' => 'varchar', 'size' => 32, 'index' => 'parent_id', 'composite_index' => 1),
+            'parent_title'       => array('type' => 'varchar', 'size' => 100),
+            'parent_url'         => array('type' => 'varchar', 'size' => 255),
+            'is_parent_hidden'   => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 1),
+            'category_id'        => array('type' => 'int', 'index' => true, 'default' => 1, 'unsigned' => true),
+            'folder_id'          => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'is_comments_on'     => array('type' => 'bool', 'default' => 1),
+            'comments'           => array('type' => 'int', 'default' => 0, 'unsigned' => true),
+            'rating'             => array('type' => 'int', 'default' => 0),
+            'is_deleted'         => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 2),
+            'is_approved'        => array('type' => 'bool', 'index' => 'date_pub', 'composite_index' => 3, 'default' => 1),
+            'approved_by'        => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'date_approved'      => array('type' => 'timestamp'),
+            'is_private'         => array('type' => 'bool', 'default' => 0)
         );
 
     }
@@ -86,11 +127,11 @@ class cmsModel{
 
         return array(
             'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int'),
-            'name'          => array('type' => 'varchar', 'size' => 20),
+            'ctype_id'      => array('type' => 'int', 'unsigned' => true),
+            'name'          => array('type' => 'varchar', 'size' => 40),
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
-            'ordering'      => array('type' => 'int', 'index'=>true),
+            'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),
@@ -104,6 +145,7 @@ class cmsModel{
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
             'groups_edit'   => array('type' => 'text'),
+            'filter_view'   => array('type' => 'text')
         );
 
     }
@@ -111,14 +153,14 @@ class cmsModel{
     public function getPropsTableStruct(){
 
         return array(
-            'id'            => array('type' => 'primary'),
-            'ctype_id'      => array('type' => 'int'),
-            'title'         => array('type' => 'varchar', 'size' => 100),
-            'fieldset'      => array('type' => 'varchar', 'size' => 32),
-            'type'          => array('type' => 'varchar', 'size' => 16),
-            'is_in_filter'  => array('type' => 'bool', 'index'=>true),
-            'values'        => array('type' => 'text'),
-            'options'       => array('type' => 'text'),
+            'id'           => array('type' => 'primary'),
+            'ctype_id'     => array('type' => 'int', 'unsigned' => true),
+            'title'        => array('type' => 'varchar', 'size' => 100),
+            'fieldset'     => array('type' => 'varchar', 'size' => 32),
+            'type'         => array('type' => 'varchar', 'size' => 16),
+            'is_in_filter' => array('type' => 'bool', 'index' => true),
+            'values'       => array('type' => 'text'),
+            'options'      => array('type' => 'text')
         );
 
     }
@@ -126,10 +168,10 @@ class cmsModel{
     public function getPropsBindTableStruct(){
 
         return array(
-            'id'        => array('type' => 'primary'),
-            'prop_id'   => array('type' => 'int', 'index'=>true),
-            'cat_id'    => array('type' => 'int', 'index'=>true),
-            'ordering'  => array('type' => 'int', 'index'=>true),
+            'id'       => array('type' => 'primary'),
+            'prop_id'  => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'cat_id'   => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'ordering' => array('type' => 'int', 'index' => true, 'unsigned' => true),
         );
 
     }
@@ -137,9 +179,9 @@ class cmsModel{
     public function getPropsValuesTableStruct(){
 
         return array(
-            'prop_id'   => array('type' => 'int', 'index'=>true),
-            'item_id'   => array('type' => 'int', 'index'=>true),
-            'value'     => array('type' => 'varchar', 'size' => 255),
+            'prop_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'item_id' => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'value'   => array('type' => 'varchar', 'size' => 255),
         );
 
     }
@@ -159,13 +201,17 @@ class cmsModel{
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         $category = $this->getItemByField($table_name, $by_field, $id);
 
         if (!$category) { return false; }
 
         $category['path'] = $this->getCategoryPath($ctype_name, $category);
+
+        if(!empty($category['allow_add'])){
+            $category['allow_add'] = cmsModel::yamlToArray($category['allow_add']);
+        }
 
         return $category;
 
@@ -184,7 +230,7 @@ class cmsModel{
         foreach($category['path'] as $c){
             if ($c['id'] == 1) { continue; }
             if ($slug) { $slug .= '/'; }
-            $slug .= lang_slug( empty($c['slug_key']) ? $c['title'] : $c['slug_key'] );
+            $slug .= lang_slug( empty($c['slug_key']) ? str_replace('/', '', $c['title']) : $c['slug_key'] );
         }
 
         return $slug;
@@ -204,10 +250,13 @@ class cmsModel{
 
         $this->orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name, function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
+            if(!empty($node['allow_add'])){
+                $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
+            }
             return $node;
         });
 
@@ -222,6 +271,8 @@ class cmsModel{
 
         $this->filterEqual('parent_id', $parent_id);
         $this->orderBy('ns_left');
+
+        $this->useCache('content.categories');
 
         return $this->get($table_name);
 
@@ -243,7 +294,7 @@ class cmsModel{
 
         $this->orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name);
 
@@ -267,7 +318,7 @@ class cmsModel{
             filterGt('ns_level', 0)->
             orderBy('ns_left');
 
-        $this->useCache("content.categories");
+        $this->useCache('content.categories');
 
         return $this->get($table_name);
 
@@ -298,7 +349,7 @@ class cmsModel{
             'slug' => $category['slug']
         ));
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         return $category;
 
@@ -309,7 +360,7 @@ class cmsModel{
 
     public function updateCategory($ctype_name, $id, $category){
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
@@ -349,7 +400,7 @@ class cmsModel{
 
     public function updateCategoryTree($ctype_name, $tree, $categories_count){
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         $table_name = $this->table_prefix . $ctype_name . '_cats';
 
@@ -439,7 +490,7 @@ class cmsModel{
         $this->db->nestedSets->setTable($table_name);
         $this->db->nestedSets->deleteNode($id);
 
-        cmsCache::getInstance()->clean("content.categories");
+        cmsCache::getInstance()->clean('content.categories');
 
         return true;
 
@@ -462,22 +513,22 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function update($table_name, $id, $data){
+    public function update($table_name, $id, $data, $skip_check_fields = false, $array_as_json = false){
         $this->filterEqual('id', $id);
-        return $this->updateFiltered($table_name, $data);
+        return $this->updateFiltered($table_name, $data, $skip_check_fields, $array_as_json);
     }
 
-    public function updateFiltered($table_name, $data){
+    public function updateFiltered($table_name, $data, $skip_check_fields = false, $array_as_json = false){
         $where = $this->where;
         $this->resetFilters();
-        return $this->db->update($table_name, $where, $data);
+        return $this->db->update($table_name, $where, $data, $skip_check_fields, $array_as_json);
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function insert($table_name, $data){
-        return $this->db->insert($table_name, $data);
+    public function insert($table_name, $data, $array_as_json = false){
+        return $this->db->insert($table_name, $data, false, $array_as_json);
     }
 
     public function insertOrUpdate($table_name, $insert_data, $update_data = false){
@@ -502,24 +553,36 @@ class cmsModel{
         $this->select       = array('i.*');
         $this->group_by     = '';
         $this->order_by     = '';
+        $this->index_action = '';
         $this->limit        = '';
         $this->join         = '';
+        $this->distinct     = '';
+        $this->straight_join = '';
 
-		if ($this->keep_filters) { return; }
+		if ($this->keep_filters) { return $this; }
 
 		$this->filter_on    = false;
 		$this->where        = '';
         $this->privacy_filtered = false;
+        $this->approved_filtered = false;
 
         return $this;
 
     }
 
+    public function setStraightJoin() {
+        $this->straight_join = self::STRAIGHT_JOIN; return $this;
+    }
+
+    public function distinctSelect() {
+        $this->distinct = 'DISTINCT'; return $this;
+    }
+
     public function filter($condition){
         if ($this->filter_on){
-            $this->where .= " {$this->where_separator} ({$condition})";
+            $this->where .= ' '.$this->where_separator.' ('.$condition.')';
         } else {
-            $this->where .= "({$condition})";
+            $this->where .= '('.$condition.')';
             $this->filter_on = true;
         }
         $this->where_separator = ' AND ';
@@ -528,9 +591,9 @@ class cmsModel{
 
     public function filterStart(){
         if ($this->filter_on){
-            $this->where .= " {$this->where_separator} (";
+            $this->where .= ' '.$this->where_separator.' (';
         } else {
-            $this->where .= "(";
+            $this->where .= '(';
         }
         $this->filter_on = false;
         return $this;
@@ -553,20 +616,20 @@ class cmsModel{
 
     public function filterNotNull($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field IS NOT NULL");
+        $this->filter($field.' IS NOT NULL');
         return $this;
     }
 
     public function filterIsNull($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field IS NULL");
+        $this->filter($field.' IS NULL');
         return $this;
     }
 
     public function filterEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field IS NULL");
+            $this->filter($field.' IS NULL');
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field = '$value'");
@@ -574,16 +637,16 @@ class cmsModel{
         return $this;
     }
 
-    public function filterFunc($field, $value){
+    public function filterFunc($field, $value, $sign='='){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->filter("$field = $value");
+        $this->filter("$field {$sign} $value");
         return $this;
     }
 
     public function filterNotEqual($field, $value){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
-            $this->filter("$field NOT IS NULL");
+            $this->filter($field.' IS NOT NULL');
         } else {
             $value = $this->db->escape($value);
             $this->filter("$field <> '$value'");
@@ -698,19 +761,93 @@ class cmsModel{
         return $this;
     }
 
+    public function filterRelated($field, $value, $lang = false){
+
+        if(mb_strlen($value) <= 3){
+            return $this->filterLike($field, $this->db->escape($value).'%');
+        }
+
+        $query = array();
+
+        $words = explode(' ', str_replace(array('"','\'','+','*','-','%',')','(','.',',','!','?'), ' ', $value));
+
+        $stopwords = string_get_stopwords($lang ? $lang : cmsConfig::get('language'));
+
+        foreach($words as $word){
+
+            $word = mb_strtolower(trim($word));
+
+            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if($stopwords && in_array($word, $stopwords)){ continue; }
+            if (mb_strlen($word)==3) { $query[] = $this->db->escape($word); continue; }
+
+            if (mb_strlen($word) >= 12) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 3).'*';
+            } else if (mb_strlen($word) >= 10) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 2).'*';
+            } else if (mb_strlen($word) >= 6) {
+                $word = mb_substr($word, 0, mb_strlen($word) - 1).'*';
+            }
+
+            $query[] = $this->db->escape($word);
+
+        }
+
+        if (empty($query)) {
+            $ft_query = '\"' . $this->db->escape($value) . '\"';
+        } else {
+
+            usort($query, function ($a, $b){
+                return mb_strlen($b)-mb_strlen($a);
+            });
+            $query = array_slice($query, 0, 5);
+
+            $ft_query  = '>\"' . $this->db->escape($value).'\" <(';
+            $ft_query .= implode(' ', $query).')';
+        }
+
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+
+        $search_param = "MATCH({$field}) AGAINST ('{$ft_query}' IN BOOLEAN MODE)";
+
+        $this->select($search_param, 'fsort');
+
+        $this->order_by = 'fsort desc';
+
+        return $this->filter($search_param);
+
+    }
+
     public function filterCategory($ctype_name, $category, $is_recursive=false){
 
-		$table_name = $this->table_prefix . $ctype_name . '_cats';
-		$bind_table_name = $table_name . '_bind';
+		$table_name      = $this->table_prefix . $ctype_name . '_cats';
+        $bind_table_name = $table_name . '_bind';
 
         if (!$is_recursive){
 
-            $this->join($bind_table_name, 'b', "b.item_id = i.id AND b.category_id = '{$category['id']}'");
+            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id')->filterEqual('b.category_id', $category['id']);
 
         } else {
 
-            $this->join($bind_table_name, 'b', 'b.item_id = i.id');
-            $this->join($table_name, 'c', "c.id = b.category_id AND c.ns_left >= '{$category['ns_left']}' AND c.ns_right <= '{$category['ns_right']}'");
+            // для корневой категории фильтрация не нужна
+            if(!$category['parent_id']){
+                return $this;
+            }
+
+            /**
+             * Нам нужны только уникальные значения
+             * Закомментировано потому что DISTINCT дает нагрузку
+             * @todo сделать анализ кол-ва записей, вложенности категорий и динамически включать или отключать
+             * В общих случаях, когда дерево категорий имеет первый и второй уровень раскомментировать не нужно
+             * Для малых БД, где повсеместно используется принадлежность к нескольким категориям ниже второго уровня
+             * имеет смысл раскомментировать строку ниже
+             */
+            //$this->distinctSelect();
+
+            $this->joinInner($bind_table_name, 'b FORCE INDEX (item_id)', 'b.item_id = i.id');
+            $this->joinInner($table_name, 'c', 'c.id = b.category_id');
+            $this->filterGtEqual('c.ns_left', $category['ns_left']);
+            $this->filterLtEqual('c.ns_right', $category['ns_right']);
 
         }
 
@@ -722,14 +859,20 @@ class cmsModel{
 
 		if (!$is_recursive){
 
-			return $this->filterCategory($ctype_name, array('id'=>$category_id));
+            if($category_id){
+                return $this->filterCategory($ctype_name, array('id'=>$category_id));
+            }
 
 		} else {
 
 			$category = $this->getCategory($ctype_name, $category_id);
-			return $this->filterCategory($ctype_name, $category, true);
+            if($category){
+                return $this->filterCategory($ctype_name, $category, true);
+            }
 
 		}
+
+        return $this;
 
 	}
 
@@ -743,9 +886,11 @@ class cmsModel{
         return $this;
     }
 
-    public function filterPrivacy(){
+    public function isEnablePrivacyFilter(){
+        return $this->privacy_filter_disabled === false;
+    }
 
-        $user = cmsUser::getInstance();
+    public function filterPrivacy(){
 
         if ($this->privacy_filtered) { return $this; }
 
@@ -754,7 +899,56 @@ class cmsModel{
         // используем флаг чтобы фильтр не применился дважды
         $this->privacy_filtered = true;
 
-        return $this->filter("(i.is_private = 0 OR i.user_id = '{$user->id}' OR (i.is_private = 1 AND EXISTS (SELECT id FROM {users}_friends WHERE user_id='{$user->id}' AND friend_id=i.user_id AND is_mutual=1)))");
+        return $this->filterEqual('i.is_private', 0);
+
+    }
+
+    public function enableDeleteFilter(){
+        $this->delete_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableDeleteFilter(){
+        $this->delete_filter_disabled = true;
+        return $this;
+    }
+
+    public function enableApprovedFilter(){
+        $this->approved_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableApprovedFilter(){
+        $this->approved_filter_disabled = true;
+        return $this;
+    }
+
+    public function filterAvailableOnly(){
+
+        if ($this->available_filtered) { return $this; }
+
+        $this->available_filtered = true;
+
+        return $this->filterIsNull('is_deleted');
+
+    }
+
+    public function filterDeleteOnly(){
+
+        return $this->filterEqual('is_deleted', 1);
+
+    }
+
+    public function filterApprovedOnly(){
+
+        if ($this->approved_filtered) { return $this; }
+
+        // Этот фильтр может применяться при подсчете числа записей
+        // и при выборке самих записей
+        // используем флаг чтобы фильтр не применился дважды
+        $this->approved_filtered = true;
+
+        return $this->filterEqual('is_approved', 1);
 
     }
 
@@ -764,11 +958,21 @@ class cmsModel{
 
     public function filterFriends($user_id){
 
-        $user_id = intval($user_id);
+        $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
-        $this->joinInner('{users}_friends', 'f', "friend_id = i.user_id AND f.is_mutual = 1 AND f.user_id = '{$user_id}'");
+        $this->filterEqual('fr.user_id', intval($user_id));
+        $this->filterEqual('fr.is_mutual', 1);
 
         return $this;
+
+    }
+
+    public function filterFriendsPrivateOnly($user_id){
+
+        // фильтр приватности при этом не нужен
+        $this->privacy_filtered = true;
+
+        return $this->filterEqual('i.is_private', 1)->filterFriends($user_id);
 
     }
 
@@ -778,6 +982,11 @@ class cmsModel{
 
             foreach($dataset['filters'] as $filter){
 
+                if (isset($filter['callback']) && is_callable($filter['callback'])){
+                    $filter['callback']($this, $dataset); continue;
+                }
+
+                if (!isset($filter['value'])) { continue; }
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }
 
@@ -809,76 +1018,84 @@ class cmsModel{
 
         }
 
-        if (!empty ($dataset['sorting']) && !$ignore_sorting){
+        if (!empty($dataset['sorting']) && !$ignore_sorting){
             $this->orderByList($dataset['sorting']);
+        }
+
+        if(!empty($dataset['index'])){
+            $this->forceIndex($dataset['index'], 2);
         }
 
         return true;
 
     }
 
+    public function selectList($fields, $is_this_only = false){
+        if($is_this_only){ $this->select = array(); }
+        foreach($fields as $field => $alias){
+            $this->select($field, $alias);
+        }
+        return $this;
+    }
+
     public function select($field, $as=false){
-        $this->select[] = $as ? "{$field} as {$as}" : $field;
+        $this->select[] = $as ? $field.' as '.$as : $field;
         return $this;
     }
 
     public function selectOnly($field, $as=false){
         $this->select = array();
-        $this->select[] = $as ? "{$field} as {$as}" : $field;
+        $this->select[] = $as ? $field.' as '.$as : $field;
         return $this;
     }
 
     public function join($table_name, $as, $on){
-        $this->join .= "JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        return $this->joinInner($table_name, $as, $on);
+    }
+
+    public function joinInner($table_name, $as, $on){
+        $this->join .= self::INNER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
     public function joinLeft($table_name, $as, $on){
-        $this->join .= "LEFT JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
-    public function joinLeftInner($table_name, $as, $on){
-        $this->join .= "LEFT INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinLeftOuter($table_name, $as, $on){
-        $this->join .= "LEFT OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+    public function joinExcludingLeft($table_name, $as, $right_key, $left_key, $join_where = ''){
+        $this->join .= self::LEFT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
+        $this->filter($right_key.' IS NULL');
         return $this;
     }
 
     public function joinRight($table_name, $as, $on){
-        $this->join .= "RIGHT JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
-    public function joinRightInner($table_name, $as, $on){
-        $this->join .= "RIGHT INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+    public function joinExcludingRight($table_name, $as, $right_key, $left_key, $join_where = ''){
+        $this->join .= self::RIGHT_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$left_key.'='.$right_key.($join_where ? ' AND '.$join_where : '').PHP_EOL;
+        $this->filter($left_key.' IS NULL');
+        return $this;
+    }
+
+    public function joinLeftOuter($table_name, $as, $on){
+        $this->join .= self::LEFT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
     public function joinRightOuter($table_name, $as, $on){
-        $this->join .= "RIGHT OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
+        $this->join .= self::RIGHT_OUTER_JOIN.' {#}'.$table_name.' as '.$as.' ON '.$on.PHP_EOL;
         return $this;
     }
 
-    public function joinInner($table_name, $as, $on){
-        $this->join .= "INNER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinOuter($table_name, $as, $on){
-        $this->join .= "OUTER JOIN {#}{$table_name} as {$as} ON {$on}\n";
-        return $this;
-    }
-
-    public function joinUser($on_field='user_id', $user_fields=array(), $join_direction=false){
+    public function joinUser($on_field='user_id', $user_fields = array(), $join_direction = false, $as = 'u'){
 
         if (!$user_fields){
             $user_fields = array(
                 'u.nickname' => 'user_nickname',
-                'u.avatar' => 'user_avatar',
+                'u.avatar'   => 'user_avatar'
             );
         }
 
@@ -889,15 +1106,15 @@ class cmsModel{
 		switch ($join_direction){
 
 			case 'left':
-				$this->joinLeft('{users}', 'u', "u.id = i.{$on_field}");
+				$this->joinLeft('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 			case 'right':
-				$this->joinRight('{users}', 'u', "u.id = i.{$on_field}");
+				$this->joinRight('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 			default:
-				$this->join('{users}', 'u', "u.id = i.{$on_field}");
+				$this->join('{users}', $as, $as.'.id = i.'.$on_field);
 				break;
 
 		}
@@ -920,9 +1137,51 @@ class cmsModel{
         return $this;
     }
 
-    public function orderBy($field, $direction=''){
-        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $this->order_by = "{$field} {$direction}";
+    /**
+     * Управляет индексами в запросе
+     * @param string $index_name Название индекса в БД
+     * @param string $action FORCE | IGNORE | USE
+     * @param int $for 1 - FOR JOIN, 2 - FOR ORDER BY, 3 - FOR GROUP BY
+     * @return \cmsModel
+     */
+    protected function indexHint($index_name, $action, $for='') {
+        switch ($for) {
+            case 1:
+                $for_action = 'FOR JOIN';
+                break;
+            case 2:
+                $for_action = 'FOR ORDER BY';
+                break;
+            case 3:
+                $for_action = 'FOR GROUP BY';
+                break;
+            default:
+                $for_action = '';
+                break;
+        }
+        $this->index_action .= "{$action} INDEX {$for_action} ({$index_name})\n";
+        return $this;
+    }
+
+    public function forceIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'FORCE', $for);
+    }
+
+    public function ignoreIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'IGNORE', $for);
+    }
+
+    public function useIndex($index_name, $for='') {
+        return $this->indexHint($index_name, 'USE', $for);
+    }
+
+    public function orderBy($field, $direction='', $is_force_index_by_field = false){
+        if(strpos($field, '(') !== false){ return $this; } // в названии поля не может быть функции
+        if($direction){
+            $direction = strtolower($direction) === 'desc' ? 'desc' : 'asc';
+        }
+        if (strpos($field, '.') === false){ $field = 'i.'.$field; }
+        $this->order_by = $field.' '.$direction;
         return $this;
     }
 
@@ -931,37 +1190,55 @@ class cmsModel{
 		$this->order_by = '';
 
 		if (is_array($list)){
+
 			foreach($list as $o){
-				$field = $o['by'];
-				$direction = $o['to'];
-				if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+
+                if(strpos($o['by'], '(') !== false){ continue; }
+
+				$field     = $o['by'];
+                $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
+
+                if (strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
-				$this->order_by .= "{$field} {$direction}";
+				$this->order_by .= $field.' '.$direction;
+
 			}
+
 		}
 
 		return $this;
 
     }
 
-    public function limit($from, $howmany='') {
+    public function limit($from, $howmany=0) {
         $this->limit = (int)$from;
+        $howmany     = (int)$howmany;
         if ($this->limit < 0) { $this->limit = 0; }
         if ($howmany){
-            if ((int)$howmany <= 0){ $howmany = 15; }
-            $this->limit .= ', '. (int)$howmany;
+            if ($howmany <= 0){ $howmany = 15; }
+            $this->limit .= ', '. $howmany;
         }
         return $this;
     }
 
-    public function limitPage($page, $perpage=false) {
-        if (!$perpage) { $perpage = $this->perpage; }
+    public function limitPage($page, $perpage=0) {
+        $page    = (int) $page;
+        $perpage = (int) $perpage;
+        if ($perpage <= 0) { $perpage = $this->perpage; }
         $this->limit(($page-1)*$perpage, $perpage);
         return $this;
     }
 
+    public function limitPagePlus($page, $perpage=0) {
+        $page    = (int) $page;
+        $perpage = (int) $perpage;
+        if ($perpage <= 0) { $perpage = $this->perpage; }
+        $this->limit(($page-1)*$perpage, $perpage+1);
+        return $this;
+    }
+
     public function setPerPage($perpage){
-        $this->perpage = $perpage;
+        $this->perpage = (int)$perpage;
         return $this;
     }
 
@@ -977,7 +1254,7 @@ class cmsModel{
 
     public function getFieldFiltered($table_name, $field_name){
 
-        $this->select = array("i.{$field_name} as {$field_name}");
+        $this->select = array('i.'.$field_name.' as '.$field_name);
 
         $this->table = $table_name;
 
@@ -1008,15 +1285,15 @@ class cmsModel{
 
         $sql = "SELECT {$select}
                 FROM {#}{$table_name} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
-		if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-		if ($this->order_by){ $sql .= "ORDER BY {$this->order_by}\n"; }
+        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
 
-        $sql .= "LIMIT 1";
+        $sql .= 'LIMIT 1';
 
         $this->resetFilters();
 
@@ -1041,7 +1318,7 @@ class cmsModel{
         $item = $this->db->fetchAssoc($result);
 
         if(is_callable($item_callback)){
-            $item = $item_callback( $item, $this );
+            $item = call_user_func_array($item_callback, array($item, $this));
         }
 
         // если указан ключ кеша для этого запроса
@@ -1072,13 +1349,15 @@ class cmsModel{
 
     public function getCount($table_name, $by_field='id'){
 
-        $sql = "SELECT COUNT(i.{$by_field}) as count
+        $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
                 FROM {#}{$table_name} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
-        if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
+
+        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
@@ -1127,6 +1406,8 @@ class cmsModel{
 
         $this->table = $table_name;
 
+        $items = $_items = array();
+
         $sql = $this->getSQL();
 
         // сбрасываем фильтры
@@ -1137,11 +1418,33 @@ class cmsModel{
         if ($this->cache_key){
 
             $cache_key = $this->cache_key . '.' . md5($sql);
+
             $cache = cmsCache::getInstance();
 
-            if (false !== ($items = $cache->get($cache_key))){
+            $_items = $cache->get($cache_key);
+
+            if ($_items !== false){
+
                 $this->stopCache();
+
+                // обрабатываем коллбэком
+                if (is_callable($item_callback)){
+
+                    foreach ($_items as $key => $item) {
+
+                        $item = call_user_func_array($item_callback, array($item, $this));
+                        if ($item === false){ continue; }
+
+                        $items[$key] = $item;
+
+                    }
+
+                } else {
+                    return $_items;
+                }
+
                 return $items;
+
             }
 
         }
@@ -1151,18 +1454,25 @@ class cmsModel{
         // если запрос ничего не вернул, возвращаем ложь
         if (!$this->db->numRows($result)){ return false; }
 
-        $items = array();
-
         // перебираем все вернувшиеся строки
         while($item = $this->db->fetchAssoc($result)){
 
             $key = $key_field ? $item[$key_field] : false;
 
+            // для кеша формируем массив без обработки коллбэком
+            if ($this->cache_key){
+                if ($key){
+                    $_items[$key] = $item;
+                } else {
+                    $_items[] = $item;
+                }
+            }
+
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)){
-                $item = $item_callback( $item, $this );
-                if ($item===false){ continue; }
+                $item = call_user_func_array($item_callback, array($item, $this));
+                if ($item === false){ continue; }
             }
 
             // добавляем обработанную строку в результирующий массив
@@ -1176,8 +1486,9 @@ class cmsModel{
 
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
+        // сохраняем не обработанный коллбэком массив
         if ($this->cache_key){
-            $cache->set($cache_key, $items);
+            $cache->set($cache_key, $_items);
             $this->stopCache();
         }
 
@@ -1195,19 +1506,19 @@ class cmsModel{
 
         $select = implode(', ', $this->select);
 
-        $sql = "SELECT {$select}
+        $sql = "SELECT {$this->distinct} {$this->straight_join} {$select}
                 FROM {#}{$this->table} i
-                ";
+                {$this->index_action}";
 
         if ($this->join){ $sql .= $this->join; }
 
-        if ($this->where){ $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        if ($this->group_by){ $sql .= "GROUP BY {$this->group_by}\n"; }
+        if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
 
-        if ($this->order_by){ $sql .= "ORDER BY {$this->order_by}\n"; }
+        if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
 
-        if ($this->limit){ $sql .= "LIMIT {$this->limit}\n"; }
+        if ($this->limit){ $sql .= 'LIMIT '.$this->limit.PHP_EOL; }
 
         return $sql;
 
@@ -1222,7 +1533,7 @@ class cmsModel{
                 FROM {#}{$table} i
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
         $sql .= "ORDER BY i.{$field} DESC
                  LIMIT 1";
@@ -1277,9 +1588,9 @@ class cmsModel{
                 FROM {#}{$table_name} i
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}\n"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        $sql .= "ORDER BY ordering";
+        $sql .= 'ORDER BY ordering';
 
         $result = $this->db->query($sql);
 
@@ -1295,7 +1606,7 @@ class cmsModel{
         while($item = $this->db->fetchAssoc($result)){
 
             $ordering += 1;
-            $this->db->query("UPDATE {#}{$table_name} SET ordering = {$ordering} WHERE id = {$item['id']}");
+            $this->db->query("UPDATE {#}{$table_name} SET ordering = {$ordering} WHERE id = '{$item['id']}'");
 
         }
 
@@ -1380,9 +1691,9 @@ class cmsModel{
         // и проверяем не передан ли фильтр для нее
         //
         foreach($grid['columns'] as $field => $column){
-            if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){
+            if (!empty($column['filter']) && $column['filter'] != 'none' && isset($filter[$field])){
 
-                if (!empty($filter[$field])){
+                if ($filter[$field] || (string)$filter[$field] === '0'){
 
                     if (!empty($column['filter_by'])){
                         $filter_field = $column['filter_by'];
@@ -1410,31 +1721,6 @@ class cmsModel{
 //============================================================================//
 //============================================================================//
 
-    /**
-     * Сортирует элементы массива $items в виде плоского дерева
-     * на основании связей через parent_id
-     * @param array $items
-     * @param array $result_tree
-     * @param int $parent_id
-     * @param int $level
-     */
-    public function buildTreeRecursive($items, &$result_tree, $parent_id=0, $level=1){
-        $level++;
-
-        foreach($items as $num=>$item){
-            if ($item['parent_id']==$parent_id){
-                $item['level'] = $level-1;
-                if (!isset($result_tree[$item['id']])){
-                    $result_tree[$item['id']] = $item;
-                }
-                $this->buildTreeRecursive($items, $result_tree, $item['id'], $level);
-            }
-        }
-    }
-
-//============================================================================//
-//============================================================================//
-
     public function increment($table, $field, $step=1){
 
         $sign = $step > 0 ? '+' : '-';
@@ -1444,7 +1730,7 @@ class cmsModel{
                 SET i.{$field} = i.{$field} {$sign} {$step}
                 ";
 
-        if ($this->where) { $sql .= "WHERE {$this->where}"; }
+        if ($this->where){ $sql .= 'WHERE '.$this->where; }
 
         $this->resetFilters();
 
@@ -1456,17 +1742,65 @@ class cmsModel{
         return $this->increment($table, $field, $step * -1);
     }
 
+    public function deleteController($name) {
+
+		if(is_numeric($name)){
+            $controller = $this->getItemById('controllers', $name);
+            $name = $controller['name'];
+		}
+
+        $this->filterEqual('listener', $name)->deleteFiltered('events');
+
+        cmsCache::getInstance()->clean('events');
+
+        return $this->filterEqual('name', $name)->deleteFiltered('controllers');
+
+    }
+
+    public function fieldsAfterStore($item, $fields, $action = 'add') {
+
+        foreach($fields as $field){
+            $field['handler']->afterStore($item, $this, $action);
+        }
+
+        return $this;
+
+    }
+//============================================================================//
+//============================================================================//
+
+    /**
+     * Сортирует элементы массива $items в виде плоского дерева
+     * на основании связей через parent_id
+     * @param array $items
+     * @param array $result_tree
+     * @param int $parent_id
+     * @param int $level
+     */
+    public static function buildTreeRecursive($items, &$result_tree, $parent_id=0, $level=1){
+        $level++;
+        foreach($items as $item){
+            if ($item['parent_id']==$parent_id){
+                $item['level'] = $level-1;
+                if (!isset($result_tree[$item['id']])){
+                    $result_tree[$item['id']] = $item;
+                }
+                self::buildTreeRecursive($items, $result_tree, $item['id'], $level);
+            }
+        }
+    }
+
 //============================================================================//
 //============================================================================//
 
     /**
      * Преобразует массив в YAML
-     * @param array $array
+     * @param array $input_array
+     * @param integer $indent
+     * @param integer $word_wrap
      * @return string
      */
-    static public function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
-
-        cmsCore::loadLib('spyc.class', 'Spyc');
+    public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
         if(!empty($input_array)){
 
@@ -1488,13 +1822,51 @@ class cmsModel{
      * @param string $yaml
      * @return array
      */
-    static public function yamlToArray($yaml) {
+    public static function yamlToArray($yaml) {
 
-        cmsCore::loadLib('spyc.class');
+        if(!$yaml){ return array(); }
+
+        if($yaml === "---\n- 0\n"){ return array(); }
 
         return Spyc::YAMLLoadString($yaml);
 
     }
 
-}
+    /**
+     * Преобразует массив в строку
+     * @param array $input_array
+     * @return string
+     */
+    public static function arrayToString($input_array) {
+        if(!is_array($input_array)){
+            return null;
+        }
+        return json_encode($input_array);
+    }
 
+    /**
+     * Преобразует строку в массив
+     * @param string $string
+     * @return array
+     */
+    public static function stringToArray($string) {
+        if(!$string){ return array(); }
+        return (array)json_decode($string, true);
+    }
+
+    /**
+     * Кеширует данные в пределах запроса
+     * @param string $key Ключ
+     * @param mixed $data Данные
+     */
+    public static function cacheResult($key, $data) {
+        self::$cached[$key] = $data;
+    }
+    public static function getCachedResult($key) {
+        if(isset(self::$cached[$key])){
+            return self::$cached[$key];
+        }
+        return null;
+    }
+
+}

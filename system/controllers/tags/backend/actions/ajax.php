@@ -8,23 +8,21 @@ class actionTagsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('tags');
 
-        $tags_model = cmsCore::getModel('tags');
-
-        $tags_model->setPerPage(admin::perpage);
+        $this->model->setPerPage(admin::perpage);
 
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
         if ($filter_str){
             parse_str($filter_str, $filter);
-            $tags_model->applyGridFilter($grid, $filter);
+            $this->model->applyGridFilter($grid, $filter);
         }
 
-        $total = $tags_model->getTagsCount();
+        $total = $this->model->getTagsCount();
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
         $pages = ceil($total / $perpage);
 
-        $tags = $tags_model->getTags();
+        $tags = $this->model->getTags();
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $tags, $total, $pages);
 

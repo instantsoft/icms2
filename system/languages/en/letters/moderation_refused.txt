@@ -6,7 +6,8 @@ Moderator refused of publication of your page.
 
 Title: {page_title}
 
+Reason: {reason}
+
 --
  Best regards, {site}
  <small>This letter is sent automatically, please do not reply</small>
-

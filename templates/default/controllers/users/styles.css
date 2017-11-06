@@ -6,8 +6,14 @@
 #user_profile_title {
     overflow:hidden;
     font-size:21px;
+    margin-bottom: 20px;
 }
-
+#user_profile_title .name h1 {
+    margin: 0;
+}
+#user_profile_title .name.name_with_status h1 {
+    font-size: 24px;
+}
 #user_profile_title .avatar {
     float:left;
     overflow:hidden;
@@ -19,7 +25,7 @@
 #user_profile_title .avatar img { display:block; }
 
 #user_profile_title .name { padding-left:50px; line-height: 38px; width: 500px; }
-#user_profile_title .name_with_status { line-height: initial; margin-top:-4px; }
+#user_profile_title .name_with_status { line-height: 28px; margin-top:-4px; }
 #user_profile_title .name a { color: #34495E; text-decoration: none; }
 #user_profile_title .name a:hover { text-decoration: underline; }
 
@@ -93,14 +99,13 @@
 #user_status_widget{
     background-color:#F4FAFC;
     padding:5px;
-    padding-right:8px;
-    border-radius: 6px;
+    border-radius: 4px;
     margin-top:-5px;
     overflow: hidden;
 }
 
 #user_status_widget .input{
-    border-color:#A3CAE0;
+    border-color:#A3CAE0; border-radius: 2px;
 }
 
 #user_status_widget.loading {
@@ -277,7 +282,19 @@
 #user_profile #information .fieldset .field .title{
     color:#68809B;
 }
+#users_profiles_list .field {
+    line-height: 18px;
+    color: #666;
+}
+#users_profiles_list .title_left {
+    display: inline-block;
+    margin-right: 10px;
+}
+#users_profiles_list .title_left + .value {
+    display: inline-block;
+}
 
+#users_profiles_list .title_top { margin-bottom:5px; }
 /* ========================================================================== */
 
 #users_karma_log_list .date{
@@ -321,19 +338,30 @@
     background-position:-16px 0;
 }
 
-/* ========================================================================== */
-
 #groups_invite_window{ padding:20px; }
 #groups_invite_window h3 { margin:0; }
 #groups_invite_window .list { margin:10px 0; }
 #groups_invite_window .list select { width:300px; }
 
-/* Media Queries ============================================================ */
+.buttons_delete_profile {
+    float: right;
+}
+input.button.delete_profile {
+    background: #c0392b;
+}
+input.button.delete_profile:hover {
+    background: #e74c3c;
+}
 
 @media screen and (max-width: 640px) {
     #user_profile #left_column { float:none; }
-    #user_profile #left_column .block { display: none; padding:0; border:none; }
-    #user_profile #left_column #avatar { display: block; margin-bottom:15px; }
+    #user_profile #left_column .block {
+        margin-right: 0;
+    }
+    #user_profile #left_column .block:last-child {
+        margin-bottom: 15px;
+    }
+    #user_profile #left_column #avatar { display: block; margin-right: 0; }
     #user_profile #left_column #avatar img { width:100%; max-width:250px; }
     #user_profile_title .avatar { display:none; }
     #user_profile_title .name { padding-left:0; }

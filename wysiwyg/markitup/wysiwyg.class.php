@@ -1,10 +1,6 @@
 <?php
 class cmsWysiwygMarkitup{
 
-	function __construct(){
-
-	}
-
 	public function displayEditor($field_id, $content=''){
 
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);

@@ -1,11 +1,8 @@
 <?php
-    $this->addJS('templates/default/js/jquery-ui.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addCSS('templates/default/css/datatree.css');
-?>
 
-<?php
     $this->setPageTitle(LANG_CP_SECTION_MENU);
 
     $this->addBreadcrumb(LANG_CP_SECTION_MENU, $this->href_to('menu'));
@@ -37,7 +34,7 @@
 
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => LANG_SAVE_ORDER,
         'href'  => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('menu', array('items_reorder'))}')"
     ));
@@ -48,6 +45,8 @@
 		'target' => '_blank',
 		'href'  => LANG_HELP_URL_MENU
 	));
+
+    $this->applyToolbarHook('admin_menu_toolbar');
 
 ?>
 

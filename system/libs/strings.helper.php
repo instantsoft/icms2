@@ -36,27 +36,25 @@ function string_strip_br($string){
  * Возвращает значение языковой константы
  * Если константа не найдена, возвращает ее имя или значение по-умолчанию
  *
- * Префикс LANG_ в имени константы указывать не нужно
+ * Префикс LANG_ в имени константы можно не указывать
  * Регистр не имеет значения
  *
- * @param string $constant
+ * @param string $constant Название языковой константы
  * @param string $default
  * @return string
  */
 function string_lang($constant, $default=false){
 
-    $constant = mb_strtoupper($constant);
+    $constant = strtoupper($constant);
 
     if (!$default) { $default = $constant; }
 
-    $constant = mb_strtoupper($constant);
-
-    if (!mb_strpos($constant, 'LANG_')===0){
+    if (strpos($constant, 'LANG_') === false){
         $constant = 'LANG_' . $constant;
     }
 
     if (defined($constant)){
-        $string = constant('LANG_'.$constant);
+        $string = constant($constant);
     } else {
         $string = $default;
     }
@@ -75,11 +73,11 @@ function string_lang($constant, $default=false){
  * @return string
  */
 function string_mask_to_regular($mask){
-    $regular = trim($mask);
-    $regular = str_replace('/', '\/', $regular);
-    $regular = str_replace('*', '(.*)', $regular);
-    $regular = str_replace('%', '([0-9]+)', $regular);
-    return $regular;
+    return str_replace(array(
+        '%','/','*','?','{slug}'
+    ), array(
+        '([0-9]+)','\/','(.*)','\?','([a-z0-9\-]*)'
+    ), trim($mask));
 }
 
 /**
@@ -187,9 +185,11 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $string = md5(md5(session_id() . '$' . microtime(true) . '$' . rand(0, 99999)) . '$' . $seed);
+    $salt = substr(md5(mt_rand(0, 65535).cmsConfig::get('db_pass')), mt_rand(0, 16), mt_rand(8, 15));
 
-    if ($length < 32) { $string = mb_substr($string, 0, $length); }
+    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . $seed);
+
+    if ($length < 32) { $string = substr($string, 0, $length); }
 
     return $string;
 
@@ -202,7 +202,7 @@ function string_random($length=32, $seed=''){
  * Пример вывода: "2 года 16 дней 5 часов 12 минут"
  *
  * @param string $date
- * @param array $options Массив элементов для перечисления: y, m, d, h, i
+ * @param array $options Массив элементов для перечисления: y, m, d, h, i, from_date
  * @param bool $is_add_back Добавлять к строке слово "назад"?
  * @return string
  */
@@ -210,7 +210,9 @@ function string_date_age($date, $options, $is_add_back=false){
 
     if (!$date) { return; }
 
-    $diff = real_date_diff($date);
+	$date2 = !empty($options['from_date']) ? $options['from_date'] : false;
+
+    $diff = real_date_diff($date, $date2);
 
     $diff_str = array();
 
@@ -351,7 +353,49 @@ function real_date_diff($date1, $date2 = NULL){
 }
 
 /**
- * Находит в строке все выжения вида {user.property} и заменяет property
+ * Форматирует дату в формат "сегодня", "вчера", "1 января 2017"
+ *
+ * @param string $date Исходная дата. Может быть как отформатированном виде, так и timestamp
+ * @param boolean $is_time Дополнять часом и минутами
+ * @return string
+ */
+function string_date_format($date, $is_time = false){
+
+    if(!$date){
+        return '';
+    }
+
+    if(!is_numeric($date)){
+        $timestamp = strtotime($date);
+    } else {
+        $timestamp = $date;
+    }
+
+    $item_date = date('j F Y', $timestamp);
+
+    $today_date     = date('j F Y');
+    $yesterday_date = date('j F Y', time()-3600*24);
+
+    switch($item_date){
+        case $today_date: $result = LANG_TODAY;
+            break;
+        case $yesterday_date: $result = LANG_YESTERDAY;
+            break;
+        default: $result = lang_date($item_date);
+    }
+
+    if ($is_time){
+
+        $result .= ' '.LANG_IN.' ' . date('H:i', $timestamp);
+
+    }
+
+    return $result;
+
+}
+
+/**
+ * Находит в строке все выражения вида {user.property} и заменяет property
  * на соответствующее свойство объекта cmsUser
  *
  * @param string $string
@@ -391,14 +435,98 @@ function string_replace_user_properties($string){
  */
 function string_replace_keys_values($string, $data){
 
-    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
-    $values = $data;
+    if(strpos($string, '{') === false){ return $string; }
 
-	foreach($values as $k=>$v){
-		if (is_array($v) || is_object($v)) { unset($values[$k]); }
+	foreach($data as $k=>$v){
+		if (is_array($v) || is_object($v)) { unset($data[$k]); }
 	}
-	
-    return str_replace($keys, $values, $string);
+
+    $keys = array_map(function($key){ return '{'.$key.'}'; }, array_keys($data));
+
+    return str_replace($keys, array_values($data), $string);
+
+}
+
+/**
+ * Находит внутри строки $string все выражения вида {key}, где key - это ключ
+ * массива $data и заменяет на значение соответствующего элемента
+ * отличительной особенностью от функции выше является возможность обработки значений функциями
+ * например, выражение {age|html_spellcount:год:года:лет} после обработки напишет "21 год, 22 года, 29 лет"
+ * при значении age 21, 22 и 29 соответственно
+ * выражение {nickname:профиль пользователя %s самый лучший} после обработки станет "профиль пользователя Василий самый лучший"
+ * при значении поля nickname в массиве $data "Василий"
+ *
+ * @param string $string
+ * @param array $data
+ */
+function string_replace_keys_values_extended($string, $data){
+
+    $matches_count = preg_match_all('/{([^}]+)}/ui', $string, $matches);
+
+    if ($matches_count){
+
+        for($i=0; $i<$matches_count; $i++){
+
+            $tag = $matches[0][$i];
+            $property = $matches[1][$i];
+
+            $func = false; $func_params = array(); $func_params_property_key = 0;
+
+            // есть ли обработка функцией
+            if(strpos($property, '|') !== false){
+                $params = explode('|', $property);
+                // первый параметр остаётся как $property
+                $property = $params[0];
+                // второй параметр - функция
+                $func = $params[1];
+                // $property ставим как первый параметр функции
+                $func_params = array($property);
+                // смотрим есть ли у функции параметры
+                if(strpos($func, ':') !== false){
+                    $par = explode(':', $func);
+                    $func = $par[0]; unset($par[0]);
+                    foreach ($par as $k => $p) {
+                        // если параметр - массив
+                        if(strpos($p, '=') !== false){
+                            $out = array(); parse_str($p, $out);
+                            $par[$k] = $out;
+                        }
+                    }
+                    $func_params = $func_params + $par;
+                }
+            } else
+            // нужно прогнать через sprintf
+            if(strpos($property, ':') !== false){
+                $params = explode(':', $property);
+                $property = $params[0];
+                $func = 'sprintf';
+                $func_params = array_reverse($params);
+                $func_params_property_key = 1;
+            }
+
+            if (isset($data[$property]) && !is_array($data[$property]) && !is_object($data[$property])){
+
+                $data_property = $data[$property];
+
+                if($func && function_exists($func)){
+
+                    $func_params[$func_params_property_key] = $data_property;
+
+                    $data_property = call_user_func_array($func, $func_params);
+
+                }
+
+                $string = str_replace($tag, $data_property, $string);
+
+            } else {
+                $string = str_replace($tag, '', $string);
+            }
+
+        }
+
+    }
+
+    return $string;
 
 }
 
@@ -427,16 +555,23 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
 
     $stat = array();
 
+    $text = str_replace(array("\n", '<br>', '<br/>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", '', $text);
     $text = mb_strtolower($text);
+
+    $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
     $words = explode(' ', $text);
 
-    foreach($words as $i=>$word){
+    foreach($words as $word){
 
-        $word = trim($word, "()+-., {}|\"\n");
+        $word = trim($word);
+        $word = str_replace(array('(',')','+','-','.','!',':','{','}','|','"',',',"'"), '', $word);
         $word = preg_replace("/\.,\(\)\{\}/i", '', $word);
+
+        if($stopwords && in_array($word, $stopwords)){
+            continue;
+        }
 
         if (mb_strlen($word)>=$min_length){
             $stat[$word] = isset($stat[$word]) ? $stat[$word]+1 : 1;
@@ -447,9 +582,7 @@ function string_get_meta_keywords($text, $min_length=5, $limit=10){
     $stat = array_reverse($stat, true);
     $stat = array_slice($stat, 0, $limit, true);
 
-    $words = implode(', ', array_keys($stat));
-
-    return $words;
+    return implode(', ', array_keys($stat));
 
 }
 
@@ -467,6 +600,26 @@ function string_get_meta_description($text, $limit=250){
 }
 
 /**
+ * Возвращает массив стоп слов
+ * @staticvar array $words
+ * @param string $lang Язык, например ru, en
+ * @return array
+ */
+function string_get_stopwords($lang='ru') {
+    static $words = null;
+    if(isset($words[$lang])){
+        return $words[$lang];
+    }
+    $file = PATH.'/system/languages/'.$lang.'/stopwords/stopwords.php';
+    if(file_exists($file)){
+        $words[$lang] = include $file;
+    } else {
+        $words[$lang] = array();
+    }
+    return $words[$lang];
+}
+
+/**
  * Обрезает исходный текст до указанной длины (или последнего предложения),
  * удаляя HTML-разметку
  *
@@ -474,21 +627,24 @@ function string_get_meta_description($text, $limit=250){
  * @param int $limit Максимальная длина результата
  * @return string
  */
-function string_short($text, $limit){
+function string_short($text, $limit=0){
 
+    // строка может быть без переносов
+    // и после strip_tags не будет пробелов между словами
+    $text = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $text);
     $text = strip_tags($text);
-    $text = str_replace("\n", ' ', $text);
 
-    if (mb_strlen($text) <= $limit) { return $text; }
+    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
 
     $text = mb_substr($text, 0, $limit);
+    $text = preg_replace('/ |\s{3,}/',' ',$text);
 
     preg_match('/^(.*)([.!?])(.*)$/i', $text, $matches);
 
     if (!$matches){
         return $text;
     } else {
-        return $matches[1];
+        return $matches[1].$matches[2];
     }
 
     return $text;
@@ -510,6 +666,16 @@ function string_compress($string){
 
 }
 
+/**
+ * Преобразует первый символ строки в верхний регистр
+ * multi-bytes ucfirst
+ *
+ * @param string $str
+ * @return string
+ */
+function string_ucfirst($string) {
+    return mb_strtoupper(mb_substr($string, 0, 1)).mb_substr($string, 1);
+}
 //============================================================================//
 
 /**
@@ -522,7 +688,9 @@ function string_compress($string){
  * @param type $value
  * @return type
  */
-function array_collection_to_list($collection, $key, $value){
+function array_collection_to_list($collection, $key, $value=false){
+
+    $value = $value ? $value : $key;
 
     $list = array();
 
@@ -533,6 +701,122 @@ function array_collection_to_list($collection, $key, $value){
     }
 
     return $list;
+
+}
+
+/**
+ * Возвращает значение ячейки массива
+ * по переданной вложенности $needle
+ *
+ * @param array|string $needle Путь до необходимого ключа, например key:subkey:subsubkey
+ * @param array $haystack Массив, в котором ищем
+ * @param string $delimiter Разделитель ключей в пути, если $needle строка
+ * @return mixed Значение или null, если ключ не найден
+ */
+function array_value_recursive($needle, $haystack, $delimiter = ':') {
+
+    if(!is_array($haystack)){ return null; }
+
+    $name_parts = !is_array($needle) ? explode($delimiter, $needle) : $needle;
+
+    foreach ($name_parts as $name) {
+        if(!is_array($haystack) || !array_key_exists($name, $haystack)){
+            return null;
+        } else {
+            $haystack = $haystack[$name];
+            if($haystack === null){ $haystack = false; }
+        }
+    }
+
+    return $haystack;
+
+}
+
+/**
+ * Устанавливает значение ключа массив
+ * по переданной вложенности ключей $path
+ *
+ * @param array|string $path Путь до необходимого ключа, например key:subkey:subsubkey
+ * @param array $array Изменяемый массив
+ * @param mixed $value Значение ключа
+ * @param string $delimiter Разделитель ключей в пути, если $path строка
+ * @return mixed Возвращает изменённый массив $array
+ */
+function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
+
+    $name_parts = !is_array($path) ? explode($delimiter, $path) : $path;
+
+    $_array = &$array;
+
+    foreach ($name_parts as $name) {
+        $_array = &$_array[$name];
+    }
+
+    $_array = $value;
+
+    return $array;
+
+}
+
+/**
+ * Сортирует двумерный ассоциативный массив по полю (полям)
+ *
+ * $fields может содержать как просто имя поля для сортировки,
+ * так и массив полей с направлениями сортировок, например:
+ * array(array('by' => 'ordering', 'to' => 'asc'), array('by' => 'title', 'to' => 'desc'))
+ *
+ * @param array &$array
+ * @param string | array $fields
+ * @param string $direction
+ * @return boolean
+ */
+function array_order_by(&$array, $fields, $direction = 'asc') {
+
+    if(!$array){ return false; }
+
+    if(is_string($fields)){
+        $list = array(array(
+            'by' => $fields,
+            'to' => $direction
+        ));
+    } else {
+        $list = $fields;
+    }
+
+    $args = array();
+
+    foreach ($array as $k => $item) {
+
+        $key = 0;
+
+        foreach ($list as $order) {
+
+            $args[$key][$k] = $item[$order['by']];
+                $key++;
+            $args[$key] = constant('SORT_'.strtoupper($order['to']));
+                $key++;
+
+        }
+
+    }
+
+    $args[] = &$array;
+
+    return call_user_func_array('array_multisort', $args);
+
+}
+
+function multi_array_unique($array) {
+
+    $result = array_map('unserialize', array_unique(array_map('serialize', $array)));
+
+    foreach ($result as $key => $value) {
+        if (is_array($value)) {
+            $result[$key] = multi_array_unique($value);
+        }
+    }
+
+    return $result;
 
 }
 

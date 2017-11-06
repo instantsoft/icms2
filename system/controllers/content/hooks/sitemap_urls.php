@@ -7,16 +7,15 @@ class onContentSitemapUrls extends cmsAction {
         $urls = array();
 
         if (empty($ctype_name)) { return $urls; }
-		
-		$is_ctype_exists = $this->model->getContentTypeByName($ctype_name);
-		
-		if (!$is_ctype_exists) { return false; }
 
-        $items = $this->model->
-                            filterNotEqual('is_private', 1)->
-                            filterNotEqual('is_approved', 0)->
-                            limit(false)->
-                            getContentItems($ctype_name);
+		$is_ctype_exists = $this->model->getContentTypeByName($ctype_name);
+		if (!$is_ctype_exists) { return $urls; }
+
+        if(cmsPermissions::getRuleSubjectPermissions('content', $ctype_name, 'view_list')){
+            return $urls;
+        }
+
+        $items = $this->model->limit(false)->getContentItemsForSitemap($ctype_name);
 
         if ($items){
             foreach($items as $item){

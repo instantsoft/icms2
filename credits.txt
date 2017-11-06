@@ -73,3 +73,31 @@ Third-party plugins, libraries and resources included in InstantCMS:
     Jevix - HTML filtration tool
         by ur001
         http://code.google.com/p/jevix/
+
+    Mobile Detect Library
+        by Serban Ghita, Nick Ilyin, Victor Stanciu
+        http://mobiledetect.net
+
+    Chosen
+        by Patrick Filler, Matthew Lettini, @pfiller, @kenearley, @stof, @koenpunt, and @tjschuck
+        http://harvesthq.github.io/chosen/
+
+    Owl Carousel 2
+        by Bartosz Wojciechowski
+        http://www.owlcarousel.owlgraphic.com/
+
+    screenfull
+        by Sindre Sorhus
+        https://github.com/sindresorhus/screenfull.js
+
+    jQuery-flexImages
+        by Pixabay.com
+        https://github.com/Pixabay/jQuery-flexImages
+
+    jQuery UI Touch Punch
+        by David Furfero
+        http://touchpunch.furf.com/
+
+    jQuery CSS Customizable Scrollbar
+        by Yuriy Khabarov
+        https://github.com/gromo/jquery.scrollbar/

@@ -1,6 +1,5 @@
 <?php
     $this->addCSS('templates/default/css/datatree.css');
-    $this->addJS('templates/default/js/jquery-ui.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addJS('templates/default/js/admin-props.js');
@@ -46,7 +45,7 @@
 
         $this->addToolButton(array(
             'class' => 'save',
-            'title' => LANG_SAVE,
+            'title' => LANG_SAVE_ORDER,
             'href'  => null,
             'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('props_reorder', $ctype['name']))}')"
         ));
@@ -79,6 +78,7 @@
 
             <div id="datatree">
                 <ul id="treeData" style="display: none">
+                    <li id="<?php echo $ctype['id'];?>.0"><?php echo LANG_ALL; ?></li>
                     <?php foreach($cats as $id=>$cat){ ?>
                         <li id="<?php echo $ctype['id'];?>.<?php echo $cat['id']; ?>" class="lazy folder"><?php echo $cat['title']; ?></li>
                     <?php } ?>
@@ -88,11 +88,15 @@
             <script type="text/javascript">
                     $(function(){
 
+                        is_loaded = false;
+
                         $("#datatree").dynatree({
 
                             onPostInit: function(isReloading, isError){
                                 var path = $.cookie('icms[props<?php echo $ctype['id']; ?>_tree_path]');
-                                if (!path) { path = '1.1'; }
+                                if (!path) {
+                                    $('a', "#datatree").eq(0).trigger('click');
+                                }
                                 if (path) {
                                     $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
                                         if(status == "loaded") {
@@ -100,7 +104,6 @@
                                         }else if(status == "ok") {
                                             node.activate();
                                             node.expand();
-                                            icms.datagrid.init();
                                         }
                                     });
                                 }
@@ -110,13 +113,15 @@
                                 node.expand();
                                 $.cookie('icms[props<?php echo $ctype['id']; ?>_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
                                 var key = node.data.key.split('.');
-                                $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('ctypes', array('props_add')); ?>/" + key[0] + "/" + key[1]);
+                                $('.cp_toolbar .add a').fadeIn('fast').attr('href', "<?php echo $this->href_to('ctypes', array('props_add')); ?>/" + key[0] + "/" + key[1]);
+                                $('.cp_toolbar .edit_folder a, .cp_toolbar .delete_folder a').fadeIn('fast');
+                                if(key[1] == 0){
+                                    $('.cp_toolbar .add a, .cp_toolbar .edit_folder a, .cp_toolbar .delete_folder a').hide();
+                                }
                                 $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
                                 $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
-                                $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>');
+                                $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?back=<?php echo $this->href_to('ctypes', array('props', $ctype['id'])) ?>&csrf_token='+icms.forms.getCsrfToken());
                                 $('form#props-bind').attr('action', "<?php echo $this->href_to('ctypes', array('props_bind')); ?>/" + key[0] + "/" + key[1]);
-                                icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props_ajax', $ctype['name'])); ?>/" + key[1]);
-                                icms.datagrid.loadRows(filterPropsList);
                                 if (node.bExpanded==false){
                                     $('#props-bind #is_childs .input-checkbox').removeAttr('checked');
                                     $('#props-bind #is_childs').hide();
@@ -124,6 +129,12 @@
                                     $('#props-bind #is_childs .input-checkbox').attr('checked', 'checked');
                                     $('#props-bind #is_childs').show();
                                 }
+                                if (!is_loaded){
+                                    is_loaded = true;
+                                    icms.datagrid.init();
+                                }
+                                icms.datagrid.setURL("<?php echo $this->href_to('ctypes', array('props_ajax', $ctype['name'])); ?>/" + key[1]);
+                                icms.datagrid.loadRows(filterPropsList);
                             },
 
                             onLazyRead: function(node){
@@ -143,7 +154,7 @@
         </td>
         <td class="main" valign="top">
 
-            <?php $this->renderGrid($this->href_to('ctypes', array('props_ajax', $ctype['name'])), $grid); ?>
+            <?php $this->renderGrid(false, $grid); ?>
 
             <?php if ($props){ ?>
                 <form action="" method="post" id="props-bind">

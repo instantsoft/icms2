@@ -4,8 +4,111 @@ icms.images = (function ($) {
 
     this.uploadCallback = null;
     this.removeCallback = null;
+    this.uploaded_count = 0;
 
     //====================================================================//
+
+    this._onSubmit = function(field_name){
+        widget = $('#widget_image_'+field_name);
+        $('.upload', widget).hide();
+        $('.loading', widget).show();
+    };
+
+    this._showButton = function(field_name){
+        widget = $('#widget_image_'+field_name);
+        $('.upload', widget).show();
+        $('.loading', widget).hide();
+    };
+
+    this._onComplete = function(field_name, result){
+
+        widget = $('#widget_image_'+field_name);
+
+        if(!result.success) {
+            icms.modal.alert(result.error);
+            icms.images._showButton(field_name);
+            return;
+        }
+
+        var preview_img_src = null;
+
+        $('.data', widget).html('');
+
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
+
+        for(var path in result.paths){
+            preview_img_src = preview_img_src || result.paths[path].url;
+            $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+path+']" value="'+result.paths[path].path+'" />');
+        }
+
+        $('.preview img', widget).attr('src', preview_img_src);
+        $('.preview', widget).show();
+        $('.loading', widget).hide();
+
+        if (typeof(icms.images.uploadCallback) == 'function'){
+            icms.images.uploadCallback(field_name, result);
+        }
+
+    };
+
+    this._onMultiComplete = function (field_name, result){
+
+        icms.images._showButton(field_name);
+
+        widget = $('#widget_image_'+field_name);
+
+        if(!result.success) {
+            return;
+        }
+
+        var idx = $('.data input:last', widget).attr('rel');
+        if (typeof(idx) == 'undefined') { idx = 0; } else { idx++; }
+
+        var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
+
+        var preview_img_src = null;
+
+        var image_data = {};
+
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
+
+        for(var path in result.paths){
+            preview_img_src = preview_img_src || result.paths[path].url;
+            $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
+            image_data[path] = result.paths[path].path;
+        }
+
+        $(preview_block).data('paths', image_data);
+        $('img', preview_block).attr('src', preview_img_src);
+        $('a', preview_block).data('id', idx).click(function() { icms.images.removeOne(field_name, this); });
+
+        $('.previews_list', widget).append(preview_block);
+
+    };
+
+    this.uploadByLink = function(field_name, upload_url, link){
+        icms.images._onSubmit(field_name);
+        var post_params = {}; post_params[field_name] = link;
+        $.post(upload_url, post_params, function(result){
+            icms.images._onComplete(field_name, result);
+        }, 'json');
+    };
+
+    this.uploadMultyByLink = function(field_name, upload_url, link, max_images){
+        max_images = +(max_images || 0);
+        icms.images.uploaded_count += 1;
+        if(max_images > 0 && icms.images.uploaded_count > max_images){
+            icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
+            return false;
+        }
+        icms.images._onSubmit(field_name);
+        var post_params = {}; post_params[field_name] = link;
+        $.post(upload_url, post_params, function(result){
+            icms.images._onMultiComplete(field_name, result);
+        }, 'json');
+    };
 
     this.upload = function(field_name, upload_url){
 
@@ -14,79 +117,89 @@ icms.images = (function ($) {
             action: upload_url,
             multiple: false,
             debug: false,
-
+            showMessage: function(message){
+                icms.modal.alert(message);
+            },
             onSubmit: function(id, fileName){
-                var widget = $('#widget_image_'+field_name);
-                $('.upload', widget).hide();
-                $('.loading', widget).show();
+                var ftitle = $('#title').val();
+                if(ftitle){
+                    this.params = {
+                        file_name: $('#title').val()+' '+field_name
+                    };
+                }
+                icms.images._onSubmit(field_name);
             },
 
             onComplete: function(id, file_name, result){
-
-                var widget = $('#widget_image_'+field_name);
-
-                if(!result.success) {
-                    alert(result.error);
-                    $('.upload', widget).show();
-                    $('.loading', widget).hide();
-                    return;
-                }
-
-                $('.preview img', widget).attr('src', result.paths.small.url);
-                $('.preview', widget).show();
-                $('.loading', widget).hide();
-
-                $('.data', widget).html('');
-
-                for(var path in result.paths){
-                    $('.data', widget).append('<input type="hidden" name="'+field_name+'['+path+']" value="'+result.paths[path].path+'" />');
-                }
-
-                if (typeof(icms.images.uploadCallback) == 'function'){
-                    icms.images.uploadCallback(field_name, result);
-                }
-
+                icms.images._onComplete(field_name, result);
             }
 
         });
 
-    }
+    };
 
-    //====================================================================//
+    this.createUploader = function(field_name, upload_url, max_images){
 
-    this.createUploader = function(field_name, upload_url){
+        max_images = +(max_images || 0);
 
         var uploader = new qq.FileUploader({
             element: document.getElementById('file-uploader-'+field_name),
             action: upload_url,
             debug: false,
-
+            showMessage: function(message){
+                icms.modal.alert(message);
+            },
+            onSubmit: function(id, fileName){
+                icms.images.uploaded_count += 1;
+                if(max_images > 0 && icms.images.uploaded_count > max_images){
+                    icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
+                    return false;
+                }
+                var ftitle = $('#title').val();
+                if(ftitle){
+                    this.params = {
+                        file_name: $('#title').val()+' '+field_name
+                    };
+                }
+                icms.images._onSubmit(field_name);
+            },
             onComplete: function(id, file_name, result){
-
-                if(!result.success) {
-                    return;
-                }
-
-                var idx = $('.data input:last', widget).attr('rel');
-                if (typeof(idx) == 'undefined') { idx = 0; } else { idx++; }
-
-                var widget = $('#widget_image_'+field_name);
-                var preview_block = $('.preview_template', widget).clone().removeClass('preview_template').addClass('preview').attr('rel', idx).show();
-
-                $('img', preview_block).attr('src', result.paths.small.url);
-                $('a', preview_block).click(function() { icms.images.removeOne(field_name, idx); });
-
-                $('.previews_list', widget).append(preview_block);
-
-                for(var path in result.paths){
-                    $('.data', widget).append('<input type="hidden" name="'+field_name+'['+idx+']['+path+']" value="'+result.paths[path].path+'" rel="'+idx+'" />');
-                }
-
+                icms.images._onMultiComplete(field_name, result);
             }
-
         });
 
-    }
+    };
+
+    this.initSortable = function (field_name){
+        var widget = $('#widget_image_'+field_name);
+        var _input_name = field_name.replace(/_l_/g, '[');
+        _input_name = _input_name.replace(/_r_/g, ']');
+        $('.previews_list', widget).sortable({
+            items: '.preview',
+            cursor: 'move',
+            cancel: 'a',
+            revert: true,
+            opacity: 0.9,
+            delay: 150,
+            placeholder: 'colplaceholder',
+            start: function(event, ui) {
+                $(ui.placeholder).addClass($(ui.item).attr('class'));
+                $(ui.placeholder).height($(ui.item).height());
+                $(ui.placeholder).width($(ui.item).width());
+            },
+            update: function(event, ui) {
+                $('.data', widget).html('');
+                $('.previews_list .preview', widget).each(function(index){
+                    $(this).attr('rel', index).find('a').data('id', index);
+                    var paths = $(this).data('paths');
+                    for(var path in paths){
+                        $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+index+']['+path+']" value="'+paths[path]+'" rel="'+index+'" />');
+                    }
+
+                });
+            }
+        });
+    };
 
     //====================================================================//
 
@@ -100,14 +213,18 @@ icms.images = (function ($) {
         $('.data', widget).html('');
 
         if (typeof(icms.images.removeCallback) == 'function'){
-            icms.images.removeCallback(field_name, result);
+            icms.images.removeCallback(field_name);
         }
 
-    }
+        return false;
+
+    };
 
     //====================================================================//
 
-    this.removeOne = function(field_name, idx){
+    this.removeOne = function(field_name, link){
+
+        var idx = $(link).data('id');
 
         var widget = $('#widget_image_'+field_name);
 
@@ -117,11 +234,15 @@ icms.images = (function ($) {
         var count = 0;
         var current = false;
 
+        icms.images.uploaded_count -= 1;
+
         if (typeof(icms.images.removeCallback) == 'function'){
             icms.images.removeCallback(field_name, idx);
         }
 
-    }
+        return false;
+
+    };
 
     //====================================================================//
 

@@ -3,33 +3,30 @@
 class actionUsersFriendDelete extends cmsAction {
 
     public function run($friend_id){
-		
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
+		if (!cmsUser::isLogged()) { cmsCore::error404(); }
 
         if (!$friend_id) { cmsCore::error404(); }
 
-        if (!$this->model->isFriendshipExists($user->id, $friend_id)){ return false; }
+        if (!$this->model->isFriendshipExists($this->cms_user->id, $friend_id)){ return false; }
 
         $friend = $this->model->getUser($friend_id);
-
-        if (!$friend){ cmsCore::error404(); }
+        if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
 
         //
         // Запрос по ссылке из профиля
         //
-        if ($this->request->isStandard()){
+        if ($this->request->isStandard() || $this->request->isAjax()){
 
             if ($this->request->has('submit')){
 
                 // подтвержение получено
 
-                $csrf_token = $this->request->get('csrf_token');
+                $csrf_token = $this->request->get('csrf_token', '');
 
                 if (!cmsForm::validateCSRFToken($csrf_token)){ cmsCore::error404(); }
 
-                $this->model->deleteFriendship($user->id, $friend_id);
+                $this->model->deleteFriendship($this->cms_user->id, $friend_id);
 
                 cmsUser::addSessionMessage(sprintf(LANG_USERS_FRIENDS_DELETED, $friend['nickname']));
 
@@ -41,9 +38,9 @@ class actionUsersFriendDelete extends cmsAction {
 
                 // спрашиваем подтверждение
 
-                return cmsTemplate::getInstance()->render('friend_delete', array(
-                    'user' => $user,
-                    'friend' => $friend,
+                return $this->cms_template->render('friend_delete', array(
+                    'user'   => $this->cms_user,
+                    'friend' => $friend
                 ));
 
             }
@@ -55,7 +52,7 @@ class actionUsersFriendDelete extends cmsAction {
         //
         if ($this->request->isInternal()){
 
-            $this->model->deleteFriendship($user->id, $friend_id);
+            $this->model->deleteFriendship($this->cms_user->id, $friend_id);
 
             $this->sendNoticeDeleted($friend, true);
 
@@ -67,13 +64,11 @@ class actionUsersFriendDelete extends cmsAction {
 
     public function sendNoticeDeleted($friend, $is_declined=false){
 
-        $user = cmsUser::getInstance();
-
         $messenger = cmsCore::getController('messages');
 
         $messenger->addRecipient($friend['id']);
 
-        $sender_link = '<a href="'.href_to($this->name, $user->id).'">'.$user->nickname.'</a>';
+        $sender_link = '<a href="'.href_to($this->name, $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
 
         $content = $is_declined ?
                     sprintf(LANG_USERS_FRIENDS_DECLINED, $sender_link) :
@@ -90,8 +85,8 @@ class actionUsersFriendDelete extends cmsAction {
         //
         if (!$is_declined){
             $messenger->sendNoticeEmail('users_friend_delete', array(
-                'friend_nickname' => $user->nickname,
-                'friend_url' => href_to_abs('users', $user->id),
+                'friend_nickname' => $this->cms_user->nickname,
+                'friend_url'      => href_to_abs('users', $this->cms_user->id)
             ));
         }
 

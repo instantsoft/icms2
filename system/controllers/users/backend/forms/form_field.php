@@ -13,7 +13,7 @@ class formUsersField extends cmsForm {
                         'rules' => array(
                             array('required'),
                             array('sysname'),
-                            array('max_length', 20), 
+                            array('max_length', 20),
                             $do == 'add' ? array('unique_field') : false
                         )
                     )),
@@ -55,7 +55,7 @@ class formUsersField extends cmsForm {
                         'generator' => function($field) {
                             $model = cmsCore::getModel('content');
                             $model->setTablePrefix('');
-                            $fieldsets = $model->getContentFieldsets('users');
+                            $fieldsets = $model->getContentFieldsets('{users}');
                             $items = array('');
                             foreach($fieldsets as $fieldset) { $items[$fieldset] = $fieldset; }
                             return $items;
@@ -73,15 +73,31 @@ class formUsersField extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_VISIBILITY,
                 'childs' => array(
+                    new fieldCheckbox('is_in_item', array(
+                        'title' => LANG_CP_FIELD_IN_PROFILE,
+                        'default' => true
+                    )),
+                    new fieldCheckbox('is_in_list', array(
+                        'title' => LANG_CP_FIELD_IN_LIST,
+                    )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
-                    )),
+                    ))
                 )
             ),
             'labels' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_LABELS,
                 'childs' => array(
+                    new fieldList('options:label_in_list', array(
+                        'title' => LANG_CP_FIELD_LABELS_IN_LIST,
+                        'default' => 'none',
+                        'items' => array(
+                            'left' => LANG_CP_FIELD_LABEL_LEFT,
+                            'top' => LANG_CP_FIELD_LABEL_TOP,
+                            'none' => LANG_CP_FIELD_LABEL_NONE
+                        )
+                    )),
                     new fieldList('options:label_in_item', array(
                         'title' => LANG_CP_FIELD_LABELS_IN_ITEM,
                         'default' => 'left',
@@ -90,7 +106,7 @@ class formUsersField extends cmsForm {
                             'top' => LANG_CP_FIELD_LABEL_TOP,
                             'none' => LANG_CP_FIELD_LABEL_NONE
                         )
-                    )),
+                    ))
                 )
             ),
             'format' => array(
@@ -109,6 +125,9 @@ class formUsersField extends cmsForm {
                     new fieldCheckbox('options:is_email', array(
                         'title' => LANG_VALIDATE_EMAIL,
                     )),
+                    new fieldCheckbox('options:is_unique', array(
+                        'title' => LANG_VALIDATE_UNIQUE,
+                    )),
                 )
             ),
             'values' => array(
@@ -120,15 +139,7 @@ class formUsersField extends cmsForm {
                     ))
                 )
             ),
-//            'privacy' => array(
-//                'type' => 'fieldset',
-//                'title' => LANG_CP_FIELD_PRIVACY,
-//                'childs' => array(
-//                    new fieldCheckbox('is_private', array(
-//                        'title' => LANG_CP_FIELD_PRIVATE,
-//                    )),
-//                )
-//            ),
+
             'read_access' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_READ,
@@ -147,6 +158,15 @@ class formUsersField extends cmsForm {
                     ))
                 )
             ),
+            'filter_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_IN_FILTER,
+                'childs' => array(
+                    new fieldListGroups('filter_view', array(
+                        'show_all' => true
+                    ))
+                )
+            )
         );
 
     }

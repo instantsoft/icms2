@@ -4,10 +4,16 @@ class actionGroupsInvite extends cmsAction {
 
     public function run($invited_id){
 
-        $user = cmsUser::getInstance();
+        // профиль приглашаемого
+        $profile = cmsCore::getModel('users')->getUser($invited_id);
+        if (!$profile || $profile['id'] == $this->cms_user->id) { cmsCore::error404(); }
+
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'invite_group_users')){
+            cmsCore::error404();
+        }
 
         // Группы, в которые можно приглашать
-        $my_groups = $this->model->getInvitableGroups($user->id);
+        $my_groups = $this->model->getInvitableGroups($this->cms_user->id);
 
         // Членства приглашаемого в группах
         $his_groups = $this->model->getUserMemberships($invited_id);
@@ -23,11 +29,9 @@ class actionGroupsInvite extends cmsAction {
             }
         }
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit') && $my_groups){
 
-        if ($is_submitted && $my_groups){
-
-            $group_id = $this->request->get('group_id');
+            $group_id = $this->request->get('group_id', 0);
 
             if (!isset($my_groups[$group_id])){ cmsCore::error404(); }
 
@@ -40,9 +44,9 @@ class actionGroupsInvite extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('invite', array(
+        return $this->cms_template->render('invite', array(
             'invited_id' => $invited_id,
-            'groups' => $my_groups,
+            'groups'     => $my_groups
         ));
 
     }

@@ -12,6 +12,8 @@ class modelAdmin extends cmsModel{
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
 
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
+
             return $item;
 
         });
@@ -27,8 +29,76 @@ class modelAdmin extends cmsModel{
     public function getControllerInfo($controller_name){
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            $item['files'] = cmsModel::yamlToArray($item['files']);
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
             return $item;
         });
+    }
+
+//============================================================================//
+//===========================    Дополнения    ===============================//
+//============================================================================//
+
+    public function getInstalledAddonsIds() {
+
+        $controllers_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('controllers', function($item, $model){ return $item['addon_id']; }, false);
+
+        $widgets_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('widgets', function($item, $model){ return $item['addon_id']; }, false);
+
+        return array_filter(array_merge($widgets_addons, $controllers_addons));
+
+    }
+
+//============================================================================//
+//============================    События    =================================//
+//============================================================================//
+
+    public function getEvents(){
+
+        $this->limit = false;
+
+        return $this->get('events');
+
+    }
+
+    public function reorderEvents($ids_list){
+
+        $this->reorderByList('events', $ids_list);
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
+    }
+
+    public function addEvent($listener, $event) {
+
+        $id = $this->insert('events', array(
+            'listener' => $listener,
+            'event'    => $event,
+            'ordering' => $this->getNextOrdering('events')
+        ));
+
+        cmsCache::getInstance()->clean('events');
+
+        return $id;
+
+    }
+
+    public function deleteEvent($listener, $event) {
+
+        $this->filterEqual('listener', $listener);
+        $this->filterEqual('event', $event);
+        $this->deleteFiltered('events');
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
     }
 
 //============================================================================//
@@ -52,23 +122,25 @@ class modelAdmin extends cmsModel{
         $tasks = $this->filterEqual('is_active', 1)->getSchedulerTasks();
         $pending = array();
 
-        foreach($tasks as $task){
+        if($tasks){
+	        foreach($tasks as $task){
 
-            if ($task['is_new']) {
-                $pending[] = $task;
-                continue;
-            }
+	            if ($task['is_new']) {
+	                $pending[] = $task;
+	                continue;
+	            }
 
-            $time_last_run = strtotime($task['date_last_run']);
-            $time_now = time();
+	            $time_last_run = strtotime($task['date_last_run']);
+	            $time_now = time();
 
-            $minutes_ago = floor(($time_now - $time_last_run) / 60);
+	            $minutes_ago = floor(($time_now - $time_last_run) / 60);
 
-            if ($minutes_ago >= $task['period']){
-                $pending[] = $task;
-                continue;
-            }
+	            if ($minutes_ago >= $task['period']){
+	                $pending[] = $task;
+	                continue;
+	            }
 
+	        }
         }
 
         return $pending;
@@ -108,7 +180,12 @@ class modelAdmin extends cmsModel{
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function toggleSchedulerPublication($id, $is_active){
+
+     	return $this->update('scheduler_tasks', $id, array(
+			'is_active' => $is_active
+		));
+
+    }
 
 }

@@ -35,6 +35,10 @@ class fieldAge extends cmsFormField {
                     'DAY' => LANG_DAYS,
                 )
             )),
+			new fieldDate('from_date', array(
+				'title' => LANG_PARSER_AGE_FROM_DATE,
+				'hint' => LANG_PARSER_AGE_FROM_DATE_HINT,
+			))
         );
     }
 
@@ -51,6 +55,7 @@ class fieldAge extends cmsFormField {
         if ($this->getOption('show_d')){ $options[] = 'd'; }
         if ($this->getOption('show_h')){ $options[] = 'h'; }
         if ($this->getOption('show_i')){ $options[] = 'i'; }
+        if ($this->getOption('from_date')){ $options['from_date'] = $this->getOption('from_date'); }
 
         return string_date_age($date, $options);
 
@@ -71,38 +76,41 @@ class fieldAge extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!is_array($value)) { return $model; }
+        if (!is_array($value)) { return parent::applyFilter($model, $value); }
 
-        if (!empty($value['from'])){
-            $from = intval($value['from']);
-            $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+        if(!empty($value['from']) || !empty($value['to'])){
+
+            if (!empty($value['from'])){
+                $from = intval($value['from']);
+                $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+            }
+
+            if (!empty($value['to'])){
+                $to = intval($value['to']);
+                $model->filterDateYounger($this->name, $to, $this->getOption('range'));
+            }
+
+            return $model;
+
         }
 
-        if (!empty($value['to'])){
-            $to = intval($value['to']);
-            $model->filterDateYounger($this->name, $to, $this->getOption('range'));
-        }
-
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $config = cmsConfig::getInstance();
-
         if ($value){
-            $date = DateTime::createFromFormat($config->date_format, $value);
-            return $date->format('Y-m-d');
-        } else {
-            return null;
+            return date('Y-m-d', strtotime($value));
         }
+
+        return null;
 
     }
 
     public function getInput($value){
 
-        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         return parent::getInput($value);
 

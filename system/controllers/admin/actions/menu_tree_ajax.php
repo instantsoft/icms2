@@ -6,9 +6,9 @@ class actionAdminMenuTreeAjax extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', '');
 
-        if (!$id || !preg_match('/^([0-9\.]+)/i', $id)){ cmsCore::error404(); }
+        if (!$id || !preg_match('/^([0-9\.]+)$/i', $id)){ cmsCore::error404(); }
 
         $menu_model = cmsCore::getModel('menu');
 
@@ -21,14 +21,14 @@ class actionAdminMenuTreeAjax extends cmsAction {
         if ($items){
             foreach($items as $item){
                 $tree_nodes[] = array(
-                    'title' => $item['title'],
-                    'key' => "{$menu_id}.{$item['id']}",
+                    'title'  => $item['title'],
+                    'key'    => "{$menu_id}.{$item['id']}",
                     'isLazy' => ($item['childs_count'] > 0)
                 );
             }
         }
 
-        cmsTemplate::getInstance()->renderJSON($tree_nodes);
+        $this->cms_template->renderJSON($tree_nodes);
 
     }
 

@@ -217,7 +217,7 @@
         		}
 
                 aStyleSheets.push(styleSheets[s]);
-                if (navigator.appName.indexOf('Microsoft') != -1) {
+                if (isIE) {
                     getStyleSheets(styleSheets[s].imports, aStyleSheets);
                 } else {
                     if (styleSheets[s].cssRules !== null) {
@@ -248,7 +248,7 @@
 
                 sStore = "";
                 var oRules;
-                if (navigator.appName.indexOf('Microsoft') != -1) {
+                if (isIE) {
                     oRules = myStyle.rules;
                 }
                 else {
@@ -313,7 +313,7 @@
                     var myStyle = oEditor.document.styleSheets[j];
                     sStore = "";
                     var oRules;
-                    if (navigator.appName.indexOf('Microsoft') != -1) {
+                    if (isIE) {
                         oRules = myStyle.rules;
                     }
                     else {
@@ -480,7 +480,7 @@
         <tr>
         <td valign="top">
         <input id="Radio6" type="radio" name="rdoApply" value="table" checked="checked" /><label for="Radio6" id="lblTable">Table</label><br />
-        <input id="Radio16" type="radio" name="rdoApply" value="cell" /><label for="Radio16" id="Label1">Cell</label>
+        <input id="Radio16" type="radio" name="rdoApply" value="cell" /><label for="Radio16" id="lblCell">Cell</label>
         </td>
         <td valign="top" style="padding-left:20px">
         <input id="Radio7" type="radio" name="rdoApply" value="even" /><label for="Radio7" id="lblEven">Even Rows</label><br />

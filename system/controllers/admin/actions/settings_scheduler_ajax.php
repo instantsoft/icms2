@@ -13,6 +13,8 @@ class actionAdminSettingsSchedulerAjax extends cmsAction {
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
+        $filter_str = cmsUser::getUPSActual('admin.grid_filter.set_scheduler', $filter_str);
+
         if ($filter_str){
             parse_str($filter_str, $filter);
             $this->model->applyGridFilter($grid, $filter);

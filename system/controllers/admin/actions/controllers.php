@@ -10,7 +10,7 @@ class actionAdminControllers extends cmsAction {
             return;
         }
 
-        $grid = $this->loadDataGrid('controllers');
+        $grid = $this->loadDataGrid('controllers', false, 'admin.grid_filter.controllers');
 
         return cmsTemplate::getInstance()->render('controllers', array(
             'grid' => $grid

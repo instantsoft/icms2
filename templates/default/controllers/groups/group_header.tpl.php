@@ -2,90 +2,63 @@
 
     $user = cmsUser::getInstance();
 
-    if(!isset($content_counts)) {
-        $content_counts = $this->controller->model->getGroupContentCounts($group['id']);
-    }
-
-    $group['content_count'] = 0;
-    $group['first_ctype_name'] = false;
-
-    if ($content_counts){
-        foreach($content_counts as $ctype_name=>$count){
-            if (!$count['is_in_list']) { continue; }
-            if (!$group['first_ctype_name']) { $group['first_ctype_name'] = $ctype_name; }
-            $group['content_count'] += $count['count'];
-        }
-    }
-
     $this->addMenuItems('group_tabs', $this->controller->getGroupTabs($group));
+    $this->addMenuItems('controller_actions_menu', $this->controller->getToolButtons($group));
 
-    $is_owner = $user->id == $group['owner_id'];
-    $membership = $this->controller->model->getMembership($group['id'], $user->id);
-    $is_member = ($membership !== false);
-    $member_role = $is_member ? $membership['role'] : groups::ROLE_NONE;
-    $invite = $this->controller->model->getInvite($group['id'], $user->id);
-    $is_can_invite = ($is_member && ($group['join_policy'] != groups::JOIN_POLICY_PRIVATE)) || $is_owner;
-
-    if (($member_role == groups::ROLE_STAFF && $group['edit_policy'] == groups::EDIT_POLICY_STAFF) || $is_owner || cmsUser::isAllowed('groups', 'edit', 'all')){
-        $this->addToolButton(array(
-            'title' => LANG_GROUPS_EDIT,
-            'class' => 'settings',
-            'href' => $this->href_to($group['id'], 'edit')
-        ));
-    }
-
-    if ($user->id && $is_can_invite){
-        $this->addToolButton(array(
-            'title' => LANG_GROUPS_INVITE,
-            'class' => 'group_add ajax-modal',
-            'href' => $this->href_to('invite_friends', $group['id'])
-        ));
-    }
-
-    if ($user->id && !$is_member && ($group['join_policy'] == groups::JOIN_POLICY_FREE || $invite)){
-        $this->addToolButton(array(
-            'title' => LANG_GROUPS_JOIN,
-            'class' => 'user_add',
-            'href' => $this->href_to($group['id'], 'join'),
-            'confirm' => LANG_GROUPS_JOIN . '?'
-        ));
-    }
-
-    if ($user->id && $is_member && !$is_owner){
-        $this->addToolButton(array(
-            'title' => LANG_GROUPS_LEAVE,
-            'class' => 'user_delete',
-            'href' => $this->href_to($group['id'], 'leave'),
-            'confirm' => LANG_GROUPS_LEAVE . '?'
-        ));
-    }
-
-    if (cmsUser::isAllowed('groups', 'delete', 'all') || (cmsUser::isAllowed('groups', 'delete', 'own') && $is_owner)){
-        $this->addToolButton(array(
-            'title' => LANG_GROUPS_DELETE,
-            'class' => 'delete',
-            'href' => $this->href_to($group['id'], 'delete')
-        ));
-    }
+    $this->setPagePatternTitle($group);
+    $this->setPagePatternDescription($group);
 
 ?>
 
+<?php if(!empty($group['fields']['cover']['is_in_item']) && $group['cover']){ ?>
+<div style="background-image: url(<?php echo html_image_src($group['cover'], $group['fields']['cover']['handler']->getOption('size_full'), true); ?>);" id="group_head">
+    <div class="gwrapper">
+        <div class="group_counts">
+            <div>
+                <strong><?php echo LANG_RATING; ?>:</strong>
+                <span><?php echo $group['rating']; ?></span>
+            </div>
+            <div>
+                <strong><?php echo LANG_GROUP_INFO_CREATED_DATE; ?>:</strong>
+                <span><?php echo string_date_age_max($group['date_pub'], true); ?></span>
+            </div>
+            <div>
+                <strong><?php echo LANG_GROUP_INFO_OWNER; ?>:</strong>
+                <span><a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a></span>
+            </div>
+        </div>
+        <div class="share">
+            <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+            <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+            <div class="ya-share2" data-title="<?php html($group['title']); ?><?php if (!empty($group['sub_title'])) { ?> / <?php html($group['sub_title']); ?><?php } ?>" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-description="<?php html(string_short($group['description'], 200)); ?>"></div>
+        </div>
+    </div>
+</div>
+<?php } ?>
+<?php $this->actionsToolbar(LANG_GROUPS_MENU); ?>
 <h1 id="group_profile_title">
-	<?php if ($group['logo']){ ?>
-		<span class="logo"><?php echo html_image($group['logo'], 'micro', $group['title']); ?></span>
+	<?php if (!empty($group['fields']['logo']['is_in_item']) && $group['logo']){ ?>
+		<span class="logo"><?php echo html_image($group['logo'], $group['fields']['logo']['handler']->getOption('size_full'), $group['title']); ?></span>
 	<?php } ?>
-    <?php html($group['title']); ?>
+    <?php if (!empty($group['fields']['title']['is_in_item'])){ ?>
+        <?php if (!empty($this->controller->options['tag_h1'])) { ?>
+            <?php echo string_replace_keys_values_extended($this->controller->options['tag_h1'], $group); ?>
+        <?php } else { ?>
+            <?php html($group['title']); ?>
+        <?php } ?>
+        <?php if (!empty($group['sub_title'])) { ?>
+            <span>/ <?php html($group['sub_title']); ?></span>
+        <?php } ?>
+    <?php } ?>
     <?php if ($group['is_closed']) { ?>
         <span class="is_closed" title="<?php html(LANG_GROUP_IS_CLOSED_ICON); ?>"></span>
     <?php } ?>
 </h1>
 
-<?php if (!$group['is_closed'] || ($is_member || $user->is_admin)){ ?>
-
+<?php if (!$group['is_closed'] || ($group['access']['is_member'] || $user->is_admin)){ ?>
     <div id="group_profile_tabs">
         <div class="tabs-menu">
-            <?php $this->menu('group_tabs'); ?>
+            <?php $this->menu('group_tabs', true, 'tabbed', 6); ?>
         </div>
     </div>
-
 <?php } ?>

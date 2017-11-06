@@ -8,35 +8,6 @@
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
 
-    $tool_buttons = array();
-
-    if ($user->is_logged) {
-
-        if ($is_friends_on && !$is_own_profile){
-            if ($is_friend_profile){
-                $tool_buttons['friend_delete'] = array(
-                    'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete',
-                    'href' => $this->href_to('friend_delete', $profile['id'])
-                );
-            } else if(!$is_friend_req) {
-                $tool_buttons['friend_add'] = array(
-                    'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add',
-                    'href' => $this->href_to('friend_add', $profile['id'])
-                );
-            }
-        }
-
-    }
-
-    $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
-        'profile' => $profile,
-        'buttons' => $tool_buttons
-    ));
-
-    $tool_buttons = $buttons_hook['buttons'];
-
     if (is_array($tool_buttons)){
         foreach($tool_buttons as $button){
             $this->addToolButton($button);

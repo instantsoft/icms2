@@ -23,23 +23,46 @@
     <script language="javascript" type="text/javascript">
         var obj = parent.oUtil.obj;
 
+		var UA = navigator.userAgent.toLowerCase();
+		var isIE = (UA.indexOf('msie') >= 0) ? true : false;
+		var isIE11 = false;
+		if(!isIE) { //ie11
+			isIE = (UA.indexOf('trident') >= 0) ? true : false;
+			if(isIE) isIE11 = true;
+		}
+
+		var lastRange = null;
+		
         function doSearch() {
             var oEditor = parent.oUtil.oEditor;
             var oSel;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 obj.setFocus();
                 if (!obj.checkFocus()) { return; } //Focus stuff
 
-                oSel = oEditor.document.selection.createRange();
-
+                oSel = oEditor.document.body.createTextRange(); 
+				
                 if (chkMatchCase.checked && chkMatchWord.checked) sType = 6;
                 else if (chkMatchCase.checked) sType = 4;
                 else if (chkMatchWord.checked) sType = 2;
                 else sType = 0;
-                oSel.collapse(false)
-                if (oSel.findText(inpSearch.value, 1000000000, sType)) oSel.select();
-                else {
+                
+				if(!isIE11) {
+					oSel.collapse(false);				
+				} else {
+					if(lastRange!=null) {
+						oSel.setEndPoint("StartToEnd", lastRange);
+					}
+				}
+				
+                if (oSel.findText(inpSearch.value, 100000, sType)) {
+					oSel.select();
+					lastRange = oSel.duplicate();
+				} else {
                     if (confirm(getTxt("Finished searching"))) {
+						if(isIE11) {
+							lastRange=null;
+						}
                         oSel.expand("textedit");
                         oSel.collapse("true");
                         oSel.select();
@@ -75,20 +98,34 @@
         function doReplace() {
             var oEditor = parent.oUtil.oEditor;
             var oSel;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 obj.setFocus();
                 if (!obj.checkFocus()) { return; } //Focus stuff
-
-                oSel = oEditor.document.selection.createRange();
+				
+				if(isIE11) {
+					oSel = oEditor.document.body.createTextRange(); 
+				} else {
+					oSel = oEditor.document.selection.createRange();
+				}
+				
+				if(isIE11 && lastRange!=null) {
+					oSel.setEndPoint("StartToStart", lastRange);
+					oSel.setEndPoint("EndToEnd", lastRange);
+				}
 
                 if (oSel.text.toLowerCase() == inpSearch.value.toLowerCase()) {
                     parent.oUtil.obj.saveForUndo();
                     oSel.text = inpReplace.value;
-                    oSel = oEditor.document.selection.createRange();
-                    oSel.moveStart("character", inpSearch.value.length);
-                    oSel.moveEnd("character", 1);
-                    oSel.collapse("false");
-                    oSel.select();
+					if(!isIE11) {
+						oSel = oEditor.document.selection.createRange();
+						oSel.moveStart("character", inpSearch.value.length);
+						oSel.moveEnd("character", 1);
+						oSel.collapse("false");
+						oSel.select();
+					} else {
+						oSel.collapse(false);
+						oSel.select();
+					}
                     setTimeout(function() { doSearch(); }, 100);
                 }
                 else {
@@ -127,11 +164,18 @@
         function doReplaceAll() {
             var oEditor = parent.oUtil.oEditor;
             var oSel;
-            if (navigator.appName.indexOf('Microsoft') != -1) {
+            if (isIE) {
                 obj.setFocus();
                 if (!obj.checkFocus()) { return; } //Focus stuff
-
-                oSel = oEditor.document.selection.createRange();
+					
+				if(isIE11) {
+					oSel = oEditor.document.body.createTextRange(); 
+					if(lastRange!=null) {
+						oSel.setEndPoint("StartToEnd", lastRange);
+					}
+				} else {
+					oSel = oEditor.document.selection.createRange();
+				}
 
                 if (chkMatchCase.checked && chkMatchWord.checked) sType = 6;
                 else if (chkMatchCase.checked) sType = 4;
@@ -145,18 +189,22 @@
                 if (oSel.findText(inpSearch.value, 1000000000, sType)) {
                     oSel.select();
                     oSel.text = inpReplace.value;
+				    lastRange = oSel.duplicate();
                     nReplaced++;
 
-                    oSel = oEditor.document.selection.createRange();
-                    oSel.moveStart("character", inpSearch.value.length);
-					oSel.moveEnd("character", 1);
-					oSel.collapse("false");
-                    oSel.select();
+					if(!isIE11) {
+						oSel = oEditor.document.selection.createRange();
+						oSel.moveStart("character", inpSearch.value.length);
+						oSel.moveEnd("character", 1);
+						oSel.collapse("false");
+						oSel.select();
+					}
 
                     setTimeout(function() { doReplaceAll(); }, 10);
                 }
                 else {
                     alert(nReplaced + " occurrence(s) replaced.");
+					lastRange = null;
                     nReplaced = 0;
                     return;
                 }

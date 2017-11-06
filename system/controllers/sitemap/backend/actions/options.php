@@ -32,6 +32,8 @@ class actionSitemapOptions extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 cmsController::saveOptions($this->name, $options);
 
                 $this->redirectToAction('options');

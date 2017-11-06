@@ -6,7 +6,7 @@
 <?php } ?>
 
 <script><?php
-    echo $this->getLangJS('LANG_PM_DELETE_CONTACT_CONFIRM', 'LANG_PM_IGNORE_CONTACT_CONFIRM');
+    echo $this->getLangJS('LANG_PM_DELETE_CONTACT_CONFIRM', 'LANG_PM_IGNORE_CONTACT_CONFIRM', 'LANG_YES', 'LANG_NO');
 ?></script>
 
 <div id="pm_window"
@@ -16,6 +16,8 @@
      data-ignore-url="<?php echo $this->href_to('ignore'); ?>"
      data-forgive-url="<?php echo $this->href_to('forgive'); ?>"
      data-delete-url="<?php echo $this->href_to('delete'); ?>"
+     data-delete-mesage-url="<?php echo $this->href_to('delete_mesage'); ?>"
+     data-restore-mesage-url="<?php echo $this->href_to('restore_mesage'); ?>"
      >
 
     <?php if (!$contacts) { ?>
@@ -27,15 +29,21 @@
         <div class="layout">
 
             <div class="right-panel">
+                <div id="user_search_panel">
+                    <?php echo html_input('text', '', '', array('placeholder' => LANG_PM_USER_SEARCH)); ?>
+                </div>
                 <div class="contacts">
                     <?php $first_id = false; ?>
                     <?php foreach($contacts as $contact){ ?>
                         <?php $first_id = $first_id ? $first_id : $contact['id']; ?>
                         <?php $nickname = mb_strlen($contact['nickname']) > 15 ? mb_substr($contact['nickname'], 0, 15).'...' : $contact['nickname']; ?>
                         <div id="contact-<?php echo $contact['id']; ?>" class="contact" rel="<?php echo $contact['id']; ?>">
-                            <a href="#<?php echo $contact['id']; ?>" onclick="icms.messages.selectContact(<?php echo $contact['id']; ?>)" title="<?php echo $contact['nickname']; ?>">
-                                <span><?php echo html_avatar_image($contact['avatar'], 'micro'); ?></span>
-                                <span><?php echo $nickname; ?></span>
+                            <a href="#<?php echo $contact['id']; ?>" onclick="return icms.messages.selectContact(<?php echo $contact['id']; ?>);" title="<?php echo $contact['nickname']; ?>">
+                                <span <?php if ($contact['is_online']) { ?>class="peer_online"<?php } ?>><?php echo html_avatar_image($contact['avatar'], 'micro'); ?></span>
+                                <span class="contact_nickname"><?php echo $nickname; ?></span>
+                                <?php if (!$contact['is_online']) { ?>
+                                    <strong title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>"><?php echo string_date_age_max($contact['date_log'], true); ?></strong>
+                                <?php } ?>
                                 <?php if ($contact['new_messages']) { ?>
                                     <span class="counter"><?php echo $contact['new_messages']; ?></span>
                                 <?php } ?>
@@ -45,13 +53,32 @@
                 </div>
             </div>
 
-            <div class="left-panel loading-panel">
-
-            </div>
+            <div class="left-panel"></div>
 
         </div>
 
-        <script>icms.messages.selectContact(<?php echo $first_id; ?>)</script>
+        <script type="text/javascript">
+            icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
+            icms.messages.initUserSearch();
+            icms.messages.selectContact(<?php echo $first_id; ?>);
+            icms.messages.bindMyMsg();
+            var resize_func = function(){
+                var pm_window = $('#pm_window:visible');
+                if ($(pm_window).length == 0){
+                    $(window).off('resize', resize_func);
+                    return false;
+                }
+                icms.modal.resize();
+            };
+            $(window).on('resize', resize_func);
+            $('#pm_window').on('click', '.toogle-actions', function(){
+                $('.actions').toggleClass('actions-active');
+                $(this).toggleClass('toogle-actions-active');
+            });
+            icms.modal.setCallback('close', function (){
+                $('#popup-manager').removeClass('nyroModalMessage');
+            });
+        </script>
 
     <?php } ?>
 

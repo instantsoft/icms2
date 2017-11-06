@@ -29,7 +29,7 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
 --_BASE64_SEPARATOR--
 */
 
-/* 
+/*
    Quick notes:
 
    - This file is heavily commented, run it through a CSS minifier before putting into production but don't remove the MHTML comment at the start. http://www.google.com/search?q=css+minifier
@@ -40,27 +40,27 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
    - All browsers except IE6 and IE7 get one regular base 64 encoded image sprite.
    - The drag handle is only 20px in width & height and not suitable for touch screen devices. You will have to change the image etc if targeting a touch screen. 44px is the Apple norm.
    - It's painless to BASE 64 your own image, use an online encoder. http://www.google.com/search?q=base+64+encoder - the only problem is that IE needs each frame of the handle sprite to be encoded individually.
-   - Remember to find and replace all occurences of "the_absolute_path_to_this_file" with an absolute path to this file on your server (no trailing slash required)                 
+   - Remember to find and replace all occurences of "the_absolute_path_to_this_file" with an absolute path to this file on your server (no trailing slash required)
      e.g. if your file is positioned at
-     
+
      http://www.mysite.com/css/fd-slider.css
-     
+
      Then you would run a find/replace, replacing the_absolute_path_to_this_file by
-     
+
      http://www.mysite.com/css
-     
+
      Remember, don't include the trailing slash on the directory path.
-     
+
 */
-   
+
 /* The styles given to the associated form element in order to hide it */
 .fd-form-element-hidden
         {
         display:none;
-        } 
+        }
 /* Horizontal Outer wrapper - all other DOM elements added as children to this top level wrapper */
 .fd-slider
-        {                     
+        {
         width:200px;
         /* The height of the slider handle */
         height:20px;
@@ -69,15 +69,15 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         }
 /* Vertical Outer wrapper - all other DOM elements added as children to this top level wrapper */
 .fd-slider-vertical
-        {       
-        /* The width of the slider handle */        
+        {
+        /* The width of the slider handle */
         width:20px;
         /* Fill the available space */
-        height:100%; 
-        /* Set a 10 pixel right and bottom margin */      
-        margin:0 10px 10px 0; 
+        height:100%;
+        /* Set a 10 pixel right and bottom margin */
+        margin:0 10px 10px 0;
         /* You may wish to float the vertical sliders left or display:inline-block */
-        /* float:left; */              
+        /* float:left; */
         }
 /* Shared rules - both horizontal & vertical sliders */
 .fd-slider,
@@ -88,15 +88,15 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         display:block;
         /* This lets us absolutely position the drag handle */
         position:relative;
-        /* Change the cursor */  
+        /* Change the cursor */
         cursor:pointer;
-        cursor:hand;      
+        cursor:hand;
         text-decoration:none;
         border:0 none;
         -moz-user-select:none;
         -khtml-user-select:none;
-        -webkit-touch-callout:none; 
-        user-select:none;     
+        -webkit-touch-callout:none;
+        user-select:none;
         }
 .fd-slider-inner
         {
@@ -105,46 +105,46 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         }
 /* IE 6, 7 & 8 onfocus blur effect */
 .oldie .fd-slider-inner
-        {  
-        display:none;      
-        position:absolute;        
+        {
+        display:none;
+        position:absolute;
         height:2px;
         border:1px solid #bbf;
-        background:#88f;      
-        top:4px;        
+        background:#88f;
+        top:4px;
         bottom:none;
         left:4px;
-        right:12px;              
-        z-index:2;       
+        right:12px;
+        z-index:2;
         margin:0;
         padding:0;
         overflow:hidden;
         line-height:4px;
-        /* IE 6 can't absolutely position on 4 sides so we reset the right to "auto" and use a nasty expression to calculate the width */ 
+        /* IE 6 can't absolutely position on 4 sides so we reset the right to "auto" and use a nasty expression to calculate the width */
         _right:auto;
-        _width:expression((this.parentNode.offsetWidth - 8) + "px");
-        /* Use the "blur" filter to simulate the box-shadow - not brilliant but the best we can do for IE */       
+        /*_width:expression((this.parentNode.offsetWidth - 8) + "px");*/
+        /* Use the "blur" filter to simulate the box-shadow - not brilliant but the best we can do for IE */
         filter:progid:DXImageTransform.Microsoft.Blur(pixelradius=3.5);
         }
 /* Reposition for the vertical slider for IE 6, 7 & 8 */
 .oldie .fd-slider-vertical .fd-slider-inner
-        {        
+        {
         width:2px;
-        height:auto;     
+        height:auto;
         top:4px;
         bottom:12px;
         left:4px;
         right:auto;
-        /* IE 6 can't absolutely position on 4 sides so we reset the bottom to "auto" and use a nasty expression to calculate the height */ 
+        /* IE 6 can't absolutely position on 4 sides so we reset the bottom to "auto" and use a nasty expression to calculate the height */
         _bottom:auto;
-        _height:expression((this.parentNode.offsetHeight - 8) + "px");
-        /* Note: The "blur" filter rule cascades from the rule above */   
+        /*_height:expression((this.parentNode.offsetHeight - 8) + "px");*/
+        /* Note: The "blur" filter rule cascades from the rule above */
         }
 /* Display the "blurred" div for IE 6, 7 & 8 when the slider gains focus */
 .oldie .fd-slider-focused .fd-slider-inner
-        {        
+        {
         display:block;
-        }   
+        }
 /* The inner track bar */
 .fd-slider-bar
         {
@@ -154,32 +154,32 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         height:2px;
         width:auto;
     border:3px solid #ccc;
--moz-border-radius:5px; 
-	-webkit-border-radius:5px; 
+-moz-border-radius:5px;
+	-webkit-border-radius:5px;
 	-moz-box-shadow:inset 0 0 1px #777;
         margin:0;   margin-left:-10px;
         padding:0;
         overflow:hidden;
         line-height:4px;
         top:8px;
-        right:10px; 
-        left:10px;                 
-        -moz-border-radius:2px; 
-        -webkit-border-radius:2px; 
+        right:10px;
+        left:10px;
+        -moz-border-radius:2px;
+        -webkit-border-radius:2px;
         border-radius:2px;
-        -moz-background-clip: padding; 
-        -webkit-background-clip: padding-box; 
-        background-clip: padding-box; 
-        background-color: #000; 
-        
+        -moz-background-clip: padding;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        background-color: #000;
+
         }
 .oldie .fd-slider-bar
         {
         /* IE6 does not recognise absolute positioning on four sides (top, right, bottom & left) so we use an expression
-           to dynamically calculate the track bar size. Yes, it is horrible - you don't need to remind me. */    
+           to dynamically calculate the track bar size. Yes, it is horrible - you don't need to remind me. */
         _left:10px;
-        _right:auto;        
-        _width:expression((this.parentNode.offsetWidth - 20) + "px");
+        _right:auto;
+        /*_width:expression((this.parentNode.offsetWidth - 20) + "px");*/
         /* Using the gradient filter for IE 6, 7 & 8. Colour strings in AARRGGBB format */
         filter:progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ffececec',endColorstr='#ffcccccc');
         -ms-filter:"filter:progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ffececec',endColorstr='#ffcccccc')";
@@ -190,20 +190,20 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         position:absolute;
         display:block;
         z-index:3;
-        height:2px;      
+        height:2px;
         margin:0;     margin-left:-10px;
         padding:0;
         overflow:hidden;
         line-height:2px;
         top:11px;
-        left:13px;         	      
-        background-color: #c90000;                                        
+        left:13px;
+        background-color: #c90000;
         }
 .oldie .fd-slider-range
         {
-        /* IE6 - is this needed? To test... */ 
+        /* IE6 - is this needed? To test... */
         _left:10px;
-        /* IE 6, 7 & 8 */        
+        /* IE 6, 7 & 8 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff66cccc',endColorstr='#ff33ccff');
         -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff66cccc',endColorstr='#ff33ccff')";
         }
@@ -212,53 +212,53 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
         {
         height:auto;
         width:2px;
-        top:auto;        
+        top:auto;
         right:auto;
         bottom:11px;
-        left:9px;        
+        left:9px;
         /* Firefox 3.6+ */
         background-image: -moz-linear-gradient(top, #3cf, #6cc);
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, left bottom, from(#3cf), to(#6cc));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(top, #3cf, #6cc); 
+        background-image: -webkit-linear-gradient(top, #3cf, #6cc);
         /* Opera 11.10+ */
-        background-image: -o-linear-gradient(top, #3cf, #6cc);   
+        background-image: -o-linear-gradient(top, #3cf, #6cc);
         }
 .oldie .fd-slider-vertical .fd-slider-range
         {
-        /* IE 6, 7 & 8 */   
+        /* IE 6, 7 & 8 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff33ccff',endColorstr='#ff66cccc');
         -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff33ccff',endColorstr='#ff66cccc')";
-        }     
+        }
 .fd-slider-vertical .fd-slider-bar
-        {         
-        width:2px;   
+        {
+        width:2px;
         top:10px;
         right:auto;
         bottom:10px;
-        left:8px;        
+        left:8px;
         height:auto;
         /* Firefox 3.6+ */
         background-image: -moz-linear-gradient(left, #ececec, #ccc);
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, right top, from(#ececec), to(#ccc));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(left, #ececec, #ccc); 
+        background-image: -webkit-linear-gradient(left, #ececec, #ccc);
         /* Opera 11.10+ */
         background-image: -o-linear-gradient(left, #ececec, #ccc);
         }
 .oldie .fd-slider-vertical .fd-slider-bar
-        {  
+        {
         /* Again, we use an expression to calculate the vertical track bar size for IE 6 */
         _top:10px;
         _bottom:auto;
         _right:auto;
-        _left:8px;             
-        _height:expression((this.parentNode.offsetHeight - 20) + "px");
+        _left:8px;
+        /*_height:expression((this.parentNode.offsetHeight - 20) + "px");*/
         /* Using the gradient filter for IE 6, 7 & 8. Colour strings in AARRGGBB format */
         filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc');
-        -ms-filter"filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc')";
+        -ms-filter:"filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ffececec',endColorstr='#ffcccccc')";
         }
 .fd-slider-vertical .fd-slider-handle,
 .fd-slider-vertical .fd-slider-handle:link,
@@ -274,17 +274,17 @@ iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFn
 	height:15px;
 	width:15px;
 	top:1px;
-	position:absolute; 
-	display:block; 
+	position:absolute;
+	display:block;
 	margin-top:1px;
 	border:1px solid #fff;
 	cursor:move;
-	border-radius:2px; 
+	border-radius:2px;
 	box-shadow:0 3px 5px #333;
 	-moz-box-shadow:0 3px 5px #333;
 	-webkit-box-shadow:0 3px 5px #333;
 	-moz-border-radius:14px;
-	-webkit-border-radius:14px; 
+	-webkit-border-radius:14px;
 background: #eeeeee;
 background: -moz-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#cccccc));
@@ -310,50 +310,50 @@ z-index:3;
         /* Using a BASE64 encoded image sprite for the drag handle */
     /*    background-image:url(data:image/png;base64,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);
         background-position:0 0;
-        cursor:move;  
+        cursor:move;
         line-height:20px;
-        font-size:10px;       
+        font-size:10px;
         -webkit-user-select: none;
-        -webkit-touch-callout:none;        
+        -webkit-touch-callout:none;
         -moz-user-select:none;
-        -moz-user-focus:none; 
+        -moz-user-focus:none;
         -moz-outline:0 none;
-        user-select:none;        */                         
+        user-select:none;        */
         }
 .oldie .fd-slider-handle
         {
-        /* 
-        
+        /*
+
         IE6 and IE7
         -----------
-        
+
         Should not render the image above as they do not understand regular base 64 encoded images
         but will render the MHTML image within the AlphaImageLoader filter below
-        
+
         IE8 in IE7 compat mode
         ----------------------
-        
+
         Will render the image declared above (as it suddenly appears to understand regular base64 encoded images)
         but not the MHTML base 64 encoded image below (as it suddenly appears to forget what MHTML is)
-        
+
         IE8
         ---
-        
+
         Renders the regular base64 encoded image above but does not render the filter below
-        
+
         */
-        *filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=crop,src='mhtml:the_absolute_path_to_this_file/fd-slider.css!handlenormal');        
-        /* 
-        
+        *filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=crop,src='mhtml:the_absolute_path_to_this_file/fd-slider.css!handlenormal');
+        /*
+
         IE6, IE7 and IE8
         ----------------
-        
-        A nasty expression is used to not draw focus outline on drag handle. 
-        Feel free to remove the rule if you prefer the outline. 
-        
+
+        A nasty expression is used to not draw focus outline on drag handle.
+        Feel free to remove the rule if you prefer the outline.
+
         */
         outline:expression(hideFocus='true');
-        } 
+        }
 /* Focus styles */
 .fd-slider-handle:focus
         {
@@ -361,9 +361,9 @@ z-index:3;
         border:0 none;
         -moz-user-focus:normal;
         }
-a.fd-slider-handle:focus::-moz-focus-inner 
-        { 
-        border-color: transparent; 
+a.fd-slider-handle:focus::-moz-focus-inner
+        {
+        border-color: transparent;
         }
 /* Glowing slider handle when focused or when hovered */
 .fd-slider-focused .fd-slider-handle,
@@ -375,38 +375,38 @@ a.fd-slider-handle:focus::-moz-focus-inner
 .oldie .fd-slider-focused .fd-slider-handle,
 .oldie .fd-slider-hover   .fd-slider-handle
         {
-        /* 
-        
+        /*
+
         IE6 and IE7
         -----------
-        
-        Should not render the base64 encoded image sprite declared within the 
-        .fd-slider-handle ruleset above but will render the MHTML image within 
+
+        Should not render the base64 encoded image sprite declared within the
+        .fd-slider-handle ruleset above but will render the MHTML image within
         the AlphaImageLoader filter below
-        
+
         IE8 in IE7 compat mode
         ----------------------
-        
-        Will render the the base64 encoded image sprite declared within the 
-        .fd-slider-handle ruleset (as it suddenly appears to understand regular 
-        base64 encoded images) but not the MHTML base 64 encoded image below 
+
+        Will render the the base64 encoded image sprite declared within the
+        .fd-slider-handle ruleset (as it suddenly appears to understand regular
+        base64 encoded images) but not the MHTML base 64 encoded image below
         (as it suddenly appears to forget what MHTML is)
-        
+
         IE8
         ---
-        
-        Will render the the base64 encoded image sprite declared within the 
+
+        Will render the the base64 encoded image sprite declared within the
         .fd-slider-handle ruleset but does not render the AlphaImageLoader
         filter below
-        
+
         */
         *filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=crop,src='mhtml:the_absolute_path_to_this_file/fd-slider.css!handleglow');
         }
 /* The slider is given this class whenever no value has been set by the user.
-   Opacity & png images won't work in IE though so the .oldie class is used to 
-   pass a BASE64 encoded image to IE 6, 7 & 8 
-   
-   This does mean that IE doesn't get the :hover + :focus effect 
+   Opacity & png images won't work in IE though so the .oldie class is used to
+   pass a BASE64 encoded image to IE 6, 7 & 8
+
+   This does mean that IE doesn't get the :hover + :focus effect
 */
 .fd-slider-no-value .fd-slider-handle
         {
@@ -417,55 +417,55 @@ a.fd-slider-handle:focus::-moz-focus-inner
         {
         /* Reset opacity for IE8 as we are using png images */
         opacity:1;
-        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjVJREFUeNrMVE1PE0EYfmZ32a1ugXVrS0FsoKWKxBps4kFNOBnjybPR/8Nv8A+Y1K+DxgMeIMYLngiBxGyQKK1NWxq3VpGW7tc4O25C024rBw5MMpnknXmfeeZ9nncIpRSnOQSc8jj7gFJYkLCBZxs69IkclHNzkJUk37A6NXTau2jsb+NJvkFDBCC9MYYlRF9sZZLJ5L3rsdFsXoU0qxAhIhByREE//aF2odg0zP3aKh4vfmX53kCGnNlyIa7r+v278ejcnSiVNYnFQOF5FDI7shQl8oX0+MJTxxJ/LBdes5R6N9PeJ4uYTt+c1MczuuBKDRswLfDT/iTBPE8E8UEqll37ffVWBVhhIWcQoAx17AqxbbHYAsoE1KHoq5NEQFwIYiahLzDAtWGACgOc2GvbKLXgDZXTp0ojGs8BWoMAJVYsUjs6oUc8rw+j3zb18i9tekYdY2KMMJd6IZ0pMHY2wzqsVg7M//jQwe52FZdnp1SRYJQVy092vGNRpOCSAxfUKhq17vqFAXaw+sropNIp71ouoUkC0UaYMZlzRLbp+q9kmjdtStulHdP+8MbgOUMALay/L7Xjlza/O4/yyC1elAURkwoH9oFQ7Xi0svP5Z/nd883mystvPGdQp3Bj/1MtgRu3s1h6OI/5fAJTMyo/UNk7hLFRx8e3BrbWv/gV9xl2Gzu09bgfAd8SsWCNBNu+/k02zWC1eluPhH2wAVMxAFa6SuMENfOf6Z7oczhz/+FfAQYATvji+0cdRCAAAAAASUVORK5CYII==);        
-        /* 
-        
+        background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjVJREFUeNrMVE1PE0EYfmZ32a1ugXVrS0FsoKWKxBps4kFNOBnjybPR/8Nv8A+Y1K+DxgMeIMYLngiBxGyQKK1NWxq3VpGW7tc4O25C024rBw5MMpnknXmfeeZ9nncIpRSnOQSc8jj7gFJYkLCBZxs69IkclHNzkJUk37A6NXTau2jsb+NJvkFDBCC9MYYlRF9sZZLJ5L3rsdFsXoU0qxAhIhByREE//aF2odg0zP3aKh4vfmX53kCGnNlyIa7r+v278ejcnSiVNYnFQOF5FDI7shQl8oX0+MJTxxJ/LBdes5R6N9PeJ4uYTt+c1MczuuBKDRswLfDT/iTBPE8E8UEqll37ffVWBVhhIWcQoAx17AqxbbHYAsoE1KHoq5NEQFwIYiahLzDAtWGACgOc2GvbKLXgDZXTp0ojGs8BWoMAJVYsUjs6oUc8rw+j3zb18i9tekYdY2KMMJd6IZ0pMHY2wzqsVg7M//jQwe52FZdnp1SRYJQVy092vGNRpOCSAxfUKhq17vqFAXaw+sropNIp71ouoUkC0UaYMZlzRLbp+q9kmjdtStulHdP+8MbgOUMALay/L7Xjlza/O4/yyC1elAURkwoH9oFQ7Xi0svP5Z/nd883mystvPGdQp3Bj/1MtgRu3s1h6OI/5fAJTMyo/UNk7hLFRx8e3BrbWv/gV9xl2Gzu09bgfAd8SsWCNBNu+/k02zWC1eluPhH2wAVMxAFa6SuMENfOf6Z7oczhz/+FfAQYATvji+0cdRCAAAAAASUVORK5CYII==);
+        /*
+
         IE6 and IE7
         -----------
-        
+
         Should not render the image above as they do not understand regular base 64 encoded images
         but will render the MHTML image within the AlphaImageLoader filter below
-        
+
         IE8 in IE7 compat mode
         ----------------------
-        
+
         Will render the image declared above (as it suddenly appears to understand regular base64 encoded images)
         but not the MHTML base 64 encoded image below (as it suddenly appears to forget what MHTML is)
-        
+
         IE8
         ---
-        
+
         Renders the regular base64 encoded image above but does not render the filter below
-        
+
         */
         *filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=crop,src='mhtml:the_absolute_path_to_this_file/fd-slider.css!handleglow');
         }
 .oldie .fd-slider,
 .oldie .fd-slider-vertical
-        {        
+        {
         /*
-        
+
         IE6 and IE7
         -----------
-        
+
         Require either a solid background colour or a background image in order
-        for mouse hover events to work. We are using a MHTML base64 encoded 
+        for mouse hover events to work. We are using a MHTML base64 encoded
         transparent gif image to get it to work
-        
+
         IE8 in IE7 compat mode
         ----------------------
-        
-        Setting the background image below seems to do the trick, even if the 
+
+        Setting the background image below seems to do the trick, even if the
         image is not rendered. It just works - don't ask me why.
-        
-        IE8 
+
+        IE8
         ---
-        
-        Does not need the background hack to get mouse hover events to work so 
+
+        Does not need the background hack to get mouse hover events to work so
         we keep the following rule from being noticed by using the star hack
-                
-        */             
-        *background:transparent url(mhtml:the_absolute_path_to_this_file/fd-slider.css!blank) repeat;        
+
+        */
+        *background:transparent url(mhtml:the_absolute_path_to_this_file/fd-slider.css!blank) repeat;
         }
 /* Drop shadow on the inner bar when focused - IE gets a "Blur" filter on an inner SPAN instead */
 .fd-slider-focused .fd-slider-bar
@@ -473,7 +473,7 @@ a.fd-slider-handle:focus::-moz-focus-inner
         -moz-box-shadow: 0 0 4px #aaf;
         -webkit-box-shadow: 0 0 4px #aaf;
         box-shadow: 0 0 4px #aaf;
-        } 
+        }
 /* Class given to body to change cursor when dragging */
 .fd-slider-drag-vertical,
 .fd-slider-drag-vertical *
@@ -483,7 +483,7 @@ a.fd-slider-handle:focus::-moz-focus-inner
         /* Stop text selection */
         -moz-user-select:none;
         -webkit-user-select:none;
-        user-select:none;     
+        user-select:none;
         }
 .fd-slider-drag-horizontal,
 .fd-slider-drag-horizontal *
@@ -492,9 +492,9 @@ a.fd-slider-handle:focus::-moz-focus-inner
         /* Stop text selection */
         -moz-user-select:none;
         -webkit-user-select:none;
-        user-select:none;     
-        }   
-/* Disabled Sliders */  
+        user-select:none;
+        }
+/* Disabled Sliders */
 .fd-slider-disabled
         {
         /* Lower opacity - No IE 6, 7 or 8 though */
@@ -512,29 +512,29 @@ a.fd-slider-handle:focus::-moz-focus-inner
         }
 .oldie .fd-slider-disabled .fd-slider-handle
         {
-        /* 
-        
+        /*
+
         IE8
         ---
-        
+
         Need to reset the opacity as opacity + png images don't mix
-        
+
          */
         opacity:1;
         /*
-        
+
         IE6 and IE7
         -----------
-        
+
         Should not render the image above as they do not understand regular base 64 encoded images
         but will render the MHTML image within the AlphaImageLoader filter below
-        
+
         IE8 in IE7 compat mode
         ----------------------
-        
+
         Will render the image declared above (as it suddenly appears to understand regular base64 encoded images)
         but not the MHTML base 64 encoded image below (as it suddenly appears to forget what MHTML is)
-                   
+
         */
         *filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true,sizingMethod=crop,src='mhtml:the_absolute_path_to_this_file/fd-slider.css!handledisabled');
         }
@@ -552,15 +552,15 @@ a.fd-slider-handle:focus::-moz-focus-inner
         border-bottom:1px solid rgba(153,153,153,.8);
         border-right:1px solid rgba(153,153,153,.8);
         /* Black background */
-        background-color: #222; 
+        background-color: #222;
         /* Firefox 3.6+ */
         background-image: -moz-linear-gradient(left, #222, #000);
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, right top, from(#222), to(#000));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(left, #222, #000); 
+        background-image: -webkit-linear-gradient(left, #222, #000);
         /* Opera 11.10+ */
-        background-image: -o-linear-gradient(left, #222, #000);    
+        background-image: -o-linear-gradient(left, #222, #000);
         }
 /* Vertical disabled track bar */
 .fd-slider-vertical.fd-slider-disabled .fd-slider-bar
@@ -570,7 +570,7 @@ a.fd-slider-handle:focus::-moz-focus-inner
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, right bottom, from(#000), to(#222));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(top, #000, #222); 
+        background-image: -webkit-linear-gradient(top, #000, #222);
         /* Opera 11.10+ */
         background-image: -o-linear-gradient(top, #000, #222);
         }
@@ -578,47 +578,47 @@ a.fd-slider-handle:focus::-moz-focus-inner
 
 IE6
 ---
-        
+
 IE6 sees this rule as being ".oldie .fd-slider-disabled .fd-slider-bar"
-        
+
 */
 .oldie .fd-slider-vertical.fd-slider-disabled .fd-slider-bar
         {
         /* IE 6 + 7 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000');
         /* IE8 */
-        -ms-filter"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000')";
+        -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#ff222222',endColorstr='#ff000000')";
         }
-/* 
+/*
 
-IE6 
+IE6
 ---
-        
+
 The following rule rewrites the above rule as IE6 doesn't understand
 chained classes. This limits us to serving the same rule to IE6 for
 both horizontal and vertical sliders
-        
+
 */
 .oldie .fd-slider-disabled .fd-slider-bar
         {
         /* IE 6 + 7 */
         filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000');
         /* IE8 */
-        -ms-filter"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000')";
+        -ms-filter:"filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1,startColorstr='#ff222222',endColorstr='#ff000000')";
         }
 /* Disabled range bar */
 .fd-slider-disabled .fd-slider-range
         {
         cursor:auto !important;
-        background-color: #555; 
+        background-color: #555;
         /* Firefox 3.6+ */
         background-image: -moz-linear-gradient(left, #666, #333);
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, right top, from(#666), to(#333));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(left, #666, #333); 
+        background-image: -webkit-linear-gradient(left, #666, #333);
         /* Opera 11.10+ */
-        background-image: -o-linear-gradient(left, #666, #333); 
+        background-image: -o-linear-gradient(left, #666, #333);
         }
 /* Vertical disabled range bar */
 .fd-slider-vertical.fd-slider-disabled .fd-slider-range
@@ -628,9 +628,9 @@ both horizontal and vertical sliders
         /* Safari 4+, Chrome 1+ */
         background-image: -webkit-gradient(linear, left top, right bottom, from(#333), to(#666));
         /* Safari 5.1+, Chrome 10+ */
-        background-image: -webkit-linear-gradient(top, #333, #666); 
+        background-image: -webkit-linear-gradient(top, #333, #666);
         /* Opera 11.10+ */
-        background-image: -o-linear-gradient(top, #333, #666); 
+        background-image: -o-linear-gradient(top, #333, #666);
         }
 .oldie .fd-slider-vertical.fd-slider-disabled .fd-slider-range
         {

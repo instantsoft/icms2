@@ -16,13 +16,13 @@ class actionAdminCtypesPropsAdd extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        $cats = array($category_id);
+        $cats = array(intval($category_id));
         $subcats = $content_model->getSubCategoriesTree($ctype['name'], $category_id, false);
-        
-        if (is_array($subcats)) { foreach($subcats as $cat) { $cats[] = $cat['id']; } }
-        
+
+        if (is_array($subcats)) { foreach($subcats as $cat) { $cats[] = intval($cat['id']); } }
+
         $prop = array(
-            'ctype_id' => $ctype_id, 
+            'ctype_id' => $ctype_id,
             'cats' => $cats
         );
 
@@ -42,10 +42,10 @@ class actionAdminCtypesPropsAdd extends cmsAction {
                 unset($prop['new_fieldset']);
 
                 $prop['ctype_id'] = $ctype_id;
-                
+
                 // сохраняем поле
                 $prop_id = $content_model->addContentProp($ctype['name'], $prop);
-                
+
                 $this->redirectToAction('ctypes', array('props', $ctype['id']));
 
             }

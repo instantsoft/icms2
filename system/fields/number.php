@@ -2,8 +2,8 @@
 
 class fieldNumber extends cmsFormField {
 
-    public $title   = LANG_PARSER_NUMBER;
-    public $sql     = 'float NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_NUMBER;
+    public $sql         = 'float NULL DEFAULT NULL';
     public $filter_type = 'int';
 
     public function getOptions(){
@@ -21,6 +21,7 @@ class fieldNumber extends cmsFormField {
     public function getRules() {
 
         $this->rules[] = array('number');
+        $this->rules[] = array('max_length', 7);
 
         return $this->rules;
 
@@ -32,6 +33,16 @@ class fieldNumber extends cmsFormField {
         if(!$units) { $units = ''; }
 		if (intval($value)==$value){ $value = number_format($value, 0, '.', ''); }
         return htmlspecialchars($value)." {$units}";
+    }
+
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_range')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
     }
 
     public function getFilterInput($value) {
@@ -59,32 +70,30 @@ class fieldNumber extends cmsFormField {
 
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_range')){
+        if (!is_array($value)){
 
-            $model->filterEqual($this->name, "{$value}");
+            return $model->filterEqual($this->name, "{$value}");
 
-        } else {
-
-            if (!is_array($value)) { return $model; }
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
 
             if (!empty($value['from'])){
-                $model->filterGtEqual($this->name, $value['from']);
+                $model->filterGtEqual($this->name.'+0', $value['from']);
             }
             if (!empty($value['to'])){
-                $model->filterLtEqual($this->name, $value['to']);
+                $model->filterLtEqual($this->name.'+0', $value['to']);
             }
+
+            return $model;
 
         }
 
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $value = str_replace(',', '.', trim($value));
-
-        return $value;
+        return str_replace(',', '.', trim($value));
 
     }
 

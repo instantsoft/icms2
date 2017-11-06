@@ -3,7 +3,11 @@
     return array(
 
         'hooks' => array(
-            'menu_moderation',
+            'admin_dashboard_block',
+            'content_after_trash_put',
+            'content_after_restore',
+            'content_before_delete',
+            'menu_moderation'
         )
 
     );

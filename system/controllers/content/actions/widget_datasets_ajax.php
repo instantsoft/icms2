@@ -6,21 +6,26 @@ class actionContentWidgetDatasetsAjax extends cmsAction {
 
 		if (!$this->request->isAjax()){ cmsCore::error404(); }
 		if (!cmsUser::isAdmin()) { cmsCore::error404(); }
-		
-		$ctype_id = $this->request->get('value');
-		
+
+		$ctype_id = $this->request->get('value', '');
 		if (!$ctype_id) { cmsCore::error404(); }
-		
-		$datasets = $this->model->getContentDatasets($ctype_id);
-		
+
+        $target_controller = 'content';
+
+        if(strpos($ctype_id, ':') !== false){
+            list($target_controller, $ctype_id) = explode(':', $ctype_id);
+        }
+
+		$datasets = $this->model->getContentDatasets($target_controller == 'content' ? $ctype_id : $target_controller);
+
 		$list = array();
-		
-		if ($datasets){		
+
+		if ($datasets){
 			$list = array('0'=>'') + array_collection_to_list($datasets, 'id', 'title');
 		}
-		
-		cmsTemplate::getInstance()->renderJSON($list);
-		
+
+		return $this->cms_template->renderJSON($list);
+
     }
 
 }

@@ -1,6 +1,10 @@
 <?php
 
-class backendUsers extends cmsBackend{
+class backendUsers extends cmsBackend {
+
+    public $useSeoOptions = true;
+    public $useItemSeoOptions = true;
+    protected $useOptions = true;
 
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
@@ -30,14 +34,16 @@ class backendUsers extends cmsBackend{
             array(
                 'title' => LANG_USERS_CFG_MIGRATION,
                 'url' => href_to($this->root_url, 'migrations')
+            ),
+            array(
+                'title' => LANG_USERS,
+                'url' => href_to('admin', 'users')
             )
         );
     }
 
     public function validate_unique_field($value){
-        $core = cmsCore::getInstance();
-        $table_name = '{users}';
-        return !$core->db->isFieldExists($table_name, $value);
+        return !$this->cms_core->db->isFieldExists('{users}', $value);
     }
 
 }

@@ -6,13 +6,12 @@ class onUsersWallPermissions extends cmsAction {
 
         if ($profile_type != 'user') { return false; }
 
-        $user = cmsUser::getInstance();
-
         $profile = $this->model->getUser($profile_id);
 
         return array(
-            'add' => $user->is_logged && $user->isPrivacyAllowed($profile, 'users_profile_wall'),
-            'delete' => ($user->is_admin || ($user->id == $profile['id'])),
+            'add'    => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall') && !$profile['is_locked'],
+            'reply'  => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall_reply') && !$profile['is_locked'],
+            'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id']))
         );
 
     }

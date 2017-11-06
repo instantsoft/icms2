@@ -1,6 +1,8 @@
 <?php
 
     $this->addJS('templates/default/js/content.js');
+    $this->addJS('templates/default/js/jquery-chosen.js');
+    $this->addCSS('templates/default/css/jquery-chosen.css');
 
     $page_title =   $do=='add' ?
                     sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) :
@@ -8,21 +10,21 @@
 
     $this->setPageTitle($page_title);
 
-    if ($ctype['options']['list_on'] && !$parent){
-        $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
-    }
+    if(!empty($group)){
 
-    if ($parent){
-
-        if ($parent['ctype']['options']['list_on']){
-            $this->addBreadcrumb($parent['ctype']['title'], href_to($parent['ctype']['name']));
+        $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        if ($ctype['options']['list_on']){
+            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], array('content', $ctype['name'])));
         }
 
-        $this->addBreadcrumb($parent['item']['title'], href_to($parent['ctype']['name'], $parent['item']['slug'].'.html'));
+    } else {
+
+        if ($ctype['options']['list_on'] && !$parent){
+            $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
+        }
 
     }
-
-    $back_url = $this->controller->request->get('back');
 
     $this->addToolButton(array(
         'class' => 'save',
@@ -30,18 +32,18 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
 
-    if ($ctype['options']['list_on']){
+    if ($cancel_url){
         $this->addToolButton(array(
             'class' => 'cancel',
             'title' => LANG_CANCEL,
-            'href'  => $back_url ? $back_url : href_to($ctype['name'])
+            'href'  => $cancel_url
         ));
     }
-	
+
 	$is_multi_cats = !empty($ctype['options']['is_cats_multi']);
 
     $this->addBreadcrumb($page_title);
-	
+
 ?>
 
 <h1><?php echo html($page_title) ?></h1>
@@ -49,6 +51,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
+        'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(
@@ -68,24 +71,23 @@
 <?php } ?>
 
 <?php if ($is_multi_cats) { ?>
-	<div class="content_multi_cats_form">
-		<div class="list"></div>
-		<div class="add_button">
-			<a href="javascript:" class="ajaxlink"><?php echo LANG_ADD; ?></a>
-		</div>
+	<div class="content_multi_cats_data">
+        <?php echo html_select('add_cats', array(), '', array('multiple'=>true)); ?>
 	</div>
 <?php } ?>
 
 <?php if ($props || $is_multi_cats){ ?>
-    <script>        
+    <script>
 		<?php if ($is_multi_cats){ ?>
-			<?php echo $this->getLangJS('LANG_DELETE'); ?>
-			var add_cats = [];
+			<?php echo $this->getLangJS('LANG_LIST_EMPTY','LANG_SELECT', 'LANG_CONTENT_SELECT_CATEGORIES'); ?>
+			var add_cats = []; /** оставлено для совместимости **/
+            var add_cats_data = [];
 			<?php if (!empty($add_cats)) { ?>
 				<?php foreach($add_cats as $cat_id){ ?>
-					add_cats.push(<?php echo $cat_id; ?>);
+					add_cats_data.push(<?php echo $cat_id; ?>);
 				<?php } ?>
 			<?php } ?>
+            icms.content.initMultiCats(add_cats_data);
 		<?php } ?>
 		<?php if ($props){ ?>
 			<?php echo $this->getLangJS('LANG_LOADING'); ?>

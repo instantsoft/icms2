@@ -30,7 +30,7 @@
                     </div>
                     <?php if ($show_text) { ?>
                         <div class="text">
-                            <?php echo html_clean($item['content'], 50); ?>
+                            <?php echo html_clean($item['content_html'], 50); ?>
                         </div>
                     <?php } ?>
                 </div>

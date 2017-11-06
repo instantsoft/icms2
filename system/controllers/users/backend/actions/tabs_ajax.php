@@ -8,9 +8,7 @@ class actionUsersTabsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('tabs');
 
-        $users_model = cmsCore::getModel('users');
-
-        $tabs = $users_model->getUsersProfilesTabs();
+        $tabs = $this->model->getUsersProfilesTabs();
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $tabs);
 

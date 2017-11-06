@@ -2,6 +2,14 @@
 
 function grid_ctypes($controller){
 
+    $options = array(
+        'is_sortable' => false,
+        'is_filter' => false,
+        'is_draggable' => true,
+        'order_by' => 'ordering',
+        'order_to' => 'asc'
+    );
+
     $columns = array(
         'id' => array(
             'title' => 'id',
@@ -67,9 +75,9 @@ function grid_ctypes($controller){
         )
     );
     return array(
+        'options' => $options,
         'columns' => $columns,
         'actions' => $actions
     );
 
 }
-

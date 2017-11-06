@@ -12,7 +12,7 @@
 
     $count++;
 
-    $is_can_add = $permissions['add'] && $entry['parent_id']==0;
+    $is_can_add = !empty($permissions['reply']) && $entry['parent_id'] == 0;
     $is_can_edit = ($entry['user']['id']==$user->id) || $user->is_admin;
     $is_can_delete = ($entry['user']['id']==$user->id) || $permissions['delete'];
 

@@ -2,55 +2,31 @@
 
 class actionUsersProfileEditNotices extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
-        $notify_types = cmsEventsManager::hookAll('user_notify_types');
+        $notify_types = $this->model->getUserNotifyTypes();
 
         $form = new cmsForm();
 
         $fieldset_id = $form->addFieldset();
 
-        $default_options = array('', 'email', 'pm', 'both');
+        foreach($notify_types as $name => $field_options){
 
-        foreach($notify_types as $list){
-            foreach($list as $name=>$type){
+            $form->addField($fieldset_id, new fieldList($name, $field_options));
 
-                $options = array();
-
-                if(!isset($type['options'])) { $type['options'] = $default_options; }
-
-                foreach($type['options'] as $option){
-                    if (!$option){
-                        $options[''] = LANG_USERS_NOTIFY_VIA_NONE;
-                    } else {
-                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_'.mb_strtoupper($option));
-                    }
-                }
-
-                $form->addField($fieldset_id, new fieldList($name, array(
-                    'title' => $type['title'],
-                    'default' => 'email',
-                    'items' => $options
-                )));
-
-            }
         }
-
-        // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
 
         $options = $this->model->getUserNotifyOptions($profile['id']);
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $options = array_merge($options, $form->parse($this->request, $is_submitted, $options));
+            $options = array_merge($options, $form->parse($this->request, true, $options));
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $options);
@@ -59,6 +35,8 @@ class actionUsersProfileEditNotices extends cmsAction {
 
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUserNotifyOptions($profile['id'], $options);
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 $this->redirectTo('users', $profile['id']);
 
@@ -70,12 +48,12 @@ class actionUsersProfileEditNotices extends cmsAction {
 
         }
 
-        return $template->render('profile_edit_notices', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit_notices', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
             'options' => $options,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

@@ -6,15 +6,14 @@ class actionAuthRestore extends cmsAction {
         if (cmsUser::isLogged()) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
+
         $form = $this->getForm('restore');
 
         $data = array();
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit')){
 
-        if ($is_submitted){
-
-            $data = $form->parse($this->request, $is_submitted);
+            $data = $form->parse($this->request, true);
 
             $errors = $form->validate($this,  $data);
 
@@ -28,7 +27,15 @@ class actionAuthRestore extends cmsAction {
 
                 if (!$user){
 
-                    cmsUser::addSessionMessage(LANG_EMAIL_NOT_FOUND, 'error');
+                    $errors['email'] = LANG_EMAIL_NOT_FOUND;
+
+                } elseif($user['is_locked']) {
+
+                    $errors['email'] = LANG_RESTORE_BLOCK.($user['lock_reason'] ? '. '.$user['lock_reason'] : '');
+
+                } elseif($user['pass_token']) {
+
+                    $errors['email'] = LANG_RESTORE_TOKEN_IS_SEND;
 
                 } else {
 
@@ -54,9 +61,9 @@ class actionAuthRestore extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('restore', array(
-            'data' => $data,
-            'form' => $form,
+        return $this->cms_template->render('restore', array(
+            'data'   => $data,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

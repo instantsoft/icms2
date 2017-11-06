@@ -10,18 +10,14 @@ class actionAdminSettings extends cmsAction {
             return;
         }
 
-        $config = cmsConfig::getInstance();
-
-        $values = $config->getAll();
+        $values = $this->cms_config->getAll();
         $values['time_zone'] = $values['cfg_time_zone'];
 
         $form = $this->getForm('settings');
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit')){
 
-        if ($is_submitted){
-
-            $values = array_merge($values, $form->parse($this->request, $is_submitted));
+            $values = array_merge($values, $form->parse($this->request, true));
             $errors = $form->validate($this,  $values);
 
             if (!$errors){
@@ -42,13 +38,28 @@ class actionAdminSettings extends cmsAction {
                     }
                 }
 
-                $result = $config->save($values);
+                if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
+                    files_clear_directory($this->cms_config->cache_path.'data/');
+                }
+
+                $values = cmsEventsManager::hook('site_settings_before_update', $values);
+
+                $result = $this->cms_config->save($values);
 
                 if (!$result){
+
                     $errors = array();
+
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
+
                 } else {
-                    $this->redirectBack();
+
+                    cmsEventsManager::hook('site_settings_after_update', $values);
+
+                    cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
+                    $this->redirectToAction('settings');
+
                 }
 
             } else {
@@ -59,10 +70,20 @@ class actionAdminSettings extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('settings', array(
-            'do' => 'edit',
+        $templates_has_options = array();
+
+        $tpls = cmsCore::getTemplates();
+        foreach ($tpls as $tpl) {
+            if(file_exists($this->cms_config->root_path.'templates/'.$tpl.'/options.form.php')){
+                $templates_has_options[] = $tpl;
+            }
+        }
+
+        return $this->cms_template->render('settings', array(
+            'templates_has_options' => $templates_has_options,
+            'do'     => 'edit',
             'values' => $values,
-            'form' => $form,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

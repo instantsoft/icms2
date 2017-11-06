@@ -6,12 +6,10 @@ class onUsersMenuUsers extends cmsAction {
 
         $action = $item['action'];
 
-        $user = cmsUser::getInstance();
-
         if ($action == 'profile'){
 
             return array(
-                'url' => href_to($this->name, $user->id),
+                'url'   => href_to($this->name, $this->cms_user->id),
                 'items' => false
             );
 
@@ -20,7 +18,7 @@ class onUsersMenuUsers extends cmsAction {
         if ($action == 'settings'){
 
             return array(
-                'url' => href_to($this->name, 'edit', array($user->id)),
+                'url'   => href_to($this->name, 'edit', array($this->cms_user->id)),
                 'items' => false
             );
 

@@ -25,6 +25,13 @@ class formUsersOptions extends cmsForm {
                     new fieldCheckbox('is_filter', array(
                         'title' => LANG_USERS_OPT_FILTER_SHOW,
                     )),
+                    new fieldNumber('limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
+                    ))
 
                 )
             ),
@@ -80,7 +87,7 @@ class formUsersOptions extends cmsForm {
                     ))
 
                 )
-            ),
+            )
 
         );
 

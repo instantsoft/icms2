@@ -2,10 +2,13 @@
 
 class fieldList extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST;
-    public $sql   = 'int NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_LIST;
+    public $sql         = 'int NULL DEFAULT NULL';
     public $filter_type = 'int';
     public $filter_hint = LANG_PARSER_LIST_FILTER_HINT;
+    public $var_type    = 'string';
+    public $native_tag  = false;
+    public $dynamic_list = false;
 
     public function getOptions(){
         return array(
@@ -13,16 +16,21 @@ class fieldList extends cmsFormField {
                 'title' => LANG_PARSER_LIST_FILTER_MULTI,
                 'default' => false
             )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
+            ))
         );
     }
 
     public function getFilterInput($value) {
 
-        $items = $this->getListItems();
+        $items = $this->getListItems(false);
 
          if (!$this->getOption('filter_multiple')){
 
-            $items = array(''=>'') + $items;// array_pad($items, (sizeof($items)+1)*-1, '');
+            $items = array(''=>'') + $items;
             return html_select($this->name, $items, $value);
 
          } else {
@@ -31,7 +39,6 @@ class fieldList extends cmsFormField {
              return html_select_multiple($this->name, $items, $value);
 
          }
-
 
     }
 
@@ -45,6 +52,17 @@ class fieldList extends cmsFormField {
 
     }
 
+    public function getStringValue($value){
+
+        $items = $this->getListItems();
+        $item  = '';
+
+        if (isset($items[$value])) { $item = $items[$value]; }
+
+        return $item;
+
+    }
+
     public function parse($value){
 
         $items = $this->getListItems();
@@ -52,11 +70,15 @@ class fieldList extends cmsFormField {
 
         if (isset($items[$value])) { $item = $items[$value]; }
 
+        if ($this->getOption('is_autolink')){
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.htmlspecialchars($item).'</a>';
+        }
+
         return htmlspecialchars($item);
 
     }
 
-    public function getListItems(){
+    public function getListItems($show_empty_value = true){
 
         $items = array();
 
@@ -71,7 +93,26 @@ class fieldList extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = $this->parseListItems($this->getDefaultValue());
+            $items = ($show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
+
+        }
+
+        return $items;
+
+    }
+
+    public function getListValuesItems(){
+
+        $items = array();
+
+        if (isset($this->value_items)){
+
+            $items = $this->value_items;
+
+        } else if (isset($this->values_generator)) {
+
+            $generator = $this->values_generator;
+            $items = $generator($this->item);
 
         }
 
@@ -83,33 +124,59 @@ class fieldList extends cmsFormField {
         return string_explode_list($string);
     }
 
+    public function getDefaultVarType($is_filter=false) {
+
+        if ($is_filter && $this->getOption('filter_multiple')){
+            $this->var_type = 'array';
+        }
+        if($this->getProperty('is_multiple')){
+            $this->var_type = 'array';
+        }
+        if($this->getProperty('is_chosen_multiple')){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
+    }
+
     public function applyFilter($model, $value) {
 
-        if (!$this->getOption('filter_multiple')){
+        if (!is_array($value)){
 
-            $model->filterEqual($this->name, $value);
+            return $model->filterEqual($this->name, $value);
 
         } else {
 
-            if (!is_array($value)) { return $model; }
-
-            $model->filterIn($this->name, $value);
+            return $model->filterIn($this->name, $value);
 
         }
-
-        return $model;
 
     }
 
     public function getInput($value){
 
-        $this->data['items']        = $this->getListItems();
+        if($this->getDefaultVarType() === 'array' && $value && !is_array($value)){
+            $value = cmsModel::yamlToArray($value);
+        }
 
-        $this->data['is_multiple']  = $this->getProperty('is_multiple');
-        $this->data['is_tree']      = $this->getProperty('is_tree');
-	$this->data['parent']       = $this->getProperty('parent');
+        $this->data['items']       = $this->getListItems();
+        $this->data['is_multiple'] = $this->getProperty('is_multiple');
+        $this->data['multiple_select_deselect'] = $this->getProperty('multiple_select_deselect');
+        $this->data['is_chosen_multiple'] = $this->getProperty('is_chosen_multiple');
+        $this->data['is_tree']     = $this->getProperty('is_tree');
+        $this->data['parent']      = $this->getProperty('parent');
+        $this->data['dom_attr']    = array('id' => $this->id);
+        $this->data['is_ns_value_items'] = false;
 
-	$this->data['dom_attr']     = array('id'=>$this->id);
+        if($this->dynamic_list){
+            $this->data['value_items'] = $this->getListValuesItems();
+            $first_value_item = reset($this->data['value_items']);
+            $this->data['is_ns_value_items'] = is_array($first_value_item);
+            $this->class = 'list_dynamic';
+            if(!$value){ $value = new stdClass(); }
+            if(!isset($this->multiple_keys)){ $this->multiple_keys = new stdClass(); }
+        }
 
         return parent::getInput($value);
 

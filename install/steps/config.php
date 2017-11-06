@@ -39,6 +39,7 @@ function create_config($path, $file){
         'upload_root'			=> $_SESSION['install']['paths']['upload'],
         'upload_host'			=> $_SESSION['install']['hosts']['upload'],
         'cache_root'			=> $_SESSION['install']['paths']['cache'],
+        'is_site_only_auth_users' => 0,
         'is_site_on'            => 1,
         'off_reason'            => LANG_CFG_OFF_REASON,
         'sitename'				=> $_SESSION['install']['site']['sitename'],
@@ -47,11 +48,16 @@ function create_config($path, $file){
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
         'template'				=> 'default',
+        'template_admin'		=> 'default',
+        'template_mobile'		=> '',
+        'template_tablet'		=> '',
         'db_host'				=> $_SESSION['install']['db']['host'],
         'db_base'				=> $_SESSION['install']['db']['base'],
         'db_user'				=> $_SESSION['install']['db']['user'],
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
+        'db_engine'				=> $_SESSION['install']['db']['engine'],
+        'clear_sql_mode'	    => $_SESSION['install']['db']['clear_sql_mode'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
         'metakeys'				=> $_SESSION['install']['site']['metakeys'],
@@ -60,6 +66,7 @@ function create_config($path, $file){
         'ct_default'			=> 'content',
         'frontpage'             => 'none',
         'debug'					=> 0,
+        'manifest_from_files'   => 0,
         'emulate_lag'			=> '',
         'cache_enabled'			=> 0,
         'cache_method'			=> 'files',
@@ -71,12 +78,19 @@ function create_config($path, $file){
         'merge_js'				=> 0,
         'mail_transport'		=> 'mail',
         'mail_from'				=> 'noreply@example.com',
+        'mail_from_name'		=> '',
         'mail_smtp_server'		=> 'smtp.example.com',
         'mail_smtp_port'		=> 25,
         'mail_smtp_auth'		=> 1,
         'mail_smtp_user'		=> 'user@example.com',
         'mail_smtp_pass'		=> '',
         'is_check_updates'		=> 1,
+        'detect_ip_key'		    => 'REMOTE_ADDR',
+        'allow_ips'		        => '',
+        'default_editor'		=> 'redactor',
+        'show_breadcrumbs'		=> 1,
+        'check_spoofing_type'   => 0,
+        'controllers_without_widgets' => array('admin')
     );
 
     write_config($file, $config);
@@ -94,9 +108,9 @@ function write_config($file, $config){
 
     foreach($config as $key=>$value){
 
-        $value = "'{$value}'";
+        $value = var_export($value, true);
 
-        $tabs = 7 - ceil((mb_strlen($key)+3)/4);
+        $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
         $dump .= "\t'{$key}'";
         $dump .= str_repeat("\t", $tabs);

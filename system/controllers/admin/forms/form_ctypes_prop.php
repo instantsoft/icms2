@@ -3,6 +3,8 @@ class formAdminCtypesProp extends cmsForm {
 
     public function init($do) {
 
+        $model = cmsCore::getModel('content');
+
         return array(
             'basic' => array(
                 'type' => 'fieldset',
@@ -25,8 +27,7 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldList('fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_SELECT,
-                        'generator' => function($prop) {
-                            $model = cmsCore::getModel('content');
+                        'generator' => function($prop) use($model){
                             $fieldsets = $model->getContentPropsFieldsets($prop['ctype_id']);
                             $items = array('');
                             if (is_array($fieldsets)){
@@ -50,9 +51,12 @@ class formAdminCtypesProp extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'list',
                         'items' => array(
-                            'list' => LANG_PARSER_LIST,
-                            'string' => LANG_PARSER_STRING,
-                            'number' => LANG_PARSER_NUMBER,
+                            'list'          => LANG_PARSER_LIST,
+                            'list_multiple' => LANG_PARSER_LIST_MULTIPLE,
+                            'string'        => LANG_PARSER_STRING,
+                            'color'         => LANG_PARSER_COLOR,
+                            'number'        => LANG_PARSER_NUMBER,
+                            'checkbox'      => LANG_PARSER_CHECKBOX
                         )
                     )),
                     new fieldCheckbox('options:is_required', array(
@@ -92,10 +96,9 @@ class formAdminCtypesProp extends cmsForm {
                     new fieldList('cats', array(
                             'is_multiple' => true,
                             'is_tree' => true,
-                            'generator' => function($prop){
-                                $content_model = cmsCore::getModel('content');
-                                $ctype = $content_model->getContentType($prop['ctype_id']);
-                                $tree = $content_model->getCategoriesTree($ctype['name'], false);
+                            'generator' => function($prop) use($model){
+                                $ctype = $model->getContentType($prop['ctype_id']);
+                                $tree = $model->limit(0)->getCategoriesTree($ctype['name'], false);
                                 foreach($tree as $c){
                                     $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];
                                 }

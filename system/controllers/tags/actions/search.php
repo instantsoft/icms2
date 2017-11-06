@@ -2,28 +2,31 @@
 
 class actionTagsSearch extends cmsAction {
 
-    public function run($ctype_name=false){
-
-        $query = $this->request->get('q');
-
-        if (!$query) { cmsCore::error404(); }
-
-        $tag_id = $this->model->getTagId($query);
-
-        $targets = $tag_id ? $this->model->getTagTargets($tag_id) : false; 
-
-        if (!$targets || !$tag_id) { 
-            return cmsTemplate::getInstance()->render('search', array(
-                'is_results' => false,
-                'tag' => $query,
-            ));            
-        }
-
-        $is_first_tab = !$ctype_name;
+    public function run($ctype_name = false){
 
         $content_controller = cmsCore::getController('content', $this->request);
 
         $ctypes = $content_controller->model->getContentTypes();
+
+        $query = $this->request->get('q', '');
+        if (!$query) {
+            if($ctype_name && $content_controller->model->getContentTypeByName($ctype_name)){
+                $this->redirectTo($ctype_name);
+            } else {
+                cmsCore::error404();
+            }
+        }
+
+        $tag_id = $this->model->getTagId($query);
+
+        $targets = $tag_id ? $this->model->getTagTargets($tag_id) : false;
+
+        if (!$targets || !$tag_id) {
+            return $this->cms_template->render('search', array(
+                'is_results' => false,
+                'tag'        => $query
+            ));
+        }
 
         foreach($ctypes as $id => $type){
             if (!$ctype_name){
@@ -46,19 +49,23 @@ class actionTagsSearch extends cmsAction {
                 join('tags_bind', 't', "t.target_id = i.id AND t.target_subject = '{$ctype_name}' AND t.target_controller = 'content'")->
                 filterEqual('t.tag_id', $tag_id);
 
-        $page_url = $is_first_tab ?
-                        href_to($this->name, 'search') . "?q={$query}" :
-                        href_to($this->name, 'search', array($ctype_name)) . "?q={$query}" ;
+        $page_url = array(
+            'base'   => href_to($this->name, 'search', array($ctype_name)),
+            'first'  => href_to($this->name, 'search', array($ctype_name)),
+            'cancel' => href_to($this->name, 'search', array($ctype_name)).'?q='.urlencode($query)
+        );
 
-        $html = $content_controller->renderItemsList($ctype, $page_url);
+        $html = $content_controller->setListContext('search')->renderItemsList($ctype, $page_url, false, 0, array(), false, array(
+            'q' => $query
+        ));
 
-        return cmsTemplate::getInstance()->render('search', array(
-            'is_results' => true, 
-            'tag' => $query,
-            'targets' => $targets,
-            'ctypes' => $ctypes,
-            'ctype' => $ctype,
-            'html' => $html
+        return $this->cms_template->render('search', array(
+            'is_results' => true,
+            'tag'        => $query,
+            'targets'    => $targets,
+            'ctypes'     => $ctypes,
+            'ctype'      => $ctype,
+            'html'       => $html
         ));
 
     }

@@ -1,4 +1,4 @@
-﻿function loadTxt() {
+function loadTxt() {
     document.getElementById("tab0").innerHTML = "Вставить";
     document.getElementById("tab1").innerHTML = "Изменить";
     document.getElementById("tab2").innerHTML = "Автоформат";
@@ -12,13 +12,13 @@
     document.getElementById("btnMerge").value = "Объединить ячейки";
     document.getElementById("lblFormat").innerHTML = "Формат:";
     document.getElementById("lblTable").innerHTML = "Таблица";
-    document.getElementById("Label1").innerHTML = "Ячейка";
+    document.getElementById("lblCell").innerHTML = "Ячейка";
     document.getElementById("lblEven").innerHTML = "Четные строки";
     document.getElementById("lblOdd").innerHTML = "Нечетные строки";
     document.getElementById("lblCurrRow").innerHTML = "Текущая строка";
     document.getElementById("lblCurrCol").innerHTML = "Текущий столбец";
     document.getElementById("lblBg").innerHTML = "Фон:";
-    document.getElementById("lblText").innerHTML = "Текст:";    
+    document.getElementById("lblText").innerHTML = "Текст:";
     document.getElementById("lblBorder").innerHTML = "Рамки:";
     document.getElementById("lblThickness").innerHTML = "Толщина:";
     document.getElementById("lblBorderColor").innerHTML = "Цвет:";
@@ -38,7 +38,7 @@
     document.getElementById("lblColor").innerHTML = "Цвет:";
     document.getElementById("lblCellSize").innerHTML = "Размер ячейки:";
     document.getElementById("lblCellWidth").innerHTML = "Ширина:";
-    document.getElementById("lblCellHeight").innerHTML = "Высота:";       
+    document.getElementById("lblCellHeight").innerHTML = "Высота:";
 }
 function writeTitle() {
     document.write("<title>" + "Таблица" + "</title>")

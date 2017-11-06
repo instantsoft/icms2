@@ -1,9 +1,12 @@
 /***********************************************************
-InnovaStudio WYSIWYG Editor 5.5
-© 2010, InnovaStudio (www.innovastudio.com). All rights reserved.
+Live Editor 1.7.3
+© 2014, InnovaStudio (www.innovastudio.com). All rights reserved.
 ************************************************************/
 var UA = navigator.userAgent.toLowerCase();
 var isIE = (UA.indexOf('msie') >= 0) ? true : false;
+if(!isIE) { //ie11
+	isIE = (UA.indexOf('trident') >= 0) ? true : false;
+}
 var isNS = (UA.indexOf('mozilla') >= 0) ? true : false;
 var isIE7 = (UA.indexOf('msie 7.0') >= 0) ? true : false;
 
@@ -642,6 +645,10 @@ function ISWindow(id) {
   isIE8=(ua.indexOf("MSIE 8.0") >=0),
   isIE6=(!isIE7 && !isIE8 && isIE),
   IEBackCompat = (isIE && document.compatMode=="BackCompat");
+  
+  if(!isIE) {
+	isIE = (UA.indexOf('TRIDENT') >= 0) ? true : false;
+  }
   
   var me=this;
   

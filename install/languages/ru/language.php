@@ -32,7 +32,7 @@
     define('LANG_LICENSE_TRANSLATION',      'Перевод');
 
     define('LANG_PHP_VERSION',              'Версия интерпретатора');
-    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.3 или выше');
+    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.4 или выше');
     define('LANG_PHP_VERSION_DESC',         'Установленная версия');
 	define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
 	define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');
@@ -50,7 +50,6 @@
     define('LANG_PATHS_ROOT_INFO',          'Все пути указываются относительно:<br/><span class="root-path">%s</span>');
     define('LANG_PATHS_ROOT_CHANGE',        'изменить');
     define('LANG_PATHS_CHANGE_INFO',        'После установки пути можно будет изменить отредактировав файл конфигурации.<br/>Не забудьте сделать это при переносе сайта с локального сервера на хостинг!');
-    define('LANG_PATHS_HTACCESS_INFO',      'Вы устанавливаете InstantCMS не в корневую папку сайта, поэтому необходимо изменить файл .htaccess. <a href="http://docs.instantcms.ru/manual/install?&#указание-путей" target="_blank">Инструкция</a>');
     define('LANG_PATHS_MUST_WRITABLE',      'Должна быть доступна для записи');
     define('LANG_PATHS_NOT_WRITABLE',       'не доступна для записи!');
     define('LANG_PATHS_WRITABLE_HINT',      'Выставьте правильные права на эту папку');
@@ -70,21 +69,31 @@
     define('LANG_DATABASE_USER',            'Пользователь');
     define('LANG_DATABASE_PASS',            'Пароль');
     define('LANG_DATABASE_BASE',            'База данных');
+    define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
+    define('LANG_DATABASE_ENGINE',          'Движок базы данных');
+    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');
     define('LANG_DATABASE_USERS_TABLE_OLD', 'Использовать имеющуюся');
+    define('LANG_DATABASE_INSTALL_DEMO',    'Установить демо данные');
 
+    define('LANG_DATABASE_PREFIX_ERROR',    'Префикс БД может содержать только латинские буквы, цифры и знак подчёркивания');
+    define('LANG_DATABASE_SELECT_ERROR',    'Невозможно выбрать базу данных %s');
     define('LANG_DATABASE_CONNECT_ERROR',   "Ошибка подключения MySQL:\n\n%s");
     define('LANG_DATABASE_BASE_ERROR',      "Ошибка импорта базы данных\nПроверьте правильность реквизитов");
+    define('LANG_DATABASE_ENGINE_NO',       'Выбранный движок БД не поддерживается');
+    define('LANG_DATABASE_ENGINE_DISABLED', 'Выбранный движок БД поддерживается, но отключен в настройках MySQL');
+    define('LANG_DATABASE_ENGINE_ERROR',    'Выбранный движок БД не поддерживается сервером');
 
     define('LANG_SITE_SITENAME',            "Название сайта");
     define('LANG_SITE_HOMETITLE',           "Заголовок главной страницы");
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
-    define('LANG_SITE_METADESC',            "Описание сайта");    
-    
+    define('LANG_SITE_METADESC',            "Описание сайта");
+
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
-    
+    define('LANG_SITE_HOMETITLE_ERROR',     "Требуется указать заголовок главной страницы");
+
     define('LANG_ADMIN_EXTERNAL',           'Реквизиты администратора будут взяты из таблицы <b>%s</b>');
     define('LANG_ADMIN_INFO',               'Для создания главного администратора необходимо указать его реквизиты');
     define('LANG_ADMIN_NAME',               'Имя администратора');
@@ -116,8 +125,8 @@
     define('LANG_FINISH_TO_SITE',           'Перейти на сайт');
 
     define('LANG_CFG_OFF_REASON',           'Идут технические работы');
-    define('LANG_CFG_SITENAME',             'InstantCMS 2.0');
-    define('LANG_CFG_HOMETITLE',            'InstantCMS 2.0');
+    define('LANG_CFG_SITENAME',             'InstantCMS 2');
+    define('LANG_CFG_HOMETITLE',            'InstantCMS 2');
     define('LANG_CFG_DATE_FORMAT',          'd.m.Y');
     define('LANG_CFG_DATE_FORMAT_JS',       'dd.mm.yy');
     define('LANG_CFG_TIME_ZONE',            'Europe/Moscow');

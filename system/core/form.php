@@ -4,20 +4,9 @@ class cmsForm {
 
     public $is_tabbed = false;
 
-    private $params = array();
-    private $structure = array();
+    private $params          = array();
+    private $structure       = array();
     private $disabled_fields = array();
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Заполняет массив полей формы
-     * Должен быть переопределен в наследуемом классе
-     */
-//    public function init(){
-//        return array();
-//    }
 
     public function setStructure($structure=array()){
         $this->structure = $structure;
@@ -90,6 +79,10 @@ class cmsForm {
 //============================================================================//
 //============================================================================//
 
+    public function isFieldsetExists($id) {
+        return isset($this->structure[$id]);
+    }
+
     /**
      * Добавляет набор полей в форму.
      * Возращает id набора полей
@@ -102,6 +95,8 @@ class cmsForm {
         if (is_null($id)){
             $id = sizeof($this->structure);
         }
+
+        if($this->isFieldsetExists($id)){ return $id; }
 
         $fieldset = array(
             'type' => 'fieldset',
@@ -171,20 +166,52 @@ class cmsForm {
 	}
 
     /**
-     * Добавляет поле в указанный набор полей формы
+     * Добавляет поле в конец набора полей
      * @param string $fieldset_id ID набора полей
-     * @param string $name Название поля
-     * @param array $params Параметры поля
+     * @param object $field Объект поля
+     * @return $this
      */
     public function addField($fieldset_id, $field){
 
-        $this->structure[ $fieldset_id ]['childs'][] = $field;
+        $this->structure[ $fieldset_id ]['childs'][$field->name] = $field;
+
+        return $this;
 
     }
 
+    /**
+     * Добавляет поле в начало набора полей
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return $this
+     */
     public function addFieldToBeginning($fieldset_id, $field){
 
         $this->structure[ $fieldset_id ]['childs'] = array($field->name => $field) + $this->structure[ $fieldset_id ]['childs'];
+
+        return $this;
+
+    }
+
+    /**
+     * Добавляет поле после заданного в $after_id
+     * @param string $after_id ID поля, после которого нужно добавить
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return $this
+     */
+    public function addFieldAfter($after_id, $fieldset_id, $field){
+
+        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']));
+
+        if($pos === false){ return $this; }
+
+        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1);
+        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1);
+
+        $this->structure[$fieldset_id]['childs'] = $before + array($field->name => $field) + $after;
+
+        return $this;
 
     }
 
@@ -219,6 +246,25 @@ class cmsForm {
         }
     }
 
+    public function setFieldAttributeByName($field_name, $attr_name, $value){
+        foreach($this->structure as $fieldset){
+            foreach( $fieldset['childs'] as $field) {
+                if ($field->getName() == $field_name){
+                    $field->setOption($attr_name, $value);
+                    break;
+                }
+            }
+        }
+    }
+
+    public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
+        foreach( $this->structure[ $fieldset_id ]['childs'] as $field) {
+            if ($field->getName() == $field_name){
+                $field->{$attr_name} = $value;
+                break;
+            }
+        }
+    }
 //============================================================================//
 //============================================================================//
 
@@ -237,7 +283,12 @@ class cmsForm {
      * @param string $fieldset_id ID набора полей
      * @param string $field_name Название поля
      */
-    public function hideField($fieldset_id, $field_name){
+    public function hideField($fieldset_id, $field_name = ''){
+
+        if ($fieldset_id && empty($field_name)){
+            $this->setFieldAttributeByName($fieldset_id, 'is_hidden', true);
+            return;
+        }
 
         $this->setFieldAttribute($fieldset_id, $field_name, 'is_hidden', true);
 
@@ -245,6 +296,14 @@ class cmsForm {
 
 //============================================================================//
 //============================================================================//
+
+    /**
+     * Убирает из набора все поля
+     * @param string $fieldset_id ID набора полей
+     */
+    public function clearFieldset($fieldset_id){
+        $this->structure[ $fieldset_id ]['childs'] = array();
+    }
 
     /**
      * Удаляет набор полей из формы
@@ -305,16 +364,24 @@ class cmsForm {
 
                 $is_array = strpos($name, ':');
 
-                $value = $request->get($name, null);
+                $value = $request->get($name, null, $field->getDefaultVarType());
 
                 if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
 
-                $old_value = $item ? (isset($item[$name]) ? $item[$name] : null) : null;
+                $old_value = null;
+
+                if($item){
+                    if ($is_array === false){
+                        $old_value = array_key_exists($name, $item) ? $item[$name] : null;
+                    }
+                    if ($is_array !== false){
+                        $old_value = array_value_recursive($name, $item);
+                    }
+                }
 
                 $field->setItem($item);
 
                 $value = $field->store($value, $is_submitted, $old_value);
-
                 if ($value === false) { continue; }
 
                 if ($is_array === false){
@@ -322,8 +389,20 @@ class cmsForm {
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $result[$name_parts[0]][$name_parts[1]] = $value;
+                    $result = set_array_value_recursive($name, $result, $value);
+                }
+
+                // если нужна денормализация
+                if($is_submitted && $field->is_denormalization){
+
+                    $d_name = $field->getDenormalName();
+
+                    if ($is_array === false){
+                        $result[$d_name] = $field->storeCachedValue($value);
+                    } else {
+                        $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
+                    }
+
                 }
 
             }
@@ -353,7 +432,7 @@ class cmsForm {
         // Проверяем CSRF-token
         //
         if ($is_check_csrf){
-            $csrf_token = $controller->request->get('csrf_token');
+            $csrf_token = $controller->request->get('csrf_token', '');
             if ( !self::validateCSRFToken( $csrf_token ) ){
                 return true;
             }
@@ -373,8 +452,11 @@ class cmsForm {
                 // если поле отключено, пропускаем поле
                 if (in_array($name, $this->disabled_fields)){ continue; }
 
+                // правила
+                $rules = $field->getRules();
+
                 // если нет правил, пропускаем поле
-                if (!$field->getRules()){ continue; }
+                if (!$rules){ continue; }
 
                 // проверяем является ли поле элементом массива
                 $is_array = strpos($name, ':');
@@ -383,12 +465,11 @@ class cmsForm {
                 // получаем значение поля из массива данных
                 //
                 if ($is_array === false){
-                    $value = isset($data[$name]) ? $data[$name] : '';
+                    $value = array_key_exists($name, $data) ? $data[$name] : '';
                 }
 
                 if ($is_array !== false){
-                    $name_parts = explode(':', $name);
-                    $value = isset($data[$name_parts[0]][$name_parts[1]]) ? $data[$name_parts[0]][$name_parts[1]] : '';
+                    $value = array_value_recursive($name, $data);
                 }
 
                 if ($data) { $field->setItem($data); }
@@ -397,7 +478,7 @@ class cmsForm {
                 // перебираем правила для поля
                 // и проверяем каждое из них
                 //
-                foreach($field->getRules() as $rule){
+                foreach($rules as $rule){
 
                     if (!$rule) { continue; }
 
@@ -455,7 +536,7 @@ class cmsForm {
      */
     public static function generateCSRFToken(){
 
-        $hash = implode('::', array(session_id(), rand(0, 9999), microtime(true)));
+        $hash = implode('::', array(session_id(), uniqid(), microtime(true)));
         $token = md5($hash);
 
         cmsUser::sessionSet('csrf_token', $token);
@@ -470,7 +551,7 @@ class cmsForm {
      * @return bool
      */
     public static function validateCSRFToken($csrf_token){
-        return (cmsUser::sessionGet('csrf_token') == $csrf_token);
+        return (cmsUser::sessionGet('csrf_token') === $csrf_token);
     }
 
 //============================================================================//
@@ -570,8 +651,5 @@ class cmsForm {
         return $form;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

@@ -1,0 +1,18 @@
+.accept_redirect {
+    color: #bdc3c7;
+    float: right;
+    margin: 6px 0 0 0;
+}
+.redirect_warning {
+    background: url("../../images/icons/error.png") no-repeat 10px center #e74c3c;
+    padding: 10px;
+    padding-left: 35px;
+    line-height: 16px;
+    color: #FFF;
+}
+.redirect_warning a, .redirect_warning_visit a {
+    color: inherit;
+}
+.redirect_warning_visit {
+    color: #d35400;
+}

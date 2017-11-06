@@ -1,8 +1,6 @@
 <?php
 
     $this->addJS('templates/default/js/admin-moderators.js');
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
 
     $this->setPageTitle(LANG_MODERATORS, $ctype['title']);
 
@@ -13,11 +11,17 @@
     $this->addMenuItems('ctype', $this->controller->getCtypeMenu('moderators', $ctype['id']));
 
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_MODERATORS
-	));
+		'class'  => 'settings',
+        'title'  => LANG_MODERATORATION_OPTIONS,
+        'href'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options'))
+    ));
+
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_CTYPES_MODERATORS
+    ));
 
 ?>
 
@@ -35,11 +39,12 @@
 <div id="ctype_moderators_list" class="striped-list list-32" <?php if (!$moderators){ ?>style="display:none"<?php } ?>>
 
     <div class="datagrid_wrapper">
-        <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?>" cellpadding="0" cellspacing="0" border="0">
+        <table id="datagrid" class="datagrid" cellpadding="0" cellspacing="0">
             <thead>
                 <tr>
                     <th colspan="2"><?php echo LANG_MODERATOR; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_ASSIGNED_DATE; ?></th>
+                    <th class="center"><?php echo LANG_MODERATOR_TRASH_LEFT_TIME; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_APPROVED_COUNT; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_DELETED_COUNT; ?></th>
                     <th class="center"><?php echo LANG_MODERATOR_IDLE_COUNT; ?></th>
@@ -64,7 +69,7 @@
     <div class="hint"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
 
     <div class="field">
-        <?php echo html_input('text', 'username', '', array('id'=>'username', 'autocomplete'=>'off')); ?>
+        <?php echo html_input('text', 'user_email', '', array('id'=>'user_email', 'autocomplete'=>'off')); ?>
         <?php echo html_button(LANG_ADD, 'add', 'return icms.adminModerators.add()', array('id'=>'submit', 'disabled'=>'disabled')); ?>
     </div>
     <div class="loading-icon" style="display:none"></div>
@@ -80,7 +85,7 @@
 
         var cache = {};
 
-        $( "#username" ).autocomplete({
+        $( "#user_email" ).autocomplete({
             minLength: 2,
             delay: 500,
             source: function( request, response ) {
@@ -100,7 +105,7 @@
             }
         });
 
-        $( "#submit" ).removeAttr('disabled');
+        $( "#submit" ).prop('disabled', false);
         $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
 
     });

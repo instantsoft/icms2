@@ -3,7 +3,7 @@
 function grid_menu_items($controller){
 
     $options = array(
-        'is_auto_init' => false, 
+        'is_auto_init' => false,
         'is_sortable' => false,
         'is_filter' => false,
         'is_pagination' => false,
@@ -20,11 +20,17 @@ function grid_menu_items($controller){
         ),
         'title' => array(
             'title' => LANG_CP_MENU_ITEM_TITLE,
-            'width' => 200,
+            'width' => 250,
             'href' => href_to($controller->name, 'menu', array('item_edit', '{id}')),
+            'editable' => array(
+                'table' => 'menu_items'
+            )
         ),
         'url' => array(
-            'title' => LANG_CP_MENU_ITEM_URL            
+            'title' => LANG_CP_MENU_ITEM_URL,
+            'editable' => array(
+                'table' => 'menu_items'
+            )
         ),
     );
 
@@ -38,15 +44,15 @@ function grid_menu_items($controller){
             'title' => LANG_DELETE,
             'class' => 'delete',
             'href' => href_to($controller->name, 'menu', array('item_delete', '{id}')),
-            'confirm' => LANG_CP_MENU_ITEM_DELETE_CONFIRM            
+            'confirm' => LANG_CP_MENU_ITEM_DELETE_CONFIRM
         )
     );
 
     return array(
-        'options' => $options, 
+        'options' => $options,
         'columns' => $columns,
         'actions' => $actions
     );
-    
+
 }
 

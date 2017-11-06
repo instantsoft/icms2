@@ -16,7 +16,9 @@ class actionAdminCtypesFieldsAjax extends cmsAction {
 
         $fields = $content_model->getContentFields($ctype_name);
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $fields);
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
+        $this->cms_template->renderGridRowsJSON($grid, $fields);
 
         $this->halt();
 

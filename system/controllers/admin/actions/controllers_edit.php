@@ -2,24 +2,26 @@
 
 class actionAdminControllersEdit extends cmsAction {
 
-    public function run( $controller_name ){
+    public function run($controller_name){
 
         if (!$controller_name) { cmsCore::error404(); }
 
         $controller_info = $this->model->getControllerInfo($controller_name);
+        if (!$controller_info) {
+            // если компонент имеет несколько контроллеров и один из них использует опции другого
+            $controller_info = cmsEventsManager::hook("admin_{$controller_name}_controller_info", false);
+            if (!$controller_info) { cmsCore::error404(); }
+        }
 
-        if (!$controller_info) { cmsCore::error404(); }
+        cmsCore::loadControllerLanguage($controller_info['name']);
 
-        cmsCore::loadControllerLanguage($controller_name);
-
-        $controller_title = constant('LANG_'.mb_strtoupper($controller_name).'_CONTROLLER');
-
-        $template = cmsTemplate::getInstance();
+        $controller_title = string_lang($controller_info['name'].'_CONTROLLER', $controller_info['title']);
 
         if (!$controller_info['is_backend']){
-            return $template->render('controllers_edit', array(
-                'is_backend' => false,
-                'controller_name' => $controller_name,
+            return $this->cms_template->render('controllers_edit', array(
+                'is_backend'       => false,
+                'ctype'            => false,
+                'controller_name'  => $controller_info['name'],
                 'controller_title' => $controller_title
             ));
         }
@@ -29,7 +31,7 @@ class actionAdminControllersEdit extends cmsAction {
         //
         $backend_context = $this->request->isAjax() ? cmsRequest::CTX_AJAX : cmsRequest::CTX_INTERNAL;
         $backend_request = new cmsRequest($this->request->getData(), $backend_context);
-        $backend_controller = $this->loadControllerBackend($controller_name, $backend_request);
+        $backend_controller = $this->loadControllerBackend($controller_info['name'], $backend_request);
 
         // Определяем текущий экшен бакенда
         $action_name = sizeof($this->params)>1 ? $this->params[1] : 'index';
@@ -45,9 +47,6 @@ class actionAdminControllersEdit extends cmsAction {
             unset($params[1]);
         }
 
-        // Устанавливаем корень для URL внутри бакенда
-        $backend_controller->setRootURL( $this->name . '/controllers/edit/' . $controller_name );
-
         // Если запрос пришел по AJAX, то выполняем экшен бакенда сразу же
         // иначе он будет выполнен позже, в шаблоне, чтобы тулбары и pathwey бакенда
         // вывелись позже, чем админки
@@ -57,18 +56,19 @@ class actionAdminControllersEdit extends cmsAction {
         }
 
         // Подключаем CSS бакенда если он есть
-        $css_file = $template->getStylesFileName($controller_name, 'backend');
-        if ($css_file){ $template->addCSS($css_file); }
+        $css_file = $this->cms_template->getStylesFileName($controller_info['name'], 'backend');
+        if ($css_file){ $this->cms_template->addCSS($css_file); }
 
-        $template->setMenuItems('backend', $backend_controller->getBackendMenu());
+        $this->cms_template->setMenuItems('backend', $backend_controller->getBackendMenu());
 
-        return $template->render('controllers_edit', array(
-            'is_backend' => true,
-            'controller_name' => $controller_name,
-            'controller_title' => $controller_title,
-            'params' => $params,
-            'action_name' => $action_name,
-            'backend_controller' => $backend_controller,
+        return $this->cms_template->render('controllers_edit', array(
+            'is_backend'         => true,
+            'ctype'              => cmsCore::getModel('content')->getContentTypeByName($backend_controller->maintained_ctype ? $backend_controller->maintained_ctype : $controller_name),
+            'controller_name'    => $controller_info['name'],
+            'controller_title'   => $controller_title,
+            'params'             => $params,
+            'action_name'        => $action_name,
+            'backend_controller' => $backend_controller
         ));
 
     }

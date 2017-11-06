@@ -8,13 +8,13 @@ class actionImagesPresetsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('presets');
 
-        $images_model = cmsCore::getModel('images');
+        $presets = $this->model->orderByList(array(
+            array('by' => 'is_internal', 'to' => 'asc'),
+            array('by' => 'width', 'to' => 'asc'),
+            array('by' => 'quality', 'to' => 'desc'),
+        ))->getPresets();
 
-        $presets = $images_model->getPresets();
-
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $presets);
-
-        $this->halt();
+        return $this->cms_template->renderGridRowsJSON($grid, $presets);
 
     }
 

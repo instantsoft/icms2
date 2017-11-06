@@ -11,9 +11,11 @@ class formContentCategory extends cmsForm {
 
                     new fieldString('title', array(
                         'title' => LANG_CATEGORY_TITLE,
+                        'options'=>array(
+                            'max_length'=> 200
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('max_length', 64)
+                            array('required')
                         )
                     )),
 
@@ -21,8 +23,7 @@ class formContentCategory extends cmsForm {
                         'title' => LANG_PARENT_CATEGORY,
                         'generator' => function($cat){
 
-                            $content_model = cmsCore::getModel('content');
-                            $tree = $content_model->getCategoriesTree($cat['ctype_name']);
+                            $tree = cmsCore::getModel('content')->limit(0)->getCategoriesTree($cat['ctype_name']);
 
                             if ($tree){
                                 foreach($tree as $item){
@@ -44,6 +45,13 @@ class formContentCategory extends cmsForm {
 
                         }
                     )),
+
+                    new fieldHtml('description', array(
+                        'title' => LANG_CATEGORY_DESCRIPTION,
+                        'options' => array(
+                            'editor' => cmsConfig::get('default_editor')
+                        )
+                    ))
 
                 )
             )

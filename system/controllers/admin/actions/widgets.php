@@ -15,27 +15,40 @@ class actionAdminWidgets extends cmsAction {
         $widgets_model = cmsCore::getModel('widgets');
 
         $controllers = $widgets_model->getPagesControllers();
-        
+
         $widgets_list = $widgets_model->getAvailableWidgets();
 
-        $template = cmsTemplate::getInstance();
+        $tpls = cmsCore::getTemplates();
 
-        $scheme_html = $this->getSchemeHTML();
+        $template_name = $this->request->get('template_name', '');
 
-        return $template->render('widgets', array(
-            'controllers' => $controllers,
-            'widgets_list' => $widgets_list,
-            'scheme_html' => $scheme_html
+        if(!$template_name || !in_array($template_name, $tpls)){
+            $template_name = cmsConfig::get('template');
+        }
+
+        cmsCore::loadTemplateLanguage($template_name);
+
+        foreach ($tpls as $tpl) {
+            $templates[$tpl] = $tpl;
+        }
+
+        $scheme_html = $this->getSchemeHTML($template_name);
+
+        return $this->cms_template->render('widgets', array(
+            'controllers'   => $controllers,
+            'template_name' => $template_name,
+            'templates'     => $templates,
+            'widgets_list'  => $widgets_list,
+            'scheme_html'   => $scheme_html
         ));
 
     }
 
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
-        $template = cmsTemplate::getInstance();
+        $template = new cmsTemplate($name);
 
         $scheme_html = $template->getSchemeHTML();
-
         if (!$scheme_html) { return false; }
 
         if (!preg_match_all('/{([a-zA-Z0-9:_\-]+)}/u', $scheme_html, $matches)) { return false; }
@@ -51,12 +64,12 @@ class actionAdminWidgets extends cmsAction {
             }
 
             if ($type=='block') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
+                if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
                 $replace_html = '<div class="block"><span>'.$value.'</span></div>';
             }
 
             if ($type=='cell') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
+                if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
                 $replace_html = '<div class="cell"><span>'.$value.'</span></div>';
             }
 

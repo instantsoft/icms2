@@ -32,6 +32,7 @@
             <div class="buttons">
                 <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.wall.preview()'); ?>
                 <?php echo html_button(LANG_SEND, 'submit', 'icms.wall.submit()'); ?>
+                <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.wall.restoreForm()', array('class'=>'button-cancel')); ?>
             </div>
             <div class="loading">
                 <?php echo LANG_LOADING; ?>
@@ -42,7 +43,13 @@
     <div id="entries_list">
 
         <?php if (!$entries) { ?>
-            <p class="no_entries"><?php echo LANG_WALL_EMPTY; ?></p>
+            <p class="no_entries">
+                <?php if ($permissions['add']){ ?>
+                    <?php echo LANG_WALL_EMPTY; ?>
+                <?php } else { ?>
+                    <?php echo LANG_WALL_EMPTY_ONLY; ?>
+                <?php } ?>
+            </p>
         <?php } ?>
 
         <?php if ($entries){ ?>

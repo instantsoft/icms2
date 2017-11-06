@@ -1,31 +1,47 @@
 <?php
+/******************************************************************************/
+//                                                                            //
+//                             InstantCMS 2                                   //
+//                        http://instantcms.ru/                               //
+//                   produced by InstantSoft, instantsoft.ru                  //
+//                        LICENSED BY GNU/GPL v2                              //
+//                                                                            //
+/******************************************************************************/
 
-	session_start();
+    define('VALID_RUN', true);
 
-	define('VALID_RUN', true);
-
-	// Устанавливаем кодировку
-	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS');
+    header('Content-type:text/html; charset=utf-8');
 
     require_once 'bootstrap.php';
 
-    if (cmsConfig::get('emulate_lag')) { usleep(350000); }
+    if ($config->emulate_lag) { usleep(350000); }
+
+    if($config->cookie_domain){
+        session_set_cookie_params(0, '/', '.'.$config->cookie_domain, false, true);
+    }
+
+    session_start();
+
+    //Запускаем роутинг
+    $core->route($_SERVER['REQUEST_URI']);
 
     // Инициализируем шаблонизатор
     $template = cmsTemplate::getInstance();
 
-    if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
-        if (!cmsConfig::get('is_site_on') && !cmsUser::isAdmin()) {
-            cmsCore::errorMaintenance();
-        }
-    }
-
     cmsEventsManager::hook('engine_start');
 
-    //Запускаем роутинг и контроллер
-    $core->route($_SERVER['REQUEST_URI']);
-	$core->runController();
+    // загружаем и устанавливаем страницы для текущего URI
+    $core->loadMatchedPages();
+
+    // Проверяем доступ
+    if(cmsEventsManager::hook('page_is_allowed', true)){
+
+        //Запускаем контроллер
+        $core->runController();
+
+    }
+
+    // формируем виджеты
     $core->runWidgets();
 
     //Выводим готовую страницу

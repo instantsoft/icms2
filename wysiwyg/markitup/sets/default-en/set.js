@@ -1,14 +1,3 @@
-// ----------------------------------------------------------------------------
-// markItUp!
-// ----------------------------------------------------------------------------
-// Copyright (C) 2011 Jay Salvat
-// http://markitup.jaysalvat.com/
-// ----------------------------------------------------------------------------
-// Html tags
-// http://en.wikipedia.org/wiki/html
-// ----------------------------------------------------------------------------
-// Basic set. Feel free to add more tags
-// ----------------------------------------------------------------------------
 var mySettings = {
     resizeHandle: false,
 	onShiftEnter:  	{keepDefault:false, replaceWith:'<br />\n'},
@@ -26,6 +15,9 @@ var mySettings = {
 		{name:'Image from URL', replaceWith:'<img src="[![Image URL:!:http://]!]" alt="[![Image description]!]" />', className: 'btnImg'},
 		{name:'Upload Image', className: 'btnImgUpload', beforeInsert: function(markItUp) { InlineUpload.display(markItUp) }},
 		{name:'YouTube Video', openWith:'<youtube>[![YouTube Video URL]!]', closeWith:'</youtube>', className: 'btnVideoYoutube'},
-        {name:'Code', openWith:'<code>', closeWith:'</code>', className: 'btnCode'}
+        {name:'Facebook Video', openWith:'<facebook>[![Facebook Video URL]!]', closeWith:'</facebook>', className: 'btnVideoFacebook'},
+        {name:'Code', openWith:'<code type="[![Language:!:php]!]">', placeHolder:'\n\n', openWith:'<code>', closeWith:'</code>', className: 'btnCode'},
+        {name:'Spoiler', openWith:'<spoiler title="[![Spoiler title:!:Spoiler]!]">', placeHolder:'\n\n', closeWith:'</spoiler>', className: 'btnSpoiler'},
+        {name:'Smiles', className: 'btnSmiles', key: 'Z', beforeInsert: function(markItUp) { insertSmiles.displayPanel(markItUp); }}
 	]
-}
+};

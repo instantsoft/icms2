@@ -3,70 +3,13 @@
     $this->addJS('templates/default/js/jquery-ui.js');
     $this->addCSS('templates/default/css/jquery-ui.css');
 
-    $this->setPageTitle($profile['nickname']);
+    $this->setPagePatternTitle($profile, 'nickname');
+    $this->setPagePatternDescription($profile, 'nickname');
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
 
-    $tool_buttons = array();
-
-    if ($user->is_logged) {
-
-        if ($is_friends_on && !$is_own_profile){
-            if ($is_friend_profile){
-                $tool_buttons['friend_delete'] = array(
-                    'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete',
-                    'href' => $this->href_to('friend_delete', $profile['id'])
-                );
-            } else if(!$is_friend_req) {
-                $tool_buttons['friend_add'] = array(
-                    'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add',
-                    'href' => $this->href_to('friend_add', $profile['id'])
-                );
-            }
-        }
-
-        if ($is_own_profile && $profile['invites_count']){
-            $tool_buttons['invites'] = array(
-                'title' => LANG_USERS_MY_INVITES,
-                'class' => 'invites',
-                'counter' => $profile['invites_count'],
-                'href' => $this->href_to($profile['id'], 'invites')
-            );
-        }
-
-        if ($is_own_profile || $user->is_admin){
-            $tool_buttons['settings'] = array(
-                'title' => LANG_USERS_EDIT_PROFILE,
-                'class' => 'settings',
-                'href' => $this->href_to($profile['id'], 'edit')
-            );
-        }
-
-        if ($user->is_admin){
-            $tool_buttons['edit'] = array(
-                'title' => LANG_USERS_EDIT_USER,
-                'class' => 'edit',
-                'href' => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . $this->href_to($profile['id'])
-            );
-        }
-
-    }
-
-    $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
-        'profile' => $profile,
-        'buttons' => $tool_buttons
-    ));
-
-    $tool_buttons = $buttons_hook['buttons'];
-
-    if (is_array($tool_buttons)){
-        foreach($tool_buttons as $button){
-            $this->addToolButton($button);
-        }
-    }
+    $this->addToolButtons($tool_buttons);
 
 ?>
 
@@ -78,9 +21,11 @@
 
     <div id="left_column" class="column">
 
-        <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
-        </div>
+        <?php if ($fields['avatar']['is_in_item']){ ?>
+            <div id="avatar" class="block">
+                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+            </div>
+        <?php } ?>
 
         <?php if ($content_counts) { ?>
             <div class="block">
@@ -101,7 +46,11 @@
         <?php if ($is_friends_on && $friends) { ?>
             <div class="block">
                 <div class="block-title">
-                    <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php if($show_all_flink){ ?>
+                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php } else { ?>
+                        <?php echo LANG_USERS_FRIENDS; ?>
+                    <?php } ?>
                     (<?php echo $profile['friends_count']; ?>)
                 </div>
                 <div class="friends-list">
@@ -178,7 +127,7 @@
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
 
-                        <?php if (empty($profile[$field['name']])) { continue; } ?>
+                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
                         <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
@@ -196,13 +145,9 @@
                             <?php } ?>
 
                             <div class="value">
-
                                 <?php
-
-                                    echo $field['handler']->parse( $profile[$field['name']] );
-
+                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
                                 ?>
-
                             </div>
 
                         </div>

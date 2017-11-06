@@ -4,18 +4,15 @@ class actionMessagesIndex extends cmsAction {
 
     public function run(){
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
+        $is_allowed = $this->cms_user->isInGroups( $this->options['groups_allowed'] );
 
-        $user = cmsUser::getInstance();
+        $contacts = $this->model->getContacts($this->cms_user->id);
 
-        $is_allowed = $user->isInGroups( $this->options['groups_allowed'] );
-
-        $contacts = $this->model->getContacts($user->id);
-
-        cmsTemplate::getInstance()->render('index', array(
-            'user' => $user,
-            'is_allowed' => $is_allowed,
-            'contacts' => $contacts
+        $this->cms_template->render('index', array(
+            'user'         => $this->cms_user,
+            'is_allowed'   => $is_allowed,
+            'refresh_time' => (!empty($this->options['refresh_time']) ? ($this->options['refresh_time']*1000) : 15000),
+            'contacts'     => $contacts
         ));
 
     }

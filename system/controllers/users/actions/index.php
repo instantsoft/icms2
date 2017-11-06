@@ -2,26 +2,21 @@
 
 class actionUsersIndex extends cmsAction {
 
-    public function run($tab='all'){
+    public function run($dataset_name = 'all'){
 
-        $user = cmsUser::getInstance();
-
-        $dataset_name = false;
         $datasets = $this->getDatasets();
 
-        if ($tab && isset($datasets[$tab])) { 
-            
-            $dataset_name = $tab; 
-            $dataset = $datasets[$tab]; 
-            
-            if (isset($dataset['filter']) && is_callable($dataset['filter'])){
-                $this->model = $dataset['filter']($this->model, $dataset);
-            }            
-            
-        } else if ($tab) { cmsCore::error404(); }
+        if(!$dataset_name || !isset($datasets[$dataset_name])){
+            cmsCore::error404();
+        }
 
-        // Сортировка
-        if ($dataset_name){
+        $dataset = $datasets[$dataset_name];
+
+        if (isset($dataset['filter']) && is_callable($dataset['filter'])){
+            $this->model = $dataset['filter']($this->model, $dataset);
+        }
+
+        if (!empty($datasets[$dataset_name]['order'])){
             $this->model->orderBy( $datasets[$dataset_name]['order'][0], $datasets[$dataset_name]['order'][1] );
         }
 
@@ -31,15 +26,14 @@ class actionUsersIndex extends cmsAction {
             'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
         );
 
-        // Получаем HTML списка записей
-        $profiles_list_html = $this->renderProfilesList($page_url, $dataset_name);
-
-        return cmsTemplate::getInstance()->render('index', array(
-            'datasets' => $datasets,
-            'dataset_name' => $dataset_name,
-            'dataset' => $dataset,
-            'user' => $user,
-            'profiles_list_html' => $profiles_list_html,
+        return $this->cms_template->render('index', array(
+            'page_title'         => ($dataset_name != 'all' ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS),
+            'base_ds_url'        => href_to($this->name, 'index').'%s',
+            'datasets'           => $datasets,
+            'dataset_name'       => $dataset_name,
+            'dataset'            => $dataset,
+            'user'               => $this->cms_user,
+            'profiles_list_html' => $this->renderProfilesList($page_url, $dataset_name)
         ), $this->request);
 
     }

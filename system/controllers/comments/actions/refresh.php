@@ -7,15 +7,15 @@ class actionCommentsRefresh extends cmsAction {
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
         $user = cmsUser::getInstance();
-
         if (!$user->is_logged) { cmsCore::error404(); }
 
         $template = cmsTemplate::getInstance();
 
-        $timestamp = $this->request->get('timestamp');
+        $timestamp         = $this->request->get('timestamp');
         $target_controller = $this->request->get('tc');
-        $target_subject = $this->request->get('ts');
-        $target_id = $this->request->get('ti');
+        $target_subject    = $this->request->get('ts');
+        $target_id         = $this->request->get('ti');
+        $target_user_id    = $this->request->get('tud');
 
         $comments_per_request = 5;
 
@@ -43,11 +43,11 @@ class actionCommentsRefresh extends cmsAction {
 
         foreach($comments as $comment){
             $comments_collection[] = array(
-                'id' => $comment['id'],
+                'id'        => $comment['id'],
                 'parent_id' => $comment['parent_id'],
-                'level' => $comment['level'],
+                'level'     => $comment['level'],
                 'timestamp' => strtotime($comment['date_pub']),
-                'html' => $template->render('comment', array('comments'=>array($comment), 'user'=>$user), $template_request)
+                'html'      => $template->render('comment', array('comments' => array($comment), 'target_user_id' => $target_user_id, 'user' => $user), $template_request)
             );
         }
 

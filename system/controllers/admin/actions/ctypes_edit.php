@@ -8,8 +8,6 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $content_model = cmsCore::getModel('content');
 
-        $is_submitted = $this->request->has('submit');
-
         $ctype = $content_model->getContentType($id);
         if (!$ctype) { cmsCore::error404(); }
 
@@ -22,16 +20,20 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $ctype = cmsEventsManager::hook('ctype_before_edit', $ctype);
 
-        $template = cmsTemplate::getInstance();
+        $template = new cmsTemplate($this->cms_config->template);
 
         // Если есть собственный шаблон для типа контента
         // то удаляем поле выбора стиля
         $tpl_file = $template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
-        if ($tpl_file) { $form->removeField('listview', 'options:list_style'); }
+        if ($tpl_file) {
+            $form->removeField('listview', 'options:list_style');
+            $form->removeField('listview', 'options:list_style_names');
+            $form->removeField('listview', 'options:context_list_style');
+        }
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $ctype = $form->parse($this->request, $is_submitted);
+            $ctype = $form->parse($this->request, true);
             $errors = $form->validate($this,  $ctype);
 
             if (!$errors){
@@ -45,11 +47,15 @@ class actionAdminCtypesEdit extends cmsAction {
                 cmsEventsManager::hook("ctype_after_update", $ctype);
                 cmsEventsManager::hook("ctype_{$ctype['name']}_after_update", $ctype);
 
-                $this->redirectToAction('ctypes');
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
+                $this->redirectToAction('ctypes', array('edit', $ctype['id']));
 
             }
 
             if ($errors){
+
+                $ctype['id'] = $id;
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
@@ -57,11 +63,11 @@ class actionAdminCtypesEdit extends cmsAction {
 
         }
 
-        return $template->render('ctypes_basic', array(
-            'id' => $id,
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_basic', array(
+            'id'     => $id,
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

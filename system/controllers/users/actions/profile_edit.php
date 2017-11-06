@@ -2,26 +2,28 @@
 
 class actionUsersProfileEdit extends cmsAction {
 
-    public function run($profile, $do=false){
+    public $lock_explicit_call = true;
+
+    public function run($profile, $do=false, $param=false){
 
 		if (!cmsUser::isLogged()) { cmsCore::error404(); }
-		
-        $user = cmsUser::getInstance();
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2));
+            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
             return;
         }
 
+        $back_url = $this->request->get('back', '');
+
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         // Получаем поля
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content_model->getContentFields('{users}', $profile['id']);
 
         // Строим форму
         $form = new cmsForm();
@@ -39,7 +41,9 @@ class actionUsersProfileEdit extends cmsAction {
         // Добавляем поля в форму
         foreach($fieldsets as $fieldset){
 
-            $fieldset_id = $form->addFieldset($fieldset['title']);
+            $fid = $fieldset['title'] ? md5($fieldset['title']) : null;
+
+            $fieldset_id = $form->addFieldset($fieldset['title'], $fid);
 
             foreach($fieldset['fields'] as $field){
 
@@ -51,10 +55,9 @@ class actionUsersProfileEdit extends cmsAction {
         }
 
         // Добавляем поле выбора часового пояса
-        $config = cmsConfig::getInstance();
         $fieldset_id = $form->addFieldset( LANG_TIME_ZONE );
         $form->addField($fieldset_id, new fieldList('time_zone', array(
-            'default' => $config->time_zone,
+            'default' => $this->cms_config->time_zone,
             'generator' => function($item){
                 return cmsCore::getTimeZones();
             }
@@ -75,7 +78,14 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors){
                 $is_allowed = cmsEventsManager::hookAll('user_profile_update', $profile, true);
-                if ($is_allowed !== true && in_array(false, $is_allowed)) { $errors = true; }
+                if (is_array($is_allowed)) {
+                    $errors = array();
+                    foreach ($is_allowed as $error_list) {
+                        if(is_array($error_list) && $error_list){
+                            $errors = array_merge($error_list);
+                        }
+                    }
+                }
             }
 
             if (!$errors){
@@ -84,32 +94,46 @@ class actionUsersProfileEdit extends cmsAction {
                 $this->model->updateUser($profile['id'], $profile);
 
                 // Отдельно обновляем часовой пояс в сессии
-                cmsUser::sessionSet('user_data:time_zone', $profile['time_zone']);
-		
+                cmsUser::sessionSet('user:time_zone', $profile['time_zone']);
+
                 // Постим уведомление о смене аватара в ленту
                 if (!$this->model->isAvatarsEqual($new['avatar'], $old['avatar'])){
                     $activity_controller = cmsCore::getController('activity');
-                    $activity_controller->deleteEntry($this->name, "avatar", $profile['id']);
+                    $activity_controller->deleteEntry($this->name, 'avatar', $profile['id']);
 					if (!empty($new['avatar'])){
-						$activity_controller->addEntry($this->name, "avatar", array(
-							'user_id' => $profile['id'],
-							'subject_title' => $profile['nickname'],
-							'subject_id' => $profile['id'],
-							'subject_url' => href_to('users', $profile['id']),
-							'is_private' => 0,
-							'group_id' => null,
-							'images' => array(
-								array(
-									'url' => href_to('users', $profile['id']),
-									'src' => html_image_src($new['avatar'], 'normal')
-								)
-							),
-							'images_count' => 1
-						));
+						$activity_controller->addEntry($this->name, 'avatar', array(
+							'user_id'       => $profile['id'],
+                            'subject_title' => $profile['nickname'],
+                            'subject_id'    => $profile['id'],
+                            'subject_url'   => href_to_rel('users', $profile['id']),
+                            'is_private'    => 0,
+                            'group_id'      => null,
+                            'images'        => array(
+                                array(
+                                    'url' => href_to_rel('users', $profile['id']),
+                                    'src' => html_image_src($new['avatar'], $fields['avatar']['options']['size_full'])
+                                )
+                            ),
+                            'images_count'  => 1
+                        ));
 					}
                 }
 
-                $this->redirectTo('users', $profile['id']);
+                $content = cmsCore::getController('content', $this->request);
+
+                $parents = $content->model->getContentTypeParents(null, $this->name);
+
+                if($parents){
+                    $content->bindItemToParents(array('id' => null, 'name' => $this->name, 'controller' => $this->name), $profile, $parents);
+                }
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
+                if ($back_url){
+                    $this->redirect($back_url);
+                } else {
+                    $this->redirectTo('users', $profile['id']);
+                }
 
             }
 
@@ -119,12 +143,17 @@ class actionUsersProfileEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('profile_edit', array(
-            'do' => 'edit',
-            'id' => $profile['id'],
-            'profile' => $profile,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+        $allow_delete_profile = (cmsUser::isAllowed('users', 'delete', 'any') ||
+            (cmsUser::isAllowed('users', 'delete', 'my') && $this->is_own_profile));
+
+        return $this->cms_template->render('profile_edit', array(
+            'do'                   => 'edit',
+            'cancel_url'           => ($back_url ? $back_url : href_to('users', $profile['id'])),
+            'id'                   => $profile['id'],
+            'profile'              => $profile,
+            'form'                 => $form,
+            'allow_delete_profile' => $allow_delete_profile,
+            'errors'               => isset($errors) ? $errors : false
         ));
 
     }

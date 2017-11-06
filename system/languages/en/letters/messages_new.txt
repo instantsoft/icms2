@@ -1,0 +1,9 @@
+[subject:New message - {site}]
+
+Hello, {nickname}.
+
+The site "{site}" You received a new private message
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

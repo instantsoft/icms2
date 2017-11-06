@@ -6,20 +6,19 @@ class actionContentWidgetCatsAjax extends cmsAction {
 
 		if (!$this->request->isAjax()){ cmsCore::error404(); }
 		if (!cmsUser::isAdmin()) { cmsCore::error404(); }
-		
-		$ctype_id = $this->request->get('value');
-		
+
+		$ctype_id = $this->request->get('value', 0);
 		if (!$ctype_id) { cmsCore::error404(); }
-		
+
 		$ctype = $this->model->getContentType($ctype_id);
-		
+
 		if (!$ctype) { cmsCore::error404(); }
-		
+
 		$cats = $this->model->getCategoriesTree($ctype['name']);
-		
+
 		$cats_list = array();
-		
-		if ($cats){ 
+
+		if ($cats){
 			foreach($cats as $cat){
 
 				if ($cat['ns_level'] > 1){
@@ -30,9 +29,9 @@ class actionContentWidgetCatsAjax extends cmsAction {
 
 			}
 		}
-		
-		cmsTemplate::getInstance()->renderJSON($cats_list);
-		
+
+		return $this->cms_template->renderJSON($cats_list);
+
     }
 
 }

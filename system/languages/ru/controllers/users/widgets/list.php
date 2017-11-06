@@ -10,3 +10,4 @@
     define('LANG_WD_USERS_LIST_STYLE',           'Стиль');
     define('LANG_WD_USERS_LIST_STYLE_LIST',      'Список');
     define('LANG_WD_USERS_LIST_STYLE_TILES',     'Плитка');
+    define('LANG_WD_USERS_LIST_LIST_FIELDS',     'Поля, которые необходимо вывести в списке');

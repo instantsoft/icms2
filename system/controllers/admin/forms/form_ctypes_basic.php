@@ -3,7 +3,7 @@ class formAdminCtypesBasic extends cmsForm {
 
     public function init($do) {
 
-        $template = cmsTemplate::getInstance();
+        $template = new cmsTemplate(cmsConfig::get('template'));
 
         return array(
             'titles' => array(
@@ -35,6 +35,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'pub' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_PUBLICATION,
                 'childs' => array(
                     new fieldCheckbox('is_premod_add', array(
@@ -47,10 +48,20 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_IS_PUB_CONTROL,
                         'hint' => LANG_CP_IS_PUB_CONTROL_HINT
                     )),
+                    new fieldList('options:is_date_range_process', array(
+                        'title' => LANG_CP_IS_PUB_CONTROL_PROCESS,
+                        'default' => 'hide',
+                        'items' => array(
+                            'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
+                            'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL,
+                            'in_basket' => LANG_BASKET_DELETE
+                        )
+                    ))
                 )
             ),
             'categories' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_CATEGORIES,
                 'childs' => array(
                     new fieldCheckbox('is_cats', array(
@@ -82,6 +93,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'folders' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_FOLDERS,
                 'childs' => array(
                     new fieldCheckbox('is_folders', array(
@@ -92,6 +104,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'groups' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_CT_GROUPS,
                 'childs' => array(
                     new fieldCheckbox('is_in_groups', array(
@@ -104,6 +117,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'comments' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_COMMENTS,
                 'childs' => array(
                     new fieldCheckbox('is_comments', array(
@@ -113,6 +127,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'ratings' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_RATING,
                 'childs' => array(
                     new fieldCheckbox('is_rating', array(
@@ -122,6 +137,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'tags' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_TAGS,
                 'childs' => array(
                     new fieldCheckbox('is_tags', array(
@@ -137,6 +153,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'listview' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_LISTVIEW_OPTIONS,
                 'childs' => array(
                     new fieldCheckbox('options:list_on', array(
@@ -153,24 +170,78 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('options:list_expand_filter', array(
                         'title' => LANG_CP_LISTVIEW_FILTER_EXPAND
                     )),
+                    new fieldList('options:privacy_type', array(
+                        'title'   => LANG_CP_PRIVACY_TYPE,
+                        'default' => 'hide',
+                        'items'   => array(
+                            'hide'       => LANG_CP_PRIVACY_TYPE_HIDE,
+                            'show_title' => LANG_CP_PRIVACY_TYPE_SHOW_TITLE,
+                            'show_all'   => LANG_CP_PRIVACY_TYPE_SHOW_ALL
+                        )
+                    )),
+                    new fieldNumber('options:limit', array(
+                        'title' => LANG_LIST_LIMIT,
+                        'default' => 15,
+                        'rules' => array(
+                            array('required')
+                        )
+                    )),
                     new fieldList('options:list_style', array(
                         'title' => LANG_CP_LISTVIEW_STYLE,
+                        'is_chosen_multiple' => true,
                         'hint' => sprintf(LANG_CP_LISTVIEW_STYLE_HINT, $template->getName()),
-                        'generator' => function(){
-                            $template = cmsTemplate::getInstance();
-                            $styles = $template->getAvailableContentListStyles();
-                            return $styles;
+                        'generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
                         }
                     )),
+                    new fieldList('options:list_style_names', array(
+                        'title'        => LANG_CP_LIST_STYLE_NAMES,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'multiple_keys' => array(
+                            'name' => 'field', 'value' => 'field_value'
+                        ),
+                        'generator' => function($ctype) use ($template){
+                            return $template->getAvailableContentListStyles();
+                        }
+                    )),
+                    new fieldList('options:context_list_style', array(
+                        'title'        => LANG_CP_CONTEXT_LIST_STYLE,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'generator' => function($ctype) use ($do){
+
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template'.($do != 'add' ? ':'.$ctype['name'] : ''));
+
+                            $items = array();
+
+                            if($lists){
+                                foreach ($lists as $list) {
+                                    $items = array_merge($items, $list);
+                                }
+                            }
+
+                            return $items;
+                        },
+                        'values_generator' => function() use($template){
+                            return $template->getAvailableContentListStyles();
+                        }
+                    ))
                 )
             ),
             'itemview' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_ITEMVIEW_OPTIONS,
                 'childs' => array(
                     new fieldCheckbox('options:item_on', array(
                         'title' => LANG_CP_ITEMVIEW_ON,
                         'default' => true
+                    )),
+                    new fieldCheckbox('options:is_show_fields_group', array(
+                        'title' => LANG_CP_ITEMVIEW_FIELDS_GROUP,
                     )),
                     new fieldCheckbox('options:hits_on', array(
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
@@ -183,6 +254,7 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'seo-items' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA,
                 'childs' => array(
                     new fieldCheckbox('options:is_manual_title', array(
@@ -212,10 +284,23 @@ class formAdminCtypesBasic extends cmsForm {
                             array('required'),
                         )
                     )),
+                    new fieldString('options:seo_title_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_keys_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    )),
+                    new fieldString('options:seo_desc_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                    ))
                 )
             ),
             'seo-cats' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA_CATS,
                 'childs' => array(
                     new fieldCheckbox('options:is_cats_title', array(
@@ -235,21 +320,73 @@ class formAdminCtypesBasic extends cmsForm {
             ),
             'seo' => array(
                 'type' => 'fieldset',
+                'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA_DEFAULT,
                 'childs' => array(
                     new fieldString('seo_title', array(
                         'title' => LANG_SEO_TITLE,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
                     )),
                     new fieldString('seo_keys', array(
                         'title' => LANG_SEO_KEYS,
                         'hint' => LANG_SEO_KEYS_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
                     )),
                     new fieldText('seo_desc', array(
                         'title' => LANG_SEO_DESC,
                         'hint' => LANG_SEO_DESC_HINT,
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
                     ))
                 )
             ),
+            'collapsed' => array(
+                'type' => 'fieldset',
+                'is_collapsed' => true,
+                'title' => LANG_CP_IS_COLLAPSED,
+                'childs' => array(
+                    new fieldListMultiple('options:is_collapsed', array(
+                        'generator' => function ($ctype) use($do){
+
+                            $items = array(
+                                'folder' => LANG_CP_FOLDERS,
+                                'group_wrap' => LANG_CP_CT_GROUPS
+                            );
+
+                            if($do != 'add'){
+
+                                $model = cmsCore::getModel('content');
+
+                                $fieldset_titles = $model->orderBy('ordering')->getContentFieldsets($ctype['id']);
+
+                                if($fieldset_titles){
+                                    foreach ($fieldset_titles as $fieldset) {
+                                        $items[md5($fieldset)] = $fieldset;
+                                    }
+                                }
+
+                            }
+
+                            return $items + array(
+                                'tags_wrap'    => LANG_TAGS,
+                                'privacy_wrap' => LANG_CP_FIELD_PRIVACY,
+                                'is_comment'   => LANG_CP_COMMENTS,
+                                'seo_wrap'     => LANG_SEO,
+                                'pub_wrap'     => LANG_CP_PUBLICATION,
+                            );
+
+                        }
+                    ))
+                )
+            )
         );
 
     }

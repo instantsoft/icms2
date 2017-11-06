@@ -6,13 +6,10 @@ class actionAdminUsersAutocomplete extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        $term = $this->request->get('term');
-
+        $term = $this->request->get('term', '');
         if (!$term) { cmsCore::error404(); }
 
-        $users_model = cmsCore::getModel('users');
-
-        $users = $users_model->filterLike("nickname", "{$term}%")->getUsers();
+        $users = cmsCore::getModel('users')->filterLike('email', "{$term}%")->getUsers();
 
         $result = array();
 
@@ -20,15 +17,15 @@ class actionAdminUsersAutocomplete extends cmsAction {
             foreach($users as $user){
 
                 $result[] = array(
-                    'id' => $user['id'],
+                    'id'    => $user['id'],
                     'label' => $user['nickname'],
-                    'value' => $user['nickname']
+                    'value' => $user['email']
                 );
 
             }
         }
 
-        cmsTemplate::getInstance()->renderJSON($result);
+        return $this->cms_template->renderJSON($result);
 
     }
 

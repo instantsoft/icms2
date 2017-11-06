@@ -4,23 +4,38 @@ class actionImagesPresetsAdd extends cmsAction {
 
     public function run(){
 
-        $images_model = cmsCore::getModel('images');
-
         $form = $this->getForm('preset', array('add'));
-
-        $is_submitted = $this->request->has('submit');
 
         $preset = array();
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $preset = $form->parse($this->request, $is_submitted);
+            $preset = $form->parse($this->request, true);
 
             $errors = $form->validate($this,  $preset);
 
             if (!$errors){
 
-                $id = $images_model->addPreset($preset);
+                if((!$preset['width'] && !$preset['height']) ||
+                        ($preset['is_square'] && (!$preset['width'] || !$preset['height']))){
+
+                    if(!$preset['width']){
+                        $errors['width'] = ERR_VALIDATE_REQUIRED;
+                    }
+                    if(!$preset['height']){
+                        $errors['height'] = ERR_VALIDATE_REQUIRED;
+                    }
+
+                }
+
+            }
+
+            if (!$errors){
+
+                $id = $this->model->addPreset($preset);
+
+                // создаем дефолтные миниатюры
+                $this->createDefaultImages($preset);
 
                 $this->redirectToAction('presets');
 
@@ -34,10 +49,10 @@ class actionImagesPresetsAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/preset', array(
-            'do' => 'add',
+        return $this->cms_template->render('backend/preset', array(
+            'do'     => 'add',
             'preset' => $preset,
-            'form' => $form,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

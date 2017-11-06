@@ -1,6 +1,5 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addCSS('templates/default/css/datatree.css');
@@ -8,12 +7,27 @@
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);
 
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_INSTALL
+    ));
+
     // Зависимости удовлетворены
     $depends_pass = true;
+
+    if(!empty($manifest['notice_system_files'])){
+        cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
+    }
 
 ?>
 
 <h1><?php echo LANG_CP_INSTALL_PACKAGE_INFO; ?></h1>
+
+<div class="cp_toolbar">
+    <?php $this->toolbar(); ?>
+</div>
 
 <h2>
     <?php html($manifest['info']['title']); ?>
@@ -48,6 +62,20 @@
                 </fieldset>
                 <?php } ?>
 
+                <?php if (isset($manifest['package'])) { ?>
+                <fieldset>
+
+                    <legend><?php echo LANG_CP_PACKAGE_TYPE; ?></legend>
+
+                    <p><?php echo $manifest['package']['type_hint']; ?>
+                    <?php if (!empty($manifest['package']['installed_version'])) { ?>
+                        <?php echo ' '.$manifest['package']['installed_version'].' => '.$manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build']; ?>
+                    <?php } ?>
+                    </p>
+
+                </fieldset>
+                <?php } ?>
+
                 <?php if (isset($manifest['description'])) { ?>
                 <fieldset>
 
@@ -73,8 +101,28 @@
                             </li>
                             <?php if (!$manifest['depends_results']['core']){ $depends_pass = false; } ?>
                         <?php } ?>
+                        <?php if (isset($manifest['depends']['package'])) { ?>
+                            <li>
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?>:
+                                <?php echo html_bool_span($manifest['depends']['package'], $manifest['depends_results']['package']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['package']){ $depends_pass = false; } ?>
+                        <?php } ?>
+                        <?php if (isset($manifest['depends']['dependent_type'])) { ?>
+                            <li>
+                                <?php echo sprintf(LANG_CP_PACKAGE_DEPENDENT_TYPE, string_lang('LANG_CP_PACKAGE_DEPENDENT_'.$manifest['depends']['dependent_type']), $manifest['depends']['dependent_url'], $manifest['depends']['dependent_title']); ?>:
+                                <?php echo html_bool_span(($manifest['depends_results']['dependent_type'] ? LANG_CP_INSTALLED : LANG_CP_NOT_INSTALLED), $manifest['depends_results']['dependent_type']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['dependent_type']){ $depends_pass = false; } ?>
+                        <?php } ?>
+                        <?php if (!empty($manifest['depends_results']['dependent_type']) && isset($manifest['depends']['dependent_version'])) { ?>
+                            <li>
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank"><?php echo $manifest['depends']['dependent_title']; ?></a>:
+                                <?php echo html_bool_span($manifest['depends']['dependent_version'], $manifest['depends_results']['dependent_version']); ?>
+                            </li>
+                            <?php if (!$manifest['depends_results']['dependent_version']){ $depends_pass = false; } ?>
+                        <?php } ?>
                     </ul>
-
 
                 </fieldset>
                 <?php } ?>
@@ -109,7 +157,7 @@
 
         <div class="buttons">
             <?php if ($depends_pass){ echo html_button(LANG_INSTALL, 'cancel', "location.href='".$this->href_to('install', 'ftp')."'", array('class'=>'button-submit')); } ?>
-            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('')."'"); ?>
+            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
         </div>
 
     </form>

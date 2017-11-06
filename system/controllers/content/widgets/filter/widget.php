@@ -7,100 +7,128 @@ class widgetContentFilter extends cmsWidget {
 
         $ctype_name = $this->getOption('ctype_name');
 
-        $slug = null;
+        $core = cmsCore::getInstance();
+        $user = cmsUser::getInstance();
 
-        if (!$ctype_name){
+        $category = array('id' => 1);
+        $item     = array();
 
-            $core = cmsCore::getInstance();
+        if(strpos($core->uri, '.html') === false){
 
-            if ($core->controller != 'content'){ return false; }
+            $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
+            if(!empty($current_ctype_category['id'])){
+                $category = $current_ctype_category;
+            }
 
-            $uri_segs = explode('/', $core->uri);
-			
-            $ctype_string = $uri_segs[0];
+        } else {
 
-            $slug = !mb_strstr($core->uri, '.html') ? mb_substr($core->uri, mb_strlen($ctype_string)+1) : false;
-
-            if (preg_match('/^([a-z0-9]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[0];
-            } else
-            if (preg_match('/^([a-z0-9]+)-([a-z0-9_]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[1];
-            } else {
-                return false;
+            $item = cmsModel::getCachedResult('current_ctype_item');
+            if($item){
+                if(!empty($item['category'])){
+                    $category = $item['category'];
+                }
             }
 
         }
 
-		$core = cmsCore::getInstance();
-        $model = cmsCore::getModel('content');
-		$content_controller = cmsCore::getController('content');
+        if (!$ctype_name){
 
-        $fields = $model->getContentFields($ctype_name);
-		
-		$category = array('id' => 1);
-		
-		if ($slug) {
-			$category = $model->getCategoryBySLUG($ctype_name, $slug);
-		}
-		
-		$props = $model->getContentProps($ctype_name, $category['id']);
-		$props_fields = $content_controller->getPropsFields($props);		
+            $ctype = cmsModel::getCachedResult('current_ctype');
+            if(!$ctype){ return false; }
+
+            $ctype_name = $ctype['name'];
+
+            if(strpos($core->uri, '.html') !== false){
+                if(!$item){ return false; }
+            }
+
+            $fields       = cmsModel::getCachedResult('current_ctype_fields');
+            $props        = cmsModel::getCachedResult('current_ctype_props');
+            $props_fields = cmsModel::getCachedResult('current_ctype_props_fields');
+
+            if($props_fields === null){
+                $props_fields = cmsCore::getController('content')->getPropsFields($props);
+            }
+
+        } else {
+
+            $content_controller = cmsCore::getController('content');
+
+            $fields = $content_controller->model->getContentFields($ctype_name);
+            $props  = $content_controller->model->getContentProps($ctype_name, $category['id']);
+
+            $props_fields = $content_controller->getPropsFields($props);
+
+        }
+
+        if(!$fields && !$props){
+            return false;
+        }
 
 		$fields_count = 0;
-		
-		foreach($fields as $field){
-			if ($field['is_in_filter']) { $fields_count++; break; }
-		}
-		
-		if (!$fields_count && !empty($props_fields)){
+
+        if($fields){
+            foreach($fields as $field){
+                if ($field['is_in_filter'] && (empty($field['filter_view']) || $user->isInGroups($field['filter_view']))) {
+                    $fields_count++;
+                } else {
+                    unset($fields[$field['name']]);
+                }
+            }
+        }
+
+		if (!empty($props_fields)){
 			foreach($props as $prop){
-				if ($prop['is_in_filter']) { $fields_count++; break; }
+				if ($prop['is_in_filter']) {
+                    $fields_count++;
+                } else {
+                    unset($props[$prop['id']]);
+                }
 			}
 		}
-		
+
 		if (!$fields_count){
-			return false;			
+			return false;
 		}
-		
+
 		$filters = array();
-		
+
 		foreach($fields as $name => $field){
 
-			if (!$field['is_in_filter']) { continue; }
 			if (!$core->request->has($name)){ continue; }
 
-			$value = $core->request->get($name);
+			$value = $core->request->get($name, false, $field['handler']->getDefaultVarType(true));
 			if (!$value) { continue; }
 
 			$filters[$name] = $value;
 
-		}		
-		
+		}
+
 		if (!empty($props)){
 			foreach($props as $prop){
 
-				$name = "p{$prop['id']}";
+				$name = 'p'.$prop['id'];
 
-				if (!$prop['is_in_filter']) { continue; }
 				if (!$core->request->has($name)){ continue; }
 
-				$value = $core->request->get($name);
+                $prop['handler'] = $props_fields[$prop['id']];
+
+				$value = $core->request->get($name, false, $prop['handler']->getDefaultVarType(true));
 				if (!$value) { continue; }
 
-				$model->filterPropValue($ctype_name, $prop, $value);
 				$filters[$name] = $value;
 
 			}
-		}		
-		
+		}
+
         return array(
-			'ctype_name' => $ctype_name,
-			'page_url' => $core->uri_absolute,
-			'fields' => $fields,
-			'props_fields' => $props_fields,
-			'props' => $props,
-			'filters' => $filters,
+			'ctype_name'   => $ctype_name,
+			'category'     => $category,
+            'page_url'     => href_to($ctype_name),
+            'fields'       => $fields,
+            'props_fields' => $props_fields,
+            'props'        => $props,
+            'filters'      => $filters
         );
 
     }

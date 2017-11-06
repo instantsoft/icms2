@@ -8,6 +8,19 @@
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
 
+    define('LANG_USERS_RESTORE_PROFILE',    'Восстановить профиль');
+    define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
+    define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
+    define('LANG_RULE_USERS_BIND_TO_PARENT', 'Привязка записей типов контента');
+    define('LANG_RULE_USERS_BIND_OFF_PARENT', 'Отвязка записей типов контента');
+    define('LANG_PERM_OPTION_MY',           'Только свой');
+    define('LANG_PERM_OPTION_ANYUSER',      'Любой');
+    define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');
+    define('LANG_USERS_DELETE_SUCCESS',     'Профиль успешно удалён');
+    define('LANG_USERS_RESTORE_SUCCESS',    'Профиль успешно восстановлен');
+    define('LANG_USERS_DELETE_ADMIN_ERROR', 'Вы не можете удалять профили администраторов');
+    define('LANG_USERS_IS_DELETED',         'Профиль удалён');
+
     define('LANG_USERS_EDIT_PROFILE_MAIN',  'Содержание');
     define('LANG_USERS_EDIT_PROFILE_THEME', 'Оформление');
     define('LANG_USERS_EDIT_PROFILE_NOTICES', 'Уведомления');
@@ -74,9 +87,7 @@
     define('LANG_USERS_PROFILE_WALL',       'Стена пользователя');
 
     define('LANG_USERS_PROFILE_REGDATE',    'Регистрация');
-    define('LANG_USERS_PROFILE_LOGDATE',    'Последний визит');
     define('LANG_USERS_PROFILE_INVITED_BY', 'По приглашению');
-    define('LANG_USERS_PROFILE_LAST_IP',    'Последний IP');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Личная информация скрыта настройками приватности');
 
@@ -107,6 +118,8 @@
 
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
+    define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Кто может комментировать записи на стене?');
+    define('LANG_USERS_PRIVACY_PROFILE_CTYPE',  'Кто может просматривать список ваших %s?');
 
     define('LANG_USERS_FRIENDS_SPELLCOUNT',     'друг|друга|друзей');
 
@@ -133,3 +146,15 @@
     define('LANG_USERS_INVITES_EMAILS_HINT','По одному адресу в строке');
     define('LANG_USERS_INVITES_SENT_TO',    'Приглашения успешно отправлены на адреса');
     define('LANG_USERS_INVITES_FAILED_TO',  'Не удалось отправить приглашения на адреса');
+    define('LANG_USERS_SESSIONS',  'Сеансы');
+    define('LANG_USERS_SESSIONS_DELETE',  'Сеанс успешно закрыт');
+    define('LANG_SESS_DESKTOP',  'Настольный ПК');
+    define('LANG_SESS_TABLET',  'Планшет');
+    define('LANG_SESS_MOBILE',  'Телефон');
+    define('LANG_SESS_APP',  'Приложение');
+    define('LANG_SESS_NOT_FOUND',  'Нет активных сохранённых сеансов.');
+    define('LANG_SESS_DROP',  'завершить');
+    define('LANG_SESS_IP',  'IP-адрес');
+    define('LANG_SESS_LAST_DATE',  'Последняя активность');
+    define('LANG_SESS_TYPE',  'Тип доступа');
+    define('LANG_SESSIONS_HINT',  'Здесь показаны сеансы с активным доступом, когда при авторизации вы ставили чекбокс "Запомнить меня" или сеансы с мобильного приложения. Вы можете в любой момент прекратить любой из сеансов.');

@@ -5,11 +5,18 @@ class cmsCore {
     private static $instance;
 
 	public $uri            = '';
+	public $uri_before_remap = '';
     public $uri_absolute   = '';
     public $uri_controller = '';
+    public $uri_controller_before_remap = '';
     public $uri_action     = '';
     public $uri_params     = array();
     public $uri_query      = array();
+    private $matched_pages = null;
+
+    private static $language = 'ru';
+    private static $language_href_prefix = '';
+    private static $core_version = null;
 
     public $controller = '';
 
@@ -31,43 +38,113 @@ class cmsCore {
 
         $this->request = new cmsRequest($_REQUEST);
 
+        self::detectLanguage();
+
+    }
+
+    /*
+     * deprecated, use cmsDebugging
+     */
+    private static $start_time;
+    public static function startTimer() {
+        self::$start_time = microtime(true);
+    }
+    public static function getTime() {
+        return microtime(true) - self::$start_time;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    private static function detectLanguage() {
+
+        $config = cmsConfig::getInstance();
+
+        self::$language = $config->language;
+
+        if(!empty($_SERVER['REQUEST_URI']) && !empty($config->is_user_change_lang)){
+
+            $segments = explode('/', mb_substr($_SERVER['REQUEST_URI'], mb_strlen($config->root)));
+
+            // язык может быть только двухбуквенный, определяем его по первому сегменту
+            if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
+                if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
+                    // язык по-умолчанию без префиксов, дубли нам не нужны
+                    if($segments[0] != $config->language){
+
+                        self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
+
+                        $_SERVER['REQUEST_URI'] = $config->root.implode('/', $segments);
+
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    public static function getLanguageHrefPrefix() {
+        return self::$language_href_prefix;
+    }
+
+    public static function getLanguageName() {
+        return self::$language;
+    }
+
+    public static function changeLanguage($new_lang){
+        self::$language = $new_lang;
     }
 
 //============================================================================//
 //============================================================================//
 
     /**
-     * Возвращает информацию о версии ядра
-     * @return type
+     * Возвращает информацию о версии CMS
+     * в виде строки
+     * @param boolean $show_date Показывать дату версии
+     * @return string
      */
-    public static function getVersion($show_date=false){
+    public static function getVersion($show_date = false){
 
         $version = self::getVersionArray();
 
         if (!$show_date && isset($version['date'])) { unset($version['date']); }
 
-        return implode('.', $version);
+        return $version['version'].($show_date ? ' '.LANG_FROM.' '.$version['date'] : '');
 
     }
 
     /**
-     * Возвращает информацию о версии ядра
+     * Возвращает информацию о версии CMS
      * в виде массива с ключами:
-     *  - major
-     *  - minor
-     *  - build
-     *  - date
-     * @return type
+     *  - date Дата релиза
+     *  - version Полная версия CMS
+     *  - raw
+     *  -- major
+     *  -- minor
+     *  -- build
+     *  -- date
+     * @return array
      */
     public static function getVersionArray(){
 
-        $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+        if(self::$core_version === null){
 
-        if (!file_exists($file)){ die('version.ini not found'); }
+            $file = cmsConfig::get('root_path') . 'system/config/version.ini';
+            if (!is_readable($file)){ die('system/config/version.ini not found'); }
 
-        $version = parse_ini_file($file);
+            $version = parse_ini_file($file);
 
-        return $version;
+            self::$core_version = array(
+                'date'    => $version['date'],
+                'version' => $version['major'] .'.'. $version['minor'] .'.'. $version['build'],
+                'raw'     => $version
+            );
+
+        }
+
+        return self::$core_version;
 
     }
 
@@ -98,7 +175,7 @@ class cmsCore {
             return self::$includedFiles[$file];
         }
 
-        if (!file_exists($file)){
+        if (!is_readable($file)){
             self::$includedFiles[$file] = false;
             return false;
         }
@@ -117,7 +194,7 @@ class cmsCore {
 
         $file = cmsConfig::get('root_path') . $file;
 
-        if (!file_exists($file)){ return false; }
+        if (!is_readable($file)){ return false; }
 
         $result = require $file;
 
@@ -150,11 +227,9 @@ class cmsCore {
 
         if ($class && class_exists($class, false)){ return true; }
 
-        $config = cmsConfig::getInstance();
+        $lib_file = cmsConfig::get('root_path').'system/libs/'.$library.'.php';
 
-        $lib_file = $config->root_path.'system/libs/'.$library.'.php';
-
-        if (!file_exists($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
+        if (!is_readable($lib_file)){ self::error(ERR_LIBRARY_NOT_FOUND . ': '. $library); }
 
         include_once $lib_file;
 
@@ -173,7 +248,7 @@ class cmsCore {
 
         $class_file = cmsConfig::get('root_path') . 'system/core/'.$class.'.class.php';
 
-        if (!file_exists($class_file)){
+        if (!is_readable($class_file)){
             self::error(ERR_CLASS_NOT_FOUND . ': '. $class);
         }
 
@@ -208,21 +283,19 @@ class cmsCore {
 
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
-        if (!class_exists($model_class)) {
+        if (!class_exists($model_class, false)) {
 
             $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
 
-            if (file_exists($model_file)){
+            if (is_readable($model_file)){
                 include_once($model_file);
             } else {
-                self::error(ERR_MODEL_NOT_FOUND . ': '. $model_file);
+                return self::error(ERR_MODEL_NOT_FOUND . ': '. str_replace(cmsConfig::get('root_path'), '', $model_file));
             }
 
         }
 
-        $model = new $model_class();
-
-        return $model;
+        return new $model_class();
 
     }
 
@@ -230,21 +303,19 @@ class cmsCore {
 //============================================================================//
 
     /**
-     * Проверяет существования компонента
-     * @param type $controller_name
-     * @return type
+     * Проверяет существования контроллера
+     * @param string $controller_name
+     * @return bool
      */
     public static function isControllerExists($controller_name){
 
-        $ctrl_file = cmsConfig::get('root_path') . 'system/controllers/'.$controller_name;
-
-        return file_exists($ctrl_file);
+        return is_dir(cmsConfig::get('root_path').'system/controllers/'.$controller_name);
 
     }
 
     /**
      * Создает и возвращает объект контроллера
-     * @param str $controller_name
+     * @param string $controller_name
      * @param cmsRequest $request
      * @return controller_class
      */
@@ -254,39 +325,37 @@ class cmsCore {
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
-        if(!file_exists($ctrl_file)){
-            $controller_name = $config->ct_default;
-            self::getInstance()->controller = $config->ct_default;
-            $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
-        }
-
-        if (!class_exists($controller_name)) {
+        if (!class_exists($controller_name, false)) {
             include_once($ctrl_file);
         }
 
         $custom_file = $config->root_path . 'system/controllers/'.$controller_name.'/custom.php';
 
-        if(!file_exists($custom_file)){
+        if(!is_readable($custom_file)){
             $controller_class = $controller_name;
         } else {
             $controller_class = $controller_name . '_custom';
-            if (!class_exists($controller_class)){
+            if (!class_exists($controller_class, false)){
                 include_once($custom_file);
             }
         }
 
+        if (!class_exists($controller_class, false)) {
+            return self::error(ERR_COMPONENT_NOT_FOUND . ': '. str_replace($config->root_path, '', $ctrl_file));
+        }
+
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
 
-        $controller = new $controller_class($request);
-
-        return $controller;
+        return new $controller_class($request);
 
     }
 
     public static function getControllerNameByAlias($controller_alias){
 
-        $mapping = cmsConfig::getControllersMapping();
+        $config_mapping      = cmsConfig::getControllersMapping();
+        $controllers_mapping = cmsController::getControllersMapping();
 
+        $mapping = array_merge($controllers_mapping, $config_mapping);
         if (!$mapping) { return false; }
 
         foreach($mapping as $name=>$alias){
@@ -301,33 +370,74 @@ class cmsCore {
 
         $mapping = cmsConfig::getControllersMapping();
 
-        if (!$mapping || !isset($mapping[$controller_name])){ return false; }
+        if (!empty($mapping[$controller_name])){ return $mapping[$controller_name]; }
 
-        return $mapping[$controller_name];
+        $cmapping = cmsController::getControllersMapping();
+
+        if (!empty($cmapping[$controller_name])){ return $cmapping[$controller_name]; }
+
+        return false;
 
     }
 
-    public static function getControllersManifests(){
+    /**
+     * Возвращает массив хуков контроллеров
+     * @param boolean $is_debug Если передано true, то массив формируется из файлов манифестов, иначе - из БД
+     * @param boolean $is_enabled
+     * @return array
+     */
+    public static function getControllersManifests($is_debug = false, $is_enabled = true){
 
-        $manifests = array();
+        if ($is_debug){
+            return self::getManifestsEvents();
+        }
 
-        $controllers = self::getDirsList('system/controllers');
+        $events = array();
+
+        if($is_enabled){
+            $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+        } else {
+            $controllers_events = cmsDatabase::getInstance()->getRows('events', '1', '*', 'ordering ASC', true);
+        }
+
+        if($controllers_events){
+            foreach($controllers_events as $event){
+
+                $events[ $event['listener'] ][] = $event['event'];
+
+            }
+        }
+
+        return $events;
+
+    }
+
+    /**
+     * Возвращает массив хуков контроллеров
+     * из файлов манифестов
+     * @return array
+     */
+    public static function getManifestsEvents(){
+
+        $manifests_events = array();
+
+        $controllers = cmsCore::getDirsList('system/controllers', true);
 
         foreach($controllers as $controller_name){
 
             $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
 
-            if (!file_exists($manifest_file)){ continue; }
+            if (!is_readable($manifest_file)){ continue; }
 
             $manifest = include $manifest_file;
 
-            if (!$manifest) { continue; }
+            if (empty($manifest['hooks']) || !is_array($manifest['hooks'])) { continue; }
 
-            $manifests[ $controller_name ] = $manifest;
+            $manifests_events[ $controller_name ] = $manifest['hooks'];
 
         }
 
-        return $manifests;
+        return $manifests_events;
 
     }
 
@@ -346,109 +456,6 @@ class cmsCore {
 
     }
 
-    public static function getWidgetOptionsForm($widget_name, $controller_name=false, $options=false){
-
-		$widget_path = self::getWidgetPath($widget_name, $controller_name);
-
-        $path = cmsConfig::get('system_path') . $widget_path;
-
-        $form_file = $path . '/options.form.php';
-
-        $form_name = 'widget' . ($controller_name ? "_{$controller_name}_" : '_') . "{$widget_name}_options";
-
-        $form = cmsForm::getForm($form_file, $form_name, array($options));
-
-        if (!$form) { $form = new cmsForm(); }
-
-        $form->is_tabbed = true;
-
-		//
-		// Опции внешнего вида
-		//
-		$design_fieldset_id = $form->addFieldset(LANG_DESIGN);
-
-            $form->addField($design_fieldset_id, new fieldString('class_wrap', array(
-                'title' => LANG_CSS_CLASS_WRAP,
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('class_title', array(
-                'title' => LANG_CSS_CLASS_TITLE,
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('class', array(
-                'title' => LANG_CSS_CLASS_BODY,
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('tpl_wrap', array(
-                'title' => LANG_WIDGET_WRAPPER_TPL,
-				'hint' => LANG_WIDGET_WRAPPER_TPL_HINT
-            )));
-
-            $form->addField($design_fieldset_id, new fieldString('tpl_body', array(
-                'title' => LANG_WIDGET_BODY_TPL,
-				'hint' => sprintf(LANG_WIDGET_BODY_TPL_HINT, $widget_path)
-            )));
-
-        //
-        // Опции доступа
-        //
-        $access_fieldset_id = $form->addFieldset(LANG_PERMISSIONS);
-
-            // Показывать группам
-            $form->addField($access_fieldset_id, new fieldListGroups('groups_view', array(
-                'title' => LANG_SHOW_TO_GROUPS,
-                'show_all' => true,
-                'show_guests' => true,
-            )));
-
-            // Не показывать группам
-            $form->addField($access_fieldset_id, new fieldListGroups('groups_hide', array(
-                'title' => LANG_HIDE_FOR_GROUPS,
-                'show_all' => false,
-                'show_guests' => true,
-            )));
-
-        //
-        // Опции заголовка
-        //
-        $title_fieldset_id = $form->addFieldsetToBeginning(LANG_BASIC_OPTIONS);
-
-            // ID виджета
-            $form->addField($title_fieldset_id, new fieldNumber('id', array(
-                'is_hidden'=>true
-            )));
-
-            // Заголовок виджета
-            $form->addField($title_fieldset_id, new fieldString('title', array(
-                'title' => LANG_TITLE,
-                'rules' => array(
-                    array('required'),
-                    array('min_length', 3),
-                    array('max_length', 128),
-                )
-            )));
-
-            // Флаг показа заголовка
-            $form->addField($title_fieldset_id, new fieldCheckbox('is_title', array(
-                'title' => LANG_SHOW_TITLE,
-                'default' => true
-            )));
-
-            // Флаг объединения с предыдущим виджетом
-            $form->addField($title_fieldset_id, new fieldCheckbox('is_tab_prev', array(
-                'title' => LANG_WIDGET_TAB_PREV,
-            )));
-
-            // Ссылки в заголовке
-            $form->addField($title_fieldset_id, new fieldText('links', array(
-                'title' => LANG_WIDGET_TITLE_LINKS,
-                'hint' => LANG_WIDGET_TITLE_LINKS_HINT,
-            )));
-
-		return $form;
-
-    }
-
 //============================================================================//
 //============================================================================//
 
@@ -461,9 +468,7 @@ class cmsCore {
      */
     public static function loadLanguage($file=false){
 
-        $config = cmsConfig::getInstance();
-
-        $lang_dir = 'system/languages/'. $config->language;
+        $lang_dir = 'system/languages/'. self::$language;
 
         if (!$file){
 
@@ -488,11 +493,7 @@ class cmsCore {
      */
     public static function getLanguageTextFile($file){
 
-        $config = cmsConfig::getInstance();
-
-        if (!isset($config->language)){	$config->language = 'ru'; }
-
-        $lang_dir = $config->root_path . 'system/languages/'. $config->language;
+        $lang_dir = cmsConfig::get('root_path').'system/languages/'.self::$language;
 
         $lang_file = $lang_dir .'/' . $file . '.txt';
 
@@ -590,7 +591,7 @@ class cmsCore {
 
         }
 
-        $this->uri = $uri;
+        $this->uri = $this->uri_before_remap = $uri;
         $this->uri_absolute = $config->root . $uri;
 
         // разбиваем URL на сегменты
@@ -611,6 +612,14 @@ class cmsCore {
 
     }
 
+    public function getUriData() {
+        return array(
+            'controller' => $this->uri_controller,
+            'action'     => $this->uri_action,
+            'params'     => $this->uri_params
+        );
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -627,12 +636,48 @@ class cmsCore {
 
         // проверяем ремаппинг контроллера
         $remap_to = self::getControllerNameByAlias($this->uri_controller);
-        if ($remap_to) { $this->uri_controller = $remap_to; }
+        if ($remap_to) {
+            // в uri также меняем
+            if($this->uri){
+                $seg = explode('/', $this->uri);
+                $seg[0] = $remap_to;
+                $this->uri = implode('/', $seg);
+                $this->uri_absolute = str_replace($this->uri_before_remap, $this->uri, $this->uri_absolute);
+            }
+            $this->uri_controller_before_remap = $this->uri_controller;
+            $this->uri_controller = $remap_to;
+        }
+
+        if (!self::isControllerExists($this->uri_controller)) {
+            array_unshift($this->uri_params, $this->uri_action);
+            $this->uri_action     = $this->uri_controller;
+            $this->uri_controller = $config->ct_default;
+        }
 
         $this->controller = $this->uri_controller;
 
+        if ($this->controller && !preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
+            self::error404();
+        }
+
         // загружаем контроллер
-        $controller = self::getController($this->uri_controller, $this->request);
+        $controller = self::getController($this->controller, $this->request);
+
+        // контроллер включен?
+        if(!$controller->isEnabled()){
+            return self::error404();
+        }
+
+        // редирект 301, если настроен ремап
+        if(!$remap_to && $slug = $controller->hasSlug()){
+
+            // если контроллер запрещает редирект, то 404
+            if($controller->disallow_mapping_redirect){
+                return self::error404();
+            }
+
+            $controller->redirectTo($slug, $this->uri_action, $this->uri_params, $this->uri_query, 301);
+        }
 
         // сохраняем в контроллере название текущего экшена
         $controller->current_action = $this->uri_action;
@@ -640,6 +685,34 @@ class cmsCore {
         // запускаем действие
         $controller->runAction($this->uri_action, $this->uri_params);
 
+    }
+
+    /**
+     * Определяет и загружает id страниц, которые определены для текущего uri
+     * @return \cmsCore
+     */
+    public function loadMatchedPages() {
+
+        if($this->matched_pages !== null){
+            return $this;
+        }
+
+        $widgets_model = cmsCore::getModel('widgets');
+        $pages = $widgets_model->getPages();
+
+        $this->matched_pages = $this->detectMatchedWidgetPages($pages);
+
+        return $this;
+
+    }
+
+    public function getMatchedPages() {
+        return $this->matched_pages;
+    }
+
+    public function setMatchedPages($matched_pages) {
+        $this->matched_pages = $matched_pages;
+        return $this;
     }
 
 //============================================================================//
@@ -650,65 +723,106 @@ class cmsCore {
      */
     public function runWidgets(){
 
-        $widgets_model = cmsCore::getModel('widgets');
-        $pages = $widgets_model->getPages();
+        $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
 
-        $matched_pages = $this->detectMatchedWidgetPages($pages);
+        if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) { return; }
 
-        if (!is_array($matched_pages)) { return; }
-        if (sizeof($matched_pages)==0) { return; }
+        $matched_pages = $this->loadMatchedPages()->getMatchedPages();
+        if (!$matched_pages) { return; }
 
-        $widgets_list = $widgets_model->getWidgetsForPages($matched_pages);
+        $template = cmsTemplate::getInstance();
+
+        $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), $template->getName());
 
         if (is_array($widgets_list)){
+
+            $device_type = cmsRequest::getDeviceType();
+            $layout = $template->getLayout();
+            $user = cmsUser::getInstance();
+
             foreach ($widgets_list as $widget){
+
+                // не выводим виджеты контроллеров, которые отключены
+                if(!empty($widget['controller']) && !cmsController::enabled($widget['controller'])){
+                    continue;
+                }
+
+                // проверяем доступ для виджетов
+                if (!$user->isInGroups($widget['groups_view'])) { continue; }
+                if (!empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin) {
+                    continue;
+                }
+
+                // проверяем для каких устройств показывать
+                if($widget['device_types'] && !in_array($device_type, $widget['device_types'])){
+                    continue;
+                }
+
+                // проверяем для каких макетов показывать
+                if($widget['template_layouts'] && !in_array($layout, $widget['template_layouts'])){
+                    continue;
+                }
+
+                cmsDebugging::pointStart('widgets');
+
                 $this->runWidget($widget);
+
+                cmsDebugging::pointProcess('widgets', array(
+                    'data' => $widget['title'].' => /system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php'
+                ), 0);
+
             }
+
         }
 
     }
 
     public function runWidget($widget){
 
-        $user = cmsUser::getInstance();
+        $result = false;
 
-        $is_user_view = $user->isInGroups($widget['groups_view']);
-        $is_user_hide = !empty($widget['groups_hide']) && $user->isInGroups($widget['groups_hide']) && !$user->is_admin;
-
-        if ($is_user_hide) { return false; }
-        if (!$is_user_view) { return false; }
-
-        $path = 'system/' . cmsCore::getWidgetPath( $widget['name'], $widget['controller'] );
-        $file = $path . '/widget.php';
-
-        cmsCore::includeFile($file);
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
         $class = 'widget' .
                     ($widget['controller'] ? string_to_camel('_', $widget['controller']) : '') .
                     string_to_camel('_', $widget['name']);
 
-        $widget_object = new $class($widget);
-
-        $cache_key = "widgets.{$widget['id']}";
-        $cache = cmsCache::getInstance();
-
-        if (!$widget_object->isCacheable() || false === ($result = $cache->get($cache_key))){
-            $result = call_user_func_array(array($widget_object, 'run'), array());
-            if ($result){
-                // Отдельно кешируем имя шаблона виджета, поскольку оно могло быть
-                // изменено внутри виджета, а в кеш у нас попадает только тот массив
-                // который возвращается кодом виджета (без самих свойств $widget_object)
-                $result['_wd_template'] = $widget_object->getTemplate();
-            }
-            $cache->set($cache_key, $result);
+        if (!class_exists($class, false)) {
+            cmsCore::includeFile($file);
+            cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
         }
 
-        if ($result===false) { return false; }
+        $widget_object = new $class($widget);
+
+        $cache_key = 'widgets'.$widget['id'];
+        $cache = cmsCache::getInstance();
+
+        if($widget_object->isCacheable()){
+            $result = $cache->get($cache_key);
+        }
+
+        if ($result === false){
+            $result = call_user_func_array(array($widget_object, 'run'), array());
+            if ($result !== false){
+                // Отдельно кешируем имя шаблона виджета, заголовок и враппер, поскольку они могли быть
+                // изменены внутри виджета, а в кеш у нас попадает только тот массив
+                // который возвращается кодом виджета (без самих свойств $widget_object)
+                $result['_wd_template'] = $widget_object->getTemplate();
+                $result['_wd_title']    = $widget_object->title;
+                $result['_wd_wrapper']  = $widget_object->getWrapper();
+            }
+            if($widget_object->isCacheable()){
+                $cache->set($cache_key, $result);
+            }
+        }
+
+        if ($result === false) { return false; }
 
         if (isset($result['_wd_template'])) { $widget_object->setTemplate($result['_wd_template']); }
+        if (isset($result['_wd_title'])) { $widget_object->title = $result['_wd_title']; }
+        if (isset($result['_wd_wrapper'])) { $widget_object->setWrapper($result['_wd_wrapper']); }
 
-        cmsTemplate::getInstance()->renderWidget($widget_object, $result);
+        return cmsTemplate::getInstance()->renderWidget($widget_object, $result);
 
     }
 
@@ -725,7 +839,11 @@ class cmsCore {
             return array(0, 1);
         }
 
-        $matched_pages = array(0);
+        $matched_pages = array();
+
+        $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
+
+        $ctype_default = cmsConfig::get('ctype_default');
 
         //
         // Перебираем все точки привязок и проверяем совпадение
@@ -733,27 +851,36 @@ class cmsCore {
         //
         foreach($pages as $page){
 
-            if (empty($page['url_mask'])) { continue; }
+            if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
-            $is_mask_match = false;
+            $prefix = '';
+            if($page['controller'] == 'content' &&
+                    $ctype_default && !$this->uri_action &&
+                    $page['name'] == $ctype_default.'.item'){
+                $prefix = $ctype_default .'/';
+            }
+
+            $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
-            foreach($page['url_mask'] as $mask){
-                $regular = string_mask_to_regular($mask);
-                $regular = "/^{$regular}$/iu";
-                $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
+            if (!empty($page['url_mask'])) {
+                foreach($page['url_mask'] as $mask){
+                    $regular = string_mask_to_regular($mask);
+                    $regular = "/^{$regular}$/iu";
+                    $is_mask_match = $is_mask_match || preg_match($regular, $prefix.$this->uri);
+                }
             }
 
             if (!empty($page['url_mask_not'])) {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $this->uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $prefix.$_full_uri);
                 }
             }
 
             if ($is_mask_match && !$is_stop_match){
-                $matched_pages[] = $page['id'];
+                $matched_pages[$page['id']] = $page;
             }
 
         }
@@ -771,14 +898,47 @@ class cmsCore {
      */
     public static function error($message, $details=''){
 
-        $config = cmsConfig::getInstance();
+        if(ob_get_length()) { ob_end_clean(); }
 
-        if ($config->debug){
+        header('HTTP/1.0 503 Service Unavailable');
+        header('Status: 503 Service Unavailable');
+
+        if (cmsConfig::get('debug')){
             cmsTemplate::getInstance()->renderAsset('errors/error', array(
                 'message'=>$message,
                 'details'=>$details
             ));
+        } else {
+            echo '<h1>503 Service Unavailable</h1>';
+            echo '<h2>Please, enable debug mode in the site settings</h2>';
         }
+
+        die();
+
+    }
+
+    /**
+     * Показывает сообщение об ошибке 403 и завершает работу
+     * @param string $message Текстовое сообщение к ошибке
+     * @param boolean $show_login_link Показывать ссылку на авторизацию
+     * @return die
+     */
+    public static function errorForbidden($message = '', $show_login_link = false){
+
+		$result = cmsEventsManager::hook('error_403', self::getInstance()->uri);
+
+        if($result === true){ return false; }
+
+        if(ob_get_length()) { ob_end_clean(); }
+
+        header("HTTP/1.0 403 Forbidden");
+        header("HTTP/1.1 403 Forbidden");
+        header("Status: 403 Forbidden");
+
+        cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
+            'message'         => $message,
+            'show_login_link' => $show_login_link
+        ));
 
         die();
 
@@ -789,13 +949,15 @@ class cmsCore {
      */
     public static function error404(){
 
-		cmsEventsManager::hook('error_404', self::getInstance()->uri);
+		$result = cmsEventsManager::hook('error_404', self::getInstance()->uri);
+
+        if($result === true){ return false; }
+
+        if(ob_get_length()) { ob_end_clean(); }
 
         header("HTTP/1.0 404 Not Found");
         header("HTTP/1.1 404 Not Found");
         header("Status: 404 Not Found");
-
-        if(ob_get_length()) { ob_end_clean(); }
 
         cmsTemplate::getInstance()->renderAsset('errors/notfound');
         die();
@@ -812,21 +974,6 @@ class cmsCore {
         cmsTemplate::getInstance()->renderAsset('errors/offline', array(
             'reason' => cmsConfig::get('off_reason')
         ));
-        die();
-
-    }
-
-    /**
-     * Показывает сообщение об ошибке 403 и завершает работу
-     */
-    public static function errorForbidden(){
-
-        $config = cmsConfig::getInstance();
-
-        header("HTTP/1.0 403 Forbidden");
-        header("Status: 403 Forbidden");
-
-        include	($config->root_path . 'templates/' . $config->template .'/system/forbidden.tpl.php');
         die();
 
     }
@@ -870,9 +1017,10 @@ class cmsCore {
     /**
      * Возвращает список директорий внутри указанной
      * @param string $root_dir
+     * @param bool $asc_sort Сортировать по алфавиту, по умолчанию false
      * @return array
      */
-    public static function getDirsList($root_dir){
+    public static function getDirsList($root_dir, $asc_sort=false){
 
         $dir = cmsConfig::get('root_path') . $root_dir;
         $dir_context = opendir($dir);
@@ -889,12 +1037,16 @@ class cmsCore {
 
         }
 
+        if($asc_sort){
+            asort($list);
+        }
+
         return $list;
 
     }
 
     /**
-     * Возвращает список файл из указанной директории по нужной маске
+     * Возвращает список файлов из указанной директории по нужной маске
      * @param string $root_dir Директория
      * @param string $pattern Маска файлов
      * @param bool $is_strip_ext Отрезать расширения?
@@ -959,4 +1111,13 @@ class cmsCore {
 //============================================================================//
 //============================================================================//
 
+}
+
+/**
+ * В случае, если отладка отключена, не загружаем файл класса
+ */
+if(!class_exists('cmsDebugging', false)){
+    class cmsDebugging {
+        public static function __callStatic($name, $arguments) {}
+    }
 }

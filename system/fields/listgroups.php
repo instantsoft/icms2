@@ -2,10 +2,11 @@
 
 class fieldListGroups extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST_GROUPS;
-    public $is_public = false;
-    public $sql   = 'text NULL DEFAULT NULL';
+    public $title       = LANG_PARSER_LIST_GROUPS;
+    public $is_public   = false;
+    public $sql         = 'text NULL DEFAULT NULL';
     public $allow_index = false;
+    public $var_type    = 'array';
 
     public function getOptions(){
         return array(
@@ -20,22 +21,32 @@ class fieldListGroups extends cmsFormField {
         );
     }
 
-    public function getInput($value){
+    public function getListItems(){
 
         $users_model = cmsCore::getModel('users');
 
         $items = $this->getProperty('show_all') ? array(0 => LANG_ALL) : array();
-        $is_show_guests = (bool)$this->getProperty('show_guests');
 
-        $groups = $users_model->getGroups($is_show_guests);
+        $groups = $users_model->getGroups((bool)$this->getProperty('show_guests'));
 
         foreach($groups as $group){
             $items[$group['id']] = $group['title'];
         }
 
-        $this->data['groups'] = $items;
+        return $items;
 
-        return parent::getInput($value?:array(0));
+    }
+
+    public function getInput($value){
+
+
+        $this->data['groups'] = $this->getListItems();
+
+        if(!is_array($value)){
+            $value = cmsModel::yamlToArray($value);
+        }
+
+        return parent::getInput($value ? $value : array(0));
 
     }
 

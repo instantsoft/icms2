@@ -6,7 +6,7 @@
 
             <legend><?php echo LANG_FILTER; ?></legend>
 
-            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <table cellpadding="2" cellspacing="0" border="0" width="100%">
 
                 <?php $index = 0; ?>
                 <?php foreach($fields as $field) { ?>

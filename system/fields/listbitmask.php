@@ -2,17 +2,70 @@
 
 class fieldListBitmask extends cmsFormField {
 
-    public $title = LANG_PARSER_LIST_MULTIPLE;
-    public $sql   = 'varchar(64) NULL DEFAULT NULL';
-	public $allow_index = true;
-	public $filter_type = 'str';
+    public $title       = LANG_PARSER_LIST_MULTIPLE;
+    public $sql         = 'varchar({max_length}) NULL DEFAULT NULL';
+    public $allow_index = true;
+    public $filter_type = 'str';
+    public $var_type    = 'array';
+
+    public function getOptions(){
+        return array(
+            new fieldCheckbox('is_checkbox_multiple', array(
+                'title'   => LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE,
+                'default' => true
+            )),
+            new fieldString('list_class', array(
+                'title'   => LANG_PARSER_BITMASK_LIST_CLASS,
+                'default' => 'multiple_tags_list'
+            )),
+            new fieldNumber('max_length', array(
+                'title'   => LANG_PARSER_BITMASK_MAX,
+                'hint'    => LANG_PARSER_BITMASK_MAX_HINT,
+                'default' => 64,
+                'rules' => array(
+                    array('min', 1)
+                )
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
+            ))
+        );
+    }
 
     public function getFilterInput($value) {
 
+        $this->data['items']    = $this->getListItems();
+        $this->data['selected'] = array();
+
+        if(is_array($value)){
+            foreach ($value as $k => $v) {
+                if(is_numeric($v)){ $this->data['selected'][$k] = intval($v); }
+            }
+        } else {
+            $this->data['selected'] = array();
+        }
+
+        $this->element_title = '';
+
+        return parent::getInput($value);
+
+    }
+
+    public function getStringValue($value){
+
+        if (!$value) { return LANG_NO; }
+
         $items = $this->getListItems();
 
-		$value = is_array($value) ? $value : array();
-		return html_select_multiple($this->name, $items, $value);
+        $string = '';
+
+		if ($items) {
+            $string = implode(', ', $items);
+		}
+
+        return $string;
 
     }
 
@@ -25,14 +78,19 @@ class fieldListBitmask extends cmsFormField {
 		$html = '';
 
 		if ($items) {
+            $is_autolink = $this->getOption('is_autolink');
 			$pos = 0;
-			$html .= '<ul>';
+			$html .= '<ul class="'.$this->getOption('list_class').'">';
 			foreach($items as $key => $item){
-				if (mb_substr($value, $pos, 1) == 1){
-					$html .= '<li>' . htmlspecialchars($item) . '</li>';
+				if (substr($value, $pos, 1) == 1){
+                    if($is_autolink){
+                        $html .= '<li><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
+                    } else {
+                        $html .= '<li>' . htmlspecialchars($item) . '</li>';
+                    }
 				}
 				$pos++;
-				if ($pos+1 > mb_strlen($value)) { break; }
+				if ($pos+1 > strlen($value)) { break; }
 			}
 			$html .= '</ul>';
 		}
@@ -56,7 +114,7 @@ class fieldListBitmask extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = $this->parseListItems($this->getDefaultValue());
+            $items = string_explode_list($this->getDefaultValue());
 
         }
 
@@ -64,13 +122,17 @@ class fieldListBitmask extends cmsFormField {
 
     }
 
-    public function parseListItems($string){
-        return string_explode_list($string);
+    public function setOptions($options){
+        parent::setOptions($options);
+        if (!isset($this->items) && $this->hasDefaultValue()){
+            $this->items = string_explode_list($this->getDefaultValue());
+            $this->default = null;
+        }
     }
 
 	public function parseValue($values){
 
-		if (!$values) { return false; }
+		if (!$values) { return ''; }
 
 		$items = $this->getListItems();
 		$value = '';
@@ -89,8 +151,8 @@ class fieldListBitmask extends cmsFormField {
 
         $value = $this->parseValue($value);
 
-		if (mb_strpos($value, "1") === false){
-			return "";
+		if (mb_strpos($value, '1') === false){
+			return '';
 		}
 
         return $value;
@@ -99,21 +161,21 @@ class fieldListBitmask extends cmsFormField {
 
     public function applyFilter($model, $values) {
 
-		if (!is_array($values)) { return $model; }
+		if (!is_array($values)) { return parent::applyFilter($model, $values); }
 
 		$filter = $this->parseValue($values);
-		$filter = str_replace("0", "_", $filter) . '%';
+        if (!$filter) { return parent::applyFilter($model, $values); }
 
-		$model->filterLike($this->name, $filter);
+		$filter = str_replace('0', '_', $filter) . '%';
 
-        return $model;
+		return $model->filterLike($this->name, $filter);
 
     }
 
     public function getInput($value){
 
-	$this->data['items']    = $this->getListItems();
-	$this->data['selected'] = array();
+        $this->data['items']    = $this->getListItems();
+        $this->data['selected'] = array();
 
         if($value){
             if(!is_array($value)){

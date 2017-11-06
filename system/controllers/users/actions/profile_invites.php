@@ -2,13 +2,12 @@
 
 class actionUsersProfileInvites extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id) { cmsCore::error404(); }
+        if (!$this->is_own_profile) { cmsCore::error404(); }
 
         // Форма отправлена?
         $is_submitted = $this->request->has('submit');
@@ -57,7 +56,7 @@ class actionUsersProfileInvites extends cmsAction {
 
                 $results = $this->sendInvites($profile, $input['emails']);
 
-                return $template->render('profile_invites_results', array(
+                return $this->cms_template->render('profile_invites_results', array(
                     'id' => $profile['id'],
                     'profile' => $profile,
                     'results' => $results,
@@ -71,19 +70,17 @@ class actionUsersProfileInvites extends cmsAction {
 
         }
 
-        return $template->render('profile_invites', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_invites', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
-            'form' => $form,
-            'input' => $input,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'input'   => $input,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }
 
     private function sendInvites($profile, $emails_list){
-
-        $user = cmsUser::getInstance();
 
         $results = array(
             'success' => array(),
@@ -114,20 +111,20 @@ class actionUsersProfileInvites extends cmsAction {
                 continue;
             }
 
-            $invite = $auth_model->getNextInvite($user->id);
+            $invite = $auth_model->getNextInvite($this->cms_user->id);
 
             $to = array('email' => $email, 'name' => $email);
             $letter = array('name' => 'users_invite');
 
             $messenger->sendEmail($to, $letter, array(
-                'nickname' => $user->nickname,
+                'nickname' => $this->cms_user->nickname,
                 'code' => $invite['code'],
                 'page_url' => href_to_abs('auth', 'register') . "?inv={$invite['code']}",
             ));
 
             $results['success'][$email] = true;
 
-            $auth_model->markInviteSended($invite['id'], $user->id, $email);
+            $auth_model->markInviteSended($invite['id'], $this->cms_user->id, $email);
 
             if ((sizeof($results['success']) + sizeof($results['failed'])) >= $profile['invites_count']) { break; }
 

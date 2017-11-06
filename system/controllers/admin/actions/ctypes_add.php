@@ -6,7 +6,7 @@ class actionAdminCtypesAdd extends cmsAction {
 
         $form = $this->getForm('ctypes_basic', array('add'));
 
-        $form = cmsEventsManager::hook("ctype_basic_form", $form);
+        $form = cmsEventsManager::hook('ctype_basic_form', $form);
 
         $is_submitted = $this->request->has('submit');
 
@@ -17,21 +17,28 @@ class actionAdminCtypesAdd extends cmsAction {
             $errors = $form->validate($this, $ctype);
 
             if (!$errors){
+                if(cmsCore::isControllerExists($ctype['name'])){
+                    $errors['name'] = LANG_CP_CTYPE_ERROR_NAME;
+                }
+            }
+
+            if (!$errors){
 
                 $content_model = cmsCore::getModel('content');
 
-                $ctype = cmsEventsManager::hook("ctype_before_add", $ctype);
+                $ctype = cmsEventsManager::hook('ctype_before_add', $ctype);
                 $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_add", $ctype);
 
                 $ctype_id = $content_model->addContentType($ctype);
 
                 $ctype['id'] = $ctype_id;
-                cmsEventsManager::hook("ctype_after_add", $ctype);
+
+                cmsEventsManager::hook('ctype_after_add', $ctype);
                 cmsEventsManager::hook("ctype_{$ctype['name']}_after_add", $ctype);
 
                 if ($ctype_id){
 
-                    cmsCore::getController('content')->addWidgetsPages($ctype);
+                    $this->addCtypeWidgetsPages($ctype);
 
                     cmsUser::addSessionMessage(sprintf(LANG_CP_CTYPE_CREATED, $ctype['title']), 'success');
 
@@ -42,17 +49,15 @@ class actionAdminCtypesAdd extends cmsAction {
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_basic', array(
-            'do' => 'add',
-            'ctype' => $ctype,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_basic', array(
+            'do'     => 'add',
+            'ctype'  => $ctype,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

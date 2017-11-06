@@ -1,5 +1,5 @@
 <?php if (!empty($this->options['logo'])){ ?>
-#layout header #logo a {
+#layout header #logo a, #layout header #logo > span {
     background-image: url("<?php echo $config->upload_root . $this->options['logo']['original']; ?>") !important;
 }
 <?php } ?>

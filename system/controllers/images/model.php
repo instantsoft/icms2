@@ -13,10 +13,13 @@ class modelImages extends cmsModel{
 		});
 	}
 
-	public function getPresetsList(){
+	public function getPresetsList($with_params = false){
 		return $this->filterIsNull('is_internal')->
 				orderBy('width')->
-				get('images_presets', function($item, $model){
+				get('images_presets', function($item, $model) use($with_params){
+                    if($with_params){
+                        return $item['title'].' ('.$item['name'].', '.($item['width'] ? $item['width'] : LANG_AUTO).' x '.($item['height'] ? $item['height'] : LANG_AUTO).')';
+                    }
 					return $item['title'];
 				}, 'name');
 	}
@@ -27,16 +30,16 @@ class modelImages extends cmsModel{
 			return $item;
 		});
 	}
-	
+
 	public function getPresetByName($name){
 		return $this->getItemByField('images_presets', 'name', $name, function($item, $model){
 			$item['wm_image'] = cmsModel::yamlToArray($item['wm_image']);
 			return $item;
 		});
 	}
-	
+
 	public function addPreset ($preset) {
-		return $this->insert('images_presets', $preset); 
+		return $this->insert('images_presets', $preset);
 	}
 
 	public function updatePreset ($id, $preset) {
@@ -47,20 +50,4 @@ class modelImages extends cmsModel{
 		return $this->delete('images_presets', $id);
 	}
 
-	public function togglePresetIsSquare($id, $is_square){
-				
-		return $this->update('images_presets', $id, array(
-			'is_square' => $is_square
-		));
-		
-	}	
-
-	public function togglePresetIsWatermark($id, $is_watermark){
-				
-		return $this->update('images_presets', $id, array(
-			'is_watermark' => $is_watermark
-		));
-		
-	}	
-	
 }

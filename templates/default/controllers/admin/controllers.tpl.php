@@ -10,6 +10,18 @@
 		'href'  => $this->href_to('install')
 	));
 
+    $this->addToolButton(array(
+        'class' => 'addons',
+        'title' => LANG_CP_OFICIAL_ADDONS,
+        'href'  => $this->href_to('addons_list')
+    ));
+
+	$this->addToolButton(array(
+		'class' => 'logs',
+		'title' => LANG_EVENTS_MANAGEMENT,
+		'href'  => $this->href_to('controllers', array('events'))
+	));
+
 	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,

@@ -17,7 +17,7 @@ class onRssContentBeforeCategory extends cmsAction {
 
             if ($category['id'] > 1){ $feed_url .= '?category=' . $category['id']; }
 
-            $link_tag = '<link title="'.$feed_title.'" type="application/rss+xml" rel="alternate" href="'.$feed_url.'">';
+            $link_tag = '<link title="'.htmlspecialchars($feed_title).'" type="application/rss+xml" rel="alternate" href="'.$feed_url.'">';
 
             cmsTemplate::getInstance()->addHead($link_tag);
 

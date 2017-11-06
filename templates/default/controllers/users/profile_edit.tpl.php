@@ -1,5 +1,7 @@
 <?php
 
+    $this->addJS('templates/default/js/users.js');
+
     $this->setPageTitle(LANG_USERS_EDIT_PROFILE);
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
@@ -14,19 +16,32 @@
     $this->addToolButton(array(
         'class' => 'cancel',
         'title' => LANG_CANCEL,
-        'href'  => href_to('users', $id)
+        'href'  => $cancel_url
     ));
 
     $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE);
 
-?>
+    $this->renderChild('profile_edit_header', array('profile'=>$profile));
 
-<?php $this->renderChild('profile_edit_header', array('profile'=>$profile)); ?>
+    $append_html = '';
+
+    if($allow_delete_profile){
+
+        ob_start(); ?>
+
+        <div class="buttons_delete_profile">
+            <?php echo html_button(LANG_USERS_DELETE_PROFILE, 'delete_profile', "icms.users.delete('".href_to('users', $id, 'delete')."', '".LANG_USERS_DELETE_PROFILE."');", array('class'=>'delete_profile')); ?>
+        </div>
+
+        <?php $append_html = ob_get_clean(); ?>
+
+    <?php } ?>
 
 <?php
     $this->renderForm($form, $profile, array(
-        'action' => '',
-        'method' => 'post',
-        'toolbar' => false
+        'action'      => '',
+        'append_html' => $append_html,
+        'cancel'      => array('show' => true, 'href' => $cancel_url),
+        'method'      => 'post',
+        'toolbar'     => false
     ), $errors);
-?>

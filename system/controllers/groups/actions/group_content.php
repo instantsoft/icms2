@@ -2,28 +2,76 @@
 
 class actionGroupsGroupContent extends cmsAction {
 
-    public function run($group, $ctype_name=false){
+    public $lock_explicit_call = true;
+
+    public function run($group, $ctype_name = false, $dataset = false){
 
         if (!$ctype_name) { cmsCore::error404(); }
 
-        $user = cmsUser::getInstance();
+        $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
+        if (!$ctype || empty($ctype['is_in_groups'])) { cmsCore::error404(); }
 
-        $content_controller = cmsCore::getController('content', $this->request);
+        $this->controller_content->setListContext('group_content');
 
-        $ctype = $content_controller->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        // Получаем список наборов
+        $datasets = $this->controller_content->getCtypeDatasets($ctype, array(
+            'cat_id' => 0
+        ));
 
-        $content_controller->model->filterEqual('parent_id', $group['id'])->filterEqual('parent_type', 'group');
+        // Если есть наборы, применяем фильтры текущего
+        if ($datasets){
 
-        $page_url = href_to($this->name, $group['id'], array('content', $ctype_name));
+            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
 
-        $html = $content_controller->renderItemsList($ctype, $page_url);
+            $keys = array_keys($datasets);
+            $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+            $this->controller_content->model->applyDatasetFilters($current_dataset);
+            // устанавливаем максимальное количество записей для набора, если задано
+            if(!empty($current_dataset['max_count'])){
+                $this->controller_content->max_items_count = $current_dataset['max_count'];
+            }
+            // если набор всего один, например для изменения сортировки по умолчанию,
+            // не показываем его на сайте
+            if(count($datasets) == 1){
+                unset($current_dataset); $datasets = false;
+            }
 
-        return cmsTemplate::getInstance()->render('group_content', array(
-            'user' => $user,
-            'group' => $group,
-            'ctype' => $ctype,
-            'html' => $html
+        }
+
+        $this->controller_content->model->
+                filterEqual('parent_id', $group['id'])->
+                filterEqual('parent_type', 'group')->
+                orderBy('date_pub', 'desc')->forceIndex('parent_id');
+
+        $page_url = href_to($this->name, $group['slug'], array('content', $ctype_name));
+
+        if (($this->cms_user->id == $group['owner_id']) || $this->cms_user->is_admin){
+            $this->controller_content->model->disableApprovedFilter();
+			$this->controller_content->model->disablePubFilter();
+            $this->controller_content->model->disablePrivacyFilter();
+        }
+
+        $this->filterPrivacyGroupsContent($ctype, $this->controller_content->model, $group);
+
+        $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+
+        if(isset($current_dataset) && $dataset){
+            $group['sub_title'] .= ' / '.$current_dataset['title'];
+        }
+
+        $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        $this->cms_template->addBreadcrumb($group['sub_title']);
+
+        return $this->cms_template->render('group_content', array(
+            'user'            => $this->cms_user,
+            'group'           => $group,
+            'ctype'           => $ctype,
+            'datasets'        => $datasets,
+            'dataset'         => $dataset,
+            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'base_ds_url'     => $page_url . '%s',
+            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''))
         ));
 
     }

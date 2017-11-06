@@ -17,15 +17,22 @@ function step($is_submit){
 
 function check_data(){
 
-    $sitename   = $_POST['sitename'];
-    $hometitle  = $_POST['hometitle'];
-    $metakeys   = $_POST['metakeys'];
-    $metadesc   = $_POST['metadesc'];
+    $sitename   = trim($_POST['sitename']);
+    $hometitle  = trim($_POST['hometitle']);
+    $metakeys   = trim($_POST['metakeys']);
+    $metadesc   = trim($_POST['metadesc']);
 
     if (!$sitename){
         return array(
             'error' => true,
             'message' => LANG_SITE_SITENAME_ERROR
+        );
+    }
+
+    if (!$hometitle){
+        return array(
+            'error' => true,
+            'message' => LANG_SITE_HOMETITLE_ERROR
         );
     }
 

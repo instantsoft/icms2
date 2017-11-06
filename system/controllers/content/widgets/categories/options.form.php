@@ -43,6 +43,11 @@ class formWidgetContentCategoriesOptions extends cmsForm {
                         'default' => false
                     )),
 
+                    new fieldCheckbox('options:show_full_tree', array(
+                        'title' => LANG_WD_CONTENT_CATS_SHOW_FULL_TREE,
+                        'default' => false
+                    ))
+
                 )
             ),
 

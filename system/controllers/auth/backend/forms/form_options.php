@@ -6,6 +6,13 @@ class formAuthOptions extends cmsForm {
 
     public function init() {
 
+        $auth_redirect_items = array(
+            'none'        => LANG_REG_CFG_AUTH_REDIRECT_NONE,
+            'index'       => LANG_REG_CFG_AUTH_REDIRECT_INDEX,
+            'profile'     => LANG_REG_CFG_AUTH_REDIRECT_PROFILE,
+            'profileedit' => LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT
+        );
+
         return array(
 
             array(
@@ -29,21 +36,30 @@ class formAuthOptions extends cmsForm {
                         'title' => LANG_REG_CFG_REG_CAPTCHA,
                     )),
 
-                    new fieldCheckbox('verify_email', array(
-                        'title' => LANG_REG_CFG_VERIFY_EMAIL,
-                        'hint' => LANG_REG_CFG_VERIFY_EMAIL_HINT,
+                    new fieldCheckbox('reg_auto_auth', array(
+                        'title'   => LANG_REG_CFG_REG_AUTO_AUTH,
+                        'default' => 1
                     )),
-					
+
                     new fieldListGroups('def_groups', array(
                         'title' => LANG_REG_CFG_DEF_GROUP_ID,
                         'show_all' => false,
 						'default' => array(3)
                     )),
 
-//                    new fieldNumber('verify_exp', array(
-//                        'title' => LANG_REG_CFG_VERIFY_EXPIRATION,
-//                        'default' => 48
-//                    )),
+                    new fieldCheckbox('verify_email', array(
+                        'title' => LANG_REG_CFG_VERIFY_EMAIL,
+                        'hint' => LANG_REG_CFG_VERIFY_EMAIL_HINT,
+                    )),
+
+                    new fieldNumber('verify_exp', array(
+                        'title'   => LANG_REG_CFG_VERIFY_EXPIRATION,
+                        'default' => 48,
+                        'rules' => array(
+                            array('required'),
+                            array('min', 1)
+                        )
+                    ))
 
                 )
             ),
@@ -55,6 +71,18 @@ class formAuthOptions extends cmsForm {
 
                     new fieldCheckbox('auth_captcha', array(
                         'title' => LANG_REG_CFG_AUTH_CAPTCHA,
+                    )),
+
+                    new fieldList('first_auth_redirect', array(
+                        'title'   => LANG_REG_CFG_FIRST_AUTH_REDIRECT,
+                        'default' => 'profileedit',
+                        'items'   => $auth_redirect_items
+                    )),
+
+                    new fieldList('auth_redirect', array(
+                        'title'   => LANG_REG_CFG_AUTH_REDIRECT,
+                        'default' => 'none',
+                        'items'   => $auth_redirect_items
                     )),
 
                 )

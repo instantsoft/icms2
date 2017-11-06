@@ -2,29 +2,30 @@
 
 class actionGroupsGroupLeave extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($group){
 
-        $user = cmsUser::getInstance();
+        if ($group['access']['is_member'] && !$group['access']['is_owner']){
 
-        $is_member = $this->model->getMembership($group['id'], $user->id);
-        $is_owner = $group['owner_id'] == $user->id;
+            $group = cmsEventsManager::hook('group_before_leave', $group);
 
-        if ($is_member && !$is_owner){
+            $this->model->deleteMembership($group['id'], $this->cms_user->id);
 
-            $this->model->deleteMembership($group['id'], $user->id);
-
-            cmsCore::getController('activity')->addEntry($this->name, "leave", array(
+            cmsCore::getController('activity')->addEntry($this->name, 'leave', array(
                 'subject_title' => $group['title'],
-                'subject_id' => $group['id'],
-                'subject_url' => href_to($this->name, $group['id']),
-                'group_id' => $group['id']
+                'subject_id'    => $group['id'],
+                'subject_url'   => href_to_rel($this->name, $group['slug']),
+                'group_id'      => $group['id']
             ));
+
+            cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
+
+            $this->redirectToAction($group['slug']);
 
         }
 
-        cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
-
-        $this->redirectToAction($group['id']);
+        cmsCore::error404();
 
     }
 

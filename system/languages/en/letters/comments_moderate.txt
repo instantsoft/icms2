@@ -1,0 +1,18 @@
+[subject:Require comments moderation - {site}]
+
+Hello, {nickname}.
+
+New comment is awaiting your check:
+
+<b>Comment link:</b> <a href="{page_url}">{page_url}</a>
+<b>All moderation:</b> <a href="{list_url}">{list_url}</a>
+
+<a href="{author_url}"><b>{author_nickname}</b></a>:
+<blockquote>{comment}</blockquote>
+
+You must be logged in to view this page..
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

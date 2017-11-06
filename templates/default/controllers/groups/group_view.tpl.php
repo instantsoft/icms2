@@ -1,81 +1,59 @@
-<?php
-
-    $this->setPageTitle($group['title']);
-
-    $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-    $this->addBreadcrumb($group['title']);
-
-?>
-
 <div id="group_profile_header">
-    <?php $this->renderChild('group_header', array('group'=>$group)); ?>
+    <?php $this->renderChild('group_header', array('group' => $group)); ?>
 </div>
 
-<div id="group_profile">
+<div id="group_profile" class="content_item groups_item">
 
-    <div id="left_column" class="column">
+    <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 
-		<?php if ($group['logo']) { ?>
-			<div id="logo" class="block">
-				<?php echo html_image($group['logo'], 'normal', $group['title']); ?>
-			</div>
-		<?php } ?>
-
-        <?php if ($content_counts) { ?>
-            <div class="block">
-                <ul class="content_counts">
-                    <?php foreach($content_counts as $ctype_name=>$count){ ?>
-                        <?php if (!$count['is_in_list']) { continue; } ?>
-                        <li>
-                            <a href="<?php echo href_to('groups', $group['id'], array('content', $ctype_name)); ?>">
-                                <?php html($count['title']); ?>
-                                <span class="counter"><?php html($count['count']); ?></span>
-                            </a>
-                        </li>
-                    <?php } ?>
-                </ul>
-            </div>
+        <?php if ($fieldset['title']) { ?>
+            <div class="fields_group fields_group_groups_<?php echo $fieldset_id ?>">
+                <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
         <?php } ?>
 
-        <div class="block">
+        <?php if (!empty($fieldset['fields'])) { ?>
+            <?php foreach ($fieldset['fields'] as $name => $field) { ?>
 
-            <ul class="details">
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
+                    <?php if ($field['options']['label_in_item'] != 'none') { ?>
+                        <div class="title_<?php echo $field['options']['label_in_item']; ?>"><?php html($field['title']); ?>: </div>
+                    <?php } ?>
+                    <div class="value"><?php echo $field['html']; ?></div>
+                </div>
 
-                <li>
-                    <strong><?php echo LANG_RATING; ?>:</strong>
-                    <span class="<?php echo html_signed_class($group['rating']); ?>"><?php echo $group['rating']; ?></span>
-                </li>
+            <?php } ?>
+        <?php } ?>
 
-                <li>
-                    <strong><?php echo LANG_GROUP_INFO_CREATED_DATE; ?>:</strong>
-                    <?php echo string_date_age_max($group['date_pub'], true); ?>
-                </li>
-                <li>
-                    <strong><?php echo LANG_GROUP_INFO_OWNER; ?>:</strong>
-                    <a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a>
-                </li>
-                <li>
-                    <strong><?php echo LANG_GROUP_INFO_MEMBERS; ?>:</strong>
-                    <a href="<?php echo $this->href_to($group['id'], 'members'); ?>"><?php echo html_spellcount($group['members_count'], LANG_GROUPS_MEMBERS_SPELLCOUNT); ?></a>
-                </li>
+        <?php if ($fieldset['title']) { ?></div><?php } ?>
 
-            </ul>
+    <?php } ?>
 
-        </div>
-
-    </div>
-
-    <div id="right_column" class="column">
-
-        <div id="information" class="content_item block">
-
-            <div class="group_description">
-                <?php echo cmsEventsManager::hook('html_filter', $group['description']); ?>
+    <?php if (empty($group['fields']['cover']['is_in_item']) || !$group['cover']){ ?>
+        <div class="info_bar">
+            <div class="bar_item bi_rating">
+                <strong><?php echo LANG_RATING; ?>:</strong> <?php echo $group['rating']; ?>
             </div>
-
+            <div class="bar_item bi_date_pub">
+                <?php echo LANG_GROUP_INFO_CREATED_DATE.' '.string_date_age_max($group['date_pub'], true); ?>
+            </div>
+            <div class="bar_item bi_user">
+                <?php echo LANG_GROUP_INFO_OWNER; ?> <a href="<?php echo href_to('users', $group['owner_id']); ?>"><?php html($group['owner_nickname']); ?></a>
+            </div>
+            <?php if (!$group['is_approved']){ ?>
+                <div class="bar_item bi_not_approved">
+                    <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                </div>
+            <?php } else { ?>
+            <div class="bar_item bi_share">
+                <div class="share">
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+                    <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+                    <div class="ya-share2" data-title="<?php html($group['title']); ?><?php if (!empty($group['sub_title'])) { ?> / <?php html($group['sub_title']); ?><?php } ?>" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-description="<?php html(string_short($group['description'], 200)); ?>" data-size="s"></div>
+                </div>
+            </div>
+            <?php } ?>
         </div>
-
-    </div>
+    <?php } ?>
 
 </div>
 
@@ -83,5 +61,4 @@
     <div id="wall_profile_wall">
         <?php echo $wall_html; ?>
     </div>
-<?php } ?>
-
+<?php }

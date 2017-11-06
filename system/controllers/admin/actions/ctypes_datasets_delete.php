@@ -6,9 +6,11 @@ class actionAdminCtypesDatasetsDelete extends cmsAction {
 
         if (!$dataset_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
 
-        $content_model->deleteContentDataset($dataset_id);
+        cmsCore::getModel('content')->deleteContentDataset($dataset_id);
 
         $this->redirectBack();
 

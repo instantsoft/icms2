@@ -2,7 +2,7 @@
 
 class actionAdminCtypesPropsAjax extends cmsAction {
 
-    public function run($ctype_name, $category_id){
+    public function run($ctype_name, $category_id=false){
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
