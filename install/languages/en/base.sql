@@ -214,9 +214,9 @@ CREATE TABLE `{#}content_types` (
   KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Content types';
 
-INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_premod_add`, `is_premod_edit`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Pages', 'pages', 'Static pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Photo albums', 'albums', 'User photo albums', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
+(1, 'Pages', 'pages', 'Static pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
+(7, 'Photo albums', 'albums', 'User photo albums', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
@@ -955,8 +955,8 @@ CREATE TABLE `{#}perms_rules` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='A list of all available permission rules';
 
 INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VALUES
-(1, 'content', 'add', 'flag', NULL),
-(2, 'content', 'edit', 'list', 'own,all'),
+(1, 'content', 'add', 'list', 'premod,yes'),
+(2, 'content', 'edit', 'list', 'premod_own,own,premod_all,all'),
 (3, 'content', 'delete', 'list', 'own,all'),
 (4, 'content', 'add_cat', 'flag', NULL),
 (5, 'content', 'edit_cat', 'flag', NULL),
@@ -968,7 +968,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
 (14, 'comments', 'view_all', 'flag', NULL),
-(15, 'groups', 'add', 'list', 'yes,premod'),
+(15, 'groups', 'add', 'list', 'premod,yes'),
 (16, 'groups', 'edit', 'list', 'own,all'),
 (17, 'groups', 'delete', 'list', 'own,all'),
 (18, 'content', 'limit', 'number', NULL),
@@ -1029,9 +1029,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (10, 3, 'comments', '1'),
 (12, 3, 'comments', 'own'),
 (11, 3, 'comments', 'own'),
-(1, 4, 'albums', '1'),
-(1, 5, 'albums', '1'),
-(1, 6, 'albums', '1'),
+(1, 4, 'albums', 'yes'),
+(1, 5, 'albums', 'yes'),
+(1, 6, 'albums', 'yes'),
 (3, 4, 'albums', 'own'),
 (3, 5, 'albums', 'all'),
 (3, 6, 'albums', 'all'),
@@ -1056,7 +1056,7 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (21, 4, 'comments', '1'),
 (23, 5, 'activity', '1'),
 (23, 6, 'activity', '1'),
-(1, 3, 'albums', '1'),
+(1, 3, 'albums', 'yes'),
 (3, 3, 'albums', 'own'),
 (2, 3, 'albums', 'own');
 

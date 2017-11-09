@@ -254,6 +254,8 @@
     define('LANG_PERM_OPTION_NULL',          'No');
     define('LANG_PERM_OPTION_YES',           'Yes');
     define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
+    define('LANG_PERM_OPTION_PREMOD_OWN',    'Only own with premoderation');
+    define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
     define('LANG_PERM_OPTION_OTHER',         'Only others');
     define('LANG_PERM_OPTION_ALL',           'All');

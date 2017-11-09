@@ -20,13 +20,19 @@ class actionContentItemEdit extends cmsAction {
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
-        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all')) {
-            if (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] != $this->cms_user->id) {
+        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') && !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all')) {
+            if (
+                (cmsUser::isAllowed($ctype['name'], 'edit', 'own') ||
+                    cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')
+                ) && $item['user_id'] != $this->cms_user->id) {
                 cmsCore::error404();
             }
         }
 
-        $is_premoderation = $ctype['is_premod_edit'];
+        $is_premoderation = false;
+        if(cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own', true) || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all', true)){
+            $is_premoderation = true;
+        }
         $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
         if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
@@ -140,7 +146,7 @@ class actionContentItemEdit extends cmsAction {
 
             if (!$errors){
 
-                $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
+                $item['is_approved'] = $item['is_approved'] && (!$is_premoderation || $is_moderator);
                 $item['approved_by'] = null;
 
                 if ($ctype['is_tags']){

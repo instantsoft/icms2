@@ -410,6 +410,7 @@ pre, code {
     padding: 10px 15px;
     margin:0;
     color:#666;
+    white-space: pre-wrap;
 }
 
 select {

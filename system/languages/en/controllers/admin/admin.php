@@ -89,8 +89,6 @@
     define('LANG_CP_BASIC',                     'Basic settings');
     define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');
-    define('LANG_CP_PREMOD_ADD',                'Pre-moderate new entries');
-    define('LANG_CP_PREMOD_EDIT',               'Pre-moderate edited entries');
     define('LANG_CP_IS_PUB_CONTROL',            'Custom publication date');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired entry action');

@@ -154,7 +154,7 @@ class actionContentItemAdd extends cmsAction {
         }
 
         $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype_name, $this->cms_user->id);
-        $is_premoderation = $ctype['is_premod_add'];
+        $is_premoderation = cmsUser::isAllowed($ctype_name, 'add', 'premod', true);
 
 		$ctype = cmsEventsManager::hook('content_add', $ctype);
         list($form, $item) = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
@@ -238,7 +238,7 @@ class actionContentItemAdd extends cmsAction {
 
             if (!$errors){
 
-                $item['is_approved'] = !$ctype['is_premod_add'] || $is_moderator;
+                $item['is_approved'] = !$is_premoderation || $is_moderator;
 
 				$is_pub_control = cmsUser::isAllowed($ctype['name'], 'pub_on');
 				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');

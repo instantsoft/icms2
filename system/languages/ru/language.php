@@ -253,6 +253,8 @@
     define('LANG_PERM_OPTION_NULL',          'Нет');
     define('LANG_PERM_OPTION_YES',           'Да');
     define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
+    define('LANG_PERM_OPTION_PREMOD_OWN',    'Только свои с премодерацией');
+    define('LANG_PERM_OPTION_PREMOD_ALL',    'Все с премодерацией');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
     define('LANG_PERM_OPTION_OTHER',         'Только чужие');
     define('LANG_PERM_OPTION_ALL',           'Все');

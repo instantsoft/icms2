@@ -38,12 +38,6 @@ class formAdminCtypesBasic extends cmsForm {
                 'is_collapsed' => true,
                 'title' => LANG_CP_PUBLICATION,
                 'childs' => array(
-                    new fieldCheckbox('is_premod_add', array(
-                        'title' => LANG_CP_PREMOD_ADD
-                    )),
-                    new fieldCheckbox('is_premod_edit', array(
-                        'title' => LANG_CP_PREMOD_EDIT
-                    )),
                     new fieldCheckbox('is_date_range', array(
                         'title' => LANG_CP_IS_PUB_CONTROL,
                         'hint' => LANG_CP_IS_PUB_CONTROL_HINT

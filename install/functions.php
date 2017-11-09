@@ -168,3 +168,37 @@ function copy_folder($dir_source, $dir_target) {
     }
 
 }
+
+function execute_command($command, $postfix=' 2>&1'){
+    if(!function_exists('exec')){
+        return false;
+    }
+    $buffer = array();
+    $err    = '';
+    $result = exec($command.$postfix, $buffer, $err);
+    if($err !== 127){
+        if(!isset($buffer[0])){
+            $buffer[0] = $result;
+        }
+        // проверяем, что команда такая есть
+        $b = mb_strtolower($buffer[0]);
+        if(mb_strstr($b,'error') || mb_strstr($b,' no ') || mb_strstr($b,'not found') || mb_strstr($b,'No such file or directory')){
+            return false;
+        }
+    } else {
+        // команда не найдена
+        return false;
+    }
+    return $buffer;
+}
+
+function get_program_path($program){
+    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
+        $which = 'where';
+    } else {
+        $which = '/usr/bin/which';
+    }
+    $data = execute_command($which.' '.$program);
+    if(!$data){ return false; }
+    return !empty($data[0]) ? $data[0] : false;
+}

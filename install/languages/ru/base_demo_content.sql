@@ -54,11 +54,11 @@ INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `descripti
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'Личное');
 
-INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_premod_add`, `is_premod_edit`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(5, 'Статьи', 'articles', 'Текстовые материалы', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: null\n', '---\none: статья\ntwo: статьи\nmany: статей\ncreate: статью\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
-(6, 'Посты', 'posts', 'Персональные публикации пользователей', NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: пост\ntwo: поста\nmany: постов\ncreate: пост\nlist: Лента блогов\nprofile: Блог\n', NULL, NULL, NULL, NULL, NULL),
-(9, 'Объявления', 'board', 'Коммерческие объявления', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: 1\nis_show_cats: 1\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style: table\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: объявление\ntwo: объявления\nmany: объявлений\ncreate: объявление\nlist: Доска объявлений\nprofile:\n', NULL, NULL, NULL, NULL, NULL),
-(10, 'Новости', 'news', 'Информационные сообщения', NULL, 1, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
+(5, 'Статьи', 'articles', 'Текстовые материалы', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: null\n', '---\none: статья\ntwo: статьи\nmany: статей\ncreate: статью\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
+(6, 'Посты', 'posts', 'Персональные публикации пользователей', NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: пост\ntwo: поста\nmany: постов\ncreate: пост\nlist: Лента блогов\nprofile: Блог\n', NULL, NULL, NULL, NULL, NULL),
+(9, 'Объявления', 'board', 'Коммерческие объявления', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: 1\nis_show_cats: 1\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style: table\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: объявление\ntwo: объявления\nmany: объявлений\ncreate: объявление\nlist: Доска объявлений\nprofile:\n', NULL, NULL, NULL, NULL, NULL),
+(10, 'Новости', 'news', 'Информационные сообщения', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
 (16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, NULL, 0, NULL);
@@ -929,9 +929,9 @@ INSERT INTO `{#}moderators` (`id`, `user_id`, `date_assigned`, `ctype_name`, `co
 (1, 1, CURRENT_TIMESTAMP, 'articles', 0, 0, 0);
 
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
-(1, 4, 'articles', '1'),
-(1, 5, 'articles', '1'),
-(1, 6, 'articles', '1'),
+(1, 4, 'articles', 'yes'),
+(1, 5, 'articles', 'yes'),
+(1, 6, 'articles', 'yes'),
 (4, 5, 'articles', '1'),
 (4, 6, 'articles', '1'),
 (3, 4, 'articles', 'own'),
@@ -952,9 +952,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 6, 'articles', '1'),
 (13, 5, 'articles', '1'),
 (13, 6, 'articles', '1'),
-(1, 4, 'posts', '1'),
-(1, 5, 'posts', '1'),
-(1, 6, 'posts', '1'),
+(1, 4, 'posts', 'yes'),
+(1, 5, 'posts', 'yes'),
+(1, 6, 'posts', 'yes'),
 (3, 4, 'posts', 'own'),
 (3, 5, 'posts', 'all'),
 (3, 6, 'posts', 'all'),
@@ -966,9 +966,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 4, 'posts', '1'),
 (8, 5, 'posts', '1'),
 (8, 6, 'posts', '1'),
-(1, 4, 'board', '1'),
-(1, 5, 'board', '1'),
-(1, 6, 'board', '1'),
+(1, 4, 'board', 'yes'),
+(1, 5, 'board', 'yes'),
+(1, 6, 'board', 'yes'),
 (4, 5, 'board', '1'),
 (4, 6, 'board', '1'),
 (3, 4, 'board', 'own'),
@@ -987,9 +987,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 6, 'board', '1'),
 (13, 5, 'board', '1'),
 (13, 6, 'board', '1'),
-(1, 4, 'news', '1'),
-(1, 5, 'news', '1'),
-(1, 6, 'news', '1'),
+(1, 4, 'news', 'yes'),
+(1, 5, 'news', 'yes'),
+(1, 6, 'news', 'yes'),
 (4, 6, 'news', '1'),
 (3, 4, 'news', 'own'),
 (3, 5, 'news', 'all'),
@@ -1005,13 +1005,13 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 5, 'news', '1'),
 (8, 6, 'news', '1'),
 (13, 6, 'news', '1'),
-(1, 3, 'articles', '1'),
+(1, 3, 'articles', 'yes'),
 (3, 3, 'articles', 'own'),
 (2, 3, 'articles', 'own'),
-(1, 3, 'posts', '1'),
+(1, 3, 'posts', 'yes'),
 (3, 3, 'posts', 'own'),
 (2, 3, 'posts', 'own'),
-(1, 3, 'board', '1'),
+(1, 3, 'board', 'yes'),
 (3, 3, 'board', 'own'),
 (2, 3, 'board', 'own');
 
