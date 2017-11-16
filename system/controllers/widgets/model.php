@@ -341,7 +341,7 @@ class modelWidgets extends cmsModel {
                     select('w.name', 'name')->
                     join('widgets', 'w', 'w.id = i.widget_id')->
                     filterEqual('template', $template)->
-                    filterNotNull('is_enabled')->
+                    filterEqual('is_enabled', 1)->
                     filterIn('page_id', $pages_list)->
                     orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
                     get('widgets_bind', function($item, $model){

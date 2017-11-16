@@ -55,7 +55,7 @@ class cmsUpdater {
 
         $url = sprintf($this->update_info_url, $current_version);
 
-        $data = file_get_contents_from_url($url);
+        $data = file_get_contents_from_url($url, 2);
 
         if ($data === false) { return false; }
 

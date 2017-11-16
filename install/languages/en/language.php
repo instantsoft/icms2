@@ -90,6 +90,7 @@
     define('LANG_SITE_HOMETITLE',           "Main page title");
     define('LANG_SITE_METAKEYS',            "Keywords");
     define('LANG_SITE_METADESC',            "Description");
+    define('LANG_SITE_CHECK_UPDATE',        "Automatically check for InstantCMS updates");
 
     define('LANG_SITE_SITENAME_ERROR',      "Site name is required");
     define('LANG_SITE_HOMETITLE_ERROR',     "Home title is required");

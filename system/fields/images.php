@@ -111,36 +111,58 @@ class fieldImages extends cmsFormField {
             }
         }
 
-        $result = null;
+        $result = array();
 
         if (is_array($value)){
-            $result = array();
             foreach ($value as $paths){ $result[] = $paths; }
         }
 
-        if (empty($result)) { return $result; }
+        if (empty($result)) { return null; }
 
         $sizes = $this->getOption('sizes');
         if (empty($sizes)) {
-            $this->delete($result); return $result;
+            $this->delete($result); return null;
         }
 
+        $results = array();
+
+        $upload_path = cmsConfig::get('upload_path');
+
         foreach($result as $key => $image){
+
+            $images = array();
+
             foreach($image as $size => $image_rel_path){
+
+                $image_rel_path = str_replace(array('"', "'", ' ', '#'), '', html_entity_decode($image_rel_path));
+
+                if(!is_file($upload_path.$image_rel_path)){
+                    continue;
+                }
+
                 // удаляем ненужные пресеты, если умельцы правили параметры вручную
                 if (!in_array($size, $sizes)){
-                    files_delete_file($image_rel_path, 2); unset($image[$size]);
+                    files_delete_file($image_rel_path, 2); continue;
                 }
+
+                $images[$size] = $image_rel_path;
+
             }
-            $result[$key] = $image;
+
+            if($images){
+                $results[$key] = $images;
+            }
+
         }
+
+        if (empty($results)) { return null; }
 
         // удаляем, если вдруг каким-то образом загрузили больше
         // js тоже регулирует этот параметр
-        if(!empty($this->options['max_photos']) && count($result) > $this->options['max_photos']){
+        if(!empty($this->options['max_photos']) && count($results) > $this->options['max_photos']){
 
-            $chunks = array_chunk($result, $this->options['max_photos'], true);
-            $result = $chunks[0]; unset($chunks[0]);
+            $chunks = array_chunk($results, $this->options['max_photos'], true);
+            $results = $chunks[0]; unset($chunks[0]);
 
             foreach ($chunks as $chunk) {
                 $this->delete($chunk);
@@ -148,7 +170,7 @@ class fieldImages extends cmsFormField {
 
         }
 
-        return $result;
+        return $results;
 
     }
 

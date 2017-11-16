@@ -84,7 +84,7 @@ function create_config($path, $file){
         'mail_smtp_auth'		=> 1,
         'mail_smtp_user'		=> 'user@example.com',
         'mail_smtp_pass'		=> '',
-        'is_check_updates'		=> 1,
+        'is_check_updates'		=> $_SESSION['install']['site']['is_check_updates'],
         'detect_ip_key'		    => 'REMOTE_ADDR',
         'allow_ips'		        => '',
         'default_editor'		=> 'redactor',

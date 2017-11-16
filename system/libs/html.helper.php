@@ -228,7 +228,7 @@ function html_avatar_image_src($avatars, $size_preset='small', $is_relative=true
         }
     }
 
-    return $src;
+    return htmlspecialchars($src);
 
 }
 
@@ -269,7 +269,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
         }
     }
 
-    return $src;
+    return htmlspecialchars($src);
 
 }
 

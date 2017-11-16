@@ -90,6 +90,7 @@
     define('LANG_SITE_HOMETITLE',           "Заголовок главной страницы");
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
     define('LANG_SITE_METADESC',            "Описание сайта");
+    define('LANG_SITE_CHECK_UPDATE',        "Автоматически проверять обновления InstantCMS");
 
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
     define('LANG_SITE_HOMETITLE_ERROR',     "Требуется указать заголовок главной страницы");

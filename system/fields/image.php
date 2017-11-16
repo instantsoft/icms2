@@ -117,13 +117,27 @@ class fieldImage extends cmsFormField {
 
         if (empty($sizes) || empty($value)) { return $value; }
 
+        $upload_path = cmsConfig::get('upload_path');
+
+        $image_urls = array();
+
         foreach($value as $size => $image_url){
-            if (!in_array($size, $sizes)){
-                files_delete_file($image_url, 2);
+
+            $image_url = str_replace(array('"', "'", ' ', '#'), '', html_entity_decode($image_url));
+
+            if(!is_file($upload_path.$image_url)){
+                continue;
             }
+
+            if (!in_array($size, $sizes)){
+                files_delete_file($image_url, 2); continue;
+            }
+
+            $image_urls[$size] = $image_url;
+
         }
 
-        return $value;
+        return $image_urls ?: null;
 
     }
 

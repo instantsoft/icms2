@@ -37,6 +37,8 @@ class actionContentItemView extends cmsAction {
 
 		if (!$ctype['options']['item_on']) { return cmsCore::error404(); }
 
+        list($ctype, $this->model) = cmsEventsManager::hook('content_item_filter', array($ctype, $this->model));
+
         // Получаем запись
         $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
         if (!$item) { return cmsCore::error404(); }

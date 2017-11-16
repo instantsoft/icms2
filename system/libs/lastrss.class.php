@@ -258,27 +258,23 @@ class lastRSS {
 
     private function getRssFromUrl($url){
 
-        $data = @file_get_contents($url);
+        if (function_exists('curl_init')){
 
-        if ($data===false){
+            $curl = curl_init();
 
-            if (function_exists('curl_init')){
-
-                $curl = curl_init();
-
-                if(strpos($url, 'https') === 0){
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                }
-                curl_setopt($curl, CURLOPT_URL, $url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_HEADER, false);
-                curl_setopt($curl, CURLOPT_TIMEOUT, 3);
-                $data = curl_exec($curl);
-                curl_close($curl);
-
+            if(strpos($url, 'https') === 0){
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             }
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+            $data = curl_exec($curl);
+            curl_close($curl);
 
+        } else {
+            $data = @file_get_contents($url);
         }
 
         return $data;

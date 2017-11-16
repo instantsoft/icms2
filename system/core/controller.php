@@ -972,7 +972,7 @@ class cmsController {
 
     public function validate_email($value){
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
+        if (!is_string($value) || filter_var($value, FILTER_VALIDATE_EMAIL) !== $value){ return ERR_VALIDATE_EMAIL; }
         return true;
     }
 
