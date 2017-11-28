@@ -672,22 +672,6 @@ class modelGroups extends cmsModel {
 
     }
 
-    public function filterByModeratorTask($moderator_id, $is_admin = false){
-
-        if($is_admin){
-
-            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
-
-            return $this->filterEqual('m.ctype_name', 'groups');
-
-        } else {
-
-            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='groups' AND item_id=i.id))");
-
-        }
-
-    }
-
 //============================================================================//
 //============================================================================//
 

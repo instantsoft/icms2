@@ -923,6 +923,28 @@ class cmsModel {
         return $this;
     }
 
+    public function joinModerationsTasks($ctype_name){
+        $this->select('IF(t.id IS NULL AND i.is_approved < 1, 1, NULL)', 'is_draft');
+        $this->select('t.is_new_item');
+        return $this->joinLeft('moderators_tasks', 't', "t.item_id = i.id AND t.ctype_name = '{$ctype_name}'");
+    }
+
+    public function filterByModeratorTask($moderator_id, $ctype_name, $is_admin = false){
+
+        if($is_admin){
+
+            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
+
+            return $this->filterEqual('m.ctype_name', $ctype_name);
+
+        } else {
+
+            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='{$ctype_name}' AND item_id=i.id))");
+
+        }
+
+    }
+
     public function filterAvailableOnly(){
 
         if ($this->available_filtered) { return $this; }
@@ -1766,6 +1788,19 @@ class cmsModel {
         return $this;
 
     }
+
+    /**
+     * Возвращает количество массив количества записей в черновиках
+     * Для нужных контроллеров должна быть переопределена
+     * в их моделях
+     *
+     * @param integer $user_id
+     * @return integer | array
+     */
+    public function getDraftCounts($user_id){
+        return 0;
+    }
+
 //============================================================================//
 //============================================================================//
 

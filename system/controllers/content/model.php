@@ -1730,22 +1730,6 @@ class modelContent extends cmsModel {
 
 	}
 
-    public function filterByModeratorTask($moderator_id, $ctype_name, $is_admin = false){
-
-        if($is_admin){
-
-            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
-
-            return $this->filterEqual('m.ctype_name', $ctype_name);
-
-        } else {
-
-            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='{$ctype_name}' AND item_id=i.id))");
-
-        }
-
-    }
-
 //============================================================================//
 
     public function filterPropValue($ctype_name, $prop, $value){
@@ -2340,13 +2324,19 @@ class modelContent extends cmsModel {
 
         $this->useCache("content.item.{$ctype_name}");
 
-        return $this->getItemByField($table_name, $by_field, $id, function($item, $model){
+        return $this->getItemByField($table_name, $by_field, $id, function($item, $model) use($ctype_name){
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
                 'avatar'   => $item['user_avatar']
             );
+
+            $item['is_draft'] = false;
+
+            if (!$item['is_approved']){
+                $item['is_draft'] = $model->isDraftContentItem($ctype_name, $item);
+            }
 
             return $item;
 
@@ -2607,6 +2597,47 @@ class modelContent extends cmsModel {
             cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         }
+
+    }
+
+    public function isDraftContentItem($ctype_name, $item) {
+
+        if(!empty($item['is_approved'])){ return false; }
+
+        return !(bool)$this->selectOnly('id')->filterEqual('ctype_name', $ctype_name)->
+                    filterEqual('item_id', $item['id'])->getItem('moderators_tasks');
+
+    }
+
+    public function getDraftCounts($user_id){
+
+        $counts = array();
+
+        $ctypes = $this->getContentTypes();
+
+        foreach($ctypes as $ctype){
+
+            $this->useCache("content.list.{$ctype['name']}");
+
+            $this->filterEqual('user_id', $user_id);
+            $this->filterEqual('is_approved', 0);
+            $this->disableApprovedFilter();
+            $this->disablePubFilter();
+            $this->disablePrivacyFilter();
+
+            $this->joinExcludingLeft('moderators_tasks', 't', 't.item_id', 'i.id', "t.ctype_name = '{$ctype['name']}'");
+
+            $count = $this->getContentItemsCount($ctype['name']);
+
+            $this->resetFilters();
+
+            if ($count) {
+                $counts[ $ctype['name'] ] = $count;
+            }
+
+        }
+
+        return $counts;
 
     }
 

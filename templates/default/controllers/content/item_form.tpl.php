@@ -1,12 +1,8 @@
 <?php
 
-    $this->addJS('templates/default/js/content.js');
-    $this->addJS('templates/default/js/jquery-chosen.js');
-    $this->addCSS('templates/default/css/jquery-chosen.css');
-
-    $page_title =   $do=='add' ?
-                    sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) :
-                    $item['title'];
+    $this->addJS($this->getJavascriptFileName('content'));
+    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
+    $this->addCSS($this->getTemplateStylesFileName('jquery-chosen'));
 
     $this->setPageTitle($page_title);
 
@@ -26,10 +22,18 @@
 
     }
 
+    $this->addBreadcrumb($page_title);
+
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => $button_save_text,
         'href'  => "javascript:icms.forms.submit()"
+    ));
+
+    $this->addToolButton(array(
+        'class' => 'save_draft',
+        'title' => $button_draft_text,
+        'href'  => "javascript:icms.forms.submit('.button.to_draft')"
     ));
 
     if ($cancel_url){
@@ -40,10 +44,6 @@
         ));
     }
 
-	$is_multi_cats = !empty($ctype['options']['is_cats_multi']);
-
-    $this->addBreadcrumb($page_title);
-
 ?>
 
 <h1><?php echo html($page_title) ?></h1>
@@ -51,7 +51,18 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
+        'submit' => array('title' => $button_save_text),
         'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
+        'buttons' => array(
+            array(
+                'title' => $button_draft_text,
+                'name' => 'to_draft',
+                'attributes' => array(
+                    'type' => 'submit',
+                    'class' => 'to_draft'
+                )
+            )
+        ),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(

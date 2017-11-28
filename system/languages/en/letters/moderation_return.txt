@@ -1,0 +1,9 @@
+[subject:Item retrieve from the moderation - {site}]
+
+Hello, {moderator}.
+
+Author <a href="{author_url}">{author}</a> retrieve item <a href="{page_url}">{page_title}</a> from the moderation.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

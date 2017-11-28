@@ -137,7 +137,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
         </div>
         <?php if (!$item['is_approved']){ ?>
             <div class="bar_item bi_not_approved">
-                <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                <?php echo $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
             </div>
         <?php } ?>
     </div>

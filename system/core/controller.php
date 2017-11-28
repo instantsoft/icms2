@@ -56,7 +56,7 @@ class cmsController {
     protected $callbacks = array();
     protected $useOptions = false;
 
-    function __construct($request){
+    function __construct( cmsRequest $request){
 
         self::loadControllers();
 
@@ -66,7 +66,7 @@ class cmsController {
 
         $this->root_path = $this->cms_config->root_path . 'system/controllers/' . $this->name . '/';
 
-        $this->request = $request;
+        $this->setRequest($request);
 
         cmsCore::loadControllerLanguage($this->name);
 
@@ -84,6 +84,10 @@ class cmsController {
 
         $this->loadCallback();
 
+    }
+
+    public function setRequest( cmsRequest $request) {
+        $this->request = $request; return $this;
     }
 
     /////////////////    Набор методов для коллбэков    ////////////////////////
@@ -695,6 +699,11 @@ class cmsController {
 
     public function halt($text='') {
         die((string)$text);
+    }
+
+    public function getUniqueKey($params) {
+        array_unshift($params, $this->name);
+        return implode('.', $params);
     }
 
 //============================================================================//

@@ -563,6 +563,7 @@
     define('LANG_CP_SCHEDULER_TASK_CONTROLLER',     'Component');
     define('LANG_CP_SCHEDULER_TASK_HOOK',           'Hook');
     define('LANG_CP_SCHEDULER_TASK_PERIOD',         'Interval, minutes');
+    define('LANG_CP_SCHEDULER_IS_STRICT_PERIOD',    'Strict adherence to the period');
     define('LANG_CP_SCHEDULER_TASK_LAST_RUN',       'Last run');
     define('LANG_CP_SCHEDULER_TASK_DELETE_CONFIRM', 'Delete task?');
     define('LANG_CP_SCHEDULER_TASK_CREATED',        'The task has been created');

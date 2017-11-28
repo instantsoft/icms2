@@ -882,7 +882,9 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (33, 2, 0, 'My groups', '{groups:my}', 5, '---\ntarget: _self\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Log in', 'auth/login', 9, '---\ntarget: _self\nclass: ajax-modal key', '---\n- 1\n', NULL),
 (35, 5, 0, 'Sign up', 'auth/register', 10, '---\ntarget: _self\nclass: user_add', '---\n- 1\n', NULL),
+(36, 2, 0, 'Drafts', '{content:draft}', 4, '---\ntarget: _self\nclass: draft\n', '---\n- 0\n', NULL),
 (37, 2, 0, 'Moderation', '{moderation:panel}', 4, '---\ntarget: _self\nclass: checklist', '---\n- 5\n- 6\n', NULL),
+(41, 2, 0, 'On moderation', '{moderation:user_panel}', 4, '---\ntarget: _self\nclass: onchecklist\n', '---\n- 0\n', NULL),
 (38, 1, 0, 'Comments', 'comments', 7, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (43, 2, 0, 'Log out', 'auth/logout', 12, '---\ntarget: _self\nclass: logout', '---\n- 0\n', NULL);
 
@@ -1139,20 +1141,20 @@ INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `descriptio
 
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
 CREATE TABLE `{#}scheduler_tasks` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(250) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `hook` varchar(32) DEFAULT NULL,
-  `period` int(11) unsigned DEFAULT NULL,
+  `period` int(11) UNSIGNED DEFAULT NULL,
+  `is_strict_period` tinyint(1) UNSIGNED DEFAULT NULL,
   `date_last_run` timestamp NULL DEFAULT NULL,
-  `is_active` tinyint(1) unsigned DEFAULT NULL,
-  `is_new` tinyint(1) unsigned DEFAULT '1',
+  `is_active` tinyint(1) UNSIGNED DEFAULT NULL,
+  `is_new` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
-  KEY `is_enabled` (`is_active`),
-  KEY `is_new` (`is_new`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
 (1, 'User migrations between groups', 'users', 'migration', 1440, NULL, 1, 0),

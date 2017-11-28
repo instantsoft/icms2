@@ -2,6 +2,8 @@
 
 class actionContentItemView extends cmsAction {
 
+    private $viewed_moderators = false;
+
     public function run(){
 
         $props = $props_values = false;
@@ -48,9 +50,57 @@ class actionContentItemView extends cmsAction {
         if(!$is_moderator && $this->cms_user->is_logged){
             $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
         }
+        // на модерации или в черновиках
         if (!$item['is_approved']){
-            if (!$is_moderator && $this->cms_user->id != $item['user_id']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
-            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
+
+            $item_view_notice = $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_MODERATION_NOTICE;
+
+            if (!$is_moderator && $this->cms_user->id != $item['user_id']){
+
+                return cmsCore::errorForbidden($item_view_notice, true);
+
+            }
+
+            // если запись на модерации и смотрим автором, проверяем кем просмотрена запись уже
+            if (!$item['is_draft'] && ($this->cms_user->id == $item['user_id'] || $is_moderator)){
+
+                // ставим флаг, что модератор уже смотрит, после этого изъять из модерации нельзя
+                if ($is_moderator){
+
+                    cmsUser::setUPS($this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])), time());
+
+                    $item_view_notice = LANG_MODERATION_NOTICE_MODER;
+
+                }
+
+                $this->viewed_moderators = cmsUser::getSetUPS($this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])));
+
+                if(isset($this->viewed_moderators[$this->cms_user->id])){ unset($this->viewed_moderators[$this->cms_user->id]); }
+
+                if($this->viewed_moderators){
+
+                    $viewed_moderators = $this->model_users->filterIn('id', array_keys($this->viewed_moderators))->getUsers();
+
+                    $moderator_links = array();
+
+                    foreach ($viewed_moderators as $viewed_moderator) {
+                        $moderator_links[] = '<a href="'.href_to_profile($viewed_moderator).'">'.$viewed_moderator['nickname'].'</a>';
+                    }
+
+                    $item_view_notice .= sprintf(
+                        LANG_MODERATION_NOTICE_VIEW,
+                        (count($moderator_links) > 1 ? LANG_MODERATORS : LANG_MODERATOR),
+                        implode(', ', $moderator_links),
+                        (count($moderator_links) > 1 ? LANG_MODERATION_VIEWS : LANG_MODERATION_VIEW),
+                        (count($moderator_links) == 1 ? ' '.mb_strtolower(string_date_format($this->viewed_moderators[$viewed_moderator['id']], true)) : '')
+                    );
+
+                }
+
+            }
+
+            cmsUser::addSessionMessage($item_view_notice, 'info');
+
         }
 
         // общие права доступа на просмотр
@@ -147,13 +197,13 @@ class actionContentItemView extends cmsAction {
 
                 $is_allowed_to_unbind = cmsUser::isAllowed($relation['child_ctype_name'], 'bind_off_parent');
 
-                if ($is_allowed_to_add) {
+                if ($is_allowed_to_add && $item['is_approved']) {
                     $childs['to_add'][] = $relation;
                 }
-                if ($is_allowed_to_bind) {
+                if ($is_allowed_to_bind && $item['is_approved']) {
                     $childs['to_bind'][] = $relation;
                 }
-                if ($is_allowed_to_unbind) {
+                if ($is_allowed_to_unbind && $item['is_approved']) {
                     $childs['to_unbind'][] = $relation;
                 }
 
@@ -344,15 +394,28 @@ class actionContentItemView extends cmsAction {
 
         $tool_buttons = array();
 
-        if (!$item['is_approved'] && $is_moderator){
+        if (!$item['is_approved'] && !$item['is_draft'] && $is_moderator){
             $tool_buttons['accept'] = array(
                 'title'   => LANG_MODERATION_APPROVE,
                 'options' => array('class' => 'accept'),
                 'url'     => href_to($ctype['name'], 'approve', $item['id'])
             );
+            $tool_buttons['return_for_revision'] = array(
+                'title'   => LANG_MODERATION_RETURN_FOR_REVISION,
+                'options' => array('class' => 'return_for_revision ajax-modal'),
+                'url'     => href_to($ctype['name'], 'return_for_revision', $item['id'])
+            );
         }
 
-        if ($item['is_approved'] || $is_moderator){
+        if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $item['user_id'] == $this->cms_user->id){
+            $tool_buttons['return'] = array(
+                'title'   => LANG_MODERATION_RETURN,
+                'options' => array('class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM),
+                'url'     => href_to($ctype['name'], 'return', $item['id'])
+            );
+        }
+
+        if ($item['is_approved'] || $item['is_draft'] || $is_moderator){
 
             if (!empty($childs['to_add'])){
                 foreach($childs['to_add'] as $relation){
@@ -409,7 +472,7 @@ class actionContentItemView extends cmsAction {
                 (cmsUser::isAllowed($ctype['name'], 'delete', 'own') && $item['user_id'] == $this->cms_user->id));
 
             if ($allow_delete){
-                if ($item['is_approved']){
+                if ($item['is_approved'] || $item['is_draft']){
 
                     $tool_buttons['delete'] = array(
                         'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),

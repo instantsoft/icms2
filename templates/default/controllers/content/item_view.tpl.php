@@ -32,7 +32,9 @@
 
     $this->addBreadcrumb($item['title']);
 
-    $this->addMenuItems('toolbar', $tool_buttons);
+    if($tool_buttons){
+        $this->addMenuItems('toolbar', $tool_buttons);
+    }
 
     if (!empty($childs['tabs'])){
 

@@ -1,13 +1,10 @@
 <?php
 
-class actionModerationIndex extends cmsAction {
+class actionModerationWaitingList extends cmsAction {
 
     public function run($ctype_name = false){
 
-        $counts = $this->model->getTasksCounts($this->cms_user->id, $this->cms_user->is_admin);
-
-        $is_moderator = $this->model->isUserModerator($this->cms_user->id) || $this->cms_user->is_admin;
-        if (!$is_moderator) { cmsCore::error404(); }
+        $counts = $this->model->getUserTasksCounts($this->cms_user->id);
 
         if (!$counts){
             return $this->cms_template->render('empty');
@@ -19,11 +16,11 @@ class actionModerationIndex extends cmsAction {
 
         if (!$ctype_name) { $ctype_name = $ctypes_list[0]; $is_index = true; }
 
-        $page_url = $is_index ? href_to($this->name) : href_to($this->name, 'index', $ctype_name);
+        $page_url = href_to($this->name, 'waiting_list', $ctype_name);
 
         $titles = array(); $list_html = '';
 
-        $moderations = cmsEventsManager::hookAll('moderation_list', array($counts, $ctype_name, $page_url, 'index'), array(), $this->request);
+        $moderations = cmsEventsManager::hookAll('moderation_list', array($counts, $ctype_name, $page_url, 'waiting_list'), array(), $this->request);
 
         foreach ($moderations as $moderation) {
 
@@ -39,16 +36,16 @@ class actionModerationIndex extends cmsAction {
 
         if (!$is_index){
 
-            $this->cms_template->addBreadcrumb(LANG_MODERATION, href_to($this->name));
+            $this->cms_template->addBreadcrumb(LANG_MODERATION_USERS, href_to($this->name, 'waiting_list'));
             $this->cms_template->addBreadcrumb($titles[$ctype_name]);
 
-            $this->cms_template->setPageTitle(LANG_MODERATION, $titles[$ctype_name]);
+            $this->cms_template->setPageTitle(LANG_MODERATION_USERS, $titles[$ctype_name]);
 
         } else {
 
-            $this->cms_template->setPageTitle(LANG_MODERATION);
+            $this->cms_template->setPageTitle(LANG_MODERATION_USERS);
 
-            $this->cms_template->addBreadcrumb(LANG_MODERATION);
+            $this->cms_template->addBreadcrumb(LANG_MODERATION_USERS);
 
         }
 
@@ -59,7 +56,7 @@ class actionModerationIndex extends cmsAction {
         foreach($counts as $c_name => $count){
             $content_menu[] = array(
                 'title'   => $titles[$c_name],
-                'url'     => $is_first ? href_to($this->name) : href_to($this->name, 'index', $c_name),
+                'url'     => $is_first ? href_to($this->name, 'waiting_list') : href_to($this->name, 'waiting_list', $c_name),
                 'counter' => $count
             );
             $is_first = false;
@@ -68,8 +65,8 @@ class actionModerationIndex extends cmsAction {
         $this->cms_template->addMenuItems('moderation_content_types', $content_menu);
 
         return $this->cms_template->render('index', array(
-            'list_html' => $list_html,
-            'page_title' => LANG_MODERATION
+            'list_html'  => $list_html,
+            'page_title' => LANG_MODERATION_USERS
         ));
 
     }

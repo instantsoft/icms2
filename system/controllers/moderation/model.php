@@ -6,11 +6,27 @@ class modelModeration extends cmsModel {
     const LOG_DELETE_ACTION = 1;
     const LOG_RESTORE_ACTION = 2;
 
+    public function getUserTasksCounts($user_id){
+
+        $this->filterEqual('author_id', $user_id);
+
+        return $this->getTasksItemCounts();
+
+    }
+
     public function getTasksCounts($moderator_id, $is_admin = false){
 
         if(!$is_admin){
             $this->filterEqual('moderator_id', $moderator_id);
         }
+
+        return $this->getTasksItemCounts();
+
+    }
+
+    public function getTasksItemCounts(){
+
+        $this->selectOnly('ctype_name');
 
         $tasks = $this->getTasks();
         if (!$tasks) { return false; }
@@ -40,9 +56,11 @@ class modelModeration extends cmsModel {
     public function getTasks(){
 
         return $this->get('moderators_tasks', function ($item, $model){
-            $item['url'] = rel_to_href($item['url']);
+            if(isset($item['url'])){
+                $item['url'] = rel_to_href($item['url']);
+            }
             return $item;
-        });
+        }, false);
 
     }
 
@@ -51,6 +69,34 @@ class modelModeration extends cmsModel {
         return $this->filterEqual('ctype_name', $controller_name)->
                     filterEqual('item_id', $id)->
                     getItem('moderators_tasks');
+
+    }
+
+    public function cancelModeratorTask($controller_name, $id, $moderator_user_id){
+
+        $task = $this->getModeratorTask($controller_name, $id);
+        if(!$task){ return false; }
+
+        $this->
+            filterEqual('user_id', $task['moderator_id'])->
+            filterEqual('ctype_name', $controller_name)->
+            filterGt('count_idle', 0)->
+            decrement('moderators', 'count_idle');
+
+        if($moderator_user_id != $task['moderator_id']){
+            $this->
+                filterEqual('user_id', $moderator_user_id)->
+                filterEqual('ctype_name', $controller_name)->
+                filterGt('count_idle', 0)->
+                decrement('moderators', 'count_idle');
+        }
+
+        $this->
+            filterEqual('ctype_name', $controller_name)->
+            filterEqual('item_id', $id)->
+            deleteFiltered('moderators_tasks');
+
+        return $task;
 
     }
 
@@ -71,6 +117,14 @@ class modelModeration extends cmsModel {
             filterEqual('ctype_name', $controller_name)->
             filterGt('count_idle', 0)->
             decrement('moderators', 'count_idle');
+
+        if($moderator_user_id != $task['moderator_id']){
+            $this->
+                filterEqual('user_id', $moderator_user_id)->
+                filterEqual('ctype_name', $controller_name)->
+                filterGt('count_idle', 0)->
+                decrement('moderators', 'count_idle');
+        }
 
         return $this->
                 filterEqual('ctype_name', $controller_name)->

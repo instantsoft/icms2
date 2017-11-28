@@ -107,6 +107,10 @@
 .icon-edit, .menu .edit .item { background-image: url("../images/icons/edit.png"); }
 .icon-delete, .menu .delete .item { background-image: url("../images/icons/delete.png"); }
 .icon-save, .menu .save .item { background-image: url("../images/icons/save.png"); }
+.icon-save_draft, .menu .save_draft .item { background-image: url("../images/icons/save_draft.png"); }
+.icon-draft, .menu .draft .item { background-image: url("../images/icons/draft.png"); }
+.icon-return_for_revision, .menu .return_for_revision .item { background-image: url("../images/icons/return_for_revision.png"); }
+.icon-return, .menu .return .item { background-image: url("../images/icons/return.png"); }
 .icon-cancel, .menu .cancel .item { background-image: url("../images/icons/cancel.png"); }
 .icon-key, .menu .key .item { background-image: url("../images/icons/key.png"); }
 .icon-page_gear, .menu .page_gear .item { background-image: url("../images/icons/page_gear.png"); }
@@ -127,6 +131,7 @@
 .icon-more, .menu .more > .item { background-image: url("../images/icons/folders.png"); }
 .icon-logout, .menu .logout .item { background-image: url("../images/icons/logout.png"); }
 .icon-checklist, .menu .checklist .item { background-image: url("../images/icons/checklist.png"); }
+.icon-onchecklist, .menu .onchecklist .item { background-image: url("../images/icons/onchecklist.png"); }
 .icon-images, .menu .images .item { background-image: url("../images/icons/images.png"); }
 .icon-invites, .menu .invites .item { background-image: url("../images/icons/signature.png"); }
 .icon-balance, .menu .balance .item { background-image: url("../images/icons/coin.png"); }
@@ -795,6 +800,12 @@ input.button.button-cancel {
 }
 input.button.button-cancel:hover {
     background: #7f8c8d;
+}
+input.button.to_draft {
+    background: #8e44ad;
+}
+input.button.to_draft:hover {
+    background: #9b59b6;
 }
 input.button-small {
     padding:4px 10px;

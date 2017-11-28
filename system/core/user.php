@@ -532,6 +532,10 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function getSetUPS($key){
+        return cmsCore::getModel('users')->getSetUPS($key);
+    }
+
     /**
      * Устанавливает для пользователя его уникальные персональные настройки
      * User Personal Setting
@@ -541,7 +545,6 @@ class cmsUser {
      * @param int       $user_id    Ид юзера
      * @return bool
      */
-
     public static function setUPS($key, $data, $user_id = null){
 
         if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
@@ -590,6 +593,10 @@ class cmsUser {
 
         return cmsCore::getModel('users')->deleteUPS($key, $user_id);
 
+    }
+
+    public static function deleteUPSlist($key){
+        return cmsCore::getModel('users')->deleteUPS($key);
     }
 
 //============================================================================//

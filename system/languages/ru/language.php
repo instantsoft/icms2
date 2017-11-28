@@ -17,6 +17,11 @@
     define('LANG_CONTENT_EDIT_ITEM',         'Редактировать %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
+    define('LANG_CONTENT_RETURN_CONFIRM',    'Вы уверены что хотите отозвать эту запись с проверки?\nОна переместится в ваши черновики.');
+    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновики');
+    define('LANG_CONTENT_MOVE_DRAFT',		 'Перенести в черновики');
+    define('LANG_CONTENT_DRAFT_NOTICE',		 'Запись скрыта в черновики');
+    define('LANG_CONTENT_DRAFT_LIST',		 'Черновики');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
@@ -231,21 +236,33 @@
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
+    define('LANG_MODERATION_USERS',          'Ваши материалы, ожидающие проверки');
     define('LANG_MODERATOR',                 'Модератор');
     define('LANG_MODERATORS',                'Модераторы');
     define('LANG_MODERATION_SUCCESS',        'Проверено');
     define('LANG_MODERATION_APPROVE',        'Одобрить запись');
+    define('LANG_MODERATION_RETURN',         'Отозвать с проверки');
+    define('LANG_MODERATION_RETURN_FOR_REVISION', 'Вернуть на доработку');
     define('LANG_MODERATION_REFUSE',         'Отклонить и удалить %s');
     define('LANG_MODERATION_REFUSE_REASON',  'Укажите причину отклонения');
+    define('LANG_MODERATION_REMARKS',        'Замечания');
     define('LANG_MODERATION_APPROVED',       'Страница опубликована');
     define('LANG_MODERATION_APPROVED_BY',    'Проверено модератором');
     define('LANG_MODERATION_PM_AUTHOR',      'Написать автору');
-    define('LANG_MODERATION_NOTICE',         'Будет опубликовано после проверки модератором');
+    define('LANG_MODERATION_SEND',           'Отправить на модерацию');
+    define('LANG_MODERATION_NOTICE',         'Будет опубликовано после проверки модератором. ');
+    define('LANG_MODERATION_NOTICE_MODER',   'Запись ожидает вашего одобрения. ');
+    define('LANG_MODERATION_NOTICE_VIEW',    '%s %s уже %s её%s, решение еще не принято.');
+    define('LANG_MODERATION_VIEW',           'смотрел');
+    define('LANG_MODERATION_VIEWS',          'смотрели');
     define('LANG_MODERATION_IDLE',           'Отправлено уведомление модератору %s');
     define('LANG_MODERATION_NO_TASKS',       'Нет материалов требующих проверки');
     define('LANG_MODERATION_NOTIFY',         'Новая страница ожидает вашей проверки');
+    define('LANG_MODERATION_RETURN_NOTIFY',  'Автор отозвал материал с проверки');
+    define('LANG_MODERATION_REMARK_NOTIFY',  'Запись возвращена на доработку');
     define('LANG_PM_MODERATION_APPROVED',    'Модератор одобрил размещение страницы <b><a href="%2$s">%1$s</a></b>%3$s');
     define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
+    define('LANG_PM_MODERATION_REWORK',      'Модератор возвратил страницу <b><a href="%2$s">%1$s</a></b> на доработку и указал замечания:<br />%3$s');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');
@@ -419,6 +436,7 @@
     define('LANG_ON',	 					 'Вкл.');
     define('LANG_OFF', 						 'Выкл.');
     define('LANG_SAVE',						 'Сохранить');
+    define('LANG_PUBLISH',					 'Опубликовать');
     define('LANG_SAVE_CHANGES',              'Сохранить изменения');
     define('LANG_SAVE_ORDER',                'Сохранить порядок');
     define('LANG_SAVING',                    'Сохранение...');

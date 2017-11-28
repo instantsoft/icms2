@@ -8,6 +8,22 @@
     // Инициализация
     require_once 'bootstrap.php';
 
+    // Запрещаем дублирующие запуски
+    $lock_file = cmsConfig::get('cache_path').'cron_lock';
+    $lockfp    = fopen($lock_file, 'w');
+
+    // Если блокировку получить не удалось, значит скрипт еще работает
+    // и запуск нужно запретить
+    if (!flock($lockfp, LOCK_EX | LOCK_NB)) {
+        exit;
+    }
+
+    // По окончании работы необходимо снять блокировку и удалить файл
+    register_shutdown_function(function() use ($lockfp, $lock_file) {
+        flock($lockfp, LOCK_UN);
+        @unlink($lock_file);
+    });
+
     // Подключаем шаблонизатор, чтобы был подключен хелпер с функциями
     cmsTemplate::getInstance();
 
@@ -53,6 +69,6 @@
         $controller->runHook("cron_{$task['hook']}");
 
         // Обновляем время последнего запуска задачи
-        $model->updateSchedulerTaskDate($task['id']);
+        $model->updateSchedulerTaskDate($task);
 
     }

@@ -17,6 +17,7 @@ class cmsCore {
     private static $language = 'ru';
     private static $language_href_prefix = '';
     private static $core_version = null;
+    private static $controllers_instance = array();
 
     public $controller = '';
 
@@ -347,6 +348,18 @@ class cmsCore {
         if (!$request) { $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL); }
 
         return new $controller_class($request);
+
+    }
+
+    public static function getControllerInstance($controller_name, $request=null){
+
+        if(!isset(self::$controllers_instance[$controller_name])){
+
+            self::$controllers_instance[$controller_name] = self::getController($controller_name, $request);
+
+        }
+
+        return self::$controllers_instance[$controller_name];
 
     }
 

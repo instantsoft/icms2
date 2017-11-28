@@ -602,6 +602,7 @@ aside .menu .item, section .menu .item {
 .modal_padding {
     padding: 10px;
     box-sizing: border-box;
+    min-width: 460px;
 }
 .modal_padding h3, .modal_padding h2  {
     margin-top: 5px;
@@ -673,6 +674,11 @@ aside .menu .item, section .menu .item {
     .widget > .title { font-size:14px !important; }
     .widget > .title .links { display:none; }
     .content_item .ft_image { float:none !important; }
+    .modal_padding {
+        padding: 10px;
+        box-sizing: border-box;
+        min-width: 320px;
+    }
 }
 
 @media screen and (max-width: 480px) {

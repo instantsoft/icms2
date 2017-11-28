@@ -6,7 +6,7 @@ class cmsBackend extends cmsController {
 
     public $maintained_ctype = false;
 
-    public function __construct($request){
+    public function __construct( cmsRequest $request){
 
         $this->name = str_replace('backend', '', strtolower(get_called_class()));
 

@@ -172,9 +172,10 @@ icms.forms = (function ($) {
         return o;
 	};
 
-    this.submit = function(){
+    this.submit = function(selector){
+        selector = selector || '.button-submit';
         icms.forms.submitted = true;
-        $('.button-submit').trigger('click');
+        $(selector).trigger('click');
     };
 
     //====================================================================//

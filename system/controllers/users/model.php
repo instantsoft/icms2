@@ -41,6 +41,8 @@ class modelUsers extends cmsModel {
 
         return $this->get('{users}', function($user) use ($actions){
 
+            unset($user['pass_token'], $user['password'], $user['password_salt']);
+
             $user['groups']          = cmsModel::yamlToArray($user['groups']);
             $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
             $user['theme']           = cmsModel::yamlToArray($user['theme']);
@@ -1105,6 +1107,26 @@ class modelUsers extends cmsModel {
         return $ret;
     }
 
+    public function getSetUPS($key){
+
+        $this->useCache('users.ups');
+
+        $this->selectList(array(
+            'i.settings' => 'settings',
+            'i.user_id' => 'user_id'
+        ), true);
+
+        $this->filterEqual('skey', $key);
+
+        return $this->get('{users}_personal_settings', function($item, $model){
+            if(strpos($item['settings'], '---') === 0){
+                $item['settings'] = cmsModel::yamlToArray($item['settings']);
+            }
+            return $item['settings'];
+        }, 'user_id');
+
+    }
+
     public function getUPS($key, $user_id){
         $this->useCache('users.ups');
 
@@ -1118,7 +1140,7 @@ class modelUsers extends cmsModel {
         });
     }
 
-    public function deleteUPS($key, $user_id){
+    public function deleteUPS($key, $user_id=null){
         if($user_id && $key){
             $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
         }elseif($user_id){

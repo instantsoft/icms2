@@ -238,10 +238,17 @@ function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
  * @return html
  */
 function html_button($caption, $name, $onclick='', $attributes=array()){
+
+    if (!isset($attributes['type'])) { $attributes['type'] = 'button'; }
+
     $attr_str = html_attr_str($attributes);
+
     $class = 'button';
+
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="button" class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($caption).'" onclick="'.$onclick.'" '.$attr_str.'/>';
+
+	return '<input class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($caption).'" onclick="'.$onclick.'" '.$attr_str.'/>';
+
 }
 
 /**

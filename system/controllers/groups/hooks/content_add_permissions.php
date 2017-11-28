@@ -8,6 +8,14 @@ class onGroupsContentAddPermissions extends cmsAction {
             return $data;
         }
 
+        $group_count = $this->model->filterByMember($this->cms_user->id)->getGroupsCount();
+        $this->model->resetFilters();
+
+        if (!$group_count && !empty($data['ctype']['is_in_groups_only'])){
+            cmsUser::addSessionMessage(LANG_CONTENT_IS_IN_GROUPS_ONLY, 'error');
+            $this->redirectBack();
+        }
+
         $group_id = $this->cms_core->request->get('group_id', 0);
         if(!$group_id){ return $data; }
 

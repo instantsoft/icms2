@@ -1,6 +1,6 @@
 <?php
 
-class actionContentItemApprove extends cmsAction {
+class actionContentItemReturn extends cmsAction {
 
     public function run(){
 
@@ -15,23 +15,20 @@ class actionContentItemApprove extends cmsAction {
         if ($item['is_approved'] || $item['is_draft']){ cmsCore::error404(); }
 
         // Проверяем права
-        $is_moderator = $this->cms_user->is_admin || $this->controller_moderation->model->userIsContentModerator($ctype['name'], $this->cms_user->id);
-        if (!$is_moderator){ cmsCore::error404(); }
-
-        $this->model->approveContentItem($ctype['name'], $item['id'], $this->cms_user->id);
+        if ($this->cms_user->id != $item['user_id']){ cmsCore::error404(); }
 
         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-        $this->controller_moderation->approve($ctype['name'], $item, $this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])));
+        $this->controller_moderation->cancelModeratorTask($ctype['name'], $item, $this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])));
 
-        cmsUser::addSessionMessage(LANG_MODERATION_APPROVED, 'success');
+        cmsUser::addSessionMessage(LANG_CONTENT_DRAFT_NOTICE, 'success');
 
         $back_url = $this->request->get('back', '');
 
         if ($back_url) {
             $this->redirect($back_url);
         } else {
-            $this->redirectTo($ctype['name'], $item['slug'] . '.html');
+            $this->redirectTo('moderation', 'draft');
         }
 
     }

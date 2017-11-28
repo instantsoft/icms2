@@ -4,7 +4,7 @@ class onContentModerationList extends cmsAction {
 
     public function run($data){
 
-        list($counts, $ctype_name, $page_url) = $data;
+        list($counts, $ctype_name, $page_url, $action) = $data;
 
         $ctypes_list = array_keys($counts);
 
@@ -19,11 +19,30 @@ class onContentModerationList extends cmsAction {
 
             $ctype = $this->model->getContentTypeByName($ctype_name);
 
-            $this->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
+            if($action == 'index'){
+                $this->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
+            } else
+            if($action == 'waiting_list'){
+
+                $this->model->filterEqual('user_id', $this->cms_user->id);
+
+                $this->model->filterByModeratorTask($this->cms_user->id, $ctype_name, true);
+
+            } else
+            if($action == 'draft'){
+
+                $this->model->filterEqual('user_id', $this->cms_user->id);
+                $this->model->filterEqual('is_approved', 0);
+
+                $this->model->select('IF(t.id IS NULL AND i.is_approved < 1, 1, NULL)', 'is_draft');
+
+                $this->model->joinExcludingLeft('moderators_tasks', 't', 't.item_id', 'i.id', "t.ctype_name = '{$ctype_name}'");
+
+            }
 
             $this->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter()->disableDeleteFilter();
 
-            $list_html = $this->disableCheckListPerm()->setListContext('moderation_list')->renderItemsList($ctype, $page_url, true);
+            $list_html = $this->disableCheckListPerm()->setListContext('moderation_list')->renderItemsList($ctype, $page_url);
 
         }
 

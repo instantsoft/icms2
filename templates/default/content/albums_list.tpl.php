@@ -145,7 +145,7 @@ if( $ctype['options']['list_show_filter'] ) {
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>
                             <div class="bar_item bi_not_approved">
-                                <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                                <?php echo !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
                             </div>
                         <?php } ?>
                     </div>

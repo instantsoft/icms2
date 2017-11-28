@@ -33,8 +33,8 @@ class actionGroupsGroup extends cmsAction {
 
         // Проверяем прохождение модерации
         if (!$group['is_approved']){
-            if (!$group['access']['is_moderator'] && !$group['access']['is_owner']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
-            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE, 'info');
+            if (!$group['access']['is_moderator'] && !$group['access']['is_owner']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE_MODER, true); }
+            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE_MODER, 'info');
         }
 
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));

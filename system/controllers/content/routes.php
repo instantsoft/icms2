@@ -83,6 +83,20 @@ function routes_content(){
         ),
 
         array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/return_for_revision\/([0-9]+)$/i',
+            'action'    => 'item_return_for_revision',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
+            'pattern'   => '/^([a-z0-9\-_]+)\/return\/([0-9]+)$/i',
+            'action'    => 'item_return',
+            1           => 'ctype_name',
+            2           => 'id'
+        ),
+
+        array(
             'pattern'   => '/^([a-z0-9\-_]+)\/props\/([0-9]+)$/i',
             'action'    => 'item_props_fields',
             1           => 'ctype_name',

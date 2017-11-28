@@ -563,6 +563,7 @@
     define('LANG_CP_SCHEDULER_TASK_CONTROLLER',     'Компонент');
     define('LANG_CP_SCHEDULER_TASK_HOOK',           'Хук');
     define('LANG_CP_SCHEDULER_TASK_PERIOD',         'Период, мин.');
+    define('LANG_CP_SCHEDULER_IS_STRICT_PERIOD',    'Строгое следование периоду');
     define('LANG_CP_SCHEDULER_TASK_LAST_RUN',       'Последний запуск');
     define('LANG_CP_SCHEDULER_TASK_DELETE_CONFIRM', 'Удалить задачу?');
     define('LANG_CP_SCHEDULER_TASK_CREATED',        'Задача создана');

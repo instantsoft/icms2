@@ -35,6 +35,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_datasets` ADD `list` TEXT NULL DEFAULT NULL");
     }
 
+    if(!$core->db->isFieldExists('scheduler_tasks', 'is_strict_period')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `is_strict_period` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `period`");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

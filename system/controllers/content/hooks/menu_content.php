@@ -13,7 +13,7 @@ class onContentMenuContent extends cmsAction {
 
         } elseif($action == 'private_list') {
 
-            if(!cmsUser::isLogged()){
+            if(!$this->cms_user->is_logged){
                 return false;
             }
 

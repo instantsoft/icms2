@@ -188,6 +188,16 @@
 
     <div class="buttons">
         <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php if(isset($attributes['buttons'])){ ?>
+            <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php echo html_button(
+                        $button['title'],
+                        $button['name'],
+                        (isset($button['onclick']) ? $button['onclick'] : ''),
+                        (isset($button['attributes']) ? $button['attributes'] : array())
+                    ); ?>
+            <?php } ?>
+        <?php } ?>
         <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'", array('class'=>'button-cancel')); } ?>
     </div>
 
