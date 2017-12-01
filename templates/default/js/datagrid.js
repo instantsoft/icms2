@@ -22,7 +22,7 @@ icms.datagrid = (function ($) {
         $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').on('input change', function () {
             $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').each(function(){
                 var filter = $(this).attr('rel');
-                $('#datagrid_filter input[name='+filter+']').val($(this).val());
+                $('#datagrid_filter input[name="'+filter+'"]').val($(this).val());
             });
             icms.datagrid.setPage(1);
             icms.datagrid.loadRows();
@@ -276,7 +276,7 @@ icms.datagrid = (function ($) {
         $('#datagrid_filter input[name=order_to]').val(this.options.order_to);
 
         $('.datagrid th').removeClass('sort_asc').removeClass('sort_desc');
-        $('.datagrid th[rel='+this.options.order_by+']').addClass('sort_'+this.options.order_to);
+        $('.datagrid th[rel="'+this.options.order_by+'"]').addClass('sort_'+this.options.order_to);
     };
 
     this.setPage = function(page, perpage){
