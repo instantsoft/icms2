@@ -194,7 +194,8 @@ function execute_command($command, $postfix=' 2>&1'){
 
 function get_program_path($program){
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN'){
-        $which = 'where';
+        //$which = 'where';
+        return false;
     } else {
         $which = '/usr/bin/which';
     }

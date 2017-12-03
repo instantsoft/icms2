@@ -21,7 +21,7 @@ function check_data(){
     $hometitle  = trim($_POST['hometitle']);
     $metakeys   = trim($_POST['metakeys']);
     $metadesc   = trim($_POST['metadesc']);
-    $is_check_updates = (int)$_POST['is_check_updates'];
+    $is_check_updates = (int)(isset($_POST['is_check_updates']) ?: 0);
 
     if (!$sitename){
         return array(
