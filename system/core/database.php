@@ -338,7 +338,7 @@ class cmsDatabase {
         if ($value === '' || is_null($value)) { $value = 'NULL'; } else
 
         // если значение поля как результат функции
-        if (is_callable($value)) { $value = $value($this); }
+        if (is_callable($value) && ($value instanceof Closure)) { $value = $value($this); }
 
         else {
 

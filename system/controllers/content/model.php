@@ -1362,6 +1362,9 @@ class modelContent extends cmsModel {
                    'parent_'.$relation['parent_ctype_name'].'_id' => $ids
                 ));
 
+                cmsCache::getInstance()->clean('content.list.'.$relation['child_ctype_name']);
+                cmsCache::getInstance()->clean('content.item.'.$relation['child_ctype_name']);
+
             }
 
         }

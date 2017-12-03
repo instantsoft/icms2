@@ -628,6 +628,7 @@
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
     define('LANG_HELP_URL_EVENTS',                  'http://docs.instantcms.ru/en/manual/settings/events');
+    define('LANG_HELP_URL_COM_MESSAGES',                'http://docs.instantcms.ru/en/manual/components/messages');
     define('LANG_ZIP_ERROR_10', 'File already exists');
     define('LANG_ZIP_ERROR_21', 'Inconsistent ZIP-archive');
     define('LANG_ZIP_ERROR_18', 'Invalid argument');

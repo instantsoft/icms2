@@ -53,6 +53,16 @@ class cmsController {
      */
     public $lock_explicit_call = null;
 
+    /**
+     * Если необходимо использовать у контроллера
+     * не свою модель и/или своя модель
+     * будет наследоваться от модели какого-то контроллера
+     * укажите его в этом параметре в классе своего контроллера
+     *
+     * @var string|array
+     */
+    protected $outer_controller_model = '';
+
     protected $callbacks = array();
     protected $useOptions = false;
 
@@ -74,8 +84,14 @@ class cmsController {
 
         $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
 
+        if($this->outer_controller_model){
+            cmsCore::includeModel($this->outer_controller_model);
+        }
+
         if (cmsCore::isModelExists($this->name)){
             $this->model = cmsCore::getModel($this->name);
+        } elseif($this->outer_controller_model) {
+            $this->model = cmsCore::getModel($this->outer_controller_model);
         }
 
         if ($this->useOptions){

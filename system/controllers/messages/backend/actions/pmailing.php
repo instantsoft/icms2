@@ -92,7 +92,7 @@ class actionMessagesPmailing extends cmsAction {
                 }
 
                 if (!$recipients) {
-                    cmsUser::addSessionMessage(LANG_ADMIN_CP_NOT_RECIPIENTS, 'info');
+                    cmsUser::addSessionMessage(LANG_PM_PMAILING_NOT_RECIPIENTS, 'info');
                 }
 
                 $this->redirectToAction('pmailing', ($group_id ? $group_id : false));

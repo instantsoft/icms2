@@ -1,3 +1,19 @@
+DROP TABLE IF EXISTS `{#}jobs`;
+CREATE TABLE `{#}jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `queue` varchar(100) DEFAULT NULL COMMENT 'Название очереди',
+  `payload` text COMMENT 'Данные задания',
+  `last_error` varchar(200) DEFAULT NULL COMMENT 'Последняя ошибка',
+  `priority` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Приоритет',
+  `attempts` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Попытки выполнения',
+  `is_locked` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Блокировка одновременного запуска',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата постановки в очередь',
+  `date_started` timestamp NULL DEFAULT NULL COMMENT 'Дата последней попытки выполнения задания',
+  PRIMARY KEY (`id`),
+  KEY `queue` (`queue`),
+  KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
+
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1162,7 +1178,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1),
 (5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, 1, 1),
 (6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
-(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, 1, 1);
+(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, 1, 1),
+(8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

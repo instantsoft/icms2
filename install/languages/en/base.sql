@@ -1,3 +1,19 @@
+DROP TABLE IF EXISTS `{#}jobs`;
+CREATE TABLE `{#}jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `queue` varchar(100) DEFAULT NULL COMMENT 'Queue Name',
+  `payload` text COMMENT 'Job data',
+  `last_error` varchar(200) DEFAULT NULL COMMENT 'Last Error',
+  `priority` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'A priority',
+  `attempts` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Attempts',
+  `is_locked` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Lock simultaneous run',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Queued date',
+  `date_started` timestamp NULL DEFAULT NULL COMMENT 'Date of the last attempt to complete the task',
+  PRIMARY KEY (`id`),
+  KEY `queue` (`queue`),
+  KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Queue';
+
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1163,7 +1179,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, 1, 1),
 (5, 'Cleaning deleted private messages', 'messages', 'clean', 1440, NULL, 1, 1),
 (6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
-(7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, 1, 1);
+(7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, 1, 1),
+(8, 'Run system queue tasks', 'queue', 'run_queue', 1, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

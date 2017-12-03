@@ -39,6 +39,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `is_strict_period` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `period`");
     }
 
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'queue' AND hook = 'run_queue'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Выполняет задачи системной очереди', 'queue', 'run_queue', '1', '1');");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

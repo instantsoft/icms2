@@ -34,6 +34,10 @@ class formMessagesOptions extends cmsForm {
                             array('required'),
                             array('min', 1)
                         )
+                    )),
+
+                    new fieldCheckbox('use_queue', array(
+                        'title' => LANG_PM_USE_QUEUE
                     ))
 
                 )

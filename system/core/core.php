@@ -282,23 +282,58 @@ class cmsCore {
      */
     public static function getModel($controller, $delimitter='_'){
 
+        if(is_array($controller)){
+
+            self::includeModel($controller);
+
+            $controller = end($controller);
+
+        }
+
         $model_class = 'model' . string_to_camel($delimitter, $controller);
 
         if (!class_exists($model_class, false)) {
-
-            $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
-
-            if (is_readable($model_file)){
-                include_once($model_file);
-            } else {
-                return self::error(ERR_MODEL_NOT_FOUND . ': '. str_replace(cmsConfig::get('root_path'), '', $model_file));
-            }
-
+            self::includeModel($controller);
         }
 
         return new $model_class();
 
     }
+
+    /**
+     * Инклюдит файл модели контроллера (контроллеров)
+     * @param string $controllers Контроллер модели или массив контроллеров
+     * @param boolean $quiet
+     * @return boolean
+     */
+    public static function includeModel($controllers, $quiet = false) {
+
+        if(!is_array($controllers)){
+            $controllers = array($controllers);
+        }
+
+        foreach ($controllers as $controller) {
+
+            $model_file = cmsConfig::get('root_path').'system/controllers/'.$controller.'/model.php';
+
+            if (is_readable($model_file)){
+
+                include_once($model_file);
+
+            } else {
+
+                if($quiet){ return false; }
+
+                return self::error(ERR_MODEL_NOT_FOUND . ': '. str_replace(cmsConfig::get('root_path'), '', $model_file));
+
+            }
+
+        }
+
+        return true;
+
+    }
+
 
 //============================================================================//
 //============================================================================//

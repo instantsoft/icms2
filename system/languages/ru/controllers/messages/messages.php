@@ -20,6 +20,7 @@
     define('LANG_PM_TIME_DELETE_OLD',       'Сколько хранить удалённые сообщения?');
     define('LANG_PM_TIME_DELETE_OLD_HINT',  '0 - хранить всегда');
     define('LANG_PM_REFRESH_TIME',          'Интервал опроса о новых сообщениях');
+    define('LANG_PM_USE_QUEUE',             'Использовать систему очереди для отправки e-mail');
     define('LANG_PM_PRIVACY_CONTACT',       'Кто может писать вам личные сообщения?');
     define('LANG_PM_NOTIFY_NEW',            'Уведомлять о новых сообщениях');
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Сообщение от %s');
@@ -38,3 +39,4 @@
     define('LANG_PM_MESSAGE',               'сообщение|сообщения|сообщений');
     define('LANG_PM_SENDER_USER_ID',        'От чьего имени отправлять');
     define('LANG_PM_SENDER_USER_ID_HINT',   'Введите email пользователя. Если не указан, сообщение будет отправлено от вас.');
+    define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'Нет получателей по заданным критериям');

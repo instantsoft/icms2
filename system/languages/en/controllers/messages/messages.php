@@ -20,6 +20,7 @@
     define('LANG_PM_TIME_DELETE_OLD',       'How to store deleted messages?');
     define('LANG_PM_TIME_DELETE_OLD_HINT',  '0 - always keep');
     define('LANG_PM_REFRESH_TIME',          'New messages requests interval');
+    define('LANG_PM_USE_QUEUE',             'Use the queue system to send e-mail');
     define('LANG_PM_PRIVACY_CONTACT',       'Who can send private messages to you?');
     define('LANG_PM_NOTIFY_NEW',            'Notify on new messages');
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Messages from %s');
@@ -38,3 +39,4 @@
     define('LANG_PM_MESSAGE',               'message|message|messages');
     define('LANG_PM_SENDER_USER_ID',        'From whose name should I send');
     define('LANG_PM_SENDER_USER_ID_HINT',   'Enter the user email. If not specified, the message will be sent from you.');
+    define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'No recipients according to specified criteria');

@@ -231,6 +231,21 @@ class messages extends cmsFrontend {
             return $before_send['success'];
         }
 
+        // если используем очередь
+        if(!empty($this->options['use_queue'])){
+
+            cmsQueue::pushOn('email', array(
+                'controller' => $this->name,
+                'hook'       => 'queue_send_email',
+                'params'     => array(
+                    $to, $letter, $is_nl2br_text
+                )
+            ));
+
+            return true;
+
+        }
+
         $mailer = new cmsMailer();
 
         $mailer->addTo($to['email'], $to['name']);
