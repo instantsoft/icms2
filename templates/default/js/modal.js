@@ -26,6 +26,7 @@ icms.modal = (function ($) {
 		$.nmData(html, {autoSizable: true, anim: {def: 'show'}, callbacks: {initFilters : function (nm) {
                 if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
             }}});
+		icms.events.run('icms_modal_openHtml', html);
 	};
 
     //====================================================================//
