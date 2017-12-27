@@ -34,6 +34,9 @@ class actionContentItemEdit extends cmsAction {
         if(cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own', true) || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all', true)){
             $is_premoderation = true;
         }
+        if (!$is_premoderation && !$item['date_approved']) {
+            $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
+        }
         $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
         if (!$item['is_approved'] && !$is_moderator && !$item['is_draft']) { cmsCore::error404(); }
@@ -261,8 +264,15 @@ class actionContentItemEdit extends cmsAction {
                         cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
                         cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
                     } else {
+
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
-                        cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
+
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
+
+                        if($succes_text){
+                            cmsUser::addSessionMessage($succes_text, 'info');
+                        }
+
                     }
 
                 }

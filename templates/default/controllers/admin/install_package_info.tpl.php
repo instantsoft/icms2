@@ -54,7 +54,7 @@
                             <a class="mail" href="mailto:<?php echo $manifest['author']['email']; ?>"></a>
                         <?php } ?>
                         <?php if (isset($manifest['author']['url'])) { ?>
-                            <a class="url" href="<?php echo $manifest['author']['url']; ?>" target="_blank"></a>
+                            <a rel="noopener noreferrer" class="url" href="<?php echo $manifest['author']['url']; ?>" target="_blank"></a>
                         <?php } ?>
                     </p>
                     <?php } ?>
@@ -117,7 +117,7 @@
                         <?php } ?>
                         <?php if (!empty($manifest['depends_results']['dependent_type']) && isset($manifest['depends']['dependent_version'])) { ?>
                             <li>
-                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank"><?php echo $manifest['depends']['dependent_title']; ?></a>:
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $manifest['depends']['dependent_title']; ?></a>:
                                 <?php echo html_bool_span($manifest['depends']['dependent_version'], $manifest['depends_results']['dependent_version']); ?>
                             </li>
                             <?php if (!$manifest['depends_results']['dependent_version']){ $depends_pass = false; } ?>

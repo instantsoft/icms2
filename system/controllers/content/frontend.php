@@ -1050,4 +1050,16 @@ class content extends cmsFrontend {
 
     }
 
+    public function getContentTypeForModeration($name){
+
+        if(is_numeric($name)){
+            $ctype = $this->model->getContentType($name);
+        } else {
+            $ctype = $this->model->getContentTypeByName($name);
+        }
+
+        return $ctype;
+
+    }
+
 }

@@ -537,7 +537,7 @@ function string_replace_keys_values_extended($string, $data){
  * @return string
  */
 function string_make_links($string){
-    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank">$1</a>', $string);
+    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
 }
 
 //============================================================================//

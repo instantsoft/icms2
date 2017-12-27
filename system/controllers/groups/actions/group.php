@@ -33,8 +33,15 @@ class actionGroupsGroup extends cmsAction {
 
         // Проверяем прохождение модерации
         if (!$group['is_approved']){
-            if (!$group['access']['is_moderator'] && !$group['access']['is_owner']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE_MODER, true); }
-            cmsUser::addSessionMessage(LANG_MODERATION_NOTICE_MODER, 'info');
+            if (!$group['access']['is_moderator'] && !$group['access']['is_owner']){ return cmsCore::errorForbidden(LANG_MODERATION_NOTICE, true); }
+
+            $item_view_notice = LANG_MODERATION_NOTICE;
+
+            if($group['access']['is_moderator']){
+                $item_view_notice = LANG_MODERATION_NOTICE_MODER;
+            }
+
+            cmsUser::addSessionMessage($item_view_notice, 'info');
         }
 
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));

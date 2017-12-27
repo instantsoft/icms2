@@ -38,6 +38,6 @@
 </div>
 
 <?php if ($mode == 'childs' || $mode == 'unbind') { ?>
-    <?php $this->insertJS('templates/default/js/content-bind.js'); ?>
+    <?php $this->insertJS($this->getJavascriptFileName('content-bind')); ?>
     <script>icms.contentBind.start();</script>
 <?php } ?>

@@ -18,7 +18,11 @@ class actionCommentsCommentsDelete extends cmsAction {
 
         cmsCore::getModel($comment['target_controller'])->updateCommentsCount($comment['target_subject'], $comment['target_id'], $comments_count);
 
-        cmsEventsManager::hook('comments_after_delete', $comment['id']);
+        if(!$comment['is_approved']){
+            cmsEventsManager::hook('comments_after_refuse', $comment);
+        } else {
+            cmsEventsManager::hook('comments_after_delete', $comment);
+        }
 
         cmsUser::addSessionMessage(html_spellcount($delete_count, LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10).LANG_COMMENTS_DELETED, 'success');
 

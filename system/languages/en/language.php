@@ -261,8 +261,10 @@
     define('LANG_MODERATION_NOTIFY',         'A new page awaits your approval');
     define('LANG_MODERATION_RETURN_NOTIFY',  'Author retrieve the material from the moderation');
     define('LANG_MODERATION_REMARK_NOTIFY',  'Recording is returned for revision');
+    define('LANG_PM_MODERATION_COMMENT_APPROVED', 'Moderator approved the comment <b><a href="%2$s">%1$s</a></b> of publication%3$s');
     define('LANG_PM_MODERATION_APPROVED',    'Moderator approved the <b><a href="%2$s">%1$s</a></b> publication%3$s');
     define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Reason for rejection: %3$s');
+    define('LANG_PM_MODERATION_COMMENT_REFUSED', 'A moderator has rejected your comment on the page <b>%1$s</b>.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'The moderator returned the <b><a href="%2$s">%1$s</a></b> page for revision and pointed remarks:<br />%3$s');
 
     //PERMISSIONS

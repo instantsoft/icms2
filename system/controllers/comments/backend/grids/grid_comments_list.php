@@ -52,7 +52,7 @@ function grid_comments_list($controller){
             'filter'  => 'like',
             'handler' => function($value) {
                 if ($value) {
-                    return '<a href="#" class="ajaxlink filter_ip tooltip" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext=' . $value . '#resultsAnchor" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '"></a>';
+                    return '<a href="#" class="ajaxlink filter_ip tooltip" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext=' . $value . '#resultsAnchor" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '" rel="noopener noreferrer"></a>';
                 }
                 return '';
             }

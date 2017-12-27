@@ -30,7 +30,7 @@
                         <?php echo string_date_age_max($session['date_log'], true); ?>
                     </td>
                     <td>
-                        <a target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext=<?php echo $session['ip']; ?>#resultsAnchor">
+                        <a rel="noopener noreferrer" target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext=<?php echo $session['ip']; ?>#resultsAnchor">
                             <?php echo $session['ip']; ?>
                         </a>
                     </td>

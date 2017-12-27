@@ -496,36 +496,6 @@ class modelComments extends cmsModel {
 
     }
 
-    public function getCommentsModerators() {
-
-        // сначала ищем юзеров, которым разрешено модерировать
-        $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
-        if(!$moderators){
-
-            // не нашли модераторов, получаем администраторов
-            $moderators = $this->filterEqual('is_admin', 1)->
-                selectList(array(
-                    'i.id'             => 'id',
-                    'i.notify_options' => 'notify_options',
-                    'i.email'          => 'email',
-                    'i.nickname'       => 'nickname',
-                    'i.avatar'         => 'avatar'
-                ), true)->
-                get('{users}', function($item, $model){
-
-                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
-                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
-
-                    return $item;
-
-                });
-
-        }
-
-        return $moderators;
-
-    }
-
     public function isRssFeedEnable() {
         return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
     }

@@ -21,7 +21,7 @@
         $target_url = rel_to_href($entry['target_url']) . "#comment_{$entry['id']}";
     }
 
-    if ($is_controls){
+    if ($is_controls || !empty($is_moderator)){
         $is_can_edit = cmsUser::isAllowed('comments', 'edit', 'all') || (cmsUser::isAllowed('comments', 'edit', 'own') && $entry['user']['id'] == $user->id);
         $is_can_delete = cmsUser::isAllowed('comments', 'delete', 'all') || (cmsUser::isAllowed('comments', 'delete', 'own') && $entry['user']['id'] == $user->id);
     }
@@ -99,19 +99,19 @@
             <div class="text<?php if($dim_negative && $entry['rating'] < 0){ ?> bad<?php echo ($entry['rating'] < -6 ? 6 : abs($entry['rating'])) ?> bad<?php } ?>">
                 <?php echo $entry['content_html']; ?>
             </div>
-            <?php if ($is_controls){ ?>
+            <?php if ($is_controls || !empty($is_moderator)){ ?>
                 <div class="links">
                     <?php if ($no_approved_class){ ?>
                         <a href="#approve" class="approve hide_approved" onclick="return icms.comments.approve(<?php echo $entry['id']; ?>)"><?php echo LANG_COMMENTS_APPROVE; ?></a>
                     <?php } ?>
-                    <?php if ($is_can_add){ ?>
+                    <?php if ($is_can_add && empty($is_moderator)){ ?>
                         <a href="#reply" class="reply <?php echo $no_approved_class; ?>" onclick="return icms.comments.add(<?php echo $entry['id']; ?>)"><?php echo LANG_REPLY; ?></a>
                     <?php } ?>
-                    <?php if ($is_can_edit){ ?>
+                    <?php if ($is_can_edit && empty($is_moderator)){ ?>
                         <a href="#edit" class="edit" onclick="return icms.comments.edit(<?php echo $entry['id']; ?>)"><?php echo LANG_EDIT; ?></a>
                     <?php } ?>
                     <?php if ($is_can_delete){ ?>
-                        <a href="#delete" class="delete" onclick="return icms.comments.remove(<?php echo $entry['id']; ?>)"><?php echo LANG_DELETE; ?></a>
+                        <a href="#delete" class="delete" onclick="return icms.comments.remove(<?php echo $entry['id']; ?>, <?php if($entry['is_approved']){ ?>false<?php } else { ?>true<?php } ?>)"><?php echo $entry['is_approved'] ? LANG_DELETE : LANG_DECLINE; ?></a>
                     <?php } ?>
                 </div>
             <?php } ?>

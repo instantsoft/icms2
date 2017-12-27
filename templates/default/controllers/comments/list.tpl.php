@@ -1,7 +1,7 @@
 <?php // Шаблон списка комментариев и формы добавления //
 
-$this->addJS('templates/default/js/jquery-scroll.js');
-$this->addJS('templates/default/js/comments.js');
+$this->addJS($this->getJavascriptFileName('jquery-scroll'));
+$this->addJS($this->getJavascriptFileName('comments'));
 $is_guests_allowed =  !empty($this->controller->options['is_guests']);
 $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma);
 
@@ -109,6 +109,6 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 <?php } ?>
 
 <script type="text/javascript">
-    <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM'); ?>
+    <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM', 'LANG_MODERATION_REFUSE_REASON'); ?>
     <?php if ($is_highlight_new){ ?>icms.comments.showFirstSelected();<?php } ?>
 </script>

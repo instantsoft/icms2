@@ -26,6 +26,8 @@
 
     } else {
 
+        @ini_set('display_errors', 1);
+        @ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
         // включаем отладку
@@ -70,8 +72,13 @@
     // Подключаем базу
     $core->connectDB();
 
+    // соединение не установлено? Показываем ошибку
     if(!$core->db->ready()){
-        cmsCore::error($core->db->connectError());
+
+        cmsCore::loadLanguage();
+
+        return cmsCore::error($core->db->connectError());
+
     }
 
     // Запускаем кеш

@@ -9,47 +9,52 @@ class moderation extends cmsFrontend {
      * @param string $target_name Имя цели модерации
      * @param array $item Массив модерируемой записи
      * @param boolean $is_new_item Новая запись или редактируемая
-     * @return void
+     * @param string $pm_message Текст сообщения для уведомления
+     * @return mixed
      */
-    public function requestModeration($target_name, $item, $is_new_item = true){
+    public function requestModeration($target_name, $item, $is_new_item = true, $pm_message = LANG_MODERATION_NOTIFY){
 
         $moderator_id = $this->model->getNextModeratorId($target_name);
 
         $moderator = $this->model_users->getUser($moderator_id);
-        if(!$moderator){ return; }
+        if(!$moderator){ return false; }
 
         $author = $this->model_users->getUser($item['user_id']);
-        if(!$author){ return; }
+        if(!$author){ return false; }
+
+        // чтобы на рассылать множество уведомлений, проверяем, есть ли ожидающие модерации записи
+        if(!$this->model->isModeratorTaskExists($target_name, $moderator_id)){
+
+            // личное сообщение
+            $this->controller_messages->addRecipient($moderator['id'])->sendNoticePM(array(
+                'content' => $pm_message,
+                'actions' => array(
+                    'view' => array(
+                        'title' => LANG_SHOW,
+                        'href'  => $item['page_url']
+                    )
+                )
+            ));
+
+            // EMAIL уведомление
+            $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
+
+            $this->controller_messages->sendEmail($to, 'moderation', array(
+                'moderation_text' => $pm_message,
+                'moderator'       => $moderator['nickname'],
+                'author'          => $author['nickname'],
+                'author_url'      => href_to_abs('users', $author['id']),
+                'page_title'      => $item['title'],
+                'page_url'        => $item['page_url'],
+                'date'            => html_date_time()
+            ));
+
+        }
 
         // добавляем задачу модератору
         $this->model->addModeratorTask($target_name, $moderator_id, $is_new_item, $item);
 
-        // личное сообщение
-        $this->controller_messages->addRecipient($moderator['id'])->sendNoticePM(array(
-            'content' => LANG_MODERATION_NOTIFY,
-            'actions' => array(
-                'view' => array(
-                    'title' => LANG_SHOW,
-                    'href'  => $item['page_url']
-                )
-            )
-        ));
-
-        // EMAIL уведомление
-        $to = array('email' => $moderator['email'], 'name' => $moderator['nickname']);
-
-        $this->controller_messages->sendEmail($to, 'moderation', array(
-            'moderator'  => $moderator['nickname'],
-            'author'     => $author['nickname'],
-            'author_url' => href_to_abs('users', $author['id']),
-            'page_title' => $item['title'],
-            'page_url'   => $item['page_url'],
-            'date'       => html_date_time()
-        ));
-
-        cmsUser::addSessionMessage(sprintf(LANG_MODERATION_IDLE, $moderator['nickname']), 'info');
-
-        return;
+        return sprintf(LANG_MODERATION_IDLE, $moderator['nickname']);
 
     }
 
@@ -92,9 +97,10 @@ class moderation extends cmsFrontend {
      * @param string $target_name Имя цели модерации
      * @param array $item Массив модерируемой записи
      * @param string $ups_key Ключ UPS для записей просмотра модераций
+     * @param string $letter Название письма для уведомления
      * @return boolean
      */
-    public function approve($target_name, $item, $ups_key = false) {
+    public function approve($target_name, $item, $ups_key = false, $letter = 'moderation_approved') {
 
         $task = $this->model->getModeratorTask($target_name, $item['id']);
 
@@ -106,7 +112,7 @@ class moderation extends cmsFrontend {
 
         cmsEventsManager::hook("content_{$target_name}_after_{$after_action}_approve", $item);
 
-        $this->moderationNotifyAuthor($item, 'moderation_approved');
+        $this->moderationNotifyAuthor($item, $letter);
 
         if($ups_key){
             cmsUser::deleteUPSlist($ups_key);

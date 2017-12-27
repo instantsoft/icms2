@@ -47,6 +47,10 @@ class cmsQueue {
         return static::$max_attempts;
     }
 
+    public static function getTableName() {
+        return static::$table;
+    }
+
     protected static function pushToDatabase($data) {
 
         $model = new cmsModel();
@@ -168,6 +172,14 @@ class cmsQueue {
         $model = new cmsModel();
 
         return $model->update(static::$table, $job['id'], array('is_locked' => null), true);
+
+    }
+
+    public static function restartJob($job) {
+
+        $model = new cmsModel();
+
+        return $model->update(static::$table, $job['id'], array('is_locked' => null, 'last_error' => null, 'attempts' => 0), true);
 
     }
 

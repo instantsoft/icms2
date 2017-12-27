@@ -3,6 +3,14 @@ class images extends cmsFrontend {
 
 	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp';
 
+    public $allowed_mime = array(
+        'image/jpeg',
+        'image/png',
+        'image/pjpeg',
+        'image/gif',
+        'image/vnd.wap.wbmp'
+    );
+
 	private $file_context = null;
 
 //============================================================================//
@@ -66,7 +74,7 @@ class images extends cmsFrontend {
 
         }
 
-        $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
+        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){
@@ -157,7 +165,7 @@ class images extends cmsFrontend {
 
 	public function uploadWithPreset($name, $preset_name){
 
-        $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
+        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){

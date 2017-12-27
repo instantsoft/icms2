@@ -935,6 +935,16 @@ class cmsController {
         );
     }
 
+    public function getContentTypeForModeration($name){
+
+        return array(
+            'id'    => null,
+            'name'  => $this->name,
+            'title' => $this->title
+        );
+
+    }
+
 //============================================================================//
 //============================================================================//
 

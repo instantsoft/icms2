@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.8.2 => 2.8.3
+ * 2.8.2 => 2.9
  */
 function install_package(){
 
@@ -41,6 +41,18 @@ function install_package(){
 
     if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'queue' AND hook = 'run_queue'")){
         $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Выполняет задачи системной очереди', 'queue', 'run_queue', '1', '1');");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////// Добавляем модераторов комментариев //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
+    $model_moderation = cmsCore::getModel('moderation');
+    if($moderators){
+        foreach ($moderators as $moderator) {
+            $model_moderation->addContentTypeModerator('comments', $moderator['id']);
+        }
+
     }
 
     ////////////////////////////////////////////////////////////////////////////

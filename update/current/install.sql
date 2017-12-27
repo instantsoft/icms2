@@ -20,3 +20,4 @@ CREATE TABLE `{#}jobs` (
   KEY `queue` (`queue`),
   KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
+DELETE FROM `{#}perms_rules` WHERE `controller` = 'comments' AND `name` = 'is_moderator';

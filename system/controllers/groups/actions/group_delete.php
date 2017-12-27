@@ -23,16 +23,6 @@ class actionGroupsGroupDelete extends cmsAction {
 
             $this->model->deleteGroup($group);
 
-            if (!$group['is_approved'] && !$group['access']['is_owner']){
-
-                $this->controller_moderation->model->closeModeratorTask('groups', $group['id'], false, $this->cms_user->id);
-
-                $group['reason'] = trim(strip_tags($this->request->get('reason', '')));
-
-                $this->controller_moderation->moderationNotifyAuthor($group, 'moderation_refused');
-
-            }
-
             cmsUser::addSessionMessage(sprintf(LANG_GROUPS_DELETED, $group['title']));
 
             $this->redirectToAction('');

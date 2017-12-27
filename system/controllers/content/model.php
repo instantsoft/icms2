@@ -2680,4 +2680,16 @@ class modelContent extends cmsModel {
 
     }
 
+    /**
+     * @deprecated
+     *
+     * Метод для своместимости
+     * @param string $ctype_name
+     * @param integer $user_id
+     * @return boolean
+     */
+    public function userIsContentTypeModerator($ctype_name, $user_id){
+        return cmsCore::getModel('moderation')->userIsContentModerator($ctype_name, $user_id);
+    }
+
 }

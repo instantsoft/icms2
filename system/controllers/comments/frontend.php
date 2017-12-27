@@ -33,7 +33,9 @@ class comments extends cmsFrontend {
 
     public function getNativeComments() {
 
-        if(cmsUser::isAllowed('comments', 'is_moderator')){
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($this->name, $this->cms_user->id);
+
+        if($is_moderator){
             $this->model->disableApprovedFilter();
         }
 
@@ -260,18 +262,6 @@ class comments extends cmsFrontend {
             );
         }
 
-        // модерация
-        if(cmsUser::isAllowed('comments', 'is_moderator')){
-            $datasets['moderation'] = array(
-                'name'  => 'moderation',
-                'title' => LANG_MODERATION,
-                'filter' => function($model){
-                    $model->disableApprovedFilter();
-                    return $model->filterNotEqual('is_approved', 1);
-                }
-            );
-        }
-
         return cmsEventsManager::hook('comments_datasets', $datasets);
 
     }
@@ -285,14 +275,14 @@ class comments extends cmsFrontend {
 
         $is_approved = cmsUser::isAllowed('comments', 'add_approved');
 
+        if(!$is_approved && $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id)){
+            $is_approved = true;
+        }
+
         $is_approved_by_hook = cmsEventsManager::hook('comments_is_approved', array(
             'is_approved' => $is_approved,
             'comment'     => $comment
         ));
-
-        $is_approved_by_hook['is_approved'] = ($is_approved_by_hook['is_approved'] ?
-            $is_approved_by_hook['is_approved'] :
-            cmsUser::isAllowed('comments', 'is_moderator'));
 
         return $is_approved_by_hook['is_approved'];
 
@@ -300,56 +290,11 @@ class comments extends cmsFrontend {
 
     public function notifyModerators($comment) {
 
-        // проверяем, нет ли уже комментариев на модерации
-        $this->model->disableApprovedFilter()->filterNotEqual('is_approved', 1);
-            $count = $this->model->getCommentsCount();
-        $this->model->resetFilters();
+        $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
+        $comment['url'] = $comment['target_url'].'#comment_'.$comment['id'];
+        $comment['title'] = $comment['target_title'];
 
-        // если больше одного, значит уже уведомления рассылали
-        if($count > 1){ return false; }
-
-        $messenger = cmsCore::getController('messages');
-
-        // рассылаем модераторам уведомления
-        $moderators = $this->model->getCommentsModerators();
-
-        foreach ($moderators as $moderator) {
-
-            $messenger->clearRecipients()->addRecipient($moderator['id']);
-
-            $messenger->sendNoticePM(array(
-                'content' => LANG_COMMENTS_MODERATE_NOTIFY,
-                'actions' => array(
-                    'view' => array(
-                        'title' => LANG_SHOW,
-                        'href'  => href_to('comments', 'index', 'moderation')
-                    )
-                )
-            ));
-
-            if(!$moderator['is_online']){
-
-                $page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
-
-                $messenger->sendEmail(
-                    array(
-                        'email' => $moderator['email'],
-                        'name'  => $moderator['nickname']
-                    ),
-                    'comments_moderate',
-                    array(
-                        'author_nickname' => !$comment['user_id'] ? $comment['author_name'] : $comment['user_nickname'],
-                        'author_url' => !$comment['user_id'] ? $page_url : href_to_abs('users', $comment['user_id']),
-                        'page_url'   => $page_url,
-                        'comment'    => strip_tags($comment['content_html']),
-                        'nickname'   => $moderator['nickname'],
-                        'list_url'   => href_to_abs('comments', 'index', 'moderation')
-                    )
-                );
-
-            }
-
-        }
+        return $this->controller_moderation->requestModeration($this->name, $comment, true, LANG_COMMENTS_MODERATE_NOTIFY);
 
     }
 

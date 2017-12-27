@@ -4,6 +4,8 @@ class actionModerationWaitingList extends cmsAction {
 
     public function run($ctype_name = false){
 
+        if (!$this->cms_user->is_logged){ cmsCore::error404(); }
+
         $counts = $this->model->getUserTasksCounts($this->cms_user->id);
 
         if (!$counts){

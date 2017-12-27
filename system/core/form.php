@@ -536,8 +536,13 @@ class cmsForm {
      */
     public static function generateCSRFToken(){
 
-        $hash = implode('::', array(session_id(), uniqid(), microtime(true)));
-        $token = md5($hash);
+        $hash = implode('::', array(session_id(), microtime(true)));
+
+        if(function_exists('password_hash')){
+            $token = password_hash($hash, PASSWORD_DEFAULT, array('cost' => 8));
+        } else {
+            $token = md5($hash);
+        }
 
         cmsUser::sessionSet('csrf_token', $token);
 

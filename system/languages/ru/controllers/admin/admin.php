@@ -659,3 +659,13 @@
     define('LANG_CONFIRM_LOGIN_HINT1',  'Чтобы подтвердить, что Вы действительно являетесь владельцем аккаунта, пожалуйста, введите пароль.');
     define('LANG_ADMIN_IS_DELETED', 'Удалён?');
     define('LANG_ADMIN_CONTROLLER_SLUG', 'Url компонента');
+    define('LANG_CP_QUEUE', 'Очередь');
+    define('LANG_CP_QUEUE_TITLE', 'Очередь %s');
+    define('LANG_CP_QUEUE_DATE_CREATED', 'Дата создания');
+    define('LANG_CP_QUEUE_DATE_STARTED', 'Дата выполнения');
+    define('LANG_CP_QUEUE_STATUS', 'Статус');
+    define('LANG_CP_QUEUE_QUEUE_RESTART', 'Ошибка исправлена, вернуть в очередь');
+    define('LANG_CP_QUEUE_STATUS1', 'Выполняется');
+    define('LANG_CP_QUEUE_STATUS2', 'Заблокировано с ошибкой');
+    define('LANG_CP_QUEUE_STATUS3', 'Ожидает выполнения');
+    define('LANG_CP_QUEUE_STATUS4', 'Ожидает выполнения %s-й раз');

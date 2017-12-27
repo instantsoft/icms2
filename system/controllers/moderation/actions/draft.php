@@ -4,6 +4,8 @@ class actionModerationDraft extends cmsAction {
 
     public function run($ctype_name = false){
 
+        if (!$this->cms_user->is_logged){ cmsCore::error404(); }
+
         $counts = $this->getUserDraftCounts($this->cms_user->id);
 
         if (!$counts){

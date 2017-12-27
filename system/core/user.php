@@ -249,7 +249,7 @@ class cmsUser {
 
         $model->filterIsNull('is_deleted');
         $model->filterEqual('email', $email);
-        $model->filterFunc('password', "MD5(CONCAT(MD5('{$password}'), i.password_salt))");
+        $model->filterFunc('password', "MD5(CONCAT(MD5('".$model->db->escape($password)."'), i.password_salt))");
 
         $user = $model->getUser();
 

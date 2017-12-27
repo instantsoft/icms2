@@ -6,6 +6,17 @@ class cmsBackend extends cmsController {
 
     public $maintained_ctype = false;
 
+    protected $backend_menu = array();
+
+    protected $queue = array(
+        'queues'           => array(),
+        'queue_name'       => '',
+        'use_queue_action' => false
+    );
+
+    protected $useDefaultModerationAction = false;
+    protected $useModerationTrash = false;
+
     public function __construct( cmsRequest $request){
 
         $this->name = str_replace('backend', '', strtolower(get_called_class()));
@@ -13,6 +24,26 @@ class cmsBackend extends cmsController {
         parent::__construct($request);
 
         $this->root_path = $this->root_path . 'backend/';
+
+        // Устанавливаем корень для URL внутри бэкенда
+        $admin_controller_url = 'admin';
+        $controller_alias = cmsCore::getControllerAliasByName($admin_controller_url);
+        if ($controller_alias) { $admin_controller_url = $controller_alias; }
+        $this->setRootURL($admin_controller_url.'/controllers/edit/'.$this->name);
+
+        if(!empty($this->queue['use_queue_action'])){
+            $this->backend_menu[] = array(
+                'title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
+                'url'   => href_to($this->root_url, 'queue')
+            );
+        }
+
+        if(!empty($this->useDefaultModerationAction)){
+            $this->backend_menu[] = array(
+                'title' => LANG_MODERATORS,
+                'url'   => href_to($this->root_url, 'moderators')
+            );
+        }
 
     }
 
@@ -32,7 +63,7 @@ class cmsBackend extends cmsController {
 //============================================================================//
 
     public function getBackendMenu(){
-        return array();
+        return $this->backend_menu;
     }
 
     public function getOptionsToolbar(){
@@ -203,7 +234,7 @@ class cmsBackend extends cmsController {
 
         // добавляем правила доступа от типа контента, если контроллер на его основе
 		$ctype = cmsCore::getModel('content')->getContentTypeByName($this->name);
-        if ($ctype) {
+        if ($ctype && $subject == $this->name) {
             $rules = array_merge(cmsPermissions::getRulesList('content'), $rules);
         }
 
@@ -278,6 +309,198 @@ class cmsBackend extends cmsController {
     }
 
 //============================================================================//
+//=========                           Очереди                        =========//
 //============================================================================//
+
+    public function actionQueue(){
+
+        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
+
+        $grid = $this->controller_admin->loadDataGrid('queue', array('contex_controller' => $this));
+
+        if ($this->request->isAjax()) {
+
+            $filter     = array();
+            $filter_str = $this->request->get('filter', '');
+
+            if($filter_str){
+                parse_str($filter_str, $filter);
+            }
+
+            $this->controller_admin->model->filterIn('queue', $this->queue['queues']);
+
+            $total = $this->controller_admin->model->getCount(cmsQueue::getTableName());
+
+            $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
+            $page    = isset($filter['page']) ? intval($filter['page']) : 1;
+
+            $pages = ceil($total / $perpage);
+
+            $this->controller_admin->model->limitPage($page, $perpage);
+
+            $this->controller_admin->model->orderByList(array(
+                array('by' => 'date_started', 'to' => 'asc'),
+                array('by' => 'priority', 'to' => 'desc'),
+                array('by' => 'date_created', 'to' => 'asc')
+            ));
+
+            $jobs = $this->controller_admin->model->get(cmsQueue::getTableName());
+
+            $this->cms_template->renderGridRowsJSON($grid, $jobs, $total, $pages);
+
+            $this->halt();
+
+        }
+
+        $template_params = array(
+            'grid'       => $grid,
+            'page_title' => sprintf(LANG_CP_QUEUE_TITLE, $this->queue['queue_name']),
+            'source_url' => href_to($this->root_url, 'queue'),
+        );
+
+        return $this->cms_template->processRender($this->cms_template->getTemplateFileName('assets/ui/grid'), $template_params);
+
+    }
+
+    public function actionQueueRestart($job_id){
+
+        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
+
+        cmsQueue::restartJob(array('id' => $job_id));
+
+        $this->redirectBack();
+
+    }
+
+    public function actionQueueDelete($job_id){
+
+        if (empty($this->queue['use_queue_action'])){ cmsCore::error404(); }
+
+        $csrf_token = $this->request->get('csrf_token', '');
+        if (!cmsForm::validateCSRFToken( $csrf_token )){
+            cmsCore::error404();
+        }
+
+        cmsQueue::deleteJob(array('id' => $job_id));
+
+        $this->redirectBack();
+
+    }
+
+    //============================================================================//
+    //=========                         Модераторы                       =========//
+    //============================================================================//
+
+    public function actionModerators(){
+
+        if (empty($this->useDefaultModerationAction)){ cmsCore::error404(); }
+
+        $moderators = $this->model_moderation->getContentTypeModerators($this->name);
+
+        $template_params = array(
+            'title'         => $this->title,
+            'not_use_trash' => !$this->useModerationTrash,
+            'moderators'    => $moderators
+        );
+
+        $this->cms_template->addToolButton(array(
+            'class'  => 'settings',
+            'title'  => LANG_MODERATORATION_OPTIONS,
+            'href'   => href_to('admin', 'controllers', array('edit', 'moderation', 'options'))
+        ));
+
+        $this->cms_template->addToolButton(array(
+            'class'  => 'help',
+            'title'  => LANG_HELP,
+            'target' => '_blank',
+            'href'   => LANG_HELP_URL_CTYPES_MODERATORS
+        ));
+
+        // если задан шаблон в контроллере
+        if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/moderators', true)){
+
+            return $this->cms_template->render('backend/perms', $template_params);
+
+        } else {
+
+            $default_admin_tpl = $this->cms_template->getTemplateFileName('controllers/admin/controllers_moderators');
+
+            return $this->cms_template->processRender($default_admin_tpl, $template_params);
+
+        }
+
+    }
+
+    public function actionModeratorsAdd(){
+
+        if (!$this->request->isAjax()) { cmsCore::error404(); }
+
+        $name = $this->request->get('name', '');
+        if (!$name) { cmsCore::error404(); }
+
+        $user = cmsCore::getModel('users')->filterEqual('email', $name)->getUser();
+
+        if ($user === false){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => sprintf(LANG_CP_USER_NOT_FOUND, $name)
+            ));
+        }
+
+        $moderators = $this->model_moderation->getContentTypeModerators($this->name);
+
+        if (isset($moderators[$user['id']])){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => sprintf(LANG_MODERATOR_ALREADY, $user['nickname'])
+            ));
+        }
+
+        $moderator = $this->model_moderation->addContentTypeModerator($this->name, $user['id']);
+
+        if (!$moderator){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => LANG_ERROR
+            ));
+        }
+
+        $ctypes_moderator_tpl = $this->cms_template->getTemplateFileName('controllers/admin/ctypes_moderator');
+
+        return $this->cms_template->renderJSON(array(
+            'error' => false,
+            'name'  => $user['nickname'],
+            'html'  => $this->cms_template->processRender($ctypes_moderator_tpl, array(
+                'moderator' => $moderator,
+                'not_use_trash' => !$this->useModerationTrash,
+                'ctype'     => array('name' => $this->name, 'controller' => $this->name)
+            ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL)),
+            'id'    => $user['id']
+        ));
+
+    }
+
+    public function actionModeratorsDelete(){
+
+        if (!$this->request->isAjax()) { cmsCore::error404(); }
+
+        $id = $this->request->get('id', 0);
+        if (!$id) { cmsCore::error404(); }
+
+        $moderators = $this->model_moderation->getContentTypeModerators($this->name);
+
+        if (!isset($moderators[$id])){
+            return $this->cms_template->renderJSON(array(
+                'error' => true
+            ));
+        }
+
+        $this->model_moderation->deleteContentTypeModerator($this->name, $id);
+
+        return $this->cms_template->renderJSON(array(
+            'error' => false
+        ));
+
+    }
 
 }

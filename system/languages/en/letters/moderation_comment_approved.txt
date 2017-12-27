@@ -1,10 +1,9 @@
-[subject:Your page is approved - {site}]
+[subject:Your comment is approved - {site}]
 
 Hello, {nickname}.
 
-Moderator approved publication of your page.
+Moderator approved a comment on the page "{page_title}".
 
-Title: {page_title}
 URL: <a href="{page_url}">{page_url}</a>
 
 --

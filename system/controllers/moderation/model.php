@@ -213,7 +213,7 @@ class modelModeration extends cmsModel {
                         getFieldFiltered('{users}', 'id');
             // проверяем наличие администратора в таблице модераторов
             // и если его там нет, добавляем
-            if(!$this->getItemById('moderators', $id)){
+            if(!$this->filterEqual('ctype_name', $controller_name)->getItemByField('moderators', 'user_id', $id)){
                 $this->addContentTypeModerator($controller_name, $id);
             }
 
@@ -221,6 +221,15 @@ class modelModeration extends cmsModel {
 
         return $id;
 
+    }
+
+    public function isModeratorTaskExists($controller_name, $user_id){
+
+        $this->filterDateYounger('date_pub', 1);
+
+        return $this->filterEqual('ctype_name', $controller_name)->
+                    filterEqual('moderator_id', $user_id)->
+                    getFieldFiltered('moderators_tasks', 'id');
     }
 
     public function addModeratorTask($controller_name, $user_id, $is_new_item, $item){
@@ -236,7 +245,7 @@ class modelModeration extends cmsModel {
             'item_id'      => $item['id'],
             'ctype_name'   => $controller_name,
             'title'        => $item['title'],
-            'url'          => href_to_rel($controller_name, $item['slug'] . '.html'),
+            'url'          => (isset($item['url']) ? $item['url'] : href_to_rel($controller_name, $item['slug'] . '.html')),
             'date_pub'     => '',
             'is_new_item'  => $is_new_item
         ));

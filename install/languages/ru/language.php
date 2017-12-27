@@ -4,7 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank">Инструкция по установке</a>');
+    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');
@@ -27,7 +27,7 @@
 
     define('LANG_LICENSE_AGREE',            'Я согласен с условиями лицензии');
     define('LANG_LICENSE_ERROR',            'Вы должны согласиться с условиями лицензии');
-    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU/GPL</a> версии 2.');
+    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> версии 2.');
     define('LANG_LICENSE_ORIGINAL',         'Оригинал');
     define('LANG_LICENSE_TRANSLATION',      'Перевод');
 

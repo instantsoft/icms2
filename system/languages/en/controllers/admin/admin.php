@@ -659,3 +659,13 @@
     define('LANG_CONFIRM_LOGIN_HINT1',  'In order to confirm ownership of the accaunt, we ask you to enter the password');
     define('LANG_ADMIN_IS_DELETED', 'Deleted?');
     define('LANG_ADMIN_CONTROLLER_SLUG', 'Controller Url');
+    define('LANG_CP_QUEUE', 'Queue');
+    define('LANG_CP_QUEUE_TITLE', '%s queue');
+    define('LANG_CP_QUEUE_DATE_CREATED', 'Date Created');
+    define('LANG_CP_QUEUE_DATE_STARTED', 'Run Date');
+    define('LANG_CP_QUEUE_STATUS', 'Status');
+    define('LANG_CP_QUEUE_QUEUE_RESTART', 'Error corrected, returned to the queue');
+    define('LANG_CP_QUEUE_STATUS1', 'In progress');
+    define('LANG_CP_QUEUE_STATUS2', 'Blocked with error');
+    define('LANG_CP_QUEUE_STATUS3', 'Pending');
+    define('LANG_CP_QUEUE_STATUS4', 'Waiting for 2nd time');

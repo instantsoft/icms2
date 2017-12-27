@@ -53,8 +53,17 @@ class actionGroupsAdd extends cmsAction {
                 }
 
                 if (!$group['is_approved']){
+
                     $group['page_url'] = href_to_abs('groups', $group['slug']);
-                    cmsCore::getController('moderation')->requestModeration('groups', $group);
+
+                    $group['url'] = href_to_rel('groups', $group['slug']);
+
+                    $succes_text = cmsCore::getController('moderation')->requestModeration('groups', $group);
+
+                    if($succes_text){
+                        cmsUser::addSessionMessage($succes_text, 'info');
+                    }
+
                 } else {
                     cmsEventsManager::hook('content_groups_after_add_approve', $group);
                 }

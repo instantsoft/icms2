@@ -10,6 +10,8 @@ class cmsUploader {
     private $last_error = false;
     private $upload_errors = array();
 
+    private $allowed_mime = false;
+
     public function __construct() {
         $this->upload_errors = array(
             UPLOAD_ERR_OK         => LANG_UPLOAD_ERR_OK,
@@ -23,6 +25,10 @@ class cmsUploader {
         );
         $this->user_id = cmsUser::getInstance()->id;
         $this->site_cfg = cmsConfig::getInstance();
+    }
+
+    public function setAllowedMime($types) {
+        $this->allowed_mime = $types; return $this;
     }
 
     public function setFileName($name) {
@@ -156,6 +162,18 @@ class cmsUploader {
 
     }
 
+    private function isMimeTypeAllowed($file_path) {
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        $file_mime = finfo_file($finfo, $file_path);
+
+        if($file_mime === false){ return false; }
+
+        return in_array($file_mime, $this->allowed_mime);
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -215,6 +233,16 @@ class cmsUploader {
                 'success' => false,
                 'name'    => $dest_name
             );
+        }
+
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($source)){
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
         }
 
         if ($allowed_size){
@@ -321,6 +349,18 @@ class cmsUploader {
 		fwrite($f, $file_bin);
         fclose($f);
 
+
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
+
         return array(
             'success' => true,
             'path'    => $destination,
@@ -424,6 +464,18 @@ class cmsUploader {
                 'name'    => $orig_name,
                 'path'    => ''
             );
+        }
+
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $orig_name,
+                    'path'    => ''
+                );
+            }
         }
 
         return array(

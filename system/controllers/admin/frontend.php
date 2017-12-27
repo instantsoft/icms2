@@ -335,11 +335,7 @@ class admin extends cmsFrontend {
 
         $backend = new $controller_class($request);
 
-        // Устанавливаем корень для URL внутри бакенда
-        $admin_controller_url = $this->name;
-        $controller_alias = cmsCore::getControllerAliasByName($admin_controller_url);
-        if ($controller_alias) { $admin_controller_url = $controller_alias; }
-        $backend->setRootURL($admin_controller_url.'/controllers/edit/'.$controller_name);
+        $backend->controller_admin = $this;
 
         return $backend;
 

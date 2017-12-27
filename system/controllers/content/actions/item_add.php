@@ -320,8 +320,15 @@ class actionContentItemAdd extends cmsAction {
                         cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
                         cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
                     } else {
+
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
-                        cmsCore::getController('moderation')->requestModeration($ctype['name'], $item);
+
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item);
+
+                        if($succes_text){
+                            cmsUser::addSessionMessage($succes_text, 'info');
+                        }
+
                     }
 
                 }

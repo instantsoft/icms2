@@ -260,8 +260,10 @@
     define('LANG_MODERATION_NOTIFY',         'Новая страница ожидает вашей проверки');
     define('LANG_MODERATION_RETURN_NOTIFY',  'Автор отозвал материал с проверки');
     define('LANG_MODERATION_REMARK_NOTIFY',  'Запись возвращена на доработку');
+    define('LANG_PM_MODERATION_COMMENT_APPROVED', 'Модератор одобрил размещение комментария на странице <b><a href="%2$s">%1$s</a></b>%3$s');
     define('LANG_PM_MODERATION_APPROVED',    'Модератор одобрил размещение страницы <b><a href="%2$s">%1$s</a></b>%3$s');
     define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
+    define('LANG_PM_MODERATION_COMMENT_REFUSED', 'Модератор отклонил ваш комментарий на странице <b>%1$s</b>.%2$s Причина отклонения: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'Модератор возвратил страницу <b><a href="%2$s">%1$s</a></b> на доработку и указал замечания:<br />%3$s');
 
     //PERMISSIONS

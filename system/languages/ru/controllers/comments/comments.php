@@ -55,7 +55,6 @@ define('LANG_COMMENTS_AUTHOR_NAME', 'Ваше имя');
 define('LANG_COMMENTS_AUTHOR_EMAIL', 'E-mail для ответов');
 define('LANG_RULE_COMMENTS_ADD', 'Добавление комментариев');
 define('LANG_RULE_COMMENTS_ADD_APPROVED', 'Добавление комментариев без модерации');
-define('LANG_RULE_COMMENTS_IS_MODERATOR', 'Модерация новых комментариев');
 define('LANG_RULE_COMMENTS_EDIT', 'Редактирование комментариев');
 define('LANG_RULE_COMMENTS_EDIT_TIME', 'Время редактирования, минут');
 define('LANG_RULE_COMMENTS_DELETE', 'Удаление комментариев');
@@ -69,6 +68,6 @@ define('LANG_COMMENTS_MODERATE_NOTIFY', 'Добавлен новый комме�
 define('LANG_COMMENTS_MODERATE_TITLE', 'Комментарии на модерации (%s)');
 define('LANG_COMMENTS_ALL_LIST', 'Весь список');
 define('LANG_COMMENTS_APPROVE', 'Одобрить');
-define('LANG_COMMENTS_MODERATE_HINT', 'Комментарий будет опубликован после проверки модератором');
+define('LANG_COMMENTS_MODERATE_HINT', 'Комментарий будет опубликован после проверки модератором.');
 define('LANG_COMMENTS_LIMIT_NESTING', 'Максимальный уровень вложенности');
 define('LANG_COMMENTS_RSS_TITLE', 'Комментарий для %s');

@@ -10,11 +10,6 @@ class onCommentsRssFeedList extends cmsAction {
         $target_subject    = $this->request->get('ts', '');
         $target_id         = $this->request->get('ti', '');
 
-        // умолчания выборки комментариев
-        if(cmsUser::isAllowed('comments', 'is_moderator')){
-            $this->model->disableApprovedFilter();
-        }
-
         $this->model->filterIsNull('is_deleted')->
                 orderBy('date_pub', 'desc')->
                 limit($feed['limit']);

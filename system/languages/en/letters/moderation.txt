@@ -2,7 +2,7 @@
 
 Hello, {moderator}.
 
-A new page on the site awaits your approval:
+{moderation_text}::
 
 Title: {page_title}
 URL: <a href="{page_url}">{page_url}</a>

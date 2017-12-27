@@ -179,12 +179,10 @@ class actionCommentsSubmit extends cmsAction {
                 // Уведомление модерации
                 if(!$comment['is_approved']){
 
-                    $this->notifyModerators($comment);
-
                     return $this->cms_template->renderJSON(array(
                         'error'       => false,
                         'on_moderate' => true,
-                        'message'     => LANG_COMMENTS_MODERATE_HINT
+                        'message'     => LANG_COMMENTS_MODERATE_HINT.' '.$this->notifyModerators($comment)
                     ));
 
                 } else {

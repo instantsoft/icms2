@@ -613,7 +613,6 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (12, 'page_is_allowed', 'auth', 12, 1),
 (13, 'frontpage_types', 'auth', 13, 1),
 (14, 'content_after_update', 'comments', 14, 1),
-(15, 'admin_dashboard_block', 'comments', 15, 1),
 (16, 'admin_dashboard_chart', 'comments', 16, 1),
 (17, 'user_privacy_types', 'comments', 17, 1),
 (18, 'user_login', 'comments', 18, 1),
@@ -719,7 +718,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (118, 'user_delete', 'wall', 118, 1),
 (119, 'page_is_allowed', 'widgets', 119, 1),
 (120, 'ctype_lists_context', 'groups', 120, 1),
-(121, 'ctype_lists_context', 'tags', 121, 1);
+(121, 'ctype_lists_context', 'tags', 121, 1),
+(122, 'moderation_list', 'comments', 122, 1),
+(123, 'content_groups_before_delete', 'moderation', 123, 1),
+(124, 'content_groups_before_delete', 'moderation', 124, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -897,7 +899,7 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Войти', 'auth/login', 9, '---\nclass: ajax-modal key', '---\n- 1\n', NULL),
 (35, 5, 0, 'Регистрация', 'auth/register', 10, '---\nclass: user_add', '---\n- 1\n', NULL),
-(36, 2, 0, 'Черновики', '{content:draft}', 4, '---\ntarget: _self\nclass: draft\n', '---\n- 0\n', NULL),
+(36, 2, 0, 'Черновики', '{moderation:draft}', 4, '---\ntarget: _self\nclass: draft\n', '---\n- 0\n', NULL),
 (37, 2, 0, 'Модерация', '{moderation:panel}', 4, '---\nclass: checklist', '---\n- 5\n- 6\n', NULL),
 (41, 2, 0, 'На модерации', '{moderation:user_panel}', 4, '---\ntarget: _self\nclass: onchecklist\n', '---\n- 0\n', NULL),
 (38, 1, 0, 'Комментарии', 'comments', 8, '---\nclass:', '---\n- 0\n', NULL),
@@ -1001,7 +1003,6 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (28, 'content', 'pub_on', 'flag', NULL),
 (29, 'content', 'disable_comments', 'flag', NULL),
 (30, 'comments', 'add_approved', 'flag', NULL),
-(31, 'comments', 'is_moderator', 'flag', NULL),
 (32, 'content', 'add_to_parent', 'list', 'to_own,to_other,to_all'),
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
