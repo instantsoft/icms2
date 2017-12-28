@@ -34,9 +34,25 @@ class modelPhotos extends cmsModel{
         );
     }
 
+    public function filterApprovedOnly(){
+
+        if ($this->approved_filtered) { return $this; }
+
+        // Этот фильтр может применяться при подсчете числа записей
+        // и при выборке самих записей
+        // используем флаг чтобы фильтр не применился дважды
+        $this->approved_filtered = true;
+
+        $this->join('con_albums', 'al', 'al.id = i.album_id');
+
+        return $this->filterEqual('al.is_approved', 1);
+
+    }
+
     public function getPhotosCount($album_id){
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         $this->filterEqual('album_id', $album_id);
 
@@ -59,6 +75,7 @@ class modelPhotos extends cmsModel{
             $this->joinUser();
 
             if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
+            if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         } else {
 
@@ -113,6 +130,7 @@ class modelPhotos extends cmsModel{
 
     public function getOrphanPhotos($user_id){
         $this->disablePrivacyFilter();
+        $this->disableApprovedFilter();
         return $this->filterIsNull('slug')->getUserPhotos($user_id, false, function($item, $model){
             $item['is_private'] = 0;
             return $item;

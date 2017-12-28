@@ -38,10 +38,22 @@ class actionPhotosView extends cmsAction {
         list($photo, $album, $ctype) = cmsEventsManager::hook('photos_before_item', array($photo, $album, $ctype));
 
         // Проверяем прохождение модерации
-        $is_moderator = false;
+        $is_moderator = $this->cms_user->is_admin;
+        if(!$is_moderator && $this->cms_user->is_logged){
+            $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
+        }
+
+        // на модерации
         if (!$album['is_approved']){
-            $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
-            if (!$is_moderator && $this->cms_user->id != $album['user_id']){ cmsCore::error404(); }
+
+            $item_view_notice = $album['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_MODERATION_NOTICE;
+
+            if (!$is_moderator && $this->cms_user->id != $album['user_id']){
+                return cmsCore::errorForbidden($item_view_notice, true);
+            }
+
+            cmsUser::addSessionMessage($item_view_notice, 'info');
+
         }
 
         // Проверяем приватность альбома

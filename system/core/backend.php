@@ -419,7 +419,7 @@ class cmsBackend extends cmsController {
         // если задан шаблон в контроллере
         if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/backend/moderators', true)){
 
-            return $this->cms_template->render('backend/perms', $template_params);
+            return $this->cms_template->render('backend/moderators', $template_params);
 
         } else {
 

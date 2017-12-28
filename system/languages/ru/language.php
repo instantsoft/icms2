@@ -22,6 +22,7 @@
     define('LANG_CONTENT_MOVE_DRAFT',		 'Перенести в черновики');
     define('LANG_CONTENT_DRAFT_NOTICE',		 'Запись скрыта в черновики');
     define('LANG_CONTENT_DRAFT_LIST',		 'Черновики');
+    define('LANG_CONTENT_EDITED',            'Отредактировано');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');

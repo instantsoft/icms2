@@ -144,8 +144,8 @@ if( $ctype['options']['list_show_filter'] ) {
                             </div>
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>
-                            <div class="bar_item bi_not_approved">
-                                <?php echo !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
+                            <div class="bar_item bi_not_approved <?php if (empty($item['is_new_item'])){ ?>is_edit_item<?php } ?>">
+                                <?php echo !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED; ?>
                             </div>
                         <?php } ?>
                     </div>

@@ -114,9 +114,11 @@ class fieldParent extends cmsFormField {
         $ids = $this->idsStringToArray($values);
         if (!$ids) { return parent::applyFilter($model, $values); }
 
-        $model->joinInner('content_relations_bind', 'rr', 'rr.child_item_id = i.id AND rr.child_ctype_id '.($this->ctype_id ? '='.$this->ctype_id : 'IS NULL'));
+        $alias_name = 'rr_'.$this->name;
 
-        return $model->filterIn('rr.parent_item_id', $ids);
+        $model->joinInner('content_relations_bind', $alias_name, $alias_name.'.child_item_id = i.id AND '.$alias_name.'.child_ctype_id '.($this->ctype_id ? '='.$this->ctype_id : 'IS NULL'));
+
+        return $model->filterIn($alias_name.'.parent_item_id', $ids);
 
     }
 

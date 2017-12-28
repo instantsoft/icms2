@@ -17,6 +17,7 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
 
         if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $album['user_id']) {
             $this->model->disablePrivacyFilter();
+            $this->model->disableApprovedFilter();
         }
 
         if($album['filter_values']['types']){

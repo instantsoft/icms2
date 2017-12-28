@@ -844,14 +844,14 @@ CREATE TABLE `{#}images_presets` (
   KEY `is_internal` (`is_internal`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`) VALUES
-(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL),
-(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL),
-(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1),
-(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1),
-(7, 'wysiwyg_live', 'Редактор: Live', 690, 690, NULL, NULL, NULL, 'top-left', NULL, 1);
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`) VALUES
+(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75),
+(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, 80),
+(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, 85),
+(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, 90),
+(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, 85),
+(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, 90),
+(7, 'wysiwyg_live', 'Редактор: Live', 690, 690, NULL, NULL, NULL, 'top-left', NULL, 1, 90);
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (

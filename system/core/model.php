@@ -931,17 +931,17 @@ class cmsModel {
 
     public function filterByModeratorTask($moderator_id, $ctype_name, $is_admin = false){
 
-        if($is_admin){
+        $this->select('m.is_new_item');
 
-            $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
+        $this->joinInner('moderators_tasks', 'm', 'm.item_id = i.id');
 
-            return $this->filterEqual('m.ctype_name', $ctype_name);
+        $this->filterEqual('m.ctype_name', $ctype_name);
 
-        } else {
-
-            return $this->filter("(EXISTS (SELECT item_id FROM {#}moderators_tasks WHERE moderator_id='{$moderator_id}' AND ctype_name='{$ctype_name}' AND item_id=i.id))");
-
+        if(!$is_admin){
+            $this->filterEqual('m.moderator_id', $moderator_id);
         }
+
+        return $this;
 
     }
 

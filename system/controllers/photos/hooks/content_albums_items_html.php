@@ -20,6 +20,7 @@ class onPhotosContentAlbumsItemsHtml extends cmsAction {
 
         if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $profile['id']) {
             $this->model->disablePrivacyFilter();
+            $this->model->disableApprovedFilter();
         }
 
         $profile['url_params'] = array('photo_page' => 1);

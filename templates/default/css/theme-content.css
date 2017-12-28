@@ -391,7 +391,10 @@ article div.content_categories:last-child {
 .content_item .info_bar .bi_not_pub{
     color:#d35400;
 }
-
+.bar_item.bi_not_approved.is_edit_item {
+    color: #e67e22;
+    font-weight: bold;
+}
 /* ========================================================================== */
 
 .content_list_rss_icon, .content_list_styles { float:right; }

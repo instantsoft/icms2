@@ -23,6 +23,7 @@
     define('LANG_CONTENT_DRAFT_NOTICE',		 'The item is hidden in drafts');
     define('LANG_CONTENT_DRAFT_LIST',		 'Drafts');
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
+    define('LANG_CONTENT_EDITED',            'Edited');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
 
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
