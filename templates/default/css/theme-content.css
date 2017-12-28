@@ -259,7 +259,10 @@ article div.content_categories:last-child {
 /* ========================================================================== */
 #trash_content_pills { margin-bottom: 30px; }
 .content_list_item {
-    overflow: hidden;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    clear: both;
     position: relative;
     margin-bottom:15px; color:#666;
 }
@@ -440,7 +443,10 @@ article div.content_categories:last-child {
 /* ========================================================================== */
 
 .content_list {
-    overflow:hidden;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 100%;
+    clear: both;
 }
 
 .content_list .is_vip { background: #ffffd3; }

@@ -19,6 +19,8 @@ class onContentModerationList extends cmsAction {
 
             $ctype = $this->model->getContentTypeByName($ctype_name);
 
+            $this->cms_template->addMenuItems('list_actions_menu', $this->getToolButtons($ctype, $action));
+
             if($action == 'index'){
                 $this->model->filterByModeratorTask($this->cms_user->id, $ctype_name, $this->cms_user->is_admin);
             } else
@@ -51,6 +53,37 @@ class onContentModerationList extends cmsAction {
             'titles'    => $ctypes,
             'list_html' => $list_html
         );
+
+    }
+
+    private function getToolButtons($ctype, $action) {
+
+        $tool_buttons = array();
+
+        if ($action == 'index'){
+            $tool_buttons['accept'] = array(
+                'title'   => LANG_MODERATION_APPROVE,
+                'options' => array('class' => 'accept'),
+                'url'     => href_to($ctype['name'], 'approve', '{id}')
+            );
+            $tool_buttons['edit'] = array(
+                'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
+                'options' => array('class' => 'edit'),
+                'url'     => href_to($ctype['name'], 'edit', '{id}')
+            );
+            $tool_buttons['return_for_revision'] = array(
+                'title'   => LANG_MODERATION_RETURN_FOR_REVISION,
+                'options' => array('class' => 'return_for_revision ajax-modal'),
+                'url'     => href_to($ctype['name'], 'return_for_revision', '{id}')
+            );
+            $tool_buttons['refuse'] = array(
+                'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
+                'options' => array('class' => 'delete ajax-modal'),
+                'url'     => href_to($ctype['name'], 'delete', '{id}')
+            );
+        }
+
+        return $tool_buttons;
 
     }
 

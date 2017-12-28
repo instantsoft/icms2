@@ -361,7 +361,7 @@
 }
 #body .controller_actions_menu ul.menu li {
     padding: 3px 0;
-    line-height: 100%;
+    line-height: 16px;
 }
 .group_menu_title {
     background-color: #e5ebf1;
@@ -387,6 +387,7 @@
 }
 #body section .list_actions_menu .menu a {
     padding: 4px 10px;
+    font-size: 14px;
 }
 .list_actions_menu .group_menu_title {
     padding: 0;

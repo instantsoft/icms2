@@ -58,6 +58,21 @@
 
                         <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                             <h2 class="value">
+                            <?php if (!empty($this->menus['list_actions_menu'])){ ?>
+                                <div class="list_actions_menu controller_actions_menu dropdown_menu">
+                                    <input tabindex="-1" type="checkbox" id="menu_label_<?php echo $item['id']; ?>">
+                                    <label for="menu_label_<?php echo $item['id']; ?>" class="group_menu_title"></label>
+                                    <ul class="list_actions menu">
+                                        <?php foreach($this->menus['list_actions_menu'] as $menu){ ?>
+                                            <li>
+                                                <a class="<?php echo isset($menu['options']['class']) ? $menu['options']['class'] : ''; ?>" href="<?php echo string_replace_keys_values($menu['url'], $item); ?>" title="<?php html($menu['title']); ?>">
+                                                    <?php echo $menu['title']; ?>
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            <?php } ?>
                             <?php if ($item['parent_id']){ ?>
                                 <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                 &rarr;

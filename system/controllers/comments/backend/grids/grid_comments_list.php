@@ -7,6 +7,7 @@ function grid_comments_list($controller){
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => false,
+        'is_selectable' => true,
         'order_by'      => 'date_pub',
         'order_to'      => 'desc',
         'show_id'       => true

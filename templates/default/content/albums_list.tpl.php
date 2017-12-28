@@ -138,7 +138,7 @@ if( $ctype['options']['list_show_filter'] ) {
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                        <?php if ($fields['date_pub']['is_in_list'] && $item['is_approved']){ ?>
                             <div class="bar_item bi_date" title="<?php echo $fields['date_pub']['title']; ?>">
                                 <?php echo $fields['date_pub']['handler']->parse($item['date_pub']); ?>
                             </div>
