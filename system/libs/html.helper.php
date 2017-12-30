@@ -11,10 +11,10 @@ function html($string){
 /**
  * Очищает строку от тегов и обрезает до нужной длины
  * @param string $string Строка
- * @param int $max_length Максимальное кол-во символов, по умолчанию false
+ * @param integer $max_length Максимальное кол-во символов, по умолчанию false
  * @return string
  */
-function html_clean($string, $max_length=false){
+function html_clean($string, $max_length = false){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
@@ -32,7 +32,7 @@ function html_clean($string, $max_length=false){
 /**
  * Обрезает строку до заданного кол-ва символов
  * @param string $string Строка
- * @param int $max_length Кол-во символов, которые нужно оставить от начала строки
+ * @param integer $max_length Кол-во символов, которые нужно оставить от начала строки
  * @return string
  */
 function html_strip($string, $max_length){
@@ -81,10 +81,10 @@ function href_to_profile($user, $params = false){
  * с добавлением пути от корня сайта
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to($controller, $action='', $params=false){
+function href_to($controller, $action = '', $params = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -97,10 +97,10 @@ function href_to($controller, $action='', $params=false){
  * с добавлением хоста сайта
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to_abs($controller, $action='', $params=false){
+function href_to_abs($controller, $action = '', $params = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -113,10 +113,10 @@ function href_to_abs($controller, $action='', $params=false){
  *
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to_rel($controller, $action='', $params=false){
+function href_to_rel($controller, $action = '', $params = false){
 
     $controller = trim($controller, '/ ');
 
@@ -148,9 +148,10 @@ function href_to_rel($controller, $action='', $params=false){
 
 /**
  * Возвращает ссылку на текущую страницу
+ * @param boolean $add_host
  * @return string
  */
-function href_to_current($add_host=false){
+function href_to_current($add_host = false){
     $lang_href = cmsCore::getLanguageHrefPrefix();
     $lang_href = ($lang_href ? '/'.$lang_href : '');
     if($add_host){
@@ -202,7 +203,7 @@ function default_images($type, $preset) {
  * @param string $size_preset Название пресета
  * @return string
  */
-function html_avatar_image_src($avatars, $size_preset='small', $is_relative=true){
+function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = true){
 
     $config = cmsConfig::getInstance();
 
