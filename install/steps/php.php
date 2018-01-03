@@ -18,7 +18,7 @@ function check_requirements(){
 
     $min_php_version  = '5.4.0';
     $vars             = array('magic_quotes_gpc' => 0, 'register_globals' => 0);
-    $extensions       = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter');
+    $extensions       = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter', 'fileinfo');
     $extensions_extra = array('ftp', 'memcache', 'zip', 'curl');
 
     sort($extensions);

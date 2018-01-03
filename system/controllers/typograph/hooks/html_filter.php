@@ -156,7 +156,7 @@ class onTypographHtmlFilter extends cmsAction {
 
             $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
             $params['target'] = '_blank';
-            $params['rel']    = 'nofollow';
+            $params['rel']    = 'noopener noreferrer';
 
             if($this->build_redirect_link){
                 $params['href'] = href_to('redirect').'?url='.urlencode($params['href']);

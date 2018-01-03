@@ -49,7 +49,7 @@ class activity extends cmsFrontend {
 
         $type = $this->model->getType($controller, $name);
 
-        if (!$type['is_enabled']) { return false; }
+        if (empty($type['is_enabled'])) { return false; }
 
         if (!isset($entry['user_id'])) {
             $entry['user_id'] = $this->cms_user->id;

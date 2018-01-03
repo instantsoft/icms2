@@ -51,7 +51,7 @@ class fieldCaption extends cmsFormField {
     }
 
     public function parse($value){
-        return '<h1>'.htmlspecialchars($value).'</h1>';
+        return '<h1>'.html($value, false).'</h1>';
     }
 
     public function getStringValue($value){

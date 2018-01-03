@@ -2,10 +2,19 @@
 
 /**
  * Выводит строку, безопасную для html
- * @param string $string
+ * @param string $string Строка
+ * @param boolean $print Печатать результат или возвращать, по умолчанию true
  */
-function html($string){
-    echo htmlspecialchars($string);
+function html($string, $print = true){
+
+    $string = htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    if($print){
+        echo $string; return;
+    }
+
+    return $string;
+
 }
 
 /**
@@ -229,7 +238,7 @@ function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = 
         }
     }
 
-    return htmlspecialchars($src);
+    return html($src, false);
 
 }
 
@@ -270,7 +279,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
         }
     }
 
-    return htmlspecialchars($src);
+    return html($src, false);
 
 }
 
@@ -281,7 +290,7 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
 	$connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
 	if (!cmsCore::includeFile($connector)){
-		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.htmlspecialchars($content).'</textarea>';
+		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.html($content, false).'</textarea>';
 	}
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);

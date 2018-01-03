@@ -425,8 +425,13 @@ class cmsUser {
     public static function sessionStart($cookie_domain = false){
 
         if($cookie_domain){
-            session_set_cookie_params(0, '/', '.'.$cookie_domain, false, true);
+            $cookie_domain = '.'.$cookie_domain;
         }
+
+        // если используете ТОЛЬКО https, раскомментируйте строку ниже,
+        // а следующую за ней закомментируйте
+        //session_set_cookie_params(0, '/', $cookie_domain, true, true);
+        session_set_cookie_params(0, '/', $cookie_domain, false, true);
 
         session_start();
 

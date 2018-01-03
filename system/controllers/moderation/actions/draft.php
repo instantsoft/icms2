@@ -9,7 +9,10 @@ class actionModerationDraft extends cmsAction {
         $counts = $this->getUserDraftCounts($this->cms_user->id);
 
         if (!$counts){
-            return $this->cms_template->render('empty');
+            return $this->cms_template->render('empty', array(
+                'page_title' => LANG_CONTENT_DRAFT_LIST,
+                'empty_hint' => LANG_LIST_EMPTY
+            ));
         }
 
         $is_index = false;

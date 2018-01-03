@@ -1,10 +1,10 @@
 <?php
-    $this->setPageTitle(LANG_MODERATION);
-    $this->addBreadcrumb(LANG_MODERATION);
+    $this->setPageTitle($page_title);
+    $this->addBreadcrumb($page_title);
 ?>
 
-<h1><?php echo LANG_MODERATION; ?></h1>
+<h1><?php echo $page_title; ?></h1>
 
 <div id="moderation_content_list">
-    <p><?php echo LANG_MODERATION_NO_TASKS; ?></p>
+    <p><?php echo $empty_hint; ?></p>
 </div>

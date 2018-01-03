@@ -54,7 +54,7 @@ class fieldString extends cmsFormField {
 
         }
 
-        return htmlspecialchars($value);
+        return html($value, false);
 
     }
 

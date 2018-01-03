@@ -9,7 +9,10 @@ class actionModerationWaitingList extends cmsAction {
         $counts = $this->model->getUserTasksCounts($this->cms_user->id);
 
         if (!$counts){
-            return $this->cms_template->render('empty');
+            return $this->cms_template->render('empty', array(
+                'page_title' => LANG_MODERATION_USERS,
+                'empty_hint' => LANG_MODERATION_NO_TASKS
+            ));
         }
 
         $is_index = false;

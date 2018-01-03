@@ -69,10 +69,10 @@
                                 <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                                     <h2>
                                     <?php if ($item['parent_id']){ ?>
-                                        <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
+                                        <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                         &rarr;
                                     <?php } ?>
-                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php echo htmlspecialchars($item[$field['name']]); ?></a>
+                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
                                     </h2>
                                 <?php } else { ?>
                                     <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>

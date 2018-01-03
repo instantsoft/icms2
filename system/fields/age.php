@@ -43,7 +43,7 @@ class fieldAge extends cmsFormField {
     }
 
     public function parse($value){
-        return htmlspecialchars( $this->getDiff($value) );
+        return html($this->getDiff($value), false);
     }
 
     public function getDiff($date){

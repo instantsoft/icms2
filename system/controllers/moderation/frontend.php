@@ -68,6 +68,28 @@ class moderation extends cmsFrontend {
      */
     public function moderationNotifyAuthor($item, $letter){
 
+        // автор гость
+        if(empty($item['user_id'])){
+
+            // если не заданы параметры гостя
+            if(empty($item['author_email'])){ return $this; }
+
+            $author_name = (!empty($item['author_name']) ? $item['author_name'] : $item['author_email']);
+
+            $to = array('email' => $item['author_email'], 'name' => $author_name);
+
+            $this->controller_messages->sendEmail($to, $letter, array(
+                'nickname'   => $author_name,
+                'page_title' => $item['title'],
+                'page_url'   => (isset($item['page_url']) ? $item['page_url'] : ''),
+                'reason'     => (isset($item['reason']) ? $item['reason'] : ''),
+                'date'       => html_date_time()
+            ));
+
+            return $this;
+
+        }
+
         $author = $this->model_users->getUser($item['user_id']);
         if(!$author){ return $this; }
 

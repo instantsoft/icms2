@@ -323,7 +323,7 @@ icms.comments = (function ($) {
 
         if (current_count > 0){
             $(menu).html(new_count);
-        } else {
+        } else if($('#comments_list + .pagebar').length > 0) {
             location.reload();
         }
 

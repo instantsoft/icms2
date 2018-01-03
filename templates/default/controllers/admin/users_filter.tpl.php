@@ -14,7 +14,7 @@
                     <?php if ($field['name']=='user'){ $field['name'] = 'user_id'; } ?>
                     <tr>
                         <td>
-                            <label><?php echo htmlspecialchars($field['title']); ?></label>
+                            <label><?php html($field['title']); ?></label>
                             <?php echo html_input('hidden', "filters[{$index}][field]", $field['name']); ?>
                         </td>
                         <td>

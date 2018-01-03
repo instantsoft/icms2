@@ -1,16 +1,74 @@
 <?php
 /**
- * 2.9.0 => 2.9.1
+ * 2.8.2 => 2.9
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('groups', 'join_roles')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `join_roles` VARCHAR(1000) NULL DEFAULT NULL COMMENT 'Роли при вступлении в группу'");
+    }
+
+    if(!$core->db->isFieldExists('groups', 'is_approved')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `is_approved` TINYINT(1) NOT NULL DEFAULT '1'");
+    }
+
+    if(!$core->db->isFieldExists('groups', 'approved_by')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `approved_by` INT(11) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('groups', 'date_approved')){
+        $core->db->query("ALTER TABLE `{#}groups` ADD `date_approved` TIMESTAMP NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('content_types', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}content_types` ADD `ordering` INT(11) NULL DEFAULT NULL AFTER `description`, ADD INDEX (`ordering`)");
+    }
+
+    if(!$core->db->isFieldExists('perms_rules', 'show_for_guest_group')){
+        $core->db->query("ALTER TABLE `{#}perms_rules` ADD `show_for_guest_group` TINYINT(1) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('content_datasets', 'list')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `list` TEXT NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('scheduler_tasks', 'is_strict_period')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `is_strict_period` TINYINT(1) UNSIGNED NULL DEFAULT NULL AFTER `period`");
+    }
+
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'queue' AND hook = 'run_queue'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_active`) VALUES ('Выполняет задачи системной очереди', 'queue', 'run_queue', '1', '1');");
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////// Добавляем модераторов комментариев //////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
+    $model_moderation = cmsCore::getModel('moderation');
+    if($moderators){
+        foreach ($moderators as $moderator) {
+            $model_moderation->addContentTypeModerator('comments', $moderator['id']);
+        }
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+    add_perms(array(
+        'auth' => array(
+            'view_closed'
+        )
+    ), 'flag');
 
+    add_perms(array(
+        'content' => array(
+            'view_list'
+        )
+    ), 'list', 'other,all');
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Обновляем события ///////////////////////////////////////////

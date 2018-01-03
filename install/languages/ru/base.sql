@@ -721,7 +721,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (121, 'ctype_lists_context', 'tags', 121, 1),
 (122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
-(124, 'content_groups_before_delete', 'moderation', 124, 1);
+(124, 'content_groups_before_delete', 'moderation', 124, 1),
+(125, 'comments_after_refuse', 'moderation', 125, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

@@ -125,14 +125,14 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta name="keywords" content="'.htmlspecialchars(!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys).'">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta name="description" content="'.htmlspecialchars(!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc).'">' ."\n";
+				echo "\t". '<meta name="description" content="'.html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false).'">' ."\n";
 			}
         }
 
-		foreach ($this->head as $id=>$tag){	echo "\t". $tag . "\n";	}
+		foreach ($this->head as $id => $tag){	echo "\t". $tag . "\n";	}
 
         if($print_css){
             $this->printCssTags();
@@ -180,14 +180,14 @@ class cmsTemplate {
 	 * Выводит заголовок текущей страницы
 	 */
 	public function title(){
-    	echo htmlspecialchars(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
+    	html(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
 	}
 
 	/**
 	 * Выводит название сайта
 	 */
 	public function sitename(){
-		echo htmlspecialchars($this->site_config->sitename);
+		html($this->site_config->sitename);
 	}
 
     /**
@@ -1467,7 +1467,7 @@ class cmsTemplate {
                 foreach($grid['columns'] as $field => $column){
 
                     if (!is_array($row[$field])){
-                        $value = htmlspecialchars($row[$field]);
+                        $value = html($row[$field], false);
                     } else {
                         $value = $row[$field];
                     }
@@ -1584,7 +1584,7 @@ class cmsTemplate {
                                 // парсим шаблон запроса подтверждения, заменяя значения полей
                                 if (isset($action['confirm'])){
                                     $action['confirm'] = str_replace('{'.$cell_id.'}', $cell_value, $action['confirm']);
-                                    $confirm_attr = 'onclick="if(!confirm(\''.htmlspecialchars($action['confirm']).'\')){ return false; }"';
+                                    $confirm_attr = 'onclick="if(!confirm(\''.html($action['confirm'], false).'\')){ return false; }"';
                                 }
 
                             }

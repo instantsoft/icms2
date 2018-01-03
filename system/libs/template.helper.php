@@ -140,7 +140,7 @@ function html_input($type='text', $name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'input';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="'.$type.'" class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($value).'" '.$attr_str.'/>';
+	return '<input type="'.$type.'" class="'.$class.'" name="'.$name.'" value="'.html($value, false).'" '.$attr_str.'/>';
 }
 
 function html_file_input($name, $attributes=array()){
@@ -154,7 +154,7 @@ function html_textarea($name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'textarea';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	$html = '<textarea name="'.$name.'" class="'.$class.'" '.$attr_str.'>'.htmlspecialchars($value).'</textarea>';
+	$html = '<textarea name="'.$name.'" class="'.$class.'" '.$attr_str.'>'.html($value, false).'</textarea>';
 	return $html;
 }
 

@@ -46,7 +46,7 @@ if( $ctype['options']['list_show_filter'] ) {
                                     <div class="clear">
                                         <div class="photos_album_title">
                                             <?php if ($item['parent_id']){ ?>
-                                                <?php echo htmlspecialchars($item['parent_title']); ?> &rarr;
+                                                <?php html($item['parent_title']); ?> &rarr;
                                             <?php } ?>
 
                                             <?php if (!empty($item['is_private_item'])) { ?>
