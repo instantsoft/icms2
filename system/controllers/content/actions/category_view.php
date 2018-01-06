@@ -126,10 +126,33 @@ class actionContentCategoryView extends cmsAction {
         if(!empty($ctype['options']['list_style'])){
             if(is_array($ctype['options']['list_style']) && count($ctype['options']['list_style']) > 1){
 
-                $current_style = $this->request->has('style') ? $this->request->get('style', '') : $ctype['options']['list_style'][0];
+                $style_key_name = $ctype['name'].'_ctype_list_style';
+
+                $ctype_list_style_preset = false;
+
+                if(cmsUser::hasCookie($style_key_name)){
+                    $ctype_list_style_preset = cmsUser::getCookie($style_key_name);
+                    $ctype_list_style_preset = $ctype_list_style_preset === 'default' ? '' : $ctype_list_style_preset;
+                }
+
+                if($this->cms_user->is_logged){
+                    $ctype_list_style_preset = cmsUser::getUPS($style_key_name);
+                    $ctype_list_style_preset = $ctype_list_style_preset === null ? '' : $ctype_list_style_preset;
+                }
+
+                $current_style = $this->request->has('style') ?
+                        $this->request->get('style', '') :
+                        ($ctype_list_style_preset !== false ? $ctype_list_style_preset : $ctype['options']['list_style'][0]);
 
                 if(!in_array($current_style, $ctype['options']['list_style'])){
                     return cmsCore::error404();
+                }
+
+                // запоминаем стиль в куки
+                if(!$this->cms_user->is_logged){
+                    cmsUser::setCookie($style_key_name, ($current_style === '' ? 'default' : $current_style), 604800);
+                } else {
+                    cmsUser::setUPS($style_key_name, $current_style);
                 }
 
                 $style_titles = array();
