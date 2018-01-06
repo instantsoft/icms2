@@ -7,7 +7,7 @@
  */
 function html($string, $print = true){
 
-    $string = htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
     if($print){
         echo $string; return;
