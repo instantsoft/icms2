@@ -2,7 +2,7 @@
 
     $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
     $page_header = isset($category['title']) ? $category['title'] : $list_header;
-    $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
+    $rss_query = isset($category['id']) && $category['id'] != false ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
     $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
