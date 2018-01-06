@@ -5,7 +5,7 @@
  * @param string $href Ссылка
  */
 function html_link($title, $href){
-	echo '<a href="'.htmlspecialchars($href).'">'.htmlspecialchars($title).'</a>';
+	echo '<a href="'.html($href, false).'">'.html($title, false).'</a>';
 }
 
 /**
@@ -265,7 +265,7 @@ function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_emp
 
 	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
 
-    $img = '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" title="'.htmlspecialchars($alt).'" />';
+    $img = '<img src="'.$src.'" '.$size.' alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
 
     if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
 
@@ -326,12 +326,12 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
 
 	$size = $small_preset == 'micro' ? 'width="32" height="32"' : '';
 
-    $title = htmlspecialchars(isset($attributes['title']) ? $attributes['title'] : $alt); unset($attributes['title']);
+    $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    $image_html = '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+    $image_html = '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.$class.' />';
 
     if($modal_preset){
         $modal_src = html_image_src($image, $modal_preset, true);
@@ -367,7 +367,7 @@ function html_gif_image($image, $size_preset='small', $alt='', $attributes = arr
     return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
                 <span class="background_overlay"></span>
                 <span class="image_label">gif</span>
-                <img src="'.$preview_src.'" alt="'.htmlspecialchars($alt).'" />
+                <img src="'.$preview_src.'" alt="'.html($alt, false).'" />
             </a>';
 
 }
@@ -547,7 +547,7 @@ function html_search_bar($list, $href, $link_class = ''){
 
     foreach($list as $id => $letter){
         $letter = trim($letter);
-        $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.htmlspecialchars($letter).'</a>';
+        $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.html($letter, false).'</a>';
     }
 
     return implode(', ', $list);

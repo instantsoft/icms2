@@ -1467,7 +1467,7 @@ class cmsTemplate {
                 foreach($grid['columns'] as $field => $column){
 
                     if (!is_array($row[$field])){
-                        $value = htmlspecialchars($row[$field]);
+                        $value = html($row[$field], false);
                     } else {
                         $value = $row[$field];
                     }

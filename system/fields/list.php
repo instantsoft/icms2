@@ -71,10 +71,10 @@ class fieldList extends cmsFormField {
         if (isset($items[$value])) { $item = $items[$value]; }
 
         if ($this->getOption('is_autolink')){
-            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.htmlspecialchars($item).'</a>';
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.html($item, false).'</a>';
         }
 
-        return htmlspecialchars($item);
+        return html($item, false);
 
     }
 
