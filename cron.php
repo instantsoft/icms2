@@ -65,10 +65,19 @@
 
         }
 
-        // Выполняем хук
-        $controller->runHook("cron_{$task['hook']}");
+        try {
 
-        // Обновляем время последнего запуска задачи
-        $model->updateSchedulerTaskDate($task);
+            // Выполняем хук
+            $controller->runHook("cron_{$task['hook']}");
+
+            // Обновляем время последнего запуска задачи
+            $model->updateSchedulerTaskDate($task);
+
+        } catch (Exception $e) {
+
+            // выключаем ошибочное задание
+            $model->toggleSchedulerPublication($task['id'], 0);
+
+        }
 
     }

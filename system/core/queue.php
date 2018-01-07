@@ -138,16 +138,25 @@ class cmsQueue {
 
         $controller = cmsCore::getControllerInstance($job['payload']['controller']);
 
-        if(isset($job['payload']['hook'])){
-            return $controller->runHook($job['payload']['hook'], $job['payload']['params']);
+        try {
+
+            $result = true;
+
+            if(isset($job['payload']['hook'])){
+                $result = $controller->runHook($job['payload']['hook'], $job['payload']['params']);
+            }
+
+            if(isset($job['payload']['action'])){
+                $result = $controller->runAction($job['payload']['action'], $job['payload']['params']);
+            }
+
+        } catch (Exception $e) {
+
+            $result = $e->getMessage();
+
         }
 
-        if(isset($job['payload']['action'])){
-            return $controller->runAction($job['payload']['action'], $job['payload']['params']);
-        }
-
-        // ничего нет = ошибочная задача, удаляем
-        return true;
+        return $result;
 
     }
 
