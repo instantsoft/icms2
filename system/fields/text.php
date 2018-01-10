@@ -64,7 +64,7 @@ class fieldText extends cmsFormField {
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
         } else {
-            return nl2br(htmlspecialchars($value));
+            return nl2br(html($value, false));
         }
 
     }

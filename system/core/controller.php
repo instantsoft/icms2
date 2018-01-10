@@ -467,9 +467,6 @@ class cmsController {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Выполняет экшен, находящийся в отдельном файле ./actions/$action_name.php
      * @param str $action_name
@@ -504,7 +501,78 @@ class cmsController {
             cmsCore::error404();
         }
 
+        // проверяем параметры если нужно
+        $params_error = $this->validateRequestParams($action_object);
+        if($params_error !== false){
+            if (cmsConfig::get('debug')){
+                if ($this->request->isAjax()){
+                    return $this->cms_template->renderJSON(array('error' => true, 'request_params' => $params_error));
+                } else {
+                    cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
+                }
+            } else {
+                cmsCore::error404();
+            }
+        }
+
         return call_user_func_array(array($action_object, 'run'), $params);
+
+    }
+
+    /**
+     * Проверяет параметры запроса, если они заданы
+     * @param object $action_object
+     * @return boolean
+     */
+    public function validateRequestParams($action_object) {
+
+        if(empty($action_object->request_params)){
+            return false;
+        }
+
+        $errors = array();
+
+        // валидация аналогична валидации форм
+        foreach ($action_object->request_params as $param_name => $rules) {
+
+            $value = $this->request->get($param_name, null);
+
+            if (is_null($value) && isset($rules['default'])) {
+
+                $value = $rules['default'];
+
+                $this->request->set($param_name, $value);
+
+            } elseif(!is_null($value) && isset($rules['default'])){
+                $value = $this->request->get($param_name, $rules['default']);
+            }
+
+            foreach ($rules['rules'] as $rule) {
+
+                if (!$rule) { continue; }
+
+                $validate_function = "validate_{$rule[0]}";
+
+                $rule[] = $value;
+
+                unset($rule[0]);
+
+                $result = call_user_func_array(array($this, $validate_function), $rule);
+
+                // если получилось false, то дальше не проверяем, т.к.
+                // ошибка уже найдена
+                if ($result !== true) {
+                    $errors[$param_name] = $result;
+                    break;
+                }
+
+            }
+
+        }
+
+        if (!sizeof($errors)) { return false; }
+
+        return $errors;
 
     }
 

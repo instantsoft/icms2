@@ -80,8 +80,10 @@ icms.datagrid = (function ($) {
                 var _totals = +$('#datagrid > tbody > tr:not(.filter).selected').length;
                 if(_totals > 0){
                     $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').show();
+                    $('.cp_toolbar .show_on_selected').show();
                 } else {
                     $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').hide();
+                    $('.cp_toolbar .show_on_selected').hide();
                 }
                 if(_total === _totals){
                     $('.datagrid_select_actions .shint, .datagrid_select_actions .sall, .datagrid_select_actions .sinvert').hide();
@@ -114,6 +116,7 @@ icms.datagrid = (function ($) {
             $('.datagrid_select_actions .sinvert').on('click', function (){
                 $('#datagrid > tbody > tr:not(.filter) > td').trigger('click');
             });
+            $('.cp_toolbar .show_on_selected').hide();
         }
 
         this.setOrdering();

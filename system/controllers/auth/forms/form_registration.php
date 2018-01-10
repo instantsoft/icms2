@@ -20,17 +20,21 @@ class formAuthRegistration extends cmsForm {
                     new fieldString('password1', array(
                         'title' => LANG_PASSWORD,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('min_length', 6)
+                            array('required')
                         )
                     )),
                     new fieldString('password2', array(
                         'title' => LANG_RETYPE_PASSWORD,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('min_length', 6)
+                            array('required')
                         )
                     ))
                 )

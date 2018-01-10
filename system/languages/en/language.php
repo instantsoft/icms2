@@ -307,6 +307,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Error');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Error in parameters: %s');
     define('LANG_FORM_ERRORS',				 'Errors in form');
     define('LANG_TRACE_STACK',				 'Recent calls');
     define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');

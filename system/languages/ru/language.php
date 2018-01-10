@@ -307,6 +307,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Ошибка');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Ошибка в параметрах: %s');
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');

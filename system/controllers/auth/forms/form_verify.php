@@ -11,10 +11,12 @@ class formAuthVerify extends cmsForm {
                 'title' => LANG_VERIFY_EMAIL_CODE,
                 'childs' => array(
                     new fieldString('reg_token', array(
+                        'options'=>array(
+                            'min_length'=> 32,
+                            'max_length'=> 32
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('max_length', 32),
-                            array('min_length', 32)
+                            array('required')
                         )
                     ))
                 )

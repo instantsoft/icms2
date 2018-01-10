@@ -1061,13 +1061,13 @@ class cmsModel {
     }
 
     public function select($field, $as=false){
-        $this->select[] = $as ? $field.' as '.$as : $field;
+        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
     }
 
     public function selectOnly($field, $as=false){
         $this->select = array();
-        $this->select[] = $as ? $field.' as '.$as : $field;
+        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
     }
 
