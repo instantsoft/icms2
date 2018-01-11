@@ -237,9 +237,10 @@ function files_sanitize_name($filename){
  * Получает данные по заданному url
  * @param string $url URL, откуда нужно получить данные
  * @param integer $timeout Таймаут соединения
+ * @param boolean $json_decode Преобразовывать JSON
  * @return string
  */
-function file_get_contents_from_url($url, $timeout = 5){
+function file_get_contents_from_url($url, $timeout = 5, $json_decode = false){
 
     if (function_exists('curl_init')){
 
@@ -258,6 +259,10 @@ function file_get_contents_from_url($url, $timeout = 5){
 
     } else {
         $data = @file_get_contents($url);
+    }
+
+    if($json_decode){
+        return json_decode($data, true);
     }
 
     return $data;

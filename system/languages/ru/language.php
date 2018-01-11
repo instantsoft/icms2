@@ -18,7 +18,7 @@
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_RETURN_CONFIRM',    'Вы уверены что хотите отозвать эту запись с проверки?\nОна переместится в ваши черновики.');
-    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновики');
+    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновиках');
     define('LANG_CONTENT_MOVE_DRAFT',		 'Перенести в черновики');
     define('LANG_CONTENT_DRAFT_NOTICE',		 'Запись скрыта в черновики');
     define('LANG_CONTENT_DRAFT_LIST',		 'Черновики');

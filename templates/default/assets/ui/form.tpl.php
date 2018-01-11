@@ -10,8 +10,8 @@
     $is_ajax = $attributes['method']=='ajax';
     $method = $is_ajax ? 'post' : $attributes['method'];
 
-    $default_submit = array('title' => LANG_SAVE);
-    $default_cancel = array('title' => LANG_CANCEL, 'href'=>href_to_home(), 'show'=>false);
+    $default_submit = array('title' => LANG_SAVE, 'show' => true);
+    $default_cancel = array('title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false);
 
     $submit = isset($attributes['submit']) ? array_merge($default_submit, $attributes['submit']) : $default_submit;
     $cancel = isset($attributes['cancel']) ? array_merge($default_cancel, $attributes['cancel']) : $default_cancel;
@@ -187,9 +187,12 @@
     <?php echo $append_html; ?>
 
     <div class="buttons">
-        <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php if ($submit['show']) { ?>
+            <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php } ?>
         <?php if(isset($attributes['buttons'])){ ?>
             <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php if (!empty($button['hide'])) { continue; } ?>
                 <?php echo html_button(
                         $button['title'],
                         $button['name'],
