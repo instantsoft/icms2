@@ -993,6 +993,8 @@ class content extends cmsFrontend {
 
     public function prepareItemSeo($item, $fields, $ctype) {
 
+        list($ctype, $fields, $item) = cmsEventsManager::hook('prepare_item_seo', array($ctype, $fields, $item));
+
         $_item = $item;
 
         foreach ($fields as $field) {
