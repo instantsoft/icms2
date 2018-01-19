@@ -51,7 +51,7 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
-        'submit' => array('title' => $button_save_text, 'show' => $show_save_button),
+        'submit' => array('title' => $button_save_text, 'show' => (isset($show_save_button) ? $show_save_button : true)),
         'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
         'buttons' => array(
             array(

@@ -278,6 +278,7 @@
     define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
     define('LANG_PERM_OPTION_OTHER',         'Only others');
+    define('LANG_PERM_OPTION_TO_OTHER',      'Only in others');
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');

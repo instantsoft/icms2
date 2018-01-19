@@ -22,7 +22,7 @@ class onActivityContentAfterAddApprove extends cmsAction {
             'subject_url'      => $subject_url,
             'is_private'       => isset($item['is_private']) ? $item['is_private'] : 0,
             'group_id'         => isset($item['parent_id']) ? $item['parent_id'] : null,
-            'is_parent_hidden' => !empty($item['is_parent_hidden']),
+            'is_parent_hidden' => !empty($item['is_parent_hidden']) ? 1 : null,
             'is_pub'           => (isset($item['is_pub']) ? $item['is_pub'] : 1)
         ));
 

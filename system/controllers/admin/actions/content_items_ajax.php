@@ -86,7 +86,7 @@ class actionAdminContentItemsAjax extends cmsAction {
         );
         $content_model->select('mlog.date_expired', 'trash_date_expired');
 
-        $content_model->disableApprovedFilter()->joinModerationsTasks($ctype['name']);
+        $content_model->joinModerationsTasks($ctype['name']);
 
         $items = $content_model->getContentItems($ctype['name']);
 
