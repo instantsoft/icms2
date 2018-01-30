@@ -1466,6 +1466,10 @@ class cmsTemplate {
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
 
+                    if (isset($column['key_alias'])){
+                        $field = $column['key_alias'];
+                    }
+
                     if (!is_array($row[$field])){
                         $value = html($row[$field], false);
                     } else {

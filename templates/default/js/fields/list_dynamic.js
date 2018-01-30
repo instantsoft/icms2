@@ -1,7 +1,8 @@
 var icms = icms || {};
-icms.dynamicList = function(field_id, element_name, current_values, fields_mapping){
+icms.dynamicList = function(field_id, element_name, current_values, fields_mapping, single_select){
 
     fields_mapping = fields_mapping || {};
+    single_select = single_select || 0;
 
     var mapping_data = {};
 
@@ -60,7 +61,9 @@ icms.dynamicList = function(field_id, element_name, current_values, fields_mappi
         var list_template = $('.list_template', wrap).clone(true).removeClass('list_template').addClass('list_fields_list');
 
         var field_title = $('.key_items_list option[value="'+field+'"]', wrap).html();
-        $('.key_items_list option[id=key_option_'+field_id+'_'+field+']', wrap).prop('disabled', true);
+        if(single_select > 0){
+            $('.key_items_list option[id=key_option_'+field_id+'_'+field+']', wrap).prop('disabled', true);
+        }
 
         var ns = $('.key_items_list option[value="'+field+'"]', wrap).data('ns');
 

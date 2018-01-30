@@ -1479,7 +1479,7 @@ class cmsModel {
         // перебираем все вернувшиеся строки
         while($item = $this->db->fetchAssoc($result)){
 
-            $key = $key_field ? $item[$key_field] : false;
+            $key = ($key_field && isset($item[$key_field])) ? $item[$key_field] : false;
 
             // для кеша формируем массив без обработки коллбэком
             if ($this->cache_key){

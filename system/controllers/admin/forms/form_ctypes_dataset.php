@@ -91,6 +91,7 @@ class formAdminCtypesDataset extends cmsForm {
                         'add_title'    => LANG_FILTER_ADD,
                         'is_multiple'  => true,
                         'dynamic_list' => true,
+                        'single_select' => 0,
                         'select_title' => LANG_FILTER_FIELD,
                         'multiple_keys' => array(
                             'field' => 'field', 'condition' => 'field_select', 'value' => 'field_value'
