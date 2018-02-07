@@ -310,12 +310,12 @@ class content extends cmsFrontend {
             if(!$items && $page > 1){ cmsCore::error404(); }
         }
 
-        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
-        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
-
         cmsModel::cacheResult('current_ctype_fields', $fields);
         cmsModel::cacheResult('current_ctype_props', $props);
         cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
+
+        list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));
+        list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 
         $this->cms_template->setContext($this);
 
