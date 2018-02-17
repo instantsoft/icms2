@@ -112,6 +112,8 @@ class cmsFormField {
      * @var array
      */
     public $data = array();
+    
+    public $visible_depend = array();
 
     /**
      * @param string $name Имя поля

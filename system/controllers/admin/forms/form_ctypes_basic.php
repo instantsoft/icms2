@@ -49,7 +49,8 @@ class formAdminCtypesBasic extends cmsForm {
                             'hide'      => LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE,
                             'delete'    => LANG_CP_IS_PUB_CONTROL_PROCESS_DEL,
                             'in_basket' => LANG_BASKET_DELETE
-                        )
+                        ),
+                        'visible_depend' => array('is_date_range' => array('show' => array('1')))
                     ))
                 )
             ),
@@ -62,27 +63,34 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_CATEGORIES_ON
                     )),
                     new fieldCheckbox('is_cats_recursive', array(
-                        'title' => LANG_CP_CATEGORIES_RECURSIVE
+                        'title' => LANG_CP_CATEGORIES_RECURSIVE,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_empty_root', array(
-                        'title' => LANG_CP_CATEGORIES_EMPTY_ROOT
+                        'title' => LANG_CP_CATEGORIES_EMPTY_ROOT,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_cats_multi', array(
-                        'title' => LANG_CP_CATEGORIES_MULTI
+                        'title' => LANG_CP_CATEGORIES_MULTI,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_cats_change', array(
                         'title' => LANG_CP_CATEGORIES_CHANGE,
-                        'default' => true
+                        'default' => true,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_cats_open_root', array(
-                        'title' => LANG_CP_CATEGORIES_OPEN_ROOT
+                        'title' => LANG_CP_CATEGORIES_OPEN_ROOT,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_cats_only_last', array(
-                        'title' => LANG_CP_CATEGORIES_ONLY_LAST
+                        'title' => LANG_CP_CATEGORIES_ONLY_LAST,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_show_cats', array(
-                        'title' => LANG_CP_CATEGORIES_SHOW
-                    )),
+                        'title' => LANG_CP_CATEGORIES_SHOW,
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
+                    ))
                 )
             ),
             'folders' => array(
@@ -105,7 +113,8 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_CT_GROUPS_ALLOW
                     )),
                     new fieldCheckbox('is_in_groups_only', array(
-                        'title' => LANG_CP_CT_GROUPS_ALLOW_ONLY
+                        'title' => LANG_CP_CT_GROUPS_ALLOW_ONLY,
+                        'visible_depend' => array('is_in_groups' => array('show' => array('1')))
                     )),
                 )
             ),
@@ -138,10 +147,12 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_TAGS_ON
                     )),
                     new fieldCheckbox('options:is_tags_in_list', array(
-                        'title' => LANG_CP_TAGS_IN_LIST
+                        'title' => LANG_CP_TAGS_IN_LIST,
+                        'visible_depend' => array('is_tags' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:is_tags_in_item', array(
-                        'title' => LANG_CP_TAGS_IN_ITEM
+                        'title' => LANG_CP_TAGS_IN_ITEM,
+                        'visible_depend' => array('is_tags' => array('show' => array('1')))
                     )),
                 )
             ),
@@ -236,13 +247,16 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldCheckbox('options:is_show_fields_group', array(
                         'title' => LANG_CP_ITEMVIEW_FIELDS_GROUP,
+                        'visible_depend' => array('options:item_on' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('options:hits_on', array(
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
+                        'visible_depend' => array('options:item_on' => array('show' => array('1')))
                     )),
                     new fieldText('item_append_html', array(
                         'title' => LANG_CP_ITEMVIEW_APPEND_HTML,
                         'hint' => LANG_CP_ITEMVIEW_APPEND_HTML_HINT,
+                        'visible_depend' => array('options:item_on' => array('show' => array('1')))
                     )),
                 )
             ),
