@@ -11,6 +11,8 @@ class actionUsersProfileContent extends cmsAction {
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
+        if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
+
         if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
             cmsCore::error404();
         }
