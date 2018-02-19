@@ -17,11 +17,7 @@ class actionAdminCtypes extends cmsAction {
         $new_filter['perpage'] = isset($grid['filter']['perpage']) ? $grid['filter']['perpage'] : 30;
         $grid['filter'] = $new_filter;
 
-<<<<<<< HEAD
         return $this->cms_template->render('ctypes', array(
-=======
-        return cmsTemplate::getInstance()->render('ctypes', array(
->>>>>>> origin/master
             'grid' => $grid
         ));
 
