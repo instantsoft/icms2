@@ -57,6 +57,10 @@ class formWidgetMenuOptions extends cmsForm {
                         }
                     )),
 
+                    new fieldString('options:class', array(
+                        'title' => LANG_WD_MENU_CSS_CLASS
+                    )),
+
                     new fieldCheckbox('options:is_detect', array(
                         'title' => LANG_WD_MENU_DETECT_ACTIVE,
                         'default' => 1
