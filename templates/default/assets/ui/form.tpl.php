@@ -123,13 +123,15 @@
                             }
                         }
 
+                        if($field->visible_depend){
+                            $visible_depend[] = $field;
+                            $classes[] = 'child_field';
+                        }
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
                         $id = 'f_'.$field->id;
 
-                        if($field->visible_depend){
-                            $visible_depend[] = $field;
-                        }
                     ?>
 
                     <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>" <?php if ($rel) { ?>rel="<?php echo $rel; ?>"<?php } ?> <?php if ($styles) { ?>style="<?php echo $styles; ?>"<?php } ?>>
@@ -222,4 +224,4 @@
             });
         });
     </script>
-<?php } ?>
+<?php }
