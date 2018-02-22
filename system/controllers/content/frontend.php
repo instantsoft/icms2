@@ -621,7 +621,7 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
-                'prefix' => '/'.$ctype['name'].'/',
+                'prefix' => '/'.((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : ''), 
                 'suffix' => '.html',
                 'rules' => $slug_field_rules
             )));
