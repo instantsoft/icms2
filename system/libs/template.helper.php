@@ -354,13 +354,20 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
  */
 function html_gif_image($image, $size_preset='small', $alt='', $attributes = array()){
 
+    if(is_array($size_preset)){
+        list($small_preset, $modal_preset) = $size_preset;
+    } else {
+        $small_preset = $size_preset;
+        $modal_preset = false;
+    }
+
     $class = isset($attributes['class']) ? $attributes['class'] : '';
-    if($size_preset == 'micro'){
+    if($small_preset == 'micro'){
         $class .= ' micro_image';
     }
 
-    $original_src = html_image_src($image, 'original', true);
-    $preview_src  = html_image_src($image, $size_preset, true);
+    $original_src = html_image_src($image, $modal_preset?:'original', true);
+    $preview_src  = html_image_src($image, $small_preset, true);
 
     if (!$preview_src) { return ''; }
 
