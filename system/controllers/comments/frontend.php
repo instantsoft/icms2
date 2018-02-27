@@ -84,6 +84,8 @@ class comments extends cmsFrontend {
                 'comments'          => $comments,
                 'csrf_token_seed'   => $csrf_token_seed,
                 'rss_link'          => $rss_link,
+                'guest_name'        => cmsUser::getCookie('comments_guest_name', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
+                'guest_email'       => cmsUser::getCookie('comments_guest_email', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
                 'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
             ))
         );

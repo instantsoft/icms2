@@ -428,6 +428,10 @@ article div.content_categories:last-child {
     text-decoration: none;
     color: #839aa4;
 }
+.content_list_styles .style_switch.without_title {
+    min-width: 0;
+    padding: 0 0 0 33px;
+}
 .content_list_styles .style_switch:hover, .content_list_styles .style_switch.active {
     background-color: #ecf0f1;
 }

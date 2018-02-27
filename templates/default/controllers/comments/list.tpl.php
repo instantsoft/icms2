@@ -80,15 +80,13 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                 <?php if (!$user->is_logged) { ?>
                     <?php
                         $this->addJS('templates/default/js/jquery-cookie.js');
-                        $name = cmsUser::getCookie('comments_guest_name');
-                        $email = cmsUser::getCookie('comments_guest_email');
                     ?>
                     <div class="author_data">
                         <div class="name field">
-                            <label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $name); ?>
+                            <label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $guest_name); ?>
                         </div>
                         <div class="email field">
-                            <label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $email); ?>
+                            <label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $guest_email); ?>
                         </div>
                     </div>
                 <?php } ?>

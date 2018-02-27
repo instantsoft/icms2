@@ -86,8 +86,7 @@ class fieldAge extends cmsFormField {
             }
 
             if (!empty($value['to'])){
-                $to = intval($value['to']);
-                $model->filterDateYounger($this->name, $to, $this->getOption('range'));
+                $model->filterTimestampYounger($this->name, $value['to'], $this->getOption('range'));
             }
 
             return $model;

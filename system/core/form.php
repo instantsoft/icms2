@@ -538,8 +538,8 @@ class cmsForm {
 
         $hash = implode('::', array(session_id(), microtime(true)));
 
-        if(function_exists('password_hash')){
-            $token = password_hash($hash, PASSWORD_DEFAULT, array('cost' => 8));
+        if(function_exists('hash') && in_array('sha256', hash_algos())){
+            $token = hash('sha256', $hash);
         } else {
             $token = md5($hash);
         }

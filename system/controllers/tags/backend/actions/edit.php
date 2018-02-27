@@ -8,18 +8,17 @@ class actionTagsEdit extends cmsAction {
 
         $form = $this->getForm('tag');
 
-        $is_submitted = $this->request->has('submit');
-
         $tag = $this->model->getTag($tag_id);
+        if (!$tag) { cmsCore::error404(); }
 
-        $original_tag = $tag['tag'];
+        $original_tag = $tag;
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
-            $tag = $form->parse($this->request, $is_submitted);
+            $tag = $form->parse($this->request, true);
             $errors = $form->validate($this,  $tag);
 
-            if ($original_tag == $tag['tag']) { $this->redirectToAction(); }
+            if ($original_tag['tag'] == $tag['tag']) { $this->redirectToAction(); }
 
             if (!$errors){
 
@@ -27,11 +26,12 @@ class actionTagsEdit extends cmsAction {
 
                 if (!$duplicate_id){
                     $this->model->updateTag($tag_id, $tag);
+                    $this->model->replaceTargetTags($tag_id, $tag['tag'], $original_tag['tag']);
                 }
 
                 if ($duplicate_id){
                     $this->model->mergeTags($tag_id, $duplicate_id);
-                    cmsUser::addSessionMessage(sprintf(LANG_TAGS_MERGED, $original_tag, $tag['tag']), 'success');
+                    cmsUser::addSessionMessage(sprintf(LANG_TAGS_MERGED, $original_tag['tag'], $tag['tag']), 'success');
                 }
 
                 $this->redirectToAction();
@@ -39,17 +39,15 @@ class actionTagsEdit extends cmsAction {
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/tag', array(
-            'do' => 'edit',
-            'tag' => $tag,
-            'form' => $form,
+        return $this->cms_template->render('backend/tag', array(
+            'do'     => 'edit',
+            'tag'    => $tag,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

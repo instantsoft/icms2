@@ -328,6 +328,7 @@
     define('LANG_CP_USER_GROUP_CREATED',        'Group &laquo;%s&raquo; has been created');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Allow to join this group after sign up');
     define('LANG_CP_USER_GROUP_IS_FILTER',      'Show in user filter');
+    define('LANG_CP_USER_GROUP_ERR_DELETE',     'You can not delete the last group');
     define('LANG_CP_USER_LOCKING',              'Blocking');
     define('LANG_CP_USER_LOCKED',               'Blocked');
     define('LANG_CP_USER_IS_LOCKED',            'Block user');

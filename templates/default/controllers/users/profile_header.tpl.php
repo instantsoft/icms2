@@ -3,7 +3,7 @@
 <div id="user_profile_title">
 
     <div class="avatar">
-        <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?>
+        <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?>
     </div>
 
     <?php if (!$profile['is_deleted']){ ?>

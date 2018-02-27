@@ -56,11 +56,10 @@ class actionUsersProfile extends cmsAction {
                 'profile_id'   => $profile['id']
             );
 
-            $wall_permissions = array(
-                'add'    => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall'),
-                'reply'  => $this->cms_user->is_logged && $this->cms_user->isPrivacyAllowed($profile, 'users_profile_wall_reply'),
-                'delete' => ($this->cms_user->is_admin || ($this->cms_user->id == $profile['id']))
-            );
+            $wall_permissions = $this->runHook('wall_permissions', array(
+                'profile_type' => 'user',
+                'profile_id'   => $profile
+            ));
 
             $wall_html = $this->controller_wall->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
 

@@ -5,9 +5,13 @@ AddDefaultCharset utf-8
 Options -Indexes
 RewriteEngine on
 
+# To redirect all users to access the site without the www. prefix
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^ http://%1%{REQUEST_URI} [L,R=301]
+
 # HTTPS redirect if available
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 # Hide text files
 RewriteRule ^.htaccess$ - [F]

@@ -183,7 +183,7 @@ class cmsRequest {
 
     private static function loadDeviceType() {
 
-        $device_type  = (string)cmsUser::getCookie('device_type');
+        $device_type  = cmsUser::getCookie('device_type', 'string', function ($cookie){ return trim(strip_tags($cookie)); });
 
         if(!$device_type || !in_array($device_type, self::$device_types, true)){
 

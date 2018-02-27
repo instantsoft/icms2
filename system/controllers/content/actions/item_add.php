@@ -306,8 +306,7 @@ class actionContentItemAdd extends cmsAction {
 
                 if ($ctype['is_tags']){
                     $tags_model = cmsCore::getModel('tags');
-                    $tags_model->addTags($item['tags'], $this->name, $ctype['name'], $item['id']);
-                    $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $item['id']);
+                    $item['tags'] = $tags_model->addTags($item['tags'], $this->name, $ctype['name'], $item['id']);
                     $this->model->updateContentItemTags($ctype['name'], $item['id'], $item['tags']);
                 }
 

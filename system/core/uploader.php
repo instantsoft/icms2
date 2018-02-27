@@ -123,7 +123,7 @@ class cmsUploader {
 
         $dest_file = $dest_dir . $dest_name;
 
-        if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['height'])) { $size['height'] = 0; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
         if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {

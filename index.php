@@ -1,54 +1,56 @@
 <?php
-/******************************************************************************/
-//                                                                            //
-//                             InstantCMS 2                                   //
-//                        http://instantcms.ru/                               //
-//                   produced by InstantSoft, instantsoft.ru                  //
-//                        LICENSED BY GNU/GPL v2                              //
-//                                                                            //
-/******************************************************************************/
 
-    /**
-     * Константа, по которой можно отследить текущий тип запуска CMS
-     */
-    define('VALID_RUN', true);
-    /**
-     * Константа, наличие которой говорит о том, что нам нужны сессии
-     */
-    define('SESSION_START', true);
+/**
+ * @file
+ * Файл, который обслуживает все запросы страниц InstantCMS.
+ *
+ * Весь код InstantCMS выпущен в соответствии с лицензией GNU General Public License v2.
+ * Смотрите файлы license.en.txt и license.ru.txt в корне вашей установки копии InstantCMS.
+ * Сделано в InstantSoft, instantsoft.ru, instantcms.ru.
+ */
 
-    header('Content-type:text/html; charset=utf-8');
+/**
+ * Константа, по которой можно отследить текущий тип запуска CMS
+ */
+define('VALID_RUN', true);
 
-    require_once 'bootstrap.php';
+/**
+ * Константа, наличие которой говорит о том, что нам нужны сессии
+ */
+define('SESSION_START', true);
 
-    if ($config->emulate_lag) { usleep(350000); }
+header('Content-type:text/html; charset=utf-8');
 
-    //Запускаем роутинг
-    $core->route($_SERVER['REQUEST_URI']);
+require_once 'bootstrap.php';
 
-    // Инициализируем шаблонизатор
-    $template = cmsTemplate::getInstance();
+if ($config->emulate_lag) { usleep(350000); }
 
-    cmsEventsManager::hook('engine_start');
+//Запускаем роутинг
+$core->route($_SERVER['REQUEST_URI']);
 
-    // загружаем и устанавливаем страницы для текущего URI
-    $core->loadMatchedPages();
+// Инициализируем шаблонизатор
+$template = cmsTemplate::getInstance();
 
-    // Проверяем доступ
-    if(cmsEventsManager::hook('page_is_allowed', true)){
+cmsEventsManager::hook('engine_start');
 
-        //Запускаем контроллер
-        $core->runController();
+// загружаем и устанавливаем страницы для текущего URI
+$core->loadMatchedPages();
 
-    }
+// Проверяем доступ
+if(cmsEventsManager::hook('page_is_allowed', true)){
 
-    // формируем виджеты
-    $core->runWidgets();
+    //Запускаем контроллер
+    $core->runController();
 
-    //Выводим готовую страницу
-    $template->renderPage();
+}
 
-    cmsEventsManager::hook('engine_stop');
+// формируем виджеты
+$core->runWidgets();
 
-    // Останавливаем кеш
-    cmsCache::getInstance()->stop();
+//Выводим готовую страницу
+$template->renderPage();
+
+cmsEventsManager::hook('engine_stop');
+
+// Останавливаем кеш
+cmsCache::getInstance()->stop();

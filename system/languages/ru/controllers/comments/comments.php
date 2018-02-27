@@ -18,6 +18,8 @@ define('LANG_COMMENTS_OPT_IS_GUESTS_HINT', 'Незарегистрированн
 define('LANG_COMMENTS_OPT_GUESTS_DELAY', 'Пауза между комментариями гостей с одного IP');
 define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS', 'Запретить гостевые комментарии с IP');
 define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT', 'Один IP адрес в каждой строке');
+define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_EMAILS', 'Запретить гостевые комментарии с email');
+define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_NAMES', 'Запретить гостевые комментарии с именами');
 define('LANG_COMMENTS_DS_ALL', 'Все');
 define('LANG_COMMENTS_DS_FRIENDS', 'Моих друзей');
 define('LANG_COMMENTS_DS_MY', 'Только мои');

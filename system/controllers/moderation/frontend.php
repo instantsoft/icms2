@@ -19,8 +19,14 @@ class moderation extends cmsFrontend {
         $moderator = $this->model_users->getUser($moderator_id);
         if(!$moderator){ return false; }
 
-        $author = $this->model_users->getUser($item['user_id']);
-        if(!$author){ return false; }
+        if($item['user_id']){
+            $author = $this->model_users->getUser($item['user_id']);
+            if(!$author){ return false; }
+        } else {
+            $author = array(
+                'nickname' => (!empty($item['author_name']) ? $item['author_name'] : LANG_GUEST)
+            );
+        }
 
         // чтобы на рассылать множество уведомлений, проверяем, есть ли ожидающие модерации записи
         if(!$this->model->isModeratorTaskExists($target_name, $moderator_id)){
@@ -43,7 +49,7 @@ class moderation extends cmsFrontend {
                 'moderation_text' => $pm_message,
                 'moderator'       => $moderator['nickname'],
                 'author'          => $author['nickname'],
-                'author_url'      => href_to_abs('users', $author['id']),
+                'author_url'      => (!empty($author['id']) ? href_to_abs('users', $author['id']) : (!empty($item['author_email']) ? 'mailto:'.$item['author_email'] : '')),
                 'page_title'      => $item['title'],
                 'page_url'        => $item['page_url'],
                 'date'            => html_date_time()
@@ -120,7 +126,7 @@ class moderation extends cmsFrontend {
      * @param array $item Массив модерируемой записи
      * @param string $ups_key Ключ UPS для записей просмотра модераций
      * @param string $letter Название письма для уведомления
-     * @return boolean
+     * @return array $task
      */
     public function approve($target_name, $item, $ups_key = false, $letter = 'moderation_approved') {
 
@@ -140,7 +146,7 @@ class moderation extends cmsFrontend {
             cmsUser::deleteUPSlist($ups_key);
         }
 
-        return true;
+        return $task;
 
     }
 

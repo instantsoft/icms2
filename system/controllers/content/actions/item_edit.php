@@ -94,12 +94,6 @@ class actionContentItemEdit extends cmsAction {
             'folders_list' => $folders_list
         ), $id, $item);
 
-        // Получаем теги
-        if ($ctype['is_tags']){
-            $tags_model = cmsCore::getModel('tags');
-            $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
-        }
-
 		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item)  = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
@@ -179,8 +173,7 @@ class actionContentItemEdit extends cmsAction {
                 }
 
                 if ($ctype['is_tags']){
-                    $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
-                    $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
+                    $item['tags'] = cmsCore::getModel('tags')->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                 }
 
 				$date_pub_time = strtotime($item['date_pub']);
@@ -239,20 +232,20 @@ class actionContentItemEdit extends cmsAction {
                 // SEO параметры
                 $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
                 if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
-                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item_seo);
+                    $item['seo_title'] = string_replace_keys_values_extended($ctype['options']['seo_title_pattern'], $item_seo);
                 } else {
                     $item['seo_title'] = empty($ctype['options']['is_manual_title']) ? null : $item['seo_title'];
                 }
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
-                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item_seo);
+                        $item['seo_keys'] = string_replace_keys_values_extended($ctype['options']['seo_keys_pattern'], $item_seo);
                     } else {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
-                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item_seo));
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values_extended($ctype['options']['seo_desc_pattern'], $item_seo));
                     } else {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
@@ -276,7 +269,7 @@ class actionContentItemEdit extends cmsAction {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, empty($item['date_approved']));
 
                         if($succes_text){
                             cmsUser::addSessionMessage($succes_text, 'info');

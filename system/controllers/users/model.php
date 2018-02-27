@@ -629,6 +629,9 @@ class modelUsers extends cmsModel {
 
         $members = $this->disableDeleteFilter()->getUsers();
 
+        $first_group = $this->orderBy('id', 'asc')->filterNotEqual('id', GUEST_GROUP_ID)->getItem('{users}_groups');
+        if(!$first_group){ return false; }
+
         if ($members){
 
             foreach($members as $user){
@@ -639,13 +642,17 @@ class modelUsers extends cmsModel {
                 // и переиндексируем ключи массива
                 $groups = array_values( array_diff($groups, array($id)) );
 
+                if(!$groups){
+                    $groups = array($first_group['id']);
+                }
+
                 $this->update('{users}', $user['id'], array(
                     'groups' => $groups
                 ));
 
             }
 
-            $this->delete('{users}_groups_members', $id, "group_id");
+            $this->delete('{users}_groups_members', $id, 'group_id');
 
         }
 

@@ -504,14 +504,10 @@ class cmsController {
         // проверяем параметры если нужно
         $params_error = $this->validateRequestParams($action_object);
         if($params_error !== false){
-            if (cmsConfig::get('debug')){
-                if ($this->request->isAjax()){
-                    return $this->cms_template->renderJSON(array('error' => true, 'request_params' => $params_error));
-                } else {
-                    cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
-                }
+            if ($this->request->isAjax()){
+                return $this->cms_template->renderJSON(array('error' => true, 'errors' => $params_error));
             } else {
-                cmsCore::error404();
+                cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
             }
         }
 
@@ -1088,6 +1084,12 @@ class cmsController {
     public function validate_sysname($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        return true;
+    }
+
+    public function validate_phone($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match("/^([0-9\-\+\(\)\s]*)$/", $value)){ return ERR_VALIDATE_INVALID; }
         return true;
     }
 

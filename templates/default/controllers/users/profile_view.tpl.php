@@ -23,7 +23,7 @@
 
         <?php if ($fields['avatar']['is_in_item']){ ?>
             <div id="avatar" class="block">
-                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
             </div>
         <?php } ?>
 
@@ -56,7 +56,7 @@
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
                         <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?></span>
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
                         </a>
                     <?php } ?>
                 </div>

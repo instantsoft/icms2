@@ -352,10 +352,9 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        // Получаем теги
-        if ($ctype['is_tags']){
-            $tags_model = cmsCore::getModel('tags');
-            $item['tags'] = $tags_model->getTagsForTarget($this->name, $ctype['name'], $item['id']);
+        // Теги
+        if ($ctype['is_tags'] && $item['tags']){
+            $item['tags'] = explode(',', $item['tags']);
         }
 
         // Информация о модераторе для админа и владельца записи

@@ -68,12 +68,12 @@ class cmsUser {
         if (self::isSessionSet('user:id')){
 
             // уже авторизован
-            $this->id  = self::sessionGet('user:id');
+            $this->id = self::sessionGet('user:id');
 
-        } elseif (self::getCookie('auth')) {
+        } elseif (self::hasCookie('auth')) {
 
             // пробуем авторизовать по кукису
-            $this->id  = self::autoLogin(self::getCookie('auth'));
+            $this->id = self::autoLogin(self::getCookie('auth'));
 
         }
 
@@ -297,10 +297,12 @@ class cmsUser {
 
         cmsEventsManager::hook('user_logout', $userSession);
 
-        if (self::getCookie('auth')) {
+        if (self::hasCookie('auth')) {
 
-            if (preg_match('/^[0-9a-f]{32}$/i', self::getCookie('auth'))){
-                $model->deleteAuthToken(self::getCookie('auth'));
+            $auth_cookie = self::getCookie('auth');
+
+            if (preg_match('/^[0-9a-f]{32}$/i', $auth_cookie)){
+                $model->deleteAuthToken($auth_cookie);
             }
 
             self::unsetCookie('auth');
@@ -519,12 +521,26 @@ class cmsUser {
     /**
      * Проверяет наличие кукиса и возвращает его значение
      *
-     * @param str $key Имя кукиса
-     * @return str или false
+     * @param string $key Имя кукиса
+     * @param string $var_type Тип переменной, по умолчанию string
+     * @param callable $callback
+     * @return mixed
      */
-    public static function getCookie($key){
+    public static function getCookie($key, $var_type = 'string', $callback = false){
         if (isset($_COOKIE['icms'][$key])){
-            return trim($_COOKIE['icms'][$key]);
+
+            $cookie = $_COOKIE['icms'][$key];
+
+            if($var_type !== null){
+                @settype($cookie, $var_type);
+            }
+
+            if(is_callable($callback)){
+                $cookie = call_user_func_array($callback, array($cookie));
+            }
+
+            return $cookie;
+
         } else {
             return false;
         }

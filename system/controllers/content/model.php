@@ -673,14 +673,14 @@ class modelContent extends cmsModel {
             $field_class   = 'field'.string_to_camel('_', $field['type']);
             $field_handler = new $field_class(null, (isset($field['options']) ? array('options' => $field['options']) : null));
 
+            $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
+
             if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
 
                 if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
 
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
-
-                $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
 
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
 
@@ -1907,6 +1907,30 @@ class modelContent extends cmsModel {
         $this->update($table_name, $id, array(
             'tags' => $tags
         ));
+
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
+    }
+
+    public function replaceCachedTags($ctype_name, $ids, $new_tag, $old_tag) {
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        $old_tag = $this->db->escape($old_tag);
+        $new_tag = $this->db->escape($new_tag);
+
+        if(!is_array($ids)){
+            $ids = array($ids);
+        }
+
+        foreach($ids as $k=>$v){
+            $v = $this->db->escape($v);
+            $ids[$k] = "'{$v}'";
+        }
+        $ids = implode(',', $ids);
+
+        $this->db->query("UPDATE `{#}{$table_name}` SET `tags` = REPLACE(`tags`, '{$old_tag}', '$new_tag') WHERE id IN ({$ids})");
 
         cmsCache::getInstance()->clean('content.list.'.$ctype_name);
         cmsCache::getInstance()->clean('content.item.'.$ctype_name);

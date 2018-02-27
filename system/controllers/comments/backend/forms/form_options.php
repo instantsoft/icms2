@@ -38,6 +38,14 @@ class formCommentsOptions extends cmsForm {
                         'hint' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT,
                     )),
 
+                    new fieldText('restricted_emails', array(
+                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_EMAILS
+                    )),
+
+                    new fieldText('restricted_names', array(
+                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_NAMES
+                    )),
+
                     new fieldCheckbox('dim_negative', array(
                         'title' => LANG_COMMENTS_OPT_DIM_NEGATIVE
                     )),

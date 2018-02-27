@@ -263,9 +263,7 @@ function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_emp
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
-
-    $img = '<img src="'.$src.'" '.$size.' alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
+    $img = '<img src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
 
     if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
 
@@ -324,14 +322,12 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
 	$src = html_image_src($image, $small_preset, true);
 	if (!$src) { return ''; }
 
-	$size = $small_preset == 'micro' ? 'width="32" height="32"' : '';
-
     $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    $image_html = '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.$class.' />';
+    $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.$class.' />';
 
     if($modal_preset){
         $modal_src = html_image_src($image, $modal_preset, true);

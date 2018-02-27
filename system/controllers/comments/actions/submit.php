@@ -34,13 +34,25 @@ class actionCommentsSubmit extends cmsAction {
             if (!$author_name){
 				return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_NAME, 'html' => false));
 			}
-			if ($author_email && !preg_match("/^([a-zA-Z0-9\._-]+)@([a-zA-Z0-9\._-]+)\.([a-zA-Z]{2,4})$/i", $author_email)){
+			if ($author_email && $this->validate_email($author_email) !== true){
 				return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
 			}
 
             if (!empty($this->options['restricted_ips'])){
                 if (string_in_mask_list($this->cms_user->ip, $this->options['restricted_ips'])){
                     return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_IP, 'html' => false));
+                }
+            }
+
+            if (!empty($this->options['restricted_emails'])){
+                if (string_in_mask_list($author_email, $this->options['restricted_emails'])){
+                    return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
+                }
+            }
+
+            if (!empty($this->options['restricted_names'])){
+                if (string_in_mask_list($author_name, $this->options['restricted_names'])){
+                    return $this->cms_template->renderJSON(array('error' => true, 'message' => ERR_VALIDATE_INVALID, 'html' => false));
                 }
             }
 

@@ -38,7 +38,7 @@ class cmsTemplate {
     protected $widgets_group_index = 0;
 
     protected $controller;
-    protected $controllers_queue;
+    protected $controllers_queue = array();
 
     public static function getInstance() {
         if (self::$instance === null) {

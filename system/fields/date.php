@@ -100,7 +100,6 @@ class fieldDate extends cmsFormField {
             } else {
                 return date('Y-m-d', strtotime($value));
             }
-
         }
 
         return null;
@@ -113,6 +112,8 @@ class fieldDate extends cmsFormField {
             if(is_array($value)){
                 if(!empty($value['date'])){
                     $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+                } else {
+                    $value = null;
                 }
             }
         }
@@ -125,13 +126,13 @@ class fieldDate extends cmsFormField {
             if(!$value){
                 $this->data['hours'] = 0;
                 $this->data['mins'] = 0;
-            }else{
+            } else {
                 list($this->data['hours'], $this->data['mins']) = explode(':', date('H:i', strtotime($value)));
             }
             $this->data['fname_date']   = $this->element_name.'[date]';
             $this->data['fname_hours']  = $this->element_name.'[hours]';
             $this->data['fname_mins']   = $this->element_name.'[mins]';
-        }else{
+        } else {
             $this->data['fname_date']   = $this->element_name;
         }
 

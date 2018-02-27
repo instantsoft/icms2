@@ -36,7 +36,7 @@
                 <?php if ($fields['avatar']['is_in_list']){ ?>
                     <div class="icon">
                         <a href="<?php echo $this->href_to($profile['id']); ?>">
-                            <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
+                            <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname'], $profile['is_deleted']); ?>
                         </a>
                     </div>
                 <?php } ?>

@@ -705,6 +705,14 @@ class cmsModel {
         return $this;
     }
 
+    public function filterTimestampYounger($field, $value, $interval='DAY'){
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        $value = intval($value);
+        $interval = $this->db->escape($interval);
+        $this->filter("TIMESTAMPDIFF({$interval}, {$field}, CURDATE()) <= {$value}");
+        return $this;
+    }
+
     public function filterDateOlder($field, $value, $interval='DAY'){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = $this->db->escape($value);
@@ -1220,7 +1228,7 @@ class cmsModel {
 				$field     = $o['by'];
                 $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
 
-                if (strpos($field, '.') === false){ $field = 'i.'.$field; }
+                if (empty($o['strict']) && strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
 				$this->order_by .= $field.' '.$direction;
 

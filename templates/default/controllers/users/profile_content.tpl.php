@@ -64,7 +64,7 @@
     <?php } ?>
 
     <div class="avatar">
-        <a href="<?php echo href_to_profile($profile); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
+        <a href="<?php echo href_to_profile($profile); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?></a>
     </div>
 
     <div class="name">

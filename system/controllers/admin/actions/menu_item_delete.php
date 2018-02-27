@@ -10,9 +10,9 @@ class actionAdminMenuItemDelete extends cmsAction {
             cmsCore::error404();
         }
 
-        $menu_model = cmsCore::getModel('menu');
+        $this->model_menu->deleteMenuItem($id);
 
-        $menu_model->deleteMenuItem($id);
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('menu');
 

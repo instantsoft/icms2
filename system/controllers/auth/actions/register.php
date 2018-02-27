@@ -240,6 +240,8 @@ class actionAuthRegister extends cmsAction {
 
                             if ($logged_id){
 
+                                cmsUser::deleteUPS('first_auth', $logged_id);
+
                                 cmsEventsManager::hook('auth_login', $logged_id);
 
                             }

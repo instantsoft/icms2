@@ -95,6 +95,9 @@
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
+    define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов после запятой');
+    define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');

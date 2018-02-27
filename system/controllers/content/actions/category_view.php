@@ -131,7 +131,7 @@ class actionContentCategoryView extends cmsAction {
                 $ctype_list_style_preset = false;
 
                 if(cmsUser::hasCookie($style_key_name)){
-                    $ctype_list_style_preset = cmsUser::getCookie($style_key_name);
+                    $ctype_list_style_preset = cmsUser::getCookie($style_key_name, 'string', function ($cookie){ return trim(strip_tags($cookie)); });
                     $ctype_list_style_preset = $ctype_list_style_preset === 'default' ? '' : $ctype_list_style_preset;
                 }
 

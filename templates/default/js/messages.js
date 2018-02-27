@@ -163,6 +163,7 @@ icms.messages = (function ($) {
 
             if(!$('.left-panel', pm_window).is(':visible')){
                 $('.right-panel').hide().css({left: ''});
+                $('.left-panel').show();
             }
 
             $('.left-panel', pm_window).html(result);
