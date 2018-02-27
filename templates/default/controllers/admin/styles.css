@@ -430,6 +430,7 @@ form .ft_list label .loading{
 	width:13px;
 	height:13px;
 }
+form .child_field{padding-left:20px}
 .parent_field {
     margin-left: 25px;
 }

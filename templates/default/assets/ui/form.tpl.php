@@ -22,6 +22,7 @@
     $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : uniqid();
     $index = 0;
 
+    $visible_depend = array();
 ?>
 <form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $method; ?>"
@@ -122,9 +123,14 @@
                             }
                         }
 
+                        if($field->visible_depend){
+                            $visible_depend[] = $field;
+                            $classes[] = 'child_field';
+                        }
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
-                        $id = "f_{$field->id}";
+                        $id = 'f_'.$field->id;
 
                     ?>
 
@@ -173,6 +179,11 @@
                         $(this).addClass('do_expand').removeClass('is_collapse'); return;
                     }
                 });
+        <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
+                icms.forms.addVisibleDepend('<?php echo $form_id; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
+        <?php } ?>
+            icms.forms.VDReInit();
+            <?php } ?>
             });
         </script>
 
@@ -213,4 +224,4 @@
             });
         });
     </script>
-<?php } ?>
+<?php }

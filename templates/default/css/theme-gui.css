@@ -893,7 +893,7 @@ form .ft_parent a.add {
 	background:url("../images/icons/add.png") no-repeat left center;
 	font-size:12px;
 }
-
+form .child_field{padding-left:20px}
 .symbols_count {
     font-size: 12px;
     margin: 3px 0 0 0;

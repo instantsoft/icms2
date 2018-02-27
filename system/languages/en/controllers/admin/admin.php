@@ -314,6 +314,15 @@
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
+    define('LANG_CP_WIDGETS_FA',                'Quick selection of URLs for masks');
+    define('LANG_CP_WIDGETS_FA_TYPE',           'Type');
+    define('LANG_CP_WIDGETS_FA_ITEMS',          'Items');
+    define('LANG_CP_WIDGETS_FA_CATS',           'Categories');
+    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Title or URL');
+    define('LANG_CP_WIDGETS_FA_ADD_TO',         'Add to the');
+    define('LANG_CP_WIDGETS_FA_TO_POS',         'To positive');
+    define('LANG_CP_WIDGETS_FA_TO_NOT',         'To negative');
+    define('LANG_CP_WIDGETS_FA_ADD',            'Add');
 
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');

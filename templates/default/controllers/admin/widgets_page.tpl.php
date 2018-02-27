@@ -5,7 +5,7 @@
 
     if ($do=='add') { $this->setPageTitle(LANG_CP_WIDGETS_ADD_PAGE); }
     if ($do=='edit') { $this->setPageTitle(LANG_CP_WIDGETS_PAGE.': '.$page['title']); }
-    
+
     $this->addBreadcrumb(LANG_CP_SECTION_WIDGETS, $this->href_to('widgets'));
 
     if ($do=='add'){
@@ -39,3 +39,60 @@
         'action' => '',
         'method' => 'post'
     ), $errors);
+
+    $this->addJSFromContext('templates/default/js/jquery-ui.js');
+    $this->addCSSFromContext('templates/default/css/jquery-ui.css');
+?>
+<script>
+    $(document).ready(function(){
+        $('<div style="width:200px;float:left;margin-top:-4px"><input id="fast_add_submit" class="button" value="<?php echo LANG_CP_WIDGETS_FA_ADD; ?>" type="button"></div>').appendTo('#f_fast_add_into');
+        $('#fast_add_ctype').triggerHandler('change');
+        $('#fast_add_ctype').change(function(){
+            $('#fast_add_item').triggerHandler('input');
+        });
+        $('#f_fast_add_ctype').css({width:'200px',float:'left','margin-right':'25px'});
+        $('#f_fast_add_type').css({width:'200px',float:'left',clear:'right'});
+        $('#fast_add_into_chosen').css({width:'200px',float:'left','margin-right':'25px'});
+
+        var madd = function(value){
+            var into = $('#fast_add_into').val();
+            var now = $('#url_mask'+into).val();
+            var add = now ? now+"\n" : '';
+            add += value;
+            $('#url_mask'+into).val(add);
+        }
+        $('#fast_add_submit').click(function(){
+            var type = $('#fast_add_type').val();
+            if(type === 'items'){
+                madd($('#fast_add_item').val());
+                $('#fast_add_item').val('');
+            }else
+            if(type === 'cats'){
+                madd($('#fast_add_cat').val());
+            }
+        });
+
+        var cache = {};
+        $('#fast_add_item').autocomplete({
+            minLength: 2,
+            delay: 500,
+            source: function( request, response ){
+                var ctype = $('#fast_add_ctype').val();
+                var term = ctype+'_'+request.term;
+                request['ctype'] = ctype;
+                if(term in cache){
+                    response(cache[term]);
+                    return;
+                }
+                $.getJSON('/admin/widgets/page_autocomplete', request, function(data, status, xhr){
+                    cache[term] = data;
+                    response(data);
+                });
+            },
+            select: function(event, ui){
+                icms.events.run('autocomplete_select', this);
+            }
+        });
+
+    });
+</script>
