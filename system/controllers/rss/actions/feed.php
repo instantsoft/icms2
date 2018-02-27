@@ -12,6 +12,8 @@ class actionRssFeed extends cmsAction {
         if (!$feed || !$feed['is_enabled']) {
             cmsCore::error404();
         }
+        
+        $template = $this->request->get('template', '');
 
         if ($feed['is_cache']) {
 
@@ -44,6 +46,24 @@ class actionRssFeed extends cmsAction {
         }
 
         list($feed, $category, $author) = $data;
+        
+        if (!empty($template)){	
+		
+			$tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/controllers/rss/', '*.tpl.php');
+			$default_tpls = cmsCore::getFilesList('templates/default/controllers/rss/', '*.tpl.php');
+			$tpls = array_unique(array_merge($tpls, $default_tpls));
+			
+			$templates = array();
+			
+			foreach ($tpls as $tpl) {
+				$templates[str_replace('.tpl.php', '', $tpl)] = $tpl;
+			}
+			
+			if(array_key_exists($template, $templates)){				
+				$feed['template'] = $template;
+			}
+			
+        }
 
 		header('Content-type: application/rss+xml; charset=utf-8');
 
