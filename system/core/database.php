@@ -845,6 +845,16 @@ class cmsDatabase {
         return in_array($field, $table_fields, true);
 
     }
+	
+    public function addTableField($table_name, $field_name, $sql){
+        
+        if($this->isFieldExists($table_name, $field_name)) { return false; }
+        
+        $sql = "ALTER TABLE {#}{$table_name} ADD `{$field_name}` {$sql}";
+
+        $this->query($sql);
+
+    }
 
 //============================================================================//
 //============================================================================//
