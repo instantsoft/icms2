@@ -45,6 +45,10 @@ class actionContentItemView extends cmsAction {
         $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
         if (!$item) { return cmsCore::error404(); }
 
+        if ($slug !== $item['slug']){
+            $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
+        }
+
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin;
         if(!$is_moderator && $this->cms_user->is_logged){

@@ -59,7 +59,7 @@
                             <?php foreach($item['images'] as $image){ ?>
                                 <div class="image">
                                     <a href="<?php echo $image['url']; ?>">
-										<img src="<?php echo $image['src']; ?>">
+                                        <img src="<?php echo $image['src']; ?>" alt="<?php html(!empty($image['title']) ? $image['title'] : $item['subject_title']); ?>">
                                     </a>
                                 </div>
                             <?php } ?>

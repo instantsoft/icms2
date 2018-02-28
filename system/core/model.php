@@ -626,13 +626,13 @@ class cmsModel {
         return $this;
     }
 
-    public function filterEqual($field, $value){
+    public function filterEqual($field, $value, $binary = false){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
             $this->filter($field.' IS NULL');
         } else {
             $value = $this->db->escape($value);
-            $this->filter("$field = '$value'");
+            $this->filter(($binary ? ' BINARY ' : '')."$field = '$value'");
         }
         return $this;
     }

@@ -131,8 +131,9 @@ class actionPhotosUpload extends cmsAction{
                     $small_preset = end($_presets);
 
                     $activity_thumb_images[] = array(
-                        'url' => href_to_rel('photos', $photo['slug'].'.html'),
-                        'src' => html_image_src($photo['image'], $small_preset)
+                        'url'   => href_to_rel('photos', $photo['slug'].'.html'),
+                        'src'   => html_image_src($photo['image'], $small_preset),
+                        'title' => $photo['title']
                     );
                 }
             }

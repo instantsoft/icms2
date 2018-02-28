@@ -813,7 +813,17 @@ class cmsDatabase {
 
     }
 
-	public function isTableExists($table_name){
+    public function addTableField($table_name, $field_name, $sql) {
+
+        if ($this->isFieldExists($table_name, $field_name)) {
+            return false;
+        }
+
+        return $this->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` {$sql}");
+
+    }
+
+    public function isTableExists($table_name){
 
 		$this->query("SELECT 1 FROM `{#}{$table_name}` LIMIT 1", false, true);
 

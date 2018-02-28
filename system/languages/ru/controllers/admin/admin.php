@@ -315,11 +315,11 @@
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
-    define('LANG_CP_WIDGETS_FA',                'Быстрый подбор урлов для масок');
+    define('LANG_CP_WIDGETS_FA',                'Быстрый подбор масок');
     define('LANG_CP_WIDGETS_FA_TYPE',           'Тип');
-    define('LANG_CP_WIDGETS_FA_ITEMS',          'Итемы');
+    define('LANG_CP_WIDGETS_FA_ITEMS',          'Записи');
     define('LANG_CP_WIDGETS_FA_CATS',           'Категории');
-    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Название или урл');
+    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Название или URL');
     define('LANG_CP_WIDGETS_FA_ADD_TO',         'Добавить в');
     define('LANG_CP_WIDGETS_FA_TO_POS',         'В положительные');
     define('LANG_CP_WIDGETS_FA_TO_NOT',         'В отрицательные');

@@ -45,14 +45,11 @@
 ?>
 <script>
     $(document).ready(function(){
-        $('<div style="width:200px;float:left;margin-top:-4px"><input id="fast_add_submit" class="button" value="<?php echo LANG_CP_WIDGETS_FA_ADD; ?>" type="button"></div>').appendTo('#f_fast_add_into');
+        $('<div class="inline_button"><input id="fast_add_submit" class="button" value="<?php echo LANG_CP_WIDGETS_FA_ADD; ?>" type="button"></div>').insertAfter('#f_fast_add_into');
         $('#fast_add_ctype').triggerHandler('change');
         $('#fast_add_ctype').change(function(){
             $('#fast_add_item').triggerHandler('input');
         });
-        $('#f_fast_add_ctype').css({width:'200px',float:'left','margin-right':'25px'});
-        $('#f_fast_add_type').css({width:'200px',float:'left',clear:'right'});
-        $('#fast_add_into_chosen').css({width:'200px',float:'left','margin-right':'25px'});
 
         var madd = function(value){
             var into = $('#fast_add_into').val();

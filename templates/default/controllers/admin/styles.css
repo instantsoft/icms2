@@ -2689,6 +2689,16 @@ input[type=radio]:checked ~ label{
     padding: 0 20px;
     margin: 20px 0 0 0;
 }
+.inline_button {
+    float: left;
+    margin: 17px 0 0;
+}
+#f_fast_add_ctype, #f_fast_add_type, #f_fast_add_into {
+    width: 200px;
+    float: left;
+    clear: right;
+    margin-right: 20px;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);
