@@ -2,6 +2,8 @@
 
 class subscriptions extends cmsFrontend {
 
+    protected $useOptions = true;
+
     /**
      * Формирует HTML код для кнопки подписки
      *
@@ -9,11 +11,11 @@ class subscriptions extends cmsFrontend {
      */
     public function renderSubscribeButton($target) {
 
-        $hash               = '';
+        $hash               = md5(serialize($target));
         $subscribers_count  = 0;
         $user_is_subscribed = false;
 
-        $list_item = $this->model->getSubscriptionItem(md5(serialize($target)));
+        $list_item = $this->model->getSubscriptionItem($hash);
 
         // если такой список для подписок уже есть
         if($list_item){
@@ -23,6 +25,13 @@ class subscriptions extends cmsFrontend {
             $user_is_subscribed = $this->isUserSubscribed($list_item['id']);
 
         }
+
+        return $this->cms_template->renderInternal($this, 'button', array(
+            'target'             => $target,
+            'hash'               => $hash,
+            'subscribers_count'  => $subscribers_count,
+            'user_is_subscribed' => (bool)$user_is_subscribed
+        ));
 
     }
 

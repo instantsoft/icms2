@@ -213,11 +213,15 @@ icms.forms = (function ($) {
 
     //====================================================================//
 
-    this.submitAjax = function(form){
+    this.submitAjax = function(form, additional_params){
 
         icms.forms.submitted = true;
 
         var form_data = this.toJSON($(form));
+
+        if(additional_params){
+            $.extend(form_data, additional_params);
+        }
 
         var url = $(form).attr('action');
 

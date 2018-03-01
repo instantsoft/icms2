@@ -181,8 +181,8 @@
                 });
         <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
                 icms.forms.addVisibleDepend('<?php echo $form_id; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
-        <?php } ?>
-            icms.forms.VDReInit();
+            <?php } ?>
+                icms.forms.VDReInit();
             <?php } ?>
             });
         </script>
@@ -220,7 +220,7 @@
     <script type="text/javascript">
         $(function (){
             $('#<?php echo $form_id; ?>').on('submit', function (){
-                return icms.forms.submitAjax(this);
+                return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
             });
         });
     </script>

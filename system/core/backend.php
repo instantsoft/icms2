@@ -8,7 +8,7 @@ class cmsBackend extends cmsController {
 
     protected $backend_menu = array();
 
-    protected $queue = array(
+    public $queue = array(
         'queues'           => array(),
         'queue_name'       => '',
         'use_queue_action' => false

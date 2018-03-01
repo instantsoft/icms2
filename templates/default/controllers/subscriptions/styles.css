@@ -1,0 +1,45 @@
+.subscribe,.unsubscribe{
+    background-color:#3498db;
+    color:#fff !important;
+    padding:4px 10px;
+    text-decoration:none;
+    border-radius:2px
+}
+.subscribe:hover,.unsubscribe:hover{
+    background-color:#2980b9;
+    color:#fff;
+    text-decoration:none
+}
+.unsubscribe{
+    background-color:#bdc3c7;
+}
+.unsubscribe:hover{
+    background-color:#95a5a6;
+}
+.count-subscribers{
+    position: relative;
+    border:1px solid #bdc3c7;
+    border-radius:2px;
+    color:#95a5a6;
+    font-size:13px;
+    line-height:16px;
+    margin-left:6px;
+    padding:4px 6px;
+    text-align:center
+}
+.count-subscribers::after{
+    border-color:transparent #bdc3c7;
+    border-style:solid;
+    border-width:5px 5px 5px 0;
+    content:"";
+    left:-5px;
+    position:absolute;
+    top:6px
+}
+.subscribe_wrap {
+    float: right;
+    line-height: 26px;
+}
+.filter-panel .buttons .subscribe_wrap{
+    line-height: 32px;
+}
