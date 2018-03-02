@@ -1,6 +1,11 @@
 <div id="group_profile_header">
     <?php $this->renderChild('group_header', array('group' => $group)); ?>
 </div>
+<?php
+    if ($toolbar_html) {
+        echo html_each($toolbar_html);
+    }
+?>
 <?php if (!empty($datasets)){
     $this->renderAsset('ui/datasets-panel', array(
         'datasets'        => $datasets,

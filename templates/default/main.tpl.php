@@ -85,7 +85,10 @@
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
                         <?php } ?>
-                        <div id="controller_wrap"><?php $this->body(); ?></div>
+                        <div id="controller_wrap">
+                            <?php $this->block('before_body'); ?>
+                            <?php $this->body(); ?>
+                        </div>
                     </article>
                 <?php } ?>
 

@@ -96,7 +96,6 @@
     }
 
 ?>
-
 <?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
     <?php if (!empty($list_styles)){ ?>
         <div class="content_list_styles">
@@ -152,7 +151,6 @@
 
 <?php echo $items_list_html; ?>
 
-<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset)); ?>
 <?php if ($hooks_html) { ?>
     <div class="sub_items_list">
         <?php echo html_each($hooks_html); ?>

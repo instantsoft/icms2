@@ -44,6 +44,7 @@ class actionUsersProfileContent extends cmsAction {
         }
 
         // Если есть наборы, применяем фильтры текущего
+        $current_dataset = array();
         if ($datasets){
 
             if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
@@ -97,16 +98,34 @@ class actionUsersProfileContent extends cmsAction {
             $page_url = href_to_profile($profile, array('content', $ctype_name));
         }
 
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
         $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''));
 
         $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-        if(isset($current_dataset) && $dataset){
+        if($current_dataset && $dataset){
             $list_header .= ' / '.$current_dataset['title'];
         }
 
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+            array(
+                'field'     => 'user_id',
+                'condition' => 'eq',
+                'value'     => $profile['id']
+            ),
+            array(
+                'field'     => 'folder_id',
+                'condition' => 'eq',
+                'value'     => $folder_id
+            )
+        )));
+
         return $this->cms_template->render('profile_content', array(
             'user'            => $this->cms_user,
+            'toolbar_html'    => $toolbar_html,
             'id'              => $profile['id'],
             'profile'         => $profile,
             'ctype'           => $ctype,
@@ -114,7 +133,7 @@ class actionUsersProfileContent extends cmsAction {
             'folder_id'       => $folder_id,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
             'list_header'     => $list_header,
             'html'            => $list_html

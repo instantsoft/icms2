@@ -77,6 +77,11 @@
         <?php $this->menu('item-menu', true, 'tabbed'); ?>
     </div>
 </div>
+<?php
+    if ($toolbar_html) {
+        echo html_each($toolbar_html);
+    }
+?>
 <?php if (!empty($datasets)){
     $this->renderAsset('ui/datasets-panel', array(
         'datasets'        => $datasets,

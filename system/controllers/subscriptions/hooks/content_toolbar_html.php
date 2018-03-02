@@ -1,27 +1,23 @@
 <?php
 
-class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
+class onSubscriptionsContentToolbarHtml extends cmsAction {
 
     public function run($data){
 
-        list($ctype_name, $form_url, $filters) = $data;
+        list($ctype_name, $category, $current_dataset, $filters) = $data;
 
         $params = array(
-            'field_filters' => $filters,
-            'filters' => array()
+            'field_filters' => array(),
+            'filters' => $filters
         );
 
-        $cat = cmsModel::getCachedResult('current_ctype_category');
-
-        if(!empty($cat['id'])){
+        if(!empty($category['id'])){
             $params['filters'][] = array(
                 'field'     => 'category_id',
                 'condition' => 'eq',
-                'value'     => $cat['id']
+                'value'     => $category['id']
             );
         }
-
-        $current_dataset = cmsModel::getCachedResult('current_ctype_dataset');
 
         if(!empty($current_dataset['filters'])){
             foreach($current_dataset['filters'] as $filter){

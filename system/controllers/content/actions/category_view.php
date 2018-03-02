@@ -68,6 +68,7 @@ class actionContentCategoryView extends cmsAction {
 
         // Если есть наборы, применяем фильтры текущего
         // иначе будем сортировать по дате создания
+        $current_dataset = array();
         if ($datasets){
             if($dataset && empty($datasets[$dataset])){ return cmsCore::error404(); }
             $keys = array_keys($datasets);
@@ -177,28 +178,37 @@ class actionContentCategoryView extends cmsAction {
             }
         }
 
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_category', $category);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
 		// Получаем HTML списка записей
 		if (!$is_hide_items){
 			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
 		}
 
-        // кешируем
-        cmsModel::cacheResult('current_ctype', $ctype);
-        cmsModel::cacheResult('current_ctype_category', $category);
-
         $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/category_view_'.$ctype['name'], true) ?
                 'category_view_'.$ctype['name'] : 'category_view';
+
+        $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset));
+
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], $category, $current_dataset, array()));
+        if ($toolbar_html) {
+            $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+        }
 
         return $this->cms_template->render($tpl_file, array(
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,
-            'parent'          => isset($parent) ? $parent : false,
+            'hooks_html'      => $hooks_html,
+            'toolbar_html'    => $toolbar_html,
             'slug'            => $slug,
             'ctype'           => $ctype,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'category'        => $category,
             'subcats'         => $subcats,
             'items_list_html' => $items_list_html,

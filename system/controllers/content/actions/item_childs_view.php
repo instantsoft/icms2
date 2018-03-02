@@ -32,6 +32,7 @@ class actionContentItemChildsView extends cmsAction {
         ));
 
         // Если есть наборы, применяем фильтры текущего
+        $current_dataset = array();
         if ($datasets){
 
             if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
@@ -78,6 +79,10 @@ class actionContentItemChildsView extends cmsAction {
 
         $base_ds_url = href_to_rel($ctype['name'], $item['slug'].'/view-'.$child_ctype_name);
 
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
         $html = $this->renderItemsList($child_ctype, rel_to_href($base_ds_url).($dataset ? '/'.$dataset : ''));
 
         $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
@@ -87,7 +92,20 @@ class actionContentItemChildsView extends cmsAction {
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook('content_childs_view', array($ctype, $item, $child_ctype, $childs));
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook("content_{$ctype['name']}_childs_view", array($ctype, $item, $child_ctype, $childs));
 
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+            array(
+                'field'     => 'relation',
+                'condition' => 'inner',
+                'value'     => array(
+                    'parent_ctype_id' => $ctype['id'],
+                    'parent_item_id'  => $item['id'],
+                    'child_ctype_id'  => $child_ctype['id']
+                )
+            )
+        )));
+
         return $this->cms_template->render('item_childs_view', array(
+            'toolbar_html'    => $toolbar_html,
             'ctype'           => $ctype,
             'child_ctype'     => $child_ctype,
             'item'            => $item,
@@ -96,7 +114,7 @@ class actionContentItemChildsView extends cmsAction {
             'relation'        => $relation,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'base_ds_url'     => $base_ds_url . '%s',
             'seo_title'       => $seo_title,
             'seo_keys'        => $seo_keys,

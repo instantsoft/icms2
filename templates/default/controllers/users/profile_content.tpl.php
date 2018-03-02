@@ -52,7 +52,9 @@
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
     }
-
+    if ($toolbar_html) {
+        echo html_each($toolbar_html);
+    }
 ?>
 
 <h1 id="user_profile_title">

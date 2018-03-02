@@ -11,6 +11,10 @@ class subscriptions extends cmsFrontend {
      */
     public function renderSubscribeButton($target) {
 
+        // убираем пустые массивы
+        if(empty($target['params']['field_filters'])){ unset($target['params']['field_filters']); }
+        if(empty($target['params']['filters'])){ unset($target['params']['filters']); }
+
         $hash               = md5(serialize($target));
         $subscribers_count  = 0;
         $user_is_subscribed = false;

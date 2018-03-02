@@ -9,6 +9,7 @@ class cmsTemplate {
     protected $inherit_names = array();
     protected $layout = 'main';
     protected $output;
+    protected $blocks = array();
     protected $options;
     protected $site_config;
 
@@ -111,6 +112,14 @@ class cmsTemplate {
 	 */
 	public function body(){
 		echo $this->output;
+	}
+
+    /**
+     * Выводит HTML блока
+     * @param string $position
+     */
+	public function block($position){
+		echo isset($this->blocks[$position]) ? $this->blocks[$position] : '';
 	}
 
     /**
@@ -463,6 +472,14 @@ class cmsTemplate {
      */
     public function addOutput($html){
         $this->output .= $html;
+    }
+
+    public function addToBlock($position, $html){
+        if(isset($this->blocks[$position])){
+            $this->blocks[$position] .= $html;
+        } else {
+            $this->blocks[$position] = $html;
+        }
     }
 
     /**
