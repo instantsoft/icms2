@@ -1081,6 +1081,16 @@ class cmsController {
         return true;
     }
 
+    public function validate_localealphanumeric($value){
+        if (empty($value)) { return true; }
+        $regexp = "/^([a-z0-9 \.\?\@\,\-]*)$/ui";
+        if(defined('LC_LANGUAGE_VALIDATE_REGEXP')){
+            $regexp = LC_LANGUAGE_VALIDATE_REGEXP;
+        }
+        if (!is_string($value) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
+        return true;
+    }
+
     public function validate_sysname($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }

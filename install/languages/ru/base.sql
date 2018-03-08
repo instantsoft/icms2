@@ -89,11 +89,9 @@ CREATE TABLE `{#}comments` (
   `is_approved` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `is_private` (`is_private`),
-  KEY `rating` (`rating`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
   KEY `author_url` (`author_url`),
-  KEY `date_pub` (`date_pub`)
+  KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
@@ -1524,7 +1522,8 @@ INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `
 (3, 'Друзья', 'users', 'friends', 1, 2),
 (4, 'Комментарии', 'comments', 'comments', 1, 10),
 (5, 'Группы', 'groups', 'groups', 1, 3),
-(6, 'Репутация', 'users', 'karma', 1, 11);
+(6, 'Репутация', 'users', 'karma', 1, 11),
+(7, 'Подписчики', 'users', 'subscribers', 1, 3);
 
 DROP TABLE IF EXISTS `{#}users_personal_settings`;
 CREATE TABLE `{#}users_personal_settings` (

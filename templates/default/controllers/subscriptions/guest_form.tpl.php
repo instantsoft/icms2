@@ -5,7 +5,7 @@
         'params' => $params,
         'method' => 'ajax',
         'submit' => array(
-            'title' => LANG_SBSCR_SUBSCRIBE
+            'title' => LANG_USERS_SUBSCRIBE
         )
     ), false);
 ?>

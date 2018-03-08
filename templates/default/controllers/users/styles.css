@@ -54,13 +54,14 @@
     margin-top:6px;
 }
 #user_profile_rates .block{
-    float:left;
-    height:20px;
-    line-height:20px;
-    margin-right:5px;
-    padding:5px 10px;
-    border-radius: 6px;
-    font-size:21px;
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 21px;
+    background-color: #ecf0f1;
+    color: #555;
 }
 
 #user_profile_rates .negative { color:red; }

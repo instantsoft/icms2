@@ -17,6 +17,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
         'subject' => array(
             'default' => '',
             'rules'   => array(
+                array('required'),
                 array('sysname')
             )
         )
@@ -37,26 +38,6 @@ class actionSubscriptionsSubscribe extends cmsAction {
             return $this->cms_template->renderJSON(array(
                 'error' => true
             ));
-
-        }
-
-        if(!$this->target['subject']){
-
-            $controller = cmsCore::getController($this->target['controller']);
-
-            $subscribe_subjects_list = $controller->runHook('subscribe_subjects_list');
-
-            // если есть список субъектов, даём выбор
-            if($subscribe_subjects_list){
-
-                return $this->cms_template->renderJSON(array(
-                    'error'   => false,
-                    'confirm' => ''
-                ));
-
-            } else {
-                $this->target['subject'] = null;
-            }
 
         }
 
@@ -193,6 +174,8 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
         // если требуется подтверждение
         if(!empty($this->options['guest_email_confirmation']) && $this->need_email_confirm){
+
+            $this->success_text = LANG_SBSCR_GUEST_EMAIL_CONFIRM_SEND;
 
             $to = array('email' => $this->subscribe['guest_email'], 'name' => $this->subscribe['guest_name']);
             $letter = array('name' => 'subscriptions_guest_confirm');

@@ -89,20 +89,48 @@ class actionUsersProfile extends cmsAction {
 
         if ($this->cms_user->is_logged && !$profile['is_deleted']) {
 
-            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
-                if ($this->is_friend_profile){
-                    $tool_buttons['friend_delete'] = array(
-                        'title' => LANG_USERS_FRIENDS_DELETE,
-                        'class' => 'user_delete ajax-modal',
-                        'href'  => href_to('users', 'friend_delete', $profile['id'])
+            if (!$this->is_own_profile &&
+                    !$profile['is_locked'] &&
+                    (!$this->options['is_friends_on'] ||
+                        ($this->options['is_friends_on'] && !$this->cms_user->isPrivacyAllowed($profile, 'users_friendship')))
+                    ){
+
+                if(!$this->is_subscribe_profile){
+                    $tool_buttons['subscribe'] = array(
+                        'title' => LANG_USERS_SUBSCRIBE,
+                        'class' => 'subscribe ajax-modal',
+                        'href'  => href_to('users', 'subscribe', $profile['id'])
                     );
-                } else if(!$this->is_friend_req) {
-                    $tool_buttons['friend_add'] = array(
-                        'title' => LANG_USERS_FRIENDS_ADD,
-                        'class' => 'user_add ajax-modal',
-                        'href'  => href_to('users', 'friend_add', $profile['id'])
+                } else {
+                    $tool_buttons['unsubscribe'] = array(
+                        'title' => LANG_USERS_UNSUBSCRIBE,
+                        'class' => 'unsubscribe ajax-modal',
+                        'href'  => href_to('users', 'unsubscribe', $profile['id'])
                     );
                 }
+
+            }
+
+            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
+
+                if ($this->cms_user->isPrivacyAllowed($profile, 'users_friendship')){
+
+                    if ($this->is_friend_profile){
+                        $tool_buttons['friend_delete'] = array(
+                            'title' => LANG_USERS_FRIENDS_DELETE,
+                            'class' => 'user_delete ajax-modal',
+                            'href'  => href_to('users', 'friend_delete', $profile['id'])
+                        );
+                    } else if(!$this->is_friend_req) {
+                        $tool_buttons['friend_add'] = array(
+                            'title' => LANG_USERS_FRIENDS_ADD,
+                            'class' => 'user_add ajax-modal',
+                            'href'  => href_to('users', 'friend_add', $profile['id'])
+                        );
+                    }
+
+                }
+
             }
 
             if ($this->is_own_profile && $profile['invites_count']){

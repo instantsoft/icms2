@@ -666,10 +666,18 @@ class modelUsers extends cmsModel {
 //==============================    ДРУЖБА   =================================//
 //============================================================================//
 
-    public function filterFriends($user_id){
-        $user_id = intval($user_id);
-        $this->joinInner('{users}_friends', 'f', "friend_id = i.id AND f.is_mutual = 1 AND f.user_id = '{$user_id}'");
+    public function filterFriends($user_id, $is_mutual = 1){
+
+        $this->joinInner('{users}_friends', 'f', 'f.friend_id = i.id');
+
+        $this->filterEqual('f.user_id', intval($user_id));
+
+        if($is_mutual !== null){
+            $this->filterEqual('f.is_mutual', $is_mutual);
+        }
+
         return $this;
+
     }
 
     public function getFriends($user_id){
@@ -716,19 +724,46 @@ class modelUsers extends cmsModel {
         return $count;
     }
 
+    public function getSubscribersCount($user_id){
+
+        $this->useCache('users.friends');
+
+        $this->filterEqual('friend_id', $user_id);
+        $this->filterEqual('is_mutual', 0);
+
+        $count = $this->getCount('{users}_friends');
+
+        $this->resetFilters();
+
+        return $count;
+
+    }
+
 
     public function getFriendsIds($user_id){
 
         $this->useCache('users.friends');
 
         $this->filterEqual('user_id', $user_id);
-        $this->filterEqual('is_mutual', 1);
 
-        return $this->get('{users}_friends', function($item, $model){
+        $data = array(
+            'friends' => array(),
+            'subscribes' => array()
+        );
 
-            return $item['friend_id'];
+        $items = $this->get('{users}_friends', false, false);
 
-        }, false);
+        if($items){
+            foreach ($items as $item) {
+                if($item['is_mutual']){
+                    $data['friends'][] = $item['friend_id'];
+                } else {
+                    $data['subscribes'][] = $item['friend_id'];
+                }
+            }
+        }
+
+        return $data;
 
     }
 

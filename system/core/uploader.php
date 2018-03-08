@@ -552,8 +552,8 @@ class cmsUploader {
         $dir_num_user = sprintf('%03d', intval($this->user_id/100));
 
         $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
-        $first_dir  = substr($file_name, 0, 2);
-        $second_dir = substr($file_name, 2, 2);
+        $first_dir  = substr($file_name, 0, 1);
+        $second_dir = substr($file_name, 1, 1);
 
         $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
 

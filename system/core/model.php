@@ -986,12 +986,23 @@ class cmsModel {
         return $this->filterIsNull('is_parent_hidden');
     }
 
-    public function filterFriends($user_id){
+    public function filterSubscribe($user_id){
+        return $this->filterFriends($user_id, 0);
+    }
+
+    public function filterFriendsAndSubscribe($user_id){
+        return $this->filterFriends($user_id, null);
+    }
+
+    public function filterFriends($user_id, $is_mutual = 1){
 
         $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
         $this->filterEqual('fr.user_id', intval($user_id));
-        $this->filterEqual('fr.is_mutual', 1);
+
+        if($is_mutual !== null){
+            $this->filterEqual('fr.is_mutual', $is_mutual);
+        }
 
         return $this;
 

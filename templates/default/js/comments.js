@@ -116,8 +116,21 @@ icms.comments = (function ($) {
 
     this.previewResult = function (result) {
 
-        if (result == null || typeof(result) == 'undefined' || result.error){
-            this.error(result.message);
+        if(!result){
+            this.error('404');
+            return;
+        }
+
+        if (result.error){
+            if(result.message){
+                this.error(result.message);
+            }
+            if (result.errors){
+                for(var field_id in result.errors){
+                    this.error(result.errors[field_id]);
+                    return;
+                }
+            }
             return;
         }
 
@@ -233,8 +246,21 @@ icms.comments = (function ($) {
 
     this.result = function(result){
 
-        if (result == null || typeof(result) == 'undefined' || result.error){
-            this.error(result.message);
+        if(!result){
+            this.error('404');
+            return;
+        }
+
+        if (result.error){
+            if(result.message){
+                this.error(result.message);
+            }
+            if (result.errors){
+                for(var field_id in result.errors){
+                    this.error(result.errors[field_id]);
+                    return;
+                }
+            }
             return;
         }
 
@@ -257,8 +283,21 @@ icms.comments = (function ($) {
 
     this.updateResult = function(result){
 
-        if (result == null || typeof(result) == 'undefined' || result.error){
-            this.error(result.message);
+        if(!result){
+            this.error('404');
+            return false;
+        }
+
+        if (result.error){
+            if(result.message){
+                this.error(result.message);
+            }
+            if (result.errors){
+                for(var field_id in result.errors){
+                    this.error(result.errors[field_id]);
+                    return false;
+                }
+            }
             return false;
         }
 

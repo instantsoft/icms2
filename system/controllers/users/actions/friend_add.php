@@ -13,6 +13,10 @@ class actionUsersFriendAdd extends cmsAction {
         $friend = $this->model->getUser($friend_id);
         if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
 
+        if (!$this->cms_user->isPrivacyAllowed($friend, 'users_friendship')){
+            cmsCore::error404();
+        }
+
         //
         // Запрос по ссылке из профиля
         //
@@ -58,9 +62,9 @@ class actionUsersFriendAdd extends cmsAction {
 
                 // спрашиваем подтверждение
 
-                return $this->cms_template->render('friend_add', array(
-                    'user'   => $this->cms_user,
-                    'friend' => $friend
+                return $this->cms_template->renderAsset('ui/confirm', array(
+                    'confirm_title'  => sprintf(LANG_USERS_FRIENDS_CONFIRM, $friend['nickname']),
+                    'confirm_action' => $this->cms_template->href_to('friend_add', $friend['id'])
                 ));
 
             }

@@ -16,6 +16,8 @@ class cmsUser {
     public $nickname;
     public $is_admin = 0;
     public $is_logged = false;
+    public $friends = array();
+    public $subscribes = array();
 
     public static $online_users = array();
     private static $online_interval = 180;
@@ -840,31 +842,39 @@ class cmsUser {
 
     public function recacheFriends(){
 
-        $model = cmsCore::getModel('users');
+        $friends = cmsCore::getModel('users')->getFriendsIds($this->id);
 
-        $this->friends = $model->getFriendsIds($this->id);
+        $this->friends = $friends['friends'];
+        $this->subscribes = $friends['subscribes'];
+
+        return $this;
 
     }
 
-    public function isFriend($friend_id){
+    public function isFriend($friend_id, $type = 'friends'){
+
+        if (!$friend_id || !$this->id) { return false; }
 
         if ($friend_id == $this->id) { return true; }
 
-        if (!isset($this->friends)) { return false; }
-        if (!is_array($this->friends)) { return false; }
+        if (empty($this->{$type})) { return false; }
 
-        return in_array($friend_id, $this->friends);
+        return in_array($friend_id, $this->{$type});
+
+    }
+
+    public function isSubscribe($friend_id){
+
+        return $this->isFriend($friend_id, 'subscribes');
 
     }
 
     public function hasFriends(){
-
         return !empty($this->friends);
-
     }
 
-//============================================================================//
-//============================================================================//
-
+    public function hasSubscribes(){
+        return !empty($this->subscribes);
+    }
 
 }

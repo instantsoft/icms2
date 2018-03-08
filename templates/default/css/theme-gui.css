@@ -144,6 +144,8 @@
 .icon-newspaper_add, .menu .newspaper_add .item { background-image: url("../images/icons/newspaper_add.png"); }
 .icon-newspaper_delete, .menu .newspaper_delete .item { background-image: url("../images/icons/newspaper_delete.png"); }
 .icon-bell, .menu .bell .item { background-image: url("../images/icons/bell.png"); }
+.icon-subscribe, .menu .subscribe .item { background-image: url("../images/icons/subscribe.png"); }
+.icon-unsubscribe, .menu .unsubscribe .item { background-image: url("../images/icons/unsubscribe.png"); }
 
 /* Misc icons =============================================================== */
 

@@ -237,6 +237,8 @@
     define('LANG_ONLINE',                    'Онлайн');
     define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
+    define('LANG_USERS_SUBSCRIBE',           'Подписаться');
+    define('LANG_USERS_UNSUBSCRIBE',         'Отписаться');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');

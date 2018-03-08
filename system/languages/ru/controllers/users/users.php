@@ -95,8 +95,10 @@
     define('LANG_USERS_FRIENDS_ADD',        'Добавить в друзья');
     define('LANG_USERS_FRIENDS_DELETE',     'Удалить из друзей');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Отправить пользователю %s предложение дружбы?');
+    define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Подписаться на новости пользователя %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей?');
     define('LANG_USERS_FRIENDS_SENT',       'Предложение дружбы отправлено');
+    define('LANG_USERS_SUBSCRIBE_SUCCESS',  'Вы успешно подписались');
     define('LANG_USERS_FRIENDS_DELETED',    '%s удален из списка друзей');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s отклонил ваше предложение дружбы');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s предлагает вам стать друзьями');
@@ -116,6 +118,7 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Уведомлять об одобренных запросах дружбы');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Уведомлять о прекращении дружбы');
 
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Кто может отправлять мне запросы дружбы?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Кто может комментировать записи на стене?');

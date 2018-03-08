@@ -18,6 +18,15 @@ class onUsersUserTabInfo extends cmsAction {
 
         }
 
+        if ($tab_name == 'subscribers'){
+
+            $this->subscribers_count = $this->model->getSubscribersCount($profile['id'], $this->cms_user->id);
+            if (!$this->subscribers_count) { return false; }
+
+            return array('counter' => $this->subscribers_count);
+
+        }
+
         return true;
 
     }

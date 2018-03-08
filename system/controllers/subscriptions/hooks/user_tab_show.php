@@ -1,6 +1,6 @@
 <?php
 
-class onActivityUserTabShow extends cmsAction {
+class onSubscriptionsUserTabShow extends cmsAction {
 
     public function run($profile, $tab_name, $tab){
 

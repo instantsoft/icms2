@@ -7,6 +7,16 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$admin->model->db->getRowsCount('{users}_tabs', "controller = 'users' AND name = 'subscribers'", 1)){
+        $admin->model->insert('{users}_tabs', array(
+            'controller' => 'users',
+            'title'      => 'Подписчики',
+            'name'       => 'subscribers',
+            'ordering'   => 2,
+            'is_active'  => 1
+        ));
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

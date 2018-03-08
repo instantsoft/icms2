@@ -238,6 +238,8 @@
     define('LANG_ONLINE',                    'Online');
     define('LANG_USERS_PROFILE_LAST_IP',     'Last IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Last visit');
+    define('LANG_USERS_SUBSCRIBE',           'Subscribe');
+    define('LANG_USERS_UNSUBSCRIBE',         'Unsubscribe');
 
     //MODERATION
     define('LANG_MODERATION',                'Moderation');
