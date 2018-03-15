@@ -24,8 +24,8 @@
 
 <div id="entry_<?php echo $entry['id']; ?>" class="entry"<?php if($is_hidden){ ?> style="display:none"<?php } ?> data-replies="<?php echo $entry['replies_count']; ?>">
     <div class="body">
-        <div <?php if (!empty($entry['user']['is_online'])){ ?>class="avatar comment_user_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="avatar"<?php } ?>>
-            <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+        <div class="avatar">
+            <a href="<?php echo href_to('users', $entry['user']['id']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                 <?php echo html_avatar_image($entry['user']['avatar'], ($entry['parent_id'] ? 'micro' : 'micro'), $entry['user']['nickname']); ?>
             </a>
         </div>

@@ -32,7 +32,7 @@
 
 ?>
 
-<div id="comment_<?php echo $entry['id']; ?>" class="comment<?php if($is_selected){ ?> selected-comment<?php } ?><?php if($target_user_id == $entry['user_id']){ ?> is_topic_starter<?php } ?>" <?php if ($is_levels) { ?>style="margin-left: <?php echo $level; ?>px" data-level="<?php echo $entry['level']; ?>"<?php } ?>>
+<div id="comment_<?php echo $entry['id']; ?>" class="comment<?php if($is_selected){ ?> selected-comment<?php } ?><?php if($entry['user_id'] && $target_user_id == $entry['user_id']){ ?> is_topic_starter<?php } ?>" <?php if ($is_levels) { ?>style="margin-left: <?php echo $level; ?>px" data-level="<?php echo $entry['level']; ?>"<?php } ?>>
     <?php if($entry['is_deleted']){ ?>
         <span class="deleted"><?php echo LANG_COMMENT_DELETED; ?></span>
         <span class="nav">
@@ -86,9 +86,9 @@
         <?php } ?>
     </div>
     <div class="body">
-        <div <?php if (!empty($entry['user']['is_online'])){ ?>class="avatar comment_user_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="avatar"<?php } ?>>
+        <div class="avatar">
             <?php if ($entry['user_id']) { ?>
-                <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+                <a href="<?php echo href_to('users', $entry['user']['id']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                     <?php echo html_avatar_image($entry['user']['avatar'], 'micro', $entry['user']['nickname']); ?>
                 </a>
             <?php } else { ?>

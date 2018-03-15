@@ -64,40 +64,24 @@
         <?php } ?>
 
         <div class="block">
-
             <ul class="details">
-
-                <li>
-                    <strong><?php echo LANG_RATING; ?>:</strong>
-                    <span class="<?php echo html_signed_class($profile['rating']); ?>"><?php echo $profile['rating']; ?></span>
-                </li>
-
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_LOGDATE; ?>:</strong>
-                    <?php echo $profile['is_online'] ? '<span class="online">'.LANG_ONLINE.'</span>' : string_date_age_max($profile['date_log'], true); ?>
-                </li>
-
                 <li>
                     <strong><?php echo LANG_USERS_PROFILE_REGDATE; ?>:</strong>
                     <?php echo string_date_age_max($profile['date_reg'], true); ?>
                 </li>
-
                 <?php if ($profile['inviter_id']) { ?>
                 <li>
                     <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
                     <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
                 </li>
                 <?php } ?>
-
                 <?php if ($user->is_admin) { ?>
                 <li>
                     <strong><?php echo LANG_USERS_PROFILE_LAST_IP; ?>:</strong>
                     <?php html($profile['ip']); ?>
                 </li>
                 <?php } ?>
-
             </ul>
-
         </div>
 
     </div>

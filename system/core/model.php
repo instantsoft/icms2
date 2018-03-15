@@ -712,7 +712,7 @@ class cmsModel {
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $value = intval($value);
         $interval = $this->db->escape($interval);
-        $this->filter("TIMESTAMPDIFF({$interval}, {$field}, CURDATE()) <= {$value}");
+        $this->filter("TIMESTAMPDIFF({$interval}, {$field}, NOW()) <= {$value}");
         return $this;
     }
 

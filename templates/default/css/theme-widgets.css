@@ -361,11 +361,11 @@ aside .widget_tabbed > .tabs .links a {
 
 .widget_activity_list h4 { margin:0; margin-bottom: 5px; }
 
-.widget_activity_list .item { margin-bottom: 10px; overflow: hidden; }
+.widget_activity_list .item { margin-bottom: 15px; overflow: hidden; }
 .widget_activity_list .item:last-child { margin-bottom: 0; }
 
-.widget_activity_list .item > .image { float:left; margin-right: 10px; padding:2px; border:solid 1px #B3C2C9; }
-.widget_activity_list .item > .image img { display: block; }
+.widget_activity_list .item > .image, .widget_comments_list .item .image { float:left; margin-right: 10px; position: relative; }
+.widget_activity_list .item > .image img, .widget_comments_list .item .image img { display: block; border-radius: 50%; }
 .widget_activity_list .item .info { line-height:17px; padding-top:2px; }
 
 .widget_activity_list .item .title{ }
@@ -406,9 +406,6 @@ aside .widget_tabbed > .tabs .links a {
 .widget_activity_list .item .images .image.more a:hover {
     color:#2c3e50;
 }
-.widget_activity_list .item .images .image.more a span{
-}
-
 .widget_activity_list .item .actions {
     float:right;
     visibility: hidden;
@@ -431,11 +428,7 @@ aside .widget_tabbed > .tabs .links a {
 .widget_comments_list .item { margin-bottom: 15px; overflow: hidden; }
 .widget_comments_list .item:last-child { margin-bottom: 0; }
 
-.widget_comments_list .item .image { float:left; margin-right: 10px; padding:2px; border:solid 1px #B3C2C9; }
-.widget_comments_list .item .image img { display: block; }
 .widget_comments_list .item .info { line-height:17px; padding-top:2px; }
-
-.widget_comments_list .item .title{ }
 .widget_comments_list .item .title a.author{ color:#376499; }
 .widget_comments_list .item .title a.author:hover{ color:#d35400; }
 

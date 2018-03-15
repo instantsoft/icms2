@@ -518,10 +518,16 @@
 .striped-list .item .actions{
     float: left;
     margin-right: 15px;
+    position: relative;
 }
 
-.striped-list .item .icon img {
+.striped-list .item .icon img,
+#wall_widget #entries_list .entry .body .avatar img,
+#pm_window .contacts .contact img, #pm_contact .overview a img,
+.user_avatar img,
+#comments_list .comment .body .avatar img {
     display: block;
+    border-radius: 50%;
 }
 
 .striped-list .item .position {
@@ -1354,31 +1360,15 @@ form .child_field{padding-left:20px}
 
 #comments_list .comment .body .avatar{
     float:left;
-    padding:2px;
-    border:solid 1px #999;
     position: relative
 }
-#comments_list .comment .body .avatar.comment_user_online, #wall_widget #entries_list .entry .body .avatar.comment_user_online {
-    border-left-color: #27ae60;
-    border-left-width: 2px;
-}
 
-#comments_list .comment .body .avatar img, #comments_list .comment .body .avatar a { display:block; }
-#comments_list .comment .body .avatar:after {
-    display: block;
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 14px;
-    background: url("../images/comment_arrow.png") no-repeat 0px 0px;
-    right: -10px;
-    top: 8px;
-}
+#comments_list .comment .body .avatar a { display:block; }
 
 #comments_list .comment .content{
     color:#333;
     padding-left:10px;
-    padding-top: 4px;
+    padding-top: 8px;
     position: relative;
     overflow: hidden;
 }
@@ -1388,7 +1378,7 @@ form .child_field{padding-left:20px}
 }
 
 #comments_list .comment .content .links{
-    padding:4px 0;
+    padding:10px 0 0 0;
     font-size:12px;
 }
 
@@ -1497,7 +1487,6 @@ form .child_field{padding-left:20px}
     margin-bottom: 0;
 }
 
-
 #wall_widget #entries_list .entry .info,
 #wall_widget #entries_list .entry .body {
     overflow: hidden;
@@ -1521,24 +1510,18 @@ form .child_field{padding-left:20px}
 
 #wall_widget #entries_list .entry .info .date{ color:#999; }
 
-#wall_widget #entries_list .entry .body {}
-
 #wall_widget #entries_list .entry .body .avatar{
     float:left;
-    padding:2px;
-    border:solid 1px #999;
+    position: relative;
 }
 
-#wall_widget #entries_list .entry .body .avatar img{ display:block; }
-
 #wall_widget #entries_list .entry .content{
-    color:#333;
-    padding-left:15px;
-    padding-top: 4px;
-    background: url("../images/comment_arrow.png") no-repeat 0px 6px;
+    color: #333;
+    padding-left: 10px;
+    padding-top: 8px;
     position: relative;
     z-index: 2;
-    margin-left: 37px;
+    margin-left: 32px;
 }
 #wall_widget #entries_list .entry .content .text img {
     max-width: 100%;
@@ -1589,42 +1572,19 @@ form .child_field{padding-left:20px}
 }
 
 #wall_widget #entries_list .replies .entry{
-    font-size:12px;
-    padding:10px;
-    border-left:solid 4px #ddd;
-    border-bottom:none;
-    margin:0;
-    margin-top:10px;
-    margin-left:18px;
+    font-size: 12px;
+    padding: 20px 0 10px 10px;
+    border-left: solid 4px #ddd;
+    border-bottom: none;
+    margin-left:16px;
 }
 
 #wall_widget #entries_list .replies .entry:hover{
     border-left-color:#BDC3C7;
 }
 
-#wall_widget #entries_list .replies .entry:hover .avatar{
-    border-color:#BDC3C7;
-}
-
-#wall_widget #entries_list .replies .entry .info{
-    margin:0; padding:0;
-    padding-left:0px;
-    margin-bottom: 3px;
-}
-
-#wall_widget #entries_list .replies .entry .content{
-    background:none;
-    margin:0; padding:0;
-	max-width: 600px;
-}
-
-#wall_widget #entries_list .replies .entry .avatar{
-    float:right;
-    border:solid 1px #ddd;
-}
-
 #wall_widget #entries_list .show_more {
-    margin-top:-14px;
+    margin-top:-16px;
 }
 
 #wall_widget #entries_list .show_more a{
@@ -1633,12 +1593,13 @@ form .child_field{padding-left:20px}
     line-height: 30px;
     text-align:center;
     background:#E1EBEF;
-    color:#BDC3C7;
+    color:#61676b;
     text-decoration:none;
 }
 
 #wall_widget #entries_list .show_more a:hover{
     background:#B3C2C9;
+    color:#FFF;
 }
 
 /* Private Messaging Window ================================================= */
@@ -1708,10 +1669,7 @@ form .child_field{padding-left:20px}
     overflow: hidden;
     position: relative;
 }
-#pm_window .contacts .contact img, #pm_contact .overview a img {
-    border-radius: 50%;
-	display:block;
-}
+
 .peer_online:after,
 .peer_no_online:after {
     bottom: 0;
@@ -1950,9 +1908,6 @@ form .child_field{padding-left:20px}
     margin-left: 0;
     margin-right: 10px;
     margin-top: 5px;
-}
-.user_avatar img {
-    border-radius: 50%;
 }
 .message-my .user_avatar {
     float: right;

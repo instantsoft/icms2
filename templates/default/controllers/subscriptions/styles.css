@@ -39,6 +39,7 @@
 .subscribe_wrap {
     float: right;
     line-height: 26px;
+    margin-left: 10px;
 }
 .filter-panel .buttons .subscribe_wrap{
     line-height: 32px;
