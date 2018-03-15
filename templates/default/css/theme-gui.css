@@ -1358,7 +1358,7 @@ form .child_field{padding-left:20px}
     border:solid 1px #999;
     position: relative
 }
-#comments_list .comment .body .avatar.comment_user_online{
+#comments_list .comment .body .avatar.comment_user_online, #wall_widget #entries_list .entry .body .avatar.comment_user_online {
     border-left-color: #27ae60;
     border-left-width: 2px;
 }

@@ -2,9 +2,6 @@
 
 class modelWall extends cmsModel{
 
-//============================================================================//
-//============================================================================//
-
     public function getEntriesCount($profile_type, $profile_id, $only_root=true){
 
         $this->useCache('wall.count');
@@ -29,33 +26,33 @@ class modelWall extends cmsModel{
 
         $this->useCache('wall.entries');
 
-        $entries = $this->
-                        select('COUNT(e.id)', 'replies_count')->
-                        joinLeft('wall_entries', 'e', 'e.parent_id = i.id')->
-                        joinUser()->
-                        filterEqual('profile_id', $profile_id)->
-                        filterEqual('profile_type', $profile_type)->
-                        filterEqual('parent_id', $parent_id)->
-                        groupBy('i.id')->
-                        orderBy('date_pub', 'desc');
+        $this->select('COUNT(e.id)', 'replies_count')->
+                joinLeft('wall_entries', 'e', 'e.parent_id = i.id')->
+                joinUser()->
+                filterEqual('profile_id', $profile_id)->
+                filterEqual('profile_type', $profile_type)->
+                filterEqual('parent_id', $parent_id)->
+                groupBy('i.id')->
+                orderBy('date_pub', 'desc');
 
         if ($page){
             $this->limitPage($page, wall::$perpage);
         }
 
-        $entries = $this->get('wall_entries', function($item, $model){
+        $this->joinSessionsOnline();
+
+        return $this->get('wall_entries', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => $item['is_online'],
+                'avatar'    => $item['user_avatar']
             );
 
             return $item;
 
         });
-
-        return $entries;
 
     }
 
@@ -63,17 +60,17 @@ class modelWall extends cmsModel{
 
         $this->useCache('wall.entries');
 
-        $entries = $this->
-                        joinUser()->
-                        filterEqual('parent_id', $parent_id)->
-                        orderBy('date_pub', 'asc');
+        $this->joinUser()->joinSessionsOnline()->
+                filterEqual('parent_id', $parent_id)->
+                orderBy('date_pub', 'asc');
 
-        $entries = $this->get('wall_entries', function($item, $model){
+        return $this->get('wall_entries', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => $item['is_online'],
+                'avatar'    => $item['user_avatar']
             );
 
             $item['replies_count'] = 0;
@@ -82,25 +79,24 @@ class modelWall extends cmsModel{
 
         });
 
-        return $entries;
-
     }
 
     public function getEntry($id){
 
         $entry = $this->
-                        joinUser()->
-                        getItemById('wall_entries', $id, function($item, $model){
+                    joinUser()->joinSessionsOnline()->
+                    getItemById('wall_entries', $id, function($item, $model){
 
-                            $item['user'] = array(
-                                'id' => $item['user_id'],
-                                'nickname' => $item['user_nickname'],
-                                'avatar' => $item['user_avatar']
-                            );
+                        $item['user'] = array(
+                            'id'        => $item['user_id'],
+                            'nickname'  => $item['user_nickname'],
+                            'is_online' => $item['is_online'],
+                            'avatar'    => $item['user_avatar']
+                        );
 
-                            return $item;
+                        return $item;
 
-                        });
+                    });
 
         return $entry;
 
@@ -186,8 +182,5 @@ class modelWall extends cmsModel{
         cmsCache::getInstance()->clean('wall.count');
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

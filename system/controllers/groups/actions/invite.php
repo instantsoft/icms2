@@ -4,6 +4,8 @@ class actionGroupsInvite extends cmsAction {
 
     public function run($invited_id){
 
+        if (!$invited_id) { cmsCore::error404(); }
+
         // профиль приглашаемого
         $profile = cmsCore::getModel('users')->getUser($invited_id);
         if (!$profile || $profile['id'] == $this->cms_user->id) { cmsCore::error404(); }

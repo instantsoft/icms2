@@ -505,7 +505,7 @@ class cmsController {
         $params_error = $this->validateRequestParams($action_object);
         if($params_error !== false){
             if ($this->request->isAjax()){
-                return $this->cms_template->renderJSON(array('error' => true, 'errors' => $params_error));
+                return $this->cms_template->renderJSON(array('error' => true, 'errors' => $params_error, 'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))));
             } else {
                 cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
             }
@@ -540,7 +540,12 @@ class cmsController {
                 $this->request->set($param_name, $value);
 
             } elseif(!is_null($value) && isset($rules['default'])){
+
                 $value = $this->request->get($param_name, $rules['default']);
+
+                // для применения типизации переменной
+                $this->request->set($param_name, $value);
+
             }
 
             foreach ($rules['rules'] as $rule) {

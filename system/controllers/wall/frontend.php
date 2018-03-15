@@ -35,8 +35,6 @@ class wall extends cmsFrontend {
 
         $entries = cmsEventsManager::hook('wall_before_list', $entries);
 
-        $csrf_token_seed = implode('/', array($profile_type, $profile_id));
-
         return $this->cms_template->renderInternal($this, 'list', array(
             'title'           => $title,
             'controller'      => $controller,
@@ -49,7 +47,6 @@ class wall extends cmsFrontend {
             'perpage'         => wall::$perpage,
             'total'           => $total,
             'max_entries'     => $show_id ? 0 : 5,
-            'csrf_token_seed' => $csrf_token_seed,
             'show_id'         => $show_id,
             'show_reply_id'   => $show_reply_id,
             'go_reply'        => $go_reply

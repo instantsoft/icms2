@@ -21,7 +21,7 @@
     <div id="wall_add_form">
         <div class="preview_box"></div>
         <form action="<?php echo $this->href_to('submit'); ?>" method="post">
-            <?php echo html_csrf_token($csrf_token_seed); ?>
+            <?php echo html_csrf_token(); ?>
             <?php echo html_input('hidden', 'action', 'add'); ?>
             <?php echo html_input('hidden', 'id', 0); ?>
             <?php echo html_input('hidden', 'parent_id', 0); ?>

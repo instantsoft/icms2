@@ -34,7 +34,7 @@ class widgetUsersList extends cmsWidget {
             case 'friends_online':
                 if (!$user->is_logged) { return false; }
                 $model->filterFriends($user->id);
-                $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
+                $model->filterOnlineUsers();
                 break;
 
         }

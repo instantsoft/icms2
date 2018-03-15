@@ -80,15 +80,15 @@ class actionCommentsSubmit extends cmsAction {
         }
 
         // параметры комментария
-        $this->target_controller = $this->request->get('tc', '');
-        $this->target_subject    = $this->request->get('ts', '');
-        $this->target_id         = $this->request->get('ti', 0);
-        $this->target_user_id    = $this->request->get('tud', 0);
-        $this->parent_id         = $this->request->get('parent_id', 0);
-        $this->comment_id        = $this->request->get('id', 0);
+        $this->target_controller = $this->request->get('tc');
+        $this->target_subject    = $this->request->get('ts');
+        $this->target_id         = $this->request->get('ti');
+        $this->target_user_id    = $this->request->get('tud');
+        $this->parent_id         = $this->request->get('parent_id');
+        $this->comment_id        = $this->request->get('id');
         $this->content           = $this->request->get('content', '');
-        $this->author_name       = $this->request->get('author_name', '');
-        $this->author_email      = $this->request->get('author_email', '');
+        $this->author_name       = $this->request->get('author_name');
+        $this->author_email      = $this->request->get('author_email');
 
         // Проверяем наличие контроллера и модели
         if (!(cmsCore::isControllerExists($this->target_controller) &&
@@ -108,7 +108,7 @@ class actionCommentsSubmit extends cmsAction {
             ));
 		}
 
-        return call_user_func(array($this, 'run'.ucfirst($this->request->get('action', ''))));
+        return call_user_func(array($this, 'run'.ucfirst($this->request->get('action'))));
 
     }
 

@@ -50,6 +50,7 @@ class cmsModel {
     protected $delete_filter_disabled = false;
     protected $approved_filtered = false;
     protected $available_filtered = false;
+    protected $joined_session_online = array();
 
     protected static $cached = array();
 
@@ -558,6 +559,7 @@ class cmsModel {
         $this->join         = '';
         $this->distinct     = '';
         $this->straight_join = '';
+        $this->joined_session_online = array();
 
 		if ($this->keep_filters) { return $this; }
 
@@ -565,6 +567,7 @@ class cmsModel {
 		$this->where        = '';
         $this->privacy_filtered = false;
         $this->approved_filtered = false;
+        $this->available_filtered = false;
 
         return $this;
 
@@ -1017,6 +1020,10 @@ class cmsModel {
 
     }
 
+    public function filterOnlineUsers() {
+        return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
+    }
+
     public function applyDatasetFilters($dataset, $ignore_sorting=false){
 
         if (!empty ($dataset['filters'])){
@@ -1135,8 +1142,8 @@ class cmsModel {
 
         if (!$user_fields){
             $user_fields = array(
-                'u.nickname' => 'user_nickname',
-                'u.avatar'   => 'user_avatar'
+                $as.'.nickname' => 'user_nickname',
+                $as.'.avatar'   => 'user_avatar'
             );
         }
 
@@ -1171,6 +1178,19 @@ class cmsModel {
 	public function joinUserRight($on_field='user_id', $user_fields=array()){
 		return $this->joinUser($on_field, $user_fields, 'right');
 	}
+
+    public function joinSessionsOnline($as = 'u') {
+
+        if(!empty($this->joined_session_online[$as])){ return $this; }
+
+        $this->joinLeft('sessions_online', 'online', 'online.user_id = '.$as.'.id');
+        $this->select('IF(online.date_created IS NOT NULL AND TIMESTAMPDIFF(SECOND, online.date_created, NOW()) <= '.cmsUser::USER_ONLINE_INTERVAL.', 1, 0)', 'is_online');
+
+        $this->joined_session_online[$as] = true;
+
+        return $this;
+
+    }
 
     public function groupBy($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }

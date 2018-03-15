@@ -39,6 +39,8 @@ class modelUsers extends cmsModel {
 
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
 
+        $this->joinSessionsOnline('i');
+
         return $this->get('{users}', function($user) use ($actions){
 
             unset($user['pass_token'], $user['password'], $user['password_salt']);
@@ -47,7 +49,6 @@ class modelUsers extends cmsModel {
             $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
             $user['theme']           = cmsModel::yamlToArray($user['theme']);
             $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-            $user['is_online']       = cmsUser::userIsOnline($user['id']);
             $user['item_css_class']  = array();
             $user['notice_title']    = array();
             $user['ctype_name']      = 'users';
@@ -92,7 +93,7 @@ class modelUsers extends cmsModel {
         $this->selectOnly('i.id', 'id');
 
         return $this->get('{users}', function($user){
-            return (int)cmsUser::userIsOnline($user['id']);
+            return $user['id'];
         });
 
     }
@@ -107,6 +108,8 @@ class modelUsers extends cmsModel {
         $this->select('u.nickname', 'inviter_nickname');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
 
+        $this->joinSessionsOnline('i');
+
         if ($id){
             $user = $this->getItemById('{users}', $id);
         } else {
@@ -119,7 +122,6 @@ class modelUsers extends cmsModel {
         $user['theme']           = cmsModel::yamlToArray($user['theme']);
         $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-        $user['is_online']       = cmsUser::userIsOnline($user['id']);
         $user['ctype_name']      = 'users';
 
         return $user;
@@ -222,8 +224,8 @@ class modelUsers extends cmsModel {
         $date_reg = date('Y-m-d H:i:s');
         $date_log = $date_reg;
 
-        $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
-        $password_salt = substr($password_salt, rand(1,8), 16);
+        $password_salt = string_random();
+        $password_salt = substr($password_salt, mt_rand(1,8), 16);
         $password_hash = md5(md5($user['password1']) . $password_salt);
 
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
@@ -265,8 +267,8 @@ class modelUsers extends cmsModel {
 
     public function updateUser($id, $user){
 
-        $success    = false;
-        $errors     = false;
+        $success = false;
+        $errors  = false;
 
         if (!empty($user['email'])){
 
@@ -288,8 +290,8 @@ class modelUsers extends cmsModel {
                 $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
             }
 
-            $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
-            $password_salt = substr($password_salt, rand(1,8), 16);
+            $password_salt = string_random();
+            $password_salt = substr($password_salt, mt_rand(1,8), 16);
             $password_hash = md5(md5($user['password1']) . $password_salt);
 
             $user['password']      = $password_hash;
@@ -311,13 +313,13 @@ class modelUsers extends cmsModel {
 
         }
 
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
 
         return array(
             'success' => $success,
-            'errors' => $errors,
-            'id' => $id
+            'errors'  => $errors,
+            'id'      => $id
         );
 
     }
@@ -339,9 +341,9 @@ class modelUsers extends cmsModel {
 
 		}
 
-        $res = $this->update('{users}', $id, array('theme'=>$theme));
+        $res = $this->update('{users}', $id, array('theme' => $theme), true);
 
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        cmsCache::getInstance()->clean('users.user.'.$id);
 
         return $res;
 
@@ -393,30 +395,70 @@ class modelUsers extends cmsModel {
 
     }
 
+    public function updateUserIp($id, $ip = false){
+
+        $this->update('{users}', $id, array(
+            'ip' => ($ip ? $ip : cmsUser::getIp())
+        ), true);
+
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
+
+    public function updateUserDateLog($id){
+
+        $this->update('{users}', $id, array(
+            'date_log' => null
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
+
     public function setUserIsDeleted($id){
+
         $this->update('{users}', $id, array(
             'is_deleted' => 1
-        ));
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
         return $this;
+
     }
 
     public function restoreUser($id){
+
         $this->update('{users}', $id, array(
             'is_deleted' => null
-        ));
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
         return $this;
+
     }
 
     public function unlockUser($id){
+
         $this->update('{users}', $id, array(
-            'is_locked' => null,
-            'lock_until' => null,
+            'is_locked'   => null,
+            'lock_until'  => null,
             'lock_reason' => null
-        ));
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
         return $this;
+
     }
 
 //============================================================================//
@@ -505,7 +547,9 @@ class modelUsers extends cmsModel {
 
     public function updateUserNotifyOptions($id, $options){
 
-        return $this->update('{users}', $id, array('notify_options'=>$options));
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this->update('{users}', $id, array('notify_options' => $options), true);
 
     }
 
@@ -573,7 +617,9 @@ class modelUsers extends cmsModel {
 
     public function updateUserPrivacyOptions($id, $options){
 
-        return $this->update('{users}', $id, array('privacy_options'=>$options));
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this->update('{users}', $id, array('privacy_options' => $options), true);
 
     }
 
@@ -648,9 +694,13 @@ class modelUsers extends cmsModel {
 
                 $this->update('{users}', $user['id'], array(
                     'groups' => $groups
-                ));
+                ), true);
+
+                cmsCache::getInstance()->clean('users.user.'.$id);
 
             }
+
+            cmsCache::getInstance()->clean('users.list');
 
             $this->delete('{users}_groups_members', $id, 'group_id');
 
@@ -688,6 +738,7 @@ class modelUsers extends cmsModel {
         $this->select('u.*');
 
         $this->joinInner('{users}', 'u', 'u.id = i.friend_id');
+        $this->joinSessionsOnline();
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('is_mutual', 1);
@@ -701,7 +752,6 @@ class modelUsers extends cmsModel {
             $user['groups']          = cmsModel::yamlToArray($user['groups']);
             $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
             $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-            $user['is_online']       = cmsUser::userIsOnline($user['id']);
 
             return $user;
 
@@ -968,9 +1018,11 @@ class modelUsers extends cmsModel {
         $this->update('{users}', $status['user_id'], array(
             'status_text' => $status['content'],
             'status_id' => $id
-        ));
+        ), true);
 
-        cmsCache::getInstance()->clean("users.status");
+        cmsCache::getInstance()->clean('users.status');
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$status['user_id']);
 
         return $id;
 
@@ -978,14 +1030,14 @@ class modelUsers extends cmsModel {
 
     public function clearUserStatus($user_id){
 
-        cmsCache::getInstance()->clean("users.status");
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$user_id}");
+        cmsCache::getInstance()->clean('users.status');
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
 
-        $this->update('{users}', $user_id, array(
+        return $this->update('{users}', $user_id, array(
             'status_text' => null,
             'status_id' => null
-        ));
+        ), true);
 
     }
 

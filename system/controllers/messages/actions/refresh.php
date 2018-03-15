@@ -2,10 +2,29 @@
 
 class actionMessagesRefresh extends cmsAction {
 
+    /**
+     * @var array Описание правил валидации входных данных
+     */
+    public $request_params = array(
+        'contact_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('required'),
+                array('digits')
+            )
+        ),
+        'last_date' => array(
+            'default' => '',
+            'rules'   => array(
+                array('regexp', "/^([a-z0-9 ]*)$/ui")
+            )
+        )
+    );
+
     public function run(){
 
-        $contact_id = $this->request->get('contact_id', 0) or cmsCore::error404();
-        $last_date  = $this->request->get('last_date', '');
+        $contact_id = $this->request->get('contact_id');
+        $last_date  = $this->request->get('last_date');
 
         $contact = $this->model->getContact($this->cms_user->id, $contact_id);
 

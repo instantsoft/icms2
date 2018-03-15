@@ -1184,11 +1184,9 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (
-  `session_id` varchar(32) DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `session_id` (`session_id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id` (`user_id`),
   KEY `date_created` (`date_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

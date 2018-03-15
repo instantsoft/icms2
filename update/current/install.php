@@ -7,7 +7,7 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
-    if(!$admin->model->db->getRowsCount('{users}_tabs', "controller = 'users' AND name = 'subscribers'", 1)){
+    if(!$core->db->getRowsCount('{users}_tabs', "controller = 'users' AND name = 'subscribers'", 1)){
         $admin->model->insert('{users}_tabs', array(
             'controller' => 'users',
             'title'      => 'Подписчики',
@@ -17,10 +17,45 @@ function install_package(){
         ));
     }
 
+    if($core->db->isFieldExists('sessions_online', 'session_id')){
+        $core->db->query("TRUNCATE `{#}sessions_online`");
+        $core->db->query("ALTER TABLE `{#}sessions_online` DROP `session_id`");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////// Индексы //////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    $remove_table_indexes = array(
+        'sessions_online' => array(
+            'session_id', 'user_id'
+        )
+    );
+    $add_table_uq_indexes = array(
+        'sessions_online' => array(
+            'user_id' => array('user_id')
+        )
+    );
+
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    if($add_table_uq_indexes){
+        foreach ($add_table_uq_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
+            }
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Обновляем события ///////////////////////////////////////////

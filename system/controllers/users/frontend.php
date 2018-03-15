@@ -299,7 +299,7 @@ class users extends cmsFrontend {
                 'title' => LANG_USERS_DS_ONLINE,
                 'order' => array('date_log', 'desc'),
                 'filter' => function($model, $dset){
-                    return $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
+                    return $model->joinSessionsOnline('i')->filterOnlineUsers();
                 }
             );
         }

@@ -271,6 +271,8 @@ class cmsPermissions {
         }, 'group_id');
         if(!$groups_ids){ return array(); }
 
+        $model->joinSessionsOnline();
+
         return $model->filterIn('group_id', $groups_ids)->
                 selectOnly('user_id', 'id')->
                 joinUser('user_id', array(
@@ -282,7 +284,6 @@ class cmsPermissions {
                 get('{users}_groups_members', function($item, $model){
 
                     $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
-                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
 
                     return $item;
 

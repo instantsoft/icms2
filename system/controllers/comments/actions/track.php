@@ -44,10 +44,10 @@ class actionCommentsTrack extends cmsAction {
             return $this->cms_template->renderJSON(array('error' => true));
         }
 
-        $target_controller = $this->request->get('tc', '');
-        $target_subject    = $this->request->get('ts', '');
-        $target_id         = $this->request->get('ti', 0);
-        $is_track          = $this->request->get('is_track', 0);
+        $target_controller = $this->request->get('tc');
+        $target_subject    = $this->request->get('ts');
+        $target_id         = $this->request->get('ti');
+        $is_track          = $this->request->get('is_track');
 
         $success = $this->model->
                             filterEqual('target_controller', $target_controller)->

@@ -19,6 +19,8 @@ class actionPhotosMore extends cmsAction{
 
         } elseif($target === 'user_id'){
 
+            if (!$id) { $this->halt(); }
+
             $profile = cmsCore::getModel('users')->getUser($id);
             if (!$profile) { $this->halt(); }
 

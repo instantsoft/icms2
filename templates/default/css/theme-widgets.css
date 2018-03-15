@@ -249,6 +249,7 @@ aside .widget_tabbed > .tabs .links a {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
+  min-height: 300px;
 }
 .widget_content_slider > table td,
 .widget_content_slider > table th {
@@ -302,6 +303,7 @@ aside .widget_tabbed > .tabs .links a {
   background:#ecf0f1;
   position: relative;
   z-index: 2;
+  vertical-align: top;
 }
 
 .widget_content_slider .items .item {

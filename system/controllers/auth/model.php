@@ -8,7 +8,7 @@ class modelAuth extends cmsModel{
 
         for ($i=1; $i<=$qty; $i++){
 
-            $code = md5(md5(implode(',', array($user_id, microtime(true), rand(0,10000), session_id()))));
+            $code = string_random();
             $code = mb_strtoupper(mb_substr($code, rand(0, 16), 10));
 
             $result = $result &&

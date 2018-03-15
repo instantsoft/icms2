@@ -49,6 +49,7 @@ class modelMessages extends cmsModel {
         $this->select('IFNULL(COUNT(m.id), 0)', 'new_messages');
 
         $this->join('{users}', 'u', 'u.id = i.contact_id');
+        $this->joinSessionsOnline();
         $this->joinLeft('{users}_messages', 'm', 'm.from_id = i.contact_id AND m.to_id = i.user_id AND m.is_new = 1 AND m.is_deleted IS NULL');
 
         $this->filterEqual('user_id', $user_id);
@@ -57,10 +58,7 @@ class modelMessages extends cmsModel {
 
         $this->orderBy('date_last_msg', 'desc');
 
-        return $this->get('{users}_contacts', function ($item, $model){
-            $item['is_online'] = cmsUser::userIsOnline($item['id']);
-            return $item;
-        });
+        return $this->get('{users}_contacts');
 
     }
 
@@ -82,6 +80,7 @@ class modelMessages extends cmsModel {
         $this->select('u.privacy_options', 'privacy_options');
         $this->select('COUNT(g.user_id)', 'is_ignored');
         $this->join('{users}', 'u', 'u.id = i.contact_id');
+        $this->joinSessionsOnline();
         $this->joinLeft('{users}_ignors', 'g', "g.ignored_user_id = i.contact_id AND g.user_id = '{$user_id}'");
 
         $this->filterEqual('user_id', $user_id);
@@ -91,7 +90,6 @@ class modelMessages extends cmsModel {
 
         return $this->getItem('{users}_contacts', function($item, $model){
             $item['privacy_options'] = cmsModel::yamlToArray($item['privacy_options']);
-            $item['is_online'] = cmsUser::userIsOnline($item['contact_id']);
             return $item;
         });
 

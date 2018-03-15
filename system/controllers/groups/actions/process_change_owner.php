@@ -6,6 +6,8 @@ class actionGroupsProcessChangeOwner extends cmsAction {
 
         if (!$this->request->isInternal()){ cmsCore::error404(); }
 
+        if (!$group_id || !$owner_id) { return false; }
+
         $group = $this->model->getGroup($group_id);
         if (!$group) { return false; }
 

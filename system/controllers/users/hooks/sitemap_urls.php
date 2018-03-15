@@ -14,7 +14,7 @@ class onUsersSitemapUrls extends cmsAction {
             limit(false)->getUsersIds();
 
         if ($users){
-            foreach($users as $user_id => $user_is_online){
+            foreach($users as $user_id){
                 $url = href_to_abs($this->name, $user_id);
                 $date_last_modified = false;
                 $urls[$url] = $date_last_modified;
