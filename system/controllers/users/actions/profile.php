@@ -89,10 +89,12 @@ class actionUsersProfile extends cmsAction {
 
         if ($this->cms_user->is_logged && !$profile['is_deleted']) {
 
+            $allowed_user_friendship = $this->cms_user->isPrivacyAllowed($profile, 'users_friendship', true);
+
             if (!$this->is_own_profile &&
                     !$profile['is_locked'] &&
                     (!$this->options['is_friends_on'] ||
-                        ($this->options['is_friends_on'] && !$this->cms_user->isPrivacyAllowed($profile, 'users_friendship')))
+                        ($this->options['is_friends_on'] && !$allowed_user_friendship))
                     ){
 
                 if(!$this->is_subscribe_profile){
@@ -113,7 +115,7 @@ class actionUsersProfile extends cmsAction {
 
             if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
 
-                if ($this->cms_user->isPrivacyAllowed($profile, 'users_friendship')){
+                if ($allowed_user_friendship){
 
                     if ($this->is_friend_profile){
                         $tool_buttons['friend_delete'] = array(

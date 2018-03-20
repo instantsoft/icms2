@@ -1005,6 +1005,13 @@ class cmsModel {
 
         if($is_mutual !== null){
             $this->filterEqual('fr.is_mutual', $is_mutual);
+        } else {
+            // подписчики (null) и друзья (1)
+            $this->filterStart();
+                $this->filterEqual('fr.is_mutual', 1);
+                    $this->filterOr();
+                $this->filterIsNull('fr.is_mutual');
+            $this->filterEnd();
         }
 
         return $this;

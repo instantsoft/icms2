@@ -6,7 +6,7 @@ class actionUsersProfileRestore extends cmsAction {
 
     public function run($profile){
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+		if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         if(!cmsUser::isAllowed('users', 'delete', 'any')){
             cmsCore::error404();
@@ -28,11 +28,9 @@ class actionUsersProfileRestore extends cmsAction {
 
         }
 
-        return $this->cms_template->render('action_confirm', array(
-            'confirm' => array(
-                'action' => href_to('users', $profile['id'], 'restore'),
-                'title'  => LANG_USERS_RESTORE_PROFILE.'?'
-            )
+        return $this->cms_template->renderAsset('ui/confirm', array(
+            'confirm_title'  => LANG_USERS_RESTORE_PROFILE.'?',
+            'confirm_action' => href_to('users', $profile['id'], 'restore')
         ));
 
     }

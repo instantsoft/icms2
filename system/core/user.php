@@ -718,9 +718,9 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public function isPrivacyAllowed($profile, $option){
+    public function isPrivacyAllowed($profile, $option, $strict = false){
 
-        if ($this->is_admin) { return true; }
+        if ($this->is_admin && !$strict) { return true; }
 
         if ($profile['id'] == $this->id) { return true; }
 

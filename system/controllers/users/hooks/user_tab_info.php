@@ -11,7 +11,7 @@ class onUsersUserTabInfo extends cmsAction {
             }
 
             // Проверяем наличие друзей
-            $this->friends_count = $this->model->getFriendsCount($profile['id']);
+            $this->friends_count = $profile['friends_count'];
             if (!$this->friends_count) { return false; }
 
             return array('counter' => $this->friends_count);

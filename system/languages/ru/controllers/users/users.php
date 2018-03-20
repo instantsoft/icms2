@@ -94,15 +94,22 @@
     define('LANG_USERS_FRIENDS',            'Друзья');
     define('LANG_USERS_FRIENDS_ADD',        'Добавить в друзья');
     define('LANG_USERS_FRIENDS_DELETE',     'Удалить из друзей');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS', 'Оставить в подписчиках');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Отправить пользователю %s предложение дружбы?');
     define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Подписаться на новости пользователя %s?');
+    define('LANG_USERS_UNSUBSCRIBE_CONFIRM',    'Отписаться от пользователя %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей?');
+    define('LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей, оставив в подписчиках?');
     define('LANG_USERS_FRIENDS_SENT',       'Предложение дружбы отправлено');
     define('LANG_USERS_SUBSCRIBE_SUCCESS',  'Вы успешно подписались');
+    define('LANG_USERS_UNSUBSCRIBE_SUCCESS',  'Вы успешно отписались');
     define('LANG_USERS_FRIENDS_DELETED',    '%s удален из списка друзей');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s отклонил ваше предложение дружбы');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE',   '%s оставил вас в подписчиках');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s предлагает вам стать друзьями');
     define('LANG_USERS_FRIENDS_DONE',       '%s стал вашим другом');
+    define('LANG_USERS_SUBSCRIBE_DONE',     '%s подписался на вас');
+    define('LANG_USERS_UNSUBSCRIBE_DONE',   '%s отписался от вас');
     define('LANG_USERS_FRIENDS_UNDONE',     '%s прекратил дружбу с вами');
 
     define('LANG_USERS_NOTIFY_VIA_NONE',    'Не уведомлять');

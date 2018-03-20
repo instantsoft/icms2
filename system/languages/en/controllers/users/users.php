@@ -94,15 +94,22 @@
     define('LANG_USERS_FRIENDS',            'Friends');
     define('LANG_USERS_FRIENDS_ADD',        'Add to Friends');
     define('LANG_USERS_FRIENDS_DELETE',     'Remove from Friends');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS', 'Keep in subscribers');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Send friendship request to user %s?');
     define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Subscribe to %s\'s news?');
+    define('LANG_USERS_UNSUBSCRIBE_CONFIRM',    'Unsubscribe from user %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Delete user <b>%s</b> from your friend list?');
+    define('LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM', 'Delete user <b>%s</b> from your friend list, keeping in subscribers?');
     define('LANG_USERS_FRIENDS_SENT',       'Friendship request was sent');
     define('LANG_USERS_SUBSCRIBE_SUCCESS',  'You have successfully subscribed');
+    define('LANG_USERS_UNSUBSCRIBE_SUCCESS',  'You have successfully unsubscribed');
     define('LANG_USERS_FRIENDS_DELETED',    '%s was removed from your friend list');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s declined your friendship request');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE',   '%s keep you in subscribers');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s invites you to become friends');
     define('LANG_USERS_FRIENDS_DONE',       '%s became your friend');
+    define('LANG_USERS_SUBSCRIBE_DONE',     '%s subscribed to you');
+    define('LANG_USERS_UNSUBSCRIBE_DONE',   '%s unsubscribed from you');
     define('LANG_USERS_FRIENDS_UNDONE',     '%s stopped being your friend');
 
     define('LANG_USERS_NOTIFY_VIA_NONE',    'Do not notify');

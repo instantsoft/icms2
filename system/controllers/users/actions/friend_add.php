@@ -4,7 +4,7 @@ class actionUsersFriendAdd extends cmsAction {
 
     public function run($friend_id){
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+		if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         if (!$friend_id) { cmsCore::error404(); }
 
@@ -13,7 +13,7 @@ class actionUsersFriendAdd extends cmsAction {
         $friend = $this->model->getUser($friend_id);
         if (!$friend || $friend['is_locked']){ cmsCore::error404(); }
 
-        if (!$this->cms_user->isPrivacyAllowed($friend, 'users_friendship')){
+        if (!$this->cms_user->isPrivacyAllowed($friend, 'users_friendship', true)){
             cmsCore::error404();
         }
 
@@ -26,15 +26,15 @@ class actionUsersFriendAdd extends cmsAction {
             // Если запрос от друга уже существует
             //
 
-            if ($this->model->isFriendshipRequested($friend_id, $this->cms_user->id)){
+            if ($this->model->isFriendshipRequested($friend['id'], $this->cms_user->id)){
 
-                $this->model->addFriendship($this->cms_user->id, $friend_id);
+                $this->model->addFriendship($this->cms_user->id, $friend['id']);
 
                 cmsUser::addSessionMessage(sprintf(LANG_USERS_FRIENDS_DONE, $friend['nickname']), 'success');
 
                 $this->sendNoticeAccepted($friend);
 
-                $this->redirectToAction($friend_id);
+                $this->redirectToAction($friend['id']);
 
             }
 
@@ -50,13 +50,13 @@ class actionUsersFriendAdd extends cmsAction {
 
                 if (!cmsForm::validateCSRFToken($csrf_token)){ cmsCore::error404(); }
 
-                $this->model->addFriendship($this->cms_user->id, $friend_id);
+                $this->model->addFriendship($this->cms_user->id, $friend['id']);
 
                 cmsUser::addSessionMessage(LANG_USERS_FRIENDS_SENT);
 
                 $this->sendNoticeRequest($friend);
 
-                $this->redirectToAction($friend_id);
+                $this->redirectToAction($friend['id']);
 
             } else {
 
@@ -76,7 +76,7 @@ class actionUsersFriendAdd extends cmsAction {
         //
         if ($this->request->isInternal()){
 
-            $this->model->addFriendship($this->cms_user->id, $friend_id);
+            $this->model->addFriendship($this->cms_user->id, $friend['id']);
 
             $this->sendNoticeAccepted($friend);
 
@@ -107,6 +107,12 @@ class actionUsersFriendAdd extends cmsAction {
                     'title'      => LANG_ACCEPT,
                     'controller' => $this->name,
                     'action'     => 'friend_add',
+                    'params'     => array($this->cms_user->id)
+                ),
+                'keep' => array(
+                    'title'      => LANG_USERS_KEEP_IN_SUBSCRIBERS,
+                    'controller' => $this->name,
+                    'action'     => 'keep_in_subscribers',
                     'params'     => array($this->cms_user->id)
                 ),
                 'decline' => array(

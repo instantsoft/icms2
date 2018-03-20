@@ -1,6 +1,6 @@
 <?php
 
-class actionUsersFriendDelete extends cmsAction {
+class actionUsersKeepInSubscribers extends cmsAction {
 
     public function run($friend_id){
 
@@ -26,7 +26,7 @@ class actionUsersFriendDelete extends cmsAction {
 
                 if (!cmsForm::validateCSRFToken($csrf_token)){ cmsCore::error404(); }
 
-                $this->model->deleteFriendship($this->cms_user->id, $friend_id);
+                $this->model->keepInSubscribers($this->cms_user->id, $friend_id);
 
                 cmsUser::addSessionMessage(sprintf(LANG_USERS_FRIENDS_DELETED, $friend['nickname']));
 
@@ -43,8 +43,8 @@ class actionUsersFriendDelete extends cmsAction {
             } else {
 
                 return $this->cms_template->renderAsset('ui/confirm', array(
-                    'confirm_title'  => sprintf(LANG_USERS_FRIENDS_DELETE_CONFIRM, $friend['nickname']),
-                    'confirm_action' => $this->cms_template->href_to('friend_delete', $friend['id'])
+                    'confirm_title'  => sprintf(LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM, $friend['nickname']),
+                    'confirm_action' => $this->cms_template->href_to('keep_in_subscribers', $friend['id'])
                 ));
 
             }
@@ -56,9 +56,9 @@ class actionUsersFriendDelete extends cmsAction {
         //
         if ($this->request->isInternal()){
 
-            $this->model->deleteFriendship($this->cms_user->id, $friend_id);
+            $this->model->keepInSubscribers($this->cms_user->id, $friend_id);
 
-            $this->sendNoticeDeleted($friend, true);
+            $this->sendNoticeDeleted($friend);
 
             return true;
 
@@ -66,7 +66,7 @@ class actionUsersFriendDelete extends cmsAction {
 
     }
 
-    public function sendNoticeDeleted($friend, $is_declined=false){
+    private function sendNoticeDeleted($friend){
 
         $messenger = cmsCore::getController('messages');
 
@@ -74,25 +74,11 @@ class actionUsersFriendDelete extends cmsAction {
 
         $sender_link = '<a href="'.href_to($this->name, $this->cms_user->id).'">'.$this->cms_user->nickname.'</a>';
 
-        $content = $is_declined ?
-                    sprintf(LANG_USERS_FRIENDS_DECLINED, $sender_link) :
-                    sprintf(LANG_USERS_FRIENDS_UNDONE, $sender_link);
-
         $notice = array(
-            'content' => $content,
+            'content' => sprintf(LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE, $sender_link)
         );
 
         $messenger->sendNoticePM($notice, 'users_friend_delete');
-
-        //
-        // E-mail
-        //
-        if (!$is_declined){
-            $messenger->sendNoticeEmail('users_friend_delete', array(
-                'friend_nickname' => $this->cms_user->nickname,
-                'friend_url'      => href_to_abs('users', $this->cms_user->id)
-            ));
-        }
 
         return true;
 

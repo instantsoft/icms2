@@ -6,7 +6,7 @@ class actionUsersProfileDelete extends cmsAction {
 
     public function run($profile){
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+		if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         // проверяем наличие доступа
         $allow_delete_profile = (cmsUser::isAllowed('users', 'delete', 'any') ||
@@ -49,11 +49,9 @@ class actionUsersProfileDelete extends cmsAction {
 
         }
 
-        return $this->cms_template->render('action_confirm', array(
-            'confirm' => array(
-                'action' => href_to('users', $profile['id'], 'delete'),
-                'title' => ($this->is_own_profile ? LANG_USERS_DELETE_PROFILE.'?' : sprintf(LANG_USERS_DELETE_CONFIRM, $profile['nickname']))
-            )
+        return $this->cms_template->renderAsset('ui/confirm', array(
+            'confirm_title'  => ($this->is_own_profile ? LANG_USERS_DELETE_PROFILE.'?' : sprintf(LANG_USERS_DELETE_CONFIRM, $profile['nickname'])),
+            'confirm_action' => href_to('users', $profile['id'], 'delete')
         ));
 
     }

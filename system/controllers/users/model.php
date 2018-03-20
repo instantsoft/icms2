@@ -724,6 +724,13 @@ class modelUsers extends cmsModel {
 
         if($is_mutual !== null){
             $this->filterEqual('f.is_mutual', $is_mutual);
+        } else {
+            // подписчики (null) и друзья (1)
+            $this->filterStart();
+                $this->filterEqual('f.is_mutual', 1);
+                    $this->filterOr();
+                $this->filterIsNull('f.is_mutual');
+            $this->filterEnd();
         }
 
         return $this;
@@ -779,7 +786,7 @@ class modelUsers extends cmsModel {
         $this->useCache('users.friends');
 
         $this->filterEqual('friend_id', $user_id);
-        $this->filterEqual('is_mutual', 0);
+        $this->filterIsNull('is_mutual');
 
         $count = $this->getCount('{users}_friends');
 
@@ -805,8 +812,10 @@ class modelUsers extends cmsModel {
 
         if($items){
             foreach ($items as $item) {
-                if($item['is_mutual']){
-                    $data['friends'][] = $item['friend_id'];
+                if($item['is_mutual'] !== null){
+                    if($item['is_mutual']){
+                        $data['friends'][] = $item['friend_id'];
+                    }
                 } else {
                     $data['subscribes'][] = $item['friend_id'];
                 }
@@ -825,13 +834,14 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('friend_id', $friend_id);
-        $this->filterEqual('is_mutual', 0);
+        // учитываем и подписки и запросы дружбы
+        $this->filterStart();
+            $this->filterEqual('is_mutual', 0);
+                $this->filterOr();
+            $this->filterIsNull('is_mutual');
+        $this->filterEnd();
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
-
-        $this->resetFilters();
-
-        return $is_exists;
+        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
 
     }
 
@@ -851,11 +861,7 @@ class modelUsers extends cmsModel {
         $this->filterEqual('friend_id', $user_id);
         $this->filterEnd();
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
-
-        $this->resetFilters();
-
-        return $is_exists;
+        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
 
     }
 
@@ -882,14 +888,30 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('is_mutual', 1);
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
-
-        $this->resetFilters();
-
-        return $is_exists;
+        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
 
     }
 
+    public function subscribeUser($user_id, $friend_id){
+
+        cmsCache::getInstance()->clean('users.friends');
+
+        return $this->insert('{users}_friends', array(
+            'user_id'   => $user_id,
+            'friend_id' => $friend_id
+        ));
+
+    }
+
+    public function unsubscribeUser($user_id, $friend_id){
+
+        $this->filterEqual('user_id', $user_id);
+        $this->filterEqual('friend_id', $friend_id);
+        $this->deleteFiltered('{users}_friends');
+
+        cmsCache::getInstance()->clean('users.friends');
+
+    }
 
     public function addFriendship($user_id, $friend_id){
 
@@ -923,13 +945,28 @@ class modelUsers extends cmsModel {
 
         }
 
+        if ($this->isFriendshipRequested($user_id, $friend_id)){
+
+            $this->filterEqual('user_id', $user_id);
+            $this->filterEqual('friend_id', $friend_id);
+
+            $this->updateFiltered('{users}_friends', array(
+                'is_mutual' => true
+            ));
+
+        } else {
+
+            $this->insert('{users}_friends', array(
+                'user_id'   => $user_id,
+                'friend_id' => $friend_id,
+                'is_mutual' => $is_mutual
+            ));
+
+        }
+
         cmsCache::getInstance()->clean('users.friends');
 
-        return $this->insert('{users}_friends', array(
-            'user_id'   => $user_id,
-            'friend_id' => $friend_id,
-            'is_mutual' => $is_mutual
-        ));
+        return $is_mutual;
 
     }
 
@@ -948,7 +985,28 @@ class modelUsers extends cmsModel {
         $this->filterEqual('friend_id', $user_id);
         $this->deleteFiltered('{users}_friends');
 
-        cmsCache::getInstance()->clean("users.friends");
+        cmsCache::getInstance()->clean('users.friends');
+
+    }
+
+    public function keepInSubscribers($user_id, $friend_id){
+
+        if ($this->isFriendshipMutual($user_id, $friend_id)){
+            $this->filterEqual('id', $user_id)->decrement('{users}', 'friends_count');
+            $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
+        }
+
+        $this->filterEqual('user_id', $user_id);
+        $this->filterEqual('friend_id', $friend_id);
+        $this->deleteFiltered('{users}_friends');
+
+        $this->filterEqual('user_id', $friend_id);
+        $this->filterEqual('friend_id', $user_id);
+        $this->updateFiltered('{users}_friends', array(
+            'is_mutual' => null
+        ));
+
+        cmsCache::getInstance()->clean('users.friends');
 
     }
 

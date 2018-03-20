@@ -1493,7 +1493,7 @@ form .child_field{padding-left:20px}
 }
 
 #wall_widget #entries_list .entry .info{
-    margin-bottom:6px;
+    margin-bottom:10px;
 }
 
 #wall_widget #entries_list .entry .info div {
@@ -1528,7 +1528,7 @@ form .child_field{padding-left:20px}
 }
 #wall_widget #entries_list .entry .links{
     font-size:12px;
-    margin-top:10px;
+    margin:10px 0 0 42px;
 }
 
 #wall_widget #entries_list .entry .links.has_replies{
@@ -1549,24 +1549,34 @@ form .child_field{padding-left:20px}
     border-bottom:dashed 1px #d35400;
 }
 
-#wall_widget #entries_list .entry .links a.get_replies{
+#wall_widget #entries_list .entry .links .get_replies{
     font-weight:bold;
     color:#34495e;
     border-bottom: dashed 1px #34495e;
 }
-
+span.get_replies {
+    display: none;
+}
 #wall_widget #entries_list .entry .links a.get_replies:hover{
     color:#d35400;
     border-bottom-color:#d35400;
 }
 
 #wall_widget #entries_list .replies_loading {
-    margin-top:12px;
-    margin-bottom: 10px;
-    color:#666;
     display: none;
 }
-
+#wall_widget #entries_list .replies_loading .spinner > div {
+    width: 10px;
+    height: 10px;
+}
+#wall_widget #entries_list .replies_loading .spinner {
+    position: static;
+    top: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+    margin: -16px 10px 0 0;
+}
 #wall_widget #entries_list .replies {
     clear:both;
 }

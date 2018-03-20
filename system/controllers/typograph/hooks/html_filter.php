@@ -70,7 +70,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
         $jevix->cfgSetTagPreformatted(array(
-            'pre', 'video'
+            'pre', 'video', 'code'
         ));
 
         // Устанавливаем теги, которые необходимо вырезать из текста вместе с контентом.
@@ -125,7 +125,9 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
 
         // Отключаем типографирование в определенном теге
-        $jevix->cfgSetTagNoTypography('pre','youtube', 'iframe');
+        $jevix->cfgSetTagNoTypography(array('pre', 'youtube', 'iframe', 'code'));
+
+        $jevix->cfgSetTagNoAutoBr(array('ul','ol','code'));
 
         // Ставим колбэк для youtube
         $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));
@@ -245,7 +247,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
-        $geshi = new GeSHi(trim(str_replace('<br/>', '', $content)), (isset($params['type']) ? $params['type'] : 'php'));
+        $geshi = new GeSHi(trim(htmlspecialchars_decode($content)), (isset($params['type']) ? $params['type'] : 'php'));
 
         return $geshi->parse_code();
 
