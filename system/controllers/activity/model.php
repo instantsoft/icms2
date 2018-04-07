@@ -138,8 +138,9 @@ class modelActivity extends cmsModel{
         $this->useCache('activity.entries');
 
         $config = cmsConfig::getInstance();
+        $user = cmsUser::getInstance();
 
-        return $this->get('activity', function($item, $model) use ($config) {
+        return $this->get('activity', function($item, $model) use ($config, $user) {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
@@ -189,6 +190,8 @@ class modelActivity extends cmsModel{
             $item['description'] = sprintf($item['description'], $link);
 
             $item['date_diff'] = string_date_age_max($item['date_pub'], true);
+
+            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
 
             return $item;
 

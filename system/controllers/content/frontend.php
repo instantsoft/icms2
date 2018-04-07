@@ -293,6 +293,8 @@ class content extends cmsFrontend {
 
             }
 
+            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
+
             return $item;
 
         });
@@ -621,7 +623,7 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
-                'prefix' => '/'.((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : ''), 
+                'prefix' => '/'.((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : ''),
                 'suffix' => '.html',
                 'rules' => $slug_field_rules
             )));

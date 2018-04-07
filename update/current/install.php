@@ -17,9 +17,27 @@ function install_package(){
         ));
     }
 
+    if(!$core->db->getRowsCount('{users}_tabs', "controller = 'subscriptions' AND name = 'subscriptions'", 1)){
+        $admin->model->insert('{users}_tabs', array(
+            'controller' => 'users',
+            'title'      => 'Подписки',
+            'name'       => 'subscriptions',
+            'ordering'   => 2,
+            'is_active'  => 1
+        ));
+    }
+
+    if(!$core->db->isFieldExists('{users}', 'subscribers_count')){
+        $core->db->query("ALTER TABLE `{users}` ADD `subscribers_count` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `friends_count`;");
+    }
+
     if($core->db->isFieldExists('sessions_online', 'session_id')){
         $core->db->query("TRUNCATE `{#}sessions_online`");
         $core->db->query("ALTER TABLE `{#}sessions_online` DROP `session_id`");
+    }
+
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'subscriptions' AND hook = 'delete_expired_unconfirmed'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`) VALUES ('Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, '2018-03-21 00:03:00', 1);");
     }
 
     ////////////////////////////////////////////////////////////////////////////

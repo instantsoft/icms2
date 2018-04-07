@@ -783,8 +783,6 @@ class modelUsers extends cmsModel {
 
     public function getSubscribersCount($user_id){
 
-        $this->useCache('users.friends');
-
         $this->filterEqual('friend_id', $user_id);
         $this->filterIsNull('is_mutual');
 
@@ -796,6 +794,13 @@ class modelUsers extends cmsModel {
 
     }
 
+    public function cacheSubscribersCount($user_id){
+
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
+
+        return $this->update('{users}', $user_id, array('subscribers_count' => $this->getSubscribersCount($user_id)), true);
+
+    }
 
     public function getFriendsIds($user_id){
 
@@ -896,10 +901,12 @@ class modelUsers extends cmsModel {
 
         cmsCache::getInstance()->clean('users.friends');
 
-        return $this->insert('{users}_friends', array(
+        $this->insert('{users}_friends', array(
             'user_id'   => $user_id,
             'friend_id' => $friend_id
         ));
+
+        return $this->cacheSubscribersCount($friend_id);
 
     }
 
@@ -910,6 +917,8 @@ class modelUsers extends cmsModel {
         $this->deleteFiltered('{users}_friends');
 
         cmsCache::getInstance()->clean('users.friends');
+
+        return $this->cacheSubscribersCount($friend_id);
 
     }
 
@@ -925,6 +934,8 @@ class modelUsers extends cmsModel {
             $this->updateFiltered('{users}_friends', array(
                 'is_mutual' => true
             ));
+
+            $this->cacheSubscribersCount($user_id);
 
             $is_mutual = true;
 
@@ -953,6 +964,8 @@ class modelUsers extends cmsModel {
             $this->updateFiltered('{users}_friends', array(
                 'is_mutual' => true
             ));
+
+            $this->cacheSubscribersCount($friend_id);
 
         } else {
 
@@ -1007,6 +1020,8 @@ class modelUsers extends cmsModel {
         ));
 
         cmsCache::getInstance()->clean('users.friends');
+
+        return $this->cacheSubscribersCount($user_id);
 
     }
 

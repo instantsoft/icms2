@@ -40,7 +40,25 @@
     float: right;
     line-height: 26px;
     margin-left: 10px;
+    position: relative;
 }
 .filter-panel .buttons .subscribe_wrap{
     line-height: 32px;
+}
+.subscribe_wrap .spinner {
+    margin: 0;
+    left: -35px;
+    top: 0;
+    width: 35px;
+    line-height: inherit;
+    height: auto;
+    display: none;
+}
+.subscribe_wrap .spinner > div {
+    width: 10px;
+    height: 10px;
+    background-color: #3498db;
+}
+.subscribe_wrap .unsubscribe + .spinner > div {
+    background-color: #bdc3c7;
 }

@@ -199,7 +199,8 @@ class messages extends cmsFrontend {
             'email'          => false,
             'name'           => false,
             'email_reply_to' => false,
-            'name_reply_to'  => false
+            'name_reply_to'  => false,
+            'custom_headers' => array()
         ), $to);
 
         if (empty($to['email'])) { return false; }
@@ -252,6 +253,12 @@ class messages extends cmsFrontend {
 
         if (!empty($to['email_reply_to'])){
             $mailer->setReplyTo($to['email_reply_to'], $to['name_reply_to']);
+        }
+
+        if (!empty($to['custom_headers'])){
+            foreach ($to['custom_headers'] as $name => $value) {
+                $mailer->addCustomHeader($name, $value);
+            }
         }
 
         $letter['text'] = $mailer->parseSubject($letter['text']);

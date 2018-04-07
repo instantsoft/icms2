@@ -16,7 +16,7 @@ function step($is_submit){
 
 function check_requirements(){
 
-    $min_php_version  = '5.4.0';
+    $min_php_version  = '5.5.0';
     $func             = array('parse_ini_file');
     $vars             = array('magic_quotes_gpc' => 0, 'register_globals' => 0);
     $extensions       = array('date', 'gd', 'json', 'mbstring', 'mysqli', 'session', 'filter', 'fileinfo');
@@ -30,7 +30,7 @@ function check_requirements(){
     $info['valid'] = true;
 
     $info['php'] = array(
-        'version' => PHP_VERSION,
+        'version' => implode('.', array(PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION)),
         'valid'   => (version_compare(PHP_VERSION, $min_php_version) >= 0)
     );
 

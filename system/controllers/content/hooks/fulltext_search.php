@@ -63,6 +63,11 @@ class onContentFulltextSearch extends cmsAction {
                 array(
                     'condition' => 'IS',
                     'value'     => NULL,
+                    'field'     => 'is_deleted'
+                ),
+                array(
+                    'condition' => 'IS',
+                    'value'     => NULL,
                     'field'     => 'is_parent_hidden'
                 )
             );

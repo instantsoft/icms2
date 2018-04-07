@@ -41,7 +41,9 @@ class modelWall extends cmsModel{
 
         $this->joinSessionsOnline();
 
-        return $this->get('wall_entries', function($item, $model){
+        $user = cmsUser::getInstance();
+
+        return $this->get('wall_entries', function($item, $model) use($user) {
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
@@ -49,6 +51,8 @@ class modelWall extends cmsModel{
                 'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
+
+            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
 
             return $item;
 

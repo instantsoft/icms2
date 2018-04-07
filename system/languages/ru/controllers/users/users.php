@@ -69,6 +69,7 @@
 
     define('LANG_USERS_OPT_DS_SHOW',        'Показывать вкладку "%s"');
     define('LANG_USERS_DS_LATEST',          'Новые');
+    define('LANG_USERS_DS_SUBSCRIBERS',     'Популярные по подписчикам');
     define('LANG_USERS_DS_POPULAR',         'Популярные');
     define('LANG_USERS_DS_ONLINE',          'Онлайн');
     define('LANG_USERS_DS_RATED',           'Рейтинг');

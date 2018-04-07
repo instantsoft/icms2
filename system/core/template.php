@@ -2,6 +2,8 @@
 
 class cmsTemplate {
 
+    const HEAD_TIME = 20180407;
+
     private static $instance;
 
     public $name;
@@ -755,7 +757,7 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. self::HEAD_TIME;
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
     }
 
@@ -766,7 +768,7 @@ class cmsTemplate {
      * @return string
      */
     public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. self::HEAD_TIME;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
     }

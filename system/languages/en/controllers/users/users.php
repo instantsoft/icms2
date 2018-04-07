@@ -70,6 +70,7 @@
     define('LANG_USERS_OPT_DS_SHOW',        'Show the "%s" tab');
     define('LANG_USERS_DS_LATEST',          'New');
     define('LANG_USERS_DS_POPULAR',         'Popular');
+    define('LANG_USERS_DS_SUBSCRIBERS',     'Popular by subscribers');
     define('LANG_USERS_DS_ONLINE',          'Online');
     define('LANG_USERS_DS_RATED',           'Rating');
     define('LANG_USERS_DS_DATE_LOG',        'Last visit');

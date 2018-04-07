@@ -49,7 +49,7 @@
                         <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                     <?php } ?>
                     <div class="details">
-                        <span class="date"><?php echo $item['date_diff']; ?></span>
+                        <span class="date<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>"><?php echo $item['date_diff']; ?></span>
                         <?php if (!empty($item['reply_url']) && cmsUser::isLogged()) { ?>
                             <span class="reply">
                                 <a href="<?php echo $item['reply_url']; ?>"><?php echo LANG_REPLY; ?></a>

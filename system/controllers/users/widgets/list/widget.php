@@ -46,6 +46,8 @@ class widgetUsersList extends cmsWidget {
                 break;
             case 'popular': $model->orderBy('friends_count', 'desc');
                 break;
+            case 'subscribers': $model->orderBy('subscribers_count', 'desc');
+                break;
             case 'date_log': $model->orderBy('date_log', 'desc');
                 break;
         }

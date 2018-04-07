@@ -790,6 +790,10 @@ class cmsCore {
             $layout = $template->getLayout();
             $user = cmsUser::getInstance();
 
+            if($user->is_admin){
+                $template->addJS('templates/default/js/widgets.js');
+            }
+
             foreach ($widgets_list as $widget){
 
                 // не выводим виджеты контроллеров, которые отключены

@@ -12,6 +12,12 @@ class onMessagesQueueSendEmail extends cmsAction {
             $mailer->setReplyTo($to['email_reply_to'], $to['name_reply_to']);
         }
 
+        if (!empty($to['custom_headers'])){
+            foreach ($to['custom_headers'] as $name => $value) {
+                $mailer->addCustomHeader($name, $value);
+            }
+        }
+
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
 

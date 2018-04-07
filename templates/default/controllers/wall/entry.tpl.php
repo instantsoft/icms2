@@ -34,7 +34,7 @@
                 <div class="name">
                     <a class="user" href="<?php echo href_to('users', $entry['user']['id']); ?>"><?php echo $entry['user']['nickname']; ?></a>
                 </div>
-                <div class="date">
+                <div class="date<?php if(!empty($entry['is_new'])){ ?> highlight_new<?php } ?>">
                     <?php echo html(string_date_age_max($entry['date_pub'], true)); ?>
                 </div>
                 <div class="anchor">

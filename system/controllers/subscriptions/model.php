@@ -98,6 +98,40 @@ class modelSubscriptions extends cmsModel {
 
     }
 
+    public function unsubscribe($target, $subscribe) {
+
+        if(empty($target['hash'])){
+            $target['hash'] = md5(serialize($target));
+        }
+
+        $list_item_id = $this->filterEqual('hash', $target['hash'])->getFieldFiltered('subscriptions', 'id');
+
+        if(!$list_item_id){
+            return false;
+        }
+
+        if(!empty($subscribe['user_id'])){
+
+            $this->filterEqual('user_id', $subscribe['user_id']);
+            $this->filterEqual('subscription_id', $list_item_id);
+
+            $this->deleteFiltered('subscriptions_bind', 'id');
+
+        } else {
+
+            $this->filterEqual('guest_email', $subscribe['guest_email']);
+            $this->filterEqual('subscription_id', $list_item_id);
+
+            $this->deleteFiltered('subscriptions_bind', 'id');
+
+        }
+
+        $this->reCountSubscribers($list_item_id);
+
+        return true;
+
+    }
+
     public function reCountSubscribers($subscription_id) {
 
         $this->db->query("UPDATE {#}subscriptions SET subscribers_count=(SELECT COUNT(id) FROM {#}subscriptions_bind WHERE subscription_id = '{$subscription_id}' AND is_confirmed = 1) WHERE id = '{$subscription_id}'");

@@ -124,7 +124,7 @@ class widgetContentFilter extends cmsWidget {
         return array(
 			'ctype_name'   => $ctype_name,
 			'category'     => $category,
-            'page_url'     => href_to($ctype_name),
+            'page_url'     => href_to($ctype_name, isset($category['slug']) ? $category['slug'] : ''),
             'fields'       => $fields,
             'props_fields' => $props_fields,
             'props'        => $props,

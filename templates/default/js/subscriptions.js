@@ -12,6 +12,8 @@ icms.subscriptions = (function ($) {
 
             icms.subscriptions.active_link = this;
 
+            icms.subscriptions.showLoader();
+
             $.get($(this).attr('href'), $(this).data('target'), function(data){
                 icms.subscriptions.setResult(data);
             }, 'json');
@@ -22,7 +24,17 @@ icms.subscriptions = (function ($) {
 
     };
 
+    this.showLoader = function (){
+        $(icms.subscriptions.active_link).closest('.subscribe_wrap').find('.spinner').show();
+    };
+
+    this.hideLoader = function (){
+        $(icms.subscriptions.active_link).closest('.subscribe_wrap').find('.spinner').hide();
+    };
+
     this.setResult = function (data){
+
+        icms.subscriptions.hideLoader();
 
         if(data.error){
             alert('error'); return;

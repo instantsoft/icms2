@@ -347,25 +347,25 @@ icms.forms = (function ($) {
     this.VDListeners = {};
     this.VDRules = {from:{},depends:{}};
     this.addVisibleDepend = function(form_id, field_id, rules){
-        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ // здесь все зависимости поля field_name
-            this.VDRules.depends[form_id+'-'+field_id] = rules; // array('is_cats' => array('show' => array('1')))
+        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ /* здесь все зависимости поля field_name */
+            this.VDRules.depends[form_id+'-'+field_id] = rules; /* array('is_cats' => array('show' => array('1'))) */
         }else{
             $.extend(this.VDRules.depends[form_id+'-'+field_id], rules);
         }
         for(var f in rules){if(rules.hasOwnProperty(f)){
             if(typeof this.VDRules.from[form_id+'-'+f] === 'undefined'){this.VDRules.from[form_id+'-'+f] = {};}
             if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ // здесь все, кто зависит от поля f
-                this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; // array('show' => array('1'))
+                this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; /* array('show' => array('1')) */
             }else{
                 $.extend(this.VDRules.from[form_id+'-'+f][field_id], rules[f]);
             }
             if(typeof this.VDListeners[form_id+'-'+f] === 'undefined'){
                 this.VDListeners[form_id+'-'+f] = '#'+form_id+' [name="'+this.inputNameToElName(f)+'"]';
                 $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change', function (){
-                    for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ // перебор тех, кто зависит от этого поля f
-                        var display = null; // если не будет show
+                    for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ /* перебор тех, кто зависит от этого поля f */
+                        var display = null; /* если не будет show */
 
-                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ // перебор тех, от кого зависит поле field
+                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
                             if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['show'] !== 'undefined'){
                                 if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']) !== -1){
                                     display = true;
@@ -378,8 +378,8 @@ icms.forms = (function ($) {
 
                         if(display === null){display = true;}
 
-                        if(display){ // скрытие сильнее показа
-                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ // перебор тех, от кого зависит поле field
+                        if(display){ /* скрытие сильнее показа */
+                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
                                 if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['hide'] !== 'undefined'){
                                     if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']) !== -1){
                                         display = false;

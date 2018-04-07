@@ -14,6 +14,37 @@ CREATE TABLE `{#}jobs` (
   KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
 
+DROP TABLE IF EXISTS `{#}subscriptions`;
+CREATE TABLE `{#}subscriptions` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `controller` varchar(32) DEFAULT NULL,
+  `subject` varchar(50) DEFAULT NULL,
+  `params` text,
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `hash` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `target_controller` (`controller`,`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Списки подписок';
+
+DROP TABLE IF EXISTS `{#}subscriptions_bind`;
+CREATE TABLE `{#}subscriptions_bind` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `subscription_id` int(11) UNSIGNED DEFAULT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `guest_email` varchar(100) DEFAULT NULL,
+  `guest_name` varchar(50) DEFAULT NULL,
+  `is_confirmed` tinyint(1) UNSIGNED DEFAULT '1',
+  `confirm_token` varchar(32) DEFAULT NULL,
+  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`,`subscription_id`) USING BTREE,
+  KEY `guest_email` (`guest_email`,`subscription_id`) USING BTREE,
+  KEY `confirm_token` (`confirm_token`),
+  KEY `subscription_id` (`subscription_id`,`is_confirmed`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Подписки';
+
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1171,15 +1202,16 @@ CREATE TABLE `{#}scheduler_tasks` (
   KEY `is_active` (`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
-(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, 1, 0),
-(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, 1, 0),
-(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, 1, 0),
-(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1),
-(5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, 1, 1),
-(6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
-(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, 1, 1),
-(8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, 1, 1);
+INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES
+(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, NULL, 1, 0),
+(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, NULL, 1, 0),
+(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, NULL, 1, 0),
+(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, NULL, 1, 1),
+(5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, NULL, 1, 1),
+(6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
+(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
+(8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
+(9, 'Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, '2018-03-21 00:03:00', 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (
@@ -1250,8 +1282,8 @@ CREATE TABLE `{#}users` (
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',
   `pass_token` varchar(32) DEFAULT NULL COMMENT 'Ключ для восстановления пароля',
   `date_token` timestamp NULL DEFAULT NULL COMMENT 'Дата создания ключа восстановления пароля',
-  `files_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во загруженных файлов',
   `friends_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во друзей',
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во подписчиков',
   `time_zone` varchar(32) DEFAULT NULL COMMENT 'Часовой пояс',
   `karma` int(11) NOT NULL DEFAULT '0' COMMENT 'Репутация',
   `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Рейтинг',
@@ -1292,7 +1324,7 @@ CREATE TABLE `{#}users` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
 (1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/Moscow', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 4400, 'Москва', 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
@@ -1521,7 +1553,8 @@ INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `
 (4, 'Комментарии', 'comments', 'comments', 1, 10),
 (5, 'Группы', 'groups', 'groups', 1, 3),
 (6, 'Репутация', 'users', 'karma', 1, 11),
-(7, 'Подписчики', 'users', 'subscribers', 1, 3);
+(7, 'Подписчики', 'users', 'subscribers', 1, 3),
+(8, 'Подписки', 'subscriptions', 'subscriptions', 1, 3);
 
 DROP TABLE IF EXISTS `{#}users_personal_settings`;
 CREATE TABLE `{#}users_personal_settings` (

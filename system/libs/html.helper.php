@@ -186,7 +186,7 @@ function href_to_home(){
 function html_attr_str($attributes){
     $attr_str = '';
     unset($attributes['class']);
-    if (sizeof($attributes)){
+    if (is_array($attributes)){
         foreach($attributes as $key=>$val){
             if(is_bool($val)){
                 if($val === true){

@@ -574,8 +574,8 @@ class admin extends cmsFrontend {
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
                 'generator' => function($item) use ($template){
-                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', '*.tpl.php');
-                    $default_tpls = cmsCore::getFilesList('templates/default/widgets', '*.tpl.php');
+                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', 'wrapper*.tpl.php');
+                    $default_tpls = cmsCore::getFilesList('templates/default/widgets', 'wrapper*.tpl.php');
                     $tpls = array_unique(array_merge($current_tpls, $default_tpls));
                     $items = array();
                     if ($tpls) {

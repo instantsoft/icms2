@@ -4,7 +4,7 @@ class actionUsersUnsubscribe extends cmsAction {
 
     public function run($friend_id){
 
-		if(!$this->cms_user->is_logged){ cmsCore::error404(); }
+        if(!$this->cms_user->is_logged){ cmsCore::error404(); }
 
         if (!$friend_id) { cmsCore::error404(); }
 

@@ -1017,32 +1017,66 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
-    public function validate_required($value){
-        if($value === '0'){ return true; }
+    public function validate_required($value, $disable_empty = true){
+        if($value === '0' && !$disable_empty){ return true; }
         if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
         return true;
     }
 
     public function validate_min($min, $value){
-        if ((int)$value < $min) { return sprintf(ERR_VALIDATE_MIN, $min); }
+
+        if (empty($value)) { $value = 0; }
+
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+            return ERR_VALIDATE_NUMBER;
+        }
+
+        if ((float)$value < $min) { return sprintf(ERR_VALIDATE_MIN, $min); }
+
         return true;
+
     }
 
     public function validate_max($max, $value){
-        if ((int)$value > $max) { return sprintf(ERR_VALIDATE_MAX, $max); }
+
+        if (empty($value)) { $value = 0; }
+
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+            return ERR_VALIDATE_NUMBER;
+        }
+
+        if ((float)$value > $max) { return sprintf(ERR_VALIDATE_MAX, $max); }
+
         return true;
+
     }
 
     public function validate_min_length($length, $value){
+
         if (empty($value)) { return true; }
-        if (mb_strlen($value)<$length) { return sprintf(ERR_VALIDATE_MIN_LENGTH, $length); }
+
+        if (is_array($value)){
+            return ERR_VALIDATE_INVALID;
+        }
+
+        if (mb_strlen($value) < $length) { return sprintf(ERR_VALIDATE_MIN_LENGTH, $length); }
+
         return true;
+
     }
 
     public function validate_max_length($length, $value){
+
         if (empty($value)) { return true; }
-        if (mb_strlen($value)>$length) { return sprintf(ERR_VALIDATE_MAX_LENGTH, $length); }
+
+        if (is_array($value)){
+            return ERR_VALIDATE_INVALID;
+        }
+
+        if (mb_strlen($value) > $length) { return sprintf(ERR_VALIDATE_MAX_LENGTH, $length); }
+
         return true;
+
     }
 
     public function validate_array_key($array, $value){

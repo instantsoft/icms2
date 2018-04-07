@@ -1,5 +1,3 @@
-/* Session messages ========================================================= */
-
 .sess_messages {
     margin-bottom:10px;
 }
@@ -2235,6 +2233,9 @@ table.data_list .empty{
 }
 table.data_list .actions{
     width: 70px;
+}
+.highlight_new {
+    color: #d35400 !important;
 }
 .spinner {
     width: 70px;
