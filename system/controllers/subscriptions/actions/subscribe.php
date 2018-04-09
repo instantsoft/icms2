@@ -41,6 +41,15 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
         }
 
+        // предварительная валидация
+        if(!$this->validateParams($this->target['params'])){
+
+            return $this->cms_template->renderJSON(array(
+                'error' => true
+            ));
+
+        }
+
         if($this->cms_user->is_logged){
 
             $this->subscribe['user_id'] = $this->cms_user->id;
@@ -131,14 +140,33 @@ class actionSubscriptionsSubscribe extends cmsAction {
         // проверяем, не подписаны ли
         if(!$this->model->isSubscribed($this->target, $this->subscribe)){
 
+            // пробуем получить название списка
+            $controller = cmsCore::getController($this->target['controller'], $this->request);
+
+            $subscribe_list_title = $controller->runHook('subscribe_list_title', array($this->target, $this->subscribe), false);
+
+            if(is_string($subscribe_list_title)){
+                $this->target['title'] = $subscribe_list_title;
+            }
+
             // подписываем и возвращаем id нового списка, если он ранее не был создан
             $now_create_list_id = $this->model->subscribe($this->target, $this->subscribe);
 
             cmsEventsManager::hook('subscribe', array($this->target, $this->subscribe, $now_create_list_id));
 
-            // уведомляем администраторов о новом списке
-            if($now_create_list_id){
-                // @todo
+            // уведомляем администраторов о новом списке, если заголовок неопеределён
+            if($now_create_list_id && empty($this->target['title']) && !empty($this->options['admin_email'])){
+
+                $admin_emails = explode(',', $this->options['admin_email']);
+
+                foreach ($admin_emails as $admin_email) {
+
+                    $this->controller_messages->sendEmail(trim($admin_email), 'subscribe_new_list', array(
+                        'admin_slist_url' => href_to_abs('admin', 'controllers', array('edit', 'subscriptions', 'list'))
+                    ));
+
+                }
+
             }
 
         } else {
@@ -188,6 +216,56 @@ class actionSubscriptionsSubscribe extends cmsAction {
             ));
 
         }
+
+    }
+
+    private function validateParams($params) {
+
+        if(!$params){ return true; }
+
+        $names = array_keys($params);
+
+        if(count($names) > 2){
+            return false;
+        }
+
+        if(count($names) == 2 && $names !== array('field_filters', 'filters')){
+            return false;
+        }
+
+        if(!in_array($names[0], array('field_filters', 'filters'))){
+            return false;
+        }
+
+        if(!empty($params['filters'])){
+            foreach ($params['filters'] as $filter) {
+                if(count($filter) != 3){
+                    return false;
+                }
+                if(empty($filter['field']) || empty($filter['condition']) || !isset($filter['value'])){
+                    return false;
+                }
+                if($this->validate_sysname($filter['field']) !== true){
+                    return false;
+                }
+                if($this->validate_sysname($filter['condition']) !== true){
+                    return false;
+                }
+                if(is_array($filter['value'])){
+                    return false;
+                }
+            }
+        }
+
+        if(!empty($params['field_filters'])){
+            foreach ($params['field_filters'] as $field => $value) {
+                if($this->validate_sysname($field) !== true){
+                    return false;
+                }
+            }
+        }
+
+        return true;
 
     }
 

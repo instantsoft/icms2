@@ -40,7 +40,7 @@
                 <a href="<?php echo $page_url.'?'.http_build_query($url_params); ?>">
                     <?php echo $name; ?>
                     <?php if($item['filter_values']['types'] == $value){ ?>
-                        <input type="hidden" name="types" value="<?php echo $value; ?>">
+                        <input type="hidden" name="type" value="<?php echo $value; ?>">
                         <i class="check">&larr;</i>
                     <?php } ?>
                 </a>
@@ -64,7 +64,18 @@
     </div>
 
     <?php if($item['filter_values']['width'] || $item['filter_values']['height']){ ?>
-        <span class="box_menu box_menu_select"><?php echo LANG_PHOTOS_MORE_THAN; ?> <?php html($item['filter_values']['width']); ?> x <?php html($item['filter_values']['height']); ?></span>
+        <span class="box_menu box_menu_select">
+            <?php echo LANG_PHOTOS_MORE_THAN; ?>
+            <?php if($item['filter_values']['width'] && $item['filter_values']['height']){ ?>
+                <?php html($item['filter_values']['width']); ?>px
+            X
+                <?php html($item['filter_values']['height']); ?>px
+            <?php } elseif($item['filter_values']['width']){ ?>
+                <?php html($item['filter_values']['width']); ?>px <?php echo LANG_PHOTOS_BYWIDTH; ?>
+            <?php } elseif($item['filter_values']['height']){ ?>
+                <?php html($item['filter_values']['height']); ?>px <?php echo LANG_PHOTOS_BYHEIGHT; ?>
+            <?php } ?>
+        </span>
     <?php } else { ?>
         <span class="box_menu"><?php echo LANG_PHOTOS_SIZE; ?></span>
     <?php } ?>

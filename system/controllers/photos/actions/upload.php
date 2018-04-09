@@ -117,7 +117,7 @@ class actionPhotosUpload extends cmsAction{
 
             }
 
-            $photos = $this->model->assignPhotoList($photo_list);
+            $photos = cmsEventsManager::hook('content_photos_after_add', $this->model->assignPhotoList($photo_list));
 
             $activity_thumb_images = array();
 

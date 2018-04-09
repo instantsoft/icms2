@@ -30,7 +30,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
         $album['filter_values'] = array(
             'ordering'    => $this->cms_core->request->get('ordering', $this->options['ordering']),
             'orderto'     => $this->cms_core->request->get('orderto', $this->options['orderto']),
-            'types'       => $this->cms_core->request->get('types', ''),
+            'types'       => $this->cms_core->request->get('type', ''),
             'orientation' => $this->cms_core->request->get('orientation', ''),
             'width'       => $this->cms_core->request->get('width', 0) ?: '',
             'height'      => $this->cms_core->request->get('height', 0) ?: ''

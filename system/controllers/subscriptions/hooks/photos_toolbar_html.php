@@ -6,7 +6,11 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
 
         $params = array(
             'field_filters' => array(),
-            'filters' => array()
+            'filters' => array(array(
+                'field'     => 'album_id',
+                'condition' => 'eq',
+                'value'     => $album['id']
+            ))
         );
 
         if(!empty($album['filter_values']['types'])){
@@ -31,7 +35,7 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
             $params['filters'][] = array(
                 'field'     => 'width',
                 'condition' => 'ge',
-                'value'     => $album['filter_values']['width']
+                'value'     => (string)$album['filter_values']['width']
             );
         }
 
@@ -39,7 +43,7 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
             $params['filters'][] = array(
                 'field'     => 'height',
                 'condition' => 'ge',
-                'value'     => $album['filter_values']['height']
+                'value'     => (string)$album['filter_values']['height']
             );
         }
 

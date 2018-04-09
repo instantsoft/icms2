@@ -582,9 +582,12 @@ class cmsController {
 
     /**
      * Находит и запускает хук для указанного события
-     * @param string $event_name
+     * @param string $event_name Название события
+     * @param array $params Параметры события
+     * @param mixed $default Умолчания, если хука нет
+     * @return mixed
      */
-    public function runHook($event_name, $params = array()){
+    public function runHook($event_name, $params = array(), $default = null){
 
         if ($this->beforeHook($event_name) === false) { return false; }
 
@@ -608,7 +611,11 @@ class cmsController {
             } else {
 
                 // хука нет вообще, возвращаем данные запроса без изменений
-                return $this->request->getData();
+                if($default === null){
+                    return $this->request->getData();
+                } else {
+                    return $default;
+                }
 
             }
 
@@ -620,12 +627,11 @@ class cmsController {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Выполняет хук, находящийся в отдельном файле ./hooks/$event_name.php
-     * @param str $event_name
+     * @param string $event_name Название события
+     * @param array $params Параметры события
+     * @return mixed
      */
     public function runExternalHook($event_name, $params = array()){
 
@@ -658,7 +664,7 @@ class cmsController {
      * @param string $path_prefix Префикс путь к файлу формы относительно директории контроллера
      * @return \cmsForm
      */
-    public function getForm($form_name, $params=false, $path_prefix=''){
+    public function getForm($form_name, $params = false, $path_prefix = ''){
 
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
         $_form_name = $this->name . $form_name;

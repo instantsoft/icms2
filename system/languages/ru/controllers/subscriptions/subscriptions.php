@@ -9,3 +9,7 @@ define('LANG_SBSCR_GUEST_IS_EXISTS', 'Подписка на этот E-mail уж
 define('LANG_SBSCR_NEED_AUTH', 'Подписки доступны только зарегистрированным пользователям');
 define('LANG_SBSCR_VERIFY_EXP', 'Время жизни ссылки подтверждения');
 define('LANG_SBSCR_VERIFY_SUCCESS', 'E-mail адрес и подписка подтверждены');
+define('LANG_SBSCR_ADMIN_EMAIL', 'E-mail адреса для уведомлений (можно указать несколько через запятую) о новых списках без названий');
+define('LANG_SBSCR_QUEUE_NAME', 'рассылок');
+define('LANG_SBSCR_LIST', 'Списки подписок');
+define('LANG_SBSCR_LIMIT', 'Количество подписок на страницу во вкладке');

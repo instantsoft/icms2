@@ -29,7 +29,7 @@ icms.subscriptions = (function ($) {
     };
 
     this.hideLoader = function (){
-        $(icms.subscriptions.active_link).closest('.subscribe_wrap').find('.spinner').hide();
+        $(icms.subscriptions.active_link).closest('.subscribe_wrap').find('.spinner').fadeOut();
     };
 
     this.setResult = function (data){

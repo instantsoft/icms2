@@ -41,6 +41,8 @@
     define('LANG_PHOTOS_SIZE_W',                'Ширина');
     define('LANG_PHOTOS_SIZE_H',                'Высота');
     define('LANG_PHOTOS_MORE_THAN',             'Больше чем');
+    define('LANG_PHOTOS_BYWIDTH',               'по ширине');
+    define('LANG_PHOTOS_BYHEIGHT',              'по высоте');
     define('LANG_PHOTOS_CLEAR_FILTER',          'Очистить фильтр');
     define('LANG_PHOTOS_DATE_PUB',              'По дате добавления');
     define('LANG_PHOTOS_DATE_PHOTO',            'По дате съёмки');

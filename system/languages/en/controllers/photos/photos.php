@@ -41,6 +41,8 @@ define('LANG_PHOTOS_SIZE', 'Size');
 define('LANG_PHOTOS_SIZE_W', 'Width');
 define('LANG_PHOTOS_SIZE_H', 'Height');
 define('LANG_PHOTOS_MORE_THAN', 'Larger than');
+define('LANG_PHOTOS_BYWIDTH', 'by width');
+define('LANG_PHOTOS_BYHEIGHT', 'by height');
 define('LANG_PHOTOS_CLEAR_FILTER', 'Clear filters');
 define('LANG_PHOTOS_DATE_PUB', 'By upload date');
 define('LANG_PHOTOS_DATE_PHOTO', 'By photographing date');

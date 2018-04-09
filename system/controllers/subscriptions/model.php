@@ -30,7 +30,13 @@ class modelSubscriptions extends cmsModel {
             $this->filterEqual('hash', $hash_or_id);
         }
 
-        return $this->getItem('subscriptions');
+        return $this->getItem('subscriptions', function ($item, $model){
+
+            $item['params'] = cmsModel::stringToArray($item['params']);
+
+            return $item;
+
+        });
 
     }
 
@@ -137,6 +143,45 @@ class modelSubscriptions extends cmsModel {
         $this->db->query("UPDATE {#}subscriptions SET subscribers_count=(SELECT COUNT(id) FROM {#}subscriptions_bind WHERE subscription_id = '{$subscription_id}' AND is_confirmed = 1) WHERE id = '{$subscription_id}'");
 
         return $this;
+
+    }
+
+    public function getSubscriptions(){
+
+        $this->joinUser()->joinSessionsOnline();
+
+        $this->selectList(array(
+            's.title'             => 'title',
+            's.controller'        => 'controller',
+            's.subject'           => 'subject',
+            's.params'            => 'params',
+            's.subscribers_count' => 'subscribers_count',
+            's.hash'              => 'hash'
+        ));
+
+        $this->join('subscriptions', 's', 's.id = i.subscription_id');
+
+        return $this->get('subscriptions_bind', function($item, $model) {
+
+            $item['user'] = array(
+                'id'         => $item['user_id'],
+                'nickname'   => $item['user_nickname'],
+                'is_online'  => $item['is_online'],
+                'is_deleted' => $item['user_is_deleted'],
+                'avatar'     => $item['user_avatar']
+            );
+
+            $item['params'] = cmsModel::stringToArray($item['params']);
+
+            $item['target'] = array(
+                'controller' => $item['controller'],
+                'subject'    => $item['subject'],
+                'params'     => $item['params']
+            );
+
+            return $item;
+
+        }, false);
 
     }
 

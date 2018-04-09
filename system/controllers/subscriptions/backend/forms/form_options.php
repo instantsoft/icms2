@@ -27,6 +27,15 @@ class formSubscriptionsOptions extends cmsForm {
                         'units'   => LANG_HOURS,
                         'default' => 24,
                         'visible_depend' => array('need_auth' => array('hide' => array('1')))
+                    )),
+
+                    new fieldString('admin_email', array(
+                        'title' => LANG_SBSCR_ADMIN_EMAIL
+                    )),
+
+                    new fieldNumber('limit', array(
+                        'title'   => LANG_SBSCR_LIMIT,
+                        'default' => 20
                     ))
 
                 )

@@ -67,4 +67,50 @@ class subscriptions extends cmsFrontend {
 
     }
 
+    public function renderSubscriptionsList($base_url, $page, $perpage = false, $show_next = true){
+
+        $perpage  = ($perpage ? $perpage : $this->options['limit']);
+
+        if (!$this->model->order_by){ $this->model->orderBy('i.date_pub', 'desc'); }
+
+        if($show_next){
+            // получаем на одну страницу больше
+            $this->model->limitPagePlus($page, $perpage);
+        } else {
+            $this->model->limit($perpage);
+        }
+
+        $items = $this->model->getSubscriptions();
+        if(!$items && $page > 1){ cmsCore::error404(); }
+
+        if($show_next && $items && (count($items) > $perpage)){
+            $has_next = true; array_pop($items);
+        } else {
+            $has_next = false;
+        }
+
+        $html = $this->cms_template->renderInternal($this, 'list', array(
+            'user'     => $this->cms_user,
+            'is_ajax'  => $this->request->isAjax(),
+            'items'    => $items,
+            'base_url' => $base_url,
+            'page'     => $page,
+            'has_next' => $has_next
+        ));
+
+        if (!$this->request->isAjax()){
+
+            return $html;
+
+        } else {
+
+            return $this->cms_template->renderJSON(array(
+                'html'     => $html,
+                'has_next' => $has_next,
+                'page'     => $page
+            ));
+        }
+
+    }
+
 }
