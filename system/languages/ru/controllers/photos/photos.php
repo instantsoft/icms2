@@ -34,8 +34,8 @@
 	define('LANG_PHOTOS_NO_PUB',                'Фото не опубликовано');
     define('LANG_PHOTOS_ALL_ORIENT',            'Любая ориентация');
     define('LANG_PHOTOS_SQUARE',                'Квадратные');
-    define('LANG_PHOTOS_LANDSCAPE',             'Горизонтальная');
-    define('LANG_PHOTOS_PORTRAIT',              'Вертикальная');
+    define('LANG_PHOTOS_LANDSCAPE',             'Горизонтальные');
+    define('LANG_PHOTOS_PORTRAIT',              'Вертикальные');
     define('LANG_PHOTOS_ALL',                   'Все изображения');
     define('LANG_PHOTOS_SIZE',                  'Размер');
     define('LANG_PHOTOS_SIZE_W',                'Ширина');

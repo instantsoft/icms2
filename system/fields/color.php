@@ -5,7 +5,7 @@ class fieldColor extends cmsFormField {
     public $title       = LANG_PARSER_COLOR;
     public $sql         = 'varchar(7) NULL DEFAULT NULL';
     public $filter_hint = '#RRGGBB';
-    public $allow_index = false;
+    public $filter_type = 'str';
     public $var_type    = 'string';
 
     public function getOptions(){
@@ -42,6 +42,10 @@ class fieldColor extends cmsFormField {
 
     public function getStringValue($value){
         return $value;
+    }
+
+    public function applyFilter($model, $value) {
+        return $model->filterEqual($this->name, $value);
     }
 
     public function getInput($value) {

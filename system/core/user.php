@@ -86,6 +86,24 @@ class cmsUser {
         //
         if ($this->id){
             $this->loadAuthUser($this->id);
+        } else {
+
+            // для неавторизованных ставим дату посещения
+            $_date_log = self::getCookie('guest_date_log', 'integer');
+            if(!$_date_log){
+                $_date_log = time();
+            }
+
+            if (!self::isSessionSet('user:date_log') || ((time()-self::USER_ONLINE_INTERVAL) >= $_date_log)){
+
+                self::setCookie('guest_date_log', time(), 31536000);
+
+                self::sessionSet('user:date_log', $_date_log);
+
+            }
+
+            $this->date_log = date('Y-m-d H:i:s', self::sessionGet('user:date_log'));
+
         }
 
     }

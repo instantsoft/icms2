@@ -17,8 +17,12 @@
 * Легкое создание шаблонов;
 * [API](https://github.com/instantsoft/icms2-json-api-component) для подключения мобильных приложений.
 
+## Демо ##
+
+Попробуйте сами в нашем [онлайн демо](http://demo.instantcms.ru/)
+
 ## Cистемные требования ##
-* Интерпретатор PHP версии 5.4 или выше;
+* Интерпретатор PHP версии 5.5 или выше;
 * Опции PHP register_globals и magic_quotes_gpc должны быть выключены;
 * Модули для PHP: GD, iconv, mbstring, simplexml, json, filter;
 * СУБД MySQL версии 5 или выше;

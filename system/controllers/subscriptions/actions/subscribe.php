@@ -225,16 +225,14 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
         $names = array_keys($params);
 
-        if(count($names) > 2){
+        if(count($names) > 3){
             return false;
         }
 
-        if(count($names) == 2 && $names !== array('field_filters', 'filters')){
-            return false;
-        }
-
-        if(!in_array($names[0], array('field_filters', 'filters'))){
-            return false;
+        foreach ($names as $name) {
+            if(!in_array($name, array('field_filters', 'filters', 'dataset'))){
+                return false;
+            }
         }
 
         if(!empty($params['filters'])){
@@ -259,6 +257,14 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
         if(!empty($params['field_filters'])){
             foreach ($params['field_filters'] as $field => $value) {
+                if($this->validate_sysname($field) !== true){
+                    return false;
+                }
+            }
+        }
+
+        if(!empty($params['dataset'])){
+            foreach ($params['dataset'] as $field => $value) {
                 if($this->validate_sysname($field) !== true){
                     return false;
                 }

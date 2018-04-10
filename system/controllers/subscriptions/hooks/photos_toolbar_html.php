@@ -9,7 +9,7 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
             'filters' => array(array(
                 'field'     => 'album_id',
                 'condition' => 'eq',
-                'value'     => $album['id']
+                'value'     => (string)$album['id']
             ))
         );
 
@@ -18,7 +18,7 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
             $params['filters'][] = array(
                 'field'     => 'type',
                 'condition' => 'eq',
-                'value'     => $album['filter_values']['types']
+                'value'     => (string)$album['filter_values']['types']
             );
 
         }

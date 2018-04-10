@@ -21,7 +21,7 @@ Is a free open source CMS (content management system) that allows you to build w
 Try it out for yourself in our [online demo](http://demo.instantcms.ru/)
 
 ## Requirements ##
-* PHP 5.4+ (PHP 7 supported too)
+* PHP 5.5+ (PHP 7 supported too)
 * PHP register_globals off
 * PHP magic_quotes_gpc off
 * GD, iconv, mbstring, simplexml, json and filter PHP extension

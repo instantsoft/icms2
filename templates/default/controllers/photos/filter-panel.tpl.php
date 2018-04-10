@@ -36,7 +36,7 @@
         </span>
         <div class="box_menu_dd">
             <?php foreach($item['filter_panel']['types'] as $value => $name){ ?>
-                <?php $url_params = $item['url_params']; $url_params['types'] = $value; ?>
+                <?php $url_params = $item['url_params']; $url_params['type'] = $value; ?>
                 <a href="<?php echo $page_url.'?'.http_build_query($url_params); ?>">
                     <?php echo $name; ?>
                     <?php if($item['filter_values']['types'] == $value){ ?>

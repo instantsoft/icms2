@@ -1031,9 +1031,9 @@ class cmsModel {
         return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting=false){
+    public function applyDatasetFilters($dataset, $ignore_sorting = false){
 
-        if (!empty ($dataset['filters'])){
+        if (!empty($dataset['filters'])){
 
             foreach($dataset['filters'] as $filter){
 
@@ -1045,7 +1045,7 @@ class cmsModel {
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }
 
-                if ($filter['value'] !== '') { $filter['value'] = string_replace_user_properties($filter['value']); }
+                if ($filter['value'] !== '' && !is_array($filter['value'])) { $filter['value'] = string_replace_user_properties($filter['value']); }
 
                 switch($filter['condition']){
 
@@ -1066,6 +1066,12 @@ class cmsModel {
                     // даты
                     case 'dy': $this->filterDateYounger($filter['field'], $filter['value']); break;
                     case 'do': $this->filterDateOlder($filter['field'], $filter['value']); break;
+
+                    // массив
+                    case 'in':
+                        if(!is_array($filter['value'])){ $filter['value'] = explode(',', $filter['value']); }
+                        $this->filterIn($filter['field'], $filter['value']);
+                        break;
 
                 }
 

@@ -14,6 +14,7 @@ class subscriptions extends cmsFrontend {
         // убираем пустые массивы
         if(empty($target['params']['field_filters'])){ unset($target['params']['field_filters']); }
         if(empty($target['params']['filters'])){ unset($target['params']['filters']); }
+        if(empty($target['params']['dataset'])){ unset($target['params']['dataset']); }
 
         $hash               = md5(serialize($target));
         $subscribers_count  = 0;
