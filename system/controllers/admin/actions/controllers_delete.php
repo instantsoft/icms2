@@ -41,8 +41,6 @@ class actionAdminControllersDelete extends cmsAction {
 
         if($controller_info['files']){
 
-            $controller_info['files'] = cmsModel::yamlToArray($controller_info['files']);
-
             return $this->cms_template->render('install_package_files', array(
                 'type'        => 'controllers',
                 'addon_title' => $controller_info['title'],
