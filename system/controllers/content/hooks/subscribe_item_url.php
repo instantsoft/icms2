@@ -9,7 +9,7 @@ class onContentSubscribeItemUrl extends cmsAction {
             return false;
         }
 
-        $url = href_to($ctype['name']); $params = array();
+        $url = href_to($ctype['name']); $params = array(); $ds = array();
 
         if(empty($subscription['params']['filters']) && empty($subscription['params']['field_filters'])){
             return $url;
@@ -62,6 +62,14 @@ class onContentSubscribeItemUrl extends cmsAction {
                 }
             }
 
+        }
+
+        if($ds && !empty($subscription['params']['dataset']['fields'])){
+            foreach ($subscription['params']['dataset']['fields'] as $ds_field_name) {
+                if(isset($params[$ds_field_name])){
+                    unset($params[$ds_field_name]);
+                }
+            }
         }
 
         if(!empty($params)){

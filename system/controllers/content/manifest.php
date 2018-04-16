@@ -17,6 +17,7 @@
             'ctype_relation_childs',
             'admin_content_dataset_fields_list',
             'moderation_list',
+            'admin_subscriptions_list',
             'ctype_lists_context'
         )
 

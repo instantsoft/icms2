@@ -7,6 +7,8 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $core->db->query("ALTER TABLE `{#}controllers` CHANGE `files` `files` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Список файлов контроллера (для стороних компонентов)';");
+
     if(!$core->db->getRowsCount('{users}_tabs', "controller = 'users' AND name = 'subscribers'", 1)){
         $admin->model->insert('{users}_tabs', array(
             'controller' => 'users',

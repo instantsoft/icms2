@@ -185,4 +185,13 @@ class modelSubscriptions extends cmsModel {
 
     }
 
+    public function deleteSubscriptionsList($id) {
+
+        $this->filterEqual('subscription_id', $id)->deleteFiltered('subscriptions_bind');
+        $this->filterEqual('id', $id)->deleteFiltered('subscriptions');
+
+        return true;
+
+    }
+
 }

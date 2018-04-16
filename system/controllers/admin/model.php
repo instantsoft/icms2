@@ -8,6 +8,10 @@ class modelAdmin extends cmsModel{
 
     public function getInstalledControllers(){
 
+        if(!$this->order_by){
+            $this->orderBy('title', 'asc');
+        }
+
         return $this->get('controllers', function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);

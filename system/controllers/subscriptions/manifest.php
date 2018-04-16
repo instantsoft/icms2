@@ -9,6 +9,7 @@
             'content_filter_buttons_html',
             'user_tab_info',
             'content_photos_after_add',
+            'user_notify_types',
             'user_tab_show'
         )
 

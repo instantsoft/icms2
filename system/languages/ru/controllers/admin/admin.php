@@ -621,6 +621,7 @@
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/manual/components/recaptcha');
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/manual/components/images');
+	define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'http://docs.instantcms.ru/manual/components/subscriptions');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/manual/components/users');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/manual/components/users/migrations');
     define('LANG_HELP_URL_COM_MARKITUP',            'http://docs.instantcms.ru/manual/components/markitup');
@@ -679,3 +680,4 @@
     define('LANG_CP_QUEUE_STATUS2', 'Заблокировано с ошибкой');
     define('LANG_CP_QUEUE_STATUS3', 'Ожидает выполнения');
     define('LANG_CP_QUEUE_STATUS4', 'Ожидает выполнения %s-й раз');
+    define('LANG_CP_SUBJECT', 'Субъект');

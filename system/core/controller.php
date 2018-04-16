@@ -694,24 +694,27 @@ class cmsController {
 //============================================================================//
 
     /**
-     * Загружает и возвращает описание структуры таблицы
-     * @param string $grid_name
+     * Загружает и возвращает описание структуры grid таблицы
+     * @param string $grid_name Название
+     * @param array $params Параметры для передачи в функцию описания grid-а
+     * @param string $ups_key Ключ UPS
+     * @return array || false
      */
     public function loadDataGrid($grid_name, $params = false, $ups_key = ''){
 
         $default_options = array(
-            'order_by' => 'id',
-            'order_to' => 'asc',
-            'show_id' => true,
-            'is_auto_init' => true,
-            'is_sortable' => true,
-            'is_filter' => true,
-            'is_actions' => true,
+            'order_by'      => 'id',
+            'order_to'      => 'asc',
+            'show_id'       => true,
+            'is_auto_init'  => true,
+            'is_sortable'   => true,
+            'is_filter'     => true,
+            'is_actions'    => true,
             'is_pagination' => true,
-            'is_toolbar' => true,
-            'is_draggable' => false,
+            'is_toolbar'    => true,
+            'is_draggable'  => false,
             'is_selectable' => false,
-            'load_columns' => false
+            'load_columns'  => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';

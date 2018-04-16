@@ -9,7 +9,7 @@
     </a>
     <script type="text/javascript">
         $(function(){
-            new icms.pagebar('#<?php echo $elemet_id; ?>', <?php echo $page; ?>, <?php if($has_next){ echo 'true'; } else { echo 'false'; } ?>);
+            new icms.pagebar('#<?php echo $elemet_id; ?>', <?php echo $page; ?>, <?php if($has_next){ echo 'true'; } else { echo 'false'; } ?>, <?php if(!empty($is_modal)){ echo 'true'; } else { echo 'false'; } ?>);
         });
     </script>
 <?php } ?>

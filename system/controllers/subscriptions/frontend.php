@@ -82,13 +82,15 @@ class subscriptions extends cmsFrontend {
         }
 
         $items = $this->model->getSubscriptions();
-        if(!$items && $page > 1){ cmsCore::error404(); }
+        if(!$items && $page > 1){ return false; }
 
         if($show_next && $items && (count($items) > $perpage)){
             $has_next = true; array_pop($items);
         } else {
             $has_next = false;
         }
+
+        $items = cmsEventsManager::hook('subscriptions_list', $items);
 
         $html = $this->cms_template->renderInternal($this, 'list', array(
             'user'     => $this->cms_user,

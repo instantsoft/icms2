@@ -276,7 +276,7 @@ CREATE TABLE `{#}controllers` (
   `version` varchar(8) NOT NULL COMMENT 'Version',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Admin panel?',
   `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Third-party component',
-  `files` varchar(10000) DEFAULT NULL,
+  `files` text COMMENT 'Список файлов контроллера (для стороних компонентов)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)

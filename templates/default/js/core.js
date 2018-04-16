@@ -442,7 +442,7 @@ icms.events = (function ($) {
 
 }).call(icms.events || {},jQuery);
 
-icms.pagebar = function(id, initial_page, has_next){
+icms.pagebar = function(id, initial_page, has_next, is_modal){
 
     initial_page = initial_page || 1;
 
@@ -492,7 +492,13 @@ icms.pagebar = function(id, initial_page, has_next){
 
             var _sep = first_page_url.indexOf('?') !== -1 ? '&' : '?';
 
-            window.history.pushState({link: first_page_url+_sep+'page='+page}, '', first_page_url+_sep+'page='+page);
+            if(!is_modal){
+                window.history.pushState({link: first_page_url+_sep+'page='+page}, '', first_page_url+_sep+'page='+page);
+            }
+
+            if(is_modal){
+                icms.modal.resize();
+            }
 
         }, 'json');
 

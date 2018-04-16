@@ -22,6 +22,22 @@ icms.subscriptions = (function ($) {
 
         });
 
+        $('.subscribe_wrap > .count-subscribers').on('click', function () {
+
+            if(+$(this).text() === 0){
+                return false;
+            }
+
+            var list_title = $(this).attr('title');
+
+            $.get($(this).data('list_link'), {}, function(data){
+                icms.modal.openHtml(data.html, list_title);
+            }, 'json');
+
+            return false;
+
+        });
+
     };
 
     this.showLoader = function (){
