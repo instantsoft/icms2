@@ -3,7 +3,7 @@ class actionAuthLogin extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
         $email    = $this->request->get('login_email', '');
         $password = $this->request->get('login_password', '');
@@ -88,6 +88,7 @@ class actionAuthLogin extends cmsAction {
 
         return $this->cms_template->render('login', array(
             'back_url'     => $back_url,
+            'hooks_html'   => cmsEventsManager::hookAll('login_form_html'),
             'captcha_html' => (isset($captcha_html) ? $captcha_html : false)
         ));
 

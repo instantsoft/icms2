@@ -451,6 +451,8 @@
     define('LANG_SAVING',                    'Сохранение...');
     define('LANG_PREVIEW',                   'Предпросмотр');
     define('LANG_SEND',						 'Отправить');
+    define('LANG_SEND_AGAIN',				 'Отправить еще раз');
+    define('LANG_SEND_AGAIN_VIA',			 'Отправить еще раз через ');
     define('LANG_INSTALL',					 'Установить');
     define('LANG_INSERT',					 'Вставить');
     define('LANG_CANCEL',					 'Отменить');

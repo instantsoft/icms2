@@ -3,7 +3,7 @@ class actionAuthRegister extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged() && !cmsUser::isAdmin()) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
         $form = $this->getForm('registration');
@@ -228,6 +228,11 @@ class actionAuthRegister extends cmsAction {
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
+
+                        cmsUser::setCookie('reg_email', $user['email'], $verify_exp*3600);
+
+                        // редиректим сразу на форму подтверждения регистрации
+                        $this->redirectToAction('verify');
 
                     } else {
 

@@ -258,7 +258,7 @@ class cmsUser {
      */
     public static function login($email, $password, $remember = false) {
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) !== $email){
+        if (!$email || filter_var($email, FILTER_VALIDATE_EMAIL) !== $email){
             return 0;
         }
 

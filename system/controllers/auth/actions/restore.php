@@ -3,7 +3,7 @@ class actionAuthRestore extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
 

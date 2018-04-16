@@ -363,12 +363,30 @@ class modelUsers extends cmsModel {
             if(!$user){ return false; }
         }
 
+        $inCache = cmsCache::getInstance();
+
         $content_model = cmsCore::getModel('content');
         $content_model->setTablePrefix('');
         $fields = $content_model->getContentFields('{users}', $user['id']);
 
         foreach($fields as $field){
             $field['handler']->delete($user[$field['name']]);
+        }
+
+        // уменьшаем счётчики друзей и подписчиков
+        $data = $this->getFriendsIds($user['id']);
+
+        if(!empty($data['friends'])){
+            foreach ($data['friends'] as $friend_id) {
+                $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
+                $inCache->clean('users.user.'.$friend_id);
+            }
+        }
+        if(!empty($data['subscribes'])){
+            foreach ($data['subscribes'] as $friend_id) {
+                $this->filterEqual('id', $friend_id)->decrement('{users}', 'subscribers_count');
+                $inCache->clean('users.user.'.$friend_id);
+            }
         }
 
         $this->deleteUserAuthTokens($user['id']);
@@ -380,7 +398,6 @@ class modelUsers extends cmsModel {
         $this->delete('{users}_personal_settings', $user['id'], 'user_id');
         $this->delete('{users}', $user['id']);
 
-        $inCache = cmsCache::getInstance();
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
         $inCache->clean('users.user.'.$user['id']);

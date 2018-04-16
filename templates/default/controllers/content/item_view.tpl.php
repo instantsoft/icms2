@@ -5,6 +5,7 @@
     if (!empty($item['seo_keys'])){ $this->setPageKeywords($item['seo_keys']); }
     if (!empty($item['seo_desc'])){ $this->setPageDescription($item['seo_desc']); }
 
+	$this->addHead('<link rel="canonical" href="'.href_to_abs($ctype['name'], $item['slug'] . '.html').'"/>');
 	$this->setPageTitle(!empty($item['seo_title']) ? $item['seo_title'] : $item['title']);
 
     if ($item['parent_id'] && !empty($ctype['is_in_groups'])){

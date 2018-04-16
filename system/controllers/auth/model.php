@@ -1,6 +1,8 @@
 <?php
 
-class modelAuth extends cmsModel{
+class modelAuth extends cmsModel {
+
+    const RESUBMIT_TIME = 300;
 
     public function addInvites($user_id, $qty=1){
 

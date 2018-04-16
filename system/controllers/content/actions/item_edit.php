@@ -263,8 +263,16 @@ class actionContentItemEdit extends cmsAction {
                 if(!$is_draf_submitted){
 
                     if ($item['is_approved'] || $is_moderator){
+
+                        // новая запись, например из черновика
+                        if(empty($item['date_approved'])){
+                            cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                            cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
+                        }
+
                         cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
                         cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
+
                     } else {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
