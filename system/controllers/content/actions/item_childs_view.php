@@ -2,7 +2,7 @@
 
 class actionContentItemChildsView extends cmsAction {
 
-    public function run($ctype, $item, $child_ctype_name, $childs){
+    public function run($ctype, $item, $child_ctype_name, $childs, $fields){
 
         $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
 
@@ -85,9 +85,11 @@ class actionContentItemChildsView extends cmsAction {
 
         $html = $this->renderItemsList($child_ctype, rel_to_href($base_ds_url).($dataset ? '/'.$dataset : ''));
 
-        $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
-        $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
-        $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values($relation['seo_desc'], $item));
+        $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
+
+        $seo_title = empty($relation['seo_title']) ? $child_ctype['title'] . ' - ' . $item['title'] : string_replace_keys_values_extended($relation['seo_title'], $item_seo);
+        $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values_extended($relation['seo_keys'], $item_seo);
+        $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values_extended($relation['seo_desc'], $item_seo));
 
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook('content_childs_view', array($ctype, $item, $child_ctype, $childs));
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook("content_{$ctype['name']}_childs_view", array($ctype, $item, $child_ctype, $childs));

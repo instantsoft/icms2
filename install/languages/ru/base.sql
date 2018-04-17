@@ -1227,6 +1227,9 @@ CREATE TABLE `{#}tags` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(32) NOT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
+  `tag_title` varchar(300) DEFAULT NULL,
+  `tag_desc` varchar(300) DEFAULT NULL,
+  `tag_h1` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`),
   UNIQUE KEY `frequency` (`frequency`,`tag`)

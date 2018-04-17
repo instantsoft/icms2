@@ -47,9 +47,11 @@ class cmsModel {
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
     protected $approved_filter_disabled = false;
+    protected $hidden_parents_filter_disabled = true;
     protected $delete_filter_disabled = false;
     protected $approved_filtered = false;
     protected $available_filtered = false;
+    protected $hp_filtered = false;
     protected $joined_session_online = array();
 
     protected static $cached = array();
@@ -563,11 +565,12 @@ class cmsModel {
 
 		if ($this->keep_filters) { return $this; }
 
-		$this->filter_on    = false;
-		$this->where        = '';
-        $this->privacy_filtered = false;
-        $this->approved_filtered = false;
+		$this->filter_on          = false;
+        $this->where              = '';
+        $this->privacy_filtered   = false;
+        $this->approved_filtered  = false;
         $this->available_filtered = false;
+        $this->hp_filtered        = false;
 
         return $this;
 
@@ -934,6 +937,20 @@ class cmsModel {
         return $this;
     }
 
+    public function enableHiddenParentsFilter(){
+        $this->hidden_parents_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableHiddenParentsFilter(){
+        $this->hidden_parents_filter_disabled = true;
+        return $this;
+    }
+
+    public function isEnableHiddenParentsFilter(){
+        return $this->hidden_parents_filter_disabled === false;
+    }
+
     public function joinModerationsTasks($ctype_name){
         $this->select('IF(t.id IS NULL AND i.is_approved < 1, 1, NULL)', 'is_draft');
         $this->select('t.is_new_item');
@@ -986,7 +1003,13 @@ class cmsModel {
     }
 
     public function filterHiddenParents(){
+
+        if ($this->hp_filtered) { return $this; }
+
+        $this->hp_filtered = true;
+
         return $this->filterIsNull('is_parent_hidden');
+
     }
 
     public function filterSubscribe($user_id){

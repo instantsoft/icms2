@@ -10,3 +10,4 @@
     define('LANG_TAGS_SETTINGS',            'Configure Tags');
     define('LANG_TAGS_RECOUNT',             'Recount Tags');
     define('LANG_TAGS_CONTEXT_LT_SEARCH',   'When searching by tags');
+    define('LANG_TAGS_SEO_HINT',            'You can use the expressions {tag} - the current tag, {ctype_title} - the title of the current content type');

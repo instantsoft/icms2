@@ -78,7 +78,7 @@ class widgetContentList extends cmsWidget {
         $hide_except_title = $model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $model->filterHiddenParents();
+        $model->enableHiddenParentsFilter();
 
         if($this->getOption('widget_type') == 'related'){
             if($current_ctype_item){

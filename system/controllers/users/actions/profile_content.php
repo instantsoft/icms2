@@ -78,7 +78,7 @@ class actionUsersProfileContent extends cmsAction {
         }
 
         if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
-            $this->controller_content->model->filterHiddenParents();
+            $this->controller_content->model->enableHiddenParentsFilter();
         }
 
         if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){

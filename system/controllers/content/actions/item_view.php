@@ -165,6 +165,14 @@ class actionContentItemView extends cmsAction {
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
 
+        // Получаем поля для данного типа контента
+        $fields = $this->model->getContentFields($ctype['name']);
+
+        // Парсим значения полей
+        foreach($fields as $name=>$field){
+            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
+        }
+
         // формируем связи (дочерние списки)
         $childs = array(
             'relations' => $this->model->getContentTypeChilds($ctype['id']),
@@ -298,7 +306,8 @@ class actionContentItemView extends cmsAction {
                         'ctype'   => $ctype,
                         'item'    => $item,
                         'childs'  => $childs,
-                        'content_controller' => $this
+                        'content_controller' => $this,
+                        'fields'  => $fields
                     ));
 
                 }
@@ -309,17 +318,10 @@ class actionContentItemView extends cmsAction {
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
-                'childs'           => $childs
+                'childs'           => $childs,
+                'fields'           => $fields
             ));
 
-        }
-
-        // Получаем поля для данного типа контента
-        $fields = $this->model->getContentFields($ctype['name']);
-
-        // Парсим значения полей
-        foreach($fields as $name=>$field){
-            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
         }
 
         // Получаем поля-свойства

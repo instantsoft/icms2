@@ -22,7 +22,7 @@ class actionActivityIndex extends cmsAction{
             'first' => href_to($this->name, $dataset_name)
         );
 
-        $this->model->filterHiddenParents();
+        $this->model->enableHiddenParentsFilter();
 
         // Получаем HTML списка записей
         $items_list_html = $this->renderActivityList($page_url, $dataset_name);

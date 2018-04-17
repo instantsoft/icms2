@@ -119,6 +119,12 @@ class modelTags extends cmsModel{
 
     }
 
+    public function getTagByTag($tag){
+
+        return $this->filterEqual('tag', $tag)->getItem('tags');
+
+    }
+
     public function getTagTargets($tag_id){
 
         $binds = $this->filterEqual('tag_id', $tag_id)->get('tags_bind');

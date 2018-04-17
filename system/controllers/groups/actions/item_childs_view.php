@@ -2,7 +2,7 @@
 
 class actionGroupsItemChildsView extends cmsAction {
 
-    public function run($ctype, $item, $childs, $content_controller){
+    public function run($ctype, $item, $childs, $content_controller, $fields){
 
         if(!empty($childs['tabs'][$this->name]['relation_id'])){
             $relation = $childs['relations'][$childs['tabs'][$this->name]['relation_id']];
@@ -72,9 +72,11 @@ class actionGroupsItemChildsView extends cmsAction {
 
         $html = $this->renderGroupsList(rel_to_href($base_ds_url).($dataset ? '/'.$dataset : ''));
 
-        $seo_title = empty($relation['seo_title']) ? LANG_GROUPS . ' - ' . $item['title'] : string_replace_keys_values($relation['seo_title'], $item);
-        $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values($relation['seo_keys'], $item);
-        $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values($relation['seo_desc'], $item));
+        $item_seo = $content_controller->prepareItemSeo($item, $fields, $ctype);
+
+        $seo_title = empty($relation['seo_title']) ? LANG_GROUPS . ' - ' . $item['title'] : string_replace_keys_values_extended($relation['seo_title'], $item_seo);
+        $seo_keys  = empty($relation['seo_keys']) ? '' : string_replace_keys_values_extended($relation['seo_keys'], $item_seo);
+        $seo_desc  = empty($relation['seo_desc']) ? '' : string_get_meta_description(string_replace_keys_values_extended($relation['seo_desc'], $item_seo));
 
         $this->cms_template->setContext($content_controller);
 

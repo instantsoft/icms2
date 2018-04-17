@@ -195,8 +195,6 @@ class actionContentItemEdit extends cmsAction {
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
-				} else {
-					$item['date_pub_end'] = false;
 				}
 
 				unset($item['pub_days']);

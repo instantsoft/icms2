@@ -95,7 +95,7 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $this->model->filterHiddenParents();
+        $this->model->enableHiddenParentsFilter();
 
         // Формируем базовые URL для страниц
         $page_url = array(

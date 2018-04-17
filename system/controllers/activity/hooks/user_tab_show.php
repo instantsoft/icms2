@@ -13,7 +13,7 @@ class onActivityUserTabShow extends cmsAction {
         $page_url = href_to('users', $profile['id'], 'activity');
 
         if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
-            $this->model->filterHiddenParents();
+            $this->model->enableHiddenParentsFilter();
         }
 
         $list_html = $this->renderActivityList($page_url);

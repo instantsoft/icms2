@@ -247,7 +247,6 @@ class actionContentItemAdd extends cmsAction {
 				$is_date_pub_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_late');
 				$is_date_pub_end_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'any');
 				$is_date_pub_days_allowed = $ctype['is_date_range'] && cmsUser::isAllowed($ctype['name'], 'pub_long', 'days');
-				$pub_max_days = intval(cmsUser::getPermissionValue($ctype['name'], 'pub_max_days'));
 
 				$date_pub_time = isset($item['date_pub']) ? strtotime($item['date_pub']) : time();
 				$now_time = time();

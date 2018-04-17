@@ -13,7 +13,7 @@ class actionContentItemsFromFriends extends cmsAction {
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $this->model->filterHiddenParents();
+        $this->model->enableHiddenParentsFilter();
 
         $this->model->filterFriendsPrivateOnly($this->cms_user->id);
 

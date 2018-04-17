@@ -29,6 +29,18 @@ function install_package(){
         ));
     }
 
+    if(!$core->db->isFieldExists('tags', 'tag_title')){
+        $core->db->query("ALTER TABLE `{#}tags` ADD `tag_title` VARCHAR(300) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('tags', 'tag_desc')){
+        $core->db->query("ALTER TABLE `{#}tags` ADD `tag_desc` VARCHAR(300) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('tags', 'tag_h1')){
+        $core->db->query("ALTER TABLE `{#}tags` ADD `tag_h1` VARCHAR(300) NULL DEFAULT NULL");
+    }
+
     if(!$core->db->isFieldExists('{users}', 'subscribers_count')){
         $core->db->query("ALTER TABLE `{users}` ADD `subscribers_count` INT(11) UNSIGNED NOT NULL DEFAULT '0' AFTER `friends_count`;");
     }

@@ -47,7 +47,7 @@ class widgetContentSlider extends cmsWidget {
         $hide_except_title = $model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $model->filterHiddenParents();
+        $model->enableHiddenParentsFilter();
 
 		list($ctype, $model) = cmsEventsManager::hook('content_list_filter', array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
