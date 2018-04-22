@@ -6,6 +6,18 @@ class onSubscriptionsContentToolbarHtml extends cmsAction {
 
         list($ctype_name, $category, $current_dataset, $filters) = $data;
 
+        // если есть фильтрация по юзеру, не показываем автору
+        if($filters){
+            foreach($filters as $fkey => $f){
+                if($f['field'] == 'user_id' && $f['value'] == $this->cms_user->id){
+                    return '';
+                }
+                if($f['value'] === false){
+                    unset($filters[$fkey]);
+                }
+            }
+        }
+
         $params = array(
             'field_filters' => array(),
             'filters'       => $filters,
@@ -27,6 +39,7 @@ class onSubscriptionsContentToolbarHtml extends cmsAction {
             foreach($current_dataset['filters'] as $filter){
 
                 if (!isset($filter['value'])) { continue; }
+                if ($filter['value'] === false) { continue; }
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }
 

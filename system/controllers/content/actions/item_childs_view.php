@@ -82,6 +82,8 @@ class actionContentItemChildsView extends cmsAction {
         // кешируем
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+        cmsModel::cacheResult('current_ctype_item', $item);
+        cmsModel::cacheResult('current_child_ctype', $child_ctype);
 
         $html = $this->renderItemsList($child_ctype, rel_to_href($base_ds_url).($dataset ? '/'.$dataset : ''));
 

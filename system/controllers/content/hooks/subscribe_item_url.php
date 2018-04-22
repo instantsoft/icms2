@@ -9,7 +9,7 @@ class onContentSubscribeItemUrl extends cmsAction {
             return false;
         }
 
-        $url = href_to($ctype['name']); $params = array(); $ds = array();
+        $url = href_to($ctype['name']); $params = array(); $ds = array(); $is_cat_ds = false;
 
         if(empty($subscription['params']['filters']) && empty($subscription['params']['field_filters'])){
             return $url;
@@ -23,33 +23,97 @@ class onContentSubscribeItemUrl extends cmsAction {
 
             $ds = $this->model->getContentDataset($subscription['params']['dataset']['id']);
 
-            if($ds){
-                $url .= '-'.$ds['name'];
-            }
-
         }
 
         if(!empty($subscription['params']['filters'])){
 
-            // категория
-            if($subscription['params']['filters'][0]['field'] == 'category_id'){
+            foreach ($subscription['params']['filters'] as $filters) {
 
-                $cat = $this->model->getCategory($ctype['name'], $subscription['params']['filters'][0]['value']);
+                // пользователь
+                if($filters['field'] == 'user_id'){
 
-                if($cat){
+                    $user = $this->model_users->getUser($filters['value']);
 
-                    $url .= '/'.$cat['slug'];
+                    if($user){
+                        $url = href_to_profile($user, array('content', $ctype['name']));
+                    }
 
-                    unset($subscription['params']['filters'][0]);
+                    continue;
 
+                }
+                // папка
+                if($filters['field'] == 'folder_id'){
+
+                    $folder = $this->model->getContentFolder($filters['value']);
+
+                    if($folder){
+                        $url .= '/'.$folder['id'];
+                    }
+
+                    continue;
+
+                }
+                // группа
+                if($filters['field'] == 'parent_id' && $target['params']['filters'][$key+1]['value'] == 'group'){
+
+                    $group = $this->model_groups->getGroup($filters['value']);
+
+                    if($group){
+                        $url = href_to('groups', $group['slug'], array('content', $ctype['name']));
+                    }
+
+                    continue;
+
+                }
+                // связь
+                if($filters['field'] == 'relation'){
+
+                    $item = $this->model->getContentItem($filters['value']['parent_ctype_id'], $filters['value']['parent_item_id']);
+
+                    if($item){
+
+                        $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
+
+                        if($child_ctype){
+                            $url = href_to($ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
+                        }
+
+                    }
+
+                    continue;
+
+                }
+                // категория
+                if($filters['field'] == 'category_id'){
+
+                    $cat = $this->model->getCategory($ctype['name'], $filters['value']);
+
+                    if($cat){
+
+                        if($ds){
+
+                            $is_cat_ds = true;
+
+                            $url .= '-'.$ds['name'];
+
+                        }
+
+                        $url .= '/'.$cat['slug'];
+
+                    }
+
+                    continue;
+
+                }
+
+                if(isset($fields[$filters['field']])){
+                    $params[$filters['field']] = $filters['value'];
                 }
 
             }
 
-            foreach ($subscription['params']['filters'] as $filters) {
-                if(isset($fields[$filters['field']])){
-                    $params[$filters['field']] = $filters['value'];
-                }
+            if($ds && !$is_cat_ds){
+                $url .= '/'.$ds['name'];
             }
 
         }

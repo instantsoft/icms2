@@ -70,6 +70,32 @@ class fieldNumber extends cmsFormField {
 
     }
 
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        $units = $this->getProperty('units')?:$this->getOption('units');
+
+        if(is_array($value)){
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+            }
+
+            return $result_string;
+
+        }
+
+        return $this->formatFloatValue($value).' '.$units;
+
+    }
+
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
 
         $new_decimal_int = isset($field['options']['decimal_int']) ? $field['options']['decimal_int'] : 7;

@@ -2342,7 +2342,17 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentItem($ctype_name, $id, $by_field='id'){
+    public function getContentItem($ctype_name, $id, $by_field = 'id'){
+
+        if(is_numeric($ctype_name)){
+
+            $ctype = $this->getContentType($ctype_name);
+
+            if(!$ctype){ return false; }
+
+            $ctype_name = $ctype['name'];
+
+        }
 
         $table_name = $this->table_prefix . $ctype_name;
 

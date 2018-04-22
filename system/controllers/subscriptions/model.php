@@ -6,8 +6,7 @@ class modelSubscriptions extends cmsModel {
 
         return $this->filterEqual('confirm_token', $confirm_token)->
                 updateFiltered('subscriptions_bind', array(
-                    'is_confirmed'  => 1,
-                    'confirm_token' => null
+                    'is_confirmed'  => 1
                 ));
 
     }
@@ -191,6 +190,71 @@ class modelSubscriptions extends cmsModel {
         $this->filterEqual('id', $id)->deleteFiltered('subscriptions');
 
         return true;
+
+    }
+
+    public function getSubscriptionsList() {
+
+        return $this->get('subscriptions', function($item, $model) {
+
+            $item['params'] = cmsModel::stringToArray($item['params']);
+
+            $item['target'] = array(
+                'controller' => $item['controller'],
+                'subject'    => $item['subject'],
+                'params'     => $item['params']
+            );
+
+            return $item;
+
+        });
+
+    }
+
+    public function getNotifiedUsers($subscription_id){
+
+        $this->limit(false);
+
+        $this->selectList(array(
+            'i.id'             => 'id',
+            'i.email'          => 'email',
+            'i.nickname'       => 'nickname',
+            'i.notify_options' => 'notify_options',
+            'sb.confirm_token' => 'confirm_token',
+            'sb.guest_email'   => 'guest_email',
+            'sb.guest_name'    => 'guest_name'
+        ), true);
+
+        $this->filterIsNull('is_locked');
+        $this->filterIsNull('is_deleted');
+
+        $this->joinRight('subscriptions_bind', 'sb', 'sb.user_id = i.id')->
+                filterEqual('sb.subscription_id', $subscription_id)->
+                filterEqual('sb.is_confirmed', 1);
+
+        return $this->get('{users}', function($user, $model){
+
+            // гость
+            if(!$user['id']){
+                $user['email'] = $user['guest_email'];
+                $user['nickname'] = $user['guest_name'];
+            }
+
+            $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
+
+            // умолчания
+            if (!isset($user['notify_options']['subscriptions'])){
+                $user['notify_options']['subscriptions'] = $user['id'] ? 'both' : 'email';
+            }
+
+            // отключены уведомления
+            if (empty($user['notify_options']['subscriptions'])){
+                return false;
+            }
+
+            return $user;
+
+        }, false);
 
     }
 

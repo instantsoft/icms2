@@ -46,8 +46,9 @@ icms.rating = (function ($) {
         var widget_id = 'rating-' + subject + '-' + id;
         var widget = $('#'+widget_id);
 
-        $('.arrow', widget).html('<span class="disabled"></span>');
-        $('.score', widget).addClass('loading');
+        $('.arrow svg', widget).unwrap();
+        $('.arrow svg', widget).wrap('<span class="disabled"></span>');
+        $('.score', widget).html('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
 
         $.post(this.options.url, {
 
@@ -58,12 +59,13 @@ icms.rating = (function ($) {
 
         }, function(result){
 
-            $('.score', widget).removeClass('loading');
-
             if (!result.success){
                 if (result.message){
-                    alert(result.message);
+                    icms.modal.alert(result.message);
                     $('.disabled', widget).attr('title', result.message);
+                }
+                if (result.rating){
+                    $('.score', widget).html('<span class="'+result.css_class+'">'+result.rating+'</span>');
                 }
                 return;
             }

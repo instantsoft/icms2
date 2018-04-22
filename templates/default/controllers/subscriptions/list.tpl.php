@@ -22,7 +22,7 @@
                         <div class="subscribe_wrap">
                             <a href="#" class="subscriber" data-hash="<?php echo $item['hash']; ?>" data-link0="<?php echo $this->href_to('subscribe'); ?>" data-link1="<?php echo $this->href_to('unsubscribe'); ?>" data-text0="<?php echo LANG_USERS_SUBSCRIBE; ?>" data-text1="<?php echo LANG_USERS_UNSUBSCRIBE; ?>" data-issubscribe="1" data-target="<?php html(json_encode($item['target'])); ?>"><span></span></a>
                             <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
-                            <span class="count-subscribers"><?php echo $item['subscribers_count']; ?></span>
+                            <span class="count-subscribers" title="<?php echo LANG_SBSCR_SUBSCRIBERS; ?>" data-list_link="<?php echo $this->href_to('list_subscribers', $item['hash']); ?>"><?php echo $item['subscribers_count']; ?></span>
                         </div>
                     </div>
                 <?php } else { ?>

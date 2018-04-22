@@ -4,6 +4,10 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
 
     public function run($album){
 
+        if($album['user_id'] == $this->cms_user->id){
+            return '';
+        }
+
         $params = array(
             'field_filters' => array(),
             'filters' => array(array(
@@ -13,12 +17,12 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
             ))
         );
 
-        if(!empty($album['filter_values']['types'])){
+        if(!empty($album['filter_values']['type'])){
 
             $params['filters'][] = array(
                 'field'     => 'type',
                 'condition' => 'eq',
-                'value'     => (string)$album['filter_values']['types']
+                'value'     => (string)$album['filter_values']['type']
             );
 
         }

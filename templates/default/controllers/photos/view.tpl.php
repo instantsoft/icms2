@@ -96,7 +96,7 @@
             <div class="share">
                 <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,whatsapp" data-size="s"></div>
             </div>
         </div>
 

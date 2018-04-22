@@ -16,3 +16,5 @@ define('LANG_SBSCR_SUBSCRIBERS', 'Подписчики');
 define('LANG_SBSCR_LIMIT', 'Количество подписок на страницу во вкладке');
 define('LANG_SBSCR_NOTIFY_NEW', 'Уведомлять о новых записях в подписках');
 define('LANG_SBSCR_DELETE_CONFIRM', 'Удалить этот список?\nВсе подписчики будут отписаны.');
+define('LANG_SBSCR_PM_NOTIFY', 'Обновление в вашем списке подписки «<a href="%s">%s</a>»: %s.');
+define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'Вы успешно отписались от подписки');

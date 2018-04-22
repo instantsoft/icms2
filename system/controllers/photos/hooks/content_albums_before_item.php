@@ -21,7 +21,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
         $album['filter_panel'] = array(
             'ordering'    => modelPhotos::getOrderList(),
             'orderto'     => array('asc' => LANG_SORTING_ASC, 'desc' => LANG_SORTING_DESC),
-            'types'       => (!empty($this->options['types']) ? (array('' => LANG_PHOTOS_ALL) + $this->options['types']) : array()),
+            'type'        => (!empty($this->options['types']) ? (array('' => LANG_PHOTOS_ALL) + $this->options['types']) : array()),
             'orientation' => modelPhotos::getOrientationList(),
             'width'       => '',
             'height'      => ''
@@ -30,7 +30,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
         $album['filter_values'] = array(
             'ordering'    => $this->cms_core->request->get('ordering', $this->options['ordering']),
             'orderto'     => $this->cms_core->request->get('orderto', $this->options['orderto']),
-            'types'       => $this->cms_core->request->get('type', ''),
+            'type'        => $this->cms_core->request->get('type', ''),
             'orientation' => $this->cms_core->request->get('orientation', ''),
             'width'       => $this->cms_core->request->get('width', 0) ?: '',
             'height'      => $this->cms_core->request->get('height', 0) ?: ''
@@ -61,8 +61,8 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
             $album['filter_values']['orderto'] = 'desc';
         }
 
-        if($album['filter_values']['types'] && !in_array($album['filter_values']['types'], array_keys($album['filter_panel']['types']))){
-            $album['filter_values']['types'] = '';
+        if($album['filter_values']['type'] && !in_array($album['filter_values']['type'], array_keys($album['filter_panel']['type']))){
+            $album['filter_values']['type'] = '';
         }
 
         if($album['filter_values']['orientation'] && !in_array($album['filter_values']['orientation'], array_keys($album['filter_panel']['orientation']))){

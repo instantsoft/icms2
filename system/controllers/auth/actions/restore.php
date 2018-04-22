@@ -35,7 +35,11 @@ class actionAuthRestore extends cmsAction {
 
                 } elseif($user['pass_token']) {
 
-                    $errors['email'] = LANG_RESTORE_TOKEN_IS_SEND;
+                    if ((strtotime($user['date_token']) + (24 * 3600)) < time()){
+                        $users_model->clearUserPassToken($user['id']);
+                    } else {
+                        $errors['email'] = LANG_RESTORE_TOKEN_IS_SEND;
+                    }
 
                 } else {
 

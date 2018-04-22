@@ -53,6 +53,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
         if($this->cms_user->is_logged){
 
             $this->subscribe['user_id'] = $this->cms_user->id;
+            $this->subscribe['confirm_token'] = string_random(32, $this->cms_user->email);
 
         } else {
 
@@ -123,7 +124,6 @@ class actionSubscriptionsSubscribe extends cmsAction {
                 if(!empty($this->options['guest_email_confirmation'])){
 
                     $this->subscribe['is_confirmed']  = null;
-                    $this->subscribe['confirm_token'] = string_random(32, $this->subscribe['guest_email']);
 
                 }
 
@@ -134,6 +134,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
             $this->subscribe['guest_email'] = $subscriber_email;
             $this->subscribe['guest_name']  = $subscriber_name;
+            $this->subscribe['confirm_token'] = string_random(32, $this->subscribe['guest_email']);
 
         }
 
@@ -250,7 +251,11 @@ class actionSubscriptionsSubscribe extends cmsAction {
                     return false;
                 }
                 if(is_array($filter['value'])){
-                    return false;
+                    foreach ($filter['value'] as $vkey => $vvalue) {
+                        if($this->validate_sysname($vkey) !== true){
+                            return false;
+                        }
+                    }
                 }
             }
         }

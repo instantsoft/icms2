@@ -25,6 +25,30 @@ class fieldDate extends cmsFormField {
         return $value ? html_date($value, $this->getOption('show_time')) : null;
     }
 
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        if(is_array($value)){
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+            }
+
+            return $result_string;
+
+        }
+
+        return date(cmsConfig::get('date_format'), strtotime($value));
+
+    }
+
     public function getFilterInput($value) {
 
         if ($this->getOption('filter_range')){
@@ -34,10 +58,10 @@ class fieldDate extends cmsFormField {
 
             $this->title = false;
 
-            return cmsTemplate::getInstance()->renderFormField($this->class."_range", array(
+            return cmsTemplate::getInstance()->renderFormField($this->class.'_range', array(
                 'field' => $this,
-                'from' => $from,
-                'to' => $to
+                'from'  => $from,
+                'to'    => $to
             ));
 
 

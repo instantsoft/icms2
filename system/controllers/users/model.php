@@ -570,34 +570,39 @@ class modelUsers extends cmsModel {
 
     }
 
-    public function getNotifiedUsers($notice_type, $id_list, $options_only=array()){
+    public function getNotifiedUsers($notice_type = false, $id_list = array(), $options_only = array(), $default = 'email'){
 
         $list = array();
 
-        $this->filterIn('id', $id_list);
+        $this->selectList(array(
+            'i.id'             => 'id',
+            'i.email'          => 'email',
+            'i.nickname'       => 'nickname',
+            'i.notify_options' => 'notify_options'
+        ), true);
+
+        if($id_list){
+            $this->filterIn('id', $id_list);
+        }
 
         $this->filterIsNull('is_locked');
         $this->filterIsNull('is_deleted');
 
         $users = $this->get('{users}', function($user, $model){
 
-            return array(
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'nickname' => $user['nickname'],
-                'notify_options' => cmsModel::yamlToArray($user['notify_options'])
-            );
+            $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
 
-        });
+            return $user;
+
+        }, false);
 
         if (!$users) { return false; }
 
-        foreach($users as $user){
-
-            if ($options_only){
+        if ($options_only){
+            foreach($users as $user){
 
                 if (!isset($user['notify_options'][$notice_type])){
-                    $user['notify_options'][$notice_type] = 'email';
+                    $user['notify_options'][$notice_type] = $default;
                 }
 
                 if (empty($user['notify_options'][$notice_type])){
@@ -608,11 +613,11 @@ class modelUsers extends cmsModel {
                     continue;
                 }
 
+                $list[] = $user;
+
             }
-
-            unset($user['notify_options']);
-            $list[] = $user;
-
+        } else {
+            $list = $users;
         }
 
         return $list ? $list : false;

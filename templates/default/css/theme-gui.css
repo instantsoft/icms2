@@ -1123,7 +1123,14 @@ form .child_field{padding-left:20px}
 
 .qq-upload-failed-text {display:none;}
 .qq-upload-fail .qq-upload-failed-text {display:inline;}
-
+.style-svg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    vertical-align: middle;
+    transition: fill 0.3s ease;
+}
 /* Rating Widget ============================================================ */
 
 .rating_widget .arrow,
@@ -1132,9 +1139,21 @@ form .child_field{padding-left:20px}
     height:15px;
 }
 
-.rating_widget .score{ margin: 0 5px; cursor:help; font-weight: bold; }
-.rating_widget .score .positive { color:green; }
-.rating_widget .score .negative { color:red; }
+.rating_widget .score { margin: 0 10px; cursor:help; font-weight: bold; font-size: 14px; position: relative; }
+.rating_widget .score .spinner {
+    width: auto;
+    margin: 0;
+    position: static;
+    left: auto;
+    top: auto;
+}
+.rating_widget .score .spinner > div {
+    width: 6px;
+    height: 6px;
+    background-color: #95a5a6;
+}
+.rating_widget .score .positive { color:#27ae60; }
+.rating_widget .score .negative { color:#c0392b; }
 
 .rating_widget .score .clickable{
     cursor: pointer;
@@ -1149,18 +1168,14 @@ form .child_field{padding-left:20px}
 .rating_widget .arrow span,
 .rating_widget .arrow a {
     display: block;
-    width:11px;
-    height:15px;
-    background: url("../images/icons/vote.gif") no-repeat;
+    width:18px;
 }
 
 .rating_widget .arrow a { cursor: pointer; }
+.rating_widget .style-svg { fill: #95a5a6; }
 
-.rating_widget .up a{ background-position: 0 -15px; }
-.rating_widget .up a:hover{ background-position: 0 0; }
-
-.rating_widget .down a{ background-position: -11px -15px; }
-.rating_widget .down a:hover{ background-position: -11px 0; }
+.rating_widget .up a:hover .style-svg { fill: #27ae60; }
+.rating_widget .down a:hover  .style-svg { fill: #e74c3c; }
 
 .rating_widget .up .disabled{ background-position: -22px 0; }
 .rating_widget .down .disabled{ background-position: -22px -15px; }

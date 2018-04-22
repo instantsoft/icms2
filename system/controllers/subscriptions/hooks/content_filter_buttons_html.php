@@ -6,6 +6,17 @@ class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
 
         list($ctype_name, $form_url, $filters) = $data;
 
+        // для связей делаем вот такой финт
+        if(strpos($form_url, '/view-'.$ctype_name) !== false){
+
+            $ctype = cmsModel::getCachedResult('current_ctype');
+
+            if($ctype){
+                $ctype_name = $ctype['name'];
+            }
+
+        }
+
         $params = array(
             'field_filters' => $filters,
             'filters'       => array(),
@@ -20,6 +31,54 @@ class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
                 'condition' => 'eq',
                 'value'     => (string)$cat['id']
             );
+        }
+
+        $profile = cmsModel::getCachedResult('current_profile');
+
+        if(!empty($profile['id'])){
+            $params['filters'][] = array(
+                'field'     => 'user_id',
+                'condition' => 'eq',
+                'value'     => (string)$profile['id']
+            );
+        }
+
+        $group = cmsModel::getCachedResult('current_group');
+
+        if(!empty($group['id'])){
+            $params['filters'][] = array(
+                'field'     => 'parent_id',
+                'condition' => 'eq',
+                'value'     => (string)$group['id']
+            );
+            $params['filters'][] = array(
+                'field'     => 'parent_type',
+                'condition' => 'eq',
+                'value'     => 'group'
+            );
+        }
+
+        $child_ctype = cmsModel::getCachedResult('current_child_ctype');
+
+        if(!empty($child_ctype['id'])){
+
+            $ctype = cmsModel::getCachedResult('current_ctype');
+            $item = cmsModel::getCachedResult('current_ctype_item');
+
+            if(!empty($ctype['id']) && !empty($item['id'])){
+
+                $params['filters'][] = array(
+                    'field'     => 'relation',
+                    'condition' => 'inner',
+                    'value'     => array(
+                        'parent_ctype_id' => $ctype['id'],
+                        'parent_item_id'  => $item['id'],
+                        'child_ctype_id'  => $child_ctype['id']
+                    )
+                );
+
+            }
+
         }
 
         $current_dataset = cmsModel::getCachedResult('current_ctype_dataset');

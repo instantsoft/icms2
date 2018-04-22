@@ -73,6 +73,7 @@
     line-height: normal;
     font-size: 12px;
 }
+#user_profile_ratings .positive { color:#31fd88; }
 #user_profile_rates .negative { color:red; }
 #user_profile_rates .positive { color:green; }
 #user_profile_rates .karma .value,

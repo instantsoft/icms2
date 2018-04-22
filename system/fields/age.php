@@ -46,6 +46,30 @@ class fieldAge extends cmsFormField {
         return html($this->getDiff($value), false);
     }
 
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        if(is_array($value)){
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+            }
+
+            return $result_string.' '.constant('LANG_' . $this->getOption('range').'10');
+
+        }
+
+        return $this->getDiff($value);
+
+    }
+
     public function getDiff($date){
 
         $options = array();
@@ -100,7 +124,7 @@ class fieldAge extends cmsFormField {
     public function store($value, $is_submitted, $old_value=null){
 
         if ($value){
-            return date('Y-m-d', strtotime($value));
+            return date('Y-m-d H:i:s', strtotime($value));
         }
 
         return null;

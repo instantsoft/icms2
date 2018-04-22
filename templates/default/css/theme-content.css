@@ -338,7 +338,7 @@ article div.content_categories:last-child {
 .content_item .info_bar .bar_item,
 .content_list_item .info_bar .bar_item {
     float:left;
-    padding: 3px 5px;
+    padding: 3px 10px;
     height:18px;
     line-height:18px;
 }
