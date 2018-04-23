@@ -56,13 +56,14 @@ function html_strip($string, $max_length){
 /**
  * Формирует ссылку по относительной (без добавления корня URL)
  * @param string $rel_link
+ * @param boolean $is_abs
  * @return string
  */
-function rel_to_href($rel_link){
+function rel_to_href($rel_link, $is_abs = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : '').$rel_link;
+	return ($is_abs ? cmsConfig::get('host') . '/' : cmsConfig::get('root')) .($lang_href ? $lang_href.'/' : '').$rel_link;
 
 }
 

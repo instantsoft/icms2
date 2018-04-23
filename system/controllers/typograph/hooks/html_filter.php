@@ -152,7 +152,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         $href_params = parse_url($params['href']);
 
-        $is_external_link = !empty($href_params['host']) && !strstr($params['href'], parse_url($this->cms_config->host, PHP_URL_HOST));
+        $is_external_link = !empty($href_params['host']) && strpos($params['href'], $this->cms_config->host) !== 0;
 
         if($is_external_link){
 
@@ -247,7 +247,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
-        $geshi = new GeSHi(trim(htmlspecialchars_decode($content)), (isset($params['type']) ? $params['type'] : 'php'));
+        $geshi = new GeSHi(htmlspecialchars_decode($content), (isset($params['type']) ? $params['type'] : 'php'));
 
         return $geshi->parse_code();
 

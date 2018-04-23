@@ -95,11 +95,11 @@ class modelSubscriptions extends cmsModel {
 
         }
 
-        $this->insert('subscriptions_bind', $subscribe);
+        $sid = $this->insert('subscriptions_bind', $subscribe);
 
         $this->reCountSubscribers($subscribe['subscription_id']);
 
-        return $is_now_create_list;
+        return array($is_now_create_list, $sid);
 
     }
 
@@ -153,6 +153,7 @@ class modelSubscriptions extends cmsModel {
             's.title'             => 'title',
             's.controller'        => 'controller',
             's.subject'           => 'subject',
+            's.subject_url'       => 'subject_url',
             's.params'            => 'params',
             's.subscribers_count' => 'subscribers_count',
             's.hash'              => 'hash'
@@ -186,10 +187,15 @@ class modelSubscriptions extends cmsModel {
 
     public function deleteSubscriptionsList($id) {
 
-        $this->filterEqual('subscription_id', $id)->deleteFiltered('subscriptions_bind');
+        $this->filterEqual('subscription_id', $id)->lockFilters();
+
+        $subscriptions = $this->get('subscriptions_bind');
+
+        $this->unlockFilters()->deleteFiltered('subscriptions_bind');
+
         $this->filterEqual('id', $id)->deleteFiltered('subscriptions');
 
-        return true;
+        return $subscriptions;
 
     }
 

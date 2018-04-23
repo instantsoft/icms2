@@ -97,6 +97,21 @@ class actionRatingVote extends cmsAction{
             'rating'  => $rating
         ));
 
+        // ссылка на проголосовавшего
+        if($this->cms_user->is_logged){
+            $user_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
+        } else {
+            $user_link = LANG_GUEST;
+        }
+        // уведомляем автора записи
+        $this->controller_messages->addRecipient($target['user_id'])->sendNoticePM(array(
+            'content' => sprintf(LANG_RATING_PM,
+                    $user_link,
+                    string_lang('LANG_RATING_'.$direction),
+                    $target['page_url'],
+                    $target['title'])
+        ));
+
         // Собираем результат
         $result = array(
             'success'   => true,

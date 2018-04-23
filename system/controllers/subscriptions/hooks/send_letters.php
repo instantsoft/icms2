@@ -24,12 +24,8 @@ class onSubscriptionsSendLetters extends cmsAction {
 
         foreach ($subscriptions_list as $subscription) {
 
-            // получаем урл списка
-            $list_url = $controller->runHook('subscribe_item_url', array($subscription), false);
-            if(!$list_url){ continue; }
-
             // полный урл
-            $list_url = $this->cms_config->host.$list_url;
+            $list_url = rel_to_href($subscription['subject_url'], true);
 
             // получаем совпадения для подписки
             $match_list = $controller->runHook('subscription_match_list', array($subscription, $items), false);

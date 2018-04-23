@@ -70,6 +70,13 @@ class fieldHtml extends cmsFormField {
                 $value .= '<a class="read-more" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
             }
 
+        } else if ($this->getOption('is_html_filter')){
+            $value = cmsEventsManager::hook('html_filter', array(
+                'text'                => $value,
+                'is_auto_br'          => false,
+                'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
+                'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
+            ));
         }
 
         return $value;

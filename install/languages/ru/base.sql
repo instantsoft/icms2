@@ -20,6 +20,7 @@ CREATE TABLE `{#}subscriptions` (
   `title` varchar(100) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `subject` varchar(50) DEFAULT NULL,
+  `subject_url` varchar(255) DEFAULT NULL,
   `params` text,
   `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `hash` varchar(32) DEFAULT NULL,
@@ -94,7 +95,8 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (11, 1, 'groups', 'leave', 'Выход из группы', 'выходит из группы %s'),
 (12, 1, 'users', 'status', 'Изменение статуса', '&rarr; %s'),
 (18, 1, 'photos', 'add.photos', 'Добавление фотографий', 'загружает фото в альбом %s'),
-(19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар');
+(19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар'),
+(20, 1, 'subscriptions', 'subscribe', 'Подписка на контент', 'подписывается на список %s');
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
@@ -751,8 +753,19 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (121, 'ctype_lists_context', 'tags', 121, 1),
 (122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
-(124, 'content_groups_before_delete', 'moderation', 124, 1),
-(125, 'comments_after_refuse', 'moderation', 125, 1);
+(124, 'comments_after_refuse', 'moderation', 124, 1),
+(125, 'subscribe', 'activity', 125, 1),
+(126, 'unsubscribe', 'activity', 126, 1),
+(127, 'admin_subscriptions_list', 'content', 127, 1),
+(128, 'admin_subscriptions_list', 'photos', 128, 1),
+(129, 'user_delete', 'subscriptions', 129, 1),
+(130, 'content_toolbar_html', 'subscriptions', 130, 1),
+(131, 'photos_toolbar_html', 'subscriptions', 131, 1),
+(132, 'content_filter_buttons_html', 'subscriptions', 132, 1),
+(133, 'user_tab_info', 'subscriptions', 133, 1),
+(134, 'content_photos_after_add', 'subscriptions', 134, 1),
+(135, 'user_notify_types', 'subscriptions', 135, 1),
+(136, 'user_tab_show', 'subscriptions', 136, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

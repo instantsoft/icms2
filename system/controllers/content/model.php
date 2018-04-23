@@ -2569,6 +2569,10 @@ class modelContent extends cmsModel {
 
         $item = $this->getItemById($table_name, $id);
 
+        if($item){
+            $item['page_url'] = href_to($ctype_name, $item['slug'].'.html');
+        }
+
         return $item;
 
     }

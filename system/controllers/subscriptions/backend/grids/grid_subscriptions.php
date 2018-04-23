@@ -57,7 +57,7 @@ function grid_subscriptions ($controller){
         array(
             'title' => LANG_VIEW,
             'class' => 'view',
-            'href'  => href_to('subscriptions', 'view_list', '{id}')
+            'href'  => rel_to_href('{subject_url}')
         ),
         array(
             'title'   => LANG_DELETE,

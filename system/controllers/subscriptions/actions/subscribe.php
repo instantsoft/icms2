@@ -150,10 +150,16 @@ class actionSubscriptionsSubscribe extends cmsAction {
                 $this->target['title'] = $subscribe_list_title;
             }
 
-            // подписываем и возвращаем id нового списка, если он ранее не был создан
-            $now_create_list_id = $this->model->subscribe($this->target, $this->subscribe);
+            $list_url = $controller->runHook('subscribe_item_url', array($this->target), false);
 
-            cmsEventsManager::hook('subscribe', array($this->target, $this->subscribe, $now_create_list_id));
+            if($list_url){
+                $this->target['subject_url'] = $list_url;
+            }
+
+            // подписываем и возвращаем id нового списка, если он ранее не был создан
+            list($now_create_list_id, $sid) = $this->model->subscribe($this->target, $this->subscribe);
+
+            cmsEventsManager::hook('subscribe', array($this->target, $this->subscribe, $now_create_list_id, $sid));
 
             // уведомляем администраторов о новом списке, если заголовок неопеределён
             if($now_create_list_id && empty($this->target['title']) && !empty($this->options['admin_email'])){

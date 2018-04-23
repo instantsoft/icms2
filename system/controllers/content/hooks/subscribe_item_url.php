@@ -9,7 +9,7 @@ class onContentSubscribeItemUrl extends cmsAction {
             return false;
         }
 
-        $url = href_to($ctype['name']); $params = array(); $ds = array(); $is_cat_ds = false;
+        $url = href_to_rel($ctype['name']); $params = array(); $ds = array(); $is_cat_ds = false;
 
         if(empty($subscription['params']['filters']) && empty($subscription['params']['field_filters'])){
             return $url;
@@ -35,7 +35,7 @@ class onContentSubscribeItemUrl extends cmsAction {
                     $user = $this->model_users->getUser($filters['value']);
 
                     if($user){
-                        $url = href_to_profile($user, array('content', $ctype['name']));
+                        $url = href_to_rel('users', (empty($user['slug']) ? $user['id'] : $user['slug']), array('content', $ctype['name']));
                     }
 
                     continue;
@@ -59,7 +59,7 @@ class onContentSubscribeItemUrl extends cmsAction {
                     $group = $this->model_groups->getGroup($filters['value']);
 
                     if($group){
-                        $url = href_to('groups', $group['slug'], array('content', $ctype['name']));
+                        $url = href_to_rel('groups', $group['slug'], array('content', $ctype['name']));
                     }
 
                     continue;
@@ -75,7 +75,7 @@ class onContentSubscribeItemUrl extends cmsAction {
                         $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
 
                         if($child_ctype){
-                            $url = href_to($ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
+                            $url = href_to_rel($ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
                         }
 
                     }

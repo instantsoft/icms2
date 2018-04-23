@@ -21,11 +21,10 @@
         if ($ctype['options']['list_on']){
             $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
             $this->addBreadcrumb($list_header, href_to($ctype['name']));
-        }
-
-        if (isset($item['category'])){
-            foreach($item['category']['path'] as $c){
-                $this->addBreadcrumb($c['title'], href_to($ctype['name'], $c['slug']));
+            if (isset($item['category'])){
+                foreach($item['category']['path'] as $c){
+                    $this->addBreadcrumb($c['title'], href_to($ctype['name'], $c['slug']));
+                }
             }
         }
 

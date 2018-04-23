@@ -112,7 +112,7 @@ class cmsFormField {
      * @var array
      */
     public $data = array();
-    
+
     public $visible_depend = array();
 
     /**

@@ -14,7 +14,7 @@
                         <?php html($item['user']['nickname']); ?>
                     </span>
                     <div class="fields">
-                        <a href="<?php echo href_to('subscriptions', 'view_list', $item['subscription_id']); ?>"><?php echo $item['title']; ?></a>
+                        <a href="<?php echo rel_to_href($item['subject_url']); ?>"><?php echo $item['title']; ?></a>
                     </div>
                 </div>
                 <?php if($item['user']['id'] == $user->id){ ?>

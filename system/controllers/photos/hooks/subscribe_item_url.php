@@ -4,7 +4,7 @@ class onPhotosSubscribeItemUrl extends cmsAction {
 
     public function run($subscription){
 
-        $url = href_to($this->name); $params = array();
+        $url = href_to_rel($this->name); $params = array();
 
         if(!empty($subscription['params']['filters'])){
 
@@ -22,7 +22,7 @@ class onPhotosSubscribeItemUrl extends cmsAction {
 
                 if(!$album){ return false; }
 
-                $url = href_to($album['ctype']['name'], $album['slug'].'.html');
+                $url = href_to_rel($album['ctype']['name'], $album['slug'].'.html');
 
                 unset($subscription['params']['filters'][0]);
 

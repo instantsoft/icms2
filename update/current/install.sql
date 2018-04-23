@@ -6,6 +6,7 @@ CREATE TABLE `{#}subscriptions` (
   `title` varchar(100) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `subject` varchar(50) DEFAULT NULL,
+  `subject_url` varchar(255) DEFAULT NULL,
   `params` text,
   `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
   `hash` varchar(32) DEFAULT NULL,

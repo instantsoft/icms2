@@ -18,7 +18,15 @@ class actionSubscriptionsDelete extends cmsAction {
 
         foreach ($items as $id) {
             if(is_numeric($id)){
-                $this->model->deleteSubscriptionsList($id);
+
+                $subscriptions = $this->model->deleteSubscriptionsList($id);
+
+                if($subscriptions){
+                    foreach ($subscriptions as $subscription) {
+                        $this->controller_activity->deleteEntry('subscriptions', 'subscribe', $subscription['id']);
+                    }
+                }
+
             }
         }
 

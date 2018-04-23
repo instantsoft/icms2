@@ -12,7 +12,7 @@ class actionSubscriptionsViewList extends cmsAction {
 
         $list_url = $controller->runHook('subscribe_item_url', array($subscription), false);
 
-        $this->redirect($list_url ? $list_url : href_to_home());
+        $this->redirect($list_url ? rel_to_href($list_url) : href_to_home());
 
     }
 

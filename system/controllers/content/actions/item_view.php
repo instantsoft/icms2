@@ -129,6 +129,8 @@ class actionContentItemView extends cmsAction {
 
             if (!$is_moderator && !$allow_restore){ return cmsCore::error404(); }
 
+            cmsUser::addSessionMessage(LANG_CONTENT_ITEM_IN_TRASH, 'info');
+
         }
 
         // Проверяем ограничения доступа из других контроллеров

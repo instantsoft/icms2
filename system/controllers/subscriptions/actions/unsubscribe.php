@@ -40,9 +40,19 @@ class actionSubscriptionsUnsubscribe extends cmsAction {
 
         }
 
+        $list_item = $this->model->getSubscriptionItem($this->target['hash']);
+
+        if(!$list_item){
+            return $this->cms_template->renderJSON(array(
+                'error' => true
+            ));
+        }
+
         if($this->cms_user->is_logged){
 
             $this->subscribe['user_id'] = $this->cms_user->id;
+
+            $this->subscribe['id'] = $this->model->isUserSubscribed($this->cms_user->id, $list_item['id']);
 
         } else {
 
@@ -70,11 +80,13 @@ class actionSubscriptionsUnsubscribe extends cmsAction {
 
             $this->subscribe['guest_email'] = $subscriber_email;
 
+            $this->subscribe['id'] = $this->model->isGuestSubscribed($subscriber_email, $list_item['id']);
+
         }
 
         $this->model->unsubscribe($this->target, $this->subscribe);
 
-        $list_item = $this->model->getSubscriptionItem($this->target['hash']);
+        cmsEventsManager::hook('unsubscribe', array($this->target, $this->subscribe));
 
         return $this->cms_template->renderJSON(array(
             'errors'       => false,

@@ -18,6 +18,8 @@ class actionSubscriptionsEmailUnsubscribe extends cmsAction {
 
         $this->model->unsubscribe($list_item, $subscription);
 
+        cmsEventsManager::hook('unsubscribe', array($list_item, $subscription));
+
         cmsUser::addSessionMessage(LANG_SBSCR_UNSUBSCRIBE_SUCCESS, 'success');
 
         $this->redirectToAction('view_list', $list_item['id']);

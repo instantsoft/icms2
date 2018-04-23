@@ -1001,9 +1001,7 @@ class content extends cmsFrontend {
 
         foreach ($fields as $field) {
 
-            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { $_item[$field['name']] = ''; continue; }
-
-            if (!$field['is_in_item'] || !isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
                 $_item[$field['name']] = ''; continue;

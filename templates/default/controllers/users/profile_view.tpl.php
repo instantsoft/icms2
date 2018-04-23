@@ -26,43 +26,6 @@
                 <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
             </div>
         <?php } ?>
-
-        <?php if ($content_counts) { ?>
-            <div class="block">
-                <ul class="content_counts">
-                    <?php foreach($content_counts as $ctype_name=>$count){ ?>
-                        <?php if (!$count['is_in_list']) { continue; } ?>
-                        <li>
-                            <a href="<?php echo href_to('users', $profile['id'], array('content', $ctype_name)); ?>">
-                                <?php html($count['title']); ?>
-                                <span class="counter"><?php html($count['count']); ?></span>
-                            </a>
-                        </li>
-                    <?php } ?>
-                </ul>
-            </div>
-        <?php } ?>
-
-        <?php if ($is_friends_on && $friends) { ?>
-            <div class="block">
-                <div class="block-title">
-                    <?php if($show_all_flink){ ?>
-                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
-                    <?php } else { ?>
-                        <?php echo LANG_USERS_FRIENDS; ?>
-                    <?php } ?>
-                    (<?php echo $profile['friends_count']; ?>)
-                </div>
-                <div class="friends-list">
-                    <?php foreach($friends as $friend){ ?>
-                        <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
-                        </a>
-                    <?php } ?>
-                </div>
-            </div>
-        <?php } ?>
-
         <div class="block">
             <ul class="details">
                 <li>
@@ -83,6 +46,40 @@
                 <?php } ?>
             </ul>
         </div>
+        <?php if ($content_counts) { ?>
+            <div class="block">
+                <ul class="content_counts">
+                    <?php foreach($content_counts as $ctype_name=>$count){ ?>
+                        <?php if (!$count['is_in_list']) { continue; } ?>
+                        <li>
+                            <a href="<?php echo href_to('users', $profile['id'], array('content', $ctype_name)); ?>">
+                                <?php html($count['title']); ?>
+                                <span class="counter"><?php html($count['count']); ?></span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </div>
+        <?php } ?>
+        <?php if ($is_friends_on && $friends) { ?>
+            <div class="block">
+                <div class="block-title">
+                    <?php if($show_all_flink){ ?>
+                        <a href="<?php echo $this->href_to($profile['id'], 'friends'); ?>"><?php echo LANG_USERS_FRIENDS; ?></a>
+                    <?php } else { ?>
+                        <?php echo LANG_USERS_FRIENDS; ?>
+                    <?php } ?>
+                    (<?php echo $profile['friends_count']; ?>)
+                </div>
+                <div class="friends-list">
+                    <?php foreach($friends as $friend){ ?>
+                        <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
+                        </a>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
 
     </div>
 

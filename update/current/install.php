@@ -1,11 +1,15 @@
 <?php
 /**
- * 2.9.0 => 2.9.1
+ * 2.9.0 => 2.10
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    if(!$core->db->getRowsCount('activity_types', "controller = 'subscriptions' AND name = 'subscribe'")){
+        $core->db->query("INSERT INTO `{#}activity_types` (`is_enabled`, `controller`, `name`, `title`, `description`) VALUES (1, 'subscriptions', 'subscribe', 'Подписка на контент', 'подписывается на список %s');");
+    }
 
     $core->db->query("ALTER TABLE `{#}controllers` CHANGE `files` `files` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT 'Список файлов контроллера (для стороних компонентов)';");
 

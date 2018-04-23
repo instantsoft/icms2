@@ -501,7 +501,13 @@ class modelPhotos extends cmsModel{
 
     public function getRatingTarget($subject, $id){
 
-        return $this->getPhoto($id);
+        $item = $this->getPhoto($id);
+
+        if($item){
+            $item['page_url'] = href_to('photos', $item['slug'].'.html');
+        }
+
+        return $item;
 
     }
 
