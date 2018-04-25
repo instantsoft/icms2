@@ -55,7 +55,7 @@ $(document).ready(function(){
             var tabs = $(this);
 
             var dropdown = $("<select>").prependTo(tabs);
-            $("ul > li > a", tabs).each(function() {
+            $("> ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
                     value   : el.attr('href'),
