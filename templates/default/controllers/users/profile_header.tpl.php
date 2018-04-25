@@ -42,7 +42,7 @@
                             <?php } ?>
                         </span>
                     <?php } ?>
-                    <?php if ($profile['id'] == $user->id) { ?>
+		<?php if ($profile['id'] == $user->id or $user->is_admin) { ?>
                         <span class="delete">
                             <a href="#delete-status" onclick="return icms.users.deleteStatus(this)" data-url="<?php echo $this->href_to('status_delete', $profile['id']); ?>"><?php echo LANG_DELETE; ?></a>
                         </span>
@@ -84,10 +84,12 @@
 
 </div>
 
-<?php if ($this->controller->options['is_status'] && $profile['id'] == $user->id) { ?>
+     <?php if ($this->controller->options['is_status'] && $profile['id'] == $user->id or $user->is_admin) { ?>
     <script><?php
         echo $this->getLangJS('LANG_REPLY', 'LANG_USERS_DELETE_STATUS_CONFIRM');
     ?></script>
+	<?php } ?>
+     <?php if ($this->controller->options['is_status'] && $profile['id'] == $user->id) { ?>
     <div id="user_status_widget">
         <?php
             echo html_input('text', 'status', '', array(
@@ -98,6 +100,7 @@
             ));
         ?>
     </div>
+ 
 <?php } ?>
 
 <?php if (!isset($is_can_view) || $is_can_view){ ?>
