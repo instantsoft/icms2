@@ -6,6 +6,7 @@
     $this->addMenuItems('controller_actions_menu', $this->controller->getToolButtons($group));
 
     $this->setPagePatternTitle($group);
+    if(!empty($filter_titles)){ $this->addToPageTitle(implode(', ', $filter_titles)); }
     $this->setPagePatternDescription($group);
 
 ?>

@@ -502,12 +502,17 @@ class cmsTemplate {
 	 * @param string $pagetitle Заголовок
 	 */
 	public function setPageTitle($pagetitle){
-        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', array_filter(func_get_args())); }
         if (is_array($pagetitle)){ $pagetitle = implode(' ', $pagetitle); }
         $this->title = $pagetitle;
         if($this->site_config->is_sitename_in_title){
             $this->title .= ' — '.$this->site_config->sitename;
         }
+        return $this;
+	}
+
+	public function addToPageTitle($title){
+        $this->title .= ' '.$title;
         return $this;
 	}
 

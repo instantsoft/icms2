@@ -199,6 +199,7 @@ class actionContentCategoryView extends cmsAction {
         }
 
         return $this->cms_template->render($tpl_file, array(
+            'filter_titles'   => $this->getFilterTitles(),
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,

@@ -39,6 +39,14 @@ class onSubscriptionsSendLetters extends cmsAction {
                 continue;
             }
 
+            list($subscription,
+                    $subscribers,
+                    $match_list) = cmsEventsManager::hook('notify_subscribers', array(
+                        $subscription,
+                        $subscribers,
+                        $match_list
+                    ));
+
             // ссылки на новые записи
             $links = array();
 

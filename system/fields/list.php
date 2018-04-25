@@ -55,11 +55,17 @@ class fieldList extends cmsFormField {
     public function getStringValue($value){
 
         $items = $this->getListItems();
-        $item  = '';
+        $item  = array();
 
-        if (isset($items[$value])) { $item = $items[$value]; }
+        if(!is_array($value)){
+            $value = array($value);
+        }
 
-        return $item;
+        foreach ($value as $val) {
+            if (isset($items[$val])) { $item[] = $items[$val]; }
+        }
+
+        return implode(', ', $item);
 
     }
 

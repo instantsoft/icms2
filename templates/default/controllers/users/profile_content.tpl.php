@@ -8,12 +8,12 @@
 
         $this->addBreadcrumb($folders[$folder_id]['title']);
 
-        $this->setPageTitle($list_header, $folders[$folder_id]['title'], $profile['nickname']);
+        $this->setPageTitle($list_header, implode(', ', $filter_titles), $folders[$folder_id]['title'], $profile['nickname']);
         $this->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$folder_id]['title']);
 
     } else {
 
-        $this->setPageTitle($list_header, $profile['nickname']);
+        $this->setPageTitle($list_header, implode(', ', $filter_titles), $profile['nickname']);
         $this->setPageDescription($profile['nickname'].' — '.$list_header);
 
     }

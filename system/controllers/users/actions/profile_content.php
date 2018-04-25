@@ -124,6 +124,7 @@ class actionUsersProfileContent extends cmsAction {
         )));
 
         return $this->cms_template->render('profile_content', array(
+            'filter_titles'   => $this->controller_content->getFilterTitles(),
             'user'            => $this->cms_user,
             'toolbar_html'    => $toolbar_html,
             'id'              => $profile['id'],

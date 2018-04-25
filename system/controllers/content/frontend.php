@@ -8,6 +8,8 @@ class content extends cmsFrontend {
 
     private $check_list_perm = true;
 
+    private $filter_titles = array();
+
 //============================================================================//
 //============================================================================//
 
@@ -163,6 +165,10 @@ class content extends cmsFrontend {
 
     }
 
+    public function getFilterTitles() {
+        return $this->filter_titles;
+    }
+
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
@@ -192,7 +198,15 @@ class content extends cmsFrontend {
 			if (!$value) { continue; }
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
+
                 $filters[$name] = $value;
+
+                $filter_title = $field['handler']->getStringValue($value);
+
+                if($filter_title){
+                    $this->filter_titles[] = mb_strtolower($field['title'].' '.$filter_title);
+                }
+
             }
 
 		}
@@ -214,6 +228,12 @@ class content extends cmsFrontend {
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
                     $filters[$name] = $value;
+
+                    $filter_title = $prop['handler']->getStringValue($value);
+
+                    if($filter_title){
+                        $this->filter_titles[] = mb_strtolower($prop['title'].' '.$filter_title);
+                    }
 
                 }
 

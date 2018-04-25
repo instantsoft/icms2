@@ -765,7 +765,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (133, 'user_tab_info', 'subscriptions', 133, 1),
 (134, 'content_photos_after_add', 'subscriptions', 134, 1),
 (135, 'user_notify_types', 'subscriptions', 135, 1),
-(136, 'user_tab_show', 'subscriptions', 136, 1);
+(136, 'user_tab_show', 'subscriptions', 136, 1),
+(137, 'content_after_add_approve', 'subscriptions', 137, 1),
+(138, 'publish_delayed_content', 'subscriptions', 138, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

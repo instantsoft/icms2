@@ -1,5 +1,5 @@
 <div id="group_profile_header">
-    <?php $this->renderChild('group_header', array('group' => $group)); ?>
+    <?php $this->renderChild('group_header', array('group' => $group, 'filter_titles' => $filter_titles)); ?>
 </div>
 <?php
     if ($toolbar_html) {

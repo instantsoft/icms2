@@ -70,7 +70,7 @@ CREATE TABLE `{#}activity` (
   KEY `group_id` (`group_id`),
   KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `is_pub` (`is_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Лента активности';
 
 DROP TABLE IF EXISTS `{#}activity_types`;
 CREATE TABLE `{#}activity_types` (
@@ -84,7 +84,7 @@ CREATE TABLE `{#}activity_types` (
   KEY `is_enabled` (`is_enabled`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы записей в ленте активности';
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
@@ -189,7 +189,7 @@ CREATE TABLE `{#}content_folders` (
   `title` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`ctype_id`,`title`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Папки для записей типов контента';
 
 DROP TABLE IF EXISTS `{#}content_relations`;
 CREATE TABLE `{#}content_relations` (
@@ -207,7 +207,7 @@ CREATE TABLE `{#}content_relations` (
   PRIMARY KEY (`id`),
   KEY `ctype_id` (`ctype_id`,`ordering`),
   KEY `child_ctype_id` (`child_ctype_id`,`target_controller`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Свзяи типов контента';
 
 DROP TABLE IF EXISTS `{#}content_relations_bind`;
 CREATE TABLE `{#}content_relations_bind` (
@@ -765,7 +765,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (133, 'user_tab_info', 'subscriptions', 133, 1),
 (134, 'content_photos_after_add', 'subscriptions', 134, 1),
 (135, 'user_notify_types', 'subscriptions', 135, 1),
-(136, 'user_tab_show', 'subscriptions', 136, 1);
+(136, 'user_tab_show', 'subscriptions', 136, 1),
+(137, 'content_after_add_approve', 'subscriptions', 137, 1),
+(138, 'publish_delayed_content', 'subscriptions', 138, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -865,7 +867,7 @@ CREATE TABLE `{#}groups_member_roles` (
   `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`,`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Роли участников групп';
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -886,7 +888,7 @@ CREATE TABLE `{#}images_presets` (
   KEY `is_square` (`is_square`),
   KEY `is_watermark` (`is_watermark`),
   KEY `is_internal` (`is_internal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Пресеты для конвертации изображений';
 
 INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`) VALUES
 (1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75),
@@ -963,7 +965,7 @@ CREATE TABLE `{#}moderators` (
   KEY `user_id` (`user_id`),
   KEY `ctype_name` (`ctype_name`),
   KEY `count_idle` (`count_idle`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Модераторы';
 
 DROP TABLE IF EXISTS `{#}moderators_tasks`;
 CREATE TABLE `{#}moderators_tasks` (
@@ -983,7 +985,7 @@ CREATE TABLE `{#}moderators_tasks` (
   KEY `date_pub` (`date_pub`),
   KEY `item_id` (`item_id`),
   KEY `is_new` (`is_new_item`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Задачи модераторов';
 
 DROP TABLE IF EXISTS `{#}moderators_logs`;
 CREATE TABLE `{#}moderators_logs` (
@@ -1002,7 +1004,7 @@ CREATE TABLE `{#}moderators_logs` (
   KEY `target_id` (`target_id`,`target_subject`,`target_controller`),
   KEY `author_id` (`author_id`),
   KEY `date_expired` (`date_expired`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Логи модерации';
 
 DROP TABLE IF EXISTS `{#}perms_rules`;
 CREATE TABLE `{#}perms_rules` (
@@ -1154,7 +1156,7 @@ CREATE TABLE `{#}photos` (
   KEY `camera` (`camera`),
   KEY `ordering` (`ordering`),
   FULLTEXT KEY `title` (`title`,`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Фотографии фотоальбомов';
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -1193,7 +1195,7 @@ CREATE TABLE `{#}rss_feeds` (
   KEY `is_cache` (`is_cache`),
   KEY `cache_interval` (`cache_interval`),
   KEY `date_cached` (`date_cached`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='RSS ленты';
 
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
 (1, NULL, 'comments', 'Комментарии', NULL, NULL, '---\r\ntitle: target_title\r\ndescription: content_html\r\npubDate: date_pub\r\n', 15, 1, NULL, 60, NULL),
@@ -1214,7 +1216,7 @@ CREATE TABLE `{#}scheduler_tasks` (
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
   KEY `is_active` (`is_active`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Задачи планировщика';
 
 INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES
 (1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, NULL, 1, 0),
@@ -1233,7 +1235,7 @@ CREATE TABLE `{#}sessions_online` (
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY `user_id` (`user_id`),
   KEY `date_created` (`date_created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Онлайн сессии';
 
 DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
@@ -1278,7 +1280,7 @@ CREATE TABLE `{#}uploaded_files` (
   UNIQUE KEY `path` (`path`),
   KEY `user_id` (`user_id`),
   KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Загруженные файлы';
 
 DROP TABLE IF EXISTS `{#}users`;
 CREATE TABLE `{#}users` (
@@ -1477,7 +1479,7 @@ CREATE TABLE `{#}users_ignors` (
   PRIMARY KEY (`id`),
   KEY `ignored_user_id` (`ignored_user_id`,`user_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Списки игнорирования';
 
 DROP TABLE IF EXISTS `{#}users_invites`;
 CREATE TABLE `{#}users_invites` (
@@ -1489,7 +1491,7 @@ CREATE TABLE `{#}users_invites` (
   KEY `user_id` (`user_id`),
   KEY `email` (`email`),
   KEY `key` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Выданные инвайты';
 
 DROP TABLE IF EXISTS `{#}users_karma`;
 CREATE TABLE `{#}users_karma` (
@@ -1531,7 +1533,7 @@ CREATE TABLE `{#}users_notices` (
   `actions` text,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`date_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Уведомления пользователей';
 
 DROP TABLE IF EXISTS `{#}users_statuses`;
 CREATE TABLE `{#}users_statuses` (
@@ -1562,7 +1564,7 @@ CREATE TABLE `{#}users_tabs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `is_active` (`is_active`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Табы профилей';
 
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES
 (1, 'Лента', 'activity', 'activity', 1, 1),
@@ -1581,7 +1583,7 @@ CREATE TABLE `{#}users_personal_settings` (
   `settings` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`skey`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Универсальные персональные настройки пользователей';
 
 DROP TABLE IF EXISTS `{#}users_auth_tokens`;
 CREATE TABLE `{#}users_auth_tokens` (
@@ -1595,7 +1597,7 @@ CREATE TABLE `{#}users_auth_tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_token` (`auth_token`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Токены авторизации';
 
 DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
@@ -1633,7 +1635,7 @@ CREATE TABLE `{#}widgets` (
   KEY `version` (`version`),
   KEY `name` (`name`),
   KEY `controller` (`controller`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Доступные виджеты CMS';
 
 INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES
 (1, NULL, 'text', 'Текстовый блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),

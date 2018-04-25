@@ -15,6 +15,9 @@ class onContentSubscribeItemUrl extends cmsAction {
             return $url;
         }
 
+        // id категории для свойств
+        $category_id = 0;
+
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
@@ -27,7 +30,7 @@ class onContentSubscribeItemUrl extends cmsAction {
 
         if(!empty($subscription['params']['filters'])){
 
-            foreach ($subscription['params']['filters'] as $filters) {
+            foreach ($subscription['params']['filters'] as $key => $filters) {
 
                 // пользователь
                 if($filters['field'] == 'user_id'){
@@ -54,7 +57,7 @@ class onContentSubscribeItemUrl extends cmsAction {
 
                 }
                 // группа
-                if($filters['field'] == 'parent_id' && $target['params']['filters'][$key+1]['value'] == 'group'){
+                if($filters['field'] == 'parent_id' && $subscription['params']['filters'][$key+1]['value'] == 'group'){
 
                     $group = $this->model_groups->getGroup($filters['value']);
 
@@ -72,10 +75,16 @@ class onContentSubscribeItemUrl extends cmsAction {
 
                     if($item){
 
-                        $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
+                        $parent_ctype = $this->model->getContentType($filters['value']['parent_ctype_id']);
 
-                        if($child_ctype){
-                            $url = href_to_rel($ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
+                        if($parent_ctype){
+
+                            $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
+
+                            if($child_ctype){
+                                $url = href_to_rel($parent_ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
+                            }
+
                         }
 
                     }
@@ -100,6 +109,8 @@ class onContentSubscribeItemUrl extends cmsAction {
 
                         $url .= '/'.$cat['slug'];
 
+                        $category_id = $cat['id'];
+
                     }
 
                     continue;
@@ -118,12 +129,41 @@ class onContentSubscribeItemUrl extends cmsAction {
 
         }
 
+        // Получаем поля-свойства
+        $props = $props_fields = false;
+        if ($category_id > 1){
+            $props = $this->model->getContentProps($ctype['name'], $category_id);
+            if($props){
+                $props_fields = $this->getPropsFields($props);
+            }
+        }
+
         if(!empty($subscription['params']['field_filters'])){
 
             foreach ($subscription['params']['field_filters'] as $field_name => $field_value) {
-                if(isset($fields[$field_name])){
-                    $params[$field_name] = $field_value;
+
+                $matches = array();
+
+                // свойства или поля
+                if(preg_match('/^p([0-9]+)$/i', $field_name, $matches)){
+
+                    // нет свойств
+                    if (!is_array($props)){
+                        continue;
+                    }
+
+                    // нет такого свойства
+                    if(!isset($props_fields[$matches[1]])){ continue; }
+
+                } else {
+
+                    // нет такого поля
+                    if(!isset($fields[$field_name])){ continue; }
+
                 }
+
+                $params[$field_name] = $field_value;
+
             }
 
         }

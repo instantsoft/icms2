@@ -6,17 +6,6 @@ class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
 
         list($ctype_name, $form_url, $filters) = $data;
 
-        // для связей делаем вот такой финт
-        if(strpos($form_url, '/view-'.$ctype_name) !== false){
-
-            $ctype = cmsModel::getCachedResult('current_ctype');
-
-            if($ctype){
-                $ctype_name = $ctype['name'];
-            }
-
-        }
-
         $params = array(
             'field_filters' => $filters,
             'filters'       => array(),

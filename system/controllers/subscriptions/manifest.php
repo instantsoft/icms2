@@ -9,6 +9,8 @@
             'content_filter_buttons_html',
             'user_tab_info',
             'content_photos_after_add',
+            'content_after_add_approve',
+            'publish_delayed_content',
             'user_notify_types',
             'user_tab_show'
         )

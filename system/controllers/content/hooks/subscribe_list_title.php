@@ -16,6 +16,9 @@ class onContentSubscribeListTitle extends cmsAction {
             return $result_title;
         }
 
+        // id категории для свойств
+        $category_id = 0;
+
         // Получаем поля для данного типа контента
         $fields = $this->model->getContentFields($ctype['name']);
 
@@ -66,12 +69,21 @@ class onContentSubscribeListTitle extends cmsAction {
 
                     if($item){
 
-                        $titles[] = mb_strtolower($item['title']);
+                        // для связей стартовое название меняем на родительское
+                        $parent_ctype = $this->model->getContentType($filters['value']['parent_ctype_id']);
 
-                        $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
+                        if($parent_ctype){
 
-                        if($child_ctype){
-                            $titles[] = mb_strtolower($child_ctype['title']);
+                            $result_title = $parent_ctype['title'];
+
+                            $titles[] = mb_strtolower($item['title']);
+
+                            $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
+
+                            if($child_ctype){
+                                $titles[] = mb_strtolower($child_ctype['title']);
+                            }
+
                         }
 
                     }
@@ -85,7 +97,11 @@ class onContentSubscribeListTitle extends cmsAction {
                     $cat = $this->model->getCategory($ctype['name'], $filters['value']);
 
                     if($cat){
+
                         $titles[] = mb_strtolower($cat['title']);
+
+                        $category_id = $cat['id'];
+
                     }
 
                     continue;
@@ -97,7 +113,7 @@ class onContentSubscribeListTitle extends cmsAction {
                     $result = $fields[$filters['field']]['handler']->getStringValue($filters['value']);
 
                     if($result){
-                        $titles[] = mb_strtolower($fields[$filters['field']]['title'].': '.$result);
+                        $titles[] = mb_strtolower($fields[$filters['field']]['title'].' '.$result);
                     }
 
                 }
@@ -105,32 +121,69 @@ class onContentSubscribeListTitle extends cmsAction {
 
         }
 
+        // Получаем поля-свойства
+        $props = $props_fields = false;
+        if ($category_id > 1){
+            $props = $this->model->getContentProps($ctype['name'], $category_id);
+            if($props){
+                $props_fields = $this->getPropsFields($props);
+            }
+        }
+
         if(!empty($target['params']['field_filters'])){
 
             foreach ($target['params']['field_filters'] as $field_name => $field_value) {
-                if(isset($fields[$field_name])){
 
-                    if($fields[$field_name]['handler']->getDefaultVarType(true) !== 'array' && is_array($field_value)){
-                        foreach ($field_value as $field_val) {
+                $matches = array();
 
-                            $result = $fields[$field_name]['handler']->getStringValue($field_val);
+                // свойства или поля
+                if(preg_match('/^p([0-9]+)$/i', $field_name, $matches)){
 
-                            if($result){
-                                $titles[] = mb_strtolower($fields[$field_name]['title'].': '.$result);
-                            }
+                    // нет свойств
+                    if (!is_array($props)){
+                        continue;
+                    }
 
-                        }
-                    } else {
+                    // нет такого свойства
+                    if(!isset($props_fields[$matches[1]])){ continue; }
 
-                        $result = $fields[$field_name]['handler']->getStringValue($field_value);
+                    $handler = $props_fields[$matches[1]];
+
+                    $field_title = $props[$matches[1]]['title'];
+
+                } else {
+
+                    // нет такого поля
+                    if(!isset($fields[$field_name])){ continue; }
+
+                    $handler = $fields[$field_name]['handler'];
+
+                    $field_title = $fields[$field_name]['title'];
+
+                }
+
+                $handler->setItem(array('ctype_name' => $ctype['name'], 'id' => null));
+
+                if($handler->getDefaultVarType(true) !== 'array' && is_array($field_value)){
+                    foreach ($field_value as $field_val) {
+
+                        $result = $handler->getStringValue($field_val);
 
                         if($result){
-                            $titles[] = mb_strtolower($fields[$field_name]['title'].': '.$result);
+                            $titles[] = mb_strtolower($field_title.' '.$result);
                         }
 
                     }
+                } else {
+
+                    $result = $handler->getStringValue($field_value);
+
+                    if($result){
+                        $titles[] = mb_strtolower($field_title.' '.$result);
+                    }
 
                 }
+
             }
 
         }

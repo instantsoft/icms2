@@ -96,7 +96,7 @@ class actionContentItemChildsView extends cmsAction {
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook('content_childs_view', array($ctype, $item, $child_ctype, $childs));
         list($ctype, $item, $child_ctype, $childs) = cmsEventsManager::hook("content_{$ctype['name']}_childs_view", array($ctype, $item, $child_ctype, $childs));
 
-        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($child_ctype['name'], array(), $current_dataset, array(
             array(
                 'field'     => 'relation',
                 'condition' => 'inner',

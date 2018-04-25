@@ -22,6 +22,30 @@ class fieldParent extends cmsFormField {
 
     }
 
+    public function getStringValue($value){
+
+        if (!$value){
+            return '';
+        }
+
+        $parent_ctype_name = $this->getParentContentTypeName();
+
+        $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
+
+        if (!$parent_items){
+            return '';
+        }
+
+		$result = array();
+
+		foreach($parent_items as $parent_item) {
+			$result[] = $parent_item['title'];
+		}
+
+		return $result ? implode(', ', $result) : '';
+
+    }
+
     public function parse($value){
 
 		$parent_items = false;

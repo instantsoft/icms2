@@ -15,6 +15,7 @@
 		if (!$seo_title) { $seo_title = $page_header; }
         if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
         if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
+        if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
 
         $this->setPageTitle($seo_title);
 

@@ -205,7 +205,10 @@ class fieldNumber extends cmsFormField {
     }
 
     private function formatFloatValue($value) {
-        return rtrim(number_format((float)$value, $this->getOption('decimal_s'), '.', ''), 0);
+        if(strpos($value, '.') !== false){
+            return rtrim(number_format((float)$value, $this->getOption('decimal_s'), '.', ''), '0.');
+        }
+        return $value;
     }
 
 }
