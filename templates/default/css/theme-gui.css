@@ -1056,31 +1056,18 @@ form .child_field{padding-left:20px}
 .qq-uploader { position:relative; width: 100%; box-sizing: border-box; height: 100%;}
 
 .qq-upload-button {
-	-moz-box-shadow:inset 0px 1px 0px 0px #FFF;
-	-webkit-box-shadow:inset 0px 1px 0px 0px #FFF;
-	box-shadow:inset 0px 1px 0px 0px #FFF;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #f9f9f9), color-stop(1, #EDEDED) );
-	background:-moz-linear-gradient( center top, #f9f9f9 5%, #EDEDED 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#EDEDED');
-	background-color:#f9f9f9;
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	border-radius:6px;
-	border:1px solid #DDDDDD;
+	background-color:#eee;
+	border:1px solid #aaa;
 	display:inline-block;
-	color:#666666;
-	font-family:arial;
-	font-size:15px;
+	color:#555;
 	font-weight:bold;
 	padding:6px 24px;
 	text-decoration:none;
 	text-shadow:1px 1px 0px #FFF;
+    transition: background-color 0.3s ease;
 }
 .qq-upload-button-hover {
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #EDEDED), color-stop(1, #f9f9f9) );
-	background:-moz-linear-gradient( center top, #EDEDED 5%, #f9f9f9 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#EDEDED', endColorstr='#f9f9f9');
-	background-color:#EDEDED;
+	background-color:#dcdcdc;
 }
 .qq-upload-button-focus {
 	position:relative;
