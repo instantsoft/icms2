@@ -6,6 +6,17 @@ class onSubscriptionsContentFilterButtonsHtml extends cmsAction {
 
         list($ctype_name, $form_url, $filters) = $data;
 
+        $ctype = $this->model_content->getContentTypeByName($ctype_name);
+        if(!$ctype){
+            return '';
+        }
+
+        if(array_key_exists('enable_subscriptions', $ctype['options'])){
+            if(!$ctype['options']['enable_subscriptions']){
+                return '';
+            }
+        }
+
         $params = array(
             'field_filters' => $filters,
             'filters'       => array(),

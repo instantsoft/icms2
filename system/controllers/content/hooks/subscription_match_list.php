@@ -97,9 +97,19 @@ class onContentSubscriptionMatchList extends cmsAction {
         // нам нужны только записи, id которых передали
         $this->model->filterIn('id', $item_ids);
 
-        // категория рекурсивно
+        // категория
         if (!empty($category['id']) && $category['id'] > 1){
-            $this->model->filterCategory($ctype['name'], $category, true);
+
+            // рекурсивность
+            $is_recursive = true;
+            if(array_key_exists('subscriptions_recursive_categories', $ctype['options'])){
+                if(!$ctype['options']['subscriptions_recursive_categories']){
+                    $is_recursive = false;
+                }
+            }
+
+            $this->model->filterCategory($ctype['name'], $category, $is_recursive);
+
         }
 
         // фильтр по связям

@@ -93,7 +93,7 @@ class actionSubscriptionsUnsubscribe extends cmsAction {
             'error'        => false,
             'callback'     => 'successSubscribe',
             'is_subscribe' => 0,
-            'count'        => $list_item['subscribers_count']
+            'count'        => ($list_item['subscribers_count']-1)
         ));
 
     }

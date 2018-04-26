@@ -75,3 +75,13 @@
     width: 460px;
     padding: 10px 20px;
 }
+.subscriptions_buttons .subscribe_wrap {
+    float: none;
+    margin: 0;
+}
+.subscriptions_buttons_item {
+    margin: 0 0 10px 0;
+}
+.subscriptions_buttons_item:last-child {
+    margin-bottom: 0;
+}

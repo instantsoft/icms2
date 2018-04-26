@@ -18,3 +18,5 @@ define('LANG_SBSCR_NOTIFY_NEW', 'Notify about new entries in subscriptions');
 define('LANG_SBSCR_DELETE_CONFIRM', 'Delete this list?\nAll subscribers will be unsubscribed.');
 define('LANG_SBSCR_PM_NOTIFY', 'Update in your subscription list «<a href="%s">%s</a>»: %s.');
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'You successfully unsubscribed from the subscription');
+define('LANG_SBSCR_CTYPE_ON', 'Enable Subscriptions');
+define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Include nested categories');

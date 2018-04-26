@@ -216,6 +216,8 @@ class actionPhotosView extends cmsAction {
 
         }
 
+        cmsModel::cacheResult('current_photo_item', array($album, $photo));
+
         return $this->cms_template->render($tpl, array(
             'photos_url_params' => $photos_url_params,
             'next_photo'    => $next_photo,

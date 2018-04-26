@@ -6,6 +6,17 @@ class onSubscriptionsContentToolbarHtml extends cmsAction {
 
         list($ctype_name, $category, $current_dataset, $filters) = $data;
 
+        $ctype = $this->model_content->getContentTypeByName($ctype_name);
+        if(!$ctype){
+            return '';
+        }
+
+        if(array_key_exists('enable_subscriptions', $ctype['options'])){
+            if(!$ctype['options']['enable_subscriptions']){
+                return '';
+            }
+        }
+
         // если есть фильтрация по юзеру, не показываем автору
         if($filters){
             foreach($filters as $fkey => $f){

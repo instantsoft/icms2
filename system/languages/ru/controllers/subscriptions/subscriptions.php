@@ -18,3 +18,5 @@ define('LANG_SBSCR_NOTIFY_NEW', 'Уведомлять о новых запися
 define('LANG_SBSCR_DELETE_CONFIRM', 'Удалить этот список?\nВсе подписчики будут отписаны.');
 define('LANG_SBSCR_PM_NOTIFY', 'Обновление в вашем списке подписки «<a href="%s">%s</a>»: %s.');
 define('LANG_SBSCR_UNSUBSCRIBE_SUCCESS', 'Вы успешно отписались от подписки');
+define('LANG_SBSCR_CTYPE_ON', 'Включить подписки');
+define('LANG_SBSCR_CTYPE_RECURSIVE_CATEGORIES', 'Учитывать вложенные категории');

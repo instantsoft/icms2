@@ -4,6 +4,10 @@ for (var i = 0; i < oScripts.length; i++) {
     var sSrc = oScripts[i].src.toLowerCase();
     if (sSrc.indexOf('scripts/innovaeditor.js') !== -1) {
         sEditorPath = oScripts[i].src.replace(/innovaeditor.js/, "");
+        if (sEditorPath.indexOf('?') !== -1) {
+            sEditorPath = sEditorPath.split('?')[0];
+            oScripts[i].src = sEditorPath+'innovaeditor.js';
+        }
     }
 }
 

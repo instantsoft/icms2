@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'ctype_basic_form',
             'user_delete',
             'content_toolbar_html',
             'photos_toolbar_html',
