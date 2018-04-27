@@ -385,6 +385,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile theme');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
+    define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumbs?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');

@@ -1254,9 +1254,13 @@ form .child_field{padding-left:20px}
     margin: -15px 0 0 0;
 }
 #comments_widget #comments_add_link {
-    margin: 10px 0;
+    margin: 0 0 10px 0;
+    clear: both;
     padding-left:20px;
     background: url("../images/icons/comment.png") no-repeat left center;
+}
+#comments_widget #comments_add_link:first-child {
+    margin-top: 15px;
 }
 #comments_widget #comments_add_link a { font-size:14px; }
 
@@ -1315,6 +1319,9 @@ form .child_field{padding-left:20px}
 }
 #comments_list .comment:first-child {
     margin-top: 0;
+}
+#comments_list .comment:last-child {
+    margin-bottom: 0;
 }
 #comments_list .comment.selected-comment:first-child {
     margin-top: 13px;
@@ -1488,9 +1495,11 @@ form .child_field{padding-left:20px}
     margin:15px 0;
     background:#ecf0f1;
     padding:15px;
-    border-radius: 4px;
+    clear: both;
 }
-
+#comments_add_link + #comments_add_form {
+    margin:0;
+}
 #wall_widget #wall_add_form textarea{
     height:100px;
     margin-bottom:4px;

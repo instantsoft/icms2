@@ -414,7 +414,12 @@ article div.content_categories:last-child {
     display: inline-block;
 }
 #comments_widget .content_list_rss_icon {
-    margin: 6px 0 0 15px;
+    height: 30px;
+    margin: 0 0 0 10px;
+}
+#comments_widget .content_list_rss_icon a {
+    height:100%;
+    background-position: center center;
 }
 .content_list_styles .style_switch {
     display: inline-block;

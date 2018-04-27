@@ -42,7 +42,7 @@ icms.comments = (function ($) {
         if (parent_id == 0){
 
             $('#comments_widget #comments_add_link').hide();
-            form.detach().appendTo('#comments_widget');
+            form.detach().insertBefore('#comments_list');
 
         } else {
 

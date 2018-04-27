@@ -386,6 +386,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
+    define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');

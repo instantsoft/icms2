@@ -21,7 +21,11 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
         <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
     </div>
 <?php } ?>
-
+<?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
+    <div id="comments_add_link">
+        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
+    </div>
+<?php } ?>
 <div id="comments_list">
 
     <?php if (!$comments){ ?>
@@ -60,10 +64,6 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 ></div>
 
 <?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
-    <div id="comments_add_link">
-        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
-    </div>
-
     <div id="comments_add_form">
         <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
             <div class="preview_box"></div>

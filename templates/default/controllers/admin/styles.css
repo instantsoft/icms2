@@ -1,6 +1,3 @@
-/* ========================================================================== */
-/* ========================================================================== */
-
 html, body {
     padding:0; margin:0;
     font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
@@ -1915,7 +1912,10 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     line-height:25px;
     margin-left:10px;
     background:url("../../images/icons/page_gear.png") no-repeat left center;
-    display: block;
+    display: inline-block;
+}
+#site_settings #f_template .hint a.inthemer {
+    background:url("../../images/icons/package_go.png") no-repeat left center;
 }
 #site_settings #f_merge_js label, #site_settings #f_merge_css label {display: inline-block;}
 .symbols_count {
