@@ -1962,16 +1962,19 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     box-sizing: border-box;
     margin-right: -20px;
     margin-top: -20px;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
 }
 #dashboard .col, .colplaceholder {
     vertical-align: top;
     border:solid 1px #EDEDED;
     box-sizing: border-box;
-    float: left;
     margin-right: 20px;
     margin-top: 20px;
     background: #FFF;
     position: relative;
+    max-height: 520px;
 }
 #dashboard .col:hover {
     box-shadow: 0px 0px 10px #DDD;

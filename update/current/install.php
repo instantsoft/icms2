@@ -74,6 +74,8 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES ('auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);");
     }
 
+    $core->db->query("UPDATE `{#}controllers` SET `options` = NULL WHERE `name` = 'admin'");
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
