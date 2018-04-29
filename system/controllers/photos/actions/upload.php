@@ -6,6 +6,14 @@ class actionPhotosUpload extends cmsAction{
 
         if (!cmsUser::isAllowed('albums', 'add')) { cmsCore::error404(); }
 
+        $request_album_id = $this->request->get('album_id', 0);
+
+        if($request_album_id){
+            $album_id = $request_album_id;
+        } else {
+            $album_id = (int)$album_id;
+        }
+
         if ($this->request->isAjax()){
 
             return $this->processUpload($album_id);
@@ -54,8 +62,6 @@ class actionPhotosUpload extends cmsAction{
 
             $this->redirect(href_to('albums', 'add').($group_id ? '?group_id='.$group_id : ''));
         }
-
-        $album_id = $album_id ? (int)$album_id : $this->request->get('album_id', 0);
 
         if ($this->request->has('submit')){
 
@@ -195,8 +201,6 @@ class actionPhotosUpload extends cmsAction{
     }
 
     public function processUpload($album_id){
-
-        $album_id = $album_id ? $album_id : $this->request->get('album_id', 0);
 
         $album = $this->model->getAlbum($album_id);
 
