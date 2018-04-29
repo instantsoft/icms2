@@ -282,14 +282,19 @@
     border: solid 1px #B3C2C9;
     border-bottom: none;
     background-color:#FFF;
-    margin: 1px 0 0 0;
+    margin: -1px 0 0 0;
+    border-top-color: #2980b9;
+    border-top-width: 3px;
 }
-
+#comments_widget.tabs-menu .tabbed li.active a {
+    border-top-color: #B3C2C9;
+}
 .tabs-menu li a .counter {
-    color:#34495e;
-    font-size:12px;
-    margin-top:-15px;
-    border-radius:10px;
+    color: #444d56;
+    font-size: 12px;
+    background-color: rgba(27,31,35,0.08);
+    border-radius: 8px;
+    padding: 2px 7px;
 }
 
 .tabs-menu li.more > .item {
@@ -303,8 +308,7 @@
     padding-right:18px;
 }
 
-.tabs-menu li.active a .counter { color:#68809B; }
-.tabs-menu li a:hover .counter { color:#68809B; }
+.tabs-menu li a:hover .counter { color:#252d35; }
 
 .tabs-menu li.folder > ul {
     visibility:hidden;
