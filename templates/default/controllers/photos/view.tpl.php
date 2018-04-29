@@ -21,6 +21,13 @@
     }
     $this->addBreadcrumb($photo['title']);
 
+    if ($is_can_set_cover) {
+        $this->addToolButton(array(
+            'class' => 'images',
+            'title' => LANG_PHOTOS_SET_COVER,
+            'href'  => $this->href_to('set_cover', $photo['id'])
+        ));
+    }
     if ($is_can_edit) {
         $this->addToolButton(array(
             'class' => 'edit',

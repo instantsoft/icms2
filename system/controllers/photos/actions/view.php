@@ -155,6 +155,8 @@ class actionPhotosView extends cmsAction {
 
         }
 
+        $is_can_set_cover = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $this->cms_user->id));
         $is_can_edit   = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
                 (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $this->cms_user->id) ||
                 ($photo['user_id'] == $this->cms_user->id));
@@ -223,6 +225,7 @@ class actionPhotosView extends cmsAction {
             'next_photo'    => $next_photo,
             'prev_photo'    => $prev_photo,
             'downloads'     => $downloads,
+            'is_can_set_cover' => $is_can_set_cover,
             'is_can_edit'   => $is_can_edit,
             'is_can_delete' => $is_can_delete,
             'user'          => $this->cms_user,
