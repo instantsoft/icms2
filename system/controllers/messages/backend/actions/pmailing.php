@@ -20,7 +20,7 @@ class actionMessagesPmailing extends cmsAction {
 
                 $user = $this->model_users->getUserByEmail($mailing['sender_user_email']);
                 if(!$user && !$errors){
-                    $errors['email'] = ERR_USER_NOT_FOUND;
+                    $errors['sender_user_email'] = ERR_USER_NOT_FOUND;
                 }
 
             }

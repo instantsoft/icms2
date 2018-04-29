@@ -150,6 +150,7 @@
     define('LANG_USERS_KARMA_LOG_EMPTY',    'No votes yet');
 
     define('LANG_USERS_MY_INVITES',         'My invites');
+    define('LANG_USERS_INVITES_LINKS',      'Or distribute links for an invitation');
     define('LANG_USERS_INVITES_COUNT',      'You can send %s');
     define('LANG_USERS_INVITES_SPELLCOUNT', 'invite|invites|invites');
     define('LANG_USERS_INVITES_EMAIL',      'E-mail that is used to send an invite');

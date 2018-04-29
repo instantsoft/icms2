@@ -346,6 +346,8 @@
     define('LANG_CP_USER_NOT_FOUND',            'User %s not found');
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this IP');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
+    define('LANG_CP_USER_SEARCH_NOT_FOUND',     'No users by specified criteria');
+    define('LANG_CP_USERS_ONLINE',              'Online now');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
@@ -418,6 +420,8 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Without encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME',  'Abstract Counter');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME_HINT',  'Used in the parameters when connecting js and css. Increase after the changes to reset the cache of visitors.');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');

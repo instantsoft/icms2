@@ -1962,7 +1962,6 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     box-sizing: border-box;
     margin-right: -20px;
     margin-top: -20px;
-    overflow: hidden;
 }
 #dashboard .col, .colplaceholder {
     vertical-align: top;
@@ -1973,6 +1972,9 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     margin-top: 20px;
     background: #FFF;
     position: relative;
+}
+#dashboard .col:hover {
+    box-shadow: 0px 0px 10px #DDD;
 }
 #dashboard a.view_all_link {
     display: block;
@@ -2014,10 +2016,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 #dashboard .col h3 {
     padding:10px 10px;
-    background:#F9F9F9;
+    background:#9DB1B9;
     margin:0;
     height: 20px;
     line-height: 20px;
+    color: #FFF;
 }
 #dashboard .actions-toolbar {
     padding: 5px 0;
@@ -2175,11 +2178,11 @@ ul.news_targets_tabs > li.active_news {
 #news-loading {
     display: none;
 }
-#icms_news_wrap {
+#icms_news_wrap, #icms_users_wrap {
     height: calc(100% - 35px);
     box-sizing: border-box;
 }
-#icms_news_wrap .icms_news_wrap {
+#icms_news_wrap .icms_news_wrap, #icms_users_wrap .icms_users_wrap {
     height: 100%;
     box-sizing: border-box;
 }

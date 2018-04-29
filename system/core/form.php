@@ -566,6 +566,8 @@ class cmsForm {
 
         $fieldsets = array();
 
+        if(!$fields){ return $fieldsets; }
+
         $current = null;
 
         $index = 0;

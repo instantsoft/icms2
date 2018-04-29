@@ -1155,8 +1155,9 @@ class cmsCore {
 
     public static function getTimeZones(){
         self::loadLib('timezones');
+        $_zones = getTimeZones();
         $zones = array();
-        foreach(getTimeZones() as $zone){
+        foreach($_zones as $zone){
             $zones[ $zone ] = $zone;
         }
         return $zones;

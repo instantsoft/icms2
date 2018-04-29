@@ -261,6 +261,12 @@ class messages extends cmsFrontend {
             }
         }
 
+        if (!empty($to['attachments'])){
+            foreach ($to['attachments'] as $attach) {
+                $mailer->addAttachment($attach);
+            }
+        }
+
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
 

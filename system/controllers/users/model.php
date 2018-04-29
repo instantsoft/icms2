@@ -197,7 +197,9 @@ class modelUsers extends cmsModel {
 
     }
 
-    public function updateUserPassToken($id, $pass_token=null){
+    public function updateUserPassToken($id, $pass_token = null){
+
+        cmsCache::getInstance()->clean('users.user.'.$id);
 
         return $this->
                     filterEqual('id', $id)->

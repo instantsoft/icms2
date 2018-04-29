@@ -64,7 +64,7 @@ define('LANG_RULE_COMMENTS_KARMA', 'Reputation points that allow to add comments
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Comment rating will effect author\'s rating');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Increase/decrease author\'s reputation for +/- in comments');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Full delete all');
-define('LANG_COMMENTS_MODERATE_NOTIFY', 'Added a new comment. Moderation is needed.');
+define('LANG_COMMENTS_MODERATE_NOTIFY', "Added a new comment. Moderation is needed.\n<blockquote>%s</blockquote>");
 define('LANG_COMMENTS_MODERATE_TITLE', 'Comments on moderation (%s)');
 define('LANG_COMMENTS_ALL_LIST', 'All comments on moderation');
 define('LANG_COMMENTS_APPROVE', 'Approve');

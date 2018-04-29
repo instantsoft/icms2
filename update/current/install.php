@@ -70,6 +70,10 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES ('subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);");
     }
 
+    if(!$core->db->getRowsCount('widgets', "controller = 'auth' AND name = 'register'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES ('auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

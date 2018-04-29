@@ -347,6 +347,8 @@
     define('LANG_CP_USER_NOT_FOUND',            'Пользователь %s не найден');
     define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
     define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
+    define('LANG_CP_USER_SEARCH_NOT_FOUND',     'Нет пользователей по заданным критериям');
+    define('LANG_CP_USERS_ONLINE',              'Сейчас на сайте');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
@@ -419,6 +421,8 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Без шифрования');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME',  'Абстрактный счётчик');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME_HINT',  'Используется в параметрах при подключении js и css. Увеличивайте после изменений, чтобы сбросить кэш у посетителей.');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Кеширование включено');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Метод кеширования');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'не доступно');

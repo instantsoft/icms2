@@ -5,76 +5,7 @@ class actionAuthRegister extends cmsAction {
 
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
-        $users_model = cmsCore::getModel('users');
-        $form = $this->getForm('registration');
-
-        //
-        // Добавляем поле для кода приглашения,
-        // если регистрация доступна только по приглашениям
-        //
-        if ($this->options['is_reg_invites']){
-
-            $fieldset_id = $form->addFieldsetToBeginning(LANG_REG_INVITED_ONLY);
-
-            $form->addField($fieldset_id, new fieldString('inv', array(
-                'title' => LANG_REG_INVITE_CODE,
-                'rules' => array(
-                    array('required'),
-                    array('min_length', 10),
-                    array('max_length', 10),
-                )
-            )));
-
-        }
-
-        //
-        // Добавляем поле выбора группы,
-        // при наличии публичных групп
-        //
-        $public_groups = $users_model->getPublicGroups();
-
-        if ($public_groups) {
-
-            $pb_items = array();
-            foreach($public_groups as $pb) { $pb_items[ $pb['id'] ] = $pb['title']; }
-
-            $form->addFieldToBeginning('basic',
-                new fieldList('group_id', array(
-                        'title' => LANG_USER_GROUP,
-                        'items' => $pb_items
-                    )
-                )
-            );
-
-        }
-
-        //
-        // Добавляем в форму обязательные поля профилей
-        //
-        $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $content_model->orderBy('ordering');
-        $fields = $content_model->getRequiredContentFields('{users}');
-
-        // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields);
-
-        // Добавляем поля в форму
-        foreach($fieldsets as $fieldset){
-
-            $fieldset_id = $form->addFieldset($fieldset['title']);
-
-            foreach($fieldset['fields'] as $field){
-
-                if ($field['name'] == 'nickname') {
-                    $form->addFieldToBeginning('basic', $field['handler']); continue;
-                }
-
-                $form->addField($fieldset_id, $field['handler']);
-
-            }
-
-        }
+        list($form, $fieldsets) = $this->getRegistrationForm();
 
         $user = array();
 
@@ -113,7 +44,7 @@ class actionAuthRegister extends cmsAction {
             foreach($fieldsets as $fieldset){
                 foreach($fieldset['fields'] as $field){
 
-                    if (!$field['groups_edit']) { continue; }
+                    if (empty($field['groups_edit'])) { continue; }
                     if (in_array(0, $field['groups_edit'])) { continue; }
 
                     if (!in_array($user['group_id'], $field['groups_edit'])){
@@ -136,12 +67,13 @@ class actionAuthRegister extends cmsAction {
                 //
                 // проверяем код приглашения
                 //
-                if ($this->options['is_reg_invites']){
+                if ($this->options['is_reg_invites'] || $this->request->has('inv')){
                     $invite = $this->model->getInviteByCode($user['inv']);
                     if (!$invite) {
                         $errors['inv'] = LANG_REG_WRONG_INVITE_CODE;
                     } else {
-                        if ($this->options['is_invites_strict'] && ($invite['email'] != $user['email'])) {
+                        if ($this->options['is_invites_strict'] &&
+                                $this->options['is_reg_invites'] && ($invite['email'] != $user['email'])) {
                             $errors['inv'] = LANG_REG_WRONG_INVITE_CODE_EMAIL;
                         } else {
                             $user['inviter_id'] = $invite['user_id'];
@@ -187,8 +119,6 @@ class actionAuthRegister extends cmsAction {
 
             if (!$errors){
 
-                unset($user['inv']);
-
                 //
                 // Блокируем пользователя, если включена верификация e-mail
                 //
@@ -201,11 +131,29 @@ class actionAuthRegister extends cmsAction {
                     ));
                 }
 
-                $result = $users_model->addUser($user);
+                $result = $this->model_users->addUser($user);
 
                 if ($result['success']){
 
 					$user['id'] = $result['id'];
+
+                    // если использовали код приглашения
+                    if(!empty($invite['id'])){
+
+                        // для декремента счётчика инвайтов, если приглашение по ссылке
+                        if(empty($invite['email'])){
+                            $this->model->markInviteSended($invite['id'], $invite['user_id'], $user['email']);
+                        }
+
+                        // удаляем инвайт, раз им воспользовались
+                        $this->model->deleteInvite($invite['id']);
+
+                        // уведомляем того, чей инвайт
+                        $this->model_messages->addNotice(array($invite['user_id']), array(
+                            'content' => sprintf(LANG_AUTH_INVITE_NOTIFY, href_to_profile($user), $user['nickname'])
+                        ));
+
+                    }
 
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
 
@@ -216,11 +164,10 @@ class actionAuthRegister extends cmsAction {
 
                         $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
 
-                        $messenger = cmsCore::getController('messages');
                         $to = array('email' => $user['email'], 'name' => $user['nickname']);
                         $letter = array('name' => 'reg_verify');
 
-                        $messenger->sendEmail($to, $letter, array(
+                        $this->controller_messages->sendEmail($to, $letter, array(
                             'nickname'    => $user['nickname'],
                             'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
                             'pass_token'  => $user['pass_token'],

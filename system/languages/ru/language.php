@@ -568,6 +568,7 @@
     define('LANG_TIME10',                    'раз');
     define('LANG_SUBSCRIBERS_SPELL',         'подписчик|подписчика|подписчиков');
     define('LANG_DOWNLOAD_SPELL',            'скачивание|скачивания|скачиваний');
+    define('LANG_USERS_SPELL',               'пользователь|пользователя|пользователей');
 
     define('LANG_ISLEFT',                    'осталось');
 

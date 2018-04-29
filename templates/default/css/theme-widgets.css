@@ -720,7 +720,7 @@ section .widget.fixed_actions_menu > .edit_wlinks {
     bottom: 0;
     right: 0;
     opacity: 0;
-    z-index: 200;
+    z-index: 100;
     transition: opacity 0.4s;
 }
 .widget:hover .edit_wlinks, .widget_tabbed .body:hover .edit_wlinks {

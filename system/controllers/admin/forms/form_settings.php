@@ -232,6 +232,12 @@ class formAdminSettings extends cmsForm {
                         'hint' => $is_js_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'js')) : false
                     )),
 
+                    new fieldNumber('production_time', array(
+                        'title'   => LANG_CP_SETTINGS_PRODUCTION_TIME,
+                        'hint'    => LANG_CP_SETTINGS_PRODUCTION_TIME_HINT,
+                        'default' => time()
+                    ))
+
                 )
             ),
 
@@ -370,7 +376,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldCheckbox('emulate_lag', array(
                         'title' => LANG_CP_SETTINGS_EMULATE_LAG,
-                    )),
+                    ))
 
                 )
             ),

@@ -1,4 +1,5 @@
 UPDATE `{#}comments` SET `author_name` = 'Гость' WHERE `author_name` IS NOT NULL;
+UPDATE `{#}widgets` SET `controller` = 'auth', `title` = 'Форма авторизации' WHERE `controller` IS NULL AND `name` = 'auth';
 
 DROP TABLE IF EXISTS `{#}subscriptions`;
 CREATE TABLE `{#}subscriptions` (

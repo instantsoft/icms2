@@ -4,6 +4,17 @@ class onSubscriptionsPhotosToolbarHtml extends cmsAction {
 
     public function run($album){
 
+        $ctype = $this->model_content->getContentTypeByName($album['ctype_name']);
+        if(!$ctype){
+            return '';
+        }
+
+        if(array_key_exists('enable_subscriptions', $ctype['options'])){
+            if(!$ctype['options']['enable_subscriptions']){
+                return '';
+            }
+        }
+
         if($album['user_id'] == $this->cms_user->id){
             return '';
         }

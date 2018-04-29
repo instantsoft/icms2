@@ -1,5 +1,5 @@
 <?php
-class widgetAuth extends cmsWidget {
+class widgetAuthAuth extends cmsWidget {
 
 	public $is_cacheable = false;
 

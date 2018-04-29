@@ -2,8 +2,6 @@
 
 class cmsTemplate {
 
-    const HEAD_TIME = 20180407;
-
     private static $instance;
 
     public $name;
@@ -762,7 +760,7 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. self::HEAD_TIME;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. $this->site_config->production_time;
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
     }
 
@@ -773,7 +771,7 @@ class cmsTemplate {
      * @return string
      */
     public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. self::HEAD_TIME;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. $this->site_config->production_time;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
     }
@@ -861,7 +859,7 @@ class cmsTemplate {
         if (isset($this->insert_js[$hash])) { return false; }
 		$this->insert_js[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root.$file.'?'.$this->site_config->production_time;
         $comment = $comment ? "<!-- {$comment} !-->" : '';
         // атрибут rel="forceLoad" добавлен для nyroModal
         echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
@@ -876,7 +874,7 @@ class cmsTemplate {
         if (isset($this->insert_css[$hash])) { return false; }
 		$this->insert_css[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root.$file.'?'.$this->site_config->production_time;;
 		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
 
         return true;

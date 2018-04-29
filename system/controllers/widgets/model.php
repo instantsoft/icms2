@@ -167,7 +167,10 @@ class modelWidgets extends cmsModel {
 
     public function getAvailableWidgets(){
 
-        $widgets = $this->orderBy('name')->get('widgets');
+        $widgets = $this->orderByList(array(
+            array('by' => 'controller', 'to' => 'asc'),
+            array('by' => 'name', 'to' => 'asc')
+        ))->get('widgets');
 
         if (!$widgets){ return false; }
 
@@ -177,7 +180,7 @@ class modelWidgets extends cmsModel {
 
             $key = $widget['controller'] ? $widget['controller'] : '0';
 
-            $sorted[ $key ][] = $widget;
+            $sorted[$key][] = $widget;
 
         }
 

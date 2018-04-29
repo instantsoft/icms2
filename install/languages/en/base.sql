@@ -768,7 +768,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (136, 'user_tab_show', 'subscriptions', 136, 1),
 (137, 'content_after_add_approve', 'subscriptions', 137, 1),
 (138, 'publish_delayed_content', 'subscriptions', 138, 1),
-(139, 'ctype_basic_form', 'subscriptions', 139, 1);
+(139, 'ctype_basic_form', 'subscriptions', 139, 1),
+(140, 'admin_dashboard_block', 'users', 140, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1651,13 +1652,14 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (9, 'users', 'avatar', 'User Avatar', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (10, 'tags', 'cloud', 'Tag cloud', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (11, 'content', 'slider', 'Content slider', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(12, NULL, 'auth', 'Authorization', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(12, 'auth', 'auth', 'Authorization form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (13, 'search', 'search', 'Search', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
+(18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

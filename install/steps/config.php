@@ -90,6 +90,7 @@ function create_config($path, $file){
         'default_editor'		=> 'redactor',
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
+        'production_time'       => time(),
         'controllers_without_widgets' => array('admin')
     );
 

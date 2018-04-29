@@ -296,7 +296,7 @@ class comments extends cmsFrontend {
         $comment['url'] = $comment['target_url'].'#comment_'.$comment['id'];
         $comment['title'] = $comment['target_title'];
 
-        return $this->controller_moderation->requestModeration($this->name, $comment, true, LANG_COMMENTS_MODERATE_NOTIFY);
+        return $this->controller_moderation->requestModeration($this->name, $comment, true, sprintf(LANG_COMMENTS_MODERATE_NOTIFY, $comment['content_html']));
 
     }
 

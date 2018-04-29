@@ -62,8 +62,9 @@ class cmsUser {
 
     public function __construct(){
 
-        $this->groups = array(GUEST_GROUP_ID);
-        $this->ip     = self::getIp();
+        $this->groups   = array(GUEST_GROUP_ID);
+        $this->ip       = self::getIp();
+        $this->date_log = date('Y-m-d H:i:s');
 
         if (self::isSessionSet('user:id')){
 

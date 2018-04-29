@@ -151,6 +151,7 @@
 
     define('LANG_USERS_MY_INVITES',         'Мои приглашения');
     define('LANG_USERS_INVITES_COUNT',      'Вы можете отправить %s');
+    define('LANG_USERS_INVITES_LINKS',      'Или распространите ссылки для приглашения');
     define('LANG_USERS_INVITES_SPELLCOUNT', 'приглашение|приглашения|приглашений');
     define('LANG_USERS_INVITES_EMAIL',      'Адрес e-mail для отправки приглашения');
     define('LANG_USERS_INVITES_EMAILS',     'Адреса e-mail для отправки приглашений');
