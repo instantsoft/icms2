@@ -307,7 +307,11 @@ class cmsUser {
 
         $userSession = self::sessionGet('user');
 
+        if(empty($userSession['id'])){ return false; }
+
         $model->updateUserDateLog($userSession['id']);
+
+        $model->filterEqual('user_id', $userSession['id'])->deleteFiltered('sessions_online');
 
         cmsEventsManager::hook('user_logout', $userSession);
 
