@@ -25,7 +25,7 @@ function install_package(){
 
     if(!$core->db->getRowsCount('{users}_tabs', "controller = 'subscriptions' AND name = 'subscriptions'", 1)){
         $admin->model->insert('{users}_tabs', array(
-            'controller' => 'users',
+            'controller' => 'subscriptions',
             'title'      => 'Подписки',
             'name'       => 'subscriptions',
             'ordering'   => 2,
