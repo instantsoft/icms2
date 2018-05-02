@@ -43,6 +43,6 @@
         </div>
     <?php } ?>
     <?php if($page == 1){ ?>
-        <?php $this->renderAsset('ui/pagebar', array('has_next' => $has_next, 'page' => $page, 'base_url' => $base_url, 'is_modal' => true), new cmsRequest(array(), cmsRequest::CTX_INTERNAL)); ?>
+        <?php $this->renderAsset('ui/pagebar', array('has_next' => $has_next, 'page' => $page, 'base_url' => $base_url, 'is_modal' => true)); ?>
     <?php } ?>
 <?php }

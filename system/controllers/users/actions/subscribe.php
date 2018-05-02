@@ -18,7 +18,7 @@ class actionUsersSubscribe extends cmsAction {
             return $this->cms_template->renderAsset('ui/confirm', array(
                 'confirm_title'  => sprintf(LANG_USERS_SUBSCRIBE_CONFIRM, $friend['nickname']),
                 'confirm_action' => $this->cms_template->href_to('subscribe', $friend['id'])
-            ));
+            ), $this->request);
 
         }
 

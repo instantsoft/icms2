@@ -52,7 +52,7 @@ class actionUsersProfileDelete extends cmsAction {
         return $this->cms_template->renderAsset('ui/confirm', array(
             'confirm_title'  => ($this->is_own_profile ? LANG_USERS_DELETE_PROFILE.'?' : sprintf(LANG_USERS_DELETE_CONFIRM, $profile['nickname'])),
             'confirm_action' => href_to('users', $profile['id'], 'delete')
-        ));
+        ), $this->request);
 
     }
 

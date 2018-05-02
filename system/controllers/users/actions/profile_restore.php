@@ -31,7 +31,7 @@ class actionUsersProfileRestore extends cmsAction {
         return $this->cms_template->renderAsset('ui/confirm', array(
             'confirm_title'  => LANG_USERS_RESTORE_PROFILE.'?',
             'confirm_action' => href_to('users', $profile['id'], 'restore')
-        ));
+        ), $this->request);
 
     }
 

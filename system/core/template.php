@@ -1709,14 +1709,14 @@ class cmsTemplate {
 
     public function renderAsset($tpl_file, $data=array(), $request = false){
 
-        if(!$request){ $request = cmsCore::getInstance()->request; }
-
         $tpl_file = $this->getTemplateFileName('assets/' . $tpl_file);
 
         extract($data); include($tpl_file);
 
-        if ($request->isAjax()) {
-            exit();
+        if($request){
+            if ($request->isAjax()) {
+                exit();
+            }
         }
 
     }

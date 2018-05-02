@@ -896,7 +896,7 @@ class cmsController {
 
             $this->cms_template->renderAsset('ui/redirect_continue', array(
                 'redirect_url' => href_to($url)
-            ));
+            ), $this->request);
 
         } else {
 

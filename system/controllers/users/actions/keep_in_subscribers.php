@@ -45,7 +45,7 @@ class actionUsersKeepInSubscribers extends cmsAction {
                 return $this->cms_template->renderAsset('ui/confirm', array(
                     'confirm_title'  => sprintf(LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM, $friend['nickname']),
                     'confirm_action' => $this->cms_template->href_to('keep_in_subscribers', $friend['id'])
-                ));
+                ), $this->request);
 
             }
 
