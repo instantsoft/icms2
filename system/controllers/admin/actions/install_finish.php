@@ -119,7 +119,7 @@ class actionAdminInstallFinish extends cmsAction {
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
 
-            $backend_controller = $this->loadControllerBackend($manifest['package']['name'], cmsRequest::CTX_INTERNAL);
+            $backend_controller = $this->loadControllerBackend($manifest['package']['name'], new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
             $form = $backend_controller->addControllerSeoOptions($form);
 
@@ -159,7 +159,7 @@ class actionAdminInstallFinish extends cmsAction {
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
 
-            $backend_controller = $this->loadControllerBackend($manifest['package']['name'], cmsRequest::CTX_INTERNAL);
+            $backend_controller = $this->loadControllerBackend($manifest['package']['name'], new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
 
             $form = $backend_controller->addControllerSeoOptions($form);
 
