@@ -22,11 +22,15 @@ class auth extends cmsFrontend {
 
         $back_url = $this->getBackURL();
 
-        $h = get_headers($this->getBackURL(), true);
-        $code = substr($h[0], 9, 3);
+        if($back_url != $this->cms_config->root){
 
-        if((int)$code < 400){
-            $this->redirect($back_url);
+            $h = get_headers($this->getBackURL(), true);
+            $code = substr($h[0], 9, 3);
+
+            if((int)$code < 400){
+                $this->redirect($back_url);
+            }
+
         }
 
         $this->redirectToHome();

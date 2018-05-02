@@ -1631,7 +1631,7 @@ CREATE TABLE `{#}widgets` (
   `url` varchar(250) DEFAULT NULL COMMENT 'Сайт автора',
   `version` varchar(8) DEFAULT NULL COMMENT 'Версия',
   `is_external` tinyint(1) DEFAULT '1',
-  `files` varchar(10000) DEFAULT NULL COMMENT 'Список файлов виджета (для стороних виджетов)',
+  `files` text COMMENT 'Список файлов виджета (для стороних виджетов)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
   PRIMARY KEY (`id`),
   KEY `version` (`version`),

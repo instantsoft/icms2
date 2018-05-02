@@ -1832,6 +1832,12 @@ class modelContent extends cmsModel {
 
         $table_name = $this->table_prefix . $ctype['name'];
 
+        if(array_key_exists('date_pub_end', $item)){
+            if($item['date_pub_end'] === null){
+                $item['date_pub_end'] = false;
+            }
+        }
+
         if (!$ctype['is_fixed_url']){
 
             if ($ctype['is_auto_url']){

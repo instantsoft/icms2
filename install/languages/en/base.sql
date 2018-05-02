@@ -1632,7 +1632,7 @@ CREATE TABLE `{#}widgets` (
   `url` varchar(250) DEFAULT NULL COMMENT 'Author site',
   `version` varchar(8) DEFAULT NULL COMMENT 'Version',
   `is_external` tinyint(1) DEFAULT '1',
-  `files` varchar(10000) DEFAULT NULL,
+  `files` text COMMENT 'List of widget files (for third-party widgets)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
