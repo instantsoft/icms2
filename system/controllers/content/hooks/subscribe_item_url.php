@@ -9,7 +9,7 @@ class onContentSubscribeItemUrl extends cmsAction {
             return false;
         }
 
-        $url = href_to_rel($ctype['name']); $params = array(); $ds = array(); $is_cat_ds = false;
+        $url = href_to_rel($ctype['name']); $params = array(); $ds = array(); $ds_prefix = '-'; $is_cat_ds = false;
 
         if(empty($subscription['params']['filters']) && empty($subscription['params']['field_filters'])){
             return $url;
@@ -39,6 +39,8 @@ class onContentSubscribeItemUrl extends cmsAction {
 
                     if($user){
                         $url = href_to_rel('users', (empty($user['slug']) ? $user['id'] : $user['slug']), array('content', $ctype['name']));
+                        $ds_prefix = '/';
+
                     }
 
                     continue;
@@ -62,7 +64,11 @@ class onContentSubscribeItemUrl extends cmsAction {
                     $group = $this->model_groups->getGroup($filters['value']);
 
                     if($group){
+
                         $url = href_to_rel('groups', $group['slug'], array('content', $ctype['name']));
+
+                        $ds_prefix = '/';
+
                     }
 
                     continue;
@@ -82,7 +88,11 @@ class onContentSubscribeItemUrl extends cmsAction {
                             $child_ctype = $this->model->getContentType($filters['value']['child_ctype_id']);
 
                             if($child_ctype){
+
                                 $url = href_to_rel($parent_ctype['name'], $item['slug'], array('view-'.$child_ctype['name']));
+
+                                $ds_prefix = '/';
+
                             }
 
                         }
@@ -103,7 +113,7 @@ class onContentSubscribeItemUrl extends cmsAction {
 
                             $is_cat_ds = true;
 
-                            $url .= '-'.$ds['name'];
+                            $url .= $ds_prefix.$ds['name'];
 
                         }
 
@@ -124,7 +134,7 @@ class onContentSubscribeItemUrl extends cmsAction {
             }
 
             if($ds && !$is_cat_ds){
-                $url .= '/'.$ds['name'];
+                $url .= $ds_prefix.$ds['name'];
             }
 
         }

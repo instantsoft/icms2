@@ -110,7 +110,31 @@ class onContentSubscribeListTitle extends cmsAction {
 
                 if(isset($fields[$filters['field']])){
 
-                    $result = $fields[$filters['field']]['handler']->getStringValue($filters['value']);
+                    $result = '';
+
+                    if(!empty($filters['condition'])){
+
+                        switch($filters['condition']){
+
+                            case 'gt': $result = '&gt; '.$filters['value']; break;
+                            case 'lt': $result = '&lt; '.$filters['value']; break;
+                            case 'ge': $result = '&ge; '.$filters['value']; break;
+                            case 'le': $result = '&le; '.$filters['value']; break;
+                            case 'nn': $result = LANG_FILTER_NOT_NULL; break;
+                            case 'ni': $result = LANG_FILTER_IS_NULL; break;
+                            case 'lk': $result = LANG_FILTER_LIKE.' '.$filters['value']; break;
+                            case 'lb': $result = LANG_FILTER_LIKE_BEGIN.' '.$filters['value']; break;
+                            case 'lf': $result = LANG_FILTER_LIKE_END.' '.$filters['value']; break;
+                            case 'dy': $result = LANG_FILTER_DATE_YOUNGER.' '.$filters['value']; break;
+                            case 'do': $result = LANG_FILTER_DATE_OLDER.' '.$filters['value']; break;
+
+                        }
+
+                    }
+
+                    if(!$result){
+                        $result = $fields[$filters['field']]['handler']->getStringValue($filters['value']);
+                    }
 
                     if($result){
                         $titles[] = mb_strtolower($fields[$filters['field']]['title'].' '.$result);
