@@ -760,20 +760,40 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. $this->site_config->production_time;
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+
     }
 
     /**
      * Возвращает тег <script> для указанного файла
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @param string $comment Комментарий к скрипту
+     * @param array $params Параметры тега
      * @return string
      */
-    public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file .'?'. $this->site_config->production_time;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
-        return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
+    public function getJSTag($file, $comment = '', $params = array()){
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
+        $comment = $comment ? '<!-- '.$comment.' !-->' : '';
+
+        return '<script type="text/javascript" src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
+
     }
 
 	/**
@@ -853,16 +873,14 @@ class cmsTemplate {
 
     }
 
-	public function insertJS($file, $comment=''){
+	public function insertJS($file, $comment = ''){
 
         $hash = md5($file);
         if (isset($this->insert_js[$hash])) { return false; }
 		$this->insert_js[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root.$file.'?'.$this->site_config->production_time;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
         // атрибут rel="forceLoad" добавлен для nyroModal
-        echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
+        echo $this->getJSTag($file, $comment, array('rel' => 'forceLoad'));
 
         return true;
 
@@ -874,8 +892,7 @@ class cmsTemplate {
         if (isset($this->insert_css[$hash])) { return false; }
 		$this->insert_css[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root.$file.'?'.$this->site_config->production_time;;
-		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+		echo $this->getCSSTag($file);
 
         return true;
 
