@@ -34,7 +34,7 @@ class actionGroupsGroupContent extends cmsAction {
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if(count($datasets) == 1){
-                unset($current_dataset); $datasets = false;
+                $current_dataset = array(); $datasets = false;
             }
 
         }
