@@ -21,6 +21,17 @@ class modelContent extends cmsModel {
 
     public function addContentType($ctype){
 
+        if(!isset($ctype['labels'])){
+            $ctype['labels'] = array(
+                'one'     => $ctype['name'],
+                'two'     => $ctype['name'],
+                'many'    => $ctype['name'],
+                'create'  => $ctype['name'],
+                'list'    => '',
+                'profile' => ''
+            );
+        }
+
         $id = $this->insert('content_types', $ctype);
 
         $config = cmsConfig::getInstance();

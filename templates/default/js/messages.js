@@ -537,7 +537,7 @@ icms.messages = (function ($) {
                     return false;
                 }
 
-                $('.item', pm_notices_window).not('.has_actions').fadeOut('fast', function(){
+                $('.item', pm_notices_window).fadeOut('fast', function(){
                     $(this).remove();
                     var count = $('.item', pm_notices_window).length;
                     icms.messages.setNoticesCounter(count);

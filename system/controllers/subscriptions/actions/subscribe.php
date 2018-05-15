@@ -161,7 +161,7 @@ class actionSubscriptionsSubscribe extends cmsAction {
 
             cmsEventsManager::hook('subscribe', array($this->target, $this->subscribe, $now_create_list_id, $sid));
 
-            // уведомляем администраторов о новом списке, если заголовок неопеределён
+            // уведомляем администраторов о новом списке, если заголовок не опеределён
             if($now_create_list_id && empty($this->target['title']) && !empty($this->options['admin_email'])){
 
                 $admin_emails = explode(',', $this->options['admin_email']);

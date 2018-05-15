@@ -382,7 +382,7 @@ class modelMessages extends cmsModel {
 
     public function deleteUserNotices($user_id){
 
-         $this->filterIsNull('actions')->filterEqual('user_id', $user_id);
+         $this->filterEqual('user_id', $user_id);
 
         return $this->deleteFiltered('{users}_notices');
 
