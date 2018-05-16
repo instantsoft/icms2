@@ -74,16 +74,18 @@
                 <?php } ?>
                 <a href="#down" class="scroll-down" onclick="return icms.comments.down(this)" title="<?php echo html( LANG_COMMENT_SHOW_CHILD ); ?>">&darr;</a>
             </div>
-            <div class="rating <?php echo $no_approved_class; ?>">
-                <span class="value <?php echo html_signed_class($entry['rating']); ?>"><?php echo $entry['rating'] ? html_signed_num($entry['rating']) : ''; ?></span>
-                <?php if ($is_can_rate && ($entry['user_id'] != $user->id) && !$entry['is_rated']){ ?>
-                    <div class="buttons">
-                        <a href="#rate-up" class="rate-up" title="<?php echo html( LANG_COMMENT_RATE_UP ); ?>" data-id="<?php echo $entry['id']; ?>"></a>
-                        <a href="#rate-down" class="rate-down" title="<?php echo html( LANG_COMMENT_RATE_DOWN ); ?>" data-id="<?php echo $entry['id']; ?>"></a>
-                    </div>
-                <?php } ?>
-            </div>
         <?php } ?>
+        <div class="rating <?php echo $no_approved_class; ?>">
+            <span class="value <?php echo html_signed_class($entry['rating']); ?>">
+                <?php echo $entry['rating'] ? html_signed_num($entry['rating']) : ''; ?>
+            </span>
+            <?php if ($is_can_rate && ($entry['user_id'] != $user->id) && empty($entry['is_rated'])){ ?>
+                <div class="buttons">
+                    <a href="#rate-up" class="rate-up" title="<?php echo html( LANG_COMMENT_RATE_UP ); ?>" data-id="<?php echo $entry['id']; ?>"></a>
+                    <a href="#rate-down" class="rate-down" title="<?php echo html( LANG_COMMENT_RATE_DOWN ); ?>" data-id="<?php echo $entry['id']; ?>"></a>
+                </div>
+            <?php } ?>
+        </div>
     </div>
     <div class="body">
         <div class="avatar">

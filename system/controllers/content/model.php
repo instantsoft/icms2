@@ -1781,6 +1781,10 @@ class modelContent extends cmsModel {
             $item['category_id'] = 0;
         }
 
+        if(!empty($item['is_approved'])){
+            $item['date_approved'] = null; // будет CURRENT_TIMESTAMP
+        }
+
         if (!empty($item['new_category'])){
             $category = $this->addCategory($ctype['name'], array(
                 'title' => $item['new_category'],

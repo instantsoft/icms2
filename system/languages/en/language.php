@@ -98,6 +98,7 @@
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');

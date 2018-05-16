@@ -187,7 +187,7 @@ article div.content_categories:last-child {
     border:solid 1px #CCC;
 }
 
-.content_list_item .ft_html a.read-more {
+.ft_html a.read-more {
     display: block;
     margin:5px 0;
 }

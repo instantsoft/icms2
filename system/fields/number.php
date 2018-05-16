@@ -23,6 +23,12 @@ class fieldNumber extends cmsFormField {
                     array('max', 30)
                 )
             )),
+            new fieldString('thousands_sep', array(
+                'title' => LANG_PARSER_NUMBER_THOUSANDS_SEP,
+                'options'=>array(
+                    'max_length'=> 1
+                )
+            )),
             new fieldCheckbox('is_abs', array(
                 'title'   => LANG_PARSER_NUMBER_IS_ABS,
                 'default' => false
@@ -205,8 +211,9 @@ class fieldNumber extends cmsFormField {
     }
 
     private function formatFloatValue($value) {
+        $value = (float)$value;
         if(strpos($value, '.') !== false){
-            return rtrim(number_format((float)$value, $this->getOption('decimal_s'), '.', ''), '0.');
+            return rtrim(rtrim(number_format($value, $this->getOption('decimal_s'), '.', ($this->getOption('thousands_sep')?:'')), '0'), '.');
         }
         return $value;
     }

@@ -116,6 +116,12 @@ class cmsFormField {
     public $visible_depend = array();
 
     /**
+     * Исключение поля в контроллерах
+     * @var array
+     */
+    public $excluded_controllers = array();
+
+    /**
      * @param string $name Имя поля
      * @param array $options Массив опций
      */

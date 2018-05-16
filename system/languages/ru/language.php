@@ -97,6 +97,7 @@
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов после запятой');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');

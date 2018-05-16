@@ -41,10 +41,7 @@ class formAdminCtypesField extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'string',
                         'generator' => function() {
-                            $field_types = array();
-                            $field_types = cmsForm::getAvailableFormFields();
-                            asort($field_types, SORT_STRING);
-                            return $field_types;
+                            return cmsForm::getAvailableFormFields('only_public', 'content');
                         }
                     ))
                 )

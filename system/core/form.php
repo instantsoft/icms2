@@ -617,7 +617,7 @@ class cmsForm {
      * Возвращает список всех имеющихся типов полей
      * @return array
      */
-    public static function getAvailableFormFields($only_public = true){
+    public static function getAvailableFormFields($only_public = true, $controller = false){
 
         $fields_types   = array();
         $fields_files   = cmsCore::getFilesList('system/fields', '*.php', true, true);
@@ -629,10 +629,13 @@ class cmsForm {
             $field = new $class(null, null);
 
             if ($only_public && !$field->is_public){ continue; }
+            if ($controller && in_array($controller, $field->excluded_controllers)){ continue; }
 
             $fields_types[$name] = $field->getTitle();
 
         }
+
+        asort($fields_types, SORT_STRING);
 
         return $fields_types;
 

@@ -2259,6 +2259,9 @@ span.get_replies {
     background: #FFF;
     opacity: 0.2;
 }
+.striped-list .default_avatar, .avatar .default_avatar, .image .default_avatar {
+    border-radius: 50%;
+}
 table.data_list {
     border-collapse: collapse;
     width:100%;
