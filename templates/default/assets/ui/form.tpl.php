@@ -19,7 +19,7 @@
     $prepend_html = isset($attributes['prepend_html']) ? $attributes['prepend_html'] : '';
     $append_html = isset($attributes['append_html']) ? $attributes['append_html'] : '';
 
-    $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : uniqid();
+    $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : md5(microtime(true));
     $index = 0;
 
     $visible_depend = array();

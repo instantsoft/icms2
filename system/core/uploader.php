@@ -100,12 +100,12 @@ class cmsUploader {
             if($this->file_name){
                 $file_name = str_replace('.'.$file_ext, '', files_sanitize_name($this->file_name.'.'.$file_ext));
             } else {
-                $file_name = substr(md5(uniqid().microtime(true)), 0, 8);
+                $file_name = substr(md5(microtime(true)), 0, 8);
             }
         }
 
         if (file_exists($path.$file_name.'.'.$file_ext)) {
-            return $this->getFileName($path, $file_ext, $file_name.'_'.uniqid());
+            return $this->getFileName($path, $file_ext, $file_name.'_'.md5(microtime(true)));
         }
 
         return $file_name.'.'.$file_ext;
@@ -551,7 +551,7 @@ class cmsUploader {
 
         $dir_num_user = sprintf('%03d', intval($this->user_id/100));
 
-        $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
+        $file_name  = md5(md5($this->site_cfg->db_user) . md5($this->site_cfg->db_base) .microtime(true));
         $first_dir  = substr($file_name, 0, 1);
         $second_dir = substr($file_name, 1, 1);
 

@@ -186,7 +186,7 @@ class onTypographHtmlFilter extends cmsAction {
             return '';
         }
 
-        $id = uniqid();
+        $id = string_random();
         $title = !empty($params['title']) ? htmlspecialchars($params['title']) : '';
 
         return '<div class="spoiler"><input tabindex="-1" type="checkbox" id="'.$id.'"><label for="'.$id.'">'.$title.'</label><div class="spoiler_body">'.$content.'</div></div>';

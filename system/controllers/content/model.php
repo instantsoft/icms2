@@ -2005,13 +2005,12 @@ class modelContent extends cmsModel {
             return $slug;
         }
 
-        if($this->filterNotEqual('id', $item['id'])->
-                filterEqual('slug', $slug)->
-                getFieldFiltered($this->table_prefix.$ctype['name'], 'id')){
+        $scount = $this->filterNotEqual('id', $item['id'])->
+                filterLike('slug', "%{$slug}%")->
+                getCount($this->table_prefix.$ctype['name']);
 
-            $slug = mb_substr($slug, 0, ($slug_len-13));
-            $slug .= uniqid();
-
+        if($scount){
+            $slug .= ($scount+1);
         }
 
         return $slug;

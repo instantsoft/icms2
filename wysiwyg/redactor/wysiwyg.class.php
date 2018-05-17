@@ -30,7 +30,6 @@ class cmsWysiwygRedactor {
         $options = array();
 
         $plugins = array(
-            'fontfamily',
             'fontsize',
             'fullscreen',
             'fontcolor'
