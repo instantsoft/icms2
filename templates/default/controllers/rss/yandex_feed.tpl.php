@@ -24,12 +24,12 @@
             <?php foreach($feed['items'] as $item){ ?>
                 <item>
                     <?php if(!empty($feed['mapping']['title'])) { ?>
-                        <title><?php html($item[$feed['mapping']['title']]); ?></title>
+                        <title><?php echo htmlspecialchars($item[$feed['mapping']['title']]); ?></title>
                     <?php } ?>
                     <link><?php echo $item['page_url']; ?></link>
                     <?php if(!empty($feed['mapping']['description'])) { ?>
-                        <description><?php html(html_clean($item[$feed['mapping']['description']], 150)); ?></description>
-                        <yandex:full-text><?php html(html_clean($item[$feed['mapping']['description']])); ?></yandex:full-text>
+                        <description><?php echo htmlspecialchars(html_clean($item[$feed['mapping']['description']], 150)); ?></description>
+                        <yandex:full-text><?php echo htmlspecialchars(html_clean($item[$feed['mapping']['description']])); ?></yandex:full-text>
                     <?php } ?>
                     <?php if(!empty($feed['mapping']['image'])) { ?>
                         <?php $image = cmsModel::yamlToArray($item[$feed['mapping']['image']]); ?>

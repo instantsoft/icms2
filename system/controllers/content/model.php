@@ -1821,7 +1821,7 @@ class modelContent extends cmsModel {
             $this->addPropsValues($ctype['name'], $item['id'], $props_values);
         }
 
-        if (!isset($item['slug'])){
+        if (empty($item['slug'])){
             $item = $this->getContentItem($ctype['name'], $item['id']);
             $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
         }
@@ -2006,11 +2006,17 @@ class modelContent extends cmsModel {
         }
 
         $scount = $this->filterNotEqual('id', $item['id'])->
-                filterLike('slug', "%{$slug}%")->
-                getCount($this->table_prefix.$ctype['name']);
+                filterLike('slug', "{$slug}%")->
+                getCount($this->table_prefix.$ctype['name'], 'id', true);
 
         if($scount){
-            $slug .= ($scount+1);
+
+            $scount += 1;
+
+            $slug = mb_substr($slug, 0, ($slug_len - strlen($scount)));
+
+            $slug .= $scount;
+
         }
 
         return $slug;

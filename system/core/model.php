@@ -1445,7 +1445,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getCount($table_name, $by_field='id'){
+    public function getCount($table_name, $by_field = 'id', $reset = false){
 
         $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
                 FROM {#}{$table_name} i
@@ -1456,6 +1456,10 @@ class cmsModel {
         if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
         if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
+
+        if($reset){
+            $this->resetFilters();
+        }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
