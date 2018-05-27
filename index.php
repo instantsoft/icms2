@@ -20,6 +20,7 @@ define('VALID_RUN', true);
 define('SESSION_START', true);
 
 header('Content-type:text/html; charset=utf-8');
+header('X-Powered-By: InstantCMS');
 
 require_once 'bootstrap.php';
 

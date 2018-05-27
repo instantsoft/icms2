@@ -29,6 +29,7 @@
 
 	var reUrlYoutube = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
 	var reUrlVimeo = /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+    var reUrlFacebook = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:facebook\.com(?:\/[^\/]+\/videos\/|\/video\.php\?v=))([0-9]+)(?:.+)?$/;
 
 	$.fn.redactor = function(options)
 	{
@@ -135,6 +136,8 @@
 			fileUploadParam: 'file',
 			clipboardUpload: true,
 			clipboardUploadUrl: false,
+
+			smilesUrl: '',
 
 			dnbImageTypes: ['image/png', 'image/jpeg', 'image/gif'],
 
@@ -292,7 +295,14 @@
 					underline: 'Underline',
 					alignment: 'Alignment',
 					filename: 'Name (optional)',
-					edit: 'Edit'
+					edit: 'Edit',
+                    spoiler: 'Spoiler',
+                    spoiler_name: 'Spoiler name',
+                    spoiler_text: 'Spoiler text',
+                    smiles: 'Smiles',
+                    undo: 'Undo',
+                    redo: 'Redo',
+                    formalize: 'Formalize'
 				}
 			}
 	};
@@ -5893,6 +5903,10 @@
 			{
 				data = data.replace(reUrlVimeo, iframeStart + '//player.vimeo.com/video/$2' + iframeEnd);
 			}
+            else if (data.match(reUrlFacebook))
+            {
+                data = data.replace(reUrlFacebook, iframeStart + 'https://www.facebook.com/video/embed?video_id=$1' + iframeEnd);
+            }
 
 			this.selectionRestore();
 

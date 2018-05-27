@@ -65,7 +65,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 
 <?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
     <div id="comments_add_form">
-        <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
+        <?php if ($is_karma_allowed || (!$user->is_logged && $is_guests_allowed)){ ?>
             <div class="preview_box"></div>
             <form action="<?php echo $this->href_to('submit'); ?>" method="post">
                 <?php echo html_csrf_token($csrf_token_seed); ?>

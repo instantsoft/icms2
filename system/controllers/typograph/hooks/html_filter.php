@@ -53,7 +53,7 @@ class onTypographHtmlFilter extends cmsAction {
         // Устанавливаем разрешённые теги. (Все не разрешенные теги считаются запрещенными.)
         $jevix->cfgAllowTags(array(
             'p', 'br', 'span', 'div',
-            'a', 'img',
+            'a', 'img', 'input', 'label',
             'b', 'i', 'u', 's', 'del', 'em', 'strong', 'sup', 'sub', 'hr', 'font',
             'ul', 'ol', 'li',
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
@@ -65,7 +65,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
         $jevix->cfgSetTagShort(array(
-            'br', 'img', 'hr', 'embed'
+            'br', 'img', 'hr', 'embed', 'input'
         ));
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
@@ -86,6 +86,8 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('a', array('href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('img', array('src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text'));
         $jevix->cfgAllowTagParams('span', array('style' => '#text'));
+        $jevix->cfgAllowTagParams('input', array('tabindex' => '#text', 'type' => '#text', 'id' => '#text'));
+        $jevix->cfgAllowTagParams('label', array('class' => '#text', 'for' => '#text'));
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
         $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
         $jevix->cfgAllowTagParams('embed', array('src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text','allowscriptaccess' => '#text', 'allowfullscreen' => '#text','width' => '#int', 'height' => '#int', 'flashvars'=> '#text', 'wmode'=> '#text'));

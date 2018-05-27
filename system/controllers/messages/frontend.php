@@ -270,6 +270,8 @@ class messages extends cmsFrontend {
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
 
+        list($letter, $is_nl2br_text) = cmsEventsManager::hook('process_email_letter', array($letter, $is_nl2br_text));
+
         $mailer->setBodyHTML( ($is_nl2br_text ? nl2br($letter['text']) : $letter['text']) );
 
         $result = $mailer->send();

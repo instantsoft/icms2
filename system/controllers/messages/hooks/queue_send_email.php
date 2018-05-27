@@ -4,6 +4,17 @@ class onMessagesQueueSendEmail extends cmsAction {
 
 	public function run($attempt, $to, $letter, $is_nl2br_text = null){
 
+        $before_send = cmsEventsManager::hook('before_send_email', array(
+            'send_email' => true,
+            'success'    => false,
+            'to'         => $to,
+            'letter'     => $letter
+        ));
+
+        if(!$before_send['send_email']){
+            return $before_send['success'];
+        }
+
         $mailer = new cmsMailer();
 
         $mailer->addTo($to['email'], $to['name']);
@@ -26,6 +37,8 @@ class onMessagesQueueSendEmail extends cmsAction {
 
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
+
+        list($letter, $is_nl2br_text) = cmsEventsManager::hook('process_email_letter', array($letter, $is_nl2br_text));
 
         $mailer->setBodyHTML( (!empty($is_nl2br_text) ? nl2br($letter['text']) : $letter['text']) );
 

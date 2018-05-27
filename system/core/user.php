@@ -99,7 +99,9 @@ class cmsUser {
 
                 self::setCookie('guest_date_log', time(), 31536000);
 
-                self::sessionSet('user:date_log', $_date_log);
+                if (!self::isSessionSet('user:date_log')){
+                    self::sessionSet('user:date_log', $_date_log);
+                }
 
             }
 
@@ -163,7 +165,9 @@ class cmsUser {
         // сохраним дату в сессии и обновим в базе
         if (!self::isSessionSet('user:date_log') || ((time()-self::USER_ONLINE_INTERVAL) >= strtotime($user['date_log']))){
 
-            self::sessionSet('user:date_log', $user['date_log']);
+            if (!self::isSessionSet('user:date_log')){
+                self::sessionSet('user:date_log', $user['date_log']);
+            }
 
             $model->updateUserDateLog($user_id);
 

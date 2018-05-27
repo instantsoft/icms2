@@ -2332,6 +2332,7 @@ class modelContent extends cmsModel {
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
         $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
@@ -2352,6 +2353,7 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
+                'avatar'    => $item['user_avatar'],
                 'is_friend' => $user->isFriend($item['user_id'])
             );
 
@@ -2394,6 +2396,7 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 

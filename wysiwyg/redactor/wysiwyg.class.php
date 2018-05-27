@@ -32,6 +32,8 @@ class cmsWysiwygRedactor {
         $plugins = array(
             'fontsize',
             'fullscreen',
+            'smiles',
+            'spoiler',
             'fontcolor'
         );
 
@@ -51,6 +53,8 @@ class cmsWysiwygRedactor {
 
         }
 
+        $options['smilesUrl'] = href_to('typograph', 'get_smiles');
+
         //конвертирование ссылок vimeo и youtube
         $options['convertVideoLinks'] = true;
 
@@ -61,7 +65,7 @@ class cmsWysiwygRedactor {
         $options['convertDivs'] = false;
 
         // прилипание тулбара
-        $options['toolbarFixed'] = true;
+        $options['toolbarFixed'] = false;
 
         if (!$user->is_admin) {
             $options['buttonSource'] = false;
