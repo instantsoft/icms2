@@ -164,7 +164,13 @@ class actionContentItemView extends cmsAction {
         $item['ctype_name'] = $ctype['name'];
 
         if ($ctype['is_cats'] && $item['category_id'] > 1){
+
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+
+            if(!empty($ctype['options']['is_cats_multi'])){
+                $item['categories'] = $this->model->getContentItemCategoriesList($ctype['name'], $item['id']);
+            }
+
         }
 
         // Получаем поля для данного типа контента

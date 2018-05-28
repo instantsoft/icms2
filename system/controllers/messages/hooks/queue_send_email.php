@@ -17,6 +17,8 @@ class onMessagesQueueSendEmail extends cmsAction {
 
         $mailer = new cmsMailer();
 
+        list($letter, $is_nl2br_text, $to) = cmsEventsManager::hook('process_email_letter', array($letter, $is_nl2br_text, $to));
+
         $mailer->addTo($to['email'], $to['name']);
 
         if (!empty($to['email_reply_to'])){
@@ -37,8 +39,6 @@ class onMessagesQueueSendEmail extends cmsAction {
 
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);
-
-        list($letter, $is_nl2br_text) = cmsEventsManager::hook('process_email_letter', array($letter, $is_nl2br_text));
 
         $mailer->setBodyHTML( (!empty($is_nl2br_text) ? nl2br($letter['text']) : $letter['text']) );
 

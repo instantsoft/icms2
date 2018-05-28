@@ -284,7 +284,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
 
 }
 
-function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
+function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = array()){
 
     if (!$wysiwyg){ $wysiwyg = cmsConfig::get('wysiwyg'); }
 
@@ -298,7 +298,7 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
 
     $editor = new $class_name();
 
-    ob_start(); $editor->displayEditor($field_id, $content);
+    ob_start(); $editor->displayEditor($field_id, $content, $config);
 
     return ob_get_clean();
 

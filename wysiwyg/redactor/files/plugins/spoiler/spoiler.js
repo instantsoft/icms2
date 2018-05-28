@@ -44,6 +44,7 @@ RedactorPlugins.spoiler = {
                 text = $(elem).find('.spoiler_body').html();
 
                 text = text.replace(/<br>/gi, '\n');
+                text = text.replace(/<span(.*?)id="selection-marker(.*?)<\/span>/gi, '');
 
                 this.insert_spoiler_node = elem;
 

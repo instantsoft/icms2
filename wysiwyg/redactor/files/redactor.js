@@ -164,7 +164,7 @@
 			toolbarOverflow: false,
 			buttonSource: true,
 
-			buttons: ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
+			buttons: ['html', 'undo', 'redo', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
 					  'outdent', 'indent', 'image', 'video', 'file', 'table', 'link', 'alignment', '|',
 					  'horizontalrule'], /**'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'**/
 			buttonsHideOnMobile: [],
@@ -402,6 +402,16 @@
 				{
 					title: lang.html,
 					func: 'toggle'
+				},
+				undo:
+				{
+					title: lang.undo,
+					func: 'bufferUndo'
+				},
+				redo:
+				{
+					title: lang.redo,
+					func: 'bufferRedo'
 				},
 				formatting:
 				{

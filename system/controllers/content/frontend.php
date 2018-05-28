@@ -476,56 +476,17 @@ class content extends cmsFrontend {
 
         // Если включены категории, добавляем в форму поле выбора категории
         if ($ctype['is_cats'] && ($action != 'edit' || $ctype['options']['is_cats_change'])){
+
+            $cats = $this->getFormCategories($ctype['name']);
+
             $fieldset_id = $form->addFieldset(LANG_CATEGORY, 'category');
+
             $form->addField($fieldset_id,
                 new fieldList('category_id', array(
                         'rules' => array(
                             array('required')
                         ),
-                        'generator' => function($item){
-
-                            $user = cmsUser::getInstance();
-
-                            $content_model = cmsCore::getModel('content');
-                            $ctype = $content_model->getContentTypeByName($item['ctype_name']);
-                            $tree = $content_model->limit(0)->getCategoriesTree($item['ctype_name']);
-                            $level_offset = 0;
-                            $last_header_id = false;
-                            $items = array('' => '' );
-
-                            if ($tree){
-                                foreach($tree as $c){
-
-                                    if(!empty($c['allow_add']) &&  !$user->isInGroups($c['allow_add'])){
-                                        continue;
-                                    }
-
-                                    if ($ctype['options']['is_cats_only_last']){
-										$dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
-                                        if ($c['ns_right']-$c['ns_left'] == 1){
-                                            if ($last_header_id !== false && $last_header_id != $c['parent_id']){
-                                                $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
-                                            }
-                                            $items[$c['id']] = $dash_pad . $c['title'];
-                                        } else if ($c['parent_id']>0) {
-                                            $items['opt'.$c['id']] = array($dash_pad.$c['title']);
-                                            $last_header_id = $c['id'];
-                                        }
-                                        continue;
-                                    }
-
-                                    if (!$ctype['options']['is_cats_only_last']){
-                                        if ($c['parent_id']==0 && !$ctype['options']['is_cats_open_root']){ $level_offset = 1; continue; }
-                                        $items[$c['id']] = str_repeat('-- ', $c['ns_level']-$level_offset).' '.$c['title'];
-                                        continue;
-                                    }
-
-                                }
-                            }
-
-                            return $items;
-
-                        }
+                        'items' => $cats
                     )
                 )
             );
@@ -823,6 +784,58 @@ class content extends cmsFrontend {
         list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', array($form, $item, $ctype), null, $this->request);
 
         return $form;
+
+    }
+
+    public function getFormCategories($ctype_name) {
+
+        $level_offset   = 0;
+        $last_header_id = false;
+        $items          = array('' => '');
+
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if(!$ctype){ return $items; }
+
+        $tree = $this->model->limit(0)->getCategoriesTree($ctype_name);
+        if(!$tree){ return $items; }
+
+        foreach($tree as $c){
+
+            if(!empty($c['allow_add']) &&  !$this->cms_user->isInGroups($c['allow_add'])){
+                continue;
+            }
+
+            if ($ctype['options']['is_cats_only_last']){
+
+                $dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
+
+                if ($c['ns_right']-$c['ns_left'] == 1){
+                    if ($last_header_id !== false && $last_header_id != $c['parent_id']){
+                        $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
+                    }
+                    $items[$c['id']] = $dash_pad . $c['title'];
+                } else if ($c['parent_id']>0) {
+                    $items['opt'.$c['id']] = array($dash_pad.$c['title']);
+                    $last_header_id = $c['id'];
+                }
+
+                continue;
+
+            }
+
+            if (!$ctype['options']['is_cats_only_last']){
+
+                if ($c['parent_id']==0 && !$ctype['options']['is_cats_open_root']){ $level_offset = 1; continue; }
+
+                $items[$c['id']] = str_repeat('-- ', $c['ns_level']-$level_offset).' '.$c['title'];
+
+                continue;
+
+            }
+
+        }
+
+        return $items;
 
     }
 

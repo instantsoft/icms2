@@ -25,6 +25,8 @@ RedactorPlugins.smiles = {
 
         var _self = this;
 
+        this.showProgressBar();
+
         $.post(this.opts.smilesUrl, {}, function(result){
 
             _self.is_loaded = true;
@@ -50,6 +52,9 @@ RedactorPlugins.smiles = {
                 });
 
             }
+
+            _self.hideProgressBar();
+
         }, 'json');
 
         return this;

@@ -2036,6 +2036,23 @@ class modelContent extends cmsModel {
 
 	}
 
+	public function getContentItemCategoriesList($ctype_name, $id){
+
+		$bind_table_name = $this->table_prefix . $ctype_name . '_cats_bind';
+        $cats_table_name = $this->table_prefix . $ctype_name . '_cats';
+
+        $this->join($bind_table_name, 'b', 'b.category_id = i.id');
+
+        $this->filterEqual('b.item_id', $id);
+
+        $this->orderBy('ns_left');
+
+        $this->useCache('content.categories');
+
+		return $this->get($cats_table_name);
+
+	}
+
     public function moveContentItemsToCategory($ctype, $category_id, $items_ids, $fields){
 
         $table_name = $this->table_prefix . $ctype['name'];

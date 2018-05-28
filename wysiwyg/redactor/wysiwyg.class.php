@@ -3,9 +3,9 @@ class cmsWysiwygRedactor {
 
     private static $redactor_loaded = false;
 
-	public function displayEditor($field_id, $content=''){
+	public function displayEditor($field_id, $content = '', $config = array()){
 
-        $this->loadRedactor();
+        $this->loadRedactor($config);
 
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
@@ -13,7 +13,7 @@ class cmsWysiwygRedactor {
 
 	}
 
-    private function loadRedactor() {
+    private function loadRedactor($config = array()) {
 
         if(self::$redactor_loaded){ return false; }
 
@@ -29,21 +29,13 @@ class cmsWysiwygRedactor {
 
         $options = array();
 
-        $plugins = array(
+        $options['plugins'] = array(
             'fontsize',
             'fullscreen',
             'smiles',
             'spoiler',
             'fontcolor'
         );
-
-        foreach($plugins as $plugin){
-
-            $options['plugins'][] = $plugin;
-
-            $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
-
-        }
 
         if($lang !== 'en'){
 
@@ -65,7 +57,8 @@ class cmsWysiwygRedactor {
         $options['convertDivs'] = false;
 
         // прилипание тулбара
-        $options['toolbarFixed'] = false;
+        $options['toolbarFixed'] = true;
+        $options['toolbarFixedBox'] = true;
 
         if (!$user->is_admin) {
             $options['buttonSource'] = false;
@@ -99,6 +92,14 @@ class cmsWysiwygRedactor {
         }
 
         $options['minHeight'] = 200;
+
+        $options = array_merge($options, $config);
+
+        foreach($options['plugins'] as $plugin){
+
+            $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
+
+        }
 
         ?>
 

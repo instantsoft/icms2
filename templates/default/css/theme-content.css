@@ -61,6 +61,16 @@ article div.content_categories:last-child {
     height: 24px;
     line-height: 24px;
 }
+.cats_bar ul {
+    margin: 0 0 10px;
+    list-style: none;
+}
+.cats_bar ul > li {
+    display: inline-block;
+    padding-left: 20px;
+    background: url("../images/icons/folder.png") no-repeat left center;
+    margin-right: 10px;
+}
 
 /* ========================================================================== */
 
