@@ -13,7 +13,9 @@ class widgetContentFilter extends cmsWidget {
         $category = array('id' => 1);
         $item     = array();
 
-        if(strpos($core->uri, '.html') === false){
+        $is_in_item = strpos($core->uri, '.html') !== false || strpos($core->uri, '/view-') !== false;
+
+        if(!$is_in_item){
 
             $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
             if(!empty($current_ctype_category['id'])){
@@ -38,9 +40,11 @@ class widgetContentFilter extends cmsWidget {
 
             $ctype_name = $ctype['name'];
 
-            if(strpos($core->uri, '.html') !== false){
+            if($is_in_item){
                 if(!$item){ return false; }
             }
+
+            $page_url = href_to($ctype_name, isset($category['slug']) ? $category['slug'] : '');
 
             $fields       = cmsModel::getCachedResult('current_ctype_fields');
             $props        = cmsModel::getCachedResult('current_ctype_props');
@@ -48,6 +52,11 @@ class widgetContentFilter extends cmsWidget {
 
             if($props_fields === null){
                 $props_fields = cmsCore::getController('content')->getPropsFields($props);
+            }
+
+            $current_child_ctype = cmsModel::getCachedResult('current_child_ctype');
+            if($current_child_ctype){
+                $page_url = href_to($ctype['name'], $item['slug'].'/view-'.$current_child_ctype['name']);
             }
 
         } else {
@@ -58,6 +67,8 @@ class widgetContentFilter extends cmsWidget {
             $props  = $content_controller->model->getContentProps($ctype_name, $category['id']);
 
             $props_fields = $content_controller->getPropsFields($props);
+
+            $page_url = href_to($ctype_name, isset($category['slug']) ? $category['slug'] : '');
 
         }
 
@@ -124,7 +135,7 @@ class widgetContentFilter extends cmsWidget {
         return array(
 			'ctype_name'   => $ctype_name,
 			'category'     => $category,
-            'page_url'     => href_to($ctype_name, isset($category['slug']) ? $category['slug'] : ''),
+            'page_url'     => $page_url,
             'fields'       => $fields,
             'props_fields' => $props_fields,
             'props'        => $props,
