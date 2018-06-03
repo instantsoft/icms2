@@ -2312,7 +2312,7 @@ class modelContent extends cmsModel {
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
-        if (!$this->approved_filter_disabled) { $this->filterHiddenParents(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         $this->useCache("content.list.{$ctype_name}");
 
@@ -2336,7 +2336,7 @@ class modelContent extends cmsModel {
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
-        if (!$this->approved_filter_disabled) { $this->filterHiddenParents(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
 

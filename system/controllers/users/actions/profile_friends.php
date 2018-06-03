@@ -30,7 +30,7 @@ class actionUsersProfileFriends extends cmsAction {
                 'class' => 'ajax-modal',
                 'href'  => href_to('users', 'keep_in_subscribers', '{id}').'?back='.href_to_profile($profile, array('subscribers')),
                 'handler' => function($user){
-                    return $this->is_own_profile;
+                    return $this->is_own_profile && empty($user['is_deleted']);
                 }
             )
         ));

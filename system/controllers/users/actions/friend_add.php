@@ -26,7 +26,17 @@ class actionUsersFriendAdd extends cmsAction {
             // Если запрос от друга уже существует
             //
 
-            if ($this->model->isFriendshipRequested($friend['id'], $this->cms_user->id)){
+            $friendship_requested = $this->model->getFriendshipRequested($friend['id'], $this->cms_user->id);
+
+            if ($friendship_requested !== false){
+
+                // если в подписчиках, спрашиваем подтверждение
+                if ($friendship_requested === null && !$this->request->has('submit')){
+                    return $this->cms_template->renderAsset('ui/confirm', array(
+                        'confirm_title'  => LANG_USERS_FRIENDS_ADD.'?',
+                        'confirm_action' => $this->cms_template->href_to('friend_add', $friend['id'])
+                    ), $this->request);
+                }
 
                 $this->model->addFriendship($this->cms_user->id, $friend['id']);
 

@@ -114,7 +114,7 @@ class modelActivity extends cmsModel{
 
     public function getEntriesCount(){
 
-        if (!$this->approved_filter_disabled) { $this->filterHiddenParents(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         $this->useCache('activity.entries');
 
@@ -137,7 +137,7 @@ class modelActivity extends cmsModel{
             $this->orderBy('date_pub', 'desc');
         }
 
-        if (!$this->approved_filter_disabled) { $this->filterHiddenParents(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         $this->useCache('activity.entries');
 

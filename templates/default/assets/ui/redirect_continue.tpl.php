@@ -8,7 +8,12 @@
              <?php } ?>
         </div>
     <?php } ?>
-    <form action="<?php echo $redirect_url; ?>" method="post">
+    <form id="redirect_form" action="<?php echo $redirect_url; ?>" method="post">
         <?php echo html_submit(LANG_CONTINUE); ?>
     </form>
 </div>
+<script>
+    setTimeout(function (){
+        $('#redirect_form .button-submit').trigger('click');
+    }, 1000);
+</script>

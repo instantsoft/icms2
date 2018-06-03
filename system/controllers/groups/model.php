@@ -557,7 +557,8 @@ class modelGroups extends cmsModel {
 
         $this->select('m.role', 'role');
 
-        $this->joinInner('groups_members', 'm', "m.user_id = '{$user_id}'");
+        $this->joinInner('groups_members', 'm', 'm.group_id = i.id');
+        $this->filterEqual('m.user_id', $user_id);
 
         $groups = $this->get('groups', function($group, $model){
 

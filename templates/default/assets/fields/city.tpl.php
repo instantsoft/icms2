@@ -5,8 +5,8 @@
 <?php if(!is_array($value)){ ?>
 
     <?php
-    $this->addJSFromContext('templates/default/js/jquery-chosen.js');
-    $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+    $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
+    $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
     ?>
 
     <div class="location_list location_group_<?php echo $field->data['location_group']; ?>">

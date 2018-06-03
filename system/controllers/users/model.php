@@ -855,7 +855,7 @@ class modelUsers extends cmsModel {
 
     }
 
-    public function isFriendshipRequested($user_id, $friend_id){
+    public function getFriendshipRequested($user_id, $friend_id, $field = 'is_mutual'){
 
         if(!$user_id){ return false; }
 
@@ -870,8 +870,12 @@ class modelUsers extends cmsModel {
             $this->filterIsNull('is_mutual');
         $this->filterEnd();
 
-        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
+        return $this->getFieldFiltered('{users}_friends', $field);
 
+    }
+
+    public function isFriendshipRequested($user_id, $friend_id){
+        return $this->getFriendshipRequested($user_id, $friend_id, 'id');
     }
 
     public function isFriendshipExists($user_id, $friend_id){
