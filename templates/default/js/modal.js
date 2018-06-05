@@ -4,7 +4,7 @@ icms.modal = (function ($) {
 
     this.onDocumentReady = function() {
         icms.modal.bind('a.ajax-modal');
-        icms.modal.bind('.ajax-modal a');
+        icms.modal.bind('.ajax-modal > a');
     };
 
     //====================================================================//

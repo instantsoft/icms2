@@ -759,13 +759,14 @@ class content extends cmsFrontend {
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
                     $rules[] = array('max', $pub_max_days);
-                    for($d=$min; $d<=$pub_max_days; $d++) { $days[$d] = $d; }
+                    for($d=$pub_max_days; $d>=$min; $d--) { $days[$d] = $d; }
 					$form->addField($pub_fieldset_id, new fieldList('pub_days', array(
-						'title' => $title,
-						'hint' => $hint,
-						'items' => $days,
-						'rules' => $rules
-					)));
+						'title'   => $title,
+                        'hint'    => $hint,
+                        'default' => $pub_max_days,
+                        'items'   => $days,
+                        'rules'   => $rules
+                    )));
 				} else {
                     $rules = array();
                     if ($action == 'add'){ $rules[] = array('required'); $min = 1; }

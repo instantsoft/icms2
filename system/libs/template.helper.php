@@ -225,7 +225,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
  */
 function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
     $attr_str = html_attr_str($attributes);
-    $class = 'button-submit';
+    $class = 'button-submit button';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
 	return '<input class="'.$class.'" type="submit" name="'.$name.'" value="'.htmlspecialchars($caption).'" '.$attr_str.'/>';
 }
