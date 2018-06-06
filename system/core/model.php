@@ -695,6 +695,13 @@ class cmsModel {
         return $this;
     }
 
+    public function filterNotLike($field, $value){
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        $value = $this->db->escape($value);
+        $this->filter("$field NOT LIKE '$value'");
+        return $this;
+    }
+
     public function filterBetween($field, $start, $end){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $start = $this->db->escape($start);
