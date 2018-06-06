@@ -34,6 +34,7 @@
     define('LANG_FILTER_FIELD',              'Filter by field');
     define('LANG_FILTER_ADD',                'New filter');
     define('LANG_FILTER_LIKE',               'contains');
+    define('LANG_FILTER_NOT_LIKE',           'do not contains');
     define('LANG_FILTER_LIKE_BEGIN',         'starts with');
     define('LANG_FILTER_LIKE_END',           'ends with');
     define('LANG_FILTER_DATE_YOUNGER',       'not earlier, days');
