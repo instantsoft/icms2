@@ -26,7 +26,7 @@ class actionAuthReset extends cmsAction {
 
             cmsUser::addSessionMessage(LANG_RESTORE_TOKEN_EXPIRED, 'error');
 
-            $this->redirectToHome();
+            $this->redirectToAction('restore');
 
         }
 

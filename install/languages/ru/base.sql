@@ -304,7 +304,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (18, 'Фотоальбомы', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\r\n  2 | Векторы\r\n  3 | Иллюстрации\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (21, 'География', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (22, 'Подписки', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
 

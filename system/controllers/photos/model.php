@@ -491,6 +491,7 @@ class modelPhotos extends cmsModel{
         if (!$album) { return false; }
 
         $album['ctype'] = $content_model->getContentTypeByName('albums');
+        $album['ctype_name'] = $album['ctype']['name'];
 
         return $album;
 
