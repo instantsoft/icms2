@@ -1083,6 +1083,7 @@ class cmsModel {
 
                     // строки
                     case 'lk': $this->filterLike($filter['field'], '%'.$filter['value'].'%'); break;
+                    case 'ln': $this->filterNotLike($filter['field'], '%'.$filter['value'].'%'); break;
                     case 'lb': $this->filterLike($filter['field'], $filter['value'] . '%'); break;
                     case 'lf': $this->filterLike($filter['field'], '%' . $filter['value']); break;
 
