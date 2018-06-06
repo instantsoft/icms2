@@ -25,10 +25,11 @@ class formWidgetUsersListOptions extends cmsForm {
                     new fieldList('options:dataset', array(
                         'title' => LANG_WD_USERS_LIST_DATASET,
                         'items' => array(
-                            'latest' => LANG_USERS_DS_LATEST,
-                            'rating' => LANG_USERS_DS_RATED,
-                            'popular' => LANG_USERS_DS_POPULAR,
-                            'date_log' => LANG_USERS_DS_DATE_LOG,
+                            'latest'      => LANG_USERS_DS_LATEST,
+                            'subscribers' => LANG_USERS_DS_SUBSCRIBERS,
+                            'rating'      => LANG_USERS_DS_RATED,
+                            'popular'     => LANG_USERS_DS_POPULAR,
+                            'date_log'    => LANG_USERS_DS_DATE_LOG
                         )
                     )),
 
@@ -38,6 +39,32 @@ class formWidgetUsersListOptions extends cmsForm {
                             'list' => LANG_WD_USERS_LIST_STYLE_LIST,
                             'tiles' => LANG_WD_USERS_LIST_STYLE_TILES,
                         )
+                    )),
+
+                    new fieldList('options:list_fields', array(
+                        'title' => LANG_WD_USERS_LIST_LIST_FIELDS,
+                        'is_chosen_multiple' => true,
+                        'generator' => function($item) {
+
+                            $model = cmsCore::getModel('content');
+                            $model->setTablePrefix('');
+                            $model->orderBy('ordering');
+                            $fields = $model->getContentFields('{users}');
+
+                            $items = array();
+
+                            if ($fields) {
+                                foreach ($fields as $field) {
+                                    if(in_array($field['name'], array('nickname', 'avatar'))){
+                                        continue;
+                                    }
+                                    $items[$field['id']] = $field['title'];
+                                }
+                            }
+
+                            return $items;
+
+                        },
                     )),
 
                     new fieldListGroups('options:groups', array(
@@ -50,10 +77,10 @@ class formWidgetUsersListOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

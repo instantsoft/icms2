@@ -32,6 +32,12 @@ function grid_ctype_fields($controller){
             'flag'  => true,
 			'flag_toggle' => href_to($controller->name, 'ctypes', array('fields_toggle', 'list', '{ctype_id}', '{id}')),
             'width' => 60,
+            'flag_handler' => function($value, $row){
+                if(!empty($row['options']['context_list']) && array_search('0', $row['options']['context_list']) === false){
+                    return -1;
+                }
+                return $value;
+            }
         ),
         'is_in_item' => array(
             'title' => LANG_CP_FIELD_IN_ITEM_SHORT,

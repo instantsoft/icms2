@@ -56,6 +56,38 @@ function files_clear_directory($directory){
 }
 
 /**
+ * Удаляет файл и его родительские директории
+ * @param string $file_path Отностительный или полный путь к файлу
+ * @param integer $delete_parent_dir Количество родительских директорий, которые нужно также удалить, если они пустые
+ * @return boolean
+ */
+function files_delete_file($file_path, $delete_parent_dir = 0) {
+
+    if(!is_file($file_path)){
+        $file_path = cmsConfig::get('upload_path') . $file_path;
+    }
+
+    $success = @unlink($file_path);
+
+    if($delete_parent_dir && $success){
+
+        $parent_dir = pathinfo($file_path, PATHINFO_DIRNAME);
+
+        for ($i = 1; $i <= $delete_parent_dir; $i++) {
+
+            if(!@rmdir($parent_dir)){ break; }
+
+            $parent_dir = pathinfo($parent_dir, PATHINFO_DIRNAME);
+
+        }
+
+    }
+
+    return $success;
+
+}
+
+/**
  * Возвращает дерево каталогов и файлов по указанному пути в виде
  * рекурсивного массива
  * @param string $path
@@ -169,6 +201,17 @@ function files_format_bytes($bytes) {
 }
 
 /**
+ * Возвращает 32-х символьный хэш, привязанный к ip адресу
+ * используется для защиты от хотлинка
+ *
+ * @param string $file_path Путь к файлу
+ * @return string
+ */
+function files_user_file_hash($file_path = ''){
+    return md5(cmsUser::getIp().md5($file_path.cmsConfig::get('root_path')));
+}
+
+/**
  * Очищает имя файла от специальных символов
  *
  * @param string $filename
@@ -177,7 +220,7 @@ function files_format_bytes($bytes) {
 function files_sanitize_name($filename){
 
 	$path_parts = pathinfo($filename);
-    $filename = lang_slug($path_parts['filename']) . '.' . $path_parts['extension'];
+    $filename = lang_slug($path_parts['filename']) . '.' . (isset($path_parts['extension']) ? $path_parts['extension'] : '');
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
     $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
@@ -193,31 +236,33 @@ function files_sanitize_name($filename){
 /**
  * Получает данные по заданному url
  * @param string $url URL, откуда нужно получить данные
+ * @param integer $timeout Таймаут соединения
+ * @param boolean $json_decode Преобразовывать JSON
  * @return string
  */
-function file_get_contents_from_url($url){
+function file_get_contents_from_url($url, $timeout = 5, $json_decode = false){
 
-    $data = @file_get_contents($url);
+    if (function_exists('curl_init')){
 
-    if ($data===false){
+        $curl = curl_init();
 
-        if (function_exists('curl_init')){
-
-            $curl = curl_init();
-
-            if(strpos($url, 'https') === 0){
-                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            }
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_setopt($curl, CURLOPT_TIMEOUT, 3);
-            $data = curl_exec($curl);
-            curl_close($curl);
-
+        if(strpos($url, 'https') === 0){
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         }
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        $data = curl_exec($curl);
+        curl_close($curl);
 
+    } else {
+        $data = @file_get_contents($url);
+    }
+
+    if($json_decode){
+        return json_decode($data, true);
     }
 
     return $data;
@@ -668,5 +713,39 @@ function img_rotate($angle, $image_res) {
         'height'    => imagesy($new_image_res),
         'image_res' => $new_image_res
     );
+
+}
+
+/**
+ * Выполняет команду в shell и возвращает массив строк ответа
+ *
+ * @param string $command Команда
+ * @param string $postfix Строка после команды
+ * @return array
+ */
+function console_exec_command($command, $postfix = ' 2>&1'){
+
+    if(!function_exists('exec')){
+        return null;
+    }
+
+    $buffer = array();
+    $err    = '';
+
+    $result = exec($command.$postfix, $buffer, $err);
+
+    if($err !== 127){
+        if(!isset($buffer[0])){
+            $buffer[0] = $result;
+        }
+        $b = strtolower($buffer[0]);
+        if(strstr($b,'error') || strstr($b,' no ') || strstr($b,'not found') || strstr($b,'No such file or directory')){
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+    return $buffer;
 
 }

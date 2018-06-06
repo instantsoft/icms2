@@ -4,11 +4,11 @@
 
 <?php if($field->title){ ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
-<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], array('id'=>$field->id), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], array('id'=>$field->id), array('minDate'=>date('d.m.Y', 86400))); ?>
 
 <?php if($field->data['show_time']){ ?>
     <?php echo html_select_range($field->data['fname_hours'], 0, 23, 1, true, $field->data['hours']); ?> :
-    <?php echo html_select_range($field->data['fname_mins'], 0, 59, 5, true, $field->data['mins']); ?>
+    <?php echo html_select_range($field->data['fname_mins'], 0, 59, 1, true, $field->data['mins']); ?>
 <?php } ?>
 
     <a class="ajaxlink" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#"><?php echo LANG_PARSER_CURRENT_TIME; ?></a>

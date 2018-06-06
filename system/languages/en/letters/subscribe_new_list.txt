@@ -1,0 +1,11 @@
+[subject:New subscription list without a title - {site}]
+
+Hello.
+
+For some reason, a subscription list was created without an automatically generated title.
+Go to <a href="{admin_slist_url}">this link</a> and enter a title for the list.
+You must be logged in as an administrator.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

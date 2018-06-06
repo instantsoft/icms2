@@ -42,6 +42,17 @@ class actionRatingVote extends cmsAction{
             'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 
+        $target_model = cmsCore::getModel( $target_controller );
+
+        $target = $target_model->getRatingTarget($target_subject, $target_id);
+
+        if (!$target){
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_ERROR
+            ));
+        }
+
         $cookie_key = $target_subject.$target_id.$target_controller;
 
         // Этот голос уже учитывался?
@@ -53,13 +64,11 @@ class actionRatingVote extends cmsAction{
             }
             return $this->cms_template->renderJSON(array(
                 'success' => false,
+                'rating'  => html_signed_num($target['rating']),
+                'css_class' => html_signed_class($target['rating']) . ($this->options['is_show'] ? ' clickable' : ''),
                 'message' => LANG_RATING_VOTED
             ));
         }
-
-        $target_model = cmsCore::getModel( $target_controller );
-
-        $target = $target_model->getRatingTarget($target_subject, $target_id);
 
         if (!empty($target['user_id'])){
             if($this->cms_user->is_logged){
@@ -86,6 +95,21 @@ class actionRatingVote extends cmsAction{
             'target'  => $target,
             'vote'    => $vote,
             'rating'  => $rating
+        ));
+
+        // ссылка на проголосовавшего
+        if($this->cms_user->is_logged){
+            $user_link = '<a href="'.href_to_profile($this->cms_user).'">'.$this->cms_user->nickname.'</a>';
+        } else {
+            $user_link = LANG_GUEST;
+        }
+        // уведомляем автора записи
+        $this->controller_messages->addRecipient($target['user_id'])->sendNoticePM(array(
+            'content' => sprintf(LANG_RATING_PM,
+                    $user_link,
+                    string_lang('LANG_RATING_'.$direction),
+                    $target['page_url'],
+                    $target['title'])
         ));
 
         // Собираем результат

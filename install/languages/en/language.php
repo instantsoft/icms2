@@ -4,7 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank">Installation Manual</a>');
+    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please select a language');
@@ -27,12 +27,12 @@
 
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');
-    define('LANG_LICENSE_NOTE',             'InstantCMS is licensed under <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU/GPL</a> v2.');
+    define('LANG_LICENSE_NOTE',             'InstantCMS is licensed under <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> v2.');
     define('LANG_LICENSE_ORIGINAL',         'English');
     define('LANG_LICENSE_TRANSLATION',      'Russian');
 
     define('LANG_PHP_VERSION',              'PHP version');
-    define('LANG_PHP_VERSION_REQ',          'PHP 5.3 or higher is required');
+    define('LANG_PHP_VERSION_REQ',          'PHP 5.5 or higher is required');
     define('LANG_PHP_VERSION_DESC',         'Installed version');
 	define('LANG_PHP_VARIABLES',            'PHP configuration');
 	define('LANG_PHP_VARIABLES_HINT',       'Required conditions are marked gray');
@@ -90,6 +90,7 @@
     define('LANG_SITE_HOMETITLE',           "Main page title");
     define('LANG_SITE_METAKEYS',            "Keywords");
     define('LANG_SITE_METADESC',            "Description");
+    define('LANG_SITE_CHECK_UPDATE',        "Automatically check for InstantCMS updates");
 
     define('LANG_SITE_SITENAME_ERROR',      "Site name is required");
     define('LANG_SITE_HOMETITLE_ERROR',     "Home title is required");
@@ -125,8 +126,8 @@
     define('LANG_FINISH_TO_SITE',           'Visit site');
 
     define('LANG_CFG_OFF_REASON',           'The site is closed for maintenance');
-    define('LANG_CFG_SITENAME',             'InstantCMS 2.0');
-    define('LANG_CFG_HOMETITLE',            'InstantCMS 2.0');
+    define('LANG_CFG_SITENAME',             'InstantCMS 2');
+    define('LANG_CFG_HOMETITLE',            'InstantCMS 2');
     define('LANG_CFG_DATE_FORMAT',          'd.m.Y');
     define('LANG_CFG_DATE_FORMAT_JS',       'dd.mm.yy');
     define('LANG_CFG_TIME_ZONE',            'Europe/London');

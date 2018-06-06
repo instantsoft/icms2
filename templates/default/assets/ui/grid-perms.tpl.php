@@ -29,6 +29,10 @@
 
                         <?php foreach($groups as $group){ ?>
 
+                            <?php if($group['id'] == GUEST_GROUP_ID && empty($rule['show_for_guest_group'])){ ?>
+                                <td class="center"></td>
+                            <?php continue; } ?>
+
                             <?php
                                 $default =  isset($values[$rule['id']][$group['id']]) ?
                                             $values[$rule['id']][$group['id']] :

@@ -23,11 +23,9 @@ class widgetCommentsList extends cmsWidget {
             $model->filterEqual('is_private', 0);
         }
 
-        $items = $model->
-                    filterIsNull('is_deleted')->
-                    limit($limit)->
-                    getComments();
+        cmsEventsManager::hook('comments_list_filter', $model);
 
+        $items = $model->filterIsNull('is_deleted')->limit($limit)->getComments();
         if (!$items) { return false; }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);

@@ -4,6 +4,7 @@
 
         'hooks' => array(
             'admin_dashboard_chart',
+            'admin_dashboard_block',
             'menu_users',
             'rating_vote',
             'user_notify_types',
@@ -14,7 +15,11 @@
             'wall_permissions',
             'wall_after_add',
             'wall_after_delete',
-            'sitemap_sources'
+            'content_privacy_types',
+            'content_view_hidden',
+            'sitemap_sources',
+            'content_before_childs',
+            'ctype_relation_childs'
         )
 
     );

@@ -1,0 +1,10 @@
+[subject:{user_nickname} request rejected - {site}]
+
+Hello.
+
+Your request to join in <a href="{group_url}">{group_title}</a> group was rejected by the administrator: <a href="{user_url}">{user_nickname}</a>.
+
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

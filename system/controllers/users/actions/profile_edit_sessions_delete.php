@@ -9,7 +9,7 @@ class actionUsersProfileEditSessionsDelete extends cmsAction {
         if(!$id){ cmsCore::error404(); }
 
         // проверяем наличие доступа
-        if ($profile['id'] != $this->cms_user->id && !$this->cms_user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         $ses = $this->model->getItemById('{users}_auth_tokens', $id);
         if(!$ses){ cmsCore::error404(); }

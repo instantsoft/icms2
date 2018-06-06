@@ -9,11 +9,17 @@
     $this->addMenuItems('settings', $this->controller->getSettingsMenu());
 
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_SETTINGS_GLOBAL
+		'class' => 'transfer ajax-modal',
+		'title' => LANG_MAILCHECK_MENU,
+		'href'  => $this->href_to('settings', array('mail_check'))
 	));
+
+	$this->addToolButton(array(
+		'class'  => 'help',
+        'title'  => LANG_HELP,
+        'target' => '_blank',
+        'href'   => LANG_HELP_URL_SETTINGS_GLOBAL
+    ));
 
 ?>
 
@@ -38,6 +44,10 @@
                 setThemeConfigURL(this);
             }).triggerHandler('change');
         });
+        $('.auto_copy_value').on('click', function (){
+            $(this).parents('.input-prefix-suffix').find('input').val($(this).data('value'));
+            return false;
+        });
     });
 
     function setThemeConfigURL(obj){
@@ -45,7 +55,7 @@
         if($.inArray(theme, templates_has_options) === -1){
             theme = false;
         }
-        var theme_config_link = $(obj).parent().find('.hint a');
+        var theme_config_link = $(obj).parent().find('.hint a.theme_settings');
         if(theme){
             theme_config_link.show().attr('href', theme_config_link.data('url')+'/'+theme);
         } else {

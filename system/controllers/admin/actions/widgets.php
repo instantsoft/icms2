@@ -46,8 +46,9 @@ class actionAdminWidgets extends cmsAction {
 
     public function getSchemeHTML($name=''){
 
-        $scheme_html = $this->cms_template->getSchemeHTML($name);
+        $template = new cmsTemplate($name);
 
+        $scheme_html = $template->getSchemeHTML();
         if (!$scheme_html) { return false; }
 
         if (!preg_match_all('/{([a-zA-Z0-9:_\-]+)}/u', $scheme_html, $matches)) { return false; }
@@ -63,12 +64,12 @@ class actionAdminWidgets extends cmsAction {
             }
 
             if ($type=='block') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
+                if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
                 $replace_html = '<div class="block"><span>'.$value.'</span></div>';
             }
 
             if ($type=='cell') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
+                if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
                 $replace_html = '<div class="cell"><span>'.$value.'</span></div>';
             }
 

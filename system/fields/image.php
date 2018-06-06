@@ -15,7 +15,7 @@ class fieldImage extends cmsFormField {
                 'title'     => LANG_PARSER_IMAGE_SIZE_TEASER,
                 'default'   => 'small',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
                 }
@@ -24,7 +24,7 @@ class fieldImage extends cmsFormField {
                 'title'     => LANG_PARSER_IMAGE_SIZE_FULL,
                 'default'   => 'big',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
                 }
@@ -33,7 +33,7 @@ class fieldImage extends cmsFormField {
                 'title'     => LANG_PARSER_IMAGE_SIZE_MODAL,
                 'default'   => '',
                 'generator' => function (){
-                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return array('' => '') + $presets;
                 }
@@ -101,16 +101,13 @@ class fieldImage extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $config = cmsConfig::getInstance();
-
         if (!is_null($old_value) && !is_array($old_value)){
 
             $old_value = cmsModel::yamlToArray($old_value);
 
             if ($old_value != $value){
                 foreach($old_value as $image_url){
-                    $image_path = $config->upload_path . $image_url;
-                    @unlink($image_path);
+                    files_delete_file($image_url, 2);
                 }
             }
 
@@ -120,14 +117,27 @@ class fieldImage extends cmsFormField {
 
         if (empty($sizes) || empty($value)) { return $value; }
 
+        $upload_path = cmsConfig::get('upload_path');
+
+        $image_urls = array();
+
         foreach($value as $size => $image_url){
-            if (!in_array($size, $sizes)){
-                $image_path = $config->upload_path . $image_url;
-                @unlink($image_path);
+
+            $image_url = str_replace(array('"', "'", ' ', '#'), '', html_entity_decode($image_url));
+
+            if(!is_file($upload_path.$image_url)){
+                continue;
             }
+
+            if (!in_array($size, $sizes)){
+                files_delete_file($image_url, 2); continue;
+            }
+
+            $image_urls[$size] = $image_url;
+
         }
 
-        return $value;
+        return $image_urls ?: null;
 
     }
 
@@ -137,11 +147,8 @@ class fieldImage extends cmsFormField {
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
-        $config = cmsConfig::getInstance();
-
         foreach($value as $image_url){
-            $image_path = $config->upload_path . $image_url;
-            @unlink($image_path);
+            files_delete_file($image_url, 2);
         }
 
         return true;

@@ -1,53 +1,57 @@
 <?php
-/******************************************************************************/
-//                                                                            //
-//                             InstantCMS 2                                   //
-//                        http://instantcms.ru/                               //
-//                   produced by InstantSoft, instantsoft.ru                  //
-//                        LICENSED BY GNU/GPL v2                              //
-//                                                                            //
-/******************************************************************************/
-	session_start();
 
-	define('VALID_RUN', true);
+/**
+ * @file
+ * Файл, который обслуживает все запросы страниц InstantCMS.
+ *
+ * Весь код InstantCMS выпущен в соответствии с лицензией GNU General Public License v2.
+ * Смотрите файлы license.en.txt и license.ru.txt в корне вашей установки копии InstantCMS.
+ * Сделано в InstantSoft, instantsoft.ru, instantcms.ru.
+ */
 
-	// Устанавливаем кодировку
-	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS 2');
+/**
+ * Константа, по которой можно отследить текущий тип запуска CMS
+ */
+define('VALID_RUN', true);
 
-    require_once 'bootstrap.php';
+/**
+ * Константа, наличие которой говорит о том, что нам нужны сессии
+ */
+define('SESSION_START', true);
 
-    if ($config->emulate_lag) { usleep(350000); }
+header('Content-type:text/html; charset=utf-8');
+header('X-Powered-By: InstantCMS');
 
-    //Запускаем роутинг
-    $core->route($_SERVER['REQUEST_URI']);
+require_once 'bootstrap.php';
 
-    // Инициализируем шаблонизатор
-    $template = cmsTemplate::getInstance();
+if ($config->emulate_lag) { usleep(350000); }
 
-    // Если сайт выключен, закрываем его от посетителей
-    if (!$config->is_site_on) {
-        if (href_to('auth', 'login') != href_to_current() && !cmsUser::isAdmin()){
-            cmsCore::errorMaintenance();
-        }
-    }
-    // Если гостям запрещено просматривать сайт, перенаправляем на страницу авторизации
-    if (!empty($config->is_site_only_auth_users)) {
-        if (!cmsUser::isLogged() && !in_array($core->uri_controller, array('auth', 'geo'))) {
-            cmsUser::goLogin();
-        }
-    }
+//Запускаем роутинг
+$core->route($_SERVER['REQUEST_URI']);
 
-    cmsEventsManager::hook('engine_start');
+// Инициализируем шаблонизатор
+$template = cmsTemplate::getInstance();
+
+cmsEventsManager::hook('engine_start');
+
+// загружаем и устанавливаем страницы для текущего URI
+$core->loadMatchedPages();
+
+// Проверяем доступ
+if(cmsEventsManager::hook('page_is_allowed', true)){
 
     //Запускаем контроллер
-	$core->runController();
-    $core->runWidgets();
+    $core->runController();
 
-    //Выводим готовую страницу
-    $template->renderPage();
+}
 
-    cmsEventsManager::hook('engine_stop');
+// формируем виджеты
+$core->runWidgets();
 
-    // Останавливаем кеш
-    cmsCache::getInstance()->stop();
+//Выводим готовую страницу
+$template->renderPage();
+
+cmsEventsManager::hook('engine_stop');
+
+// Останавливаем кеш
+cmsCache::getInstance()->stop();

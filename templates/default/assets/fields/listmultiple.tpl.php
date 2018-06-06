@@ -1,5 +1,5 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
-<?php echo html_select_multiple($field->element_name, $field->data['items'], $value, array('id'=>$field->id)); ?>
+<?php echo html_select_multiple($field->element_name, $field->data['items'], $value, array('id'=>$field->id, 'class' => $field->is_vertical ? 'block_labels' : '')); ?>
 
 <?php if($field->getProperty('show_all')){ ?>
 

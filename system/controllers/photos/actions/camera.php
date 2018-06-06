@@ -18,7 +18,7 @@ class actionPhotosCamera extends cmsAction{
 
         $this->model->limitPagePlus($page, $perpage);
 
-        $this->model->orderBy($this->options['ordering'], 'desc');
+        $this->model->orderBy($this->options['ordering'], $this->options['orderto']);
 
         $photos = $this->getPhotosList();
         if (!$photos) { cmsCore::error404(); }

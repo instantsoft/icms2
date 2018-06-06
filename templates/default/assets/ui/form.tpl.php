@@ -1,3 +1,4 @@
+<?php $this->addJS($this->getJavascriptFileName('jquery-cookie')); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
@@ -9,8 +10,8 @@
     $is_ajax = $attributes['method']=='ajax';
     $method = $is_ajax ? 'post' : $attributes['method'];
 
-    $default_submit = array('title' => LANG_SAVE);
-    $default_cancel = array('title' => LANG_CANCEL, 'href'=>href_to_home(), 'show'=>false);
+    $default_submit = array('title' => LANG_SAVE, 'show' => true);
+    $default_cancel = array('title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false);
 
     $submit = isset($attributes['submit']) ? array_merge($default_submit, $attributes['submit']) : $default_submit;
     $cancel = isset($attributes['cancel']) ? array_merge($default_cancel, $attributes['cancel']) : $default_cancel;
@@ -18,9 +19,10 @@
     $prepend_html = isset($attributes['prepend_html']) ? $attributes['prepend_html'] : '';
     $append_html = isset($attributes['append_html']) ? $attributes['append_html'] : '';
 
-    $form_id = uniqid();
+    $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : md5(microtime(true));
     $index = 0;
 
+    $visible_depend = array();
 ?>
 <form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $method; ?>"
@@ -55,8 +57,7 @@
         <?php if (empty($fieldset['is_empty']) && empty($fieldset['childs'])) { continue; } ?>
 
             <div id="tab-<?php echo $fieldset_id; ?>" class="tab" <?php if($form->is_tabbed && $index){ ?>style="display: none;"<?php } ?>>
-            <fieldset id="fset_<?php echo $fieldset_id; ?>"
-            <?php if (isset($fieldset['class'])){ ?>class="<?php echo $fieldset['class']; ?>"<?php } ?>
+            <fieldset id="fset_<?php echo $fieldset_id; ?>" class="<?php if (!empty($fieldset['is_collapsed'])){ ?>is_collapsed <?php if (!empty($fieldset['collapse_open'])){ ?>do_expand<?php } else { ?>is_collapse<?php } ?><?php } ?><?php if (isset($fieldset['class'])){ ?><?php echo $fieldset['class']; ?><?php } ?>"
             <?php if (isset($fieldset['is_hidden'])){ ?>style="display:none"<?php } ?>>
 
                 <?php if (!empty($fieldset['title']) && !$form->is_tabbed){ ?>
@@ -122,9 +123,14 @@
                             }
                         }
 
+                        if($field->visible_depend){
+                            $visible_depend[] = $field;
+                            $classes[] = 'child_field';
+                        }
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
-                        $id = "f_{$field->id}";
+                        $id = 'f_'.$field->id;
 
                     ?>
 
@@ -140,7 +146,7 @@
 
                         <?php } else { ?>
 
-                            <?php echo html_input('hidden', $name, $value); ?>
+                            <?php echo html_input('hidden', $name, $value, array('id' => $name)); ?>
 
                         <?php } ?>
 
@@ -163,6 +169,21 @@
             <?php if ($form->is_tabbed){ ?>
                 initTabs('#<?php echo $form_id; ?>');
             <?php } ?>
+                $('.is_collapsed legend').on('click', function (){
+                    var _fieldset = $(this).closest('.is_collapsed');
+                    $(_fieldset).toggleClass('is_collapse do_expand');
+                    $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
+                });
+                $('.is_collapsed').each(function (){
+                    if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
+                        $(this).addClass('do_expand').removeClass('is_collapse'); return;
+                    }
+                });
+        <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
+                icms.forms.addVisibleDepend('<?php echo $form_id; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
+            <?php } ?>
+                icms.forms.VDReInit();
+            <?php } ?>
             });
         </script>
 
@@ -177,7 +198,20 @@
     <?php echo $append_html; ?>
 
     <div class="buttons">
-        <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php if ($submit['show']) { ?>
+            <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php } ?>
+        <?php if(isset($attributes['buttons'])){ ?>
+            <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php if (!empty($button['hide'])) { continue; } ?>
+                <?php echo html_button(
+                        $button['title'],
+                        $button['name'],
+                        (isset($button['onclick']) ? $button['onclick'] : ''),
+                        (isset($button['attributes']) ? $button['attributes'] : array())
+                    ); ?>
+            <?php } ?>
+        <?php } ?>
         <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'", array('class'=>'button-cancel')); } ?>
     </div>
 
@@ -186,8 +220,8 @@
     <script type="text/javascript">
         $(function (){
             $('#<?php echo $form_id; ?>').on('submit', function (){
-                return icms.forms.submitAjax(this);
+                return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
             });
         });
     </script>
-<?php } ?>
+<?php }

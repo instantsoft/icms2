@@ -74,9 +74,9 @@ function string_lang($constant, $default=false){
  */
 function string_mask_to_regular($mask){
     return str_replace(array(
-        '%','/','*','?'
+        '%','/','*','?','{slug}'
     ), array(
-        '([0-9]+)','\/','(.*)','\?'
+        '([0-9]+)','\/','(.*)','\?','([a-z0-9\-]*)'
     ), trim($mask));
 }
 
@@ -300,7 +300,7 @@ function string_date_age_max($date, $is_add_back=false){
  * @param string $date2
  * @return array
  */
-function real_date_diff($date1, $date2 = NULL){
+function real_date_diff($date1, $date2 = null){
 
     $diff = array();
 
@@ -309,8 +309,11 @@ function real_date_diff($date1, $date2 = NULL){
     //Если вторая дата не задана принимаем ее как текущую
     if(!$date2) {
         $cd = getdate();
-        $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
+    } else {
+        $cd = getdate(strtotime($date2));
     }
+
+    $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
 
     //Преобразуем даты в массив
     $pattern = '/(\d+)-(\d+)-(\d+)(\s+(\d+):(\d+):(\d+))?/';
@@ -349,6 +352,48 @@ function real_date_diff($date1, $date2 = NULL){
 
     //Возвращаем результат
     return $diff;
+
+}
+
+/**
+ * Форматирует дату в формат "сегодня", "вчера", "1 января 2017"
+ *
+ * @param string $date Исходная дата. Может быть как отформатированном виде, так и timestamp
+ * @param boolean $is_time Дополнять часом и минутами
+ * @return string
+ */
+function string_date_format($date, $is_time = false){
+
+    if(!$date){
+        return '';
+    }
+
+    if(!is_numeric($date)){
+        $timestamp = strtotime($date);
+    } else {
+        $timestamp = $date;
+    }
+
+    $item_date = date('j F Y', $timestamp);
+
+    $today_date     = date('j F Y');
+    $yesterday_date = date('j F Y', time()-3600*24);
+
+    switch($item_date){
+        case $today_date: $result = LANG_TODAY;
+            break;
+        case $yesterday_date: $result = LANG_YESTERDAY;
+            break;
+        default: $result = lang_date($item_date);
+    }
+
+    if ($is_time){
+
+        $result .= ' '.LANG_IN.' ' . date('H:i', $timestamp);
+
+    }
+
+    return $result;
 
 }
 
@@ -406,13 +451,96 @@ function string_replace_keys_values($string, $data){
 }
 
 /**
+ * Находит внутри строки $string все выражения вида {key}, где key - это ключ
+ * массива $data и заменяет на значение соответствующего элемента
+ * отличительной особенностью от функции выше является возможность обработки значений функциями
+ * например, выражение {age|html_spellcount:год:года:лет} после обработки напишет "21 год, 22 года, 29 лет"
+ * при значении age 21, 22 и 29 соответственно
+ * выражение {nickname:профиль пользователя %s самый лучший} после обработки станет "профиль пользователя Василий самый лучший"
+ * при значении поля nickname в массиве $data "Василий"
+ *
+ * @param string $string
+ * @param array $data
+ */
+function string_replace_keys_values_extended($string, $data){
+
+    $matches_count = preg_match_all('/{([^}]+)}/ui', $string, $matches);
+
+    if ($matches_count){
+
+        for($i=0; $i<$matches_count; $i++){
+
+            $tag = $matches[0][$i];
+            $property = $matches[1][$i];
+
+            $func = false; $func_params = array(); $func_params_property_key = 0;
+
+            // есть ли обработка функцией
+            if(strpos($property, '|') !== false){
+                $params = explode('|', $property);
+                // первый параметр остаётся как $property
+                $property = $params[0];
+                // второй параметр - функция
+                $func = $params[1];
+                // $property ставим как первый параметр функции
+                $func_params = array($property);
+                // смотрим есть ли у функции параметры
+                if(strpos($func, ':') !== false){
+                    $par = explode(':', $func);
+                    $func = $par[0]; unset($par[0]);
+                    foreach ($par as $k => $p) {
+                        // если параметр - массив
+                        if(strpos($p, '=') !== false){
+                            $out = array(); parse_str($p, $out);
+                            $par[$k] = $out;
+                        }
+                    }
+                    $func_params = $func_params + $par;
+                }
+            } else
+            // нужно прогнать через sprintf
+            if(strpos($property, ':') !== false){
+                $params = explode(':', $property);
+                $property = $params[0];
+                $func = 'sprintf';
+                $func_params = array_reverse($params);
+                $func_params_property_key = 1;
+            }
+
+            if (isset($data[$property]) && !is_array($data[$property]) && !is_object($data[$property])){
+
+                $data_property = $data[$property];
+
+                if($func && function_exists($func)){
+
+                    $func_params[$func_params_property_key] = $data_property;
+
+                    $data_property = call_user_func_array($func, $func_params);
+
+                }
+
+                $string = str_replace($tag, $data_property, $string);
+
+            } else {
+                $string = str_replace($tag, '', $string);
+            }
+
+        }
+
+    }
+
+    return $string;
+
+}
+
+/**
  * Делает активными гиперссылки внутри строки
  *
  * @param string $string
  * @return string
  */
 function string_make_links($string){
-    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank">$1</a>', $string);
+    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
 }
 
 //============================================================================//
@@ -541,6 +669,16 @@ function string_compress($string){
 
 }
 
+/**
+ * Преобразует первый символ строки в верхний регистр
+ * multi-bytes ucfirst
+ *
+ * @param string $str
+ * @return string
+ */
+function string_ucfirst($string) {
+    return mb_strtoupper(mb_substr($string, 0, 1)).mb_substr($string, 1);
+}
 //============================================================================//
 
 /**
@@ -620,6 +758,68 @@ function set_array_value_recursive($path, $array, $value, $delimiter = ':') {
     $_array = $value;
 
     return $array;
+
+}
+
+/**
+ * Сортирует двумерный ассоциативный массив по полю (полям)
+ *
+ * $fields может содержать как просто имя поля для сортировки,
+ * так и массив полей с направлениями сортировок, например:
+ * array(array('by' => 'ordering', 'to' => 'asc'), array('by' => 'title', 'to' => 'desc'))
+ *
+ * @param array &$array
+ * @param string | array $fields
+ * @param string $direction
+ * @return boolean
+ */
+function array_order_by(&$array, $fields, $direction = 'asc') {
+
+    if(!$array){ return false; }
+
+    if(is_string($fields)){
+        $list = array(array(
+            'by' => $fields,
+            'to' => $direction
+        ));
+    } else {
+        $list = $fields;
+    }
+
+    $args = array();
+
+    foreach ($array as $k => $item) {
+
+        $key = 0;
+
+        foreach ($list as $order) {
+
+            $args[$key][$k] = $item[$order['by']];
+                $key++;
+            $args[$key] = constant('SORT_'.strtoupper($order['to']));
+                $key++;
+
+        }
+
+    }
+
+    $args[] = &$array;
+
+    return call_user_func_array('array_multisort', $args);
+
+}
+
+function multi_array_unique($array) {
+
+    $result = array_map('unserialize', array_unique(array_map('serialize', $array)));
+
+    foreach ($result as $key => $value) {
+        if (is_array($value)) {
+            $result[$key] = multi_array_unique($value);
+        }
+    }
+
+    return $result;
 
 }
 

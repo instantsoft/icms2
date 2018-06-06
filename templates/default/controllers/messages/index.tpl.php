@@ -53,9 +53,7 @@
                 </div>
             </div>
 
-            <div class="left-panel loading-panel">
-
-            </div>
+            <div class="left-panel"></div>
 
         </div>
 

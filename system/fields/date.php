@@ -25,19 +25,43 @@ class fieldDate extends cmsFormField {
         return $value ? html_date($value, $this->getOption('show_time')) : null;
     }
 
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        if(is_array($value)){
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+            }
+
+            return $result_string;
+
+        }
+
+        return date(cmsConfig::get('date_format'), strtotime($value));
+
+    }
+
     public function getFilterInput($value) {
 
         if ($this->getOption('filter_range')){
 
-            $from = !empty($value['from']) ? date(cmsConfig::get('date_format'), strtotime($value['from'])) : false;
-            $to = !empty($value['to']) ? date(cmsConfig::get('date_format'), strtotime($value['to'])) : false;
+            $from = !empty($value['from']) ? date('d.m.Y', strtotime($value['from'])) : false;
+            $to = !empty($value['to']) ? date('d.m.Y', strtotime($value['to'])) : false;
 
             $this->title = false;
 
-            return cmsTemplate::getInstance()->renderFormField($this->class."_range", array(
+            return cmsTemplate::getInstance()->renderFormField($this->class.'_range', array(
                 'field' => $this,
-                'from' => $from,
-                'to' => $to
+                'from'  => $from,
+                'to'    => $to
             ));
 
 
@@ -100,7 +124,6 @@ class fieldDate extends cmsFormField {
             } else {
                 return date('Y-m-d', strtotime($value));
             }
-
         }
 
         return null;
@@ -113,25 +136,27 @@ class fieldDate extends cmsFormField {
             if(is_array($value)){
                 if(!empty($value['date'])){
                     $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
+                } else {
+                    $value = null;
                 }
             }
         }
 
         $this->data['show_time'] = $this->getOption('show_time');
 
-        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         if($this->data['show_time']){
             if(!$value){
                 $this->data['hours'] = 0;
                 $this->data['mins'] = 0;
-            }else{
+            } else {
                 list($this->data['hours'], $this->data['mins']) = explode(':', date('H:i', strtotime($value)));
             }
             $this->data['fname_date']   = $this->element_name.'[date]';
             $this->data['fname_hours']  = $this->element_name.'[hours]';
             $this->data['fname_mins']   = $this->element_name.'[mins]';
-        }else{
+        } else {
             $this->data['fname_date']   = $this->element_name;
         }
 

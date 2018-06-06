@@ -20,10 +20,16 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $ctype = cmsEventsManager::hook('ctype_before_edit', $ctype);
 
+        $template = new cmsTemplate($this->cms_config->template);
+
         // Если есть собственный шаблон для типа контента
         // то удаляем поле выбора стиля
-        $tpl_file = $this->cms_template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
-        if ($tpl_file) { $form->removeField('listview', 'options:list_style'); }
+        $tpl_file = $template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
+        if ($tpl_file) {
+            $form->removeField('listview', 'options:list_style');
+            $form->removeField('listview', 'options:list_style_names');
+            $form->removeField('listview', 'options:context_list_style');
+        }
 
         if ($this->request->has('submit')){
 
@@ -43,11 +49,13 @@ class actionAdminCtypesEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('ctypes');
+                $this->redirectToAction('ctypes', array('edit', $ctype['id']));
 
             }
 
             if ($errors){
+
+                $ctype['id'] = $id;
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 

@@ -17,19 +17,14 @@
 <body>
 
     <?php
-        $messages = cmsUser::getSessionMessages();
-        if ($messages){
-            ?>
-            <div class="sess_messages">
-                <?php
-                    foreach($messages as $message){
-                        echo $message;
-                    }
-                ?>
-            </div>
-            <?php
-        }
-    ?>
+    $messages = cmsUser::getSessionMessages();
+    if ($messages){ ?>
+        <div class="sess_messages">
+            <?php foreach($messages as $message){ ?>
+                <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+             <?php } ?>
+        </div>
+    <?php } ?>
 
     <div id="error-maintenance">
         <h1><?php echo ERR_SITE_OFFLINE; ?></h1>

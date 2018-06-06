@@ -4,10 +4,10 @@
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
-            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
         <?php } ?>
     </h1>
-    <?php if ($item['parent_id']){ ?>
+    <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
         <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
             <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
         </h2>
@@ -34,12 +34,12 @@
             return true;
         } ); ?>
 
-        <?php foreach ($fields_fieldsets as $fieldset) { ?>
+        <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 
             <?php $is_fields_group = !empty($ctype['options']['is_show_fields_group']) && $fieldset['title']; ?>
 
             <?php if ($is_fields_group) { ?>
-                <div class="fields_group">
+                <div class="fields_group fields_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
                     <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
             <?php } ?>
 
@@ -100,13 +100,7 @@
         if ($hooks_html) { echo html_each($hooks_html); }
     ?>
 
-    <?php
-        $is_tags = $ctype['is_tags'] &&
-                   !empty($ctype['options']['is_tags_in_item']) &&
-                   $item['tags'];
-    ?>
-
-    <?php if ($is_tags){ ?>
+    <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_item']) &&  $item['tags']){ ?>
         <div class="tags_bar">
             <?php echo html_tags_bar($item['tags']); ?>
         </div>
@@ -159,14 +153,14 @@
             <?php } ?>
             <div class="bar_item bi_share">
                 <div class="share">
-                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8" defer></script>
+                    <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8" defer></script>
+                    <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,gplus,twitter,viber,whatsapp,telegram" data-size="s"></div>
                 </div>
             </div>
             <?php if (!$item['is_approved']){ ?>
                 <div class="bar_item bi_not_approved">
-                    <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                    <?php echo $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
                 </div>
             <?php } ?>
         </div>

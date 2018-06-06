@@ -36,6 +36,11 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
             if (!$errors){
 
+                list($target_controller, $child_ctype_id) = explode(':', $relation['child_ctype_id']);
+
+                $relation['child_ctype_id'] = $child_ctype_id ? $child_ctype_id : null;
+                $relation['target_controller'] = $target_controller;
+
                 $relation['ctype_id'] = $ctype_id;
 
                 $relation_id = $content_model->addContentRelation($relation);
@@ -44,7 +49,23 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
 
                     cmsUser::addSessionMessage(LANG_CP_RELATION_CREATED, 'success');
 
-                    $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+                    if($relation['target_controller'] != 'content'){
+
+                        $content_model->setTablePrefix('');
+
+                        cmsCore::loadControllerLanguage($relation['target_controller']);
+
+                        $target_ctype = array(
+                            'title' => string_lang('LANG_'.strtoupper($relation['target_controller']).'_CONTROLLER'),
+                            'name' => $relation['target_controller'],
+                            'id'  => null
+                        );
+
+                    } else {
+
+                        $target_ctype = $content_model->getContentType($relation['child_ctype_id']);
+
+                    }
 
                     if (!$content_model->isContentFieldExists($target_ctype['name'], $parent_field_name)){
 
@@ -52,14 +73,18 @@ class actionAdminCtypesRelationsAdd extends cmsAction {
                             'type'          => 'parent',
                             'ctype_id'      => $target_ctype['id'],
                             'name'          => $parent_field_name,
-                            'title'         => mb_convert_case($ctype['labels']['one'], MB_CASE_TITLE),
+                            'title'         => string_ucfirst($ctype['labels']['one']),
                             'options'       => array(),
                             'is_fixed'      => true,
                             'is_in_filter'  => false,
                             'is_fixed_type' => true
                         ));
 
-                        cmsUser::addSessionMessage(sprintf(LANG_CP_RELATION_FIELD_CREATED, $target_ctype['title']), 'success');
+                        if ($content_model->getContentTypeByName($target_ctype['name'])) {
+                            cmsUser::addSessionMessage(sprintf(LANG_CP_RELATION_FIELD_CREATED, $target_ctype['title']), 'info');
+                        } else {
+                            cmsUser::addSessionMessage(sprintf(LANG_CP_CONTR_RELATION_FIELD_CREATED, $target_ctype['title']), 'info');
+                        }
 
                     }
 

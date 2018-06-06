@@ -20,6 +20,12 @@
             <label><?php echo LANG_SITE_METADESC; ?></label>
             <textarea name="metadesc" rows="4"><?php echo LANG_CFG_METADESC; ?></textarea>
         </div>
+        <div class="field">
+            <label>
+                <input type="checkbox" value="1" checked="checked" name="is_check_updates">
+                <?php echo LANG_SITE_CHECK_UPDATE; ?>
+            </label>
+        </div>
 
     </fieldset>
 
@@ -28,4 +34,3 @@
 <div class="buttons">
     <input type="button" name="next" id="btn-next" value="<?php echo LANG_NEXT; ?>" onclick="submitStep()" />
 </div>
-

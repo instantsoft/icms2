@@ -2,24 +2,21 @@
 
 class actionUsersIndex extends cmsAction {
 
-    public function run($tab='all'){
+    public function run($dataset_name = 'all'){
 
-        $dataset_name = false;
         $datasets = $this->getDatasets();
 
-        if ($tab && isset($datasets[$tab])) {
+        if(!$dataset_name || !isset($datasets[$dataset_name])){
+            cmsCore::error404();
+        }
 
-            $dataset_name = $tab;
-            $dataset = $datasets[$tab];
+        $dataset = $datasets[$dataset_name];
 
-            if (isset($dataset['filter']) && is_callable($dataset['filter'])){
-                $this->model = $dataset['filter']($this->model, $dataset);
-            }
+        if (isset($dataset['filter']) && is_callable($dataset['filter'])){
+            $this->model = $dataset['filter']($this->model, $dataset);
+        }
 
-        } else if ($tab) { cmsCore::error404(); }
-
-        // Сортировка
-        if ($dataset_name){
+        if (!empty($datasets[$dataset_name]['order'])){
             $this->model->orderBy( $datasets[$dataset_name]['order'][0], $datasets[$dataset_name]['order'][1] );
         }
 
@@ -30,6 +27,8 @@ class actionUsersIndex extends cmsAction {
         );
 
         return $this->cms_template->render('index', array(
+            'page_title'         => ($dataset_name != 'all' ? LANG_USERS . ' - ' . $dataset['title'] : LANG_USERS),
+            'base_ds_url'        => href_to($this->name, 'index').'%s',
             'datasets'           => $datasets,
             'dataset_name'       => $dataset_name,
             'dataset'            => $dataset,

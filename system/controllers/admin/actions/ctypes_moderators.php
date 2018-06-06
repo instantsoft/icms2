@@ -2,13 +2,11 @@
 
 class actionAdminCtypesModerators extends cmsAction {
 
-    public function run($ctype_id, $action='view'){
+    public function run($ctype_id, $action = 'view'){
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $this->content_model = cmsCore::getModel('content');
-        $this->ctype = $this->content_model->getContentType($ctype_id);
-
+        $this->ctype = $this->model_content->getContentType($ctype_id);
         if (!$this->ctype) { cmsCore::error404(); }
 
         switch ($action){
@@ -27,7 +25,7 @@ class actionAdminCtypesModerators extends cmsAction {
 
     private function view(){
 
-        $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
+        $moderators = $this->model_moderation->getContentTypeModerators($this->ctype['name']);
 
         return $this->cms_template->render('ctypes_moderators', array(
             'ctype'      => $this->ctype,
@@ -52,7 +50,7 @@ class actionAdminCtypesModerators extends cmsAction {
             ));
         }
 
-        $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
+        $moderators = $this->model_moderation->getContentTypeModerators($this->ctype['name']);
 
         if (isset($moderators[$user['id']])){
             return $this->cms_template->renderJSON(array(
@@ -61,7 +59,7 @@ class actionAdminCtypesModerators extends cmsAction {
             ));
         }
 
-        $moderator = $this->content_model->addContentTypeModerator($this->ctype['name'], $user['id']);
+        $moderator = $this->model_moderation->addContentTypeModerator($this->ctype['name'], $user['id']);
 
         if (!$moderator){
             return $this->cms_template->renderJSON(array(
@@ -89,7 +87,7 @@ class actionAdminCtypesModerators extends cmsAction {
         $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
-        $moderators = $this->content_model->getContentTypeModerators($this->ctype['name']);
+        $moderators = $this->model_moderation->getContentTypeModerators($this->ctype['name']);
 
         if (!isset($moderators[$id])){
             return $this->cms_template->renderJSON(array(
@@ -97,7 +95,7 @@ class actionAdminCtypesModerators extends cmsAction {
             ));
         }
 
-        $this->content_model->deleteContentTypeModerator($this->ctype['name'], $id);
+        $this->model_moderation->deleteContentTypeModerator($this->ctype['name'], $id);
 
         return $this->cms_template->renderJSON(array(
             'error' => false

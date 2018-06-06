@@ -4,7 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank">Инструкция по установке</a>');
+    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');
@@ -27,12 +27,12 @@
 
     define('LANG_LICENSE_AGREE',            'Я согласен с условиями лицензии');
     define('LANG_LICENSE_ERROR',            'Вы должны согласиться с условиями лицензии');
-    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU/GPL</a> версии 2.');
+    define('LANG_LICENSE_NOTE',             'InstantCMS распространяется по лицензии <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank" rel="noopener noreferrer">GNU/GPL</a> версии 2.');
     define('LANG_LICENSE_ORIGINAL',         'Оригинал');
     define('LANG_LICENSE_TRANSLATION',      'Перевод');
 
     define('LANG_PHP_VERSION',              'Версия интерпретатора');
-    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.3 или выше');
+    define('LANG_PHP_VERSION_REQ',          'Требуется PHP 5.5 или выше');
     define('LANG_PHP_VERSION_DESC',         'Установленная версия');
 	define('LANG_PHP_VARIABLES',            'Опции настройки PHP');
 	define('LANG_PHP_VARIABLES_HINT',       'Серым цветом указано требуемое значение');
@@ -90,6 +90,7 @@
     define('LANG_SITE_HOMETITLE',           "Заголовок главной страницы");
     define('LANG_SITE_METAKEYS',            "Ключевые слова");
     define('LANG_SITE_METADESC',            "Описание сайта");
+    define('LANG_SITE_CHECK_UPDATE',        "Автоматически проверять обновления InstantCMS");
 
     define('LANG_SITE_SITENAME_ERROR',      "Требуется указать название сайта");
     define('LANG_SITE_HOMETITLE_ERROR',     "Требуется указать заголовок главной страницы");
@@ -125,8 +126,8 @@
     define('LANG_FINISH_TO_SITE',           'Перейти на сайт');
 
     define('LANG_CFG_OFF_REASON',           'Идут технические работы');
-    define('LANG_CFG_SITENAME',             'InstantCMS 2.0');
-    define('LANG_CFG_HOMETITLE',            'InstantCMS 2.0');
+    define('LANG_CFG_SITENAME',             'InstantCMS 2');
+    define('LANG_CFG_HOMETITLE',            'InstantCMS 2');
     define('LANG_CFG_DATE_FORMAT',          'd.m.Y');
     define('LANG_CFG_DATE_FORMAT_JS',       'dd.mm.yy');
     define('LANG_CFG_TIME_ZONE',            'Europe/Moscow');

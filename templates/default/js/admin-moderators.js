@@ -49,7 +49,7 @@ icms.adminModerators = (function ($) {
 
         var list_item = $('#ctype_moderators_list #moderator-'+id);
 
-        $('a.delete', list_item).hide();
+        $('a.delete, a.view', list_item).hide();
         $('.loading-icon', list_item).show();
 
         $.post(this.url_delete, {id: id}, function(result){

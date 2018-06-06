@@ -8,6 +8,8 @@
             'publish_delayed_content',
             'user_delete',
             'user_tab_info',
+            'subscribe',
+            'unsubscribe',
             'user_tab_show'
         )
 

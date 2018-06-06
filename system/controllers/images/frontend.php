@@ -3,6 +3,16 @@ class images extends cmsFrontend {
 
 	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp';
 
+    public $allowed_mime = array(
+        'image/jpeg',
+        'image/png',
+        'image/pjpeg',
+        'image/gif',
+        'image/vnd.wap.wbmp'
+    );
+
+	private $file_context = null;
+
 //============================================================================//
 //============================================================================//
 
@@ -64,7 +74,7 @@ class images extends cmsFrontend {
 
         }
 
-        $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
+        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){
@@ -75,7 +85,7 @@ class images extends cmsFrontend {
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $this->cms_template->renderJSON($result);
         }
@@ -137,7 +147,7 @@ class images extends cmsFrontend {
 		}
 
 		if (!in_array('original', $sizes, true)){
-			unlink($result['path']);
+			files_delete_file($result['path'], 2);
 		}
 
         if ($this->request->isInternal()){
@@ -155,7 +165,7 @@ class images extends cmsFrontend {
 
 	public function uploadWithPreset($name, $preset_name){
 
-        $result = $this->cms_uploader->enableRemoteUpload()->upload($name, $this->allowed_extensions);
+        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){
@@ -166,7 +176,7 @@ class images extends cmsFrontend {
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $result;
         }
@@ -198,8 +208,10 @@ class images extends cmsFrontend {
 
 		$result['image'] = $image;
 
-		@unlink($result['path']);
+		files_delete_file($result['path'], 2);
         unset($result['path']);
+
+        $this->registerFile($image);
 
         return $result;
 
@@ -223,6 +235,27 @@ class images extends cmsFrontend {
             $this->allowed_extensions = $exts;
         }
 		return $this;
+	}
+
+	public function registerUploadFile($file_context){
+        $this->file_context = $file_context; return $this;
+	}
+
+	private function registerFile($image){
+
+        if($this->file_context === null){ return false; }
+
+        $file_id = cmsCore::getModel('files')->registerFile(array_merge($this->file_context, array(
+            'path'    => $image['path'],
+            'type'    => 'image',
+            'name'    => pathinfo($image['path'], PATHINFO_BASENAME),
+            'user_id' => cmsUser::get('id')
+        )));
+
+        $this->file_context = null;
+
+        return $file_id;
+
 	}
 
 }

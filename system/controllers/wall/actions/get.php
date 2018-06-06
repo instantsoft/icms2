@@ -6,33 +6,23 @@ class actionWallGet extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        $entry_id = $this->request->get('id');
+        $entry_id = $this->request->get('id', 0);
 
-        // Проверяем валидность
-        $is_valid = is_numeric($entry_id);
-
-        if (!$is_valid){
-            $result = array('error' => true, 'message' => LANG_ERROR);
-            cmsTemplate::getInstance()->renderJSON($result);
+        if (!is_numeric($entry_id)){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_ERROR));
         }
-
-        $user = cmsUser::getInstance();
 
         $entry = $this->model->getEntry($entry_id);
 
-        if ($entry['user']['id'] != $user->id && !$user->is_admin){
-            $result = array('error' => true, 'message' => LANG_ERROR);
-            cmsTemplate::getInstance()->renderJSON($result);
+        if ($entry['user']['id'] != $this->cms_user->id && !$this->cms_user->is_admin){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_ERROR));
         }
 
-        // Формируем и возвращаем результат
-        $result = array(
+        return $this->cms_template->renderJSON(array(
             'error' => $entry ? false : true,
-            'id' => $entry_id,
-            'html' => $entry ? string_strip_br($entry['content']) : false
-        );
-
-        cmsTemplate::getInstance()->renderJSON($result);
+            'id'    => $entry_id,
+            'html'  => $entry ? string_strip_br($entry['content']) : false
+        ));
 
     }
 

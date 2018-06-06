@@ -45,16 +45,22 @@
             <tr class="filter">
                 <?php foreach($columns as $name=>$column){ ?>
                     <td>
-                        <?php if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){ ?>
-
+                        <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
+                            <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
                             <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input'), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
 
                             <?php } else { ?>
+                                <?php if (!empty($column['filter_select'])){ ?>
 
-                                <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+                                    <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
 
+                                <?php } else { ?>
+
+                                    <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
+
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     </td>
@@ -70,6 +76,11 @@
     </table>
     <div class="datagrid_loading">
         <div class="loading_overlay"></div>
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
     </div>
 </div>
 

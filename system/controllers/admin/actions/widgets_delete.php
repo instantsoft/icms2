@@ -12,8 +12,7 @@ class actionAdminWidgetsDelete extends cmsAction {
         $widgets_model->deleteWidgetBinding($binded_id);
 
         $this->halt();
-        
+
     }
 
 }
-

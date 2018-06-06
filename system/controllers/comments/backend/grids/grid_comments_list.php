@@ -7,6 +7,7 @@ function grid_comments_list($controller){
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => false,
+        'is_selectable' => true,
         'order_by'      => 'date_pub',
         'order_to'      => 'desc',
         'show_id'       => true
@@ -52,7 +53,7 @@ function grid_comments_list($controller){
             'filter'  => 'like',
             'handler' => function($value) {
                 if ($value) {
-                    return '<a href="#" class="ajaxlink filter_ip tooltip" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext=' . $value . '#resultsAnchor" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '"></a>';
+                    return '<a href="#" class="ajaxlink filter_ip tooltip" title="' . LANG_CP_USER_FIND_BYIP . '">' . $value . '</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext=' . $value . '#resultsAnchor" target="_blank" title="' . LANG_CP_USER_RIPE_SEARCH . '" rel="noopener noreferrer"></a>';
                 }
                 return '';
             }
@@ -96,7 +97,7 @@ function grid_comments_list($controller){
         array(
             'title' => LANG_COMMENTS_VIEW,
             'class' => 'view tooltip',
-            'href'  => href_to('{target_url}', '#comment_{id}')
+            'href'  => rel_to_href('{target_url}').'#comment_{id}'
         ),
         array(
             'title'   => LANG_DELETE,

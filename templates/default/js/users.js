@@ -2,8 +2,6 @@ var icms = icms || {};
 
 icms.users = (function ($) {
 
-    //=====================================================================//
-
     this.onDocumentReady = function () {
 
         $('#user_status_widget .input:text').on('keydown', function(event){
@@ -12,9 +10,7 @@ icms.users = (function ($) {
             }
         });
 
-    }
-
-    //=====================================================================//
+    };
 
     this.enableStatusInput = function (clear) {
 
@@ -28,16 +24,14 @@ icms.users = (function ($) {
             $('#user_status_widget .input:text').val('').blur();
         }
 
-    }
+    };
 
     this.disableStatusInput = function () {
 
         $('#user_status_widget').addClass('loading');
         $('#user_status_widget .input:text').attr('disabled', 'disabled');
 
-    }
-
-    //=====================================================================//
+    };
 
     this.saveStatus = function (){
 
@@ -65,7 +59,7 @@ icms.users = (function ($) {
         }, 'json');
 
 
-    }
+    };
 
     this.updateStatus = function (result){
 
@@ -76,7 +70,7 @@ icms.users = (function ($) {
         $('.status .reply a', block).html(LANG_REPLY).attr('href', '?wid='+result.wall_entry_id+'&reply=1');
         $('.status', block).hide().fadeIn(800);
 
-    }
+    };
 
     this.deleteStatus = function (link){
 
@@ -101,19 +95,17 @@ icms.users = (function ($) {
 
         return false;
 
-    }
-
-    //=====================================================================//
+    };
 
     this.karmaUp = function(){
         this.karmaVote('up');
         return false;
-    }
+    };
 
     this.karmaDown = function(){
         this.karmaVote('down');
         return false;
-    }
+    };
 
     this.karmaVote = function(direction){
 
@@ -153,16 +145,16 @@ icms.users = (function ($) {
 
         }, 'json');
 
-    }
-
-    //=====================================================================//
+    };
 
     this.error = function(message){
         if (message) { icms.modal.alert(message); }
         this.enableStatusInput(false);
-    }
+    };
 
-    //=====================================================================//
+    this.delete = function(link, title){
+        icms.modal.openAjax(link, {}, false, title);
+    };
 
 	return this;
 

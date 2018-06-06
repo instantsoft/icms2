@@ -4,7 +4,6 @@ icms.images = (function ($) {
 
     this.uploadCallback = null;
     this.removeCallback = null;
-    this.uploaded_count = 0;
 
     //====================================================================//
 
@@ -82,7 +81,7 @@ icms.images = (function ($) {
 
         $(preview_block).data('paths', image_data);
         $('img', preview_block).attr('src', preview_img_src);
-        $('a', preview_block).click(function() { icms.images.removeOne(field_name, idx); });
+        $('a', preview_block).data('id', idx).click(function() { icms.images.removeOne(field_name, this); });
 
         $('.previews_list', widget).append(preview_block);
 
@@ -96,10 +95,10 @@ icms.images = (function ($) {
         }, 'json');
     };
 
-    this.uploadMultyByLink = function(field_name, upload_url, link, max_images){
+    this.uploadMultyByLink = function(field_name, upload_url, link, max_images, LANG_UPLOAD_ERR_MAX_IMAGES){
         max_images = +(max_images || 0);
-        icms.images.uploaded_count += 1;
-        if(max_images > 0 && icms.images.uploaded_count > max_images){
+        if(max_images > 0 && icms.images.incrementUploadedCount(field_name) > max_images){
+            icms.images.decrementUploadedCount(field_name);
             icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
             return false;
         }
@@ -117,7 +116,9 @@ icms.images = (function ($) {
             action: upload_url,
             multiple: false,
             debug: false,
-
+            showMessage: function(message){
+                icms.modal.alert(message);
+            },
             onSubmit: function(id, fileName){
                 var ftitle = $('#title').val();
                 if(ftitle){
@@ -136,7 +137,31 @@ icms.images = (function ($) {
 
     };
 
-    this.createUploader = function(field_name, upload_url, max_images){
+    this.incrementUploadedCount = function (field_name){
+
+        var current_count = +$('#file-uploader-'+field_name).data('uploaded_count');
+
+        current_count += 1;
+
+        $('#file-uploader-'+field_name).data('uploaded_count', current_count);
+
+        return current_count;
+
+    };
+
+    this.decrementUploadedCount = function (field_name){
+
+        var current_count = +$('#file-uploader-'+field_name).data('uploaded_count');
+
+        current_count -= 1;
+
+        $('#file-uploader-'+field_name).data('uploaded_count', current_count);
+
+        return current_count;
+
+    };
+
+    this.createUploader = function(field_name, upload_url, max_images, LANG_UPLOAD_ERR_MAX_IMAGES){
 
         max_images = +(max_images || 0);
 
@@ -148,8 +173,8 @@ icms.images = (function ($) {
                 icms.modal.alert(message);
             },
             onSubmit: function(id, fileName){
-                icms.images.uploaded_count += 1;
-                if(max_images > 0 && icms.images.uploaded_count > max_images){
+                if(max_images > 0 && icms.images.incrementUploadedCount(field_name) > max_images){
+                    icms.images.decrementUploadedCount(field_name);
                     icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
                     return false;
                 }
@@ -188,7 +213,7 @@ icms.images = (function ($) {
             update: function(event, ui) {
                 $('.data', widget).html('');
                 $('.previews_list .preview', widget).each(function(index){
-                    $(this).attr('rel', index);
+                    $(this).attr('rel', index).find('a').data('id', index);
                     var paths = $(this).data('paths');
                     for(var path in paths){
                         $('.data', widget).append('<input type="hidden" name="'+_input_name+'['+index+']['+path+']" value="'+paths[path]+'" rel="'+index+'" />');
@@ -211,30 +236,33 @@ icms.images = (function ($) {
         $('.data', widget).html('');
 
         if (typeof(icms.images.removeCallback) == 'function'){
-            icms.images.removeCallback(field_name, result);
+            icms.images.removeCallback(field_name);
         }
 
-    }
+        return false;
+
+    };
 
     //====================================================================//
 
-    this.removeOne = function(field_name, idx){
+    this.removeOne = function(field_name, link){
+
+        var idx = $(link).data('id');
 
         var widget = $('#widget_image_'+field_name);
 
         $('.data input[rel='+idx+']', widget).remove();
         $('.preview[rel='+idx+']', widget).remove();
 
-        var count = 0;
-        var current = false;
-
-        icms.images.uploaded_count -= 1;
+        icms.images.decrementUploadedCount(field_name);
 
         if (typeof(icms.images.removeCallback) == 'function'){
             icms.images.removeCallback(field_name, idx);
         }
 
-    }
+        return false;
+
+    };
 
     //====================================================================//
 

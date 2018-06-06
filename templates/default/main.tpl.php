@@ -19,10 +19,11 @@
         <?php $this->addMainJS("templates/{$this->name}/js/messages.js"); ?>
     <?php } ?>
     <!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/r29/html5.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/livingston-css3-mediaqueries-js/1.0.0/css3-mediaqueries.min.js"></script>
     <![endif]-->
     <?php $this->head(); ?>
+    <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <style><?php include('options.css.php'); ?></style>
 </head>
 <body id="<?php echo $device_type; ?>_device_type">
@@ -30,7 +31,13 @@
     <div id="layout">
 
         <?php if (!$config->is_site_on){ ?>
-            <div id="site_off_notice"><?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?></div>
+            <div id="site_off_notice">
+                <?php if (cmsUser::isAdmin()){ ?>
+                    <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
+                <?php } else { ?>
+                    <?php echo ERR_SITE_OFFLINE; ?>
+                <?php } ?>
+            </div>
         <?php } ?>
 
         <header>
@@ -58,19 +65,14 @@
             ?>
 
             <?php
-                $messages = cmsUser::getSessionMessages();
-                if ($messages){
-                    ?>
-                    <div class="sess_messages">
-                        <?php
-                            foreach($messages as $message){
-                                echo $message;
-                            }
-                        ?>
-                    </div>
-                    <?php
-                }
-            ?>
+            $messages = cmsUser::getSessionMessages();
+            if ($messages){ ?>
+                <div class="sess_messages">
+                    <?php foreach($messages as $message){ ?>
+                        <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                     <?php } ?>
+                </div>
+            <?php } ?>
 
             <section style="width:<?php echo $section_width; ?>">
 
@@ -83,7 +85,10 @@
                                 <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                             </div>
                         <?php } ?>
-                        <div id="controller_wrap"><?php $this->body(); ?></div>
+                        <div id="controller_wrap">
+                            <?php $this->block('before_body'); ?>
+                            <?php $this->body(); ?>
+                        </div>
                     </article>
                 <?php } ?>
 
@@ -102,17 +107,8 @@
         </div>
 
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
-            <div id="sql_debug" style="display:none">
-                <div id="sql_queries">
-                    <div id="sql_stat"><?php echo $core->db->getStat(); ?></div>
-                    <?php foreach($core->db->query_list as $sql) { ?>
-                        <div class="query">
-                            <div class="src"><?php echo $sql['src']; ?></div>
-                            <?php echo nl2br(htmlspecialchars($sql['sql'])); ?>
-                            <div class="query_time"><?php echo LANG_DEBUG_QUERY_TIME; ?> <span class="<?php echo (($sql['time']>=0.1) ? 'red_query' : 'green_query'); ?>"><?php echo number_format($sql['time'], 5); ?></span> <?php echo LANG_SECOND10 ?></div>
-                        </div>
-                    <?php } ?>
-                </div>
+            <div id="debug_block">
+                <?php $this->renderAsset('ui/debug', array('core' => $core)); ?>
             </div>
         <?php } ?>
 
@@ -133,18 +129,13 @@
                     </span>
                     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
                         <span class="item">
-                            SQL: <a href="#sql_debug" title="SQL dump" class="ajax-modal"><?php echo $core->db->query_count; ?></a>
-                        </span>
-                        <?php if ($config->cache_enabled){ ?>
-                            <span class="item">
-                                Cache: <a href="<?php echo href_to('admin', 'cache_delete', $config->cache_method);?>" title="Clear cache"><?php echo cmsCache::getInstance()->query_count; ?></a>
-                            </span>
-                        <?php } ?>
-                        <span class="item">
-                            Mem: <?php echo round(memory_get_usage()/1024/1024, 2); ?> Mb
+                            <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
                         </span>
                         <span class="item">
-                            Time: <?php echo number_format(cmsCore::getTime(), 4); ?> s
+                            Time: <?php echo cmsDebugging::getTime('cms', 4); ?> s
+                        </span>
+                        <span class="item">
+                            Mem: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?> Mb
                         </span>
                     <?php } ?>
                 </li>

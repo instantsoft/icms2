@@ -9,6 +9,7 @@ class cmsTemplate {
     protected $inherit_names = array();
     protected $layout = 'main';
     protected $output;
+    protected $blocks = array();
     protected $options;
     protected $site_config;
 
@@ -17,6 +18,8 @@ class cmsTemplate {
 	protected $head_css = array();
 	protected $head_main_js = array();
 	protected $head_js = array();
+	protected $insert_js = array();
+	protected $insert_css = array();
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
 	protected $title;
@@ -36,7 +39,7 @@ class cmsTemplate {
     protected $widgets_group_index = 0;
 
     protected $controller;
-    protected $controllers_queue;
+    protected $controllers_queue = array();
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -112,6 +115,14 @@ class cmsTemplate {
 	}
 
     /**
+     * Выводит HTML блока
+     * @param string $position
+     */
+	public function block($position){
+		echo isset($this->blocks[$position]) ? $this->blocks[$position] : '';
+	}
+
+    /**
      * Выводит головные теги страницы
      * @param boolean $is_seo_meta Выводить мета теги
      * @param boolean $print_js Выводить javascript теги
@@ -123,14 +134,14 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys)){
-				echo "\t". '<meta name="keywords" content="'.htmlspecialchars(!empty($this->metakeys_item) ? string_replace_keys_values($this->metakeys, $this->metakeys_item) : $this->metakeys).'">' . "\n";
+				echo "\t". '<meta name="keywords" content="'.html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta name="description" content="'.htmlspecialchars(!empty($this->metadesc_item) ? string_replace_keys_values($this->metadesc, $this->metadesc_item) : $this->metadesc).'">' ."\n";
+				echo "\t". '<meta name="description" content="'.html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false).'">' ."\n";
 			}
         }
 
-		foreach ($this->head as $id=>$tag){	echo "\t". $tag . "\n";	}
+		foreach ($this->head as $id => $tag){	echo "\t". $tag . "\n";	}
 
         if($print_css){
             $this->printCssTags();
@@ -178,14 +189,14 @@ class cmsTemplate {
 	 * Выводит заголовок текущей страницы
 	 */
 	public function title(){
-    	echo htmlspecialchars(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
+    	html(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
 	}
 
 	/**
 	 * Выводит название сайта
 	 */
 	public function sitename(){
-		echo htmlspecialchars($this->site_config->sitename);
+		html($this->site_config->sitename);
 	}
 
     /**
@@ -194,6 +205,16 @@ class cmsTemplate {
     public function toolbar(){
         if (!$this->isToolbar()){ return; }
         $this->menu('toolbar', false);
+    }
+
+    /**
+     * Выводит меню действий контроллера
+     * @param string $menu_title Название меню
+     * @return
+     */
+    public function actionsToolbar($menu_title){
+        if (empty($this->menus['controller_actions_menu'])){ return; }
+        $this->menu('controller_actions_menu', false, 'menu', 0, false, 'controller_actions_menu', $menu_title);
     }
 
     /**
@@ -273,8 +294,9 @@ class cmsTemplate {
      * @param int $max_items Максимальное количество видимых пунктов
      * @param bool $is_allow_multiple_active Определять все активные пункты меню
      * @param string $template Название файла шаблона меню в assets/ui/
+     * @param string $menu_title Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template = 'menu'){
+    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template='menu', $menu_title=''){
 
         if (!isset($this->menus[$menu_name])) {
 
@@ -392,7 +414,7 @@ class cmsTemplate {
             $active_ids = array($active_ids[count($active_ids)-1]);
         }
 
-        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template);
+        $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
 
     }
 
@@ -452,6 +474,14 @@ class cmsTemplate {
         $this->output .= $html;
     }
 
+    public function addToBlock($position, $html){
+        if(isset($this->blocks[$position])){
+            $this->blocks[$position] .= $html;
+        } else {
+            $this->blocks[$position] = $html;
+        }
+    }
+
     /**
      * Принудительно печатает вывод
      */
@@ -470,11 +500,32 @@ class cmsTemplate {
 	 * @param string $pagetitle Заголовок
 	 */
 	public function setPageTitle($pagetitle){
-        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', array_filter(func_get_args())); }
         if (is_array($pagetitle)){ $pagetitle = implode(' ', $pagetitle); }
         $this->title = $pagetitle;
         if($this->site_config->is_sitename_in_title){
             $this->title .= ' — '.$this->site_config->sitename;
+        }
+        return $this;
+	}
+
+	public function addToPageTitle($title){
+        $this->title .= ' '.$title;
+        return $this;
+	}
+
+    /**
+     * Устанавливает заголовок странице по паттерну в настройках контроллера
+     *
+     * @param array $item Массив записи
+     * @param string $default Ключ по умолчанию, если паттерн не задан
+     * @return \cmsTemplate
+     */
+	public function setPagePatternTitle($item, $default = 'title'){
+        if (!empty($this->controller->options['tag_title'])) {
+            $this->setPageTitle(string_replace_keys_values_extended($this->controller->options['tag_title'], $item));
+        } else {
+            $this->setPageTitle($item[$default]);
         }
         return $this;
 	}
@@ -522,12 +573,25 @@ class cmsTemplate {
         $this->metadesc_item= $item; return $this;
 	}
 
+	public function setPagePatternDescription($item, $default = 'description'){
+
+        if (!empty($this->controller->options['tag_desc'])) {
+            $this->setPageDescription(string_replace_keys_values_extended($this->controller->options['tag_desc'], $item));
+        } else {
+            $this->setPageDescription(string_get_meta_description($item[$default]));
+        }
+
+        return $this;
+
+	}
+
 // ========================================================================== //
 // ========================================================================== //
 
     /**
      * Добавляет кнопку на глобальный тулбар
      * @param array $button
+     * @return \cmsTemplate
      */
     public function addToolButton($button){
 
@@ -546,6 +610,25 @@ class cmsTemplate {
         );
 
         $this->addMenuItem('toolbar', $item);
+
+        return $this;
+
+    }
+
+    /**
+     * Добавляет кнопки на глобальный тулбар
+     * @param array $buttons
+     * @return \cmsTemplate
+     */
+    public function addToolButtons($buttons){
+
+        if (is_array($buttons)){
+            foreach($buttons as $button){
+                $this->addToolButton($button);
+            }
+        }
+
+        return $this;
 
     }
 
@@ -616,6 +699,18 @@ class cmsTemplate {
 
     }
 
+    public function applyMenuItemsHook($menu_name, $event_name){
+
+        $this->menus[$menu_name] = cmsEventsManager::hook($event_name, (isset($this->menus[$menu_name]) ? $this->menus[$menu_name] : array()));
+
+        return $this;
+
+    }
+
+    public function applyToolbarHook($event_name){
+        return $this->applyMenuItemsHook('toolbar', $event_name);
+    }
+
 // ========================================================================== //
 // ========================================================================== //
     /**
@@ -665,20 +760,40 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+
     }
 
     /**
      * Возвращает тег <script> для указанного файла
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @param string $comment Комментарий к скрипту
+     * @param array $params Параметры тега
      * @return string
      */
-    public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
-        return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
+    public function getJSTag($file, $comment = '', $params = array()){
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
+        $comment = $comment ? '<!-- '.$comment.' !-->' : '';
+
+        return '<script type="text/javascript" src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
+
     }
 
 	/**
@@ -758,19 +873,28 @@ class cmsTemplate {
 
     }
 
-	public function insertJS($file, $comment=''){
+	public function insertJS($file, $comment = ''){
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
+        $hash = md5($file);
+        if (isset($this->insert_js[$hash])) { return false; }
+		$this->insert_js[$hash] = $file;
+
         // атрибут rel="forceLoad" добавлен для nyroModal
-        echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
+        echo $this->getJSTag($file, $comment, array('rel' => 'forceLoad'));
+
+        return true;
 
 	}
 
     public function insertCSS($file){
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+        $hash = md5($file);
+        if (isset($this->insert_css[$hash])) { return false; }
+		$this->insert_css[$hash] = $file;
+
+		echo $this->getCSSTag($file);
+
+        return true;
 
     }
 
@@ -827,8 +951,8 @@ class cmsTemplate {
         $output = '';
 
         foreach($phrases as $phrase){
-            $value = htmlspecialchars(constant($phrase));
-            $output .= "var {$phrase} = '{$value}';";
+            $value = var_export(htmlspecialchars(constant($phrase)), true);
+            $output .= "var {$phrase} = {$value};";
         }
 
         return $output;
@@ -860,7 +984,7 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_js_no_merge)) { continue; }
-            $file_path = $this->site_config->root_path . $file;
+            $file_path = $this->site_config->root_path . strtok($file, '?');
             $contents = file_get_contents($file_path);
             $merged_contents .= $contents;
         }
@@ -893,7 +1017,7 @@ class cmsTemplate {
 
         foreach($files as $file){
             if (in_array($file, $this->head_css_no_merge)) { continue; }
-            $file_path = $this->site_config->root_path . $file;
+            $file_path = $this->site_config->root_path . strtok($file, '?');
             $contents = file_get_contents($file_path);
             $contents = $this->convertCSSUrlsToAbsolute($contents, $file);
             $contents = string_compress($contents);
@@ -1096,6 +1220,14 @@ class cmsTemplate {
     }
 
     /**
+     * Возвращает объект текущего контроллера
+     * @return object
+     */
+    public function getContext(){
+        return $this->controller;
+    }
+
+    /**
      * Восстанавливает ссылку на предыдущий контроллер
      */
     public function restoreContext(){
@@ -1155,9 +1287,16 @@ class cmsTemplate {
      * @return string
      */
     public function getJavascriptFileName($filename){
-
         return $this->getTplFilePath('js/'.$filename.'.js', false);
+    }
 
+    /**
+     * Возвращает путь к CSS-файлу, определяя его наличие в собственном шаблоне
+     * @param string $filename
+     * @return string
+     */
+    public function getTemplateStylesFileName($filename){
+        return $this->getTplFilePath('css/'.$filename.'.css', false);
     }
 
 //============================================================================//
@@ -1182,9 +1321,17 @@ class cmsTemplate {
             header('Content-type: application/json; charset=utf-8');
         }
 
-        echo json_encode($data);
+        $json = json_encode($data);
 
-        $this->controller->halt();
+        if($json === false){
+            $json = json_encode(array(
+                'success' => false,
+                'errors'  => true,
+                'error'   => json_last_error_msg()
+            ));
+        }
+
+        $this->controller->halt($json);
 
     }
 
@@ -1303,7 +1450,13 @@ class cmsTemplate {
      */
     public function renderForm($form, $data, $attributes=array(), $errors=false){
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/form');
+        $form_tpl_file = 'form';
+
+        if(!empty($attributes['form_tpl_file'])){
+            $form_tpl_file = $attributes['form_tpl_file'];
+        }
+
+        $tpl_file = $this->getTemplateFileName('assets/ui/'.$form_tpl_file);
 
         include($tpl_file);
 
@@ -1352,8 +1505,12 @@ class cmsTemplate {
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
 
+                    if (isset($column['key_alias'])){
+                        $field = $column['key_alias'];
+                    }
+
                     if (!is_array($row[$field])){
-                        $value = htmlspecialchars($row[$field]);
+                        $value = html($row[$field], false);
                     } else {
                         $value = $row[$field];
                     }
@@ -1362,10 +1519,14 @@ class cmsTemplate {
 
                     if (isset($column['flag']) && $column['flag']){
 
+                        if (isset($column['flag_handler'])){
+                            $value = $column['flag_handler']($value, $row);
+                        }
+
 						if (isset($column['flag_on'])){
 							$is_flag_on = $value == $column['flag_on'];
 						} else {
-							$is_flag_on = (bool)$value;
+							$is_flag_on = (int)$value;
 						}
 
                         $flag_class = $column['flag']===true ? 'flag' : $column['flag'];
@@ -1378,7 +1539,7 @@ class cmsTemplate {
 
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
 
-                        $value = '<div class="flag_trigger '.($is_flag_on ? "{$flag_class}_on" : "{$flag_class}_off").'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
+                        $value = '<div class="flag_trigger '.($is_flag_on > 0 ? "{$flag_class}_on" : ($is_flag_on < 0 ? "{$flag_class}_middle" : "{$flag_class}_off")).'" data-class="'.$flag_class.'">'.$flag_content.'</div>';
 
                     }
 
@@ -1407,9 +1568,19 @@ class cmsTemplate {
                         if(!empty($column['editable']['save_action'])){
                             $save_action = string_replace_keys_values($column['editable']['save_action'], $row);
                         }
+                        $attributes = array();
+                        if(!empty($column['editable']['attributes'])){
+                            foreach ($column['editable']['attributes'] as $akey => $avalue) {
+                                if(is_string($avalue)){
+                                    $attributes[$akey] = string_replace_keys_values($avalue, $row);
+                                } else {
+                                    $attributes[$akey] = $avalue;
+                                }
+                            }
+                        }
                         if(!empty($save_action)){
                             $value = '<div class="grid_field_value '.$field.'_grid_value '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.$value.'</div>';
-                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field]);
+                            $value .= '<div class="grid_field_edit '.((isset($column['href']) ? 'edit_by_click' : '')).'">'.html_input('text', $field, $row[$field], $attributes);
                             if($editable_index == $editable_count){
                                 $value .= html_button(LANG_SAVE, '', '', array('data-action'=>$save_action, 'class'=>'inline_submit'));
                             }
@@ -1456,7 +1627,7 @@ class cmsTemplate {
                                 // парсим шаблон запроса подтверждения, заменяя значения полей
                                 if (isset($action['confirm'])){
                                     $action['confirm'] = str_replace('{'.$cell_id.'}', $cell_value, $action['confirm']);
-                                    $confirm_attr = 'onclick="if(!confirm(\''.htmlspecialchars($action['confirm']).'\')){ return false; }"';
+                                    $confirm_attr = 'onclick="if(!confirm(\''.html($action['confirm'], false).'\')){ return false; }"';
                                 }
 
                             }
@@ -1543,8 +1714,9 @@ class cmsTemplate {
      * @param string $css_class CSS класс контейнера пунктов меню
      * @param int $max_items Максимальное количество видимых пунктов
      * @param string $template Название файла шаблона меню в assets/ui/
+     * @param string $menu_title Название(подпись) меню
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu'){
+    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu', $menu_title=''){
 
         $tpl_file = $this->getTemplateFileName('assets/ui/'.$template);
 
@@ -1552,11 +1724,17 @@ class cmsTemplate {
 
     }
 
-    public function renderAsset($tpl_file, $data=array()){
+    public function renderAsset($tpl_file, $data=array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('assets/' . $tpl_file);
 
         extract($data); include($tpl_file);
+
+        if($request){
+            if ($request->isAjax()) {
+                exit();
+            }
+        }
 
     }
 
@@ -1624,16 +1802,34 @@ class cmsTemplate {
 
     /**
      * Рендерит шаблон списка записей контента
+     * @param array $ctype Массив данных типа контента
+     * @param array $data Массив данных для шаблона
+     * @param mixed $request Объект запроса
+     * @return string
      */
-    public function renderContentList($ctype, $data=array(), $request=false){
+    public function renderContentList($ctype, $data = array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('content/'.$ctype['name'].'_list', true);
 
         if (!$tpl_file){
 
-            $style = !empty($ctype['options']['list_style']) ? '_'.$ctype['options']['list_style'] : '';
+            $style = '';
 
-            $tpl_file = $this->getTemplateFileName("content/default_list{$style}");
+            if(!empty($ctype['options']['list_style'])){
+                if(is_array($ctype['options']['list_style'])){
+                    $style = $ctype['options']['list_style'][0] ? '_'.$ctype['options']['list_style'][0] : '';
+                } else {
+                    $style = '_'.$ctype['options']['list_style'];
+                }
+            }
+
+            $list_type = $this->controller->getListContext();
+
+            if(isset($ctype['options']['context_list_style'][$list_type])){
+                $style = $ctype['options']['context_list_style'][$list_type] ? '_'.$ctype['options']['context_list_style'][$list_type] : '';
+            }
+
+            $tpl_file = $this->getTemplateFileName('content/default_list'.$style);
 
         }
 
@@ -1645,8 +1841,12 @@ class cmsTemplate {
 
     /**
      * Рендерит шаблон просмотра записи контента
+     * @param string $ctype_name Имя типа контента
+     * @param array $data Массив данных для шаблона
+     * @param mixed $request Объект запроса
+     * @return string
      */
-    public function renderContentItem($ctype_name, $data=array(), $request=false){
+    public function renderContentItem($ctype_name, $data = array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('content/'.$ctype_name.'_item', true);
 

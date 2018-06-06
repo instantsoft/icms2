@@ -1,10 +1,15 @@
 <?php
 
     define('LANG_ADMIN_CONTROLLER',     'Control Panel');
-
+    define('LANG_CP_INSTALL_FOLDER_EXISTS',     'Attention! The installation directory <b>/install</b> has not been deleted.');
+    define('LANG_CP_TOOLTIP_HELP',              'Useful documentation for the section');
+    define('LANG_CP_TOOLTIP_HELP_HINT',         'Disable animations can be in the template settings');
     define('LANG_CP_DASHBOARD_STATS',           'Site Stats');
     define('LANG_CP_DASHBOARD_SYSINFO',         'System Info');
     define('LANG_CP_DASHBOARD_RESOURCES',       'Useful Resources');
+    define('LANG_CP_DASHBOARD_NEWS',            'InstantCMS news');
+    define('LANG_CP_DASHBOARD_NEWS_O',          'Official');
+    define('LANG_CP_DASHBOARD_NEWS_A',          'Blogs');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
@@ -39,7 +44,7 @@
     define('LANG_CP_SECTION_USERS',             'Users');
     define('LANG_CP_SECTION_GROUPS',            'Groups');
     define('LANG_CP_SECTION_MENU',              'Menu');
-    define('LANG_CP_SECTION_WIDGETS',           'Widgets');
+    define('LANG_CP_SECTION_WIDGETS',           'Widgets and pages');
     define('LANG_CP_SECTION_CONTROLLERS',       'Components');
     define('LANG_CP_SECTION_SETTINGS',          'Settings');
     define('LANG_CP_SECTION_UPDATE',            'Updates');
@@ -53,6 +58,7 @@
     define('LANG_CP_CTYPE_CREATED',             'Content type &laquo;%s&raquo; created');
     define('LANG_CP_CTYPE_DELETE_CONFIRM',      'Delete content type "{title}"?');
     define('LANG_CP_CTYPE_ERROR_NAME',          'It should not be called the name of an existing component');
+    define('LANG_CP_CTYPE_TO_LIST',             'To the content types list');
 
     define('LANG_CP_CTYPE_SETTINGS',            'Settings');
     define('LANG_CP_CTYPE_LABELS',              'Labels');
@@ -81,9 +87,8 @@
     define('LANG_CP_SELECT_HINT',               'Click on a row to select or ');
 
     define('LANG_CP_BASIC',                     'Basic settings');
+    define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');
-    define('LANG_CP_PREMOD_ADD',                'Pre-moderate new entries');
-    define('LANG_CP_PREMOD_EDIT',               'Pre-moderate edited entries');
     define('LANG_CP_IS_PUB_CONTROL',            'Custom publication date');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired entry action');
@@ -123,7 +128,8 @@
     define('LANG_CP_SEOMETA_ITEM_TITLE',        'META-title pattern');
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'META-keys pattern');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'META-descriptions pattern');
-    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>');
+    define('LANG_CP_SEOMETA_ITEM_H1',           'h1 tag pattern');
+    define('LANG_CP_SEOMETA_ITEM_HINT',         'Use the item field, inserting their names in braces. For example: <strong>{title}</strong>. You can use the processing of values, more details in <a target="_blank" href="http://docs.instantcms.ru/en/manual/settings/seo-patterns">the documentation</a>');
     define('LANG_CP_AUTO_URL',                  'Autogenerate URL');
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');
@@ -137,12 +143,15 @@
     define('LANG_CP_LISTVIEW_ON',               'List view enabled');
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
-    define('LANG_CP_LISTVIEW_STYLE',            'List style');
+    define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
+    define('LANG_CP_LIST_STYLE_NAMES',          'Names for list styles');
+    define('LANG_CP_CONTEXT_LIST_STYLE',        'Styles for other lists');
+    define('LANG_CP_CONTEXT_SELECT_LIST',       'Select a list');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Basic list');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Table');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
@@ -193,6 +202,8 @@
     define('LANG_CP_FIELD_LABEL_LEFT',          'Left');
     define('LANG_CP_FIELD_LABEL_TOP',           'Top');
     define('LANG_CP_FIELD_IN_LIST',             'Show in list view');
+    define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'For which lists should this be shown');
+    define('LANG_CP_FIELD_NOT_IN_LIST_CONTEXT', 'For which lists do not show');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in entry view');
     define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
@@ -250,10 +261,11 @@
     define('LANG_CP_RELATION_LAYOUT_HIDE_TITLE','Hide list title');
     define('LANG_CP_RELATION_LAYOUT_HIDE_FILTER','Hide filter');
     define('LANG_CP_RELATION_LAYOUT_LIMIT',     'Records per page');
-    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content Type default');
+    define('LANG_CP_RELATION_LAYOUT_LIMIT_HINT','Leave blank to use Content default');
     define('LANG_CP_RELATION_CREATED',          'Relation has been created');
     define('LANG_CP_RELATION_FIELD_CREATED',    'Parent relation field has been created in the "%s" Content Type');
-    define('LANG_CP_RELATION_CHILD',            'Child Content Type');
+    define('LANG_CP_CONTR_RELATION_FIELD_CREATED', 'Parent relation field has been created in the "%s" Component');
+    define('LANG_CP_RELATION_CHILD',            'Child Content');
     define('LANG_CP_RELATION_TAB_OPTS',         'Tab Options');
     define('LANG_CP_RELATION_TAB_SEO_HINT',     'Use curly braces to insert parent item\'s field. Example: <strong>{title}</strong>');
     define('LANG_CP_RELATION_TAB_SEO_TITLE',    'Tab Title');
@@ -294,6 +306,7 @@
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from their positions?\nThe widgets will be moved to the Unused Widgets section');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
+    define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Are you sure you want to permanently remove the widget from the system?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
     define('LANG_CP_WIDGET_PAGE_URLS',          'URL binding');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
@@ -301,7 +314,17 @@
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
+    define('LANG_CP_WIDGETS_FA',                'Quick selection of URLs for masks');
+    define('LANG_CP_WIDGETS_FA_TYPE',           'Type');
+    define('LANG_CP_WIDGETS_FA_ITEMS',          'Items');
+    define('LANG_CP_WIDGETS_FA_CATS',           'Categories');
+    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Title or URL');
+    define('LANG_CP_WIDGETS_FA_ADD_TO',         'Add to the');
+    define('LANG_CP_WIDGETS_FA_TO_POS',         'To positive');
+    define('LANG_CP_WIDGETS_FA_TO_NOT',         'To negative');
+    define('LANG_CP_WIDGETS_FA_ADD',            'Add');
 
+    define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
     define('LANG_CP_USER_CREATED',              'User &laquo;%s&raquo; is created');
     define('LANG_CP_USER_DELETE_CONFIRM',       'Delete a user {nickname}?\nAll his content and all his uploaded files will be also deleted');
@@ -314,6 +337,7 @@
     define('LANG_CP_USER_GROUP_CREATED',        'Group &laquo;%s&raquo; has been created');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Allow to join this group after sign up');
     define('LANG_CP_USER_GROUP_IS_FILTER',      'Show in user filter');
+    define('LANG_CP_USER_GROUP_ERR_DELETE',     'You can not delete the last group');
     define('LANG_CP_USER_LOCKING',              'Blocking');
     define('LANG_CP_USER_LOCKED',               'Blocked');
     define('LANG_CP_USER_IS_LOCKED',            'Block user');
@@ -322,6 +346,8 @@
     define('LANG_CP_USER_NOT_FOUND',            'User %s not found');
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this IP');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
+    define('LANG_CP_USER_SEARCH_NOT_FOUND',     'No users by specified criteria');
+    define('LANG_CP_USERS_ONLINE',              'Online now');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
@@ -337,6 +363,9 @@
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
+    define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
+    define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Strictly for ip address');
     define('LANG_CP_SETTINGS_USER_CHANGE_LANG', 'Allow change language by user (substitution prefix in the URL)');
     define('LANG_CP_SETTINGS_ALLOW_IPS',        'IP addresses allowed to access the control panel');
     define('LANG_CP_SETTINGS_ALLOW_IPS_HINT',   'One address per line. Allowed to all if not specified. Current ip address: %s');
@@ -358,6 +387,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile theme');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
+    define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumbs?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
@@ -390,6 +420,8 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Without encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME',  'Abstract Counter');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME_HINT',  'Used in the parameters when connecting js and css. Increase after the changes to reset the cache of visitors.');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');
@@ -397,6 +429,9 @@
     define('LANG_CP_SETTINGS_CACHE_HOST',       'Memcached server');
     define('LANG_CP_SETTINGS_CACHE_PORT',       'Memcached port');
     define('LANG_CP_SETTINGS_CACHE_MIN_HTML',   'Minify HTML');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN',    'Cookie Domain');
+    define('LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT', 'Your site\'s cookies will be distributed to the specified domain and all of its subdomains. End-to-end authentication will be available. If not specified, the cookie will be valid within the current domain.');
+    define('LANG_CP_SETTINGS_CURRENT_DOMAIN',   'Current domain: ');
 
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Memcached module not found');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Cannot connect to Memcached - check server and port');
@@ -408,11 +443,38 @@
     define('LANG_CP_PERMISSIONS_SUCCESS',       'The access rules saved successfully');
 
     define('LANG_CP_SETTINGS_DEBUG_MODE',       'Debug mode enabled');
+    define('LANG_CP_SETTINGS_MANIFEST_FROM_FILES', 'Load events from manifest.php files');
     define('LANG_CP_SETTINGS_EMULATE_LAG',      'Emulate network lag');
 
     define('LANG_CP_SETTINGS_CACHE_CLEAN',      'Clear cache');
 
+    define('LANG_CP_ADDONS_DATA_ERROR',         'Error getting data, try again later.');
+    define('LANG_CP_ADDONS_CURL_ERROR',         'Browse the add-ons catalog failed, because CURL is not available on the server. You can select addons from a <a target="_blank" href="http://addons.instantcms.ru/">official add-ons catalog</a>.');
+    define('LANG_CP_INSTALL_PACKAGE_LINK_HINT', 'For example, by copying a download link from the <a target="_blank" href="http://addons.instantcms.ru/">official add-ons catalog</a>');
+    define('LANG_CP_INSTALL_BY_LINK',           'Install from URL');
+    define('LANG_CP_OFICIAL_ADDONS',            'Add-ons catalog');
     define('LANG_CP_INSTALL_PACKAGE',           'Install Extension Package');
+    define('LANG_CP_DO_INSTALL',                'Install');
+    define('LANG_CP_DO_UPDATE',                 'Update');
+    define('LANG_CP_LAST_UPDATE',               'Last update');
+    define('LANG_CP_INSTALL_COMPATIBILITY_YES', 'Compatible with your InstantCMS version');
+    define('LANG_CP_INSTALL_COMPATIBILITY_NO',  'Not tested with your InstantCMS version');
+    define('LANG_CP_NO_ADDONS',                 'No add-ons for your request');
+    define('LANG_CP_FIND_ADDON_TITLE',          'Search by name of the add-on');
+    define('LANG_CP_FIND_ADDON_FREE',           'Only free');
+    define('LANG_CP_FIND_ADDON_BUY',            'Only paid');
+    define('LANG_CP_FIND_FOUND',                'Total on request');
+    define('LANG_CP_PACKAGE_VIDEO',             'Video');
+    define('LANG_CP_PACKAGE_VIDEO_TITLE',       'Video review');
+    define('LANG_CP_PACKAGE_DEMO',              'Demo');
+    define('LANG_CP_PACKAGE_BUY',               'Buy for %s');
+    define('LANG_CP_PACKAGE_BUY_UPDATE',        'Update available');
+    define('LANG_CP_PACKAGE_INSTALLEDT',        'Installed');
+    define('LANG_CP_PACKAGE_INSTALLED_HINT',    '%s installed');
+    define('LANG_CP_ADDDONS_DS_INSTALLED',      'Installed');
+    define('LANG_CP_PACKAGE_DELETE_CONTROLLERS', 'Deleting a «%s» component files');
+    define('LANG_CP_PACKAGE_DELETE_WIDGETS',     'Deleting a «%s» widget files');
+    define('LANG_CP_PACKAGE_DELETE_HINT',       'We strongly recommend that you manually delete all the files listed below, they are no longer used. InstantCMS does not have permission to delete (and should not).');
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Installation completed');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Extension package has been successfully installed');
     define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'The <b>%s</b> folder has not been cleared due to lack of permissions, clear it manually');
@@ -430,6 +492,9 @@
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Automatic extraction is impossible');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Request your hoster to install the <b>ZipArchive</b> class for PHP on your server');
     define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Change file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Server does not support the function parse_ini_file');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Installing add-ons is not possible');
+    define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Please contact the hoster to enable the <b>parse_ini_file</b> function for PHP on your server');
     define('LANG_CP_INSTALL_ERROR',             'Package installation error');
     define('LANG_CP_INSTALL_PERM_ERROR',        'The "%s" file is not readable');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Package extraction error');
@@ -469,12 +534,18 @@
     define('LANG_CP_FTP_PASS',                  'Password');
     define('LANG_CP_FTP_PATH',                  'Site root path');
 	define('LANG_CP_FTP_PATH_HINT',             '<a href="http://docs.instantcms.ru/en/manual/addons/ftppath" target="_blank">How to specify correct path?</a>');
+    define('LANG_CP_CHECK',                     'Check');
     define('LANG_CP_FTP_IS_PASV',               'Passive transfer mode');
-    define('LANG_CP_FTP_AUTH_FAILED',           'Connection failed. Verify the specified details');
+    define('LANG_CP_FTP_CONNECT_FAILED',        'Connection failed. Verify that the host and port are correct');
+    define('LANG_CP_FTP_AUTH_FAILED',           'Connection failed. Verify the username and password are correct');
     define('LANG_CP_FTP_UPLOAD_FAILED',         'File copy error. Make sure the path and permissions are correct');
     define('LANG_CP_FTP_MKDIR_FAILED',          'Failed to create the folder. Make sure the path and permissions are correct');
 	define('LANG_CP_FTP_NO_ROOT',				'Error: the %s folder not found on the server');
 	define('LANG_CP_FTP_BAD_ROOT',				'Bad root path: InstantCMS 2 not found in <strong>%s</strong>');
+    define('LANG_CP_FTP_CHECK',				    'Checking the FTP connection');
+    define('LANG_CP_FTP_CONNECTION_INFO',       'Connection to %s');
+    define('LANG_CP_FTP_NO_ERRORS',             'The connection is established and configured correctly.');
+    define('LANG_CP_FTP_ROOT_LIST_TITLE',       'List of connection files and directories');
 
     define('LANG_CP_FTP_SAVE_TO_SESSION',   'Remember FTP details for the current session');
     define('LANG_CP_FTP_SAVE_TO_SESSION_HINT', 'Not safe if the extension is not from a trusted author');
@@ -507,6 +578,7 @@
     define('LANG_CP_SCHEDULER_TASK_CONTROLLER',     'Component');
     define('LANG_CP_SCHEDULER_TASK_HOOK',           'Hook');
     define('LANG_CP_SCHEDULER_TASK_PERIOD',         'Interval, minutes');
+    define('LANG_CP_SCHEDULER_IS_STRICT_PERIOD',    'Strict adherence to the period');
     define('LANG_CP_SCHEDULER_TASK_LAST_RUN',       'Last run');
     define('LANG_CP_SCHEDULER_TASK_DELETE_CONFIRM', 'Delete task?');
     define('LANG_CP_SCHEDULER_TASK_CREATED',        'The task has been created');
@@ -515,13 +587,13 @@
     define('LANG_CP_SCHEDULER_TASK_RAN',            'Task &laquo;%s&raquo; was executed %s');
     define('LANG_CP_SCHEDULER_TASK_RUN_FAIL',       'Failed to execute task &laquo;%s&raquo;');
 
-    define('LANG_CP_UPDATE_CHECK',                  'Check for updates');
+    define('LANG_CP_UPDATE_CHECK',                  'Check for InstantCMS updates');
     define('LANG_CP_UPDATE_DATE',                   'Release date');
     define('LANG_CP_UPDATE_DOWNLOAD',               'Download package');
     define('LANG_CP_UPDATE_DOWNLOAD_FAIL',          'Unable to download the update package');
     define('LANG_CP_UPDATE_INSTALL',                'Install Update');
     define('LANG_CP_UPDATE_AVAILABLE',              '%s is available for update');
-    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'No updates. You are using the latest version');
+    define('LANG_CP_UPDATE_NOT_AVAILABLE',          'No updates. You are using the latest version %s of %s.');
     define('LANG_CP_UPDATE_CHECK_FAIL',             'Unable to check for updates');
     define('LANG_CP_UPDATE_MANUAL_1',               'Automatic download failed because CURL is not available on the server.');
     define('LANG_CP_UPDATE_MANUAL_2',               'Download the update archive manually and <a href="'.href_to('admin', 'install').'">Install</a> it');
@@ -546,12 +618,14 @@
     define('LANG_HELP_URL_WIDGETS_PAGES',           'http://docs.instantcms.ru/en/manual/widgets/pages');
     define('LANG_HELP_URL_COMPONENTS',              'http://docs.instantcms.ru/en/manual/components');
     define('LANG_HELP_URL_INSTALL',                 'http://docs.instantcms.ru/en/manual/addons');
+    define('LANG_HELP_URL_COM_REDIRECT',            'http://docs.instantcms.ru/en/manual/components/redirect');
     define('LANG_HELP_URL_COM_AUTH',                'http://docs.instantcms.ru/en/manual/components/auth');
     define('LANG_HELP_URL_COM_ACTIVITY',            'http://docs.instantcms.ru/en/manual/components/activity');
     define('LANG_HELP_URL_COM_GROUPS',              'http://docs.instantcms.ru/en/manual/components/groups');
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/en/manual/components/recaptcha');
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/en/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/en/manual/components/images');
+	define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'http://docs.instantcms.ru/en/manual/components/subscriptions');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/en/manual/components/users');
     define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/en/manual/components/moderation');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/en/manual/components/users/migrations');
@@ -569,6 +643,8 @@
     define('LANG_HELP_URL_SETTINGS_GLOBAL',         'http://docs.instantcms.ru/en/manual/settings/global');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER',      'http://docs.instantcms.ru/en/manual/settings/scheduler');
     define('LANG_HELP_URL_SETTINGS_SCHEDULER_TASK', 'http://docs.instantcms.ru/en/manual/settings/scheduler/task');
+    define('LANG_HELP_URL_EVENTS',                  'http://docs.instantcms.ru/en/manual/settings/events');
+    define('LANG_HELP_URL_COM_MESSAGES',                'http://docs.instantcms.ru/en/manual/components/messages');
     define('LANG_ZIP_ERROR_10', 'File already exists');
     define('LANG_ZIP_ERROR_21', 'Inconsistent ZIP-archive');
     define('LANG_ZIP_ERROR_18', 'Invalid argument');
@@ -579,3 +655,34 @@
     define('LANG_ZIP_ERROR_5', 'Read error');
     define('LANG_ZIP_ERROR_4', 'Seek error');
     define('LANG_INSTALL_NOTICE_SYSTEM_FILE', 'Attention! Package replaces some CMS system files. It is not recommended to continue the installation package if you are unsure of the developer.');
+    define('LANG_ADMIN_NOTICES', 'Notifications');
+    define('LANG_ADMIN_ACCESS_DENIED_BY_IP', 'Access from your ip address is restricted');
+    define('LANG_MAILCHECK_ERROR', 'When sending a letter error occurred: <br><b>%s</b>');
+    define('LANG_MAILCHECK_SUCCESS', 'A letter has been sent successfully');
+    define('LANG_MAILCHECK_MENU', 'Check mail settings');
+    define('LANG_MAILCHECK_TO', 'Send message to');
+    define('LANG_MAILCHECK_SUBJECT', 'Message subject');
+    define('LANG_MAILCHECK_BODY', 'Message contents');
+    define('LANG_EVENTS_MANAGEMENT', 'Events management');
+    define('LANG_EVENTS_REFRESH',    'Update events in the database');
+    define('LANG_EVENTS_DELETED',    'These events are no longer available');
+    define('LANG_EVENTS_LISTENER',   'Component');
+    define('LANG_EVENTS_EVENT_NAME', 'Event');
+    define('LANG_EVENTS_ALLOW_NEW',  'Available new events');
+    define('LANG_EVENTS_SUCCESS',  'Events in the database are updated');
+    define('LANG_CONFIRM_LOGIN',  'Security Check');
+    define('LANG_CONFIRM_LOGIN_HINT',  'You are trying to log in under the name of "%s" from an unusual location');
+    define('LANG_CONFIRM_LOGIN_HINT1',  'In order to confirm ownership of the accaunt, we ask you to enter the password');
+    define('LANG_ADMIN_IS_DELETED', 'Deleted?');
+    define('LANG_ADMIN_CONTROLLER_SLUG', 'Controller Url');
+    define('LANG_CP_QUEUE', 'Queue');
+    define('LANG_CP_QUEUE_TITLE', '%s queue');
+    define('LANG_CP_QUEUE_DATE_CREATED', 'Date Created');
+    define('LANG_CP_QUEUE_DATE_STARTED', 'Run Date');
+    define('LANG_CP_QUEUE_STATUS', 'Status');
+    define('LANG_CP_QUEUE_QUEUE_RESTART', 'Error corrected, returned to the queue');
+    define('LANG_CP_QUEUE_STATUS1', 'In progress');
+    define('LANG_CP_QUEUE_STATUS2', 'Blocked with error');
+    define('LANG_CP_QUEUE_STATUS3', 'Pending');
+    define('LANG_CP_QUEUE_STATUS4', 'Waiting for 2nd time');
+    define('LANG_CP_SUBJECT', 'Subject');

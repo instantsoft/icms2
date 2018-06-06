@@ -12,7 +12,12 @@ class actionAdminCtypes extends cmsAction {
 
         $grid = $this->loadDataGrid('ctypes', false, 'admin.grid_filter.ctypes');
 
-        return cmsTemplate::getInstance()->render('ctypes', array(
+        $new_filter = array(); // далее сброс всех ранее сохранённых фильтров
+        $new_filter['page'] = isset($grid['filter']['page']) ? $grid['filter']['page'] : 1;
+        $new_filter['perpage'] = isset($grid['filter']['perpage']) ? $grid['filter']['perpage'] : 30;
+        $grid['filter'] = $new_filter;
+
+        return $this->cms_template->render('ctypes', array(
             'grid' => $grid
         ));
 

@@ -20,12 +20,12 @@ class actionAdminWidgetsPageAdd extends cmsAction {
 
                 $page_id = $widgets_model->addPage($page);
 
-                if ($page_id){ 
-                    
-                    cmsUser::addSessionMessage(sprintf(LANG_CP_WIDGET_PAGE_CREATED, $page['title']), 'success'); 
-                    
+                if ($page_id){
+
+                    cmsUser::addSessionMessage(sprintf(LANG_CP_WIDGET_PAGE_CREATED, $page['title']), 'success');
+
                     cmsUser::setCookiePublic('widgets_tree_path', "/custom/custom.{$page_id}");
-                    
+
                 }
 
                 $this->redirectToAction('widgets');
@@ -40,10 +40,10 @@ class actionAdminWidgetsPageAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('widgets_page', array(
-            'do' => 'add',
-            'page' => $page,
-            'form' => $form,
+        return $this->cms_template->render('widgets_page', array(
+            'do'     => 'add',
+            'page'   => $page,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

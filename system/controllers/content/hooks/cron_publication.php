@@ -12,7 +12,9 @@ class onContentCronPublication extends cmsAction {
 
 			if (!$ctype['is_date_range']) { continue; }
 
-            $pub_items = $this->model->filterNotEqual('is_pub', 1)->filter('i.date_pub <= NOW()')->
+            $pub_items = $this->model->filterNotEqual('is_pub', 1)->
+                    filterIsNull('is_deleted')->
+                    filter('i.date_pub <= NOW()')->
                     filterStart()->
                         filter('i.date_pub_end > NOW()')->
                         filterOr()->

@@ -41,10 +41,7 @@ class formAdminCtypesField extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'string',
                         'generator' => function() {
-                            $field_types = array();
-                            $field_types = cmsForm::getAvailableFormFields();
-                            asort($field_types, SORT_STRING);
-                            return $field_types;
+                            return cmsForm::getAvailableFormFields('only_public', 'content');
                         }
                     ))
                 )
@@ -80,6 +77,27 @@ class formAdminCtypesField extends cmsForm {
                     )),
                     new fieldCheckbox('is_in_list', array(
                         'title' => LANG_CP_FIELD_IN_LIST,
+                    )),
+                    new fieldListMultiple('options:context_list', array(
+                        'title' => LANG_CP_FIELD_IN_LIST_CONTEXT,
+                        'default'   => 0,
+                        'show_all'  => true,
+                        'is_vertical' => true,
+                        'generator' => function() use($ctype_name) {
+
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template:'.$ctype_name);
+
+                            $items = array();
+
+                            if($lists){
+                                foreach ($lists as $list) {
+                                    $items = array_merge($items, $list);
+                                }
+                            }
+
+                            return $items;
+
+                        }
                     )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,

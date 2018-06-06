@@ -5,8 +5,8 @@
 
         echo html_select_multiple($field->element_name, $field->data['items'], $value, $field->data['dom_attr'], $field->data['is_tree']); ?>
 
-        <?php if($field->data['multiple_select_deselct']){ ?>
-            <div class="select_deselct">
+        <?php if($field->data['multiple_select_deselect']){ ?>
+            <div class="select_deselect">
                 <a href="#" onclick="$('#<?php echo $field->element_name; ?> input:checkbox').prop('checked', true); return false;">
                     <?php echo LANG_SELECT_ALL; ?>
                 </a>
@@ -19,16 +19,16 @@
     <?php
     } elseif($field->data['is_chosen_multiple'] && !$field->native_tag) {
 
-        $this->addJSFromContext('templates/default/js/jquery-chosen.js');
-        $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+        $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
+        $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
 
         echo html_select($field->element_name, $field->data['items'], $value, ($field->data['dom_attr'] + array('multiple' => true)));
 
     } else {
 
         if (!$field->native_tag) {
-            $this->addJSFromContext('templates/default/js/jquery-chosen.js');
-            $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+            $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
+            $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
         }
 
         echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']);
@@ -39,10 +39,10 @@
 <script type="text/javascript">
     <?php if ($field->data['parent']) { ?>
         $('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
-            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val());
+            icms.forms.updateChildList('<?php echo $field->id; ?>', '<?php echo $field->data['parent']['url']; ?>', $(this).val(), "<?php html($value); ?>");
         });
     <?php } ?>
     <?php if (!$field->native_tag && ($field->data['is_chosen_multiple'] || !$field->data['is_multiple'])) { ?>
-        $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>'});
+        $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
     <?php } ?>
 </script>

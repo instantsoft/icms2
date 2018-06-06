@@ -15,12 +15,12 @@ class actionContentCategoryView extends cmsAction {
                 $ctype = $this->model->getContentTypeByName($_ctype_name);
             }
             if(!$ctype){
-                cmsCore::error404();
+                return cmsCore::error404();
             } else {
                 $this->cms_core->uri_controller_before_remap = $ctype_name;
             }
         }
-        if (!$ctype['options']['list_on']) { cmsCore::error404(); }
+        if (!$ctype['options']['list_on']) { return cmsCore::error404(); }
 
         $category = array('id' => false);
         $subcats = array();
@@ -28,11 +28,11 @@ class actionContentCategoryView extends cmsAction {
         // Получаем SLUG категории
         $slug = $this->request->get('slug', '');
 
-        if (!$ctype['is_cats'] && $slug != 'index') { cmsCore::error404(); }
+        if (!$ctype['is_cats'] && $slug != 'index') { return cmsCore::error404(); }
 
         if ($ctype['is_cats'] && $slug != 'index') {
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
-            if (!$category){ cmsCore::error404(); }
+            if (!$category){ return cmsCore::error404(); }
         }
 
         // Получаем список подкатегорий для текущей
@@ -42,15 +42,9 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Получаем список наборов
-        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($category) {
-
-            $is_view = !$item['cats_view'] || in_array($category['id'], $item['cats_view']);
-            $is_user_hide = $item['cats_hide'] && in_array($category['id'], $item['cats_hide']);
-
-            if (!$is_view || $is_user_hide) { return false; }
-
-            return $item;
-        });
+        $datasets = $this->getCtypeDatasets($ctype, array(
+            'cat_id' => $category['id']
+        ));
 
         // Текущий набор
         $dataset = $this->request->get('dataset', '');
@@ -74,15 +68,20 @@ class actionContentCategoryView extends cmsAction {
 
         // Если есть наборы, применяем фильтры текущего
         // иначе будем сортировать по дате создания
+        $current_dataset = array();
         if ($datasets){
-            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
+            if($dataset && empty($datasets[$dataset])){ return cmsCore::error404(); }
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
             $this->model->applyDatasetFilters($current_dataset);
+            // устанавливаем максимальное количество записей для набора, если задано
+            if(!empty($current_dataset['max_count'])){
+                $this->max_items_count = $current_dataset['max_count'];
+            }
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if(count($datasets) == 1){
-                unset($current_dataset); $datasets = false;
+                $current_dataset = array(); $datasets = false;
             }
         }
 
@@ -96,7 +95,7 @@ class actionContentCategoryView extends cmsAction {
         }
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $this->model->filterHiddenParents();
+        $this->model->enableHiddenParentsFilter();
 
         // Формируем базовые URL для страниц
         $page_url = array(
@@ -123,24 +122,94 @@ class actionContentCategoryView extends cmsAction {
 		$items_list_html = '';
 		$is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
 
+        $list_styles = array();
+
+        if(!empty($ctype['options']['list_style'])){
+            if(is_array($ctype['options']['list_style']) && count($ctype['options']['list_style']) > 1){
+
+                $style_key_name = $ctype['name'].'_ctype_list_style';
+
+                $ctype_list_style_preset = false;
+
+                if(cmsUser::hasCookie($style_key_name)){
+                    $ctype_list_style_preset = cmsUser::getCookie($style_key_name, 'string', function ($cookie){ return trim(strip_tags($cookie)); });
+                    $ctype_list_style_preset = $ctype_list_style_preset === 'default' ? '' : $ctype_list_style_preset;
+                }
+
+                if($this->cms_user->is_logged){
+                    $ctype_list_style_preset = cmsUser::getUPS($style_key_name);
+                    $ctype_list_style_preset = $ctype_list_style_preset === null ? '' : $ctype_list_style_preset;
+                }
+
+                $current_style = $this->request->has('style') ?
+                        $this->request->get('style', '') :
+                        ($ctype_list_style_preset !== false ? $ctype_list_style_preset : $ctype['options']['list_style'][0]);
+
+                if(!in_array($current_style, $ctype['options']['list_style'])){
+                    return cmsCore::error404();
+                }
+
+                // запоминаем стиль в куки
+                if(!$this->cms_user->is_logged){
+                    cmsUser::setCookie($style_key_name, ($current_style === '' ? 'default' : $current_style), 604800);
+                } else {
+                    cmsUser::setUPS($style_key_name, $current_style);
+                }
+
+                $style_titles = array();
+                if(!empty($ctype['options']['list_style_names'])){
+                    foreach ($ctype['options']['list_style_names'] as $list_style_names) {
+                        $style_titles[$list_style_names['name']] = $list_style_names['value'];
+                    }
+                }
+
+                foreach ($ctype['options']['list_style'] as $list_style) {
+                    $list_styles[] = array(
+                        'title' => (isset($style_titles[$list_style]) ? $style_titles[$list_style] : ''),
+                        'style' => $list_style,
+                        'url'   => $page_url['base'].'?style='.$list_style,
+                        'class' => $list_style.($current_style === $list_style ? ' active' : ''),
+                    );
+                }
+
+                $ctype['options']['raw_list_style'] = $ctype['options']['list_style'];
+                $ctype['options']['list_style'] = $current_style;
+
+            }
+        }
+
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_category', $category);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
 		// Получаем HTML списка записей
 		if (!$is_hide_items){
 			$items_list_html = $this->renderItemsList($ctype, $page_url, false, $category['id'], array(), $dataset);
 		}
 
-        // кешируем
-        cmsModel::cacheResult('current_ctype', $ctype);
-        cmsModel::cacheResult('current_ctype_category', $category);
+        $tpl_file = $this->cms_template->getTemplateFileName('controllers/content/category_view_'.$ctype['name'], true) ?
+                'category_view_'.$ctype['name'] : 'category_view';
 
-        return $this->cms_template->render('category_view', array(
+        $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset));
+
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], $category, $current_dataset, array()));
+        if ($toolbar_html) {
+            $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+        }
+
+        return $this->cms_template->render($tpl_file, array(
+            'filter_titles'   => $this->getFilterTitles(),
+            'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,
-            'parent'          => isset($parent) ? $parent : false,
+            'hooks_html'      => $hooks_html,
+            'toolbar_html'    => $toolbar_html,
             'slug'            => $slug,
             'ctype'           => $ctype,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'category'        => $category,
             'subcats'         => $subcats,
             'items_list_html' => $items_list_html,

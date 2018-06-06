@@ -1,6 +1,6 @@
 <?php
 
-    $this->addCSS('templates/default/controllers/photos/styles.css');
+    $this->addCSS($this->getStylesFileName('photos'));
     $this->addJS( $this->getJavascriptFileName('photos') );
     $this->addJS( $this->getJavascriptFileName('jquery-flex-images') );
 

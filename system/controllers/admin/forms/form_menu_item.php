@@ -46,7 +46,6 @@ class formAdminMenuItem extends cmsForm {
                         'title' => LANG_CP_MENU_ITEM_ACTION_URL,
                         'hint' => LANG_CP_MENU_ITEM_ACTION_URL_HINT,
                         'rules' => array(
-                            array('required'),
                             array('max_length', 255)
                         )
                     )),

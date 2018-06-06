@@ -38,7 +38,7 @@ class actionAdminCtypesAdd extends cmsAction {
 
                 if ($ctype_id){
 
-                    cmsCore::getController('content')->addWidgetsPages($ctype);
+                    $this->addCtypeWidgetsPages($ctype);
 
                     cmsUser::addSessionMessage(sprintf(LANG_CP_CTYPE_CREATED, $ctype['title']), 'success');
 

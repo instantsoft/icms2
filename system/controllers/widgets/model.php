@@ -44,6 +44,9 @@ class modelWidgets extends cmsModel {
 
         return $this->getItemById('widgets_pages', $id, function($item, $model){
 
+            $item['groups'] = cmsModel::yamlToArray($item['groups']);
+            $item['countries'] = cmsModel::yamlToArray($item['countries']);
+
             $item['is_custom'] = !empty($item['title']);
 
             $item['title'] = !empty($item['title']) ?
@@ -61,6 +64,9 @@ class modelWidgets extends cmsModel {
         $this->useCache('widgets.pages');
 
         return $this->get('widgets_pages', function($item, $model){
+
+            $item['groups'] = cmsModel::yamlToArray($item['groups']);
+            $item['countries'] = cmsModel::yamlToArray($item['countries']);
 
             if ($item['url_mask']) { $item['url_mask'] = explode("\n", $item['url_mask']); }
             if ($item['url_mask_not']) { $item['url_mask_not'] = explode("\n", $item['url_mask_not']); }
@@ -161,7 +167,10 @@ class modelWidgets extends cmsModel {
 
     public function getAvailableWidgets(){
 
-        $widgets = $this->orderBy('name')->get('widgets');
+        $widgets = $this->orderByList(array(
+            array('by' => 'controller', 'to' => 'asc'),
+            array('by' => 'name', 'to' => 'asc')
+        ))->get('widgets');
 
         if (!$widgets){ return false; }
 
@@ -171,7 +180,7 @@ class modelWidgets extends cmsModel {
 
             $key = $widget['controller'] ? $widget['controller'] : '0';
 
-            $sorted[ $key ][] = $widget;
+            $sorted[$key][] = $widget;
 
         }
 
@@ -198,6 +207,8 @@ class modelWidgets extends cmsModel {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+            $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
             return $item;
         });
 
@@ -221,17 +232,29 @@ class modelWidgets extends cmsModel {
 
         $positions = array();
 
-        foreach($binds as $bind){
+        if($binds){
+            foreach($binds as $bind){
 
-            $positions[ $bind['position'] ][] = array(
-                'id'          => $bind['id'],
-                'title'       => $bind['title'],
-                'name'        => $bind['name'],
-                'is_tab_prev' => (bool) $bind['is_tab_prev'],
-                'is_enabled'  => (bool) $bind['is_enabled'],
-                'is_disabled' => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
-            );
+                $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
+                if($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3){
+                    foreach ($bind['device_types'] as $dt) {
+                        $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
+                    }
+                } else {
+                    $device_types = false;
+                }
 
+                $positions[ $bind['position'] ][] = array(
+                    'id'           => $bind['id'],
+                    'title'        => $bind['title'],
+                    'device_types' => $device_types,
+                    'name'         => $bind['name'],
+                    'is_tab_prev'  => (bool) $bind['is_tab_prev'],
+                    'is_enabled'   => (bool) $bind['is_enabled'],
+                    'is_disabled'  => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
+                );
+
+            }
         }
 
         return $positions ? $positions : false;
@@ -273,6 +296,18 @@ class modelWidgets extends cmsModel {
 
     }
 
+    public function deleteWidget($id){
+
+        $this->filterEqual('widget_id', $id);
+
+        $this->deleteFiltered('widgets_bind');
+
+        cmsCache::getInstance()->clean('widgets.bind');
+
+        return $this->delete('widgets', $id);
+
+    }
+
     public function reorderWidgetsBindings($position, $items, $page_id=0){
 
         cmsCache::getInstance()->clean('widgets.bind');
@@ -309,13 +344,21 @@ class modelWidgets extends cmsModel {
                     select('w.name', 'name')->
                     join('widgets', 'w', 'w.id = i.widget_id')->
                     filterEqual('template', $template)->
-                    filterNotNull('is_enabled')->
+                    filterEqual('is_enabled', 1)->
                     filterIn('page_id', $pages_list)->
                     orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
                     get('widgets_bind', function($item, $model){
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+                        $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
+                        if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
+                            $item['template_layouts'] = array();
+                        }
+                        $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+                        if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
+                            $item['device_types'] = array();
+                        }
                         return $item;
                     });
 

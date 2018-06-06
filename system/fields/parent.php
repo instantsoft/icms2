@@ -2,13 +2,49 @@
 
 class fieldParent extends cmsFormField {
 
-    public $title       = LANG_PARSER_PARENT;
-    public $is_public   = false;
-    public $sql         = 'varchar(1024) NULL DEFAULT NULL';
-    public $allow_index = false;
-    public $var_type    = 'string';
-    public $filter_type = 'str';
-    private $input_action = 'bind';
+    public $title         = LANG_PARSER_PARENT;
+    public $is_public     = false;
+    public $sql           = 'varchar(1024) NULL DEFAULT NULL';
+    public $allow_index   = false;
+    public $var_type      = 'string';
+    public $filter_type   = 'str';
+    protected $input_action = 'bind';
+
+    public function setItem($item) {
+
+        parent::setItem($item);
+
+        if(!empty($item['ctype']['name'])){
+            $this->item['ctype_name'] = $item['ctype']['name'];
+        }
+
+        return $this;
+
+    }
+
+    public function getStringValue($value){
+
+        if (!$value){
+            return '';
+        }
+
+        $parent_ctype_name = $this->getParentContentTypeName();
+
+        $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
+
+        if (!$parent_items){
+            return '';
+        }
+
+		$result = array();
+
+		foreach($parent_items as $parent_item) {
+			$result[] = $parent_item['title'];
+		}
+
+		return $result ? implode(', ', $result) : '';
+
+    }
 
     public function parse($value){
 
@@ -40,8 +76,9 @@ class fieldParent extends cmsFormField {
 
 		$parent_ctype_name = $this->getParentContentTypeName();
 		$parent_items = false;
+        $auth_user_id = cmsUser::get('id');
 
-        $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : cmsUser::get('id');
+        $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : $auth_user_id;
 
         if ($value){
             $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
@@ -50,16 +87,23 @@ class fieldParent extends cmsFormField {
         }
 
 		$perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_to_parent');
-
 		$is_allowed_to_bind = ($perm && (
-								($perm == 'all_to_all') ||
-								($perm == 'own_to_all' && $author_id == cmsUser::get('id')) ||
-								($perm == 'own_to_own' && $author_id == cmsUser::get('id'))
+								($perm == 'all_to_all') || ($perm == 'all_to_own') || ($perm == 'all_to_other') ||
+								($perm == 'own_to_all' && $author_id == $auth_user_id) ||
+								($perm == 'own_to_other' && $author_id == $auth_user_id) ||
+								($perm == 'own_to_own' && $author_id == $auth_user_id) ||
+								($perm == 'other_to_own' && $author_id != $auth_user_id) ||
+								($perm == 'other_to_other' && $author_id != $auth_user_id) ||
+								($perm == 'other_to_all' && $author_id != $auth_user_id)
 							)) || cmsUser::isAdmin();
 
         $perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'add_to_parent');
-
         $is_allowed_to_add = ($perm && (($perm == 'to_all') || ($perm == 'to_own'))) || cmsUser::isAdmin();
+
+        $allowed_to_unbind_perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_off_parent');
+        if(cmsUser::isAdmin()){
+            $allowed_to_unbind_perm = 'all';
+        }
 
         if(!$parent_items && !$is_allowed_to_bind){
             return '';
@@ -73,6 +117,8 @@ class fieldParent extends cmsFormField {
             'input_action'       => $this->input_action,
             'value'              => $value,
             'items'              => $parent_items,
+            'auth_user_id'       => $auth_user_id,
+            'allowed_to_unbind_perm' => $allowed_to_unbind_perm,
             'is_allowed_to_bind' => $is_allowed_to_bind,
             'is_allowed_to_add'  => $is_allowed_to_add
         ));
@@ -92,9 +138,11 @@ class fieldParent extends cmsFormField {
         $ids = $this->idsStringToArray($values);
         if (!$ids) { return parent::applyFilter($model, $values); }
 
-        $model->joinInner('content_relations_bind', 'rr', "rr.child_item_id = i.id AND rr.child_ctype_id = {$this->ctype_id}");
+        $alias_name = 'rr_'.$this->name;
 
-        return $model->filterIn('rr.parent_item_id', $ids);
+        $model->joinInner('content_relations_bind', $alias_name, $alias_name.'.child_item_id = i.id AND '.$alias_name.'.child_ctype_id '.($this->ctype_id ? '='.$this->ctype_id : 'IS NULL'));
+
+        return $model->filterIn($alias_name.'.parent_item_id', $ids);
 
     }
 
@@ -156,12 +204,25 @@ class fieldParent extends cmsFormField {
 			}
 		}
 
-		if (!$parent_ctype || !$child_ctype) { return false; }
+		if (!$parent_ctype) { return false; }
+		if (!$child_ctype) {
+            if (cmsController::enabled($this->item['ctype_name'])){
+                $child_ctype = array(
+                    'name'       => $this->item['ctype_name'],
+                    'controller' => $this->item['ctype_name'],
+                    'id'         => null
+                );
+            } else {
+                return false;
+            }
+        } else {
+            $child_ctype['controller'] = 'content';
+        }
 
         $filter =  "r.parent_ctype_id = {$parent_ctype['id']} AND ".
                    "r.child_item_id = {$this->item['id']} AND ".
-                   "r.child_ctype_id = {$child_ctype['id']} AND ".
-                   "r.parent_item_id = i.id";
+                   'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND '.
+                   "r.parent_item_id = i.id AND r.target_controller = '{$child_ctype['controller']}'";
 
         $content_model->join('content_relations_bind', 'r', $filter);
 

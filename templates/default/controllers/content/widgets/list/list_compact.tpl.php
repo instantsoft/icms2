@@ -35,7 +35,7 @@
                             <?php html($item['title']); ?>
                         <?php } ?>
                         <?php if ($item['is_private']) { ?>
-                            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE_HINT); ?>"></span>
+                            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
                         <?php } ?>
                     </div>
                 </div>

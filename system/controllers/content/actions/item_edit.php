@@ -4,8 +4,6 @@ class actionContentItemEdit extends cmsAction {
 
     public function run(){
 
-        $back_url = $this->request->get('back', '');
-
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
         if (!$ctype) { cmsCore::error404(); }
@@ -18,24 +16,38 @@ class actionContentItemEdit extends cmsAction {
         if (!$item) { cmsCore::error404(); }
 
         $item['ctype_id'] = $ctype['id'];
+        $item['ctype_name'] = $ctype['name'];
+
+        // автор записи?
+        $is_owner = $item['user_id'] == $this->cms_user->id;
 
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
-        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all')) {
-            if (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $item['user_id'] != $this->cms_user->id) {
+        if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') && !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all')) {
+            if (
+                (cmsUser::isAllowed($ctype['name'], 'edit', 'own') ||
+                    cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')
+                ) && !$is_owner) {
                 cmsCore::error404();
             }
         }
 
-        $is_premoderation = $ctype['is_premod_edit'];
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+        // модерация
+        $is_premoderation = false;
+        if(cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own', true) || cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all', true)){
+            $is_premoderation = true;
+        }
+        if (!$is_premoderation && !$item['date_approved']) {
+            $is_premoderation = cmsUser::isAllowed($ctype['name'], 'add', 'premod', true);
+        }
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
-        if (!$item['is_approved'] && !$is_moderator) { cmsCore::error404(); }
+        if (!$item['is_approved'] && !$is_moderator && !$item['is_draft']) { cmsCore::error404(); }
 
         if ($item['is_deleted']){
 
             $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
-                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $is_owner));
 
             if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
         }
@@ -82,23 +94,23 @@ class actionContentItemEdit extends cmsAction {
             'folders_list' => $folders_list
         ), $id, $item);
 
-        // Получаем теги
-        if ($ctype['is_tags']){
-            $tags_model = cmsCore::getModel('tags');
-            $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
-        }
-
 		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item)  = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
 
         // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
+        $is_submitted = $this->request->has('submit') || $this->request->has('to_draft');
 
-        $item['ctype_name'] = $ctype['name'];
-        $item['ctype_id'] = $ctype['id'];
+        // форма отправлена к контексте черновика
+        $is_draf_submitted = $this->request->has('to_draft');
 
         if ($ctype['props']){
-            $item_props = $this->model->getContentProps($ctype['name'], $item['category_id']);
+
+            $category_id = !$is_submitted ? $item['category_id'] :
+                (($this->request->has('category_id') && $ctype['options']['is_cats_change']) ?
+                    $this->request->get('category_id', 0) :
+                    $item['category_id']);
+
+            $item_props = $this->model->getContentProps($ctype['name'], $category_id);
             $item_props_fields = $this->getPropsFields($item_props);
             $item['props'] = $this->model->getPropsValues($ctype['name'], $id);
             foreach($item_props_fields as $field){
@@ -138,30 +150,30 @@ class actionContentItemEdit extends cmsAction {
 
             if (!$errors){
 
-                unset($item['ctype_name']);
-                unset($item['ctype_id']);
+                if($is_draf_submitted){
 
-                if (isset($item['parent_id']) && $groups_list){
-                    if (array_key_exists($item['parent_id'], $groups_list) && $item['parent_id'] > 0){
-                        $group = $groups_model->getGroup($item['parent_id']);
-                        $item['parent_type']      = 'group';
-                        $item['parent_title']     = $groups_list[$item['parent_id']];
-                        $item['parent_url']       = href_to_rel('groups', $item['parent_id'], array('content', $ctype['name']));
-                        $item['is_parent_hidden'] = $group['is_closed'] ? true : null;
+                    $item['is_approved'] = 0;
+
+                } else {
+
+                    if($item['is_draft']){
+                        $item['is_approved'] = !$is_premoderation || $is_moderator;
                     } else {
-                        $item['parent_id']    = null;
-                        $item['parent_type']  = null;
-                        $item['parent_title'] = null;
-                        $item['parent_url']   = null;
+                        $item['is_approved'] = $item['is_approved'] && (!$is_premoderation || $is_moderator);
                     }
+
                 }
 
-                $item['is_approved'] = $item['is_approved'] && (!$ctype['is_premod_edit'] || $is_moderator);
-                $item['approved_by'] = null;
+                if($is_draf_submitted || !$item['is_approved']){
+                    unset($item['date_approved']);
+                }
+
+                if($is_owner){
+                    $item['approved_by'] = null;
+                }
 
                 if ($ctype['is_tags']){
-                    $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
-                    $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
+                    $item['tags'] = cmsCore::getModel('tags')->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                 }
 
 				$date_pub_time = strtotime($item['date_pub']);
@@ -183,8 +195,6 @@ class actionContentItemEdit extends cmsAction {
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
-				} else {
-					$item['date_pub_end'] = false;
 				}
 
 				unset($item['pub_days']);
@@ -218,21 +228,22 @@ class actionContentItemEdit extends cmsAction {
                 $item = cmsEventsManager::hook("content_{$ctype['name']}_before_update", $item);
 
                 // SEO параметры
+                $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
                 if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
-                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item);
+                    $item['seo_title'] = string_replace_keys_values_extended($ctype['options']['seo_title_pattern'], $item_seo);
                 } else {
                     $item['seo_title'] = empty($ctype['options']['is_manual_title']) ? null : $item['seo_title'];
                 }
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
-                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item);
+                        $item['seo_keys'] = string_replace_keys_values_extended($ctype['options']['seo_keys_pattern'], $item_seo);
                     } else {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
-                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item));
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values_extended($ctype['options']['seo_desc_pattern'], $item_seo));
                     } else {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
@@ -247,12 +258,34 @@ class actionContentItemEdit extends cmsAction {
                 cmsEventsManager::hook('content_after_update', $item);
                 cmsEventsManager::hook("content_{$ctype['name']}_after_update", $item);
 
-                if ($item['is_approved'] || $is_moderator){
-                    cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
-                    cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
-                } else {
-                    $this->requestModeration($ctype['name'], $item, false);
+                if(!$is_draf_submitted){
+
+                    if ($item['is_approved'] || $is_moderator){
+
+                        // новая запись, например из черновика
+                        if(empty($item['date_approved'])){
+                            cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                            cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
+                        }
+
+                        cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
+                        cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
+
+                    } else {
+
+                        $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
+
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, empty($item['date_approved']));
+
+                        if($succes_text){
+                            cmsUser::addSessionMessage($succes_text, 'info');
+                        }
+
+                    }
+
                 }
+
+                $back_url = $this->request->get('back', '');
 
                 if ($back_url){
                     $this->redirect($back_url);
@@ -268,8 +301,14 @@ class actionContentItemEdit extends cmsAction {
 
         }
 
+        $back_url = $this->request->get('back', '');
+
+        $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
+
         return $this->cms_template->render('item_form', array(
             'do'               => 'edit',
+            'page_title'       => $item['title'],
+            'group'            => ((!empty($item['parent_id']) && !empty($groups[$item['parent_id']])) ? $groups[$item['parent_id']] : array()),
             'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['item_on'] ? href_to($ctype['name'], $item['slug'] . '.html') : false)),
             'ctype'            => $ctype,
             'parent'           => isset($parent) ? $parent : false,
@@ -278,6 +317,10 @@ class actionContentItemEdit extends cmsAction {
             'props'            => $props,
             'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
+            'show_save_button' => $show_save_button,
+            'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
+            'button_draft_text' => (!$item['is_draft'] ? ($show_save_button ? LANG_CONTENT_MOVE_DRAFT : LANG_SAVE) : LANG_CONTENT_SAVE_DRAFT),
+            'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => false,
             'add_cats'         => $add_cats,
             'errors'           => isset($errors) ? $errors : false

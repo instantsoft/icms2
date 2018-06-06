@@ -13,23 +13,36 @@
 
             $field->setName($name);
 
+            $styles = array();
+
+            if (isset($field->is_visible)){
+                if (!$field->is_visible){
+                    $styles[] = 'display:none';
+                }
+            }
+
         ?>
 
-        <div class="field" id="f_<?php echo $field->id; ?>">
+        <div class="field" id="f_<?php echo $field->id; ?>" <?php if ($styles) { ?>style="<?php echo implode(';', $styles); ?>"<?php } ?>>
                 <?php echo $field->getInput($value); ?>
-                <?php if(!empty($field->hint)) { ?><div class="hint">&mdash; <?php echo $field->hint; ?></div><?php } ?>
+                <?php if(!empty($field->hint)) { ?><div class="hint"><?php echo $field->hint; ?></div><?php } ?>
         </div>
     <?php } ?>
 <?php } ?>
 <script type="text/javascript">
     if($('#fset_visibility > .field').length == 1){
-        id_name = '#tab-visibility';
+        var id_name = '#tab-visibility';
     } else {
-        id_name = '#f_is_in_filter';
+        var id_name = '#f_is_in_filter, #tab-filter_access';
     }
     <?php if(!$is_can_in_filter){ ?>
-        $(id_name).hide(); $('#is_in_filter').prop('checked', false)
+        $(id_name).hide(); $('#is_in_filter').prop('checked', false);
     <?php } else { ?>
         $(id_name).show();
+    <?php } ?>
+    <?php if(!$options){ ?>
+        if ($('#f_type > input[id=type]').length != 0){
+            $('#tab-type').hide();
+        }
     <?php } ?>
 </script>

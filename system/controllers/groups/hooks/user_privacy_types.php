@@ -9,6 +9,11 @@ class onGroupsUserPrivacyTypes extends cmsAction {
             'options' => array('anyone', 'friends')
         );
 
+        $types['invite_group_users'] = array(
+            'title'   => LANG_GROUPS_INVITE_GROUP_USERS,
+            'options' => array('', 'anyone', 'friends')
+        );
+
         return $types;
 
     }

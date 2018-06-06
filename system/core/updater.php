@@ -15,25 +15,26 @@ class cmsUpdater {
         $this->cache_file = cmsConfig::get('root_path') . $this->cache_file;
     }
 
-    public function checkUpdate($only_cached=false){
+    public function checkUpdate($only_cached = false){
 
-        $current_version = cmsCore::getVersion();
+        $current_version = cmsCore::getVersionArray();
 
-        $update_info = $this->getUpdateFileContents($current_version, $only_cached);
+        $update_info = $this->getUpdateFileContents($current_version['version'], $only_cached);
 
         if (!$update_info) { return cmsUpdater::UPDATE_CHECK_ERROR; }
 
         list($next_version, $date, $url) = explode("\n", trim($update_info));
 
-        if (version_compare($next_version, $current_version, '<=')) {
+        if (version_compare($next_version, $current_version['version'], '<=')) {
             $this->deleteUpdateFile();
             return cmsUpdater::UPDATE_NOT_AVAILABLE;
         }
 
         return array(
-            'version' => $next_version,
-            'date' => $date,
-            'url' => $url
+            'current_version' => $current_version,
+            'version'         => $next_version,
+            'date'            => $date,
+            'url'             => $url
         );
 
     }
@@ -54,7 +55,7 @@ class cmsUpdater {
 
         $url = sprintf($this->update_info_url, $current_version);
 
-        $data = file_get_contents_from_url($url);
+        $data = file_get_contents_from_url($url, 2);
 
         if ($data === false) { return false; }
 

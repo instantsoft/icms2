@@ -3,12 +3,20 @@ class actionAuthLogin extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
-
         $email    = $this->request->get('login_email', '');
         $password = $this->request->get('login_password', '');
         $remember = (bool)$this->request->get('remember');
         $back_url = $this->request->get('back', '');
+
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) {
+
+            if ($back_url){
+                $this->redirect($back_url);
+            } else {
+                $this->redirect(href_to_profile($this->cms_user));
+            }
+
+        }
 
         $is_site_offline = !cmsConfig::get('is_site_on');
         $is_submit = $this->request->has('submit');
@@ -31,7 +39,7 @@ class actionAuthLogin extends cmsAction {
 
                     if ($is_site_offline){
 						$userSession = cmsUser::sessionGet('user');
-                        if (!$userSession['is_admin']){
+                        if (empty($userSession['perms']['auth']['view_closed']) && empty($userSession['is_admin'])){
                             cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
                             cmsUser::logout();
                             $this->redirectBack();
@@ -88,6 +96,7 @@ class actionAuthLogin extends cmsAction {
 
         return $this->cms_template->render('login', array(
             'back_url'     => $back_url,
+            'hooks_html'   => cmsEventsManager::hookAll('login_form_html'),
             'captcha_html' => (isset($captcha_html) ? $captcha_html : false)
         ));
 

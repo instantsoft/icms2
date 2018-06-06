@@ -43,7 +43,31 @@ class fieldAge extends cmsFormField {
     }
 
     public function parse($value){
-        return htmlspecialchars( $this->getDiff($value) );
+        return html($this->getDiff($value), false);
+    }
+
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        if(is_array($value)){
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+            }
+
+            return $result_string.' '.constant('LANG_' . $this->getOption('range').'10');
+
+        }
+
+        return $this->getDiff($value);
+
     }
 
     public function getDiff($date){
@@ -86,8 +110,7 @@ class fieldAge extends cmsFormField {
             }
 
             if (!empty($value['to'])){
-                $to = intval($value['to']);
-                $model->filterDateYounger($this->name, $to, $this->getOption('range'));
+                $model->filterTimestampYounger($this->name, $value['to'], $this->getOption('range'));
             }
 
             return $model;
@@ -101,10 +124,7 @@ class fieldAge extends cmsFormField {
     public function store($value, $is_submitted, $old_value=null){
 
         if ($value){
-            $date = DateTime::createFromFormat(cmsConfig::get('date_format'), $value);
-            if($date){
-                return $date->format('Y-m-d');
-            }
+            return date('Y-m-d H:i:s', strtotime($value));
         }
 
         return null;
@@ -113,7 +133,7 @@ class fieldAge extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['date'] = $value ? date(cmsConfig::get('date_format'), strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         return parent::getInput($value);
 

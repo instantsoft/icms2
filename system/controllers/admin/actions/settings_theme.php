@@ -37,6 +37,10 @@ class actionAdminSettingsTheme extends cmsAction {
 
         }
 
+        $this->cms_template->setName($template_name);
+
+        $this->cms_template->setInheritNames($this->cms_template->getInheritTemplates());
+
         return $this->cms_template->render('settings_theme', array(
             'template_name' => $template_name,
             'options'       => $options,

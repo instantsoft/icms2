@@ -3,12 +3,17 @@
     $this->addJS('templates/default/js/jquery-cookie.js');
     $this->addJS('templates/default/js/datatree.js');
     $this->addJS('templates/default/js/admin-content.js');
-?>
 
-<?php
     $this->setPageTitle(LANG_CP_SECTION_CONTENT);
 
     $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
+
+    $this->addToolButton(array(
+        'class' => 'help',
+        'title' => LANG_HELP,
+        'target' => '_blank',
+        'href'  => LANG_HELP_URL_CONTENT,
+    ));
 
     $this->addToolButton(array(
         'class' => 'filter',
@@ -69,25 +74,27 @@
     ));
 
     $this->addToolButton(array(
-        'class' => 'move',
+        'class' => 'move show_on_selected',
         'title' => LANG_MOVE,
         'href'  => null,
         'onclick' => 'return icms.datagrid.submitAjax($(this))'
     ));
 
     $this->addToolButton(array(
-        'class' => 'delete',
+        'class' => 'delete show_on_selected',
         'title' => LANG_DELETE,
         'href'  => null,
         'onclick' => "return icms.datagrid.submit($(this), '".LANG_DELETE_SELECTED_CONFIRM."')",
     ));
 
     $this->addToolButton(array(
-        'class' => 'help',
-        'title' => LANG_HELP,
-        'target' => '_blank',
-        'href'  => LANG_HELP_URL_CONTENT,
+        'class' => 'basket_put show_on_selected',
+        'title' => LANG_BASKET_DELETE,
+        'href'  => null,
+        'onclick' => "return icms.datagrid.submit($(this), '".LANG_TRASH_DELETE_SELECTED_CONFIRM."')",
     ));
+
+    $this->applyToolbarHook('admin_content_toolbar');
 
 ?>
 
@@ -144,10 +151,11 @@
                             $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('content', array('item_add')); ?>/" + key[0] + "/" + key[1]);
                             $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1]);
                             $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1]);
-                            $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?csrf_token='+$('meta[name="csrf-token"]').attr('content'));
+                            $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?csrf_token='+icms.forms.getCsrfToken());
                             $('.cp_toolbar .tree_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_order')); ?>/" + key[0]);
                             $('.cp_toolbar .move a').data('url', "<?php echo $this->href_to('content', array('item_move')); ?>/" + key[0] + "/" + key[1]);
-                            $('.cp_toolbar .delete a').data('url', "<?php echo $this->href_to('content', array('item_delete')); ?>/" + key[0] + '?csrf_token='+$('meta[name="csrf-token"]').attr('content'));
+                            $('.cp_toolbar .delete a').data('url', "<?php echo $this->href_to('content', array('item_delete')); ?>/" + key[0] + '?csrf_token='+icms.forms.getCsrfToken());
+                            $('.cp_toolbar .basket_put a').data('url', "<?php echo $this->href_to('content', array('item_trash_put')); ?>/" + key[0] + '?csrf_token='+icms.forms.getCsrfToken());
                             $('.cp_toolbar .logs a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'moderation', 'logs', 'content')); ?>/" + key[0]);
                             if (key[1] == 1){
                                 $('.cp_toolbar .edit_folder a').hide();

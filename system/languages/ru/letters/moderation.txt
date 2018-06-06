@@ -2,7 +2,7 @@
 
 Здравствуйте, {moderator}.
 
-Новая страница на сайте ожидает вашей проверки:
+{moderation_text}:
 
 Название: {page_title}
 Адрес: <a href="{page_url}">{page_url}</a>

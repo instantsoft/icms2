@@ -18,7 +18,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
         <?php } ?>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
-            <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
         <?php } ?>
     </h1>
     <?php if ($show_bar){ ?>
@@ -47,7 +47,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
                     <?php echo html_spellcount($item['hits_count'], LANG_HITS_SPELL); ?>
                 </span>
             <?php } ?>
-            <?php if ($item['parent_id']){ ?>
+            <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
                 <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
             <?php } ?>
             <?php if ($is_tags){ ?>
@@ -58,87 +58,10 @@ $show_bar = $is_tags || $item['parent_id'] ||
     <?php unset($fields['title']); ?>
 <?php } ?>
 
-<div class="photo_filter">
-    <form action="<?php echo $item['base_url']; ?>" method="get">
-    <span title="<?php echo LANG_SORTING; ?>" class="box_menu <?php echo !isset($item['filter_selected']['ordering']) ?'': 'box_menu_select'; ?>">
-        <?php echo $item['filter_panel']['ordering'][$item['filter_values']['ordering']]; ?>
-    </span>
-    <div class="box_menu_dd">
-        <?php foreach($item['filter_panel']['ordering'] as $value => $name){ ?>
-            <?php $url_params = $item['url_params']; $url_params['ordering'] = $value; ?>
-            <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html?'.http_build_query($url_params)); ?>">
-                <?php echo $name; ?>
-                <?php if($item['filter_values']['ordering'] == $value){ ?>
-                    <input type="hidden" name="ordering" value="<?php echo $value; ?>">
-                    <i class="check">&larr;</i>
-                <?php } ?>
-            </a>
-        <?php } ?>
-    </div>
-    <?php if($item['filter_panel']['types']){ ?>
-        <span class="box_menu <?php echo !isset($item['filter_selected']['types']) ?'': 'box_menu_select'; ?>">
-            <?php echo $item['filter_panel']['types'][$item['filter_values']['types']]; ?>
-        </span>
-        <div class="box_menu_dd">
-            <?php foreach($item['filter_panel']['types'] as $value => $name){ ?>
-                <?php $url_params = $item['url_params']; $url_params['types'] = $value; ?>
-                <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html?'.http_build_query($url_params)); ?>">
-                    <?php echo $name; ?>
-                    <?php if($item['filter_values']['types'] == $value){ ?>
-                        <input type="hidden" name="types" value="<?php echo $value; ?>">
-                        <i class="check">&larr;</i>
-                    <?php } ?>
-                </a>
-            <?php } ?>
-        </div>
-    <?php } ?>
-    <span class="box_menu <?php echo !isset($item['filter_selected']['orientation']) ?'': 'box_menu_select'; ?>">
-        <?php echo $item['filter_panel']['orientation'][$item['filter_values']['orientation']]; ?>
-    </span>
-    <div class="box_menu_dd">
-        <?php foreach($item['filter_panel']['orientation'] as $value => $name){ ?>
-            <?php $url_params = $item['url_params']; $url_params['orientation'] = $value; ?>
-            <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html?'.http_build_query($url_params)); ?>">
-                <?php echo $name; ?>
-                <?php if($item['filter_values']['orientation'] == $value){ ?>
-                    <input type="hidden" name="orientation" value="<?php echo $value; ?>">
-                    <i class="check">&larr;</i>
-                <?php } ?>
-            </a>
-        <?php } ?>
-    </div>
-
-    <?php if($item['filter_values']['width'] || $item['filter_values']['height']){ ?>
-        <span class="box_menu box_menu_select"><?php echo LANG_PHOTOS_MORE_THAN; ?> <?php html($item['filter_values']['width']); ?> x <?php html($item['filter_values']['height']); ?></span>
-    <?php } else { ?>
-        <span class="box_menu"><?php echo LANG_PHOTOS_SIZE; ?></span>
-    <?php } ?>
-
-    <div class="box_menu_dd">
-        <div class="size_search_params">
-            <fieldset>
-                <legend><?php echo LANG_PHOTOS_MORE_THAN; ?></legend>
-                <div class="field">
-                    <label for="birth_date"><?php echo LANG_PHOTOS_SIZE_W; ?></label>
-                    <input type="text" name="width" value="<?php html($item['filter_values']['width']); ?>" placeholder="px" class="input">
-                </div>
-                <div class="field">
-                    <label for="birth_date"><?php echo LANG_PHOTOS_SIZE_H; ?></label>
-                    <input type="text" name="height" value="<?php html($item['filter_values']['height']); ?>" placeholder="px" class="input">
-                </div>
-            </fieldset>
-            <div class="buttons">
-                <input type="submit" class="button" value="<?php echo LANG_FIND; ?>">
-            </div>
-        </div>
-    </div>
-
-    <?php if($item['filter_selected']) { ?>
-        <a title="<?php echo LANG_PHOTOS_CLEAR_FILTER; ?>" class="box_menu clear_filter" href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>">x</a>
-    <?php } ?>
-
-    </form>
-</div>
+<?php echo $this->renderControllerChild('photos', 'filter-panel', array(
+    'item' => $item,
+    'page_url' => href_to($ctype['name'], $item['slug'].'.html')
+)); ?>
 
 <div class="content_item <?php echo $ctype['name']; ?>_item">
 
@@ -207,14 +130,14 @@ $show_bar = $is_tags || $item['parent_id'] ||
         <?php } ?>
         <div class="bar_item bi_share">
             <div class="share">
-                <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
-                <script src="//yastatic.net/share2/share.js"></script>
+                <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" defer></script>
+                <script src="//yastatic.net/share2/share.js" defer></script>
                 <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,gplus,twitter,lj,tumblr,viber,whatsapp,skype,telegram" data-size="s"></div>
             </div>
         </div>
         <?php if (!$item['is_approved']){ ?>
             <div class="bar_item bi_not_approved">
-                <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                <?php echo $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
             </div>
         <?php } ?>
     </div>

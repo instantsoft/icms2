@@ -130,6 +130,8 @@ class modelComments extends cmsModel {
 
             cmsCache::getInstance()->clean('comments.list');
 
+            cmsCore::getController('activity')->deleteEntry('comments', 'vote.comment', $ids);
+
         }
 
         return $ids ? true : false;
@@ -259,13 +261,13 @@ class modelComments extends cmsModel {
 
     }
 
-    public function getComments(){
+    public function getComments($callback = null){
 
         $user = cmsUser::getInstance();
 
         $this->select('r.score', 'is_rated');
 
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
         $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user->id}'");
 
         if (!$this->order_by){
@@ -276,14 +278,18 @@ class modelComments extends cmsModel {
 
         $this->useCache('comments.list');
 
-        return $this->get('comments', function($item, $model){
+        return $this->get('comments', function($item, $model) use ($callback){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
+
+            if (is_callable($callback)){
+                $item = $callback($item, $model);
+            }
 
             return $item;
 
@@ -298,14 +304,14 @@ class modelComments extends cmsModel {
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
 
@@ -490,34 +496,8 @@ class modelComments extends cmsModel {
 
     }
 
-    public function getCommentsModerators() {
-
-        // сначала ищем юзеров, которым разрешено модерировать
-        $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
-        if(!$moderators){
-
-            // не нашли модераторов, получаем администраторов
-            $moderators = $this->filterEqual('is_admin', 1)->
-                selectList(array(
-                    'i.id'             => 'id',
-                    'i.notify_options' => 'notify_options',
-                    'i.email'          => 'email',
-                    'i.nickname'       => 'nickname',
-                    'i.avatar'         => 'avatar'
-                ), true)->
-                get('{users}', function($item, $model){
-
-                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
-                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
-
-                    return $item;
-
-                });
-
-        }
-
-        return $moderators;
-
+    public function isRssFeedEnable() {
+        return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
     }
 
 }

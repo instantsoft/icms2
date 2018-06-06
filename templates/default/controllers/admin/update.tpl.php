@@ -1,21 +1,18 @@
 <?php
 
     $this->setPageTitle(LANG_CP_SECTION_UPDATE);
-
     $this->addBreadcrumb(LANG_CP_SECTION_UPDATE, $this->href_to('update'));
-
-    $update = $updater->checkUpdate();
 
 ?>
 
 <h1><?php echo LANG_CP_SECTION_UPDATE; ?></h1>
 
-<?php if ($update == cmsUpdater::UPDATE_CHECK_ERROR){ ?>
+<?php if ($update === cmsUpdater::UPDATE_CHECK_ERROR){ ?>
     <p><?php echo LANG_CP_UPDATE_CHECK_FAIL; ?></p>
 <?php } ?>
 
-<?php if ($update == cmsUpdater::UPDATE_NOT_AVAILABLE || $update===false){ ?>
-    <p><?php echo LANG_CP_UPDATE_NOT_AVAILABLE; ?></p>
+<?php if ($update === cmsUpdater::UPDATE_NOT_AVAILABLE){ ?>
+    <p><?php echo sprintf(LANG_CP_UPDATE_NOT_AVAILABLE, $current_version['version'], html_date($current_version['date'])); ?></p>
 <?php } ?>
 
 <?php if (!empty($update['version'])){ ?>

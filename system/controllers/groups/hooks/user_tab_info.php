@@ -8,6 +8,10 @@ class onGroupsUserTabInfo extends cmsAction {
             return false;
         }
 
+        if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){
+            $this->model->disableApprovedFilter();
+        }
+
         $this->count = $this->model->filterByMember($profile['id'])->getGroupsCount();
 
         $this->model->resetFilters();

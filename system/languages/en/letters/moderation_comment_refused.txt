@@ -1,0 +1,13 @@
+[subject:Your comment is refused - {site}]
+
+Hello, {nickname}.
+
+A moderator has rejected your comment.
+
+Commenting material: {page_title}
+
+Reason: {reason}
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

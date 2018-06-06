@@ -21,7 +21,7 @@
     <div id="wall_add_form">
         <div class="preview_box"></div>
         <form action="<?php echo $this->href_to('submit'); ?>" method="post">
-            <?php echo html_csrf_token($csrf_token_seed); ?>
+            <?php echo html_csrf_token(); ?>
             <?php echo html_input('hidden', 'action', 'add'); ?>
             <?php echo html_input('hidden', 'id', 0); ?>
             <?php echo html_input('hidden', 'parent_id', 0); ?>
@@ -43,7 +43,13 @@
     <div id="entries_list">
 
         <?php if (!$entries) { ?>
-            <p class="no_entries"><?php echo LANG_WALL_EMPTY; ?></p>
+            <p class="no_entries">
+                <?php if ($permissions['add']){ ?>
+                    <?php echo LANG_WALL_EMPTY; ?>
+                <?php } else { ?>
+                    <?php echo LANG_WALL_EMPTY_ONLY; ?>
+                <?php } ?>
+            </p>
         <?php } ?>
 
         <?php if ($entries){ ?>

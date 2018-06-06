@@ -23,11 +23,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
         <?php foreach($items as $item){ ?>
 
-            <?php
-                $item['ctype'] = $ctype;
-                $is_private    = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
-                $stop = 0;
-            ?>
+            <?php $stop = 0; ?>
 
             <div class="tile content_list_item <?php echo $ctype['name']; ?>_list_item">
 
@@ -38,79 +34,64 @@ if( $ctype['options']['list_show_filter'] ) {
 							/ <span><?php echo LANG_PHOTOS_PUBLIC_ALBUM; ?></span>
 						<?php } ?>
                     </div>
-                    <?php if ($is_private) { ?>
+                    <?php if (!empty($item['is_private_item'])) { ?>
                         <?php echo html_image(default_images('private', $ctype['photos_options']['preset_small']), $ctype['photos_options']['preset_small'], $item['title']); ?>
                     <?php } else { ?>
                         <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>" <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>style="background-image: url(<?php echo html_image_src($item['cover_image'], $ctype['photos_options']['preset_small'], true); ?>);"<?php } ?>>
                             <?php if (!empty($item['cover_image']) && !empty($fields['cover_image']['is_in_list'])){ ?>
                                 <?php echo html_image($item['cover_image'], $ctype['photos_options']['preset_small'], $item['title']); ?>
-                                <?php unset($item['cover_image']); ?>
                             <?php } ?>
                             <div class="photos_album_title_wrap">
                                 <?php if (!empty($fields['title']['is_in_list'])) { ?>
                                     <div class="clear">
                                         <div class="photos_album_title">
                                             <?php if ($item['parent_id']){ ?>
-                                                <?php echo htmlspecialchars($item['parent_title']); ?> &rarr;
+                                                <?php html($item['parent_title']); ?> &rarr;
                                             <?php } ?>
 
-                                            <?php if ($is_private) { ?>
-                                                <?php html($item['title']); ?> <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                            <?php if (!empty($item['is_private_item'])) { ?>
+                                                <?php html($item['title']); ?> <span class="is_private" title="<?php html($item['private_item_hint']); ?>"></span>
                                             <?php } else { ?>
                                                 <?php html($item['title']); ?>
                                                 <?php if ($item['is_private']) { ?>
-                                                    <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
+                                                    <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
                                                 <?php } ?>
                                             <?php } ?>
                                         </div>
                                     </div>
                                 <?php } ?>
-                                <?php if ($item['content'] && !empty($fields['content']['is_in_list'])) { ?>
+                                <?php if (!empty($item['fields']['content'])) { ?>
                                     <div class="photos_album_description_wrap">
                                         <div class="photos_album_description">
-                                            <?php if (!$fields['content']['groups_read'] || $user->isInGroups($fields['content']['groups_read'])) { ?>
-                                                <?php if ($is_private) { $stop++; ?>
-                                                <?php } else { ?>
-                                                     <?php echo $fields['content']['handler']->setItem($item)->parseTeaser($item['content']); ?>
-                                                <?php } ?>
-                                            <?php } ?>
+                                            <?php echo $item['fields']['content']['html']; ?>
                                         </div>
                                     </div>
                                 <?php } ?>
                             </div>
                         </a>
                     <?php } ?>
-                    <?php unset($item['cover_image'], $item['content'], $item['is_public']); ?>
+                    <?php unset($item['fields']['cover_image'], $item['fields']['content'], $item['fields']['is_public'], $item['fields']['title']); ?>
                 </div>
 
                 <div class="fields">
 
-                <?php foreach($fields as $field){ ?>
+                <?php foreach($item['fields'] as $field){ ?>
 
                     <?php if ($stop === 2) { break; } ?>
-                    <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']]) || $field['name'] == 'title') { continue; } ?>
-                    <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                    <?php if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; } ?>
-
-                    <?php
-                        if (!isset($field['options']['label_in_list'])) {
-                            $label_pos = 'none';
-                        } else {
-                            $label_pos = $field['options']['label_in_list'];
-                        }
-                    ?>
 
                     <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
 
-                        <?php if ($label_pos != 'none'){ ?>
-                            <div class="title_<?php echo $label_pos; ?>"><?php echo $field['title'] . ($label_pos=='left' ? ': ' : ''); ?></div>
+                        <?php if ($field['label_pos'] != 'none'){ ?>
+                            <div class="title_<?php echo $field['label_pos']; ?>">
+                                <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                            </div>
                         <?php } ?>
 
                         <div class="value">
-                            <?php if ($is_private) { $stop++; ?>
-                                 <!--noindex--><div class="private_field_hint"><?php echo LANG_PRIVACY_PRIVATE_HINT; ?></div><!--/noindex-->
+                            <?php if (!empty($item['is_private_item'])) { $stop++; ?>
+                                <div class="private_field_hint"><?php echo $item['private_item_hint']; ?></div>
                             <?php } else { ?>
-                                 <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
+                                 <?php echo $field['html']; ?>
                             <?php } ?>
                         </div>
 
@@ -120,28 +101,23 @@ if( $ctype['options']['list_show_filter'] ) {
 
                 </div>
 
-                <?php
-                    $is_tags = $ctype['is_tags'] &&
-                            !empty($ctype['options']['is_tags_in_list']) &&
-                            $item['tags'];
-                ?>
-
-                <?php if ($is_tags){ ?>
+                <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_list']) &&  $item['tags']){?>
                     <div class="tags_bar">
                         <?php echo html_tags_bar($item['tags']); ?>
                     </div>
                 <?php } ?>
 
                 <?php
-                    $show_bar = $ctype['is_rating'] ||
+                    $show_bar = !empty($item['rating_widget']) ||
                                 $fields['date_pub']['is_in_list'] ||
                                 $fields['user']['is_in_list'] ||
+                                ($ctype['is_comments'] && $item['is_comments_on']) ||
                                 !$item['is_approved'];
                 ?>
 
                 <?php if ($show_bar){ ?>
                     <div class="info_bar">
-                        <?php if ($ctype['is_rating']){ ?>
+                        <?php if (!empty($item['rating_widget'])){ ?>
                             <div class="bar_item bi_rating">
                                 <?php echo $item['rating_widget']; ?>
                             </div>
@@ -153,7 +129,7 @@ if( $ctype['options']['list_show_filter'] ) {
                         <?php } ?>
                         <?php if ($ctype['is_comments'] && $item['is_comments_on']){ ?>
                             <div class="bar_item bi_comments">
-                                <?php if ($is_private) { ?>
+                                <?php if (!empty($item['is_private_item'])) { ?>
                                     <?php echo intval($item['comments']); ?>
                                 <?php } else { ?>
                                     <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>#comments" title="<?php echo LANG_COMMENTS; ?>">
@@ -162,14 +138,14 @@ if( $ctype['options']['list_show_filter'] ) {
                                 <?php } ?>
                             </div>
                         <?php } ?>
-                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                        <?php if ($fields['date_pub']['is_in_list'] && $item['is_approved']){ ?>
                             <div class="bar_item bi_date" title="<?php echo $fields['date_pub']['title']; ?>">
                                 <?php echo $fields['date_pub']['handler']->parse($item['date_pub']); ?>
                             </div>
                         <?php } ?>
                         <?php if (!$item['is_approved']){ ?>
-                            <div class="bar_item bi_not_approved">
-                                <?php echo LANG_CONTENT_NOT_APPROVED; ?>
+                            <div class="bar_item bi_not_approved <?php if (empty($item['is_new_item'])){ ?>is_edit_item<?php } ?>">
+                                <?php echo !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED; ?>
                             </div>
                         <?php } ?>
                     </div>
@@ -186,7 +162,15 @@ if( $ctype['options']['list_show_filter'] ) {
     </div>
 
     <?php if ($perpage < $total) { ?>
-        <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
+        <?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
     <?php } ?>
 
-<?php } else { echo LANG_LIST_EMPTY; } ?>
+<?php  } else {
+
+    if(!empty($ctype['labels']['many'])){
+        echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']);
+    } else {
+        echo LANG_LIST_EMPTY;
+    }
+
+}

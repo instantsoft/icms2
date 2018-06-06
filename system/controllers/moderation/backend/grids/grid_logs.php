@@ -32,7 +32,7 @@ function grid_logs($controller){
             }
         ),
         'target_subject' => array(
-            'title' => LANG_MODERATION_SUBJECT,
+            'title' => LANG_CP_SUBJECT,
             'width' => 130,
             'handler' => function($value, $item) use ($controller){
                 return '<a href="'.href_to($controller->root_url, 'logs', array($item['target_controller'], $item['target_subject'])).'">'.$item['subject_title'].'</a>';
@@ -41,7 +41,12 @@ function grid_logs($controller){
         'data' => array(
             'title' => LANG_MODERATION_SUBJECT_ITEM,
             'handler' => function($value, $item){
-                return '<a target="_blank" href="'.href_to($item['target_subject'], $item['data']['slug'].'.html').'">'.$item['data']['title'].'</a>';
+                if(isset($item['data']['url'])){
+                    $url = rel_to_href($item['data']['url']);
+                } else {
+                    $url = href_to($item['target_subject'], $item['data']['slug'].'.html');
+                }
+                return '<a target="_blank" href="'.$url.'">'.$item['data']['title'].'</a>';
             }
         ),
         'date_expired' => array(

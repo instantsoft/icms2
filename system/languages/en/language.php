@@ -17,7 +17,13 @@
     define('LANG_CONTENT_EDIT_ITEM',         'Edit %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Delete %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Are you sure you want to delete %s?');
+    define('LANG_CONTENT_RETURN_CONFIRM',    'Are you sure you want to retrieve this item from the moderation?\nIt will move to your drafts.');
+    define('LANG_CONTENT_SAVE_DRAFT',		 'Save to Drafts');
+    define('LANG_CONTENT_MOVE_DRAFT',		 'Move to drafts');
+    define('LANG_CONTENT_DRAFT_NOTICE',		 'The item is hidden in drafts');
+    define('LANG_CONTENT_DRAFT_LIST',		 'Drafts');
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
+    define('LANG_CONTENT_EDITED',            'Edited');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
 
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
@@ -70,8 +76,18 @@
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'File title is taken from the <b>widgets</b> folder of your theme, without the <b>.tpl.php</b> extension');
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
+    define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');
+    define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
+    define('LANG_TABLET_DEVICES',  'Tablets');
+    define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
+    define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Multi-selection by checkboxes');
+    define('LANG_PARSER_BITMASK_LIST_CLASS', 'List css class');
     define('LANG_PARSER_BITMASK_MAX',        'List items maximum number');
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
@@ -80,6 +96,10 @@
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
+    define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
+    define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
@@ -109,6 +129,10 @@
     define('LANG_PARSER_URL',                'Link');
     define('LANG_PARSER_URL_REDIRECT',       'Links through a redirect');
     define('LANG_PARSER_URL_AUTO_HTTP',      'Add http:// automatically');
+    define('LANG_PARSER_URL_NOFOLLOW',       'Add rel="nofollow" attribute');
+    define('LANG_PARSER_URL_CSS_CLASS',      'Link CSS class');
+    define('LANG_PARSER_URL_TITLE',          'Set link title option');
+    define('LANG_PARSER_URL_TITLE_HINT',     'To display the link title, enter its name through the sign "|", for example: http://google.com|Google');
     define('LANG_PARSER_AGE',                'Age');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Starting date title');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Filter by range');
@@ -123,6 +147,7 @@
     define('LANG_PARSER_PARENT',             'Parent');
     define('LANG_PARSER_IMAGE',              'Image');
     define('LANG_PARSER_IMAGE_SPELL',        'image|image|images');
+    define('LANG_PARSER_IMAGE_DELETE',       'Delete the image from the server?');
     define('LANG_PARSER_IMAGES',             'Multiple images');
     define('LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK', 'Allow import from link');
     define('LANG_PARSER_FIRST_IMAGE_EMPHASIZE', 'Emphasize first image in entry');
@@ -139,10 +164,18 @@
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Big');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Original');
     define('LANG_PARSER_COLOR',              'Colorpicker');
+    define('LANG_PARSER_COLOR_CT',           'Color selection block type');
+    define('LANG_PARSER_COLOR_CT_HUE',       'Hue');
+    define('LANG_PARSER_COLOR_CT_SATURATION', 'Saturation');
+    define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Brightness');
+    define('LANG_PARSER_COLOR_CT_WHEEL',     'Wheel');
+    define('LANG_PARSER_COLOR_CT_SWATCHES',  'Only preset values');
+    define('LANG_PARSER_COLOR_CT_SWATCHES_OPT', 'Preset values');
     define('LANG_PARSER_FILE',               'File');
     define('LANG_PARSER_FILE_LABEL',         'File link label');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Filename');
     define('LANG_PARSER_FILE_LABEL_GET',     'Download');
+    define('LANG_PARSER_FILE_LABEL_COUNTER', 'downloaded');
     define('LANG_PARSER_FILE_EXTS',          'Allowed file extensions');
     define('LANG_PARSER_FILE_EXTS_HINT',     'List of extensions separated by commas');
     define('LANG_PARSER_FILE_EXTS_FIELD_HINT',     'Allowed file types: %s');
@@ -150,6 +183,7 @@
     define('LANG_PARSER_FILE_MAX_SIZE',      'Maximum file size, Mb');
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Not more than %d Mb (allowed in PHP settings)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Show file size');
+    define('LANG_PARSER_FILE_SHOW_COUNTER',  'Show download count');
     define('LANG_PARSER_CURRENT_TIME',       'Current time');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Include in full-text index');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Attention! Index will be rebuilt, once the option is changed. It can take a long time in respect of large tables.');
@@ -179,7 +213,7 @@
     define('LANG_USER_IS_ADMIN',             'Administrator');
     define('LANG_LOGIN_ERROR',               'Failed to log in. Verify your e-mail and password.');
     define('LANG_LOGIN_REQUIRED',            'Log in to see the requested page');
-    define('LANG_LOGIN_ADMIN_ONLY',          'Only administrator can log in when site is offline');
+    define('LANG_LOGIN_ADMIN_ONLY',          'You can\'t log in when site is offline');
     define('LANG_NICKNAME',                  'Nickname');
     define('LANG_ADMIN',                     'Administrator');
     define('LANG_EMAIL_FIND',                'Find by e-mail');
@@ -205,26 +239,52 @@
     define('LANG_ONLINE',                    'Online');
     define('LANG_USERS_PROFILE_LAST_IP',     'Last IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Last visit');
+    define('LANG_USERS_SUBSCRIBE',           'Subscribe');
+    define('LANG_USERS_UNSUBSCRIBE',         'Unsubscribe');
 
     //MODERATION
     define('LANG_MODERATION',                'Moderation');
+    define('LANG_MODERATION_USERS',          'Your materials awaiting moderation');
     define('LANG_MODERATOR',                 'Moderator');
     define('LANG_MODERATORS',                'Moderators');
     define('LANG_MODERATION_SUCCESS',        'Approved');
     define('LANG_MODERATION_APPROVE',        'Approve');
+    define('LANG_MODERATION_RETURN',         'Remove from the moderation');
+    define('LANG_MODERATION_RETURN_FOR_REVISION', 'Return for revision');
+    define('LANG_MODERATION_REFUSE',         'Refuse and delete %s');
+    define('LANG_MODERATION_REFUSE_REASON',  'What is the reason for the rejection?');
+    define('LANG_MODERATION_REMARKS',        'Remarks');
     define('LANG_MODERATION_APPROVED',       'Page published');
     define('LANG_MODERATION_APPROVED_BY',    'Approved by moderator');
     define('LANG_MODERATION_PM_AUTHOR',      'Send a message to the author');
-    define('LANG_MODERATION_NOTICE',         'The entry will be published after moderator\'s approval');
+    define('LANG_MODERATION_SEND',           'Submit to moderation');
+    define('LANG_MODERATION_NOTICE',         'The entry will be published after moderator\'s approval. ');
+    define('LANG_MODERATION_NOTICE_MODER',   'The entry awaits your approval. ');
+    define('LANG_MODERATION_NOTICE_VIEW',    '%s %s already %s it%s, the decision has not yet been made.');
+    define('LANG_MODERATION_VIEW',           'view');
+    define('LANG_MODERATION_VIEWS',          'viewed');
     define('LANG_MODERATION_IDLE',           'Notification was sent to moderator %s');
     define('LANG_MODERATION_NO_TASKS',       'No entries require approval');
     define('LANG_MODERATION_NOTIFY',         'A new page awaits your approval');
+    define('LANG_MODERATION_RETURN_NOTIFY',  'Author retrieve the material from the moderation');
+    define('LANG_MODERATION_REMARK_NOTIFY',  'Recording is returned for revision');
+    define('LANG_PM_MODERATION_COMMENT_APPROVED', 'Moderator approved the comment <b><a href="%2$s">%1$s</a></b> of publication%3$s');
+    define('LANG_PM_MODERATION_APPROVED',    'Moderator approved the <b><a href="%2$s">%1$s</a></b> publication%3$s');
+    define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Reason for rejection: %3$s');
+    define('LANG_PM_MODERATION_COMMENT_REFUSED', 'A moderator has rejected your comment on the page <b>%1$s</b>.%2$s Reason for rejection: %3$s');
+    define('LANG_PM_MODERATION_REWORK',      'The moderator returned the <b><a href="%2$s">%1$s</a></b> page for revision and pointed remarks:<br />%3$s');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
     define('LANG_PERM_RULE',                 'Permission rule');
     define('LANG_PERM_OPTION_NULL',          'No');
+    define('LANG_PERM_OPTION_YES',           'Yes');
+    define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
+    define('LANG_PERM_OPTION_PREMOD_OWN',    'Only own with premoderation');
+    define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
+    define('LANG_PERM_OPTION_OTHER',         'Only others');
+    define('LANG_PERM_OPTION_TO_OTHER',      'Only in others');
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');
@@ -239,6 +299,11 @@
     define('LANG_PERM_OPTION_ALL_TO_OWN',    'All to own');
     define('LANG_PERM_OPTION_ALL_TO_OTHER',  'All to others');
     define('LANG_PERM_OPTION_ALL_TO_ALL',    'All to all');
+    define('LANG_SHOW_TO_COUNTRIES',         'Show for countries');
+    define('LANG_HIDE_TO_COUNTRIES',         'Do not show for countries');
+    define('LANG_ACCESS_DENIED',             'Access is denied');
+    define('LANG_ACCESS_GROUP_HINT',         'The groups you belong to are access denied to this page');
+    define('LANG_ACCESS_COUNTRY_HINT',       'This page is not viewable in your country');
 
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Login');
@@ -249,6 +314,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Error');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Error in parameters: %s');
     define('LANG_FORM_ERRORS',				 'Errors in form');
     define('LANG_TRACE_STACK',				 'Recent calls');
     define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');
@@ -257,14 +323,16 @@
     define('ERR_LIBRARY_NOT_FOUND', 		 'Library not found or cannot be read');
     define('ERR_FILE_NOT_FOUND',             'File not found');
     define('ERR_CLASS_NOT_FOUND', 		 	 'Class not found or cannot be read');
+    define('ERR_CLASS_NOT_DEFINED', 		 'In the %s file class <b>%s</b> not defined');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Module not found');
     define('ERR_DATABASE_QUERY', 		 	 '<b>DB query error</b>: <p>%s</p>');
-    define('ERR_DATABASE_CONNECT', 		 	 'Database connection error');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Page not found');
+    define('ERR_FORBIDDEN', 		 	     'Forbidden');
     define('ERR_SITE_OFFLINE',               'Site is offline');
     define('ERR_SITE_OFFLINE_FULL',          'Site is offline. <a href="%s">Enable</a>');
     define('ERR_SEARCH_TITLE',               'Search');
     define('ERR_SEARCH_QUERY_INPUT',         'What?');
+    define('ERR_USER_NOT_FOUND',             'User does not exist');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'File was successfully uploaded');
@@ -335,6 +403,7 @@
     define('LANG_LIST_LIMIT',                'Entries in list');
     define('LANG_LIST_ALL',					 'Show all');
     define('LANG_LIST_EMPTY',                'No items to display');
+    define('LANG_TARGET_LIST_EMPTY',         'No %s to display');
     define('LANG_LIST_NONE_SELECTED',        'Nothing selected');
     define('LANG_DOWNLOAD',                  'Download');
     define('LANG_UPLOAD',                    'Upload');
@@ -374,16 +443,20 @@
     define('LANG_DELETE_SUCCESS', 	         'Item successfully deleted');
     define('LANG_DELETE_SELECTED',			 'Delete selected');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Delete selected elements?');
+    define('LANG_TRASH_DELETE_SELECTED_CONFIRM', 'Are you sure you want to delete the selected items in the trash?');
     define('LANG_MOVE',                      'Move');
     define('LANG_MOVE_TO_CATEGORY',          'Move to category');
     define('LANG_ON',	 					 'On');
     define('LANG_OFF', 						 'Off');
     define('LANG_SAVE',						 'Save');
+    define('LANG_PUBLISH',					 'Publish');
     define('LANG_SAVE_CHANGES',              'Save changes');
     define('LANG_SAVE_ORDER',                'Save order');
     define('LANG_SAVING',                    'Saving...');
     define('LANG_PREVIEW',                   'Preview');
     define('LANG_SEND',						 'Send');
+    define('LANG_SEND_AGAIN',				 'Send again');
+    define('LANG_SEND_AGAIN_VIA',			 'Send again via ');
     define('LANG_INSTALL',					 'Install');
     define('LANG_INSERT',					 'Insert');
     define('LANG_CANCEL',					 'Cancel');
@@ -404,6 +477,7 @@
     define('LANG_IS_ENABLED',                'Enabled');
     define('LANG_HELP',                      'Help');
     define('LANG_HELP_URL',                  'http://docs.instantcms.ru/en');
+    define('LANG_IN',                        'in');
 
     //NAVIGATION
     define('LANG_HOME',                      'Home');
@@ -419,6 +493,8 @@
     define('LANG_PAGE_CURRENT_DELETE',       'Delete current page');
     define('LANG_PAGES_SHOWN',               'Items %d-%d of %d');
     define('LANG_PAGES_SHOW_PERPAGE',        'Show');
+    define('LANG_SHOW_MORE',                 'Show more');
+    define('LANG_RETURN_TO_FIRST',           'Back to top');
 
     //FORMS
     define('LANG_SUBMIT', 					 'Submit');
@@ -453,6 +529,7 @@
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Privacy');
     define('LANG_PRIVACY_PUBLIC',            'For everyone');
+    define('LANG_PRIVACY_HINT',              'This is private item');
     define('LANG_PRIVACY_PRIVATE',           'Show only to friends');
     define('LANG_PRIVACY_PRIVATE_HINT',      'This is a private item. Only author\'s friends can view it.');
     define('LANG_ON_FRONT',				 	 'On the home page');
@@ -490,6 +567,12 @@
     define('LANG_CH1',                       'character');
     define('LANG_CH2',                       'characters');
     define('LANG_CH10',                      'characters');
+    define('LANG_TIME1',                     'time');
+    define('LANG_TIME2',                     'times');
+    define('LANG_TIME10',                    'times');
+    define('LANG_SUBSCRIBERS_SPELL',         'subscriber |subscriber|subscribers');
+    define('LANG_DOWNLOAD_SPELL',            'download|download|downloads');
+    define('LANG_USERS_SPELL',               'user|users|users');
 
     define('LANG_ISLEFT',                    'left');
 
@@ -542,6 +625,13 @@
     define('LANG_MAIL_DEFAULT_ALT',          'Please view this e-mail with a client that supports HTML');
 
     define('LANG_POWERED_BY_INSTANTCMS',     'Powered by <a href="http://instantcms.ru/">InstantCMS</a>');
-    define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-    define('LANG_DEBUG_QUERY_TIME',          'Query time');
+    define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="https://icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Successfully saved');
+
+    define('LANG_DEBUG_QUERY_TIME',          'Runtime');
+    define('LANG_DEBUG',                     'Debugging');
+    define('LANG_DEBUG_TAB_DB',              'SQL');
+    define('LANG_DEBUG_TAB_CACHE',           'Cache');
+    define('LANG_DEBUG_TAB_EVENTS',          'Events');
+    define('LANG_DEBUG_TAB_WIDGETS',         'Widgets');
+    define('LANG_DEBUG_TAB_INCLUDES',        'Included files');

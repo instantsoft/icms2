@@ -5,6 +5,7 @@ class photos extends cmsFrontend {
     public static $preset_small = null;
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     public function route($uri){
 
@@ -52,7 +53,7 @@ class photos extends cmsFrontend {
 
         $perpage  = ($perpage ? $perpage : (empty($this->options['limit']) ? 16 : $this->options['limit']));
 
-        if (!$this->model->order_by){ $this->model->orderBy($this->options['ordering'], 'desc'); }
+        if (!$this->model->order_by){ $this->model->orderBy($this->options['ordering'], $this->options['orderto']); }
 
         if($show_next){
             // получаем на одну страницу больше

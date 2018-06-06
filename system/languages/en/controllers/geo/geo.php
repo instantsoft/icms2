@@ -23,3 +23,4 @@
 	define('LANG_GEO_SUCCESS_DELETE_CITY', 'City successfully removed');
 	define('LANG_GEO_SUCCESS_DELETE_REGION', 'Region and city successfully removed');
 	define('LANG_GEO_SUCCESS_DELETE_COUNTRY', 'The country, its regions and cities have successfully removed');
+    define('LANG_HELP_URL_GEO', 'http://docs.instantcms.ru/en/manual/components/geo');

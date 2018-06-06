@@ -28,7 +28,7 @@ class actionAdminCtypesAjax extends cmsAction {
 
         $ctypes = $content_model->getContentTypesFiltered();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $ctypes, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $ctypes, $total, $pages);
 
         $this->halt();
 

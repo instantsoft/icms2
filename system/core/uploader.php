@@ -10,6 +10,8 @@ class cmsUploader {
     private $last_error = false;
     private $upload_errors = array();
 
+    private $allowed_mime = false;
+
     public function __construct() {
         $this->upload_errors = array(
             UPLOAD_ERR_OK         => LANG_UPLOAD_ERR_OK,
@@ -23,6 +25,10 @@ class cmsUploader {
         );
         $this->user_id = cmsUser::getInstance()->id;
         $this->site_cfg = cmsConfig::getInstance();
+    }
+
+    public function setAllowedMime($types) {
+        $this->allowed_mime = $types; return $this;
     }
 
     public function setFileName($name) {
@@ -94,12 +100,12 @@ class cmsUploader {
             if($this->file_name){
                 $file_name = str_replace('.'.$file_ext, '', files_sanitize_name($this->file_name.'.'.$file_ext));
             } else {
-                $file_name = substr(md5(uniqid().microtime(true)), 0, 8);
+                $file_name = substr(md5(microtime(true)), 0, 8);
             }
         }
 
         if (file_exists($path.$file_name.'.'.$file_ext)) {
-            return $this->getFileName($path, $file_ext, $file_name.'_'.uniqid());
+            return $this->getFileName($path, $file_ext, $file_name.'_'.md5(microtime(true)));
         }
 
         return $file_name.'.'.$file_ext;
@@ -117,7 +123,7 @@ class cmsUploader {
 
         $dest_file = $dest_dir . $dest_name;
 
-        if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['height'])) { $size['height'] = 0; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
         if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {
@@ -153,6 +159,18 @@ class cmsUploader {
         }
 
         return in_array(mb_strtolower($ext), $allowed, true);
+
+    }
+
+    private function isMimeTypeAllowed($file_path) {
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        $file_mime = finfo_file($finfo, $file_path);
+
+        if($file_mime === false){ return false; }
+
+        return in_array($file_mime, $this->allowed_mime);
 
     }
 
@@ -217,6 +235,16 @@ class cmsUploader {
             );
         }
 
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($source)){
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
+
         if ($allowed_size){
             if ($dest_size > $allowed_size){
                 return array(
@@ -231,8 +259,9 @@ class cmsUploader {
             $destination = $this->getUploadDestinationDirectory();
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
-            $this->file_name = $dest_name;
         }
+
+        $this->file_name = pathinfo($dest_name, PATHINFO_FILENAME);
 
         $destination .= $this->getFileName($destination, $dest_ext);
 
@@ -245,8 +274,37 @@ class cmsUploader {
 
     public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
-        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST[$post_filename]), PHP_URL_PATH), PATHINFO_EXTENSION));
-        $dest_name = files_sanitize_name($_POST[$post_filename]);
+        $link = $file_name = trim($_POST[$post_filename]);
+
+        // проверяем редирект и имя файла
+        if (function_exists('curl_init')){
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $link);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, true);
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            $headers = curl_exec($curl);
+            curl_close($curl);
+            $matches = array();
+            if(preg_match("/(?:Location:|URI:)([^\n]+)*/is", $headers, $matches)){
+                $url = trim($matches[1]);
+                if(strpos($url, 'http') !== 0){
+                    $url_data = parse_url($link);
+                    $link = $url_data['scheme'].'://'.$url_data['host'].$url;
+                } else {
+                    $link = $url;
+                }
+                $_POST[$post_filename] = $link;
+                return $this->uploadFromLink($post_filename, $allowed_ext, $allowed_size, $destination);
+            }
+            if(preg_match('#filename="([^"]+)#uis', $headers, $matches)){
+                $file_name = trim($matches[1]);
+            }
+        }
+
+        $dest_ext  = strtolower(pathinfo(parse_url($file_name, PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($file_name);
 
         if(!$this->checkExt($dest_ext, $allowed_ext)){
             return array(
@@ -256,7 +314,7 @@ class cmsUploader {
             );
         }
 
-        $file_bin = file_get_contents_from_url($_POST[$post_filename]);
+        $file_bin = file_get_contents_from_url($link);
 
         if(!$file_bin){
             return array(
@@ -290,6 +348,18 @@ class cmsUploader {
 		$f = fopen($destination, 'w+');
 		fwrite($f, $file_bin);
         fclose($f);
+
+
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
 
         return array(
             'success' => true,
@@ -396,6 +466,18 @@ class cmsUploader {
             );
         }
 
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'success' => false,
+                    'name'    => $orig_name,
+                    'path'    => ''
+                );
+            }
+        }
+
         return array(
             'success' => true,
             'path'    => $destination,
@@ -469,9 +551,9 @@ class cmsUploader {
 
         $dir_num_user = sprintf('%03d', intval($this->user_id/100));
 
-        $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
-        $first_dir  = substr($file_name, 0, 2);
-        $second_dir = substr($file_name, 2, 2);
+        $file_name  = md5(md5($this->site_cfg->db_user) . md5($this->site_cfg->db_base) .microtime(true));
+        $first_dir  = substr($file_name, 0, 1);
+        $second_dir = substr($file_name, 1, 1);
 
         $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
 

@@ -11,12 +11,9 @@ class formGroupsOptions extends cmsForm {
                 'title' => LANG_GROUPS_LIST,
                 'childs' => array(
 
-                    new fieldCheckbox('is_ds_rating', array(
-                        'title' => sprintf(LANG_GROUPS_OPT_DS_SHOW, LANG_GROUPS_DS_RATED),
-                    )),
-                    new fieldCheckbox('is_ds_popular', array(
-                        'title' => sprintf(LANG_GROUPS_OPT_DS_SHOW, LANG_GROUPS_DS_POPULAR),
-                    )),
+                    new fieldCheckbox('is_filter', array(
+                        'title' => LANG_CP_LISTVIEW_FILTER,
+                    ))
 
                 )
             ),
@@ -29,6 +26,13 @@ class formGroupsOptions extends cmsForm {
                     new fieldCheckbox('is_wall', array(
                         'title' => LANG_GROUPS_OPT_WALL_ENABLED,
                     )),
+
+                    new fieldString('change_owner_email', array(
+                        'title' => LANG_GROUPS_OPT_CHANGE_OWNER_EMAIL,
+                        'rules' => array(
+                            array('email')
+                        )
+                    ))
 
                 )
             ),

@@ -54,7 +54,7 @@
 
         $('select#child_ctype_id').on('change', function(){
            if (!isTitleTyped){
-               $('input#title').val($(this).find('option:selected').text());
+               $('input#title').val($(this).find('option:selected').text().replace(/(.*): /gi, ''));
            }
         }).triggerHandler('change');
 

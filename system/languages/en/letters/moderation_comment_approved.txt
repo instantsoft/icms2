@@ -1,0 +1,11 @@
+[subject:Your comment is approved - {site}]
+
+Hello, {nickname}.
+
+Moderator approved a comment on the page "{page_title}".
+
+URL: <a href="{page_url}">{page_url}</a>
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

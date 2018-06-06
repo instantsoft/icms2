@@ -1,13 +1,13 @@
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
 <?php if(!isset($field->prefix) && !isset($field->suffix)){ ?>
-    <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id, 'required'=>(array_search(array('required'), $field->getRules()) !== false))); ?>
+    <?php echo html_input($field->data['type'], $field->element_name, $value, $field->data['attributes']); ?>
 <?php } ?>
 
 <?php if(isset($field->prefix) || isset($field->suffix)){ ?>
     <div class="input-prefix-suffix">
         <?php if(isset($field->prefix)) { ?><span class="prefix"><?php echo $field->prefix; ?></span><?php } ?>
-        <?php echo html_input($field->data['type'], $field->element_name, $value, array('id'=>$field->id, 'required'=>(array_search(array('required'), $field->getRules()) !== false))); ?>
+        <?php echo html_input($field->data['type'], $field->element_name, $value, $field->data['attributes']); ?>
         <?php if(isset($field->suffix)) { ?><span class="suffix"><?php echo $field->suffix; ?></span><?php } ?>
     </div>
 <?php } ?>
@@ -79,7 +79,6 @@ $(function(){
             },
             select: function( event, ui ) {
                 icms.events.run('autocomplete_select', this);
-                return false;
             }
         });
     <?php } ?>

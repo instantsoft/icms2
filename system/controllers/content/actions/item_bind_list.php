@@ -19,13 +19,38 @@ class actionContentItemBindList extends cmsAction {
             cmsCore::error404();
         }
 
+        if ($this->validate_sysname($ctype_name) !== true || $this->validate_sysname($child_ctype_name) !== true){
+            cmsCore::error404();
+        }
+
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
-        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
-        if (!$child_ctype) { cmsCore::error404(); }
+        // дочерний контроллер
+        $target_controller = 'content';
 
-		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id']);
+        $child_ctype = $this->model->getContentTypeByName($child_ctype_name);
+        // если нет, проверяем по контроллеру
+        if (!$child_ctype) {
+            if (cmsCore::isControllerExists($child_ctype) && cmsController::enabled($child_ctype)){
+
+                if ($mode != 'parents') {
+                    cmsCore::error404();
+                }
+
+                $child_ctype = array(
+                    'name' => $child_ctype_name,
+                    'id'   => null
+                );
+
+                $target_controller = $child_ctype_name;
+
+            } else {
+                cmsCore::error404();
+            }
+        }
+
+		$relation = $this->model->getContentRelationByTypes($ctype['id'], $child_ctype['id'], $target_controller);
 		if (!$relation) { cmsCore::error404(); }
 
         $is_allowed_to_add = cmsUser::isAllowed($child_ctype_name, 'add_to_parent');
@@ -40,9 +65,44 @@ class actionContentItemBindList extends cmsAction {
             cmsCore::error404();
         }
 
-        if ($text){
-			$this->model->filterLike($field, "%{$text}%");
-		}
+        if ($text) {
+
+            if ($mode == 'childs' || $mode == 'unbind') {
+
+                if ($relation['target_controller'] != 'content') {
+                    $this->model->setTablePrefix('');
+                }
+
+                $fields = $this->model->getContentFields($child_ctype_name);
+
+                $this->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
+
+            } else if ($mode == 'parents') {
+
+                $fields = $this->model->getContentFields($ctype_name);
+            }
+
+            if (!$fields) {
+                cmsCore::error404();
+            }
+
+            $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
+            $filter_fields = array('id');
+
+            foreach ($fields as $_field) {
+                if ($_field['handler']->filter_type == 'str') {
+                    $filter_fields[] = $_field['name'];
+                }
+            }
+
+            if (!in_array($field, $filter_fields)) {
+                cmsCore::error404();
+            }
+
+            $this->model->filterLike($field, "%{$text}%");
+
+        }
 
         $this->model->limit(10);
 
@@ -69,11 +129,15 @@ class actionContentItemBindList extends cmsAction {
                 $this->model->filterEqual('user_id', $user->id);
             }
 
+            if ($perm == 'other_to_own' || $perm == 'other_to_other' || $perm == 'other_to_all'){
+                $this->model->filterNotEqual('user_id', $user->id);
+            }
+
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = {$item_id} AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
-                                  "r.child_item_id = i.id";
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
+                                  "r.child_item_id = i.id AND r.target_controller = '{$target_controller}'";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
                 $this->model->filterIsNull('r.id');
@@ -97,8 +161,8 @@ class actionContentItemBindList extends cmsAction {
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = i.id AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
-                                  "r.child_item_id = {$item_id}";
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
+                                  "r.child_item_id = {$item_id} AND r.target_controller = '{$target_controller}'";
 
                 $this->model->joinLeft('content_relations_bind', 'r', $join_condition);
                 $this->model->filterIsNull('r.id');
@@ -120,7 +184,7 @@ class actionContentItemBindList extends cmsAction {
             if ($item_id){
                 $join_condition = "r.parent_ctype_id = {$ctype['id']} AND ".
                                   "r.parent_item_id = {$item_id} AND " .
-                                  "r.child_ctype_id = {$child_ctype['id']} AND " .
+                                  'r.child_ctype_id '.($child_ctype['id'] ? '='.$child_ctype['id'] : 'IS NULL' ).' AND ' .
                                   "r.child_item_id = i.id";
 
                 $this->model->joinInner('content_relations_bind', 'r', $join_condition);

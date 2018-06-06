@@ -2,7 +2,7 @@
 
 Hello, {nickname}.
 
-The site "{site}" You received a new private message
+The site «{site}» You received a new private message from <a href="{user_url}">{user_nickname}</a>.
 
 --
  Best regards, {site}

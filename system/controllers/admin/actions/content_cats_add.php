@@ -2,13 +2,14 @@
 
 class actionAdminContentCatsAdd extends cmsAction {
 
-    public function run($ctype_id=false, $parent_id=1){
+    public function run($ctype_id = false, $parent_id = 1){
 
-        if (!$ctype_id) { $this->redirectBack(); }
+        if (!$ctype_id) { return cmsCore::error404(); }
 
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
         $form = $this->getForm('content_category');
 
@@ -22,7 +23,7 @@ class actionAdminContentCatsAdd extends cmsAction {
         // Парсим форму и получаем поля записи
         $category = $form->parse($this->request, $is_submitted);
 
-        $back_url = $this->request->get('back');
+        $back_url = $this->request->get('back', '');
 
         if (!$is_submitted && $parent_id) { $category['parent_id'] = $parent_id; }
 
@@ -53,12 +54,12 @@ class actionAdminContentCatsAdd extends cmsAction {
             cmsUser::addSessionMessage(sprintf(LANG_CP_CTYPE_CATEGORIES_OFF, href_to($this->name, 'ctypes', array('edit', $ctype['id'])).'#tab-categories'));
         }
 
-        return cmsTemplate::getInstance()->render('content_cats_add', array(
-            'ctype' => $ctype,
+        return $this->cms_template->render('content_cats_add', array(
+            'ctype'    => $ctype,
             'category' => $category,
-            'form' => $form,
+            'form'     => $form,
             'back_url' => $back_url,
-            'errors' => isset($errors) ? $errors : false
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }
@@ -67,13 +68,13 @@ class actionAdminContentCatsAdd extends cmsAction {
 
         $list = explode("\n", $data['title']);
 
-        $levels_ids = array();
-        $cats_ids = array();
+        $levels_ids          = array();
+        $cats_ids            = array();
+        $is_first            = true;
+        $remove_level_offset = 0;
+
         $parent_props = $content_model->getContentPropsBinds($ctype['name'], $data['parent_id']);
         $parent_props = array_collection_to_list($parent_props, 'id', 'prop_id');
-
-		$is_first = true;
-		$remove_level_offset = 0;
 
         foreach($list as $category_title){
 
@@ -82,8 +83,6 @@ class actionAdminContentCatsAdd extends cmsAction {
             if (!$category_title) { continue; }
 
 			$level = mb_strlen(str_replace(' ', '', $category_title)) - mb_strlen(ltrim(str_replace(' ', '', $category_title), '- '));
-
-//			dump($level.': '.ltrim($category_title, '- '), false);
 
 			if ($is_first && $level > 0){ $remove_level_offset = $level; }
 
@@ -122,8 +121,6 @@ class actionAdminContentCatsAdd extends cmsAction {
 
             $levels_ids[$level] = $result['id'];
             $cats_ids[] = $result['id'];
-
-
 
         }
 

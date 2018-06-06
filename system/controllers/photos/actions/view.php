@@ -38,10 +38,22 @@ class actionPhotosView extends cmsAction {
         list($photo, $album, $ctype) = cmsEventsManager::hook('photos_before_item', array($photo, $album, $ctype));
 
         // Проверяем прохождение модерации
-        $is_moderator = false;
+        $is_moderator = $this->cms_user->is_admin;
+        if(!$is_moderator && $this->cms_user->is_logged){
+            $is_moderator = cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
+        }
+
+        // на модерации
         if (!$album['is_approved']){
-            $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('content')->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
-            if (!$is_moderator && $this->cms_user->id != $album['user_id']){ cmsCore::error404(); }
+
+            $item_view_notice = $album['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_MODERATION_NOTICE;
+
+            if (!$is_moderator && $this->cms_user->id != $album['user_id']){
+                return cmsCore::errorForbidden($item_view_notice, true);
+            }
+
+            cmsUser::addSessionMessage($item_view_notice, 'info');
+
         }
 
         // Проверяем приватность альбома
@@ -87,11 +99,12 @@ class actionPhotosView extends cmsAction {
         }
 
         // Проверяем ограничения доступа из других контроллеров
-        if ($album['is_parent_hidden']){
+        if ($album['is_parent_hidden'] || $album['is_private']){
             $is_parent_viewable_result = cmsEventsManager::hook('content_view_hidden', array(
                 'viewable'     => true,
                 'item'         => $album,
-                'is_moderator' => $is_moderator
+                'is_moderator' => $is_moderator,
+                'ctype'        => $ctype
             ));
             if (!$is_parent_viewable_result['viewable']){
 
@@ -142,6 +155,8 @@ class actionPhotosView extends cmsAction {
 
         }
 
+        $is_can_set_cover = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
+                (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $this->cms_user->id));
         $is_can_edit   = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
                 (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $this->cms_user->id) ||
                 ($photo['user_id'] == $this->cms_user->id));
@@ -162,10 +177,35 @@ class actionPhotosView extends cmsAction {
             $full_size_img_preset = $this->getMaxSizePresetName($download_photo_sizes);
         }
 
-        $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                getNextPhoto($photo, $this->options['ordering']);
-        $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
-                getPrevPhoto($photo, $this->options['ordering']);
+        $ordering = $this->request->get('ordering', $this->options['ordering']);
+        $orderto  = $this->request->get('orderto', $this->options['orderto']);
+
+        $photos_url_params = array();
+        if($ordering != $this->options['ordering']){
+            $photos_url_params['ordering'] = $ordering;
+        }
+        if($orderto != $this->options['orderto']){
+            $photos_url_params['orderto'] = $orderto;
+        }
+        if($photos_url_params){
+            $photos_url_params = http_build_query($photos_url_params);
+        }
+
+        if($orderto == 'asc'){
+
+            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getNextPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
+            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getPrevPhoto($photo, $ordering, $orderto);
+
+        } else {
+
+            $next_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getNextPhoto($photo, $ordering, $orderto);
+            $prev_photo = $this->model->filterEqual('album_id', $photo['album_id'])->
+                    getPrevPhoto($photo, $ordering, ($orderto == 'asc' ? 'desc' : 'asc'));
+
+        }
 
         $tpl    = 'view';
         $preset = $this->getBigPreset($photo['sizes']);
@@ -178,10 +218,14 @@ class actionPhotosView extends cmsAction {
 
         }
 
+        cmsModel::cacheResult('current_photo_item', array($album, $photo));
+
         return $this->cms_template->render($tpl, array(
+            'photos_url_params' => $photos_url_params,
             'next_photo'    => $next_photo,
             'prev_photo'    => $prev_photo,
             'downloads'     => $downloads,
+            'is_can_set_cover' => $is_can_set_cover,
             'is_can_edit'   => $is_can_edit,
             'is_can_delete' => $is_can_delete,
             'user'          => $this->cms_user,

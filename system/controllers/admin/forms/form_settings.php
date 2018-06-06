@@ -108,6 +108,12 @@ class formAdminSettings extends cmsForm {
                         'title'   => LANG_CP_SETTINGS_DETECT_IP_KEY,
                         'hint'    => LANG_CP_SETTINGS_DETECT_IP_KEY_HINT,
                         'default' => 'REMOTE_ADDR'
+                    )),
+
+                    new fieldString('cookie_domain', array(
+                        'title' => LANG_CP_SETTINGS_COOKIE_DOMAIN,
+                        'hint'  => LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT,
+                        'suffix' => '<span class="auto_copy_value ajaxlink" data-value="'.str_replace('www.', '', $_SERVER['HTTP_HOST']).'">'.LANG_CP_SETTINGS_CURRENT_DOMAIN.$_SERVER['HTTP_HOST'].'</span>'
                     ))
 
                 )
@@ -120,7 +126,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
-                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="inthemer" target="_blank" href="http://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array();
@@ -135,7 +141,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_admin', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
-                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -150,7 +156,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_mobile', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_MOBILE,
-                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -165,7 +171,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_tablet', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
-                        'hint' => '<a href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -225,6 +231,12 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_MERGE_JS,
                         'hint' => $is_js_cache ? sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'clear_cache', 'js')) : false
                     )),
+
+                    new fieldNumber('production_time', array(
+                        'title'   => LANG_CP_SETTINGS_PRODUCTION_TIME,
+                        'hint'    => LANG_CP_SETTINGS_PRODUCTION_TIME_HINT,
+                        'default' => time()
+                    ))
 
                 )
             ),
@@ -358,9 +370,13 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_DEBUG_MODE,
                     )),
 
+                    new fieldCheckbox('manifest_from_files', array(
+                        'title' => LANG_CP_SETTINGS_MANIFEST_FROM_FILES,
+                    )),
+
                     new fieldCheckbox('emulate_lag', array(
                         'title' => LANG_CP_SETTINGS_EMULATE_LAG,
-                    )),
+                    ))
 
                 )
             ),
@@ -373,6 +389,15 @@ class formAdminSettings extends cmsForm {
                     new fieldText('allow_ips', array(
                         'title' => LANG_CP_SETTINGS_ALLOW_IPS,
                         'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp())
+                    )),
+
+                    new fieldList('check_spoofing_type', array(
+                        'title' => LANG_CP_CHECK_SPOOFING_TYPE,
+                        'items' => array(
+                            0 => LANG_NO,
+                            1 => LANG_CP_CHECK_SPOOFING_TYPE_OPT1,
+                            2 => LANG_CP_CHECK_SPOOFING_TYPE_OPT2
+                        )
                     ))
 
                 )

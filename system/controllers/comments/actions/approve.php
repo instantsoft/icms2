@@ -6,7 +6,9 @@ class actionCommentsApprove extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        if(!cmsUser::isAllowed('comments', 'is_moderator')){
+        $is_moderator = $this->cms_user->is_admin || $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id);
+
+        if(!$is_moderator){
             return $this->cms_template->renderJSON(array(
                 'error' => true,
                 'message' => LANG_COMMENT_ERROR
@@ -30,6 +32,11 @@ class actionCommentsApprove extends cmsAction {
         }
 
         $this->model->approveComment($comment['id']);
+
+        $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
+        $comment['title'] = $comment['target_title'];
+
+        $this->controller_moderation->approve($this->name, $comment, false, 'moderation_comment_approved');
 
         // Уведомляем модель целевого контента об изменении количества комментариев
         $comments_count = $this->model->

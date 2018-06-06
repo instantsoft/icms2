@@ -2,14 +2,16 @@
 
 function grid_ctype_relations($controller){
 
+    cmsCore::loadAllControllersLanguages();
+
     $options = array(
-        'is_sortable' => true,
-        'is_filter' => false,
+        'is_sortable'   => false,
+        'is_filter'     => false,
         'is_pagination' => false,
-        'is_draggable' => false,
-        'order_by' => 'id',
-        'order_to' => 'asc',
-        'show_id' => false
+        'is_draggable'  => true,
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc',
+        'show_id'       => false
     );
 
     $columns = array(
@@ -24,9 +26,16 @@ function grid_ctype_relations($controller){
         'layout' => array(
             'title' => LANG_CP_RELATION_LAYOUT_TYPE,
             'handler' => function($value, $row){
-                return constant('LANG_CP_RELATION_LAYOUT_' . mb_strtoupper($value));
+                return constant('LANG_CP_RELATION_LAYOUT_' . strtoupper($value));
             }
         ),
+        'target_controller' => array(
+            'title' => LANG_EVENTS_LISTENER,
+            'width' => 100,
+            'handler' => function($value, $row){
+                return string_lang('LANG_'.strtoupper($value).'_CONTROLLER');
+            }
+        )
     );
 
     $actions = array(

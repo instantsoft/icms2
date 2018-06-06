@@ -54,12 +54,20 @@ class onModerationAdminDashboardBlock extends cmsAction {
         $this->content_model->orderBy('date_expired', 'asc')->limit($this->show_count);
 
         $logs = $this->content_model->get('moderators_logs', function ($item, $model){
+
                 $item['data'] = cmsModel::yamlToArray($item['data']);
+
                 if($item['target_controller'] == 'content'){
                     $ctype = $model->getContentTypeByName($item['target_subject']);
-                    $item['subject_title'] = $ctype['title'];
+
+                } else {
+                    $ctype = cmsCore::getControllerInstance($item['target_controller'])->getContentTypeForModeration($item['target_subject']);
                 }
+
+                $item['subject_title'] = $ctype['title'];
+
                 return $item;
+
         });
 
         $html = $this->cms_template->renderInternal($this, 'backend/admin_dashboard_trash_block', array(
@@ -88,7 +96,11 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
         foreach ($_items as $item) {
 
-            $ctype = $this->content_model->getContentTypeByName($item['ctype_name']);
+            if(cmsCore::isControllerExists($item['ctype_name'])){
+                $ctype = cmsCore::getControllerInstance($item['ctype_name'])->getContentTypeForModeration($item['ctype_name']);
+            } else {
+                $ctype = $this->content_model->getContentTypeByName($item['ctype_name']);
+            }
 
             $item['ctype_title'] = $ctype['title'];
 

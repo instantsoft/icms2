@@ -13,6 +13,7 @@ class onUsersCronMigration extends cmsAction {
             extract($rule);
 
             $this->model->filterGroup( $group_from_id );
+            $this->model->filterIsNull('is_locked');
 
             $users = $this->model->getUsers();
 

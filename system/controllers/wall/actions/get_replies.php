@@ -6,49 +6,50 @@ class actionWallGetReplies extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        $template = cmsTemplate::getInstance();
+        $entry_id = $this->request->get('id', 0);
 
-        $entry_id = $this->request->get('id');
-
-        // Проверяем валидность
-        $is_valid = is_numeric($entry_id);
-
-        if (!$is_valid){
-            $result = array('error' => true, 'message' => LANG_ERROR);
-            $template->renderJSON($result);
+        if (!is_numeric($entry_id)){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_ERROR));
         }
 
-        $user = cmsUser::getInstance();
-
         $entry = $this->model->getEntry($entry_id);
+
+        if (!$entry){
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_ERROR));
+        }
+
+        $controller = cmsCore::getController($entry['controller']);
+
+        $permissions = $controller->runHook('wall_permissions', array(
+            'profile_type' => $entry['profile_type'],
+            'profile_id'   => $entry['profile_id']
+        ));
+
+        if (!$permissions || !is_array($permissions)){
+            return $this->cms_template->renderJSON(array(
+                'error'   => true,
+                'message' => LANG_ERROR
+            ));
+        }
 
         $replies = $this->model->getReplies($entry_id);
 
         if (!$replies){
-            $result = array('error' => true, 'message' => LANG_ERROR);
-            $template->renderJSON($result);
+            return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_ERROR));
         }
 
         $replies = cmsEventsManager::hook('wall_before_list', $replies);
 
-        $permissions = array(
-            'add'    => $user->is_logged,
-            'delete' => ($user->is_admin || ($user->id == $entry['profile_id']))
-        );
-
-        $html = $template->renderInternal($this, 'entry', array(
+        $html = $this->cms_template->renderInternal($this, 'entry', array(
             'entries'     => $replies,
-            'user'        => $user,
+            'user'        => $this->cms_user,
             'permissions' => $permissions
         ));
 
-        // Формируем и возвращаем результат
-        $result = array(
+        return $this->cms_template->renderJSON(array(
             'error' => false,
             'html'  => $html
-        );
-
-        $template->renderJSON($result);
+        ));
 
     }
 

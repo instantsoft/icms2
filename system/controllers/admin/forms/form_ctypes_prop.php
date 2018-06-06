@@ -98,7 +98,7 @@ class formAdminCtypesProp extends cmsForm {
                             'is_tree' => true,
                             'generator' => function($prop) use($model){
                                 $ctype = $model->getContentType($prop['ctype_id']);
-                                $tree = $model->getCategoriesTree($ctype['name'], false);
+                                $tree = $model->limit(0)->getCategoriesTree($ctype['name'], false);
                                 foreach($tree as $c){
                                     $items[$c['id']] = str_repeat('- ', $c['ns_level']).' '.$c['title'];
                                 }

@@ -23,7 +23,7 @@ class widgetActivityList extends cmsWidget {
 
         }
 
-        $activity->model->filterPrivacy()->filterHiddenParents()->filterEqual('is_pub', 1);
+        $activity->model->filterPrivacy()->enableHiddenParentsFilter()->filterEqual('is_pub', 1);
 
         cmsEventsManager::hook('activity_list_filter', $activity->model);
 

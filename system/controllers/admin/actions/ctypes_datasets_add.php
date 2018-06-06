@@ -8,33 +8,75 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
 
         $content_model = cmsCore::getModel('content');
 
-        $ctype = $content_model->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if(is_numeric($ctype_id)){
 
-        $form = $this->getForm('ctypes_dataset', array('add', $ctype['id']));
+            $ctype = $content_model->getContentType($ctype_id);
+            if (!$ctype) { cmsCore::error404(); }
+
+            $controller_name = 'content';
+
+        } else {
+
+            if(!$this->isControllerInstalled($ctype_id)){
+                cmsCore::error404();
+            }
+
+            cmsCore::loadControllerLanguage($ctype_id);
+
+            $ctype = array(
+                'title' => string_lang($ctype_id.'_controller'),
+                'name'  => $ctype_id,
+                'id'    => null
+            );
+
+            $content_model->setTablePrefix('');
+
+            $controller_name = $ctype_id;
+
+        }
 
         $fields  = $content_model->getContentFields($ctype['name']);
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
-        $cats = $content_model->getSubCategories($ctype['name']);
+        $cats_list = array();
 
-		$dataset = array('sorting' => array(array('by'=>'date_pub', 'to'=>'desc')));
+        if($ctype['id']){
+
+            $cats = $content_model->getCategoriesTree($ctype['name'], false);
+
+            if ($cats){
+                foreach($cats as $c){
+                    $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level']-1).' '.$c['title'];
+                }
+            }
+
+        }
+
+        $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
+
+        $form = $this->getForm('ctypes_dataset', array('add', $ctype, $cats_list, $fields_list));
 
         if ($this->request->has('submit')){
 
 			$dataset = $form->parse($this->request, true);
 
-            $dataset['filters'] = $this->request->get('filters');
-            $dataset['sorting'] = $this->request->get('sorting');
-
             $errors = $form->validate($this,  $dataset);
 
             if (!$errors){
+
+                if(!$ctype['id']){
+                    $dataset['target_controller'] = $controller_name;
+                }
 
                 $dataset_id = $content_model->addContentDataset($dataset, $ctype);
 
                 if ($dataset_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_DATASET_CREATED, $dataset['title']), 'success'); }
 
-                $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
+                if($ctype['id']){
+                    $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
+                }
+
+                $this->redirect(href_to('admin', 'controllers', array('edit', $ctype['name'], 'datasets')));
 
             }
 
@@ -47,9 +89,7 @@ class actionAdminCtypesDatasetsAdd extends cmsAction {
         return $this->cms_template->render('ctypes_dataset', array(
             'do'      => 'add',
             'ctype'   => $ctype,
-            'dataset' => $dataset,
-            'fields'  => $fields,
-            'cats'    => array_collection_to_list($cats, 'id', 'title'),
+            'dataset' => isset($dataset) ? $dataset : array(),
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
         ));

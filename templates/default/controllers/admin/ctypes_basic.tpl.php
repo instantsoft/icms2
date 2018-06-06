@@ -24,8 +24,8 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
     $this->addToolButton(array(

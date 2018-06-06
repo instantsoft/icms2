@@ -6,7 +6,7 @@
 
             <legend><?php echo LANG_FILTER; ?></legend>
 
-            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <table cellpadding="2" cellspacing="0" border="0" width="100%">
 
                 <?php $index = 0; ?>
                 <?php foreach($fields as $field) { ?>
@@ -14,7 +14,7 @@
                     <?php if ($field['name']=='user'){ $field['name'] = 'user_id'; } ?>
                     <tr>
                         <td>
-                            <label><?php echo htmlspecialchars($field['title']); ?></label>
+                            <label><?php html($field['title']); ?></label>
                             <?php echo html_input('hidden', "filters[{$index}][field]", $field['name']); ?>
                         </td>
                         <td>

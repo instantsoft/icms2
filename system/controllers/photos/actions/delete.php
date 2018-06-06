@@ -1,6 +1,6 @@
 <?php
 
-class actionPhotosDelete extends cmsAction{
+class actionPhotosDelete extends cmsAction {
 
     public function run($photo_id = null){
 
@@ -28,7 +28,11 @@ class actionPhotosDelete extends cmsAction{
 
 		$album = cmsCore::getModel('content')->getContentItem('albums', $photo['album_id']);
 
+        list($album, $photo) = cmsEventsManager::hook('photos_before_delete', array($album, $photo));
+
         $this->model->deletePhoto($photo);
+
+        list($album, $photo) = cmsEventsManager::hook('photos_after_delete', array($album, $photo));
 
         $this->cms_template->renderJSON(array(
             'success'   => true,

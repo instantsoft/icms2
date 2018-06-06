@@ -19,11 +19,27 @@ class comments extends cmsFrontend {
 
     }
 
+    public function routeAction($action_name){
+
+        if($this->isActionExists($action_name)){
+            return $action_name;
+        }
+
+        array_unshift($this->current_params, $action_name);
+
+        return 'index';
+
+    }
+
     public function getNativeComments() {
 
-        if(cmsUser::isAllowed('comments', 'is_moderator')){
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($this->name, $this->cms_user->id);
+
+        if($is_moderator){
             $this->model->disableApprovedFilter();
         }
+
+        cmsEventsManager::hook('comments_list_filter', $this->model);
 
         $comments = $this->model->filterCommentTarget(
                 $this->target_controller,
@@ -45,6 +61,15 @@ class comments extends cmsFrontend {
 
         $csrf_token_seed = implode('/', array($this->target_controller, $this->target_subject, $this->target_id));
 
+        $rss_link = '';
+        if ($this->isControllerEnabled('rss') && $this->model->isRssFeedEnable()){
+            $rss_link = href_to('rss', 'feed', 'comments').'?'.http_build_query(array(
+                'tc' => $this->target_controller,
+                'ts' => $this->target_subject,
+                'ti' => $this->target_id
+            ));
+        }
+
         return array(
             'name'  => 'icms',
             'title' => ($comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS),
@@ -58,6 +83,9 @@ class comments extends cmsFrontend {
                 'is_highlight_new'  => $is_highlight_new,
                 'comments'          => $comments,
                 'csrf_token_seed'   => $csrf_token_seed,
+                'rss_link'          => $rss_link,
+                'guest_name'        => cmsUser::getCookie('comments_guest_name', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
+                'guest_email'       => cmsUser::getCookie('comments_guest_email', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
                 'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
             ))
         );
@@ -176,9 +204,16 @@ class comments extends cmsFrontend {
         // Скрываем удаленные
         $this->model->filterIsNull('is_deleted');
 
+        cmsEventsManager::hook('comments_list_filter', $this->model);
+
         // Получаем количество и список записей
         $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();
         $items = $this->model->getComments();
+
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);
 
@@ -229,18 +264,6 @@ class comments extends cmsFrontend {
             );
         }
 
-        // модерация
-        if(cmsUser::isAllowed('comments', 'is_moderator')){
-            $datasets['moderation'] = array(
-                'name'  => 'moderation',
-                'title' => LANG_MODERATION,
-                'filter' => function($model){
-                    $model->disableApprovedFilter();
-                    return $model->filterNotEqual('is_approved', 1);
-                }
-            );
-        }
-
         return cmsEventsManager::hook('comments_datasets', $datasets);
 
     }
@@ -254,14 +277,14 @@ class comments extends cmsFrontend {
 
         $is_approved = cmsUser::isAllowed('comments', 'add_approved');
 
+        if(!$is_approved && $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id)){
+            $is_approved = true;
+        }
+
         $is_approved_by_hook = cmsEventsManager::hook('comments_is_approved', array(
             'is_approved' => $is_approved,
             'comment'     => $comment
         ));
-
-        $is_approved_by_hook['is_approved'] = ($is_approved_by_hook['is_approved'] ?
-            $is_approved_by_hook['is_approved'] :
-            cmsUser::isAllowed('comments', 'is_moderator'));
 
         return $is_approved_by_hook['is_approved'];
 
@@ -269,56 +292,11 @@ class comments extends cmsFrontend {
 
     public function notifyModerators($comment) {
 
-        // проверяем, нет ли уже комментариев на модерации
-        $this->model->disableApprovedFilter()->filterNotEqual('is_approved', 1);
-            $count = $this->model->getCommentsCount();
-        $this->model->resetFilters();
+        $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
+        $comment['url'] = $comment['target_url'].'#comment_'.$comment['id'];
+        $comment['title'] = $comment['target_title'];
 
-        // если больше одного, значит уже уведомления рассылали
-        if($count > 1){ return false; }
-
-        $messenger = cmsCore::getController('messages');
-
-        // рассылаем модераторам уведомления
-        $moderators = $this->model->getCommentsModerators();
-
-        foreach ($moderators as $moderator) {
-
-            $messenger->clearRecipients()->addRecipient($moderator['id']);
-
-            $messenger->sendNoticePM(array(
-                'content' => LANG_COMMENTS_MODERATE_NOTIFY,
-                'actions' => array(
-                    'view' => array(
-                        'title' => LANG_SHOW,
-                        'href'  => href_to('comments', 'index', 'moderation')
-                    )
-                )
-            ));
-
-            if(!$moderator['is_online']){
-
-                $page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
-
-                $messenger->sendEmail(
-                    array(
-                        'email' => $moderator['email'],
-                        'name'  => $moderator['nickname']
-                    ),
-                    'comments_moderate',
-                    array(
-                        'author_nickname' => !$comment['user_id'] ? $comment['author_name'] : $comment['user_nickname'],
-                        'author_url' => !$comment['user_id'] ? $page_url : href_to_abs('users', $comment['user_id']),
-                        'page_url'   => $page_url,
-                        'comment'    => strip_tags($comment['content_html']),
-                        'nickname'   => $moderator['nickname'],
-                        'list_url'   => href_to_abs('comments', 'index', 'moderate')
-                    )
-                );
-
-            }
-
-        }
+        return $this->controller_moderation->requestModeration($this->name, $comment, true, sprintf(LANG_COMMENTS_MODERATE_NOTIFY, $comment['content_html']));
 
     }
 

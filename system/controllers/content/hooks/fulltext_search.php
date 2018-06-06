@@ -31,9 +31,8 @@ class onContentFulltextSearch extends cmsAction {
 
             foreach($fields as $field){
 
-                // индексы создаются только на поля типа caption, text, html
                 // в настройках полей должно быть включено их участие в индексе
-                $is_text = in_array($field['type'], array('caption', 'text', 'html')) && $field['handler']->getOption('in_fulltext_search');
+                $is_text = $field['handler']->getOption('in_fulltext_search');
 
                 if ($is_text && !$field['is_private'] && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
 
@@ -60,6 +59,11 @@ class onContentFulltextSearch extends cmsAction {
                     'condition' => '=',
                     'value'     => 1,
                     'field'     => 'is_approved'
+                ),
+                array(
+                    'condition' => 'IS',
+                    'value'     => NULL,
+                    'field'     => 'is_deleted'
                 ),
                 array(
                     'condition' => 'IS',

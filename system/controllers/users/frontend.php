@@ -5,6 +5,30 @@ class users extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
+    /**
+     * Профиль текущего авторизованного пользователя
+     * @var boolean
+     */
+    public $is_own_profile = false;
+
+    /**
+     * Просматриваемый профиль в дружбе с текущим пользователем
+     * @var boolean
+     */
+    public $is_friend_profile = false;
+
+    /**
+     * Текущий пользователь подписан на просматриваемого
+     * @var boolean
+     */
+    public $is_subscribe_profile = false;
+
+    /**
+     * Текущий просматриваемый профиль
+     * @var array
+     */
+    public $profile = array();
+
     public $tabs = array();
     public $tabs_controllers = array();
 
@@ -15,21 +39,48 @@ class users extends cmsFrontend {
         // разблокируем вызов экшенов, которым запрещено вызываться напрямую
         $this->lock_explicit_call = false;
 
-        $user_id   = $action_name;
-        $is_logged = $this->cms_user->is_logged;
-
-        $profile = $this->model->getUser($user_id);
+        // $action_name это id пользователя
+        $profile = $this->model->getUser($action_name);
         if (!$profile) { cmsCore::error404(); }
 
-        if (!$is_logged && $this->options['is_auth_only']){
+        $this->setCurrentProfile($profile);
+
+        if (!$this->cms_user->is_logged && $this->options['is_auth_only']){
             cmsUser::goLogin();
         }
 
         if ($this->options['is_themes_on']){
-            $this->cms_template->applyProfileStyle($profile);
+            $this->cms_template->applyProfileStyle($this->profile);
         }
 
         $this->current_params = $this->cms_core->uri_params;
+
+        // кешируем запись для получения ее в виджетах
+        cmsModel::cacheResult('current_profile', $this->profile);
+
+        // Нет параметров после названия экшена (/users/id) - значит
+        // это главная страница профиля, первым параметром добавляем
+        // сам профиль
+        if (!$this->cms_core->uri_params){
+            array_unshift($this->current_params, $this->profile);
+            return 'profile';
+        }
+
+        // Ищем экшен внутри профиля
+        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
+            $this->current_params[0] = $this->profile;
+            return 'profile_'.$this->cms_core->uri_params[0];
+        }
+
+        // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
+        // от другого контроллера, тогда первым параметром добавляем
+        // сам профиль
+        array_unshift($this->current_params, $this->profile);
+        return 'profile_tab';
+
+    }
+
+    public function setCurrentProfile($profile) {
 
         // Статус
         if ($this->options['is_status']) {
@@ -37,33 +88,18 @@ class users extends cmsFrontend {
         }
 
         // Репутация
-        $profile['is_can_vote_karma'] = $is_logged &&
+        $profile['is_can_vote_karma'] = $this->cms_user->is_logged &&
                                         cmsUser::isAllowed('users', 'vote_karma') &&
                                         ($this->cms_user->id != $profile['id']) &&
                                         $this->model->isUserCanVoteKarma($this->cms_user->id, $profile['id'], $this->options['karma_time']);
 
-        // кешируем запись для получения ее в виджетах
-        cmsModel::cacheResult('current_profile', $profile);
+        $this->profile = $profile;
 
-        // Нет параметров после названия экшена (/users/id) - значит
-        // это главная страница профиля, первым параметром добавляем
-        // сам профиль
-        if (!$this->cms_core->uri_params){
-            array_unshift($this->current_params, $profile);
-            return 'profile';
-        }
+        $this->is_own_profile = $this->cms_user->id == $profile['id'];
+        $this->is_friend_profile = $this->cms_user->isFriend($profile['id']);
+        $this->is_subscribe_profile = $this->cms_user->isSubscribe($profile['id']);
 
-        // Ищем экшен внутри профиля
-        if ($this->isActionExists('profile_'.$this->cms_core->uri_params[0])){
-            $this->current_params[0] = $profile;
-            return 'profile_'.$this->cms_core->uri_params[0];
-        }
-
-        // Если дошли сюда, значит это неизвестный экшен, возможно вкладка
-        // от другого контроллера, тогда первым параметром добавляем
-        // сам профиль
-        array_unshift($this->current_params, $profile);
-        return 'profile_tab';
+        return $this;
 
     }
 
@@ -71,11 +107,15 @@ class users extends cmsFrontend {
 
         $menu = array(
             array(
-                'title' => LANG_USERS_PROFILE_INDEX,
-                'url' => href_to($this->name, $profile['id']),
-                'url_mask' => href_to($this->name, $profile['id']),
+                'title'    => LANG_USERS_PROFILE_INDEX,
+                'url'      => href_to($this->name, $profile['id']),
+                'url_mask' => href_to($this->name, $profile['id'])
             )
         );
+
+        if ($profile['is_deleted']){
+            return $menu;
+        }
 
         $this->tabs = $this->model->getUsersProfilesTabs(true, 'name');
 
@@ -111,7 +151,8 @@ class users extends cmsFrontend {
 
 				$tab_info = $controller->runHook('user_tab_info', array('profile'=>$profile, 'tab_name'=>$tab['name']));
 
-				if ($tab_info == false) {
+				if ($tab_info === false) {
+                    unset($this->tabs[$tab['name']]);
 					continue;
 				} else if ($tab_info === true) {
 					$tab_info = $default_tab_info;
@@ -157,12 +198,14 @@ class users extends cmsFrontend {
             'params' => array('edit', 'notices'),
         );
 
-        $menu[] = array(
-            'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'privacy'),
-        );
+        if (!empty($this->options['is_friends_on'])){
+            $menu[] = array(
+                'title' => LANG_USERS_EDIT_PROFILE_PRIVACY,
+                'controller' => $this->name,
+                'action' => $profile['id'],
+                'params' => array('edit', 'privacy'),
+            );
+        }
 
         $menu[] = array(
             'title' => LANG_PASSWORD,
@@ -182,13 +225,7 @@ class users extends cmsFrontend {
 
     }
 
-    public function renderProfilesList($page_url, $dataset_name=false){
-
-        if ($this->request->isInternal()){
-            if ($this->useOptions){
-                $this->options = $this->getOptions();
-            }
-        }
+    public function renderProfilesList($page_url, $dataset_name = false, $actions = false){
 
         $page = $this->request->get('page', 1);
         $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
@@ -224,7 +261,11 @@ class users extends cmsFrontend {
 
         // Получаем количество и список записей
         $total    = $this->model->getUsersCount();
-        $profiles = $this->model->getUsers();
+        $profiles = $this->model->getUsers($actions);
+
+        if($this->request->isStandard()){
+            if(!$profiles && $page > 1){ cmsCore::error404(); }
+        }
 
         return $this->cms_template->renderInternal($this, 'list', array(
             'page_url'     => $page_url,
@@ -258,7 +299,7 @@ class users extends cmsFrontend {
                 'title' => LANG_USERS_DS_ONLINE,
                 'order' => array('date_log', 'desc'),
                 'filter' => function($model, $dset){
-                    return $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
+                    return $model->joinSessionsOnline('i')->filterOnlineUsers();
                 }
             );
         }
@@ -311,9 +352,7 @@ class users extends cmsFrontend {
             return;
         }
 
-        $notice_text = array();
-
-        $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE);
+        $notice_text = array(sprintf(LANG_USERS_LOCKED_NOTICE));
 
         if($user['lock_until']) {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_UNTIL, html_date($user['lock_until']));
@@ -323,9 +362,13 @@ class users extends cmsFrontend {
             $notice_text[] = sprintf(LANG_USERS_LOCKED_NOTICE_REASON, $user['lock_reason']);
         }
 
-        $notice_text = implode('<br>', $notice_text);
+        if($user['lock_reason']){
+            $this->model->update('{users}', $user['id'], array(
+                'ip' => null
+            ), true);
+        }
 
-        cmsUser::addSessionMessage($notice_text, 'error');
+        cmsUser::addSessionMessage(implode('<br>', $notice_text), 'error');
 
         cmsUser::logout();
 

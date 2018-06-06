@@ -1,6 +1,3 @@
 <?php
 
-class tags extends cmsFrontend {
-
-
-}
+class tags extends cmsFrontend { }

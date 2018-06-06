@@ -93,3 +93,11 @@ Third-party plugins, libraries and resources included in InstantCMS:
     jQuery-flexImages
         by Pixabay.com
         https://github.com/Pixabay/jQuery-flexImages
+
+    jQuery UI Touch Punch
+        by David Furfero
+        http://touchpunch.furf.com/
+
+    jQuery CSS Customizable Scrollbar
+        by Yuriy Khabarov
+        https://github.com/gromo/jquery.scrollbar/

@@ -40,13 +40,18 @@ function grid_users($controller){
             'width' => 130,
             'filter' => 'like',
             'handler' => function($value){
-                return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
+                if(!$value){
+                    return '';
+                } elseif(strpos($value, '127.') === 0){
+                    return $value;
+                }
+                return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
             }
         ),
         'date_reg' => array(
             'title' => LANG_REGISTRATION,
             'width' => 80,
-            'filter' => 'like',
+            'filter' => 'date',
             'handler' => function($date, $user){
                 $ld = $user['is_online'] ? LANG_ONLINE : LANG_USERS_PROFILE_LOGDATE.' '.string_date_age_max($user['date_log'], true);
                 return '<span class="tooltip" title="'.$ld.'">'.html_date($date).'</span>';
@@ -74,6 +79,13 @@ function grid_users($controller){
                 return '<div class="tooltip" title="'.$title.'">'.$value.'</div>';
             }
         ),
+        'is_deleted' => array(
+            'title' => LANG_ADMIN_IS_DELETED,
+            'width' => 24,
+            'handler' => function($value, $user){
+                return '<div class="'.($value ? 'negative' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+            }
+        )
     );
 
     $actions = array(
@@ -85,7 +97,7 @@ function grid_users($controller){
         array(
             'title' => LANG_EDIT,
             'class' => 'edit tooltip',
-            'href' => href_to($controller->name, 'users', array('edit', '{id}'))
+            'href'  => href_to('users', '{id}', array('edit')) . '?back=' . href_to($controller->name, 'users')
         ),
         array(
             'title' => LANG_DELETE,

@@ -31,6 +31,18 @@ function grid_fields($controller){
                 return $value ? $value : '&mdash;';
             }
         ),
+        'is_in_list' => array(
+            'title' => LANG_CP_FIELD_IN_LIST_SHORT,
+            'flag'  => true,
+			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', '{users}_fields', 'is_in_list')),
+            'width' => 60,
+        ),
+        'is_in_item' => array(
+            'title' => LANG_CP_FIELD_IN_ITEM_SHORT,
+            'flag'  => true,
+			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', '{users}_fields', 'is_in_item')),
+            'width' => 60,
+        ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
             'width' => 150

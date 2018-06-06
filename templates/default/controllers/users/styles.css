@@ -4,22 +4,28 @@
 }
 
 #user_profile_title {
-    overflow:hidden;
-    font-size:21px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    line-height: 42px;
+}
+#user_profile_title .name h1 {
+    margin: 0;
+}
+#user_profile_title .name h1 > sup {
+    font-size: 12px;
+    display: inline-block;
+    margin: -5px 0 0 0px;
+}
+#user_profile_title .name.name_with_status h1 {
+    font-size: 24px;
+}
+#user_profile_title .avatar, #user_profile_title .name {
+    display: inline-block;
+    vertical-align: middle;
 }
 
-#user_profile_title .avatar {
-    float:left;
-    overflow:hidden;
-    padding:2px;
-    border:solid 1px #B3C2C9;
-    margin-right: 10px;
-}
-
-#user_profile_title .avatar img { display:block; }
-
-#user_profile_title .name { padding-left:50px; line-height: 38px; width: 500px; }
-#user_profile_title .name_with_status { line-height: initial; margin-top:-4px; }
+#user_profile_title .avatar img { display:block; border-radius: 50%; }
+#user_profile_title .name_with_status { line-height: 28px; margin-top:-4px; }
 #user_profile_title .name a { color: #34495E; text-decoration: none; }
 #user_profile_title .name a:hover { text-decoration: underline; }
 
@@ -43,30 +49,36 @@
 
 /* ========================================================================== */
 
-#user_profile_rates{
+#user_profile_rates, #user_profile_ratings {
     float:right;
-    margin-top:6px;
+    position: relative;
 }
-#user_profile_rates .block{
-    float:left;
-    height:20px;
-    line-height:20px;
-    margin-right:5px;
-    padding:5px 10px;
-    border-radius: 6px;
-    font-size:21px;
+#user_profile_ratings {
+    margin-right: 10px;
 }
-
+#user_profile_rates .block, #user_profile_ratings .block {
+    line-height: 20px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 21px;
+    background-color: #ecf0f1;
+    color: #555;
+    text-align: center;
+}
+#user_profile_ratings .block {
+    background-color: #2980b9;
+    color: #FFF;
+}
+.block .user_ratings_hint {
+    line-height: normal;
+    font-size: 12px;
+}
+#user_profile_ratings .positive { color:#FFF; }
 #user_profile_rates .negative { color:red; }
 #user_profile_rates .positive { color:green; }
-
-#user_profile_rates .value{
-    cursor: help;
-}
-
 #user_profile_rates .karma .value,
 #user_profile_rates .karma .thumb{
-    float:left;
+    display: inline-block;
 }
 #user_profile_rates .karma .thumb{
     display:inline-block;
@@ -276,7 +288,19 @@
 #user_profile #information .fieldset .field .title{
     color:#68809B;
 }
+#users_profiles_list .field {
+    line-height: 18px;
+    color: #666;
+}
+#users_profiles_list .title_left {
+    display: inline-block;
+    margin-right: 10px;
+}
+#users_profiles_list .title_left + .value {
+    display: inline-block;
+}
 
+#users_profiles_list .title_top { margin-bottom:5px; }
 /* ========================================================================== */
 
 #users_karma_log_list .date{
@@ -320,14 +344,20 @@
     background-position:-16px 0;
 }
 
-/* ========================================================================== */
-
 #groups_invite_window{ padding:20px; }
 #groups_invite_window h3 { margin:0; }
 #groups_invite_window .list { margin:10px 0; }
 #groups_invite_window .list select { width:300px; }
 
-/* Media Queries ============================================================ */
+.buttons_delete_profile {
+    float: right;
+}
+input.button.delete_profile {
+    background: #c0392b;
+}
+input.button.delete_profile:hover {
+    background: #e74c3c;
+}
 
 @media screen and (max-width: 640px) {
     #user_profile #left_column { float:none; }

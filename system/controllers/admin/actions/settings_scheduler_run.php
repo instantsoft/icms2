@@ -20,7 +20,7 @@ class actionAdminSettingsSchedulerRun extends cmsAction {
         $controller->runHook("cron_{$task['hook']}");
 
         // Обновляем время последнего запуска задачи
-        $this->model->updateSchedulerTaskDate($task['id']);
+        $this->model->updateSchedulerTaskDate($task);
 
         cmsUser::addSessionMessage(sprintf(LANG_CP_SCHEDULER_TASK_RAN, $task['title'], html_date_time()));
 

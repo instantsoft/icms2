@@ -2,6 +2,7 @@ html, body{
     margin:0; padding:0;
     font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
     height:100%;
+    font-size: 14px;
 }
 button, input, select, textarea {
     font-family: inherit;
@@ -12,7 +13,7 @@ button, input, select, textarea {
 a, a.ajaxlink { color: #2980b9; }
 a:hover, a.ajaxlink:hover { color: #d35400; }
 
-#error404{
+#error404, #error403 {
     width:300px;
     height:300px;
     background:#EDEDED;
@@ -26,17 +27,23 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
 }
 
 #error404 h1,
-#error404 h2{
+#error404 h2,
+#error403 h1,
+#error403 h2 {
     margin:0;
     padding: 0;
 }
 
-#error404 h1{
+#error404 h1 {
     font-size:150px;
     color:#bbb;
 }
 
-#error404 h2{
+#error403 h1 {
+    font-size:150px;
+}
+
+#error404 h2 {
     color:#666;
 }
 
@@ -47,11 +54,34 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
     color:#333;
 }
 
+#error403 a {
+    color:#bdc3c7;
+}
+#error403 a:hover {
+    color:#ecf0f1;
+}
+
 #error404 form {
     margin-top: 15px;
 }
-#error404 p {
+#error404 p, #error403 p {
     margin-top: 10px;
+}
+
+#error403 h3 {
+    font-size: 16px;
+    margin: 20px 0 15px;
+}
+
+#error403 {
+    background: #3498db;
+    color: #fff;
+    height: 350px;
+    width: 350px;
+}
+
+#body403 .login_form > h3 {
+    display: none;
 }
 
 #error-maintenance{
@@ -86,3 +116,17 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
 
 #error-maintenance-footer a.ajaxlink { text-decoration:none; border-bottom: dashed 1px #2980b9; }
 #error-maintenance-footer a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #d35400; }
+
+.pre { font-family: monospace; color:#990033; font-size:16px; background:#ffeff3; display:inline-block; padding:15px; }
+#site_error_wrap li { margin-bottom: 4px; }
+#site_error_wrap span { color: #999; }
+#error_body {
+    background-color: #96281B;
+}
+#site_error_wrap {
+    margin: 0 auto;
+    width: 960px;
+    background-color: #FFF;
+    box-sizing: border-box;
+    padding: 20px;
+}

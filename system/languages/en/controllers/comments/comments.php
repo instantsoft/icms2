@@ -18,6 +18,8 @@ define('LANG_COMMENTS_OPT_IS_GUESTS_HINT', 'Unregistered users will be able to a
 define('LANG_COMMENTS_OPT_GUESTS_DELAY', 'Delay between guest comments from one IP');
 define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS', 'Deny guest comments from IPs');
 define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT', 'One IP per line');
+define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_EMAILS', 'Deny guest comments from emails');
+define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_NAMES', 'Deny guest comments from names');
 define('LANG_COMMENTS_DS_ALL', 'All');
 define('LANG_COMMENTS_DS_FRIENDS', 'My friends');
 define('LANG_COMMENTS_DS_MY', 'My');
@@ -53,7 +55,6 @@ define('LANG_COMMENTS_NOTIFY_REPLY', 'Notify on new comment replies');
 define('LANG_COMMENTS_LOW_KARMA', 'Not enough reputation points (required: %s)');
 define('LANG_RULE_COMMENTS_ADD', 'Adding comments');
 define('LANG_RULE_COMMENTS_ADD_APPROVED', 'Adding comments without moderation');
-define('LANG_RULE_COMMENTS_IS_MODERATOR', 'Approval a new comments');
 define('LANG_RULE_COMMENTS_EDIT', 'Editing comments');
 define('LANG_RULE_COMMENTS_EDIT_TIME', 'Time limit for editing, minutes');
 define('LANG_RULE_COMMENTS_DELETE', 'Deleting comments');
@@ -63,9 +64,10 @@ define('LANG_RULE_COMMENTS_KARMA', 'Reputation points that allow to add comments
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Comment rating will effect author\'s rating');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Increase/decrease author\'s reputation for +/- in comments');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Full delete all');
-define('LANG_COMMENTS_MODERATE_NOTIFY', 'Added a new comment. Moderation is needed.');
+define('LANG_COMMENTS_MODERATE_NOTIFY', "Added a new comment. Moderation is needed.\n<blockquote>%s</blockquote>");
 define('LANG_COMMENTS_MODERATE_TITLE', 'Comments on moderation (%s)');
 define('LANG_COMMENTS_ALL_LIST', 'All comments on moderation');
 define('LANG_COMMENTS_APPROVE', 'Approve');
 define('LANG_COMMENTS_MODERATE_HINT', 'The comment will be published after being moderated');
 define('LANG_COMMENTS_LIMIT_NESTING', 'The maximum comments nesting level');
+define('LANG_COMMENTS_RSS_TITLE', 'Comment on %s');

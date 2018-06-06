@@ -16,13 +16,15 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
 
         $form = $this->getForm('ctypes_relation', array('edit', $ctype['id']));
 
-        $form->removeField('basic', 'child_ctype_id');
+        $form->setFieldProperty('basic', 'child_ctype_id', 'is_visible', false);
 
         if ($relation['layout'] != 'tab'){
             $form->hideFieldset('tab-opts');
         }
 
         if ($this->request->has('submit')){
+
+            $form->removeField('basic', 'child_ctype_id');
 
 			$relation = array_merge($relation, $form->parse($this->request, true));
 
@@ -52,6 +54,8 @@ class actionAdminCtypesRelationsEdit extends cmsAction {
             }
 
         }
+
+        $relation['child_ctype_id'] = $relation['target_controller'].':'.$relation['child_ctype_id'];
 
         return $this->cms_template->render('ctypes_relation', array(
             'do'       => 'edit',

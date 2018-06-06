@@ -20,6 +20,20 @@ function grid_controllers($controller){
                 return $item['is_backend'];
             }
         ),
+        'slug' => array(
+            'title' => LANG_ADMIN_CONTROLLER_SLUG,
+            'width' => 300,
+            'editable' => array(
+                'table' => 'controllers',
+                'attributes' => array('placeholder' => '{name}')
+            ),
+            'handler' => function ($v, $row){
+                if(!$v){
+                    return $row['name'];
+                }
+                return $v;
+            }
+        ),
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,
 			'flag' => true,
@@ -47,6 +61,14 @@ function grid_controllers($controller){
 
     $actions = array(
         array(
+            'title' => LANG_CP_PACKAGE_CONTENTS,
+            'class' => 'view ajax-modal',
+            'href' => href_to($controller->name, 'package_files_list', array('controllers', '{id}')),
+            'handler' => function($row){
+                return $row['files'];
+            }
+        ),
+        array(
             'title' => LANG_CONFIG,
             'class' => 'config',
             'href' => href_to($controller->name, 'controllers', array('edit', '{name}')),
@@ -72,4 +94,3 @@ function grid_controllers($controller){
     );
 
 }
-

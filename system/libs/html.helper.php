@@ -2,19 +2,28 @@
 
 /**
  * Выводит строку, безопасную для html
- * @param string $string
+ * @param string $string Строка
+ * @param boolean $print Печатать результат или возвращать, по умолчанию true
  */
-function html($string){
-    echo htmlspecialchars($string);
+function html($string, $print = true){
+
+    $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
+
+    if($print){
+        echo $string; return;
+    }
+
+    return $string;
+
 }
 
 /**
  * Очищает строку от тегов и обрезает до нужной длины
  * @param string $string Строка
- * @param int $max_length Максимальное кол-во символов, по умолчанию false
+ * @param integer $max_length Максимальное кол-во символов, по умолчанию false
  * @return string
  */
-function html_clean($string, $max_length=false){
+function html_clean($string, $max_length = false){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
@@ -32,7 +41,7 @@ function html_clean($string, $max_length=false){
 /**
  * Обрезает строку до заданного кол-ва символов
  * @param string $string Строка
- * @param int $max_length Кол-во символов, которые нужно оставить от начала строки
+ * @param integer $max_length Кол-во символов, которые нужно оставить от начала строки
  * @return string
  */
 function html_strip($string, $max_length){
@@ -47,13 +56,33 @@ function html_strip($string, $max_length){
 /**
  * Формирует ссылку по относительной (без добавления корня URL)
  * @param string $rel_link
+ * @param boolean $is_abs
  * @return string
  */
-function rel_to_href($rel_link){
+function rel_to_href($rel_link, $is_abs = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : '').$rel_link;
+	return ($is_abs ? cmsConfig::get('host') . '/' : cmsConfig::get('root')) .($lang_href ? $lang_href.'/' : '').$rel_link;
+
+}
+
+/**
+ * Возвращает ссылку на профиль пользователя
+ *
+ * @param mixed $user Массив данных пользователя
+ * @param mixed $params
+ * @return string
+ */
+function href_to_profile($user, $params = false){
+
+    if(is_array($user)){
+        return href_to('users', (empty($user['slug']) ? $user['id'] : $user['slug']), $params);
+    } elseif(is_object($user)){
+        return href_to('users', (empty($user->slug) ? $user->id : $user->slug), $params);
+    }
+
+    return href_to('users', $user, $params);
 
 }
 
@@ -62,10 +91,10 @@ function rel_to_href($rel_link){
  * с добавлением пути от корня сайта
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to($controller, $action='', $params=false){
+function href_to($controller, $action = '', $params = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -78,10 +107,10 @@ function href_to($controller, $action='', $params=false){
  * с добавлением хоста сайта
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to_abs($controller, $action='', $params=false){
+function href_to_abs($controller, $action = '', $params = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
@@ -94,10 +123,10 @@ function href_to_abs($controller, $action='', $params=false){
  *
  * @param string $controller
  * @param string $action
- * @param array|str|int $params Параметры, массив
+ * @param array|string|integer $params Параметры, массив
  * @return string
  */
-function href_to_rel($controller, $action='', $params=false){
+function href_to_rel($controller, $action = '', $params = false){
 
     $controller = trim($controller, '/ ');
 
@@ -129,9 +158,10 @@ function href_to_rel($controller, $action='', $params=false){
 
 /**
  * Возвращает ссылку на текущую страницу
+ * @param boolean $add_host
  * @return string
  */
-function href_to_current($add_host=false){
+function href_to_current($add_host = false){
     $lang_href = cmsCore::getLanguageHrefPrefix();
     $lang_href = ($lang_href ? '/'.$lang_href : '');
     if($add_host){
@@ -146,7 +176,7 @@ function href_to_current($add_host=false){
  * @return string
  */
 function href_to_home(){
-    return cmsConfig::get('host').'/'.cmsCore::getLanguageHrefPrefix();
+    return cmsConfig::get('root').cmsCore::getLanguageHrefPrefix();
 }
 
 /**
@@ -157,7 +187,7 @@ function href_to_home(){
 function html_attr_str($attributes){
     $attr_str = '';
     unset($attributes['class']);
-    if (sizeof($attributes)){
+    if (is_array($attributes)){
         foreach($attributes as $key=>$val){
             if(is_bool($val)){
                 if($val === true){
@@ -183,7 +213,7 @@ function default_images($type, $preset) {
  * @param string $size_preset Название пресета
  * @return string
  */
-function html_avatar_image_src($avatars, $size_preset='small', $is_relative=true){
+function html_avatar_image_src($avatars, $size_preset = 'small', $is_relative = true){
 
     $config = cmsConfig::getInstance();
 
@@ -209,7 +239,7 @@ function html_avatar_image_src($avatars, $size_preset='small', $is_relative=true
         }
     }
 
-    return $src;
+    return html($src, false);
 
 }
 
@@ -250,32 +280,25 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
         }
     }
 
-    return $src;
+    return html($src, false);
 
 }
 
-function html_wysiwyg($field_id, $content='', $wysiwyg=false){
+function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = array()){
 
-    $config = cmsConfig::getInstance();
-
-    if (!$wysiwyg){
-        $config = cmsConfig::getInstance();
-        $wysiwyg = $config->wysiwyg;
-    }
+    if (!$wysiwyg){ $wysiwyg = cmsConfig::get('wysiwyg'); }
 
 	$connector = 'wysiwyg/' . $wysiwyg . '/wysiwyg.class.php';
 
-	if (!file_exists($config->root_path . $connector)){
-		return '<textarea id="'.$field_id.'" name="'.$field_id.'">'.$content.'</textarea>';
+	if (!cmsCore::includeFile($connector)){
+		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.html($content, false).'</textarea>';
 	}
-
-    cmsCore::includeFile($connector);
 
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 
     $editor = new $class_name();
 
-    ob_start(); $editor->displayEditor($field_id, $content);
+    ob_start(); $editor->displayEditor($field_id, $content, $config);
 
     return ob_get_clean();
 
@@ -347,55 +370,43 @@ function html_csrf_token(){
  * @param string $one
  * @param string $two
  * @param string $many
+ * @param string $zero_text
  * @return string
  */
-function html_spellcount($num, $one, $two=false, $many=false) {
+function html_spellcount($num, $one, $two = false, $many = false, $zero_text = LANG_NO) {
 
     if (!$two && !$many){
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (mb_strstr($num, '.')){
-		return $num.' '.$two;
+	if (!$num){
+		return $zero_text.' '.$many;
 	}
 
-	if ($num==0){
-		return LANG_NO . ' ' . $many;
-	}
-
-    if ($num%10==1 && $num%100!=11){
-        return $num.' '.$one;
-    }
-    elseif($num%10>=2 && $num%10<=4 && ($num%100<10 || $num%100>=20)){
-        return $num.' '.$two;
-    }
-    else{
-        return $num.' '.$many;
-    }
-
-    return $num.' '.$one;
+    return $num.' '.html_spellcount_only($num, $one, $two, $many);
 
 }
 
-function html_spellcount_only($num, $one, $two=false, $many=false) {
+function html_spellcount_only($num, $one, $two = false, $many = false) {
 
     if (!$two && !$many){
         list($one, $two, $many) = explode('|', $one);
     }
 
-	if (mb_strstr($num, '.')){
+	if (strpos($num, '.') !== false){
 		return $two;
 	}
 
-    if ($num%10==1 && $num%100!=11){
+    if ($num%10 == 1 && $num%100 != 11){
         return $one;
     }
-    elseif($num%10>=2 && $num%10<=4 && ($num%100<10 || $num%100>=20)){
+    elseif($num%10 >= 2 && $num%10 <= 4 && ($num%100 < 10 || $num%100 >= 20)){
         return $two;
     }
     else{
         return $many;
     }
+
     return $one;
 
 }

@@ -55,7 +55,7 @@ $(document).ready(function(){
             var tabs = $(this);
 
             var dropdown = $("<select>").prependTo(tabs);
-            $("ul > li > a", tabs).each(function() {
+            $("> ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
                     value   : el.attr('href'),
@@ -80,26 +80,62 @@ $(document).ready(function(){
 	});
 
     if($('div.widget.fixed_actions_menu').length){
-        $('#breadcrumbs').prepend($('div.widget.fixed_actions_menu'));
-        $('div.widget.fixed_actions_menu').on('click', function (){
-            if($(this).hasClass('clicked')){ return; }
-            var __menu = $(this).addClass('clicked');
-            var hide_func = function (){
-                $(document).one('click', function(event) {
-                    if ($(event.target).closest(__menu).length) { hide_func(); return; }
-                    $(__menu).removeClass('clicked');
-                });
-            };
-            hide_func();
-        });
+	if ($('#breadcrumbs').length){
+		$('#breadcrumbs').prepend($('div.widget.fixed_actions_menu'));
+		$('div.widget.fixed_actions_menu').on('click', function (){
+			if($(this).hasClass('clicked')){ return; }
+			var __menu = $(this).addClass('clicked');
+			var hide_func = function (){
+				$(document).one('click', function(event) {
+					if ($(event.target).closest(__menu).length) { hide_func(); return; }
+					$(__menu).removeClass('clicked');
+				});
+			};
+			hide_func();
+		});
+	} else {
+		$('div.widget.fixed_actions_menu').removeClass('fixed_actions_menu');
+	}
     };
 
 });
+
+icms.menu = (function ($) {
+
+    this.onDocumentReady = function(){
+
+        $(document).on('click', function(event) {
+            if ($(event.target).closest('.dropdown_menu').length) {
+                $('.dropdown_menu > input').not($(event.target).closest('.dropdown_menu > input')).prop('checked', false);
+                return;
+            }
+            $('.dropdown_menu > input').prop('checked', false);
+        });
+
+    };
+
+    return this;
+
+}).call(icms.menu || {},jQuery);
 
 icms.forms = (function ($) {
 
     this.submitted = false;
     this.form_changed = false;
+    this.csrf_token = false;
+
+    var _this = this;
+
+    this.getCsrfToken = function (){
+        if(this.csrf_token === false){
+            this.csrf_token = $('meta[name="csrf-token"]').attr('content');
+        }
+        return this.csrf_token;
+    };
+
+    this.setCsrfToken = function (csrf_token){
+        this.csrf_token = csrf_token;
+    };
 
     this.initUnsaveNotice = function(){
 
@@ -138,14 +174,15 @@ icms.forms = (function ($) {
         return o;
 	};
 
-    this.submit = function(){
+    this.submit = function(selector){
+        selector = selector || '.button-submit';
         icms.forms.submitted = true;
-        $('.button-submit').trigger('click');
+        $(selector).trigger('click');
     };
 
     //====================================================================//
 
-	this.updateChildList = function (child_id, url, value){
+	this.updateChildList = function (child_id, url, value, current_value){
 
 		var child_list = $('#'+child_id);
 
@@ -155,10 +192,13 @@ icms.forms = (function ($) {
 
 		child_list.html('');
 
+        current_value = current_value || '';
+
 		$.post(url, {value: value}, function(result){
 
 			for(var k in result){
-				child_list.append('<option value="'+k+'">'+result[k]+'</option>');
+                var __selected = (k === current_value ? ' selected' : '');
+				child_list.append('<option value="'+k+'"'+__selected+'>'+result[k]+'</option>');
 			}
 
             $(child_list).trigger('chosen:updated');
@@ -173,11 +213,15 @@ icms.forms = (function ($) {
 
     //====================================================================//
 
-    this.submitAjax = function(form){
+    this.submitAjax = function(form, additional_params){
 
         icms.forms.submitted = true;
 
         var form_data = this.toJSON($(form));
+
+        if(additional_params){
+            $.extend(form_data, additional_params);
+        }
 
         var url = $(form).attr('action');
 
@@ -191,7 +235,10 @@ icms.forms = (function ($) {
 
             if (result.errors == false){
                 if ("callback" in result){
-                    window[result.callback](form_data, result);
+                    window[result.callback](form_data, result); return;
+                }
+                if (result.success_text){
+                    icms.modal.alert(result.success_text);
                 }
                 return;
             }
@@ -283,6 +330,85 @@ icms.forms = (function ($) {
         render_symbols_count();
     };
 
+    this.getInputVal = function(el){
+        if($(el).is(':checkbox,:radio')){
+            return $(el+':checked').val();
+        }
+        return $(el).val();
+    };
+    this.inputNameToId = function(name){
+        name = name.replace(/\:/g,'_');
+        return name;
+    };
+    this.inputNameToElName = function(name){
+        name = name.split(':');
+        return (typeof name !== 'string' && name.length > 1) ? name.shift()+'['+name.join('][')+']' :  name;
+    };
+    this.VDListeners = {};
+    this.VDRules = {from:{},depends:{}};
+    this.addVisibleDepend = function(form_id, field_id, rules){
+        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ /* здесь все зависимости поля field_name */
+            this.VDRules.depends[form_id+'-'+field_id] = rules; /* array('is_cats' => array('show' => array('1'))) */
+        }else{
+            $.extend(this.VDRules.depends[form_id+'-'+field_id], rules);
+        }
+        for(var f in rules){if(rules.hasOwnProperty(f)){
+            if(typeof this.VDRules.from[form_id+'-'+f] === 'undefined'){this.VDRules.from[form_id+'-'+f] = {};}
+            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ // здесь все, кто зависит от поля f
+                this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; /* array('show' => array('1')) */
+            }else{
+                $.extend(this.VDRules.from[form_id+'-'+f][field_id], rules[f]);
+            }
+            if(typeof this.VDListeners[form_id+'-'+f] === 'undefined'){
+                this.VDListeners[form_id+'-'+f] = '#'+form_id+' [name="'+this.inputNameToElName(f)+'"]';
+                $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change', function (){
+                    for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ /* перебор тех, кто зависит от этого поля f */
+                        var display = null; /* если не будет show */
+
+                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                            if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['show'] !== 'undefined'){
+                                if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']) !== -1){
+                                    display = true;
+                                    break;
+                                }else{
+                                    display = false;
+                                }
+                            }
+                        }}
+
+                        if(display === null){display = true;}
+
+                        if(display){ /* скрытие сильнее показа */
+                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                                if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['hide'] !== 'undefined'){
+                                    if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']) !== -1){
+                                        display = false;
+                                        break;
+                                    }else{
+                                        display = true;
+                                    }
+                                }
+                            }}
+                        }
+
+                        if(display){
+                            $('#f_'+_this.inputNameToId(field)).show();
+                        }else{
+                            $('#f_'+_this.inputNameToId(field)).hide();
+                        }
+
+                    }}
+                });
+            }
+        }}
+        return this;
+    };
+    this.VDReInit = function(){
+        for(var l in this.VDListeners){if(this.VDListeners.hasOwnProperty(l)){
+            $(this.VDListeners[l]).triggerHandler('change');
+        }}
+    };
+
 	return this;
 
 }).call(icms.forms || {},jQuery);
@@ -315,6 +441,78 @@ icms.events = (function ($) {
 	return this;
 
 }).call(icms.events || {},jQuery);
+
+icms.pagebar = function(id, initial_page, has_next, is_modal){
+
+    initial_page = initial_page || 1;
+
+    var page = 1;
+
+    var link = $(id);
+
+    var showMore = function(){
+
+        var list_wrap = $(link).prev();
+
+        if(!has_next){
+            if(initial_page > 1){
+                return true;
+            }
+            $('body,html').animate({
+                scrollTop: $(list_wrap).offset().top
+                }, 500
+            );
+            return false;
+        }
+
+        $(link).addClass('show_spinner');
+
+        page += 1;
+
+        var post_params = $(link).data('url-params');
+        post_params.page = page;
+
+        $.post($(link).data('url'), post_params, function(data){
+
+            var first_page_url = $(link).data('first-page-url');
+
+            $(link).removeClass('show_spinner');
+
+            if (!data.html) { return; }
+
+            has_next = data.has_next;
+            page = data.page;
+
+            $(list_wrap).append(data.html);
+
+            if(!has_next){
+                $('span', link).html($('span', link).data('to-first'));
+                $(link).attr('href', first_page_url);
+            }
+
+            var _sep = first_page_url.indexOf('?') !== -1 ? '&' : '?';
+
+            if(!is_modal){
+                window.history.pushState({link: first_page_url+_sep+'page='+page}, '', first_page_url+_sep+'page='+page);
+            }
+
+            if(is_modal){
+                icms.modal.resize();
+            }
+
+        }, 'json');
+
+        return false;
+
+    };
+
+    $(link).on('click', function (){
+        return showMore();
+    });
+
+};
+
+
 $.expr[':'].Contains = $.expr.createPseudo(function(arg) {
     return function( elem ) {
         return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
@@ -374,4 +572,18 @@ function initTabs(selector){
     $('> select', selector).change(function() {
         $(selector+' ul.tabbed > li > a[href = "'+$(this).find("option:selected").val()+'"]').trigger('click');
     });
+}
+function insertJavascript(filepath, onloadCallback) {
+    if ($('head script[src="'+filepath+'"]').length > 0){
+        return;
+    }
+    var el = document.createElement('script');
+    el.setAttribute('type', 'text/javascript');
+    el.setAttribute('src', filepath);
+    if (typeof(onloadCallback) == 'function') {
+        el.setAttribute('onload', function() {
+            onloadCallback();
+        });
+    }
+    $('head').append(el);
 }

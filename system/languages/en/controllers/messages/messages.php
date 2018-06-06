@@ -10,7 +10,7 @@
     define('LANG_PM_ACTION_FORGIVE',        'Unignore');
     define('LANG_PM_DELETE_CONTACT',        'Delete contact');
     define('LANG_PM_DELETE_CONTACT_CONFIRM','Delete the contact from the list?');
-    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Add the contact to the blacklist?\nYou will not receive messages from this user');
+    define('LANG_PM_IGNORE_CONTACT_CONFIRM','Add the contact to the blacklist? You will not receive messages from this user');
     define('LANG_PM_SEND_TO_USER',          'Write a message');
     define('LANG_PM_SEND_ERROR',            'Message send error');
     define('LANG_PM_YOU_ARE_IGNORED',       'This user added you to the blacklist');
@@ -20,6 +20,7 @@
     define('LANG_PM_TIME_DELETE_OLD',       'How to store deleted messages?');
     define('LANG_PM_TIME_DELETE_OLD_HINT',  '0 - always keep');
     define('LANG_PM_REFRESH_TIME',          'New messages requests interval');
+    define('LANG_PM_USE_QUEUE',             'Use the queue system to send e-mail');
     define('LANG_PM_PRIVACY_CONTACT',       'Who can send private messages to you?');
     define('LANG_PM_NOTIFY_NEW',            'Notify on new messages');
     define('LANG_PM_DESKTOP_NOTIFY_NEW',    'Messages from %s');
@@ -28,3 +29,14 @@
     define('LANG_PM_DO_RESTORE',            ' <a href="#" onclick="return icms.messages.restoreMsg(this);">Restore</a>');
     define('LANG_PM_CLEAR_NOTICE',          'Clear all notifications');
     define('LANG_PM_CLEAR_NOTICE_CONFIRM',  'Really clear all notifications?');
+    define('LANG_PM_PMAILING',              'Mass send messages');
+    define('LANG_PM_PMAILING_GROUPS',       'User groups for mailing');
+    define('LANG_PM_PMAILING_TYPE',         'How to send a message');
+    define('LANG_PM_PMAILING_TYPE_NOTIFY',  'As notification');
+    define('LANG_PM_PMAILING_TYPE_MESSAGE', 'As a private message');
+    define('LANG_PM_PMAILING_SENDED',       '%s sended');
+    define('LANG_PM_NOTIFY',                'notification|notification|notifications');
+    define('LANG_PM_MESSAGE',               'message|message|messages');
+    define('LANG_PM_SENDER_USER_ID',        'From whose name should I send');
+    define('LANG_PM_SENDER_USER_ID_HINT',   'Enter the user email. If not specified, the message will be sent from you.');
+    define('LANG_PM_PMAILING_NOT_RECIPIENTS', 'No recipients according to specified criteria');

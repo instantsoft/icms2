@@ -66,6 +66,7 @@ function create_config($path, $file){
         'ct_default'			=> 'content',
         'frontpage'             => 'none',
         'debug'					=> 0,
+        'manifest_from_files'   => 0,
         'emulate_lag'			=> '',
         'cache_enabled'			=> 0,
         'cache_method'			=> 'files',
@@ -83,11 +84,14 @@ function create_config($path, $file){
         'mail_smtp_auth'		=> 1,
         'mail_smtp_user'		=> 'user@example.com',
         'mail_smtp_pass'		=> '',
-        'is_check_updates'		=> 1,
+        'is_check_updates'		=> $_SESSION['install']['site']['is_check_updates'],
         'detect_ip_key'		    => 'REMOTE_ADDR',
         'allow_ips'		        => '',
         'default_editor'		=> 'redactor',
-        'show_breadcrumbs'		=> 1
+        'show_breadcrumbs'		=> 1,
+        'check_spoofing_type'   => 0,
+        'production_time'       => time(),
+        'controllers_without_widgets' => array('admin')
     );
 
     write_config($file, $config);
@@ -107,7 +111,7 @@ function write_config($file, $config){
 
         $value = var_export($value, true);
 
-        $tabs = 7 - ceil((mb_strlen($key)+3)/4);
+        $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
         $dump .= "\t'{$key}'";
         $dump .= str_repeat("\t", $tabs);

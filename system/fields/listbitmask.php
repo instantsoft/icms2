@@ -10,6 +10,14 @@ class fieldListBitmask extends cmsFormField {
 
     public function getOptions(){
         return array(
+            new fieldCheckbox('is_checkbox_multiple', array(
+                'title'   => LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE,
+                'default' => true
+            )),
+            new fieldString('list_class', array(
+                'title'   => LANG_PARSER_BITMASK_LIST_CLASS,
+                'default' => 'multiple_tags_list'
+            )),
             new fieldNumber('max_length', array(
                 'title'   => LANG_PARSER_BITMASK_MAX,
                 'hint'    => LANG_PARSER_BITMASK_MAX_HINT,
@@ -17,23 +25,71 @@ class fieldListBitmask extends cmsFormField {
                 'rules' => array(
                     array('min', 1)
                 )
+            )),
+            new fieldCheckbox('is_autolink', array(
+                'title' => LANG_PARSER_LIST_IS_AUTOLINK,
+                'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
+                'default' => false
             ))
         );
     }
 
     public function getFilterInput($value) {
 
-        $items = $this->getListItems();
+        $this->data['items']    = $this->getListItems();
+        $this->data['selected'] = array();
 
         if(is_array($value)){
             foreach ($value as $k => $v) {
-                if(is_numeric($v)){ $value[$k] = intval($v); }
+                if(is_numeric($v)){ $this->data['selected'][$k] = intval($v); }
             }
         } else {
-            $value = array();
+            $this->data['selected'] = array();
         }
 
-		return html_select_multiple($this->name, $items, $value);
+        $this->element_title = '';
+
+        return parent::getInput($value);
+
+    }
+
+    public function getStringValue($value){
+
+        if (!$value) { return ''; }
+
+        $items = $this->getListItems();
+
+        $string = '';
+
+		if ($items) {
+
+			$pos = 0; $list = array();
+
+			foreach($items as $key => $item){
+
+                if(!is_array($value)){
+
+                    if (substr($value, $pos, 1) == 1){
+                        $list[] = $item;
+                    }
+                    $pos++;
+                    if ($pos+1 > strlen($value)) { break; }
+
+                } else {
+
+                    if(in_array($key, $value)){
+                        $list[] = $item;
+                    }
+
+                }
+
+			}
+
+            $string = implode(', ', $list);
+
+		}
+
+        return $string;
 
     }
 
@@ -46,14 +102,19 @@ class fieldListBitmask extends cmsFormField {
 		$html = '';
 
 		if ($items) {
+            $is_autolink = $this->getOption('is_autolink');
 			$pos = 0;
-			$html .= '<ul>';
+			$html .= '<ul class="'.$this->getOption('list_class').'">';
 			foreach($items as $key => $item){
-				if (mb_substr($value, $pos, 1) == 1){
-					$html .= '<li>' . htmlspecialchars($item) . '</li>';
+				if (substr($value, $pos, 1) == 1){
+                    if($is_autolink){
+                        $html .= '<li><a class="listbitmask_autolink '.$this->item['ctype_name'].'_listbitmask_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($pos+1).'">'.htmlspecialchars($item).'</a></li>';
+                    } else {
+                        $html .= '<li>' . htmlspecialchars($item) . '</li>';
+                    }
 				}
 				$pos++;
-				if ($pos+1 > mb_strlen($value)) { break; }
+				if ($pos+1 > strlen($value)) { break; }
 			}
 			$html .= '</ul>';
 		}

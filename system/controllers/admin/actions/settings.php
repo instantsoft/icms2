@@ -42,14 +42,24 @@ class actionAdminSettings extends cmsAction {
                     files_clear_directory($this->cms_config->cache_path.'data/');
                 }
 
+                $values = cmsEventsManager::hook('site_settings_before_update', $values);
+
                 $result = $this->cms_config->save($values);
 
                 if (!$result){
+
                     $errors = array();
+
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_NOT_WRITABLE, 'error');
+
                 } else {
+
+                    cmsEventsManager::hook('site_settings_after_update', $values);
+
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                     $this->redirectToAction('settings');
+
                 }
 
             } else {
@@ -59,6 +69,8 @@ class actionAdminSettings extends cmsAction {
             }
 
         }
+
+        $templates_has_options = array();
 
         $tpls = cmsCore::getTemplates();
         foreach ($tpls as $tpl) {

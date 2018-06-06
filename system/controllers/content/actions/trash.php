@@ -44,7 +44,7 @@ class actionContentTrash extends cmsAction {
 
         $ctype = $ctypes[$ctype_name];
 
-		$list_html = $this->filterDeleted($ctype)->renderItemsList($ctype, $page_url, true);
+		$list_html = $this->filterDeleted($ctype)->setListContext('trash')->renderItemsList($ctype, $page_url, true);
 
         return $this->cms_template->render('trash', array(
             'is_index'   => $is_index,
@@ -74,7 +74,7 @@ class actionContentTrash extends cmsAction {
 
     private function filterDeleted($ctype){
 
-        $is_moderator = $this->cms_user->is_admin || $this->model->userIsContentTypeModerator($ctype['name'], $this->cms_user->id);
+        $is_moderator = $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($ctype['name'], $this->cms_user->id);
 
         if($is_moderator){
             $this->model->disableApprovedFilter()->disablePubFilter()->disablePrivacyFilter();

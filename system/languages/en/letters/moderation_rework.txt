@@ -1,0 +1,15 @@
+[subject:Item is returned for revision - {site}]
+
+Hello, {nickname}.
+
+The moderator rejected the placement and returned the page for revision.
+
+<b>Title:</b> {page_title}
+<b>URL:</b> <a href="{page_url}">{page_url}</a>
+
+<b>Remarks:</b>
+{reason}
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

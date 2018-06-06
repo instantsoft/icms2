@@ -18,7 +18,7 @@ define('LANG_REDIRECT_BLACK_LIST', 'Domain blacklist');
 define('LANG_REDIRECT_BLACK_LIST_HINT', 'Links from these domains will be always blocked.');
 define('LANG_REDIRECT_IS_CHECK_REFER', 'Check HTTP referer');
 define('LANG_REDIRECT_IS_CHECK_LINK', 'Check links');
-define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Links are checked through the <a href="https://vk.com/dev/utils.checkLink" target="_blank">Vkontakte Open Method</a>');
+define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Links are checked through the <a href="https://vk.com/dev/utils.checkLink" target="_blank" rel="noopener noreferrer">Vkontakte Open Method</a>');
 define('LANG_REDIRECT_WHITE_LIST', 'Domain whitelist');
 define('LANG_REDIRECT_WHITE_LIST_HINT', 'These domains will not be checked.');
 define('LANG_REDIRECT_REDIRECT_TIME', 'Link timer');

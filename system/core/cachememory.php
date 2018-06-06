@@ -2,16 +2,20 @@
 class cmsCacheMemory {
 
     private $memcache;
+    private $site_namespace;
+    private $config;
+
+    public function __construct($config) {
+
+        $this->config = $config;
+
+        $this->site_namespace = 'instantcms.'.sprintf('%u', crc32($config->host));
+
+    }
 
     public function set($key, $value, $ttl){
 
-        list($ns, $key) = $this->getNamespaceAndKey($key);
-
-        $ns_value = $this->getNamespaceValue($ns);
-
-        $key = implode('.', array($ns_value, $ns, $key));
-
-        return $this->memcache->set($key, serialize($value), false, $ttl);
+        return $this->memcache->set($this->getKey($key), serialize($value), false, $ttl);
 
     }
 
@@ -21,25 +25,18 @@ class cmsCacheMemory {
 
     public function get($key){
 
-        list($ns, $key) = $this->getNamespaceAndKey($key);
-
-        $ns_value = $this->getNamespaceValue($ns);
-
-        $key = implode('.', array($ns_value, $ns, $key));
-
-        $value = $this->memcache->get($key);
-
+        $value = $this->memcache->get($this->getKey($key));
         if (!$value) { return false; }
 
         return unserialize($value);
 
     }
 
-    public function clean($ns=false){
+    public function clean($ns = false){
 
         if ($ns){
 
-            return $this->memcache->increment("namespace:{$ns}");
+            return $this->memcache->increment($this->getNamespaceKey($ns));
 
         } else {
 
@@ -50,10 +47,13 @@ class cmsCacheMemory {
     }
 
     public function start(){
-        $config = cmsConfig::getInstance();
+
         $this->memcache = new Memcache;
-        $this->memcache->connect($config->cache_host, $config->cache_port) or die('Memcache connect error');
+
+        $this->memcache->connect($this->config->cache_host, $this->config->cache_port) or die('Memcache connect error');
+
         return true;
+
     }
 
 
@@ -62,31 +62,35 @@ class cmsCacheMemory {
         return true;
     }
 
-    private function getNamespaceAndKey($key){
+    private function getKey($_key){
 
-        $ns = str_replace('.', '/', $key);
-        $key = explode('/', $ns);
+        $key_path = explode('.', $_key);
 
-        $ns = dirname($ns);
-        $key = $key[sizeof($key)-1];
+        $key = array_pop($key_path);
+        $ns  = implode('.', $key_path);
 
-        $ns = str_replace('/', '.', $ns);
-
-        return array($ns, $key);
+        return implode('.', array($this->site_namespace, $this->getNamespaceValue($ns), $ns, $key));
 
     }
 
     private function getNamespaceValue($ns){
 
-        $ns_value = $this->memcache->get("namespace:{$ns}");
+        $ns_value = $this->memcache->get($this->getNamespaceKey($ns));
 
-        if($ns_value===false) {
-            $ns_value = 1;
-            $this->memcache->set("namespace:{$ns}", $ns_value, false, 86400);
+        if($ns_value === false) {
+
+            $ns_value = time();
+
+            $this->memcache->set($this->getNamespaceKey($ns), $ns_value, false, 86400);
+
         }
 
         return $ns_value;
 
+    }
+
+    private function getNamespaceKey($ns) {
+        return $this->site_namespace.'.namespace:'.$ns;
     }
 
 }

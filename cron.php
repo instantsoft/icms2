@@ -5,10 +5,24 @@
     // Если планируете запускать задачи CRON через curl или иные http запросы, закомментируйте строку ниже
     if(PHP_SAPI != 'cli') { die('Access denied'); }
 
-	$_SERVER['DOCUMENT_ROOT'] = dirname(__FILE__);
-
     // Инициализация
-    require_once "bootstrap.php";
+    require_once 'bootstrap.php';
+
+    // Запрещаем дублирующие запуски
+    $lock_file = cmsConfig::get('cache_path').'cron_lock';
+    $lockfp    = fopen($lock_file, 'w');
+
+    // Если блокировку получить не удалось, значит скрипт еще работает
+    // и запуск нужно запретить
+    if (!flock($lockfp, LOCK_EX | LOCK_NB)) {
+        exit;
+    }
+
+    // По окончании работы необходимо снять блокировку и удалить файл
+    register_shutdown_function(function() use ($lockfp, $lock_file) {
+        flock($lockfp, LOCK_UN);
+        @unlink($lock_file);
+    });
 
     // Подключаем шаблонизатор, чтобы был подключен хелпер с функциями
     cmsTemplate::getInstance();
@@ -16,11 +30,28 @@
     // Подключение модели
     $model = cmsCore::getModel('admin');
 
-    // Получение списка задач для выполнения
-    $tasks = $model->getPendingSchedulerTasks();
+    // id задачи
+    // id передаётся вторым параметром, первым передаётся имя домена
+    $task_id = isset($argv[2]) ? (int)$argv[2] : 0;
+
+    // если id задачи передано, запускаем только её
+    if($task_id){
+
+        $task = $model->getSchedulerTask($task_id);
+
+        if($task){
+            $tasks = array($task['id'] => $task);
+        }
+
+    } else {
+
+        // Иначе получаем весь список задач для выполнения
+        $tasks = $model->getPendingSchedulerTasks();
+
+    }
 
     // Если задач нет, выходим
-    if (!$tasks) { exit; }
+    if (empty($tasks)) { exit; }
 
     // Коллекция контроллеров
     $controllers = array();
@@ -51,10 +82,19 @@
 
         }
 
-        // Выполняем хук
-        $controller->runHook("cron_{$task['hook']}");
+        try {
 
-        // Обновляем время последнего запуска задачи
-        $model->updateSchedulerTaskDate($task['id']);
+            // Выполняем хук
+            $controller->runHook("cron_{$task['hook']}");
+
+            // Обновляем время последнего запуска задачи
+            $model->updateSchedulerTaskDate($task);
+
+        } catch (Exception $e) {
+
+            // выключаем ошибочное задание
+            $model->toggleSchedulerPublication($task['id'], 0);
+
+        }
 
     }

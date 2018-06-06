@@ -2,6 +2,7 @@
 class cmsController {
 
     private static $controllers;
+    private static $mapping;
 
     public $name;
     public $title;
@@ -14,6 +15,19 @@ class cmsController {
     public $root_path;
 
     /**
+     * Контекст списка записей
+     * @var string
+     */
+    private $list_type = 'category_view';
+    /**
+     * Если для контроллера задан ремап
+     * и это свойство установлено в true
+     * редиректа со старого адреса не будет
+     *
+     * @var boolean
+     */
+    public $disallow_mapping_redirect = false;
+    /**
      * Флаг, что контроллер должен работать только после
      * регистрации в БД
      * @var boolean
@@ -25,6 +39,11 @@ class cmsController {
      * @var boolean
      */
     public $useSeoOptions = false;
+    /**
+     * Флаг наличия SEO паттернов для страниц записей
+     * @var boolean
+     */
+    public $useItemSeoOptions = false;
 
     /**
      * Флаг блокировки прямого вызова экшена
@@ -34,10 +53,20 @@ class cmsController {
      */
     public $lock_explicit_call = null;
 
+    /**
+     * Если необходимо использовать у контроллера
+     * не свою модель и/или своя модель
+     * будет наследоваться от модели какого-то контроллера
+     * укажите его в этом параметре в классе своего контроллера
+     *
+     * @var string|array
+     */
+    protected $outer_controller_model = '';
+
     protected $callbacks = array();
     protected $useOptions = false;
 
-    function __construct($request){
+    function __construct( cmsRequest $request){
 
         self::loadControllers();
 
@@ -47,7 +76,7 @@ class cmsController {
 
         $this->root_path = $this->cms_config->root_path . 'system/controllers/' . $this->name . '/';
 
-        $this->request = $request;
+        $this->setRequest($request);
 
         cmsCore::loadControllerLanguage($this->name);
 
@@ -55,8 +84,14 @@ class cmsController {
 
         $this->title = defined($title_constant) ? constant($title_constant) : $this->name;
 
+        if($this->outer_controller_model){
+            cmsCore::includeModel($this->outer_controller_model);
+        }
+
         if (cmsCore::isModelExists($this->name)){
             $this->model = cmsCore::getModel($this->name);
+        } elseif($this->outer_controller_model) {
+            $this->model = cmsCore::getModel($this->outer_controller_model);
         }
 
         if ($this->useOptions){
@@ -65,6 +100,10 @@ class cmsController {
 
         $this->loadCallback();
 
+    }
+
+    public function setRequest( cmsRequest $request) {
+        $this->request = $request; return $this;
     }
 
     /////////////////    Набор методов для коллбэков    ////////////////////////
@@ -99,7 +138,7 @@ class cmsController {
 
     protected function loadCmsObj($name) {
 
-        if(strpos($name, 'cms') === 0){
+        if(strpos($name, 'cms_') === 0){
 
             $class_name = string_to_camel('_', $name);
 
@@ -123,12 +162,33 @@ class cmsController {
             return $this->{$name};
         }
 
+        if(strpos($name, 'controller_') === 0){
+            $this->{$name} = cmsCore::getController(str_replace('controller_', '', $name), $this->request);
+            return $this->{$name};
+        }
+
+        if(strpos($name, 'model_') === 0){
+            $this->{$name} = cmsCore::getModel(str_replace('model_', '', $name));
+            return $this->{$name};
+        }
+
         return null;
 
     }
 
     public function setRootURL($root_url){
         $this->root_url = $root_url;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function setListContext($list_type) {
+        $this->list_type = $list_type; return $this;
+    }
+
+    public function getListContext() {
+        return $this->list_type;
     }
 
 //============================================================================//
@@ -143,6 +203,9 @@ class cmsController {
         return (array)self::loadOptions($this->name);
 
     }
+    public function setOption($key, $val){
+        $this->options[$key] = $val; return $this;
+    }
 
     /**
      * Проверяет включен ли текущий контроллер
@@ -154,6 +217,10 @@ class cmsController {
 
     public function isControllerInstalled($name) {
         return isset(self::$controllers[$name]);
+    }
+
+    public function hasSlug() {
+        return !empty(self::$controllers[$this->name]['slug']) ? self::$controllers[$this->name]['slug'] : false;
     }
 
     public function isControllerEnabled($name) {
@@ -175,11 +242,37 @@ class cmsController {
         return true;
     }
 
+    public static function getControllersMapping() {
+
+        if (self::$mapping !== null) { return self::$mapping; }
+
+        self::$mapping = array();
+
+        self::loadControllers();
+
+        foreach (self::$controllers as $controller) {
+            if(!empty($controller['slug'])){
+                self::$mapping[$controller['name']] = $controller['slug'];
+            }
+        }
+
+        return self::$mapping;
+
+    }
+
     private static function loadControllers() {
 
         if(!isset(self::$controllers)){
 
             $model = new cmsModel();
+
+            $model->selectList(array(
+                'i.id'         => 'id',
+                'i.is_enabled' => 'is_enabled',
+                'i.options'    => 'options',
+                'i.name'       => 'name',
+                'i.slug'       => 'slug'
+            ), true);
 
             self::$controllers = $model->useCache('controllers')->get('controllers', function ($item, $model) {
                 $item['options'] = cmsModel::yamlToArray($item['options']);
@@ -374,9 +467,6 @@ class cmsController {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Выполняет экшен, находящийся в отдельном файле ./actions/$action_name.php
      * @param str $action_name
@@ -387,7 +477,15 @@ class cmsController {
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
+        if (!is_readable($action_file)){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $action_file));
+        }
+
         include_once $action_file;
+
+        if(!class_exists($class_name, false)){
+            cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
+        }
 
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){
@@ -403,7 +501,79 @@ class cmsController {
             cmsCore::error404();
         }
 
+        // проверяем параметры если нужно
+        $params_error = $this->validateRequestParams($action_object);
+        if($params_error !== false){
+            if ($this->request->isAjax()){
+                return $this->cms_template->renderJSON(array('error' => true, 'errors' => $params_error, 'message' => sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error)))));
+            } else {
+                cmsCore::error(LANG_ERROR, sprintf(LANG_REQUEST_PARAMS_ERROR, implode(', ', array_keys($params_error))));
+            }
+        }
+
         return call_user_func_array(array($action_object, 'run'), $params);
+
+    }
+
+    /**
+     * Проверяет параметры запроса, если они заданы
+     * @param object $action_object
+     * @return boolean
+     */
+    public function validateRequestParams($action_object) {
+
+        if(empty($action_object->request_params)){
+            return false;
+        }
+
+        $errors = array();
+
+        // валидация аналогична валидации форм
+        foreach ($action_object->request_params as $param_name => $rules) {
+
+            $value = $this->request->get($param_name, null);
+
+            if (is_null($value) && isset($rules['default'])) {
+
+                $value = $rules['default'];
+
+                $this->request->set($param_name, $value);
+
+            } elseif(!is_null($value) && isset($rules['default'])){
+
+                $value = $this->request->get($param_name, $rules['default']);
+
+                // для применения типизации переменной
+                $this->request->set($param_name, $value);
+
+            }
+
+            foreach ($rules['rules'] as $rule) {
+
+                if (!$rule) { continue; }
+
+                $validate_function = "validate_{$rule[0]}";
+
+                $rule[] = $value;
+
+                unset($rule[0]);
+
+                $result = call_user_func_array(array($this, $validate_function), $rule);
+
+                // если получилось false, то дальше не проверяем, т.к.
+                // ошибка уже найдена
+                if ($result !== true) {
+                    $errors[$param_name] = $result;
+                    break;
+                }
+
+            }
+
+        }
+
+        if (!sizeof($errors)) { return false; }
+
+        return $errors;
 
     }
 
@@ -412,9 +582,12 @@ class cmsController {
 
     /**
      * Находит и запускает хук для указанного события
-     * @param string $event_name
+     * @param string $event_name Название события
+     * @param array $params Параметры события
+     * @param mixed $default Умолчания, если хука нет
+     * @return mixed
      */
-    public function runHook($event_name, $params = array()){
+    public function runHook($event_name, $params = array(), $default = null){
 
         if ($this->beforeHook($event_name) === false) { return false; }
 
@@ -438,7 +611,11 @@ class cmsController {
             } else {
 
                 // хука нет вообще, возвращаем данные запроса без изменений
-                return $this->request->getData();
+                if($default === null){
+                    return $this->request->getData();
+                } else {
+                    return $default;
+                }
 
             }
 
@@ -450,12 +627,11 @@ class cmsController {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Выполняет хук, находящийся в отдельном файле ./hooks/$event_name.php
-     * @param str $event_name
+     * @param string $event_name Название события
+     * @param array $params Параметры события
+     * @return mixed
      */
     public function runExternalHook($event_name, $params = array()){
 
@@ -480,11 +656,15 @@ class cmsController {
 
     /**
      * Загружает и возвращает описание структуры формы
-     * @param type $form_name
-     * @param type $params
-     * @return cmsForm
+     * в контексте текущего контроллера и, в свою очередь,
+     * его контекста - Frontend или Backend
+     *
+     * @param string $form_name Название формы
+     * @param array $params Параметры формы
+     * @param string $path_prefix Префикс путь к файлу формы относительно директории контроллера
+     * @return \cmsForm
      */
-    public function getForm($form_name, $params=false, $path_prefix=''){
+    public function getForm($form_name, $params = false, $path_prefix = ''){
 
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
         $_form_name = $this->name . $form_name;
@@ -497,28 +677,44 @@ class cmsController {
 
     }
 
+    public function getControllerForm($controller, $form_name, $params = false){
+
+        $form_file = $this->cms_config->root_path.'system/controllers/'.$controller.'/forms/form_'.$form_name.'.php';
+        $_form_name = $controller . $form_name;
+
+        $form = cmsForm::getForm($form_file, $_form_name, $params);
+
+        list($form, $params) = cmsEventsManager::hook('form_'.$controller.'_'.$form_name, array($form, $params));
+
+        return $form;
+
+    }
+
 //============================================================================//
 //============================================================================//
 
     /**
-     * Загружает и возвращает описание структуры таблицы
-     * @param string $grid_name
+     * Загружает и возвращает описание структуры grid таблицы
+     * @param string $grid_name Название
+     * @param array $params Параметры для передачи в функцию описания grid-а
+     * @param string $ups_key Ключ UPS
+     * @return array || false
      */
     public function loadDataGrid($grid_name, $params = false, $ups_key = ''){
 
         $default_options = array(
-            'order_by' => 'id',
-            'order_to' => 'asc',
-            'show_id' => true,
-            'is_auto_init' => true,
-            'is_sortable' => true,
-            'is_filter' => true,
-            'is_actions' => true,
+            'order_by'      => 'id',
+            'order_to'      => 'asc',
+            'show_id'       => true,
+            'is_auto_init'  => true,
+            'is_sortable'   => true,
+            'is_filter'     => true,
+            'is_actions'    => true,
             'is_pagination' => true,
-            'is_toolbar' => true,
-            'is_draggable' => false,
+            'is_toolbar'    => true,
+            'is_draggable'  => false,
             'is_selectable' => false,
-            'load_columns' => false
+            'load_columns'  => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
@@ -597,6 +793,11 @@ class cmsController {
 
     public function halt($text='') {
         die((string)$text);
+    }
+
+    public function getUniqueKey($params) {
+        array_unshift($params, $this->name);
+        return implode('.', $params);
     }
 
 //============================================================================//
@@ -686,7 +887,8 @@ class cmsController {
 
     /**
      * Редирект на указанный адрес
-     * @param str $url
+     * @param string $url
+     * @param integer $code
      */
     public function redirect($url, $code=303){
 
@@ -694,7 +896,7 @@ class cmsController {
 
             $this->cms_template->renderAsset('ui/redirect_continue', array(
                 'redirect_url' => href_to($url)
-            ));
+            ), $this->request);
 
         } else {
 
@@ -721,37 +923,36 @@ class cmsController {
 
     /**
      * Редирект на другой контроллер
-     * @param str $controller
-     * @param str $action
+     * @param string $controller
+     * @param string $action
      * @param array $params
      * @param array $query
      */
-    public function redirectTo($controller, $action='', $params=array(), $query=array()){
+    public function redirectTo($controller, $action='', $params=array(), $query=array(), $code=303){
 
         $href_lang = cmsCore::getLanguageHrefPrefix();
 
-        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . '/' . $action;
+        $location = $this->cms_config->root .($href_lang ? $href_lang.'/' : ''). $controller . ($action ? '/'.$action : '');
 
         if ($params){ $location .= '/' . implode('/', $params); }
-        if ($query){ $location .= '?' . http_build_query($query); }
+        if ($query){ $location .= '?' . http_build_query($query, '', '&'); }
 
-        $this->redirect($location);
+        $this->redirect($location, $code);
 
     }
 
     /**
      * Редирект на собственный экшен
-     * @param str $controller
-     * @param str $action
+     * @param string $action
      * @param array $params
      * @param array $query
      */
-    public function redirectToAction($action, $params=array(), $query=array()){
+    public function redirectToAction($action='', $params=array(), $query=array()){
 
-        if ($action=='index') {
-            $location = $this->root_url;
+        if (!$action || $action=='index') {
+            $location = href_to($this->root_url);
         } else {
-            $location = $this->root_url . '/' . $action;
+            $location = href_to($this->root_url, $action);
         }
 
 		if ($params){
@@ -761,13 +962,13 @@ class cmsController {
 
         if ($query){ $location .= '?' . http_build_query($query); }
 
-        $this->redirect(href_to($location));
+        $this->redirect($location);
 
     }
 
     /**
      * Возвращает предыдущий URL текущего сайта
-     * @return str
+     * @return string
      */
     public function getBackURL() {
 
@@ -812,39 +1013,91 @@ class cmsController {
         );
     }
 
+    public function getContentTypeForModeration($name){
+
+        return array(
+            'id'    => null,
+            'name'  => $this->name,
+            'title' => $this->title
+        );
+
+    }
+
 //============================================================================//
 //============================================================================//
 
-    public function validate_required($value){
-        if($value === '0'){ return true; }
+    public function validate_required($value, $disable_empty = true){
+        if($value === '0' && !$disable_empty){ return true; }
         if (empty($value)) { return ERR_VALIDATE_REQUIRED; }
         return true;
     }
 
     public function validate_min($min, $value){
-        if ((int)$value < $min) { return sprintf(ERR_VALIDATE_MIN, $min); }
+
+        if (empty($value)) { $value = 0; }
+
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+            return ERR_VALIDATE_NUMBER;
+        }
+
+        if ((float)$value < $min) { return sprintf(ERR_VALIDATE_MIN, $min); }
+
         return true;
+
     }
 
     public function validate_max($max, $value){
-        if ((int)$value > $max) { return sprintf(ERR_VALIDATE_MAX, $max); }
+
+        if (empty($value)) { $value = 0; }
+
+        if (!in_array(gettype($value), array('integer','string','double')) || !preg_match("/^([\-]?)([0-9\.,]+)$/i", $value)){
+            return ERR_VALIDATE_NUMBER;
+        }
+
+        if ((float)$value > $max) { return sprintf(ERR_VALIDATE_MAX, $max); }
+
         return true;
+
     }
 
     public function validate_min_length($length, $value){
+
         if (empty($value)) { return true; }
-        if (mb_strlen($value)<$length) { return sprintf(ERR_VALIDATE_MIN_LENGTH, $length); }
+
+        if (is_array($value)){
+            return ERR_VALIDATE_INVALID;
+        }
+
+        if (mb_strlen($value) < $length) { return sprintf(ERR_VALIDATE_MIN_LENGTH, $length); }
+
         return true;
+
     }
 
     public function validate_max_length($length, $value){
+
         if (empty($value)) { return true; }
-        if (mb_strlen($value)>$length) { return sprintf(ERR_VALIDATE_MAX_LENGTH, $length); }
+
+        if (is_array($value)){
+            return ERR_VALIDATE_INVALID;
+        }
+
+        if (mb_strlen($value) > $length) { return sprintf(ERR_VALIDATE_MAX_LENGTH, $length); }
+
         return true;
+
     }
 
     public function validate_array_key($array, $value){
-        if (is_array($value)) { return ERR_VALIDATE_INVALID; }
+        if (is_array($value)) {
+            $result = true;
+            foreach ($value as $val) {
+                if(!isset($array[$val])){
+                    $result = ERR_VALIDATE_INVALID; break;
+                }
+            }
+            return $result;
+        }
         if (!isset($array[$value])) { return ERR_VALIDATE_INVALID; }
         return true;
     }
@@ -866,7 +1119,7 @@ class cmsController {
 
     public function validate_email($value){
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $value)){ return ERR_VALIDATE_EMAIL; }
+        if (!is_string($value) || filter_var($value, FILTER_VALIDATE_EMAIL) !== $value){ return ERR_VALIDATE_EMAIL; }
         return true;
     }
 
@@ -876,9 +1129,25 @@ class cmsController {
         return true;
     }
 
+    public function validate_localealphanumeric($value){
+        if (empty($value)) { return true; }
+        $regexp = "/^([a-z0-9 \.\?\@\,\-]*)$/ui";
+        if(defined('LC_LANGUAGE_VALIDATE_REGEXP')){
+            $regexp = LC_LANGUAGE_VALIDATE_REGEXP;
+        }
+        if (!is_string($value) || !preg_match($regexp, $value)){ return ERR_VALIDATE_REGEXP; }
+        return true;
+    }
+
     public function validate_sysname($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || !preg_match("/^([a-z0-9\_]*)$/", $value)){ return ERR_VALIDATE_SYSNAME; }
+        return true;
+    }
+
+    public function validate_phone($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match("/^([0-9\-\+\(\)\s]*)$/", $value)){ return ERR_VALIDATE_INVALID; }
         return true;
     }
 
@@ -944,14 +1213,15 @@ class cmsController {
     public function validate_unique_ctype_dataset($ctype_id, $value){
         if (empty($value)) { return true; }
         if (!in_array(gettype($value), array('integer','string'))) { return ERR_VALIDATE_INVALID; }
-        $ctype_id = (int)$ctype_id;
         $value = $this->cms_core->db->escape($value);
-        $result = !$this->cms_core->db->getRow('content_datasets', "ctype_id='{$ctype_id}' AND name='{$value}'");
+        if(is_numeric($ctype_id)){
+            $where = "ctype_id='{$ctype_id}' AND name='{$value}'";
+        } else {
+            $where = "target_controller='{$ctype_id}' AND name='{$value}'";
+        }
+        $result = !$this->cms_core->db->getRow('content_datasets', $where);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
     }
-
-//============================================================================//
-//============================================================================//
 
 }

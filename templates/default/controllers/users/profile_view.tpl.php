@@ -3,71 +3,13 @@
     $this->addJS('templates/default/js/jquery-ui.js');
     $this->addCSS('templates/default/css/jquery-ui.css');
 
-    $this->setPageTitle($profile['nickname']);
-    $this->setPageDescription($profile['nickname'].' — '.mb_strtolower(LANG_USERS_PROFILE_INDEX));
+    $this->setPagePatternTitle($profile, 'nickname');
+    $this->setPagePatternDescription($profile, 'nickname');
 
     $this->addBreadcrumb(LANG_USERS, href_to('users'));
     $this->addBreadcrumb($profile['nickname']);
 
-    $tool_buttons = array();
-
-    if ($user->is_logged) {
-
-        if ($is_friends_on && !$is_own_profile){
-            if ($is_friend_profile){
-                $tool_buttons['friend_delete'] = array(
-                    'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete ajax-modal',
-                    'href' => $this->href_to('friend_delete', $profile['id'])
-                );
-            } else if(!$is_friend_req) {
-                $tool_buttons['friend_add'] = array(
-                    'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add ajax-modal',
-                    'href' => $this->href_to('friend_add', $profile['id'])
-                );
-            }
-        }
-
-        if ($is_own_profile && $profile['invites_count']){
-            $tool_buttons['invites'] = array(
-                'title' => LANG_USERS_MY_INVITES,
-                'class' => 'invites',
-                'counter' => $profile['invites_count'],
-                'href' => $this->href_to($profile['id'], 'invites')
-            );
-        }
-
-        if ($is_own_profile || $user->is_admin){
-            $tool_buttons['settings'] = array(
-                'title' => LANG_USERS_EDIT_PROFILE,
-                'class' => 'settings',
-                'href' => $this->href_to($profile['id'], 'edit')
-            );
-        }
-
-        if ($user->is_admin){
-            $tool_buttons['edit'] = array(
-                'title' => LANG_USERS_EDIT_USER,
-                'class' => 'edit',
-                'href' => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . $this->href_to($profile['id'])
-            );
-        }
-
-    }
-
-    $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
-        'profile' => $profile,
-        'buttons' => $tool_buttons
-    ));
-
-    $tool_buttons = $buttons_hook['buttons'];
-
-    if (is_array($tool_buttons)){
-        foreach($tool_buttons as $button){
-            $this->addToolButton($button);
-        }
-    }
+    $this->addToolButtons($tool_buttons);
 
 ?>
 
@@ -79,10 +21,31 @@
 
     <div id="left_column" class="column">
 
-        <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
+        <?php if ($fields['avatar']['is_in_item']){ ?>
+            <div id="avatar" class="block">
+                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
+            </div>
+        <?php } ?>
+        <div class="block">
+            <ul class="details">
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_REGDATE; ?>:</strong>
+                    <?php echo string_date_age_max($profile['date_reg'], true); ?>
+                </li>
+                <?php if ($profile['inviter_id']) { ?>
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
+                    <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
+                </li>
+                <?php } ?>
+                <?php if ($user->is_admin) { ?>
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_LAST_IP; ?>:</strong>
+                    <?php html($profile['ip']); ?>
+                </li>
+                <?php } ?>
+            </ul>
         </div>
-
         <?php if ($content_counts) { ?>
             <div class="block">
                 <ul class="content_counts">
@@ -98,7 +61,6 @@
                 </ul>
             </div>
         <?php } ?>
-
         <?php if ($is_friends_on && $friends) { ?>
             <div class="block">
                 <div class="block-title">
@@ -112,49 +74,12 @@
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
                         <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?></span>
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
                         </a>
                     <?php } ?>
                 </div>
             </div>
         <?php } ?>
-
-        <div class="block">
-
-            <ul class="details">
-
-                <li>
-                    <strong><?php echo LANG_RATING; ?>:</strong>
-                    <span class="<?php echo html_signed_class($profile['rating']); ?>"><?php echo $profile['rating']; ?></span>
-                </li>
-
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_LOGDATE; ?>:</strong>
-                    <?php echo $profile['is_online'] ? '<span class="online">'.LANG_ONLINE.'</span>' : string_date_age_max($profile['date_log'], true); ?>
-                </li>
-
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_REGDATE; ?>:</strong>
-                    <?php echo string_date_age_max($profile['date_reg'], true); ?>
-                </li>
-
-                <?php if ($profile['inviter_id']) { ?>
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
-                    <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
-                </li>
-                <?php } ?>
-
-                <?php if ($user->is_admin) { ?>
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_LAST_IP; ?>:</strong>
-                    <?php html($profile['ip']); ?>
-                </li>
-                <?php } ?>
-
-            </ul>
-
-        </div>
 
     </div>
 

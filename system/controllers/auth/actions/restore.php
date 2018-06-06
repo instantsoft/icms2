@@ -3,7 +3,7 @@ class actionAuthRestore extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
 
@@ -35,7 +35,11 @@ class actionAuthRestore extends cmsAction {
 
                 } elseif($user['pass_token']) {
 
-                    $errors['email'] = LANG_RESTORE_TOKEN_IS_SEND;
+                    if ((strtotime($user['date_token']) + (24 * 3600)) < time()){
+                        $users_model->clearUserPassToken($user['id']);
+                    } else {
+                        $errors['email'] = LANG_RESTORE_TOKEN_IS_SEND;
+                    }
 
                 } else {
 

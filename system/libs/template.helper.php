@@ -5,19 +5,20 @@
  * @param string $href Ссылка
  */
 function html_link($title, $href){
-	echo '<a href="'.htmlspecialchars($href).'">'.htmlspecialchars($title).'</a>';
+	echo '<a href="'.html($href, false).'">'.html($title, false).'</a>';
 }
 
 /**
  * Возвращает панель со страницами
  *
- * @param int $page Текущая страница
- * @param int $perpage Записей на одной странице
- * @param int $total Количество записей
- * @param str $base_uri Базовый URL, может быть массивом из элементов first и base
- * @param str $query Массив параметров запроса
+ * @param integer $page Текущая страница
+ * @param integer $perpage Записей на одной странице
+ * @param integer $total Количество записей
+ * @param string|array $base_uri Базовый URL, может быть массивом из элементов first и base
+ * @param array $query Массив параметров запроса
+ * @param string $page_param_name Название параметра номера страницы
  */
-function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
+function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array(), $page_param_name = 'page'){
 
 	if (!$total){ return; }
 
@@ -56,20 +57,20 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
 		$html .= '<span class="pagebar_nav">';
 
 		if ($page > 1){
-			$query['page'] = ($page-1);
-			$uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+			$query[$page_param_name] = ($page-1);
+			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
 			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query['page'] == 1) { unset($query['page']); }
+			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
 			$html .= ' <a href="'. $uri . ($query ? $sep .http_build_query($query) : '') . $anchor . '" class="pagebar_page">&larr; '.LANG_PAGE_PREV.'</a> ';
 		} else {
 			$html .= ' <span class="pagebar_page disabled">&larr; '.LANG_PAGE_PREV.'</span> ';
 		}
 
 		if ($page < $pages){
-			$query['page'] = ($page+1);
-			$uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+			$query[$page_param_name] = ($page+1);
+			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
 			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query['page'] == 1) { unset($query['page']); }
+			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
 			$html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_NEXT.' &rarr;</a> ';
 		} else {
 			$html .= ' <span class="pagebar_page disabled">'.LANG_PAGE_NEXT.' &rarr;</span> ';
@@ -86,19 +87,19 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
 	$html .= '<span class="pagebar_pages">';
 
 	if ($page > $span+1){
-        $query['page'] = 1;
-        $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+        $query[$page_param_name] = 1;
+        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
         $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query['page'] == 1) { unset($query['page']); }
+        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
         $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_FIRST.'</a> ';
 	}
 
     for ($p=$p_start; $p<=$p_end; $p++){
         if ($p != $page) {
-            $query['page'] = $p;
-            $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+            $query[$page_param_name] = $p;
+            $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
             $sep = mb_strstr($uri, '?') ? '&' : '?';
-            if ($query['page'] == 1) { unset($query['page']); }
+            if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
             $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.$p.'</a> ';
         } else {
             $html .= '<span class="pagebar_current">'.$p.'</span>';
@@ -106,10 +107,10 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array()){
     }
 
 	if ($page < $pages - $span){
-        $query['page'] = $pages;
-        $uri = ($query['page']==1 ? $base_uri['first'] : $base_uri['base']);
+        $query[$page_param_name] = $pages;
+        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
         $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query['page'] == 1) { unset($query['page']); }
+        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
         $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_LAST.'</a> ';
 	}
 
@@ -139,7 +140,7 @@ function html_input($type='text', $name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'input';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="'.$type.'" class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($value).'" '.$attr_str.'/>';
+	return '<input type="'.$type.'" class="'.$class.'" name="'.$name.'" value="'.html($value, false).'" '.$attr_str.'/>';
 }
 
 function html_file_input($name, $attributes=array()){
@@ -153,7 +154,7 @@ function html_textarea($name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'textarea';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	$html = '<textarea name="'.$name.'" class="'.$class.'" '.$attr_str.'>'.htmlspecialchars($value).'</textarea>';
+	$html = '<textarea name="'.$name.'" class="'.$class.'" '.$attr_str.'>'.html($value, false).'</textarea>';
 	return $html;
 }
 
@@ -177,7 +178,8 @@ function html_radio($name, $checked=false, $value=1, $attributes=array()){
 
 function html_date($date=false, $is_time=false){
     $timestamp = $date ? strtotime($date) : time();
-    $date = '<time datetime="'.date('c', $timestamp).'">'.htmlspecialchars(date(cmsConfig::get('date_format'), $timestamp)).'</time>';
+    $date_format = cmsConfig::get('date_format');
+    $date = '<time datetime="'.date('c', $timestamp).'">'.htmlspecialchars(($date_format == 'd F Y') ? string_date_format($timestamp) : date(cmsConfig::get('date_format'), $timestamp)).'</time>';
     if ($is_time){ $date .= ' <span class="time">' . date('H:i', $timestamp). '</span>'; }
     return $date;
 }
@@ -223,7 +225,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
  */
 function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
     $attr_str = html_attr_str($attributes);
-    $class = 'button-submit';
+    $class = 'button-submit button';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
 	return '<input class="'.$class.'" type="submit" name="'.$name.'" value="'.htmlspecialchars($caption).'" '.$attr_str.'/>';
 }
@@ -236,10 +238,17 @@ function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
  * @return html
  */
 function html_button($caption, $name, $onclick='', $attributes=array()){
+
+    if (!isset($attributes['type'])) { $attributes['type'] = 'button'; }
+
     $attr_str = html_attr_str($attributes);
+
     $class = 'button';
+
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="button" class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($caption).'" onclick="'.$onclick.'" '.$attr_str.'/>';
+
+	return '<input class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($caption).'" onclick="'.$onclick.'" '.$attr_str.'/>';
+
 }
 
 /**
@@ -254,9 +263,7 @@ function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_emp
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-	$size = $size_preset == 'micro' ? 'width="32" height="32"' : '';
-
-    $img = '<img src="'.$src.'" '.$size.' alt="'.htmlspecialchars($alt).'" title="'.htmlspecialchars($alt).'" />';
+    $img = '<img src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
 
     if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
 
@@ -315,14 +322,12 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
 	$src = html_image_src($image, $small_preset, true);
 	if (!$src) { return ''; }
 
-	$size = $small_preset == 'micro' ? 'width="32" height="32"' : '';
-
-    $title = htmlspecialchars(isset($attributes['title']) ? $attributes['title'] : $alt); unset($attributes['title']);
+    $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    $image_html = '<img src="'.$src.'" '.$size.' title="'.$title.'" alt="'.htmlspecialchars($alt).'" '.$attr_str.$class.' />';
+    $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.$class.' />';
 
     if($modal_preset){
         $modal_src = html_image_src($image, $modal_preset, true);
@@ -345,20 +350,27 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
  */
 function html_gif_image($image, $size_preset='small', $alt='', $attributes = array()){
 
+    if(is_array($size_preset)){
+        list($small_preset, $modal_preset) = $size_preset;
+    } else {
+        $small_preset = $size_preset;
+        $modal_preset = false;
+    }
+
     $class = isset($attributes['class']) ? $attributes['class'] : '';
-    if($size_preset == 'micro'){
+    if($small_preset == 'micro'){
         $class .= ' micro_image';
     }
 
-    $original_src = html_image_src($image, 'original', true);
-    $preview_src  = html_image_src($image, $size_preset, true);
+    $original_src = html_image_src($image, $modal_preset?:'original', true);
+    $preview_src  = html_image_src($image, $small_preset, true);
 
     if (!$preview_src) { return ''; }
 
     return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
                 <span class="background_overlay"></span>
                 <span class="image_label">gif</span>
-                <img src="'.$preview_src.'" alt="'.htmlspecialchars($alt).'" />
+                <img src="'.$preview_src.'" alt="'.html($alt, false).'" />
             </a>';
 
 }
@@ -424,7 +436,8 @@ function html_select($name, $items, $selected = '', $attributes = array()){
  */
 function html_select_multiple($name, $items, $selected=array(), $attributes=array(), $is_tree=false){
     $attr_str = html_attr_str($attributes);
-	$html = '<div class="input_checkbox_list" '.$attr_str.'>'."\n";
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+	$html = '<div class="input_checkbox_list '.$class.'" '.$attr_str.'>'."\n";
     $start_level = false;
     if(is_array($selected) && $selected){
         foreach ($selected as $k => $v) {
@@ -447,13 +460,13 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $html .= "\t" . '<label '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    htmlspecialchars($title) . '</label><br>' . "\n";
+                    '<span>'.htmlspecialchars($title).'</span></label><br>' . "\n";
 
         } else {
 
             $html .= "\t" . '<label>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    htmlspecialchars($title) . '</label>' . "\n";
+                    '<span>'.htmlspecialchars($title) . '</span></label>' . "\n";
 
         }
 
@@ -527,21 +540,23 @@ function html_array_to_list($array){
 
 }
 
+function html_search_bar($list, $href, $link_class = ''){
+
+    if (!$list) { return ''; }
+
+    if (!is_array($list)){
+        $list = explode(',', $list);
+    }
+
+    foreach($list as $id => $letter){
+        $letter = trim($letter);
+        $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.html($letter, false).'</a>';
+    }
+
+    return implode(', ', $list);
+
+}
+
 function html_tags_bar($tags){
-
-    if (!$tags) { return ''; }
-
-    if (!is_array($tags)){
-        $tags = explode(',', $tags);
-    }
-
-    foreach($tags as $id=>$tag){
-        $tag = trim($tag);
-        $tags[$id] = '<a href="'.href_to('tags', 'search').'?q='.urlencode($tag).'">'.$tag.'</a>';
-    }
-
-    $tags_bar = implode(', ', $tags);
-
-    return $tags_bar;
-
+    return html_search_bar($tags, href_to('tags', 'search').'?q=', 'tags_bar_link');
 }

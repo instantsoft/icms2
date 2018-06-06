@@ -6,7 +6,9 @@ class actionCommentsDelete extends cmsAction {
 
         if (!$this->request->isAjax()){ cmsCore::error404(); }
 
-        if (!cmsUser::isAllowed('comments', 'delete')){
+        $is_moderator = $this->controller_moderation->model->userIsContentModerator($this->name, $this->cms_user->id);
+
+        if (!cmsUser::isAllowed('comments', 'delete') && !$is_moderator){
             $this->cms_template->renderJSON($result = array(
                 'error' => true,
                 'message' => LANG_ERROR
@@ -38,17 +40,17 @@ class actionCommentsDelete extends cmsAction {
 
         // можем ли полностью удалять
         $is_comment_child = $this->model->getItemByField('comments', 'parent_id', $comment['id']);
-        $full_delete = !$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true);
+        $is_full_delete = (!$is_comment_child && cmsUser::isAllowed('comments', 'delete', 'full_delete', true)) || !$comment['is_approved'];
 
-        $this->model->deleteComment($comment['id'], ($full_delete || !$comment['is_approved']));
+        $this->model->deleteComment($comment['id'], $is_full_delete);
 
         if(!$comment['is_approved']){
 
-            cmsEventsManager::hook('comments_after_refuse', $comment['id']);
+            cmsEventsManager::hook('comments_after_refuse', $comment);
 
         } else {
 
-            if($full_delete){
+            if($is_full_delete){
 
                 // обновляем количество
                 $comments_count = $this->model->
@@ -59,10 +61,10 @@ class actionCommentsDelete extends cmsAction {
 
                 cmsCore::getModel($comment['target_controller'])->updateCommentsCount($comment['target_subject'], $comment['target_id'], $comments_count);
 
-                cmsEventsManager::hook('comments_after_delete', $comment['id']);
+                cmsEventsManager::hook('comments_after_delete', $comment);
 
             } else {
-                cmsEventsManager::hook('comments_after_hide', $comment['id']);
+                cmsEventsManager::hook('comments_after_hide', $comment);
             }
 
         }

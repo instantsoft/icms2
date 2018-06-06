@@ -73,7 +73,7 @@ icms.photos = (function ($) {
                 }
             });
         } else {
-            $('#photo_container').addClass('full_in_modal').on('click', function (){
+            $('#photo_container').addClass('full_in_modal').find('.fullscreen_click').show().on('click', function (){
                 if(icms.photos.big_img){
                     icms.modal.openAjax(icms.photos.big_img);
                 }
@@ -276,7 +276,7 @@ icms.photos = (function ($) {
             return false;
         }
 
-        $(link).addClass('loading');
+        $(link).addClass('show_spinner');
 
         icms.photos.page += 1;
 
@@ -287,7 +287,7 @@ icms.photos = (function ($) {
 
             var first_page_url = $(link).data('first-page-url');
 
-            $(link).removeClass('loading');
+            $(link).removeClass('show_spinner');
 
             if (!html) { return; }
 

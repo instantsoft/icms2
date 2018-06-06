@@ -38,13 +38,19 @@ function check_db(){
         );
     }
 
-    $mysqli = @new mysqli($db['host'], $db['user'], $db['pass']);
+    mysqli_report(MYSQLI_REPORT_STRICT);
 
-    if ($mysqli->connect_error) {
+    try {
+
+        $mysqli = new mysqli($db['host'], $db['user'], $db['pass']);
+
+    } catch (Exception $e) {
+
         return array(
-            'error' => true,
-            'message' => sprintf(LANG_DATABASE_CONNECT_ERROR, $mysqli->connect_error)
+            'error'   => true,
+            'message' => sprintf(LANG_DATABASE_CONNECT_ERROR, $e->getMessage())
         );
+
     }
 
     if(!empty($mysqli->server_info)){

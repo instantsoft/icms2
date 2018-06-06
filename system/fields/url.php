@@ -12,7 +12,8 @@ class fieldUrl extends cmsFormField {
         return array(
             new fieldCheckbox('redirect', array(
                 'title' => LANG_PARSER_URL_REDIRECT,
-                'default' => false
+                'default' => false,
+                'is_visible' => cmsController::enabled('redirect')
             )),
             new fieldCheckbox('auto_http', array(
                 'title' => LANG_PARSER_URL_AUTO_HTTP,
@@ -21,23 +22,61 @@ class fieldUrl extends cmsFormField {
             new fieldNumber('max_length', array(
                 'title' => LANG_PARSER_TEXT_MAX_LEN,
                 'default' => 500
+            )),
+            new fieldCheckbox('nofollow', array(
+                'title'   => LANG_PARSER_URL_NOFOLLOW,
+                'default' => false
+            )),
+            new fieldCheckbox('title', array(
+                'title'   => LANG_PARSER_URL_TITLE,
+                'default' => false
+            )),
+            new fieldString('css_class', array(
+                'title'   => LANG_PARSER_URL_CSS_CLASS,
+                'rules'   => array(
+                    array('max_length', 50)
+                )
             ))
         );
     }
 
     public function parse($value){
 
-        $href = $value;
+        if (!$this->getOption('title') && strpos( $value, '|') === false){
+
+            $href = $value;
+
+        } else {
+
+            $result = explode('|', $value);
+
+            $href = trim($result[0]);
+
+            if(!empty($result[1])){
+                $value = trim($result[1]);
+            }
+
+        }
 
         if ($this->getOption('auto_http')){
             if (!preg_match('/^([a-z]+):\/\/(.+)$/i', $href)) { $href = 'http://' . $href; }
         }
 
-        if ($this->getOption('redirect')){
-            $href = cmsConfig::get('root') . 'redirect?url=' . $href;
+        if ($this->getOption('redirect') && cmsController::enabled('redirect')){
+            $href = href_to('redirect').'?url='.urlencode($href);
         }
 
-        return '<a rel="nofollow noopener" target="_blank" href="'.htmlspecialchars($href).'">'.$value.'</a>';
+        $nofollow = $class = '';
+
+        if ($this->getOption('nofollow')){
+            $nofollow = ' nofollow';
+        }
+
+        if ($this->getOption('css_class')){
+            $class = ' class="'.$this->getOption('css_class').'"';
+        }
+
+        return '<a rel="noopener'.$nofollow.'" target="_blank" '.$class.' href="'.htmlspecialchars($href).'">'.htmlspecialchars($value).'</a>';
 
     }
 

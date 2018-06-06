@@ -2,10 +2,10 @@
 
     $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
     $page_header = isset($category['title']) ? $category['title'] : $list_header;
-    $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
+    $rss_query = !empty($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
-    $base_ds_url = href_to_rel($ctype['name']) . '-%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
+    $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
     if (!$is_frontpage){
 
@@ -15,6 +15,7 @@
 		if (!$seo_title) { $seo_title = $page_header; }
         if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
         if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
+        if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
 
         $this->setPageTitle($seo_title);
 
@@ -96,44 +97,36 @@
     }
 
 ?>
-
 <?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
-    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-        <div class="content_list_rss_icon">
-            <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">RSS</a>
+    <?php if (!empty($list_styles)){ ?>
+        <div class="content_list_styles">
+            <?php foreach ($list_styles as $list_style) { ?>
+                <a rel="nofollow" href="<?php echo $list_style['url']; ?>" class="style_switch<?php if (!$list_style['title']) { ?> without_title<?php } ?> <?php echo $list_style['class']; ?>">
+                    <?php echo $list_style['title']; ?>
+                </a>
+            <?php } ?>
         </div>
     <?php } ?>
-    <h1><?php echo $page_header; ?></h1>
+    <h1>
+        <?php echo $page_header; ?>
+        <?php if ($dataset && !empty($current_dataset['title'])){ ?>
+            <span> / <?php echo $current_dataset['title']; ?></span>
+        <?php } ?>
+        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+            <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
+        <?php } ?>
+    </h1>
 <?php } ?>
 
-<?php if ($datasets && !$is_hide_items){ ?>
-    <div class="content_datasets">
-        <ul class="pills-menu">
-            <?php $ds_counter = 0; ?>
-            <?php foreach($datasets as $set){ ?>
-                <?php $ds_selected = ($dataset == $set['name'] || (!$dataset && $ds_counter==0)); ?>
-                <li <?php if ($ds_selected){ ?>class="active"<?php } ?>>
-
-                    <?php if ($ds_counter > 0) { $ds_url = sprintf(rel_to_href($base_ds_url), $set['name']); } ?>
-                    <?php if ($ds_counter == 0) { $ds_url = href_to($base_url, isset($category['slug']) ? $category['slug'] : ''); } ?>
-
-                    <?php if ($ds_selected){ ?>
-                        <div><?php echo $set['title']; ?></div>
-                    <?php } else { ?>
-                        <a href="<?php echo $ds_url; ?>"><?php echo $set['title']; ?></a>
-                    <?php } ?>
-
-                </li>
-                <?php $ds_counter++; ?>
-            <?php } ?>
-        </ul>
-    </div>
-    <?php if (!empty($current_dataset['description'])){ ?>
-    <div class="content_datasets_description">
-        <?php echo $current_dataset['description']; ?>
-    </div>
-    <?php } ?>
-<?php } ?>
+<?php if ($datasets && !$is_hide_items){
+    $this->renderAsset('ui/datasets-panel', array(
+        'datasets'        => $datasets,
+        'dataset_name'    => $dataset,
+        'current_dataset' => $current_dataset,
+        'ds_prefix'       => '-',
+        'base_ds_url'     => rel_to_href($base_ds_url)
+    ));
+} ?>
 
 <?php if (!empty($category['description'])){?>
     <div class="category_description"><?php echo $category['description']; ?></div>
@@ -143,8 +136,14 @@
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon">
             <?php foreach($subcats as $c){ ?>
+
+            <?php
+                $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
+                $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
+            ?>
+
                 <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
-                    <a href="<?php echo href_to($base_url . ($dataset ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
+                    <a href="<?php echo href_to($base_url . (($dataset && $is_ds_view && !$is_ds_hide) ? '-'.$dataset : ''), $c['slug']); ?>"><?php echo $c['title']; ?></a>
                 </li>
             <?php } ?>
         </ul>
@@ -153,7 +152,6 @@
 
 <?php echo $items_list_html; ?>
 
-<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset)); ?>
 <?php if ($hooks_html) { ?>
     <div class="sub_items_list">
         <?php echo html_each($hooks_html); ?>

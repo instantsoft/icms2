@@ -1,3 +1,51 @@
+DROP TABLE IF EXISTS `{#}jobs`;
+CREATE TABLE `{#}jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `queue` varchar(100) DEFAULT NULL COMMENT 'Название очереди',
+  `payload` text COMMENT 'Данные задания',
+  `last_error` varchar(200) DEFAULT NULL COMMENT 'Последняя ошибка',
+  `priority` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Приоритет',
+  `attempts` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Попытки выполнения',
+  `is_locked` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Блокировка одновременного запуска',
+  `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата постановки в очередь',
+  `date_started` timestamp NULL DEFAULT NULL COMMENT 'Дата последней попытки выполнения задания',
+  PRIMARY KEY (`id`),
+  KEY `queue` (`queue`),
+  KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Очередь';
+
+DROP TABLE IF EXISTS `{#}subscriptions`;
+CREATE TABLE `{#}subscriptions` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `controller` varchar(32) DEFAULT NULL,
+  `subject` varchar(50) DEFAULT NULL,
+  `subject_url` varchar(255) DEFAULT NULL,
+  `params` text,
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `hash` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `target_controller` (`controller`,`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Списки подписок';
+
+DROP TABLE IF EXISTS `{#}subscriptions_bind`;
+CREATE TABLE `{#}subscriptions_bind` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `subscription_id` int(11) UNSIGNED DEFAULT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `guest_email` varchar(100) DEFAULT NULL,
+  `guest_name` varchar(50) DEFAULT NULL,
+  `is_confirmed` tinyint(1) UNSIGNED DEFAULT '1',
+  `confirm_token` varchar(32) DEFAULT NULL,
+  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`,`subscription_id`) USING BTREE,
+  KEY `guest_email` (`guest_email`,`subscription_id`) USING BTREE,
+  KEY `confirm_token` (`confirm_token`),
+  KEY `subscription_id` (`subscription_id`,`is_confirmed`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Подписки';
+
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -22,7 +70,7 @@ CREATE TABLE `{#}activity` (
   KEY `group_id` (`group_id`),
   KEY `is_parent_hidden` (`is_parent_hidden`),
   KEY `is_pub` (`is_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Лента активности';
 
 DROP TABLE IF EXISTS `{#}activity_types`;
 CREATE TABLE `{#}activity_types` (
@@ -36,7 +84,7 @@ CREATE TABLE `{#}activity_types` (
   KEY `is_enabled` (`is_enabled`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы записей в ленте активности';
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
 (1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
@@ -47,7 +95,8 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (11, 1, 'groups', 'leave', 'Выход из группы', 'выходит из группы %s'),
 (12, 1, 'users', 'status', 'Изменение статуса', '&rarr; %s'),
 (18, 1, 'photos', 'add.photos', 'Добавление фотографий', 'загружает фото в альбом %s'),
-(19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар');
+(19, 1, 'users', 'avatar', 'Изменение аватара', 'изменяет аватар'),
+(20, 1, 'subscriptions', 'subscribe', 'Подписка на контент', 'подписывается на список %s');
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
@@ -73,11 +122,9 @@ CREATE TABLE `{#}comments` (
   `is_approved` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `is_private` (`is_private`),
-  KEY `rating` (`rating`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
   KEY `author_url` (`author_url`),
-  KEY `date_pub` (`date_pub`)
+  KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Комментарии пользователей';
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
@@ -114,8 +161,8 @@ CREATE TABLE `{#}content_datasets` (
   `description` text COMMENT 'Описание',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
   `is_visible` tinyint(1) unsigned DEFAULT NULL COMMENT 'Отображать набор на сайте?',
-  `filters` text NOT NULL COMMENT 'Массив фильтров набора',
-  `sorting` text NOT NULL COMMENT 'Массив правил сортировки',
+  `filters` text COMMENT 'Массив фильтров набора',
+  `sorting` text COMMENT 'Массив правил сортировки',
   `index` varchar(40) DEFAULT NULL COMMENT 'Название используемого индекса',
   `groups_view` text COMMENT 'Показывать группам',
   `groups_hide` text COMMENT 'Скрывать от групп',
@@ -124,12 +171,14 @@ CREATE TABLE `{#}content_datasets` (
   `seo_title` varchar(256) DEFAULT NULL,
   `cats_view` text COMMENT 'Показывать в категориях',
   `cats_hide` text COMMENT 'Не показывать в категориях',
+  `max_count` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `target_controller` varchar(32) DEFAULT NULL,
+  `list` text,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
-  KEY `ordering` (`ordering`),
-  KEY `is_visible` (`is_visible`),
   KEY `ctype_id` (`ctype_id`,`ordering`),
-  KEY `index` (`index`)
+  KEY `index` (`index`),
+  KEY `target_controller` (`target_controller`,`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Наборы для типов контента';
 
 DROP TABLE IF EXISTS `{#}content_folders`;
@@ -139,13 +188,14 @@ CREATE TABLE `{#}content_folders` (
   `user_id` int(11) unsigned DEFAULT NULL,
   `title` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`ctype_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `user_id` (`user_id`,`ctype_id`,`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Папки для записей типов контента';
 
 DROP TABLE IF EXISTS `{#}content_relations`;
 CREATE TABLE `{#}content_relations` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(256) DEFAULT NULL,
+  `target_controller` varchar(32) NOT NULL DEFAULT 'content',
   `ctype_id` int(11) unsigned DEFAULT NULL,
   `child_ctype_id` int(11) unsigned DEFAULT NULL,
   `layout` varchar(32) DEFAULT NULL,
@@ -153,10 +203,11 @@ CREATE TABLE `{#}content_relations` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `ordering` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `ctype_id` (`ctype_id`),
-  KEY `child_ctype_id` (`child_ctype_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `ctype_id` (`ctype_id`,`ordering`),
+  KEY `child_ctype_id` (`child_ctype_id`,`target_controller`,`ordering`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Свзяи типов контента';
 
 DROP TABLE IF EXISTS `{#}content_relations_bind`;
 CREATE TABLE `{#}content_relations_bind` (
@@ -165,11 +216,12 @@ CREATE TABLE `{#}content_relations_bind` (
   `parent_item_id` int(11) unsigned DEFAULT NULL,
   `child_ctype_id` int(11) unsigned DEFAULT NULL,
   `child_item_id` int(11) unsigned DEFAULT NULL,
+  `target_controller` varchar(32) NOT NULL DEFAULT 'content',
   PRIMARY KEY (`id`),
   KEY `parent_ctype_id` (`parent_ctype_id`),
-  KEY `parent_item_id` (`parent_item_id`),
   KEY `child_ctype_id` (`child_ctype_id`),
-  KEY `child_item_id` (`child_item_id`)
+  KEY `parent_item_id` (`parent_item_id`,`target_controller`),
+  KEY `child_item_id` (`child_item_id`,`target_controller`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `{#}content_types`;
@@ -178,6 +230,7 @@ CREATE TABLE `{#}content_types` (
   `title` varchar(100) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
   `description` varchar(255) DEFAULT NULL COMMENT 'Описание',
+  `ordering` int(11) DEFAULT NULL,
   `is_date_range` tinyint(1) unsigned DEFAULT NULL,
   `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при создании?',
   `is_premod_edit` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при редактировании',
@@ -205,26 +258,19 @@ CREATE TABLE `{#}content_types` (
   `is_fixed` tinyint(1) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
-  KEY `is_cats` (`is_cats`),
-  KEY `is_comments` (`is_comments`),
-  KEY `is_comments_tree` (`is_comments_tree`),
-  KEY `is_rating` (`is_rating`),
-  KEY `is_rating_pos` (`is_rating_pos`),
-  KEY `is_auto_keys` (`is_auto_keys`),
-  KEY `is_auto_url` (`is_auto_url`),
-  KEY `is_in_groups` (`is_in_groups`),
-  KEY `is_in_groups_only` (`is_in_groups_only`)
+  KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы контента';
 
-INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_premod_add`, `is_premod_edit`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Страницы', 'pages', 'Статичные страницы сайта', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\n', '---\none: страница\ntwo: страницы\nmany: страниц\ncreate: страницу\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Фотоальбомы', 'albums', 'Альбомы с фотографиями пользователей', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: альбом\ntwo: альбома\nmany: альбомов\ncreate: фотоальбом\n', NULL, NULL, NULL, NULL, 1);
+INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
+(1, 'Страницы', 'pages', 'Статичные страницы сайта', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\n', '---\none: страница\ntwo: страницы\nmany: страниц\ncreate: страницу\n', NULL, NULL, NULL, NULL, 1),
+(7, 'Фотоальбомы', 'albums', 'Альбомы с фотографиями пользователей', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: альбом\ntwo: альбома\nmany: альбомов\ncreate: фотоальбом\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
+  `slug` varchar(64) DEFAULT NULL,
   `is_enabled` tinyint(1) unsigned DEFAULT '1' COMMENT 'Включен?',
   `options` text COMMENT 'Массив настроек',
   `author` varchar(128) NOT NULL COMMENT 'Имя автора',
@@ -232,10 +278,10 @@ CREATE TABLE `{#}controllers` (
   `version` varchar(8) NOT NULL COMMENT 'Версия',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Есть админка?',
   `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Сторонний компонент',
+  `files` text COMMENT 'Список файлов контроллера (для стороних компонентов)',
+  `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`),
-  KEY `enabled` (`is_enabled`),
-  KEY `is_backend` (`is_backend`)
+  KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Компоненты';
 
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
@@ -256,11 +302,11 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (16, 'Генератор карты сайта', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (17, 'Поиск', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(18, 'Фотоальбомы', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\r\n  2 | Векторы\r\n  3 | Иллюстрации\nordering: date_pub\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(18, 'Фотоальбомы', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Фото\r\n  2 | Векторы\r\n  3 | Иллюстрации\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Загрузка изображений', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(21, 'Комментарии Вконтакте', 'commentsvk', 1, '---\napi_id: \nredesign: null\nautoPublish: 1\nnorealtime: null\nmini: 0\nattach:\n  - graffiti\n  - photo\n  - video\n  - audio\nlimit: 50\n', 'InstantCMS Team', 'http://www.instantcms.ru', '1.0', 1),
-(22, 'География', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(20, 'Редиректы', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(21, 'География', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(22, 'Подписки', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -574,14 +620,156 @@ CREATE TABLE `{#}con_pages_props_values` (
 DROP TABLE IF EXISTS `{#}events`;
 CREATE TABLE `{#}events` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `event` varchar(32) NOT NULL COMMENT 'Событие',
-  `listener` varchar(32) NOT NULL COMMENT 'Слушатель (компонент)',
-  `ordering` int(11) DEFAULT NULL COMMENT 'Порядковый номер',
+  `event` varchar(64) DEFAULT NULL COMMENT 'Событие',
+  `listener` varchar(32) DEFAULT NULL COMMENT 'Слушатель (компонент)',
+  `ordering` int(5) unsigned DEFAULT NULL COMMENT 'Порядковый номер ',
+  `is_enabled` tinyint(1) unsigned DEFAULT '1' COMMENT 'Активность',
   PRIMARY KEY (`id`),
   KEY `hook` (`event`),
   KEY `listener` (`listener`),
-  KEY `ordering` (`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Привязка хуков к событиям';
+  KEY `is_enabled` (`is_enabled`,`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Привязка хуков к событиям';
+
+INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VALUES
+(1, 'content_after_add_approve', 'activity', 1, 1),
+(2, 'content_after_update_approve', 'activity', 2, 1),
+(3, 'publish_delayed_content', 'activity', 3, 1),
+(4, 'user_delete', 'activity', 4, 1),
+(5, 'user_tab_info', 'activity', 5, 1),
+(6, 'user_tab_show', 'activity', 6, 1),
+(7, 'menu_admin', 'admin', 7, 1),
+(8, 'user_login', 'admin', 8, 1),
+(9, 'admin_confirm_login', 'admin', 9, 1),
+(10, 'user_profile_update', 'auth', 10, 1),
+(11, 'frontpage', 'auth', 11, 1),
+(12, 'page_is_allowed', 'auth', 12, 1),
+(13, 'frontpage_types', 'auth', 13, 1),
+(14, 'content_after_update', 'comments', 14, 1),
+(16, 'admin_dashboard_chart', 'comments', 16, 1),
+(17, 'user_privacy_types', 'comments', 17, 1),
+(18, 'user_login', 'comments', 18, 1),
+(19, 'user_notify_types', 'comments', 19, 1),
+(20, 'user_delete', 'comments', 20, 1),
+(21, 'user_tab_info', 'comments', 21, 1),
+(22, 'user_tab_show', 'comments', 22, 1),
+(23, 'fulltext_search', 'content', 23, 1),
+(24, 'admin_dashboard_chart', 'content', 24, 1),
+(25, 'menu_content', 'content', 25, 1),
+(26, 'user_delete', 'content', 26, 1),
+(27, 'user_privacy_types', 'content', 27, 1),
+(28, 'sitemap_sources', 'content', 28, 1),
+(29, 'rss_feed_list', 'content', 29, 1),
+(30, 'rss_content_controller_form', 'content', 30, 1),
+(31, 'rss_content_controller_after_update', 'content', 31, 1),
+(32, 'frontpage', 'content', 32, 1),
+(33, 'frontpage_types', 'content', 33, 1),
+(34, 'ctype_relation_childs', 'content', 34, 1),
+(35, 'admin_content_dataset_fields_list', 'content', 35, 1),
+(36, 'moderation_list', 'content', 36, 1),
+(37, 'ctype_lists_context', 'content', 37, 1),
+(38, 'ctype_after_update', 'frontpage', 38, 1),
+(39, 'ctype_after_delete', 'frontpage', 39, 1),
+(40, 'admin_dashboard_chart', 'groups', 40, 1),
+(41, 'content_view_hidden', 'groups', 41, 1),
+(42, 'content_before_list', 'groups', 42, 1),
+(43, 'rating_vote', 'groups', 43, 1),
+(44, 'user_privacy_types', 'groups', 44, 1),
+(45, 'user_profile_buttons', 'groups', 45, 1),
+(46, 'user_notify_types', 'groups', 46, 1),
+(47, 'user_delete', 'groups', 47, 1),
+(48, 'user_tab_info', 'groups', 48, 1),
+(49, 'user_tab_show', 'groups', 49, 1),
+(50, 'menu_groups', 'groups', 50, 1),
+(51, 'sitemap_sources', 'groups', 51, 1),
+(52, 'sitemap_urls', 'groups', 52, 1),
+(53, 'content_privacy_types', 'groups', 53, 1),
+(54, 'content_add_permissions', 'groups', 54, 1),
+(55, 'fulltext_search', 'groups', 55, 1),
+(56, 'content_before_childs', 'groups', 56, 1),
+(57, 'ctype_relation_childs', 'groups', 57, 1),
+(58, 'admin_groups_dataset_fields_list', 'groups', 58, 1),
+(59, 'content_validate', 'groups', 59, 1),
+(60, 'moderation_list', 'groups', 60, 1),
+(61, 'content_before_item', 'groups', 61, 1),
+(62, 'user_delete', 'images', 62, 1),
+(63, 'admin_dashboard_chart', 'messages', 63, 1),
+(64, 'menu_messages', 'messages', 64, 1),
+(65, 'users_profile_view', 'messages', 65, 1),
+(66, 'user_privacy_types', 'messages', 66, 1),
+(67, 'user_delete', 'messages', 67, 1),
+(68, 'user_notify_types', 'messages', 68, 1),
+(69, 'admin_dashboard_block', 'moderation', 69, 1),
+(70, 'content_after_trash_put', 'moderation', 70, 1),
+(71, 'content_after_restore', 'moderation', 71, 1),
+(72, 'content_before_delete', 'moderation', 72, 1),
+(73, 'menu_moderation', 'moderation', 73, 1),
+(74, 'content_albums_items_html', 'photos', 74, 1),
+(75, 'fulltext_search', 'photos', 75, 1),
+(76, 'admin_albums_ctype_menu', 'photos', 76, 1),
+(77, 'content_albums_after_add', 'photos', 77, 1),
+(78, 'content_albums_after_delete', 'photos', 78, 1),
+(79, 'content_albums_item_html', 'photos', 79, 1),
+(80, 'content_albums_before_item', 'photos', 80, 1),
+(81, 'content_albums_before_list', 'photos', 81, 1),
+(82, 'user_delete', 'photos', 82, 1),
+(83, 'user_delete', 'rating', 83, 1),
+(84, 'content_before_list', 'rating', 84, 1),
+(85, 'captcha_html', 'recaptcha', 85, 1),
+(86, 'captcha_validate', 'recaptcha', 86, 1),
+(87, 'ctype_basic_form', 'rss', 87, 1),
+(88, 'ctype_before_add', 'rss', 88, 1),
+(89, 'ctype_after_add', 'rss', 89, 1),
+(90, 'ctype_before_edit', 'rss', 90, 1),
+(91, 'ctype_before_update', 'rss', 91, 1),
+(92, 'ctype_after_delete', 'rss', 92, 1),
+(93, 'content_before_category', 'rss', 93, 1),
+(94, 'content_before_profile', 'rss', 94, 1),
+(95, 'photos_before_item', 'search', 95, 1),
+(96, 'content_before_list', 'search', 96, 1),
+(97, 'content_before_item', 'search', 97, 1),
+(98, 'before_print_head', 'search', 98, 1),
+(99, 'html_filter', 'typograph', 99, 1),
+(100, 'admin_dashboard_chart', 'users', 100, 1),
+(101, 'menu_users', 'users', 101, 1),
+(102, 'rating_vote', 'users', 102, 1),
+(103, 'user_notify_types', 'users', 103, 1),
+(104, 'user_privacy_types', 'users', 104, 1),
+(105, 'user_tab_info', 'users', 105, 1),
+(106, 'auth_login', 'users', 106, 1),
+(107, 'user_loaded', 'users', 107, 1),
+(108, 'wall_permissions', 'users', 108, 1),
+(109, 'wall_after_add', 'users', 109, 1),
+(110, 'wall_after_delete', 'users', 110, 1),
+(111, 'content_privacy_types', 'users', 111, 1),
+(112, 'content_view_hidden', 'users', 112, 1),
+(113, 'sitemap_sources', 'users', 113, 1),
+(114, 'content_before_childs', 'users', 114, 1),
+(115, 'ctype_relation_childs', 'users', 115, 1),
+(116, 'admin_dashboard_chart', 'wall', 116, 1),
+(117, 'user_notify_types', 'wall', 117, 1),
+(118, 'user_delete', 'wall', 118, 1),
+(119, 'page_is_allowed', 'widgets', 119, 1),
+(120, 'ctype_lists_context', 'groups', 120, 1),
+(121, 'ctype_lists_context', 'tags', 121, 1),
+(122, 'moderation_list', 'comments', 122, 1),
+(123, 'content_groups_before_delete', 'moderation', 123, 1),
+(124, 'comments_after_refuse', 'moderation', 124, 1),
+(125, 'subscribe', 'activity', 125, 1),
+(126, 'unsubscribe', 'activity', 126, 1),
+(127, 'admin_subscriptions_list', 'content', 127, 1),
+(128, 'admin_subscriptions_list', 'photos', 128, 1),
+(129, 'user_delete', 'subscriptions', 129, 1),
+(130, 'content_toolbar_html', 'subscriptions', 130, 1),
+(131, 'photos_toolbar_html', 'subscriptions', 131, 1),
+(132, 'content_filter_buttons_html', 'subscriptions', 132, 1),
+(133, 'user_tab_info', 'subscriptions', 133, 1),
+(134, 'content_photos_after_add', 'subscriptions', 134, 1),
+(135, 'user_notify_types', 'subscriptions', 135, 1),
+(136, 'user_tab_show', 'subscriptions', 136, 1),
+(137, 'content_after_add_approve', 'subscriptions', 137, 1),
+(138, 'publish_delayed_content', 'subscriptions', 138, 1),
+(139, 'ctype_basic_form', 'subscriptions', 139, 1),
+(140, 'admin_dashboard_block', 'users', 140, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -596,15 +784,59 @@ CREATE TABLE `{#}groups` (
   `join_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика вступления',
   `edit_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика редактирования',
   `wall_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика стены',
+  `wall_reply_policy` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Политика комментирования стены',
   `is_closed` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Закрытая?',
+  `cover` text COMMENT 'Обложка группы',
+  `slug` varchar(100) DEFAULT NULL,
+  `content_policy` varchar(500) DEFAULT NULL COMMENT 'Политика контента',
+  `content_groups` varchar(1000) DEFAULT NULL COMMENT 'Группы, которым разрешено добавление контента',
+  `roles` varchar(2000) DEFAULT NULL,
+  `content_roles` varchar(1000) DEFAULT NULL,
+  `join_roles` varchar(1000) DEFAULT NULL COMMENT 'Роли при вступлении в группу',
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1',
+  `approved_by` int(11) DEFAULT NULL,
+  `date_approved` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `owner_id` (`owner_id`),
+  KEY `members_count` (`members_count`),
   KEY `date_pub` (`date_pub`),
   KEY `rating` (`rating`),
-  KEY `is_public` (`join_policy`),
-  KEY `is_closed` (`is_closed`),
-  KEY `members_count` (`members_count`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Группы (сообщества)';
+  KEY `owner_id` (`owner_id`,`members_count`),
+  KEY `slug` (`slug`),
+  FULLTEXT KEY `title` (`title`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Группы (сообщества)';
+
+DROP TABLE IF EXISTS `{#}groups_fields`;
+CREATE TABLE `{#}groups_fields` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ctype_id` int(11) unsigned DEFAULT NULL,
+  `name` varchar(40) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `hint` varchar(200) DEFAULT NULL,
+  `ordering` int(11) unsigned DEFAULT NULL,
+  `fieldset` varchar(32) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  `is_in_list` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_item` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_filter` tinyint(1) unsigned DEFAULT NULL,
+  `is_in_closed` tinyint(3) unsigned DEFAULT NULL,
+  `is_private` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed` tinyint(1) unsigned DEFAULT NULL,
+  `is_fixed_type` tinyint(1) unsigned DEFAULT NULL,
+  `is_system` tinyint(1) unsigned DEFAULT NULL,
+  `values` text,
+  `options` text,
+  `groups_read` text,
+  `groups_edit` text,
+  `filter_view` text,
+  PRIMARY KEY (`id`),
+  KEY `ordering` (`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Поля групп';
+
+INSERT INTO `{#}groups_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `ordering`, `fieldset`, `type`, `is_in_list`, `is_in_item`, `is_in_filter`, `is_in_closed`, `is_private`, `is_fixed`, `is_fixed_type`, `is_system`, `values`, `options`, `groups_read`, `groups_edit`, `filter_view`) VALUES
+(1, NULL, 'title', 'Заголовок', NULL, 1, 'Основная информация', 'caption', 1, 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nmin_length: 1\nmax_length: 128\nin_fulltext_search: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(2, NULL, 'description', 'Описание группы', NULL, 2, 'Основная информация', 'html', 1, 1, NULL, 1, NULL, 1, 1, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nbuild_redirect_link: 1\nteaser_len: 200\nin_fulltext_search: null\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(3, NULL, 'logo', 'Логотип группы', NULL, 3, 'Основная информация', 'image', 1, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: micro\nsize_modal:\nsizes:\n  - micro\n  - small\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n'),
+(5, NULL, 'cover', 'Обложка группы', NULL, 4, 'Основная информация', 'image', NULL, 1, NULL, 1, NULL, 1, 1, 1, NULL, '---\nsize_teaser: small\nsize_full: original\nsize_modal:\nsizes:\n  - small\n  - original\nallow_import_link: 1\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n', '---\n- 0\n');
 
 DROP TABLE IF EXISTS `{#}groups_invites`;
 CREATE TABLE `{#}groups_invites` (
@@ -626,10 +858,18 @@ CREATE TABLE `{#}groups_members` (
   `role` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Роль пользователя в группе',
   `date_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата обновления роли',
   PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
   KEY `user_id` (`user_id`),
-  KEY `date_updated` (`date_updated`)
+  KEY `group_id` (`group_id`,`date_updated`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Члены групп (сообществ)';
+
+DROP TABLE IF EXISTS `{#}groups_member_roles`;
+CREATE TABLE `{#}groups_member_roles` (
+  `user_id` int(11) unsigned DEFAULT NULL,
+  `group_id` int(11) unsigned DEFAULT NULL,
+  `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  KEY `user_id` (`user_id`),
+  KEY `group_id` (`group_id`,`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Роли участников групп';
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -650,16 +890,16 @@ CREATE TABLE `{#}images_presets` (
   KEY `is_square` (`is_square`),
   KEY `is_watermark` (`is_watermark`),
   KEY `is_internal` (`is_internal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Пресеты для конвертации изображений';
 
-INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`) VALUES
-(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL),
-(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL),
-(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL),
-(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1),
-(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1),
-(7, 'wysiwyg_live', 'Редактор: Live', 690, 690, NULL, NULL, NULL, 'top-left', NULL, 1);
+INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`) VALUES
+(1, 'micro', 'Микро', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75),
+(2, 'small', 'Маленький', 64, 64, 1, NULL, NULL, NULL, NULL, NULL, 80),
+(3, 'normal', 'Средний', NULL, 256, NULL, NULL, NULL, NULL, NULL, NULL, 85),
+(4, 'big', 'Большой', 690, 690, NULL, NULL, NULL, 'bottom-right', NULL, NULL, 90),
+(5, 'wysiwyg_markitup', 'Редактор: markItUp!', 400, 400, NULL, NULL, NULL, 'top-left', NULL, 1, 85),
+(6, 'wysiwyg_redactor', 'Редактор: Redactor', 800, 800, NULL, NULL, NULL, 'top-left', NULL, 1, 90),
+(7, 'wysiwyg_live', 'Редактор: Live', 690, 690, NULL, NULL, NULL, 'top-left', NULL, 1, 90);
 
 DROP TABLE IF EXISTS `{#}menu`;
 CREATE TABLE `{#}menu` (
@@ -707,7 +947,9 @@ INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `orde
 (33, 2, 0, 'Мои группы', '{groups:my}', 5, '---\nclass: group', '---\n- 0\n', NULL),
 (34, 5, 0, 'Войти', 'auth/login', 9, '---\nclass: ajax-modal key', '---\n- 1\n', NULL),
 (35, 5, 0, 'Регистрация', 'auth/register', 10, '---\nclass: user_add', '---\n- 1\n', NULL),
+(36, 2, 0, 'Черновики', '{moderation:draft}', 4, '---\ntarget: _self\nclass: draft\n', '---\n- 0\n', NULL),
 (37, 2, 0, 'Модерация', '{moderation:panel}', 4, '---\nclass: checklist', '---\n- 5\n- 6\n', NULL),
+(41, 2, 0, 'На модерации', '{moderation:user_panel}', 4, '---\ntarget: _self\nclass: onchecklist\n', '---\n- 0\n', NULL),
 (38, 1, 0, 'Комментарии', 'comments', 8, '---\nclass:', '---\n- 0\n', NULL),
 (43, 2, 0, 'Выйти', 'auth/logout', 12, '---\ntarget: _self\nclass: logout', '---\n- 0\n', NULL);
 
@@ -725,7 +967,7 @@ CREATE TABLE `{#}moderators` (
   KEY `user_id` (`user_id`),
   KEY `ctype_name` (`ctype_name`),
   KEY `count_idle` (`count_idle`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Модераторы';
 
 DROP TABLE IF EXISTS `{#}moderators_tasks`;
 CREATE TABLE `{#}moderators_tasks` (
@@ -745,7 +987,7 @@ CREATE TABLE `{#}moderators_tasks` (
   KEY `date_pub` (`date_pub`),
   KEY `item_id` (`item_id`),
   KEY `is_new` (`is_new_item`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Задачи модераторов';
 
 DROP TABLE IF EXISTS `{#}moderators_logs`;
 CREATE TABLE `{#}moderators_logs` (
@@ -764,7 +1006,7 @@ CREATE TABLE `{#}moderators_logs` (
   KEY `target_id` (`target_id`,`target_subject`,`target_controller`),
   KEY `author_id` (`author_id`),
   KEY `date_expired` (`date_expired`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Логи модерации';
 
 DROP TABLE IF EXISTS `{#}perms_rules`;
 CREATE TABLE `{#}perms_rules` (
@@ -773,14 +1015,15 @@ CREATE TABLE `{#}perms_rules` (
   `name` varchar(32) NOT NULL COMMENT 'Название правила',
   `type` enum('flag','list','number') NOT NULL DEFAULT 'flag' COMMENT 'Тип выбора (flag,list...)',
   `options` varchar(128) DEFAULT NULL COMMENT 'Массив возможных значений',
+  `show_for_guest_group` tinyint(1) DEFAULT NULL COMMENT 'Показывать правило для группы гости',
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Перечь всех возможных правил доступа';
 
 INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VALUES
-(1, 'content', 'add', 'flag', NULL),
-(2, 'content', 'edit', 'list', 'own,all'),
+(1, 'content', 'add', 'list', 'premod,yes'),
+(2, 'content', 'edit', 'list', 'premod_own,own,premod_all,all'),
 (3, 'content', 'delete', 'list', 'own,all'),
 (4, 'content', 'add_cat', 'flag', NULL),
 (5, 'content', 'edit_cat', 'flag', NULL),
@@ -792,7 +1035,7 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (12, 'comments', 'delete', 'list', 'own,all,full_delete'),
 (13, 'content', 'view_all', 'flag', NULL),
 (14, 'comments', 'view_all', 'flag', NULL),
-(15, 'groups', 'add', 'flag', NULL),
+(15, 'groups', 'add', 'list', 'premod,yes'),
 (16, 'groups', 'edit', 'list', 'own,all'),
 (17, 'groups', 'delete', 'list', 'own,all'),
 (18, 'content', 'limit', 'number', NULL),
@@ -808,13 +1051,21 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (28, 'content', 'pub_on', 'flag', NULL),
 (29, 'content', 'disable_comments', 'flag', NULL),
 (30, 'comments', 'add_approved', 'flag', NULL),
-(31, 'comments', 'is_moderator', 'flag', NULL),
 (32, 'content', 'add_to_parent', 'list', 'to_own,to_other,to_all'),
 (33,  'content',  'bind_to_parent',  'list',  'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
 (34, 'content',  'bind_off_parent',  'list',  'own,all'),
 (35, 'content', 'move_to_trash', 'list', 'own,all'),
 (36, 'content', 'restore', 'list', 'own,all'),
-(37, 'content', 'trash_left_time', 'number', NULL);
+(37, 'content', 'trash_left_time', 'number', NULL),
+(38, 'users', 'delete', 'list', 'my,anyuser'),
+(39, 'groups', 'invite_users', 'flag', NULL),
+(40, 'groups', 'bind_to_parent', 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
+(41, 'users', 'bind_to_parent', 'list', 'own_to_own,own_to_other,own_to_all,other_to_own,other_to_other,other_to_all,all_to_own,all_to_other,all_to_all'),
+(42, 'groups', 'bind_off_parent', 'list', 'own,all'),
+(43, 'users', 'bind_off_parent', 'list', 'own,all'),
+(44, 'groups', 'content_access', 'flag', NULL),
+(45, 'auth', 'view_closed', 'flag', NULL),
+(46, 'content', 'view_list', 'list', 'other,all');
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
@@ -829,7 +1080,7 @@ CREATE TABLE `{#}perms_users` (
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (10, 4, 'comments', '1'),
 (11, 4, 'comments', 'own'),
-(15, 4, 'groups', '1'),
+(15, 4, 'groups', 'yes'),
 (17, 4, 'groups', 'own'),
 (16, 4, 'groups', 'own'),
 (19, 4, 'users', '1'),
@@ -837,16 +1088,16 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (12, 5, 'comments', 'all'),
 (11, 5, 'comments', 'all'),
 (14, 5, 'comments', '1'),
-(15, 5, 'groups', '1'),
+(15, 5, 'groups', 'yes'),
 (17, 5, 'groups', 'all'),
 (16, 5, 'groups', 'all'),
 (19, 5, 'users', '1'),
 (10, 3, 'comments', '1'),
 (12, 3, 'comments', 'own'),
 (11, 3, 'comments', 'own'),
-(1, 4, 'albums', '1'),
-(1, 5, 'albums', '1'),
-(1, 6, 'albums', '1'),
+(1, 4, 'albums', 'yes'),
+(1, 5, 'albums', 'yes'),
+(1, 6, 'albums', 'yes'),
 (3, 4, 'albums', 'own'),
 (3, 5, 'albums', 'all'),
 (3, 6, 'albums', 'all'),
@@ -871,7 +1122,7 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (21, 4, 'comments', '1'),
 (23, 5, 'activity', '1'),
 (23, 6, 'activity', '1'),
-(1, 3, 'albums', '1'),
+(1, 3, 'albums', 'yes'),
 (3, 3, 'albums', 'own'),
 (2, 3, 'albums', 'own');
 
@@ -907,7 +1158,7 @@ CREATE TABLE `{#}photos` (
   KEY `camera` (`camera`),
   KEY `ordering` (`ordering`),
   FULLTEXT KEY `title` (`title`,`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='Фотографии фотоальбомов';
 
 DROP TABLE IF EXISTS `{#}rating_log`;
 CREATE TABLE `{#}rating_log` (
@@ -946,52 +1197,56 @@ CREATE TABLE `{#}rss_feeds` (
   KEY `is_cache` (`is_cache`),
   KEY `cache_interval` (`cache_interval`),
   KEY `date_cached` (`date_cached`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='RSS ленты';
 
 INSERT INTO `{#}rss_feeds` (`id`, `ctype_id`, `ctype_name`, `title`, `description`, `image`, `mapping`, `limit`, `is_enabled`, `is_cache`, `cache_interval`, `date_cached`) VALUES
+(1, NULL, 'comments', 'Комментарии', NULL, NULL, '---\r\ntitle: target_title\r\ndescription: content_html\r\npubDate: date_pub\r\n', 15, 1, NULL, 60, NULL),
 (4, 7, 'albums', 'Фотоальбомы', NULL, NULL, '---\ntitle: title\ndescription: content\npubDate: date_pub\nimage: cover_image\nimage_size: normal\n', 15, 1, NULL, 60, NULL);
 
 DROP TABLE IF EXISTS `{#}scheduler_tasks`;
 CREATE TABLE `{#}scheduler_tasks` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(250) DEFAULT NULL,
   `controller` varchar(32) DEFAULT NULL,
   `hook` varchar(32) DEFAULT NULL,
-  `period` int(11) unsigned DEFAULT NULL,
+  `period` int(11) UNSIGNED DEFAULT NULL,
+  `is_strict_period` tinyint(1) UNSIGNED DEFAULT NULL,
   `date_last_run` timestamp NULL DEFAULT NULL,
-  `is_active` tinyint(1) unsigned DEFAULT NULL,
-  `is_new` tinyint(1) unsigned DEFAULT '1',
+  `is_active` tinyint(1) UNSIGNED DEFAULT NULL,
+  `is_new` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
-  KEY `is_enabled` (`is_active`),
-  KEY `is_new` (`is_new`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Задачи планировщика';
 
-INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
-(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, 1, 0),
-(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, 1, 0),
-(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, 1, 0),
-(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, 1, 1),
-(5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, 1, 1),
-(6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
-(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, 1, 1);
+INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES
+(1, 'Перевод пользователей между группами', 'users', 'migration', 1440, NULL, NULL, 1, 0),
+(2, 'Создание карты сайта', 'sitemap', 'generate', 1440, NULL, NULL, 1, 0),
+(3, 'Выдача приглашений пользователям', 'auth', 'send_invites', 1440, NULL, NULL, 1, 0),
+(4, 'Публикация контента по расписанию', 'content', 'publication', 1440, NULL, NULL, 1, 1),
+(5, 'Очистка удалённых личных сообщений', 'messages', 'clean', 1440, NULL, NULL, 1, 1),
+(6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
+(7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
+(8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
+(9, 'Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (
-  `session_id` varchar(32) DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `session_id` (`session_id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id` (`user_id`),
   KEY `date_created` (`date_created`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Онлайн сессии';
 
 DROP TABLE IF EXISTS `{#}tags`;
 CREATE TABLE `{#}tags` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(32) NOT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
+  `tag_title` varchar(300) DEFAULT NULL,
+  `tag_desc` varchar(300) DEFAULT NULL,
+  `tag_h1` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`),
   UNIQUE KEY `frequency` (`frequency`,`tag`)
@@ -1013,14 +1268,21 @@ CREATE TABLE `{#}tags_bind` (
 DROP TABLE IF EXISTS `{#}uploaded_files`;
 CREATE TABLE `{#}uploaded_files` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `url_key` varchar(32) DEFAULT NULL,
-  `path` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `counter` int(11) unsigned NOT NULL DEFAULT '0',
+  `path` varchar(255) DEFAULT NULL COMMENT 'Путь к файлу',
+  `name` varchar(255) DEFAULT NULL COMMENT 'Имя файла',
+  `size` int(11) unsigned DEFAULT NULL COMMENT 'Размер файла',
+  `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Счетчик скачиваний',
+  `type` enum('file','image','audio','video') NOT NULL DEFAULT 'file' COMMENT 'Тип файла',
+  `target_controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер привязки',
+  `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект привязки',
+  `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта',
+  `user_id` int(11) unsigned DEFAULT NULL COMMENT 'ID владельца',
+  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата добавления',
   PRIMARY KEY (`id`),
-  KEY `url_key` (`url_key`),
-  KEY `counter` (`counter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `path` (`path`),
+  KEY `user_id` (`user_id`),
+  KEY `target_controller` (`target_controller`,`target_subject`,`target_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Загруженные файлы';
 
 DROP TABLE IF EXISTS `{#}users`;
 CREATE TABLE `{#}users` (
@@ -1035,13 +1297,14 @@ CREATE TABLE `{#}users` (
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
+  `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Удалён',
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',
   `pass_token` varchar(32) DEFAULT NULL COMMENT 'Ключ для восстановления пароля',
   `date_token` timestamp NULL DEFAULT NULL COMMENT 'Дата создания ключа восстановления пароля',
-  `files_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во загруженных файлов',
   `friends_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во друзей',
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во подписчиков',
   `time_zone` varchar(32) DEFAULT NULL COMMENT 'Часовой пояс',
   `karma` int(11) NOT NULL DEFAULT '0' COMMENT 'Репутация',
   `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Рейтинг',
@@ -1082,7 +1345,7 @@ CREATE TABLE `{#}users` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Пользователи';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
 (1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 0, 0, 'Europe/Moscow', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 4400, 'Москва', 'Ротор векторного поля, очевидно, неоднозначен. По сути, уравнение в частных производных масштабирует нормальный лист Мёбиуса, при этом, вместо 13 можно взять любую другую константу.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'разные интересные', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
@@ -1133,8 +1396,8 @@ INSERT INTO `{#}users_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `order
 (1, NULL, 'birth_date', 'Возраст', NULL, 4, 'Анкета', 'age', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\ndate_title: Дата рождения\nshow_y: 1\nshow_m: \nshow_d: \nshow_h: \nshow_i: \nrange: YEAR\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
 (2, NULL, 'city', 'Город', 'Укажите город, в котором вы живете', 3, 'Анкета', 'city', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, '---\nlabel_in_item: left\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
 (3, NULL, 'hobby', 'Расскажите о себе', 'Расскажите о ваших интересах и увлечениях', 11, 'О себе', 'text', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: none\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
-(5, NULL, 'nickname', 'Никнейм', 'Ваше имя для отображения на сайте', 1, 'Анкета', 'string', NULL, 1, 1, NULL, 1, NULL, 1, NULL, '---\r\nlabel_in_list: left\r\nlabel_in_item: left\r\nis_required: 1\r\nis_digits: \r\nis_number: \r\nis_alphanumeric: \r\nis_email: \r\nis_unique: \r\nshow_symbol_count: 1\r\nmin_length: 2\r\nmax_length: 100\r\n', '---\n- 0\n', '---\n- 0\n'),
-(6, NULL, 'avatar', 'Аватар', 'Ваша основная фотография', 2, 'Анкета', 'image', NULL, 1, NULL, NULL, 1, NULL, 1, 'normal | default/avatar.jpg\r\nsmall | default/avatar_small.jpg\r\nmicro | default/avatar_micro.png', '---\nsize_teaser: micro\nsize_full: normal\nsizes:\n  - micro\n  - small\n  - normal\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
+(5, NULL, 'nickname', 'Никнейм', 'Ваше имя для отображения на сайте', 1, 'Анкета', 'string', 1, 1, 1, NULL, 1, NULL, 1, NULL, '---\r\nlabel_in_list: left\r\nlabel_in_item: left\r\nis_required: 1\r\nis_digits: \r\nis_number: \r\nis_alphanumeric: \r\nis_email: \r\nis_unique: \r\nshow_symbol_count: 1\r\nmin_length: 2\r\nmax_length: 100\r\n', '---\n- 0\n', '---\n- 0\n'),
+(6, NULL, 'avatar', 'Аватар', 'Ваша основная фотография', 2, 'Анкета', 'image', 1, 1, NULL, NULL, 1, NULL, 1, NULL, '---\nsize_teaser: micro\nsize_full: normal\nsizes:\n  - micro\n  - small\n  - normal\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\n', '---\n- 0\n', '---\n- 0\n'),
 (7, NULL, 'icq', 'ICQ', NULL, 8, 'Контакты', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 9\nlabel_in_item: left\nis_required: \nis_digits: 1\nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
 (8, NULL, 'skype', 'Skype', NULL, 9, 'Контакты', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 32\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
 (9, NULL, 'phone', 'Телефон', NULL, 7, 'Контакты', 'string', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_item: left\nis_required: \nis_digits: \nis_alphanumeric: \nis_email: \nis_unique: \n', '---\n- 0\n', '---\n- 0\n'),
@@ -1218,7 +1481,7 @@ CREATE TABLE `{#}users_ignors` (
   PRIMARY KEY (`id`),
   KEY `ignored_user_id` (`ignored_user_id`,`user_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Списки игнорирования';
 
 DROP TABLE IF EXISTS `{#}users_invites`;
 CREATE TABLE `{#}users_invites` (
@@ -1230,7 +1493,7 @@ CREATE TABLE `{#}users_invites` (
   KEY `user_id` (`user_id`),
   KEY `email` (`email`),
   KEY `key` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Выданные инвайты';
 
 DROP TABLE IF EXISTS `{#}users_karma`;
 CREATE TABLE `{#}users_karma` (
@@ -1272,7 +1535,7 @@ CREATE TABLE `{#}users_notices` (
   `actions` text,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`,`date_pub`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Уведомления пользователей';
 
 DROP TABLE IF EXISTS `{#}users_statuses`;
 CREATE TABLE `{#}users_statuses` (
@@ -1303,14 +1566,16 @@ CREATE TABLE `{#}users_tabs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `is_active` (`is_active`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Табы профилей';
 
 INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `ordering`) VALUES
 (1, 'Лента', 'activity', 'activity', 1, 1),
 (3, 'Друзья', 'users', 'friends', 1, 2),
 (4, 'Комментарии', 'comments', 'comments', 1, 10),
 (5, 'Группы', 'groups', 'groups', 1, 3),
-(6, 'Репутация', 'users', 'karma', 1, 11);
+(6, 'Репутация', 'users', 'karma', 1, 11),
+(7, 'Подписчики', 'users', 'subscribers', 1, 3),
+(8, 'Подписки', 'subscriptions', 'subscriptions', 1, 3);
 
 DROP TABLE IF EXISTS `{#}users_personal_settings`;
 CREATE TABLE `{#}users_personal_settings` (
@@ -1320,7 +1585,7 @@ CREATE TABLE `{#}users_personal_settings` (
   `settings` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`skey`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Универсальные персональные настройки пользователей';
 
 DROP TABLE IF EXISTS `{#}users_auth_tokens`;
 CREATE TABLE `{#}users_auth_tokens` (
@@ -1334,7 +1599,7 @@ CREATE TABLE `{#}users_auth_tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_token` (`auth_token`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Токены авторизации';
 
 DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
@@ -1365,34 +1630,41 @@ CREATE TABLE `{#}widgets` (
   `author` varchar(128) DEFAULT NULL COMMENT 'Имя автора',
   `url` varchar(250) DEFAULT NULL COMMENT 'Сайт автора',
   `version` varchar(8) DEFAULT NULL COMMENT 'Версия',
+  `is_external` tinyint(1) DEFAULT '1',
+  `files` text COMMENT 'Список файлов виджета (для стороних виджетов)',
+  `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
   KEY `name` (`name`),
   KEY `controller` (`controller`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Доступные виджеты CMS';
 
-INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`) VALUES
-(1, NULL, 'text', 'Текстовый блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(2, 'users', 'list', 'Список пользователей', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(6, 'activity', 'list', 'Лента активности', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(10, 'tags', 'cloud', 'Облако тегов', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(12, NULL, 'auth', 'Авторизация', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0'),
-(16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0');
+INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES
+(1, NULL, 'text', 'Текстовый блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(2, 'users', 'list', 'Список пользователей', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(3, NULL, 'menu', 'Меню', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(4, 'content', 'list', 'Список контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(5, 'content', 'categories', 'Категории', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(6, 'activity', 'list', 'Лента активности', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(7, 'comments', 'list', 'Новые комментарии', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(8, 'users', 'online', 'Кто онлайн', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(9, 'users', 'avatar', 'Аватар пользователя', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(10, 'tags', 'cloud', 'Облако тегов', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(11, 'content', 'slider', 'Слайдер контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(12, 'auth', 'auth', 'Форма авторизации', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(13, 'search', 'search', 'Поиск', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(14, NULL, 'html', 'HTML блок', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(15, 'content', 'filter', 'Фильтр контента', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(17, 'groups', 'list', 'Список групп', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(18, 'subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `template` varchar(30) DEFAULT NULL COMMENT 'Привязка к шаблону',
+  `template_layouts` varchar(500) DEFAULT NULL,
   `widget_id` int(11) unsigned NOT NULL,
   `title` varchar(128) NOT NULL COMMENT 'Заголовок',
   `links` text,
@@ -1410,6 +1682,7 @@ CREATE TABLE `{#}widgets_bind` (
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
+  `device_types` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `position` (`position`),
   KEY `widget_id` (`widget_id`),
@@ -1434,6 +1707,8 @@ CREATE TABLE `{#}widgets_pages` (
   `title` varchar(64) DEFAULT NULL,
   `url_mask` text COMMENT 'Маска URL',
   `url_mask_not` text COMMENT 'Отрицательная маска',
+  `groups` text COMMENT 'Группы доступа',
+  `countries` text COMMENT 'Страны доступа',
   PRIMARY KEY (`id`),
   KEY `controller` (`controller`),
   KEY `name` (`name`)
@@ -1441,8 +1716,8 @@ CREATE TABLE `{#}widgets_pages` (
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
 (100, 'users', 'list', 'LANG_USERS_LIST', NULL, NULL, 'users\r\nusers/index\r\nusers/index/*', NULL),
-(101, 'users', 'profile', 'LANG_USERS_PROFILE', NULL, NULL, 'users/%*', NULL),
-(102, 'users', 'edit', 'LANG_USERS_EDIT_PROFILE', NULL, NULL, 'users/edit/*', NULL),
+(101, 'users', 'profile', 'LANG_USERS_PROFILE', NULL, NULL, 'users/%*', 'users/%/edit'),
+(102, 'users', 'edit', 'LANG_USERS_EDIT_PROFILE', NULL, NULL, 'users/%/edit', NULL),
 (155, 'content', 'albums.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'albums\nalbums-*\nalbums/*', NULL),
 (156, 'content', 'albums.list', 'LANG_WP_CONTENT_LIST', NULL, NULL, 'albums\nalbums-*\nalbums/*', 'albums/*/view-*\nalbums/*.html\nalbums/add\nalbums/add/%\nalbums/addcat\nalbums/addcat/%\nalbums/editcat/%\nalbums/edit/*'),
 (157, 'content', 'albums.item', 'LANG_WP_CONTENT_ITEM', NULL, NULL, 'albums/*.html', NULL),
