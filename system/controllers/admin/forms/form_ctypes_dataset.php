@@ -126,6 +126,7 @@ class formAdminCtypesDataset extends cmsForm {
                             'str'  => array(
                                 'eq' => '=',
                                 'lk' => LANG_FILTER_LIKE,
+                                'ln' => LANG_FILTER_NOT_LIKE,
                                 'lb' => LANG_FILTER_LIKE_BEGIN,
                                 'lf' => LANG_FILTER_LIKE_END,
                                 'nn' => LANG_FILTER_NOT_NULL,

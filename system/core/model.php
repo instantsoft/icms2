@@ -695,6 +695,13 @@ class cmsModel {
         return $this;
     }
 
+    public function filterNotLike($field, $value){
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        $value = $this->db->escape($value);
+        $this->filter("$field NOT LIKE '$value'");
+        return $this;
+    }
+
     public function filterBetween($field, $start, $end){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $start = $this->db->escape($start);
@@ -1083,6 +1090,7 @@ class cmsModel {
 
                     // строки
                     case 'lk': $this->filterLike($filter['field'], '%'.$filter['value'].'%'); break;
+                    case 'ln': $this->filterNotLike($filter['field'], '%'.$filter['value'].'%'); break;
                     case 'lb': $this->filterLike($filter['field'], $filter['value'] . '%'); break;
                     case 'lf': $this->filterLike($filter['field'], '%' . $filter['value']); break;
 

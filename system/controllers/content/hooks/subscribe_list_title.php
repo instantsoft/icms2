@@ -123,6 +123,7 @@ class onContentSubscribeListTitle extends cmsAction {
                             case 'nn': $result = LANG_FILTER_NOT_NULL; break;
                             case 'ni': $result = LANG_FILTER_IS_NULL; break;
                             case 'lk': $result = LANG_FILTER_LIKE.' '.$filters['value']; break;
+                            case 'ln': $result = LANG_FILTER_NOT_LIKE.' '.$filters['value']; break;
                             case 'lb': $result = LANG_FILTER_LIKE_BEGIN.' '.$filters['value']; break;
                             case 'lf': $result = LANG_FILTER_LIKE_END.' '.$filters['value']; break;
                             case 'dy': $result = LANG_FILTER_DATE_YOUNGER.' '.$filters['value']; break;
