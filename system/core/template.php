@@ -1876,15 +1876,14 @@ class cmsTemplate {
 
         if($template_file){
 
-            if (!$config->min_html){
-                include($template_file);
-            }
+	        ob_start();
+	        $html = cmsEventsManager::hook('page_render', ob_get_clean());
 
             if ($config->min_html){
-                ob_start();
-                include($template_file);
-                echo html_minify(ob_get_clean());
+                $html =  html_minify($html);
             }
+
+            echo $html;
 
         } else {
             cmsCore::error(ERR_TEMPLATE_NOT_FOUND. ': '. $this->name.':'.$layout);
