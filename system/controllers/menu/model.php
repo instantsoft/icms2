@@ -1,33 +1,24 @@
 <?php
 
-class modelMenu extends cmsModel{
-
-//============================================================================//
-//============================================================================//
+class modelMenu extends cmsModel {
 
     public function addMenu($item){
 
         $id = $this->insert('menu', $item);
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return $id;
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function updateMenu($id, $item){
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return $this->update('menu', $id, $item);
 
     }
-
-//============================================================================//
-//============================================================================//
 
     public function deleteMenu($id){
 
@@ -35,7 +26,7 @@ class modelMenu extends cmsModel{
 
         $this->filterEqual('menu_id', $id)->deleteFiltered('menu_items');
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
     }
 
@@ -71,9 +62,9 @@ class modelMenu extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getMenu($id, $by_field='id'){
+    public function getMenu($id, $by_field = 'id'){
 
-        $this->useCache("menu.menus");
+        $this->useCache('menu.menus');
 
         return $this->getItemByField('menu', $by_field, $id);
 
@@ -82,7 +73,7 @@ class modelMenu extends cmsModel{
 //============================================================================//
 //============================================================================//
 
-    public function getMenuItems($menu_id=false, $parent_id=false){
+    public function getMenuItems($menu_id = false, $parent_id = false){
 
         $this->select('COUNT(childs.id)', 'childs_count');
 
@@ -135,7 +126,7 @@ class modelMenu extends cmsModel{
 
     }
 
-    public static function buildMenu($menus, $parse_hooks=true) {
+    public static function buildMenu($menus, $parse_hooks = true) {
 
         $items = array();
         $user  = cmsUser::getInstance();
@@ -164,7 +155,13 @@ class modelMenu extends cmsModel{
 
             $hook_result = array('items' => false);
 
-            if ($parse_hooks){
+            if ($item['title'] && $parse_hooks){
+                if(strpos($item['title'], '{user.') !== false){
+                    $item['title'] = string_replace_user_properties($item['title']);
+                }
+            }
+
+            if ($item['url'] && $parse_hooks){
 
                 // если URL пункта меню содержит свойство пользователя
                 if(strpos($item['url'], '{user.') !== false){
@@ -178,10 +175,11 @@ class modelMenu extends cmsModel{
                     $controller = $matches[1];
                     $action = $matches[2];
 
-                    $hook_result = cmsEventsManager::hook("menu_{$controller}", array(
-                        'action' => $action,
+                    $hook_result = cmsEventsManager::hook('menu_'.$controller, array(
+                        'action'        => $action,
                         'menu_item_id'  => $item['id'],
-                        'menu_item_url' => $item['url']
+                        'menu_item_url' => $item['url'],
+                        'menu_item'     => $item
                     ));
 
                     // если хук вернул результат
@@ -192,6 +190,10 @@ class modelMenu extends cmsModel{
 
                         if (isset($hook_result['counter'])) {
                             $item['counter'] = $hook_result['counter'];
+                        }
+
+                        if (isset($hook_result['title'])) {
+                            $item['title'] = $hook_result['title'];
                         }
 
                         if (isset($hook_result['items']) && is_array($hook_result['items'])) {
@@ -242,7 +244,7 @@ class modelMenu extends cmsModel{
 
     }
 
-    public function getMenuItemsTree($menu_id, $parse_hooks=true){
+    public function getMenuItemsTree($menu_id, $parse_hooks = true){
 
         $result = $this->getMenuItems($menu_id);
 
@@ -277,14 +279,11 @@ class modelMenu extends cmsModel{
 
         $this->reorderByList('menu_items', $items_ids_list);
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return true;
 
     }
-
-//============================================================================//
-//============================================================================//
 
     public function addMenuItem($item){
 
@@ -294,25 +293,19 @@ class modelMenu extends cmsModel{
 
         $id = $this->insert('menu_items', $item);
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return $id;
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function updateMenuItem($id, $item){
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return $this->update('menu_items', $id, $item);
 
     }
-
-//============================================================================//
-//============================================================================//
 
     public function deleteMenuItem($id){
 
@@ -352,16 +345,10 @@ class modelMenu extends cmsModel{
 
         $this->reorderByList('menu_items', $to_reorder);
 
-        cmsCache::getInstance()->clean("menu.items");
+        cmsCache::getInstance()->clean('menu.items');
 
         return true;
 
     }
-
-
-//============================================================================//
-//============================================================================//
-
-
 
 }

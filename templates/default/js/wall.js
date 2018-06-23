@@ -205,7 +205,7 @@ icms.wall = (function ($) {
 
         $('#wall_widget #entries_list #entry_'+id+' > .links .edit').hide();
 
-        form.detach().appendTo('#wall_widget #entries_list #entry_'+id).show();
+        form.detach().insertAfter('#wall_widget #entries_list #entry_'+id+' > .links').show();
 
         $('input[name=id]', form).val(id);
         $('input[name=action]', form).val('update');

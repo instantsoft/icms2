@@ -34,7 +34,7 @@ class widgetUsersList extends cmsWidget {
             case 'friends_online':
                 if (!$user->is_logged) { return false; }
                 $model->filterFriends($user->id);
-                $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
+                $model->filterOnlineUsers();
                 break;
 
         }
@@ -45,6 +45,8 @@ class widgetUsersList extends cmsWidget {
             case 'rating': $model->orderBy('karma desc, rating desc');
                 break;
             case 'popular': $model->orderBy('friends_count', 'desc');
+                break;
+            case 'subscribers': $model->orderBy('subscribers_count', 'desc');
                 break;
             case 'date_log': $model->orderBy('date_log', 'desc');
                 break;

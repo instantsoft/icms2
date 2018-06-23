@@ -4,7 +4,6 @@ icms.images = (function ($) {
 
     this.uploadCallback = null;
     this.removeCallback = null;
-    this.uploaded_count = 0;
 
     //====================================================================//
 
@@ -96,10 +95,10 @@ icms.images = (function ($) {
         }, 'json');
     };
 
-    this.uploadMultyByLink = function(field_name, upload_url, link, max_images){
+    this.uploadMultyByLink = function(field_name, upload_url, link, max_images, LANG_UPLOAD_ERR_MAX_IMAGES){
         max_images = +(max_images || 0);
-        icms.images.uploaded_count += 1;
-        if(max_images > 0 && icms.images.uploaded_count > max_images){
+        if(max_images > 0 && icms.images.incrementUploadedCount(field_name) > max_images){
+            icms.images.decrementUploadedCount(field_name);
             icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
             return false;
         }
@@ -138,7 +137,31 @@ icms.images = (function ($) {
 
     };
 
-    this.createUploader = function(field_name, upload_url, max_images){
+    this.incrementUploadedCount = function (field_name){
+
+        var current_count = +$('#file-uploader-'+field_name).data('uploaded_count');
+
+        current_count += 1;
+
+        $('#file-uploader-'+field_name).data('uploaded_count', current_count);
+
+        return current_count;
+
+    };
+
+    this.decrementUploadedCount = function (field_name){
+
+        var current_count = +$('#file-uploader-'+field_name).data('uploaded_count');
+
+        current_count -= 1;
+
+        $('#file-uploader-'+field_name).data('uploaded_count', current_count);
+
+        return current_count;
+
+    };
+
+    this.createUploader = function(field_name, upload_url, max_images, LANG_UPLOAD_ERR_MAX_IMAGES){
 
         max_images = +(max_images || 0);
 
@@ -150,8 +173,8 @@ icms.images = (function ($) {
                 icms.modal.alert(message);
             },
             onSubmit: function(id, fileName){
-                icms.images.uploaded_count += 1;
-                if(max_images > 0 && icms.images.uploaded_count > max_images){
+                if(max_images > 0 && icms.images.incrementUploadedCount(field_name) > max_images){
+                    icms.images.decrementUploadedCount(field_name);
                     icms.modal.alert(LANG_UPLOAD_ERR_MAX_IMAGES);
                     return false;
                 }
@@ -231,10 +254,7 @@ icms.images = (function ($) {
         $('.data input[rel='+idx+']', widget).remove();
         $('.preview[rel='+idx+']', widget).remove();
 
-        var count = 0;
-        var current = false;
-
-        icms.images.uploaded_count -= 1;
+        icms.images.decrementUploadedCount(field_name);
 
         if (typeof(icms.images.removeCallback) == 'function'){
             icms.images.removeCallback(field_name, idx);

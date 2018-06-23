@@ -6,8 +6,8 @@
 <?php } else { ?>
 
     <?php
-        $this->addJSFromContext('templates/default/js/jquery-chosen.js');
-        $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+        $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
+        $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'))
     ?>
 
     <?php echo html_select($field->element_name, $field->data['items'], $field->data['selected'], (array('id'=>$field->id, 'multiple' => true))); ?>

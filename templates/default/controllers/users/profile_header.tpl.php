@@ -3,30 +3,8 @@
 <div id="user_profile_title">
 
     <div class="avatar">
-        <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?>
+        <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?>
     </div>
-
-    <?php if (!$profile['is_deleted']){ ?>
-        <div id="user_profile_rates" class="rates"
-             data-url="<?php echo $this->href_to('karma_vote', $profile['id']); ?>"
-             data-log-url="<?php echo $this->href_to('karma_log', $profile['id']); ?>"
-             data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
-            <div class="karma block">
-                <?php if ($profile['is_can_vote_karma']){ ?>
-                    <a href="#vote-up" onclick="return icms.users.karmaUp()" class="thumb thumb_up" title="<?php echo LANG_KARMA_UP; ?>"></a>
-                <?php } ?>
-                <span class="value <?php echo html_signed_class($profile['karma']); ?>" title="<?php echo LANG_KARMA; ?>">
-                    <?php echo html_signed_num($profile['karma']); ?>
-                </span>
-                <?php if ($profile['is_can_vote_karma']){ ?>
-                    <a href="#vote-down" onclick="return icms.users.karmaDown()" class="thumb thumb_down" title="<?php echo LANG_KARMA_DOWN; ?>"></a>
-                <?php } ?>
-            </div>
-            <?php if ($this->controller->options['is_karma_comments']) { ?>
-                <script><?php echo $this->getLangJS('LANG_USERS_KARMA_COMMENT'); ?></script>
-            <?php } ?>
-        </div>
-    <?php } ?>
 
     <div class="name<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
 
@@ -42,6 +20,9 @@
             <?php if ($profile['is_deleted']){ ?>
                 <span class="is_locked"><?php echo LANG_USERS_IS_DELETED; ?></span>
             <?php } ?>
+            <sup title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>">
+                <?php echo $profile['is_online'] ? '<span class="online">'.LANG_ONLINE.'</span>' : string_date_age_max($profile['date_log'], true); ?>
+            </sup>
         </h1>
 
         <?php if ($this->controller->options['is_status']) { ?>
@@ -71,6 +52,35 @@
         <?php } ?>
 
     </div>
+
+    <?php if (!$profile['is_deleted']){ ?>
+        <div id="user_profile_rates" class="rates"
+             data-url="<?php echo $this->href_to('karma_vote', $profile['id']); ?>"
+             data-log-url="<?php echo $this->href_to('karma_log', $profile['id']); ?>"
+             data-is-comment="<?php echo $this->controller->options['is_karma_comments']; ?>">
+            <div class="karma block">
+                <?php if ($profile['is_can_vote_karma']){ ?>
+                    <a href="#vote-up" onclick="return icms.users.karmaUp()" class="thumb thumb_up" title="<?php echo LANG_KARMA_UP; ?>"></a>
+                <?php } ?>
+                <span class="value <?php echo html_signed_class($profile['karma']); ?>">
+                    <?php echo html_signed_num($profile['karma']); ?>
+                </span>
+                <?php if ($profile['is_can_vote_karma']){ ?>
+                    <a href="#vote-down" onclick="return icms.users.karmaDown()" class="thumb thumb_down" title="<?php echo LANG_KARMA_DOWN; ?>"></a>
+                <?php } ?>
+                <div class="user_ratings_hint"><?php echo LANG_KARMA; ?></div>
+            </div>
+            <?php if ($this->controller->options['is_karma_comments']) { ?>
+                <script><?php echo $this->getLangJS('LANG_USERS_KARMA_COMMENT'); ?></script>
+            <?php } ?>
+        </div>
+        <div id="user_profile_ratings">
+            <div class="block">
+                <span class="<?php echo html_signed_class($profile['rating']); ?>"><?php echo $profile['rating']; ?></span>
+                <div class="user_ratings_hint"><?php echo LANG_RATING; ?></div>
+            </div>
+        </div>
+    <?php } ?>
 
 </div>
 

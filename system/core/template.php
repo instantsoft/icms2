@@ -9,6 +9,7 @@ class cmsTemplate {
     protected $inherit_names = array();
     protected $layout = 'main';
     protected $output;
+    protected $blocks = array();
     protected $options;
     protected $site_config;
 
@@ -38,7 +39,7 @@ class cmsTemplate {
     protected $widgets_group_index = 0;
 
     protected $controller;
-    protected $controllers_queue;
+    protected $controllers_queue = array();
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -111,6 +112,14 @@ class cmsTemplate {
 	 */
 	public function body(){
 		echo $this->output;
+	}
+
+    /**
+     * Выводит HTML блока
+     * @param string $position
+     */
+	public function block($position){
+		echo isset($this->blocks[$position]) ? $this->blocks[$position] : '';
 	}
 
     /**
@@ -465,6 +474,14 @@ class cmsTemplate {
         $this->output .= $html;
     }
 
+    public function addToBlock($position, $html){
+        if(isset($this->blocks[$position])){
+            $this->blocks[$position] .= $html;
+        } else {
+            $this->blocks[$position] = $html;
+        }
+    }
+
     /**
      * Принудительно печатает вывод
      */
@@ -483,12 +500,17 @@ class cmsTemplate {
 	 * @param string $pagetitle Заголовок
 	 */
 	public function setPageTitle($pagetitle){
-        if (func_num_args() > 1){ $pagetitle = implode(' · ', func_get_args()); }
+        if (func_num_args() > 1){ $pagetitle = implode(' · ', array_filter(func_get_args())); }
         if (is_array($pagetitle)){ $pagetitle = implode(' ', $pagetitle); }
         $this->title = $pagetitle;
         if($this->site_config->is_sitename_in_title){
             $this->title .= ' — '.$this->site_config->sitename;
         }
+        return $this;
+	}
+
+	public function addToPageTitle($title){
+        $this->title .= ' '.$title;
         return $this;
 	}
 
@@ -738,20 +760,40 @@ class cmsTemplate {
      * @return string
      */
     public function getCSSTag($file){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+
     }
 
     /**
      * Возвращает тег <script> для указанного файла
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @param string $comment Комментарий к скрипту
+     * @param array $params Параметры тега
      * @return string
      */
-    public function getJSTag($file, $comment=''){
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
-        return '<script type="text/javascript" src="'.$file.'">'.$comment.'</script>';
+    public function getJSTag($file, $comment = '', $params = array()){
+
+        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
+
+            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
+
+            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+
+        }
+
+        $comment = $comment ? '<!-- '.$comment.' !-->' : '';
+
+        return '<script type="text/javascript" src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
+
     }
 
 	/**
@@ -831,16 +873,14 @@ class cmsTemplate {
 
     }
 
-	public function insertJS($file, $comment=''){
+	public function insertJS($file, $comment = ''){
 
         $hash = md5($file);
         if (isset($this->insert_js[$hash])) { return false; }
 		$this->insert_js[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-        $comment = $comment ? "<!-- {$comment} !-->" : '';
         // атрибут rel="forceLoad" добавлен для nyroModal
-        echo '<script type="text/javascript" rel="forceLoad" src="'.$file.'">'.$comment.'</script>';
+        echo $this->getJSTag($file, $comment, array('rel' => 'forceLoad'));
 
         return true;
 
@@ -852,8 +892,7 @@ class cmsTemplate {
         if (isset($this->insert_css[$hash])) { return false; }
 		$this->insert_css[$hash] = $file;
 
-        $file = (strpos($file, '://') !== false) ? $file : $this->site_config->root . $file;
-		echo '<link rel="stylesheet" type="text/css" href="'.$file.'">';
+		echo $this->getCSSTag($file);
 
         return true;
 
@@ -1466,8 +1505,12 @@ class cmsTemplate {
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
 
+                    if (isset($column['key_alias'])){
+                        $field = $column['key_alias'];
+                    }
+
                     if (!is_array($row[$field])){
-                        $value = htmlspecialchars($row[$field]);
+                        $value = html($row[$field], false);
                     } else {
                         $value = $row[$field];
                     }
@@ -1681,11 +1724,17 @@ class cmsTemplate {
 
     }
 
-    public function renderAsset($tpl_file, $data=array()){
+    public function renderAsset($tpl_file, $data=array(), $request = false){
 
         $tpl_file = $this->getTemplateFileName('assets/' . $tpl_file);
 
         extract($data); include($tpl_file);
+
+        if($request){
+            if ($request->isAjax()) {
+                exit();
+            }
+        }
 
     }
 

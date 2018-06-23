@@ -38,7 +38,9 @@
                     </div>
                 <?php } ?>
                 <div class="icon">
-                    <a href="<?php echo $url; ?>"><?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?></a>
+                    <a href="<?php echo $url; ?>" <?php if (!empty($item['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
+                        <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>
+                    </a>
                 </div>
                 <div class="title-multiline">
                     <a class="author" href="<?php echo $url; ?>"><?php html($item['user']['nickname']); ?></a>
@@ -47,7 +49,7 @@
                         <span class="is_private" title="<?php html(LANG_PRIVACY_PRIVATE); ?>"></span>
                     <?php } ?>
                     <div class="details">
-                        <span class="date"><?php echo $item['date_diff']; ?></span>
+                        <span class="date<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>"><?php echo $item['date_diff']; ?></span>
                         <?php if (!empty($item['reply_url']) && cmsUser::isLogged()) { ?>
                             <span class="reply">
                                 <a href="<?php echo $item['reply_url']; ?>"><?php echo LANG_REPLY; ?></a>
@@ -59,7 +61,7 @@
                             <?php foreach($item['images'] as $image){ ?>
                                 <div class="image">
                                     <a href="<?php echo $image['url']; ?>">
-										<img src="<?php echo $image['src']; ?>">
+                                        <img src="<?php echo $image['src']; ?>" alt="<?php html(!empty($image['title']) ? $image['title'] : $item['subject_title']); ?>">
                                     </a>
                                 </div>
                             <?php } ?>

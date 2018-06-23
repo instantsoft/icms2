@@ -17,8 +17,6 @@
 
 <h1><?php echo LANG_USERS_MY_INVITES; ?></h1>
 
-<p><?php printf(LANG_USERS_INVITES_COUNT, html_spellcount($profile['invites_count'], LANG_USERS_INVITES_SPELLCOUNT)); ?></p>
-
 <?php
     $this->renderForm($form, $input, array(
         'action' => '',

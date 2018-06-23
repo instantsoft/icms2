@@ -491,6 +491,7 @@ class modelPhotos extends cmsModel{
         if (!$album) { return false; }
 
         $album['ctype'] = $content_model->getContentTypeByName('albums');
+        $album['ctype_name'] = $album['ctype']['name'];
 
         return $album;
 
@@ -501,7 +502,13 @@ class modelPhotos extends cmsModel{
 
     public function getRatingTarget($subject, $id){
 
-        return $this->getPhoto($id);
+        $item = $this->getPhoto($id);
+
+        if($item){
+            $item['page_url'] = href_to('photos', $item['slug'].'.html');
+        }
+
+        return $item;
 
     }
 

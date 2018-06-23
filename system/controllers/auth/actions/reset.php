@@ -3,6 +3,8 @@ class actionAuthReset extends cmsAction {
 
     public function run($pass_token){
 
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
+
         if (!$pass_token) { cmsCore::error404(); }
 
         $users_model = cmsCore::getModel('users');
@@ -24,7 +26,7 @@ class actionAuthReset extends cmsAction {
 
             cmsUser::addSessionMessage(LANG_RESTORE_TOKEN_EXPIRED, 'error');
 
-            $this->redirectToHome();
+            $this->redirectToAction('restore');
 
         }
 

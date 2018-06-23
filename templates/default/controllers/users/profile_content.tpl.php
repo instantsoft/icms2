@@ -8,12 +8,12 @@
 
         $this->addBreadcrumb($folders[$folder_id]['title']);
 
-        $this->setPageTitle($list_header, $folders[$folder_id]['title'], $profile['nickname']);
+        $this->setPageTitle($list_header, implode(', ', $filter_titles), $folders[$folder_id]['title'], $profile['nickname']);
         $this->setPageDescription($profile['nickname'].' — '.$list_header.' '.$folders[$folder_id]['title']);
 
     } else {
 
-        $this->setPageTitle($list_header, $profile['nickname']);
+        $this->setPageTitle($list_header, implode(', ', $filter_titles), $profile['nickname']);
         $this->setPageDescription($profile['nickname'].' — '.$list_header);
 
     }
@@ -52,24 +52,23 @@
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
     }
-
+    if ($toolbar_html) {
+        echo html_each($toolbar_html);
+    }
 ?>
 
 <h1 id="user_profile_title">
 
-    <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-        <div class="content_list_rss_icon">
-            <a href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>">RSS</a>
-        </div>
-    <?php } ?>
-
     <div class="avatar">
-        <a href="<?php echo href_to_profile($profile); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname']); ?></a>
+        <a href="<?php echo href_to_profile($profile); ?>"><?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?></a>
     </div>
 
     <div class="name">
         <a href="<?php echo href_to_profile($profile); ?>"><?php html($profile['nickname']); ?></a> /
         <span><?php echo $list_header; ?></span>
+        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+            <a class="inline_rss_icon" href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>">RSS</a>
+        <?php } ?>
     </div>
 
 </h1>

@@ -21,7 +21,11 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
         <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
     </div>
 <?php } ?>
-
+<?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
+    <div id="comments_add_link">
+        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
+    </div>
+<?php } ?>
 <div id="comments_list">
 
     <?php if (!$comments){ ?>
@@ -60,12 +64,8 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 ></div>
 
 <?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
-    <div id="comments_add_link">
-        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
-    </div>
-
     <div id="comments_add_form">
-        <?php if ($is_karma_allowed || $is_guests_allowed){ ?>
+        <?php if ($is_karma_allowed || (!$user->is_logged && $is_guests_allowed)){ ?>
             <div class="preview_box"></div>
             <form action="<?php echo $this->href_to('submit'); ?>" method="post">
                 <?php echo html_csrf_token($csrf_token_seed); ?>
@@ -80,15 +80,13 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                 <?php if (!$user->is_logged) { ?>
                     <?php
                         $this->addJS('templates/default/js/jquery-cookie.js');
-                        $name = cmsUser::getCookie('comments_guest_name');
-                        $email = cmsUser::getCookie('comments_guest_email');
                     ?>
                     <div class="author_data">
                         <div class="name field">
-                            <label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $name); ?>
+                            <label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $guest_name); ?>
                         </div>
                         <div class="email field">
-                            <label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $email); ?>
+                            <label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $guest_email); ?>
                         </div>
                     </div>
                 <?php } ?>

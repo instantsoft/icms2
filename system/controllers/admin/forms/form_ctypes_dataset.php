@@ -91,6 +91,7 @@ class formAdminCtypesDataset extends cmsForm {
                         'add_title'    => LANG_FILTER_ADD,
                         'is_multiple'  => true,
                         'dynamic_list' => true,
+                        'single_select' => 0,
                         'select_title' => LANG_FILTER_FIELD,
                         'multiple_keys' => array(
                             'field' => 'field', 'condition' => 'field_select', 'value' => 'field_value'
@@ -125,6 +126,7 @@ class formAdminCtypesDataset extends cmsForm {
                             'str'  => array(
                                 'eq' => '=',
                                 'lk' => LANG_FILTER_LIKE,
+                                'ln' => LANG_FILTER_NOT_LIKE,
                                 'lb' => LANG_FILTER_LIKE_BEGIN,
                                 'lf' => LANG_FILTER_LIKE_END,
                                 'nn' => LANG_FILTER_NOT_NULL,

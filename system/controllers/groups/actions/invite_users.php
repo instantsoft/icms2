@@ -104,6 +104,8 @@ class actionGroupsInviteUsers extends cmsAction {
 
     private function sendUserInvite($group, $invite_user_id) {
 
+        if (!$invite_user_id) { cmsCore::error404(); }
+
         $profile = cmsCore::getModel('users')->getUser($invite_user_id);
         if (!$profile || $profile['id'] == $this->cms_user->id) { cmsCore::error404(); }
 

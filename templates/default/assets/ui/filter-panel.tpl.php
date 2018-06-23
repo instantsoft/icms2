@@ -58,11 +58,17 @@
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
                         <div class="link">
-                            <a href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>"><?php echo LANG_CANCEL; ?></a>
+                            <a href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
+                                <?php echo LANG_CANCEL; ?>
+                            </a>
                         </div>
                         <div class="link">
                             # <a href="<?php echo $form_url.$form_url_sep.http_build_query($filters); ?>"><?php echo LANG_FILTER_URL; ?></a>
                         </div>
+                        <?php
+                            $hooks_html = cmsEventsManager::hookAll('content_filter_buttons_html', array($css_prefix, $form_url, $filters));
+                            if ($hooks_html) { echo html_each($hooks_html); }
+                        ?>
                     <?php } ?>
                 </div>
             <?php } ?>

@@ -23,10 +23,29 @@
 
         <?php if ($fields['avatar']['is_in_item']){ ?>
             <div id="avatar" class="block">
-                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname']); ?>
+                <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
             </div>
         <?php } ?>
-
+        <div class="block">
+            <ul class="details">
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_REGDATE; ?>:</strong>
+                    <?php echo string_date_age_max($profile['date_reg'], true); ?>
+                </li>
+                <?php if ($profile['inviter_id']) { ?>
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
+                    <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
+                </li>
+                <?php } ?>
+                <?php if ($user->is_admin) { ?>
+                <li>
+                    <strong><?php echo LANG_USERS_PROFILE_LAST_IP; ?>:</strong>
+                    <?php html($profile['ip']); ?>
+                </li>
+                <?php } ?>
+            </ul>
+        </div>
         <?php if ($content_counts) { ?>
             <div class="block">
                 <ul class="content_counts">
@@ -42,7 +61,6 @@
                 </ul>
             </div>
         <?php } ?>
-
         <?php if ($is_friends_on && $friends) { ?>
             <div class="block">
                 <div class="block-title">
@@ -56,49 +74,12 @@
                 <div class="friends-list">
                     <?php foreach($friends as $friend){ ?>
                         <a href="<?php echo $this->href_to($friend['id']); ?>" title="<?php html($friend['nickname']); ?>">
-                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?></span>
+                            <span><?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname'], $friend['is_deleted']); ?></span>
                         </a>
                     <?php } ?>
                 </div>
             </div>
         <?php } ?>
-
-        <div class="block">
-
-            <ul class="details">
-
-                <li>
-                    <strong><?php echo LANG_RATING; ?>:</strong>
-                    <span class="<?php echo html_signed_class($profile['rating']); ?>"><?php echo $profile['rating']; ?></span>
-                </li>
-
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_LOGDATE; ?>:</strong>
-                    <?php echo $profile['is_online'] ? '<span class="online">'.LANG_ONLINE.'</span>' : string_date_age_max($profile['date_log'], true); ?>
-                </li>
-
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_REGDATE; ?>:</strong>
-                    <?php echo string_date_age_max($profile['date_reg'], true); ?>
-                </li>
-
-                <?php if ($profile['inviter_id']) { ?>
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_INVITED_BY; ?>:</strong>
-                    <a href="<?php echo href_to('users', $profile['inviter_id']); ?>"><?php html($profile['inviter_nickname']); ?></a>
-                </li>
-                <?php } ?>
-
-                <?php if ($user->is_admin) { ?>
-                <li>
-                    <strong><?php echo LANG_USERS_PROFILE_LAST_IP; ?>:</strong>
-                    <?php html($profile['ip']); ?>
-                </li>
-                <?php } ?>
-
-            </ul>
-
-        </div>
 
     </div>
 

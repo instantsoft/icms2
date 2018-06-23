@@ -47,9 +47,12 @@ class cmsModel {
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
     protected $approved_filter_disabled = false;
+    protected $hidden_parents_filter_disabled = true;
     protected $delete_filter_disabled = false;
     protected $approved_filtered = false;
     protected $available_filtered = false;
+    protected $hp_filtered = false;
+    protected $joined_session_online = array();
 
     protected static $cached = array();
 
@@ -558,13 +561,16 @@ class cmsModel {
         $this->join         = '';
         $this->distinct     = '';
         $this->straight_join = '';
+        $this->joined_session_online = array();
 
 		if ($this->keep_filters) { return $this; }
 
-		$this->filter_on    = false;
-		$this->where        = '';
-        $this->privacy_filtered = false;
-        $this->approved_filtered = false;
+		$this->filter_on          = false;
+        $this->where              = '';
+        $this->privacy_filtered   = false;
+        $this->approved_filtered  = false;
+        $this->available_filtered = false;
+        $this->hp_filtered        = false;
 
         return $this;
 
@@ -626,13 +632,13 @@ class cmsModel {
         return $this;
     }
 
-    public function filterEqual($field, $value){
+    public function filterEqual($field, $value, $binary = false){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         if (is_null($value)){
             $this->filter($field.' IS NULL');
         } else {
             $value = $this->db->escape($value);
-            $this->filter("$field = '$value'");
+            $this->filter(($binary ? ' BINARY ' : '')."$field = '$value'");
         }
         return $this;
     }
@@ -689,6 +695,13 @@ class cmsModel {
         return $this;
     }
 
+    public function filterNotLike($field, $value){
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        $value = $this->db->escape($value);
+        $this->filter("$field NOT LIKE '$value'");
+        return $this;
+    }
+
     public function filterBetween($field, $start, $end){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
         $start = $this->db->escape($start);
@@ -702,6 +715,14 @@ class cmsModel {
         $value = $this->db->escape($value);
         $interval = $this->db->escape($interval);
         $this->filter("$field >= DATE_SUB(NOW(), INTERVAL {$value} {$interval})");
+        return $this;
+    }
+
+    public function filterTimestampYounger($field, $value, $interval='DAY'){
+        if (strpos($field, '.') === false){ $field = 'i.' . $field; }
+        $value = intval($value);
+        $interval = $this->db->escape($interval);
+        $this->filter("TIMESTAMPDIFF({$interval}, {$field}, NOW()) <= {$value}");
         return $this;
     }
 
@@ -923,6 +944,20 @@ class cmsModel {
         return $this;
     }
 
+    public function enableHiddenParentsFilter(){
+        $this->hidden_parents_filter_disabled = false;
+        return $this;
+    }
+
+    public function disableHiddenParentsFilter(){
+        $this->hidden_parents_filter_disabled = true;
+        return $this;
+    }
+
+    public function isEnableHiddenParentsFilter(){
+        return $this->hidden_parents_filter_disabled === false;
+    }
+
     public function joinModerationsTasks($ctype_name){
         $this->select('IF(t.id IS NULL AND i.is_approved < 1, 1, NULL)', 'is_draft');
         $this->select('t.is_new_item');
@@ -975,15 +1010,39 @@ class cmsModel {
     }
 
     public function filterHiddenParents(){
+
+        if ($this->hp_filtered) { return $this; }
+
+        $this->hp_filtered = true;
+
         return $this->filterIsNull('is_parent_hidden');
+
     }
 
-    public function filterFriends($user_id){
+    public function filterSubscribe($user_id){
+        return $this->filterFriends($user_id, 0);
+    }
+
+    public function filterFriendsAndSubscribe($user_id){
+        return $this->filterFriends($user_id, null);
+    }
+
+    public function filterFriends($user_id, $is_mutual = 1){
 
         $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
         $this->filterEqual('fr.user_id', intval($user_id));
-        $this->filterEqual('fr.is_mutual', 1);
+
+        if($is_mutual !== null){
+            $this->filterEqual('fr.is_mutual', $is_mutual);
+        } else {
+            // подписчики (null) и друзья (1)
+            $this->filterStart();
+                $this->filterEqual('fr.is_mutual', 1);
+                    $this->filterOr();
+                $this->filterIsNull('fr.is_mutual');
+            $this->filterEnd();
+        }
 
         return $this;
 
@@ -998,9 +1057,13 @@ class cmsModel {
 
     }
 
-    public function applyDatasetFilters($dataset, $ignore_sorting=false){
+    public function filterOnlineUsers() {
+        return $this->filterNotNull('online.user_id')->filterTimestampYounger('online.date_created', cmsUser::USER_ONLINE_INTERVAL, 'SECOND');
+    }
 
-        if (!empty ($dataset['filters'])){
+    public function applyDatasetFilters($dataset, $ignore_sorting = false){
+
+        if (!empty($dataset['filters'])){
 
             foreach($dataset['filters'] as $filter){
 
@@ -1012,7 +1075,7 @@ class cmsModel {
                 if (($filter['value'] === '') && !in_array($filter['condition'], array('nn', 'ni'))) { continue; }
                 if (empty($filter['condition'])) { continue; }
 
-                if ($filter['value'] !== '') { $filter['value'] = string_replace_user_properties($filter['value']); }
+                if ($filter['value'] !== '' && !is_array($filter['value'])) { $filter['value'] = string_replace_user_properties($filter['value']); }
 
                 switch($filter['condition']){
 
@@ -1027,12 +1090,19 @@ class cmsModel {
 
                     // строки
                     case 'lk': $this->filterLike($filter['field'], '%'.$filter['value'].'%'); break;
+                    case 'ln': $this->filterNotLike($filter['field'], '%'.$filter['value'].'%'); break;
                     case 'lb': $this->filterLike($filter['field'], $filter['value'] . '%'); break;
                     case 'lf': $this->filterLike($filter['field'], '%' . $filter['value']); break;
 
                     // даты
                     case 'dy': $this->filterDateYounger($filter['field'], $filter['value']); break;
                     case 'do': $this->filterDateOlder($filter['field'], $filter['value']); break;
+
+                    // массив
+                    case 'in':
+                        if(!is_array($filter['value'])){ $filter['value'] = explode(',', $filter['value']); }
+                        $this->filterIn($filter['field'], $filter['value']);
+                        break;
 
                 }
 
@@ -1061,13 +1131,13 @@ class cmsModel {
     }
 
     public function select($field, $as=false){
-        $this->select[] = $as ? $field.' as '.$as : $field;
+        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
     }
 
     public function selectOnly($field, $as=false){
         $this->select = array();
-        $this->select[] = $as ? $field.' as '.$as : $field;
+        $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
     }
 
@@ -1116,8 +1186,9 @@ class cmsModel {
 
         if (!$user_fields){
             $user_fields = array(
-                'u.nickname' => 'user_nickname',
-                'u.avatar'   => 'user_avatar'
+                $as . '.nickname'   => 'user_nickname',
+                $as . '.is_deleted' => 'user_is_deleted',
+                $as . '.avatar'     => 'user_avatar'
             );
         }
 
@@ -1152,6 +1223,19 @@ class cmsModel {
 	public function joinUserRight($on_field='user_id', $user_fields=array()){
 		return $this->joinUser($on_field, $user_fields, 'right');
 	}
+
+    public function joinSessionsOnline($as = 'u') {
+
+        if(!empty($this->joined_session_online[$as])){ return $this; }
+
+        $this->joinLeft('sessions_online', 'online', 'online.user_id = '.$as.'.id');
+        $this->select('IF(online.date_created IS NOT NULL AND TIMESTAMPDIFF(SECOND, online.date_created, NOW()) <= '.cmsUser::USER_ONLINE_INTERVAL.', 1, 0)', 'is_online');
+
+        $this->joined_session_online[$as] = true;
+
+        return $this;
+
+    }
 
     public function groupBy($field){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
@@ -1220,7 +1304,7 @@ class cmsModel {
 				$field     = $o['by'];
                 $direction = strtolower($o['to']) === 'desc' ? 'desc' : 'asc';
 
-                if (strpos($field, '.') === false){ $field = 'i.'.$field; }
+                if (empty($o['strict']) && strpos($field, '.') === false){ $field = 'i.'.$field; }
 				if ($this->order_by) { $this->order_by .= ', '; }
 				$this->order_by .= $field.' '.$direction;
 
@@ -1369,7 +1453,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getCount($table_name, $by_field='id'){
+    public function getCount($table_name, $by_field = 'id', $reset = false){
 
         $sql = "SELECT {$this->straight_join} COUNT({$this->distinct} i.{$by_field} ) as count
                 FROM {#}{$table_name} i
@@ -1380,6 +1464,10 @@ class cmsModel {
         if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
         if ($this->group_by){ $sql .= 'GROUP BY '.$this->group_by.PHP_EOL; }
+
+        if($reset){
+            $this->resetFilters();
+        }
 
         // если указан ключ кеша для этого запроса
         // то пробуем получить результаты из кеша
@@ -1479,7 +1567,7 @@ class cmsModel {
         // перебираем все вернувшиеся строки
         while($item = $this->db->fetchAssoc($result)){
 
-            $key = $key_field ? $item[$key_field] : false;
+            $key = ($key_field && isset($item[$key_field])) ? $item[$key_field] : false;
 
             // для кеша формируем массив без обработки коллбэком
             if ($this->cache_key){

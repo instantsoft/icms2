@@ -2,7 +2,7 @@
 
     $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
     $page_header = isset($category['title']) ? $category['title'] : $list_header;
-    $rss_query = isset($category['id']) ? "?category={$category['id']}" : '';
+    $rss_query = !empty($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
     $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
@@ -15,6 +15,7 @@
 		if (!$seo_title) { $seo_title = $page_header; }
         if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
         if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
+        if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
 
         $this->setPageTitle($seo_title);
 
@@ -96,12 +97,11 @@
     }
 
 ?>
-
 <?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
     <?php if (!empty($list_styles)){ ?>
         <div class="content_list_styles">
             <?php foreach ($list_styles as $list_style) { ?>
-                <a rel="nofollow" href="<?php echo $list_style['url']; ?>" class="style_switch <?php echo $list_style['class']; ?>">
+                <a rel="nofollow" href="<?php echo $list_style['url']; ?>" class="style_switch<?php if (!$list_style['title']) { ?> without_title<?php } ?> <?php echo $list_style['class']; ?>">
                     <?php echo $list_style['title']; ?>
                 </a>
             <?php } ?>
@@ -109,6 +109,9 @@
     <?php } ?>
     <h1>
         <?php echo $page_header; ?>
+        <?php if ($dataset && !empty($current_dataset['title'])){ ?>
+            <span> / <?php echo $current_dataset['title']; ?></span>
+        <?php } ?>
         <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
             <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
         <?php } ?>
@@ -149,7 +152,6 @@
 
 <?php echo $items_list_html; ?>
 
-<?php $hooks_html = cmsEventsManager::hookAll("content_{$ctype['name']}_items_html", array('category_view', $ctype, $category, $current_dataset)); ?>
 <?php if ($hooks_html) { ?>
     <div class="sub_items_list">
         <?php echo html_each($hooks_html); ?>

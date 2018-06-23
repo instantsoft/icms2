@@ -12,6 +12,8 @@ class actionAdminSettingsSchedulerDelete extends cmsAction {
 
         $this->model->deleteSchedulerTask($id);
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $this->redirectToAction('settings', array('scheduler'));
 
     }

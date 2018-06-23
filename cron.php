@@ -30,11 +30,28 @@
     // Подключение модели
     $model = cmsCore::getModel('admin');
 
-    // Получение списка задач для выполнения
-    $tasks = $model->getPendingSchedulerTasks();
+    // id задачи
+    // id передаётся вторым параметром, первым передаётся имя домена
+    $task_id = isset($argv[2]) ? (int)$argv[2] : 0;
+
+    // если id задачи передано, запускаем только её
+    if($task_id){
+
+        $task = $model->getSchedulerTask($task_id);
+
+        if($task){
+            $tasks = array($task['id'] => $task);
+        }
+
+    } else {
+
+        // Иначе получаем весь список задач для выполнения
+        $tasks = $model->getPendingSchedulerTasks();
+
+    }
 
     // Если задач нет, выходим
-    if (!$tasks) { exit; }
+    if (empty($tasks)) { exit; }
 
     // Коллекция контроллеров
     $controllers = array();
@@ -65,10 +82,19 @@
 
         }
 
-        // Выполняем хук
-        $controller->runHook("cron_{$task['hook']}");
+        try {
 
-        // Обновляем время последнего запуска задачи
-        $model->updateSchedulerTaskDate($task);
+            // Выполняем хук
+            $controller->runHook("cron_{$task['hook']}");
+
+            // Обновляем время последнего запуска задачи
+            $model->updateSchedulerTaskDate($task);
+
+        } catch (Exception $e) {
+
+            // выключаем ошибочное задание
+            $model->toggleSchedulerPublication($task['id'], 0);
+
+        }
 
     }

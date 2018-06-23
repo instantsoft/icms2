@@ -18,6 +18,12 @@ class users extends cmsFrontend {
     public $is_friend_profile = false;
 
     /**
+     * Текущий пользователь подписан на просматриваемого
+     * @var boolean
+     */
+    public $is_subscribe_profile = false;
+
+    /**
      * Текущий просматриваемый профиль
      * @var array
      */
@@ -91,6 +97,7 @@ class users extends cmsFrontend {
 
         $this->is_own_profile = $this->cms_user->id == $profile['id'];
         $this->is_friend_profile = $this->cms_user->isFriend($profile['id']);
+        $this->is_subscribe_profile = $this->cms_user->isSubscribe($profile['id']);
 
         return $this;
 
@@ -144,7 +151,8 @@ class users extends cmsFrontend {
 
 				$tab_info = $controller->runHook('user_tab_info', array('profile'=>$profile, 'tab_name'=>$tab['name']));
 
-				if ($tab_info == false) {
+				if ($tab_info === false) {
+                    unset($this->tabs[$tab['name']]);
 					continue;
 				} else if ($tab_info === true) {
 					$tab_info = $default_tab_info;
@@ -291,7 +299,7 @@ class users extends cmsFrontend {
                 'title' => LANG_USERS_DS_ONLINE,
                 'order' => array('date_log', 'desc'),
                 'filter' => function($model, $dset){
-                    return $model->joinInner('sessions_online', 'online', 'i.id = online.user_id');
+                    return $model->joinSessionsOnline('i')->filterOnlineUsers();
                 }
             );
         }

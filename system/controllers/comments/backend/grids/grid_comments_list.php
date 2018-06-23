@@ -97,7 +97,7 @@ function grid_comments_list($controller){
         array(
             'title' => LANG_COMMENTS_VIEW,
             'class' => 'view tooltip',
-            'href'  => href_to('{target_url}', '#comment_{id}')
+            'href'  => rel_to_href('{target_url}').'#comment_{id}'
         ),
         array(
             'title'   => LANG_DELETE,

@@ -314,6 +314,15 @@
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
+    define('LANG_CP_WIDGETS_FA',                'Quick selection of URLs for masks');
+    define('LANG_CP_WIDGETS_FA_TYPE',           'Type');
+    define('LANG_CP_WIDGETS_FA_ITEMS',          'Items');
+    define('LANG_CP_WIDGETS_FA_CATS',           'Categories');
+    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Title or URL');
+    define('LANG_CP_WIDGETS_FA_ADD_TO',         'Add to the');
+    define('LANG_CP_WIDGETS_FA_TO_POS',         'To positive');
+    define('LANG_CP_WIDGETS_FA_TO_NOT',         'To negative');
+    define('LANG_CP_WIDGETS_FA_ADD',            'Add');
 
     define('LANG_CP_USER_PMAILING',             'Create pm messages');
     define('LANG_CP_USER_ADD',                  'Add user');
@@ -328,6 +337,7 @@
     define('LANG_CP_USER_GROUP_CREATED',        'Group &laquo;%s&raquo; has been created');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Allow to join this group after sign up');
     define('LANG_CP_USER_GROUP_IS_FILTER',      'Show in user filter');
+    define('LANG_CP_USER_GROUP_ERR_DELETE',     'You can not delete the last group');
     define('LANG_CP_USER_LOCKING',              'Blocking');
     define('LANG_CP_USER_LOCKED',               'Blocked');
     define('LANG_CP_USER_IS_LOCKED',            'Block user');
@@ -336,6 +346,8 @@
     define('LANG_CP_USER_NOT_FOUND',            'User %s not found');
     define('LANG_CP_USER_FIND_BYIP',            'Find all by this IP');
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
+    define('LANG_CP_USER_SEARCH_NOT_FOUND',     'No users by specified criteria');
+    define('LANG_CP_USERS_ONLINE',              'Online now');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
@@ -375,6 +387,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Mobile theme');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Tablet theme');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Theme Settings');
+    define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Create your own theme');
     define('LANG_CP_SETTINGS_EDITOR',           'Default HTML editor');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Show breadcrumbs?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Minify HTML');
@@ -407,6 +420,8 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Without encryption');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME',  'Abstract Counter');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME_HINT',  'Used in the parameters when connecting js and css. Increase after the changes to reset the cache of visitors.');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Enable caching');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Caching engine');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'not available');
@@ -610,6 +625,7 @@
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/en/manual/components/recaptcha');
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/en/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/en/manual/components/images');
+	define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'http://docs.instantcms.ru/en/manual/components/subscriptions');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/en/manual/components/users');
     define('LANG_HELP_URL_COM_MODERATION',          'http://docs.instantcms.ru/en/manual/components/moderation');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/en/manual/components/users/migrations');
@@ -669,3 +685,4 @@
     define('LANG_CP_QUEUE_STATUS2', 'Blocked with error');
     define('LANG_CP_QUEUE_STATUS3', 'Pending');
     define('LANG_CP_QUEUE_STATUS4', 'Waiting for 2nd time');
+    define('LANG_CP_SUBJECT', 'Subject');

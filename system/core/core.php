@@ -790,6 +790,10 @@ class cmsCore {
             $layout = $template->getLayout();
             $user = cmsUser::getInstance();
 
+            if($user->is_admin){
+                $template->addJS('templates/default/js/widgets.js');
+            }
+
             foreach ($widgets_list as $widget){
 
                 // не выводим виджеты контроллеров, которые отключены
@@ -1151,8 +1155,9 @@ class cmsCore {
 
     public static function getTimeZones(){
         self::loadLib('timezones');
+        $_zones = getTimeZones();
         $zones = array();
-        foreach(getTimeZones() as $zone){
+        foreach($_zones as $zone){
             $zones[ $zone ] = $zone;
         }
         return $zones;

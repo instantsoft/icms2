@@ -21,6 +21,13 @@
     }
     $this->addBreadcrumb($photo['title']);
 
+    if ($is_can_set_cover) {
+        $this->addToolButton(array(
+            'class' => 'images',
+            'title' => LANG_PHOTOS_SET_COVER,
+            'href'  => $this->href_to('set_cover', $photo['id'])
+        ));
+    }
     if ($is_can_edit) {
         $this->addToolButton(array(
             'class' => 'edit',
@@ -96,7 +103,7 @@
             <div class="share">
                 <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
+<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,whatsapp" data-size="s"></div>
             </div>
         </div>
 

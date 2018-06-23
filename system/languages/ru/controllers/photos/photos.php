@@ -20,6 +20,7 @@
 	define('LANG_PHOTOS_PRESET_RELATED',        'Пресет для похожих фотографий на странице просмотра фото');
 	define('LANG_PHOTOS_PRESET_DEF',            'По-умолчанию');
 	define('LANG_PHOTOS_EDIT_PHOTO',            'Редактировать фото');
+	define('LANG_PHOTOS_SET_COVER',             'Сделать обложкой альбома');
 	define('LANG_PHOTOS_DELETE_PHOTO',          'Удалить фото');
 	define('LANG_PHOTOS_DELETE_PHOTO_CONFIRM',  'Удалить эту фотографию?');
 	define('LANG_PHOTOS_TYPES',                 'Типы фотографий');
@@ -34,13 +35,15 @@
 	define('LANG_PHOTOS_NO_PUB',                'Фото не опубликовано');
     define('LANG_PHOTOS_ALL_ORIENT',            'Любая ориентация');
     define('LANG_PHOTOS_SQUARE',                'Квадратные');
-    define('LANG_PHOTOS_LANDSCAPE',             'Горизонтальная');
-    define('LANG_PHOTOS_PORTRAIT',              'Вертикальная');
+    define('LANG_PHOTOS_LANDSCAPE',             'Горизонтальные');
+    define('LANG_PHOTOS_PORTRAIT',              'Вертикальные');
     define('LANG_PHOTOS_ALL',                   'Все изображения');
     define('LANG_PHOTOS_SIZE',                  'Размер');
     define('LANG_PHOTOS_SIZE_W',                'Ширина');
     define('LANG_PHOTOS_SIZE_H',                'Высота');
     define('LANG_PHOTOS_MORE_THAN',             'Больше чем');
+    define('LANG_PHOTOS_BYWIDTH',               'по ширине');
+    define('LANG_PHOTOS_BYHEIGHT',              'по высоте');
     define('LANG_PHOTOS_CLEAR_FILTER',          'Очистить фильтр');
     define('LANG_PHOTOS_DATE_PUB',              'По дате добавления');
     define('LANG_PHOTOS_DATE_PHOTO',            'По дате съёмки');

@@ -41,6 +41,9 @@
         <?php foreach($widgets as $index=>$widget) { ?>
             <div id="widget-<?php echo $widget['id']; ?>" class="body<?php if ($widget['class']) { ?> <?php echo $widget['class'];  } ?>" <?php if ($index>0) { ?>style="display: none"<?php } ?>>
                 <?php echo $widget['body']; ?>
+                <?php if(cmsUser::isAdmin()){ ?>
+                    <?php include 'wrap_edit_links.tpl.php'; ?>
+                <?php } ?>
             </div>
         <?php } ?>
     </div>

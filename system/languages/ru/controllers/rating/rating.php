@@ -9,3 +9,6 @@ define('LANG_RATING_IS_HIDDEN', 'Скрывать итоговый рейтин�
 define('LANG_RATING_SHOW_INFO', 'Показывать участников голосования и их оценки');
 define('LANG_RATING_NO_VOTES', 'Нет оценок');
 define('LANG_RATING_ALLOW_GUEST_VOTE', 'Разрешить голосование гостям');
+define('LANG_RATING_UP', 'положительно');
+define('LANG_RATING_DOWN', 'отрицательно');
+define('LANG_RATING_PM', '%s %s оценил вашу запись <a href="%s">%s</a>');

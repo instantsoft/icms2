@@ -19,6 +19,8 @@ class actionPhotosMore extends cmsAction{
 
         } elseif($target === 'user_id'){
 
+            if (!$id) { $this->halt(); }
+
             $profile = cmsCore::getModel('users')->getUser($id);
             if (!$profile) { $this->halt(); }
 
@@ -63,7 +65,7 @@ class actionPhotosMore extends cmsAction{
             $album['filter_values'] = array(
                 'ordering'    => $this->request->get('ordering', $this->options['ordering']),
                 'orderto'     => $this->request->get('orderto', $this->options['orderto']),
-                'types'       => $this->request->get('types', ''),
+                'type'        => $this->request->get('type', ''),
                 'orientation' => $this->request->get('orientation', ''),
                 'width'       => $this->request->get('width', 0) ?: '',
                 'height'      => $this->request->get('height', 0) ?: ''
@@ -84,8 +86,8 @@ class actionPhotosMore extends cmsAction{
                 $this->model->disablePrivacyFilter();
             }
 
-            if($album['filter_values']['types']){
-                $this->model->filterEqual('type', $album['filter_values']['types']);
+            if($album['filter_values']['type']){
+                $this->model->filterEqual('type', $album['filter_values']['type']);
             }
 
             if($album['filter_values']['orientation']){

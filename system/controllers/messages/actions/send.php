@@ -2,18 +2,45 @@
 
 class actionMessagesSend extends cmsAction {
 
+    /**
+     * @var array Описание правил валидации входных данных
+     */
+    public $request_params = array(
+        'contact_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('required'),
+                array('digits')
+            )
+        ),
+        'content' => array(
+            'default' => '',
+            'rules'   => array(
+                array('required'),
+                array('max_length', 65535)
+            )
+        ),
+        'csrf_token' => array(
+            'default' => '',
+            'rules'   => array(
+                array('required')
+            )
+        ),
+        'last_date' => array(
+            'default' => '',
+            'rules'   => array(
+                array('regexp', "/^([a-z0-9 ]*)$/ui")
+            )
+        )
+    );
+
     public function run(){
 
-        $contact_id = $this->request->get('contact_id', 0) or cmsCore::error404();
-        $content    = $this->request->get('content', '') or cmsCore::error404();
-        $csrf_token = $this->request->get('csrf_token', '');
-        $last_date  = $this->request->get('last_date', '');
+        $contact_id = $this->request->get('contact_id');
+        $content    = $this->request->get('content');
+        $last_date  = $this->request->get('last_date');
 
-        // Проверяем валидность
-        $is_valid = is_numeric($contact_id) &&
-                    cmsForm::validateCSRFToken($csrf_token, false);
-
-        if (!$is_valid){
+        if (!cmsForm::validateCSRFToken($this->request->get('csrf_token'))){
             $this->cms_template->renderJSON(array(
                 'error'   => true,
                 'message' => ''
@@ -79,7 +106,11 @@ class actionMessagesSend extends cmsAction {
         if (!$user_to['is_online']) {
 
             if($this->model->getNewMessagesCount($user_to['id']) == 1){
-                $this->sendNoticeEmail('messages_new');
+                $this->sendNoticeEmail('messages_new', array(
+                    'user_url'      => href_to_abs('users', $this->cms_user->id),
+                    'user_nickname' => $this->cms_user->nickname,
+                    'message'       => strip_tags($content_html)
+                ));
             }
 
         }

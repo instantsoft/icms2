@@ -24,7 +24,7 @@ class actionTagsAjax extends cmsAction {
 
         $tags = $this->model->getTags();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $tags, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $tags, $total, $pages);
 
         $this->halt();
 

@@ -14,6 +14,38 @@ CREATE TABLE `{#}jobs` (
   KEY `attempts` (`attempts`,`is_locked`,`date_started`,`priority`,`date_created`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Queue';
 
+DROP TABLE IF EXISTS `{#}subscriptions`;
+CREATE TABLE `{#}subscriptions` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `controller` varchar(32) DEFAULT NULL,
+  `subject` varchar(50) DEFAULT NULL,
+  `subject_url` varchar(255) DEFAULT NULL,
+  `params` text,
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `hash` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hash` (`hash`),
+  KEY `target_controller` (`controller`,`subject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subscription Lists';
+
+DROP TABLE IF EXISTS `{#}subscriptions_bind`;
+CREATE TABLE `{#}subscriptions_bind` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `subscription_id` int(11) UNSIGNED DEFAULT NULL,
+  `user_id` int(11) UNSIGNED DEFAULT NULL,
+  `guest_email` varchar(100) DEFAULT NULL,
+  `guest_name` varchar(50) DEFAULT NULL,
+  `is_confirmed` tinyint(1) UNSIGNED DEFAULT '1',
+  `confirm_token` varchar(32) DEFAULT NULL,
+  `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`,`subscription_id`) USING BTREE,
+  KEY `guest_email` (`guest_email`,`subscription_id`) USING BTREE,
+  KEY `confirm_token` (`confirm_token`),
+  KEY `subscription_id` (`subscription_id`,`is_confirmed`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subscriptions';
+
 DROP TABLE IF EXISTS `{#}activity`;
 CREATE TABLE `{#}activity` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -63,7 +95,8 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (12, 1, 'users', 'status', 'Status changing', '&rarr; %s'),
 (18, 1, 'photos', 'add.photos', 'Photo uploading', 'uploaded photos to the album %s'),
 (19, 1, 'users', 'avatar', 'Avatar changing', 'changed avatar'),
-(20, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s');
+(20, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s'),
+(21, 1, 'subscriptions', 'subscribe', 'Subscription to content', 'subscribes to the %s list');
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
@@ -89,11 +122,9 @@ CREATE TABLE `{#}comments` (
   `is_approved` tinyint(1) unsigned DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `is_private` (`is_private`),
-  KEY `rating` (`rating`),
   KEY `target_id` (`target_id`,`target_controller`,`target_subject`,`ordering`),
   KEY `author_url` (`author_url`),
-  KEY `date_pub` (`date_pub`)
+  KEY `is_approved` (`is_approved`,`is_deleted`,`date_pub`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='User comments';
 
 DROP TABLE IF EXISTS `{#}comments_rating`;
@@ -247,7 +278,7 @@ CREATE TABLE `{#}controllers` (
   `version` varchar(8) NOT NULL COMMENT 'Version',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Admin panel?',
   `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Third-party component',
-  `files` varchar(10000) DEFAULT NULL,
+  `files` text COMMENT 'Список файлов контроллера (для стороних компонентов)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
@@ -273,8 +304,9 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (18, 'Photos', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Photo\r\n  2 | Vectors\r\n  3 | Illustrations\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
 (19, 'Image Upload', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(21, 'Geobase', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(21, 'Geobase', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
+(22, 'Subscriptions', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -721,8 +753,23 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (121, 'ctype_lists_context', 'tags', 121, 1),
 (122, 'moderation_list', 'comments', 122, 1),
 (123, 'content_groups_before_delete', 'moderation', 123, 1),
-(124, 'content_groups_before_delete', 'moderation', 124, 1),
-(125, 'comments_after_refuse', 'moderation', 125, 1);
+(124, 'comments_after_refuse', 'moderation', 124, 1),
+(125, 'subscribe', 'activity', 125, 1),
+(126, 'unsubscribe', 'activity', 126, 1),
+(127, 'admin_subscriptions_list', 'content', 127, 1),
+(128, 'admin_subscriptions_list', 'photos', 128, 1),
+(129, 'user_delete', 'subscriptions', 129, 1),
+(130, 'content_toolbar_html', 'subscriptions', 130, 1),
+(131, 'photos_toolbar_html', 'subscriptions', 131, 1),
+(132, 'content_filter_buttons_html', 'subscriptions', 132, 1),
+(133, 'user_tab_info', 'subscriptions', 133, 1),
+(134, 'content_photos_after_add', 'subscriptions', 134, 1),
+(135, 'user_notify_types', 'subscriptions', 135, 1),
+(136, 'user_tab_show', 'subscriptions', 136, 1),
+(137, 'content_after_add_approve', 'subscriptions', 137, 1),
+(138, 'publish_delayed_content', 'subscriptions', 138, 1),
+(139, 'ctype_basic_form', 'subscriptions', 139, 1),
+(140, 'admin_dashboard_block', 'users', 140, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1174,23 +1221,22 @@ CREATE TABLE `{#}scheduler_tasks` (
   KEY `is_active` (`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `date_last_run`, `is_active`, `is_new`) VALUES
-(1, 'User migrations between groups', 'users', 'migration', 1440, NULL, 1, 0),
-(2, 'Sitemap generation', 'sitemap', 'generate', 1440, NULL, 1, 0),
-(3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, NULL, 1, 0),
-(4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, 1, 1),
-(5, 'Cleaning deleted private messages', 'messages', 'clean', 1440, NULL, 1, 1),
-(6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, 1, 1),
-(7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, 1, 1),
-(8, 'Run system queue tasks', 'queue', 'run_queue', 1, NULL, 1, 1);
+INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES
+(1, 'User migrations between groups', 'users', 'migration', 1440, NULL, NULL, 1, 0),
+(2, 'Sitemap generation', 'sitemap', 'generate', 1440, NULL, NULL, 1, 0),
+(3, 'Issuing invitations to users', 'auth', 'send_invites', 1440, NULL, NULL, 1, 0),
+(4, 'Publish Content on a schedule', 'content', 'publication', 1440, NULL, NULL, 1, 1),
+(5, 'Cleaning deleted private messages', 'messages', 'clean', 1440, NULL, NULL, 1, 1),
+(6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
+(7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
+(8, 'Run system queue tasks', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
+(9, 'Removes expired unconfirmed guest subscriptions', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (
-  `session_id` varchar(32) DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `session_id` (`session_id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id` (`user_id`),
   KEY `date_created` (`date_created`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1199,6 +1245,9 @@ CREATE TABLE `{#}tags` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tag` varchar(32) NOT NULL,
   `frequency` int(11) unsigned NOT NULL DEFAULT '1',
+  `tag_title` varchar(300) DEFAULT NULL,
+  `tag_desc` varchar(300) DEFAULT NULL,
+  `tag_h1` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tag` (`tag`),
   UNIQUE KEY `frequency` (`frequency`,`tag`)
@@ -1269,8 +1318,8 @@ CREATE TABLE `{#}users` (
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Blocking reason',
   `pass_token` varchar(32) DEFAULT NULL COMMENT 'Password recovery key',
   `date_token` timestamp NULL DEFAULT NULL COMMENT 'Password recovery key creation date',
-  `files_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Number of uploaded files',
   `friends_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Number of friends',
+  `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Subscribers count',
   `time_zone` varchar(32) DEFAULT NULL COMMENT 'Time zone',
   `karma` int(11) NOT NULL DEFAULT '0' COMMENT 'Reputation',
   `rating` int(11) NOT NULL DEFAULT '0' COMMENT 'Rating',
@@ -1311,7 +1360,7 @@ CREATE TABLE `{#}users` (
   KEY `ip` (`ip`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Users';
 
-INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `files_count`, `friends_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
+INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
 (1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 468, 2, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 12008, 'London', 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'various interesting', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
@@ -1539,7 +1588,9 @@ INSERT INTO `{#}users_tabs` (`id`, `title`, `controller`, `name`, `is_active`, `
 (3, 'Friends', 'users', 'friends', 1, 2),
 (4, 'Comments', 'comments', 'comments', 1, 4),
 (5, 'Groups', 'groups', 'groups', 1, 3),
-(6, 'Reputation', 'users', 'karma', 1, 5);
+(6, 'Reputation', 'users', 'karma', 1, 5),
+(7, 'Subscribers', 'users', 'subscribers', 1, 3),
+(8, 'Subscriptions', 'subscriptions', 'subscriptions', 1, 3);
 
 DROP TABLE IF EXISTS `{#}users_personal_settings`;
 CREATE TABLE `{#}users_personal_settings` (
@@ -1581,7 +1632,7 @@ CREATE TABLE `{#}widgets` (
   `url` varchar(250) DEFAULT NULL COMMENT 'Author site',
   `version` varchar(8) DEFAULT NULL COMMENT 'Version',
   `is_external` tinyint(1) DEFAULT '1',
-  `files` varchar(10000) DEFAULT NULL,
+  `files` text COMMENT 'List of widget files (for third-party widgets)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
@@ -1601,11 +1652,14 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (9, 'users', 'avatar', 'User Avatar', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (10, 'tags', 'cloud', 'Tag cloud', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (11, 'content', 'slider', 'Content slider', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(12, NULL, 'auth', 'Authorization', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(12, 'auth', 'auth', 'Authorization form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (13, 'search', 'search', 'Search', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
 (15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
+(16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
+(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

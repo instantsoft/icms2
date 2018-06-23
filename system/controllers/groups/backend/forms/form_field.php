@@ -39,7 +39,7 @@ class formGroupsField extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'string',
                         'generator' => function() {
-                            return cmsForm::getAvailableFormFields();
+                            return cmsForm::getAvailableFormFields('only_public', 'groups');
                         }
                     ))
                 )

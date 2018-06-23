@@ -20,8 +20,8 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
             $this->model->disableApprovedFilter();
         }
 
-        if($album['filter_values']['types']){
-            $this->model->filterEqual('type', $album['filter_values']['types']);
+        if($album['filter_values']['type']){
+            $this->model->filterEqual('type', $album['filter_values']['type']);
         }
 
         if($album['filter_values']['orientation']){
@@ -38,6 +38,11 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
 
         $page    = $this->cms_core->request->get('photo_page', 1);
         $perpage = (empty($this->options['limit']) ? 16 : $this->options['limit']);
+
+        $toolbar_html = cmsEventsManager::hookAll('photos_toolbar_html', $album);
+        if ($toolbar_html) {
+            $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+        }
 
         return $this->renderPhotosList($album, 'album_id', $page, $perpage);
 

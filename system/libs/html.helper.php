@@ -7,7 +7,7 @@
  */
 function html($string, $print = true){
 
-    $string = htmlentities($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $string = htmlentities($string, ENT_QUOTES | ENT_HTML401, 'UTF-8');
 
     if($print){
         echo $string; return;
@@ -56,13 +56,14 @@ function html_strip($string, $max_length){
 /**
  * Формирует ссылку по относительной (без добавления корня URL)
  * @param string $rel_link
+ * @param boolean $is_abs
  * @return string
  */
-function rel_to_href($rel_link){
+function rel_to_href($rel_link, $is_abs = false){
 
     $lang_href = cmsCore::getLanguageHrefPrefix();
 
-	return cmsConfig::get('root') .($lang_href ? $lang_href.'/' : '').$rel_link;
+	return ($is_abs ? cmsConfig::get('host') . '/' : cmsConfig::get('root')) .($lang_href ? $lang_href.'/' : '').$rel_link;
 
 }
 
@@ -186,7 +187,7 @@ function href_to_home(){
 function html_attr_str($attributes){
     $attr_str = '';
     unset($attributes['class']);
-    if (sizeof($attributes)){
+    if (is_array($attributes)){
         foreach($attributes as $key=>$val){
             if(is_bool($val)){
                 if($val === true){
@@ -283,7 +284,7 @@ function html_image_src($image, $size_preset='small', $is_add_host=false, $is_re
 
 }
 
-function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
+function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = array()){
 
     if (!$wysiwyg){ $wysiwyg = cmsConfig::get('wysiwyg'); }
 
@@ -297,7 +298,7 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false){
 
     $editor = new $class_name();
 
-    ob_start(); $editor->displayEditor($field_id, $content);
+    ob_start(); $editor->displayEditor($field_id, $content, $config);
 
     return ob_get_clean();
 

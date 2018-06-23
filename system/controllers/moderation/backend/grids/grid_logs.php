@@ -32,7 +32,7 @@ function grid_logs($controller){
             }
         ),
         'target_subject' => array(
-            'title' => LANG_MODERATION_SUBJECT,
+            'title' => LANG_CP_SUBJECT,
             'width' => 130,
             'handler' => function($value, $item) use ($controller){
                 return '<a href="'.href_to($controller->root_url, 'logs', array($item['target_controller'], $item['target_subject'])).'">'.$item['subject_title'].'</a>';

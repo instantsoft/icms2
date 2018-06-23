@@ -121,7 +121,7 @@
                             </div>
                         <?php } ?>
                         <?php if ($fields['date_pub']['is_in_list']){ ?>
-                            <div class="bar_item bi_date_pub" title="<?php echo $fields['date_pub']['title']; ?>">
+                            <div class="bar_item bi_date_pub<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>" title="<?php echo $fields['date_pub']['title']; ?>">
                                 <?php echo $fields['date_pub']['handler']->parse( $item['date_pub'] ); ?>
                             </div>
                         <?php } ?>

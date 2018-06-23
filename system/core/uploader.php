@@ -100,12 +100,12 @@ class cmsUploader {
             if($this->file_name){
                 $file_name = str_replace('.'.$file_ext, '', files_sanitize_name($this->file_name.'.'.$file_ext));
             } else {
-                $file_name = substr(md5(uniqid().microtime(true)), 0, 8);
+                $file_name = substr(md5(microtime(true)), 0, 8);
             }
         }
 
         if (file_exists($path.$file_name.'.'.$file_ext)) {
-            return $this->getFileName($path, $file_ext, $file_name.'_'.uniqid());
+            return $this->getFileName($path, $file_ext, $file_name.'_'.md5(microtime(true)));
         }
 
         return $file_name.'.'.$file_ext;
@@ -123,7 +123,7 @@ class cmsUploader {
 
         $dest_file = $dest_dir . $dest_name;
 
-        if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['height'])) { $size['height'] = 0; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
         if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {
@@ -551,9 +551,9 @@ class cmsUploader {
 
         $dir_num_user = sprintf('%03d', intval($this->user_id/100));
 
-        $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
-        $first_dir  = substr($file_name, 0, 2);
-        $second_dir = substr($file_name, 2, 2);
+        $file_name  = md5(md5($this->site_cfg->db_user) . md5($this->site_cfg->db_base) .microtime(true));
+        $first_dir  = substr($file_name, 0, 1);
+        $second_dir = substr($file_name, 1, 1);
 
         $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
 

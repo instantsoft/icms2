@@ -33,8 +33,8 @@ class actionPhotosIndex extends cmsAction {
             $this->model->disablePrivacyFilter();
         }
 
-        if($album['filter_values']['types']){
-            $this->model->filterEqual('type', $album['filter_values']['types']);
+        if($album['filter_values']['type']){
+            $this->model->filterEqual('type', $album['filter_values']['type']);
         }
 
         if($album['filter_values']['orientation']){

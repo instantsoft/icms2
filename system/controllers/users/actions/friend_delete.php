@@ -4,7 +4,7 @@ class actionUsersFriendDelete extends cmsAction {
 
     public function run($friend_id){
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+		if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         if (!$friend_id) { cmsCore::error404(); }
 
@@ -32,16 +32,20 @@ class actionUsersFriendDelete extends cmsAction {
 
                 $this->sendNoticeDeleted($friend);
 
+                $back_url = $this->request->get('back', '');
+
+                if ($back_url){
+                    $this->redirect($back_url);
+                }
+
                 $this->redirectToAction($friend_id);
 
             } else {
 
-                // спрашиваем подтверждение
-
-                return $this->cms_template->render('friend_delete', array(
-                    'user'   => $this->cms_user,
-                    'friend' => $friend
-                ));
+                return $this->cms_template->renderAsset('ui/confirm', array(
+                    'confirm_title'  => sprintf(LANG_USERS_FRIENDS_DELETE_CONFIRM, $friend['nickname']),
+                    'confirm_action' => $this->cms_template->href_to('friend_delete', $friend['id'])
+                ), $this->request);
 
             }
 

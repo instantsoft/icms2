@@ -51,7 +51,7 @@ $steps = array(
 $current_step = 0;
 
 if (is_ajax_request()){
-    $step = $steps[(int)$_POST['step']];
+    $step = $steps[(int)(isset($_POST['step']) ? $_POST['step'] : 0)];
     $is_submit = isset($_POST['submit']);
     echo json_encode( run_step($step, $is_submit) );
     exit();

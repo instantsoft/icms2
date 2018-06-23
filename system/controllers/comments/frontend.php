@@ -84,6 +84,8 @@ class comments extends cmsFrontend {
                 'comments'          => $comments,
                 'csrf_token_seed'   => $csrf_token_seed,
                 'rss_link'          => $rss_link,
+                'guest_name'        => cmsUser::getCookie('comments_guest_name', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
+                'guest_email'       => cmsUser::getCookie('comments_guest_email', 'string', function ($cookie){ return trim(strip_tags($cookie)); }),
                 'is_can_rate'       => cmsUser::isAllowed('comments', 'rate')
             ))
         );
@@ -294,7 +296,7 @@ class comments extends cmsFrontend {
         $comment['url'] = $comment['target_url'].'#comment_'.$comment['id'];
         $comment['title'] = $comment['target_title'];
 
-        return $this->controller_moderation->requestModeration($this->name, $comment, true, LANG_COMMENTS_MODERATE_NOTIFY);
+        return $this->controller_moderation->requestModeration($this->name, $comment, true, sprintf(LANG_COMMENTS_MODERATE_NOTIFY, $comment['content_html']));
 
     }
 

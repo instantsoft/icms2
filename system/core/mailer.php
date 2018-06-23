@@ -4,43 +4,54 @@ class cmsMailer {
     private $mailer;
     private $errorInfo;
 
-    public function __construct() {
+    public function __construct($config = false) {
 
-        $config = cmsConfig::getInstance();
+        if(!$config){
+            $config = cmsConfig::getInstance();
+        }
 
         cmsCore::loadLib('phpmailer/class.phpmailer', 'PHPMailer');
 
         $this->mailer = new PHPMailer();
-        $this->mailer->CharSet = 'UTF-8';
+
+        $this->mailer->CharSet  = 'UTF-8';
+        $this->mailer->XMailer  = ' ';
+        $this->mailer->Hostname = ltrim(strstr($config->mail_from, '@'), '@');
+
         $this->mailer->setLanguage($config->language);
 
-        $this->
-            initTransport()->
+        $this->initTransport($config)->
             setFrom( $config->mail_from, (!empty($config->mail_from_name) ? $config->mail_from_name : '') )->
             setBodyText( LANG_MAIL_DEFAULT_ALT );
 
     }
 
-//============================================================================//
-//============================================================================//
+    /**
+     * Возвращает объект PHPMailer
+     * @return \PHPMailer
+     */
+    public function callMailer() {
+        return $this->mailer;
+    }
 
     /**
      * Инициализирует почтовый транспорт по настройкам
-     * из глобального конфига сайта
+     *
+     * @param object $config
      * @return \cmsMailer
      */
-    public function initTransport(){
-
-        $config = cmsConfig::getInstance();
+    public function initTransport($config){
 
         // PHP mail()
         if ($config->mail_transport == 'mail') {
-            return $this;
-        }
+            $this->mailer->isMail();
+        } else
 
         // SMTP Server
         if ($config->mail_transport == 'smtp') {
+
             cmsCore::loadLib('phpmailer/class.smtp', 'SMTP');
+
             $this->mailer->IsSMTP();
             $this->mailer->Host          = $config->mail_smtp_server;
             $this->mailer->Port          = $config->mail_smtp_port;
@@ -48,22 +59,36 @@ class cmsMailer {
             $this->mailer->SMTPKeepAlive = true;
             $this->mailer->Username      = $config->mail_smtp_user;
             $this->mailer->Password      = $config->mail_smtp_pass;
+
 			if (!empty($config->mail_smtp_enc)){
 				$this->mailer->SMTPSecure = $config->mail_smtp_enc;
 			}
-            return $this;
-        }
+
+        } else
 
         // SendMail
         if ($config->mail_transport == 'sendmail') {
             $this->mailer->IsSendmail();
-            return $this;
         }
+
+        return $this;
 
     }
 
 //============================================================================//
 //============================================================================//
+
+    /**
+     * Добавляет заголовок к письму
+     *
+     * @param string $name Имя заголовка (Может быть в формате name:value, при этом параметр $value не требуется)
+     * @param string $value Значение заголовка
+     * @return \cmsMailer
+     */
+    public function addCustomHeader($name, $value = null) {
+        $this->mailer->addCustomHeader($name, $value);
+        return $this;
+    }
 
     /**
      * Устанавливает адрес отправителя
@@ -84,7 +109,7 @@ class cmsMailer {
 	 */
 	public function setReplyTo($email, $name=''){
 		$this->mailer->ClearReplyTos();
-		$this->mailer->AddReplyTo($email, $name='');
+		$this->mailer->AddReplyTo($email, $name);
 		return $this;
 	}
 
@@ -98,9 +123,6 @@ class cmsMailer {
         $this->mailer->AddAddress($email, $name);
         return $this;
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Устанавливает тему письма
@@ -197,9 +219,6 @@ class cmsMailer {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
      * Добавляет файл во вложение к письму
      * @param string $file Абсолютный путь к файлу
@@ -209,9 +228,6 @@ class cmsMailer {
         $this->mailer->AddAttachment($file);
         return $this;
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Очищает список получателей
@@ -237,9 +253,6 @@ class cmsMailer {
     public function getErrorInfo(){
         return $this->errorInfo;
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Отправляет письмо

@@ -470,6 +470,7 @@ aside .menu .item, section .menu .item {
     text-decoration: none;
     padding:4px 10px;
     padding-left:36px;
+    white-space: normal;
 }
 
 #body aside .menu a:hover {

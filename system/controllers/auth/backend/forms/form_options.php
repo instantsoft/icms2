@@ -131,11 +131,17 @@ class formAuthOptions extends cmsForm {
                     new fieldNumber('invites_period', array(
                         'title' => LANG_AUTH_INVITES_PERIOD,
                         'units' => LANG_DAY10,
-                        'default' => 7
+                        'default' => 7,
+                        'rules' => array(
+                            array('min', 1)
+                        )
                     )),
 
                     new fieldNumber('invites_qty', array(
                         'title' => LANG_AUTH_INVITES_QTY,
+                        'rules' => array(
+                            array('min', 1)
+                        )
                     )),
 
                     new fieldNumber('invites_min_karma', array(
@@ -148,11 +154,11 @@ class formAuthOptions extends cmsForm {
 
                     new fieldNumber('invites_min_days', array(
                         'title' => LANG_AUTH_INVITES_DATE,
-                        'units' => LANG_DAY10,
-                    )),
+                        'units' => LANG_DAY10
+                    ))
 
                 )
-            ),
+            )
 
         );
 

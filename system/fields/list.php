@@ -55,11 +55,17 @@ class fieldList extends cmsFormField {
     public function getStringValue($value){
 
         $items = $this->getListItems();
-        $item  = '';
+        $item  = array();
 
-        if (isset($items[$value])) { $item = $items[$value]; }
+        if(!is_array($value)){
+            $value = array($value);
+        }
 
-        return $item;
+        foreach ($value as $val) {
+            if (isset($items[$val])) { $item[] = $items[$val]; }
+        }
+
+        return implode(', ', $item);
 
     }
 
@@ -71,10 +77,10 @@ class fieldList extends cmsFormField {
         if (isset($items[$value])) { $item = $items[$value]; }
 
         if ($this->getOption('is_autolink')){
-            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.htmlspecialchars($item).'</a>';
+            return '<a class="list_autolink '.$this->item['ctype_name'].'_list_autolink" href="'.href_to($this->item['ctype_name']).'?'.$this->name.'='.urlencode($value).'">'.html($item, false).'</a>';
         }
 
-        return htmlspecialchars($item);
+        return html($item, false);
 
     }
 

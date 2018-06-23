@@ -53,7 +53,7 @@ class onTypographHtmlFilter extends cmsAction {
         // Устанавливаем разрешённые теги. (Все не разрешенные теги считаются запрещенными.)
         $jevix->cfgAllowTags(array(
             'p', 'br', 'span', 'div',
-            'a', 'img',
+            'a', 'img', 'input', 'label',
             'b', 'i', 'u', 's', 'del', 'em', 'strong', 'sup', 'sub', 'hr', 'font',
             'ul', 'ol', 'li',
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
@@ -65,12 +65,12 @@ class onTypographHtmlFilter extends cmsAction {
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
         $jevix->cfgSetTagShort(array(
-            'br', 'img', 'hr', 'embed'
+            'br', 'img', 'hr', 'embed', 'input'
         ));
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
         $jevix->cfgSetTagPreformatted(array(
-            'pre', 'video'
+            'pre', 'video', 'code'
         ));
 
         // Устанавливаем теги, которые необходимо вырезать из текста вместе с контентом.
@@ -86,10 +86,12 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('a', array('href' => '#link', 'name' => '#text', 'target' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('img', array('src', 'style' => '#text', 'alt' => '#text', 'title' => '#text', 'align' => array('right', 'left', 'center'), 'width' => '#int', 'height' => '#int', 'hspace' => '#int', 'vspace' => '#int', 'class' => '#text'));
         $jevix->cfgAllowTagParams('span', array('style' => '#text'));
+        $jevix->cfgAllowTagParams('input', array('tabindex' => '#text', 'type' => '#text', 'id' => '#text'));
+        $jevix->cfgAllowTagParams('label', array('class' => '#text', 'for' => '#text'));
         $jevix->cfgAllowTagParams('object', array('width' => '#int', 'height' => '#int', 'data' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text'));
         $jevix->cfgAllowTagParams('param', array('name' => '#text', 'value' => '#text'));
         $jevix->cfgAllowTagParams('embed', array('src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com')), 'type' => '#text','allowscriptaccess' => '#text', 'allowfullscreen' => '#text','width' => '#int', 'height' => '#int', 'flashvars'=> '#text', 'wmode'=> '#text'));
-        $jevix->cfgAllowTagParams('iframe', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com','my.mail.ru','facebook.com'))));
+        $jevix->cfgAllowTagParams('iframe', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'frameborder' => '#int', 'allowfullscreen' => '#text', 'src' => array('#domain'=>array('youtube.com','rutube.ru','vimeo.com','vk.com','my.mail.ru','facebook.com',parse_url($this->cms_config->host, PHP_URL_HOST)))));
         $jevix->cfgAllowTagParams('table', array('width' => '#int', 'height' => '#int', 'cellpadding' => '#int', 'cellspacing' => '#int', 'border' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text'));
         $jevix->cfgAllowTagParams('td', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
         $jevix->cfgAllowTagParams('th', array('width' => '#int', 'height' => '#int', 'style' => '#text', 'align'=>'#text', 'valign'=>'#text', 'colspan'=>'#int', 'rowspan'=>'#int'));
@@ -125,7 +127,9 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
 
         // Отключаем типографирование в определенном теге
-        $jevix->cfgSetTagNoTypography('pre','youtube', 'iframe');
+        $jevix->cfgSetTagNoTypography(array('pre', 'youtube', 'iframe', 'code'));
+
+        $jevix->cfgSetTagNoAutoBr(array('ul','ol','code'));
 
         // Ставим колбэк для youtube
         $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));
@@ -150,7 +154,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         $href_params = parse_url($params['href']);
 
-        $is_external_link = !empty($href_params['host']) && !strstr($params['href'], parse_url($this->cms_config->host, PHP_URL_HOST));
+        $is_external_link = !empty($href_params['host']) && strpos($params['href'], $this->cms_config->host) !== 0;
 
         if($is_external_link){
 
@@ -184,7 +188,7 @@ class onTypographHtmlFilter extends cmsAction {
             return '';
         }
 
-        $id = uniqid();
+        $id = string_random();
         $title = !empty($params['title']) ? htmlspecialchars($params['title']) : '';
 
         return '<div class="spoiler"><input tabindex="-1" type="checkbox" id="'.$id.'"><label for="'.$id.'">'.$title.'</label><div class="spoiler_body">'.$content.'</div></div>';
@@ -245,7 +249,7 @@ class onTypographHtmlFilter extends cmsAction {
 
         cmsCore::loadLib('geshi/geshi', 'GeSHi');
 
-        $geshi = new GeSHi(trim(str_replace('<br/>', '', $content)), (isset($params['type']) ? $params['type'] : 'php'));
+        $geshi = new GeSHi(htmlspecialchars_decode($content), (isset($params['type']) ? $params['type'] : 'php'));
 
         return $geshi->parse_code();
 

@@ -45,6 +45,10 @@ class actionContentItemView extends cmsAction {
         $item = $this->model->getContentItemBySLUG($ctype['name'], $slug);
         if (!$item) { return cmsCore::error404(); }
 
+        if ($slug !== $item['slug']){
+            $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
+        }
+
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin;
         if(!$is_moderator && $this->cms_user->is_logged){
@@ -125,6 +129,8 @@ class actionContentItemView extends cmsAction {
 
             if (!$is_moderator && !$allow_restore){ return cmsCore::error404(); }
 
+            cmsUser::addSessionMessage(LANG_CONTENT_ITEM_IN_TRASH, 'info');
+
         }
 
         // Проверяем ограничения доступа из других контроллеров
@@ -158,7 +164,21 @@ class actionContentItemView extends cmsAction {
         $item['ctype_name'] = $ctype['name'];
 
         if ($ctype['is_cats'] && $item['category_id'] > 1){
+
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
+
+            if(!empty($ctype['options']['is_cats_multi'])){
+                $item['categories'] = $this->model->getContentItemCategoriesList($ctype['name'], $item['id']);
+            }
+
+        }
+
+        // Получаем поля для данного типа контента
+        $fields = $this->model->getContentFields($ctype['name']);
+
+        // Парсим значения полей
+        foreach($fields as $name=>$field){
+            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
         }
 
         // формируем связи (дочерние списки)
@@ -294,7 +314,8 @@ class actionContentItemView extends cmsAction {
                         'ctype'   => $ctype,
                         'item'    => $item,
                         'childs'  => $childs,
-                        'content_controller' => $this
+                        'content_controller' => $this,
+                        'fields'  => $fields
                     ));
 
                 }
@@ -305,17 +326,10 @@ class actionContentItemView extends cmsAction {
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,
-                'childs'           => $childs
+                'childs'           => $childs,
+                'fields'           => $fields
             ));
 
-        }
-
-        // Получаем поля для данного типа контента
-        $fields = $this->model->getContentFields($ctype['name']);
-
-        // Парсим значения полей
-        foreach($fields as $name=>$field){
-            $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
         }
 
         // Получаем поля-свойства
@@ -352,10 +366,9 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        // Получаем теги
-        if ($ctype['is_tags']){
-            $tags_model = cmsCore::getModel('tags');
-            $item['tags'] = $tags_model->getTagsForTarget($this->name, $ctype['name'], $item['id']);
+        // Теги
+        if ($ctype['is_tags'] && $item['tags']){
+            $item['tags'] = explode(',', $item['tags']);
         }
 
         // Информация о модераторе для админа и владельца записи

@@ -76,6 +76,7 @@ RedactorPlugins.fontcolor = {
 		this.inlineRemoveStyle(rule);
 		if (type !== false) this.inlineSetStyle(rule, type);
 		if (this.opts.air) this.$air.fadeOut(100);
+        this.setSpansVerified();
 		this.sync();
 	}
 };

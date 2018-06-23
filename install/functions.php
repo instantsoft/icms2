@@ -93,30 +93,13 @@ function get_version($show_date = false){
 
     $file = dirname(PATH).DS.'system/config/version.ini';
 
-    if (!is_readable($file)){ return ''; }
+    if (!is_readable($file) || !function_exists('parse_ini_file')){ return ''; }
 
     $version = parse_ini_file($file);
 
     if (!$show_date && isset($version['date'])) { unset($version['date']); }
 
     return implode('.', $version);
-
-}
-
-function make_json($array){
-
-    $json = '{';
-    $pairs = array();
-
-    foreach($array as $key=>$val){
-        if (!is_numeric($val)) { $val = "'{$val}'"; }
-        $pairs[] = "{$key}: $val";
-    }
-
-    $json .= implode(', ', $pairs);
-    $json .= '}';
-
-    return $json;
 
 }
 

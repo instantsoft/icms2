@@ -267,7 +267,7 @@ class modelComments extends cmsModel {
 
         $this->select('r.score', 'is_rated');
 
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
         $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user->id}'");
 
         if (!$this->order_by){
@@ -283,7 +283,7 @@ class modelComments extends cmsModel {
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
 
@@ -304,14 +304,14 @@ class modelComments extends cmsModel {
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
 

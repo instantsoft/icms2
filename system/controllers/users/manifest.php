@@ -4,6 +4,7 @@
 
         'hooks' => array(
             'admin_dashboard_chart',
+            'admin_dashboard_block',
             'menu_users',
             'rating_vote',
             'user_notify_types',

@@ -29,6 +29,7 @@
 
 	var reUrlYoutube = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
 	var reUrlVimeo = /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
+    var reUrlFacebook = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:facebook\.com(?:\/[^\/]+\/videos\/|\/video\.php\?v=))([0-9]+)(?:.+)?$/;
 
 	$.fn.redactor = function(options)
 	{
@@ -136,6 +137,8 @@
 			clipboardUpload: true,
 			clipboardUploadUrl: false,
 
+			smilesUrl: '',
+
 			dnbImageTypes: ['image/png', 'image/jpeg', 'image/gif'],
 
 			s3: false,
@@ -161,7 +164,7 @@
 			toolbarOverflow: false,
 			buttonSource: true,
 
-			buttons: ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
+			buttons: ['html', 'undo', 'redo', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist',
 					  'outdent', 'indent', 'image', 'video', 'file', 'table', 'link', 'alignment', '|',
 					  'horizontalrule'], /**'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'**/
 			buttonsHideOnMobile: [],
@@ -183,7 +186,7 @@
 				table: 'table'
 			},
 
-			formattingTags: ['p', 'blockquote', 'pre', 'h2', 'h3', 'h4', 'h5', 'h6'],
+			formattingTags: ['p', 'blockquote', 'code', 'h2', 'h3', 'h4', 'h5', 'h6'],
 
 			linebreaks: false,
 			paragraphy: true,
@@ -212,9 +215,9 @@
 								'HEADER', 'FOOTER', 'ASIDE', 'ARTICLE'],
 			ownLine: ['area', 'body', 'head', 'hr', 'i?frame', 'link', 'meta', 'noscript', 'style', 'script', 'table', 'tbody', 'thead', 'tfoot'],
 			contOwnLine: ['li', 'dt', 'dt', 'h[1-6]', 'option', 'script'],
-			newLevel: ['blockquote', 'div', 'dl', 'fieldset', 'form', 'frameset', 'map', 'ol', 'p', 'pre', 'select', 'td', 'th', 'tr', 'ul'],
+			newLevel: ['blockquote', 'div', 'dl', 'fieldset', 'form', 'frameset', 'map', 'ol', 'p', 'code', 'select', 'td', 'th', 'tr', 'ul'],
 			blockLevelElements: ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'DD', 'DL', 'DT', 'DIV', 'LI',
-								'BLOCKQUOTE', 'OUTPUT', 'FIGCAPTION', 'PRE', 'ADDRESS', 'SECTION',
+								'BLOCKQUOTE', 'OUTPUT', 'FIGCAPTION', 'CODE', 'ADDRESS', 'SECTION',
 								'HEADER', 'FOOTER', 'ASIDE', 'ARTICLE', 'TD'],
 			langs: {
 				en: {
@@ -292,7 +295,14 @@
 					underline: 'Underline',
 					alignment: 'Alignment',
 					filename: 'Name (optional)',
-					edit: 'Edit'
+					edit: 'Edit',
+                    spoiler: 'Spoiler',
+                    spoiler_name: 'Spoiler name',
+                    spoiler_text: 'Spoiler text',
+                    smiles: 'Smiles',
+                    undo: 'Undo',
+                    redo: 'Redo',
+                    formalize: 'Formalize'
 				}
 			}
 	};
@@ -393,6 +403,16 @@
 					title: lang.html,
 					func: 'toggle'
 				},
+				undo:
+				{
+					title: lang.undo,
+					func: 'bufferUndo'
+				},
+				redo:
+				{
+					title: lang.redo,
+					func: 'bufferRedo'
+				},
 				formatting:
 				{
 					title: lang.formatting,
@@ -410,11 +430,11 @@
 							func: 'formatQuote',
 							className: 'redactor_format_blockquote'
 						},
-						pre:
+						code:
 						{
 							title: lang.code,
 							func: 'formatBlocks',
-							className: 'redactor_format_pre'
+							className: 'redactor_format_code'
 						},
 						h1:
 						{
@@ -1295,7 +1315,7 @@
 				}
 			}
 			this.imageResizeHide(false);
-			if ((parent && $(parent).get(0).tagName === 'PRE') || (current && $(current).get(0).tagName === 'PRE'))
+			if ((parent && $(parent).get(0).tagName === 'CODE') || (current && $(current).get(0).tagName === 'CODE'))
 			{
 				pre = true;
 				if (key === this.keyCode.DOWN) this.insertAfterLastElement(block);
@@ -2778,7 +2798,7 @@
 				this.callback('execCommand', cmd, param);
 				return;
 			}
-			if (this.currentOrParentIs('PRE') && !this.opts.formattingPre) return false;
+			if (this.currentOrParentIs('CODE') && !this.opts.formattingPre) return false;
 			if (cmd === 'insertunorderedlist' || cmd === 'insertorderedlist') return this.execLists(cmd, param);
 			if (cmd === 'unlink') return this.execUnlink(cmd, param);
 			this.exec(cmd, param, sync);
@@ -3248,7 +3268,7 @@
 			if (buffer !== false)
 			{
 				var buffer = []
-				var matches = html.match(/<(pre|style|script|title)(.*?)>([\w\W]*?)<\/(pre|style|script|title)>/gi);
+				var matches = html.match(/<(code|style|script|title)(.*?)>([\w\W]*?)<\/(code|style|script|title)>/gi);
 				if (matches === null) matches = [];
 
 				if (this.opts.phpTags)
@@ -3297,7 +3317,7 @@
 			html = html.replace(/[\u200B-\u200D\uFEFF]/g, '');
 
 			var etagsInline = ["<b>\\s*</b>", "<b>&nbsp;</b>", "<em>\\s*</em>"]
-			var etags = ["<pre></pre>", "<blockquote>\\s*</blockquote>", "<dd></dd>", "<dt></dt>", "<ul></ul>", "<ol></ol>", "<li></li>", "<table></table>", "<tr></tr>", "<span>\\s*<span>", "<span>&nbsp;<span>", "<p>\\s*</p>", "<p></p>", "<p>&nbsp;</p>",  "<p>\\s*<br>\\s*</p>", "<div>\\s*</div>", "<div>\\s*<br>\\s*</div>"];
+			var etags = ["<code></code>", "<blockquote>\\s*</blockquote>", "<dd></dd>", "<dt></dt>", "<ul></ul>", "<ol></ol>", "<li></li>", "<table></table>", "<tr></tr>", "<span>\\s*<span>", "<span>&nbsp;<span>", "<p>\\s*</p>", "<p></p>", "<p>&nbsp;</p>",  "<p>\\s*<br>\\s*</p>", "<div>\\s*</div>", "<div>\\s*<br>\\s*</div>"];
 
 			if (this.opts.removeEmptyTags)
 			{
@@ -3328,7 +3348,7 @@
 			}
 
 			var safes = [];
-			var matches = html.match(/<(table|div|pre|object)(.*?)>([\w\W]*?)<\/(table|div|pre|object)>/gi);
+			var matches = html.match(/<(table|div|code|object)(.*?)>([\w\W]*?)<\/(table|div|code|object)>/gi);
 			if (!matches) matches = [];
 
 			var commentsMatches = html.match(/<!--([\w\W]*?)-->/gi);
@@ -3357,7 +3377,7 @@
 				return html.replace(new RegExp(str, mod), r);
 			}
 
-			var blocks = '(comment|html|body|head|title|meta|style|script|link|iframe|table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
+			var blocks = '(comment|html|body|head|title|meta|style|script|link|iframe|table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|code|select|option|form|map|area|blockquote|address|math|style|p|h[1-6]|hr|fieldset|legend|section|article|aside|hgroup|header|footer|nav|figure|figcaption|details|menu|summary)';
 
 			html = R('(<' + blocks + '[^>]*>)', 'gi', "\n$1");
 			html = R('(</' + blocks + '>)', 'gi', "$1\n\n");
@@ -3399,7 +3419,7 @@
 
 			html = R('(</?' + blocks + '[^>]*>)\s?</p>', 'gi', "$1");
 			html = R('(</?' + blocks + '[^>]*>)\s?<br />', 'gi', "$1");
-			html = R('<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)', 'gi', '$1');
+			html = R('<br />(\s*</?(?:p|li|div|dl|dd|dt|th|code|td|ul|ol)[^>]*>)', 'gi', '$1');
 			html = R("\n</p>", 'gi', '</p>');
 
 			html = R('<li><p>', 'gi', '<li>');
@@ -3600,7 +3620,7 @@
 				{
 					out += tag + '>\n';
 				}
-				else if (t = tag.match(/^<(script|style|pre)/i))
+				else if (t = tag.match(/^<(script|style|pre|code)/i))
 				{
 					t[1] = t[1].toLowerCase();
 					tag = this.cleanTag(tag);
@@ -3786,7 +3806,7 @@
 			}
 
 			var contents = '';
-			if (tag !== 'pre')
+			if (tag !== 'code')
 			{
 				contents = $(block).contents();
 			}
@@ -3800,7 +3820,7 @@
 				}
 			}
 
-			if (block.tagName === 'PRE') tag = 'p';
+			if (block.tagName === 'CODE') tag = 'p';
 
 			if (this.opts.linebreaks === true && tag === 'p')
 			{
@@ -4288,7 +4308,7 @@
 			if ($html.contents().length == 1)
 			{
 				var htmlTagName = $html.contents()[0].tagName;
-				if (htmlTagName != 'P' && htmlTagName == currBlock.tagName || htmlTagName == 'PRE')
+				if (htmlTagName != 'P' && htmlTagName == currBlock.tagName || htmlTagName == 'CODE')
 				{
 
 					$html = $('<div>').append(html);
@@ -4308,7 +4328,7 @@
 			html = this.setSpansVerifiedHtml(html);
 
 			if ($html.contents().length > 1 && currBlock
-			|| $html.contents().is('p, :header, ul, ol, li, div, table, td, blockquote, pre, address, section, header, footer, aside, article'))
+			|| $html.contents().is('p, :header, ul, ol, li, div, table, td, blockquote, code, address, section, header, footer, aside, article'))
 			{
 				if (this.browser('msie'))
 				{
@@ -4634,7 +4654,7 @@
 					html = html.replace(new RegExp('</' + s + '>', 'gi'), '<br>');
 				});
 			}
-			if (this.currentOrParentIs('PRE'))
+			if (this.currentOrParentIs('CODE'))
 			{
 				html = this.pastePre(html);
 				this.pasteInsert(html);
@@ -5893,6 +5913,10 @@
 			{
 				data = data.replace(reUrlVimeo, iframeStart + '//player.vimeo.com/video/$2' + iframeEnd);
 			}
+            else if (data.match(reUrlFacebook))
+            {
+                data = data.replace(reUrlFacebook, iframeStart + 'https://www.facebook.com/video/embed?video_id=$1' + iframeEnd);
+            }
 
 			this.selectionRestore();
 

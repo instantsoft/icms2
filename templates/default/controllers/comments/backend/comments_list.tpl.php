@@ -2,8 +2,16 @@
 $this->addBreadcrumb(LANG_COMMENTS_LIST);
 $this->setPageTitle(LANG_COMMENTS_LIST);
 
+
 $this->addToolButton(array(
-    'class' => 'delete',
+    'class' => 'help',
+    'title' => LANG_HELP,
+    'target' => '_blank',
+    'href'  => LANG_HELP_URL_COM_COMMENTS
+));
+
+$this->addToolButton(array(
+    'class' => 'delete show_on_selected',
     'title' => LANG_DELETE,
     'href'  => null,
     'onclick' => "return icms.datagrid.submit('".$this->href_to('comments_delete').'?csrf_token='.cmsForm::generateCSRFToken()."', '".LANG_DELETE_SELECTED_CONFIRM."')",

@@ -50,7 +50,7 @@ $.Redactor.opts.langs['ru'] = {
 	text: 'Текст',
 	mailto: 'Эл. почта',
 	web: 'URL',
-	video_html_code: 'Код видео ролика или ссылка на YouTube/Vimeo',
+	video_html_code: 'Код видео ролика или ссылка на YouTube/Vimeo/Facebook',
 	file: 'Файл',
 	upload: 'Загрузить',
 	download: 'Скачать',
@@ -74,6 +74,13 @@ $.Redactor.opts.langs['ru'] = {
 	alignment: 'Выравнивание',
 	filename: 'Название (необязательно)',
 	edit: 'Редактировать',
-	center: 'По центру'
+	center: 'По центру',
+	spoiler: 'Спойлер',
+	spoiler_name: 'Название спойлера',
+	spoiler_text: 'Текст спойлера',
+	smiles: 'Смайлы',
+	undo: 'Отменить',
+	redo: 'Вернуть',
+	formalize: 'Оформление'
 };
 })( jQuery );

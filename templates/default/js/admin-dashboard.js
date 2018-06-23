@@ -84,7 +84,6 @@ $(function(){
         },
         update: function(event, ui) {
             renderChart();
-            colAutoHeight.calc();
             var id_list = new Array();
             $('#dashboard .col:not(.disabled)').each(function(){
                 var id = $(this).data('id');

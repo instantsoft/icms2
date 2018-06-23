@@ -18,13 +18,16 @@ class actionContentItemEdit extends cmsAction {
         $item['ctype_id'] = $ctype['id'];
         $item['ctype_name'] = $ctype['name'];
 
+        // автор записи?
+        $is_owner = $item['user_id'] == $this->cms_user->id;
+
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit')) { cmsCore::error404(); }
         if (!cmsUser::isAllowed($ctype['name'], 'edit', 'all') && !cmsUser::isAllowed($ctype['name'], 'edit', 'premod_all')) {
             if (
                 (cmsUser::isAllowed($ctype['name'], 'edit', 'own') ||
                     cmsUser::isAllowed($ctype['name'], 'edit', 'premod_own')
-                ) && $item['user_id'] != $this->cms_user->id) {
+                ) && !$is_owner) {
                 cmsCore::error404();
             }
         }
@@ -44,7 +47,7 @@ class actionContentItemEdit extends cmsAction {
         if ($item['is_deleted']){
 
             $allow_restore = (cmsUser::isAllowed($ctype['name'], 'restore', 'all') ||
-                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $item['user_id'] == $this->cms_user->id));
+                (cmsUser::isAllowed($ctype['name'], 'restore', 'own') && $is_owner));
 
             if (!$is_moderator && !$allow_restore){ cmsCore::error404(); }
         }
@@ -90,12 +93,6 @@ class actionContentItemEdit extends cmsAction {
             'groups_list' => $groups_list,
             'folders_list' => $folders_list
         ), $id, $item);
-
-        // Получаем теги
-        if ($ctype['is_tags']){
-            $tags_model = cmsCore::getModel('tags');
-            $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
-        }
 
 		list($ctype, $item) = cmsEventsManager::hook('content_edit', array($ctype, $item));
         list($form, $item)  = cmsEventsManager::hook("content_{$ctype['name']}_form", array($form, $item));
@@ -167,11 +164,16 @@ class actionContentItemEdit extends cmsAction {
 
                 }
 
-                $item['approved_by'] = null;
+                if($is_draf_submitted || !$item['is_approved']){
+                    unset($item['date_approved']);
+                }
+
+                if($is_owner){
+                    $item['approved_by'] = null;
+                }
 
                 if ($ctype['is_tags']){
-                    $tags_model->updateTags($item['tags'], $this->name, $ctype['name'], $id);
-                    $item['tags'] = $tags_model->getTagsStringForTarget($this->name, $ctype['name'], $id);
+                    $item['tags'] = cmsCore::getModel('tags')->updateTags($item['tags'], $this->name, $ctype['name'], $id);
                 }
 
 				$date_pub_time = strtotime($item['date_pub']);
@@ -193,8 +195,6 @@ class actionContentItemEdit extends cmsAction {
 					$days_from_pub = floor(($now_date - $date_pub_end_time)/60/60/24);
 					$is_pub = $is_pub && ($days_from_pub < 1);
 					$item['date_pub_end'] = date('Y-m-d', $date_pub_end_time);
-				} else {
-					$item['date_pub_end'] = false;
 				}
 
 				unset($item['pub_days']);
@@ -230,20 +230,20 @@ class actionContentItemEdit extends cmsAction {
                 // SEO параметры
                 $item_seo = $this->prepareItemSeo($item, $fields, $ctype);
                 if(empty($ctype['options']['is_manual_title']) && !empty($ctype['options']['seo_title_pattern'])){
-                    $item['seo_title'] = string_replace_keys_values($ctype['options']['seo_title_pattern'], $item_seo);
+                    $item['seo_title'] = string_replace_keys_values_extended($ctype['options']['seo_title_pattern'], $item_seo);
                 } else {
                     $item['seo_title'] = empty($ctype['options']['is_manual_title']) ? null : $item['seo_title'];
                 }
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
-                        $item['seo_keys'] = string_replace_keys_values($ctype['options']['seo_keys_pattern'], $item_seo);
+                        $item['seo_keys'] = string_replace_keys_values_extended($ctype['options']['seo_keys_pattern'], $item_seo);
                     } else {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
-                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values($ctype['options']['seo_desc_pattern'], $item_seo));
+                        $item['seo_desc'] = string_get_meta_description(string_replace_keys_values_extended($ctype['options']['seo_desc_pattern'], $item_seo));
                     } else {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
@@ -261,13 +261,21 @@ class actionContentItemEdit extends cmsAction {
                 if(!$is_draf_submitted){
 
                     if ($item['is_approved'] || $is_moderator){
+
+                        // новая запись, например из черновика
+                        if(empty($item['date_approved'])){
+                            cmsEventsManager::hook('content_after_add_approve', array('ctype_name' => $ctype['name'], 'item' => $item));
+                            cmsEventsManager::hook("content_{$ctype['name']}_after_add_approve", $item);
+                        }
+
                         cmsEventsManager::hook('content_after_update_approve', array('ctype_name'=>$ctype['name'], 'item'=>$item));
                         cmsEventsManager::hook("content_{$ctype['name']}_after_update_approve", $item);
+
                     } else {
 
                         $item['page_url'] = href_to_abs($ctype['name'], $item['slug'] . '.html');
 
-                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, false);
+                        $succes_text = cmsCore::getController('moderation')->requestModeration($ctype['name'], $item, empty($item['date_approved']));
 
                         if($succes_text){
                             cmsUser::addSessionMessage($succes_text, 'info');
@@ -295,6 +303,8 @@ class actionContentItemEdit extends cmsAction {
 
         $back_url = $this->request->get('back', '');
 
+        $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
+
         return $this->cms_template->render('item_form', array(
             'do'               => 'edit',
             'page_title'       => $item['title'],
@@ -307,8 +317,9 @@ class actionContentItemEdit extends cmsAction {
             'props'            => $props,
             'is_moderator'     => $is_moderator,
             'is_premoderation' => $is_premoderation,
+            'show_save_button' => $show_save_button,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
-            'button_draft_text' => (!$item['is_draft'] ? LANG_CONTENT_MOVE_DRAFT : LANG_CONTENT_SAVE_DRAFT),
+            'button_draft_text' => (!$item['is_draft'] ? ($show_save_button ? LANG_CONTENT_MOVE_DRAFT : LANG_SAVE) : LANG_CONTENT_SAVE_DRAFT),
             'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => false,
             'add_cats'         => $add_cats,

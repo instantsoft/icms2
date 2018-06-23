@@ -21,6 +21,17 @@ class modelContent extends cmsModel {
 
     public function addContentType($ctype){
 
+        if(!isset($ctype['labels'])){
+            $ctype['labels'] = array(
+                'one'     => $ctype['name'],
+                'two'     => $ctype['name'],
+                'many'    => $ctype['name'],
+                'create'  => $ctype['name'],
+                'list'    => '',
+                'profile' => ''
+            );
+        }
+
         $id = $this->insert('content_types', $ctype);
 
         $config = cmsConfig::getInstance();
@@ -673,14 +684,14 @@ class modelContent extends cmsModel {
             $field_class   = 'field'.string_to_camel('_', $field['type']);
             $field_handler = new $field_class(null, (isset($field['options']) ? array('options' => $field['options']) : null));
 
+            $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
+
             if (($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type']) || ($new_lenght != $old_lenght)){
 
                 if($field_old['type'] != $field['type']){ $this->db->dropIndex($content_table_name, $field_old['name']); }
 
                 $sql = "ALTER TABLE `{#}{$content_table_name}` CHANGE `{$field_old['name']}` `{$field['name']}` {$field_handler->getSQL()}";
                 $this->db->query($sql);
-
-                $field_handler->hookAfterUpdate($content_table_name, $field, $field_old, $this);
 
                 if(($field_old['name'] != $field['name']) || ($field_old['type'] != $field['type'])){
 
@@ -1770,6 +1781,10 @@ class modelContent extends cmsModel {
             $item['category_id'] = 0;
         }
 
+        if(!empty($item['is_approved'])){
+            $item['date_approved'] = null; // будет CURRENT_TIMESTAMP
+        }
+
         if (!empty($item['new_category'])){
             $category = $this->addCategory($ctype['name'], array(
                 'title' => $item['new_category'],
@@ -1806,7 +1821,7 @@ class modelContent extends cmsModel {
             $this->addPropsValues($ctype['name'], $item['id'], $props_values);
         }
 
-        if (!isset($item['slug'])){
+        if (empty($item['slug'])){
             $item = $this->getContentItem($ctype['name'], $item['id']);
             $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
         }
@@ -1831,6 +1846,12 @@ class modelContent extends cmsModel {
     public function updateContentItem($ctype, $id, $item, $fields){
 
         $table_name = $this->table_prefix . $ctype['name'];
+
+        if(array_key_exists('date_pub_end', $item)){
+            if($item['date_pub_end'] === null){
+                $item['date_pub_end'] = false;
+            }
+        }
 
         if (!$ctype['is_fixed_url']){
 
@@ -1913,6 +1934,30 @@ class modelContent extends cmsModel {
 
     }
 
+    public function replaceCachedTags($ctype_name, $ids, $new_tag, $old_tag) {
+
+        $table_name = $this->table_prefix . $ctype_name;
+
+        $old_tag = $this->db->escape($old_tag);
+        $new_tag = $this->db->escape($new_tag);
+
+        if(!is_array($ids)){
+            $ids = array($ids);
+        }
+
+        foreach($ids as $k=>$v){
+            $v = $this->db->escape($v);
+            $ids[$k] = "'{$v}'";
+        }
+        $ids = implode(',', $ids);
+
+        $this->db->query("UPDATE `{#}{$table_name}` SET `tags` = REPLACE(`tags`, '{$old_tag}', '$new_tag') WHERE id IN ({$ids})");
+
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -1960,12 +2005,17 @@ class modelContent extends cmsModel {
             return $slug;
         }
 
-        if($this->filterNotEqual('id', $item['id'])->
-                filterEqual('slug', $slug)->
-                getFieldFiltered($this->table_prefix.$ctype['name'], 'id')){
+        $scount = $this->filterNotEqual('id', $item['id'])->
+                filterLike('slug', "{$slug}%")->
+                getCount($this->table_prefix.$ctype['name'], 'id', true);
 
-            $slug = mb_substr($slug, 0, ($slug_len-13));
-            $slug .= uniqid();
+        if($scount){
+
+            $scount += 1;
+
+            $slug = mb_substr($slug, 0, ($slug_len - strlen($scount)));
+
+            $slug .= $scount;
 
         }
 
@@ -1983,6 +2033,23 @@ class modelContent extends cmsModel {
 		return $this->filterEqual('item_id', $id)->get($table_name, function($item, $model){
 			return $item['category_id'];
 		}, false);
+
+	}
+
+	public function getContentItemCategoriesList($ctype_name, $id){
+
+		$bind_table_name = $this->table_prefix . $ctype_name . '_cats_bind';
+        $cats_table_name = $this->table_prefix . $ctype_name . '_cats';
+
+        $this->join($bind_table_name, 'b', 'b.category_id = i.id');
+
+        $this->filterEqual('b.item_id', $id);
+
+        $this->orderBy('ns_left');
+
+        $this->useCache('content.categories');
+
+		return $this->get($cats_table_name);
 
 	}
 
@@ -2245,6 +2312,7 @@ class modelContent extends cmsModel {
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         $this->useCache("content.list.{$ctype_name}");
 
@@ -2268,6 +2336,7 @@ class modelContent extends cmsModel {
         if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
         if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
         if (!$this->pub_filter_disabled) { $this->filterPublishedOnly(); }
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
 
         if (!$this->order_by){ $this->orderBy('date_pub', 'desc')->forceIndex('date_pub'); }
 
@@ -2280,6 +2349,7 @@ class modelContent extends cmsModel {
         $table_name = $this->table_prefix . $ctype_name;
 
         $this->select('u.nickname', 'user_nickname');
+        $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
         $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
@@ -2300,6 +2370,7 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
+                'avatar'    => $item['user_avatar'],
                 'is_friend' => $user->isFriend($item['user_id'])
             );
 
@@ -2316,7 +2387,17 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentItem($ctype_name, $id, $by_field='id'){
+    public function getContentItem($ctype_name, $id, $by_field = 'id'){
+
+        if(is_numeric($ctype_name)){
+
+            $ctype = $this->getContentType($ctype_name);
+
+            if(!$ctype){ return false; }
+
+            $ctype_name = $ctype['name'];
+
+        }
 
         $table_name = $this->table_prefix . $ctype_name;
 
@@ -2332,6 +2413,7 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
+                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 
@@ -2379,7 +2461,7 @@ class modelContent extends cmsModel {
         $this->filterEqual('user_id', $user_id);
 
         if ($is_filter_hidden){
-            $this->filterHiddenParents();
+            $this->enableHiddenParentsFilter();
         }
 
         if (!$is_filter_hidden){
@@ -2532,6 +2614,10 @@ class modelContent extends cmsModel {
         $table_name = $this->table_prefix . $ctype_name;
 
         $item = $this->getItemById($table_name, $id);
+
+        if($item){
+            $item['page_url'] = href_to($ctype_name, $item['slug'].'.html');
+        }
 
         return $item;
 

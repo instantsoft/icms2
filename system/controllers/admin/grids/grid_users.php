@@ -51,7 +51,7 @@ function grid_users($controller){
         'date_reg' => array(
             'title' => LANG_REGISTRATION,
             'width' => 80,
-            'filter' => 'like',
+            'filter' => 'date',
             'handler' => function($date, $user){
                 $ld = $user['is_online'] ? LANG_ONLINE : LANG_USERS_PROFILE_LOGDATE.' '.string_date_age_max($user['date_log'], true);
                 return '<span class="tooltip" title="'.$ld.'">'.html_date($date).'</span>';

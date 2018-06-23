@@ -8,6 +8,8 @@ class content extends cmsFrontend {
 
     private $check_list_perm = true;
 
+    private $filter_titles = array();
+
 //============================================================================//
 //============================================================================//
 
@@ -163,6 +165,10 @@ class content extends cmsFrontend {
 
     }
 
+    public function getFilterTitles() {
+        return $this->filter_titles;
+    }
+
     public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
@@ -192,7 +198,15 @@ class content extends cmsFrontend {
 			if (!$value) { continue; }
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
+
                 $filters[$name] = $value;
+
+                $filter_title = $field['handler']->getStringValue($value);
+
+                if($filter_title){
+                    $this->filter_titles[] = mb_strtolower($field['title'].' '.$filter_title);
+                }
+
             }
 
 		}
@@ -214,6 +228,12 @@ class content extends cmsFrontend {
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
                     $filters[$name] = $value;
+
+                    $filter_title = $prop['handler']->getStringValue($value);
+
+                    if($filter_title){
+                        $this->filter_titles[] = mb_strtolower($prop['title'].' '.$filter_title);
+                    }
 
                 }
 
@@ -292,6 +312,8 @@ class content extends cmsFrontend {
                 );
 
             }
+
+            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
 
             return $item;
 
@@ -454,56 +476,17 @@ class content extends cmsFrontend {
 
         // Если включены категории, добавляем в форму поле выбора категории
         if ($ctype['is_cats'] && ($action != 'edit' || $ctype['options']['is_cats_change'])){
+
+            $cats = $this->getFormCategories($ctype['name']);
+
             $fieldset_id = $form->addFieldset(LANG_CATEGORY, 'category');
+
             $form->addField($fieldset_id,
                 new fieldList('category_id', array(
                         'rules' => array(
                             array('required')
                         ),
-                        'generator' => function($item){
-
-                            $user = cmsUser::getInstance();
-
-                            $content_model = cmsCore::getModel('content');
-                            $ctype = $content_model->getContentTypeByName($item['ctype_name']);
-                            $tree = $content_model->limit(0)->getCategoriesTree($item['ctype_name']);
-                            $level_offset = 0;
-                            $last_header_id = false;
-                            $items = array('' => '' );
-
-                            if ($tree){
-                                foreach($tree as $c){
-
-                                    if(!empty($c['allow_add']) &&  !$user->isInGroups($c['allow_add'])){
-                                        continue;
-                                    }
-
-                                    if ($ctype['options']['is_cats_only_last']){
-										$dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
-                                        if ($c['ns_right']-$c['ns_left'] == 1){
-                                            if ($last_header_id !== false && $last_header_id != $c['parent_id']){
-                                                $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
-                                            }
-                                            $items[$c['id']] = $dash_pad . $c['title'];
-                                        } else if ($c['parent_id']>0) {
-                                            $items['opt'.$c['id']] = array($dash_pad.$c['title']);
-                                            $last_header_id = $c['id'];
-                                        }
-                                        continue;
-                                    }
-
-                                    if (!$ctype['options']['is_cats_only_last']){
-                                        if ($c['parent_id']==0 && !$ctype['options']['is_cats_open_root']){ $level_offset = 1; continue; }
-                                        $items[$c['id']] = str_repeat('-- ', $c['ns_level']-$level_offset).' '.$c['title'];
-                                        continue;
-                                    }
-
-                                }
-                            }
-
-                            return $items;
-
-                        }
+                        'items' => $cats
                     )
                 )
             );
@@ -621,7 +604,7 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
-                'prefix' => '/'.$ctype['name'].'/',
+                'prefix' => '/'.((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : ''),
                 'suffix' => '.html',
                 'rules' => $slug_field_rules
             )));
@@ -776,13 +759,14 @@ class content extends cmsFrontend {
                     $rules[] = array('number');
                     $rules[] = array('min', $min);
                     $rules[] = array('max', $pub_max_days);
-                    for($d=$min; $d<=$pub_max_days; $d++) { $days[$d] = $d; }
+                    for($d=$pub_max_days; $d>=$min; $d--) { $days[$d] = $d; }
 					$form->addField($pub_fieldset_id, new fieldList('pub_days', array(
-						'title' => $title,
-						'hint' => $hint,
-						'items' => $days,
-						'rules' => $rules
-					)));
+						'title'   => $title,
+                        'hint'    => $hint,
+                        'default' => $pub_max_days,
+                        'items'   => $days,
+                        'rules'   => $rules
+                    )));
 				} else {
                     $rules = array();
                     if ($action == 'add'){ $rules[] = array('required'); $min = 1; }
@@ -801,6 +785,58 @@ class content extends cmsFrontend {
         list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', array($form, $item, $ctype), null, $this->request);
 
         return $form;
+
+    }
+
+    public function getFormCategories($ctype_name) {
+
+        $level_offset   = 0;
+        $last_header_id = false;
+        $items          = array('' => '');
+
+        $ctype = $this->model->getContentTypeByName($ctype_name);
+        if(!$ctype){ return $items; }
+
+        $tree = $this->model->limit(0)->getCategoriesTree($ctype_name);
+        if(!$tree){ return $items; }
+
+        foreach($tree as $c){
+
+            if(!empty($c['allow_add']) &&  !$this->cms_user->isInGroups($c['allow_add'])){
+                continue;
+            }
+
+            if ($ctype['options']['is_cats_only_last']){
+
+                $dash_pad = $c['ns_level']-1 >= 0 ? str_repeat('-', $c['ns_level']-1) . ' ' : '';
+
+                if ($c['ns_right']-$c['ns_left'] == 1){
+                    if ($last_header_id !== false && $last_header_id != $c['parent_id']){
+                        $items['opt'.$c['id']] = array(str_repeat('-', $c['ns_level']-1).' '.$c['title']);
+                    }
+                    $items[$c['id']] = $dash_pad . $c['title'];
+                } else if ($c['parent_id']>0) {
+                    $items['opt'.$c['id']] = array($dash_pad.$c['title']);
+                    $last_header_id = $c['id'];
+                }
+
+                continue;
+
+            }
+
+            if (!$ctype['options']['is_cats_only_last']){
+
+                if ($c['parent_id']==0 && !$ctype['options']['is_cats_open_root']){ $level_offset = 1; continue; }
+
+                $items[$c['id']] = str_repeat('-- ', $c['ns_level']-$level_offset).' '.$c['title'];
+
+                continue;
+
+            }
+
+        }
+
+        return $items;
 
     }
 
@@ -993,13 +1029,13 @@ class content extends cmsFrontend {
 
     public function prepareItemSeo($item, $fields, $ctype) {
 
+        list($ctype, $fields, $item) = cmsEventsManager::hook('prepare_item_seo', array($ctype, $fields, $item));
+
         $_item = $item;
 
         foreach ($fields as $field) {
 
-            if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) { $_item[$field['name']] = ''; continue; }
-
-            if (!$field['is_in_item'] || !isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
                 $_item[$field['name']] = ''; continue;

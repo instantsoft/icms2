@@ -300,7 +300,7 @@ function string_date_age_max($date, $is_add_back=false){
  * @param string $date2
  * @return array
  */
-function real_date_diff($date1, $date2 = NULL){
+function real_date_diff($date1, $date2 = null){
 
     $diff = array();
 
@@ -309,8 +309,11 @@ function real_date_diff($date1, $date2 = NULL){
     //Если вторая дата не задана принимаем ее как текущую
     if(!$date2) {
         $cd = getdate();
-        $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
+    } else {
+        $cd = getdate(strtotime($date2));
     }
+
+    $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
 
     //Преобразуем даты в массив
     $pattern = '/(\d+)-(\d+)-(\d+)(\s+(\d+):(\d+):(\d+))?/';

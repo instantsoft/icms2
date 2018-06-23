@@ -4,6 +4,15 @@ class actionRssFeed extends cmsAction {
 
     private $cache_file_path;
 
+    public $request_params = array(
+        'template' => array(
+            'default' => '',
+            'rules'   => array(
+                array('sysname')
+            )
+        )
+    );
+
     public function run($ctype_name=false){
 
         if (!$ctype_name || $this->validate_sysname($ctype_name) !== true) { cmsCore::error404(); }
@@ -46,6 +55,16 @@ class actionRssFeed extends cmsAction {
         list($feed, $category, $author) = $data;
 
 		header('Content-type: application/rss+xml; charset=utf-8');
+
+        $template = $this->request->get('template');
+
+        if($template){
+            if($this->cms_template->getTemplateFileName('controllers/'.$this->name.'/'.$template, true)){
+                $feed['template'] = $template;
+            } else {
+                cmsCore::error404();
+            }
+        }
 
         $rss = $this->cms_template->getRenderedChild($feed['template'], array(
             'feed'     => $feed,

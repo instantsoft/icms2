@@ -10,3 +10,4 @@
     define('LANG_TAGS_SETTINGS',            'Настроить теги');
     define('LANG_TAGS_RECOUNT',             'Пересчитать теги');
     define('LANG_TAGS_CONTEXT_LT_SEARCH',   'При поиске по тегам');
+    define('LANG_TAGS_SEO_HINT',            'Можно использовать выражения {tag} - текущий тег, {ctype_title} - название текущего типа контента');

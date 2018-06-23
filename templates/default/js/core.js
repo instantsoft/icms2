@@ -55,7 +55,7 @@ $(document).ready(function(){
             var tabs = $(this);
 
             var dropdown = $("<select>").prependTo(tabs);
-            $("ul > li > a", tabs).each(function() {
+            $("> ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
                     value   : el.attr('href'),
@@ -123,6 +123,8 @@ icms.forms = (function ($) {
     this.submitted = false;
     this.form_changed = false;
     this.csrf_token = false;
+
+    var _this = this;
 
     this.getCsrfToken = function (){
         if(this.csrf_token === false){
@@ -211,11 +213,15 @@ icms.forms = (function ($) {
 
     //====================================================================//
 
-    this.submitAjax = function(form){
+    this.submitAjax = function(form, additional_params){
 
         icms.forms.submitted = true;
 
         var form_data = this.toJSON($(form));
+
+        if(additional_params){
+            $.extend(form_data, additional_params);
+        }
 
         var url = $(form).attr('action');
 
@@ -324,6 +330,85 @@ icms.forms = (function ($) {
         render_symbols_count();
     };
 
+    this.getInputVal = function(el){
+        if($(el).is(':checkbox,:radio')){
+            return $(el+':checked').val();
+        }
+        return $(el).val();
+    };
+    this.inputNameToId = function(name){
+        name = name.replace(/\:/g,'_');
+        return name;
+    };
+    this.inputNameToElName = function(name){
+        name = name.split(':');
+        return (typeof name !== 'string' && name.length > 1) ? name.shift()+'['+name.join('][')+']' :  name;
+    };
+    this.VDListeners = {};
+    this.VDRules = {from:{},depends:{}};
+    this.addVisibleDepend = function(form_id, field_id, rules){
+        if(typeof this.VDRules.depends[form_id+'-'+field_id] === 'undefined'){ /* здесь все зависимости поля field_name */
+            this.VDRules.depends[form_id+'-'+field_id] = rules; /* array('is_cats' => array('show' => array('1'))) */
+        }else{
+            $.extend(this.VDRules.depends[form_id+'-'+field_id], rules);
+        }
+        for(var f in rules){if(rules.hasOwnProperty(f)){
+            if(typeof this.VDRules.from[form_id+'-'+f] === 'undefined'){this.VDRules.from[form_id+'-'+f] = {};}
+            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ // здесь все, кто зависит от поля f
+                this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; /* array('show' => array('1')) */
+            }else{
+                $.extend(this.VDRules.from[form_id+'-'+f][field_id], rules[f]);
+            }
+            if(typeof this.VDListeners[form_id+'-'+f] === 'undefined'){
+                this.VDListeners[form_id+'-'+f] = '#'+form_id+' [name="'+this.inputNameToElName(f)+'"]';
+                $('#'+form_id+' [name="'+this.inputNameToElName(f)+'"]').on('change', function (){
+                    for(var field in _this.VDRules.from[form_id+'-'+f]){if(_this.VDRules.from[form_id+'-'+f].hasOwnProperty(field)){ /* перебор тех, кто зависит от этого поля f */
+                        var display = null; /* если не будет show */
+
+                        for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                            if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['show'] !== 'undefined'){
+                                if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['show']) !== -1){
+                                    display = true;
+                                    break;
+                                }else{
+                                    display = false;
+                                }
+                            }
+                        }}
+
+                        if(display === null){display = true;}
+
+                        if(display){ /* скрытие сильнее показа */
+                            for(var _from in _this.VDRules.depends[form_id+'-'+field]){if(_this.VDRules.depends[form_id+'-'+field].hasOwnProperty(_from)){ /* перебор тех, от кого зависит поле field */
+                                if(typeof _this.VDRules.depends[form_id+'-'+field][_from]['hide'] !== 'undefined'){
+                                    if($.inArray(_this.getInputVal('#'+form_id+' [name="'+_this.inputNameToElName(_from)+'"]'), _this.VDRules.depends[form_id+'-'+field][_from]['hide']) !== -1){
+                                        display = false;
+                                        break;
+                                    }else{
+                                        display = true;
+                                    }
+                                }
+                            }}
+                        }
+
+                        if(display){
+                            $('#f_'+_this.inputNameToId(field)).show();
+                        }else{
+                            $('#f_'+_this.inputNameToId(field)).hide();
+                        }
+
+                    }}
+                });
+            }
+        }}
+        return this;
+    };
+    this.VDReInit = function(){
+        for(var l in this.VDListeners){if(this.VDListeners.hasOwnProperty(l)){
+            $(this.VDListeners[l]).triggerHandler('change');
+        }}
+    };
+
 	return this;
 
 }).call(icms.forms || {},jQuery);
@@ -356,6 +441,78 @@ icms.events = (function ($) {
 	return this;
 
 }).call(icms.events || {},jQuery);
+
+icms.pagebar = function(id, initial_page, has_next, is_modal){
+
+    initial_page = initial_page || 1;
+
+    var page = 1;
+
+    var link = $(id);
+
+    var showMore = function(){
+
+        var list_wrap = $(link).prev();
+
+        if(!has_next){
+            if(initial_page > 1){
+                return true;
+            }
+            $('body,html').animate({
+                scrollTop: $(list_wrap).offset().top
+                }, 500
+            );
+            return false;
+        }
+
+        $(link).addClass('show_spinner');
+
+        page += 1;
+
+        var post_params = $(link).data('url-params');
+        post_params.page = page;
+
+        $.post($(link).data('url'), post_params, function(data){
+
+            var first_page_url = $(link).data('first-page-url');
+
+            $(link).removeClass('show_spinner');
+
+            if (!data.html) { return; }
+
+            has_next = data.has_next;
+            page = data.page;
+
+            $(list_wrap).append(data.html);
+
+            if(!has_next){
+                $('span', link).html($('span', link).data('to-first'));
+                $(link).attr('href', first_page_url);
+            }
+
+            var _sep = first_page_url.indexOf('?') !== -1 ? '&' : '?';
+
+            if(!is_modal){
+                window.history.pushState({link: first_page_url+_sep+'page='+page}, '', first_page_url+_sep+'page='+page);
+            }
+
+            if(is_modal){
+                icms.modal.resize();
+            }
+
+        }, 'json');
+
+        return false;
+
+    };
+
+    $(link).on('click', function (){
+        return showMore();
+    });
+
+};
+
+
 $.expr[':'].Contains = $.expr.createPseudo(function(arg) {
     return function( elem ) {
         return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;

@@ -1,6 +1,3 @@
-/* ========================================================================== */
-/* ========================================================================== */
-
 html, body {
     padding:0; margin:0;
     font-family: 'Trebuchet MS', Helvetica, 'DejaVu Sans', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', sans-serif;
@@ -430,6 +427,7 @@ form .ft_list label .loading{
 	width:13px;
 	height:13px;
 }
+form .child_field{padding-left:20px}
 .parent_field {
     margin-left: 25px;
 }
@@ -1914,7 +1912,10 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     line-height:25px;
     margin-left:10px;
     background:url("../../images/icons/page_gear.png") no-repeat left center;
-    display: block;
+    display: inline-block;
+}
+#site_settings #f_template .hint a.inthemer {
+    background:url("../../images/icons/package_go.png") no-repeat left center;
 }
 #site_settings #f_merge_js label, #site_settings #f_merge_css label {display: inline-block;}
 .symbols_count {
@@ -1961,17 +1962,22 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     box-sizing: border-box;
     margin-right: -20px;
     margin-top: -20px;
-    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
 }
 #dashboard .col, .colplaceholder {
     vertical-align: top;
     border:solid 1px #EDEDED;
     box-sizing: border-box;
-    float: left;
     margin-right: 20px;
     margin-top: 20px;
     background: #FFF;
     position: relative;
+    max-height: 520px;
+}
+#dashboard .col:hover {
+    box-shadow: 0px 0px 10px #DDD;
 }
 #dashboard a.view_all_link {
     display: block;
@@ -2013,10 +2019,11 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
 }
 #dashboard .col h3 {
     padding:10px 10px;
-    background:#F9F9F9;
+    background:#9DB1B9;
     margin:0;
     height: 20px;
     line-height: 20px;
+    color: #FFF;
 }
 #dashboard .actions-toolbar {
     padding: 5px 0;
@@ -2174,11 +2181,11 @@ ul.news_targets_tabs > li.active_news {
 #news-loading {
     display: none;
 }
-#icms_news_wrap {
+#icms_news_wrap, #icms_users_wrap {
     height: calc(100% - 35px);
     box-sizing: border-box;
 }
-#icms_news_wrap .icms_news_wrap {
+#icms_news_wrap .icms_news_wrap, #icms_users_wrap .icms_users_wrap {
     height: 100%;
     box-sizing: border-box;
 }
@@ -2688,6 +2695,16 @@ input[type=radio]:checked ~ label{
     padding: 0 20px;
     margin: 20px 0 0 0;
 }
+.inline_button {
+    float: left;
+    margin: 17px 0 0;
+}
+#f_fast_add_ctype, #f_fast_add_type, #f_fast_add_into {
+    width: 200px;
+    float: left;
+    clear: right;
+    margin-right: 20px;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);
@@ -2698,7 +2715,7 @@ input[type=radio]:checked ~ label{
         width: 100%;
     }
 }
-@media screen and (max-width: 980px) {
+@media screen and (max-width: 1040px) {
     #dashboard .col1 {
         width: calc(50% - 20px);
     }
@@ -2717,6 +2734,14 @@ input[type=radio]:checked ~ label{
     #cp_header #menu li .wrap {
         padding-right: 10px;
         padding-left: 10px;
+    }
+    #cp_top_line #left_links {
+        display: none;
+    }
+    #cp_header #logo {
+        position: absolute;
+        top: -22px;
+        left: 10px;
     }
 }
 @media screen and (max-width: 815px) {
@@ -2738,14 +2763,6 @@ input[type=radio]:checked ~ label{
         box-sizing: border-box;
         box-shadow: 4px 5px 5px #CCC;
         z-index: 1;
-    }
-    #cp_top_line #left_links {
-        display: none;
-    }
-    #cp_header #logo {
-        position: absolute;
-        top: -22px;
-        left: 10px;
     }
     #cp_header {
         padding: 0 5px;

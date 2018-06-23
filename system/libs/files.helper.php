@@ -237,9 +237,10 @@ function files_sanitize_name($filename){
  * Получает данные по заданному url
  * @param string $url URL, откуда нужно получить данные
  * @param integer $timeout Таймаут соединения
+ * @param boolean $json_decode Преобразовывать JSON
  * @return string
  */
-function file_get_contents_from_url($url, $timeout = 5){
+function file_get_contents_from_url($url, $timeout = 5, $json_decode = false){
 
     if (function_exists('curl_init')){
 
@@ -258,6 +259,10 @@ function file_get_contents_from_url($url, $timeout = 5){
 
     } else {
         $data = @file_get_contents($url);
+    }
+
+    if($json_decode){
+        return json_decode($data, true);
     }
 
     return $data;
@@ -708,5 +713,39 @@ function img_rotate($angle, $image_res) {
         'height'    => imagesy($new_image_res),
         'image_res' => $new_image_res
     );
+
+}
+
+/**
+ * Выполняет команду в shell и возвращает массив строк ответа
+ *
+ * @param string $command Команда
+ * @param string $postfix Строка после команды
+ * @return array
+ */
+function console_exec_command($command, $postfix = ' 2>&1'){
+
+    if(!function_exists('exec')){
+        return null;
+    }
+
+    $buffer = array();
+    $err    = '';
+
+    $result = exec($command.$postfix, $buffer, $err);
+
+    if($err !== 127){
+        if(!isset($buffer[0])){
+            $buffer[0] = $result;
+        }
+        $b = strtolower($buffer[0]);
+        if(strstr($b,'error') || strstr($b,' no ') || strstr($b,'not found') || strstr($b,'No such file or directory')){
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+    return $buffer;
 
 }

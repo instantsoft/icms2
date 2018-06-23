@@ -18,7 +18,7 @@
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
     define('LANG_CONTENT_RETURN_CONFIRM',    'Вы уверены что хотите отозвать эту запись с проверки?\nОна переместится в ваши черновики.');
-    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновики');
+    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновиках');
     define('LANG_CONTENT_MOVE_DRAFT',		 'Перенести в черновики');
     define('LANG_CONTENT_DRAFT_NOTICE',		 'Запись скрыта в черновики');
     define('LANG_CONTENT_DRAFT_LIST',		 'Черновики');
@@ -33,6 +33,7 @@
     define('LANG_FILTER_FIELD',              'Фильтр по полю');
     define('LANG_FILTER_ADD',                'Добавить фильтр');
     define('LANG_FILTER_LIKE',               'содержит');
+    define('LANG_FILTER_NOT_LIKE',           'не содержит');
     define('LANG_FILTER_LIKE_BEGIN',         'начинается с');
     define('LANG_FILTER_LIKE_END',           'оканчивается на');
     define('LANG_FILTER_DATE_YOUNGER',       'не старше, дней');
@@ -95,6 +96,10 @@
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
+    define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов после запятой');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
+    define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
@@ -234,6 +239,8 @@
     define('LANG_ONLINE',                    'Онлайн');
     define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
+    define('LANG_USERS_SUBSCRIBE',           'Подписаться');
+    define('LANG_USERS_UNSUBSCRIBE',         'Отписаться');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
@@ -307,6 +314,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Ошибка');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Ошибка в параметрах: %s');
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
@@ -445,6 +453,8 @@
     define('LANG_SAVING',                    'Сохранение...');
     define('LANG_PREVIEW',                   'Предпросмотр');
     define('LANG_SEND',						 'Отправить');
+    define('LANG_SEND_AGAIN',				 'Отправить еще раз');
+    define('LANG_SEND_AGAIN_VIA',			 'Отправить еще раз через ');
     define('LANG_INSTALL',					 'Установить');
     define('LANG_INSERT',					 'Вставить');
     define('LANG_CANCEL',					 'Отменить');
@@ -560,6 +570,7 @@
     define('LANG_TIME10',                    'раз');
     define('LANG_SUBSCRIBERS_SPELL',         'подписчик|подписчика|подписчиков');
     define('LANG_DOWNLOAD_SPELL',            'скачивание|скачивания|скачиваний');
+    define('LANG_USERS_SPELL',               'пользователь|пользователя|пользователей');
 
     define('LANG_ISLEFT',                    'осталось');
 

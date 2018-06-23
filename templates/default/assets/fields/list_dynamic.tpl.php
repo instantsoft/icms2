@@ -57,6 +57,6 @@
 
 <script type="text/javascript">
     $(function(){
-        new icms.dynamicList('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->multiple_keys); ?>);
+        new icms.dynamicList('<?php echo $field->id; ?>', '<?php echo $field->element_name; ?>', <?php echo json_encode($value); ?>, <?php echo json_encode($field->multiple_keys); ?>, <?php echo !isset($field->single_select) ? 1 : (int)$field->single_select; ?>);
     });
 </script>

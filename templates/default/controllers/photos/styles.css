@@ -184,40 +184,6 @@
 }
 .album-photos-wrap .photo .info .positive { color:lime; }
 .album-photos-wrap .photo .info .negative { color:red; }
-.show-more {
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    background-color: #B3C2C9;
-    color: #FFF;
-    padding: 7px;
-    margin: 17px 0 20px 0;
-    background-position: center center;
-    height: 26px;
-    box-sizing: border-box;
-    line-height: 12px;
-    position: relative;
-}
-.show-more.show_spinner{
-    background-color: #FFF;
-}
-.show-more.show_spinner > span{
-    display: none;
-}
-.show-more:hover{
-    background-color: #bed4de;
-    color: #FFF;
-}
-.show-more .spinner {
-    display: none;
-}
-.show-more.show_spinner .spinner {
-    display: block;
-    margin-top: 0px;
-}
-.show-more.show_spinner:hover{
-    background-color: inherit;
-}
 span.tags_bar {
     padding-left: 20px;
     background: url(../../images/icons/tag.png) no-repeat left center;

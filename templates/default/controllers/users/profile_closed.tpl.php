@@ -25,7 +25,7 @@
     <div id="left_column" class="column">
 
         <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
+            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname'], $profile['is_deleted']); ?>
         </div>
 
         <div class="block">

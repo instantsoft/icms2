@@ -4,7 +4,7 @@ class backendMessages extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
 
-    protected $queue = array(
+    public $queue = array(
         'queues'           => array('email'),
         'queue_name'       => LANG_EMAIL,
         'use_queue_action' => true

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.9.0 => 2.9.1
+ * 2.10.0 => 2.10.1
  */
 function install_package(){
 
@@ -11,6 +11,28 @@ function install_package(){
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////// Индексы //////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    $remove_table_indexes = array();
+    $add_table_uq_indexes = array();
+
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    if($add_table_uq_indexes){
+        foreach ($add_table_uq_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
+            }
+        }
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Обновляем события ///////////////////////////////////////////

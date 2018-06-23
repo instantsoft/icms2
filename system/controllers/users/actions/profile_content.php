@@ -11,6 +11,8 @@ class actionUsersProfileContent extends cmsAction {
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
+        if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
+
         if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
             cmsCore::error404();
         }
@@ -42,6 +44,7 @@ class actionUsersProfileContent extends cmsAction {
         }
 
         // Если есть наборы, применяем фильтры текущего
+        $current_dataset = array();
         if ($datasets){
 
             if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
@@ -56,7 +59,7 @@ class actionUsersProfileContent extends cmsAction {
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if(count($datasets) == 1){
-                unset($current_dataset); $datasets = false;
+                $current_dataset = array(); $datasets = false;
             }
 
         }
@@ -75,7 +78,7 @@ class actionUsersProfileContent extends cmsAction {
         }
 
         if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
-            $this->controller_content->model->filterHiddenParents();
+            $this->controller_content->model->enableHiddenParentsFilter();
         }
 
         if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){
@@ -95,16 +98,35 @@ class actionUsersProfileContent extends cmsAction {
             $page_url = href_to_profile($profile, array('content', $ctype_name));
         }
 
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
         $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''));
 
         $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-        if(isset($current_dataset) && $dataset){
+        if($current_dataset && $dataset){
             $list_header .= ' / '.$current_dataset['title'];
         }
 
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+            array(
+                'field'     => 'user_id',
+                'condition' => 'eq',
+                'value'     => $profile['id']
+            ),
+            array(
+                'field'     => 'folder_id',
+                'condition' => 'eq',
+                'value'     => $folder_id
+            )
+        )));
+
         return $this->cms_template->render('profile_content', array(
+            'filter_titles'   => $this->controller_content->getFilterTitles(),
             'user'            => $this->cms_user,
+            'toolbar_html'    => $toolbar_html,
             'id'              => $profile['id'],
             'profile'         => $profile,
             'ctype'           => $ctype,
@@ -112,7 +134,7 @@ class actionUsersProfileContent extends cmsAction {
             'folder_id'       => $folder_id,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
             'list_header'     => $list_header,
             'html'            => $list_html

@@ -114,6 +114,8 @@ class modelActivity extends cmsModel{
 
     public function getEntriesCount(){
 
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
+
         $this->useCache('activity.entries');
 
         return $this->getCount('activity');
@@ -129,20 +131,26 @@ class modelActivity extends cmsModel{
         $this->select('t.description', 'description');
         $this->join('activity_types', 't', 't.id = i.type_id');
 
+        $this->joinSessionsOnline();
+
         if (!$this->order_by){
             $this->orderBy('date_pub', 'desc');
         }
 
+        if (!$this->hidden_parents_filter_disabled) { $this->filterHiddenParents(); }
+
         $this->useCache('activity.entries');
 
         $config = cmsConfig::getInstance();
+        $user = cmsUser::getInstance();
 
-        return $this->get('activity', function($item, $model) use ($config) {
+        return $this->get('activity', function($item, $model) use ($config, $user) {
 
             $item['user'] = array(
-                'id'       => $item['user_id'],
-                'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar']
+                'id'        => $item['user_id'],
+                'nickname'  => $item['user_nickname'],
+                'is_online' => $item['is_online'],
+                'avatar'    => $item['user_avatar']
             );
 
             if (!empty($item['subject_url'])){
@@ -186,6 +194,8 @@ class modelActivity extends cmsModel{
             $item['description'] = sprintf($item['description'], $link);
 
             $item['date_diff'] = string_date_age_max($item['date_pub'], true);
+
+            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
 
             return $item;
 

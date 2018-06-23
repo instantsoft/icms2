@@ -57,6 +57,9 @@ function grid_content_items($controller, $ctype_name=false){
                         return html_bool_span(LANG_MODERATION_NOT_NEEDED, true);
                     }
                 } else {
+                    if(!empty($item['is_draft'])){
+                        return html_bool_span(LANG_CONTENT_DRAFT_NOTICE, false);
+                    }
                     return html_bool_span(LANG_CONTENT_NOT_APPROVED, false);
                 }
             }

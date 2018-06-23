@@ -49,6 +49,7 @@ class actionContentItemReturnForRevision extends cmsAction {
         if (!$errors){
 
             $item['reason'] = $data['remarks'];
+            $item['page_url'] = href_to_abs($ctype['name'], 'edit', $item['id']);
 
             $this->controller_moderation->reworkModeratorTask($ctype['name'], $item, $this->getUniqueKey(array($ctype['name'], 'moderation', $item['id'])));
 

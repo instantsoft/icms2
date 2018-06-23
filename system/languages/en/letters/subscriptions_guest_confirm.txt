@@ -1,0 +1,15 @@
+[subject:Subscription Confirmation - {site}]
+
+Hello, {nickname}.
+
+To confirm your subscription follow the link:
+
+<a href="{page_url}">{page_url}</a>
+
+Or use the verification code: {confirm_token}
+
+You should do that until {valid_until}.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

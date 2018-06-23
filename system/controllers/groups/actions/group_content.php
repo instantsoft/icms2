@@ -19,6 +19,7 @@ class actionGroupsGroupContent extends cmsAction {
         ));
 
         // Если есть наборы, применяем фильтры текущего
+        $current_dataset = array();
         if ($datasets){
 
             if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
@@ -33,7 +34,7 @@ class actionGroupsGroupContent extends cmsAction {
             // если набор всего один, например для изменения сортировки по умолчанию,
             // не показываем его на сайте
             if(count($datasets) == 1){
-                unset($current_dataset); $datasets = false;
+                $current_dataset = array(); $datasets = false;
             }
 
         }
@@ -55,9 +56,26 @@ class actionGroupsGroupContent extends cmsAction {
 
         $group['sub_title'] = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
-        if(isset($current_dataset) && $dataset){
+        if($current_dataset && $dataset){
             $group['sub_title'] .= ' / '.$current_dataset['title'];
         }
+
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
+
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+            array(
+                'field'     => 'parent_id',
+                'condition' => 'eq',
+                'value'     => $group['id']
+            ),
+            array(
+                'field'     => 'parent_type',
+                'condition' => 'eq',
+                'value'     => 'group'
+            )
+        )));
 
         $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
         $this->cms_template->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
@@ -65,13 +83,15 @@ class actionGroupsGroupContent extends cmsAction {
 
         return $this->cms_template->render('group_content', array(
             'user'            => $this->cms_user,
+            'toolbar_html'    => $toolbar_html,
             'group'           => $group,
             'ctype'           => $ctype,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
-            'current_dataset' => (isset($current_dataset) ? $current_dataset : array()),
+            'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
-            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''))
+            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : '')),
+            'filter_titles'   => $this->controller_content->getFilterTitles(),
         ));
 
     }

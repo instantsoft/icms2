@@ -24,10 +24,10 @@
             <?php foreach ($feed['items'] as $item) { ?>
                 <item>
                     <?php if (!empty($feed['mapping']['title'])) { ?>
-                        <title><?php html(html_clean($item[$feed['mapping']['title']], 150)); ?></title>
+                        <title><?php echo htmlspecialchars(html_clean($item[$feed['mapping']['title']], 150)); ?></title>
                     <?php } ?>
                     <?php if (!empty($feed['mapping']['description'])) { ?>
-                        <description><?php html($item[$feed['mapping']['description']]); ?></description>
+                        <description><?php echo htmlspecialchars($item[$feed['mapping']['description']]); ?></description>
                     <?php } ?>
                     <?php if (!empty($feed['mapping']['pubDate'])) { ?>
                         <pubDate><?php html(date('r', strtotime($item[$feed['mapping']['pubDate']]))); ?></pubDate>

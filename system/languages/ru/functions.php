@@ -89,3 +89,8 @@ function lang_setlocale() {
  * Locale name
  */
 define('LC_LANGUAGE_TERRITORY', 'ru_RU');
+
+/**
+ * Locale validate regexp
+ */
+define('LC_LANGUAGE_VALIDATE_REGEXP', "/^([a-zа-яёй0-9 \.\?\@\,\-]*)$/ui");

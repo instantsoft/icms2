@@ -9,6 +9,13 @@
     $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
 
     $this->addToolButton(array(
+        'class' => 'help',
+        'title' => LANG_HELP,
+        'target' => '_blank',
+        'href'  => LANG_HELP_URL_CONTENT,
+    ));
+
+    $this->addToolButton(array(
         'class' => 'filter',
         'title' => LANG_FILTER,
         'href'  => null,
@@ -67,31 +74,24 @@
     ));
 
     $this->addToolButton(array(
-        'class' => 'move',
+        'class' => 'move show_on_selected',
         'title' => LANG_MOVE,
         'href'  => null,
         'onclick' => 'return icms.datagrid.submitAjax($(this))'
     ));
 
     $this->addToolButton(array(
-        'class' => 'delete',
+        'class' => 'delete show_on_selected',
         'title' => LANG_DELETE,
         'href'  => null,
         'onclick' => "return icms.datagrid.submit($(this), '".LANG_DELETE_SELECTED_CONFIRM."')",
     ));
 
     $this->addToolButton(array(
-        'class' => 'basket_put',
+        'class' => 'basket_put show_on_selected',
         'title' => LANG_BASKET_DELETE,
         'href'  => null,
         'onclick' => "return icms.datagrid.submit($(this), '".LANG_TRASH_DELETE_SELECTED_CONFIRM."')",
-    ));
-
-    $this->addToolButton(array(
-        'class' => 'help',
-        'title' => LANG_HELP,
-        'target' => '_blank',
-        'href'  => LANG_HELP_URL_CONTENT,
     ));
 
     $this->applyToolbarHook('admin_content_toolbar');

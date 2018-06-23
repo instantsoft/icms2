@@ -30,17 +30,17 @@
             </a>
         <?php } ?>
     </div>
-    <?php if($item['filter_panel']['types']){ ?>
-        <span class="box_menu <?php echo !isset($item['filter_selected']['types']) ?'': 'box_menu_select'; ?>">
-            <?php echo $item['filter_panel']['types'][$item['filter_values']['types']]; ?>
+    <?php if($item['filter_panel']['type']){ ?>
+        <span class="box_menu <?php echo !isset($item['filter_selected']['type']) ?'': 'box_menu_select'; ?>">
+            <?php echo $item['filter_panel']['type'][$item['filter_values']['type']]; ?>
         </span>
         <div class="box_menu_dd">
-            <?php foreach($item['filter_panel']['types'] as $value => $name){ ?>
-                <?php $url_params = $item['url_params']; $url_params['types'] = $value; ?>
+            <?php foreach($item['filter_panel']['type'] as $value => $name){ ?>
+                <?php $url_params = $item['url_params']; $url_params['type'] = $value; ?>
                 <a href="<?php echo $page_url.'?'.http_build_query($url_params); ?>">
                     <?php echo $name; ?>
-                    <?php if($item['filter_values']['types'] == $value){ ?>
-                        <input type="hidden" name="types" value="<?php echo $value; ?>">
+                    <?php if($item['filter_values']['type'] == $value){ ?>
+                        <input type="hidden" name="type" value="<?php echo $value; ?>">
                         <i class="check">&larr;</i>
                     <?php } ?>
                 </a>
@@ -64,7 +64,18 @@
     </div>
 
     <?php if($item['filter_values']['width'] || $item['filter_values']['height']){ ?>
-        <span class="box_menu box_menu_select"><?php echo LANG_PHOTOS_MORE_THAN; ?> <?php html($item['filter_values']['width']); ?> x <?php html($item['filter_values']['height']); ?></span>
+        <span class="box_menu box_menu_select">
+            <?php echo LANG_PHOTOS_MORE_THAN; ?>
+            <?php if($item['filter_values']['width'] && $item['filter_values']['height']){ ?>
+                <?php html($item['filter_values']['width']); ?>px
+            X
+                <?php html($item['filter_values']['height']); ?>px
+            <?php } elseif($item['filter_values']['width']){ ?>
+                <?php html($item['filter_values']['width']); ?>px <?php echo LANG_PHOTOS_BYWIDTH; ?>
+            <?php } elseif($item['filter_values']['height']){ ?>
+                <?php html($item['filter_values']['height']); ?>px <?php echo LANG_PHOTOS_BYHEIGHT; ?>
+            <?php } ?>
+        </span>
     <?php } else { ?>
         <span class="box_menu"><?php echo LANG_PHOTOS_SIZE; ?></span>
     <?php } ?>

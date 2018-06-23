@@ -538,8 +538,8 @@ class cmsForm {
 
         $hash = implode('::', array(session_id(), microtime(true)));
 
-        if(function_exists('password_hash')){
-            $token = password_hash($hash, PASSWORD_DEFAULT, array('cost' => 8));
+        if(function_exists('hash') && in_array('sha256', hash_algos())){
+            $token = hash('sha256', $hash);
         } else {
             $token = md5($hash);
         }
@@ -565,6 +565,8 @@ class cmsForm {
     public static function mapFieldsToFieldsets($fields, $callback=null, $values=null){
 
         $fieldsets = array();
+
+        if(!$fields){ return $fieldsets; }
 
         $current = null;
 
@@ -615,7 +617,7 @@ class cmsForm {
      * Возвращает список всех имеющихся типов полей
      * @return array
      */
-    public static function getAvailableFormFields($only_public = true){
+    public static function getAvailableFormFields($only_public = true, $controller = false){
 
         $fields_types   = array();
         $fields_files   = cmsCore::getFilesList('system/fields', '*.php', true, true);
@@ -627,10 +629,13 @@ class cmsForm {
             $field = new $class(null, null);
 
             if ($only_public && !$field->is_public){ continue; }
+            if ($controller && in_array($controller, $field->excluded_controllers)){ continue; }
 
             $fields_types[$name] = $field->getTitle();
 
         }
+
+        asort($fields_types, SORT_STRING);
 
         return $fields_types;
 

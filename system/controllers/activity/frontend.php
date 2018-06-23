@@ -162,7 +162,7 @@ class activity extends cmsFrontend {
                 'name' => 'friends',
                 'title' => LANG_ACTIVITY_DS_FRIENDS,
                 'filter' => function($model) use($user){
-                    return $model->filterFriends($user->id);
+                    return $model->filterFriendsAndSubscribe($user->id);
                 }
             );
             // Только мои

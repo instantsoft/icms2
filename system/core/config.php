@@ -1,9 +1,19 @@
 <?php
-
+/**
+ * Класс для работы с конфигурациями
+ */
 class cmsConfig {
 
-    private static $instance;
-    private static $mapping;
+    /**
+     * Путь директории с конфигурациями
+     * можно изменить на хранение вне корня сайта,
+     * изменив путь, используя две точки (..) для
+     * указания на родительские каталоги
+     */
+    const CONFIG_DIR = '/system/config/';
+
+    private static $instance = null;
+    private static $mapping  = null;
 
     private $ready   = false;
     private $data    = array();
@@ -147,9 +157,9 @@ class cmsConfig {
 //============================================================================//
 //============================================================================//
 
-    public function load($cfg_file='config.php'){
+    public function load($cfg_file = 'config.php'){
 
-        $cfg_file = PATH . '/system/config/' . $cfg_file;
+        $cfg_file = PATH . self::CONFIG_DIR . $cfg_file;
 
         if(!is_readable($cfg_file)){
             return false;
@@ -159,7 +169,7 @@ class cmsConfig {
 
     }
 
-    public function save($values, $cfg_file='config.php'){
+    public function save($values, $cfg_file = 'config.php'){
 
         $dump = "<?php\n" .
                 "return array(\n\n";
@@ -180,7 +190,7 @@ class cmsConfig {
 
         $dump .= "\n);\n";
 
-        $file = self::get('root_path').'system/config/' . $cfg_file;
+        $file = PATH . self::CONFIG_DIR . $cfg_file;
 
         $success = false;
 
@@ -193,7 +203,7 @@ class cmsConfig {
 
     }
 
-    public function update($key, $value, $cfg_file='config.php'){
+    public function update($key, $value, $cfg_file = 'config.php'){
 
         $data = $this->load($cfg_file);
         $data[$key] = $value;

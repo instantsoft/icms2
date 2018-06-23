@@ -11,6 +11,13 @@ class onUsersUserPrivacyTypes extends cmsAction {
             'options' => array('anyone', 'friends')
         );
 
+        if(!empty($this->options['is_friends_on'])){
+            $types['users_friendship'] = array(
+                'title'   => LANG_USERS_PRIVACY_FRIENDSHIP,
+                'options' => array('', 'anyone')
+            );
+        }
+
         if ($this->options['is_wall']) {
 
             $types['users_profile_wall'] = array(

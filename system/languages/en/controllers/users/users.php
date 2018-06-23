@@ -70,6 +70,7 @@
     define('LANG_USERS_OPT_DS_SHOW',        'Show the "%s" tab');
     define('LANG_USERS_DS_LATEST',          'New');
     define('LANG_USERS_DS_POPULAR',         'Popular');
+    define('LANG_USERS_DS_SUBSCRIBERS',     'Popular by subscribers');
     define('LANG_USERS_DS_ONLINE',          'Online');
     define('LANG_USERS_DS_RATED',           'Rating');
     define('LANG_USERS_DS_DATE_LOG',        'Last visit');
@@ -94,13 +95,22 @@
     define('LANG_USERS_FRIENDS',            'Friends');
     define('LANG_USERS_FRIENDS_ADD',        'Add to Friends');
     define('LANG_USERS_FRIENDS_DELETE',     'Remove from Friends');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS', 'Keep in subscribers');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Send friendship request to user %s?');
+    define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Subscribe to %s\'s news?');
+    define('LANG_USERS_UNSUBSCRIBE_CONFIRM',    'Unsubscribe from user %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Delete user <b>%s</b> from your friend list?');
+    define('LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM', 'Delete user <b>%s</b> from your friend list, keeping in subscribers?');
     define('LANG_USERS_FRIENDS_SENT',       'Friendship request was sent');
+    define('LANG_USERS_SUBSCRIBE_SUCCESS',  'You have successfully subscribed');
+    define('LANG_USERS_UNSUBSCRIBE_SUCCESS',  'You have successfully unsubscribed');
     define('LANG_USERS_FRIENDS_DELETED',    '%s was removed from your friend list');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s declined your friendship request');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE',   '%s keep you in subscribers');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s invites you to become friends');
     define('LANG_USERS_FRIENDS_DONE',       '%s became your friend');
+    define('LANG_USERS_SUBSCRIBE_DONE',     '%s subscribed to you');
+    define('LANG_USERS_UNSUBSCRIBE_DONE',   '%s unsubscribed from you');
     define('LANG_USERS_FRIENDS_UNDONE',     '%s stopped being your friend');
 
     define('LANG_USERS_NOTIFY_VIA_NONE',    'Do not notify');
@@ -116,6 +126,7 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Notify on friendship request acceptance');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Notify on cancelled friendship');
 
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Who can send me requests for friendship?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Who can view your profile?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Who can write on your wall?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Who can comment on my wall posts?');
@@ -139,6 +150,7 @@
     define('LANG_USERS_KARMA_LOG_EMPTY',    'No votes yet');
 
     define('LANG_USERS_MY_INVITES',         'My invites');
+    define('LANG_USERS_INVITES_LINKS',      'Or distribute links for an invitation');
     define('LANG_USERS_INVITES_COUNT',      'You can send %s');
     define('LANG_USERS_INVITES_SPELLCOUNT', 'invite|invites|invites');
     define('LANG_USERS_INVITES_EMAIL',      'E-mail that is used to send an invite');

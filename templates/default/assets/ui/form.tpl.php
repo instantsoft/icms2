@@ -10,8 +10,8 @@
     $is_ajax = $attributes['method']=='ajax';
     $method = $is_ajax ? 'post' : $attributes['method'];
 
-    $default_submit = array('title' => LANG_SAVE);
-    $default_cancel = array('title' => LANG_CANCEL, 'href'=>href_to_home(), 'show'=>false);
+    $default_submit = array('title' => LANG_SAVE, 'show' => true);
+    $default_cancel = array('title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false);
 
     $submit = isset($attributes['submit']) ? array_merge($default_submit, $attributes['submit']) : $default_submit;
     $cancel = isset($attributes['cancel']) ? array_merge($default_cancel, $attributes['cancel']) : $default_cancel;
@@ -19,9 +19,10 @@
     $prepend_html = isset($attributes['prepend_html']) ? $attributes['prepend_html'] : '';
     $append_html = isset($attributes['append_html']) ? $attributes['append_html'] : '';
 
-    $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : uniqid();
+    $form_id = isset($attributes['form_id']) ? $attributes['form_id'] : md5(microtime(true));
     $index = 0;
 
+    $visible_depend = array();
 ?>
 <form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $method; ?>"
@@ -122,9 +123,14 @@
                             }
                         }
 
+                        if($field->visible_depend){
+                            $visible_depend[] = $field;
+                            $classes[] = 'child_field';
+                        }
+
                         $classes = implode(' ', $classes);
                         $styles = implode(';', $styles);
-                        $id = "f_{$field->id}";
+                        $id = 'f_'.$field->id;
 
                     ?>
 
@@ -173,6 +179,11 @@
                         $(this).addClass('do_expand').removeClass('is_collapse'); return;
                     }
                 });
+        <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
+                icms.forms.addVisibleDepend('<?php echo $form_id; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
+            <?php } ?>
+                icms.forms.VDReInit();
+            <?php } ?>
             });
         </script>
 
@@ -187,9 +198,12 @@
     <?php echo $append_html; ?>
 
     <div class="buttons">
-        <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php if ($submit['show']) { ?>
+            <?php echo html_submit($submit['title'], 'submit', $submit); ?>
+        <?php } ?>
         <?php if(isset($attributes['buttons'])){ ?>
             <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php if (!empty($button['hide'])) { continue; } ?>
                 <?php echo html_button(
                         $button['title'],
                         $button['name'],
@@ -206,8 +220,8 @@
     <script type="text/javascript">
         $(function (){
             $('#<?php echo $form_id; ?>').on('submit', function (){
-                return icms.forms.submitAjax(this);
+                return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
             });
         });
     </script>
-<?php } ?>
+<?php }

@@ -34,6 +34,7 @@
     define('LANG_FILTER_FIELD',              'Filter by field');
     define('LANG_FILTER_ADD',                'New filter');
     define('LANG_FILTER_LIKE',               'contains');
+    define('LANG_FILTER_NOT_LIKE',           'does not contain');
     define('LANG_FILTER_LIKE_BEGIN',         'starts with');
     define('LANG_FILTER_LIKE_END',           'ends with');
     define('LANG_FILTER_DATE_YOUNGER',       'not earlier, days');
@@ -96,6 +97,10 @@
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
+    define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
+    define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
@@ -235,6 +240,8 @@
     define('LANG_ONLINE',                    'Online');
     define('LANG_USERS_PROFILE_LAST_IP',     'Last IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Last visit');
+    define('LANG_USERS_SUBSCRIBE',           'Subscribe');
+    define('LANG_USERS_UNSUBSCRIBE',         'Unsubscribe');
 
     //MODERATION
     define('LANG_MODERATION',                'Moderation');
@@ -278,6 +285,7 @@
     define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
     define('LANG_PERM_OPTION_OWN',           'Only own');
     define('LANG_PERM_OPTION_OTHER',         'Only others');
+    define('LANG_PERM_OPTION_TO_OTHER',      'Only in others');
     define('LANG_PERM_OPTION_ALL',           'All');
     define('LANG_SHOW_TO_GROUPS',            'Show to groups');
     define('LANG_HIDE_FOR_GROUPS',           'Hide from groups');
@@ -307,6 +315,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Error');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Error in parameters: %s');
     define('LANG_FORM_ERRORS',				 'Errors in form');
     define('LANG_TRACE_STACK',				 'Recent calls');
     define('ERR_COMPONENT_NOT_FOUND',		 'Component not found');
@@ -447,6 +456,8 @@
     define('LANG_SAVING',                    'Saving...');
     define('LANG_PREVIEW',                   'Preview');
     define('LANG_SEND',						 'Send');
+    define('LANG_SEND_AGAIN',				 'Send again');
+    define('LANG_SEND_AGAIN_VIA',			 'Send again via ');
     define('LANG_INSTALL',					 'Install');
     define('LANG_INSERT',					 'Insert');
     define('LANG_CANCEL',					 'Cancel');
@@ -562,6 +573,7 @@
     define('LANG_TIME10',                    'times');
     define('LANG_SUBSCRIBERS_SPELL',         'subscriber |subscriber|subscribers');
     define('LANG_DOWNLOAD_SPELL',            'download|download|downloads');
+    define('LANG_USERS_SPELL',               'user|users|users');
 
     define('LANG_ISLEFT',                    'left');
 

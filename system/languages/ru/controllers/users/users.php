@@ -69,6 +69,7 @@
 
     define('LANG_USERS_OPT_DS_SHOW',        'Показывать вкладку "%s"');
     define('LANG_USERS_DS_LATEST',          'Новые');
+    define('LANG_USERS_DS_SUBSCRIBERS',     'Популярные по подписчикам');
     define('LANG_USERS_DS_POPULAR',         'Популярные');
     define('LANG_USERS_DS_ONLINE',          'Онлайн');
     define('LANG_USERS_DS_RATED',           'Рейтинг');
@@ -94,13 +95,22 @@
     define('LANG_USERS_FRIENDS',            'Друзья');
     define('LANG_USERS_FRIENDS_ADD',        'Добавить в друзья');
     define('LANG_USERS_FRIENDS_DELETE',     'Удалить из друзей');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS', 'Оставить в подписчиках');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Отправить пользователю %s предложение дружбы?');
+    define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Подписаться на новости пользователя %s?');
+    define('LANG_USERS_UNSUBSCRIBE_CONFIRM',    'Отписаться от пользователя %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей?');
+    define('LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей, оставив в подписчиках?');
     define('LANG_USERS_FRIENDS_SENT',       'Предложение дружбы отправлено');
+    define('LANG_USERS_SUBSCRIBE_SUCCESS',  'Вы успешно подписались');
+    define('LANG_USERS_UNSUBSCRIBE_SUCCESS',  'Вы успешно отписались');
     define('LANG_USERS_FRIENDS_DELETED',    '%s удален из списка друзей');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s отклонил ваше предложение дружбы');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE',   '%s оставил вас в подписчиках');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s предлагает вам стать друзьями');
     define('LANG_USERS_FRIENDS_DONE',       '%s стал вашим другом');
+    define('LANG_USERS_SUBSCRIBE_DONE',     '%s подписался на вас');
+    define('LANG_USERS_UNSUBSCRIBE_DONE',   '%s отписался от вас');
     define('LANG_USERS_FRIENDS_UNDONE',     '%s прекратил дружбу с вами');
 
     define('LANG_USERS_NOTIFY_VIA_NONE',    'Не уведомлять');
@@ -116,6 +126,7 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Уведомлять об одобренных запросах дружбы');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Уведомлять о прекращении дружбы');
 
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Кто может отправлять мне запросы дружбы?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Кто может комментировать записи на стене?');
@@ -140,6 +151,7 @@
 
     define('LANG_USERS_MY_INVITES',         'Мои приглашения');
     define('LANG_USERS_INVITES_COUNT',      'Вы можете отправить %s');
+    define('LANG_USERS_INVITES_LINKS',      'Или распространите ссылки для приглашения');
     define('LANG_USERS_INVITES_SPELLCOUNT', 'приглашение|приглашения|приглашений');
     define('LANG_USERS_INVITES_EMAIL',      'Адрес e-mail для отправки приглашения');
     define('LANG_USERS_INVITES_EMAILS',     'Адреса e-mail для отправки приглашений');

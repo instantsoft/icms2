@@ -9,14 +9,14 @@
 
 	<div class="filter-tabs">
 		<ul class="pills-menu">
-            <?php if($show_my_tab){ ?>
+            <?php if($show_all_tab){ ?>
                 <li class="active">
-                    <a href="#own" data-mode="own"><?php echo LANG_CONTENT_OWN_ITEMS; ?></a>
+                    <a href="#all" data-mode="all"><?php echo LANG_ALL; ?></a>
                 </li>
             <?php } ?>
-            <?php if($show_all_tab){ ?>
-                <li <?php if(!$show_my_tab){ ?>class="active"<?php } ?>>
-                    <a href="#all" data-mode="all"><?php echo LANG_ALL; ?></a>
+            <?php if($show_my_tab){ ?>
+                <li <?php if(!$show_all_tab){ ?>class="active"<?php } ?>>
+                    <a href="#own" data-mode="own"><?php echo LANG_CONTENT_OWN_ITEMS; ?></a>
                 </li>
             <?php } ?>
 		</ul>

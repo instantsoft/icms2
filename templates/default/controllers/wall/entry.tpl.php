@@ -25,7 +25,7 @@
 <div id="entry_<?php echo $entry['id']; ?>" class="entry"<?php if($is_hidden){ ?> style="display:none"<?php } ?> data-replies="<?php echo $entry['replies_count']; ?>">
     <div class="body">
         <div class="avatar">
-            <a href="<?php echo href_to('users', $entry['user']['id']); ?>">
+            <a href="<?php echo href_to('users', $entry['user']['id']); ?>" <?php if (!empty($entry['user']['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                 <?php echo html_avatar_image($entry['user']['avatar'], ($entry['parent_id'] ? 'micro' : 'micro'), $entry['user']['nickname']); ?>
             </a>
         </div>
@@ -34,7 +34,7 @@
                 <div class="name">
                     <a class="user" href="<?php echo href_to('users', $entry['user']['id']); ?>"><?php echo $entry['user']['nickname']; ?></a>
                 </div>
-                <div class="date">
+                <div class="date<?php if(!empty($entry['is_new'])){ ?> highlight_new<?php } ?>">
                     <?php echo html(string_date_age_max($entry['date_pub'], true)); ?>
                 </div>
                 <div class="anchor">
@@ -46,13 +46,9 @@
             </div>
         </div>
     </div>
-    <div class="replies_loading loading"><?php echo LANG_LOADING; ?></div>
-    <?php if (!$entry['parent_id']) { ?>
-        <div class="replies"></div>
-    <?php } ?>
     <div class="links<?php if ($entry['replies_count']){ ?> has_replies<?php } ?>">
         <?php if ($entry['replies_count']){ ?>
-            <a href="#wall-replies" class="get_replies" onclick="return icms.wall.replies(<?php echo $entry['id']; ?>)"><?php echo html_spellcount($entry['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
+        <a href="#wall-replies" class="get_replies" onclick="return icms.wall.replies(<?php echo $entry['id']; ?>)"><?php echo html_spellcount($entry['replies_count'], LANG_REPLY_SPELLCOUNT); ?></a>
         <?php } ?>
         <?php if ($is_can_add){ ?>
             <a href="#wall-reply" class="reply" onclick="return icms.wall.add(<?php echo $entry['id']; ?>)"><?php echo LANG_REPLY; ?></a>
@@ -64,6 +60,12 @@
             <a href="#wall-delete" class="delete" onclick="return icms.wall.remove(<?php echo $entry['id']; ?>)"><?php echo LANG_DELETE; ?></a>
         <?php } ?>
     </div>
+    <?php if (!$entry['parent_id']) { ?>
+        <div class="replies_loading">
+            <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
+        </div>
+        <div class="replies"></div>
+    <?php } ?>
 </div>
 
 <?php if ($max_entries && ($count == $max_entries) && (sizeof($entries) > $count) && ($page == 1)){ ?>

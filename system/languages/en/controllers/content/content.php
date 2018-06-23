@@ -52,6 +52,7 @@
     define('LANG_CONTENT_SELECT_FOLDER',    '-- select folder --');
     define('LANG_CONTENT_PRIVATE_FRIEND_ITEMS', 'Private %s of friends');
     define('LANG_CONTENT_PRIVATE_FRIEND_INFO', '%s available only to author\'s friends <a href="%s">%s</a>');
+    define('LANG_CONTENT_ITEM_IN_TRASH', 'The item is in the trash');
     //WIDGETS
     define('LANG_WP_CONTENT_ALL_PAGES',     '%s: All pages');
     define('LANG_WP_CONTENT_LIST',          '%s: List view');

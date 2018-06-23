@@ -315,6 +315,15 @@
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
+    define('LANG_CP_WIDGETS_FA',                'Быстрый подбор масок');
+    define('LANG_CP_WIDGETS_FA_TYPE',           'Тип');
+    define('LANG_CP_WIDGETS_FA_ITEMS',          'Записи');
+    define('LANG_CP_WIDGETS_FA_CATS',           'Категории');
+    define('LANG_CP_WIDGETS_FA_TITLE_OR_URL',   'Название или URL');
+    define('LANG_CP_WIDGETS_FA_ADD_TO',         'Добавить в');
+    define('LANG_CP_WIDGETS_FA_TO_POS',         'В положительные');
+    define('LANG_CP_WIDGETS_FA_TO_NOT',         'В отрицательные');
+    define('LANG_CP_WIDGETS_FA_ADD',            'Добавить');
 
     define('LANG_CP_USER_PMAILING',             'Создать рассылку');
     define('LANG_CP_USER_ADD',                  'Создать пользователя');
@@ -327,6 +336,7 @@
     define('LANG_CP_USER_GROUP_DELETE',         'Удалить группу');
     define('LANG_CP_USER_GROUP_DELETE_CONFIRM', 'Удалить выбранную группу?\nПользователи не будут удалены');
     define('LANG_CP_USER_GROUP_CREATED',        'Группа &laquo;%s&raquo; создана');
+    define('LANG_CP_USER_GROUP_ERR_DELETE',     'Вы не можете удалить последнюю группу');
     define('LANG_CP_USER_GROUP_IS_PUBLIC',      'Разрешить вступление при регистрации');
     define('LANG_CP_USER_GROUP_IS_FILTER',      'Показывать в фильтре пользователей');
     define('LANG_CP_USER_LOCKING',              'Блокировка');
@@ -337,6 +347,8 @@
     define('LANG_CP_USER_NOT_FOUND',            'Пользователь %s не найден');
     define('LANG_CP_USER_FIND_BYIP',            'Найти всех с таким ip');
     define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
+    define('LANG_CP_USER_SEARCH_NOT_FOUND',     'Нет пользователей по заданным критериям');
+    define('LANG_CP_USERS_ONLINE',              'Сейчас на сайте');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
@@ -376,6 +388,7 @@
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
+    define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
     define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');
@@ -408,6 +421,8 @@
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO', 'Без шифрования');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL','SSL');
     define('LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS','TLS');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME',  'Абстрактный счётчик');
+    define('LANG_CP_SETTINGS_PRODUCTION_TIME_HINT',  'Используется в параметрах при подключении js и css. Увеличивайте после изменений, чтобы сбросить кэш у посетителей.');
     define('LANG_CP_SETTINGS_CACHE_ENABLED',    'Кеширование включено');
     define('LANG_CP_SETTINGS_CACHE_METHOD',     'Метод кеширования');
     define('LANG_CP_SETTINGS_CACHE_METHOD_NO',  'не доступно');
@@ -611,6 +626,7 @@
     define('LANG_HELP_URL_COM_RECAPTCHA',           'http://docs.instantcms.ru/manual/components/recaptcha');
     define('LANG_HELP_URL_COM_COMMENTS',            'http://docs.instantcms.ru/manual/components/comments');
 	define('LANG_HELP_URL_COM_IMAGES',				'http://docs.instantcms.ru/manual/components/images');
+	define('LANG_HELP_URL_COM_SUBSCRIPTIONS',		'http://docs.instantcms.ru/manual/components/subscriptions');
     define('LANG_HELP_URL_COM_USERS',               'http://docs.instantcms.ru/manual/components/users');
     define('LANG_HELP_URL_COM_USERS_MIGRATON',      'http://docs.instantcms.ru/manual/components/users/migrations');
     define('LANG_HELP_URL_COM_MARKITUP',            'http://docs.instantcms.ru/manual/components/markitup');
@@ -669,3 +685,4 @@
     define('LANG_CP_QUEUE_STATUS2', 'Заблокировано с ошибкой');
     define('LANG_CP_QUEUE_STATUS3', 'Ожидает выполнения');
     define('LANG_CP_QUEUE_STATUS4', 'Ожидает выполнения %s-й раз');
+    define('LANG_CP_SUBJECT', 'Субъект');

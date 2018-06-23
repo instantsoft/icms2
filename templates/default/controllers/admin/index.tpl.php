@@ -2,7 +2,6 @@
     $this->setPageTitle(LANG_ADMIN_CONTROLLER);
     $this->addJS('templates/default/js/admin-chart.js');
     $this->addJS('templates/default/js/admin-dashboard.js');
-    $this->addJS('templates/default/js/col-auto-height.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
 ?>
 <h1><?php echo LANG_ADMIN_CONTROLLER; ?></h1>
@@ -29,6 +28,5 @@
                 at: "top-20"
             }
         });
-        colAutoHeight.init('#dashboard', '.col');
     });
 </script>

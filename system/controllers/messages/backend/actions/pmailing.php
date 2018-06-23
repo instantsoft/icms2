@@ -20,7 +20,7 @@ class actionMessagesPmailing extends cmsAction {
 
                 $user = $this->model_users->getUserByEmail($mailing['sender_user_email']);
                 if(!$user && !$errors){
-                    $errors['email'] = ERR_USER_NOT_FOUND;
+                    $errors['sender_user_email'] = ERR_USER_NOT_FOUND;
                 }
 
             }
@@ -28,6 +28,7 @@ class actionMessagesPmailing extends cmsAction {
             if (!$errors) {
 
                 $sender_id = !empty($user['id']) ? $user['id'] : $this->cms_user->id;
+                $sender_nickname = !empty($user['id']) ? $user['nickname'] : $this->cms_user->nickname;
 
                 if ($mailing['groups'] && $mailing['groups'] != array(0)) {
                     $this->model_users->filterGroups($mailing['groups']);
@@ -58,17 +59,19 @@ class actionMessagesPmailing extends cmsAction {
 
                             $this->controller_messages->clearRecipients();
 
-                            foreach ($recipients as $user_id => $is_online) {
+                            foreach ($recipients as $user_id) {
 
-                                if (!$is_online) {
-                                    if($this->model->getNewMessagesCount($user_id) == 1){
-                                        $this->controller_messages->addRecipient($user_id);
-                                    }
+                                if($this->model->getNewMessagesCount($user_id) == 1){
+                                    $this->controller_messages->addRecipient($user_id);
                                 }
 
                             }
 
-                            $this->controller_messages->sendNoticeEmail('messages_new');
+                            $this->controller_messages->sendNoticeEmail('messages_new', array(
+                                'user_url'      => href_to_abs('users', $sender_id),
+                                'user_nickname' => $sender_nickname,
+                                'message'       => strip_tags($mailing['message_text'])
+                            ));
 
                         }
 
