@@ -35,6 +35,7 @@
                                 <select name="filters[<?php echo $index; ?>][condition]">
                                     <option value="lk"><?php echo LANG_FILTER_LIKE; ?></option>
                                     <option value="eq">=</option>
+                                    <option value="ln"><?php echo LANG_FILTER_NOT_LIKE; ?></option>
                                     <option value="lb"><?php echo LANG_FILTER_LIKE_BEGIN; ?></option>
                                     <option value="lf"><?php echo LANG_FILTER_LIKE_END; ?></option>
                                     <option value="nn"><?php echo LANG_FILTER_NOT_NULL; ?></option>

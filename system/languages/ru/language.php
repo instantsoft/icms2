@@ -33,6 +33,7 @@
     define('LANG_FILTER_FIELD',              'Фильтр по полю');
     define('LANG_FILTER_ADD',                'Добавить фильтр');
     define('LANG_FILTER_LIKE',               'содержит');
+    define('LANG_FILTER_NOT_LIKE',           'не содержит');
     define('LANG_FILTER_LIKE_BEGIN',         'начинается с');
     define('LANG_FILTER_LIKE_END',           'оканчивается на');
     define('LANG_FILTER_DATE_YOUNGER',       'не старше, дней');
