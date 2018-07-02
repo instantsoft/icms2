@@ -59,8 +59,8 @@ class onTypographHtmlFilter extends cmsAction {
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote',
-            'video', 'audio', 'youtube','facebook',
-            'object', 'param', 'embed', 'iframe','spoiler'
+            'video', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
+            'object', 'param', 'embed', 'iframe', 'spoiler'
         ));
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
@@ -99,6 +99,8 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('div', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('spoiler', array('title' => '#text'));
         $jevix->cfgAllowTagParams('code', array('type' => '#text'));
+        $jevix->cfgAllowTagParams('figure', array('style' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('figcaption', array('style' => '#text', 'class' => '#text'));
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
