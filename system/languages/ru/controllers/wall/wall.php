@@ -12,3 +12,5 @@
     define('LANG_WALL_ENTRY_DELETE_CONFIRM', 'Удалить запись от пользователя %s?');
     define('LANG_WALL_ENTRY_ANCHOR', 'Ссылка на эту запись');
     define('LANG_WALL_NOTIFY_NEW', 'Уведомлять о записях на стене');
+    define('LANG_WALL_SORTING_DATE_LAST_REPLY', 'По дате последнего ответа');
+    define('LANG_WALL_SHOW_ENTRIES', 'Видимых записей на страницу');

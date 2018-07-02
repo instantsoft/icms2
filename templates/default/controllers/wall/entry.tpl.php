@@ -36,6 +36,9 @@
                 </div>
                 <div class="date<?php if(!empty($entry['is_new'])){ ?> highlight_new<?php } ?>">
                     <?php echo html(string_date_age_max($entry['date_pub'], true)); ?>
+                    <?php if ($entry['date_last_modified']){ ?>
+                        <span class="date_last_modified" title="<?php echo strip_tags(html_date_time($entry['date_last_modified'])); ?>">(<?php echo mb_strtolower(LANG_CONTENT_EDITED); ?>)</span>
+                    <?php } ?>
                 </div>
                 <div class="anchor">
                     <a href="?wid=<?php echo $entry['id']; ?>" title="<?php echo LANG_WALL_ENTRY_ANCHOR; ?>">#</a>

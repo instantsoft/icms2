@@ -314,6 +314,8 @@ class cmsDatabase {
      */
     public function prepareValue($field, $value, $array_as_json = false){
 
+        $is_date_field = strpos($field, 'date_') === 0;
+
         // если значение поля - массив,
         // то преобразуем его в YAML
         if (is_array($value)){
@@ -324,10 +326,10 @@ class cmsDatabase {
             }
         } else
 
-        // если это поле даты публикации и оно не установлено,
+        // если это поле даты и оно не установлено,
         // то используем текущее время
-		if (strpos($field, 'date_')===0 && ($value === false)) { $value = "NULL"; }  else
-        if (strpos($field, 'date_')===0 && ($value == '' || is_null($value))) { $value = "CURRENT_TIMESTAMP"; }  else
+		if ($is_date_field && ($value === false)) { $value = 'NULL'; }  else
+        if ($is_date_field && ($value == '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
 
         // если это поле булево,
         // то преобразуем его в число
@@ -1008,8 +1010,5 @@ class cmsDatabase {
         return true;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

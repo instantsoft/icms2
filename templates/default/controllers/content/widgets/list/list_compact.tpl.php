@@ -4,7 +4,7 @@
         <?php foreach($items as $item) { ?>
 
             <?php
-                $url        = href_to($ctype['name'], $item['slug']) . '.html';
+                $url        = href_to($ctype['name'], $item['slug'] . '.html');
                 $is_private = $item['is_private'] && $hide_except_title && !$item['user']['is_friend'];
                 $image      = (($image_field && !empty($item[$image_field])) ? $item[$image_field] : '');
                 if ($is_private) {

@@ -1,47 +1,25 @@
 <?php
 
-class modelWall extends cmsModel{
+class modelWall extends cmsModel {
 
-    public function getEntriesCount($profile_type, $profile_id, $only_root=true){
+    public function getEntriesCount(){
 
         $this->useCache('wall.count');
 
-        $this->
-            filterEqual('profile_id', $profile_id)->
-            filterEqual('profile_type', $profile_type);
-
-        if ($only_root){
-            $this->filterEqual('parent_id', 0);
-        }
-
-        $count = $this->getCount('wall_entries');
-
-        $this->resetFilters();
-
-        return $count;
+        return $this->getCount('wall_entries');
 
     }
 
-    public function getEntries($profile_type, $profile_id, $page=false, $parent_id=0){
+    public function getEntries($user){
 
         $this->useCache('wall.entries');
 
         $this->select('COUNT(e.id)', 'replies_count')->
                 joinLeft('wall_entries', 'e', 'e.parent_id = i.id')->
                 joinUser()->
-                filterEqual('profile_id', $profile_id)->
-                filterEqual('profile_type', $profile_type)->
-                filterEqual('parent_id', $parent_id)->
-                groupBy('i.id')->
-                orderBy('date_pub', 'desc');
-
-        if ($page){
-            $this->limitPage($page, wall::$perpage);
-        }
+                groupBy('i.id');
 
         $this->joinSessionsOnline();
-
-        $user = cmsUser::getInstance();
 
         return $this->get('wall_entries', function($item, $model) use($user) {
 
@@ -128,6 +106,13 @@ class modelWall extends cmsModel{
 
     public function addEntry($entry){
 
+        // для записей-ответов ставим дату у родителя
+        if(!empty($entry['parent_id'])){
+            $this->update('wall_entries', $entry['parent_id'], array(
+                'date_last_reply' => null
+            ));
+        }
+
         $id = $this->insert('wall_entries', $entry);
 
         cmsCache::getInstance()->clean('wall.entries');
@@ -153,8 +138,9 @@ class modelWall extends cmsModel{
     public function updateEntryContent($id, $content, $content_html){
 
         $result = $this->update('wall_entries', $id, array(
-            'content'=>$content,
-            'content_html'=>$content_html
+            'date_last_modified' => null,
+            'content'            => $content,
+            'content_html'       => $content_html
         ));
 
         cmsCache::getInstance()->clean('wall.entries');

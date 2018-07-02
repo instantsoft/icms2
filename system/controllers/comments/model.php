@@ -27,6 +27,7 @@ class modelComments extends cmsModel {
         cmsCache::getInstance()->clean('comments.list');
 
         return $this->update('comments', $id, array(
+            'date_last_modified' => null,
             'content'      => $content,
             'content_html' => $content_html
         ));

@@ -271,6 +271,7 @@ class content extends cmsFrontend {
             $item['ctype_name'] = $ctype['name'];
             $item['is_private_item'] = $item['is_private'] && $hide_except_title;
             $item['private_item_hint'] = LANG_PRIVACY_HINT;
+            $item['fields'] = array();
 
             // для приватности друзей
             // другие проверки приватности (например для групп) в хуках content_before_list

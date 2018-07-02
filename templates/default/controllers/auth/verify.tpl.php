@@ -41,10 +41,12 @@
             }
         }
     };
-    $(function(){
-        vTimer.init();
-        if($('#reg_token').val().length == 32){
-            $('#reg_token').closest('form').find('.button-submit').trigger('click');
-        }
-    });
+    <?php if(!$errors){ ?>
+        $(function(){
+            vTimer.init();
+            if($('#reg_token').val().length == 32){
+                $('#reg_token').closest('form').find('.button-submit').trigger('click');
+            }
+        });
+    <?php } ?>
 </script>
