@@ -1876,14 +1876,16 @@ class cmsTemplate {
 
         if($template_file){
 
-            if (!$config->min_html){
-                include($template_file);
-            }
+            ob_start();
 
-            if ($config->min_html){
-                ob_start();
-                include($template_file);
-                echo html_minify(ob_get_clean());
+            include($template_file);
+
+            $html = cmsEventsManager::hook('render_page', ob_get_clean());
+
+            if (!$config->min_html){
+                echo $html;
+            } else {
+                echo html_minify($html);
             }
 
         } else {
