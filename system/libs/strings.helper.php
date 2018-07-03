@@ -623,31 +623,47 @@ function string_get_stopwords($lang='ru') {
 }
 
 /**
- * Обрезает исходный текст до указанной длины (или последнего предложения),
+ * Обрезает исходный текст до указанной длины (или последнего предложения/слова),
  * удаляя HTML-разметку
  *
  * @param string $text
  * @param int $limit Максимальная длина результата
+ * @param string $postfix Строка, добавляемая к результату, если исходную пришлось обрезать
+ * @param string $type Тип обрезки:
+ *              s (sentence) - по последнему предложению
+ *              w (word) - по последнему слову
+ *              пустая строка или любой другой символ - обрезать в любом месте
  * @return string
  */
-function string_short($text, $limit=0){
+function string_short($text, $limit=0, $postfix='', $type='s'){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
     $text = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $text);
     $text = strip_tags($text);
+    $text = preg_replace('/ |\s{3,}/',' ',$text);
 
     if (!$limit || mb_strlen($text) <= $limit) { return $text; }
 
-    $text = mb_substr($text, 0, $limit);
-    $text = preg_replace('/ |\s{3,}/',' ',$text);
+    $type = strtolower($type);
 
-    preg_match('/^(.*)([.!?])(.*)$/i', $text, $matches);
-
-    if (!$matches){
-        return $text;
-    } else {
-        return $matches[1].$matches[2];
+    switch ($type) {
+        case 's':
+            // Обрезаем по последнему предложению
+            $text = mb_substr($text, 0, $limit);
+            preg_match('/^(.*)([.!?…])(.*)$/iu', $text, $matches);
+            if ($matches) { return $matches[1].$matches[2].$postfix; }
+            break;
+        case 'w':
+            // Обрезаем по последнему слову
+            $text = mb_substr($text, 0, $limit+1);
+            preg_match('/^(.*)([\W]+)(\w*)$/iuU', $text, $matches);
+            if ($matches) { return $matches[1].$postfix; }
+            break;
+        default:
+            // Обрезаем как получится
+            $text = mb_substr($text, 0, $limit);
+            return $text.$postfix;
     }
 
     return $text;
