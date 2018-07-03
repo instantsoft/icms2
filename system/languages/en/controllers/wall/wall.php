@@ -12,3 +12,5 @@
     define('LANG_WALL_ENTRY_DELETE_CONFIRM', 'Delete %s\'s post?');
     define('LANG_WALL_ENTRY_ANCHOR', 'Post link');
     define('LANG_WALL_NOTIFY_NEW', 'Notify on new wall posts');
+    define('LANG_WALL_SORTING_DATE_LAST_REPLY', 'By last reply date');
+    define('LANG_WALL_SHOW_ENTRIES', 'Visible entries per page');

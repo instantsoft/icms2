@@ -14,7 +14,10 @@ class fieldUser extends cmsFormField {
     }
 
     public function parse($value){
-        return '<a href="'.href_to('users', $value['id']).'">'.htmlspecialchars($value['nickname']).'</a>';
+        if(is_array($value)){
+            return '<a href="'.href_to('users', $value['id']).'">'.htmlspecialchars($value['nickname']).'</a>';
+        }
+        return htmlspecialchars($value);
     }
 
     public function applyFilter($model, $value) {

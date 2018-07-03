@@ -62,6 +62,9 @@
         </div>
         <div class="date">
             <span class="<?php echo $no_approved_class; ?>"><?php echo html_date_time($entry['date_pub']); ?></span>
+            <?php if ($entry['date_last_modified']){ ?>
+                <span class="date_last_modified" title="<?php echo strip_tags(html_date_time($entry['date_last_modified'])); ?>">(<?php echo mb_strtolower(LANG_CONTENT_EDITED); ?>)</span>
+            <?php } ?>
             <?php if ($no_approved_class){ ?>
                 <span class="hide_approved"><?php echo html_bool_span(LANG_CONTENT_NOT_APPROVED, false); ?></span>
             <?php } ?>

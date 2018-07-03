@@ -1,13 +1,14 @@
 <?php
 class images extends cmsFrontend {
 
-	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp';
+	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp,webp';
 
     public $allowed_mime = array(
         'image/jpeg',
         'image/png',
         'image/pjpeg',
         'image/gif',
+        'image/webp',
         'image/vnd.wap.wbmp'
     );
 

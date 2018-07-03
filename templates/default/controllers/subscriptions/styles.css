@@ -85,3 +85,6 @@
 .subscriptions_buttons_item:last-child {
     margin-bottom: 0;
 }
+.subscribe_wrap .style-svg {
+    margin: -2px 2px 0 0;
+}

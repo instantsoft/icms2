@@ -77,8 +77,8 @@ class cmsWysiwygRedactor {
                 $upload_params['target_subject'] = $context['action'];
             }
 
-            if(strpos($core->uri, '/add/') === false && !empty($context['params'][0]) && is_numeric($context['params'][0])){
-                $upload_params['target_id'] = $context['params'][0];
+            if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
+                $upload_params['target_id'] = $context['params'][1];
             }
 
             $options['imageUpload'] = href_to('redactor/upload').($upload_params ? '?'.http_build_query($upload_params) : '');
