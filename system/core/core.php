@@ -792,6 +792,7 @@ class cmsCore {
 
             if($user->is_admin){
                 $template->addJS('templates/default/js/widgets.js');
+                cmsCore::loadControllerLanguage('admin');
             }
 
             foreach ($widgets_list as $widget){

@@ -201,6 +201,7 @@ class modelContent extends cmsModel {
 
         cmsCache::getInstance()->clean('content.types');
 
+        // связь как родитель
         $relations = $this->getContentRelations($id);
 
         if($relations){
@@ -230,6 +231,14 @@ class modelContent extends cmsModel {
                     $this->deleteContentField($target_ctype['name'], $parent_field_name, 'name', true);
                 }
 
+            }
+        }
+
+        // связь как дочка
+        $relations = $this->filterEqual('child_ctype_id', $id)->getContentRelations();
+        if($relations){
+            foreach ($relations as $relation) {
+                $this->deleteContentRelation($relation['id']);
             }
         }
 
