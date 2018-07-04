@@ -626,8 +626,8 @@ function string_get_stopwords($lang='ru') {
  * Обрезает исходный текст до указанной длины (или последнего предложения/слова),
  * удаляя HTML-разметку
  *
- * @param string $text
- * @param int $limit Максимальная длина результата
+ * @param string $string
+ * @param integer $length Максимальная длина результата
  * @param string $postfix Строка, добавляемая к результату, если исходную пришлось обрезать
  * @param string $type Тип обрезки:
  *              s (sentence) - по последнему предложению
@@ -635,38 +635,34 @@ function string_get_stopwords($lang='ru') {
  *              пустая строка или любой другой символ - обрезать в любом месте
  * @return string
  */
-function string_short($text, $limit=0, $postfix='', $type='s'){
+function string_short($string, $length = 0, $postfix = '', $type = 's'){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $text = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $text);
-    $text = strip_tags($text);
-    $text = preg_replace('/ |\s{3,}/',' ',$text);
+    $string = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $string);
+    $string = strip_tags($string);
 
-    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
+    if (!$length || mb_strlen($string) <= $length) { return $string; }
 
-    $type = strtolower($type);
+    $length -= min($length, mb_strlen($postfix));
 
-    switch ($type) {
+    switch (strtolower($type)) {
+        // Обрезаем по последнему предложению
         case 's':
-            // Обрезаем по последнему предложению
-            $text = mb_substr($text, 0, $limit);
-            preg_match('/^(.*)([.!?…])(.*)$/iu', $text, $matches);
-            if ($matches) { return $matches[1].$matches[2].$postfix; }
+            $string = mb_substr($string, 0, $length);
+            preg_match('/^(.+)([\.!?…]+)(.*)$/u', $string, $matches);
+            if (!empty($matches[2])) { $string = $matches[1].$matches[2]; }
             break;
+        // Обрезаем по последнему слову
         case 'w':
-            // Обрезаем по последнему слову
-            $text = mb_substr($text, 0, $limit+1);
-            preg_match('/^(.*)([\W]+)(\w*)$/iuU', $text, $matches);
-            if ($matches) { return $matches[1].$postfix; }
+            $string = preg_replace('/\s+?(\S+)?$/u', '', mb_substr($string, 0, $length + 1));
             break;
+        // Обрезаем как получится
         default:
-            // Обрезаем как получится
-            $text = mb_substr($text, 0, $limit);
-            return $text.$postfix;
+            $string = mb_substr($string, 0, $length);
     }
 
-    return $text;
+    return $string . $postfix;
 
 }
 
