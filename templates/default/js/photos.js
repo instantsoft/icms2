@@ -147,6 +147,7 @@ icms.photos = (function ($) {
                 loop:false,
                 margin:10,
                 autoWidth:true,
+                dots:false,
                 nav:true,
                 autoplay: true,
                 autoplayTimeout:5000,

@@ -655,7 +655,9 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
             break;
         // Обрезаем по последнему слову
         case 'w':
-            $string = preg_replace('/\s+?(\S+)?$/u', '', mb_substr($string, 0, $length + 1));
+            $string = mb_substr($string, 0, $length + 1);
+            preg_match('/^(.*)([\W]+)(\w*)$/uU', $string, $matches);
+            if (!empty($matches[1])) { $string = $matches[1]; }
             break;
         // Обрезаем как получится
         default:
