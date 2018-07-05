@@ -16,7 +16,7 @@ function install_package(){
     }
 
     if(!$core->db->isFieldExists('wall_entries', 'date_last_reply')){
-        $core->db->query("ALTER TABLE `{#}wall_entries` ADD `date_last_reply` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `date_pub`");
+        $core->db->query("ALTER TABLE `{#}wall_entries` ADD `date_last_reply` TIMESTAMP NULL DEFAULT NULL AFTER `date_pub`");
         $core->db->query("UPDATE `{#}wall_entries` SET `date_last_reply` = `date_pub`");
     }
 
