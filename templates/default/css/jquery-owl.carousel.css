@@ -149,7 +149,7 @@
   top: 50%;
   margin-left: -40px;
   margin-top: -40px;
-  background: url("../images/video.play.pngg") no-repeat;
+  background: url("../images/video.play.png") no-repeat;
   cursor: pointer;
   z-index: 1;
   -webkit-backface-visibility: hidden;
