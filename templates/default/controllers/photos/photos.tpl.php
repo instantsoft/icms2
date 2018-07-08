@@ -43,7 +43,7 @@
         </div>
 
     <?php } ?>
-
+    <?php if((isset($has_next) || isset($page) || empty($disable_flex)) || !empty($item['photos_url_params'])){ ?>
     <script type="text/javascript">
         <?php if(isset($has_next) || isset($page) || empty($disable_flex)){ ?>
             <?php if(isset($has_next)){ ?>
@@ -68,4 +68,5 @@
             });
         <?php } ?>
     </script>
+    <?php } ?>
 <?php }

@@ -1607,7 +1607,7 @@ DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Publication date',
-  `date_last_reply` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Last reply date',
+  `date_last_reply` timestamp NULL DEFAULT NULL COMMENT 'Last reply date',
   `date_last_modified` timestamp NULL DEFAULT NULL COMMENT 'Last modified date',
   `controller` varchar(32) DEFAULT NULL COMMENT 'Profile owner component',
   `profile_type` varchar(32) DEFAULT NULL COMMENT 'Profile type (user/group)',

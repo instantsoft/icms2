@@ -1606,7 +1606,7 @@ DROP TABLE IF EXISTS `{#}wall_entries`;
 CREATE TABLE `{#}wall_entries` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `date_pub` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата публикации',
-  `date_last_reply` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Дата последнего ответа',
+  `date_last_reply` timestamp NULL DEFAULT NULL COMMENT 'Дата последнего ответа',
   `date_last_modified` timestamp NULL DEFAULT NULL COMMENT 'Дата изменения',
   `controller` varchar(32) DEFAULT NULL COMMENT 'Компонент владелец профиля',
   `profile_type` varchar(32) DEFAULT NULL COMMENT 'Тип профиля (пользователь/группа)',

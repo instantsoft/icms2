@@ -113,6 +113,8 @@ class modelWall extends cmsModel {
             ));
         }
 
+        $entry['date_last_reply'] = null;
+
         $id = $this->insert('wall_entries', $entry);
 
         cmsCache::getInstance()->clean('wall.entries');

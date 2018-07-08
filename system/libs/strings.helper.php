@@ -623,34 +623,48 @@ function string_get_stopwords($lang='ru') {
 }
 
 /**
- * Обрезает исходный текст до указанной длины (или последнего предложения),
+ * Обрезает исходный текст до указанной длины (или последнего предложения/слова),
  * удаляя HTML-разметку
  *
- * @param string $text
- * @param int $limit Максимальная длина результата
+ * @param string $string
+ * @param integer $length Максимальная длина результата
+ * @param string $postfix Строка, добавляемая к результату, если исходную пришлось обрезать
+ * @param string $type Тип обрезки:
+ *              s (sentence) - по последнему предложению
+ *              w (word) - по последнему слову
+ *              пустая строка или любой другой символ - обрезать в любом месте
  * @return string
  */
-function string_short($text, $limit=0){
+function string_short($string, $length = 0, $postfix = '', $type = 's'){
 
     // строка может быть без переносов
     // и после strip_tags не будет пробелов между словами
-    $text = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $text);
-    $text = strip_tags($text);
+    $string = str_replace(array("\n", "\r", '<br>', '<br/>', '</p>'), ' ', $string);
+    $string = strip_tags($string);
 
-    if (!$limit || mb_strlen($text) <= $limit) { return $text; }
+    if (!$length || mb_strlen($string) <= $length) { return $string; }
 
-    $text = mb_substr($text, 0, $limit);
-    $text = preg_replace('/ |\s{3,}/',' ',$text);
+    $length -= min($length, mb_strlen($postfix));
 
-    preg_match('/^(.*)([.!?])(.*)$/i', $text, $matches);
-
-    if (!$matches){
-        return $text;
-    } else {
-        return $matches[1].$matches[2];
+    switch (strtolower($type)) {
+        // Обрезаем по последнему предложению
+        case 's':
+            $string = mb_substr($string, 0, $length);
+            preg_match('/^(.+)([\.!?…]+)(.*)$/u', $string, $matches);
+            if (!empty($matches[2])) { $string = $matches[1].$matches[2]; }
+            break;
+        // Обрезаем по последнему слову
+        case 'w':
+            $string = mb_substr($string, 0, $length + 1);
+            preg_match('/^(.*)([\W]+)(\w*)$/uU', $string, $matches);
+            if (!empty($matches[1])) { $string = $matches[1]; }
+            break;
+        // Обрезаем как получится
+        default:
+            $string = mb_substr($string, 0, $length);
     }
 
-    return $text;
+    return $string . $postfix;
 
 }
 
