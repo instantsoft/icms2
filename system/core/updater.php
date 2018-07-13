@@ -42,7 +42,7 @@ class cmsUpdater {
     public function getUpdateFileContents($current_version, $only_cached){
 
         if(function_exists('gethostbyname')){
-            if(gethostbyname(parse_url($this->update_info_url, PHP_URL_HOST)) !== '176.9.155.142'){
+            if(gethostbyname(parse_url($this->update_info_url, PHP_URL_HOST)) !== '217.25.226.96'){
                 return false;
             }
         }
