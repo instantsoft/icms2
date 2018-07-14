@@ -1026,6 +1026,10 @@ class cmsCore {
 
         if(ob_get_length()) { ob_end_clean(); }
 
+        header("HTTP/1.0 503 Service Unavailable");
+        header("HTTP/1.1 503 Service Unavailable");
+        header("Status: 503 Service Unavailable");
+
         cmsTemplate::getInstance()->renderAsset('errors/offline', array(
             'reason' => cmsConfig::get('off_reason')
         ));
