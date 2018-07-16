@@ -19,7 +19,7 @@
 
 ## Демо ##
 
-Попробуйте сами в нашем [онлайн демо](http://demo.instantcms.ru/)
+Попробуйте сами в нашем [онлайн демо](https://demo.instantcms.ru/)
 
 ## Cистемные требования ##
 * Интерпретатор PHP версии 5.5 или выше;
@@ -28,8 +28,13 @@
 * СУБД MySQL версии 5 или выше;
 * Веб-сервер Apache с установленным модулем mod_rewrite.
 
+## Как установить InstantCMS ##
+
+* Проверьте системные требования.
+* Воспользуйтесь инструкцией [по установке InstantCMS](https://docs.instantcms.ru/en/manual/install)?
+
 ## Ссылки
 
-* [Официальный сайт](http://www.instantcms.ru/)
+* [Официальный сайт](http://instantcms.ru/)
 * [Дополнения](http://addons.instantcms.ru/)
-* [Документация](http://docs.instantcms.ru/)
+* [Документация](https://docs.instantcms.ru/)

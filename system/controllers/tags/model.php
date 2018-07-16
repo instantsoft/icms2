@@ -1,7 +1,6 @@
 <?php
 
-class modelTags extends cmsModel{
-
+class modelTags extends cmsModel {
 
     public function filterTarget($controller, $subject, $id){
 
@@ -55,7 +54,7 @@ class modelTags extends cmsModel{
 
     }
 
-    public function recountTagsFrequency($tags_ids=array()){
+    public function recountTagsFrequency($tags_ids = array()){
 
         $this->
             select('t.id', 'tag_id')->
@@ -108,6 +107,8 @@ class modelTags extends cmsModel{
         $id = $this->insertOrUpdate('tags', array('tag' => $tag));
 
         if (!$id) { return $this->getTagId($tag); }
+
+        cmsCache::getInstance()->clean('tags.tags');
 
         return $id;
 
@@ -310,6 +311,5 @@ class modelTags extends cmsModel{
         cmsCache::getInstance()->clean('tags.tags');
 
     }
-
 
 }
