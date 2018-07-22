@@ -34,7 +34,14 @@ $(function(){
             minLength: 2,
             source: function( request, response ) {
                 var full_term = request.term;
-                var term = full_term.split( /,\s*/ ).pop();
+                /* Массив значений из строки */
+                var terms = full_term.split( /,\s*/ );
+                /* Позиция курсора в строке */
+                var cursor_pos = getCursorPosition( document.getElementById( "<?php echo $field->id; ?>" ) );
+                /* Номер редактируемого значения */
+                var term_num = full_term.substring( 0, cursor_pos ).split( /,\s*/ ).length;
+                /* Само редактируемое значение */
+                var term = terms[term_num - 1].trim();
                 if (term.length < 2) {
                     return false;
                 }
@@ -53,15 +60,71 @@ $(function(){
                 return false;
             },
             select: function( event, ui ) {
+                /* Массив значений из строки */
                 var terms = this.value.split( /,\s*/ );
-                terms.pop();
-                terms.push( ui.item.value );
-                terms.push('');
-                this.value = terms.join(', ');
+                /* Общее количество значений в строке */
+                var terms_count = terms.length;
+                /* Позиция курсора в строке */
+                var cursor_pos = getCursorPosition( document.getElementById( "<?php echo $field->id; ?>" ) );
+                /* Номер редактируемого значения */
+                var term_num = this.value.substring( 0, cursor_pos ).split( /,\s*/ ).length;
+                /* Признак, что редактируемое значение последнее в строке */
+                var is_last = (term_num === terms_count);
+                /* Подставляем выбранное из автоподбора значение */
+                terms[term_num-1] = ui.item.value;
+                /* Формируем новую строку с значениями */
+                var full_term = '';
+                var left_term_new = '';
+                var i;
+                for (i = 0; i < terms_count; i++) {
+                    if (i < terms_count - 1) {
+                        /* Объединяем все значения, кроме последнего */
+                        full_term += terms[i] + ', ';
+                    } else {
+                        /* Последнее значение добавляем только если оно не пустое */
+                        if (terms[i].length > 0) full_term += terms[i] + ', ';
+                    }
+                    /* Получаем строку значений до редактируемого включительно */
+                    if (i < term_num) left_term_new += terms[i] + ', ';
+                }
+                this.value = full_term;
+                /* Новая позиция курсора */
+                cursor_pos = left_term_new.length;
+                if (!is_last) cursor_pos -= 2;
+                setCursorPosition( document.getElementById( "<?php echo $field->id; ?>" ), cursor_pos );
                 icms.events.run('autocomplete_select', this);
                 return false;
             }
         });
+        function getCursorPosition( ctrl ) {
+            var CaretPos = 0;
+            /* IE < 9 Support */
+            if ( document.selection ) {
+                ctrl.focus ();
+                var Sel = document.selection.createRange();
+                Sel.moveStart ('character', -ctrl.value.length);
+                CaretPos = Sel.text.length;
+            /* IE >=9 and other browsers */
+            } else if ( ctrl.selectionStart || ctrl.selectionStart == '0' ) {
+                CaretPos = ctrl.selectionStart;
+            }
+            return CaretPos;
+        };
+        function setCursorPosition( ctrl, pos ) {
+            /* IE >=9 and other browsers */
+            if(ctrl.setSelectionRange) {
+                ctrl.focus();
+                ctrl.setSelectionRange(pos, pos);
+            }
+            /* IE < 9 Support */
+            else if (ctrl.createTextRange) {
+                var range = ctrl.createTextRange();
+                range.collapse(true);
+                range.moveEnd('character', pos);
+                range.moveStart('character', pos);
+                range.select();
+            }
+        };
     <?php } else { ?>
         $( "#<?php echo $field->id; ?>" ).autocomplete({
             minLength: 2,
