@@ -30,22 +30,28 @@ class cmsDatabase {
 
     /**
      * Время соединения с базой
-     * @var int
+     * @var integer
      */
     private $init_start_time;
 
     /**
      * Время, через которое при PHP_SAPI == 'cli' нужно сделать реконнект
      * для случаев, когда mysql.connect_timeout по дефолту (60 с) и переопределить это поведение нельзя
-     * @var int
+     * @var integer
      */
     private $reconnect_time = 60;
 
     /**
      * Ошибка подключения к базе
-     * @var bool|string
+     * @var boolean|string
      */
     private $connect_error = false;
+
+    /**
+     *
+     * @var boolean|null
+     */
+    public $query_quiet = null;
 
     /**
      * Настройки базы данных
@@ -63,9 +69,12 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	public function __construct(){
-        $this->setOptions(cmsConfig::getInstance()->getAll());
+	public function __construct($options = array()){
+
+        $this->setOptions($options ? $options : cmsConfig::getInstance()->getAll());
+
         $this->connect();
+
 	}
 
     public function setOptions($options) {
@@ -78,7 +87,14 @@ class cmsDatabase {
 
 	public function __destruct(){
         if($this->ready()){
+
+            // откатываемся, если была транзакция и ошибка в ней
+            if(!$this->isAutocommitOn() && $this->mysqli->errno){
+                $this->rollback();
+            }
+
             $this->mysqli->close();
+
         }
 	}
 
@@ -174,6 +190,47 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
+    public function autocommitOn() {
+        $this->mysqli->autocommit(true); return $this;
+    }
+
+    public function autocommitOff() {
+        $this->mysqli->autocommit(false); return $this;
+    }
+
+    public function isAutocommitOn() {
+
+        $result = $this->mysqli->query('SELECT @@autocommit');
+
+		if($result){
+
+			$row = $result->fetch_row();
+
+            $result->free();
+
+            return isset($row[0]) && $row[0] == 1;
+
+		}
+
+        return false;
+
+    }
+
+    public function rollback() {
+        $this->mysqli->rollback(); return $this;
+    }
+
+    public function commit() {
+        $this->mysqli->commit(); return $this;
+    }
+
+    public function beginTransaction() {
+        $this->mysqli->begin_transaction(); return $this;
+    }
+
+//============================================================================//
+//============================================================================//
+
 	/**
 	 * Подготавливает строку перед запросом
 	 *
@@ -188,10 +245,10 @@ class cmsDatabase {
      * Выполняет запрос в базе
      * @param string $sql Строка запроса
      * @param array|string $params Аргументы запроса, которые будут переданы в vsprintf
-     * @param bool $quiet В случае ошибки запроса отдавать false, а не "умирать"
+     * @param boolean $quiet В случае ошибки запроса отдавать false, а не "умирать"
      * @return boolean
      */
-	public function query($sql, $params=false, $quiet=false){
+	public function query($sql, $params = false, $quiet = false){
 
         if (!empty($this->options['debug'])){
             cmsDebugging::pointStart('db');
@@ -233,7 +290,13 @@ class cmsDatabase {
 
 		if(!$this->mysqli->errno) { return $result; }
 
-        if($quiet) { return false; }
+        if($quiet || $this->query_quiet === true) {
+
+            error_log(sprintf(ERR_DATABASE_QUERY, $this->error()));
+
+            return false;
+
+        }
 
         cmsCore::error(sprintf(ERR_DATABASE_QUERY, $this->error()), $sql);
 
@@ -271,7 +334,10 @@ class cmsDatabase {
 
 	/**
 	 * Возвращает ID последней вставленной записи из таблицы
-	 * @return int
+     * При работе с транзакциями вызывать необходимо
+     * До коммита
+     *
+	 * @return integer
 	 */
 	public function lastId(){
 		return $this->mysqli->insert_id;
@@ -362,7 +428,7 @@ class cmsDatabase {
      * @param string $table Таблица
      * @param string $where Критерии запроса
 	 * @param array $data Массив[Название поля] = значение поля
-	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
+	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return boolean
      */
@@ -395,9 +461,9 @@ class cmsDatabase {
 	 *
 	 * @param string $table Таблица
 	 * @param array $data Массив[Название поля] = значение поля
-	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
+	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
-	 * @return bool
+	 * @return boolean|integer ID вставленной записи
 	 */
 	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false){
 
@@ -436,7 +502,7 @@ class cmsDatabase {
 	 * @param string $table Таблица
 	 * @param array $data Массив данных для вставки в таблицу
 	 * @param array $update_data Массив данных для обновления при совпадении ключей
-	 * @return bool
+	 * @return boolean|integer
 	 */
 	public function insertOrUpdate($table, $data, $update_data = false){
 
@@ -490,7 +556,7 @@ class cmsDatabase {
      * Выполняет запрос DELETE
      * @param string $table_name Таблица
      * @param string $where Критерии запроса
-     * @return type
+     * @return boolean
      */
 	public function delete($table_name, $where){
         $where = str_replace('i.', '', $where);
@@ -558,13 +624,17 @@ class cmsDatabase {
 	 * @return mixed
 	 */
 	public function getField($table, $where, $field, $order=''){
+
 		$row = $this->getRow($table, $where, $field, $order);
-		return $row[$field];
+
+        if(!$row){ return false; }
+
+		return array_key_exists($field, $row) === true ? $row[$field] : false;
+
 	}
 
 	public function getFields($table, $where, $fields='*', $order=''){
-		$row = $this->getRow($table, $where, $fields, $order);
-		return $row;
+		return $this->getRow($table, $where, $fields, $order);
 	}
 
 //============================================================================//
@@ -574,8 +644,8 @@ class cmsDatabase {
      * Возвращает количество строк выведенных запросом
      * @param string $table
      * @param string $where
-     * @param int $limit
-     * @return boolean|int
+     * @param integer $limit
+     * @return boolean|integer
      */
 	public function getRowsCount($table, $where='1', $limit=false){
 		$sql = "SELECT COUNT(1) FROM {#}$table WHERE $where";

@@ -37,9 +37,12 @@ class cmsModel {
     public $where_separator  = 'AND';
     public $group_by   = '';
     public $order_by   = '';
+    public $read_type  = '';
     public $index_action = '';
     public $limit      = 1000;
     public $perpage    = 50;
+
+    public $is_transaction_started = false;
 
     public $keep_filters = false;
     public $filter_on  = false;
@@ -558,6 +561,7 @@ class cmsModel {
         $this->order_by     = '';
         $this->index_action = '';
         $this->limit        = '';
+        $this->read_type    = '';
         $this->join         = '';
         $this->distinct     = '';
         $this->straight_join = '';
@@ -1348,6 +1352,94 @@ class cmsModel {
         return $this;
     }
 
+    public function setReadType($type){
+        $this->read_type = $type;
+        return $this;
+    }
+
+//============================================================================//
+//============================== Транзакции ==================================//
+
+    public function processTransaction($payload_callback, $after_autocommit_on = false) {
+
+        // нам не нужно, чтобы внутри транзакции при ошибке запроса
+        // всё умирало
+        $this->db->query_quiet = true;
+
+        // флаг результата выполнения
+        $success = true;
+
+        // мы внутри транзакции?
+        $is_autocommit_on = $this->db->isAutocommitOn();
+
+        // выключаем автокоммит, чтобы все запросы были в транзакции
+        // если автокоммит выключен, то мы уже в транзакции
+        if ($is_autocommit_on) {
+            $this->db->autocommitOff();
+        }
+
+        try {
+
+            $success = call_user_func_array($payload_callback, array($this));
+
+        } catch (Exception $e) {
+
+            error_log($e->getMessage());
+
+            $success = false;
+
+        }
+
+        $this->db->query_quiet = null;
+
+        if ($is_autocommit_on || $after_autocommit_on) {
+
+            $this->endTransaction($success);
+
+        }
+
+        return $success;
+
+    }
+
+    public function startTransaction() {
+
+        $this->is_transaction_started = true;
+
+        $this->db->autocommitOff();
+
+        return $this;
+
+    }
+
+    public function endTransaction($success) {
+
+        if ($success) {
+
+            $this->db->commit();
+
+        } else {
+
+            $this->db->rollback();
+
+        }
+
+        $this->db->autocommitOn();
+
+        $this->is_transaction_started = false;
+
+        return $this;
+
+    }
+
+    public function forUpdate() {
+        return $this->setReadType('FOR UPDATE');
+    }
+
+    public function lockInShareMode() {
+        return $this->setReadType('LOCK IN SHARE MODE');
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -1400,6 +1492,10 @@ class cmsModel {
         if ($this->order_by){ $sql .= 'ORDER BY '.$this->order_by.PHP_EOL; }
 
         $sql .= 'LIMIT 1';
+
+        if ($this->read_type){
+            $sql .= PHP_EOL.$this->read_type;
+        }
 
         $this->resetFilters();
 
@@ -1630,6 +1726,8 @@ class cmsModel {
 
         if ($this->limit){ $sql .= 'LIMIT '.$this->limit.PHP_EOL; }
 
+        if ($this->read_type){ $sql .= $this->read_type.PHP_EOL; }
+
         return $sql;
 
     }
@@ -1844,7 +1942,7 @@ class cmsModel {
 
         $this->resetFilters();
 
-        return $this->db->query($sql);
+        return $this->db->query($sql, false, true);
 
     }
 
