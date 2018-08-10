@@ -1,7 +1,7 @@
 <?php
 class cmsWysiwygLive{
 
-	public function displayEditor($field_id, $content=''){
+	public function displayEditor($field_id, $content = '', $config = array()){
 
         $lang = cmsCore::getLanguageName();
         if ($lang == 'en') { $lang = 'en-US'; }

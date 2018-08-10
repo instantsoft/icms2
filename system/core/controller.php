@@ -1060,6 +1060,22 @@ class cmsController {
 
     }
 
+    public function validate_minfloat($min, $value){
+        if (empty($value)) { return true; }
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value)) === 1){
+            return sprintf(ERR_VALIDATE_MIN, $min);
+        }
+        return true;
+    }
+
+    public function validate_maxfloat($min, $value){
+        if (empty($value)) { return true; }
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value)) === -1){
+            return sprintf(ERR_VALIDATE_MAX, $min);
+        }
+        return true;
+    }
+
     public function validate_min_length($length, $value){
 
         if (empty($value)) { return true; }

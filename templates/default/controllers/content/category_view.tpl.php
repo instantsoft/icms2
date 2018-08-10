@@ -1,8 +1,8 @@
 <?php
 
     $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-    $page_header = isset($category['title']) ? $category['title'] : $list_header;
-    $rss_query = !empty($category['id']) ? "?category={$category['id']}" : '';
+    $page_header = !empty($category['title']) ? $category['title'] : $list_header;
+    $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
 
     $base_url = $ctype['name'];
     $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
@@ -10,7 +10,7 @@
     if (!$is_frontpage){
 
 		$seo_title = false;
-		if (!empty($ctype['seo_title'])){ $seo_title = $ctype['seo_title']; }
+		if (!empty($ctype['seo_title']) && empty($category['title'])){ $seo_title = $ctype['seo_title']; }
 		if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
 		if (!$seo_title) { $seo_title = $page_header; }
         if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }

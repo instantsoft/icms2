@@ -180,9 +180,10 @@ class cmsFormField {
     /**
      * Возвращает значение опции поля
      * @param string $key Имя опции
+     * @param mixed $default Значение по умолчанию
      * @return mixed
      */
-    public function getOption($key) {
+    public function getOption($key, $default = null) {
 
         if(array_key_exists($key, $this->options)){
             return $this->options[$key];
@@ -208,7 +209,7 @@ class cmsFormField {
             return $this->options[$key];
         }
 
-        return null;
+        return $default;
 
     }
 

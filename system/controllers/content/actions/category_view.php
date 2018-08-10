@@ -83,6 +83,8 @@ class actionContentCategoryView extends cmsAction {
             if(count($datasets) == 1){
                 $current_dataset = array(); $datasets = false;
             }
+        } elseif($dataset){
+            return cmsCore::error404();
         }
 
         // Фильтр по категории
