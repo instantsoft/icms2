@@ -562,6 +562,7 @@ function initTabs(selector){
         $(this).parent('li').addClass('active');
         $(selector+' .tab').hide();
         $(selector+' '+$(this).attr('href')).show();
+	icms.events.run('icms_tab_cliked', this);
         return false;
     });
     $(selector+' .field').each(function(indx, element){
