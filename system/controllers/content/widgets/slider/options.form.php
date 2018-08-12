@@ -80,6 +80,9 @@ class formWidgetContentSliderOptions extends cmsForm {
 
                     new fieldList('options:image_field', array(
                         'title' => LANG_WD_CONTENT_SLIDER_IMAGE,
+                        'rules' => array(
+                            array('required')
+                        ),
 						'parent' => array(
 							'list' => 'options:ctype_id',
 							'url' => href_to('content', 'widget_fields_ajax')

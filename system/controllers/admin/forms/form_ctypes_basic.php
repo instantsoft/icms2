@@ -12,6 +12,10 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
                         'hint' => LANG_CP_SYSTEM_NAME_HINT,
+                        'options'=>array(
+                            'max_length' => 32,
+                            'show_symbol_count' => true
+                        ),
                         'rules' => array(
                             array('required'),
                             array('sysname'),
@@ -20,15 +24,19 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('title', array(
                         'title' => LANG_TITLE,
+                        'options'=>array(
+                            'max_length' => 100,
+                            'show_symbol_count' => true
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('max_length', 100)
+                            array('required')
                         )
                     )),
                     new fieldString('description', array(
                         'title' => LANG_DESCRIPTION,
-                        'rules' => array(
-                            array('max_length', 255)
+                        'options'=>array(
+                            'max_length' => 255,
+                            'show_symbol_count' => true
                         )
                     )),
                 )
@@ -288,8 +296,12 @@ class formAdminCtypesBasic extends cmsForm {
                         'prefix' => '/articles/',
                         'suffix' => '.html',
                         'default' => '{id}-{title}',
+                        'options'=>array(
+                            'max_length' => 255,
+                            'show_symbol_count' => true
+                        ),
                         'rules' => array(
-                            array('required'),
+                            array('required')
                         )
                     )),
                     new fieldString('options:seo_title_pattern', array(

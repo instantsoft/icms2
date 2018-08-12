@@ -1147,7 +1147,7 @@ class cmsController {
 
     public function validate_localealphanumeric($value){
         if (empty($value)) { return true; }
-        $regexp = "/^([a-z0-9 \.\?\@\,\-]*)$/ui";
+        $regexp = "/^([\w \.\?\@\,\-]*)$/ui";
         if(defined('LC_LANGUAGE_VALIDATE_REGEXP')){
             $regexp = LC_LANGUAGE_VALIDATE_REGEXP;
         }

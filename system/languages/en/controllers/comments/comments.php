@@ -53,6 +53,8 @@ define('LANG_NEW_COMMENT10', 'new comments');
 define('LANG_COMMENTS_NOTIFY_NEW', 'Notify on new comments');
 define('LANG_COMMENTS_NOTIFY_REPLY', 'Notify on new comment replies');
 define('LANG_COMMENTS_LOW_KARMA', 'Not enough reputation points (required: %s)');
+define('LANG_COMMENTS_AUTHOR_NAME', 'Your name');
+define('LANG_COMMENTS_AUTHOR_EMAIL', 'E-mail for replies');
 define('LANG_RULE_COMMENTS_ADD', 'Adding comments');
 define('LANG_RULE_COMMENTS_ADD_APPROVED', 'Adding comments without moderation');
 define('LANG_RULE_COMMENTS_EDIT', 'Editing comments');

@@ -24,11 +24,13 @@
 
     $this->addBreadcrumb($page_title);
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'title' => $button_save_text,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+    if(!empty($show_save_button) || !isset($show_save_button)){
+        $this->addToolButton(array(
+            'class' => 'save',
+            'title' => $button_save_text,
+            'href'  => "javascript:icms.forms.submit()"
+        ));
+    }
 
     $this->addToolButton(array(
         'class' => 'save_draft',

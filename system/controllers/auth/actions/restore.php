@@ -5,6 +5,17 @@ class actionAuthRestore extends cmsAction {
 
         if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
+        // если аккаунт не подтверждён и время не вышло
+        // редиректим на верификацию
+        $reg_email = cmsUser::getCookie('reg_email');
+        if($reg_email && $this->validate_email($reg_email) === true){
+
+            cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $reg_email), 'info');
+
+            $this->redirectToAction('verify');
+
+        }
+
         $users_model = cmsCore::getModel('users');
 
         $form = $this->getForm('restore');

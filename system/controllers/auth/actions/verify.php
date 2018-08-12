@@ -48,6 +48,8 @@ class actionAuthVerify extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::unsetCookie('reg_email');
+
                 $users_model->unlockUser($user['id'])->clearUserPassToken($user['id']);
 
                 cmsEventsManager::hook('user_registered', $user);

@@ -1997,8 +1997,11 @@ class modelContent extends cmsModel {
                 $value = str_replace('/', '', $item[$field_name]);
 
                 if (isset($fields[$field_name])){
+
                     $value = $fields[$field_name]['handler']->getStringValue($value);
-                    $value = trim($value, '/');
+
+                    $value = lang_slug(trim($value, '/'));
+
                 }
 
                 $pattern = str_replace($tags[$idx], $value, $pattern);
@@ -2006,7 +2009,7 @@ class modelContent extends cmsModel {
             }
         }
 
-        $slug = lang_slug($pattern);
+        $slug = $pattern;
 
         $slug = mb_substr($slug, 0, $slug_len);
 
