@@ -22,9 +22,20 @@ class actionTagsSearch extends cmsAction {
         $targets = !empty($tag['id']) ? $this->model->getTagTargets($tag['id']) : false;
 
         if (!$targets || empty($tag['id'])) {
+
+            // Возвращаем код 404 если тег не найден
+            if(ob_get_length()) { ob_end_clean(); }
+            header("HTTP/1.0 404 Not Found");
+            header("HTTP/1.1 404 Not Found");
+            header("Status: 404 Not Found");
+
             return $this->cms_template->render('search', array(
                 'is_results' => false,
-                'tag'        => $query
+                'tag'        => $query,
+                'seo_title'  => '',
+                'seo_keys'   => '',
+                'seo_desc'   => '',
+                'seo_h1'     => ''
             ));
         }
 
