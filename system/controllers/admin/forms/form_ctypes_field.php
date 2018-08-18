@@ -240,6 +240,18 @@ class formAdminCtypesField extends cmsForm {
                         'show_all' => true
                     ))
                 )
+            ),
+            'author_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_AUTHOR_ACCESS,
+                'childs' => array(
+                    new fieldListMultiple('options:author_access', array(
+                        'items' => array(
+                            'is_read' => LANG_CP_FIELD_READING,
+                            'is_edit' => LANG_CP_FIELD_EDITING,
+                        )
+                    ))
+                )
             )
         );
 

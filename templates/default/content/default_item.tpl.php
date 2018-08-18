@@ -30,9 +30,19 @@
         <?php $fields_fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item) {
             if (!$field['is_in_item'] || $field['is_system']) { return false; }
             if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { return false; }
-            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { return false; }
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($item['user_id'] == $user->id){ return true; }
+                    return false;
+                }
+                return false;
+            }
             return true;
-        } ); ?>
+        }); ?>
 
         <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 

@@ -29,11 +29,19 @@ class actionUsersProfileEdit extends cmsAction {
         $form = new cmsForm();
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
 
             // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) { return false; }
-
+            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                // если группа пользователя не имеет доступ к редактированию этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($profile['id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                    if ($profile['id'] == $user->id){ return true; }
+                    return false;
+                }
+                return false;
+            }
             return true;
 
         });

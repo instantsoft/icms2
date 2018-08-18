@@ -547,13 +547,22 @@ class content extends cmsFrontend {
         }
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item){
 
             // пропускаем системные поля
             if ($field['is_system']) { return false; }
 
             // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) { return false; }
+            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                // если группа пользователя не имеет доступ к редактированию этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                    if ($item['user_id'] == $user->id){ return true; }
+                    return false;
+                }
+                return false;
+            }
 
             return true;
 

@@ -27,7 +27,17 @@ class actionGroupsGroup extends cmsAction {
         $fields_fieldsets = cmsForm::mapFieldsToFieldsets($group['fields'], function($field, $user) use ($group) {
             if (!$field['is_in_item'] || $field['is_system']) { return false; }
             if ((empty($group[$field['name']]) || empty($field['html'])) && $group[$field['name']] !== '0') { return false; }
-            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { return false; }
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($group['owner_id'] == $user->id){ return true; }
+                    return false;
+                }
+                return false;
+            }
             return true;
         });
 

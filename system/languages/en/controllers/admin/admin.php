@@ -686,3 +686,7 @@
     define('LANG_CP_QUEUE_STATUS3', 'Pending');
     define('LANG_CP_QUEUE_STATUS4', 'Waiting for 2nd time');
     define('LANG_CP_SUBJECT', 'Subject');
+
+    define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Access for the author or owner');
+    define('LANG_CP_FIELD_READING',       'Reading');
+    define('LANG_CP_FIELD_EDITING',       'Editing');

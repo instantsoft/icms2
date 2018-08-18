@@ -88,8 +88,20 @@
             <div id="information" class="content_item block">
 
                 <?php
-                    $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user){
+                    $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
                         if (in_array($field['name'], array('nickname', 'avatar'))){ return false; }
+                        if (empty($profile[$field['name']]) || !$field['is_in_item']) { return false; }
+                        // проверяем что группа пользователя имеет доступ к чтению этого поля
+                        if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                            // если группа пользователя не имеет доступ к чтению этого поля,
+                            // проверяем на доступ к нему для авторов
+                            if (!empty($profile['id'] && !empty($field['options']['author_access']))){
+                                if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                                if ($profile['id'] == $user->id){ return true; }
+                                return false;
+                            }
+                            return false;
+                        }
                         return true;
                     }, $profile);
                 ?>
@@ -107,9 +119,6 @@
                     <?php } ?>
 
                     <?php foreach($fieldset['fields'] as $field){ ?>
-
-                        <?php if (empty($profile[$field['name']]) || !$field['is_in_item']) { continue; } ?>
-                        <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
 
                         <?php
                             if (!isset($field['options']['label_in_item'])) {
