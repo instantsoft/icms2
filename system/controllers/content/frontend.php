@@ -292,7 +292,15 @@ class content extends cmsFrontend {
                     }
                 }
 
-                if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; }
+                // проверяем что группа пользователя имеет доступ к чтению этого поля
+                if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                    // если группа пользователя не имеет доступ к чтению этого поля,
+                    // проверяем на доступ к нему для авторов
+                    if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
+                    if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                    if ($item['user_id'] !== $user->id){ continue; }
+                }
+
                 if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
 
                 if (!isset($field['options']['label_in_list'])) {
