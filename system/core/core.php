@@ -955,8 +955,7 @@ class cmsCore {
 
         if(ob_get_length()) { ob_end_clean(); }
 
-        header('HTTP/1.0 503 Service Unavailable');
-        header('Status: 503 Service Unavailable');
+        http_response_code(503);
 
         if (cmsConfig::get('debug')){
             cmsTemplate::getInstance()->renderAsset('errors/error', array(
@@ -986,9 +985,7 @@ class cmsCore {
 
         if(ob_get_length()) { ob_end_clean(); }
 
-        header("HTTP/1.0 403 Forbidden");
-        header("HTTP/1.1 403 Forbidden");
-        header("Status: 403 Forbidden");
+        http_response_code(403);
 
         cmsTemplate::getInstance()->renderAsset('errors/forbidden', array(
             'message'         => $message,
@@ -1010,9 +1007,7 @@ class cmsCore {
 
         if(ob_get_length()) { ob_end_clean(); }
 
-        header("HTTP/1.0 404 Not Found");
-        header("HTTP/1.1 404 Not Found");
-        header("Status: 404 Not Found");
+        http_response_code(404);
 
         cmsTemplate::getInstance()->renderAsset('errors/notfound');
         die();
@@ -1026,14 +1021,44 @@ class cmsCore {
 
         if(ob_get_length()) { ob_end_clean(); }
 
-        header("HTTP/1.0 503 Service Unavailable");
-        header("HTTP/1.1 503 Service Unavailable");
-        header("Status: 503 Service Unavailable");
+        http_response_code(503);
 
         cmsTemplate::getInstance()->renderAsset('errors/offline', array(
             'reason' => cmsConfig::get('off_reason')
         ));
         die();
+
+    }
+
+    public static function respondIfModifiedSince($lastmod) {
+
+        $last_modified_unix = strtotime($lastmod);
+
+        $last_modified = gmdate("D, d M Y H:i:s \G\M\T", $last_modified_unix);
+
+        $if_modified_since = false;
+
+        if (isset($_ENV['HTTP_IF_MODIFIED_SINCE'])) {
+            $if_modified_since = strtotime(substr($_ENV['HTTP_IF_MODIFIED_SINCE'], 5));
+        }
+
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            $if_modified_since = strtotime(substr($_SERVER['HTTP_IF_MODIFIED_SINCE'], 5));
+        }
+
+        if ($if_modified_since && $if_modified_since >= $last_modified_unix) {
+
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+
+            http_response_code(304);
+
+            die();
+
+        }
+
+        header('Last-Modified: ' . $last_modified);
 
     }
 

@@ -2,9 +2,7 @@
 
 $user = cmsUser::getInstance();
 
-$is_tags = $ctype['is_tags'] && !empty($ctype['options']['is_tags_in_item']) && $item['tags'];
-
-$show_bar = $is_tags || $item['parent_id'] ||
+$show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
             $fields['date_pub']['is_in_item'] ||
             $fields['user']['is_in_item'] ||
             !empty($ctype['options']['hits_on']);
@@ -50,7 +48,7 @@ $show_bar = $is_tags || $item['parent_id'] ||
             <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
                 <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
             <?php } ?>
-            <?php if ($is_tags){ ?>
+            <?php if (!empty($item['show_tags'])){ ?>
                 <span class="tags_bar"><?php echo html_tags_bar($item['tags']); ?></span>
             <?php } ?>
         </h2>

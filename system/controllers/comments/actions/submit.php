@@ -154,7 +154,7 @@ class actionCommentsSubmit extends cmsAction {
                 cmsCore::error404();
             }
 
-            if (!$this->author_email){
+            if (!empty($this->options['show_author_email']) && !$this->author_email){
 				return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
 			}
 
@@ -170,7 +170,7 @@ class actionCommentsSubmit extends cmsAction {
             }
 
             // запрещенные email
-            if (!empty($this->options['restricted_emails'])){
+            if (!empty($this->options['show_author_email']) && !empty($this->options['restricted_emails'])){
                 if (string_in_mask_list($this->author_email, $this->options['restricted_emails'])){
                     return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR_EMAIL, 'html' => false));
                 }

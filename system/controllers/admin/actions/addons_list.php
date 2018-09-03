@@ -147,7 +147,7 @@ class actionAdminAddonsList extends cmsAction {
             $item['install'] = array(
                 'need_update'   => false,
                 'need_install'  => true,
-                'install_url'   => 'http://addons.instantcms.ru/addons/download/'.$item['id'].'/'.$latest_version['id'],
+                'install_url'   => 'https://addons.instantcms.ru/addons/download/'.$item['id'].'/'.$latest_version['id'],
                 'installed_url' => '',
                 'install_title' => LANG_CP_DO_INSTALL
             );
@@ -196,7 +196,7 @@ class actionAdminAddonsList extends cmsAction {
                     $item['install']['need_install']  = false;
                     $item['install']['need_update']   = true;
                     $item['install']['install_title'] = LANG_CP_DO_UPDATE;
-                    $item['install']['install_url']   = 'http://addons.instantcms.ru/addons/download_patch/'.$item['id'].'/'.$next_version['id'];
+                    $item['install']['install_url']   = 'https://addons.instantcms.ru/addons/download_patch/'.$item['id'].'/'.$next_version['id'];
 
                 }
 

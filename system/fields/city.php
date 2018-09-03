@@ -1,6 +1,6 @@
 <?php
 /**
- * Назвавние city оставлено для совместимости
+ * Название city оставлено для совместимости
  */
 class fieldCity extends cmsFormField {
 
@@ -23,6 +23,10 @@ class fieldCity extends cmsFormField {
                     'regions'   => LANG_REGION,
                     'cities'    => LANG_CITY
                 )
+            )),
+            new fieldCheckbox('auto_detect', array(
+                'title'   => LANG_PARSER_CITY_AUTO_DETECT,
+                'visible_depend' => array('options:location_type' => array('show' => array('countries')))
             )),
             new fieldString('location_group', array(
                 'title' => LANG_PARSER_CITY_LOCATION_GROUP,
@@ -66,6 +70,10 @@ class fieldCity extends cmsFormField {
 
     private function getLocationTypeValue($id, $location_type){
 
+        if(!$id){
+            return null;
+        }
+
         $model = new cmsModel();
 
         $item_name = $model->getField('geo_'.$location_type, $id, 'name');
@@ -108,7 +116,21 @@ class fieldCity extends cmsFormField {
 
         $this->data['items'] = $this->getListItems();
 
-        // если поля не объеденены и это поле выбора города
+        // автоопределение
+        if($this->getOption('auto_detect') && $value === null && $location_type == 'countries'){
+
+            $geo = cmsCore::getController('geo')->getGeoByIp();
+
+            if(!empty($geo['city']['country_id'])){
+                $value = $geo['city']['country_id'];
+            }
+            if(!empty($geo['country']['id']) && !$value){
+                $value = $geo['country']['id'];
+            }
+
+        }
+
+        // если поля не объединены и это поле выбора города
         if(!$location_group && $location_type == 'cities'){
 
             $city_name = $this->getLocationTypeValue($value, $location_type);

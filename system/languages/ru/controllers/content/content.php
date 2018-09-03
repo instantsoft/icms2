@@ -13,6 +13,7 @@
 	define('LANG_CONTENT_PUB_LONG_NOW',		 'Сейчас опубликовано до %s');
 	define('LANG_CONTENT_IS_PUB',			 'Публиковать %s на сайте');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Публикация отключена по дате');
+	define('LANG_CONTENT_TEMPLATE',		     'Шаблон записи для вывода');
     define('LANG_CONTENT_WRONG_PARENT',		 'Выбран неверный родитель');
     define('LANG_RULE_CONTENT_VIEW_LIST',    'Запретить просмотр списка записей');
     define('LANG_RULE_CONTENT_VIEW_LIST_HINT', 'Если это правило задано хотя бы для одной из групп, гостям список записей не показывается');

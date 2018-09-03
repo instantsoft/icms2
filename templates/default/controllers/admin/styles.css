@@ -796,6 +796,7 @@ form .hint {
 
 .tabs-menu .tab fieldset{
     border:none;
+    padding-bottom: 5px;
 }
 
 .tabs-menu > select { display:none; }

@@ -6,6 +6,19 @@ function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+    $content_model = cmsCore::getModel('content');
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        $table_name = $content_model->table_prefix . $ctype['name'];
+
+        if(!$core->db->isFieldExists($table_name, 'template')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name}` ADD `template` VARCHAR(150) NULL DEFAULT NULL AFTER `tags`");
+        }
+
+	}
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -54,6 +67,8 @@ function install_package(){
             }
         }
     }
+
+    save_controller_options(array('sitemap', 'comments', 'geo'));
 
     return true;
 

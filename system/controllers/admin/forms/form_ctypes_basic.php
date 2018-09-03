@@ -65,7 +65,7 @@ class formAdminCtypesBasic extends cmsForm {
             'categories' => array(
                 'type' => 'fieldset',
                 'is_collapsed' => true,
-                'title' => LANG_CP_CATEGORIES,
+                'title' => LANG_CATEGORIES,
                 'childs' => array(
                     new fieldCheckbox('is_cats', array(
                         'title' => LANG_CP_CATEGORIES_ON
@@ -143,24 +143,6 @@ class formAdminCtypesBasic extends cmsForm {
                 'childs' => array(
                     new fieldCheckbox('is_rating', array(
                         'title' => LANG_CP_RATING_ON
-                    )),
-                )
-            ),
-            'tags' => array(
-                'type' => 'fieldset',
-                'is_collapsed' => true,
-                'title' => LANG_TAGS,
-                'childs' => array(
-                    new fieldCheckbox('is_tags', array(
-                        'title' => LANG_CP_TAGS_ON
-                    )),
-                    new fieldCheckbox('options:is_tags_in_list', array(
-                        'title' => LANG_CP_TAGS_IN_LIST,
-                        'visible_depend' => array('is_tags' => array('show' => array('1')))
-                    )),
-                    new fieldCheckbox('options:is_tags_in_item', array(
-                        'title' => LANG_CP_TAGS_IN_ITEM,
-                        'visible_depend' => array('is_tags' => array('show' => array('1')))
                     )),
                 )
             ),

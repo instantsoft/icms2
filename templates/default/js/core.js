@@ -337,7 +337,7 @@ icms.forms = (function ($) {
         return $(el).val();
     };
     this.inputNameToId = function(name){
-        name = name.replace(/\:/g,'_');
+        name = name.replace(/\:|\|/g,'_');
         return name;
     };
     this.inputNameToElName = function(name){
@@ -354,7 +354,7 @@ icms.forms = (function ($) {
         }
         for(var f in rules){if(rules.hasOwnProperty(f)){
             if(typeof this.VDRules.from[form_id+'-'+f] === 'undefined'){this.VDRules.from[form_id+'-'+f] = {};}
-            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ // здесь все, кто зависит от поля f
+            if(typeof this.VDRules.from[form_id+'-'+f][field_id] === 'undefined'){ /* здесь все, кто зависит от поля f */
                 this.VDRules.from[form_id+'-'+f][field_id] = rules[f]; /* array('show' => array('1')) */
             }else{
                 $.extend(this.VDRules.from[form_id+'-'+f][field_id], rules[f]);

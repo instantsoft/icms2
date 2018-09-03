@@ -175,8 +175,8 @@ function href_to_current($add_host = false){
  * Возвращает ссылку на главную страницу сайта
  * @return string
  */
-function href_to_home(){
-    return cmsConfig::get('root').cmsCore::getLanguageHrefPrefix();
+function href_to_home($add_host = false){
+    return ($add_host ? cmsConfig::get('host').'/' : cmsConfig::get('root')).cmsCore::getLanguageHrefPrefix();
 }
 
 /**

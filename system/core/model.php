@@ -104,6 +104,7 @@ class cmsModel {
             'seo_desc'           => array('type' => 'varchar', 'size' => 256),
             'seo_title'          => array('type' => 'varchar', 'size' => 256),
             'tags'               => array('type' => 'varchar', 'size' => 1000),
+            'template'           => array('type' => 'varchar', 'size' => 150),
             'date_pub'           => array('type' => 'timestamp', 'index' => array('date_pub','parent_id', 'user_id'), 'composite_index' => array(4,3,2,1), 'default_current' => true),
             'date_last_modified' => array('type' => 'timestamp'),
             'date_pub_end'       => array('type' => 'timestamp', 'index' => true),
@@ -1735,16 +1736,15 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getMax($table, $field, $default=0){
+    public function getMax($table, $field, $default = 0){
 
-        $sql = "SELECT i.{$field} as {$field}
+        $sql = "SELECT MAX(i.{$field}) as {$field}
                 FROM {#}{$table} i
                 ";
 
         if ($this->where){ $sql .= 'WHERE '.$this->where.PHP_EOL; }
 
-        $sql .= "ORDER BY i.{$field} DESC
-                 LIMIT 1";
+        $sql .= "LIMIT 1";
 
         $result = $this->db->query($sql);
 

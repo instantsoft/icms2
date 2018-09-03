@@ -13,6 +13,10 @@ class actionSearchIndex extends cmsAction {
         if (!in_array($date, array('all', 'w', 'm', 'y'), true)){ cmsCore::error404(); }
         if (!is_numeric($page)){ cmsCore::error404(); }
 
+        if($target && $this->validate_sysname($target) !== true){
+            cmsCore::error404();
+        }
+
         if ($this->request->has('q')){
 
             if (!$query || !$this->model->setQuery($query)) {

@@ -279,35 +279,34 @@ CREATE TABLE `{#}controllers` (
   `version` varchar(8) NOT NULL COMMENT 'Version',
   `is_backend` tinyint(1) unsigned DEFAULT NULL COMMENT 'Admin panel?',
   `is_external` tinyint(1) unsigned DEFAULT NULL COMMENT 'Third-party component',
-  `files` text COMMENT 'Список файлов контроллера (для стороних компонентов)',
+  `files` text COMMENT 'Controller files list (for third-party components)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Components';
 
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
-(1, 'Control Panel', 'admin', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
-(2, 'Content', 'content', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 0),
-(3, 'User Profiles', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(4, 'Comments', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: null\nguest_ip_delay:\nrestricted_ips:\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys:\nseo_desc:\nis_guests_moderate: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(5, 'Private messages', 'messages', 1, '---\nlimit: 10\ngroups_allowed: \n  - 0\n', 'InstantCMS Team', 'http://www.instantcms.ru/', '2.0', 1),
-(6, 'Authorization & Registration', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  We apologize, but,\n  we do not accept\n  new users at the moment\nis_reg_invites: null\nreg_captcha: 1\nverify_email: null\nverify_exp: 48\nauth_captcha: 0\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(7, 'Activity Feed', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(8, 'Groups', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(9, 'Markup Editor', 'markitup', 1, '---\nset: default-en\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(10, 'Rating', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(11, 'Wall', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key: 6LdgRuESAAAAAKsuQoDeT_wPZ0YN6T0jGjKuHZRI\nprivate_key: 6LdgRuESAAAAAFaKHgCjfQlHVYh8v3aeYirFM0ow\ntheme: clean\nlang: en\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(16, 'Sitemap generator', 'sitemap', 1, '---\nsources:\n  users|profiles: 1\n  groups|profiles: 1\n  content|pages: 1\n  content|articles: 1\n  content|posts: 1\n  content|albums: 1\n  content|board: 1\n  content|news: 1\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(17, 'Search', 'search', 1, '---\nctypes:\n  - articles\n  - posts\n  - albums\n  - board\n  - news\nperpage: 15\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(18, 'Photos', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Photo\r\n  2 | Vectors\r\n  3 | Illustrations\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(19, 'Image Upload', 'images', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(21, 'Geobase', 'geo', 1, NULL, 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1),
-(22, 'Subscriptions', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', 1);
+(1, 'Control Panel', 'admin', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
+(2, 'Content', 'content', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
+(3, 'User Profiles', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(4, 'Comments', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: null\nguest_ip_delay:\nrestricted_ips:\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys:\nseo_desc:\nis_guests_moderate: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(5, 'Private messages', 'messages', 1, '---\nlimit: 10\ngroups_allowed: \n  - 0\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
+(6, 'Authorization & Registration', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  We apologize, but,\n  we do not accept\n  new users at the moment\nis_reg_invites: null\nreg_captcha: 1\nverify_email: null\nverify_exp: 48\nauth_captcha: 0\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  admin*\r\n  moderator\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(7, 'Activity Feed', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(8, 'Groups', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(9, 'Markup Editor', 'markitup', 1, '---\nset: default-en\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(10, 'Rating', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(11, 'Wall', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key: \nprivate_key: \ntheme: clean\nlang: en\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(16, 'Sitemap and robots.txt generator', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(18, 'Photos', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Photo\r\n  2 | Vectors\r\n  3 | Illustrations\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(19, 'Image Upload', 'images', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(20, 'Redirects', 'redirect', 1, '---\nno_redirect_list:\nblack_list:\nis_check_link: null\nwhite_list:\nredirect_time: 10\nis_check_refer: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(21, 'Geobase', 'geo', 1, '---\nauto_detect: 1\nauto_detect_provider: ipgeobase\ndefault_country_id: null\ndefault_country_id_cache: null\ndefault_region_id: null\ndefault_region_id_cache: null\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(22, 'Subscriptions', 'subscriptions', 1, '---\nguest_email_confirmation: 1\nneed_auth: null\nverify_exp: 24\nupdate_user_rating: 1\nrating_value: 1\nadmin_email:\nlimit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);
 
 DROP TABLE IF EXISTS `{#}con_albums`;
 CREATE TABLE `{#}con_albums` (
@@ -319,6 +318,7 @@ CREATE TABLE `{#}con_albums` (
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `template` varchar(150) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
   `date_pub_end` timestamp NULL DEFAULT NULL,
@@ -475,6 +475,7 @@ CREATE TABLE `{#}con_pages` (
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `template` varchar(150) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
   `date_pub_end` timestamp NULL DEFAULT NULL,
@@ -770,7 +771,17 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (137, 'content_after_add_approve', 'subscriptions', 137, 1),
 (138, 'publish_delayed_content', 'subscriptions', 138, 1),
 (139, 'ctype_basic_form', 'subscriptions', 139, 1),
-(140, 'admin_dashboard_block', 'users', 140, 1);
+(140, 'admin_dashboard_block', 'users', 140, 1),
+(141, 'engine_start', 'sitemap', 141, 1),
+(142, 'sitemap_sources', 'frontpage', 142, 1),
+(143, 'sitemap_sources', 'photos', 143, 1),
+(144, 'ctype_basic_form', 'tags', 144, 1),
+(145, 'content_after_add', 'tags', 145, 1),
+(146, 'content_before_update', 'tags', 146, 1),
+(147, 'content_item_form', 'tags', 147, 1),
+(148, 'content_before_item', 'tags', 148, 1),
+(149, 'content_before_list', 'tags', 149, 1),
+(150, 'tags_search_subjects', 'content', 150, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1362,7 +1373,7 @@ CREATE TABLE `{#}users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Users';
 
 INSERT INTO `{#}users` (`id`, `groups`, `email`, `password`, `password_salt`, `is_admin`, `nickname`, `date_reg`, `date_log`, `date_group`, `ip`, `is_locked`, `lock_until`, `lock_reason`, `pass_token`, `date_token`, `friends_count`, `subscribers_count`, `time_zone`, `karma`, `rating`, `theme`, `notify_options`, `privacy_options`, `status_id`, `status_text`, `inviter_id`, `invites_count`, `date_invites`, `birth_date`, `city`, `city_cache`, `hobby`, `avatar`, `icq`, `skype`, `phone`, `music`, `movies`, `site`) VALUES
-(1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 468, 2, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_aссept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 12008, 'London', 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'various interesting', 'instantcms.ru');
+(1, '---\n- 6\n', 'admin@example.com', '', '', 1, 'admin', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '127.0.0.1', NULL, NULL, NULL, NULL, NULL, 468, 2, 'Europe/London', 0, 0, '---\nbg_img: null\nbg_color: ''#ffffff''\nbg_repeat: no-repeat\nbg_pos_x: left\nbg_pos_y: top\nmargin_top: 0\n', '---\nusers_friend_add: both\nusers_friend_delete: both\ncomments_new: both\ncomments_reply: email\nusers_friend_accept: pm\ngroups_invite: email\nusers_wall_write: email\n', '---\nusers_profile_view: anyone\nmessages_pm: anyone\n', NULL, NULL, NULL, 0, NULL, '1985-10-15 00:00:00', 12008, 'London', 'Style too own civil out along. Perfectly offending attempted add arranging age gentleman concluded.', NULL, '987654321', 'admin', '100-20-30', 'Disco House, Minimal techno', 'various interesting', 'instantcms.ru');
 
 DROP TABLE IF EXISTS `{#}users_contacts`;
 CREATE TABLE `{#}users_contacts` (
@@ -1644,25 +1655,25 @@ CREATE TABLE `{#}widgets` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, `version`, `is_external`) VALUES
-(1, NULL, 'text', 'Text block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(2, 'users', 'list', 'User list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(3, NULL, 'menu', 'Menu', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(4, 'content', 'list', 'Content list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(5, 'content', 'categories', 'Categories', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(6, 'activity', 'list', 'Activity feed', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(7, 'comments', 'list', 'New comments', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(8, 'users', 'online', 'Who is online', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(9, 'users', 'avatar', 'User Avatar', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(10, 'tags', 'cloud', 'Tag cloud', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(11, 'content', 'slider', 'Content slider', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(12, 'auth', 'auth', 'Authorization form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(13, 'search', 'search', 'Search', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL),
-(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'http://www.instantcms.ru', '2.0', NULL);
+(1, NULL, 'text', 'Text block', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(2, 'users', 'list', 'User list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(3, NULL, 'menu', 'Menu', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(4, 'content', 'list', 'Content list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(5, 'content', 'categories', 'Categories', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(6, 'activity', 'list', 'Activity feed', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(7, 'comments', 'list', 'New comments', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(8, 'users', 'online', 'Who is online', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(9, 'users', 'avatar', 'User Avatar', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(10, 'tags', 'cloud', 'Tag cloud', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(11, 'content', 'slider', 'Content slider', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(12, 'auth', 'auth', 'Authorization form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(13, 'search', 'search', 'Search', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(14, NULL, 'html', 'HTML block', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(15, 'content', 'filter', 'Content filter', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

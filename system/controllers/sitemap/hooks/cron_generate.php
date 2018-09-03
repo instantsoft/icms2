@@ -2,31 +2,52 @@
 
 class onSitemapCronGenerate extends cmsAction {
 
-    // вообще ограничение 50000 или 10Мб, чтобы не проверять размер файла, задаем меньше
-    private $max_count = 45000;
+    private $max_count = 50000;
+    private $max_html_count = 500;
 
     public function run(){
 
-        // автоматическое получение опций через $this->options здесь не
-        // работает, потому что форма опций не содержит полей, они заполняются
-        // динамически в админке
-        $options = $this->loadOptions($this->name);
-        if (!$options) { return false; }
-
-        $sources_list = $options['sources'];
+        $sources_list = $this->options['sources'];
         if (!$sources_list) { return false; }
+
+        $priority_list = !empty($this->options['priority']) ? $this->options['priority'] : array();
+        $changefreq_list = !empty($this->options['changefreq']) ? $this->options['changefreq'] : array();
 
         if(!is_writable($this->cms_config->root_path.'cache/static/sitemaps/')){
             return false;
         }
 
-        $sources = array();
-        $sitemaps = array();
+        $source_controllers = array();
+        $sources            = array();
+        $sitemaps           = array();
+        $sitemaps_html      = array();
 
-        foreach($sources_list as $item=>$is_enabled){
-            if (!$is_enabled) { continue; }
-            list($controller_name, $source) = explode('|', $item);
+        if(!empty($this->options['generate_html_sitemap'])){
+            $source_controllers = cmsEventsManager::hookAll('sitemap_sources');
+        }
+
+        foreach ($sources_list as $item => $is_enabled) {
+
+            if (!$is_enabled) {
+                continue;
+            }
+
+            $targets = explode('|', $item);
+
+            if(count($targets) == 2){
+
+                list($controller_name, $source) = $targets;
+
+            } else {
+
+                $controller_name = array_shift($targets);
+
+                $source = $targets;
+
+            }
+
             $sources[$controller_name][] = $source;
+
         }
 
         foreach($sources as $controller_name => $items){
@@ -40,39 +61,120 @@ class onSitemapCronGenerate extends cmsAction {
                 $urls = $controller->runHook('sitemap_urls', array($item));
 				if (!$urls) { continue; }
 
+                if(!is_array($item)){
+                    $item = array($item);
+                }
+
+                $source_key = implode('|', $item);
+
+                $sitemap_file = "sitemap_{$controller_name}_".implode('_', $item)."%s";
+
+                $changefreq = $this->options['default_changefreq'];
+                $priority = null;
+
+                if(!empty($changefreq_list[$controller_name][$source_key])){
+
+                    $changefreq = $changefreq_list[$controller_name][$source_key];
+
+                }
+
+                if(!empty($priority_list[$controller_name][$source_key])){
+
+                    $priority = $priority_list[$controller_name][$source_key];
+
+                }
+
+                // sitemap.xml
                 if(count($urls) > $this->max_count){
 
-                    $chunk_data = array_chunk($urls, $this->max_count, true); unset($urls);
+                    $chunk_data = array_chunk($urls, $this->max_count, true);
 
-                    foreach ($chunk_data as $index=>$chunk_urls) {
+                    foreach ($chunk_data as $index => $chunk_urls) {
 
                         $index = $index ? '_'.$index : '';
 
-                        $sitemap_file = "sitemap_{$controller_name}_{$item}{$index}.xml";
+                        $sitemap_file_xml = sprintf($sitemap_file, $index.'.xml');
 
                         file_put_contents(
-                            $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file}",
+                            $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file_xml}",
                             $this->cms_template->renderInternal($this, 'sitemap', array(
-                                'urls' => $chunk_urls
+                                'urls'            => $chunk_urls,
+                                'changefreq'      => $changefreq,
+                                'priority'        => $priority,
+                                'show_lastmod'    => !empty($this->options['show_lastmod']),
+                                'show_changefreq' => !empty($this->options['show_changefreq']),
+                                'show_priority'   => !empty($this->options['show_priority'])
                             ))
                         );
 
-                        $sitemaps[] = $sitemap_file;
+                        $sitemaps[] = $sitemap_file_xml;
+
+                    }
+
+                    unset($chunk_data, $chunk_urls);
+
+                } else {
+
+                    $sitemap_file_xml = sprintf($sitemap_file, '.xml');
+
+                    file_put_contents(
+                        $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file_xml}",
+                        $this->cms_template->renderInternal($this, 'sitemap', array(
+                            'urls'            => $urls,
+                            'changefreq'      => $changefreq,
+                            'priority'        => $priority,
+                            'show_lastmod'    => !empty($this->options['show_lastmod']),
+                            'show_changefreq' => !empty($this->options['show_changefreq']),
+                            'show_priority'   => !empty($this->options['show_priority'])
+                        ))
+                    );
+
+                    $sitemaps[] = $sitemap_file_xml;
+
+                }
+
+                if(!$source_controllers){
+                    continue;
+                }
+
+                // sitemap.html
+                if(count($urls) > $this->max_html_count){
+
+                    $chunk_data = array_chunk($urls, $this->max_html_count, true); unset($urls);
+
+                    foreach ($chunk_data as $index => $chunk_urls) {
+
+                        $number = $index + 1;
+
+                        $index = $index ? '_'.$index : '';
+
+                        $sitemap_file_html = sprintf($sitemap_file, $index);
+
+                        file_put_contents(
+                            $this->cms_config->root_path.'cache/static/sitemaps/'.$sitemap_file_html.'.json',
+                            json_encode($chunk_urls, JSON_UNESCAPED_UNICODE)
+                        );
+
+                        $sitemaps_html[] = array(
+                            'url'   => href_to_abs('sitemap', $sitemap_file_html),
+                            'title' => $source_controllers[$controller_name]['sources'][$source_key].', '.mb_strtolower(LANG_PAGE).$number
+                        );
 
                     }
 
                 } else {
 
-                    $sitemap_file = "sitemap_{$controller_name}_{$item}.xml";
+                    $sitemap_file_html = sprintf($sitemap_file, '');
 
                     file_put_contents(
-                        $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file}",
-                        $this->cms_template->renderInternal($this, 'sitemap', array(
-                            'urls' => $urls
-                        ))
+                        $this->cms_config->root_path.'cache/static/sitemaps/'.$sitemap_file_html.'.json',
+                        json_encode($urls, JSON_UNESCAPED_UNICODE)
                     );
 
-                    $sitemaps[] = $sitemap_file;
+                    $sitemaps_html[] = array(
+                        'url'   => href_to_abs('sitemap', $sitemap_file_html),
+                        'title' => $source_controllers[$controller_name]['sources'][$source_key]
+                    );
 
                 }
 
@@ -87,6 +189,15 @@ class onSitemapCronGenerate extends cmsAction {
                 'host' => $this->cms_config->host
             ))
         );
+
+        if($sitemaps_html){
+
+            file_put_contents(
+                $this->cms_config->root_path.'cache/static/sitemaps/sitemap.json',
+                json_encode($sitemaps_html, JSON_UNESCAPED_UNICODE)
+            );
+
+        }
 
         return true;
 

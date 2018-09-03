@@ -12,6 +12,7 @@
             'content_albums_before_item',
             'content_albums_before_list',
             'admin_subscriptions_list',
+            'sitemap_sources',
             'user_delete'
         )
 

@@ -63,9 +63,9 @@ class onWidgetsPageIsAllowed extends cmsAction {
 
     private function displayAccessError($page) {
 
-        header("HTTP/1.0 403 Forbidden");
-        header("HTTP/1.1 403 Forbidden");
-        header("Status: 403 Forbidden");
+        header('HTTP/1.0 403 Forbidden');
+        header('HTTP/1.1 403 Forbidden');
+        header('Status: 403 Forbidden');
 
         if($page['controller']){
 
@@ -107,28 +107,9 @@ class onWidgetsPageIsAllowed extends cmsAction {
 
         if($this->country !== null){ return $this; }
 
-        $country = cmsUser::sessionGet('cached_geo');
+        $geo = $this->controller_geo->getAutoDetectGeoByIp();
 
-        if(!$country){
-
-            $json = file_get_contents_from_url('http://freegeoip.net/json/'.cmsUser::getIp());
-
-            if($json){
-                $data = json_decode($json, true);
-            }
-
-            // определяем страну
-            if(isset($data['country_code'])){
-                $country = $this->model->getItemByField('geo_countries', 'alpha2', $data['country_code']);
-            } else {
-                $country = array('id'=>null,'name'=>null);
-            }
-
-            cmsUser::sessionSet('cached_geo', $country);
-
-        }
-
-        $this->country = $country;
+        $this->country = $geo['country'];
 
         return $this;
 

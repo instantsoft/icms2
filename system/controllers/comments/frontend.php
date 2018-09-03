@@ -149,35 +149,44 @@ class comments extends cmsFrontend {
 
     public function notifyParent($comment, $parent_comment){
 
-        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) { return; }
+        $success = false;
+
+        if ($comment['user_id'] && ($comment['user_id'] == $parent_comment['user_id'])) { return $success; }
 
         $messenger = cmsCore::getController('messages');
 
-		$is_guest_parent = !$parent_comment['user_id'] && $parent_comment['author_email'];
+		$is_guest_parent  = !$parent_comment['user_id'];
 		$is_guest_comment = !$comment['user_id'];
 
 		$page_url = href_to_abs($comment['target_url']) . "#comment_{$comment['id']}";
 
 		$letter_data = array(
-            'page_url' => $page_url,
-            'page_title' => $comment['target_title'],
-            'author_url' => $is_guest_comment ? $page_url : href_to_abs('users', $comment['user_id']),
+            'page_url'        => $page_url,
+            'page_title'      => $comment['target_title'],
+            'author_url'      => $is_guest_comment ? $page_url : href_to_abs('users', $comment['user_id']),
             'author_nickname' => $is_guest_comment ? $comment['author_name'] : $comment['user_nickname'],
-            'comment' => $comment['content'],
-            'original' => $parent_comment['content'],
+            'comment'         => $comment['content'],
+            'original'        => $parent_comment['content']
         );
 
 		if (!$is_guest_parent){
-			$messenger->addRecipient($parent_comment['user_id']);
-			$messenger->sendNoticeEmail('comments_reply', $letter_data);
+
+			$success = $messenger->addRecipient($parent_comment['user_id'])->
+                    sendNoticeEmail('comments_reply', $letter_data);
+
 		}
 
-		if ($is_guest_parent){
+		if ($is_guest_parent && $parent_comment['author_email']){
+
 			$letter_data['nickname'] = $parent_comment['author_name'];
 			$to = array('name' => $parent_comment['author_name'], 'email' => $parent_comment['author_email']);
 			$letter = array('name' => 'comments_reply');
-			$messenger->sendEmail($to, $letter, $letter_data);
+
+			$success = $messenger->sendEmail($to, $letter, $letter_data);
+
 		}
+
+        return $success;
 
     }
 

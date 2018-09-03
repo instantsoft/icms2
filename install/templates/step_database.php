@@ -42,8 +42,8 @@
             <div class="hint"><?php echo LANG_DATABASE_ENGINE_HINT; ?></div>
             <label><?php echo LANG_DATABASE_ENGINE; ?></label>
             <select class="input" name="db[engine]">
-                <option value="MyISAM" <?php if(@$cfg['db_engine'] == 'MyISAM'){?>selected="selected"<?php } ?>>MyISAM</option>
                 <option value="InnoDB" <?php if(@$cfg['db_engine'] == 'InnoDB'){?>selected="selected"<?php } ?>>InnoDB</option>
+                <option value="MyISAM" <?php if(@$cfg['db_engine'] == 'MyISAM'){?>selected="selected"<?php } ?>>MyISAM</option>
             </select>
         </div>
 

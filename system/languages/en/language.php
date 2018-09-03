@@ -103,6 +103,7 @@
     define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
+    define('LANG_PARSER_CITY_AUTO_DETECT',   'Automatically identify the country');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Name for group');
     define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'If you want to combine locations country-region-city, enter a name for unification of all fields. At a minimum, it should be established fields such as "Country" and "Region"');
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Field value output string');
@@ -516,6 +517,7 @@
     define('LANG_INFORMATION',               'Information');
     define('LANG_CONTENT', 					 'Contents');
     define('LANG_CATEGORY',                  'Category');
+    define('LANG_CATEGORIES',                'Categories');
     define('LANG_CATEGORY_TITLE',            'Category title');
     define('LANG_CATEGORY_DESCRIPTION',      'Category description');
     define('LANG_FOLDER',                    'Folder');

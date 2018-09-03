@@ -303,14 +303,8 @@ class actionContentItemAdd extends cmsAction {
 
                 $this->bindItemToParents($ctype, $item, $parents);
 
-                if ($ctype['is_tags']){
-                    $tags_model = cmsCore::getModel('tags');
-                    $item['tags'] = $tags_model->addTags($item['tags'], $this->name, $ctype['name'], $item['id']);
-                    $this->model->updateContentItemTags($ctype['name'], $item['id'], $item['tags']);
-                }
-
-                cmsEventsManager::hook('content_after_add', $item);
-                cmsEventsManager::hook("content_{$ctype['name']}_after_add", $item);
+                $item = cmsEventsManager::hook('content_after_add', $item);
+                $item = cmsEventsManager::hook("content_{$ctype['name']}_after_add", $item);
 
                 if(!$is_draf_submitted){
 

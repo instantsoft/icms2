@@ -17,9 +17,10 @@ class cmsUser {
     public $email;
     public $password;
     public $nickname;
-    public $is_admin = 0;
-    public $is_logged = false;
-    public $friends = array();
+    public $date_log;
+    public $is_admin   = 0;
+    public $is_logged  = false;
+    public $friends    = array();
     public $subscribes = array();
 
     public static function getInstance() {
@@ -152,6 +153,8 @@ class cmsUser {
 
         $config = cmsConfig::getInstance();
         $model  = cmsCore::getModel('users');
+
+        $model->filterIsNull('is_deleted');
 
         $user = $model->getUser($user_id);
 
@@ -368,7 +371,9 @@ class cmsUser {
 
         $model = new cmsModel();
 
-        if($model->filterEqual('user_id', $user_id)->getFieldFiltered('sessions_online', 'user_id')){
+        $date_created = $model->filterEqual('user_id', $user_id)->getFieldFiltered('sessions_online', 'date_created');
+
+        if($date_created && (time()-self::USER_ONLINE_INTERVAL) >= strtotime($date_created)){
             self::$cached_online[$user_id] = true;
         }
 
@@ -456,6 +461,10 @@ class cmsUser {
             list($key, $subkey) = explode(':', $key);
             unset($_SESSION[$key][$subkey]);
         }
+    }
+
+    public static function sessionClear(){
+        $_SESSION = array();
     }
 
     /**

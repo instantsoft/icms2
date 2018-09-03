@@ -102,6 +102,7 @@
     define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
+    define('LANG_PARSER_CITY_AUTO_DETECT',   'Определять страну автоматически');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
     define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'Если необходимо объединить местоположения страна-область-город, укажите одно имя объединения для всех полей. Как минимум должны быть созданы поля типа "страна" и "область"');
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
@@ -513,6 +514,7 @@
     define('LANG_INFORMATION',               'Информация');
     define('LANG_CONTENT', 					 'Содержимое');
     define('LANG_CATEGORY',                  'Категория');
+    define('LANG_CATEGORIES',                'Категории');
     define('LANG_CATEGORY_TITLE',            'Название категории');
     define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
     define('LANG_FOLDER',                    'Папка');

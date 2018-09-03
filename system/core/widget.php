@@ -37,8 +37,12 @@ class cmsWidget {
 
     }
 
-    public function getOption($key, $default=false){
+    public function getOption($key, $default = false){
         return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+    }
+
+    public function getOptions(){
+        return $this->options;
     }
 
     public function setTemplate($template){

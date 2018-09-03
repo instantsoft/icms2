@@ -126,7 +126,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
-                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="inthemer" target="_blank" href="http://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
+                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array();

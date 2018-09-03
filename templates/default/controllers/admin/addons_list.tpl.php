@@ -102,7 +102,7 @@
     $(function() {
         $('#addons_list').on('click', '.button-video > a', function(e){
             var id = $(this).data('id');
-            var frame = '<iframe width="640" height="480" src="http://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
+            var frame = '<iframe width="640" height="480" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
             icms.modal.openHtml(frame, '<?php echo LANG_CP_PACKAGE_VIDEO_TITLE; ?>');
             return false;
         });

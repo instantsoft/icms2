@@ -558,5 +558,5 @@ function html_search_bar($list, $href, $link_class = ''){
 }
 
 function html_tags_bar($tags){
-    return html_search_bar($tags, href_to('tags', 'search').'?q=', 'tags_bar_link');
+    return html_search_bar($tags, href_to('tags').'/', 'tags_bar_link');
 }

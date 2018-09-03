@@ -1062,7 +1062,7 @@ class cmsController {
 
     public function validate_minfloat($min, $value){
         if (empty($value)) { return true; }
-        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value)) === 1){
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === 1){
             return sprintf(ERR_VALIDATE_MIN, $min);
         }
         return true;
@@ -1070,7 +1070,7 @@ class cmsController {
 
     public function validate_maxfloat($min, $value){
         if (empty($value)) { return true; }
-        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value)) === -1){
+        if(bccomp(sprintf('%.8f', $min), sprintf('%.8f', $value), 8) === -1){
             return sprintf(ERR_VALIDATE_MAX, $min);
         }
         return true;

@@ -25,25 +25,38 @@ class formCommentsOptions extends cmsForm {
 
                     new fieldCheckbox('is_guests_moderate', array(
                         'title' => LANG_COMMENTS_OPT_IS_GUESTS_MODERATE,
-                        'default' => 1
+                        'default' => 1,
+                        'visible_depend' => array('is_guests' => array('show' => array('1')))
                     )),
 
                     new fieldNumber('guest_ip_delay', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_DELAY,
                         'units' => LANG_MINUTE10,
+                        'visible_depend' => array('is_guests' => array('show' => array('1')))
                     )),
 
                     new fieldText('restricted_ips', array(
                         'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS,
                         'hint' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS_HINT,
+                        'visible_depend' => array('is_guests' => array('show' => array('1')))
+                    )),
+
+                    new fieldCheckbox('show_author_email', array(
+                        'title' => LANG_COMMENTS_OPT_SHOW_AUTHOR_EMAIL,
+                        'default' => 1,
+                        'visible_depend' => array('is_guests' => array('show' => array('1')))
                     )),
 
                     new fieldText('restricted_emails', array(
-                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_EMAILS
+                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_EMAILS,
+                        'visible_depend' => array(
+                            'is_guests' => array('show' => array('1'))
+                        )
                     )),
 
                     new fieldText('restricted_names', array(
-                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_NAMES
+                        'title' => LANG_COMMENTS_OPT_GUESTS_RESTRICTED_NAMES,
+                        'visible_depend' => array('is_guests' => array('show' => array('1')))
                     )),
 
                     new fieldCheckbox('dim_negative', array(

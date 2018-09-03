@@ -14,6 +14,7 @@ define('LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT', 'It can be useful if you want
 define('LANG_COMMENTS_OPT_DIM_NEGATIVE', 'Dim comments with negative rating');
 define('LANG_COMMENTS_OPT_IS_GUESTS', 'Allow guests to add comments');
 define('LANG_COMMENTS_OPT_IS_GUESTS_MODERATE', 'Guest comments moderation');
+define('LANG_COMMENTS_OPT_SHOW_AUTHOR_EMAIL', 'Show the "E-mail for replies" field');
 define('LANG_COMMENTS_OPT_IS_GUESTS_HINT', 'Unregistered users will be able to add comments');
 define('LANG_COMMENTS_OPT_GUESTS_DELAY', 'Delay between guest comments from one IP');
 define('LANG_COMMENTS_OPT_GUESTS_RESTRICTED_IPS', 'Deny guest comments from IPs');

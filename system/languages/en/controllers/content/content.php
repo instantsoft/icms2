@@ -14,6 +14,7 @@
 	define('LANG_CONTENT_IS_PUB',			 'Publish %s on site');
 	define('LANG_CONTENT_IS_PUB_OFF',		 'Publication by date was disabled');
     define('LANG_CONTENT_WRONG_PARENT',		 'Wrong parent selected');
+    define('LANG_CONTENT_TEMPLATE',		     'Item view template');
     define('LANG_RULE_CONTENT_VIEW_LIST',    'View a item list');
     define('LANG_RULE_CONTENT_VIEW_LIST_HINT', 'If this rule is set for at least one of the groups, the items list is not displayed to the guests');
     define('LANG_RULE_CONTENT_ADD',          'Adding entries');

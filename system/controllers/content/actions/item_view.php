@@ -49,6 +49,11 @@ class actionContentItemView extends cmsAction {
             $this->redirect(href_to($ctype['name'], $item['slug'] . '.html'), 301);
         }
 
+        // добавляем Last-Modified
+        if(!$this->cms_user->is_logged && (!$ctype['is_comments'] || !$item['is_comments_on'])){
+            cmsCore::respondIfModifiedSince($item['date_last_modified']);
+        }
+
         // Проверяем прохождение модерации
         $is_moderator = $this->cms_user->is_admin;
         if(!$is_moderator && $this->cms_user->is_logged){
@@ -364,11 +369,6 @@ class actionContentItemView extends cmsAction {
 
             $item['comments_widget'] = $comments_controller->getWidget();
 
-        }
-
-        // Теги
-        if ($ctype['is_tags'] && $item['tags']){
-            $item['tags'] = explode(',', $item['tags']);
         }
 
         // Информация о модераторе для админа и владельца записи

@@ -1,8 +1,11 @@
 <?php
 
-class backendSitemap extends cmsBackend{
+class backendSitemap extends cmsBackend {
 
-    public function actionIndex(){
+    protected $useOptions = true;
+    public $useDefaultOptionsAction = true;
+
+    public function actionIndex() {
         $this->redirectToAction('options');
     }
 

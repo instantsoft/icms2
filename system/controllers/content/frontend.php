@@ -577,24 +577,6 @@ class content extends cmsFrontend {
 
         }
 
-        //
-        // Если включены теги, то добавляем поле для них
-        //
-        if ($ctype['is_tags']){
-            $fieldset_id = $form->addFieldset(LANG_TAGS, 'tags_wrap', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('tags_wrap', $ctype['options']['is_collapsed'])));
-            $form->addField($fieldset_id, new fieldString('tags', array(
-                'hint' => LANG_TAGS_HINT,
-                'options'=>array(
-                    'max_length'=> 1000,
-                    'show_symbol_count'=>true
-                ),
-                'autocomplete' => array(
-                    'multiple' => true,
-                    'url' => href_to('tags', 'autocomplete')
-                )
-            )));
-        }
-
         // Если ручной ввод SLUG, то добавляем поле для этого
         if (!$ctype['is_auto_url']){
 
@@ -782,6 +764,23 @@ class content extends cmsFrontend {
 				}
 			}
 		}
+
+        // выбор шаблона записи
+        if($this->cms_user->is_admin){
+
+            $styles = $this->cms_template->getAvailableContentItemStyles($ctype['name']);
+
+            if($styles){
+
+                $fieldset_id = $form->addFieldset(LANG_CONTENT_TEMPLATE, 'template_item', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('template_item', $ctype['options']['is_collapsed'])));
+
+                $form->addField($fieldset_id, new fieldList('template', array(
+                    'items' => array('' => LANG_BY_DEFAULT) + $styles
+                )));
+
+            }
+
+        }
 
         list($form, $item, $ctype) = cmsEventsManager::hook('content_item_form', array($form, $item, $ctype), null, $this->request);
 

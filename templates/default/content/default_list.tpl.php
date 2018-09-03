@@ -15,7 +15,7 @@
 
 <?php if ($items){ ?>
 
-    <div class="content_list featured <?php echo $ctype['name']; ?>_list">
+    <div class="content_list default_list <?php echo $ctype['name']; ?>_list">
 
         <?php foreach($items as $item){ ?>
 
@@ -97,7 +97,7 @@
 
                 </div>
 
-                <?php if ($ctype['is_tags'] && !empty($ctype['options']['is_tags_in_list']) &&  $item['tags']){ ?>
+                <?php if (!empty($item['show_tags'])){ ?>
                     <div class="tags_bar">
                         <?php echo html_tags_bar($item['tags']); ?>
                     </div>

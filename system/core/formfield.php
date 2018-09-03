@@ -135,8 +135,6 @@ class cmsFormField {
             $this->setOptions($options);
         }
 
-        $this->id = str_replace(':', '_', $name);
-
     }
 
     /**
@@ -271,6 +269,8 @@ class cmsFormField {
 
         $keys = explode(':', $name);
         $this->element_name = count($keys) > 1 ? array_shift($keys) . '[' . implode('][', $keys) . ']' : $name;
+
+        $this->id = str_replace(array(':', '|'), '_', $name);
 
         return $this;
 

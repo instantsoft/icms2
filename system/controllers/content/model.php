@@ -2338,6 +2338,7 @@ class modelContent extends cmsModel {
 
         $this->selectOnly('slug');
         $this->select('date_last_modified');
+        $this->select('title');
         if($fields){
             foreach ($fields as $field) {
                 $this->select($field);

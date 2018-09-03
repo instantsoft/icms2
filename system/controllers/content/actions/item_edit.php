@@ -17,6 +17,7 @@ class actionContentItemEdit extends cmsAction {
 
         $item['ctype_id'] = $ctype['id'];
         $item['ctype_name'] = $ctype['name'];
+        $item['ctype_data'] = $ctype;
 
         // автор записи?
         $is_owner = $item['user_id'] == $this->cms_user->id;
@@ -172,10 +173,6 @@ class actionContentItemEdit extends cmsAction {
                     $item['approved_by'] = null;
                 }
 
-                if ($ctype['is_tags']){
-                    $item['tags'] = cmsCore::getModel('tags')->updateTags($item['tags'], $this->name, $ctype['name'], $id);
-                }
-
 				$date_pub_time = strtotime($item['date_pub']);
 				$date_pub_end_time = strtotime($item['date_pub_end']);
 				$now_time = time();
@@ -250,8 +247,6 @@ class actionContentItemEdit extends cmsAction {
                 }
 
                 $item = $this->model->updateContentItem($ctype, $id, $item, $fields);
-
-                $item['ctype_data'] = $ctype;
 
                 $this->bindItemToParents($ctype, $item);
 

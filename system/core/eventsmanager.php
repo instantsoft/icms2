@@ -94,7 +94,7 @@ class cmsEventsManager {
                 $result = $controller->runHook($event_name, array($data));
 
                 if ($result !== false){
-                    $results[] = $result;
+                    $results[$listener] = $result;
                 }
 
             cmsDebugging::pointProcess('events', array(

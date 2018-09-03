@@ -87,9 +87,6 @@ class actionUsersProfileContent extends cmsAction {
 			$this->controller_content->model->disablePrivacyFilter();
         }
 
-        // указываем тут сортировку, чтобы тут же указать индекс для использования
-        $this->controller_content->model->orderBy('date_pub', 'desc')->forceIndex('user_id');
-
         list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
 
         if ($folder_id){

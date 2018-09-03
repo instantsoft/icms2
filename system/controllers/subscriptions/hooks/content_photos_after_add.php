@@ -10,6 +10,15 @@ class onSubscriptionsContentPhotosAfterAdd extends cmsAction {
             return $data;
         }
 
+        $subscriptions_list = $this->model->filterEqual('controller', 'photos')->
+                filterEqual('subject', 'album')->
+                filterGt('subscribers_count', 0)->
+                getSubscriptionsList();
+
+        if(!$subscriptions_list){
+            return $data;
+        }
+
         /**
          * Т.к. объём может быть большой сразу создаём задачу,
          * в которой и будем всё делать

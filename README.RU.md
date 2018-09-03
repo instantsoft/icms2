@@ -35,6 +35,6 @@
 
 ## Ссылки
 
-* [Официальный сайт](http://instantcms.ru/)
-* [Дополнения](http://addons.instantcms.ru/)
+* [Официальный сайт](https://instantcms.ru/)
+* [Дополнения](https://addons.instantcms.ru/)
 * [Документация](https://docs.instantcms.ru/)

@@ -74,7 +74,7 @@ function get_db_list() {
             $list = array();
 
             while($data = $r->fetch_assoc()){
-                if(in_array($data['Database'], array('information_schema', 'mysql', 'performance_schema', 'phpmyadmin'))){
+                if(in_array($data['Database'], array('information_schema', 'mysql', 'performance_schema', 'phpmyadmin', 'sys'))){
                     continue;
                 }
                 $list[$data['Database']] = $data['Database'];

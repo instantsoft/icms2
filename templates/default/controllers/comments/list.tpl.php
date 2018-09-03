@@ -85,9 +85,11 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                         <div class="name field">
                             <label><?php echo LANG_COMMENTS_AUTHOR_NAME; ?>:</label> <?php echo html_input('text', 'author_name', $guest_name); ?>
                         </div>
+                        <?php if(!empty($this->controller->options['show_author_email'])){ ?>
                         <div class="email field">
                             <label><?php echo LANG_COMMENTS_AUTHOR_EMAIL; ?>:</label> <?php echo html_input('text', 'author_email', $guest_email); ?>
                         </div>
+                        <?php } ?>
                     </div>
                 <?php } ?>
                 <?php echo $user->is_logged ? html_editor('content') : html_textarea('content'); ?>
