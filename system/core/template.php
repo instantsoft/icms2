@@ -1534,7 +1534,7 @@ class cmsTemplate {
 						$flag_toggle_url = isset($column['flag_toggle']) ? $column['flag_toggle'] : false;
 
 						if ($flag_toggle_url){
-							$flag_toggle_url = string_replace_keys_values($flag_toggle_url, $row);
+							$flag_toggle_url = string_replace_keys_values_extended($flag_toggle_url, $row);
 						}
 
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
@@ -1556,7 +1556,7 @@ class cmsTemplate {
                             $is_active = true;
                         }
                         if($is_active){
-                            $column['href'] = string_replace_keys_values($column['href'], $row);
+                            $column['href'] = string_replace_keys_values_extended($column['href'], $row);
                             $value = '<a href="'.$column['href'].'">'.$value.'</a>';
                         }
                     }
@@ -1566,13 +1566,13 @@ class cmsTemplate {
                             $save_action = href_to('admin', 'inline_save', array(urlencode($column['editable']['table']), $row['id']));
                         }
                         if(!empty($column['editable']['save_action'])){
-                            $save_action = string_replace_keys_values($column['editable']['save_action'], $row);
+                            $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
                         }
                         $attributes = array();
                         if(!empty($column['editable']['attributes'])){
                             foreach ($column['editable']['attributes'] as $akey => $avalue) {
                                 if(is_string($avalue)){
-                                    $attributes[$akey] = string_replace_keys_values($avalue, $row);
+                                    $attributes[$akey] = string_replace_keys_values_extended($avalue, $row);
                                 } else {
                                     $attributes[$akey] = $avalue;
                                 }
@@ -1615,21 +1615,15 @@ class cmsTemplate {
 
                         if ($is_active){
 
-                            foreach($row as $cell_id=>$cell_value){
+                            // парсим шаблон адреса, заменяя значения полей
+                            if (isset($action['href'])){
+                                $action['href'] = string_replace_keys_values_extended($action['href'], $row);
+                            }
 
-                                if (is_array($cell_value) || is_object($cell_value)) { continue; }
-
-                                // парсим шаблон адреса, заменяя значения полей
-                                if (isset($action['href'])){
-                                    $action['href'] = str_replace('{'.$cell_id.'}', urlencode($cell_value), $action['href']);
-                                }
-
-                                // парсим шаблон запроса подтверждения, заменяя значения полей
-                                if (isset($action['confirm'])){
-                                    $action['confirm'] = str_replace('{'.$cell_id.'}', $cell_value, $action['confirm']);
-                                    $confirm_attr = 'onclick="if(!confirm(\''.html($action['confirm'], false).'\')){ return false; }"';
-                                }
-
+                            // парсим шаблон запроса подтверждения, заменяя значения полей
+                            if (isset($action['confirm'])){
+                                $action['confirm'] = string_replace_keys_values_extended($action['confirm'], $row);
+                                $confirm_attr = 'onclick="if(!confirm(\''.html($action['confirm'], false).'\')){ return false; }"';
                             }
 
                             // все действия с подтверждением снабжаем csrf_token
