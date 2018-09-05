@@ -34,7 +34,6 @@ class actionGroupsGroup extends cmsAction {
                 if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
                     if (!in_array('is_read', $field['options']['author_access'])){ return false; }
                     if ($group['owner_id'] == $user->id){ return true; }
-                    return false;
                 }
                 return false;
             }

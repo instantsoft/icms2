@@ -1,12 +1,8 @@
 <?php
-
-$user = cmsUser::getInstance();
-
 $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
             $fields['date_pub']['is_in_item'] ||
             $fields['user']['is_in_item'] ||
             !empty($ctype['options']['hits_on']);
-
 ?>
 
 <?php if ($fields['title']['is_in_item']){ ?>
@@ -53,7 +49,6 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
             <?php } ?>
         </h2>
     <?php } ?>
-    <?php unset($fields['title']); ?>
 <?php } ?>
 
 <?php echo $this->renderControllerChild('photos', 'filter-panel', array(
@@ -63,26 +58,33 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
 
 <div class="content_item <?php echo $ctype['name']; ?>_item">
 
-    <?php foreach($fields as $name=>$field){ ?>
+    <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 
-        <?php if (!$field['is_in_item'] || $field['is_system']) { continue; } ?>
-        <?php if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { continue; } ?>
-        <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
+        <?php $is_fields_group = !empty($ctype['options']['is_show_fields_group']) && $fieldset['title']; ?>
 
-        <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
-            <?php if ($field['options']['label_in_item'] != 'none'){ ?>
-                <div class="title_<?php echo $field['options']['label_in_item']; ?>"><?php html($field['title']); ?>: </div>
+        <?php if ($is_fields_group) { ?>
+            <div class="fields_group fields_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
+                <h3 class="group_title"><?php html($fieldset['title']); ?></h3>
+        <?php } ?>
+
+        <?php if (!empty($fieldset['fields'])) { ?>
+            <?php foreach ($fieldset['fields'] as $name => $field) { ?>
+
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
+                    <?php if ($field['options']['label_in_item'] != 'none') { ?>
+                        <div class="title_<?php echo $field['options']['label_in_item']; ?>"><?php html($field['title']); ?>: </div>
+                    <?php } ?>
+                    <div class="value"><?php echo $field['html']; ?></div>
+                </div>
+
             <?php } ?>
-            <div class="value"><?php echo $field['html']; ?></div>
-        </div>
+        <?php } ?>
+
+        <?php if ($is_fields_group) { ?></div><?php } ?>
 
     <?php } ?>
 
-    <?php if ($props && array_filter((array)$props_values)) { ?>
-        <?php
-            $props_fields = $this->controller->getPropsFields($props);
-            $props_fieldsets = cmsForm::mapFieldsToFieldsets($props);
-        ?>
+    <?php if ($props_fieldsets) { ?>
         <div class="content_item_props <?php echo $ctype['name']; ?>_item_props">
             <table>
                 <tbody>
@@ -94,15 +96,12 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
                         <?php } ?>
                         <?php if ($fieldset['fields']){ ?>
                             <?php foreach($fieldset['fields'] as $prop){ ?>
-                                <?php if (isset($props_values[$prop['id']])) { ?>
-                                <?php $prop_field = $props_fields[$prop['id']]; ?>
-                                    <tr>
-                                        <td class="title"><?php html($prop['title']); ?></td>
-                                        <td class="value">
-                                            <?php echo $prop_field->setItem($item)->parse($props_values[$prop['id']]); ?>
-                                        </td>
-                                    </tr>
-                                <?php } ?>
+                                <tr>
+                                    <td class="title"><?php html($prop['title']); ?></td>
+                                    <td class="value">
+                                        <?php echo $prop['html']; ?>
+                                    </td>
+                                </tr>
                             <?php } ?>
                         <?php } ?>
                     <?php } ?>
@@ -126,13 +125,13 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
                 <?php echo $item['rating_widget']; ?>
             </div>
         <?php } ?>
-        <div class="bar_item bi_share">
-            <div class="share">
-                <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" defer></script>
-                <script src="//yastatic.net/share2/share.js" defer></script>
-                <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,gplus,twitter,lj,tumblr,viber,whatsapp,skype,telegram" data-size="s"></div>
+        <?php if (!empty($ctype['options']['share_code'])){ ?>
+            <div class="bar_item bi_share">
+                <div class="share">
+                    <?php echo $ctype['options']['share_code']; ?>
+                </div>
             </div>
-        </div>
+        <?php } ?>
         <?php if (!$item['is_approved']){ ?>
             <div class="bar_item bi_not_approved">
                 <?php echo $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>

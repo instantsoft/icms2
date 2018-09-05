@@ -162,6 +162,7 @@
     define('LANG_CP_ITEMVIEW_HITS_ON',			'Считать количество просмотров');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Выводить HTML в конце записи');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Введенный здесь HTML код будет выводиться под каждой записью');
+    define('LANG_CP_ITEMVIEW_SHARE_CODE',       'HTML код для социальных кнопок');
 
     define('LANG_CP_NUMERALS_LABELS',           'Числительные');
     define('LANG_CP_NUMERALS_1_LABEL',          'Один / одна / одно (...)');
@@ -685,7 +686,6 @@
     define('LANG_CP_QUEUE_STATUS3', 'Ожидает выполнения');
     define('LANG_CP_QUEUE_STATUS4', 'Ожидает выполнения %s-й раз');
     define('LANG_CP_SUBJECT', 'Субъект');
-
     define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Доступ для автора или владельца');
     define('LANG_CP_FIELD_READING',       'Чтение');
     define('LANG_CP_FIELD_EDITING',       'Изменение');

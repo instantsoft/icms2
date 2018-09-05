@@ -298,7 +298,7 @@ class content extends cmsFrontend {
                     // проверяем на доступ к нему для авторов
                     if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
                     if (!in_array('is_read', $field['options']['author_access'])){ continue; }
-                    if ($item['user_id'] !== $user->id){ continue; }
+                    if ($item['user_id'] != $user->id){ continue; }
                 }
 
                 if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
@@ -567,7 +567,6 @@ class content extends cmsFrontend {
                 if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
                     if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
                     if ($item['user_id'] == $user->id){ return true; }
-                    return false;
                 }
                 return false;
             }

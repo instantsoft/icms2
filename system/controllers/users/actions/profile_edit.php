@@ -38,7 +38,6 @@ class actionUsersProfileEdit extends cmsAction {
                 if (!empty($profile['id']) && !empty($field['options']['author_access'])){
                     if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
                     if ($profile['id'] == $user->id){ return true; }
-                    return false;
                 }
                 return false;
             }

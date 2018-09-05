@@ -48,11 +48,14 @@
     }
 
     $this->renderContentItem($ctype['name'], array(
-        'item'         => $item,
-        'ctype'        => $ctype,
-        'fields'       => $fields,
-        'props'        => $props,
-        'props_values' => $props_values
+        'item'             => $item,
+        'ctype'            => $ctype,
+        'fields'           => $fields,
+        'fields_fieldsets' => $fields_fieldsets,
+        'props'            => $props,
+        'props_values'     => $props_values,
+        'props_fields'     => $props_fields,
+        'props_fieldsets'  => $props_fieldsets,
     ));
 
     if (!empty($childs['lists'])){

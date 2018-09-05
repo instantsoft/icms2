@@ -221,7 +221,6 @@ class groups extends cmsFrontend {
                 if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
                     if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
                     if ($group['owner_id'] == $user->id){ return true; }
-                    return false;
                 }
                 return false;
             }

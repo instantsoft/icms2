@@ -67,6 +67,26 @@ class actionUsersProfile extends cmsAction {
 
         list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
 
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
+
+            if (in_array($field['name'], array('nickname', 'avatar'))){ return false; }
+
+            if (empty($profile[$field['name']]) || !$field['is_in_item']) { return false; }
+
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($profile['id'] && !empty($field['options']['author_access']))){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($profile['id'] == $user->id){ return true; }
+                }
+                return false;
+            }
+            return true;
+
+        }, $profile);
+
         return $this->cms_template->render('profile_view', array(
             'profile'        => $profile,
             'user'           => $this->cms_user,
@@ -77,6 +97,7 @@ class actionUsersProfile extends cmsAction {
             'friends'        => $friends,
             'content_counts' => $content_counts,
             'fields'         => $fields,
+            'fieldsets'      => $fieldsets,
             'wall_html'      => isset($wall_html) ? $wall_html : false,
             'tabs'           => $this->getProfileMenu($profile)
         ));

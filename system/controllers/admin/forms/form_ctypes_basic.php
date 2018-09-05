@@ -243,6 +243,10 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_ITEMVIEW_HITS_ON,
                         'visible_depend' => array('options:item_on' => array('show' => array('1')))
                     )),
+                    new fieldText('options:share_code', array(
+                        'title' => LANG_CP_ITEMVIEW_SHARE_CODE,
+                        'visible_depend' => array('options:item_on' => array('show' => array('1')))
+                    )),
                     new fieldText('item_append_html', array(
                         'title' => LANG_CP_ITEMVIEW_APPEND_HTML,
                         'hint' => LANG_CP_ITEMVIEW_APPEND_HTML_HINT,

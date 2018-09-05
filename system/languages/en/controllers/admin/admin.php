@@ -157,6 +157,7 @@
 	define('LANG_CP_ITEMVIEW_HITS_ON',			'Count views (hits)');
     define('LANG_CP_ITEMVIEW_APPEND_HTML',      'Append HTML');
     define('LANG_CP_ITEMVIEW_APPEND_HTML_HINT', 'Appended HTML code will be shown under each entry');
+    define('LANG_CP_ITEMVIEW_SHARE_CODE',       'Social buttons HTML code');
     define('LANG_CP_PRIVACY_TYPE',              'How to show private entries in list');
     define('LANG_CP_PRIVACY_TYPE_HIDE',         'Hide');
     define('LANG_CP_PRIVACY_TYPE_SHOW_TITLE',   'Show only title');
@@ -685,7 +686,6 @@
     define('LANG_CP_QUEUE_STATUS3', 'Pending');
     define('LANG_CP_QUEUE_STATUS4', 'Waiting for 2nd time');
     define('LANG_CP_SUBJECT', 'Subject');
-
-    define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Access for the author or owner');
+    define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Author or owner access');
     define('LANG_CP_FIELD_READING',       'Reading');
     define('LANG_CP_FIELD_EDITING',       'Editing');

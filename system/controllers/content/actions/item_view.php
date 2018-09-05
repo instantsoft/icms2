@@ -7,6 +7,7 @@ class actionContentItemView extends cmsAction {
     public function run(){
 
         $props = $props_values = false;
+        $props_fieldsets = $props_fields = false;
 
         // Получаем название типа контента и сам тип
         $ctype = $this->model->getContentTypeByName($this->request->get('ctype_name', ''));
@@ -339,8 +340,36 @@ class actionContentItemView extends cmsAction {
 
         // Получаем поля-свойства
         if ($ctype['is_cats'] && $item['category_id'] > 1){
+
             $props = $this->model->getContentProps($ctype['name'], $item['category_id']);
-            $props_values = $this->model->getPropsValues($ctype['name'], $item['id']);
+
+            $props_values = array_filter((array)$this->model->getPropsValues($ctype['name'], $item['id']));
+
+            if ($props && $props_values) {
+
+                $props_fields = $this->getPropsFields($props);
+
+                foreach ($props as $key => $prop) {
+
+                    if (!isset($props_values[$prop['id']])) {
+                        continue;
+                    }
+
+                    $prop_field = $props_fields[$prop['id']];
+
+                    $props[$key]['html'] = $prop_field->setItem($item)->parse($props_values[$prop['id']]);
+
+                }
+
+                $props_fieldsets = cmsForm::mapFieldsToFieldsets($props, function($field, $user) use($props_values) {
+                    if (!isset($props_values[$field['id']])) {
+                        return false;
+                    }
+                    return true;
+                });
+
+            }
+
         }
 
         // Рейтинг
@@ -383,22 +412,47 @@ class actionContentItemView extends cmsAction {
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 
+        $fields_fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item) {
+
+            if (!$field['is_in_item'] || $field['is_system'] || $field['name'] == 'title') { return false; }
+
+            if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { return false; }
+
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($item['user_id'] == $user->id){ return true; }
+                }
+                return false;
+            }
+            return true;
+        });
+
         // кешируем запись для получения ее в виджетах
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_item', $item);
         cmsModel::cacheResult('current_ctype_fields', $fields);
+        cmsModel::cacheResult('current_ctype_fields_fieldsets', $fields_fieldsets);
         cmsModel::cacheResult('current_ctype_props', $props);
+        cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
+        cmsModel::cacheResult('current_ctype_props_props_fieldsets', $props_fieldsets);
 
         return $this->cms_template->render('item_view', array(
-            'tool_buttons' => $this->getToolButtons($ctype, $item, $is_moderator, $childs),
-            'ctype'        => $ctype,
-            'fields'       => $fields,
-            'props'        => $props,
-            'props_values' => $props_values,
-            'item'         => $item,
-            'is_moderator' => $is_moderator,
-            'user'         => $this->cms_user,
-            'childs'       => $childs,
+            'tool_buttons'     => $this->getToolButtons($ctype, $item, $is_moderator, $childs),
+            'ctype'            => $ctype,
+            'fields'           => $fields,
+            'fields_fieldsets' => $fields_fieldsets,
+            'props'            => $props,
+            'props_values'     => $props_values,
+            'props_fields'     => $props_fields,
+            'props_fieldsets'  => $props_fieldsets,
+            'item'             => $item,
+            'is_moderator'     => $is_moderator,
+            'user'             => $this->cms_user,
+            'childs'           => $childs
         ));
 
     }
