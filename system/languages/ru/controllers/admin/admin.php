@@ -685,3 +685,7 @@
     define('LANG_CP_QUEUE_STATUS3', 'Ожидает выполнения');
     define('LANG_CP_QUEUE_STATUS4', 'Ожидает выполнения %s-й раз');
     define('LANG_CP_SUBJECT', 'Субъект');
+
+    define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Доступ для автора или владельца');
+    define('LANG_CP_FIELD_READING',       'Чтение');
+    define('LANG_CP_FIELD_EDITING',       'Изменение');
