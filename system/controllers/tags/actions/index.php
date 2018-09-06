@@ -116,6 +116,8 @@ class actionTagsIndex extends cmsAction {
             ));
         }
 
+        $this->cms_template->addHead('<link rel="canonical" href="'.($is_index ? href_to_abs($this->name, urlencode($tag_name)) : href_to_abs($this->name, $target, urlencode($tag_name))).'"/>');
+
         return $this->cms_template->render('search', array(
             'seo_title'  => $seo_title,
             'seo_keys'   => $seo_keys,

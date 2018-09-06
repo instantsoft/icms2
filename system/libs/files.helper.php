@@ -493,6 +493,10 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
         $idest = imagecreatetruecolor($maxwidth, $maxwidth);
 
+        // Определяем пропорции целевого и исходного изображения
+        $target_ratio = $maxwidth / $maxheight;
+        $source_ratio = $new_width / $new_height;
+
         if ($format == 'jpeg') {
 
             imagefill($idest, 0, 0, 0xFFFFFF);
@@ -506,21 +510,19 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
         }
 
-        // вырезаем квадратную серединку по x, если фото горизонтальное
-        if ($new_width > $new_height) {
-
-            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
-
+        // вырезаем серединку по x, если фото горизонтальное
+        if ($source_ratio > $target_ratio) {
+            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxheight, $maxwidth * ($new_height / $maxheight), $new_height);
         }
 
-        // вырезаем квадратную верхушку по y,
-        if ($new_width < $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
+        // вырезаем верхушку по y, если фото вертикальное
+        if ($source_ratio < $target_ratio) {
+            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $maxheight * ($new_width / $maxwidth));
         }
 
-        // квадратная картинка масштабируется без вырезок
-        if ($new_width == $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
+        // картинка масштабируется без вырезок
+        if ($source_ratio == $target_ratio) {
+            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $new_height);
         }
 
     } else {
@@ -587,7 +589,7 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
     }
 
     if ($format == 'png') {
-        $quality = (10 - ceil($quality / 10));
+        $quality = (9 - ceil((9*$quality)/100));
     }
     if ($format == 'gif') {
         $quality = NULL;

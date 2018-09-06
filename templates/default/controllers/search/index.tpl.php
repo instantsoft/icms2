@@ -21,8 +21,8 @@
 
             $content_menu[] = array(
                 'title'    => $result['title'],
-                'url'      => $this->href_to('index', array($result['name'])) . '?' . $uri_query,
-                'url_mask' => $this->href_to('index', array($result['name'])),
+                'url'      => $this->href_to($result['name']) . '?' . $uri_query,
+                'url_mask' => $this->href_to($result['name']),
                 'counter'  => $result['count']
             );
 
@@ -43,7 +43,13 @@
 
 ?>
 
-<h1><?php echo LANG_SEARCH_TITLE; ?></h1>
+<h1>
+    <?php if (!$query){ ?>
+        <?php echo LANG_SEARCH_TITLE; ?>
+    <?php } else { ?>
+        <?php printf(LANG_SEARCH_H1, html($query, false)); ?>
+    <?php } ?>
+</h1>
 
 <div id="search_form">
     <form action="<?php echo href_to('search'); ?>" method="get">

@@ -49,7 +49,7 @@ class cmsController {
      * Флаг блокировки прямого вызова экшена
      * полезно если название экшена переопределяется
      * а вызов экшена напрямую нужно запретить
-     * @var bool || null
+     * @var boolean || null
      */
     public $lock_explicit_call = null;
 
@@ -65,6 +65,13 @@ class cmsController {
 
     protected $callbacks = array();
     protected $useOptions = false;
+
+    /**
+     * Неизвестные экшены определять
+     * как первый параметр экшена index
+     * @var boolean
+     */
+    protected $unknown_action_as_index_param = false;
 
     function __construct( cmsRequest $request){
 
@@ -809,6 +816,19 @@ class cmsController {
      * @return string
      */
     public function routeAction($action_name){
+
+        // Избавляемся от index в url
+        if($this->unknown_action_as_index_param){
+
+            if($this->isActionExists($action_name)){
+                return $action_name;
+            }
+
+            array_unshift($this->current_params, $action_name);
+
+            return 'index';
+
+        }
 
         return $action_name;
 

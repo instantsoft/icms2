@@ -8,6 +8,8 @@ class comments extends cmsFrontend {
 	protected $useOptions = true;
     public $useSeoOptions = true;
 
+    protected $unknown_action_as_index_param = true;
+
 	public function __construct($request){
 
         parent::__construct($request);
@@ -16,18 +18,6 @@ class comments extends cmsFrontend {
         $this->target_subject    = $this->request->get('target_subject', '');
         $this->target_id         = $this->request->get('target_id', 0);
         $this->target_user_id    = $this->request->get('target_user_id', 0);
-
-    }
-
-    public function routeAction($action_name){
-
-        if($this->isActionExists($action_name)){
-            return $action_name;
-        }
-
-        array_unshift($this->current_params, $action_name);
-
-        return 'index';
 
     }
 
