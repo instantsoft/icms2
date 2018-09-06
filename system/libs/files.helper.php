@@ -491,7 +491,11 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
     if ($is_square) {
 
-        $idest = imagecreatetruecolor($maxwidth, $maxwidth);
+        $idest = imagecreatetruecolor($maxwidth, $maxheight);
+		
+		// Определяем пропорции целевого и исходного изображения
+		$proportions_target = $maxwidth / $maxheight;
+		$proportions_source = $new_width / $new_height;
 
         if ($format == 'jpeg') {
 
@@ -506,21 +510,21 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
         }
 
-        // вырезаем квадратную серединку по x, если фото горизонтальное
-        if ($new_width > $new_height) {
+        // вырезаем серединку по x, если фото горизонтальное
+        if ($proportions_source > $proportions_target) {
 
-            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
+            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxheight, $maxwidth * ($new_height / $maxheight), $new_height);
 
         }
 
-        // вырезаем квадратную верхушку по y,
-        if ($new_width < $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, min($new_width, $new_height), min($new_width, $new_height));
+        // вырезаем верхушку по y,
+        if ($proportions_source < $proportions_target) {
+            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $maxheight * ($new_width / $maxwidth));
         }
 
-        // квадратная картинка масштабируется без вырезок
-        if ($new_width == $new_height) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxwidth, $new_width, $new_width);
+        // картинка масштабируется без вырезок
+        if ($proportions_source == $proportions_target) {
+            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $new_height);
         }
 
     } else {
