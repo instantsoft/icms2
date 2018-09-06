@@ -84,6 +84,12 @@ class onSitemapCronGenerate extends cmsAction {
 
                 }
 
+                // если есть отдельный шаблон, используем его
+                $template_file = 'sitemap_'.$controller_name.'_'.implode('_', $item);
+                if(!$this->cms_template->getTemplateFileName('controllers/sitemap/'.$template_file, true)){
+                    $template_file = 'sitemap';
+                }
+
                 // sitemap.xml
                 if(count($urls) > $this->max_count){
 
@@ -97,7 +103,7 @@ class onSitemapCronGenerate extends cmsAction {
 
                         file_put_contents(
                             $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file_xml}",
-                            $this->cms_template->renderInternal($this, 'sitemap', array(
+                            $this->cms_template->renderInternal($this, $template_file, array(
                                 'urls'            => $chunk_urls,
                                 'changefreq'      => $changefreq,
                                 'priority'        => $priority,
@@ -119,7 +125,7 @@ class onSitemapCronGenerate extends cmsAction {
 
                     file_put_contents(
                         $this->cms_config->root_path."cache/static/sitemaps/{$sitemap_file_xml}",
-                        $this->cms_template->renderInternal($this, 'sitemap', array(
+                        $this->cms_template->renderInternal($this, $template_file, array(
                             'urls'            => $urls,
                             'changefreq'      => $changefreq,
                             'priority'        => $priority,

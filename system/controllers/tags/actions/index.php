@@ -61,7 +61,7 @@ class actionTagsIndex extends cmsAction {
         // результат поиска получаем только по переданному контроллеру
         $controller = cmsCore::getController($target_controller, $this->request);
 
-        $list_html = $controller->runHook('tags_search', array($target_subject, $page_url));
+        $list_html = $controller->runHook('tags_search', array($target_subject, $tag, $page_url));
         if (!$list_html) { cmsCore::error404(); }
 
         $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets, $target, $is_index));
