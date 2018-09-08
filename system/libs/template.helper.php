@@ -557,6 +557,6 @@ function html_search_bar($list, $href, $link_class = ''){
 
 }
 
-function html_tags_bar($tags){
-    return html_search_bar($tags, href_to('tags').'/', 'tags_bar_link');
+function html_tags_bar($tags, $prefix = ''){
+    return html_search_bar($tags, href_to('tags').'/'.($prefix ? $prefix.'/' : ''), 'tags_bar_link');
 }

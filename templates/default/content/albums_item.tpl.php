@@ -45,7 +45,7 @@ $show_bar = !empty($item['show_tags']) || $item['parent_id'] ||
                 <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
             <?php } ?>
             <?php if (!empty($item['show_tags'])){ ?>
-                <span class="tags_bar"><?php echo html_tags_bar($item['tags']); ?></span>
+                <span class="tags_bar"><?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name']); ?></span>
             <?php } ?>
         </h2>
     <?php } ?>

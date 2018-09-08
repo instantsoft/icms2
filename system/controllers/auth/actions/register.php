@@ -241,8 +241,9 @@ class actionAuthRegister extends cmsAction {
         }
 
         // запоминаем откуда пришли на регистрацию
-        if(empty($errors) && $this->options['first_auth_redirect'] == 'none'){
-            cmsUser::sessionSet('auth_back_url', $this->getBackURL());
+        $back_url = $this->request->get('back', '');
+        if(empty($errors) && ($back_url || $this->options['first_auth_redirect'] == 'none')){
+            cmsUser::sessionSet('auth_back_url', ($back_url ? $back_url :$this->getBackURL()));
         }
 
         return $this->cms_template->render('registration', array(

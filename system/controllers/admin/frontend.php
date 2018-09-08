@@ -626,6 +626,20 @@ class admin extends cmsFrontend {
                 'show_guests' => true
             )));
 
+            $form->addField($access_fieldset_id, new fieldListMultiple('languages', array(
+                'title'   => LANG_WIDGET_LANG_SELECT,
+                'default' => 0,
+                'show_all'=> true,
+                'generator'   => function ($item){
+                    $langs = cmsCore::getLanguages();
+                    $items = array();
+                    foreach ($langs as $lang) {
+                        $items[$lang] = $lang;
+                    }
+                    return $items;
+                }
+            )));
+
             $form->addField($access_fieldset_id, new fieldListMultiple('device_types', array(
                 'title'   => LANG_WIDGET_DEVICE,
                 'default' => 0,

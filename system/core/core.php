@@ -818,6 +818,11 @@ class cmsCore {
                     continue;
                 }
 
+                // проверяем для каких языков показывать
+                if($widget['languages'] && !in_array(cmsCore::getLanguageName(), $widget['languages'])){
+                    continue;
+                }
+
                 cmsDebugging::pointStart('widgets');
 
                 $this->runWidget($widget);

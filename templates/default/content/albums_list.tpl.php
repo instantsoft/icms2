@@ -103,7 +103,7 @@ if( $ctype['options']['list_show_filter'] ) {
 
                 <?php if (!empty($item['show_tags'])){?>
                     <div class="tags_bar">
-                        <?php echo html_tags_bar($item['tags']); ?>
+                        <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name']); ?>
                     </div>
                 <?php } ?>
 

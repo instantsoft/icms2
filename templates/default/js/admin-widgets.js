@@ -164,30 +164,7 @@ function widgetsLoad(page_id){
 
             for (var idx in result.scheme[pos]){
 
-                var widget = result.scheme[pos][idx];
-                var widget_dom = $(document.createElement('li')).attr('bind-id', widget.id).data('name', widget.name).html(widget.title);
-
-                if (widget.is_tab_prev){
-                    widget_dom.addClass('is_tab_prev');
-                }
-
-                if (widget.device_types){
-                    widget_dom.addClass('device_restrictions');
-                    widget_dom.append('<span class="wd_device_types">'+widget.device_types.join(', ')+'</span>');
-                }
-
-                $('#cp-widgets-layout #pos-'+pos).append(widget_dom);
-                if (widget.is_disabled) {
-                    widget_dom.addClass('disabled');
-                } else {
-                    widgetAddActionButtons(widget_dom);
-                }
-
-                if (!widget.is_enabled) {
-                    widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
-                }
-
-                widgetsMarkTabbed();
+                createWidgetNode(result.scheme[pos][idx]);
 
             }
 
@@ -197,6 +174,39 @@ function widgetsLoad(page_id){
 
     }, 'json');
 
+
+}
+
+function createWidgetNode(widget){
+
+    var widget_dom = $(document.createElement('li')).attr('bind-id', widget.id).data('name', widget.name).html(widget.title);
+
+    if (widget.is_tab_prev){
+        widget_dom.addClass('is_tab_prev');
+    }
+
+    if (widget.device_types){
+        widget_dom.addClass('device_restrictions');
+        widget_dom.append('<span class="wd_device_types">'+widget.device_types.join(', ')+'</span>');
+    }
+    if (widget.languages){
+        widget_dom.append('<span class="wd_languages">'+widget.languages.join(', ')+'</span>');
+    }
+
+    $('#cp-widgets-layout #pos-'+widget.position).append(widget_dom);
+    if (widget.is_disabled) {
+        widget_dom.addClass('disabled');
+    } else {
+        widgetAddActionButtons(widget_dom);
+    }
+
+    if (!widget.is_enabled) {
+        widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
+    }
+
+    widgetsMarkTabbed();
+
+    return widget_dom;
 
 }
 
@@ -228,6 +238,39 @@ function widgetAddActionButtons(widget_dom){
         var widget_id = $(this).parent('span').parent('li').attr('bind-id');
         return widgetToggle(widget_id);
     });
+
+    $('.actions .copy', widget_dom).click(function(){
+        var widget_id = $(this).parent('span').parent('li').attr('bind-id');
+        return widgetCopy(widget_id);
+    });
+
+}
+
+function widgetCopy(id){
+
+    if (!confirm(LANG_CP_WIDGET_COPY_CONFIRM)){return false;}
+
+    var copy_url = $('#cp-widgets-layout').data('copy-url') + '/' + id;
+
+    var widget_dom = $( "#cp-widgets-layout li[bind-id=" + id + ']');
+
+    $.post(copy_url, {}, function(response){
+
+        if(response.error === true){ return false; }
+
+        var new_widget_dom = createWidgetNode(response.widget);
+
+        $(new_widget_dom).addClass('copied').on('mouseleave', function (){
+            $(this).removeClass('copied');
+        });
+
+        widgetEdit(response.widget.id);
+
+        icms.events.run('admin_widgets_copy', response.widget);
+
+    }, 'json');
+
+    return false;
 
 }
 
@@ -315,6 +358,11 @@ function widgetUpdated(widget, result){
 
     if (result.widget.device_types){
         widget_dom.append('<span class="wd_device_types">'+result.widget.device_types.join(', ')+'</span>');
+        widget_dom.addClass('device_restrictions');
+    }
+
+    if (result.widget.languages){
+        widget_dom.append('<span class="wd_languages">'+result.widget.languages.join(', ')+'</span>');
     }
 
     widgetAddActionButtons(widget_dom);
@@ -325,9 +373,7 @@ function widgetUpdated(widget, result){
         widget_dom.removeClass('is_tab_prev');
     }
 
-    if (result.widget.device_types){
-        widget_dom.addClass('device_restrictions');
-    } else {
+    if (!result.widget.device_types){
         widget_dom.removeClass('device_restrictions');
     }
 

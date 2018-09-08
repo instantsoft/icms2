@@ -198,6 +198,7 @@ class modelWidgets extends cmsModel {
 
         $this->select('w.controller', 'controller');
         $this->select('w.name', 'name');
+        $this->select('w.title', 'widget_title');
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
@@ -209,6 +210,7 @@ class modelWidgets extends cmsModel {
             $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
             $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
             $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
+            $item['languages'] = cmsModel::yamlToArray($item['languages']);
             return $item;
         });
 
@@ -235,6 +237,7 @@ class modelWidgets extends cmsModel {
         if($binds){
             foreach($binds as $bind){
 
+                $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
                 $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
                 if($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3){
                     foreach ($bind['device_types'] as $dt) {
@@ -247,6 +250,8 @@ class modelWidgets extends cmsModel {
                 $positions[ $bind['position'] ][] = array(
                     'id'           => $bind['id'],
                     'title'        => $bind['title'],
+                    'position'     => $bind['position'],
+                    'languages'    => $bind['languages'],
                     'device_types' => $device_types,
                     'name'         => $bind['name'],
                     'is_tab_prev'  => (bool) $bind['is_tab_prev'],
@@ -293,6 +298,25 @@ class modelWidgets extends cmsModel {
         cmsCache::getInstance()->clean('widgets.bind');
 
         return $this->delete('widgets_bind', $id);
+
+    }
+
+    public function copyWidget($id) {
+
+        $widget_bind = $this->getItemById('widgets_bind', $id);
+        if(!$widget_bind){ return false; }
+
+        $widget_bind['ordering'] = $this->filterEqual('page_id', $widget_bind['page_id'])->
+            filterEqual('position', $widget_bind['position'])->
+            getNextOrdering('widgets_bind');
+
+        $widget_bind['title'] = $widget_bind['title'].' ('.$widget_bind['ordering'].')';
+
+        unset($widget_bind['id']);
+
+        cmsCache::getInstance()->clean('widgets.bind');
+
+        return $this->insert('widgets_bind', $widget_bind);
 
     }
 
@@ -351,6 +375,10 @@ class modelWidgets extends cmsModel {
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                         $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+                        $item['languages'] = cmsModel::yamlToArray($item['languages']);
+                        if(!$item['languages'] || $item['languages'] === array(0)){
+                            $item['languages'] = array();
+                        }
                         $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
                         if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
                             $item['template_layouts'] = array();

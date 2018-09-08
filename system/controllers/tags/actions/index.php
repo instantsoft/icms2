@@ -4,8 +4,6 @@ class actionTagsIndex extends cmsAction {
 
     public function run($target = '', $tag_name = ''){
 
-        $is_index = false;
-
         // ничего нет - показываем список тегов
         if(!$target && !$tag_name){
             return $this->displayTags();
@@ -39,13 +37,13 @@ class actionTagsIndex extends cmsAction {
         // субъект по умолчанию - первый из списка
         if(!$target){
 
-            $is_index = true;
-
             foreach ($targets as $controller_name => $subjects) {
 
                 $target = $controller_name.'-'.reset($subjects);
 
-                break;
+                // редиректим на правильный урл
+                $this->redirect(href_to('tags', $target, urlencode($tag_name)), 301);
+
             }
 
         }
@@ -56,7 +54,7 @@ class actionTagsIndex extends cmsAction {
             cmsCore::error404();
         }
 
-        $page_url = $is_index ? href_to($this->name, urlencode($tag_name)) : href_to($this->name, $target, urlencode($tag_name));
+        $page_url = href_to($this->name, $target, urlencode($tag_name));
 
         // результат поиска получаем только по переданному контроллеру
         $controller = cmsCore::getController($target_controller, $this->request);
@@ -64,26 +62,11 @@ class actionTagsIndex extends cmsAction {
         $list_html = $controller->runHook('tags_search', array($target_subject, $tag, $page_url));
         if (!$list_html) { cmsCore::error404(); }
 
-        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets, $target, $is_index));
+        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets, $target));
         if (!$menu_items) { cmsCore::error404(); }
 
-        $is_first_menu_item = true;
-
         foreach ($menu_items as $menu_item) {
-
-            if($is_first_menu_item){
-
-                $keys = array_keys($menu_item);
-                $first_key = $keys[0];
-
-                $menu_item[$first_key]['url'] = str_replace($first_key.'/', '', $menu_item[$first_key]['url']);
-
-            }
-
             $this->cms_template->addMenuItems('results_tabs', $menu_item);
-
-            $is_first_menu_item = false;
-
         }
 
         $seo_title = sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag['tag']);
@@ -116,7 +99,7 @@ class actionTagsIndex extends cmsAction {
             ));
         }
 
-        $this->cms_template->addHead('<link rel="canonical" href="'.($is_index ? href_to_abs($this->name, urlencode($tag_name)) : href_to_abs($this->name, $target, urlencode($tag_name))).'"/>');
+        $this->cms_template->addHead('<link rel="canonical" href="'.href_to_abs($this->name, $target, urlencode($tag_name)).'"/>');
 
         return $this->cms_template->render('search', array(
             'seo_title'  => $seo_title,

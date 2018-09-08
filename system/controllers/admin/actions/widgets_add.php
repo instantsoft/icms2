@@ -19,10 +19,20 @@ class actionAdminWidgetsAdd extends cmsAction {
         $widgets_model = cmsCore::getModel('widgets');
 
         $widget = $widgets_model->getWidget($widget_id);
+        if (!$widget){
+            return $this->cms_template->renderJSON(array(
+                'error' => true
+            ));
+        }
 
         $binded_id = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template);
 
         $bind_widget = $widgets_model->getWidgetBinding($binded_id);
+        if (!$bind_widget){
+            return $this->cms_template->renderJSON(array(
+                'error' => true
+            ));
+        }
 
         cmsCore::loadWidgetLanguage($bind_widget['name'], $bind_widget['controller']);
 
@@ -31,9 +41,9 @@ class actionAdminWidgetsAdd extends cmsAction {
 
         $widgets_model->updateWidgetBinding($binded_id, $data);
 
-        $this->cms_template->renderJSON(array(
+        return $this->cms_template->renderJSON(array(
             'error' => !(bool) $binded_id,
-            'name' => $widget['title'],
+            'name'  => $widget['title'],
             'id'    => $binded_id
         ));
 

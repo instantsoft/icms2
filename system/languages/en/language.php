@@ -78,6 +78,7 @@
     define('LANG_WIDGET_BODY_TPL',			 'Widget template');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'File title is taken from the <b>%s</b> folder of your theme, without the <b>.tpl.php</b> extension');
     define('LANG_WIDGET_DEVICE',			 'Which devices show the widget');
+    define('LANG_WIDGET_LANG_SELECT',		 'For which languages will the widget be displayed?');
     define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Display on layouts');
     define('LANG_DESKTOP_DEVICES',  'Desktop PCs');
     define('LANG_TABLET_DEVICES',  'Tablets');
@@ -433,6 +434,7 @@
     define('LANG_ADMIN_SELECTED', 			 'Assign selected as administrators');
     define('LANG_UNADMIN_SELECTED',			 'Deprive selected administrator rights');
     define('LANG_HIDE', 					 'Hide');
+    define('LANG_COPY', 					 'Copy');
     define('LANG_HIDE_SELECTED',			 'Hide selected');
     define('LANG_CONFIG', 					 'Settings');
     define('LANG_RESTORE', 					 'Restore');

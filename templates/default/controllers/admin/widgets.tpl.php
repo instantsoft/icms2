@@ -80,6 +80,7 @@
                  data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"
                  data-delete-url="<?php echo $this->href_to('widgets', 'delete'); ?>"
                  data-remove-url="<?php echo $this->href_to('widgets', 'remove'); ?>"
+                 data-copy-url="<?php echo $this->href_to('widgets', 'copy'); ?>"
                  data-files-url="<?php echo $this->href_to('package_files_list', 'widgets'); ?>"
                  data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
                  data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
@@ -133,6 +134,7 @@
                 <div id="actions-template" style="display:none">
                     <span class="actions">
                         <a class="hide" href="#" title="<?php echo LANG_HIDE; ?>"></a>
+                        <a class="copy" href="#" title="<?php echo LANG_COPY; ?>"></a>
                         <a class="edit" href="#" title="<?php echo LANG_EDIT; ?>"></a>
                         <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
@@ -145,5 +147,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
 </script>

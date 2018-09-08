@@ -124,9 +124,6 @@
                     <span class="item">
                         <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
                     </span>
-                    <span class="item">
-                        <?php echo LANG_ICONS_BY_FATCOW; ?>
-                    </span>
                     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
                         <span class="item">
                             <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>

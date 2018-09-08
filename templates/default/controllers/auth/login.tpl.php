@@ -50,7 +50,7 @@
                                 <?php echo html_submit(LANG_LOG_IN); ?>
                             </td>
                             <td class="reg_link">
-                                <?php echo LANG_NO_ACCOUNT; ?> <a href="<?php echo $this->href_to('register'); ?>"><?php echo LANG_REGISTRATION; ?></a>
+                                <?php echo LANG_NO_ACCOUNT; ?> <a href="<?php echo $this->href_to('register').($back_url ? '?back='.$back_url : ''); ?>"><?php echo LANG_REGISTRATION; ?></a>
                             </td>
                         </tr>
                     </table>

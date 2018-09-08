@@ -305,6 +305,7 @@
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS', 'Unbind All Widgets');
     define('LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM', 'Unbind all widgets from their positions?\nThe widgets will be moved to the Unused Widgets section');
     define('LANG_CP_WIDGETS_MISC',              'Miscellaneous');
+    define('LANG_CP_WIDGET_COPY_CONFIRM',       'Copy the widget, duplicating it at the same position?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
     define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Are you sure you want to permanently remove the widget from the system?');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
