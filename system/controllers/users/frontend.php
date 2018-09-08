@@ -221,7 +221,9 @@ class users extends cmsFrontend {
             'params'     => array('edit', 'sessions')
         );
 
-        return cmsEventsManager::hook('profile_edit_menu', array($menu, $profile));
+        list($menu, $profile) = cmsEventsManager::hook('profile_edit_menu', array($menu, $profile));
+
+        return $menu;
 
     }
 
