@@ -112,7 +112,7 @@ class cmsUser {
 
     }
 
-    private static function restrictSessionToIp($ip = false) {
+    public static function restrictSessionToIp($ip = false) {
 
         if(!$ip){ $ip = self::getIp(); }
 

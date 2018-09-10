@@ -133,7 +133,9 @@ a.ajaxlink:hover { text-decoration:none; border-bottom: dashed 1px #f90; }
 
 #cp_top_line #left_links{ float:left; }
 #cp_top_line #right_links{ float:right; }
-
+#install_folder_exists {
+    color: #ff0d0d;
+}
 #cp_top_line a.logout {
     color:#6FB8F1;
 }

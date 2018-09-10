@@ -2,11 +2,11 @@
 
 class actionAdminContent extends cmsAction {
 
-    public function run($do=false){
+    public function run($do = false) {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('content_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('content_'.$do, array_slice($this->params, 1));
             return;
         }
 
@@ -27,7 +27,7 @@ class actionAdminContent extends cmsAction {
 
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
 
-        return cmsTemplate::getInstance()->render('content', array(
+        return $this->cms_template->render('content', array(
             'ctypes'     => $ctypes,
             'grid'       => $grid,
             'diff_order' => $diff_order

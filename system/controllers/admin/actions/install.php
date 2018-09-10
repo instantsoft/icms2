@@ -9,7 +9,7 @@ class actionAdminInstall extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('install_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('install_'.$do, array_slice($this->params, 1));
             return;
         }
 

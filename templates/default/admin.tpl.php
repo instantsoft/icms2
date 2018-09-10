@@ -1,12 +1,3 @@
-<?php
-    $user = cmsUser::getInstance();
-    $updater = new cmsUpdater();
-    $update = $updater->checkUpdate(true);
-    $notices_count = cmsCore::getModel('messages')->getNoticesCount($user->id);
-    if($this->controller->install_folder_exists){
-        cmsUser::addSessionMessage(LANG_CP_INSTALL_FOLDER_EXISTS, 'error');
-    }
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,6 +37,11 @@
                         <a href="<?php echo href_to('admin', 'update'); ?>"><?php echo LANG_CP_UPDATE_CHECK; ?></a>
                     <?php } ?>
                 </li>
+                <?php if($this->controller->install_folder_exists){ ?>
+                    <li id="install_folder_exists">
+                        <?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?>
+                    </li>
+                <?php } ?>
             </ul>
             <ul id="right_links">
                 <li><a href="<?php echo href_to('users', $user->id); ?>" class="user"><?php echo html_avatar_image($user->avatar, 'micro'); ?><span><?php echo $user->nickname; ?></span></a></li>

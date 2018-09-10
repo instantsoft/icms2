@@ -4,13 +4,13 @@ class actionUsersProfileEdit extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($profile, $do=false, $param=false){
+    public function run($profile, $do = false, $param = false) {
 
-		if (!cmsUser::isLogged()) { cmsCore::error404(); }
+        if (!$this->cms_user->is_logged) { cmsCore::error404(); }
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
+            $this->runExternalAction('profile_edit_'.$do, array($profile) + array_slice($this->params, 2, null, true));
             return;
         }
 

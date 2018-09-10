@@ -16,7 +16,7 @@ class admin extends cmsFrontend {
 
 	public function routeAction($action_name) {
 
-        if(!$this->request->isInternal()){
+        if($this->request->isStandard()){
 
             $result = cmsEventsManager::hook('admin_confirm_login', array(
                 'allow'     => true,
@@ -49,20 +49,29 @@ class admin extends cmsFrontend {
 
         if(!$this->request->isInternal()){
 
-            if (!cmsUser::isLogged()) { cmsCore::errorForbidden('', true); }
+            if (!$this->cms_user->is_logged) { cmsCore::errorForbidden('', true); }
 
-            if (!cmsUser::isAdmin()) { cmsCore::error404(); }
+            if (!$this->cms_user->is_admin) { cmsCore::error404(); }
 
             if(!$this->isAllowByIp()){ cmsCore::errorForbidden(LANG_ADMIN_ACCESS_DENIED_BY_IP); }
 
-            $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
-
-            $this->cms_template->setLayout('admin');
-
             $this->install_folder_exists = file_exists($this->cms_config->root_path . 'install/');
 
-        }
+            if($this->request->isStandard()){
 
+                $this->cms_template->setLayout('admin');
+
+                $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+
+                $this->cms_template->setLayoutParams(array(
+                    'user' => $this->cms_user,
+                    'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
+                    'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
+                ));
+
+            }
+
+        }
 
     }
 

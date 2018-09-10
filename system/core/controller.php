@@ -409,9 +409,10 @@ class cmsController {
     }
 
     /**
-     * Находит и запускает требуемый экшен
+     * Запускает требуемый экшен
      * @param string $action_name
      * @param array $params
+     * @return mixed
      */
     public function runAction($action_name, $params = array()){
 
@@ -421,6 +422,22 @@ class cmsController {
 
         $action_name = $this->routeAction($action_name);
 
+        $result = $this->processAction($action_name, $this->current_params);
+
+        $this->after($action_name);
+
+        return $result;
+
+    }
+
+    /**
+     * Находит и выполняет требуемый экшен
+     * @param string $action_name
+     * @param array $params
+     * @return mixed
+     */
+    public function processAction($action_name, $params = array()) {
+
         $method_name = 'action' . string_to_camel('_', $action_name);
 
         // проверяем наличие экшена его в отдельном файле
@@ -429,7 +446,7 @@ class cmsController {
         if(is_readable($action_file)){
 
             // вызываем экшен из отдельного файла
-            $result = $this->runExternalAction($action_name, $this->current_params);
+            $result = $this->runExternalAction($action_name, $params);
 
         } else {
 
@@ -440,11 +457,11 @@ class cmsController {
                 if ($this->name != 'admin'){
                     $rf = new ReflectionMethod($this, $method_name);
                     $max_params = $rf->getNumberOfParameters();
-                    if ($max_params < count($this->current_params)) { cmsCore::error404(); }
+                    if ($max_params < count($params)) { cmsCore::error404(); }
                 }
 
                 // если есть нужный экшен, то вызываем его
-                $result = call_user_func_array(array($this, $method_name), $this->current_params);
+                $result = call_user_func_array(array($this, $method_name), $params);
 
             } else {
 
@@ -453,7 +470,7 @@ class cmsController {
                 if(method_exists($this, 'route')){
 
                     $route_uri = $action_name;
-                    if ($this->current_params) { $route_uri .= '/' . implode('/', $this->current_params); }
+                    if ($params) { $route_uri .= '/' . implode('/', $params); }
                     $result = call_user_func(array($this, 'route'), $route_uri);
 
                 } else {
@@ -467,8 +484,6 @@ class cmsController {
             }
 
         }
-
-        $this->after($action_name);
 
         return $result;
 

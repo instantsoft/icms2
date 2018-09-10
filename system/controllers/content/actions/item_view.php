@@ -328,7 +328,7 @@ class actionContentItemView extends cmsAction {
 
             }
 
-            return $this->runAction('item_childs_view', array(
+            return $this->runExternalAction('item_childs_view', array(
                 'ctype'            => $ctype,
                 'item'             => $item,
                 'child_ctype_name' => $child_ctype_name,

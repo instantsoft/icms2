@@ -58,6 +58,7 @@ class tags extends cmsFrontend {
         }
 
         return array(
+            'subjects' => ((!empty($options['subjects']) && $options['subjects'] !== array(0)) ? $options['subjects'] : array()),
             'style'    => $options['style'],
             'max_fs'   => $options['max_fs'],
             'min_fs'   => $options['min_fs'],

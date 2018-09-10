@@ -8,6 +8,7 @@ class cmsTemplate {
     public $path;
     protected $inherit_names = array();
     protected $layout = 'main';
+    protected $layout_params = array();
     protected $output;
     protected $blocks = array();
     protected $options;
@@ -1093,9 +1094,26 @@ class cmsTemplate {
     /**
      * Устанавливает шаблон скелета
      * @param string $layout
+     * @return $this
      */
     public function setLayout($layout){
+
         $this->layout = $layout;
+
+        return $this;
+
+    }
+    /**
+     * Устанавливает параметры шаблон скелета
+     * @param array $layout_params
+     * @return $this
+     */
+    public function setLayoutParams($layout_params){
+
+        $this->layout_params = $layout_params;
+
+        return $this;
+
     }
 
     /**
@@ -1923,6 +1941,10 @@ class cmsTemplate {
         $device_type = cmsRequest::getDeviceType();
 
         if($template_file){
+
+            if($this->layout_params){
+                extract($this->layout_params);
+            }
 
             ob_start();
 

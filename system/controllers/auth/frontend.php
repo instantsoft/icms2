@@ -6,7 +6,7 @@ class auth extends cmsFrontend {
 
 	public function actionIndex(){
 
-        $this->runAction('login');
+        $this->processAction('login');
 
   	}
 

@@ -36,8 +36,7 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                     if($user){
 
-                        cmsUser::sessionUnset('user_ip');
-                        cmsUser::sessionUnset('user_net');
+                        cmsUser::restrictSessionToIp();
 
                         $data['allow'] = true;
 
@@ -55,7 +54,7 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
             }
 
-            // если хотим испоьзовать свой шаблон, то строку ниже раскомментировать
+            // если хотим использовать свой шаблон, то строку ниже раскомментировать
             // $this->cms_template->setContext($this);
 
         }
