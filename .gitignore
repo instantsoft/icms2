@@ -14,3 +14,4 @@
 /cache/*.js
 /cache/*.css
 /cache/*.xml
+/logs/
