@@ -1,7 +1,8 @@
 <?php
-class cmsCacheMemory {
 
-    private $memcache;
+class cacheProviderMemcached {
+
+    private $memcached;
     private $site_namespace;
     private $config;
 
@@ -15,7 +16,7 @@ class cmsCacheMemory {
 
     public function set($key, $value, $ttl){
 
-        return $this->memcache->set($this->getKey($key), serialize($value), false, $ttl);
+        return $this->memcached->set($this->getKey($key), serialize($value), $ttl);
 
     }
 
@@ -25,7 +26,7 @@ class cmsCacheMemory {
 
     public function get($key){
 
-        $value = $this->memcache->get($this->getKey($key));
+        $value = $this->memcached->get($this->getKey($key));
         if (!$value) { return false; }
 
         return unserialize($value);
@@ -36,11 +37,11 @@ class cmsCacheMemory {
 
         if ($ns){
 
-            return $this->memcache->increment($this->getNamespaceKey($ns));
+            return $this->memcached->increment($this->getNamespaceKey($ns));
 
         } else {
 
-            return $this->memcache->flush();
+            return $this->memcached->flush();
 
         }
 
@@ -48,17 +49,16 @@ class cmsCacheMemory {
 
     public function start(){
 
-        $this->memcache = new Memcache;
+        $this->memcached = new Memcached;
 
-        $this->memcache->connect($this->config->cache_host, $this->config->cache_port) or die('Memcache connect error');
+        $this->memcached->addServer($this->config->cache_host, $this->config->cache_port) or die('Memcache connect error');
 
         return true;
 
     }
 
-
     public function stop(){
-        $this->memcache->close();
+        $this->memcached->quit();
         return true;
     }
 
@@ -75,13 +75,13 @@ class cmsCacheMemory {
 
     private function getNamespaceValue($ns){
 
-        $ns_value = $this->memcache->get($this->getNamespaceKey($ns));
+        $ns_value = $this->memcached->get($this->getNamespaceKey($ns));
 
         if($ns_value === false) {
 
             $ns_value = time();
 
-            $this->memcache->set($this->getNamespaceKey($ns), $ns_value, false, 86400);
+            $this->memcached->set($this->getNamespaceKey($ns), $ns_value, 86400);
 
         }
 

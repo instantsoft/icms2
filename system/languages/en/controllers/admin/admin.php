@@ -22,6 +22,17 @@
     define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
 
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS', 'Memcached stats');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_SERVER', 'Server');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_VERSION', 'Version');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_PID', 'PID');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_CONNECTIONS_MAX', 'Connections max.');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_CONNECTIONS_CURRENT', 'Connections curr.');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_ITEMS_TOTAL', 'Items total');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_ITEMS_CURRENT', 'Items current');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_COMMAND_GET', 'Command get');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_COMMAND_SET', 'Command set');
+
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General sponsor');
 
     define('LANG_CP_DASHBOARD_LINKS_SITE',      'Official Site');

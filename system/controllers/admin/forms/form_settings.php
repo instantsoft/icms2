@@ -346,7 +346,8 @@ class formAdminSettings extends cmsForm {
                         'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method'))),
                         'items' => array(
                             'files' => 'Files',
-                            'memory' => 'Memcached' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memcache' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
                         )
                     )),
 
