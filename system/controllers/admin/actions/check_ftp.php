@@ -51,7 +51,7 @@ class actionAdminCheckFtp extends cmsAction {
 
                     $check_dirs = array(
                         'system/core'   => 'core.php',
-                        'system/config' => 'config.php'
+                        'config' => 'config.php'
                     );
 
                     foreach ($check_dirs as $dir => $file) {

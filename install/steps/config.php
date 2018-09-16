@@ -4,7 +4,7 @@ function step($is_submit){
 
     $root = $_SESSION['install']['paths']['root'];
 
-    $path = $_SERVER['DOCUMENT_ROOT'] . $root . 'system/config';
+    $path = $_SERVER['DOCUMENT_ROOT'] . $root . 'config';
     $file = 'config.php';
 
     if ($is_submit){

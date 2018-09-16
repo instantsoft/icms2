@@ -106,7 +106,7 @@ class actionAdminInstallFtp extends cmsAction {
 
         $check_dirs = array(
             'system/core' => 'core.php',
-            'system/config' => 'config.php'
+            'config' => 'config.php'
         );
 
         if (!ftp_nlist($connection, $account['path'])){

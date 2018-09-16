@@ -11,6 +11,17 @@
     define('LANG_CP_DASHBOARD_NEWS_O',          'Официальные');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Блоги');
 
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS', 'Статистика Memcached');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_SERVER', 'Сервер');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_VERSION', 'Версия');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_PID', 'PID');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_CONNECTIONS_MAX', 'Подключении макс.');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_CONNECTIONS_CURRENT', 'Подключении текщ.');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_ITEMS_TOTAL', 'Записей всего');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_ITEMS_CURRENT', 'Записей текщ.');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_COMMAND_GET', 'Операции чтения');
+	define('LANG_CP_DASHBOARD_MEMCACHED_STATS_COMMAND_SET', 'Операции записи');
+
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');

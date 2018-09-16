@@ -2937,3 +2937,23 @@ input[type=radio]:checked ~ label{
 .scrollbar-macosx > .scroll-element.scroll-y .scroll-element_size { top: -4px; }
 .scrollbar-macosx > .scroll-element.scroll-x.scroll-scrolly_visible .scroll-element_size { left: -11px; }
 .scrollbar-macosx > .scroll-element.scroll-y.scroll-scrollx_visible .scroll-element_size { top: -11px; }
+
+.cache_memcached {
+    padding:0;
+    margin:0;
+}
+
+.cache_memcached li {
+    margin: 0 0 8px 0;
+    color: #97A5A6;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0;
+    list-style: none;
+}
+.cache_memcached li span {
+    display: block;
+    margin-bottom: 2px;
+    color: #34495e;
+}

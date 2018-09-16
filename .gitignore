@@ -1,6 +1,6 @@
 /.idea
-/system/config/config.php
-/system/config/theme_default.yml
+/config/config.php
+/config/theme_default.yml
 /upload/u1/
 /upload/000/
 /upload/default/
@@ -14,3 +14,4 @@
 /cache/*.js
 /cache/*.css
 /cache/*.xml
+/logs/
