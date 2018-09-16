@@ -19,7 +19,7 @@ function run_step($step, $is_submit=false){
 }
 
 function is_config_exists() {
-    return is_readable(dirname(PATH).DS.'system/config/config.php');
+    return is_readable(dirname(PATH).DS.'config/config.php');
 }
 
 function get_site_config() {
@@ -28,7 +28,7 @@ function get_site_config() {
 
     if(isset($cfg)){ return $cfg; }
 
-    $cfg_file = dirname(PATH).DS.'system/config/config.php';
+    $cfg_file = dirname(PATH).DS.'config/config.php';
 
     if(!is_readable($cfg_file)){
         return false;
@@ -91,7 +91,7 @@ function get_db_list() {
 }
 function get_version($show_date = false){
 
-    $file = dirname(PATH).DS.'system/config/version.ini';
+    $file = dirname(PATH).DS.'config/version.ini';
 
     if (!is_readable($file) || !function_exists('parse_ini_file')){ return ''; }
 

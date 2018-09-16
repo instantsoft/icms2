@@ -10,7 +10,7 @@ class cmsConfig {
      * изменив путь, используя две точки (..) для
      * указания на родительские каталоги
      */
-    const CONFIG_DIR = '/system/config/';
+    const CONFIG_DIR = '/config/';
 
     private static $instance = null;
     private static $mapping  = null;
@@ -36,7 +36,7 @@ class cmsConfig {
 
         self::$mapping = array();
 
-        $map_file = 'system/config/remap.php';
+        $map_file = 'config/remap.php';
         $map_function = 'remap_controllers';
 
         if (!cmsCore::includeFile($map_file)) { return self::$mapping; }
