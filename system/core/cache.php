@@ -19,7 +19,9 @@ class cmsCache {
 
         if ($config->cache_enabled) {
 
-            $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
+        	include_once __DIR__.'/cache/'.$config->cache_method.'.php';
+
+            $cacher_class = 'cacheProvider' . string_to_camel('_', $config->cache_method);
 
             $this->cacher = new $cacher_class($config);
 

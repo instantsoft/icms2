@@ -73,6 +73,19 @@ class actionAdminIndex extends cmsAction {
             'html'  => $this->cms_template->getRenderedChild('index_resources', array())
         );
 
+		if (class_exists('Memcached') && cmsConfig::get('cache_method') == 'memcached'){
+
+			$memcached = new Memcached();
+			$memcached->addServer(cmsConfig::get('cache_host'), cmsConfig::get('cache_port'));
+			$dashboard_blocks[] = array(
+				'title' => LANG_CP_DASHBOARD_MEMCACHED_STATS,
+				'html'  => $this->cms_template->getRenderedChild('index_memcached', array(
+					'stats' => $memcached->getStats()
+				))
+			);
+		}
+
+
         $dashboard_blocks = array_merge($dashboard_blocks, cmsEventsManager::hookAll('admin_dashboard_block', false, array()));
 
         $_block_id = 0;

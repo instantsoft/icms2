@@ -1,5 +1,5 @@
 <?php
-class cmsCacheFiles {
+class cacheProviderFiles {
 
     private $cache_path;
 
