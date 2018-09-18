@@ -1227,6 +1227,7 @@ CREATE TABLE `{#}scheduler_tasks` (
   `date_last_run` timestamp NULL DEFAULT NULL,
   `is_active` tinyint(1) UNSIGNED DEFAULT NULL,
   `is_new` tinyint(1) UNSIGNED DEFAULT '1',
+  `consistent_run` tinyint(1) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),

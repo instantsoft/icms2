@@ -1552,7 +1552,7 @@ class cmsTemplate {
 						$flag_toggle_url = isset($column['flag_toggle']) ? $column['flag_toggle'] : false;
 
 						if ($flag_toggle_url){
-							$flag_toggle_url = string_replace_keys_values_extended($flag_toggle_url, $row);
+							$flag_toggle_url = string_replace_keys_values($flag_toggle_url, $row);
 						}
 
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';

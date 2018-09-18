@@ -52,6 +52,10 @@ class cmsUser {
 
     }
 
+    public static function setIp($ip){
+        self::$_ip = $ip;
+    }
+
     /**
      * Для var_export
      * @param array $data

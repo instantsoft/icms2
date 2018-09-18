@@ -422,7 +422,7 @@ class cmsController {
 
         $action_name = $this->routeAction($action_name);
 
-        $result = $this->processAction($action_name, $this->current_params);
+        $result = $this->executeAction($action_name, $this->current_params);
 
         $this->after($action_name);
 
@@ -436,7 +436,7 @@ class cmsController {
      * @param array $params
      * @return mixed
      */
-    public function processAction($action_name, $params = array()) {
+    public function executeAction($action_name, $params = array()) {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 

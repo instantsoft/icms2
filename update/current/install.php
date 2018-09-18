@@ -24,6 +24,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `languages` VARCHAR(100) NULL DEFAULT NULL AFTER `template_layouts`;");
     }
 
+    if(!$core->db->isFieldExists('scheduler_tasks', 'consistent_run')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `consistent_run` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

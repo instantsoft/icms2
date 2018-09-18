@@ -2219,15 +2219,10 @@ ul.news_targets_tabs > li.active_news {
     box-sizing: border-box;
 }
 .grid_field_edit > .button {
-    line-height: 23px;
-    height: 24px;
     padding: 0 7px;
     font-size: 12px;
     margin: 0 0 0 10px;
-    border-radius: 3px;
-    vertical-align: baseline;
-    display: inline-block;
-    box-sizing: border-box;
+    border-radius: 2px;
     box-shadow: none;
     text-shadow: none;
 }
@@ -2239,17 +2234,18 @@ ul.news_targets_tabs > li.active_news {
 }
 .grid_field_edit.process_save:after {
     content: '';
-    display: inline-block;
-    background: url("../../images/loader16.gif") no-repeat center center;
+    background: url(../../images/loader16.gif) no-repeat center center;
     width: 18px;
     height: 18px;
-    vertical-align: middle;
+    position: absolute;
+    left: -26px;
+    top: 6px;
 }
 .grid_field_edit {
     display: none;
+    position: relative;
 }
 .grid_field_value {
-    height: 27px;
     line-height: 25px;
     display: inline-block;
 }
@@ -2262,15 +2258,15 @@ ul.news_targets_tabs > li.active_news {
     background-position: right 5px center;
 }
 .datagrid tr:hover .grid_field_edit:not(.edit_by_click) {
-    display: block;
+    display: flex;
 }
 .datagrid tr:hover .grid_field_value:not(.edit_by_click) {
     display: none;
 }
-.datagrid tr:hover .edit_by_click.edit_by_click_visible {
+.datagrid tr .edit_by_click.edit_by_click_visible {
     display: block;
 }
-.datagrid tr:hover .edit_by_click.edit_by_click_hidden {
+.datagrid tr .edit_by_click.edit_by_click_hidden {
     display: none;
 }
 .datagrid tr:hover .grid_field_value.edit_by_click:after {
@@ -2279,7 +2275,7 @@ ul.news_targets_tabs > li.active_news {
     background-repeat: no-repeat;
     background-position: center center;
     width: 32px;
-    height: 26px;
+    height: 28px;
     display: inline-block;
     vertical-align: middle;
     margin: 0 0 0 10px;

@@ -24,6 +24,7 @@
     <![endif]-->
     <?php $this->head(); ?>
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
+    <meta name="generator" content="InstantCMS" />
     <style><?php include('options.css.php'); ?></style>
 </head>
 <body id="<?php echo $device_type; ?>_device_type">
