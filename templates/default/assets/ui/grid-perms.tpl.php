@@ -21,10 +21,12 @@
                 <?php foreach($rules as $rule){ ?>
                     <tr>
                         <td>
+                            <div>
                             <?php echo $rule['title']; ?>
                             <?php if(!empty($rule['title_hint'])){ ?>
                                 <div class="hint"><?php echo $rule['title_hint']; ?></div>
                             <?php } ?>
+                            </div>
                         </td>
 
                         <?php foreach($groups as $group){ ?>
@@ -39,7 +41,7 @@
                                             null;
                             ?>
 
-                            <td class="center">
+                            <td class="center" data-label="<?php html($group['title']); ?>">
                                 <?php if ($rule['type'] == 'flag'){ ?>
                                     <?php echo html_checkbox("value[{$rule['id']}][{$group['id']}]", $default); ?>
                                 <?php } ?>

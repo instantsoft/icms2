@@ -793,7 +793,7 @@ class cmsTemplate {
 
         $comment = $comment ? '<!-- '.$comment.' !-->' : '';
 
-        return '<script type="text/javascript" src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
+        return '<script src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
 
     }
 
@@ -1507,7 +1507,7 @@ class cmsTemplate {
 
     public function renderGridRowsJSON($grid, $dataset, $total=1, $pages_count=1){
 
-        $rows = array();
+        $rows = $titles = array();
         $row_index = 0;
 
         //
@@ -1522,6 +1522,8 @@ class cmsTemplate {
 
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
+
+                    $titles[$cell_index] = isset($column['title']) ? $column['title'] : '';
 
                     if (isset($column['key_alias'])){
                         $field = $column['key_alias'];
@@ -1619,6 +1621,8 @@ class cmsTemplate {
                 // для текущей строки
                 if ($grid['actions']){
 
+                    $titles[$cell_index] = LANG_CP_ACTIONS;
+
                     $actions_html = '<div class="actions">';
 
                     foreach($grid['actions'] as $action){
@@ -1692,6 +1696,7 @@ class cmsTemplate {
         }
 
         $result = array(
+            'titles'      => $titles,
             'rows'        => $rows,
             'pages_count' => $pages_count,
             'total'       => $total,

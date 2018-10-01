@@ -2792,6 +2792,64 @@ input[type=radio]:checked ~ label{
     #cp_header {
         padding: 0 5px;
     }
+    .datagrid_wrapper {
+        box-shadow: none;
+        background: transparent;
+    }
+    .datagrid thead:not(.list_thead) {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    .datagrid tr.filter {
+        display: none;
+    }
+    .datagrid tbody tr {
+        display: block;
+        border-left: 5px solid #ededed;
+        border-right: 1px solid #ededed;
+        margin-bottom: 20px;
+    }
+    .datagrid tbody.list_tbody tr {
+        margin-bottom: 0;
+    }
+    .datagrid tbody td {
+        display: flex;
+        border-bottom: 1px solid #ededed;
+    }
+    .datagrid tbody.list_tbody td {
+        border-bottom: none;
+    }
+    .datagrid tbody td::before {
+        content: attr(data-label);
+        width: 30%;
+    }
+    .datagrid tbody.list_tbody td::before {
+        width: 50%;
+    }
+    .datagrid tbody td > div {
+        width: 70%;
+    }
+    .datagrid tbody.list_tbody td > div {
+        width: 50%;
+    }
+    .datagrid .actions, .datagrid td.center {
+        text-align: left;
+    }
+    .datagrid tbody td:first-child {
+        border-top: 1px solid #ededed;
+    }
+    .datagrid .flag_trigger, .datagrid .flag_trigger a {
+        margin: 7px 0 0 0;
+    }
+    .list_tbody > tr > td:first-child {
+        display: none;
+    }
 }
 @media screen and (max-width: 640px) {
     #confirm_login {

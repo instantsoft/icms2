@@ -75,7 +75,11 @@ class images extends cmsFrontend {
 
         }
 
-        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
+        $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime);
+
+        cmsEventsManager::hook('images_before_upload', array($name, $this->cms_uploader), null, $this->request);
+
+        $result = $this->cms_uploader->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){
@@ -166,7 +170,20 @@ class images extends cmsFrontend {
 
 	public function uploadWithPreset($name, $preset_name){
 
-        $result = $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime)->upload($name, $this->allowed_extensions);
+		$preset = $this->model->getPresetByName($preset_name);
+
+		if (!$preset){
+			return array(
+				'success' => false,
+                'error'   => ''
+            );
+		}
+
+        $this->cms_uploader->enableRemoteUpload()->setAllowedMime($this->allowed_mime);
+
+        cmsEventsManager::hook('images_before_upload_by_preset', array($name, $this->cms_uploader, $preset), null, $this->request);
+
+        $result = $this->cms_uploader->upload($name, $this->allowed_extensions);
 
         if ($result['success']){
             if (!$this->cms_uploader->isImage($result['path'])){
@@ -181,15 +198,6 @@ class images extends cmsFrontend {
             }
             return $result;
         }
-
-		$preset = $this->model->getPresetByName($preset_name);
-
-		if (!$preset){
-			return array(
-				'success' => false,
-                'error'   => ''
-            );
-		}
 
 		$path = $this->cms_uploader->resizeImage($result['path'], array(
 			'width'     => $preset['width'],

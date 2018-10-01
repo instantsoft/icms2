@@ -2364,7 +2364,7 @@ class modelContent extends cmsModel {
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
-        $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
+        $this->join('{users}', 'u', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
