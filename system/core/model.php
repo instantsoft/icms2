@@ -17,6 +17,14 @@ class cmsModel {
 	const NATURAL_RIGHT_OUTER_JOIN = 'NATURAL RIGHT OUTER JOIN';
 
     /**
+     * Уровни изоляций транзакций
+     */
+    const READ_UNCOMMITTED = 'READ UNCOMMITTED';
+    const READ_COMMITTED = 'READ COMMITTED';
+    const REPEATABLE_READ = 'REPEATABLE READ';
+    const SERIALIZABLE = 'SERIALIZABLE';
+
+    /**
      * Префикс по умолчанию таблиц контента
      */
     const DEFAULT_TABLE_PREFIX = 'con_';
@@ -1439,6 +1447,10 @@ class cmsModel {
 
     public function lockInShareMode() {
         return $this->setReadType('LOCK IN SHARE MODE');
+    }
+
+    public function setTransactionIsolationLevel($level) {
+        $this->db->query("SET TRANSACTION ISOLATION LEVEL {$level};"); return $this;
     }
 
 //============================================================================//

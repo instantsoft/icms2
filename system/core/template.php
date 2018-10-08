@@ -23,6 +23,7 @@ class cmsTemplate {
 	protected $insert_css = array();
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
+	protected $head_preload = array();
 	protected $title;
 	protected $title_item;
 	protected $metadesc;
@@ -125,11 +126,13 @@ class cmsTemplate {
 
     /**
      * Выводит головные теги страницы
+     *
      * @param boolean $is_seo_meta Выводить мета теги
      * @param boolean $print_js Выводить javascript теги
      * @param boolean $print_css Выводить CSS теги
+     * @return $this
      */
-	public function head($is_seo_meta=true, $print_js = true, $print_css = true){
+	public function head($is_seo_meta = true, $print_js = true, $print_css = true){
 
         cmsEventsManager::hook('before_print_head', $this);
 
@@ -152,37 +155,79 @@ class cmsTemplate {
             $this->printJavascriptTags();
         }
 
+        if($this->head_preload){
+            header('Link: '.implode(', ', $this->head_preload));
+        }
+
+        return $this;
+
 	}
 
     /**
      * Выводит javascript теги
+     * @return $this
      */
     public function printJavascriptTags() {
 
+        $js = array();
+
         if (!$this->site_config->merge_js){
-            foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
-            foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+
+            $js = array_merge(array_values($this->head_main_js), array_values($this->head_js));
+
         } else {
-            $tag = "\t". $this->getJSTag( $this->getMergedJSPath() ) . "\n";
-            echo $tag;
-            foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
+
+            $js[] = $this->getMergedJSPath();
+
+            $js = array_merge($js, array_values($this->head_js_no_merge));
+
         }
+
+        foreach ($js as $file) {
+
+            $file = $this->getHeadFilePath($file);
+
+            $this->head_preload[] = '<'.$file.'>; rel=preload; as=script';
+
+            echo "\t" . $this->getJSTag($file) . "\n";
+
+        }
+
+        return $this;
 
     }
 
     /**
      * Выводит CSS теги
+     * @return $this
      */
     public function printCssTags() {
 
+        $css = array();
+
         if (!$this->site_config->merge_css){
-            foreach ($this->head_main_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
-            foreach ($this->head_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
+
+            $css = array_merge(array_values($this->head_main_css), array_values($this->head_css));
+
         } else {
-            $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
-            echo $tag;
-            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
+
+            $css[] = $this->getMergedCSSPath();
+
+            $css = array_merge($css, array_values($this->head_css_no_merge));
+
         }
+
+        foreach ($css as $file) {
+
+            $file = $this->getHeadFilePath($file);
+
+            $this->head_preload[] = '<'.$file.'>; rel=preload; as=style';
+
+            echo "\t" . $this->getCSSTag($file) . "\n";
+
+        }
+
+        return $this;
 
     }
 
@@ -755,12 +800,7 @@ class cmsTemplate {
         return $this;
 	}
 
-    /**
-     * Возвращает тег <link rel="stylesheet"> для указанного файла
-     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
-     * @return string
-     */
-    public function getCSSTag($file){
+    public function getHeadFilePath($file){
 
         if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
 
@@ -768,6 +808,21 @@ class cmsTemplate {
 
             $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
 
+        }
+
+        return $file;
+
+    }
+    /**
+     * Возвращает тег <link rel="stylesheet"> для указанного файла
+     *
+     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
+     * @return string
+     */
+    public function getCSSTag($file){
+
+        if(strpos($file, '/') !== 0){
+            $file = $this->getHeadFilePath($file);
         }
 
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
@@ -783,12 +838,8 @@ class cmsTemplate {
      */
     public function getJSTag($file, $comment = '', $params = array()){
 
-        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
-
-            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
-
-            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
-
+        if(strpos($file, '/') !== 0){
+            $file = $this->getHeadFilePath($file);
         }
 
         $comment = $comment ? '<!-- '.$comment.' !-->' : '';

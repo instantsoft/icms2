@@ -2730,6 +2730,9 @@ input[type=radio]:checked ~ label{
     clear: right;
     margin-right: 20px;
 }
+.ace_redactor {
+    height: 350px;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);
@@ -2848,6 +2851,9 @@ input[type=radio]:checked ~ label{
         margin: 7px 0 0 0;
     }
     .list_tbody > tr > td:first-child {
+        display: none;
+    }
+    .loading_overlay {
         display: none;
     }
 }
