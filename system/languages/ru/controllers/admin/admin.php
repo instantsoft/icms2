@@ -690,3 +690,4 @@
     define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Доступ для автора или владельца');
     define('LANG_CP_FIELD_READING',       'Чтение');
     define('LANG_CP_FIELD_EDITING',       'Изменение');
+    define('LANG_WD_CONTENT_FILTER_DETECT', 'Определять автоматически');

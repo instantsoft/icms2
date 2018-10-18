@@ -19,7 +19,16 @@ class widgetContentList extends cmsWidget {
 
         $model = cmsCore::getModel('content');
 
-        $ctype = $model->getContentType($ctype_id);
+        if($ctype_id){
+
+            $ctype = $model->getContentType($ctype_id);
+
+        } else {
+
+            $ctype = $current_ctype;
+
+        }
+
         if (!$ctype) { return false; }
 
 		if ($cat_id){

@@ -17,7 +17,7 @@ class formWidgetContentCategoriesOptions extends cmsForm {
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();
 
-                            $items = array(0 => LANG_WD_CONTENT_CATS_DETECT);
+                            $items = array(0 => LANG_WD_CONTENT_FILTER_DETECT);
 
                             if ($tree) {
                                 foreach ($tree as $item) {
