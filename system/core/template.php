@@ -316,7 +316,7 @@ class cmsTemplate {
     protected function loadMenus($menu_name=false) {
 
         if(!$this->menu_loaded){
-            $this->db_menus = cmsCore::getModel('menu')->getAllMenuItemsTree();
+            $this->db_menus = cmsCore::getModel('menu')->filterEqual('is_enabled', 1)->getAllMenuItemsTree();
             $this->menu_loaded = true;
         }
 

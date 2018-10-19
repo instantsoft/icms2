@@ -28,6 +28,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `consistent_run` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
     }
 
+    if(!$core->db->isFieldExists('menu_items', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}menu_items` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `parent_id`");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

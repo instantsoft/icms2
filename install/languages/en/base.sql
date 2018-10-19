@@ -936,6 +936,7 @@ CREATE TABLE `{#}menu_items` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `menu_id` int(11) unsigned DEFAULT NULL COMMENT 'Menu ID',
   `parent_id` int(11) unsigned DEFAULT '0' COMMENT 'Parent item ID',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Is enabled?',
   `title` varchar(64) DEFAULT NULL COMMENT 'Item title',
   `url` varchar(255) DEFAULT NULL COMMENT 'URL',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Order number',

@@ -486,7 +486,7 @@
     define('LANG_CP_INSTALL_ERR_HINT',          'Следствие');
     define('LANG_CP_INSTALL_ERR_FIX',           'Решение');
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');
-    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Папка <b>%s</b> не доступна для записи');
+    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Папка <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную папку и обновите страницу');
     define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
@@ -666,7 +666,7 @@
     define('LANG_MAILCHECK_BODY', 'Сообщение');
     define('LANG_EVENTS_MANAGEMENT', 'Управление событиями');
     define('LANG_EVENTS_REFRESH',    'Обновить события в базе данных');
-    define('LANG_EVENTS_DELETED',    'Эти события уже не доступны');
+    define('LANG_EVENTS_DELETED',    'Эти события уже недоступны');
     define('LANG_EVENTS_LISTENER',   'Компонент');
     define('LANG_EVENTS_EVENT_NAME', 'Событие');
     define('LANG_EVENTS_ALLOW_NEW',  'Доступны новые события');

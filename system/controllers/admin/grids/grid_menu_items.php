@@ -32,6 +32,12 @@ function grid_menu_items($controller){
                 'table' => 'menu_items'
             )
         ),
+        'is_enabled' => array(
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'menu_item_toggle', array('{id}')),
+            'width'       => 80
+        )
     );
 
     $actions = array(

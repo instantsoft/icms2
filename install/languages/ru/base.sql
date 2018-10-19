@@ -937,6 +937,7 @@ CREATE TABLE `{#}menu_items` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `menu_id` int(11) unsigned DEFAULT NULL COMMENT 'ID меню',
   `parent_id` int(11) unsigned DEFAULT '0' COMMENT 'ID родительского пункта',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Включен?',
   `title` varchar(64) DEFAULT NULL COMMENT 'Заголовок пункта',
   `url` varchar(255) DEFAULT NULL COMMENT 'Ссылка',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
