@@ -831,6 +831,7 @@ class cmsTemplate {
 
     /**
      * Возвращает тег <script> для указанного файла
+     *
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @param string $comment Комментарий к скрипту
      * @param array $params Параметры тега
@@ -848,84 +849,177 @@ class cmsTemplate {
 
     }
 
-	/**
-	 * Добавляет CSS файл в головной раздел страницы выше остальных CSS-тегов
-	 * @param string $file
-	 */
-    public function addMainCSS($file){
+    /**
+     * Добавляет CSS файл в головной раздел страницы выше остальных CSS-тегов
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @return boolean
+     */
+    public function addMainCSS($file) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) { return false; }
-		$this->head_main_css[$hash] = $file;
+        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) {
+            return false;
+        }
+        $this->head_main_css[$hash] = $file;
         return true;
     }
 
-	/**
-	 * Добавляет CSS файл в головной раздел страницы
-	 * @param string $file
-	 */
-	public function addCSS($file, $allow_merge = true){
+    /**
+     * Добавляет CSS файл в головной раздел страницы
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+	public function addCSS($file, $allow_merge = true) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) { return false; }
-		$this->head_css[$hash] = $file;
-        if (!$allow_merge){
+        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) {
+            return false;
+        }
+        $this->head_css[$hash] = $file;
+        if (!$allow_merge) {
             $this->head_css_no_merge[$hash] = $file;
         }
         return true;
-	}
+    }
 
-	/**
-	 * Добавляет JS файл в головной раздел страницы выше остальных JS-тегов
-	 * @param string $file
-	 */
-	public function addMainJS($file, $comment=''){
+    /**
+     * Добавляет JS файл к подключению на странице выше остальных JS-тегов
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @return boolean
+     */
+	public function addMainJS($file, $comment = '') {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_main_js[$hash])) { return false; }
-		$this->head_main_js[$hash] = $file;
+        if (isset($this->head_main_js[$hash])) {
+            return false;
+        }
+        $this->head_main_js[$hash] = $file;
         return true;
-	}
+    }
 
-	/**
-	 * Добавляет JS файл в головной раздел страницы
-	 * @param string $file
-	 */
-	public function addJS($file, $comment='', $allow_merge = true){
+    /**
+     * Добавляет JS файл к подключению на странице
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+	public function addJS($file, $comment = '', $allow_merge = true) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_js[$hash])) { return false; }
-		$this->head_js[$hash] = $file;
-        if (!$allow_merge){
+        if (isset($this->head_js[$hash])) {
+            return false;
+        }
+        $this->head_js[$hash] = $file;
+        if (!$allow_merge) {
             $this->head_js_no_merge[$hash] = $file;
         }
         return true;
-	}
+    }
 
+    /**
+     * Подключает JS файл из директории шаблона controllers/CNAME/js/
+     *
+     * @param string $path Путь к файлу относительно templates/TNAME/controllers/CNAME/js/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param string $comment Комментарий скрипта
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
     public function addControllerJS($path, $cname = '', $comment = '', $allow_merge = true){
 
         if(!$cname){ $cname = $this->controller->name; }
 
-        $js_file = $this->getTplFilePath("controllers/{$cname}/js/{$path}.js", false);
-
-        if($js_file){
-            return $this->addJS($js_file, $comment, $allow_merge);
-        }
-
-        return false;
+        return $this->addTplJS("controllers/{$cname}/js/{$path}", $comment, $allow_merge);
 
     }
+
+    /**
+     * Подключает CSS файл из директории шаблона controllers/CNAME/css/
+     *
+     * @param string $path Путь к файлу относительно templates/TNAME/controllers/CNAME/css/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
     public function addControllerCSS($path, $cname = '', $allow_merge = true){
 
         if(!$cname){ $cname = $this->controller->name; }
 
-        $css_file = $this->getTplFilePath("controllers/{$cname}/css/{$path}.css", false);
-
-        if($css_file){
-            return $this->addCSS($css_file, $allow_merge);
-        }
-
-        return false;
+        return $this->addTplCSS("controllers/{$cname}/css/{$path}", $allow_merge);
 
     }
 
-	public function insertJS($file, $comment = ''){
+    /**
+     * Подключает JS файл относительно корня шаблона
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $path Путь к файлу относительно templates/TEMPLATE_NAME/
+     * @param string $comment Комментарий скрипта
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+    public function addTplJS($path, $comment = '', $allow_merge = true) {
+        return $this->addJS($this->getTplFilePath($path . '.js', false), $comment, $allow_merge);
+    }
+
+    /**
+     * Подключает CSS файл относительно корня шаблона
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $path Путь к файлу относительно templates/TEMPLATE_NAME/
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+    public function addTplCSS($path, $allow_merge = true) {
+        return $this->addCSS($this->getTplFilePath($path . '.css', false), $allow_merge);
+    }
+
+    /**
+     * Подключает JS файл относительно templates/TEMPLATE_NAME/js/
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $name Имя файла без расширения
+     * @return boolean
+     */
+    public function addTplJSName($name) {
+        return $this->addJS($this->getJavascriptFileName($name));
+    }
+    public function addMainTplJSName($name) {
+        return $this->addMainJS($this->getJavascriptFileName($name));
+    }
+
+    /**
+     * Подключает CSS файл относительно templates/TEMPLATE_NAME/css/
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $name Имя файла без расширения
+     * @return boolean
+     */
+    public function addTplCSSName($name) {
+        return $this->addCSS($this->getTemplateStylesFileName($name));
+    }
+    public function addMainTplCSSName($name) {
+        return $this->addMainCSS($this->getTemplateStylesFileName($name));
+    }
+
+    public function insertJS($file, $comment = ''){
+
+        if (!$file) { return false; }
 
         $hash = md5($file);
         if (isset($this->insert_js[$hash])) { return false; }
@@ -939,6 +1033,8 @@ class cmsTemplate {
 	}
 
     public function insertCSS($file){
+
+        if (!$file) { return false; }
 
         $hash = md5($file);
         if (isset($this->insert_css[$hash])) { return false; }

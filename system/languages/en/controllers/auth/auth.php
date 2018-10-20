@@ -67,7 +67,7 @@ define('LANG_RESTORE_BLOCK', 'Account is blocked');
 define('LANG_PASS_RESTORE', 'Password Recovery');
 define('LANG_EMAIL_NOT_FOUND', 'This e-mail not found in our database');
 define('LANG_TOKEN_SENDED', 'We sent you an e-mail with further instructions on password recovery');
-define('LANG_RESTORE_NOTICE', 'Please enter the e-mail address with which you registered.<br/>We will send you further instructions on password recovery.');
+define('LANG_RESTORE_NOTICE', 'Please enter the e-mail address with which you registered.<br/>Instructions for password recovery will be sent to the specified address.');
 define('LANG_AUTH_INVITES_STARGET', 'To whom to issue invitations');
 define('LANG_AUTH_INVITES_SGROUP', 'Group of users');
 define('LANG_AUTH_INVITES_SUSER', 'Or user');
