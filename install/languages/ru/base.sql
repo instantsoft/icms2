@@ -297,7 +297,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (9, 'Редактор разметки', 'markitup', 1, '---\nset: default-ru\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key: \nprivate_key: \ntheme: clean\nlang: ru\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (14, 'Теги', 'tags', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),

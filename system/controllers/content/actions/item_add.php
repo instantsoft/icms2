@@ -287,14 +287,14 @@ class actionContentItemAdd extends cmsAction {
                 if ($ctype['is_auto_keys']){
                     if(!empty($ctype['options']['seo_keys_pattern'])){
                         $item['seo_keys'] = string_replace_keys_values_extended($ctype['options']['seo_keys_pattern'], $item_seo);
-                    } else {
+                    } elseif(!empty($item['content'])) {
                         $item['seo_keys'] = string_get_meta_keywords($item['content']);
                     }
                 }
                 if ($ctype['is_auto_desc']){
                     if(!empty($ctype['options']['seo_desc_pattern'])){
                         $item['seo_desc'] = string_get_meta_description(string_replace_keys_values_extended($ctype['options']['seo_desc_pattern'], $item_seo));
-                    } else {
+                    } elseif(!empty($item['content'])) {
                         $item['seo_desc'] = string_get_meta_description($item['content']);
                     }
                 }

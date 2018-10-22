@@ -5,6 +5,9 @@ class cmsModel {
 
     public $db;
 
+    /**
+     * Типы MySQL JOIN
+     */
 	const LEFT_JOIN = 'LEFT JOIN';
 	const RIGHT_JOIN = 'RIGHT JOIN';
 	const INNER_JOIN = 'INNER JOIN';
@@ -55,6 +58,9 @@ class cmsModel {
     public $keep_filters = false;
     public $filter_on  = false;
 
+    protected static $global_localized = false;
+
+    protected $localized = false;
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
     protected $approved_filter_disabled = false;
@@ -69,11 +75,19 @@ class cmsModel {
 
     private $cache_key = false;
 
+    protected $lang;
+    protected $default_lang;
+
     public function __construct(){
 
         $this->name = strtolower(str_replace('model', '', get_called_class()));
 
         $this->db = cmsCore::getInstance()->db;
+
+        $this->lang = cmsCore::getLanguageName();
+        $this->default_lang = cmsConfig::get('language');
+
+        $this->localized = self::$global_localized;
 
 	}
 
@@ -586,6 +600,47 @@ class cmsModel {
         $this->hp_filtered        = false;
 
         return $this;
+
+    }
+
+    public function localizedOn() {
+        $this->localized = true; return $this;
+    }
+
+    public function localizedOff() {
+        $this->localized = false; return $this;
+    }
+
+    public static function globalLocalizedOn() {
+        self::$global_localized = true;
+    }
+
+    public static function globalLocalizedOff() {
+        self::$global_localized = false;
+    }
+
+    public function replaceTranslatedField($item, $table_name = false) {
+
+        // предполагается, что язык в настройках -
+        // основной язык и основные тексты хранятся
+        // в ячейках без постфикса
+        if ($this->lang == $this->default_lang) {
+            return $item;
+        }
+
+        $postfix = '_' . $this->lang;
+
+        foreach ($item as $key => $value) {
+
+            if (!isset($item[$key . $postfix])) {
+                continue;
+            }
+
+            $item[$key] = $item[$key . $postfix];
+
+        }
+
+        return $item;
 
     }
 
@@ -1135,10 +1190,14 @@ class cmsModel {
 
     }
 
-    public function selectList($fields, $is_this_only = false){
+    public function selectList($fields, $is_this_only = false, $translated_table = false){
         if($is_this_only){ $this->select = array(); }
         foreach($fields as $field => $alias){
-            $this->select($field, $alias);
+            if($translated_table){
+                $this->selectTranslatedField($field, $translated_table, $alias);
+            } else {
+                $this->select($field, $alias);
+            }
         }
         return $this;
     }
@@ -1146,6 +1205,18 @@ class cmsModel {
     public function select($field, $as=false){
         $this->select[] = $as ? $field.' as `'.$as.'`' : $field;
         return $this;
+    }
+
+    public function selectTranslatedField($field, $table, $as = false){
+
+        $field_name = $field.'_'.$this->lang;
+
+        if(!$this->db->isFieldExists($table, $field_name)){
+            $field_name = $field;
+        }
+
+        return $this->select($field_name, $as);
+
     }
 
     public function selectOnly($field, $as=false){
@@ -1481,6 +1552,10 @@ class cmsModel {
 
         $item = $this->db->fetchAssoc($result);
 
+        if($this->localized){
+            $item = $this->replaceTranslatedField($item, $table_name);
+        }
+
         $this->db->freeResult($result);
 
         return $item[ $field_name ];
@@ -1531,6 +1606,10 @@ class cmsModel {
         if (!$this->db->numRows($result)){ return false; }
 
         $item = $this->db->fetchAssoc($result);
+
+        if($this->localized){
+            $item = $this->replaceTranslatedField($item, $table_name);
+        }
 
         if(is_callable($item_callback)){
             $item = call_user_func_array($item_callback, array($item, $this));
@@ -1651,6 +1730,10 @@ class cmsModel {
 
                     foreach ($_items as $key => $item) {
 
+                        if($this->localized){
+                            $item = $this->replaceTranslatedField($item, $table_name);
+                        }
+
                         $item = call_user_func_array($item_callback, array($item, $this));
                         if ($item === false){ continue; }
 
@@ -1685,6 +1768,10 @@ class cmsModel {
                 } else {
                     $_items[] = $item;
                 }
+            }
+
+            if($this->localized){
+                $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // если задан коллбек для обработки строк,

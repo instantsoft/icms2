@@ -297,7 +297,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (9, 'Markup Editor', 'markitup', 1, '---\nset: default-en\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Rating', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Wall', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key: \nprivate_key: \ntheme: clean\nlang: en\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: en\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
