@@ -12,7 +12,7 @@ class actionUsersProfileInvites extends cmsAction {
         }
 
         if (!$profile['invites_count']) {
-            cmsCore::error404();
+            $this->redirectToAction($profile['id']);
         }
 
         // Форма отправлена?
@@ -77,9 +77,9 @@ class actionUsersProfileInvites extends cmsAction {
                 $results = $this->sendInvites($profile, $input['emails']);
 
                 return $this->cms_template->render('profile_invites_results', array(
-                            'id'      => $profile['id'],
-                            'profile' => $profile,
-                            'results' => $results
+                    'id'      => $profile['id'],
+                    'profile' => $profile,
+                    'results' => $results
                 ));
 
             }
@@ -91,12 +91,12 @@ class actionUsersProfileInvites extends cmsAction {
         }
 
         return $this->cms_template->render('profile_invites', array(
-                    'id'      => $profile['id'],
-                    'profile' => $profile,
-                    'invites' => $invites,
-                    'form'    => $form,
-                    'input'   => $input,
-                    'errors'  => isset($errors) ? $errors : false
+            'id'      => $profile['id'],
+            'profile' => $profile,
+            'invites' => $invites,
+            'form'    => $form,
+            'input'   => $input,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

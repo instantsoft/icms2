@@ -544,7 +544,7 @@ class actionContentItemView extends cmsAction {
                     $tool_buttons['delete'] = array(
                         'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
                         'options' => array('class' => 'delete', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])),
-                        'url'     => href_to($ctype['name'], 'delete', $item['id'])
+                        'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::generateCSRFToken()
                     );
 
                 } else {
@@ -552,7 +552,7 @@ class actionContentItemView extends cmsAction {
                     $tool_buttons['refuse'] = array(
                         'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
                         'options' => array('class' => 'delete ajax-modal'),
-                        'url'     => href_to($ctype['name'], 'delete', $item['id'])
+                        'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::generateCSRFToken()
                     );
 
                 }

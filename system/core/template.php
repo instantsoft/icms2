@@ -270,7 +270,7 @@ class cmsTemplate {
      * @param string $wrapper Название шаблона обертки
      * @return boolean
      */
-	public function widgets($position, $is_titles=true, $wrapper=''){
+	public function widgets($position, $is_titles = true, $wrapper = '') {
 
         if (!$this->hasWidgetsOn($position)){ return false; }
 
@@ -295,6 +295,13 @@ class cmsTemplate {
 
 	}
 
+    /**
+     * Проверяет наличие виджетов на позиции/позициях
+     *
+     * @param string $position Название позиции
+     *                         Можно передавать сколь угодно дополнительных параметров
+     * @return boolean
+     */
     public function hasWidgetsOn($position){
 
         if (func_num_args() > 1){
@@ -328,21 +335,28 @@ class cmsTemplate {
 
     }
 
+    /**
+     * Проверяет наличие меню
+     *
+     * @param string $menu_name Название меню
+     * @return boolean
+     */
     public function hasMenu($menu_name){
         return !empty($this->menus[$menu_name]);
     }
 
     /**
      * Выводит меню
+     *
      * @param string $menu_name Название меню
-     * @param bool $detect_active_id Определять активные пункты меню
+     * @param boolean $detect_active_id Определять активные пункты меню
      * @param string $css_class CSS класс контейнера пунктов меню
-     * @param int $max_items Максимальное количество видимых пунктов
-     * @param bool $is_allow_multiple_active Определять все активные пункты меню
+     * @param integer $max_items Максимальное количество видимых пунктов
+     * @param boolean $is_allow_multiple_active Определять все активные пункты меню
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template='menu', $menu_title=''){
+    public function menu($menu_name, $detect_active_id = true, $css_class = 'menu', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
 
         if (!isset($this->menus[$menu_name])) {
 
@@ -466,9 +480,10 @@ class cmsTemplate {
 
     /**
      * Выводит глубиномер
+     *
      * @param array $options Опции глубиномера
      */
-    public function breadcrumbs($options=array()){
+    public function breadcrumbs($options = array()) {
 
         $default_options = array(
             'home_url'   => href_to_home(),
@@ -499,7 +514,7 @@ class cmsTemplate {
      * @param string|array $params Параметры экшена
      * @return type
      */
-    public function href_to($action, $params=false){
+    public function href_to($action, $params = false) {
 
         if (!isset($this->controller->root_url)){
             return href_to($this->controller->name, $action, $params);

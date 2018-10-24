@@ -79,7 +79,7 @@ class onContentModerationList extends cmsAction {
             $tool_buttons['refuse'] = array(
                 'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
                 'options' => array('class' => 'delete ajax-modal'),
-                'url'     => href_to($ctype['name'], 'delete', '{id}')
+                'url'     => href_to($ctype['name'], 'delete', '{id}').'?csrf_token='.cmsForm::generateCSRFToken()
             );
         }
 

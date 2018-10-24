@@ -1211,7 +1211,7 @@ class cmsModel {
 
         $field_name = $field.'_'.$this->lang;
 
-        if(!$this->db->isFieldExists($table, $field_name)){
+        if(!$this->db->isFieldExists($table, (strpos($field, '.') === false ? $field_name : ltrim(strrchr($field, '.'), '.')))){
             $field_name = $field;
         }
 
