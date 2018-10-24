@@ -33,6 +33,8 @@ class actionAdminUsersGroupPerms extends cmsAction {
             );
 
         }
+        
+        $owners = cmsEventsManager::hook('users_group_perms', $owners);
 
         $template = cmsTemplate::getInstance();
 
