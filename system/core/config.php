@@ -183,7 +183,7 @@ class cmsConfig {
             $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
             $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs);
+            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
             $dump .= "=> $value,\n";
 
         }
