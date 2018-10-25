@@ -23,19 +23,57 @@ class actionAdminSettings extends cmsAction {
             if (!$errors){
 
                 if ($values['cache_method'] == 'memory'){
+
                     if (!class_exists('Memcache')){
+
                         cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
+
                         $values['cache_method'] = 'files';
+
+                    } else {
+
+                        $memcache_tester = new Memcache();
+
+                        $memcache_result = $memcache_tester->connect($values['cache_host'], $values['cache_port']);
+
+                        if (!$memcache_result){
+
+                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+
+                            $values['cache_method'] = 'files';
+
+                        }
+
                     }
+
                 }
 
-                if ($values['cache_method'] == 'memory'){
-                    $memcache_tester = new Memcache;
-                    $memcache_result = @$memcache_tester->connect($values['cache_host'], $values['cache_port']);
-                    if (!$memcache_result){
-                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+                if ($values['cache_method'] == 'memcached'){
+
+                    if (!class_exists('Memcached')){
+
+                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
+
                         $values['cache_method'] = 'files';
+
+                    } else {
+
+                        $memcache_tester = new Memcached();
+
+                        $memcache_tester->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
+
+                        $memcache_result = $memcache_tester->addServer($values['cache_host'], $values['cache_port']);
+
+                        if (!$memcache_result){
+
+                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+
+                            $values['cache_method'] = 'files';
+
+                        }
+
                     }
+
                 }
 
                 if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){

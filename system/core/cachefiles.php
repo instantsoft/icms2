@@ -79,4 +79,8 @@ class cmsCacheFiles {
     public function start(){ return true; }
     public function stop(){ return true; }
 
+    public function getStats(){
+        return array();
+    }
+
 }
