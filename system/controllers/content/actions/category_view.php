@@ -4,6 +4,18 @@ class actionContentCategoryView extends cmsAction {
 
     public function run(){
 
+        // Получаем SLUG категории
+        $slug = $this->request->get('slug', '');
+
+        // Текущий набор
+        $dataset = $this->request->get('dataset', '');
+
+        // Это вывод на главной?
+        $is_frontpage = $this->request->get('is_frontpage', false);
+
+        // Номер страницы
+        $page = $this->request->get('page', 1);
+
         // Получаем название типа контента и сам тип
         $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
@@ -19,18 +31,22 @@ class actionContentCategoryView extends cmsAction {
             } else {
                 $this->cms_core->uri_controller_before_remap = $ctype_name;
             }
+
+        } elseif(!$this->cms_core->uri_controller_before_remap && !$dataset && $this->cms_config->ctype_default && $this->cms_config->ctype_default === $ctype_name && $slug !== 'index'){
+            $this->redirect(href_to($slug), 301);
         }
+
         if (!$ctype['options']['list_on']) { return cmsCore::error404(); }
 
-        $category = array('id' => false);
-        $subcats = array();
+        if(!isset($category)){
+            $category = array('id' => false);
+        }
 
-        // Получаем SLUG категории
-        $slug = $this->request->get('slug', '');
+        $subcats = array();
 
         if (!$ctype['is_cats'] && $slug != 'index') { return cmsCore::error404(); }
 
-        if ($ctype['is_cats'] && $slug != 'index') {
+        if ($ctype['is_cats'] && $slug != 'index' && !$category['id']) {
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
             if (!$category){ return cmsCore::error404(); }
         }
@@ -45,15 +61,6 @@ class actionContentCategoryView extends cmsAction {
         $datasets = $this->getCtypeDatasets($ctype, array(
             'cat_id' => $category['id']
         ));
-
-        // Текущий набор
-        $dataset = $this->request->get('dataset', '');
-
-        // Это вывод на главной?
-        $is_frontpage = $this->request->get('is_frontpage', false);
-
-        // Номер страницы
-        $page = $this->request->get('page', 1);
 
         // Если это не главная, но данный контент выводится на главной и сейчас
         // открыта индексная страница контента - редиректим на главную
@@ -148,7 +155,7 @@ class actionContentCategoryView extends cmsAction {
                         ($ctype_list_style_preset !== false ? $ctype_list_style_preset : $ctype['options']['list_style'][0]);
 
                 if(!in_array($current_style, $ctype['options']['list_style'])){
-                    return cmsCore::error404();
+                    $current_style = $ctype['options']['list_style'][0];
                 }
 
                 // запоминаем стиль в куки
@@ -200,8 +207,62 @@ class actionContentCategoryView extends cmsAction {
             $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
         }
 
+        $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
+        $page_header = !empty($category['title']) ? $category['title'] : $list_header;
+        $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
+
+        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+        $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
+
+        if (!$is_frontpage){
+
+            $filter_titles = $this->getFilterTitles();
+
+            $seo_title = $seo_desc = $seo_keys = '';
+
+            if (!empty($ctype['seo_title']) && empty($category['title'])){ $seo_title = $ctype['seo_title']; }
+            if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
+            if (!$seo_title) { $seo_title = $page_header; }
+            if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
+            if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
+            if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
+
+            $this->cms_template->setPageTitle($seo_title);
+
+            if (!empty($ctype['seo_keys'])){ $seo_keys = $ctype['seo_keys']; }
+            if (!empty($ctype['seo_desc'])){ $seo_desc = $ctype['seo_desc']; }
+            if (!empty($category['seo_keys'])){ $seo_keys = $category['seo_keys']; }
+            if (!empty($category['seo_desc'])){ $seo_desc = $category['seo_desc']; }
+            if (!empty($current_dataset['seo_keys'])){ $seo_keys = $current_dataset['seo_keys']; }
+            if (!empty($current_dataset['seo_desc'])){ $seo_desc = $current_dataset['seo_desc']; }
+
+            $this->cms_template->setPageKeywords($seo_keys);
+            $this->cms_template->setPageDescription($seo_desc);
+
+            $meta_item = !empty($category['id']) ? $category : (!empty($current_dataset['id']) ? $current_dataset : array());
+
+            $this->cms_template->
+                    setPageKeywordsItem($meta_item)->
+                    setPageDescriptionItem($meta_item)->
+                    setPageTitleItem($meta_item);
+
+        }
+
+        if ($ctype['options']['list_on'] && !$is_frontpage){
+            $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
+        }
+
+        if (isset($category['path']) && $category['path']){
+            foreach($category['path'] as $c){
+                $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+            }
+        }
+
         return $this->cms_template->render($tpl_file, array(
-            'filter_titles'   => $this->getFilterTitles(),
+            'base_ds_url'     => $base_ds_url,
+            'base_url'        => $base_url,
+            'rss_query'       => $rss_query,
+            'page_header'     => $page_header,
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,

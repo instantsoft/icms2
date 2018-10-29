@@ -21,6 +21,10 @@ class onContentMenuContent extends cmsAction {
 
         } elseif($action == 'trash') {
 
+            if(!$this->cms_user->is_logged){
+                return false;
+            }
+
             $ctypes = $this->model->getContentTypes();
             if (!$ctypes) { return false; }
 

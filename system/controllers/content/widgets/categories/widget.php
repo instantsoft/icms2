@@ -56,8 +56,10 @@ class widgetContentCategories extends cmsWidget {
 
         }
 
+        $ctype_default = cmsConfig::get('ctype_default');
+
         return array(
-            'ctype_name' => $ctype_name,
+            'ctype_name' => ($ctype_name == $ctype_default ? '' : $ctype_name),
             'cats'       => $cats,
             'active_cat' => $active_cat,
             'path'       => (!empty($path) ? $path : array())

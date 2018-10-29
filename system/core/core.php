@@ -20,6 +20,7 @@ class cmsCore {
     private static $controllers_instance = array();
 
     public $controller = '';
+    private $defined_controllers = array();
 
 	public $link;
 	public $request;
@@ -416,6 +417,8 @@ class cmsCore {
 
     public static function getControllerAliasByName($controller_name){
 
+        if(!$controller_name){ return false; }
+
         $mapping = cmsConfig::getControllersMapping();
 
         if (!empty($mapping[$controller_name])){ return $mapping[$controller_name]; }
@@ -671,10 +674,15 @@ class cmsCore {
 //============================================================================//
 //============================================================================//
 
-    /**
-     * Запускает выбранное действие контроллера
-     */
-    public function runController(){
+    public function defineController() {
+
+        $hash = md5($this->uri_controller.$this->uri_action);
+
+        if(isset($this->defined_controllers[$hash])){
+            return $this;
+        }
+
+        $this->defined_controllers[$hash] = true;
 
         $config = cmsConfig::getInstance();
 
@@ -706,7 +714,18 @@ class cmsCore {
 
         $this->controller = $this->uri_controller;
 
-        if ($this->controller && !preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
+        return $this;
+
+    }
+
+    /**
+     * Запускает выбранное действие контроллера
+     */
+    public function runController(){
+
+        $this->defineController();
+
+        if (!preg_match('/^[a-z]{1}[a-z0-9_]*$/', $this->controller)){
             self::error404();
         }
 
@@ -719,7 +738,7 @@ class cmsCore {
         }
 
         // редирект 301, если настроен ремап
-        if(!$remap_to && $slug = $controller->hasSlug()){
+        if(!$this->uri_controller_before_remap && $slug = $controller->hasSlug()){
 
             // если контроллер запрещает редирект, то 404
             if($controller->disallow_mapping_redirect){
@@ -903,8 +922,6 @@ class cmsCore {
 
         $_full_uri = $this->uri.($this->uri_query ? '?'.http_build_query($this->uri_query) : '');
 
-        $ctype_default = cmsConfig::get('ctype_default');
-
         //
         // Перебираем все точки привязок и проверяем совпадение
         // маски URL с текущим URL
@@ -913,13 +930,6 @@ class cmsCore {
 
             if (empty($page['url_mask']) && !empty($page['id'])) { continue; }
 
-            $prefix = '';
-            if($page['controller'] == 'content' &&
-                    $ctype_default && !$this->uri_action &&
-                    $page['name'] == $ctype_default.'.item'){
-                $prefix = $ctype_default .'/';
-            }
-
             $is_mask_match = empty($page['id']);
             $is_stop_match = false;
 
@@ -927,7 +937,7 @@ class cmsCore {
                 foreach($page['url_mask'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_mask_match = $is_mask_match || preg_match($regular, $prefix.$this->uri);
+                    $is_mask_match = $is_mask_match || preg_match($regular, $this->uri);
                 }
             }
 
@@ -935,7 +945,7 @@ class cmsCore {
                 foreach($page['url_mask_not'] as $mask){
                     $regular = string_mask_to_regular($mask);
                     $regular = "/^{$regular}$/iu";
-                    $is_stop_match = $is_stop_match || preg_match($regular, $prefix.$_full_uri);
+                    $is_stop_match = $is_stop_match || preg_match($regular, $_full_uri);
                 }
             }
 

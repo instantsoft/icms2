@@ -40,12 +40,14 @@ class onContentSitemapUrls extends cmsAction {
 
             $items = $this->model->limit(false)->getCategoriesTree($ctype_name, false);
 
+            $base_url = $this->cms_config->ctype_default == $ctype_name ? '' : $ctype_name;
+
             if ($items){
                 foreach($items as $item){
                     $urls[] = array(
                         'last_modified' => null,
                         'title'         => $item['title'],
-                        'url'           => href_to_abs($ctype_name, $item['slug'])
+                        'url'           => href_to_abs($base_url, $item['slug'])
                     );
                 }
             }

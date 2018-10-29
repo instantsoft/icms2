@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'engine_start',
             'tags_search_subjects',
             'fulltext_search',
             'admin_dashboard_chart',

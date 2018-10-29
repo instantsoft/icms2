@@ -1209,13 +1209,19 @@ class cmsModel {
 
     public function selectTranslatedField($field, $table, $as = false){
 
+        if ($this->lang == $this->default_lang) {
+            return $this->select($field, $as);
+        }
+
         $field_name = $field.'_'.$this->lang;
 
-        if(!$this->db->isFieldExists($table, (strpos($field, '.') === false ? $field_name : ltrim(strrchr($field, '.'), '.')))){
+        $select_name = (strpos($field, '.') === false ? $field : ltrim(strrchr($field, '.'), '.'));
+
+        if(!$this->db->isFieldExists($table, $select_name)){
             $field_name = $field;
         }
 
-        return $this->select($field_name, $as);
+        return $this->select($field_name, $select_name);
 
     }
 

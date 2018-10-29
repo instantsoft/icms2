@@ -101,6 +101,8 @@ class content extends cmsFrontend {
         $tree = $this->model->getCategoriesTree($ctype['name']);
         if (!$tree) { return $result; }
 
+        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+
         foreach($tree as $cat){
 
             if ($cat['id']==1) { continue; }
@@ -109,13 +111,11 @@ class content extends cmsFrontend {
             $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
 
             $result['items'][] = array(
-                'id' => $item_id,
-                'parent_id' =>  $cat['parent_id'] == 1 ?
-                                $menu_item_id :
-                                $parent_id,
-                'title' => $cat['title'],
-                'childs_count' => ($cat['ns_right'] - $cat['ns_left']) -1,
-                'url' => href_to($ctype['name'], $cat['slug'])
+                'id'           => $item_id,
+                'parent_id'    => ($cat['parent_id'] == 1 ? $menu_item_id : $parent_id),
+                'title'        => $cat['title'],
+                'childs_count' => ($cat['ns_right'] - $cat['ns_left']) - 1,
+                'url'          => href_to($base_url, $cat['slug'])
             );
 
         }
