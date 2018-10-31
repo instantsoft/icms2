@@ -27,6 +27,7 @@ class onContentRssFeedList extends cmsAction {
 
         $this->model->limit($feed['limit']);
 
+        list ($ctype_name, $this->model) = cmsEventsManager::hook("content_rss_items", array($feed['ctype_name'],$this->model));
         $feed['items'] = $this->model->getContentItems($feed['ctype_name'], function ($item, $model, $ctype_name){
 
             $item['page_url'] = href_to_abs($ctype_name, $item['slug'].'.html');
