@@ -22,6 +22,8 @@ class onContentSitemapUrls extends cmsAction {
                 return $urls;
             }
 
+	    list ($ctype_name, $this->model) = cmsEventsManager::hook("content_sitemap_items", array($ctype_name,$this->model));
+
             $items = $this->model->limit(false)->getContentItemsForSitemap($ctype_name);
 
             if ($items){
@@ -38,6 +40,7 @@ class onContentSitemapUrls extends cmsAction {
 
         if($action == 'cats' && $ctype['is_cats']){
 
+	    list ($ctype_name, $this->model) = cmsEventsManager::hook("content_sitemap_cats", array($ctype_name,$this->model));
             $items = $this->model->limit(false)->getCategoriesTree($ctype_name, false);
 
             $base_url = $this->cms_config->ctype_default == $ctype_name ? '' : $ctype_name;
