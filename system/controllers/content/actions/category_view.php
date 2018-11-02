@@ -38,15 +38,13 @@ class actionContentCategoryView extends cmsAction {
 
         if (!$ctype['options']['list_on']) { return cmsCore::error404(); }
 
-        if(!isset($category)){
-            $category = array('id' => false);
-        }
+        $category = array('id' => false);
 
         $subcats = array();
 
         if (!$ctype['is_cats'] && $slug != 'index') { return cmsCore::error404(); }
 
-        if ($ctype['is_cats'] && $slug != 'index' && !$category['id']) {
+        if ($ctype['is_cats'] && $slug != 'index') {
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
             if (!$category){ return cmsCore::error404(); }
         }
