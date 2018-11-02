@@ -18,18 +18,21 @@ class onContentSitemapUrls extends cmsAction {
 
         if($action == 'items'){
 
-            if(cmsPermissions::getRuleSubjectPermissions('content', $ctype_name, 'view_list')){
+            if(cmsPermissions::getRuleSubjectPermissions('content', $ctype['name'], 'view_list')){
                 return $urls;
             }
 
-            $items = $this->model->limit(false)->getContentItemsForSitemap($ctype_name);
+            list($ctype, $this->model) = cmsEventsManager::hook('content_list_sitemap_filter', array($ctype, $this->model));
+            list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_sitemap_filter", array($ctype, $this->model));
+
+            $items = $this->model->limit(false)->getContentItemsForSitemap($ctype['name']);
 
             if ($items){
                 foreach($items as $item){
                     $urls[] = array(
                         'last_modified' => $item['date_last_modified'],
                         'title'         => $item['title'],
-                        'url'           => href_to_abs($ctype_name, $item['slug'] . '.html')
+                        'url'           => href_to_abs($ctype['name'], $item['slug'] . '.html')
                     );
                 }
             }
@@ -38,9 +41,12 @@ class onContentSitemapUrls extends cmsAction {
 
         if($action == 'cats' && $ctype['is_cats']){
 
-            $items = $this->model->limit(false)->getCategoriesTree($ctype_name, false);
+            list($ctype, $this->model) = cmsEventsManager::hook('content_list_sitemap_cats_filter', array($ctype, $this->model));
+            list($ctype, $this->model) = cmsEventsManager::hook("content_{$ctype['name']}_list_sitemap_cats_filter", array($ctype, $this->model));
 
-            $base_url = $this->cms_config->ctype_default == $ctype_name ? '' : $ctype_name;
+            $items = $this->model->limit(false)->getCategoriesTree($ctype['name'], false);
+
+            $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
 
             if ($items){
                 foreach($items as $item){
