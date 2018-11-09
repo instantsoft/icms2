@@ -230,7 +230,7 @@ CREATE TABLE `{#}content_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'System name',
-  `description` varchar(255) DEFAULT NULL COMMENT 'Description',
+  `description` text COMMENT 'Description',
   `ordering` int(11) DEFAULT NULL,
   `is_date_range` tinyint(1) unsigned DEFAULT NULL,
   `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Pre-moderate new content?',
@@ -263,8 +263,8 @@ CREATE TABLE `{#}content_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Content types';
 
 INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Pages', 'pages', 'Static pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Photo albums', 'albums', 'User photo albums', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
+(1, 'Pages', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: page\ntwo: pages\nmany: pages\ncreate: page\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1),
+(7, 'Photo albums', 'albums', '<p>User photo albums</p>', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: album\ntwo: albums\nmany: albums\ncreate: album\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (

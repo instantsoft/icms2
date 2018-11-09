@@ -140,6 +140,7 @@
     define('LANG_CP_LISTVIEW_OPTIONS',          'Просмотр списка');
     define('LANG_CP_PROFILELIST_ON',            'Просмотр списка в профилях пользователей включен');
     define('LANG_CP_LISTVIEW_ON',               'Просмотр списка на сайте включен');
+    define('LANG_CP_LIST_OFF_BREADCRUMB',       'Не показывать хлебные крошки');
     define('LANG_CP_LISTVIEW_FILTER',           'Показывать фильтр');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');

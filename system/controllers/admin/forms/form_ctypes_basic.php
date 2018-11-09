@@ -32,12 +32,8 @@ class formAdminCtypesBasic extends cmsForm {
                             array('required')
                         )
                     )),
-                    new fieldString('description', array(
-                        'title' => LANG_DESCRIPTION,
-                        'options'=>array(
-                            'max_length' => 255,
-                            'show_symbol_count' => true
-                        )
+                    new fieldHtml('description', array(
+                        'title' => LANG_DESCRIPTION
                     )),
                 )
             ),
@@ -151,6 +147,9 @@ class formAdminCtypesBasic extends cmsForm {
                 'is_collapsed' => true,
                 'title' => LANG_CP_LISTVIEW_OPTIONS,
                 'childs' => array(
+                    new fieldCheckbox('options:list_off_breadcrumb', array(
+                        'title' => LANG_CP_LIST_OFF_BREADCRUMB
+                    )),
                     new fieldCheckbox('options:list_on', array(
                         'title' => LANG_CP_LISTVIEW_ON,
                         'default' => true
@@ -231,6 +230,9 @@ class formAdminCtypesBasic extends cmsForm {
                 'is_collapsed' => true,
                 'title' => LANG_CP_ITEMVIEW_OPTIONS,
                 'childs' => array(
+                    new fieldCheckbox('options:item_off_breadcrumb', array(
+                        'title' => LANG_CP_LIST_OFF_BREADCRUMB
+                    )),
                     new fieldCheckbox('options:item_on', array(
                         'title' => LANG_CP_ITEMVIEW_ON,
                         'default' => true

@@ -27,9 +27,22 @@ function grid_ctypes($controller){
             'width' => 150,
             'filter' => 'like'
         ),
-        'description' => array(
-            'title' => LANG_DESCRIPTION,
-            'filter' => 'like'
+        'url_pattern' => array(
+            'title' => LANG_CP_URL_PATTERN,
+            'width' => 200
+        ),
+        'is_cats' => array(
+            'title' => LANG_CATEGORIES,
+            'width' => 90,
+            'handler' => function($value, $ctype){
+                return '<div class="'.(!$value ? '' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+            }
+        ),
+        'is_folders' => array(
+            'title' => LANG_CP_FOLDERS,
+            'handler' => function($value, $ctype){
+                return '<div class="'.(!$value ? '' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+            }
         )
     );
 

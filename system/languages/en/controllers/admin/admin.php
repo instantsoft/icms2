@@ -140,6 +140,7 @@
     define('LANG_CP_LISTVIEW_OPTIONS',          'List view options');
     define('LANG_CP_PROFILELIST_ON',            'List view in user profiles enabled');
     define('LANG_CP_LISTVIEW_ON',               'List view enabled');
+    define('LANG_CP_LIST_OFF_BREADCRUMB',       'Do not show breadcrumbs');
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');

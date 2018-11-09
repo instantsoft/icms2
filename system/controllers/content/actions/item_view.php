@@ -457,35 +457,40 @@ class actionContentItemView extends cmsAction {
         $this->cms_template->setPageTitle($seo_title);
 
         // глубиномер
-        if ($item['parent_id'] && !empty($ctype['is_in_groups'])){
+        if (empty($ctype['options']['item_off_breadcrumb']) && empty($item['off_breadcrumb'])){
 
-            $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
-            $this->cms_template->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
-            if ($ctype['options']['list_on']){
-                $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), rel_to_href($item['parent_url']));
-            }
+            if ($item['parent_id'] && !empty($ctype['is_in_groups'])){
 
-        } else {
-
-            if ($ctype['options']['list_on']){
-
-                $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-
-                $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
-
-                if (isset($item['category'])){
-
-                    $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
-
-                    foreach($item['category']['path'] as $c){
-                        $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
-                    }
-
+                $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+                $this->cms_template->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
+                if ($ctype['options']['list_on']){
+                    $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), rel_to_href($item['parent_url']));
                 }
+
+            } else {
+
+                if ($ctype['options']['list_on']){
+
+                    $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
+
+                    $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
+
+                    if (isset($item['category'])){
+
+                        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+
+                        foreach($item['category']['path'] as $c){
+                            $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                        }
+
+                    }
+                }
+
             }
+
+            $this->cms_template->addBreadcrumb($item['title']);
 
         }
-        $this->cms_template->addBreadcrumb($item['title']);
 
         $tool_buttons = $this->getToolButtons($ctype, $item, $is_moderator, $childs);
 

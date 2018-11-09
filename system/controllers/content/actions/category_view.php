@@ -38,7 +38,7 @@ class actionContentCategoryView extends cmsAction {
 
         if (!$ctype['options']['list_on']) { return cmsCore::error404(); }
 
-        $category = array('id' => false);
+        $category = array('id' => false, 'description' => (!empty($ctype['description']) ? $ctype['description'] : ''));
 
         $subcats = array();
 
@@ -246,14 +246,18 @@ class actionContentCategoryView extends cmsAction {
 
         }
 
-        if ($ctype['options']['list_on'] && !$is_frontpage){
-            $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
-        }
+        if (empty($ctype['options']['list_off_breadcrumb'])){
 
-        if (isset($category['path']) && $category['path']){
-            foreach($category['path'] as $c){
-                $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+            if ($ctype['options']['list_on'] && !$is_frontpage){
+                $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
             }
+
+            if (isset($category['path']) && $category['path']){
+                foreach($category['path'] as $c){
+                    $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
+                }
+            }
+
         }
 
         return $this->cms_template->render($tpl_file, array(
