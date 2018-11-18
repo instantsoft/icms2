@@ -139,8 +139,16 @@ icms.forms = (function ($) {
 
     this.initUnsaveNotice = function(){
 
+        var init_data = {};
+
+        $('form').each(function(i){
+            init_data[i] = _this.toJSON($(this));
+            $(this).attr('data-notice_id', i);
+        });
+
         $(document).on('change', '.form-tabs input, .form-tabs select, .form-tabs textarea', function (e) {
-            icms.forms.form_changed = true;
+            var form = $(this).closest('form');
+            _this.form_changed = (JSON.stringify(init_data[form.attr('data-notice_id')]) !== JSON.stringify(_this.toJSON(form))) ? true : false;
         });
         $(document).on('submit', 'form', function () {
             icms.forms.submitted = true;
