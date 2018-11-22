@@ -20,10 +20,6 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_SITE_ENABLED,
                     )),
 
-                    new fieldCheckbox('is_site_only_auth_users', array(
-                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
-                    )),
-
                     new fieldString('off_reason', array(
                         'title' => LANG_CP_SETTINGS_SITE_REASON,
                     )),

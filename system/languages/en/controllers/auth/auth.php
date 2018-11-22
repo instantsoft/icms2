@@ -39,6 +39,7 @@ define('LANG_REG_CFG_IS_INVITES', 'Registration is by invitation only');
 define('LANG_REG_CFG_REG_CAPTCHA', 'Show CAPTCHA to protect from spam registrations');
 define('LANG_REG_CFG_AUTH_CAPTCHA', 'Show CAPTCHA after failed log in');
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'After first login');
+define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Components available without authorization');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'After consequent authorization');
 define('LANG_REG_CFG_AUTH_REDIRECT_NONE', 'Stay on page, at which the logged');
 define('LANG_REG_CFG_AUTH_REDIRECT_INDEX', 'Open homepage');

@@ -117,6 +117,8 @@
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Process special templates');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Use the entry fields by inserting their names in curly braces. For example, for content types: <strong>{title}</strong>, <strong>{category}</strong> etc. You can use the processing of values, more in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">documentation</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'External links via a redirect if sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');

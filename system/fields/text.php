@@ -25,6 +25,10 @@ class fieldText extends cmsFormField {
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
             )),
+            new fieldCheckbox('parse_patterns', array(
+                'title' => LANG_PARSER_PARSE_PATTERNS,
+                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
+            )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
@@ -56,6 +60,10 @@ class fieldText extends cmsFormField {
     }
 
     public function parse($value){
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
 
         if ($this->getOption('is_html_filter')){
             return cmsEventsManager::hook('html_filter', array(

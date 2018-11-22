@@ -87,8 +87,8 @@ class fieldAge extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $from = !empty($value['from']) ? intval($value['from']) : false;
-        $to = !empty($value['to']) ? intval($value['to']) : false;
+        $from = !empty($value['from']) ? (int)$value['from'] : false;
+        $to = !empty($value['to']) ? (int)$value['to'] : false;
 
         $range = constant('LANG_' . $this->getOption('range').'10');
 
@@ -105,7 +105,7 @@ class fieldAge extends cmsFormField {
         if(!empty($value['from']) || !empty($value['to'])){
 
             if (!empty($value['from'])){
-                $from = intval($value['from']);
+                $from = (int)$value['from'];
                 $model->filterDateOlder($this->name, $from, $this->getOption('range'));
             }
 

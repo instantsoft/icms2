@@ -80,7 +80,7 @@ function install_package(){
         }
     }
 
-    save_controller_options(array('sitemap', 'comments', 'geo'));
+    save_controller_options(array('sitemap', 'comments', 'geo', 'auth'));
 
     return true;
 
@@ -122,6 +122,10 @@ function save_controller_options($controllers) {
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
             $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
+            if($controller == 'auth'){
+                $options['is_site_only_auth_users'] = cmsConfig::get('is_site_only_auth_users');
+                $options['guests_allow_controllers'] = array('auth', 'geo');
+            }
             cmsCore::getModel('content')->filterEqual('name', $controller)->updateFiltered('controllers', array(
                 'options' => $options
             ));

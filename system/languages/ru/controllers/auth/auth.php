@@ -39,6 +39,7 @@ define('LANG_REG_CFG_IS_INVITES', 'Регистрация только по пр
 define('LANG_REG_CFG_REG_CAPTCHA', 'Показывать капчу для защиты от спамовых регистраций');
 define('LANG_REG_CFG_AUTH_CAPTCHA', 'Показывать капчу после неудачной авторизации');
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'После первой авторизации на сайте');
+define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Компоненты, доступные без авторизации');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'После следующих авторизаций на сайте');
 define('LANG_REG_CFG_AUTH_REDIRECT_NONE', 'Оставаться на странице, с которой авторизовались');
 define('LANG_REG_CFG_AUTH_REDIRECT_INDEX', 'Открыть главную страницу');

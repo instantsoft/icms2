@@ -478,24 +478,37 @@ function string_replace_keys_values_extended($string, $data){
             // есть ли обработка функцией
             if(strpos($property, '|') !== false){
                 $params = explode('|', $property);
-                // первый параметр остаётся как $property
-                $property = $params[0];
                 // второй параметр - функция
                 $func = $params[1];
-                // $property ставим как первый параметр функции
-                $func_params = array($property);
-                // смотрим есть ли у функции параметры
-                if(strpos($func, ':') !== false){
-                    $par = explode(':', $func);
-                    $func = $par[0]; unset($par[0]);
-                    foreach ($par as $k => $p) {
-                        // если параметр - массив
-                        if(strpos($p, '=') !== false){
-                            $out = array(); parse_str($p, $out);
-                            $par[$k] = $out;
+                if(function_exists($func)){
+
+                    // первый параметр остаётся как $property
+                    $property = $params[0];
+                    // $property ставим как первый параметр функции
+                    $func_params = array($property);
+                    // смотрим есть ли у функции параметры
+                    if(strpos($func, ':') !== false){
+                        $par = explode(':', $func);
+                        $func = $par[0]; unset($par[0]);
+                        foreach ($par as $k => $p) {
+                            // если параметр - массив
+                            if(strpos($p, '=') !== false){
+                                $out = array(); parse_str($p, $out);
+                                $par[$k] = $out;
+                            }
                         }
+                        $func_params = $func_params + $par;
                     }
-                    $func_params = $func_params + $par;
+
+                } else {
+
+                    // значит рандомные значения из списка
+                    $values = explode('|', $property);
+
+                    $string = str_replace($tag, $values[mt_rand(0, (count($values)-1))], $string);
+
+                    continue;
+
                 }
             } else
             // нужно прогнать через sprintf

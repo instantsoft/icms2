@@ -1,3 +1,4 @@
+/.gitignore
 /.idea
 /system/config/config.php
 /system/config/theme_default.yml

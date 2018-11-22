@@ -20,6 +20,10 @@
     define('LANG_PM_TIME_DELETE_OLD',       'How to store deleted messages?');
     define('LANG_PM_TIME_DELETE_OLD_HINT',  '0 - always keep');
     define('LANG_PM_REFRESH_TIME',          'New messages requests interval');
+    define('LANG_PM_REALTIME_MODE',         'Realtime mode');
+    define('LANG_PM_REALTIME_MODE_SOCKET',  'Socket server [not available]');
+    define('LANG_PM_REALTIME_SOCKET_HOST',  'Socket server host');
+    define('LANG_PM_REALTIME_SOCKET_PORT',  'Socket server port');
     define('LANG_PM_USE_QUEUE',             'Use the queue system to send e-mail');
     define('LANG_PM_PRIVACY_CONTACT',       'Who can send private messages to you?');
     define('LANG_PM_NOTIFY_NEW',            'Notify on new messages');

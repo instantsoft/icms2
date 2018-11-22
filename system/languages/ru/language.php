@@ -116,6 +116,8 @@
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Обрабатывать специальные шаблоны');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Используйте поля записи, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'При обработке типографом внешние ссылки формировать через редирект');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Обрезать текст при просмотре списка');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');

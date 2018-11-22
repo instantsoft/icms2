@@ -788,7 +788,7 @@ class cmsModel {
 
     public function filterTimestampYounger($field, $value, $interval='DAY'){
         if (strpos($field, '.') === false){ $field = 'i.' . $field; }
-        $value = intval($value);
+        $value = (int)$value;
         $interval = $this->db->escape($interval);
         $this->filter("TIMESTAMPDIFF({$interval}, {$field}, NOW()) <= {$value}");
         return $this;
@@ -1099,7 +1099,7 @@ class cmsModel {
 
         $this->joinInner('{users}_friends', 'fr', 'fr.friend_id = i.user_id');
 
-        $this->filterEqual('fr.user_id', intval($user_id));
+        $this->filterEqual('fr.user_id', (int)$user_id);
 
         if($is_mutual !== null){
             $this->filterEqual('fr.is_mutual', $is_mutual);
@@ -1995,8 +1995,8 @@ class cmsModel {
 
         // устанавливаем страницу
         if (!empty($filter['page'])){
-            $perpage = !empty($filter['perpage']) ? intval($filter['perpage']) : $this->perpage;
-            $this->limitPage(intval($filter['page']), $perpage);
+            $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $this->perpage;
+            $this->limitPage((int)$filter['page'], $perpage);
         }
 
         //

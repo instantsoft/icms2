@@ -2,8 +2,8 @@ var icms = icms || {};
 
 $(document).ready(function(){
 
-    for(module in icms){
-        if ( typeof(icms[module].onDocumentReady) == 'function' ) {
+    for(var module in icms){
+        if ( typeof(icms[module].onDocumentReady) === 'function' ) {
             icms[module].onDocumentReady();
         }
     }
