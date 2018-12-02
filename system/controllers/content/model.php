@@ -2781,7 +2781,7 @@ class modelContent extends cmsModel {
     /**
      * @deprecated
      *
-     * Метод для своместимости
+     * Метод для совместимости
      * @param string $ctype_name
      * @param integer $user_id
      * @return boolean
