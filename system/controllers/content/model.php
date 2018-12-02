@@ -2426,7 +2426,6 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 
