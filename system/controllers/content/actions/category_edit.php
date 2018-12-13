@@ -67,7 +67,7 @@ class actionContentCategoryEdit extends cmsAction {
         }
 
         // Если включен ручной ввод SLUG и ранее он не был введен, то генерируем
-        // его значение по-умолчанию из заголовка
+        // его значение по умолчанию из заголовка
         if (!$ctype['options']['is_cats_auto_url'] && empty($category['slug_key'])){
             $category['slug_key'] = lang_slug($category['title']);
         }

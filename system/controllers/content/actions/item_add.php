@@ -136,7 +136,7 @@ class actionContentItemAdd extends cmsAction {
             cmsCore::error404();
         }
 
-        // Заполняем поля значениями по-умолчанию, взятыми из профиля пользователя
+        // Заполняем поля значениями по умолчанию, взятыми из профиля пользователя
         // (для тех полей, в которых это включено)
         foreach($fields as $field){
             if (!empty($field['options']['profile_value'])){

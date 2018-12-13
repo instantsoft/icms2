@@ -131,7 +131,7 @@ function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array(), 
  * Возвращает тег <input>
  * @param string $type Тип поля
  * @param string $name Имя поля
- * @param string $value Значение по-умолчанию
+ * @param string $value Значение по умолчанию
  * @param array $attributes Атрибуты тега название=>значение
  * @return html
  */

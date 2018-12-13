@@ -119,7 +119,7 @@
     define('LANG_CP_PHOTOS',                    'Изображения');
     define('LANG_CP_PHOTOS_ON',                 'Основное изображение');
     define('LANG_CP_PHOTOS_MULTI',              'Дополнительные изображения');
-    define('LANG_CP_SEOMETA_DEFAULT',           'SEO по-умолчанию');
+    define('LANG_CP_SEOMETA_DEFAULT',           'SEO по умолчанию');
     define('LANG_CP_SEOMETA',                   'SEO для записей');
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Вручную указывать тайтл для записей');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Автоматическая генерация ключевых слов');
@@ -187,7 +187,7 @@
     define('LANG_CP_FIELD_TYPE_OPTS',           'Настройки поля');
     define('LANG_CP_FIELD_VALUES',              'Предустановленные значения');
     define('LANG_CP_FIELD_PROFILE_VALUE',       'Значение из профиля пользователя');
-    define('LANG_CP_FIELD_PROFILE_VALUE_HINT',  'Поле может получать значение по-умолчанию из профиля текущего пользователя<br/>Только для текстовых полей и списков');
+    define('LANG_CP_FIELD_PROFILE_VALUE_HINT',  'Поле может получать значение по умолчанию из профиля текущего пользователя<br/>Только для текстовых полей и списков');
     define('LANG_CP_FIELD_TITLE',               'Название поля');
     define('LANG_CP_FIELD_FIELDSET',            'Группа');
     define('LANG_CP_FIELD_FIELDSET_SELECT',     'Выберите группу');
@@ -385,13 +385,13 @@
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по-умолчанию');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по умолчанию');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
-    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
+    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Объединять CSS-файлы');
@@ -401,7 +401,7 @@
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Не удалось очистить папку <b>%s</b>. Проверьте права или очистите ее вручную');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'Кеш успешно очищен');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Ошибка очистки кеша');
-    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по умолчанию');
     define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Выводить на главной странице');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Только виджеты');
