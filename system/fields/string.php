@@ -77,7 +77,7 @@ class fieldString extends cmsFormField {
 
         $this->data['type']         = $this->getProperty('is_password') ? 'password' : $this->getProperty('type');
         $this->data['autocomplete'] = $this->getProperty('autocomplete');
-        $this->data['attributes']   = $this->getProperty('attributes')?:array();
+        $this->data['attributes']   = $this->getProperty('attributes')?:array('autocomplete' => 'off');
 
         $this->data['attributes']['id'] = $this->id;
         $this->data['attributes']['required'] = (array_search(array('required'), $this->getRules()) !== false);

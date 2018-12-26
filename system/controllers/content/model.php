@@ -305,6 +305,15 @@ class modelContent extends cmsModel {
                     $item['options']['list_style'] = $list_styles;
                 }
             }
+            if(!empty($item['options']['context_list_cover_sizes'])){
+                if(is_array($item['options']['context_list_cover_sizes'])){
+                    $list_styles = array();
+                    foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
+                        $list_styles[$key?$key:''] = $value;
+                    }
+                    $item['options']['context_list_cover_sizes'] = $list_styles;
+                }
+            }
 
             return $item;
 

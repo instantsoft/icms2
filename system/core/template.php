@@ -821,7 +821,7 @@ class cmsTemplate {
 
             $arg_separator = strpos($file, '?') !== false ? '&' : '?';
 
-            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+            $file = $this->site_config->root . $file .($this->site_config->production_time ? $arg_separator. $this->site_config->production_time : '');
 
         }
 
@@ -1750,7 +1750,7 @@ class cmsTemplate {
                         if(!empty($column['editable']['save_action'])){
                             $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
                         }
-                        $attributes = array();
+                        $attributes = array('autocomplete' => 'off');
                         if(!empty($column['editable']['attributes'])){
                             foreach ($column['editable']['attributes'] as $akey => $avalue) {
                                 if(is_string($avalue)){

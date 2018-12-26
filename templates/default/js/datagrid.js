@@ -19,7 +19,7 @@ icms.datagrid = (function ($) {
         });
     };
     this.bind_filter = function(){
-        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').on('input change', function () {
+        $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').on('input', function () {
             $('.datagrid .filter .input, .datagrid .filter .date-input, .datagrid .filter select').each(function(){
                 var filter = $(this).attr('rel');
                 $('#datagrid_filter input[name="'+filter+'"]').val($(this).val());
@@ -354,7 +354,7 @@ icms.datagrid = (function ($) {
             var row_html = '<tr id="'+(row[0] > 0 ? row[0] : ('tr_id_'+i))+'">';
             $.each(row, function(index){
                 if (index>0 || icms.datagrid.options.show_id) {
-                        row_html = row_html + '<td data-label="'+result.titles[index]+'"><div>' + this + '</div></td>';
+                        row_html = row_html + '<td data-label="'+result.titles[index]+'">' + this + '</td>';
                 }
             });
             row_html = row_html + '</tr>';

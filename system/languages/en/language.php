@@ -524,6 +524,8 @@
     define('LANG_CATEGORIES',                'Categories');
     define('LANG_CATEGORY_TITLE',            'Category title');
     define('LANG_CATEGORY_DESCRIPTION',      'Category description');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Hidden category');
+    define('LANG_CATEGORY_COVER',            'Category cover');
     define('LANG_FOLDER',                    'Folder');
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');
@@ -551,6 +553,7 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'Component main page SEO');
+    define('LANG_SEO_H1',                    'Page H1 tag');
     define('LANG_SEO_TITLE',                 'Page title');
     define('LANG_SEO_KEYS',                  'Keywords');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');

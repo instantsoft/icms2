@@ -340,7 +340,7 @@ span.wrap > span.counter:after {
 .cp_toolbar ul li.scroll_top {
     float: right;
     display: none;
-    background-color: #9fc974;
+    background-color: #64889b;
 }
 .cp_toolbar.fixed_toolbar ul li.scroll_top {
     display: block;
@@ -359,7 +359,7 @@ span.wrap > span.counter:after {
     margin: 5px 0;
 }
 .cp_toolbar ul li.scroll_top:hover {
-    background-color: #91b76a;
+    background-color: #82aabf;
 }
 .cp_toolbar ul li.right + .scroll_top {
     margin-right: 14px;

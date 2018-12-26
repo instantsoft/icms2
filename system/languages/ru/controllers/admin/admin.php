@@ -130,9 +130,12 @@
     define('LANG_CP_SEOMETA_ITEM_H1',           'Шаблон генерации тега h1');
     define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');
+    define('LANG_CP_CAT_COVER_SIZES',           'Пресеты обложек категорий');
+    define('LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES', 'Пресет обложек для списков');
     define('LANG_CP_FIXED_URL',                 'Не изменять URL при редактировании записи');
     define('LANG_CP_URL_PATTERN',               'Шаблон генерации URL');
     define('LANG_CP_SEOMETA_CATS',              'SEO для категорий');
+    define('LANG_CP_SEOMETA_CATS_H1',           'Разрешить ввод тега H1 для страниц категорий');
     define('LANG_CP_SEOMETA_CATS_TITLE',        'Разрешить ввод тайтлов для страниц категорий');
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Разрешить ввод ключевых слов для категорий');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Разрешить ввод META-описаний для категорий');

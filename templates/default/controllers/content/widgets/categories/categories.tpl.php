@@ -7,6 +7,7 @@
         <?php foreach($cats as $id=>$item){ ?>
 
             <?php
+                if(!empty($item['is_hidden'])){ continue; }
                 $is_active = (!empty($active_cat['id']) && $id == $active_cat['id']);
                 $is_visible = isset($path[$item['id']]) || isset($path[$item['parent_id']]) || $item['ns_level'] <= 1;
                 if (!isset($item['ns_level'])) { $item['ns_level'] = 1; }

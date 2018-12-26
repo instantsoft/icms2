@@ -48,7 +48,7 @@ class actionContentCategoryAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('category_form', array(
+        return $this->cms_template->render('category_form', array(
             'do'       => 'add',
             'ctype'    => $ctype,
             'category' => $category,

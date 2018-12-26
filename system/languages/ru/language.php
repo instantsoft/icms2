@@ -521,6 +521,8 @@
     define('LANG_CATEGORIES',                'Категории');
     define('LANG_CATEGORY_TITLE',            'Название категории');
     define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Скрытая категория');
+    define('LANG_CATEGORY_COVER',            'Обложка категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');
@@ -548,6 +550,7 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'SEO для главной страницы');
+    define('LANG_SEO_H1',                    'Тег H1 страницы');
     define('LANG_SEO_TITLE',                 'Тайтл страницы');
     define('LANG_SEO_KEYS',                  'Ключевые слова');
     define('LANG_SEO_KEYS_HINT',             'Ключевые слова страницы, через запятую');

@@ -19,6 +19,7 @@ class actionContentCategoryEdit extends cmsAction {
         if (!$id) { cmsCore::error404(); }
 
         $category = $this->model->getCategory($ctype['name'], $id);
+        if (!$category) { cmsCore::error404(); }
 
         $form = $this->getCategoryForm($ctype, 'edit');
 
@@ -26,13 +27,10 @@ class actionContentCategoryEdit extends cmsAction {
 
         $back_url = $this->request->get('back', '');
 
-        // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $category = $form->parse($this->request, $is_submitted);
+            $category = $form->parse($this->request, true);
 
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $category);
@@ -72,13 +70,13 @@ class actionContentCategoryEdit extends cmsAction {
             $category['slug_key'] = lang_slug($category['title']);
         }
 
-        return cmsTemplate::getInstance()->render('category_form', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
+        return $this->cms_template->render('category_form', array(
+            'do'       => 'edit',
+            'ctype'    => $ctype,
             'category' => $category,
-            'form' => $form,
+            'form'     => $form,
             'back_url' => $back_url,
-            'errors' => isset($errors) ? $errors : false
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }

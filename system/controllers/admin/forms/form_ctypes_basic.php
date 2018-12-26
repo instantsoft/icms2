@@ -94,6 +94,31 @@ class formAdminCtypesBasic extends cmsForm {
                     new fieldCheckbox('options:is_show_cats', array(
                         'title' => LANG_CP_CATEGORIES_SHOW,
                         'visible_depend' => array('is_cats' => array('show' => array('1')))
+                    )),
+                    new fieldListMultiple('options:cover_sizes', array(
+                        'title' => LANG_CP_CAT_COVER_SIZES,
+                        'default' => array(),
+                        'generator' => function (){
+                            $presets = cmsCore::getModel('images')->getPresetsList();
+                            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                            return $presets;
+                        },
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
+                    )),
+                    new fieldList('options:context_list_cover_sizes', array(
+                        'title'        => LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_CP_CONTEXT_SELECT_LIST,
+                        'generator' => function($ctype) use ($template){
+                            return $template->getAvailableContentListStyles();
+                        },
+                        'values_generator' => function() {
+                            $presets = cmsCore::getModel('images')->getPresetsList();
+                            $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                            return $presets;
+                        },
+                        'visible_depend' => array('is_cats' => array('show' => array('1')))
                     ))
                 )
             ),
@@ -313,6 +338,9 @@ class formAdminCtypesBasic extends cmsForm {
                 'childs' => array(
                     new fieldCheckbox('options:is_cats_title', array(
                         'title' => LANG_CP_SEOMETA_CATS_TITLE
+                    )),
+                    new fieldCheckbox('options:is_cats_h1', array(
+                        'title' => LANG_CP_SEOMETA_CATS_H1
                     )),
                     new fieldCheckbox('options:is_cats_keys', array(
                         'title' => LANG_CP_SEOMETA_CATS_KEYS

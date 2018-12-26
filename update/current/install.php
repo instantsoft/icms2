@@ -13,9 +13,22 @@ function install_package(){
 	foreach($ctypes as $ctype){
 
         $table_name = $content_model->table_prefix . $ctype['name'];
+        $table_name_cat = $table_name.'_cats';
 
         if(!$core->db->isFieldExists($table_name, 'template')){
             $content_model->db->query("ALTER TABLE `{#}{$table_name}` ADD `template` VARCHAR(150) NULL DEFAULT NULL AFTER `tags`");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'is_hidden')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `is_hidden` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'cover')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `cover` tinytext");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'seo_h1')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `seo_h1` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_title`");
         }
 
 	}

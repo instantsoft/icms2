@@ -133,6 +133,9 @@
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');
     define('LANG_CP_SEOMETA_CATS',              'SEO: Categories');
+    define('LANG_CP_CAT_COVER_SIZES',           'Category Cover Presets');
+    define('LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES', 'List Cover Preset');
+    define('LANG_CP_SEOMETA_CATS_H1',           'Allow custom H1 tag for category pages');
     define('LANG_CP_SEOMETA_CATS_TITLE',        'Allow custom titles for category pages');
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Allow custom keywords for categories');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Allow custom META descriptions for categories');

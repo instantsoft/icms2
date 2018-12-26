@@ -131,6 +131,15 @@ class actionContentCategoryView extends cmsAction {
 
         $list_styles = array();
 
+        $current_style = '';
+        if(!empty($ctype['options']['list_style'])){
+            if(is_array($ctype['options']['list_style'])){
+                $current_style = $ctype['options']['list_style'][0] ? '_'.$ctype['options']['list_style'][0] : '';
+            } else {
+                $current_style = '_'.$ctype['options']['list_style'];
+            }
+        }
+
         if(!empty($ctype['options']['list_style'])){
             if(is_array($ctype['options']['list_style']) && count($ctype['options']['list_style']) > 1){
 
@@ -185,6 +194,13 @@ class actionContentCategoryView extends cmsAction {
             }
         }
 
+        $ctype['options']['cover_preset'] = '';
+        if(!empty($ctype['options']['cover_sizes']) && !empty($ctype['options']['context_list_cover_sizes'])){
+            if(array_key_exists($current_style, $ctype['options']['context_list_cover_sizes'])){
+                $ctype['options']['cover_preset'] = $ctype['options']['context_list_cover_sizes'][$current_style];
+            }
+        }
+
         // кешируем
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_category', $category);
@@ -206,7 +222,7 @@ class actionContentCategoryView extends cmsAction {
         }
 
         $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $page_header = !empty($category['title']) ? $category['title'] : $list_header;
+        $page_header = !empty($category['seo_h1']) ? $category['seo_h1'] : (!empty($category['title']) ? $category['title'] : $list_header);
         $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
 
         $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];

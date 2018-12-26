@@ -92,16 +92,20 @@
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
     <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
-        <ul class="<?php echo $ctype['name'];?>_icon">
+        <ul class="<?php echo $ctype['name'];?>_icon <?php if($ctype['options']['cover_preset']){ ?>has_cover_preset cover_preset_<?php echo $ctype['options']['cover_preset'];?><?php } ?>">
             <?php foreach($subcats as $c){ ?>
 
             <?php
+                if(!empty($c['is_hidden'])){ continue; }
                 $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
                 $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
+                $img_src  = html_image_src($c['cover'], $ctype['options']['cover_preset'], true);
             ?>
 
-                <li class="<?php echo str_replace('/', '-', $c['slug']);?>">
-                    <a href="<?php echo href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $c['slug']); ?>"><?php echo $c['title']; ?></a>
+                <li <?php if($img_src){ ?>style="background-image: url(<?php echo $img_src; ?>);"<?php } ?> class="<?php echo str_replace('/', '-', $c['slug']);?> <?php if($img_src){ ?>set_cover_preset<?php } ?>">
+                    <a href="<?php echo href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $c['slug']); ?>">
+                        <span><?php echo $c['title']; ?></span>
+                    </a>
                 </li>
             <?php } ?>
         </ul>

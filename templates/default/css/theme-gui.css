@@ -409,6 +409,7 @@
     color: #B3C2C9;
     box-sizing: border-box;
     clear: both;
+    overflow: hidden;
 }
 
 .gui-panel h3 {
