@@ -2435,7 +2435,6 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 
@@ -2791,7 +2790,7 @@ class modelContent extends cmsModel {
     /**
      * @deprecated
      *
-     * Метод для своместимости
+     * Метод для совместимости
      * @param string $ctype_name
      * @param integer $user_id
      * @return boolean
