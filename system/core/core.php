@@ -71,7 +71,7 @@ class cmsCore {
             // язык может быть только двухбуквенный, определяем его по первому сегменту
             if (!empty($segments[0]) && preg_match('/^[a-z]{2}$/i', $segments[0])) {
                 if(is_dir($config->root_path.'system/languages/'.$segments[0].'/')){
-                    // язык по-умолчанию без префиксов, дубли нам не нужны
+                    // язык по умолчанию без префиксов, дубли нам не нужны
                     if($segments[0] != $config->language){
 
                         self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
@@ -686,7 +686,7 @@ class cmsCore {
 
         $config = cmsConfig::getInstance();
 
-        // контроллер и экшен по-умолчанию
+        // контроллер и экшен по умолчанию
         if (!$this->uri_controller){ $this->uri_controller = $config->ct_autoload;	}
         if (!$this->uri_action) { $this->uri_action = 'index'; }
 

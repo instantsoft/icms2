@@ -12,14 +12,14 @@ function loadTxt() {
     document.getElementById("lblLetterSpacing").innerHTML = "Межсимвольный интервал:";
     document.getElementById("lblWordSpacing").innerHTML = "Интервал между словами:";
     document.getElementById("lblNote").innerHTML = "Эта возможность недоступна в IE.";
-    document.getElementById("divShadowClear").innerHTML = "Очистить";    
+    document.getElementById("divShadowClear").innerHTML = "Очистить";
 }
 function writeTitle() {
     document.write("<title>" + "Текст" + "</title>")
 }
 function getTxt(s) {
     switch (s) {
-        case "DEFAULT SIZE": return "По-умолчанию";
+        case "DEFAULT SIZE": return "По умолчанию";
         case "Heading 1": return "Заголовок 1";
         case "Heading 2": return "Заголовок 2";
         case "Heading 3": return "Заголовок 3";
