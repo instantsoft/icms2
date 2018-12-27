@@ -277,6 +277,7 @@
     define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
     define('LANG_PM_MODERATION_COMMENT_REFUSED', 'Модератор отклонил ваш комментарий на странице <b>%1$s</b>.%2$s Причина отклонения: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'Модератор возвратил страницу <b><a href="%2$s">%1$s</a></b> на доработку и указал замечания:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Устраните, пожалуйста, замечания в тексте.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');

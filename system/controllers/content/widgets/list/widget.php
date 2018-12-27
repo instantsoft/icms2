@@ -38,15 +38,7 @@ class widgetContentList extends cmsWidget {
 		}
 
         if ($dataset_id){
-
             $dataset = $model->getContentDataset($dataset_id);
-
-            if ($dataset){
-                $model->applyDatasetFilters($dataset);
-            } else {
-                $dataset_id = false;
-            }
-
         }
 
         if ($relation_id && $current_ctype_item && $current_ctype){
@@ -76,6 +68,10 @@ class widgetContentList extends cmsWidget {
                 }
             }
 
+        }
+
+        if (!empty($dataset)){
+            $model->applyDatasetFilters($dataset);
         }
 
 		if ($category){

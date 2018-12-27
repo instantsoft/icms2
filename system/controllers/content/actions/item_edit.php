@@ -80,7 +80,7 @@ class actionContentItemEdit extends cmsAction {
         if ($ctype['is_in_groups'] || $ctype['is_in_groups_only']){
 
             $groups_model = cmsCore::getModel('groups');
-            $groups = $groups_model->getUserGroups($this->cms_user->id);
+            $groups = $groups_model->getUserGroups($item['user_id']);
 
             if ($groups){
                 $groups_list = ($ctype['is_in_groups_only']) ? array() : array('0'=>'');
@@ -278,6 +278,19 @@ class actionContentItemEdit extends cmsAction {
 
                     }
 
+                } else {
+
+                    if($is_moderator && !$is_owner){
+
+                        $item['reason']   = LANG_PM_MODERATION_REWORK_DRAFT;
+                        $item['page_url'] = href_to_abs($ctype['name'], 'edit', $item['id']);
+
+                        $this->controller_moderation->moderationNotifyAuthor($item, 'moderation_rework');
+
+                        cmsUser::addSessionMessage(LANG_MODERATION_REMARK_NOTIFY, 'info');
+
+                    }
+
                 }
 
                 $back_url = $this->request->get('back', '');
@@ -300,6 +313,20 @@ class actionContentItemEdit extends cmsAction {
 
         $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
 
+        $button_draft_text = LANG_CONTENT_SAVE_DRAFT;
+
+        if(!$item['is_draft']){
+            if($show_save_button){
+                if($is_moderator && !$is_owner){
+                    $button_draft_text = LANG_MODERATION_RETURN_FOR_REVISION;
+                } else {
+                    $button_draft_text = LANG_CONTENT_MOVE_DRAFT;
+                }
+            } else {
+                $button_draft_text = LANG_SAVE;
+            }
+        }
+
         return $this->cms_template->render('item_form', array(
             'do'               => 'edit',
             'page_title'       => $item['title'],
@@ -314,7 +341,7 @@ class actionContentItemEdit extends cmsAction {
             'is_premoderation' => $is_premoderation,
             'show_save_button' => $show_save_button,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
-            'button_draft_text' => (!$item['is_draft'] ? ($show_save_button ? LANG_CONTENT_MOVE_DRAFT : LANG_SAVE) : LANG_CONTENT_SAVE_DRAFT),
+            'button_draft_text' => $button_draft_text,
             'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => false,
             'add_cats'         => $add_cats,

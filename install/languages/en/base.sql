@@ -789,7 +789,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (149, 'content_before_list', 'tags', 149, 1),
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
-(152, 'engine_start', 'content', 152, 1);
+(152, 'engine_start', 'content', 152, 1),
+(153, 'content_category_after_update', 'subscriptions', 153, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

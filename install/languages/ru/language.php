@@ -4,7 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
+    define('LANG_MANUAL',                   '<a href="https://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');

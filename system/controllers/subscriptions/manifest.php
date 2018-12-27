@@ -13,6 +13,7 @@
             'content_after_add_approve',
             'publish_delayed_content',
             'user_notify_types',
+            'content_category_after_update',
             'user_tab_show'
         )
 

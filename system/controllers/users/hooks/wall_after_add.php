@@ -32,7 +32,7 @@ class onUsersWallAfterAdd extends cmsAction {
             'author_url'      => href_to_abs('users', $entry['user_id']),
             'author_nickname' => $entry['user_nickname'],
             'content'         => $entry['content_html']
-        ));
+        ), 'users_wall_write');
 
     }
 

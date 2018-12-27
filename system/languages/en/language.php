@@ -278,6 +278,7 @@
     define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_COMMENT_REFUSED', 'A moderator has rejected your comment on the page <b>%1$s</b>.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'The moderator returned the <b><a href="%2$s">%1$s</a></b> page for revision and pointed remarks:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Please correct the notes in the text.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');

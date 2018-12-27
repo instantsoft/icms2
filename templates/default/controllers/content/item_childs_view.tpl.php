@@ -79,7 +79,7 @@
     </div>
 </div>
 <?php
-    if ($toolbar_html) {
+    if (!empty($toolbar_html)) {
         echo html_each($toolbar_html);
     }
 ?>

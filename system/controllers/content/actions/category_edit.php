@@ -30,33 +30,42 @@ class actionContentCategoryEdit extends cmsAction {
         if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $category = $form->parse($this->request, true);
+            $new_category = $form->parse($this->request, true);
 
             // Проверям правильность заполнения
-            $errors = $form->validate($this,  $category);
+            $errors = $form->validate($this,  $new_category);
 
             if (!$errors){
 
                 // Обнуляем ручной SLUG, ключевые слова и описание
                 // если они не разрешены для ручного ввода
-                if ($ctype['options']['is_cats_auto_url']){ $category['slug_key'] = null; }
-                if (!$ctype['options']['is_cats_keys']){ $category['seo_keys'] = null; }
-                if (!$ctype['options']['is_cats_desc']){ $category['seo_desc'] = null; }
+                if ($ctype['options']['is_cats_auto_url']){ $new_category['slug_key'] = null; }
+                if (!$ctype['options']['is_cats_keys']){ $new_category['seo_keys'] = null; }
+                if (!$ctype['options']['is_cats_desc']){ $new_category['seo_desc'] = null; }
 
                 // Добавляем категорию и редиректим на ее просмотр
-                $category = $this->model->updateCategory($ctype_name, $id, $category);
+                $new_category = $this->model->updateCategory($ctype_name, $id, $new_category);
+
+                list($ctype, $category, $new_category) = cmsEventsManager::hook('content_category_after_update', array(
+                    $ctype, $category, $new_category
+                ));
+                list($ctype, $category, $new_category) = cmsEventsManager::hook('content_'.$ctype['name'].'_category_after_update', array(
+                    $ctype, $category, $new_category
+                ));
 
                 if ($back_url){
                     $this->redirect($back_url);
                 } else {
                     if ($ctype['options']['list_on']){
-                        $this->redirectTo($ctype_name, $category['slug']);
+                        $this->redirectTo($ctype_name, $new_category['slug']);
                     } else {
                         $this->redirectToHome();
                     }
                 }
 
             }
+
+            $category = $new_category;
 
             if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');

@@ -8,7 +8,7 @@ class onUsersUserPrivacyTypes extends cmsAction {
 
         $types['users_profile_view'] = array(
             'title'   => LANG_USERS_PRIVACY_PROFILE_VIEW,
-            'options' => array('anyone', 'friends')
+            'options' => array('', 'anyone', 'friends')
         );
 
         if(!empty($this->options['is_friends_on'])){

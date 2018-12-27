@@ -567,6 +567,18 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
+    public function replaceFieldString($table_name, $search, $replace, $field){
+
+        $search = $this->db->escape($search);
+        $replace = $this->db->escape($replace);
+
+        return $this->db->query("UPDATE `{#}{$table_name}` SET `{$field}` = REPLACE(`{$field}`, '{$search}', '$replace') WHERE `{$field}` LIKE '%{$search}%'");
+
+    }
+
+//============================================================================//
+//============================================================================//
+
     public function lockFilters(){
         $this->keep_filters = true;
         return $this;
