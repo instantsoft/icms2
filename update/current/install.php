@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.10.1 => 2.10.2
+ * 2.10.1 => 2.11.0
  */
 function install_package(){
 
