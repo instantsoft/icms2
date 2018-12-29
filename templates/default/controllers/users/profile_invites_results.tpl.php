@@ -2,7 +2,9 @@
 
     $this->setPageTitle(LANG_USERS_MY_INVITES);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
     $this->addBreadcrumb(LANG_USERS_MY_INVITES);
 

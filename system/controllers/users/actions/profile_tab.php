@@ -30,6 +30,13 @@ class actionUsersProfileTab extends cmsAction {
 
         $this->request->set('dataset', $dataset);
 
+        $this->cms_template->setPageTitle($tab['title'], $profile['nickname']);
+
+        if($this->listIsAllowed()){
+            $this->cms_template->addBreadcrumb(LANG_USERS, href_to('users'));
+        }
+        $this->cms_template->addBreadcrumb($profile['nickname'], href_to_profile($profile));
+
         $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 

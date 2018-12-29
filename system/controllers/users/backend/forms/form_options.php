@@ -31,6 +31,11 @@ class formUsersOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
+                    )),
+                    new fieldListGroups('list_allowed', array(
+                        'title' => LANG_USERS_OPT_LIST_ALLOWED,
+                        'show_all' => true,
+                        'default'  => array(0)
                     ))
 
                 )

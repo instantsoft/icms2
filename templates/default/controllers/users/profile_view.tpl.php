@@ -6,7 +6,9 @@
     $this->setPagePatternTitle($profile, 'nickname');
     $this->setPagePatternDescription($profile, 'nickname');
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname']);
 
     $this->addToolButtons($tool_buttons);

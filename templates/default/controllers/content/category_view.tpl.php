@@ -91,7 +91,7 @@
 <?php } ?>
 
 <?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
-    <div class="gui-panel content_categories<?php if (count($subcats)>8){ ?> categories_small<?php } ?>">
+    <div class="gui-panel content_categories<?php if (count($subcats)>8 && !$ctype['options']['cover_preset']){ ?> categories_small<?php } ?>">
         <ul class="<?php echo $ctype['name'];?>_icon <?php if($ctype['options']['cover_preset']){ ?>has_cover_preset cover_preset_<?php echo $ctype['options']['cover_preset'];?><?php } ?>">
             <?php foreach($subcats as $c){ ?>
 

@@ -56,7 +56,8 @@ article div.content_categories:last-child {
     padding-left: 40px;
 }
 .widget_content_tree .cover_preset_micro li.set_cover_preset {
-    line-height: 45px
+    line-height: 45px;
+    background-position: left center;
 }
 .content_categories li a { color:#68809B; }
 .content_categories li a:hover { color:#d35400; }

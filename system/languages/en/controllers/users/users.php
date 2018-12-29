@@ -74,6 +74,7 @@
     define('LANG_USERS_DS_ONLINE',          'Online');
     define('LANG_USERS_DS_RATED',           'Rating');
     define('LANG_USERS_DS_DATE_LOG',        'Last visit');
+    define('LANG_USERS_OPT_LIST_ALLOWED',   'Users list is available for');
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Show filter');
 

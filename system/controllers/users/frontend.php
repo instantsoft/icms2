@@ -378,4 +378,14 @@ class users extends cmsFrontend {
 
     }
 
+    public function listIsAllowed() {
+
+        if(empty($this->options['list_allowed'])){
+            return true;
+        }
+
+        return $this->cms_user->isInGroups($this->options['list_allowed']);
+
+    }
+
 }

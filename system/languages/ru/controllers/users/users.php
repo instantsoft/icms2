@@ -74,6 +74,7 @@
     define('LANG_USERS_DS_ONLINE',          'Онлайн');
     define('LANG_USERS_DS_RATED',           'Рейтинг');
     define('LANG_USERS_DS_DATE_LOG',        'Дата последнего визита');
+    define('LANG_USERS_OPT_LIST_ALLOWED',   'Список доступен для');
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Показывать фильтр');
 

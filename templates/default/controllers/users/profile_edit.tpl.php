@@ -4,7 +4,9 @@
 
     $this->setPageTitle(LANG_USERS_EDIT_PROFILE);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
 
     $this->addToolButton(array(
