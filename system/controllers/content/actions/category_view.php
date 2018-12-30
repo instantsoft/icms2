@@ -196,8 +196,9 @@ class actionContentCategoryView extends cmsAction {
 
         $ctype['options']['cover_preset'] = '';
         if(!empty($ctype['options']['cover_sizes']) && !empty($ctype['options']['context_list_cover_sizes'])){
-            if(array_key_exists($current_style, $ctype['options']['context_list_cover_sizes'])){
-                $ctype['options']['cover_preset'] = $ctype['options']['context_list_cover_sizes'][$current_style];
+            $cover_key = ltrim($current_style, '_');
+            if(array_key_exists($cover_key, $ctype['options']['context_list_cover_sizes'])){
+                $ctype['options']['cover_preset'] = $ctype['options']['context_list_cover_sizes'][$cover_key];
             }
         }
 

@@ -71,7 +71,7 @@
     define('LANG_DATABASE_BASE',            'База данных');
     define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
     define('LANG_DATABASE_ENGINE',          'Движок базы данных');
-    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
+    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте InnoDB.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');

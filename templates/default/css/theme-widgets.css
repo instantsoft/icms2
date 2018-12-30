@@ -484,7 +484,7 @@ aside .widget_tabbed > .tabs .links a {
     margin-left: 0px;
     list-style: none;
     padding-left:20px;
-    background: url("../images/icons/folder.png") no-repeat left 1px;
+    background: url("../images/icons/folder.png") no-repeat left center;
 }
 .folder_hidden { display: none; }
 .widget_content_tree ul li.active > a:hover,
