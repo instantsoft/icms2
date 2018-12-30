@@ -24,7 +24,7 @@ function install_package(){
         }
 
         if(!$core->db->isFieldExists($table_name_cat, 'cover')){
-            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `cover` tinytext");
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `cover` TEXT NULL DEFAULT NULL");
         }
 
         if(!$core->db->isFieldExists($table_name_cat, 'seo_h1')){

@@ -83,11 +83,9 @@ article div.content_categories:last-child {
     background-repeat: no-repeat;
     background-position: left center;
     line-height: 64px;
-    padding: 0 0 0 32px;
-    box-sizing: border-box;
-}
-.cover_preset_small > li.set_cover_preset {
     padding: 0 0 0 80px;
+    box-sizing: border-box;
+    background-image: url("../images/folder64.png");
 }
 .widget_content_tree .cover_preset_normal > li {
     flex-basis: 40%;

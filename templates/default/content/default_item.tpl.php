@@ -52,15 +52,15 @@
         <div class="content_item_props <?php echo $ctype['name']; ?>_item_props">
             <table>
                 <tbody>
-                    <?php foreach($props_fieldsets as $fieldset){ ?>
+                    <?php foreach($props_fieldsets as $fieldset_id => $fieldset){ ?>
                         <?php if ($fieldset['title']){ ?>
-                            <tr>
+                            <tr class="props_groups props_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
                                 <td class="heading" colspan="2"><?php html($fieldset['title']); ?></td>
                             </tr>
                         <?php } ?>
                         <?php if ($fieldset['fields']){ ?>
                             <?php foreach($fieldset['fields'] as $prop){ ?>
-                                 <tr>
+                                 <tr class="prop_wrap prop_<?php echo $prop['type']; ?>">
                                     <td class="title"><?php html($prop['title']); ?></td>
                                     <td class="value">
                                         <?php echo $prop['html']; ?>
