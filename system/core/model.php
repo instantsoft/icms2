@@ -63,6 +63,7 @@ class cmsModel {
     protected $localized = false;
     protected $privacy_filter_disabled = false;
     protected $privacy_filtered = false;
+    protected $privacy_filter_value = 0;
     protected $approved_filter_disabled = false;
     protected $hidden_parents_filter_disabled = true;
     protected $delete_filter_disabled = false;
@@ -607,6 +608,7 @@ class cmsModel {
 		$this->filter_on          = false;
         $this->where              = '';
         $this->privacy_filtered   = false;
+        $this->privacy_filter_value = 0;
         $this->approved_filtered  = false;
         $this->available_filtered = false;
         $this->hp_filtered        = false;
@@ -979,11 +981,18 @@ class cmsModel {
 
     public function disablePrivacyFilter(){
         $this->privacy_filter_disabled = true;
+        $this->privacy_filter_value = 0;
+        return $this;
+    }
+
+    public function disablePrivacyFilterForFriends(){
+        $this->privacy_filter_value = array(0, 1);
         return $this;
     }
 
     public function enablePrivacyFilter(){
         $this->privacy_filter_disabled = false;
+        $this->privacy_filter_value = 0;
         return $this;
     }
 
@@ -1000,7 +1009,11 @@ class cmsModel {
         // используем флаг чтобы фильтр не применился дважды
         $this->privacy_filtered = true;
 
-        return $this->filterEqual('i.is_private', 0);
+        if(is_array($this->privacy_filter_value)){
+            return $this->filterIn('i.is_private', $this->privacy_filter_value);
+        }
+
+        return $this->filterEqual('i.is_private', $this->privacy_filter_value);
 
     }
 

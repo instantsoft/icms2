@@ -1,12 +1,49 @@
 <?php
 /**
- * 2.11.0 => 2.11.1
+ * 2.10.1 => 2.11.0
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
     $content_model = cmsCore::getModel('content');
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        $table_name = $content_model->table_prefix . $ctype['name'];
+        $table_name_cat = $table_name.'_cats';
+
+        if(!$core->db->isFieldExists($table_name, 'template')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name}` ADD `template` VARCHAR(150) NULL DEFAULT NULL AFTER `tags`");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'is_hidden')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `is_hidden` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'cover')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `cover` TEXT NULL DEFAULT NULL");
+        }
+
+        if(!$core->db->isFieldExists($table_name_cat, 'seo_h1')){
+            $content_model->db->query("ALTER TABLE `{#}{$table_name_cat}` ADD `seo_h1` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_title`");
+        }
+
+	}
+
+    if(!$core->db->isFieldExists('widgets_bind', 'languages')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `languages` VARCHAR(100) NULL DEFAULT NULL AFTER `template_layouts`;");
+    }
+
+    if(!$core->db->isFieldExists('scheduler_tasks', 'consistent_run')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `consistent_run` TINYINT(1) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('menu_items', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}menu_items` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `parent_id`");
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -55,6 +92,8 @@ function install_package(){
             }
         }
     }
+
+    save_controller_options(array('sitemap', 'comments', 'geo', 'auth'));
 
     return true;
 

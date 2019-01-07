@@ -480,7 +480,7 @@ function string_replace_keys_values_extended($string, $data){
                 $params = explode('|', $property);
                 // второй параметр - функция
                 $func = $params[1];
-                if(function_exists($func)){
+                if(function_exists($func) || strpos($func, ':') !== false){
 
                     // первый параметр остаётся как $property
                     $property = $params[0];
@@ -490,14 +490,18 @@ function string_replace_keys_values_extended($string, $data){
                     if(strpos($func, ':') !== false){
                         $par = explode(':', $func);
                         $func = $par[0]; unset($par[0]);
-                        foreach ($par as $k => $p) {
-                            // если параметр - массив
-                            if(strpos($p, '=') !== false){
-                                $out = array(); parse_str($p, $out);
-                                $par[$k] = $out;
+                        if(function_exists($func)){
+                            foreach ($par as $k => $p) {
+                                // если параметр - массив
+                                if(strpos($p, '=') !== false){
+                                    $out = array(); parse_str($p, $out);
+                                    $par[$k] = $out;
+                                }
                             }
+                            $func_params = $func_params + $par;
+                        } else {
+                            $func = false;
                         }
-                        $func_params = $func_params + $par;
                     }
 
                 } else {

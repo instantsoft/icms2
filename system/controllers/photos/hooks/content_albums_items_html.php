@@ -23,6 +23,10 @@ class onPhotosContentAlbumsItemsHtml extends cmsAction {
             $this->model->disableApprovedFilter();
         }
 
+        if($this->cms_user->isFriend($profile['id'])){
+            $this->model->disablePrivacyFilterForFriends();
+        }
+
         $profile['url_params'] = array('photo_page' => 1);
         $profile['base_url']   = href_to('users', $profile['id'], array('content', $ctype['name']));
 

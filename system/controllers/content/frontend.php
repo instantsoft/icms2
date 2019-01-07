@@ -424,7 +424,11 @@ class content extends cmsFrontend {
         }
 
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
-        if (!empty($ctype['options']['is_cats_title']) || $ctype['options']['is_cats_keys'] || $ctype['options']['is_cats_desc']){
+        if (!empty($ctype['options']['is_cats_title']) ||
+                !empty($ctype['options']['is_cats_h1']) ||
+                !empty($ctype['options']['is_cats_keys']) ||
+                !empty($ctype['options']['is_cats_desc'])){
+
             $fieldset_id = $form->addFieldset( LANG_SEO );
             if (!empty($ctype['options']['is_cats_h1'])){
                 $form->addField($fieldset_id, new fieldString('seo_h1', array(
