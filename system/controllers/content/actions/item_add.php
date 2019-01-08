@@ -301,6 +301,10 @@ class actionContentItemAdd extends cmsAction {
 
                 $item = $this->model->addContentItem($ctype, $item, $fields);
 
+                $item['ctype_name'] = $ctype['name'];
+                $item['ctype_id']   = $ctype['id'];
+                $item['ctype_data'] = $ctype;
+
                 $this->bindItemToParents($ctype, $item, $parents);
 
                 $item = cmsEventsManager::hook('content_after_add', $item);
