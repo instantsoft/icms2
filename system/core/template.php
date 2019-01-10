@@ -1835,15 +1835,29 @@ class cmsTemplate {
 
         $columns = array();
         if($grid['options']['load_columns']){
+            $clear_filter = '<a class="clear_filter" href="#" onclick="return icms.datagrid.resetFilter(this)"></a>';
             foreach($grid['columns'] as $name=>$column){
                 if ($name==='id' && !$grid['options']['show_id']){continue;}
+                if(!empty($column['filter']) && $column['filter'] !== 'none'){
+                    $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array();
+                    if(strpos($name, 'date_') === 0){
+                        $filter = html_datepicker('filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))).$clear_filter;
+                    }else
+                    if(!empty($column['filter_select'])){
+                        $filter = html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name)));
+                    }else{
+                        $filter = html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))).$clear_filter;
+                    }
+                }else{
+                    $filter = '';
+                }
                 $columns[] = array(
                     'sortable'  => $grid['options']['is_sortable'],
                     'width'     => isset($column['width']) ? $column['width'] : '',
                     'title'     => $column['title'],
                     'name'      => $name,
-                    'filter'    => (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false) ?
-                    html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)) : ''
+                    'filter'    => $filter,
+                    'order_to'  => !empty($grid['filter']['order_by']) && $grid['filter']['order_by'] === $name && !empty($grid['filter']['order_to']) ? $grid['filter']['order_to'] : ''
                 );
             }
             if($grid['actions']){

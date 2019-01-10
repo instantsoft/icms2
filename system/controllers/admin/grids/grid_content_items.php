@@ -7,6 +7,7 @@ function grid_content_items($controller, $ctype_name=false){
         'is_sortable' => true,
         'is_filter' => true,
         'is_pagination' => true,
+        'is_columns_settings' => true,
         'is_draggable' => false,
         'is_selectable' => true,
         'order_by' => 'id',

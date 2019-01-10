@@ -94,6 +94,10 @@
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','How display in filter');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Enter default values from exist data');
+    define('LANG_PARSER_STRING_SELECT',      'Select with default values');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Not empty field checkbox');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');

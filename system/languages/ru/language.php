@@ -93,6 +93,10 @@
     define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','Вариант отображения в фильтре');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Заполнить предустановленные значения из имеющихся данных');
+    define('LANG_PARSER_STRING_SELECT',      'Выпадающий список с предустановленными значениями');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Флаг заполненности поля');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');

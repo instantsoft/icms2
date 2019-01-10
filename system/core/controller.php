@@ -760,6 +760,7 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
+        list($grid, $args) = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name.'_args', array($grid, $args));
 
         if ($this->request->isAjax() && $this->request->has('heads')) {
 

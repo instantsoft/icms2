@@ -68,6 +68,22 @@
     define('LANG_CP_CTYPE_DATASETS',            'Наборы');
     define('LANG_CP_CTYPE_DATASET',             'Набор');
 
+    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Настройки столбцов');
+    define('LANG_CP_GRID_COLYMNS_SYSTEM',       'Системные');
+    define('LANG_CP_GRID_COLYMNS_USER',         'Пользовательские');
+    define('LANG_CP_GRID_COLYMNS_FILTER',       'Фильтр');
+    define('LANG_CP_GRID_COLYMNS_DISPLAY',      'Отображение');
+    define('LANG_CP_GRID_COLYMNS_EXACT',        'Точное соответствие');
+    define('LANG_CP_GRID_COLYMNS_LIKE',         'Вхождение в строку');
+    define('LANG_CP_GRID_COLYMNS_DATE',         'Дата');
+    define('LANG_CP_GRID_COLYMNS_SELECT',       'Список');
+    define('LANG_CP_GRID_COLYMNS_FLAG',         'Переключатель');
+    define('LANG_CP_GRID_COLYMNS_RESET',        'Сбросить');
+    define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'Первые 100 символов');
+    define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Кол-во изображений');
+    define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Превью');
+    define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Подставить в фильтр');
+
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Создать запись');
