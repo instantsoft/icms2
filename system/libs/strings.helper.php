@@ -130,7 +130,7 @@ function string_parse_list($string_list){
 
 }
 
-function string_explode_list($string_list){
+function string_explode_list($string_list, $index_as_value = false){
 
     $items = array();
     $rows = explode("\n", trim($string_list));
@@ -139,7 +139,7 @@ function string_explode_list($string_list){
             if (mb_strpos($row, '|')){
                 list($index, $value) = explode('|', trim($row));
             } else {
-                $index = $count + 1;
+                $index = $index_as_value ? $row : ($count + 1);
                 $value = $row;
             }
             $items[trim($index)] = trim($value);

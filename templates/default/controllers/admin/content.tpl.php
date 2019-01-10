@@ -170,6 +170,7 @@
                             }else{
                                 icms.datagrid.loadRows();
                             }
+                            $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"></a>');
                         },
 
                         onLazyRead: function(node){
@@ -187,6 +188,23 @@
                             $(this).parents('tr').addClass($(this).data('class'));
                         });
                     };
+                    $('.datagrid').tooltip({
+                      items: 'td > a:has(.grid_image_preview)',
+                      content: function(){
+                        var element = $(this);
+                        if(element.is('a')){
+                          return '<img class="datagrid_image_preview" alt="" src="'+element.attr('href')+'" />';
+                        }
+                      },
+                      position: {
+                          using: function(position, feedback){
+                              position['max-width'] = '500px';
+                              $(this).css(position);
+                          }
+                      },
+                      hide: {duration: 0},
+                      show: {duration: 0}
+                    });
                 });
 
             </script>

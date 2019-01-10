@@ -24,6 +24,15 @@ class fieldString extends cmsFormField {
             new fieldCheckbox('show_symbol_count', array(
                 'title' => LANG_PARSER_SHOW_SYMBOL_COUNT
             )),
+            new fieldList('in_filter_as', array(
+                'title' => LANG_PARSER_STRING_DISPLAY_VARIANT,
+                'hint'  => '<a href="#" onclick="return fieldStringLoadDefault(\''.cmsTemplate::getInstance()->href_to('ctypes', array('field_string_ajax', $this->name)).'\')" class="ajaxlink">'.LANG_PARSER_STRING_ENTER_DEFAULT.'</a>',
+                'items' => array(
+                    'input'     => LANG_PARSER_STRING,
+                    'select'    => LANG_PARSER_STRING_SELECT,
+                    'checkbox'  => LANG_PARSER_STRING_CHECKBOX
+                )
+            )),
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_HINT.LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
@@ -59,7 +68,28 @@ class fieldString extends cmsFormField {
     }
 
     public function applyFilter($model, $value) {
-        return $model->filterLike($this->name, "%{$value}%");
+        switch($this->getOption('in_filter_as')){
+            case 'select':
+                return $model->filterEqual($this->name, $value);
+            case 'checkbox':
+                if($value){ // работает и без этого
+                    return $model->filterNotNull($this->name);
+                }
+                return $model;
+            case 'input':
+            default:
+                return $model->filterLike($this->name, '%'.$value.'%');
+        }
+    }
+
+    public function getFilterInput($value){
+        if($this->getOption('in_filter_as') === 'select'){
+            $this->data['items'] = array('' => '');
+            if($this->hasDefaultValue()){
+                $this->data['items'] = $this->data['items'] + string_explode_list($this->getDefaultValue(), true);
+            }
+        }
+        return parent::getFilterInput($value);
     }
 
     public function store($value, $is_submitted, $old_value=null){

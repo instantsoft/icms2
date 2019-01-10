@@ -68,6 +68,22 @@
     define('LANG_CP_CTYPE_DATASETS',            'Datasets');
     define('LANG_CP_CTYPE_DATASET',             'Dataset');
 
+    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Columns settings');
+    define('LANG_CP_GRID_COLYMNS_SYSTEM',       'System');
+    define('LANG_CP_GRID_COLYMNS_USER',         'User');
+    define('LANG_CP_GRID_COLYMNS_FILTER',       'Filter');
+    define('LANG_CP_GRID_COLYMNS_DISPLAY',      'Display');
+    define('LANG_CP_GRID_COLYMNS_EXACT',        'Exact match');
+    define('LANG_CP_GRID_COLYMNS_LIKE',         'Like in string');
+    define('LANG_CP_GRID_COLYMNS_DATE',         'Date');
+    define('LANG_CP_GRID_COLYMNS_SELECT',       'Select');
+    define('LANG_CP_GRID_COLYMNS_FLAG',         'Switch');
+    define('LANG_CP_GRID_COLYMNS_RESET',        'Reset');
+    define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'First 100 symbols');
+    define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Number of images');
+    define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Preview');
+    define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Put in filter');
+
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Add Entry');

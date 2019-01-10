@@ -121,6 +121,8 @@ class cmsFormField {
      */
     public $excluded_controllers = array();
 
+    public $context = null;
+
     /**
      * @param string $name Имя поля
      * @param array $options Массив опций
@@ -240,6 +242,7 @@ class cmsFormField {
      */
     public function setOption($key, $value) { $this->options[$key] = $value; return $this; }
 
+    public function setContext($value){$this->context = $value; return $this;}
     /**
      * Возвращает название поля
      * @return string
