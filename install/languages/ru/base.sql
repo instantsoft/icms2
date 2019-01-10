@@ -791,7 +791,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (150, 'tags_search_subjects', 'content', 150, 1),
 (151, 'images_before_upload', 'typograph', 151, 1),
 (152, 'engine_start', 'content', 152, 1),
-(153, 'content_category_after_update', 'subscriptions', 153, 1);
+(153, 'content_category_after_update', 'subscriptions', 153, 1),
+(154, 'grid_admin_content_items_args', 'admin', 154, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
