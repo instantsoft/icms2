@@ -105,10 +105,9 @@ class actionContentCategoryView extends cmsAction {
         $this->model->enableHiddenParentsFilter();
 
         // Формируем базовые URL для страниц
-        $page_url = array(
-            'base'  => href_to($ctype['name'] . ($dataset ? '-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : ''),
-            'first' => href_to($ctype['name'] . ($dataset ? '-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : '')
-        );
+        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+
+        $page_url = href_to($base_url . ($dataset ? (!$base_url ? $ctype['name'] : '').'-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : '');
 
         // если не на главной
         if(!$is_frontpage){
@@ -226,7 +225,6 @@ class actionContentCategoryView extends cmsAction {
         $page_header = !empty($category['seo_h1']) ? $category['seo_h1'] : (!empty($category['title']) ? $category['title'] : $list_header);
         $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
 
-        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
         $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
         if (!$is_frontpage){
