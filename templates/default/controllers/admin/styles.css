@@ -1096,17 +1096,26 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid_dataset_filter label{
     padding-right:15px;
 }
-.datagrid_dataset_filter select, .datagrid_grid_columns_settings label {
+.datagrid_dataset_filter select {
     width:160px;
 }
-
-.datagrid_grid_columns_settings td{
-    text-align: center;
+.datagrid_grid_columns_settings form select {
+    width: 100%;
+}
+.datagrid_grid_columns_settings table{
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+}
+.datagrid_grid_columns_settings td, .datagrid_grid_columns_settings th{
+    text-align: left;
     padding: 5px 10px;
 }
-
-.datagrid_grid_columns_settings tr td:nth-child(2){
-    text-align: left;
+.datagrid_grid_columns_settings th:first-child {
+    width: 180px;
+}
+.datagrid_grid_columns_settings tr td:nth-child(2), .datagrid_grid_columns_settings tr td:nth-child(3){
+    width: 200px;
 }
 
 .datagrid_dataset_filter select.dataset {
@@ -1242,7 +1251,7 @@ ul.errors li .hint strong { color:#666666; }
     display:block;
     width:16px;
     height:16px;
-    margin:0;
+    margin:0 5px 0 0;
     float: right;
     background:url("../../images/icons/config.png") no-repeat center center;
 }
