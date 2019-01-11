@@ -98,7 +98,7 @@ class modelWidgets extends cmsModel {
 
         if ($pages){
             foreach($pages as $page){
-                $this->deletePageWidgets($page['id']);
+                $this->deleteWidgetBindPage($page['id'], 'page_id');
             }
         }
 
@@ -112,11 +112,7 @@ class modelWidgets extends cmsModel {
 
     public function deletePageWidgets($page_id){
 
-        $this->filterEqual('page_id', $page_id);
-
-        cmsCache::getInstance()->clean('widgets.bind');
-
-        return $this->deleteFiltered('widgets_bind');
+        return $this->deleteWidgetBindPage($page_id, 'page_id');
 
     }
 
@@ -217,160 +213,208 @@ class modelWidgets extends cmsModel {
     }
 
     public function getWidgetBindingsScheme($page_id, $template_name){
-
         $binds = $this->
-                    filterEqual('template', $template_name)->
                     filterStart()->
-                        filterEqual('page_id', 0)->
+                        filterEqual('bp.template', $template_name)->
                         filterOr()->
-                        filterEqual('page_id', $page_id)->
+                        filterIsNull('bp.template')->
+                    filterEnd()->
+                    filterStart()->
+                        filterEqual('bp.page_id', 0)->
                         filterOr()->
-                        filterEqual('position', '_unused')->
+                        filterIsNull('bp.page_id')->
+                        filterOr()->
+                        filterEqual('bp.page_id', $page_id)->
+                        filterOr()->
+                        filterIsNull('bp.position')->
                     filterEnd()->
                     select('w.title', 'name')->
+                    select('bp.*')->
+                    select('IFNULL(bp.bind_id,i.id)', 'bind_id')->
                     joinInner('widgets', 'w', 'w.id = i.widget_id')->
-                    orderBy('page_id, ordering')->
-                    get('widgets_bind');
-
+                    joinLeft('widgets_bind_pages', 'bp', 'bp.bind_id = i.id')->
+                    orderBy('bp.page_id, bp.ordering')->
+                    get('widgets_bind')?:array();
         $positions = array();
-
-        if($binds){
-            foreach($binds as $bind){
-
-                $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
-                $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
-                if($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3){
-                    foreach ($bind['device_types'] as $dt) {
-                        $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
-                    }
-                } else {
-                    $device_types = false;
+        foreach($binds as $bind){
+            $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
+            $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
+            if($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3){
+                foreach ($bind['device_types'] as $dt) {
+                    $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
                 }
-
-                $positions[ $bind['position'] ][] = array(
-                    'id'           => $bind['id'],
-                    'title'        => $bind['title'],
-                    'position'     => $bind['position'],
-                    'languages'    => $bind['languages'],
-                    'device_types' => $device_types,
-                    'name'         => $bind['name'],
-                    'is_tab_prev'  => (bool) $bind['is_tab_prev'],
-                    'is_enabled'   => (bool) $bind['is_enabled'],
-                    'is_disabled'  => ($bind['page_id'] != $page_id && $bind['position'] != '_unused')
-                );
-
+            } else {
+                $device_types = false;
             }
+            if(!$bind['position']){$bind['position'] = '_unused';}
+            $positions[ $bind['position'] ][] = array(
+                'id'           => $bind['id'],
+                'bind_id'      => $bind['bind_id'],
+                'widget_id'    => $bind['widget_id'],
+                'title'        => $bind['title'],
+                'position'     => $bind['position'],
+                'languages'    => $bind['languages'],
+                'device_types' => $device_types,
+                'name'         => $bind['name'],
+                'is_tab_prev'  => (bool) $bind['is_tab_prev'],
+                'is_enabled'   => (bool) $bind['is_enabled'],
+                'is_disabled'  => ($bind['page_id'] != $page_id && $bind['position'] !== '_unused')
+            );
+
         }
-
         return $positions ? $positions : false;
-
     }
 
     public function addWidgetBinding($widget, $page_id, $position, $template){
-
         cmsCache::getInstance()->clean('widgets.bind');
-
-        return $this->insert('widgets_bind', array(
-            'template'   => $template,
+        $bind_id = $this->insert('widgets_bind', array(
             'widget_id'  => $widget['id'],
-            'title'      => $widget['title'],
-            'page_id'    => $page_id,
-            'position'   => $position,
-            'is_enabled' => 1,
-            'ordering'   => $this->
-                    filterEqual('page_id', $page_id)->
-                    filterEqual('position', $position)->
-                    getMaxOrdering('widgets_bind')
+            'title'      => $widget['title']
         ));
-
+        if(!$bind_id){return false;}
+        $bp_id = $this->addWidgetBindPage($bind_id, $page_id, $position, $template);
+        return array('id'=>$bind_id, 'bp_id'=>$bp_id);
     }
 
     public function updateWidgetBinding($id, $widget){
+        if($widget['template_layouts'] === array('0')){$widget['template_layouts'] = null;}
+        if($widget['languages'] === array('0')){$widget['languages'] = null;}
+        if($widget['groups_view'] === array('0')){$widget['groups_view'] = null;}
+        if($widget['device_types'] === array('0')){$widget['device_types'] = null;}
 
         cmsCache::getInstance()->clean('widgets.bind');
-
         return $this->update('widgets_bind', $id, $widget);
-
     }
 
     public function deleteWidgetBinding($id){
+        $this->deleteWidgetBindPage($id, 'bind_id');
+        cmsCache::getInstance()->clean('widgets.bind');
+        return $this->delete('widgets_bind', $id);
+    }
+
+    public function getWidgetBindPage($id){
+        return $this->getItemById('widgets_bind_pages', $id);
+    }
+
+    public function copyWidgetByPage($bp_id) {
+        $binding_page = $this->getWidgetBindPage($bp_id);
+        if(!$binding_page){return false;}
+
+        $widget_bind = $this->getItemById('widgets_bind', $binding_page['bind_id']);
+        if(!$widget_bind){return false;}
 
         cmsCache::getInstance()->clean('widgets.bind');
 
-        return $this->delete('widgets_bind', $id);
+        $ordering = $this->filterEqual('page_id', $binding_page['page_id'])->filterEqual('position', $binding_page['position'])->getNextOrdering('widgets_bind_pages');
+        $widget_bind['title'] .= ' ('.$ordering.')';
+        unset($widget_bind['id']);
+
+        $bind_id = $this->insert('widgets_bind', $widget_bind);
+        if(!$bind_id){return false;}
+
+        $new_bp_id = $this->addWidgetBindPage($bind_id, $binding_page['page_id'], $binding_page['position'], $binding_page['template'], $ordering, $binding_page['is_enabled']);
+
+        return array('id'=>$bind_id, 'bp_id'=>$new_bp_id);
+    }
+
+    public function getWidgetBindPageCount($bind_id){
+        return $this->filterEqual('bind_id', $bind_id)->getCount('widgets_bind_pages');
+    }
+
+    public function addWidgetBindPage($bind_id, $page_id, $position, $template, $ordering = null, $is_enabled = 1){
+
+        cmsCache::getInstance()->clean('widgets.bind_pages');
+
+        return $this->insert('widgets_bind_pages', array(
+            'template'   => $template,
+            'page_id'    => $page_id,
+            'bind_id'    => $bind_id,
+            'position'   => $position,
+            'is_enabled' => $is_enabled,
+            'ordering'   => is_null($ordering) ? $this->
+                    filterEqual('page_id', $page_id)->
+                    filterEqual('position', $position)->
+                    getNextOrdering('widgets_bind_pages') : $ordering
+        ));
 
     }
 
-    public function copyWidget($id) {
+    public function updateWidgetBindPage($id, $item){
+        cmsCache::getInstance()->clean('widgets.bind_pages');
+        return $this->update('widgets_bind_pages', $id, $item);
+    }
 
-        $widget_bind = $this->getItemById('widgets_bind', $id);
-        if(!$widget_bind){ return false; }
-
-        $widget_bind['ordering'] = $this->filterEqual('page_id', $widget_bind['page_id'])->
-            filterEqual('position', $widget_bind['position'])->
-            getNextOrdering('widgets_bind');
-
-        $widget_bind['title'] = $widget_bind['title'].' ('.$widget_bind['ordering'].')';
-
-        unset($widget_bind['id']);
-
-        cmsCache::getInstance()->clean('widgets.bind');
-
-        return $this->insert('widgets_bind', $widget_bind);
-
+    public function deleteWidgetBindPage($id, $by = 'id'){
+        cmsCache::getInstance()->clean('widgets.bind_pages');
+        $this->filterEqual($by, $id);
+        return $this->deleteFiltered('widgets_bind_pages');
     }
 
     public function deleteWidget($id){
-
         $this->filterEqual('widget_id', $id);
-
+        $wb = $this->get('widgets_bind');
+        if($wb){
+            $this->filterIn('bind_id', array_keys($wb));
+            $this->deleteFiltered('widgets_bind_pages');
+            cmsCache::getInstance()->clean('widgets.bind_pages');
+        }
+        $this->filterEqual('widget_id', $id);
         $this->deleteFiltered('widgets_bind');
-
         cmsCache::getInstance()->clean('widgets.bind');
-
         return $this->delete('widgets', $id);
-
     }
 
-    public function reorderWidgetsBindings($position, $items, $page_id=0){
-
-        cmsCache::getInstance()->clean('widgets.bind');
-
-        $this->reorderByList('widgets_bind', $items, array('position'=>$position));
-
-        $update_data = array('page_id'=>$page_id);
-
-        if ($position == '_unused'){ $update_data['page_id'] = null; }
-
-        $this->
-            filterIn('id', $items)->
-            updateFiltered('widgets_bind', $update_data);
-
+    public function reorderWidgetsBindings($position, $items, $template, $page_id=0){
+        if($position === '_unused'){$page_id = null;}
+        $in = array();
+        foreach($items as $item){
+            if(!empty($item['bp_id'])){$in[] = $item['bp_id'];}
+        }
+        $now = $in ? $this->filterIn('id', $in)->get('widgets_bind_pages') : array();
+        $i = 0;
+        $new = array();
+        foreach($items as $item){
+            if(!empty($item['bp_id']) && !empty($now[$item['bp_id']])){
+                $this->updateWidgetBindPage($item['bp_id'], array('page_id'=>$page_id,'ordering'=>$i,'position'=>$position,'template'=>$template));
+            }else{ // копия
+                if($this->filterEqual('id', $item['id'])->getCount('widgets_bind')){
+                    $id = $this->addWidgetBindPage($item['id'], $page_id, $position, $template, $i, ($position === '_unused') ? 0 : 1);
+                    $new[$id] = $item['id']; // $item['id'] может быть одинаковый
+                }
+            }
+            $i++;
+        }
+        return $new;
     }
 
     public function unbindAllWidgets($template_name){
-
-        cmsCache::getInstance()->clean('widgets.bind');
-
-        $this->filterNotNull('page_id')->filterEqual('template', $template_name)->updateFiltered('widgets_bind', array(
-            'position'=>'_unused',
-            'page_id'=>null
-        ));
-
+        $this->deleteWidgetBindPage($template_name, 'template');
     }
 
     public function getWidgetsForPages($pages_list, $template){
 
-        $this->useCache('widgets.bind');
+        $this->useCache('widgets.bind_pages');
 
-        $widgets = $this->
-                    select('w.controller', 'controller')->
-                    select('w.name', 'name')->
-                    join('widgets', 'w', 'w.id = i.widget_id')->
+        $bind_pages = $this->
                     filterEqual('template', $template)->
                     filterEqual('is_enabled', 1)->
                     filterIn('page_id', $pages_list)->
                     orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
+                    get('widgets_bind_pages');
+        if(!$bind_pages){return cmsEventsManager::hook('widgets_before_list', array());}
+
+        $bind_ids = array();
+        foreach($bind_pages as $page){
+            $bind_ids[$page['bind_id']] = $page['bind_id'];
+        }
+
+        $this->useCache('widgets.bind');
+
+        $widgets_bind = $this->
+                    select('w.controller', 'controller')->
+                    select('w.name', 'name')->
+                    join('widgets', 'w', 'w.id = i.widget_id')->
+                    filterIn('i.id', $bind_ids)->
                     get('widgets_bind', function($item, $model){
                         $item['options'] = cmsModel::yamlToArray($item['options']);
                         $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
@@ -389,6 +433,12 @@ class modelWidgets extends cmsModel {
                         }
                         return $item;
                     });
+
+        $widgets = array();
+        foreach($bind_pages as $id => $page){
+            if(!isset($widgets_bind[$page['bind_id']])){continue;}
+            $widgets[$id] = array_merge($widgets_bind[$page['bind_id']], $page);
+        }
 
         return cmsEventsManager::hook('widgets_before_list', $widgets);
 

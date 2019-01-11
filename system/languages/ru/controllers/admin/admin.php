@@ -335,6 +335,8 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Отрицательные маски');
     define('LANG_CP_WIDGETS_UNUSED',            'Неиспользуемые виджеты');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Поместите сюда виджеты которые нужно временно скрыть или переместить на другую страницу без потери настроек');
+    define('LANG_CP_WIDGETS_BINDED',            'Привязываемые виджеты');
+    define('LANG_CP_WIDGETS_BINDED_HINT',       'Перенесите сюда виджет, чтобы привязать его с общими настройками неограниченное кол-во раз');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Виджеты для шаблона');
     define('LANG_CP_WIDGETS_FA',                'Быстрый подбор масок');
     define('LANG_CP_WIDGETS_FA_TYPE',           'Тип');
