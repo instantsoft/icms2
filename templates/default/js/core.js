@@ -204,10 +204,16 @@ icms.forms = (function ($) {
 
 		$.post(url, {value: value}, function(result){
 
-			for(var k in result){
-                var __selected = (k === current_value ? ' selected' : '');
-				child_list.append('<option value="'+k+'"'+__selected+'>'+result[k]+'</option>');
-			}
+			for(var k in result){if(result.hasOwnProperty(k)){
+                if(typeof result[k].value !== 'undefined'){
+                    var _value = result[k].value;
+                    var title = result[k].title;
+                }else{
+                    var _value = k;
+                    var title = result[k];
+                }
+				child_list.append('<option value="'+_value+'"'+(_value === current_value ? ' selected' : '')+'>'+title+'</option>');
+			}}
 
             $(child_list).trigger('chosen:updated');
 

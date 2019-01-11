@@ -4,8 +4,7 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
 
     public function run(){
 
-		if (!$this->request->isAjax()){ cmsCore::error404(); }
-		if (!cmsUser::isAdmin()) { cmsCore::error404(); }
+		if (!$this->request->isAjax() || !cmsUser::isAdmin()){ return cmsCore::error404(); }
 
         $presets = cmsCore::getModel('images')->getPresetsList();
         $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
@@ -14,7 +13,7 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
 
         if($ctype_name){
             $ctype = $this->model->getContentTypeByName($ctype_name);
-            if (!$ctype) { cmsCore::error404(); }
+            if (!$ctype) { return cmsCore::error404(); }
         } else {
             return $this->cms_template->renderJSON($presets);
         }
@@ -24,7 +23,7 @@ class actionContentWidgetCatsPresetsAjax extends cmsAction {
 		if ($presets && !empty($ctype['options']['cover_sizes'])){
 			foreach($presets as $key => $name){
                 if(in_array($key, $ctype['options']['cover_sizes'])){
-                    $_presets[$key] = $name;
+                    $_presets[] = ['title'=>$name, 'value'=>$key];
                 }
 			}
 		}
