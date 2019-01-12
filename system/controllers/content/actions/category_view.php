@@ -107,7 +107,21 @@ class actionContentCategoryView extends cmsAction {
         // Формируем базовые URL для страниц
         $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
 
-        $page_url = href_to($base_url . ($dataset ? (!$base_url ? $ctype['name'] : '').'-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : '');
+        $page_url = href_to($ctype['name']);
+
+        if($dataset){
+            $page_url .= '-'.$dataset;
+        }
+
+        if(!empty($category['slug'])){
+
+            $page_url .= '/'.$category['slug'];
+
+            if(!$base_url){
+                $page_url = str_replace($ctype['name'].'/', '', $page_url);
+            }
+
+        }
 
         // если не на главной
         if(!$is_frontpage){
@@ -182,7 +196,7 @@ class actionContentCategoryView extends cmsAction {
                     $list_styles[] = array(
                         'title' => (isset($style_titles[$list_style]) ? $style_titles[$list_style] : ''),
                         'style' => $list_style,
-                        'url'   => $page_url['base'].'?style='.$list_style,
+                        'url'   => $page_url.'?style='.$list_style,
                         'class' => $list_style.($current_style === $list_style ? ' active' : ''),
                     );
                 }
