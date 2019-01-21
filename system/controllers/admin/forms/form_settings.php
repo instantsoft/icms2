@@ -360,6 +360,34 @@ class formAdminSettings extends cmsForm {
 
             array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_SESSIONS,
+                'childs' => array(
+
+                    new fieldList('session_save_handler', array(
+                        'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER,
+                        'items' => array(
+                            'files' => 'Files',
+                            'memcache' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                        )
+                    )),
+
+                    new fieldString('session_save_path', array(
+                        'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH,
+                        'hint'  => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT
+                    )),
+
+                    new fieldNumber('session_maxlifetime', array(
+                        'title' => LANG_CP_SETTINGS_SESSION_MAXLIFETIME,
+                        'default' => ini_get('session.gc_maxlifetime')/60,
+                        'units' => LANG_MINUTES
+                    ))
+
+                )
+            ),
+
+            array(
+                'type' => 'fieldset',
                 'title' => LANG_CP_SETTINGS_DEBUG,
                 'childs' => array(
 

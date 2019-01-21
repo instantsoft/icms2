@@ -33,6 +33,13 @@ function create_config($path, $file){
 
     $file = $path . '/' . $file;
 
+    $sp = session_save_path();
+    $uniq = uniqid();
+
+    if(mkdir($sp.DS.$uniq, 0755, true) && is_writable($sp.DS.$uniq)){
+        $sp = $sp.DS.$uniq;
+    }
+
     $config = array(
         'root'					=> $_SESSION['install']['paths']['root'],
         'host'					=> $_SESSION['install']['hosts']['root'],
@@ -90,6 +97,9 @@ function create_config($path, $file){
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
         'production_time'       => time(),
+        'session_save_handler'  => 'files',
+        'session_save_path'     => $sp,
+        'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
         'controllers_without_widgets' => array('admin')
     );
 

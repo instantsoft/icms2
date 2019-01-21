@@ -16,10 +16,11 @@
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
+    define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Session save handler');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Session folder');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Max. file upload size');
     define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
-    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend OPcache installed');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
 
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General sponsor');
@@ -383,6 +384,12 @@
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
+
+    define('LANG_CP_SETTINGS_SESSIONS',         'Sessions');
+    define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
 
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');

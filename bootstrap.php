@@ -50,6 +50,9 @@
     // Стартуем сессию если константа SESSION_START объявлена
     if(defined('SESSION_START')){
 
+        // Устанавливаем директорию сессий
+        cmsUser::setSessionSavePath($config->session_save_handler, $config->session_save_path);
+
         cmsUser::sessionStart($config->cookie_domain);
 
         // таймзона сессии

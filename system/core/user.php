@@ -402,6 +402,36 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function setSessionSavePath($save_handler, $path) {
+
+        if(!$path){
+            return false;
+        }
+
+        if(ini_set('session.save_handler', $save_handler) === false){
+            return false;
+        }
+
+        if($save_handler === 'files'){
+
+            if(!is_dir($path)){
+                if(!mkdir($path, 0755, true)){
+                    return false;
+                }
+            }
+
+            if (!is_writable($path)) {
+                return false;
+            }
+
+        }
+
+        session_save_path($path);
+
+        return true;
+
+    }
+
     public static function sessionStart($cookie_domain = false){
 
         if($cookie_domain){

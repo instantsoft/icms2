@@ -20,6 +20,28 @@ class actionAdminSettings extends cmsAction {
             $values = array_merge($values, $form->parse($this->request, true));
             $errors = $form->validate($this,  $values);
 
+            if ($values['session_save_handler'] == 'memcache' && !class_exists('Memcache')){
+
+                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
+
+            } else if($values['session_save_handler'] == 'memcached' && !class_exists('Memcached')){
+
+                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
+
+            } else if($values['session_save_handler'] == 'files'){
+
+                if(!is_dir($values['session_save_path'])){
+                    if(!mkdir($values['session_save_path'], 0755, true)){
+                        $errors['session_save_path'] = LANG_CP_FTP_MKDIR_FAILED;
+                    }
+                }
+
+                if (!is_writable($values['session_save_path'])) {
+                    $errors['session_save_path'] = sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $errors['session_save_path']);
+                }
+
+            }
+
             if (!$errors){
 
                 if ($values['cache_method'] == 'memory'){

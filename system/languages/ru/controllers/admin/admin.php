@@ -16,10 +16,11 @@
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
+    define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Обработчик сессий');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
     define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
-    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend OPcache');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Установлен Zend Guard Loader');
 
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'Генеральный спонсор проекта');
@@ -385,6 +386,12 @@
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_SESSIONS',         'Сессии');
+    define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Время жизни сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Метод хранения сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь. Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
+
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Контроль изменения IP адреса при входе в админку');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Строго по ip адресу');
@@ -506,7 +513,7 @@
     define('LANG_CP_INSTALL_ERR_HINT',          'Следствие');
     define('LANG_CP_INSTALL_ERR_FIX',           'Решение');
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');
-    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Папка <b>%s</b> недоступна для записи');
+    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную папку и обновите страницу');
     define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');

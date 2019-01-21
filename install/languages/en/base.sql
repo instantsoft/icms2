@@ -1254,7 +1254,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (6, 'Delete unverified users', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
 (7, 'Deleting of expired items from the trash', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
 (8, 'Run system queue tasks', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
-(9, 'Removes expired unconfirmed guest subscriptions', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1);
+(9, 'Removes expired unconfirmed guest subscriptions', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1),
+(10, 'Removes expired PHP session', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

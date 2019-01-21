@@ -8,6 +8,10 @@ function install_package(){
     $admin = cmsCore::getController('admin');
     $content_model = cmsCore::getModel('content');
 
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'users' AND hook = 'sessionclean'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES ('Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
