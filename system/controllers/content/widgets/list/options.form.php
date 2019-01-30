@@ -63,7 +63,7 @@ class formWidgetContentListOptions extends cmsForm {
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();
 
-                            $items = array();
+                            $items = array(0 => LANG_WD_CONTENT_FILTER_DETECT);
 
                             if ($tree) {
                                 foreach ($tree as $item) {

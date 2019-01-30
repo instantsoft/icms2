@@ -744,7 +744,7 @@ class modelUsers extends cmsModel {
 
         $this->joinInner('{users}_friends', 'f', 'f.friend_id = i.id');
 
-        $this->filterEqual('f.user_id', intval($user_id));
+        $this->filterEqual('f.user_id', (int)$user_id);
 
         if($is_mutual !== null){
             $this->filterEqual('f.is_mutual', $is_mutual);

@@ -4,7 +4,7 @@
     define('LANG_INSTALLATION_WIZARD',      'Мастер установки');
     define('LANG_NEXT',                     'Далее &rarr;');
 
-    define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
+    define('LANG_MANUAL',                   '<a href="https://docs.instantcms.ru/manual/install" target="_blank" rel="noopener noreferrer">Инструкция по установке</a>');
 
     define('LANG_LANGUAGE_SELECT_RU',       'Пожалуйста, выберите язык');
     define('LANG_LANGUAGE_SELECT_EN',       'Please, select a language');
@@ -71,7 +71,7 @@
     define('LANG_DATABASE_BASE',            'База данных');
     define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
     define('LANG_DATABASE_ENGINE',          'Движок базы данных');
-    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте MyISAM.');
+    define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте InnoDB.');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');
@@ -108,9 +108,9 @@
 
     define('LANG_CONFIG_INFO',              'Сейчас будет создан файл конфигурации сайта.');
     define('LANG_CONFIG_PATH',              'Место расположения файла:');
-    define('LANG_CONFIG_MUST_WRITABLE',     'Указанная папка должна быть доступна для записи.');
-    define('LANG_CONFIG_AFTER',             'После создания файла конфигурации необходимо будет сделать эту папку (и находящиеся в ней файлы) недоступными для записи.');
-    define('LANG_CONFIG_NOT_WRITABLE',      'Папка конфигурации недоступна для записи');
+    define('LANG_CONFIG_MUST_WRITABLE',     'Указанная директория должна быть доступна для записи.');
+    define('LANG_CONFIG_AFTER',             'После создания файла конфигурации необходимо будет сделать эту директолрию (и находящиеся в ней файлы) недоступными для записи.');
+    define('LANG_CONFIG_NOT_WRITABLE',      'Директория конфигурации недоступна для записи');
 
     define('LANG_CRON_1',                   'Для полноценной работы InstantCMS необходимо создать задание для планировщика CRON на сервере.');
     define('LANG_CRON_2',                   'Это позволит системе выполнять периодические служебные задачи в фоновом режиме.');

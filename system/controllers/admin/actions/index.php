@@ -45,14 +45,15 @@ class actionAdminIndex extends cmsAction {
 
         $sysinfo = array(
             LANG_CP_DASHBOARD_SI_ICMS  => cmsCore::getVersion(),
-            LANG_CP_DASHBOARD_SI_PHP   => phpversion(),
+            LANG_CP_DASHBOARD_SI_PHP   => implode('.', array(PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION)),
             LANG_CP_DASHBOARD_SI_ML    => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
             LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),
             LANG_CP_DASHBOARD_SI_IP    => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
             LANG_CP_DASHBOARD_SI_ROOT  => PATH,
+            LANG_CP_DASHBOARD_SI_SESSION_TYPE => @ini_get('session.save_handler'),
             LANG_CP_DASHBOARD_SI_SESSION => session_save_path(),
+            LANG_CP_DASHBOARD_SI_ZEND  => in_array('Zend OPcache', $extensions),
             LANG_CP_DASHBOARD_SI_ION   => in_array('ionCube Loader', $extensions),
-            LANG_CP_DASHBOARD_SI_ZEND  => in_array('Zend Optimizer', $extensions),
             LANG_CP_DASHBOARD_SI_ZENDG => in_array('Zend Guard Loader', $extensions)
         );
 

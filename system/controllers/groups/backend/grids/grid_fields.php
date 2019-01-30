@@ -21,7 +21,7 @@ function grid_fields($controller){
             'title'    => LANG_CP_FIELD_TITLE,
             'href'     => href_to($controller->root_url, 'fields_edit', array('{id}')),
             'editable' => array(
-                'table' => '{users}_fields'
+                'table' => 'groups_fields'
             )
         ),
         'fieldset' => array(

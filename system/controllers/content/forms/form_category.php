@@ -51,6 +51,10 @@ class formContentCategory extends cmsForm {
                         'options' => array(
                             'editor' => cmsConfig::get('default_editor')
                         )
+                    )),
+
+                    new fieldCheckbox('is_hidden', array(
+                        'title' => LANG_CATEGORY_IS_HIDDEN
                     ))
 
                 )

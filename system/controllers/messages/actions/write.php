@@ -16,7 +16,7 @@ class actionMessagesWrite extends cmsAction {
             $this->model->addContact($this->cms_user->id, $contact_id);
         }
 
-        $this->processAction('index');
+        $this->executeAction('index');
 
     }
 

@@ -51,12 +51,12 @@
 
                     <?php $values = $controller['values'][$subject['name']]; ?>
 
-                    <thead>
+                    <thead class="list_thead">
                         <tr>
                             <th colspan="2"><?php echo $subject['title']; ?></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="list_tbody">
                         <?php foreach($rules as $rule){ ?>
                             <tr>
                                 <td>
@@ -72,7 +72,8 @@
                                                 null;
                                 ?>
 
-                                <td class="center">
+                                <td class="center" data-label="<?php html($rule['title']); ?>">
+                                    <div>
                                     <?php if ($rule['type'] == 'flag'){ ?>
                                         <?php echo html_checkbox("value[{$rule['id']}][{$subject['name']}]", $default); ?>
                                     <?php } ?>
@@ -82,6 +83,7 @@
                                     <?php if ($rule['type'] == 'number'){ ?>
                                     <?php echo html_input('text', "value[{$rule['id']}][{$subject['name']}]", $default, array('class'=>'input-number')); ?>
                                 <?php } ?>
+                                    </div>
                                 </td>
 
                             </tr>

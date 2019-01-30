@@ -23,6 +23,7 @@ class cmsTemplate {
 	protected $insert_css = array();
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
+	protected $head_preload = array();
 	protected $title;
 	protected $title_item;
 	protected $metadesc;
@@ -125,11 +126,13 @@ class cmsTemplate {
 
     /**
      * Выводит головные теги страницы
+     *
      * @param boolean $is_seo_meta Выводить мета теги
      * @param boolean $print_js Выводить javascript теги
      * @param boolean $print_css Выводить CSS теги
+     * @return $this
      */
-	public function head($is_seo_meta=true, $print_js = true, $print_css = true){
+	public function head($is_seo_meta = true, $print_js = true, $print_css = true){
 
         cmsEventsManager::hook('before_print_head', $this);
 
@@ -152,37 +155,79 @@ class cmsTemplate {
             $this->printJavascriptTags();
         }
 
+        if($this->head_preload){
+            header('Link: '.implode(', ', $this->head_preload));
+        }
+
+        return $this;
+
 	}
 
     /**
      * Выводит javascript теги
+     * @return $this
      */
     public function printJavascriptTags() {
 
+        $js = array();
+
         if (!$this->site_config->merge_js){
-            foreach ($this->head_main_js as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
-            foreach ($this->head_js as $id=>$file){	echo "\t". $this->getJSTag($file) . "\n";	}
+
+            $js = array_merge(array_values($this->head_main_js), array_values($this->head_js));
+
         } else {
-            $tag = "\t". $this->getJSTag( $this->getMergedJSPath() ) . "\n";
-            echo $tag;
-            foreach ($this->head_js_no_merge as $id=>$file){ echo "\t". $this->getJSTag($file) . "\n";	}
+
+            $js[] = $this->getMergedJSPath();
+
+            $js = array_merge($js, array_values($this->head_js_no_merge));
+
         }
+
+        foreach ($js as $file) {
+
+            $file = $this->getHeadFilePath($file);
+
+            $this->head_preload[] = '<'.$file.'>; rel=preload; as=script';
+
+            echo "\t" . $this->getJSTag($file) . "\n";
+
+        }
+
+        return $this;
 
     }
 
     /**
      * Выводит CSS теги
+     * @return $this
      */
     public function printCssTags() {
 
+        $css = array();
+
         if (!$this->site_config->merge_css){
-            foreach ($this->head_main_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
-            foreach ($this->head_css as $id=>$file){	echo "\t". $this->getCSSTag($file) . "\n";	}
+
+            $css = array_merge(array_values($this->head_main_css), array_values($this->head_css));
+
         } else {
-            $tag = "\t". $this->getCSSTag( $this->getMergedCSSPath() ) . "\n";
-            echo $tag;
-            foreach ($this->head_css_no_merge as $id=>$file){ echo "\t". $this->getCSSTag($file) . "\n";	}
+
+            $css[] = $this->getMergedCSSPath();
+
+            $css = array_merge($css, array_values($this->head_css_no_merge));
+
         }
+
+        foreach ($css as $file) {
+
+            $file = $this->getHeadFilePath($file);
+
+            $this->head_preload[] = '<'.$file.'>; rel=preload; as=style';
+
+            echo "\t" . $this->getCSSTag($file) . "\n";
+
+        }
+
+        return $this;
 
     }
 
@@ -225,7 +270,7 @@ class cmsTemplate {
      * @param string $wrapper Название шаблона обертки
      * @return boolean
      */
-	public function widgets($position, $is_titles=true, $wrapper=''){
+	public function widgets($position, $is_titles = true, $wrapper = '') {
 
         if (!$this->hasWidgetsOn($position)){ return false; }
 
@@ -250,6 +295,13 @@ class cmsTemplate {
 
 	}
 
+    /**
+     * Проверяет наличие виджетов на позиции/позициях
+     *
+     * @param string $position Название позиции
+     *                         Можно передавать сколь угодно дополнительных параметров
+     * @return boolean
+     */
     public function hasWidgetsOn($position){
 
         if (func_num_args() > 1){
@@ -271,7 +323,7 @@ class cmsTemplate {
     protected function loadMenus($menu_name=false) {
 
         if(!$this->menu_loaded){
-            $this->db_menus = cmsCore::getModel('menu')->getAllMenuItemsTree();
+            $this->db_menus = cmsCore::getModel('menu')->filterEqual('is_enabled', 1)->getAllMenuItemsTree();
             $this->menu_loaded = true;
         }
 
@@ -283,21 +335,28 @@ class cmsTemplate {
 
     }
 
+    /**
+     * Проверяет наличие меню
+     *
+     * @param string $menu_name Название меню
+     * @return boolean
+     */
     public function hasMenu($menu_name){
         return !empty($this->menus[$menu_name]);
     }
 
     /**
      * Выводит меню
+     *
      * @param string $menu_name Название меню
-     * @param bool $detect_active_id Определять активные пункты меню
+     * @param boolean $detect_active_id Определять активные пункты меню
      * @param string $css_class CSS класс контейнера пунктов меню
-     * @param int $max_items Максимальное количество видимых пунктов
-     * @param bool $is_allow_multiple_active Определять все активные пункты меню
+     * @param integer $max_items Максимальное количество видимых пунктов
+     * @param boolean $is_allow_multiple_active Определять все активные пункты меню
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function menu($menu_name, $detect_active_id=true, $css_class='menu', $max_items=0, $is_allow_multiple_active=false, $template='menu', $menu_title=''){
+    public function menu($menu_name, $detect_active_id = true, $css_class = 'menu', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
 
         if (!isset($this->menus[$menu_name])) {
 
@@ -421,9 +480,10 @@ class cmsTemplate {
 
     /**
      * Выводит глубиномер
+     *
      * @param array $options Опции глубиномера
      */
-    public function breadcrumbs($options=array()){
+    public function breadcrumbs($options = array()) {
 
         $default_options = array(
             'home_url'   => href_to_home(),
@@ -454,7 +514,7 @@ class cmsTemplate {
      * @param string|array $params Параметры экшена
      * @return type
      */
-    public function href_to($action, $params=false){
+    public function href_to($action, $params = false) {
 
         if (!isset($this->controller->root_url)){
             return href_to($this->controller->name, $action, $params);
@@ -755,19 +815,29 @@ class cmsTemplate {
         return $this;
 	}
 
-    /**
-     * Возвращает тег <link rel="stylesheet"> для указанного файла
-     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
-     * @return string
-     */
-    public function getCSSTag($file){
+    public function getHeadFilePath($file){
 
         if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
 
             $arg_separator = strpos($file, '?') !== false ? '&' : '?';
 
-            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
+            $file = $this->site_config->root . $file .($this->site_config->production_time ? $arg_separator. $this->site_config->production_time : '');
 
+        }
+
+        return $file;
+
+    }
+    /**
+     * Возвращает тег <link rel="stylesheet"> для указанного файла
+     *
+     * @param string $file Путь к файлу без учета корневой директории (начального слеша)
+     * @return string
+     */
+    public function getCSSTag($file){
+
+        if(strpos($file, '/') !== 0){
+            $file = $this->getHeadFilePath($file);
         }
 
         return '<link rel="stylesheet" type="text/css" href="'.$file.'">';
@@ -776,6 +846,7 @@ class cmsTemplate {
 
     /**
      * Возвращает тег <script> для указанного файла
+     *
      * @param string $file Путь к файлу без учета корневой директории (начального слеша)
      * @param string $comment Комментарий к скрипту
      * @param array $params Параметры тега
@@ -783,98 +854,187 @@ class cmsTemplate {
      */
     public function getJSTag($file, $comment = '', $params = array()){
 
-        if(!preg_match('#^([a-z]*)(:?)\/\/#', $file)){
-
-            $arg_separator = strpos($file, '?') !== false ? '&' : '?';
-
-            $file = $this->site_config->root . $file .$arg_separator. $this->site_config->production_time;
-
+        if(strpos($file, '/') !== 0){
+            $file = $this->getHeadFilePath($file);
         }
 
         $comment = $comment ? '<!-- '.$comment.' !-->' : '';
 
-        return '<script type="text/javascript" src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
+        return '<script src="'.$file.'" '.html_attr_str($params).'>'.$comment.'</script>';
 
     }
 
-	/**
-	 * Добавляет CSS файл в головной раздел страницы выше остальных CSS-тегов
-	 * @param string $file
-	 */
-    public function addMainCSS($file){
+    /**
+     * Добавляет CSS файл в головной раздел страницы выше остальных CSS-тегов
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @return boolean
+     */
+    public function addMainCSS($file) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) { return false; }
-		$this->head_main_css[$hash] = $file;
+        if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) {
+            return false;
+        }
+        $this->head_main_css[$hash] = $file;
         return true;
     }
 
-	/**
-	 * Добавляет CSS файл в головной раздел страницы
-	 * @param string $file
-	 */
-	public function addCSS($file, $allow_merge = true){
+    /**
+     * Добавляет CSS файл в головной раздел страницы
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+	public function addCSS($file, $allow_merge = true) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) { return false; }
-		$this->head_css[$hash] = $file;
-        if (!$allow_merge){
+        if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) {
+            return false;
+        }
+        $this->head_css[$hash] = $file;
+        if (!$allow_merge) {
             $this->head_css_no_merge[$hash] = $file;
         }
         return true;
-	}
+    }
 
-	/**
-	 * Добавляет JS файл в головной раздел страницы выше остальных JS-тегов
-	 * @param string $file
-	 */
-	public function addMainJS($file, $comment=''){
+    /**
+     * Добавляет JS файл к подключению на странице выше остальных JS-тегов
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @return boolean
+     */
+	public function addMainJS($file, $comment = '') {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_main_js[$hash])) { return false; }
-		$this->head_main_js[$hash] = $file;
+        if (isset($this->head_main_js[$hash])) {
+            return false;
+        }
+        $this->head_main_js[$hash] = $file;
         return true;
-	}
+    }
 
-	/**
-	 * Добавляет JS файл в головной раздел страницы
-	 * @param string $file
-	 */
-	public function addJS($file, $comment='', $allow_merge = true){
+    /**
+     * Добавляет JS файл к подключению на странице
+     *
+     * @param string $file Путь к файлу без указания корня
+     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+	public function addJS($file, $comment = '', $allow_merge = true) {
+        if (!$file) {
+            return false;
+        }
         $hash = md5($file);
-        if (isset($this->head_js[$hash])) { return false; }
-		$this->head_js[$hash] = $file;
-        if (!$allow_merge){
+        if (isset($this->head_js[$hash])) {
+            return false;
+        }
+        $this->head_js[$hash] = $file;
+        if (!$allow_merge) {
             $this->head_js_no_merge[$hash] = $file;
         }
         return true;
-	}
+    }
 
+    /**
+     * Подключает JS файл из директории шаблона controllers/CNAME/js/
+     *
+     * @param string $path Путь к файлу относительно templates/TNAME/controllers/CNAME/js/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param string $comment Комментарий скрипта
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
     public function addControllerJS($path, $cname = '', $comment = '', $allow_merge = true){
 
         if(!$cname){ $cname = $this->controller->name; }
 
-        $js_file = $this->getTplFilePath("controllers/{$cname}/js/{$path}.js", false);
-
-        if($js_file){
-            return $this->addJS($js_file, $comment, $allow_merge);
-        }
-
-        return false;
+        return $this->addTplJS("controllers/{$cname}/js/{$path}", $comment, $allow_merge);
 
     }
+
+    /**
+     * Подключает CSS файл из директории шаблона controllers/CNAME/css/
+     *
+     * @param string $path Путь к файлу относительно templates/TNAME/controllers/CNAME/css/
+     * @param string $cname Название контроллера. Если не указан, берется из текущего контекста
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
     public function addControllerCSS($path, $cname = '', $allow_merge = true){
 
         if(!$cname){ $cname = $this->controller->name; }
 
-        $css_file = $this->getTplFilePath("controllers/{$cname}/css/{$path}.css", false);
-
-        if($css_file){
-            return $this->addCSS($css_file, $allow_merge);
-        }
-
-        return false;
+        return $this->addTplCSS("controllers/{$cname}/css/{$path}", $allow_merge);
 
     }
 
-	public function insertJS($file, $comment = ''){
+    /**
+     * Подключает JS файл относительно корня шаблона
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $path Путь к файлу относительно templates/TEMPLATE_NAME/
+     * @param string $comment Комментарий скрипта
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+    public function addTplJS($path, $comment = '', $allow_merge = true) {
+        return $this->addJS($this->getTplFilePath($path . '.js', false), $comment, $allow_merge);
+    }
+
+    /**
+     * Подключает CSS файл относительно корня шаблона
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $path Путь к файлу относительно templates/TEMPLATE_NAME/
+     * @param boolean $allow_merge Использовать в объединении
+     * @return boolean
+     */
+    public function addTplCSS($path, $allow_merge = true) {
+        return $this->addCSS($this->getTplFilePath($path . '.css', false), $allow_merge);
+    }
+
+    /**
+     * Подключает JS файл относительно templates/TEMPLATE_NAME/js/
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $name Имя файла без расширения
+     * @return boolean
+     */
+    public function addTplJSName($name) {
+        return $this->addJS($this->getJavascriptFileName($name));
+    }
+    public function addMainTplJSName($name) {
+        return $this->addMainJS($this->getJavascriptFileName($name));
+    }
+
+    /**
+     * Подключает CSS файл относительно templates/TEMPLATE_NAME/css/
+     * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
+     *
+     * @param string $name Имя файла без расширения
+     * @return boolean
+     */
+    public function addTplCSSName($name) {
+        return $this->addCSS($this->getTemplateStylesFileName($name));
+    }
+    public function addMainTplCSSName($name) {
+        return $this->addMainCSS($this->getTemplateStylesFileName($name));
+    }
+
+    public function insertJS($file, $comment = ''){
+
+        if (!$file) { return false; }
 
         $hash = md5($file);
         if (isset($this->insert_js[$hash])) { return false; }
@@ -888,6 +1048,8 @@ class cmsTemplate {
 	}
 
     public function insertCSS($file){
+
+        if (!$file) { return false; }
 
         $hash = md5($file);
         if (isset($this->insert_css[$hash])) { return false; }
@@ -1507,7 +1669,7 @@ class cmsTemplate {
 
     public function renderGridRowsJSON($grid, $dataset, $total=1, $pages_count=1){
 
-        $rows = array();
+        $rows = $titles = array();
         $row_index = 0;
 
         //
@@ -1522,6 +1684,8 @@ class cmsTemplate {
 
                 // вычисляем содержимое для каждой колонки таблицы
                 foreach($grid['columns'] as $field => $column){
+
+                    $titles[$cell_index] = isset($column['title']) ? $column['title'] : '';
 
                     if (isset($column['key_alias'])){
                         $field = $column['key_alias'];
@@ -1552,7 +1716,7 @@ class cmsTemplate {
 						$flag_toggle_url = isset($column['flag_toggle']) ? $column['flag_toggle'] : false;
 
 						if ($flag_toggle_url){
-							$flag_toggle_url = string_replace_keys_values_extended($flag_toggle_url, $row);
+							$flag_toggle_url = string_replace_keys_values($flag_toggle_url, $row);
 						}
 
 						$flag_content = $flag_toggle_url ? '<a href="'.$flag_toggle_url.'"></a>' : '';
@@ -1586,7 +1750,7 @@ class cmsTemplate {
                         if(!empty($column['editable']['save_action'])){
                             $save_action = string_replace_keys_values_extended($column['editable']['save_action'], $row);
                         }
-                        $attributes = array();
+                        $attributes = array('autocomplete' => 'off');
                         if(!empty($column['editable']['attributes'])){
                             foreach ($column['editable']['attributes'] as $akey => $avalue) {
                                 if(is_string($avalue)){
@@ -1618,6 +1782,8 @@ class cmsTemplate {
                 // если есть колонка действий, то формируем набор ссылок
                 // для текущей строки
                 if ($grid['actions']){
+
+                    $titles[$cell_index] = LANG_CP_ACTIONS;
 
                     $actions_html = '<div class="actions">';
 
@@ -1669,15 +1835,29 @@ class cmsTemplate {
 
         $columns = array();
         if($grid['options']['load_columns']){
+            $clear_filter = '<a class="clear_filter" href="#" onclick="return icms.datagrid.resetFilter(this)"></a>';
             foreach($grid['columns'] as $name=>$column){
                 if ($name==='id' && !$grid['options']['show_id']){continue;}
+                if(!empty($column['filter']) && $column['filter'] !== 'none'){
+                    $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array();
+                    if(strpos($name, 'date_') === 0){
+                        $filter = html_datepicker('filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))).$clear_filter;
+                    }else
+                    if(!empty($column['filter_select'])){
+                        $filter = html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name)));
+                    }else{
+                        $filter = html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))).$clear_filter;
+                    }
+                }else{
+                    $filter = '';
+                }
                 $columns[] = array(
                     'sortable'  => $grid['options']['is_sortable'],
                     'width'     => isset($column['width']) ? $column['width'] : '',
                     'title'     => $column['title'],
                     'name'      => $name,
-                    'filter'    => (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false) ?
-                    html_input('text', 'filter_'.$name, (isset($grid['filter'][$name]) ? $grid['filter'][$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)) : ''
+                    'filter'    => $filter,
+                    'order_to'  => !empty($grid['filter']['order_by']) && $grid['filter']['order_by'] === $name && !empty($grid['filter']['order_to']) ? $grid['filter']['order_to'] : ''
                 );
             }
             if($grid['actions']){
@@ -1692,6 +1872,7 @@ class cmsTemplate {
         }
 
         $result = array(
+            'titles'      => $titles,
             'rows'        => $rows,
             'pages_count' => $pages_count,
             'total'       => $total,

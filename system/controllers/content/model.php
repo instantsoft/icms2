@@ -305,6 +305,15 @@ class modelContent extends cmsModel {
                     $item['options']['list_style'] = $list_styles;
                 }
             }
+            if(!empty($item['options']['context_list_cover_sizes'])){
+                if(is_array($item['options']['context_list_cover_sizes'])){
+                    $list_styles = array();
+                    foreach ($item['options']['context_list_cover_sizes'] as $key => $value) {
+                        $list_styles[$key?$key:''] = $value;
+                    }
+                    $item['options']['context_list_cover_sizes'] = $list_styles;
+                }
+            }
 
             return $item;
 
@@ -2364,7 +2373,7 @@ class modelContent extends cmsModel {
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
         $this->select('f.title', 'folder_title');
-        $this->join('{users}', 'u FORCE INDEX (PRIMARY)', 'u.id = i.user_id');
+        $this->join('{users}', 'u', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
@@ -2426,7 +2435,6 @@ class modelContent extends cmsModel {
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar'   => $item['user_avatar'],
                 'avatar'   => $item['user_avatar']
             );
 
@@ -2782,7 +2790,7 @@ class modelContent extends cmsModel {
     /**
      * @deprecated
      *
-     * Метод для своместимости
+     * Метод для совместимости
      * @param string $ctype_name
      * @param integer $user_id
      * @return boolean

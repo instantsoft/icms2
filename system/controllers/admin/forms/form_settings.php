@@ -20,10 +20,6 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_SITE_ENABLED,
                     )),
 
-                    new fieldCheckbox('is_site_only_auth_users', array(
-                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
-                    )),
-
                     new fieldString('off_reason', array(
                         'title' => LANG_CP_SETTINGS_SITE_REASON,
                     )),
@@ -346,7 +342,8 @@ class formAdminSettings extends cmsForm {
                         'hint'  => !cmsConfig::get('cache_enabled') ? '' : sprintf(LANG_CP_SETTINGS_CACHE_CLEAN_MERGED, href_to('admin', 'cache_delete', cmsConfig::get('cache_method'))),
                         'items' => array(
                             'files' => 'Files',
-                            'memory' => 'Memcached' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memory' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
                         )
                     )),
 
@@ -357,6 +354,34 @@ class formAdminSettings extends cmsForm {
                     new fieldNumber('cache_port', array(
                         'title' => LANG_CP_SETTINGS_CACHE_PORT,
                     )),
+
+                )
+            ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_SESSIONS,
+                'childs' => array(
+
+                    new fieldList('session_save_handler', array(
+                        'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER,
+                        'items' => array(
+                            'files' => 'Files',
+                            'memcache' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                            'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                        )
+                    )),
+
+                    new fieldString('session_save_path', array(
+                        'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH,
+                        'hint'  => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT
+                    )),
+
+                    new fieldNumber('session_maxlifetime', array(
+                        'title' => LANG_CP_SETTINGS_SESSION_MAXLIFETIME,
+                        'default' => ini_get('session.gc_maxlifetime')/60,
+                        'units' => LANG_MINUTES
+                    ))
 
                 )
             ),

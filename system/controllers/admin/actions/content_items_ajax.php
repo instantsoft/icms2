@@ -4,7 +4,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
     public function run($ctype_id, $parent_id){
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) { return cmsCore::error404(); }
 
         $content_model = cmsCore::getModel('content');
 
@@ -55,6 +55,10 @@ class actionAdminContentItemsAjax extends cmsAction {
                     cmsUser::setUPS('admin.grid_filter.content.diff_order', $new_diff_order);
                 }
 
+            }
+
+            if(!empty($filter['order_by']) && !isset($grid['columns'][$filter['order_by']])){
+                unset($filter['order_by']);
             }
 
             $content_model->applyGridFilter($grid, $filter);

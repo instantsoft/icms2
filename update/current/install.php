@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.10.1 => 2.10.2
+ * 2.11.0 => 2.11.1
  */
 function install_package(){
 
@@ -8,20 +8,8 @@ function install_package(){
     $admin = cmsCore::getController('admin');
     $content_model = cmsCore::getModel('content');
 
-    $ctypes = $content_model->getContentTypes();
-
-	foreach($ctypes as $ctype){
-
-        $table_name = $content_model->table_prefix . $ctype['name'];
-
-        if(!$core->db->isFieldExists($table_name, 'template')){
-            $content_model->db->query("ALTER TABLE `{#}{$table_name}` ADD `template` VARCHAR(150) NULL DEFAULT NULL AFTER `tags`");
-        }
-
-	}
-
-    if(!$core->db->isFieldExists('widgets_bind', 'languages')){
-        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `languages` VARCHAR(100) NULL DEFAULT NULL AFTER `template_layouts`;");
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'users' AND hook = 'sessionclean'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES ('Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);");
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -72,8 +60,6 @@ function install_package(){
         }
     }
 
-    save_controller_options(array('sitemap', 'comments', 'geo'));
-
     return true;
 
 }
@@ -114,6 +100,10 @@ function save_controller_options($controllers) {
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
             $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
+            if($controller == 'auth'){
+                $options['is_site_only_auth_users'] = cmsConfig::get('is_site_only_auth_users');
+                $options['guests_allow_controllers'] = array('auth', 'geo');
+            }
             cmsCore::getModel('content')->filterEqual('name', $controller)->updateFiltered('controllers', array(
                 'options' => $options
             ));

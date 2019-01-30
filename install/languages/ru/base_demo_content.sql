@@ -55,10 +55,10 @@ INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'Личное');
 
 INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(5, 'Статьи', 'articles', 'Текстовые материалы', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: null\n', '---\none: статья\ntwo: статьи\nmany: статей\ncreate: статью\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
-(6, 'Посты', 'posts', 'Персональные публикации пользователей', NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: пост\ntwo: поста\nmany: постов\ncreate: пост\nlist: Лента блогов\nprofile: Блог\n', NULL, NULL, NULL, NULL, NULL),
-(9, 'Объявления', 'board', 'Коммерческие объявления', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: 1\nis_show_cats: 1\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style: table\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: объявление\ntwo: объявления\nmany: объявлений\ncreate: объявление\nlist: Доска объявлений\nprofile:\n', NULL, NULL, NULL, NULL, NULL),
-(10, 'Новости', 'news', 'Информационные сообщения', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
+(5, 'Статьи', 'articles', '<p>Текстовые материалы</p>', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: null\n', '---\none: статья\ntwo: статьи\nmany: статей\ncreate: статью\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
+(6, 'Посты', 'posts', '<p>Персональные публикации пользователей</p>', NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: пост\ntwo: поста\nmany: постов\ncreate: пост\nlist: Лента блогов\nprofile: Блог\n', NULL, NULL, NULL, NULL, NULL),
+(9, 'Объявления', 'board', '<p>Коммерческие объявления</p>', NULL, 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: 1\nis_show_cats: 1\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style: table\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: объявление\ntwo: объявления\nmany: объявлений\ncreate: объявление\nlist: Доска объявлений\nprofile:\n', NULL, NULL, NULL, NULL, NULL),
+(10, 'Новости', 'news', '<p>Информационные сообщения</p>', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: новость\ntwo: новости\nmany: новостей\ncreate: новость\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
 (16, 'Красота окружающей природы', 'Фотографии из коллекции сайта deviantart.com', '16-krasota-okruzhayuschei-prirody', 'фотографии, коллекции, сайта, deviantart.com', 'Фотографии из коллекции сайта deviantart.com', NULL, 'пример, фото', DATE_SUB(NOW(),INTERVAL 4 DAY), DATE_SUB(NOW(),INTERVAL 3 DAY), NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, NULL, 0, NULL, 0, NULL);
@@ -135,6 +135,7 @@ CREATE TABLE `{#}con_articles_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -142,6 +143,8 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -315,6 +318,7 @@ CREATE TABLE `{#}con_board_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -322,6 +326,8 @@ CREATE TABLE `{#}con_board_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -617,6 +623,7 @@ CREATE TABLE `{#}con_news_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -624,6 +631,8 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -802,6 +811,7 @@ CREATE TABLE `{#}con_posts_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -809,6 +819,8 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),

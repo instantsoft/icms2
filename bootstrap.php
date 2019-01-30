@@ -10,6 +10,11 @@
     // Устанавливаем кодировку
     mb_internal_encoding('UTF-8');
 
+	// Подключаем автозагрузчик пакетов Composer
+	if (file_exists(PATH . '/vendor/autoload.php')) {
+		require_once PATH.'/vendor/autoload.php';
+	}
+
     // Подключаем автозагрузчик классов
     require_once PATH . '/system/config/autoload.php';
 
@@ -44,6 +49,9 @@
 
     // Стартуем сессию если константа SESSION_START объявлена
     if(defined('SESSION_START')){
+
+        // Устанавливаем директорию сессий
+        cmsUser::setSessionSavePath($config->session_save_handler, $config->session_save_path);
 
         cmsUser::sessionStart($config->cookie_domain);
 

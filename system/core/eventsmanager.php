@@ -18,7 +18,7 @@ class cmsEventsManager {
      *
      * @param string $event_name Название события
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
@@ -62,7 +62,7 @@ class cmsEventsManager {
      *
      * @param string $event_name Название события
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */

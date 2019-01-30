@@ -71,7 +71,7 @@
     define('LANG_DATABASE_BASE',            'Database');
     define('LANG_DATABASE_BASE_HINT',       'Create if not exists');
     define('LANG_DATABASE_ENGINE',          'Database engine');
-    define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select MyISAM.');
+    define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select InnoDB.');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
     define('LANG_DATABASE_USERS_TABLE',     'User table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');

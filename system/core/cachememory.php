@@ -62,6 +62,10 @@ class cmsCacheMemory {
         return true;
     }
 
+    public function getStats(){
+        return array();
+    }
+
     private function getKey($_key){
 
         $key_path = explode('.', $_key);

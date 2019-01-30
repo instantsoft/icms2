@@ -1,8 +1,8 @@
 <?php
 
-    $this->addJS( $this->getJavascriptFileName('photos') );
-    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
-    $this->addCSS('templates/default/css/jquery-chosen.css');
+    $this->addTplJSName('photos');
+    $this->addTplJSName('jquery-chosen');
+    $this->addTplCSSName('jquery-chosen');
 
     $this->setPageTitle($title);
 

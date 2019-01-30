@@ -2,8 +2,8 @@ var icms = icms || {};
 
 $(document).ready(function(){
 
-    for(module in icms){
-        if ( typeof(icms[module].onDocumentReady) == 'function' ) {
+    for(var module in icms){
+        if ( typeof(icms[module].onDocumentReady) === 'function' ) {
             icms[module].onDocumentReady();
         }
     }
@@ -26,7 +26,7 @@ $(document).ready(function(){
 
     });
 
-    var dropdown = $("<select>").appendTo("nav");
+    var dropdown = $('<select class="mobile_menu_select">').appendTo("nav");
     $("<option value='/'></option>").appendTo(dropdown);
 
     $("nav .menu li > a").each(function() {
@@ -44,7 +44,7 @@ $(document).ready(function(){
         $("<option>", attr).appendTo(dropdown);
     });
 
-    $("nav select").change(function() {
+    $("nav select.mobile_menu_select").change(function() {
         window.location = $(this).find("option:selected").val();
     });
 
@@ -54,7 +54,7 @@ $(document).ready(function(){
 
             var tabs = $(this);
 
-            var dropdown = $("<select>").prependTo(tabs);
+            var dropdown = $('<select class="mobile_menu_select">').prependTo(tabs);
             $("> ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {
@@ -139,8 +139,16 @@ icms.forms = (function ($) {
 
     this.initUnsaveNotice = function(){
 
+        var init_data = {};
+
+        $('form').each(function(i){
+            init_data[i] = _this.toJSON($(this));
+            $(this).attr('data-notice_id', i);
+        });
+
         $(document).on('change', '.form-tabs input, .form-tabs select, .form-tabs textarea', function (e) {
-            icms.forms.form_changed = true;
+            var form = $(this).closest('form');
+            _this.form_changed = (JSON.stringify(init_data[form.attr('data-notice_id')]) !== JSON.stringify(_this.toJSON(form))) ? true : false;
         });
         $(document).on('submit', 'form', function () {
             icms.forms.submitted = true;
@@ -196,10 +204,16 @@ icms.forms = (function ($) {
 
 		$.post(url, {value: value}, function(result){
 
-			for(var k in result){
-                var __selected = (k === current_value ? ' selected' : '');
-				child_list.append('<option value="'+k+'"'+__selected+'>'+result[k]+'</option>');
-			}
+			for(var k in result){if(result.hasOwnProperty(k)){
+                if(typeof result[k].value !== 'undefined'){
+                    var _value = result[k].value;
+                    var title = result[k].title;
+                }else{
+                    var _value = k;
+                    var title = result[k];
+                }
+				child_list.append('<option value="'+_value+'"'+(_value === current_value ? ' selected' : '')+'>'+title+'</option>');
+			}}
 
             $(child_list).trigger('chosen:updated');
 
@@ -570,7 +584,7 @@ function initTabs(selector){
             $(selector+' ul.tabbed > li > a[href = "#'+$(element).parents('.tab').attr('id')+'"]').trigger('click');
         }
     });
-    $('> select', selector).change(function() {
+    $('select.mobile_menu_select', selector).change(function() {
         $(selector+' ul.tabbed > li > a[href = "'+$(this).find("option:selected").val()+'"]').trigger('click');
     });
 }

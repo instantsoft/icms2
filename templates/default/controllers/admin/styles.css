@@ -340,7 +340,7 @@ span.wrap > span.counter:after {
 .cp_toolbar ul li.scroll_top {
     float: right;
     display: none;
-    background-color: #9fc974;
+    background-color: #64889b;
 }
 .cp_toolbar.fixed_toolbar ul li.scroll_top {
     display: block;
@@ -359,7 +359,7 @@ span.wrap > span.counter:after {
     margin: 5px 0;
 }
 .cp_toolbar ul li.scroll_top:hover {
-    background-color: #91b76a;
+    background-color: #82aabf;
 }
 .cp_toolbar ul li.right + .scroll_top {
     margin-right: 14px;
@@ -431,6 +431,7 @@ form .field label {
     display:block;
     padding:3px 0;
     color:#68809B;
+    margin-bottom:3px;
 }
 
 form .field label > input[type=checkbox] {
@@ -651,7 +652,7 @@ form .short-input{
 form .hint {
     color: #888;
     font-size: 12px;
-    margin-top: 0px;
+    margin-top: 2px;
 }
 
 .odd{
@@ -1098,6 +1099,24 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid_dataset_filter select {
     width:160px;
 }
+.datagrid_grid_columns_settings form select {
+    width: 100%;
+}
+.datagrid_grid_columns_settings table{
+    width: 100%;
+    border: none;
+    border-collapse: collapse;
+}
+.datagrid_grid_columns_settings td, .datagrid_grid_columns_settings th{
+    text-align: left;
+    padding: 5px 10px;
+}
+.datagrid_grid_columns_settings th:first-child {
+    width: 180px;
+}
+.datagrid_grid_columns_settings tr td:nth-child(2), .datagrid_grid_columns_settings tr td:nth-child(3){
+    width: 200px;
+}
 
 .datagrid_dataset_filter select.dataset {
     width:320px;
@@ -1212,6 +1231,37 @@ ul.errors li .hint strong { color:#666666; }
         inset 0 -1px 1px #fff,
         0 1px 1px #CCCCCC;
     color: #069;
+}
+.datagrid .filter a.clear_filter{
+	display: none;
+	width: 16px;
+	height: 16px;
+	background: url("../../images/icons/close.png") no-repeat;
+	margin-left: -22px;
+	top: 2px;
+	position: relative;
+}
+.datagrid .filter a.clear_filter:hover{
+    background-position-x: -16px;
+}
+.datagrid .filter .with_filter a.clear_filter{
+	display: inline-block;
+}
+.datagrid .columns_settings{
+    display:block;
+    width:16px;
+    height:16px;
+    margin:0 5px 0 0;
+    float: right;
+    background:url("../../images/icons/config.png") no-repeat center center;
+}
+.datagrid .grid_image_preview{
+    display:block;
+    max-width:100%;
+    height:16px;
+}
+.datagrid_image_preview{
+    max-width:500px;
 }
 /* ========================================================================== */
 /* ========================================================================== */
@@ -2219,15 +2269,10 @@ ul.news_targets_tabs > li.active_news {
     box-sizing: border-box;
 }
 .grid_field_edit > .button {
-    line-height: 23px;
-    height: 24px;
     padding: 0 7px;
     font-size: 12px;
     margin: 0 0 0 10px;
-    border-radius: 3px;
-    vertical-align: baseline;
-    display: inline-block;
-    box-sizing: border-box;
+    border-radius: 2px;
     box-shadow: none;
     text-shadow: none;
 }
@@ -2239,17 +2284,18 @@ ul.news_targets_tabs > li.active_news {
 }
 .grid_field_edit.process_save:after {
     content: '';
-    display: inline-block;
-    background: url("../../images/loader16.gif") no-repeat center center;
+    background: url(../../images/loader16.gif) no-repeat center center;
     width: 18px;
     height: 18px;
-    vertical-align: middle;
+    position: absolute;
+    left: -26px;
+    top: 6px;
 }
 .grid_field_edit {
     display: none;
+    position: relative;
 }
 .grid_field_value {
-    height: 27px;
     line-height: 25px;
     display: inline-block;
 }
@@ -2262,15 +2308,15 @@ ul.news_targets_tabs > li.active_news {
     background-position: right 5px center;
 }
 .datagrid tr:hover .grid_field_edit:not(.edit_by_click) {
-    display: block;
+    display: flex;
 }
 .datagrid tr:hover .grid_field_value:not(.edit_by_click) {
     display: none;
 }
-.datagrid tr:hover .edit_by_click.edit_by_click_visible {
+.datagrid tr .edit_by_click.edit_by_click_visible {
     display: block;
 }
-.datagrid tr:hover .edit_by_click.edit_by_click_hidden {
+.datagrid tr .edit_by_click.edit_by_click_hidden {
     display: none;
 }
 .datagrid tr:hover .grid_field_value.edit_by_click:after {
@@ -2279,7 +2325,7 @@ ul.news_targets_tabs > li.active_news {
     background-repeat: no-repeat;
     background-position: center center;
     width: 32px;
-    height: 26px;
+    height: 28px;
     display: inline-block;
     vertical-align: middle;
     margin: 0 0 0 10px;
@@ -2734,6 +2780,9 @@ input[type=radio]:checked ~ label{
     clear: right;
     margin-right: 20px;
 }
+.ace_redactor {
+    height: 350px;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);
@@ -2795,6 +2844,67 @@ input[type=radio]:checked ~ label{
     }
     #cp_header {
         padding: 0 5px;
+    }
+    .datagrid_wrapper {
+        box-shadow: none;
+        background: transparent;
+    }
+    .datagrid thead:not(.list_thead) {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    .datagrid tr.filter {
+        display: none;
+    }
+    .datagrid tbody tr {
+        display: block;
+        border-left: 5px solid #ededed;
+        border-right: 1px solid #ededed;
+        margin-bottom: 20px;
+    }
+    .datagrid tbody.list_tbody tr {
+        margin-bottom: 0;
+    }
+    .datagrid tbody td {
+        display: flex;
+        border-bottom: 1px solid #ededed;
+    }
+    .datagrid tbody.list_tbody td {
+        border-bottom: none;
+    }
+    .datagrid tbody td::before {
+        content: attr(data-label);
+        width: 30%;
+    }
+    .datagrid tbody.list_tbody td::before {
+        width: 50%;
+    }
+    .datagrid tbody td > div {
+        width: 70%;
+    }
+    .datagrid tbody.list_tbody td > div {
+        width: 50%;
+    }
+    .datagrid .actions, .datagrid td.center {
+        text-align: left;
+    }
+    .datagrid tbody td:first-child {
+        border-top: 1px solid #ededed;
+    }
+    .datagrid .flag_trigger, .datagrid .flag_trigger a {
+        margin: 7px 0 0 0;
+    }
+    .list_tbody > tr > td:first-child {
+        display: none;
+    }
+    .loading_overlay {
+        display: none;
     }
 }
 @media screen and (max-width: 640px) {

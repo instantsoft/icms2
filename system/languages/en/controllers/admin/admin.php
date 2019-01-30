@@ -16,10 +16,11 @@
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
+    define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Session save handler');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Session folder');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Max. file upload size');
     define('LANG_CP_DASHBOARD_SI_ION',          'IonCube Loader installed');
-    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend Optimizer installed');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Zend OPcache installed');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Zend Guard Loader installed');
 
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'General sponsor');
@@ -67,6 +68,22 @@
     define('LANG_CP_CTYPE_PERMISSIONS',         'Permissions');
     define('LANG_CP_CTYPE_DATASETS',            'Datasets');
     define('LANG_CP_CTYPE_DATASET',             'Dataset');
+
+    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Columns settings');
+    define('LANG_CP_GRID_COLYMNS_SYSTEM',       'System');
+    define('LANG_CP_GRID_COLYMNS_USER',         'User');
+    define('LANG_CP_GRID_COLYMNS_FILTER',       'Filter');
+    define('LANG_CP_GRID_COLYMNS_DISPLAY',      'Display');
+    define('LANG_CP_GRID_COLYMNS_EXACT',        'Exact match');
+    define('LANG_CP_GRID_COLYMNS_LIKE',         'Like in string');
+    define('LANG_CP_GRID_COLYMNS_DATE',         'Date');
+    define('LANG_CP_GRID_COLYMNS_SELECT',       'Select');
+    define('LANG_CP_GRID_COLYMNS_FLAG',         'Switch');
+    define('LANG_CP_GRID_COLYMNS_RESET',        'Reset');
+    define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'First 100 symbols');
+    define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Number of images');
+    define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Preview');
+    define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Put in filter');
 
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
 
@@ -133,6 +150,9 @@
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');
     define('LANG_CP_SEOMETA_CATS',              'SEO: Categories');
+    define('LANG_CP_CAT_COVER_SIZES',           'Category Cover Presets');
+    define('LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES', 'List Cover Preset');
+    define('LANG_CP_SEOMETA_CATS_H1',           'Allow custom H1 tag for category pages');
     define('LANG_CP_SEOMETA_CATS_TITLE',        'Allow custom titles for category pages');
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Allow custom keywords for categories');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Allow custom META descriptions for categories');
@@ -140,6 +160,7 @@
     define('LANG_CP_LISTVIEW_OPTIONS',          'List view options');
     define('LANG_CP_PROFILELIST_ON',            'List view in user profiles enabled');
     define('LANG_CP_LISTVIEW_ON',               'List view enabled');
+    define('LANG_CP_LIST_OFF_BREADCRUMB',       'Do not show breadcrumbs');
     define('LANG_CP_LISTVIEW_FILTER',           'Show filter');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Expand filter panel');
     define('LANG_CP_LISTVIEW_STYLE',            'Default list style');
@@ -363,6 +384,12 @@
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
+
+    define('LANG_CP_SETTINGS_SESSIONS',         'Sessions');
+    define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
 
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');
@@ -690,3 +717,4 @@
     define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Author or owner access');
     define('LANG_CP_FIELD_READING',       'Reading');
     define('LANG_CP_FIELD_EDITING',       'Editing');
+    define('LANG_WD_CONTENT_FILTER_DETECT', 'Autodetect');

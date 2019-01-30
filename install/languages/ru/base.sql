@@ -230,7 +230,7 @@ CREATE TABLE `{#}content_types` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT 'Системное имя',
-  `description` varchar(255) DEFAULT NULL COMMENT 'Описание',
+  `description` text COMMENT 'Описание',
   `ordering` int(11) DEFAULT NULL,
   `is_date_range` tinyint(1) unsigned DEFAULT NULL,
   `is_premod_add` tinyint(1) unsigned DEFAULT NULL COMMENT 'Модерация при создании?',
@@ -263,8 +263,8 @@ CREATE TABLE `{#}content_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы контента';
 
 INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(1, 'Страницы', 'pages', 'Статичные страницы сайта', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\n', '---\none: страница\ntwo: страницы\nmany: страниц\ncreate: страницу\n', NULL, NULL, NULL, NULL, 1),
-(7, 'Фотоальбомы', 'albums', 'Альбомы с фотографиями пользователей', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: альбом\ntwo: альбома\nmany: альбомов\ncreate: фотоальбом\n', NULL, NULL, NULL, NULL, 1);
+(1, 'Страницы', 'pages', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, NULL, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_tags_in_list: null\nis_tags_in_item: null\nis_rss: null\nlist_on: null\nprofile_on: null\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\n', '---\none: страница\ntwo: страницы\nmany: страниц\ncreate: страницу\n', NULL, NULL, NULL, NULL, 1),
+(7, 'Фотоальбомы', 'albums', '<p>Альбомы с фотографиями пользователей</p>', NULL, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: альбом\ntwo: альбома\nmany: альбомов\ncreate: фотоальбом\n', NULL, NULL, NULL, NULL, 1);
 
 DROP TABLE IF EXISTS `{#}controllers`;
 CREATE TABLE `{#}controllers` (
@@ -291,13 +291,13 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips:\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys:\nseo_desc:\nis_guests_moderate: 1\nrestricted_emails:\nrestricted_names:\nlimit_nesting: 5\nshow_author_email: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: \n  - 0\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
-(6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: 1\nverify_email: null\nverify_exp: 48\nauth_captcha: 0\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (7, 'Лента активности', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (8, 'Группы', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (9, 'Редактор разметки', 'markitup', 1, '---\nset: default-ru\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key: \nprivate_key: \ntheme: clean\nlang: ru\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (14, 'Теги', 'tags', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (15, 'Генератор RSS', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -366,6 +366,7 @@ CREATE TABLE `{#}con_albums_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -373,6 +374,8 @@ CREATE TABLE `{#}con_albums_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -521,6 +524,7 @@ CREATE TABLE `{#}con_pages_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -528,6 +532,8 @@ CREATE TABLE `{#}con_pages_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -782,7 +788,11 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (147, 'content_item_form', 'tags', 147, 1),
 (148, 'content_before_item', 'tags', 148, 1),
 (149, 'content_before_list', 'tags', 149, 1),
-(150, 'tags_search_subjects', 'content', 150, 1);
+(150, 'tags_search_subjects', 'content', 150, 1),
+(151, 'images_before_upload', 'typograph', 151, 1),
+(152, 'engine_start', 'content', 152, 1),
+(153, 'content_category_after_update', 'subscriptions', 153, 1),
+(154, 'grid_admin_content_items_args', 'admin', 154, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -936,6 +946,7 @@ CREATE TABLE `{#}menu_items` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `menu_id` int(11) unsigned DEFAULT NULL COMMENT 'ID меню',
   `parent_id` int(11) unsigned DEFAULT '0' COMMENT 'ID родительского пункта',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Включен?',
   `title` varchar(64) DEFAULT NULL COMMENT 'Заголовок пункта',
   `url` varchar(255) DEFAULT NULL COMMENT 'Ссылка',
   `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Порядковый номер',
@@ -1227,6 +1238,7 @@ CREATE TABLE `{#}scheduler_tasks` (
   `date_last_run` timestamp NULL DEFAULT NULL,
   `is_active` tinyint(1) UNSIGNED DEFAULT NULL,
   `is_new` tinyint(1) UNSIGNED DEFAULT '1',
+  `consistent_run` tinyint(1) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
@@ -1242,7 +1254,8 @@ INSERT INTO `{#}scheduler_tasks` (`id`, `title`, `controller`, `hook`, `period`,
 (6, 'Удаление пользователей, не прошедших верификацию', 'auth', 'delete_expired_unverified', 60, NULL, NULL, 1, 1),
 (7, 'Удаление просроченных записей из корзины', 'moderation', 'trash', 30, NULL, NULL, 1, 1),
 (8, 'Выполняет задачи системной очереди', 'queue', 'run_queue', 1, NULL, NULL, 1, 1),
-(9, 'Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1);
+(9, 'Удаляет просроченные неподтвержденные подписки гостей', 'subscriptions', 'delete_expired_unconfirmed', 1440, 1, NULL, 1, 1),
+(10, 'Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);
 
 DROP TABLE IF EXISTS `{#}sessions_online`;
 CREATE TABLE `{#}sessions_online` (

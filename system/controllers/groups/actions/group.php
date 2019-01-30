@@ -17,12 +17,17 @@ class actionGroupsGroup extends cmsAction {
 
         }
 
+        $fields = array();
+
         // Парсим значения полей
         foreach($group['fields'] as $name => $field){
-            $group['fields'][$name]['html'] = $field['handler']->setItem($group)->parse($group[$name]);
+            $fields[$name] = $field;
+            $fields[$name]['html'] = $field['handler']->setItem($group)->parse($group[$name]);
         }
 
-        list($group, $group['fields']) = cmsEventsManager::hook('group_before_view', array($group, $group['fields']));
+        list($group, $fields) = cmsEventsManager::hook('group_before_view', array($group, $fields));
+
+        $group['fields'] = $fields;
 
         $fields_fieldsets = cmsForm::mapFieldsToFieldsets($group['fields'], function($field, $user) use ($group) {
             if (!$field['is_in_item'] || $field['is_system']) { return false; }

@@ -19,7 +19,16 @@ class widgetContentList extends cmsWidget {
 
         $model = cmsCore::getModel('content');
 
-        $ctype = $model->getContentType($ctype_id);
+        if($ctype_id){
+
+            $ctype = $model->getContentType($ctype_id);
+
+        } else {
+
+            $ctype = $current_ctype;
+
+        }
+
         if (!$ctype) { return false; }
 
 		if ($cat_id){
@@ -29,15 +38,7 @@ class widgetContentList extends cmsWidget {
 		}
 
         if ($dataset_id){
-
             $dataset = $model->getContentDataset($dataset_id);
-
-            if ($dataset){
-                $model->applyDatasetFilters($dataset);
-            } else {
-                $dataset_id = false;
-            }
-
         }
 
         if ($relation_id && $current_ctype_item && $current_ctype){
@@ -67,6 +68,10 @@ class widgetContentList extends cmsWidget {
                 }
             }
 
+        }
+
+        if (!empty($dataset)){
+            $model->applyDatasetFilters($dataset);
         }
 
 		if ($category){

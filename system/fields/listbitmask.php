@@ -41,7 +41,7 @@ class fieldListBitmask extends cmsFormField {
 
         if(is_array($value)){
             foreach ($value as $k => $v) {
-                if(is_numeric($v)){ $this->data['selected'][$k] = intval($v); }
+                if(is_numeric($v)){ $this->data['selected'][$k] = (int)$v; }
             }
         } else {
             $this->data['selected'] = array();

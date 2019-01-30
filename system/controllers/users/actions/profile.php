@@ -77,7 +77,7 @@ class actionUsersProfile extends cmsAction {
             if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
                 // если группа пользователя не имеет доступ к чтению этого поля,
                 // проверяем на доступ к нему для авторов
-                if (!empty($profile['id'] && !empty($field['options']['author_access']))){
+                if (!empty($profile['id']) && !empty($field['options']['author_access'])){
                     if (!in_array('is_read', $field['options']['author_access'])){ return false; }
                     if ($profile['id'] == $user->id){ return true; }
                 }

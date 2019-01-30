@@ -14,7 +14,7 @@ $this->addToolButton(array(
     'class' => 'delete show_on_selected',
     'title' => LANG_DELETE,
     'href'  => null,
-    'onclick' => "return icms.datagrid.submit('".$this->href_to('comments_delete').'?csrf_token='.cmsForm::generateCSRFToken()."', '".LANG_DELETE_SELECTED_CONFIRM."')",
+    'onclick' => "return icms.datagrid.submit('".$this->href_to('comments_delete').'?csrf_token='.cmsForm::getCSRFToken()."', '".LANG_DELETE_SELECTED_CONFIRM."')",
 ));
 
 $this->renderGrid($this->href_to('comments_list'), $grid); ?>

@@ -14,9 +14,18 @@ function step($is_submit){
         'cache' => $root . '/' . 'cache' . '/'
     );
 
+    $protocol = 'http://';
+    if(
+            (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+            (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) ||
+            (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
+        ){
+        $protocol = 'https://';
+    }
+
     $hosts = array(
-        'root' => 'http://' . $_SERVER['HTTP_HOST'] . $root,
-        'upload' => 'http://' . $_SERVER['HTTP_HOST'] . $root . '/upload',
+        'root' => $protocol . rtrim($_SERVER['HTTP_HOST'], '/') . $root,
+        'upload' => $protocol . rtrim($_SERVER['HTTP_HOST'], '/') . $root . '/upload',
     );
 
     $result = array(
@@ -39,6 +48,9 @@ function check_writables(){
 
     $paths = $_POST['paths'];
     $hosts = $_POST['hosts'];
+
+    $hosts['root'] = rtrim($hosts['root'], '/');
+    $hosts['upload'] = rtrim($hosts['upload'], '/');
 
     $upload = rtrim(DOC_ROOT . $paths['upload'], '/');
     $cache = rtrim(DOC_ROOT . $paths['cache'], '/');

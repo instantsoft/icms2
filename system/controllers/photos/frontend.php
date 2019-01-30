@@ -62,6 +62,11 @@ class photos extends cmsFrontend {
             $this->model->limit($perpage);
         }
 
+        // если альбом не общий, фильтруем для всех и для друзей
+        if(empty($item['is_public']) && $this->cms_user->isFriend($item['user_id'])){
+            $this->model->disablePrivacyFilterForFriends();
+        }
+
         $photos = $this->getPhotosList($item['id'], $item_type);
         if(!$photos && $page > 1){ cmsCore::error404(); }
 

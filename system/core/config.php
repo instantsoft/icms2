@@ -109,6 +109,14 @@ class cmsConfig {
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
         }
 
+        if(empty($this->data['session_save_path'])){
+            $this->data['session_save_path'] = session_save_path();
+        }
+
+        if(empty($this->data['session_save_handler'])){
+            $this->data['session_save_handler'] = 'files';
+        }
+
         if(!isset($this->data['controllers_without_widgets'])){
             $this->data['controllers_without_widgets'] = array('admin');
         }
@@ -183,7 +191,7 @@ class cmsConfig {
             $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
             $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs);
+            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
             $dump .= "=> $value,\n";
 
         }

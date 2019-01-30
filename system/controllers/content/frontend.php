@@ -101,21 +101,23 @@ class content extends cmsFrontend {
         $tree = $this->model->getCategoriesTree($ctype['name']);
         if (!$tree) { return $result; }
 
+        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+
         foreach($tree as $cat){
 
             if ($cat['id']==1) { continue; }
+
+            if(!empty($cat['is_hidden'])){ continue; }
 
             $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'];
             $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
 
             $result['items'][] = array(
-                'id' => $item_id,
-                'parent_id' =>  $cat['parent_id'] == 1 ?
-                                $menu_item_id :
-                                $parent_id,
-                'title' => $cat['title'],
-                'childs_count' => ($cat['ns_right'] - $cat['ns_left']) -1,
-                'url' => href_to($ctype['name'], $cat['slug'])
+                'id'           => $item_id,
+                'parent_id'    => ($cat['parent_id'] == 1 ? $menu_item_id : $parent_id),
+                'title'        => $cat['title'],
+                'childs_count' => ($cat['ns_right'] - $cat['ns_left']) - 1,
+                'url'          => href_to($base_url, $cat['slug'])
             );
 
         }
@@ -409,9 +411,34 @@ class content extends cmsFrontend {
 
         $form = $this->getForm('category');
 
+        // Если заданы пресеты
+        if (!empty($ctype['options']['cover_sizes'])){
+
+            $fieldset_id = $form->addFieldset(LANG_CATEGORY_COVER);
+            $form->addField($fieldset_id, new fieldImage('cover', array(
+                'options' => array(
+                    'sizes' => $ctype['options']['cover_sizes']
+                )
+            )));
+
+        }
+
         // Если ручной ввод ключевых слов или описания, то добавляем поля для этого
-        if (!empty($ctype['options']['is_cats_title']) || $ctype['options']['is_cats_keys'] || $ctype['options']['is_cats_desc']){
+        if (!empty($ctype['options']['is_cats_title']) ||
+                !empty($ctype['options']['is_cats_h1']) ||
+                !empty($ctype['options']['is_cats_keys']) ||
+                !empty($ctype['options']['is_cats_desc'])){
+
             $fieldset_id = $form->addFieldset( LANG_SEO );
+            if (!empty($ctype['options']['is_cats_h1'])){
+                $form->addField($fieldset_id, new fieldString('seo_h1', array(
+                    'title' => LANG_SEO_H1,
+                    'options'=>array(
+                        'max_length'=> 256,
+                        'show_symbol_count'=>true
+                    )
+                )));
+            }
             if (!empty($ctype['options']['is_cats_title'])){
                 $form->addField($fieldset_id, new fieldString('seo_title', array(
                     'title' => LANG_SEO_TITLE,

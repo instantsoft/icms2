@@ -93,6 +93,26 @@ class formAuthOptions extends cmsForm {
                 'title' => LANG_AUTH_RESTRICTIONS,
                 'childs' => array(
 
+                    new fieldCheckbox('is_site_only_auth_users', array(
+                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
+                    )),
+
+                    new fieldList('guests_allow_controllers', array(
+                        'title'     => LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS,
+                        'default'   => array('auth', 'geo'),
+                        'is_chosen_multiple' => true,
+                        'generator' => function ($item){
+                            $admin_model = cmsCore::getModel('admin');
+                            $controllers = $admin_model->getInstalledControllers();
+                            $items = array('' => '');
+                            foreach($controllers as $controller){
+                                $items[$controller['name']] = $controller['title'];
+                            }
+                            return $items;
+                        },
+                        'visible_depend' => array('is_site_only_auth_users' => array('show' => array('1')))
+                    )),
+
                     new fieldText('restricted_emails', array(
                         'title' => LANG_AUTH_RESTRICTED_EMAILS,
                         'hint' => LANG_AUTH_RESTRICTED_EMAILS_HINT,

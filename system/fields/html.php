@@ -23,6 +23,10 @@ class fieldHtml extends cmsFormField {
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
             )),
+            new fieldCheckbox('parse_patterns', array(
+                'title' => LANG_PARSER_PARSE_PATTERNS,
+                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
+            )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
                 'is_visible' => cmsController::enabled('redirect')
@@ -54,6 +58,10 @@ class fieldHtml extends cmsFormField {
             ));
         }
 
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
         return $value;
 
     }
@@ -77,6 +85,8 @@ class fieldHtml extends cmsFormField {
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
+        } else if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
         }
 
         return $value;

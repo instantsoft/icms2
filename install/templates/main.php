@@ -39,7 +39,7 @@
 
         <div id="footer" class="section">
             <div id="copyright">
-                <a href="http://www.instantsoft.ru">InstantSoft</a> &copy; 2008 – <?php echo date('Y'); ?>
+                <a href="http://instantsoft.ru">InstantSoft</a> &copy; 2008 – <?php echo date('Y'); ?>
             </div>
             <div id="version">
                 <?php echo get_version(); ?>

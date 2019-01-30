@@ -422,7 +422,7 @@ class cmsController {
 
         $action_name = $this->routeAction($action_name);
 
-        $result = $this->processAction($action_name, $this->current_params);
+        $result = $this->executeAction($action_name, $this->current_params);
 
         $this->after($action_name);
 
@@ -436,7 +436,7 @@ class cmsController {
      * @param array $params
      * @return mixed
      */
-    public function processAction($action_name, $params = array()) {
+    public function executeAction($action_name, $params = array()) {
 
         $method_name = 'action' . string_to_camel('_', $action_name);
 
@@ -760,6 +760,7 @@ class cmsController {
         }
 
 		$grid = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name, $grid);
+        list($grid, $args) = cmsEventsManager::hook('grid_'.$this->name.'_'.$grid_name.'_args', array($grid, $args));
 
         if ($this->request->isAjax() && $this->request->has('heads')) {
 

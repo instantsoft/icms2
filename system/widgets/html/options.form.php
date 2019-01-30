@@ -8,18 +8,19 @@ class formWidgetHtmlOptions extends cmsForm {
 
             array(
                 'type' => 'fieldset',
-                'title' => LANG_OPTIONS, 
+                'title' => LANG_OPTIONS,
                 'childs' => array(
 
-                    new fieldText('options:content', array(
+                    new fieldHtml('options:content', array(
                         'title' => LANG_WD_HTML_CONTENT,
+                        'options' => array('editor' => 'ace'),
                         'rules' => array(
                             array('required')
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

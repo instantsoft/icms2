@@ -36,6 +36,8 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                     if($user){
 
+                        cmsUser::sessionUnset('user_ip');
+
                         cmsUser::restrictSessionToIp();
 
                         $data['allow'] = true;

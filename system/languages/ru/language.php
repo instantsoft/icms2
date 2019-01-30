@@ -93,6 +93,10 @@
     define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','Вариант отображения в фильтре');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Заполнить предустановленные значения из имеющихся данных');
+    define('LANG_PARSER_STRING_SELECT',      'Выпадающий список с предустановленными значениями');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Флаг заполненности поля');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
@@ -116,6 +120,8 @@
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Обрабатывать специальные шаблоны');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Используйте поля записи, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'При обработке типографом внешние ссылки формировать через редирект');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Обрезать текст при просмотре списка');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
@@ -275,6 +281,7 @@
     define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
     define('LANG_PM_MODERATION_COMMENT_REFUSED', 'Модератор отклонил ваш комментарий на странице <b>%1$s</b>.%2$s Причина отклонения: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'Модератор возвратил страницу <b><a href="%2$s">%1$s</a></b> на доработку и указал замечания:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Устраните, пожалуйста, замечания в тексте.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');
@@ -396,7 +403,7 @@
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
 
-    define('LANG_BY_DEFAULT',                'По-умолчанию');
+    define('LANG_BY_DEFAULT',                'По умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
     define('LANG_NO',                        'Нет');
@@ -519,6 +526,8 @@
     define('LANG_CATEGORIES',                'Категории');
     define('LANG_CATEGORY_TITLE',            'Название категории');
     define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Скрытая категория');
+    define('LANG_CATEGORY_COVER',            'Обложка категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');
@@ -546,6 +555,7 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'SEO для главной страницы');
+    define('LANG_SEO_H1',                    'Тег H1 страницы');
     define('LANG_SEO_TITLE',                 'Тайтл страницы');
     define('LANG_SEO_KEYS',                  'Ключевые слова');
     define('LANG_SEO_KEYS_HINT',             'Ключевые слова страницы, через запятую');

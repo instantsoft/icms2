@@ -20,22 +20,82 @@ class actionAdminSettings extends cmsAction {
             $values = array_merge($values, $form->parse($this->request, true));
             $errors = $form->validate($this,  $values);
 
-            if (!$errors){
+            if ($values['session_save_handler'] == 'memcache' && !class_exists('Memcache')){
 
-                if ($values['cache_method'] == 'memory'){
-                    if (!class_exists('Memcache')){
-                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
-                        $values['cache_method'] = 'files';
+                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
+
+            } else if($values['session_save_handler'] == 'memcached' && !class_exists('Memcached')){
+
+                $errors['session_save_handler'] = LANG_CP_MEMCACHE_NOT_AVAILABLE;
+
+            } else if($values['session_save_handler'] == 'files'){
+
+                if(!is_dir($values['session_save_path'])){
+                    if(!mkdir($values['session_save_path'], 0755, true)){
+                        $errors['session_save_path'] = LANG_CP_FTP_MKDIR_FAILED;
                     }
                 }
 
+                if (!is_writable($values['session_save_path'])) {
+                    $errors['session_save_path'] = sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $errors['session_save_path']);
+                }
+
+            }
+
+            if (!$errors){
+
                 if ($values['cache_method'] == 'memory'){
-                    $memcache_tester = new Memcache;
-                    $memcache_result = @$memcache_tester->connect($values['cache_host'], $values['cache_port']);
-                    if (!$memcache_result){
-                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+
+                    if (!class_exists('Memcache')){
+
+                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
+
                         $values['cache_method'] = 'files';
+
+                    } else {
+
+                        $memcache_tester = new Memcache();
+
+                        $memcache_result = $memcache_tester->connect($values['cache_host'], $values['cache_port']);
+
+                        if (!$memcache_result){
+
+                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+
+                            $values['cache_method'] = 'files';
+
+                        }
+
                     }
+
+                }
+
+                if ($values['cache_method'] == 'memcached'){
+
+                    if (!class_exists('Memcached')){
+
+                        cmsUser::addSessionMessage(LANG_CP_MEMCACHE_NOT_AVAILABLE, 'error');
+
+                        $values['cache_method'] = 'files';
+
+                    } else {
+
+                        $memcache_tester = new Memcached();
+
+                        $memcache_tester->setOption(\Memcached::OPT_BINARY_PROTOCOL, true);
+
+                        $memcache_result = $memcache_tester->addServer($values['cache_host'], $values['cache_port']);
+
+                        if (!$memcache_result){
+
+                            cmsUser::addSessionMessage(LANG_CP_MEMCACHE_CONNECT_ERROR, 'error');
+
+                            $values['cache_method'] = 'files';
+
+                        }
+
+                    }
+
                 }
 
                 if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){

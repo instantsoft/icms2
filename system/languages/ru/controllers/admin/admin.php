@@ -16,10 +16,11 @@
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Директория сайта');
+    define('LANG_CP_DASHBOARD_SI_SESSION_TYPE', 'Обработчик сессий');
     define('LANG_CP_DASHBOARD_SI_SESSION',      'Директория сессий');
     define('LANG_CP_DASHBOARD_SI_MAX',          'Макс. размер загрузки');
     define('LANG_CP_DASHBOARD_SI_ION',          'Установлен IonCube Loader');
-    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend Optimizer');
+    define('LANG_CP_DASHBOARD_SI_ZEND',         'Установлен Zend OPcache');
     define('LANG_CP_DASHBOARD_SI_ZENDG',        'Установлен Zend Guard Loader');
 
     define('LANG_CP_DASHBOARD_LEAD_SPONSOR',    'Генеральный спонсор проекта');
@@ -67,6 +68,22 @@
     define('LANG_CP_CTYPE_PERMISSIONS',         'Доступ');
     define('LANG_CP_CTYPE_DATASETS',            'Наборы');
     define('LANG_CP_CTYPE_DATASET',             'Набор');
+
+    define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Настройки столбцов');
+    define('LANG_CP_GRID_COLYMNS_SYSTEM',       'Системные');
+    define('LANG_CP_GRID_COLYMNS_USER',         'Пользовательские');
+    define('LANG_CP_GRID_COLYMNS_FILTER',       'Фильтр');
+    define('LANG_CP_GRID_COLYMNS_DISPLAY',      'Отображение');
+    define('LANG_CP_GRID_COLYMNS_EXACT',        'Точное соответствие');
+    define('LANG_CP_GRID_COLYMNS_LIKE',         'Вхождение в строку');
+    define('LANG_CP_GRID_COLYMNS_DATE',         'Дата');
+    define('LANG_CP_GRID_COLYMNS_SELECT',       'Список');
+    define('LANG_CP_GRID_COLYMNS_FLAG',         'Переключатель');
+    define('LANG_CP_GRID_COLYMNS_RESET',        'Сбросить');
+    define('LANG_CP_GRID_COLYMNS_CUT_TEXT',     'Первые 100 символов');
+    define('LANG_CP_GRID_COLYMNS_IMAGES_NMB',   'Кол-во изображений');
+    define('LANG_CP_GRID_COLYMNS_PREVIEW',      'Превью');
+    define('LANG_CP_GRID_COLYMNS_TO_FILTER',    'Подставить в фильтр');
 
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
@@ -119,7 +136,7 @@
     define('LANG_CP_PHOTOS',                    'Изображения');
     define('LANG_CP_PHOTOS_ON',                 'Основное изображение');
     define('LANG_CP_PHOTOS_MULTI',              'Дополнительные изображения');
-    define('LANG_CP_SEOMETA_DEFAULT',           'SEO по-умолчанию');
+    define('LANG_CP_SEOMETA_DEFAULT',           'SEO по умолчанию');
     define('LANG_CP_SEOMETA',                   'SEO для записей');
     define('LANG_CP_SEOMETA_MANUAL_TITLE',      'Вручную указывать тайтл для записей');
     define('LANG_CP_SEOMETA_AUTO_KEYS',         'Автоматическая генерация ключевых слов');
@@ -130,9 +147,12 @@
     define('LANG_CP_SEOMETA_ITEM_H1',           'Шаблон генерации тега h1');
     define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля записи, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');
+    define('LANG_CP_CAT_COVER_SIZES',           'Пресеты обложек категорий');
+    define('LANG_CP_CAT_CONTEXT_LIST_COVER_SIZES', 'Пресет обложек для списков');
     define('LANG_CP_FIXED_URL',                 'Не изменять URL при редактировании записи');
     define('LANG_CP_URL_PATTERN',               'Шаблон генерации URL');
     define('LANG_CP_SEOMETA_CATS',              'SEO для категорий');
+    define('LANG_CP_SEOMETA_CATS_H1',           'Разрешить ввод тега H1 для страниц категорий');
     define('LANG_CP_SEOMETA_CATS_TITLE',        'Разрешить ввод тайтлов для страниц категорий');
     define('LANG_CP_SEOMETA_CATS_KEYS',         'Разрешить ввод ключевых слов для категорий');
     define('LANG_CP_SEOMETA_CATS_DESC',         'Разрешить ввод META-описаний для категорий');
@@ -140,6 +160,7 @@
     define('LANG_CP_LISTVIEW_OPTIONS',          'Просмотр списка');
     define('LANG_CP_PROFILELIST_ON',            'Просмотр списка в профилях пользователей включен');
     define('LANG_CP_LISTVIEW_ON',               'Просмотр списка на сайте включен');
+    define('LANG_CP_LIST_OFF_BREADCRUMB',       'Не показывать хлебные крошки');
     define('LANG_CP_LISTVIEW_FILTER',           'Показывать фильтр');
     define('LANG_CP_LISTVIEW_FILTER_EXPAND',    'Разворачивать панель фильтра');
     define('LANG_CP_LISTVIEW_STYLE',            'Стиль списка по умолчанию');
@@ -186,7 +207,7 @@
     define('LANG_CP_FIELD_TYPE_OPTS',           'Настройки поля');
     define('LANG_CP_FIELD_VALUES',              'Предустановленные значения');
     define('LANG_CP_FIELD_PROFILE_VALUE',       'Значение из профиля пользователя');
-    define('LANG_CP_FIELD_PROFILE_VALUE_HINT',  'Поле может получать значение по-умолчанию из профиля текущего пользователя<br/>Только для текстовых полей и списков');
+    define('LANG_CP_FIELD_PROFILE_VALUE_HINT',  'Поле может получать значение по умолчанию из профиля текущего пользователя<br/>Только для текстовых полей и списков');
     define('LANG_CP_FIELD_TITLE',               'Название поля');
     define('LANG_CP_FIELD_FIELDSET',            'Группа');
     define('LANG_CP_FIELD_FIELDSET_SELECT',     'Выберите группу');
@@ -365,6 +386,12 @@
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
+    define('LANG_CP_SETTINGS_SESSIONS',         'Сессии');
+    define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Время жизни сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Метод хранения сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь. Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
+
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Контроль изменения IP адреса при входе в админку');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'По изменению подсети');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT2', 'Строго по ip адресу');
@@ -384,13 +411,13 @@
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
-    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по-умолчанию');
+    define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по умолчанию');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');
     define('LANG_CP_SETTINGS_TEMPLATE_MOBILE',  'Тема оформления для мобильных устройств');
     define('LANG_CP_SETTINGS_TEMPLATE_TABLET',  'Тема оформления для планшетов');
     define('LANG_CP_SETTINGS_TEMPLATE_OPTIONS', 'Настройки темы');
     define('LANG_CP_SETTINGS_TEMPLATE_INTH',    'Создать свою тему');
-    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по-умолчанию');
+    define('LANG_CP_SETTINGS_EDITOR',           'HTML редактор по умолчанию');
     define('LANG_CP_SETTINGS_SHOW_BREADCRUMBS', 'Показывать глубиномер?');
     define('LANG_CP_SETTINGS_HTML_MINIFY',      'Сжимать HTML');
     define('LANG_CP_SETTINGS_MERGE_CSS',        'Объединять CSS-файлы');
@@ -400,7 +427,7 @@
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Не удалось очистить папку <b>%s</b>. Проверьте права или очистите ее вручную');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'Кеш успешно очищен');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Ошибка очистки кеша');
-    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по-умолчанию');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Тип контента по умолчанию');
     define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей данного типа контента не будет добавляться его системное имя');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Выводить на главной странице');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Только виджеты');
@@ -486,7 +513,7 @@
     define('LANG_CP_INSTALL_ERR_HINT',          'Следствие');
     define('LANG_CP_INSTALL_ERR_FIX',           'Решение');
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');
-    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Папка <b>%s</b> не доступна для записи');
+    define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную папку и обновите страницу');
     define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
@@ -666,7 +693,7 @@
     define('LANG_MAILCHECK_BODY', 'Сообщение');
     define('LANG_EVENTS_MANAGEMENT', 'Управление событиями');
     define('LANG_EVENTS_REFRESH',    'Обновить события в базе данных');
-    define('LANG_EVENTS_DELETED',    'Эти события уже не доступны');
+    define('LANG_EVENTS_DELETED',    'Эти события уже недоступны');
     define('LANG_EVENTS_LISTENER',   'Компонент');
     define('LANG_EVENTS_EVENT_NAME', 'Событие');
     define('LANG_EVENTS_ALLOW_NEW',  'Доступны новые события');
@@ -690,3 +717,4 @@
     define('LANG_CP_FIELD_AUTHOR_ACCESS', 'Доступ для автора или владельца');
     define('LANG_CP_FIELD_READING',       'Чтение');
     define('LANG_CP_FIELD_EDITING',       'Изменение');
+    define('LANG_WD_CONTENT_FILTER_DETECT', 'Определять автоматически');

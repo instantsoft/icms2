@@ -25,7 +25,7 @@
     define('LANG_CONTENT_NOT_APPROVED',      'Pending approval');
     define('LANG_CONTENT_EDITED',            'Edited');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Not published');
-
+    define('LANG_CONTENT_OWN_ITEMS',		 'Only my');
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Type part of the field value');
 
     define('LANG_SHOW_FILTER',               'Show filter');
@@ -94,6 +94,10 @@
     define('LANG_PARSER_BITMASK_MAX_HINT',   'in the preset values');
     define('LANG_PARSER_CAPTION',            'Caption');
     define('LANG_PARSER_STRING',             'String');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','How display in filter');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Enter default values from exist data');
+    define('LANG_PARSER_STRING_SELECT',      'Select with default values');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Not empty field checkbox');
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
@@ -117,6 +121,8 @@
     define('LANG_PARSER_HTML',               'HTML text');
     define('LANG_PARSER_HTML_EDITOR',        'WYSIWYG editor');
     define('LANG_PARSER_HTML_FILTERING',     'Sanitize input');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Process special templates');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Use the entry fields by inserting their names in curly braces. For example, for content types: <strong>{title}</strong>, <strong>{category}</strong> etc. You can use the processing of values, more in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">documentation</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'External links via a redirect if sanitize input');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Truncate text length in list view');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','The text will be truncated to a specified length, the formatting will be removed');
@@ -276,6 +282,7 @@
     define('LANG_PM_MODERATION_REFUSED',     'Moderator refused  the<b>%1$s</b> publication.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_COMMENT_REFUSED', 'A moderator has rejected your comment on the page <b>%1$s</b>.%2$s Reason for rejection: %3$s');
     define('LANG_PM_MODERATION_REWORK',      'The moderator returned the <b><a href="%2$s">%1$s</a></b> page for revision and pointed remarks:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Please correct the notes in the text.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Permissions');
@@ -522,6 +529,8 @@
     define('LANG_CATEGORIES',                'Categories');
     define('LANG_CATEGORY_TITLE',            'Category title');
     define('LANG_CATEGORY_DESCRIPTION',      'Category description');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Hidden category');
+    define('LANG_CATEGORY_COVER',            'Category cover');
     define('LANG_FOLDER',                    'Folder');
     define('LANG_ROOT_NODE',                 'Root node');
     define('LANG_ROOT_CATEGORY',             'Root category');
@@ -549,6 +558,7 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'Component main page SEO');
+    define('LANG_SEO_H1',                    'Page H1 tag');
     define('LANG_SEO_TITLE',                 'Page title');
     define('LANG_SEO_KEYS',                  'Keywords');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');
