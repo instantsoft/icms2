@@ -102,7 +102,10 @@
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
-    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов после запятой');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов дробной части');
+    define('LANG_PARSER_NUMBER_TRIM_ZERO',   'Обрезать дробные нули');
+    define('LANG_PARSER_NUMBER_DEC_POINT',   'Разделитель дробной части');
+    define('LANG_PARSER_NUMBER_IS_CEIL',     'Только целые числа');
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
@@ -507,6 +510,11 @@
     //FORMS
     define('LANG_SUBMIT', 					 'Отправить');
     define('LANG_SUBMIT_NOT_SAVE',			 'Покинуть страницу? Возможно, внесённые изменения не сохранятся.');
+    define('LANG_DOT',                       'Точка');
+    define('LANG_COMMA',                     'Запятая');
+    define('LANG_SPACE',                     'Пробел');
+    define('LANG_APOSTROPHE',                'Апостроф');
+    define('LANG_ANOTHER',                   'Другой');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');
