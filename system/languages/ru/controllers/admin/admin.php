@@ -236,6 +236,7 @@
     define('LANG_CP_FIELD_PRIVATE',             'Показывать поле только автору записи');
     define('LANG_CP_FIELD_GROUPS_READ',         'Доступ для чтения');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Доступ для изменения');
+    define('LANG_CP_FIELD_GROUPS_ADD',          'Доступ для создания');
     define('LANG_CP_FIELD_WRAP',               'Обтекание');
     define('LANG_CP_FIELD_WRAP_TYPE',          'Тип');
     define('LANG_CP_FIELD_WRAP_LTYPE',         'Следующее поле справа от текущего');

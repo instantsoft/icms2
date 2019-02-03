@@ -368,6 +368,7 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Too short value (min. length: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Too long value (max. length: %s)');
     define('ERR_VALIDATE_EMAIL',             'Wrong e-mail format');
+    define('ERR_VALIDATE_URL',               'Wrong URL format');
     define('ERR_VALIDATE_REGEXP',            'Wrong format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
     define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
@@ -382,6 +383,7 @@
     define('LANG_VALIDATE_NUMBER',           'Only numbers');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Only Latin letters and numbers');
     define('LANG_VALIDATE_EMAIL',            'E-mail address');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Unique value');
 
     define('ERR_REQ_EMAIL', 		 	 	 'E-mail is required!');

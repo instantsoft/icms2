@@ -55,10 +55,10 @@ class actionAuthRegister extends cmsAction {
             foreach($fieldsets as $fieldset){
                 foreach($fieldset['fields'] as $field){
 
-                    if (empty($field['groups_edit'])) { continue; }
-                    if (in_array(0, $field['groups_edit'])) { continue; }
+                    if (empty($field['groups_add'])) { continue; }
+                    if (in_array(0, $field['groups_add'])) { continue; }
 
-                    if (!in_array($user['group_id'], $field['groups_edit'])){
+                    if (!in_array($user['group_id'], $field['groups_add'])){
                         $form->disableField($field['name']);
                         unset($user[$field['name']]);
                     }

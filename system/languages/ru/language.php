@@ -367,6 +367,7 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Слишком короткое значение (мин. длина: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Слишком длинное значение (макс. длина: %s)');
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
+    define('ERR_VALIDATE_URL',               'Неверный формат URL');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
     define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
@@ -375,12 +376,15 @@
     define('ERR_VALIDATE_NUMBER',            'Введите число');
     define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
     define('ERR_VALIDATE_INVALID',           'Указано недопустимое значение');
+
     define('LANG_VALIDATE_REQUIRED',         'Поле должно быть заполнено');
     define('LANG_VALIDATE_DIGITS',           'Только целые числа');
     define('LANG_VALIDATE_NUMBER',           'Только числа');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
     define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
+
     define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
     define('ERR_EMPTY_FIELDS', 			 	 'Обнаружены пустые поля!');
     define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');

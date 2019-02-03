@@ -271,8 +271,7 @@ class fieldNumber extends cmsFormField {
     public function getInput($value){
 
         $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
-
-        return parent::getInput($value);
+        return parent::getInput(!empty($this->options['is_digits']) ? (int)$value : $value);
 
     }
 

@@ -185,7 +185,7 @@ class groups extends cmsFrontend {
         return $this;
     }
 
-    public function getGroupForm($group = false){
+    public function getGroupForm($group = false, $action = 'add'){
 
         if($group === false){
 
@@ -212,17 +212,24 @@ class groups extends cmsFrontend {
         $form = new cmsForm();
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($group){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($group, $action){
 
-            // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
-                // если группа пользователя не имеет доступ к редактированию этого поля,
-                // проверяем на доступ к нему для авторов
-                if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
-                    if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
-                    if ($group['owner_id'] == $user->id){ return true; }
+            if($action === 'add'){
+                // проверяем что группа пользователя имеет доступ к созданию этого поля
+                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) { // на автора не надо проверять, ибо это и есть автор
+                    return false;
                 }
-                return false;
+            }else{
+                // проверяем что группа пользователя имеет доступ к редактированию этого поля
+                if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                    // если группа пользователя не имеет доступ к редактированию этого поля,
+                    // проверяем на доступ к нему для авторов
+                    if (!empty($group['owner_id']) && !empty($field['options']['author_access'])){
+                        if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                        if ($group['owner_id'] == $user->id){ return true; }
+                    }
+                    return false;
+                }
             }
 
             return true;
