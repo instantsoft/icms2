@@ -20,6 +20,8 @@ class widgetContentCategories extends cmsWidget {
 
         if($ctype && $ctype['name'] == $ctype_name){
 
+            if(!$ctype['is_cats']){return false;}
+
             if(strpos(cmsCore::getInstance()->uri, '.html') === false){
 
                 $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
@@ -38,9 +40,13 @@ class widgetContentCategories extends cmsWidget {
 
             }
 
+        }else{ // проверка, если показ категорий отключен
+            $model = cmsCore::getModel('content');
+            $_ctype = $model->getContentTypeByName($ctype_name);
+            if(!$_ctype['is_cats']){return false;}
         }
 
-        $model = cmsCore::getModel('content');
+        $model = isset($model) ? $model : cmsCore::getModel('content');
 
         $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
         if (!$cats) { return false; }

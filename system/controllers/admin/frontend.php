@@ -688,6 +688,10 @@ class admin extends cmsFrontend {
             $form->addField($title_fieldset_id, new fieldNumber('id', array(
                 'is_hidden'=>true
             )));
+            $form->addField($title_fieldset_id, new fieldString('template', array(
+                'is_hidden'=>true,
+                'default' => $template
+            )));
 
             // Заголовок виджета
             $form->addField($title_fieldset_id, new fieldString('title', array(

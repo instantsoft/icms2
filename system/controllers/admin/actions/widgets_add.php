@@ -19,32 +19,26 @@ class actionAdminWidgetsAdd extends cmsAction {
         $widgets_model = cmsCore::getModel('widgets');
 
         $widget = $widgets_model->getWidget($widget_id);
-        if (!$widget){
-            return $this->cms_template->renderJSON(array(
-                'error' => true
-            ));
-        }
+        if(!$widget){return $this->cms_template->renderJSON(array('error' => true));}
 
-        $binded_id = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template);
+        $res = $widgets_model->addWidgetBinding($widget, $page_id, $position, $template);
+        if(!$res){return $this->cms_template->renderJSON(array('error'=>true));}
 
-        $bind_widget = $widgets_model->getWidgetBinding($binded_id);
-        if (!$bind_widget){
-            return $this->cms_template->renderJSON(array(
-                'error' => true
-            ));
-        }
+        $widget_bind = $widgets_model->getWidgetBinding($res['id']);
+        if(!$widget_bind){return $this->cms_template->renderJSON(array('error' => true));}
 
-        cmsCore::loadWidgetLanguage($bind_widget['name'], $bind_widget['controller']);
+        cmsCore::loadWidgetLanguage($widget_bind['name'], $widget_bind['controller']);
 
-        $form = $this->getWidgetOptionsForm($bind_widget['name'], $bind_widget['controller'], false, $bind_widget['template']);
-        $data = $form->parse(new cmsRequest($bind_widget));
+        $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template);
+        $data = $form->parse(new cmsRequest($widget_bind));
 
-        $widgets_model->updateWidgetBinding($binded_id, $data);
+        $widgets_model->updateWidgetBinding($res['id'], $data);
 
         return $this->cms_template->renderJSON(array(
-            'error' => !(bool) $binded_id,
+            'error' => false,
             'name'  => $widget['title'],
-            'id'    => $binded_id
+            'id'    => $res['id'],
+            'bp_id' => $res['bp_id']
         ));
 
     }

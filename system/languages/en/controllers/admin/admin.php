@@ -335,6 +335,8 @@
     define('LANG_CP_WIDGET_PAGE_URL_MASK_NOT',  'Negative masks');
     define('LANG_CP_WIDGETS_UNUSED',            'Unused Widgets');
     define('LANG_CP_WIDGETS_UNUSED_HINT',       'Here you can place the widgets that have to be temporarily hidden or moved to another page without losing their settings');
+    define('LANG_CP_WIDGETS_BINDED',            'Binded widgets');
+    define('LANG_CP_WIDGETS_BINDED_HINT',       'Drag the widget here to bind it with common settings unlimited number of times');
     define('LANG_CP_WIDGETS_TEMPLATE',          'Widgets for template');
     define('LANG_CP_WIDGETS_FA',                'Quick selection of URLs for masks');
     define('LANG_CP_WIDGETS_FA_TYPE',           'Type');
