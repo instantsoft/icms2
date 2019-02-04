@@ -21,7 +21,7 @@ class actionGroupsGroupEdit extends cmsAction {
 
         }
 
-        $form = $this->getGroupForm($group);
+        $form = $this->getGroupForm($group, 'edit');
 
         if (!$group['access']['is_owner']){
             $form->removeFieldset('group_options');
