@@ -194,29 +194,29 @@ icms.datagrid = (function ($) {
     this.submit = function(url, confirm_message){
 
         var selected_rows_count = _this.selectedRowsCount();
-        if (selected_rows_count == 0  && !_this.options.is_draggable) {return false;}
+        if (selected_rows_count === 0  && !_this.options.is_draggable) {return false;}
 
-        if (typeof(confirm_message) == 'string'){
+        if (typeof(confirm_message) === 'string'){
             if (!confirm(confirm_message)){return false;}
         }
 
-        if (typeof(url) != 'string') {url = $(url).data('url');}
+        if (typeof(url) !== 'string') {url = $(url).data('url');}
 
         $('#datagrid_form').html('');
         $('#datagrid_form').attr('action', url);
 
         if (selected_rows_count > 0){
             $('.datagrid tbody tr.selected').each(function(){
-                var row_id = $(this).attr('id');
-                $('#datagrid_form').append('<input type="hidden" name="selected[]" value="'+row_id+'" />');
-            })
+                var item_id = $(this).data('id');
+                $('#datagrid_form').append('<input type="hidden" name="selected[]" value="'+item_id+'" />');
+            });
         }
 
         if (_this.options.is_draggable){
             $('.datagrid tbody tr').each(function(){
-                var row_id = $(this).attr('id');
-                $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+row_id+'" />');
-            })
+                var item_id = $(this).data('id');
+                $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+item_id+'" />');
+            });
         }
 
         $('#datagrid_form').submit();
@@ -238,7 +238,7 @@ icms.datagrid = (function ($) {
 
         _this.selected_rows = [];
         $('.datagrid tr.selected').each(function(){
-            _this.selected_rows.push($(this).attr('id'));
+            _this.selected_rows.push($(this).data('id'));
         });
 
         icms.modal.openAjax(url, {selected: _this.selected_rows});
@@ -372,7 +372,7 @@ icms.datagrid = (function ($) {
 
         $.each(result.rows, function(i){
             var row = this;
-            var row_html = '<tr id="'+(row[0] > 0 ? row[0] : ('tr_id_'+i))+'">';
+            var row_html = '<tr id="tr_id_'+(row[0] > 0 ? row[0] : i)+'" data-id="'+((typeof row[0] === 'number' || typeof row[0] === 'string') ? row[0] : '')+'">';
             $.each(row, function(index){
                 if (index>0 || _this.options.show_id) {
                         row_html = row_html + '<td data-label="'+result.titles[index]+'">' + this + '</td>';

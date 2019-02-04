@@ -84,8 +84,9 @@
     </div>
 </div>
 
-<?php if ($options['is_pagination']){ ?>
+<?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
 <div class="datagrid_navigation">
+<?php if ($options['is_pagination']){ ?>
     <div class="datagrid_resize">
         <label>
             <?php echo LANG_PAGES_SHOW_PERPAGE; ?>
@@ -98,12 +99,15 @@
             </select>
         </label>
     </div>
+<?php } ?>
+<?php if ($options['is_selectable']){ ?>
     <div class="datagrid_select_actions">
         <strong class="shint"><?php echo LANG_CP_SELECT_HINT; ?></strong>
         <span class="sall"><?php echo LANG_SELECT_ALL; ?></span>
         <span class="sremove"><?php echo LANG_DESELECT_ALL; ?></span>
         <span class="sinvert"><?php echo LANG_INVERT_ALL; ?></span>
     </div>
+<?php } ?>
     <div class="datagrid_pagination"></div>
 </div>
 <?php } ?>
