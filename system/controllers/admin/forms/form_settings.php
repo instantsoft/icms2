@@ -369,18 +369,27 @@ class formAdminSettings extends cmsForm {
                             'files' => 'Files',
                             'memcache' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
                             'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
+                        ),
+                        'rules' => array(
+                            array('required')
                         )
                     )),
 
                     new fieldString('session_save_path', array(
                         'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH,
-                        'hint'  => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT
+                        'hint'  => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT,
+                        'rules' => array(
+                            array('required'),
+                        )
                     )),
 
                     new fieldNumber('session_maxlifetime', array(
                         'title' => LANG_CP_SETTINGS_SESSION_MAXLIFETIME,
                         'default' => ini_get('session.gc_maxlifetime')/60,
-                        'units' => LANG_MINUTES
+                        'units' => LANG_MINUTES,
+                        'rules' => array(
+                            array('required'),
+                        )
                     ))
 
                 )

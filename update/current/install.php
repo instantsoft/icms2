@@ -12,6 +12,33 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES ('Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);");
     }
 
+    if($core->db->isFieldExists('widgets_bind', 'template')){
+
+        $bnds = $content_model->limit(false)->get('widgets_bind');
+
+        if($bnds){
+            foreach ($bnds as $bnd) {
+
+                $content_model->insert('widgets_bind_pages', array(
+                    'bind_id'    => $bnd['id'],
+                    'template'   => $bnd['template'],
+                    'is_enabled' => $bnd['is_enabled'],
+                    'page_id'    => $bnd['page_id'],
+                    'position'   => $bnd['position'],
+                    'ordering'   => $bnd['ordering']
+                ));
+
+            }
+        }
+
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `template`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `is_enabled`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `page_id`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `position`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `ordering`;");
+
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

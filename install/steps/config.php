@@ -34,6 +34,11 @@ function create_config($path, $file){
     $file = $path . '/' . $file;
 
     $sp = session_save_path();
+
+    if (!$sp) {
+        $sp = rtrim(sys_get_temp_dir(), '/');
+    }
+
     $uniq = uniqid();
 
     if(mkdir($sp.DS.$uniq, 0755, true) && is_writable($sp.DS.$uniq)){

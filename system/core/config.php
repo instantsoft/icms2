@@ -110,7 +110,13 @@ class cmsConfig {
         }
 
         if(empty($this->data['session_save_path'])){
+
             $this->data['session_save_path'] = session_save_path();
+
+            if(empty($this->data['session_save_path'])){
+                $this->data['session_save_path'] = rtrim(sys_get_temp_dir(), '/');
+            }
+
         }
 
         if(empty($this->data['session_save_handler'])){
