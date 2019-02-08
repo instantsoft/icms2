@@ -214,9 +214,7 @@ class cmsController {
         $this->options[$key] = $val; return $this;
     }
     public function getOption($key){
-        if(!isset($this->options)){
-            $this->options = $this->getOptions();
-        }
+        if(!$this->useOptions){ return null; }
         return isset($this->options[$key]) ? $this->options[$key] : null;
     }
 
