@@ -473,68 +473,46 @@ class modelWidgets extends cmsModel {
         $this->deleteWidgetPageBind($template_name, 'template');
     }
 
-    public function getWidgetsForPages($pages_list, $template) {
+    public function getWidgetsForPages($pages_list, $template){
 
-        $this->useCache('widgets.bind_pages');
+        $this->useCache('widgets.bind');
 
-        $bind_pages = $this->
+        $widgets_bind = $this->
+                select('w.controller', 'controller')->
+                select('w.name', 'name')->
+                select('wb.*')->
+                select('i.id', 'id')->
+                join('widgets_bind', 'wb', 'wb.id = i.bind_id')->
+                join('widgets', 'w', 'w.id = wb.widget_id')->
                 filterEqual('template', $template)->
                 filterEqual('is_enabled', 1)->
                 filterIn('page_id', $pages_list)->
                 orderBy('i.page_id, i.position, i.ordering')->forceIndex('page_id')->
-                get('widgets_bind_pages');
+                get('widgets_bind_pages', function($item, $model){
 
-        if (!$bind_pages) {
-            return cmsEventsManager::hook('widgets_before_list', array());
-        }
+                    $item['options'] = cmsModel::yamlToArray($item['options']);
+                    $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+                    $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+                    $item['languages'] = cmsModel::yamlToArray($item['languages']);
+                    if(!$item['languages'] || $item['languages'] === array(0)){
+                        $item['languages'] = array();
+                    }
+                    $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
+                    if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
+                        $item['template_layouts'] = array();
+                    }
+                    $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
+                    if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
+                        $item['device_types'] = array();
+                    }
 
-        $bind_ids = array();
+                    return $item;
 
-        foreach ($bind_pages as $page) {
-            $bind_ids[$page['bind_id']] = $page['bind_id'];
-        }
+                });
 
-        $this->useCache('widgets.bind');
+        if(!$widgets_bind){ return cmsEventsManager::hook('widgets_before_list', array()); }
 
-        $widgets_bind = $this->select('w.controller', 'controller')->
-            select('w.name', 'name')->
-            join('widgets', 'w', 'w.id = i.widget_id')->
-            filterIn('i.id', $bind_ids)->
-            get('widgets_bind', function($item, $model){
-
-                $item['options']     = cmsModel::yamlToArray($item['options']);
-                $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
-                $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
-                $item['languages']   = cmsModel::yamlToArray($item['languages']);
-                if (!$item['languages'] || $item['languages'] === array(0)) {
-                    $item['languages'] = array();
-                }
-                $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
-                if (!$item['template_layouts'] || $item['template_layouts'] === array(0)) {
-                    $item['template_layouts'] = array();
-                }
-                $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
-                if (!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3) {
-                    $item['device_types'] = array();
-                }
-
-                return $item;
-
-        });
-
-        $widgets = array();
-
-        foreach ($bind_pages as $id => $page) {
-
-            if (!isset($widgets_bind[$page['bind_id']])) {
-                continue;
-            }
-
-            $widgets[$id] = array_merge($widgets_bind[$page['bind_id']], $page);
-
-        }
-
-        return cmsEventsManager::hook('widgets_before_list', $widgets);
+        return cmsEventsManager::hook('widgets_before_list', $widgets_bind);
 
     }
 
