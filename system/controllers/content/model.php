@@ -569,6 +569,7 @@ class modelContent extends cmsModel {
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
+            $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
             $item['default'] = $item['values'];
@@ -579,6 +580,7 @@ class modelContent extends cmsModel {
             if ($item['options']['is_number']) {  $rules[] = array('number'); }
             if ($item['options']['is_alphanumeric']) {  $rules[] = array('alphanumeric'); }
             if ($item['options']['is_email']) {  $rules[] = array('email'); }
+            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); } // empty, ибо их нет нигде сейчас
 
             if ($item['options']['is_unique']) {
                 if (!$item_id){
@@ -640,6 +642,7 @@ class modelContent extends cmsModel {
             }
 
             $item['groups_read'] = cmsModel::yamlToArray($item['groups_read']);
+            $item['groups_add']  = cmsModel::yamlToArray($item['groups_add']);
             $item['groups_edit'] = cmsModel::yamlToArray($item['groups_edit']);
             $item['filter_view'] = cmsModel::yamlToArray($item['filter_view']);
 

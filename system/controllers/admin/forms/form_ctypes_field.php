@@ -185,6 +185,9 @@ class formAdminCtypesField extends cmsForm {
                     new fieldCheckbox('options:is_email', array(
                         'title' => LANG_VALIDATE_EMAIL,
                     )),
+                    new fieldCheckbox('options:is_url', array(
+                        'title' => LANG_VALIDATE_URL,
+                    )),
                     new fieldCheckbox('options:is_unique', array(
                         'title' => LANG_VALIDATE_UNIQUE,
                     )),
@@ -219,6 +222,15 @@ class formAdminCtypesField extends cmsForm {
                 'title' => LANG_CP_FIELD_GROUPS_READ,
                 'childs' => array(
                     new fieldListGroups('groups_read', array(
+                        'show_all' => true
+                    ))
+                )
+            ),
+            'add_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_GROUPS_ADD,
+                'childs' => array(
+                    new fieldListGroups('groups_add', array(
                         'show_all' => true
                     ))
                 )

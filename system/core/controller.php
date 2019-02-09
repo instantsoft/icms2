@@ -213,6 +213,10 @@ class cmsController {
     public function setOption($key, $val){
         $this->options[$key] = $val; return $this;
     }
+    public function getOption($key){
+        if(!$this->useOptions){ return null; }
+        return isset($this->options[$key]) ? $this->options[$key] : null;
+    }
 
     /**
      * Проверяет включен ли текущий контроллер
@@ -1172,6 +1176,12 @@ class cmsController {
     public function validate_email($value){
         if (empty($value)) { return true; }
         if (!is_string($value) || filter_var($value, FILTER_VALIDATE_EMAIL) !== $value){ return ERR_VALIDATE_EMAIL; }
+        return true;
+    }
+
+    public function validate_url($value){
+        if (empty($value)) { return true; }
+        if (!is_string($value) || !preg_match("/^((http:\/\/|https:\/\/)?(www\.)?([\w\-\.]+)?[\w\-]+(\.\w{2,14})(\/)?$)/ui", $value)){ return ERR_VALIDATE_URL; }
         return true;
     }
 

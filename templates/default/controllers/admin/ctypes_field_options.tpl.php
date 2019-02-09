@@ -42,22 +42,19 @@
     <?php } ?>
 <?php } ?>
 <script type="text/javascript">
-    if($('#fset_visibility > .field').length == 1){
-        var id_name = '#tab-visibility';
-    } else {
-        var id_name = '#f_is_in_filter, #tab-filter_access';
-    }
+    var id_name = $('#fset_visibility > .field').length === 1 ? '#tab-visibility' : '#f_is_in_filter, #tab-filter_access';
+
     <?php if(!$is_can_in_filter){ ?>
         $(id_name).hide(); $('#is_in_filter').prop('checked', false);
     <?php } else { ?>
         $(id_name).show();
     <?php } ?>
     <?php if(!$options){ ?>
-        if ($('#f_type > input[id=type]').length != 0){
+        if ($('#f_type > input[id="type"]').length !== 0){
             $('#tab-type').hide();
         }
     <?php } ?>
-    <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
+    <?php if(!empty($visible_depend)){ foreach($visible_depend as $field){ ?>
         icms.forms.addVisibleDepend($('#f_<?php echo $field->id; ?>').closest('form').attr('id'), '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
         <?php } ?>
         icms.forms.VDReInit();

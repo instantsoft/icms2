@@ -104,6 +104,9 @@
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
+    define('LANG_PARSER_NUMBER_TRIM_ZERO',   'Trim decimal zero');
+    define('LANG_PARSER_NUMBER_DEC_POINT',   'Decimal point');
+    define('LANG_PARSER_NUMBER_IS_CEIL',     'Only ceil numbers');
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
@@ -365,6 +368,7 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Too short value (min. length: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Too long value (max. length: %s)');
     define('ERR_VALIDATE_EMAIL',             'Wrong e-mail format');
+    define('ERR_VALIDATE_URL',               'Wrong URL format');
     define('ERR_VALIDATE_REGEXP',            'Wrong format');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Only letters and numbers');
     define('ERR_VALIDATE_SYSNAME',           'Only letters (lowercase), numbers and break characters');
@@ -379,6 +383,7 @@
     define('LANG_VALIDATE_NUMBER',           'Only numbers');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Only Latin letters and numbers');
     define('LANG_VALIDATE_EMAIL',            'E-mail address');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Unique value');
 
     define('ERR_REQ_EMAIL', 		 	 	 'E-mail is required!');
@@ -510,6 +515,11 @@
     //FORMS
     define('LANG_SUBMIT', 					 'Submit');
     define('LANG_SUBMIT_NOT_SAVE',			 'Do you want to leave this page? Changes have not been saved.');
+    define('LANG_DOT',                       'Dot');
+    define('LANG_COMMA',                     'Comma');
+    define('LANG_SPACE',                     'Space');
+    define('LANG_APOSTROPHE',                'Apostrophe');
+    define('LANG_ANOTHER',                   'Another');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');

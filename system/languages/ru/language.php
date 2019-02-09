@@ -102,7 +102,10 @@
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
-    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов после запятой');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов дробной части');
+    define('LANG_PARSER_NUMBER_TRIM_ZERO',   'Обрезать дробные нули');
+    define('LANG_PARSER_NUMBER_DEC_POINT',   'Разделитель дробной части');
+    define('LANG_PARSER_NUMBER_IS_CEIL',     'Только целые числа');
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
     define('LANG_PARSER_CITY',               'Местоположение');
@@ -364,6 +367,7 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Слишком короткое значение (мин. длина: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Слишком длинное значение (макс. длина: %s)');
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
+    define('ERR_VALIDATE_URL',               'Неверный формат URL');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
     define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
@@ -372,12 +376,15 @@
     define('ERR_VALIDATE_NUMBER',            'Введите число');
     define('ERR_VALIDATE_UNIQUE',            'Значение уже используется');
     define('ERR_VALIDATE_INVALID',           'Указано недопустимое значение');
+
     define('LANG_VALIDATE_REQUIRED',         'Поле должно быть заполнено');
     define('LANG_VALIDATE_DIGITS',           'Только целые числа');
     define('LANG_VALIDATE_NUMBER',           'Только числа');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
     define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
+
     define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
     define('ERR_EMPTY_FIELDS', 			 	 'Обнаружены пустые поля!');
     define('ERR_NICKNAME_EXISTS', 			 'Никнейм &laquo;%s&raquo; занят');
@@ -507,6 +514,11 @@
     //FORMS
     define('LANG_SUBMIT', 					 'Отправить');
     define('LANG_SUBMIT_NOT_SAVE',			 'Покинуть страницу? Возможно, внесённые изменения не сохранятся.');
+    define('LANG_DOT',                       'Точка');
+    define('LANG_COMMA',                     'Запятая');
+    define('LANG_SPACE',                     'Пробел');
+    define('LANG_APOSTROPHE',                'Апостроф');
+    define('LANG_ANOTHER',                   'Другой');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');

@@ -8,6 +8,10 @@ class fieldNumber extends cmsFormField {
 
     public function getOptions(){
         return array(
+            new fieldCheckbox('is_abs', array(
+                'title'   => LANG_PARSER_NUMBER_IS_ABS,
+                'default' => false
+            )),
             new fieldNumber('decimal_int', array(
                 'title'   => LANG_PARSER_NUMBER_DECIMAL_INT,
                 'default' => 7,
@@ -16,22 +20,58 @@ class fieldNumber extends cmsFormField {
                     array('max', 35)
                 )
             )),
+            new fieldList('thousands_sep', array(
+                'title'   => LANG_PARSER_NUMBER_THOUSANDS_SEP,
+                'default' => ' ',
+                'items' => array(
+                    ' ' => LANG_SPACE,
+                    ',' => LANG_COMMA,
+                    '’' => LANG_APOSTROPHE,
+                    '.' => LANG_DOT,
+                    'another' => LANG_ANOTHER,
+                )
+            )),
+                new fieldString('thousands_sep_another', array(
+                    'title' => LANG_PARSER_NUMBER_THOUSANDS_SEP,
+                    'visible_depend' => array('options:thousands_sep' => array('show' => array('another'))),
+                    'options'=>array(
+                        'max_length'=> 1
+                    )
+                )),
+            new fieldCheckbox('is_ceil', array(
+                'title'   => LANG_PARSER_NUMBER_IS_CEIL,
+                'default' => false
+            )),
+            new fieldList('dec_point', array(
+                'title'   => LANG_PARSER_NUMBER_DEC_POINT,
+                'default' => ' ',
+                'items' => array(
+                    '.' => LANG_DOT,
+                    ',' => LANG_COMMA,
+                    ' ' => LANG_SPACE,
+                    'another' => LANG_ANOTHER,
+                ),
+                'visible_depend' => array('options:is_ceil' => array('hide' => array('1')))
+            )),
+                new fieldString('dec_point_another', array(
+                    'title' => LANG_PARSER_NUMBER_DEC_POINT,
+                    'visible_depend' => array('options:dec_point' => array('show' => array('another')),'options:is_ceil' => array('hide' => array('1'))),
+                    'options'=>array(
+                        'max_length'=> 1
+                    )
+                )),
             new fieldNumber('decimal_s', array(
                 'title'   => LANG_PARSER_NUMBER_DECIMAL_S,
                 'default' => 2,
                 'rules' => array(
                     array('max', 30)
-                )
+                ),
+                'visible_depend' => array('options:is_ceil' => array('hide' => array('1')))
             )),
-            new fieldString('thousands_sep', array(
-                'title' => LANG_PARSER_NUMBER_THOUSANDS_SEP,
-                'options'=>array(
-                    'max_length'=> 1
-                )
-            )),
-            new fieldCheckbox('is_abs', array(
-                'title'   => LANG_PARSER_NUMBER_IS_ABS,
-                'default' => false
+            new fieldCheckbox('trim_dec', array(
+                'title'   => LANG_PARSER_NUMBER_TRIM_ZERO,
+                'default' => false,
+                'visible_depend' => array('options:is_ceil' => array('hide' => array('1')))
             )),
             new fieldCheckbox('filter_range', array(
                 'title' => LANG_PARSER_NUMBER_FILTER_RANGE,
@@ -48,6 +88,32 @@ class fieldNumber extends cmsFormField {
         $this->rules[] = array('number');
 
         return $this->rules;
+
+    }
+
+    public function getOption($key, $default = null) {
+
+        switch($key){
+            case 'decimal_s':
+                if(parent::getOption('is_ceil')){
+                    return 0;
+                }
+                break;
+            case 'thousands_sep':
+                if(parent::getOption('thousands_sep') === 'another'){
+                    return parent::getOption('thousands_sep_another');
+                }
+                break;
+            case 'dec_point':
+                if(parent::getOption('dec_point_sep') === 'another'){
+                    return parent::getOption('dec_point_another');
+                }
+                break;
+            default:
+                break;
+        }
+
+        return parent::getOption($key, $default);
 
     }
 
@@ -105,11 +171,11 @@ class fieldNumber extends cmsFormField {
     public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
 
         $new_decimal_int = isset($field['options']['decimal_int']) ? $field['options']['decimal_int'] : 7;
-        $new_decimal_s   = isset($field['options']['decimal_s']) ? $field['options']['decimal_s'] : 2;
+        $new_decimal_s   = empty($field['options']['is_ceil']) ? (isset($field['options']['decimal_s']) ? $field['options']['decimal_s'] : 2) : 0;
         $new_unsigned    = isset($field['options']['is_abs']) ? $field['options']['is_abs'] : false;
 
         $old_decimal_int = isset($field_old['parser']->options['decimal_int']) ? $field_old['parser']->options['decimal_int'] : 7;
-        $old_decimal_s   = isset($field_old['parser']->options['decimal_s']) ? $field_old['parser']->options['decimal_s'] : 2;
+        $old_decimal_s   = empty($field_old['parser']->options['is_ceil']) ? (isset($field_old['parser']->options['decimal_s']) ? $field_old['parser']->options['decimal_s'] : 2) : 0;
         $old_unsigned    = isset($field_old['parser']->options['is_abs']) ? $field_old['parser']->options['is_abs'] : false;
 
         if($field_old['type'] == $field['type'] && (
@@ -205,17 +271,22 @@ class fieldNumber extends cmsFormField {
     public function getInput($value){
 
         $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
-
-        return parent::getInput($value);
+        return parent::getInput(!empty($this->options['is_digits']) ? (int)$value : $value);
 
     }
 
-    private function formatFloatValue($value) {
-        $value = (float)$value;
-        if(strpos($value, '.') !== false){
-            return rtrim(rtrim(number_format($value, $this->getOption('decimal_s'), '.', ($this->getOption('thousands_sep')?:'')), '0'), '.');
+    private function formatFloatValue($value){
+
+        $dec_point = $this->getOption('dec_point');
+        $decimal_s = $this->getOption('decimal_s');
+
+        $value = number_format(($decimal_s ? (float)$value : (int)$value), $decimal_s, $dec_point, ($this->getOption('thousands_sep')?:''));
+
+        if($decimal_s && $this->getOption('trim_dec')){
+            return rtrim(rtrim($value, '0'), $dec_point);
         }
         return $value;
+
     }
 
 }

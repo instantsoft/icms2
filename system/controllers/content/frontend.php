@@ -349,6 +349,7 @@ class content extends cmsFrontend {
         cmsModel::cacheResult('current_ctype_fields', $fields);
         cmsModel::cacheResult('current_ctype_props', $props);
         cmsModel::cacheResult('current_ctype_props_fields', $props_fields);
+        cmsModel::cacheResult('current_items_list_total', $total);
 
         $this->cms_template->setContext($this);
 
@@ -547,7 +548,7 @@ class content extends cmsFrontend {
         if ($ctype['is_folders']){
             $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('folder', $ctype['options']['is_collapsed'])));
             $folders = array('0'=>'');
-            if ($folders_list) { $folders = $folders + $folders_list; }
+            if(!empty($folders_list)){$folders = $folders + $folders_list;}
             $form->addField($fieldset_id,
                 new fieldList('folder_id', array(
                     'items' => $folders
@@ -582,20 +583,27 @@ class content extends cmsFrontend {
         }
 
         // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item){
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($item, $action){
 
             // пропускаем системные поля
             if ($field['is_system']) { return false; }
 
-            // проверяем что группа пользователя имеет доступ к редактированию этого поля
-            if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
-                // если группа пользователя не имеет доступ к редактированию этого поля,
-                // проверяем на доступ к нему для авторов
-                if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
-                    if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
-                    if ($item['user_id'] == $user->id){ return true; }
+            if($action === 'add'){
+                // проверяем что группа пользователя имеет доступ к созданию этого поля
+                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) { // на автора не надо проверять, ибо это и есть автор
+                    return false;
                 }
-                return false;
+            }else{
+                // проверяем что группа пользователя имеет доступ к редактированию этого поля
+                if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
+                    // если группа пользователя не имеет доступ к редактированию этого поля,
+                    // проверяем на доступ к нему для авторов
+                    if (!empty($item['user_id']) && !empty($field['options']['author_access'])){
+                        if (!in_array('is_edit', $field['options']['author_access'])){ return false; }
+                        if ($item['user_id'] == $user->id){ return true; }
+                    }
+                    return false;
+                }
             }
 
             return true;

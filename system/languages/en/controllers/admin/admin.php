@@ -235,6 +235,7 @@
     define('LANG_CP_FIELD_PRIVATE',             'Show the field only to the entry author');
     define('LANG_CP_FIELD_GROUPS_READ',         'Read access');
     define('LANG_CP_FIELD_GROUPS_EDIT',         'Write access');
+    define('LANG_CP_FIELD_GROUPS_ADD',          'Add access');
     define('LANG_CP_FIELD_WRAP',                'Flow');
     define('LANG_CP_FIELD_WRAP_TYPE',           'Type');
     define('LANG_CP_FIELD_WRAP_LTYPE',          'The next field to the right of the current');
