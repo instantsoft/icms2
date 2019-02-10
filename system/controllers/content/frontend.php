@@ -548,7 +548,7 @@ class content extends cmsFrontend {
         if ($ctype['is_folders']){
             $fieldset_id = $form->addFieldset(LANG_FOLDER, 'folder', array('is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('folder', $ctype['options']['is_collapsed'])));
             $folders = array('0'=>'');
-            if(!empty($folders_list)){$folders = $folders + $folders_list;}
+            if(!empty($folders_list)){ $folders = $folders + $folders_list; }
             $form->addField($fieldset_id,
                 new fieldList('folder_id', array(
                     'items' => $folders
@@ -590,10 +590,11 @@ class content extends cmsFrontend {
 
             if($action === 'add'){
                 // проверяем что группа пользователя имеет доступ к созданию этого поля
-                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) { // на автора не надо проверять, ибо это и есть автор
+                // на автора не надо проверять, ибо это и есть автор
+                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) {
                     return false;
                 }
-            }else{
+            } else {
                 // проверяем что группа пользователя имеет доступ к редактированию этого поля
                 if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
                     // если группа пользователя не имеет доступ к редактированию этого поля,

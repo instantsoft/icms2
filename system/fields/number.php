@@ -44,7 +44,7 @@ class fieldNumber extends cmsFormField {
             )),
             new fieldList('dec_point', array(
                 'title'   => LANG_PARSER_NUMBER_DEC_POINT,
-                'default' => ' ',
+                'default' => '.',
                 'items' => array(
                     '.' => LANG_DOT,
                     ',' => LANG_COMMA,
@@ -70,7 +70,7 @@ class fieldNumber extends cmsFormField {
             )),
             new fieldCheckbox('trim_dec', array(
                 'title'   => LANG_PARSER_NUMBER_TRIM_ZERO,
-                'default' => false,
+                'default' => true,
                 'visible_depend' => array('options:is_ceil' => array('hide' => array('1')))
             )),
             new fieldCheckbox('filter_range', array(
@@ -285,6 +285,7 @@ class fieldNumber extends cmsFormField {
         if($decimal_s && $this->getOption('trim_dec')){
             return rtrim(rtrim($value, '0'), $dec_point);
         }
+
         return $value;
 
     }

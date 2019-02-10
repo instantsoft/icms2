@@ -39,6 +39,23 @@ function install_package(){
 
     }
 
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_fields", 'groups_add')){
+            $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        }
+
+	}
+
+    if(!$core->db->isFieldExists("groups_fields", 'groups_add')){
+        $core->db->query("ALTER TABLE `{#}groups_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+    }
+    if(!$core->db->isFieldExists("{users}_fields", 'groups_add')){
+        $core->db->query("ALTER TABLE `{users}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
