@@ -43,17 +43,22 @@ function install_package(){
 
 	foreach($ctypes as $ctype){
 
-        if(!$core->db->isFieldExists("{$content_model->table_prefix}{$ctype['name']}_fields", 'groups_add')){
-            $core->db->query("ALTER TABLE `{#}{$content_model->table_prefix}{$ctype['name']}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        $table_name = $content_model->table_prefix.$ctype['name'].'_fields';
+
+        if(!$core->db->isFieldExists($table_name, 'groups_add')){
+            $core->db->query("ALTER TABLE `{#}{$table_name}` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+            $core->db->query("UPDATE `{#}{$table_name}` SET `groups_add`= `groups_edit`;");
         }
 
 	}
 
     if(!$core->db->isFieldExists("groups_fields", 'groups_add')){
         $core->db->query("ALTER TABLE `{#}groups_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        $core->db->query("UPDATE `{#}groups_fields` SET `groups_add`= `groups_edit`;");
     }
     if(!$core->db->isFieldExists("{users}_fields", 'groups_add')){
         $core->db->query("ALTER TABLE `{users}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        $core->db->query("UPDATE `{users}_fields` SET `groups_add`= `groups_edit`;");
     }
 
     ////////////////////////////////////////////////////////////////////////////
