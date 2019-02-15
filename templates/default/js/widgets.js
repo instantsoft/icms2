@@ -1,6 +1,6 @@
-function widgetEdit(id, edit_url){
+function widgetEdit(id, edit_url, template){
 
-    icms.modal.openAjax(edit_url + '/' + id, undefined, function (){
+    icms.modal.openAjax(edit_url + '/' + id, {template:template}, function (){
         icms.modal.setCallback('close', function(){
             icms.forms.form_changed = false;
         });
