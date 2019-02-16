@@ -14,7 +14,7 @@ class actionAdminCtypesFieldsAjax extends cmsAction {
 
         $content_model->orderBy('ordering', 'asc');
 
-        $fields = $content_model->getContentFields($ctype_name);
+        $fields = $content_model->getContentFields($ctype_name, false, false);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 

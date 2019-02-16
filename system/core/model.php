@@ -162,6 +162,7 @@ class cmsModel {
             'title'         => array('type' => 'varchar', 'size' => 100),
             'hint'          => array('type' => 'varchar', 'size' => 200),
             'ordering'      => array('type' => 'int', 'index' => true, 'unsigned' => true),
+            'is_enabled'    => array('type' => 'bool', 'default' => 1),
             'fieldset'      => array('type' => 'varchar', 'size' => 32),
             'type'          => array('type' => 'varchar', 'size' => 16),
             'is_in_list'    => array('type' => 'bool'),

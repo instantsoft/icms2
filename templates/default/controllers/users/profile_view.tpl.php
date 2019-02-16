@@ -23,7 +23,7 @@
 
     <div id="left_column" class="column">
 
-        <?php if ($fields['avatar']['is_in_item']){ ?>
+        <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
             <div id="avatar" class="block">
                 <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
             </div>

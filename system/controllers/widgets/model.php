@@ -124,6 +124,7 @@ class modelWidgets extends cmsModel {
     public function getPagesControllers() {
 
         $this->filterNotNull('controller');
+        $this->joinLeft('controllers', 'ct', 'ct.name = i.controller')->filterEqual('ct.is_enabled', 1);
         $this->groupBy('controller');
 
         $controllers = $this->get('widgets_pages', function($item, $model) {
@@ -138,12 +139,11 @@ class modelWidgets extends cmsModel {
 
         if ($controller_name != 'custom') {
 
-            $this->filterNotNull('controller');
             $this->filterEqual('controller', $controller_name);
 
             if ($controller_name === 'content') {
                 $this->joinLeft('content_types', 'ct', "i.name LIKE concat(ct.name, '.%')")
-                        ->select('ct.title', 'title_subject');
+                        ->select('ct.title', 'title_subject')->filterEqual('ct.is_enabled', 1);
             }
 
         } else {

@@ -12,7 +12,7 @@ class actionUsersFieldsAjax extends cmsAction {
                             setTablePrefix('')->
                             orderBy('ordering', 'asc');
 
-        $fields = $content_model->getContentFields('{users}');
+        $fields = $content_model->getContentFields('{users}', false, false);
 
         cmsTemplate::getInstance()->renderGridRowsJSON($grid, $fields);
 
