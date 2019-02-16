@@ -33,7 +33,7 @@
                     </div>
                 <?php } ?>
 
-                <?php if ($fields['avatar']['is_in_list']){ ?>
+                <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_list']){ ?>
                     <div class="icon">
                         <a href="<?php echo $this->href_to($profile['id']); ?>" <?php if (!empty($profile['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                             <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname'], $profile['is_deleted']); ?>
@@ -42,7 +42,7 @@
                 <?php } ?>
 
                 <div class="title">
-                    <?php if ($fields['nickname']['is_in_list']){ ?>
+                    <?php if (!empty($fields['nickname']) && $fields['nickname']['is_in_list']){ ?>
                         <a href="<?php echo $this->href_to($profile['id']); ?>">
                             <?php html($profile['nickname']); ?>
                         </a>
@@ -125,4 +125,4 @@
         <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
     <?php } ?>
 
-<?php } else { echo LANG_LIST_EMPTY; } ?>
+<?php } else { echo LANG_LIST_EMPTY; }

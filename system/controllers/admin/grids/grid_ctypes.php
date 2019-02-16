@@ -27,6 +27,12 @@ function grid_ctypes($controller){
             'width' => 150,
             'filter' => 'like'
         ),
+        'is_enabled' => array(
+            'title' => LANG_IS_ENABLED,
+			'flag' => true,
+			'flag_toggle' => href_to($controller->name, 'toggle_item', array('{id}', 'content_types', 'is_enabled')),
+            'width' => 80
+        ),
         'url_pattern' => array(
             'title' => LANG_CP_URL_PATTERN,
             'width' => 200

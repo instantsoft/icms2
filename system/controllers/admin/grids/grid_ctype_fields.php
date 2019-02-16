@@ -27,6 +27,12 @@ function grid_ctype_fields($controller){
                 return $value ? $value : '&mdash;';
             }
         ),
+        'is_enabled' => array(
+            'title' => LANG_IS_ENABLED,
+			'flag' => true,
+			'flag_toggle' => href_to($controller->name, 'ctypes', array('fields_toggle', 'enable', '{ctype_id}', '{id}')),
+            'width' => 80
+        ),
         'is_in_list' => array(
             'title' => LANG_CP_FIELD_IN_LIST_SHORT,
             'flag'  => true,

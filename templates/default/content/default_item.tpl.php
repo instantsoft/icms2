@@ -1,4 +1,4 @@
-<?php if ($fields['title']['is_in_item']){ ?>
+<?php if (!empty($fields['title']['is_in_item'])){ ?>
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
@@ -87,8 +87,8 @@
 
     <?php
         $show_bar = !empty($item['rating_widget']) ||
-                    $fields['date_pub']['is_in_item'] ||
-                    $fields['user']['is_in_item'] ||
+                    !empty($fields['date_pub']['is_in_item']) ||
+                    !empty($fields['user']['is_in_item']) ||
 					!empty($ctype['options']['hits_on']) ||
 					!$item['is_pub'] ||
                     !$item['is_approved'];
@@ -105,7 +105,7 @@
                     <?php echo $item['rating_widget']; ?>
                 </div>
             <?php } ?>
-            <?php if ($fields['date_pub']['is_in_item']){ ?>
+            <?php if (!empty($fields['date_pub']['is_in_item'])){ ?>
                 <div class="bar_item bi_date_pub" title="<?php html( $fields['date_pub']['title'] ); ?>">
                     <?php echo $fields['date_pub']['html']; ?>
                 </div>
@@ -120,7 +120,7 @@
                     <?php echo $item['hits_count']; ?>
                 </div>
             <?php } ?>
-            <?php if ($fields['user']['is_in_item']){ ?>
+            <?php if (!empty($fields['user']['is_in_item'])){ ?>
                 <div class="bar_item bi_user" title="<?php html( $fields['user']['title'] ); ?>">
                     <?php echo $fields['user']['html']; ?>
                 </div>

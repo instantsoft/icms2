@@ -264,17 +264,16 @@ class modelContent extends cmsModel {
 
     public function loadAllCtypes() {
 
-        if(isset(self::$all_ctypes)) {
-            return $this;
-        }
-
-        self::$all_ctypes = $this->getContentTypesFiltered();
-
-        return $this;
+        return !isset(self::$all_ctypes) ? $this->reloadAllCtypes() : $this;
 
     }
 
-    public function reloadAllCtypes() {
+    public function reloadAllCtypes($enabled = true) {
+
+        if($enabled){
+            $this->filterEqual('is_enabled', 1);
+        }
+
         self::$all_ctypes = $this->getContentTypesFiltered();
         return $this;
     }
@@ -556,11 +555,15 @@ class modelContent extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getContentFields($ctype_name, $item_id = false){
+    public function getContentFields($ctype_name, $item_id = false, $enabled = true){
 
         $table_name = $this->table_prefix . $ctype_name . '_fields';
 
         $this->useCache('content.fields.'.$ctype_name);
+
+        if($enabled){
+            $this->filterEqual('is_enabled', 1);
+        }
 
         $this->orderBy('ordering');
 

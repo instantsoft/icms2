@@ -111,8 +111,8 @@
 
                 <?php
 					$show_bar = !empty($item['rating_widget']) ||
-								$fields['date_pub']['is_in_list'] ||
-								$fields['user']['is_in_list'] ||
+								!empty($fields['date_pub']['is_in_list']) ||
+								!empty($fields['user']['is_in_list']) ||
 								!empty($ctype['options']['hits_on']) ||
 								($ctype['is_comments'] && $item['is_comments_on']) ||
 								!$item['is_pub'] ||
@@ -126,7 +126,7 @@
                                 <?php echo $item['rating_widget']; ?>
                             </div>
                         <?php } ?>
-                        <?php if ($fields['date_pub']['is_in_list']){ ?>
+                        <?php if (!empty($fields['date_pub']['is_in_list'])){ ?>
                             <div class="bar_item bi_date_pub<?php if(!empty($item['is_new'])){ ?> highlight_new<?php } ?>" title="<?php echo $fields['date_pub']['title']; ?>">
                                 <?php echo $fields['date_pub']['handler']->parse( $item['date_pub'] ); ?>
                             </div>
@@ -136,7 +136,7 @@
                                 <?php echo LANG_CONTENT_NOT_IS_PUB; ?>
                             </div>
                         <?php } ?>
-                        <?php if ($fields['user']['is_in_list']){ ?>
+                        <?php if (!empty($fields['user']['is_in_list'])){ ?>
                             <div class="bar_item bi_user" title="<?php echo $fields['user']['title']; ?>">
                                 <?php echo $fields['user']['handler']->parse( $item['user'] ); ?>
                             </div>

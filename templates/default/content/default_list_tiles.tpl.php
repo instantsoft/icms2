@@ -91,7 +91,7 @@
 
                 <?php
 					$show_bar = !empty($item['rating_widget']) ||
-								$fields['user']['is_in_list'] ||
+								!empty($fields['user']['is_in_list']) ||
 								!empty($ctype['options']['hits_on']) ||
 								($ctype['is_comments'] && $item['is_comments_on']) ||
 								!$item['is_approved'];
@@ -104,7 +104,7 @@
                                 <?php echo $item['rating_widget']; ?>
                             </div>
                         <?php } ?>
-                        <?php if ($fields['user']['is_in_list']){ ?>
+                        <?php if (!empty($fields['user']['is_in_list'])){ ?>
                             <div class="bar_item bi_user" title="<?php echo $fields['user']['title']; ?>">
                                 <?php echo $fields['user']['handler']->parse( $item['user'] ); ?>
                             </div>

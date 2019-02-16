@@ -12,7 +12,7 @@ class actionGroupsFields extends cmsAction {
                                 setTablePrefix('')->
                                 orderBy('ordering', 'asc');
 
-            $fields = $content_model->getContentFields('groups');
+            $fields = $content_model->getContentFields('groups', false, false);
 
             $this->cms_template->renderGridRowsJSON($grid, $fields);
 
