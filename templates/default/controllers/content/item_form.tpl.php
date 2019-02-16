@@ -1,8 +1,11 @@
 <?php
 
-    $this->addJS($this->getJavascriptFileName('content'));
-    $this->addJS($this->getJavascriptFileName('jquery-chosen'));
-    $this->addCSS($this->getTemplateStylesFileName('jquery-chosen'));
+    $this->addMainTplJSName('core');
+    $this->addTplJSName('content');
+    $this->addTplCSSName('theme-gui');
+
+    $this->addTplJSName('jquery-chosen');
+    $this->addTplCSSName('jquery-chosen');
 
     $this->setPageTitle($page_title);
 

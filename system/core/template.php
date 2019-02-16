@@ -908,10 +908,10 @@ class cmsTemplate {
      * Добавляет JS файл к подключению на странице выше остальных JS-тегов
      *
      * @param string $file Путь к файлу без указания корня
-     * @param string $comment Комментарий к скрипту (устаревший параметр)
+     * @param boolean $at_begin Поместить в самое начало?
      * @return boolean
      */
-	public function addMainJS($file, $comment = '') {
+	public function addMainJS($file, $at_begin = false) {
         if (!$file) {
             return false;
         }
@@ -919,7 +919,11 @@ class cmsTemplate {
         if (isset($this->head_main_js[$hash])) {
             return false;
         }
-        $this->head_main_js[$hash] = $file;
+        if($at_begin === true){ // На случай, если здесь "Комментарий к скрипту"
+            $this->head_main_js = [$hash => $file] + $this->head_main_js;
+        }else{
+            $this->head_main_js[$hash] = $file;
+        }
         return true;
     }
 
@@ -1014,8 +1018,8 @@ class cmsTemplate {
     public function addTplJSName($name) {
         return $this->addJS($this->getJavascriptFileName($name));
     }
-    public function addMainTplJSName($name) {
-        return $this->addMainJS($this->getJavascriptFileName($name));
+    public function addMainTplJSName($name, $at_begin = false) {
+        return $this->addMainJS($this->getJavascriptFileName($name), $at_begin);
     }
 
     /**

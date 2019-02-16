@@ -11,7 +11,7 @@
     <?php $this->addMainTplCSSName('theme-widgets'); ?>
     <?php $this->addMainTplCSSName('theme-content'); ?>
     <?php $this->addMainTplCSSName('theme-modal'); ?>
-    <?php $this->addMainTplJSName('jquery'); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
     <?php $this->addMainTplJSName('jquery-modal'); ?>
     <?php $this->addMainTplJSName('core'); ?>
     <?php $this->addMainTplJSName('modal'); ?>
