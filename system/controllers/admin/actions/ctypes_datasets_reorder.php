@@ -7,7 +7,7 @@ class actionAdminCtypesDatasetsReorder extends cmsAction {
         $items = $this->request->get('items', array());
         if (!$items){ cmsCore::error404(); }
 
-        cmsCore::getModel('content')->reorderContentDatasets($items);
+        $this->model_content->reorderContentDatasets($items);
 
         cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 

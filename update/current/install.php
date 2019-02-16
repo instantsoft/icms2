@@ -6,6 +6,11 @@ function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    if(!$core->db->isFieldExists('content_types', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}content_types` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+
     $content_model = cmsCore::getModel('content');
 
     if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'users' AND hook = 'sessionclean'")){
@@ -39,7 +44,7 @@ function install_package(){
 
     }
 
-    $ctypes = $content_model->reloadAllCtypes(false)->getContentTypes();
+    $ctypes = $content_model->getContentTypes();
 
 	foreach($ctypes as $ctype){
 
@@ -71,9 +76,6 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}_fields` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
     }
 
-    if(!$core->db->isFieldExists('content_types', 'is_enabled')){
-        $core->db->query("ALTER TABLE `{#}content_types` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
-    }
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

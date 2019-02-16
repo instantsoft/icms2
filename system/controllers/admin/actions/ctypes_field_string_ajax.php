@@ -9,21 +9,23 @@ class actionAdminCtypesFieldStringAjax extends cmsAction {
             !is_numeric($ctype_id)
                 ||
             !is_numeric($field_id)
-        ){return cmsCore::error404();}
+        ){
+            return cmsCore::error404();
+        }
 
-        $content_model = cmsCore::getModel('content');
-
-        if( !($ctype = $content_model->getContentType($ctype_id))
+        if( !($ctype = $this->model_content->getContentType($ctype_id))
                 ||
-            !($field = $content_model->getContentField($ctype['name'], $field_id))
-        ){return cmsCore::error404();}
+            !($field = $this->model_content->getContentField($ctype['name'], $field_id))
+        ){
+            return cmsCore::error404();
+        }
 
-        $content_model->selectOnly('COUNT(i.id)', 'stroki')->
+        $this->model_content->selectOnly('COUNT(i.id)', 'stroki')->
                 select('i.'.$field['name'], 'field')->
                 groupBy('i.'.$field['name'])->
                 order_by = 'stroki DESC';
 
-        $items = $content_model->get($content_model->table_prefix.$ctype['name'], function($item){
+        $items = $this->model_content->get($this->model_content->table_prefix.$ctype['name'], function($item){
             return $item['field'];
         });
 

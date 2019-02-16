@@ -6,18 +6,16 @@ class actionAdminCtypesDatasets extends cmsAction {
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
         $grid = $this->loadDataGrid('ctype_datasets');
 
         if ($this->request->isAjax()) {
 
-            $content_model->orderBy('ordering', 'asc');
+            $this->model_content->orderBy('ordering', 'asc');
 
-            $datasets = $content_model->getContentDatasets($ctype_id);
+            $datasets = $this->model_content->getContentDatasets($ctype_id);
 
             $this->cms_template->renderGridRowsJSON($grid, $datasets);
 

@@ -18,16 +18,17 @@ class actionAdminInstallFtp extends cmsAction {
 
             $account = array_merge($account, $form->parse($this->request, true, $account));
 
+            cmsUser::setUPS('admin.install.ftp', array(
+                'host'    => $account['host'],
+                'port'    => $account['port'],
+                'path'    => $account['path'],
+                'is_pasv' => $account['is_pasv']
+            ));
+
             if($account['save_to_session']){
                 cmsUser::sessionSet('ftp_account', $account);
             } else {
                 cmsUser::sessionUnset('ftp_account');
-                cmsUser::setUPS('admin.install.ftp', array(
-                    'host'    => $account['host'],
-                    'port'    => $account['port'],
-                    'path'    => $account['path'],
-                    'is_pasv' => $account['is_pasv']
-                ));
             }
 
             $errors = $form->validate($this, $account);

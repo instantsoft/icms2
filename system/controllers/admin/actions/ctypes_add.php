@@ -24,12 +24,10 @@ class actionAdminCtypesAdd extends cmsAction {
 
             if (!$errors){
 
-                $content_model = cmsCore::getModel('content');
-
                 $ctype = cmsEventsManager::hook('ctype_before_add', $ctype);
                 $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_add", $ctype);
 
-                $ctype_id = $content_model->addContentType($ctype);
+                $ctype_id = $this->model_content->addContentType($ctype);
 
                 $ctype['id'] = $ctype_id;
 

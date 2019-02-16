@@ -10,11 +10,9 @@ class actionAdminCtypesFieldsAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('ctype_fields');
 
-        $content_model = cmsCore::getModel('content');
+        $this->model_content->orderBy('ordering', 'asc');
 
-        $content_model->orderBy('ordering', 'asc');
-
-        $fields = $content_model->getContentFields($ctype_name, false, false);
+        $fields = $this->model_content->getContentFields($ctype_name, false, false);
 
         $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
