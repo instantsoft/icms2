@@ -1,9 +1,6 @@
 <?php
 
-    $this->addMainTplJSName('core');
     $this->addTplJSName('content');
-    $this->addTplCSSName('theme-gui');
-
     $this->addTplJSName('jquery-chosen');
     $this->addTplCSSName('jquery-chosen');
 
