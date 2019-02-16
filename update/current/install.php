@@ -12,6 +12,55 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES ('Удаляет устаревшие сессии', 'users', 'sessionclean', 10, NULL, NULL, 1, 1);");
     }
 
+    if($core->db->isFieldExists('widgets_bind', 'template')){
+
+        $bnds = $content_model->limit(false)->get('widgets_bind');
+
+        if($bnds){
+            foreach ($bnds as $bnd) {
+
+                $content_model->insert('widgets_bind_pages', array(
+                    'bind_id'    => $bnd['id'],
+                    'template'   => $bnd['template'],
+                    'is_enabled' => $bnd['is_enabled'],
+                    'page_id'    => $bnd['page_id'],
+                    'position'   => $bnd['position'],
+                    'ordering'   => $bnd['ordering']
+                ));
+
+            }
+        }
+
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `template`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `is_enabled`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `page_id`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `position`;");
+        $core->db->query("ALTER TABLE `{#}widgets_bind` DROP `ordering`;");
+
+    }
+
+    $ctypes = $content_model->getContentTypes();
+
+	foreach($ctypes as $ctype){
+
+        $table_name = $content_model->table_prefix.$ctype['name'].'_fields';
+
+        if(!$core->db->isFieldExists($table_name, 'groups_add')){
+            $core->db->query("ALTER TABLE `{#}{$table_name}` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+            $core->db->query("UPDATE `{#}{$table_name}` SET `groups_add`= `groups_edit`;");
+        }
+
+	}
+
+    if(!$core->db->isFieldExists("groups_fields", 'groups_add')){
+        $core->db->query("ALTER TABLE `{#}groups_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        $core->db->query("UPDATE `{#}groups_fields` SET `groups_add`= `groups_edit`;");
+    }
+    if(!$core->db->isFieldExists("{users}_fields", 'groups_add')){
+        $core->db->query("ALTER TABLE `{users}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
+        $core->db->query("UPDATE `{users}_fields` SET `groups_add`= `groups_edit`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

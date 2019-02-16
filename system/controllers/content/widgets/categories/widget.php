@@ -1,9 +1,10 @@
 <?php
+
 class widgetContentCategories extends cmsWidget {
 
     public $is_cacheable = false;
 
-    public function run(){
+    public function run() {
 
         $ctype = cmsModel::getCachedResult('current_ctype');
 
@@ -11,19 +12,22 @@ class widgetContentCategories extends cmsWidget {
 
         $active_cat = false;
 
-        if (!$ctype_name){
+        if (!$ctype_name) {
 
-            if(!$ctype){ return false; }
+            if (!$ctype) { return false; }
+
             $ctype_name = $ctype['name'];
 
         }
 
-        if($ctype && $ctype['name'] == $ctype_name){
+        if ($ctype && $ctype['name'] == $ctype_name) {
 
-            if(strpos(cmsCore::getInstance()->uri, '.html') === false){
+            if (!$ctype['is_cats']) { return false; }
+
+            if (strpos(cmsCore::getInstance()->uri, '.html') === false) {
 
                 $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
-                if(!empty($current_ctype_category['id'])){
+                if (!empty($current_ctype_category['id'])) {
                     $active_cat = $current_ctype_category;
                 }
 
@@ -32,22 +36,29 @@ class widgetContentCategories extends cmsWidget {
                 $item = cmsModel::getCachedResult('current_ctype_item');
                 if(!$item){ return false; }
 
-                if(!empty($item['category'])){
+                if (!empty($item['category'])) {
                     $active_cat = $item['category'];
                 }
 
             }
 
+        } else { // проверка, если показ категорий отключен
+
+            $model  = cmsCore::getModel('content');
+            $_ctype = $model->getContentTypeByName($ctype_name);
+            if (!$_ctype['is_cats']) {
+                return false;
+            }
         }
 
-        $model = cmsCore::getModel('content');
+        $model = isset($model) ? $model : cmsCore::getModel('content');
 
         $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
         if (!$cats) { return false; }
 
-        if($active_cat){
+        if ($active_cat) {
 
-            $path = array_filter($cats, function($cat) use($active_cat){
+            $path = array_filter($cats, function($cat) use($active_cat) {
                 return ($cat['ns_left'] <= $active_cat['ns_left'] &&
                         $cat['ns_level'] <= $active_cat['ns_level'] &&
                         $cat['ns_right'] >= $active_cat['ns_right'] &&
@@ -59,11 +70,11 @@ class widgetContentCategories extends cmsWidget {
         $ctype_default = cmsConfig::get('ctype_default');
 
         return array(
-            'ctype_name' => ($ctype_name == $ctype_default ? '' : $ctype_name),
-            'cats'       => $cats,
-            'active_cat' => $active_cat,
+            'ctype_name'   => ($ctype_name == $ctype_default ? '' : $ctype_name),
+            'cats'         => $cats,
+            'active_cat'   => $active_cat,
             'cover_preset' => $this->getOption('cover_preset'),
-            'path'       => (!empty($path) ? $path : array())
+            'path'         => (!empty($path) ? $path : array())
         );
 
     }

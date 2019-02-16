@@ -92,6 +92,11 @@
                     <ul class="position" rel="_unused" id="pos-_unused"></ul>
                     <div class="hint"><?php echo LANG_CP_WIDGETS_UNUSED_HINT; ?></div>
                 </div>
+                <div id="cp-widgets-bind">
+                    <h3><?php echo LANG_CP_WIDGETS_BINDED; ?></h3>
+                    <ul class="position" rel="_copy" id="pos-_copy"></ul>
+                    <div class="hint"><?php echo LANG_CP_WIDGETS_BINDED_HINT; ?></div>
+                </div>
             </div>
 
         </td>
@@ -133,10 +138,10 @@
 
                 <div id="actions-template" style="display:none">
                     <span class="actions">
-                        <a class="hide" href="#" title="<?php echo LANG_HIDE; ?>"></a>
-                        <a class="copy" href="#" title="<?php echo LANG_COPY; ?>"></a>
-                        <a class="edit" href="#" title="<?php echo LANG_EDIT; ?>"></a>
-                        <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
+                        <a class="hide" href="#" onclick="return widgetToggle(this)" title="<?php echo LANG_HIDE; ?>"></a>
+                        <a class="copy" href="#" onclick="return widgetCopy(this)" title="<?php echo LANG_COPY; ?>"></a>
+                        <a class="edit" href="#" onclick="return widgetEdit(this)" title="<?php echo LANG_EDIT; ?>"></a>
+                        <a class="delete" href="#" onclick="return widgetDelete(this)" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
                 </div>
 

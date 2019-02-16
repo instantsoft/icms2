@@ -119,6 +119,8 @@ class images extends cmsFrontend {
             array('by' => 'width', 'to' => 'desc')
         ))->getPresets();
 
+        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_upload', array($result, $presets, $sizes), null, $this->request);
+
 		foreach($presets as $p){
 
 			if (!in_array($p['name'], $sizes, true)){
@@ -150,6 +152,8 @@ class images extends cmsFrontend {
 			$result['paths'][$p['name']] = $image;
 
 		}
+
+        list($result, $presets, $sizes) = cmsEventsManager::hook('images_after_resize', array($result, $presets, $sizes), null, $this->request);
 
 		if (!in_array('original', $sizes, true)){
 			files_delete_file($result['path'], 2);
@@ -199,6 +203,8 @@ class images extends cmsFrontend {
             return $result;
         }
 
+        list($result, $preset) = cmsEventsManager::hook('images_after_upload_by_preset', array($result, $preset), null, $this->request);
+
 		$path = $this->cms_uploader->resizeImage($result['path'], array(
 			'width'     => $preset['width'],
             'height'    => $preset['height'],
@@ -217,10 +223,12 @@ class images extends cmsFrontend {
 
 		$result['image'] = $image;
 
+        list($result, $preset) = cmsEventsManager::hook('images_after_resize_by_preset', array($result, $preset), null, $this->request);
+
 		files_delete_file($result['path'], 2);
         unset($result['path']);
 
-        $this->registerFile($image);
+        $this->registerFile($result['image']);
 
         return $result;
 

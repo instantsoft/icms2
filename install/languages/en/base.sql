@@ -299,7 +299,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (11, 'Wall', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (12, 'reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: en\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Moderation Panel', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(14, 'Tags', 'tags', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(14, 'Tags', 'tags', 1, '---\nordering: frequency\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nmin_freq: 0\nmin_len: 0\nlimit: 10\ncolors:\nshuffle: 1\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (15, 'RSS feeds', 'rss', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (16, 'Sitemap and robots.txt generator', 'sitemap', 1, '---\nsources:\n  content|pages: 1\n  content|albums: 1\n  content|articles: 1\n  content|posts: 1\n  content|board: 1\n  content|news: 1\n  frontpage|root: 1\n  groups|profiles: 1\n  users|profiles: 1\nshow_lastmod: 1\nshow_changefreq: 1\ndefault_changefreq: daily\nshow_priority: 1\nrobots: |\n  User-agent: *\r\n  Disallow:\ngenerate_html_sitemap: null\nchangefreq:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root:\n  groups:\n    profiles:\n  users:\n    profiles:\npriority:\n  content:\n    pages:\n    albums:\n    articles:\n    posts:\n    board:\n    news:\n  frontpage:\n    root: 1.0\n  groups:\n    profiles: 0.8\n  users:\n    profiles: 0.8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (18, 'Photos', 'photos', 1, '---\nsizes:\n  - normal\n  - small\n  - big\nis_origs: 1\npreset: big\npreset_small: normal\ntypes: |\n  1 | Photo\r\n  2 | Vectors\r\n  3 | Illustrations\nordering: date_pub\norderto: desc\nlimit: 20\ndownload_view:\n  normal:\n    - 0\n  related_photos:\n    - 0\n  micro:\n    - 0\n  small:\n    - 0\n  big:\n    - 0\n  original:\n    - 0\ndownload_hide:\n  normal: null\n  related_photos: null\n  micro: null\n  small: null\n  big: null\n  original:\n    - 1\n    - 3\n    - 4\nurl_pattern: ''{id}-{title}''\npreset_related: normal\nrelated_limit: 20\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -413,6 +413,7 @@ CREATE TABLE `{#}con_albums_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -571,6 +572,7 @@ CREATE TABLE `{#}con_pages_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -848,6 +850,7 @@ CREATE TABLE `{#}groups_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -1420,6 +1423,7 @@ CREATE TABLE `{#}users_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -1690,41 +1694,56 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `template` varchar(30) DEFAULT NULL COMMENT 'Template binding',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `template_layouts` varchar(500) DEFAULT NULL,
   `languages` varchar(100) DEFAULT NULL,
-  `widget_id` int(11) unsigned NOT NULL,
+  `widget_id` int(11) UNSIGNED NOT NULL,
   `title` varchar(128) NOT NULL COMMENT 'Title',
   `links` text,
   `class` varchar(64) DEFAULT NULL COMMENT 'CSS class',
   `class_title` varchar(64) DEFAULT NULL,
   `class_wrap` varchar(64) DEFAULT NULL,
-  `is_title` tinyint(1) unsigned DEFAULT '1' COMMENT 'Show title',
-  `is_enabled` tinyint(1) unsigned DEFAULT NULL COMMENT 'Enabled?',
-  `is_tab_prev` tinyint(1) unsigned DEFAULT NULL COMMENT 'Group with the previous?',
+  `is_title` tinyint(1) UNSIGNED DEFAULT '1' COMMENT 'Show title',
+  `is_tab_prev` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Group with the previous?',
   `groups_view` text COMMENT 'Show to groups',
   `groups_hide` text COMMENT 'Do not show to groups',
   `options` text COMMENT 'Options',
-  `page_id` int(11) unsigned DEFAULT NULL COMMENT 'Page ID',
-  `position` varchar(32) DEFAULT NULL COMMENT 'Position title ',
-  `ordering` int(11) unsigned DEFAULT NULL COMMENT 'Order number',
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
   `device_types` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `position` (`position`),
-  KEY `widget_id` (`widget_id`),
-  KEY `page_id` (`page_id`,`position`,`ordering`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Site widgets';
+  KEY `widget_id` (`widget_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Site widgets';
 
-INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
-(1, 'default', 3, 'Main menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', 0, 'top', 1, NULL, NULL),
-(2, 'default', 3, 'Auth menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 1\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', 0, 'header', 1, NULL, NULL),
-(5, 'default', 3, 'Actions menu', NULL, NULL, NULL, 'fixed_actions_menu', NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'left-top', 1, 'menu', 'wrapper'),
-(20, 'default', 12, 'Log in', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '', 0, 'right-center', 1, NULL, NULL),
-(3, 'default', 9, 'User menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 0, 'header', 3, 'avatar', 'wrapper'),
-(23, 'default', 3, 'Notifications', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: notices\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 0, 'header', 3, 'menu', 'wrapper');
+INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `tpl_body`, `tpl_wrap`, `device_types`) VALUES
+(1, NULL, NULL, 3, 'Main menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: main\nis_detect: 1\nmax_items: 8\n', NULL, NULL, NULL),
+(2, NULL, NULL, 3, 'Auth menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 1\n', NULL, '---\nmenu: header\nis_detect: 1\nmax_items: 0\n', NULL, NULL, NULL),
+(5, NULL, NULL, 3, 'Actions menu', NULL, NULL, NULL, 'fixed_actions_menu', NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: toolbar\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 'menu', 'wrapper', NULL),
+(20, NULL, NULL, 12, 'Log in', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '', NULL, NULL, NULL),
+(22, NULL, NULL, 9, 'User menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: personal\nis_detect: 1\nmax_items: 0\n', 'avatar', 'wrapper', NULL),
+(23, NULL, NULL, 3, 'Notifications', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', '---\n- 1\n', '---\nmenu: notices\ntemplate: menu\nis_detect: null\nmax_items: 0\n', 'menu', 'wrapper', NULL);
+
+DROP TABLE IF EXISTS `{#}widgets_bind_pages`;
+CREATE TABLE `{#}widgets_bind_pages` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `bind_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Widget options id',
+  `template` varchar(30) DEFAULT NULL COMMENT 'Template binding',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Enabled?',
+  `page_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Page ID',
+  `position` varchar(32) DEFAULT NULL COMMENT 'Position title',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Order number',
+  PRIMARY KEY (`id`),
+  KEY `position` (`position`),
+  KEY `page_id` (`page_id`,`position`,`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Bind widgets to pages';
+
+INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
+(1, 1, 'default', 1, 0, 'top', 1),
+(2, 2, 'default', 1, 0, 'header', 1),
+(3, 5, 'default', 1, 0, 'left-top', 1),
+(4, 20, 'default', 1, 0, 'right-center', 1),
+(5, 22, 'default', 1, 0, 'header', 3),
+(6, 23, 'default', 1, 0, 'header', 3);
 
 DROP TABLE IF EXISTS `{#}widgets_pages`;
 CREATE TABLE `{#}widgets_pages` (

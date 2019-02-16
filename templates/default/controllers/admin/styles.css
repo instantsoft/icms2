@@ -1501,28 +1501,28 @@ table.layout-no-fit td.main .loading { background:url("../../images/loader16.gif
     font-size:14px;
 }
 
-#cp-widgets-layout #cp-widgets-unused {
+#cp-widgets-layout #cp-widgets-unused, #cp-widgets-layout #cp-widgets-bind {
     margin-top:10px;
     background-color:#ecf0f1;
     padding:10px;
 }
 
-#cp-widgets-layout #cp-widgets-unused h3{
+#cp-widgets-layout #cp-widgets-unused h3, #cp-widgets-layout #cp-widgets-bind h3{
     margin-bottom: 4px;
     font-weight: normal;
     font-size:14px;
 }
 
-#cp-widgets-layout #cp-widgets-unused .hint{
+#cp-widgets-layout #cp-widgets-unused .hint, #cp-widgets-layout #cp-widgets-bind .hint{
     font-size:12px;
     color:#999;
 }
 
-#cp-widgets-layout #cp-widgets-unused .position{
+#cp-widgets-layout #cp-widgets-unused .position, #cp-widgets-layout #cp-widgets-bind .position{
     background:#FFF;
 }
 
-#cp-widgets-layout #cp-widgets-unused .position,
+#cp-widgets-layout #cp-widgets-unused .position, #cp-widgets-layout #cp-widgets-bind .position,
 #cp-widgets-layout table td .position{
     padding:5px;
     border: dashed 1px #68809B;

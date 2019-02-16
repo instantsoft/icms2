@@ -16,6 +16,11 @@ class fieldList extends cmsFormField {
                 'title' => LANG_PARSER_LIST_FILTER_MULTI,
                 'default' => false
             )),
+            new fieldCheckbox('filter_multiple_checkbox', array(
+                'title' => LANG_PARSER_LIST_FILTER_MULTICH,
+                'default' => false,
+                'visible_depend' => array('options:filter_multiple' => array('show' => array('1')))
+            )),
             new fieldCheckbox('is_autolink', array(
                 'title' => LANG_PARSER_LIST_IS_AUTOLINK,
                 'hint'  => LANG_PARSER_LIST_IS_AUTOLINK_FILTER,
@@ -36,7 +41,14 @@ class fieldList extends cmsFormField {
          } else {
 
              $value = is_array($value) ? $value : array();
-             return html_select_multiple($this->name, $items, $value);
+
+             if($this->getOption('filter_multiple_checkbox')){
+                 return html_select_multiple($this->name, $items, $value);
+             }
+
+             $this->setProperty('is_chosen_multiple', true);
+
+             return parent::getFilterInput($value);
 
          }
 

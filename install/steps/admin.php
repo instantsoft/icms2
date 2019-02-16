@@ -78,4 +78,17 @@ function create_admin($nickname, $email, $password){
 
     $mysqli->query($sql);
 
+    $auth_data = array(
+        'ip'          => sprintf('%u', ip2long('127.0.0.1')),
+        'access_type' => '---\ntype: desktop\nsubj: null\n',
+        'auth_token'  => md5($password_salt.md5(serialize($db)).$password_hash),
+        'user_id'     => 1
+    );
+
+    $sql = "INSERT INTO {$db['prefix']}users_auth_tokens (`ip`, `access_type`, `auth_token`, `user_id`) VALUES ('{$auth_data['ip']}', '{$auth_data['access_type']}', '{$auth_data['auth_token']}', '{$auth_data['user_id']}')";
+
+    $mysqli->query($sql);
+
+    setcookie('icms[auth]', $auth_data['auth_token'], time()+300, '/', null, false, true);
+
 }

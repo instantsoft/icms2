@@ -175,6 +175,7 @@ class cmsModel {
             'values'        => array('type' => 'text'),
             'options'       => array('type' => 'text'),
             'groups_read'   => array('type' => 'text'),
+            'groups_add'    => array('type' => 'text'),
             'groups_edit'   => array('type' => 'text'),
             'filter_view'   => array('type' => 'text')
         );

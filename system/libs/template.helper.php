@@ -394,6 +394,12 @@ function html_select($name, $items, $selected = '', $attributes = array()){
 
     $optgroup = false;
 
+    if(is_array($selected) && $selected){
+        foreach ($selected as $k => $v) {
+            if(is_numeric($v)){ $selected[$k] = (int)$v; }
+        }
+    }
+
     if($items && is_array($items)){
         foreach($items as $value => $title){
 

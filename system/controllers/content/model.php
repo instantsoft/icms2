@@ -583,7 +583,7 @@ class modelContent extends cmsModel {
             if ($item['options']['is_number']) {  $rules[] = array('number'); }
             if ($item['options']['is_alphanumeric']) {  $rules[] = array('alphanumeric'); }
             if ($item['options']['is_email']) {  $rules[] = array('email'); }
-            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); } // empty, ибо их нет нигде сейчас
+            if (!empty($item['options']['is_url'])) {  $rules[] = array('url'); }
 
             if ($item['options']['is_unique']) {
                 if (!$item_id){

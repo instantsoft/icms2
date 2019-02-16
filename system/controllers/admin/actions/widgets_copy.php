@@ -2,42 +2,43 @@
 
 class actionAdminWidgetsCopy extends cmsAction {
 
-    public function run($binded_id){
+    public function run($bp_id) {
 
-        if (!$this->request->isAjax()){ cmsCore::error404(); }
+        if (!$this->request->isAjax() || !$bp_id) {
+            return cmsCore::error404();
+        }
 
         $widgets_model = cmsCore::getModel('widgets');
 
-        $widget = $widgets_model->getWidgetBinding($binded_id);
-        if (!$widget){
-            return $this->cms_template->renderJSON(array(
-                'error' => true
-            ));
+        $copy = $widgets_model->copyWidgetByPage($bp_id);
+        if (!$copy) {
+            return $this->cms_template->renderJSON(array('error' => true));
         }
 
-        $copy_binded_id = $widgets_model->copyWidget($widget['id']);
-        if (!$copy_binded_id){
-            return $this->cms_template->renderJSON(array(
-                'error' => true
-            ));
-        }
+        $widget_bind  = $widgets_model->getWidgetBinding($copy['id']);
+        $binding_page = $widgets_model->getWidgetBindPage($copy['bp_id']);
 
-        $bind_widget = $widgets_model->getWidgetBinding($copy_binded_id);
+        if ($widget_bind['device_types'] && $widget_bind['device_types'] !== array(0) && count($widget_bind['device_types']) < 3) {
 
-        if($bind_widget['device_types'] && $bind_widget['device_types'] !== array(0) && count($bind_widget['device_types']) < 3){
-            foreach ($bind_widget['device_types'] as $dt) {
-                $device_types[] = string_lang('LANG_'.$dt.'_DEVICES');
+            foreach ($widget_bind['device_types'] as $dt) {
+                $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');
             }
+
         } else {
             $device_types = false;
         }
 
-        $bind_widget['device_types'] = $device_types;
-        $bind_widget['name'] = $bind_widget['widget_title'];
+        $widget_bind['device_types'] = $device_types;
+        $widget_bind['name']         = $widget_bind['widget_title'];
+
+        $widget_bind['bind_id']    = $widget_bind['id'];
+        $widget_bind['id']         = $binding_page['id'];
+        $widget_bind['position']   = $binding_page['position'];
+        $widget_bind['is_enabled'] = $binding_page['is_enabled'];
 
         return $this->cms_template->renderJSON(array(
-            'error'  => !(bool) $copy_binded_id,
-            'widget' => $bind_widget
+            'error'  => false,
+            'widget' => $widget_bind
         ));
 
     }

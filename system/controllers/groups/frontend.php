@@ -216,10 +216,11 @@ class groups extends cmsFrontend {
 
             if($action === 'add'){
                 // проверяем что группа пользователя имеет доступ к созданию этого поля
-                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) { // на автора не надо проверять, ибо это и есть автор
+                // на автора не надо проверять, ибо это и есть автор
+                if ($field['groups_add'] && !$user->isInGroups($field['groups_add'])) {
                     return false;
                 }
-            }else{
+            } else {
                 // проверяем что группа пользователя имеет доступ к редактированию этого поля
                 if ($field['groups_edit'] && !$user->isInGroups($field['groups_edit'])) {
                     // если группа пользователя не имеет доступ к редактированию этого поля,
