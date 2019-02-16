@@ -39,7 +39,7 @@ function install_package(){
 
     }
 
-    $ctypes = $content_model->getContentTypes();
+    $ctypes = $content_model->reloadAllCtypes(false)->getContentTypes();
 
 	foreach($ctypes as $ctype){
 
@@ -50,17 +50,30 @@ function install_package(){
             $core->db->query("UPDATE `{#}{$table_name}` SET `groups_add`= `groups_edit`;");
         }
 
+        if(!$core->db->isFieldExists($table_name, 'is_enabled')){
+            $core->db->query("ALTER TABLE `{#}{$table_name}` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+        }
+
 	}
 
     if(!$core->db->isFieldExists("groups_fields", 'groups_add')){
         $core->db->query("ALTER TABLE `{#}groups_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
         $core->db->query("UPDATE `{#}groups_fields` SET `groups_add`= `groups_edit`;");
     }
+    if(!$core->db->isFieldExists('groups_fields', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}groups_fields` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
     if(!$core->db->isFieldExists("{users}_fields", 'groups_add')){
         $core->db->query("ALTER TABLE `{users}_fields` ADD `groups_add` TEXT NULL DEFAULT NULL AFTER `groups_read`;");
         $core->db->query("UPDATE `{users}_fields` SET `groups_add`= `groups_edit`;");
     }
+    if(!$core->db->isFieldExists('{users}_fields', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{users}_fields` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
 
+    if(!$core->db->isFieldExists('content_types', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}content_types` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
