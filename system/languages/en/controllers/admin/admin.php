@@ -107,6 +107,7 @@
     define('LANG_CP_IS_COLLAPSED',              'Collapsible blocks in the add/edit item form');
     define('LANG_CP_PUBLICATION',               'Publication');
     define('LANG_CP_IS_PUB_CONTROL',            'Custom publication date');
+    define('LANG_CP_DISABLE_DRAFTS',            'Disable drafts');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired entry action');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');

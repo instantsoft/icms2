@@ -32,6 +32,10 @@ class formAdminCtypesField extends cmsForm {
                             array('max_length', 255)
                         )
                     )),
+                    new fieldCheckbox('is_enabled', array(
+                        'title' => LANG_IS_ENABLED,
+                        'default' => 1
+                    ))
                 )
             ),
             'type' => array(

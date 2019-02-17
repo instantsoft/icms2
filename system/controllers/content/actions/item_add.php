@@ -367,6 +367,7 @@ class actionContentItemAdd extends cmsAction {
             'is_premoderation' => $is_premoderation,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : LANG_SAVE),
             'button_draft_text' => LANG_CONTENT_SAVE_DRAFT,
+            'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
             'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => !isset($errors),
             'add_cats'         => isset($add_cats) ? $add_cats : array(),

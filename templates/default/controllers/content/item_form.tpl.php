@@ -32,11 +32,13 @@
         ));
     }
 
-    $this->addToolButton(array(
-        'class' => 'save_draft',
-        'title' => $button_draft_text,
-        'href'  => "javascript:icms.forms.submit('.button.to_draft')"
-    ));
+    if(!$hide_draft_btn){
+        $this->addToolButton(array(
+            'class' => 'save_draft',
+            'title' => $button_draft_text,
+            'href'  => "javascript:icms.forms.submit('.button.to_draft')"
+        ));
+    }
 
     if ($cancel_url){
         $this->addToolButton(array(
@@ -58,6 +60,7 @@
         'buttons' => array(
             array(
                 'title' => $button_draft_text,
+                'hide' => $hide_draft_btn,
                 'name' => 'to_draft',
                 'attributes' => array(
                     'type' => 'submit',

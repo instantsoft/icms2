@@ -342,6 +342,7 @@ class actionContentItemEdit extends cmsAction {
             'show_save_button' => $show_save_button,
             'button_save_text' => (($is_premoderation && !$is_moderator) ? LANG_MODERATION_SEND : ($item['is_approved'] ? LANG_SAVE : LANG_PUBLISH)),
             'button_draft_text' => $button_draft_text,
+            'hide_draft_btn'   => !empty($ctype['options']['disable_drafts']),
             'is_multi_cats'    => !empty($ctype['options']['is_cats_multi']),
             'is_load_props'    => false,
             'add_cats'         => $add_cats,

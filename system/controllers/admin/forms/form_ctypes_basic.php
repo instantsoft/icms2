@@ -55,6 +55,9 @@ class formAdminCtypesBasic extends cmsForm {
                             'in_basket' => LANG_BASKET_DELETE
                         ),
                         'visible_depend' => array('is_date_range' => array('show' => array('1')))
+                    )),
+                    new fieldCheckbox('options:disable_drafts', array(
+                        'title' => LANG_CP_DISABLE_DRAFTS
                     ))
                 )
             ),
