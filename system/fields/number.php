@@ -35,7 +35,7 @@ class fieldNumber extends cmsFormField {
                     'title' => LANG_PARSER_NUMBER_THOUSANDS_SEP,
                     'visible_depend' => array('options:thousands_sep' => array('show' => array('another'))),
                     'options'=>array(
-                        'max_length'=> 1
+                        'max_length'=> 12
                     )
                 )),
             new fieldCheckbox('is_ceil', array(
@@ -57,7 +57,7 @@ class fieldNumber extends cmsFormField {
                     'title' => LANG_PARSER_NUMBER_DEC_POINT,
                     'visible_depend' => array('options:dec_point' => array('show' => array('another')),'options:is_ceil' => array('hide' => array('1'))),
                     'options'=>array(
-                        'max_length'=> 1
+                        'max_length'=> 12
                     )
                 )),
             new fieldNumber('decimal_s', array(
