@@ -249,7 +249,7 @@ class actionContentCategoryView extends cmsAction {
 
             if (!empty($ctype['seo_title']) && empty($category['title'])){ $seo_title = $ctype['seo_title']; }
             if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
-            if (!$seo_title) { $seo_title = $page_header; }
+            if (!$seo_title) { $seo_title = (!empty($category['title']) ? $category['title'] : $list_header); }
             if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
             if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
             if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
