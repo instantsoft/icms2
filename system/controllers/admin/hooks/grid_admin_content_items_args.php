@@ -41,6 +41,7 @@ class onAdminGridAdminContentItemsArgs extends cmsAction {
                         unset($grid['columns'][$name]['filter']);
                     }
                     if(isset($default[$type][$name])){continue;} // для стоковых менять только фильтр
+                    if(!isset($settings[$type][$name])){continue;}
                     $grid['columns'][$name]['title'] = $settings[$type][$name]['title'];
                     if(!empty($field['handler']) && isset($settings[$type][$name]['handlers'][$field['handler']])){
                         if($field['handler'] === 'flag'){

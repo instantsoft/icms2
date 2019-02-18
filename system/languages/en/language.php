@@ -108,6 +108,7 @@
     define('LANG_PARSER_NUMBER_DEC_POINT',   'Decimal point');
     define('LANG_PARSER_NUMBER_IS_CEIL',     'Only ceil numbers');
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Thousands separator');
+    define('LANG_PARSER_NUMBER_UNITS_SEP',   'Units spacer');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Only positive numbers');
     define('LANG_PARSER_CITY',               'Location');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Location type');
