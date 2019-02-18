@@ -79,7 +79,22 @@ class fieldNumber extends cmsFormField {
             )),
             new fieldString('units', array(
                 'title' => LANG_PARSER_NUMBER_UNITS,
-            ))
+            )),
+            new fieldList('units_sep', array(
+                'title'   => LANG_PARSER_NUMBER_UNITS_SEP,
+                'default' => ' ',
+                'items' => array(
+                    ' ' => LANG_SPACE,
+                    'another' => LANG_ANOTHER,
+                )
+            )),
+                new fieldString('units_sep_another', array(
+                    'title' => LANG_PARSER_NUMBER_UNITS_SEP,
+                    'visible_depend' => array('options:units_sep' => array('show' => array('another'))),
+                    'options'=>array(
+                        'max_length'=> 12
+                    )
+                )),
         );
     }
 
@@ -105,8 +120,13 @@ class fieldNumber extends cmsFormField {
                 }
                 break;
             case 'dec_point':
-                if(parent::getOption('dec_point_sep') === 'another'){
+                if(parent::getOption('dec_point') === 'another'){
                     return parent::getOption('dec_point_another');
+                }
+                break;
+            case 'units_sep':
+                if(parent::getOption('units_sep') === 'another'){
+                    return parent::getOption('units_sep_another');
                 }
                 break;
             default:
@@ -138,7 +158,7 @@ class fieldNumber extends cmsFormField {
 
         $units = $this->getProperty('units')?:$this->getOption('units');
 
-        return $this->formatFloatValue($value).' '.$units;
+        return $this->formatFloatValue($value).$this->getOption('units_sep').$units;
 
     }
 
