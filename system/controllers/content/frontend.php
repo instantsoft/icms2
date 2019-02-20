@@ -1127,6 +1127,8 @@ class content extends cmsFrontend {
 
             if (!$is_view || $is_user_hide) { return false; }
 
+            $item['title'] = string_replace_user_properties($item['title']);
+
             return $item;
 
         });

@@ -145,9 +145,8 @@ class actionContentItemEdit extends cmsAction {
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $item);
 
-			if (!$errors){
-				list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors));
-			}
+			list($item, $errors) = cmsEventsManager::hook('content_validate', array($item, $errors), null, $this->request);
+            list($item, $errors, $ctype, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_validate", array($item, $errors, $ctype, $fields), null, $this->request);
 
             if (!$errors){
 

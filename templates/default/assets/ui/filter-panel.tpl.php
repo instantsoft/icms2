@@ -1,4 +1,5 @@
 <?php $user = cmsUser::getInstance(); ?>
+<?php $form_id = isset($form_id) ? $form_id : md5(microtime(true)); ?>
 <?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
 <?php $form_url = is_array($page_url) ? $page_url['base'] : $page_url; $form_url_sep = strpos($form_url, '?') === false ? '?' : '&'; ?>
 <div class="filter-panel gui-panel <?php echo $css_prefix;?>-filter">
@@ -9,7 +10,7 @@
 		<div class="filter-close">
             <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
         </div>
-        <form action="<?php echo $form_url; ?>" method="get">
+        <form action="<?php echo $form_url; ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">
             <?php echo html_input('hidden', 'page', 1); ?>
             <?php if(!empty($ext_hidden_params)){ ?>
                 <?php foreach($ext_hidden_params as $fname => $fvalue){ ?>
@@ -75,10 +76,11 @@
         </form>
     </div>
 </div>
-<?php if (!$fields_count) { ?>
 <script type="text/javascript">
     $(function (){
-        $('.filter-panel.groups-filter').hide();
+        <?php if (!$fields_count) { ?>
+            $('.filter-panel.groups-filter').hide();
+        <?php } ?>
+        icms.forms.initFilterForm('#<?php echo $form_id; ?>');
     });
 </script>
-<?php } ?>

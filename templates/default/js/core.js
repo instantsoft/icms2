@@ -137,6 +137,36 @@ icms.forms = (function ($) {
         this.csrf_token = csrf_token;
     };
 
+    this.initFilterForm = function(selector){
+
+        $($(selector).find('.buttons input[type = submit]')).on('click', function (){
+
+            var form = $(this.closest('form'));
+            var submit_uri = $(form).attr('action');
+
+            var form_params = _this.toJSON(form);
+
+            var o = {};
+            for(var name in form_params){if(form_params.hasOwnProperty(name)){
+                if(name === 'page'){ continue; }
+                if(form_params[name] && form_params[name] !== '0'){
+                    o[name] = form_params[name];
+                }
+            }}
+
+            var query_string = $.param(o);
+            if(query_string.length > 0){
+                window.location.href = submit_uri+'?'+query_string;
+            } else {
+                window.location.href = submit_uri;
+            }
+
+            return false;
+
+        });
+
+    };
+
     this.initUnsaveNotice = function(){
 
         var init_data = {};
