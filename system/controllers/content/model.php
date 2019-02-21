@@ -2032,18 +2032,26 @@ class modelContent extends cmsModel {
             return $slug;
         }
 
-        $scount = $this->filterNotEqual('id', $item['id'])->
-                filterLike('slug', "{$slug}%")->
+        $get_scount = function($slug) use($item, $ctype){
+            return $this->filterNotEqual('id', $item['id'])->
+                filterLike('slug', $slug)->
                 getCount($this->table_prefix.$ctype['name'], 'id', true);
+            };
 
-        if($scount){
+        if($get_scount($slug)){
+            if(mb_strlen($slug) >= $slug_len){
+                $slug = mb_substr($slug, 0, ($slug_len - 1));
+            }
 
-            $scount += 1;
+            $i = 2;
+            while($get_scount($slug.$i)){
+                $i++;
+                if(mb_strlen($slug.$i) > $slug_len){
+                    $slug = mb_substr($slug, 0, ($slug_len - strlen($i)));
+                }
+            }
 
-            $slug = mb_substr($slug, 0, ($slug_len - strlen($scount)));
-
-            $slug .= $scount;
-
+            $slug .= $i;
         }
 
         return $slug;
