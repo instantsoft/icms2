@@ -515,11 +515,14 @@ class cmsTemplate {
      * @return type
      */
     public function href_to($action, $params = false) {
-
-        if (!isset($this->controller->root_url)){
-            return href_to($this->controller->name, $action, $params);
-        } else {
-            return href_to($this->controller->root_url, $action, $params);
+        if (isset($this->controller)){
+            if (!isset($this->controller->root_url)){
+                return href_to($this->controller->name, $action, $params);
+            } else {
+                return href_to($this->controller->root_url, $action, $params);
+            }
+        }else{
+            return href_to($this->site_config->root, $action, $params);
         }
 
     }
