@@ -190,7 +190,8 @@ class formAdminCtypesBasic extends cmsForm {
                         'title' => LANG_CP_LISTVIEW_FILTER
                     )),
                     new fieldCheckbox('options:list_expand_filter', array(
-                        'title' => LANG_CP_LISTVIEW_FILTER_EXPAND
+                        'title' => LANG_CP_LISTVIEW_FILTER_EXPAND,
+                        'visible_depend' => array('options:list_show_filter' => array('show' => array('1')))
                     )),
                     new fieldList('options:privacy_type', array(
                         'title'   => LANG_CP_PRIVACY_TYPE,
