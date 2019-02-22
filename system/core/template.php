@@ -1497,8 +1497,9 @@ class cmsTemplate {
 
     /**
      * Выводит json строку
+     *
      * @param array $data Массив для вывода
-     * @param bool $with_header Вывод вместе с хидером Content-type
+     * @param boolean $with_header Вывод вместе с хидером Content-type
      */
     public function renderJSON($data, $with_header=false){
 
@@ -1535,11 +1536,13 @@ class cmsTemplate {
     }
 
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов этого компонента)
-     * @param string $tpl_file
-     * @param array $data
+     * Формирует HTML код файла шаблона (в папке шаблонов текущего компонента)
+     * И подключает css файл контроллера (если есть)
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
      */
-    public function render($tpl_file, $data=array(), $request=false){
+    public function render($tpl_file, $data = array(), $request = false) {
 
         $css_file = $this->getStylesFileName();
 
@@ -1551,23 +1554,36 @@ class cmsTemplate {
 
     }
 
-    public function renderPlain($tpl_file, $data=array()){
+    /**
+     * Печатает HTML код шаблона и завершает работу
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     */
+    public function renderPlain($tpl_file, $data = array()) {
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 
-        ob_start();
-
-        extract($data); include($tpl_file);
-
-        echo ob_get_clean();
-
-        $this->controller->halt();
+        $this->processRender($tpl_file, $data, new cmsRequest($this->controller->request->getData(), cmsRequest::CTX_AJAX));
 
     }
 
-    public function processRender($tpl_file, $data=array(), $request=false){
+    /**
+     * Формирует HTML код файла шаблона,
+     * учитывая контекст вызова
+     *
+     * @param string $tpl_file Полный путь к файлу шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @param object $request Объект запроса
+     * @return mixed
+     */
+    public function processRender($tpl_file, $data = array(), $request = false) {
 
         if (!$request) { $request = $this->controller->request; }
+
+        $hook_name = 'process_render_'.$this->controller->name.'_'.basename($tpl_file, '.tpl.php');
+
+        list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
         ob_start();
 
@@ -1592,39 +1608,54 @@ class cmsTemplate {
     }
 
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов текущего компонента)
-     * @param string $tpl_file
-     * @param array $data
+     * Печатает HTML код шаблона $tpl_file (в папке шаблонов текущего компонента)
+     * Предполагается, что вызов этого метода выполняется
+     * из другого шаблона текущего контроллера
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
      */
-    public function renderChild($tpl_file, $data=array()){
-
-        $request = $this->controller->request;
-
-        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
-
-        extract($data); include($tpl_file);
-
+    public function renderChild($tpl_file, $data = array()) {
+        $this->renderControllerChild($this->controller->name, $tpl_file, $data);
     }
 
-    public function renderControllerChild($controller, $tpl_file, $data=array()){
+    /**
+     * Печатает HTML код шаблона $tpl_file (в папке шаблонов $controller_name компонента)
+     * Предполагается, что вызов этого метода выполняется
+     * из другого шаблона текущего контроллера
+     *
+     * @param string $controller_name Имя контроллера
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @param object $request Объект запроса
+     */
+    public function renderControllerChild($controller_name, $tpl_file, $data = array(), $request = false) {
 
-        $tpl_file = $this->getTemplateFileName('controllers/'.$controller.'/'.$tpl_file);
+        if (!$request) { $request = $this->controller->request; }
+
+        $tpl_file = $this->getTemplateFileName('controllers/'.$controller_name.'/'.$tpl_file);
+
+        $hook_name = 'process_render_'.$controller_name.'_'.basename($tpl_file, '.tpl.php');
+
+        list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
         extract($data); include($tpl_file);
 
     }
 
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов текущего компонента)
-	 * и возвращает полученный html-код в виде строки
-     * @param string $tpl_file
-     * @param array $data
+     * Формирует HTML код шаблона и возвращает его
+     * в виде строки
+	 *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @return string
      */
-	public function getRenderedChild($tpl_file, $data=array()){
+	public function getRenderedChild($tpl_file, $data = array()) {
 
-		$tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
+        ob_start();
 
-		extract($data); ob_start(); include($tpl_file);
+        $this->renderControllerChild($this->controller->name, $tpl_file, $data);
 
 		return ob_get_clean();
 
@@ -1635,7 +1666,7 @@ class cmsTemplate {
      * @param string $tpl_file
      * @param array $data
      */
-    public function renderForm($form, $data, $attributes=array(), $errors=false){
+    public function renderForm($form, $data, $attributes = array(), $errors = false) {
 
         $form_tpl_file = 'form';
 
@@ -1643,16 +1674,21 @@ class cmsTemplate {
             $form_tpl_file = $attributes['form_tpl_file'];
         }
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/'.$form_tpl_file);
-
-        include($tpl_file);
+        $this->renderAsset('ui/'.$form_tpl_file, [
+            'form_tpl_file' => $form_tpl_file,
+            'form'          => $form,
+            'data'          => $data,
+            'attributes'    => $attributes,
+            'errors'        => $errors
+        ]);
 
     }
 
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов этого компонента)
-     * @param string $source_url
-     * @param array $grid
+     * Печатает шаблон Grid таблицы
+     *
+     * @param string $source_url URL ajax запроса списка данных
+     * @param array $grid Данные Grid таблицы
      */
     public function renderGrid($source_url, $grid){
 
@@ -1666,15 +1702,13 @@ class cmsTemplate {
             $this->addJS( $this->getJavascriptFileName('datagrid-drag') );
         }
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/grid-data');
+        $grid['source_url'] = $source_url;
 
-        extract($grid);
-
-        include($tpl_file);
+        $this->renderAsset('ui/grid-data', $grid);
 
     }
 
-    public function renderGridRowsJSON($grid, $dataset, $total=1, $pages_count=1){
+    public function renderGridRowsJSON($grid, $dataset, $total = 1, $pages_count = 1) {
 
         $rows = $titles = array();
         $row_index = 0;
@@ -1899,11 +1933,14 @@ class cmsTemplate {
      */
     public function renderPermissionsGrid($rules, $groups, $values, $submit_url){
 
-        $this->addJS( $this->getJavascriptFileName('datagrid') );
+        $this->addJS($this->getJavascriptFileName('datagrid'));
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/grid-perms');
-
-        include($tpl_file);
+        $this->renderAsset('ui/grid-perms', [
+            'rules'      => $rules,
+            'groups'     => $groups,
+            'values'     => $values,
+            'submit_url' => $submit_url
+        ]);
 
     }
 
@@ -1912,21 +1949,39 @@ class cmsTemplate {
      * @param array $menu Массив пунктов меню
      * @param array $active_ids Массив активных пунктов меню
      * @param string $css_class CSS класс контейнера пунктов меню
-     * @param int $max_items Максимальное количество видимых пунктов
+     * @param integer $max_items Максимальное количество видимых пунктов
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function renderMenu($menu, $active_ids=array(), $css_class='menu', $max_items=0, $template = 'menu', $menu_title=''){
+    public function renderMenu($menu, $active_ids = array(), $css_class = 'menu', $max_items = 0, $template = 'menu', $menu_title = '') {
 
-        $tpl_file = $this->getTemplateFileName('assets/ui/'.$template);
-
-        include($tpl_file);
+        $this->renderAsset('ui/'.$template, [
+            'menu'       => $menu,
+            'active_ids' => $active_ids,
+            'css_class'  => $css_class,
+            'max_items'  => $max_items,
+            'template'   => $template,
+            'menu_title' => $menu_title
+        ]);
 
     }
 
-    public function renderAsset($tpl_file, $data=array(), $request = false){
+    /**
+     * Формирует и печатает HTML assets шаблон
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @param object $request Объект запроса
+     */
+    public function renderAsset($tpl_file, $data = array(), $request = false) {
 
         $tpl_file = $this->getTemplateFileName('assets/' . $tpl_file);
+
+        $file_name = basename($tpl_file, '.tpl.php');
+
+        $hook_name = 'render_asset_'.basename(str_replace($file_name.'.tpl.php', '', $tpl_file)).'_'.$file_name;
+
+        list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
         extract($data); include($tpl_file);
 
@@ -1938,16 +1993,32 @@ class cmsTemplate {
 
     }
 
-    public function renderFormField($field_type, $data=array()){
-
-        $tpl_file = $this->getTemplateFileName('assets/fields/'.$field_type);
+    /**
+     * Формирует и возвращает в виде строки HTML код assets шаблона
+     *
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @return string
+     */
+    public function getRenderedAsset($tpl_file, $data = array()) {
 
         ob_start();
 
-        extract($data); include($tpl_file);
+        $this->renderAsset($tpl_file, $data);
 
         return ob_get_clean();
 
+    }
+
+    /**
+     * Формирует и возвращает в виде строки HTML код поля формы
+     *
+     * @param string $field_type Имя поля
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @return string
+     */
+    public function renderFormField($field_type, $data = array()) {
+        return $this->getRenderedAsset('fields/'.$field_type, $data);
     }
 
 //============================================================================//
@@ -2155,11 +2226,15 @@ class cmsTemplate {
 //============================================================================//
 //============================================================================//
 
-    public function renderWidget($widget, $data=array()){
+    public function renderWidget($widget, $data = array()) {
 
         $tpl_path = cmsCore::getWidgetPath($widget->name, $widget->controller);
 
         $tpl_file = $this->getTemplateFileName($tpl_path . '/' . $widget->getTemplate());
+
+        $hook_name = 'render_wdget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename($tpl_file, '.tpl.php');
+
+        list($widget, $tpl_file, $data) = cmsEventsManager::hook($hook_name, [$widget, $tpl_file, $data]);
 
         extract($data);
 
@@ -2174,14 +2249,14 @@ class cmsTemplate {
         }
 
         $this->widgets[$widget->position][$this->widgets_group_index][] = array(
-            'id' => $widget->id,
-            'title' => $widget->is_title ? $widget->title : false,
-            'links' => isset($widget->links) ? $widget->links : false,
-            'wrapper' => $widget->getWrapper(),
-            'class' => isset($widget->css_class) ? $widget->css_class : false,
+            'id'          => $widget->id,
+            'title'       => $widget->is_title ? $widget->title : false,
+            'links'       => isset($widget->links) ? $widget->links : false,
+            'wrapper'     => $widget->getWrapper(),
+            'class'       => isset($widget->css_class) ? $widget->css_class : false,
             'class_title' => isset($widget->css_class_title) ? $widget->css_class_title : false,
-            'class_wrap' => isset($widget->css_class_wrap) ? $widget->css_class_wrap : false,
-            'body' => $html
+            'class_wrap'  => isset($widget->css_class_wrap) ? $widget->css_class_wrap : false,
+            'body'        => $html
         );
 
         return $this;

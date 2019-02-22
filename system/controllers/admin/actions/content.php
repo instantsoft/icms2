@@ -20,7 +20,7 @@ class actionAdminContent extends cmsAction {
         }
 
         if(!empty($ctype)){
-            $grid = $this->loadDataGrid('content_items', false, 'admin.grid_filter.content.'.$ctype['name']);
+            $grid = $this->loadDataGrid('content_items', $ctype['name'], 'admin.grid_filter.content.'.$ctype['name']);
         } else {
             $grid = $this->loadDataGrid('content_items');
         }

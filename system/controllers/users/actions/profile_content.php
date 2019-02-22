@@ -6,17 +6,18 @@ class actionUsersProfileContent extends cmsAction {
 
     public function run($profile, $ctype_name = false, $folder_id = false, $dataset = false){
 
-        if (!$ctype_name) { cmsCore::error404(); }
+        if (!$ctype_name) { return cmsCore::error404(); }
 
         $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype) { return cmsCore::error404(); }
 
         if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
 
         if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
-            cmsCore::error404();
+            return cmsCore::error404();
         }
 
+        $original_folder_id = $folder_id;
         if($folder_id && !$dataset && !is_numeric($folder_id)){
             $dataset   = $folder_id;
             $folder_id = false;
@@ -43,35 +44,43 @@ class actionUsersProfileContent extends cmsAction {
 
         }
 
+        $this->controller_content->model->filterEqual('user_id', $profile['id']);
+
+        list($folders, $this->controller_content->model, $profile, $original_folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
+            $folders,
+            $this->controller_content->model,
+            $profile,
+            $original_folder_id
+        ));
+
         // Если есть наборы, применяем фильтры текущего
         $current_dataset = array();
         if ($datasets){
 
-            if($dataset && empty($datasets[$dataset])){ cmsCore::error404(); }
+            if($dataset && !empty($datasets[$dataset])){
 
-            $keys = array_keys($datasets);
-            $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
-            $this->controller_content->model->applyDatasetFilters($current_dataset);
-            // устанавливаем максимальное количество записей для набора, если задано
-            if(!empty($current_dataset['max_count'])){
-                $this->controller_content->max_items_count = $current_dataset['max_count'];
-            }
-            // если набор всего один, например для изменения сортировки по умолчанию,
-            // не показываем его на сайте
-            if(count($datasets) == 1){
-                $current_dataset = array(); $datasets = false;
+                $keys = array_keys($datasets);
+                $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+                $this->controller_content->model->applyDatasetFilters($current_dataset);
+                // устанавливаем максимальное количество записей для набора, если задано
+                if(!empty($current_dataset['max_count'])){
+                    $this->controller_content->max_items_count = $current_dataset['max_count'];
+                }
+                // если набор всего один, например для изменения сортировки по умолчанию,
+                // не показываем его на сайте
+                if(count($datasets) == 1){
+                    $current_dataset = array(); $datasets = false;
+                }
+
+            } else {
+
+                if($dataset && $folder_id === false && $original_folder_id === false){
+                    return cmsCore::error404();
+                }
+
             }
 
         }
-
-        $this->controller_content->model->filterEqual('user_id', $profile['id']);
-
-        list($folders, $this->controller_content->model, $profile, $folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
-            $folders,
-            $this->controller_content->model,
-            $profile,
-            $folder_id
-        ));
 
         if ($folders){
             $folders = array('0' => array('id' => '0', 'title' => LANG_ALL)) + $folders;
@@ -128,7 +137,7 @@ class actionUsersProfileContent extends cmsAction {
             'profile'         => $profile,
             'ctype'           => $ctype,
             'folders'         => $folders,
-            'folder_id'       => $folder_id,
+            'folder_id'       => $original_folder_id,
             'datasets'        => $datasets,
             'dataset'         => $dataset,
             'current_dataset' => $current_dataset,

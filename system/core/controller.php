@@ -464,6 +464,9 @@ class cmsController {
                     if ($max_params < count($params)) { cmsCore::error404(); }
                 }
 
+                // сохраняем название текущего экшена
+                $this->current_action = $action_name;
+
                 // если есть нужный экшен, то вызываем его
                 $result = call_user_func_array(array($this, $method_name), $params);
 
@@ -519,6 +522,9 @@ class cmsController {
             $max_params = $rf->getNumberOfParameters();
             if ($max_params < count($params)) { cmsCore::error404(); }
         }
+
+        // сохраняем название текущего экшена
+        $this->current_action = $action_name;
 
         $action_object = new $class_name($this, $params);
 

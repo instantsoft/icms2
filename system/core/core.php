@@ -748,9 +748,6 @@ class cmsCore {
             $controller->redirectTo($slug, $this->uri_action, $this->uri_params, $this->uri_query, 301);
         }
 
-        // сохраняем в контроллере название текущего экшена
-        $controller->current_action = $this->uri_action;
-
         // запускаем действие
         $controller->runAction($this->uri_action, $this->uri_params);
 
