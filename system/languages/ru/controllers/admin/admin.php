@@ -409,11 +409,15 @@
     define('LANG_CP_SETTINGS_SITE_REASON',      'Причина отключения сайта');
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Автоматически проверять наличие обновлений InstantCMS при входе администратора');
     define('LANG_CP_SETTINGS_SITENAME',         'Название сайта');
-    define('LANG_CP_SETTINGS_HOMETITLE',        'Заголовок главной страницы');
-    define('LANG_CP_SETTINGS_METAKEYS',         'Ключевые слова');
-    define('LANG_CP_SETTINGS_METADESC',         'Описание сайта');
+    define('LANG_CP_SETTINGS_HOMETITLE',        'Заголовок главной страницы (title)');
+    define('LANG_CP_SETTINGS_METAKEYS',         'Ключевые слова (meta keywords)');
+    define('LANG_CP_SETTINGS_METADESC',         'Описание сайта (meta description)');
+    define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Отключить тег meta keywords');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Использовать указанные выше слова и описание только для главной страницы');
+	define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'Если выключено, эти слова будут отображаться на страницах с не заданными подобными параметрами');
+	define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Добавлять номера страниц в тег title при пагинации');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Добавлять в тег title страницы название сайта');
+	define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Формировать заголовки HTTP Preload');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Локализация');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Тема оформления по умолчанию');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Тема оформления для панели управления');

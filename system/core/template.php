@@ -121,8 +121,26 @@ class cmsTemplate {
      * @param string $position
      */
 	public function block($position){
-		echo isset($this->blocks[$position]) ? $this->blocks[$position] : '';
+		echo !empty($this->blocks[$position]) ? $this->blocks[$position] : '';
 	}
+
+    public function hasBlock($position){
+
+        if (func_num_args() > 1){
+            $positions = func_get_args();
+        } else {
+            $positions = array($position);
+        }
+
+        $has = false;
+
+        foreach($positions as $pos){
+            $has = $has || !empty($this->blocks[$pos]);
+        }
+
+        return $has;
+
+    }
 
     /**
      * Выводит головные теги страницы
@@ -137,7 +155,7 @@ class cmsTemplate {
         cmsEventsManager::hook('before_print_head', $this);
 
         if ($is_seo_meta){
-			if (!empty($this->metakeys)){
+			if (!empty($this->metakeys) && empty($this->site_config->disable_metakeys)){
 				echo "\t". '<meta name="keywords" content="'.html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false).'">' . "\n";
 			}
 			if (!empty($this->metadesc)){
@@ -155,7 +173,7 @@ class cmsTemplate {
             $this->printJavascriptTags();
         }
 
-        if($this->head_preload){
+        if(!empty($this->site_config->set_head_preload) && $this->head_preload){
             header('Link: '.implode(', ', $this->head_preload));
         }
 
@@ -235,7 +253,20 @@ class cmsTemplate {
 	 * Выводит заголовок текущей страницы
 	 */
 	public function title(){
-    	html(!empty($this->title_item) ? string_replace_keys_values($this->title, $this->title_item) : $this->title);
+
+        $t = !empty($this->title_item) ? string_replace_keys_values_extended($this->title, $this->title_item) : $this->title;
+
+        if(!empty($this->site_config->page_num_in_title)){
+
+            $page = cmsCore::getInstance()->request->get('page', 0);
+
+            if($page > 1){
+                $t .= ' — '.LANG_PAGE.' №'.$page;
+            }
+
+        }
+
+    	html($t);
 	}
 
 	/**

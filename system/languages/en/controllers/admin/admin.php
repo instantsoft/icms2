@@ -409,9 +409,12 @@
     define('LANG_CP_SETTINGS_CHECK_UPDATES',    'Automatically check for InstantCMS updates when admin logs in');
     define('LANG_CP_SETTINGS_SITENAME',         'Site name');
     define('LANG_CP_SETTINGS_HOMETITLE',        'Homepage title');
-    define('LANG_CP_SETTINGS_METAKEYS',         'Site keywords');
-    define('LANG_CP_SETTINGS_METADESC',         'Site description');
+    define('LANG_CP_SETTINGS_METAKEYS',         'Site keywords (meta keywords)');
+    define('LANG_CP_SETTINGS_METADESC',         'Site description (meta description)');
+    define('LANG_CP_SETTINGS_DISABLE_METAKEYS', 'Disable meta keywords tag');
 	define('LANG_CP_SETTINGS_META_NO_DEFAULT',  'Apply the above-specified words and description to the homepage only');
+    define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
+    define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title tag when pagination');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');

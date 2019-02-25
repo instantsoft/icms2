@@ -112,6 +112,8 @@
     </div>
 <?php } ?>
 
+    <?php $this->block('before_content_items_list_html'); ?>
+
 <?php echo $items_list_html; ?>
 
 <?php if ($hooks_html) { ?>

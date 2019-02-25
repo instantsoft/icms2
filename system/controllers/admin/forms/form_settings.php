@@ -31,13 +31,6 @@ class formAdminSettings extends cmsForm {
                         )
                     )),
 
-                    new fieldString('hometitle', array(
-                        'title' => LANG_CP_SETTINGS_HOMETITLE,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
-
                     new fieldList('frontpage', array(
                         'title' => LANG_CP_SETTINGS_FP_SHOW,
                         'generator' => function($item) {
@@ -79,23 +72,6 @@ class formAdminSettings extends cmsForm {
                         }
                     )),
 
-                    new fieldString('metakeys', array(
-                        'title' => LANG_CP_SETTINGS_METAKEYS,
-                    )),
-
-                    new fieldText('metadesc', array(
-                        'title' => LANG_CP_SETTINGS_METADESC,
-                    )),
-
-                    new fieldCheckbox('is_no_meta', array(
-                        'title' => LANG_CP_SETTINGS_META_NO_DEFAULT,
-                    )),
-
-                    new fieldCheckbox('is_sitename_in_title', array(
-                        'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
-                        'default' => 1
-                    )),
-
                     new fieldCheckbox('is_check_updates', array(
                         'title' => LANG_CP_SETTINGS_CHECK_UPDATES,
                     )),
@@ -110,6 +86,52 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_COOKIE_DOMAIN,
                         'hint'  => LANG_CP_SETTINGS_COOKIE_DOMAIN_HINT,
                         'suffix' => '<span class="auto_copy_value ajaxlink" data-value="'.str_replace('www.', '', $_SERVER['HTTP_HOST']).'">'.LANG_CP_SETTINGS_CURRENT_DOMAIN.$_SERVER['HTTP_HOST'].'</span>'
+                    ))
+
+                )
+            ),
+
+            array(
+                'type' => 'fieldset',
+                'title' => 'SEO',
+                'childs' => array(
+
+                    new fieldString('hometitle', array(
+                        'title' => LANG_CP_SETTINGS_HOMETITLE,
+                        'rules' => array(
+                            array('required'),
+                        )
+                    )),
+
+                    new fieldString('metakeys', array(
+                        'title' => LANG_CP_SETTINGS_METAKEYS
+                    )),
+
+                    new fieldText('metadesc', array(
+                        'title' => LANG_CP_SETTINGS_METADESC,
+                    )),
+
+                    new fieldCheckbox('is_no_meta', array(
+                        'title' => LANG_CP_SETTINGS_META_NO_DEFAULT,
+                        'hint' => LANG_CP_SETTINGS_META_NO_DEFAULT_HINT
+                    )),
+
+                    new fieldCheckbox('disable_metakeys', array(
+                        'title' => LANG_CP_SETTINGS_DISABLE_METAKEYS
+                    )),
+
+                    new fieldCheckbox('is_sitename_in_title', array(
+                        'title'   => LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE,
+                        'default' => 1
+                    )),
+
+                    new fieldCheckbox('page_num_in_title', array(
+                        'title'   => LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE
+                    )),
+
+                    new fieldCheckbox('set_head_preload', array(
+                        'title'   => LANG_CP_SETTINGS_SET_HEAD_PRELOAD,
+                        'hint' => '<a href="https://w3c.github.io/preload/" target="_blank">HTTP Preload</a>'
                     ))
 
                 )
