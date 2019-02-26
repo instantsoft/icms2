@@ -23,6 +23,7 @@ class actionContentCategoryEdit extends cmsAction {
 
         $form = $this->getCategoryForm($ctype, 'edit');
 
+        list($ctype, $form, $category) = cmsEventsManager::hook('content_cat_edit_form', array($ctype, $form, $category), null, $this->request);
         list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
 
         $back_url = $this->request->get('back', '');

@@ -529,8 +529,8 @@ form .field_error select { border:solid 1px red; }
 
 form .field .input, form .field .textarea{ width:100%; }
 form select { width:300px; }
-#site_settings #fset_1 .chosen-container,
-#site_settings #fset_4 .chosen-container { width:300px !important; }
+#site_settings #fset_2 .chosen-container,
+#site_settings #fset_5 .chosen-container { width:300px !important; }
 
 form .field .input-number,
 form .field .input-small { width:80px; }

@@ -12,3 +12,4 @@ define('LANG_RATING_ALLOW_GUEST_VOTE', 'Разрешить голосовани�
 define('LANG_RATING_UP', 'положительно');
 define('LANG_RATING_DOWN', 'отрицательно');
 define('LANG_RATING_PM', '%s %s оценил вашу запись <a href="%s">%s</a>');
+define('LANG_RATING_NOTIFY_VOTE',  'Уведомлять об оценках записей');

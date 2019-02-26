@@ -110,7 +110,7 @@ class actionRatingVote extends cmsAction{
                     string_lang('LANG_RATING_'.$direction),
                     $target['page_url'],
                     $target['title'])
-        ));
+        ), 'rating_user_vote');
 
         // Собираем результат
         $result = array(
