@@ -77,6 +77,7 @@
     </div>
 </div>
 <script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
     $(function (){
         <?php if (!$fields_count) { ?>
             $('.filter-panel.groups-filter').hide();

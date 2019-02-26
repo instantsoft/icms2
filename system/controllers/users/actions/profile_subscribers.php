@@ -18,7 +18,7 @@ class actionUsersProfileSubscribers extends cmsAction {
                 filterIsNull('fr.is_mutual')->
                 disableDeleteFilter();
 
-        $page_url = href_to($this->name, $profile['id'], 'friends');
+        $page_url = href_to($this->name, $profile['id'], 'subscribers');
 
         $profiles_list_html = $this->renderProfilesList($page_url, false, array(
             array(

@@ -416,6 +416,7 @@
     define('LANG_CP_SETTINGS_META_NO_DEFAULT_HINT',  'If disabled, these words will be displayed on pages with no specified parameters.');
     define('LANG_CP_SETTINGS_PAGE_NUM_IN_TITLE',  'Add page numbers in the title tag when pagination');
 	define('LANG_CP_SETTINGS_IS_SITENAME_IN_TITLE',  'Add site name to the page title tag');
+    define('LANG_CP_SETTINGS_SET_HEAD_PRELOAD',  'Build HTTP Preload headers');
     define('LANG_CP_SETTINGS_LANGUAGE',         'Language');
     define('LANG_CP_SETTINGS_TEMPLATE',         'Default theme');
     define('LANG_CP_SETTINGS_TEMPLATE_ADMIN',   'Control panel theme');
