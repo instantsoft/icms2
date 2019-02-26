@@ -26,6 +26,7 @@
         <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_item']){ ?>
             <div id="avatar" class="block">
                 <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_full'], $profile['nickname'], $profile['is_deleted']); ?>
+                <?php $this->block('after_profile_avatar'); ?>
             </div>
         <?php } ?>
         <div class="block">
