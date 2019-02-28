@@ -31,12 +31,17 @@ class cmsModel {
      * Префикс по умолчанию таблиц контента
      */
     const DEFAULT_TABLE_PREFIX = 'con_';
+    /**
+     * Постфикс по умолчанию таблиц категорий контента
+     */
+    const DEFAULT_TABLE_CATEGORY_POSTFIX = '_cats';
 
     /**
      * Префикс таблиц контента
      * @var string
      */
     public $table_prefix = cmsModel::DEFAULT_TABLE_PREFIX;
+    public $table_category_postfix = cmsModel::DEFAULT_TABLE_CATEGORY_POSTFIX;
 
     //условия для выборок
     public $table      = '';
@@ -113,6 +118,15 @@ class cmsModel {
     public function setTablePrefix($prefix){
         $this->table_prefix = $prefix;
         return $this;
+    }
+
+    public function setTableCategoryPostfix($postfix){
+        $this->table_category_postfix = $postfix;
+        return $this;
+    }
+
+    public function getContentCategoryTableName($name){
+        return $this->getContentTypeTableName($name).$this->table_category_postfix;
     }
 
     public function getContentTableStruct(){
@@ -223,19 +237,15 @@ class cmsModel {
 
     public function getRootCategory($ctype_name){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
-        return $this->db->getFields($table_name, 'parent_id=0');
+        return $this->db->getFields($this->getContentCategoryTableName($ctype_name), 'parent_id=0');
 
     }
 
     public function getCategory($ctype_name, $id, $by_field='id'){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         $this->useCache('content.categories');
 
-        $category = $this->getItemByField($table_name, $by_field, $id);
+        $category = $this->getItemByField($this->getContentCategoryTableName($ctype_name), $by_field, $id);
 
         if (!$category) { return false; }
 
@@ -274,8 +284,6 @@ class cmsModel {
 
     public function getCategoriesTree($ctype_name, $is_show_root=true) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         if (!$is_show_root){
             $this->filterGt('parent_id', 0);
         }
@@ -284,7 +292,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name, function($node, $model){
+        return $this->get($this->getContentCategoryTableName($ctype_name), function($node, $model){
             if ($node['ns_level']==0) { $node['title'] = LANG_ROOT_CATEGORY; }
             if(!empty($node['allow_add'])){
                 $node['allow_add'] = cmsModel::yamlToArray($node['allow_add']);
@@ -299,20 +307,16 @@ class cmsModel {
 
     public function getSubCategories($ctype_name, $parent_id=1) {
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         $this->filterEqual('parent_id', $parent_id);
         $this->orderBy('ns_left');
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
+        return $this->get($this->getContentCategoryTableName($ctype_name));
 
     }
 
     public function getSubCategoriesTree($ctype_name, $parent_id=1, $level=1) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
 
         $parent = $this->getCategory($ctype_name, $parent_id);
 
@@ -328,7 +332,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
+        return $this->get($this->getContentCategoryTableName($ctype_name));
 
     }
 
@@ -336,8 +340,6 @@ class cmsModel {
 //============================================================================//
 
     public function getCategoryPath($ctype_name, $category) {
-
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
 
         if (!isset($category['ns_left'])){
             $category = $this->getCategory($ctype_name, $category['id']);
@@ -352,7 +354,7 @@ class cmsModel {
 
         $this->useCache('content.categories');
 
-        return $this->get($table_name);
+        return $this->get($this->getContentCategoryTableName($ctype_name));
 
     }
 
@@ -361,7 +363,7 @@ class cmsModel {
 
     public function addCategory($ctype_name, $category){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $this->db->nestedSets->setTable($table_name);
 
@@ -394,7 +396,7 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('content.categories');
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $category_old = $this->getCategory($ctype_name, $id);
 
@@ -434,8 +436,6 @@ class cmsModel {
 
         cmsCache::getInstance()->clean('content.categories');
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
-
         $this->updateCategoryTreeNode($ctype_name, $tree);
         $this->updateCategoryTreeNodeSlugs($ctype_name, $tree);
 
@@ -444,7 +444,7 @@ class cmsModel {
             'ns_right' => 1 + ($categories_count*2) + 1
         );
 
-        $this->update($table_name, 1, $root_keys);
+        $this->update($this->getContentCategoryTableName($ctype_name), 1, $root_keys);
 
         return true;
 
@@ -452,7 +452,7 @@ class cmsModel {
 
     public function updateCategoryTreeNode($ctype_name, $tree){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         foreach($tree as $node){
 
@@ -475,7 +475,7 @@ class cmsModel {
 
     public function updateCategoryTreeNodeSlugs($ctype_name, $tree){
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         foreach($tree as $node){
 
@@ -517,7 +517,7 @@ class cmsModel {
         // из категории
         //
 
-        $table_name = $this->table_prefix . $ctype_name . '_cats';
+        $table_name = $this->getContentCategoryTableName($ctype_name);
 
         $this->db->nestedSets->setTable($table_name);
         $this->db->nestedSets->deleteNode($id);
@@ -925,7 +925,7 @@ class cmsModel {
 
     public function filterCategory($ctype_name, $category, $is_recursive=false){
 
-		$table_name      = $this->table_prefix . $ctype_name . '_cats';
+        $table_name      = $this->getContentCategoryTableName($ctype_name);
         $bind_table_name = $table_name . '_bind';
 
         if (!$is_recursive){
