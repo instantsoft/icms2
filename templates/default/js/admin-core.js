@@ -1,8 +1,7 @@
 var fit_layout_delta = 0;
+var hh1, hh2;
 function fitLayout(){
-    var h1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
-    var h2 = $('#cp_footer').offset().top;
-    $('table.layout').height(h2 - h1 - 2 + fit_layout_delta);
+    $('table.layout').height(hh2 - hh1 - 2 + fit_layout_delta);
     $('table.layout').width( $('#cp_body').width() + 40 );
 }
 toolbarScroll = {
@@ -51,6 +50,8 @@ toolbarScroll = {
     }
 };
 $(function(){
+    hh1 = $('#cp_body h1').offset().top + $('#cp_body h1').height();
+    hh2 = $('#cp_footer').offset().top;
     $(window).on('resize', function (){
         toolbarScroll.init();
         fitLayout();

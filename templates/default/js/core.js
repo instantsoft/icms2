@@ -376,7 +376,8 @@ icms.forms = (function ($) {
 
     this.getInputVal = function(el){
         if($(el).is(':checkbox,:radio')){
-            return $(el+':checked').val();
+            var v = $(el+':checked').val();
+            return typeof v === 'undefined' ? '0' : v;
         }
         return $(el).val();
     };
