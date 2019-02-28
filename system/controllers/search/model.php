@@ -38,7 +38,7 @@ class modelSearch extends cmsModel{
 
         foreach($words as $word){
 
-            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if (mb_strlen($word)<3) { continue; }
             if($stopwords && in_array($word, $stopwords)){ continue; }
             if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
 

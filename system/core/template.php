@@ -2281,6 +2281,7 @@ class cmsTemplate {
 
         $this->widgets[$widget->position][$this->widgets_group_index][] = array(
             'id'          => $widget->id,
+            'bind_id'     => $widget->bind_id,
             'title'       => $widget->is_title ? $widget->title : false,
             'links'       => isset($widget->links) ? $widget->links : false,
             'wrapper'     => $widget->getWrapper(),

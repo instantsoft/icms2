@@ -240,8 +240,8 @@ class fieldNumber extends cmsFormField {
 
         if ($this->getOption('filter_range')){
 
-            $from = !empty($value['from']) ? $this->formatFloatValue($value['from']) : false;
-            $to = !empty($value['to']) ? $this->formatFloatValue($value['to']) : false;
+            $from = !empty($value['from']) ? $value['from'] : false;
+            $to = !empty($value['to']) ? $value['to'] : false;
 
             return LANG_FROM . ' ' . html_input('text', $this->element_name.'[from]', $from, array('class'=>'input-small')) . ' ' .
                     LANG_TO . ' ' . html_input('text', $this->element_name.'[to]', $to, array('class'=>'input-small')) .
@@ -249,7 +249,7 @@ class fieldNumber extends cmsFormField {
 
         } elseif($value && !is_array($value)) {
 
-            return parent::getFilterInput($this->formatFloatValue($value));
+            return parent::getFilterInput($value);
 
         }
 
