@@ -571,9 +571,9 @@
     define('LANG_ROOT_SEO',                  'SEO для главной страницы');
     define('LANG_SEO_H1',                    'Тег H1 страницы');
     define('LANG_SEO_TITLE',                 'Тайтл страницы');
-    define('LANG_SEO_KEYS',                  'Ключевые слова');
+    define('LANG_SEO_KEYS',                  'Ключевые слова (meta keywords)');
     define('LANG_SEO_KEYS_HINT',             'Ключевые слова страницы, через запятую');
-    define('LANG_SEO_DESC',                  'Описание');
+    define('LANG_SEO_DESC',                  'Описание (meta description)');
     define('LANG_SEO_DESC_HINT',             'Краткое описание страницы для поисковых систем');
     define('LANG_TAGS',                      'Теги');
     define('LANG_TAGS_HINT',                 'Ключевые слова, через запятую');

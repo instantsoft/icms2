@@ -494,9 +494,14 @@ class cmsForm {
                     // оставляем только параметры (аргументы)
                     unset($rule[0]);
 
-                    // вызываем валидатор и объединяем результат
-                    // с предыдущими
-                    $result = call_user_func_array(array($controller, $validate_function), $rule);
+                    // вызываем валидатор и объединяем результат с предыдущими
+                    // методы валидации могут быть как в самом поле
+                    // так и в контроллерах, приоритет за полем
+                    if(method_exists($field, $validate_function)){
+                        $result = call_user_func_array(array($field, $validate_function), $rule);
+                    } else {
+                        $result = call_user_func_array(array($controller, $validate_function), $rule);
+                    }
 
                     // если получилось false, то дальше не проверяем, т.к.
                     // ошибка уже найдена

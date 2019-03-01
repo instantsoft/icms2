@@ -572,9 +572,9 @@
     define('LANG_ROOT_SEO',                  'Component main page SEO');
     define('LANG_SEO_H1',                    'Page H1 tag');
     define('LANG_SEO_TITLE',                 'Page title');
-    define('LANG_SEO_KEYS',                  'Keywords');
+    define('LANG_SEO_KEYS',                  'Keywords (meta keywords)');
     define('LANG_SEO_KEYS_HINT',             'Page keywords separated by commas');
-    define('LANG_SEO_DESC',                  'Description');
+    define('LANG_SEO_DESC',                  'Description (meta description)');
     define('LANG_SEO_DESC_HINT',             'Short page description for search engines');
     define('LANG_TAGS',                      'Tags');
     define('LANG_TAGS_HINT',                 'Keywords separated by commas');
