@@ -1430,7 +1430,7 @@ class cmsTemplate {
 
     /**
      * Сохраняет ссылку на текущий контроллер
-     * @param string $controller_obj
+     * @param object $controller_obj
      */
     public function setContext($controller_obj){
         if ($this->controller) { $this->controllers_queue[] = $this->controller; }
@@ -1520,6 +1520,11 @@ class cmsTemplate {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Добавляет текст к выводу
+     *
+     * @param string $text
+     */
     public function renderText($text){
 
         echo $this->addOutput($text);
@@ -1527,12 +1532,12 @@ class cmsTemplate {
     }
 
     /**
-     * Выводит json строку
+     * Выводит JSON строку и завершает работу
      *
      * @param array $data Массив для вывода
      * @param boolean $with_header Вывод вместе с хидером Content-type
      */
-    public function renderJSON($data, $with_header=false){
+    public function renderJSON($data, $with_header = false) {
 
         if(ob_get_length()) { ob_end_clean(); }
 
@@ -1554,7 +1559,35 @@ class cmsTemplate {
 
     }
 
-    public function renderInternal($controller, $tpl_file, $data=array()){
+    /**
+     * Формирует HTML код файла шаблона (в папке шаблонов текущего компонента)
+     * И добавляет его в заданный блок
+     *
+     * @param string $position Название позиции
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @return $this
+     */
+    public function renderBlock($position, $tpl_file, $data = array()) {
+
+        $result = $this->render($tpl_file, $data, new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
+
+        $this->addToBlock($position, $result);
+
+        return $this;
+
+    }
+
+    /**
+     * Формирует и возвращает HTML код файла шаблона
+     * Меняя контекст текущего контроллера на переданный
+     *
+     * @param object $controller
+     * @param string $tpl_file Название файла шаблона
+     * @param array $data Массив параметров, передаваемых в шаблон
+     * @return string HTML код
+     */
+    public function renderInternal($controller, $tpl_file, $data = array()) {
 
         $this->setContext($controller);
 

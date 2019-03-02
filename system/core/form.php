@@ -8,7 +8,29 @@ class cmsForm {
     private $structure       = array();
     private $disabled_fields = array();
 
-    public function setStructure($structure=array()){
+    protected $controller;
+
+    /**
+     * Сохраняет ссылку на контроллер контекста
+     * @param object $controller_obj
+     */
+    public function setContext($controller_obj){
+        $this->controller = $controller_obj;
+    }
+
+    /**
+     * Возвращает объект контроллера контекста
+     * @return object
+     */
+    public function getContext(){
+        return $this->controller;
+    }
+
+    /**
+     * Устанавливает массив полей формы
+     * @param array $structure
+     */
+    public function setStructure($structure = array()) {
         $this->structure = $structure;
     }
 
@@ -23,7 +45,7 @@ class cmsForm {
 //============================================================================//
 //============================================================================//
 
-    public function setParams($params=array()){
+    public function setParams($params = array()) {
         $this->params = $params;
     }
 
@@ -620,6 +642,9 @@ class cmsForm {
 
     /**
      * Возвращает список всех имеющихся типов полей
+     *
+     * @param boolean $only_public Возвращать только публичные поля
+     * @param string $controller Название контроллера для контекста вызова
      * @return array
      */
     public static function getAvailableFormFields($only_public = true, $controller = false){
@@ -646,7 +671,16 @@ class cmsForm {
 
     }
 
-    public static function getForm($form_file, $form_name, $params=false){
+    /**
+     * Инициализирует объект формы
+     *
+     * @param string $form_file Полный путь к файлу формы
+     * @param string $form_name Название формы
+     * @param array $params Параметры, передаваемые в метод init формы
+     * @param cmsController $controller Объект контроллера контекста
+     * @return boolean|\form_class
+     */
+    public static function getForm($form_file, $form_name, $params = false, $controller = null) {
 
         if (!file_exists($form_file)){ return false; }
 
@@ -655,6 +689,10 @@ class cmsForm {
         $form_class = 'form' . string_to_camel('_', $form_name);
 
         $form = new $form_class();
+
+        if($controller instanceof cmsController){
+            $form->setContext($controller);
+        }
 
         if ($params){
             $form->setParams($params);

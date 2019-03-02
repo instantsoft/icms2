@@ -701,7 +701,7 @@ class cmsController {
         $form_file = $this->root_path . $path_prefix . 'forms/form_' . $form_name . '.php';
         $_form_name = $this->name . $form_name;
 
-        $form = cmsForm::getForm($form_file, $_form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
 
         if($form === false){
             cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
@@ -718,7 +718,7 @@ class cmsController {
         $form_file = $this->cms_config->root_path.'system/controllers/'.$controller.'/forms/form_'.$form_name.'.php';
         $_form_name = $controller . $form_name;
 
-        $form = cmsForm::getForm($form_file, $_form_name, $params);
+        $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
 
         if($form === false){
             cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
