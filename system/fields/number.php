@@ -12,6 +12,10 @@ class fieldNumber extends cmsFormField {
                 'title'   => LANG_PARSER_NUMBER_IS_ABS,
                 'default' => false
             )),
+            new fieldCheckbox('save_zero', array(
+                'title'   => LANG_PARSER_NUMBER_SAVE_ZERO,
+                'default' => true
+            )),
             new fieldNumber('decimal_int', array(
                 'title'   => LANG_PARSER_NUMBER_DECIMAL_INT,
                 'default' => 7,
@@ -184,7 +188,7 @@ class fieldNumber extends cmsFormField {
 
         }
 
-        return $this->formatFloatValue($value).' '.$units;
+        return $this->formatFloatValue($value).$this->getOption('units_sep').$units;
 
     }
 
@@ -283,6 +287,9 @@ class fieldNumber extends cmsFormField {
     public function store($value, $is_submitted, $old_value = null){
 
         $value = str_replace(',', '.', trim($value));
+
+        $value = $this->getOption('decimal_s') ? (float)$value : (int)$value;
+        if(!$this->getOption('save_zero') && !$value){return null;}
 
         return $this->getOption('is_abs') ? abs($value) : $value;
 
