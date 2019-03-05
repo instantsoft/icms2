@@ -83,6 +83,8 @@
                 </div>
             </div>
         <?php } ?>
+        
+        <?php $this->block('profile_blocks'); ?>
 
     </div>
 
