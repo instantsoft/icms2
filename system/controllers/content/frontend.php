@@ -1151,26 +1151,30 @@ class content extends cmsFrontend {
             $meta_item['description'] = strip_tags($category['description']);
         }
 
-        if (!empty($ctype['options']['seo_cat_h1_pattern'])){
-            $h1_pattern = $ctype['options']['seo_cat_h1_pattern'];
+        if(!empty($category['id'])){
+
+            if (!empty($ctype['options']['seo_cat_h1_pattern'])){
+                $h1_pattern = $ctype['options']['seo_cat_h1_pattern'];
+            }
+            if (!empty($ctype['options']['seo_cat_title_pattern'])){
+                $title_pattern = $ctype['options']['seo_cat_title_pattern'];
+            }
+            if (!empty($ctype['options']['seo_cat_keys_pattern'])){
+                $keys_pattern = $ctype['options']['seo_cat_keys_pattern'];
+            }
+            if (!empty($ctype['options']['seo_cat_desc_pattern'])){
+                $desc_pattern = $ctype['options']['seo_cat_desc_pattern'];
+            }
+
         }
         if (!empty($dataset['seo_h1'])){
             $h1_pattern = $dataset['seo_h1'];
         }
-        if (!empty($ctype['options']['seo_cat_title_pattern'])){
-            $title_pattern = $ctype['options']['seo_cat_title_pattern'];
-        }
         if (!empty($dataset['seo_title'])){
             $title_pattern = $dataset['seo_title'];
         }
-        if (!empty($ctype['options']['seo_cat_keys_pattern'])){
-            $keys_pattern = $ctype['options']['seo_cat_keys_pattern'];
-        }
         if (!empty($dataset['seo_keys'])){
             $keys_pattern = $dataset['seo_keys'];
-        }
-        if (!empty($ctype['options']['seo_cat_desc_pattern'])){
-            $desc_pattern = $ctype['options']['seo_cat_desc_pattern'];
         }
         if (!empty($dataset['seo_desc'])){
             $desc_pattern = $dataset['seo_desc'];
