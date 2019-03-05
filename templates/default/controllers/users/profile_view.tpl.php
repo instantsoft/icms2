@@ -83,6 +83,8 @@
                 </div>
             </div>
         <?php } ?>
+        
+        <?php $this->block('users_profile_view_blocks'); ?>
 
     </div>
 
