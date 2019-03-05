@@ -170,6 +170,7 @@ CREATE TABLE `{#}content_datasets` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `cats_view` text COMMENT 'Show to cats',
   `cats_hide` text COMMENT 'Hide from cats',
   `max_count` smallint(5) unsigned NOT NULL DEFAULT '0',

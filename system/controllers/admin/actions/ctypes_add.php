@@ -4,7 +4,7 @@ class actionAdminCtypesAdd extends cmsAction {
 
     public function run(){
 
-        $form = $this->getForm('ctypes_basic', array('add'));
+        $form = $this->getForm('ctypes_basic', array('add', []));
 
         $form = cmsEventsManager::hook('ctype_basic_form', $form);
 

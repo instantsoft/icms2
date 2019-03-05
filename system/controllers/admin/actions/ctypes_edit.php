@@ -9,7 +9,7 @@ class actionAdminCtypesEdit extends cmsAction {
         $ctype = $this->model_content->getContentType($id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_basic', array('edit'));
+        $form = $this->getForm('ctypes_basic', array('edit', $ctype));
 
         $form = cmsEventsManager::hook('ctype_basic_form', $form);
         $form = cmsEventsManager::hook('ctype_basic_'.$ctype['name'].'_form', $form);

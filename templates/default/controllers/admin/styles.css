@@ -2783,6 +2783,20 @@ input[type=radio]:checked ~ label{
 .ace_redactor {
     height: 350px;
 }
+.pattern_fields_panel {
+    display: none;
+}
+.pattern_fields > a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 5px;
+    border-radius: 4px;
+    background-color: #a7b6bd;
+    color: #FFF;
+}
+.pattern_fields > a:hover {
+    background-color: #64889b;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);

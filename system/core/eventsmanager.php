@@ -1,7 +1,7 @@
 <?php
 /**
  * Класс управления событиями
- * @doc http://docs.instantcms.ru/dev/controllers/hooks
+ * @doc https://docs.instantcms.ru/dev/controllers/hooks
  */
 class cmsEventsManager {
 
@@ -16,13 +16,25 @@ class cmsEventsManager {
      * Входящие данные $data передаются каждому слушателю по очереди,
      * на выходе возвращается измененный слушателями параметр $data
      *
-     * @param string $event_name Название события
+     * @param string || array $event_name Название события/событий
      * @param mixed $data Параметр события
      * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
     public static function hook($event_name, $data = false, $default_return = null, $_request = false){
+
+        // Используйте массив событий, если они с разным названиями,
+        // но с одинаковыми параметрами
+        if(is_array($event_name)){
+
+            foreach ($event_name as $_event_name) {
+                $data = self::hook($_event_name, $data, $default_return, $_request);
+            }
+
+            return $data;
+
+        }
 
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);

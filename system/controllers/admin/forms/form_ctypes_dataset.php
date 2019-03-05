@@ -16,6 +16,25 @@ class formAdminCtypesDataset extends cmsForm {
             }
         }
 
+        if(!is_numeric($ctype_id)){
+            $meta_item_fields = '';
+        } else {
+
+            $meta_item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', [
+                'title',
+                'description',
+                'ds_title',
+                'ds_description',
+                'ctype_title',
+                'ctype_description',
+                'ctype_label1',
+                'ctype_label2',
+                'ctype_label10',
+                'filter_string'
+            ]).'}</a>';
+
+        }
+
         $form = array(
             'basic' => array(
                 'type' => 'fieldset',
@@ -151,24 +170,37 @@ class formAdminCtypesDataset extends cmsForm {
                 'title' => LANG_SEO,
                 'type' => 'fieldset',
                 'childs' => array(
+                    new fieldString('seo_h1', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_H1,
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_ITEM_DS, $meta_item_fields) : ''),
+                        'default' => (!empty($ctype['options']['seo_cat_h1_pattern']) ? $ctype['options']['seo_cat_h1_pattern'] : null),
+                        'options'=>array(
+                            'max_length'=> 256,
+                            'show_symbol_count'=>true
+                        )
+                    )),
                     new fieldString('seo_title', array(
-                        'title' => LANG_SEO_TITLE,
+                        'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_ITEM_DS, $meta_item_fields) : ''),
+                        'default' => (!empty($ctype['options']['seo_cat_title_pattern']) ? $ctype['options']['seo_cat_title_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
                         )
                     )),
                     new fieldString('seo_keys', array(
-                        'title' => LANG_SEO_KEYS,
-                        'hint' => LANG_SEO_KEYS_HINT,
+                        'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_ITEM_DS, $meta_item_fields) : ''),
+                        'default' => (!empty($ctype['options']['seo_cat_keys_pattern']) ? $ctype['options']['seo_cat_keys_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
                         )
                     )),
                     new fieldText('seo_desc', array(
-                        'title' => LANG_SEO_DESC,
-                        'hint' => LANG_SEO_DESC_HINT,
+                        'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_ITEM_DS, $meta_item_fields) : ''),
+                        'default' => (!empty($ctype['options']['seo_cat_desc_pattern']) ? $ctype['options']['seo_cat_desc_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true

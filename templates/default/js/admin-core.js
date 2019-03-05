@@ -69,4 +69,13 @@ $(function(){
         }, 200);
         return false;
     });
+    $('.field.ft_string, .field.ft_text').find('input, textarea').on('focus', function (){
+        $('.pattern_fields_panel').hide();
+        $('.pattern_fields_panel_hint').show();
+        $(this).closest('.field').find('.pattern_fields_panel_hint').hide();
+        $(this).closest('.field').find('.pattern_fields_panel').show();
+    });
+    $('.pattern_fields > ').on('click', function (){
+        return addTextToPosition($(this).closest('.field').find('input, textarea'), $(this).text());
+    });
 });

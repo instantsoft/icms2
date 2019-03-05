@@ -141,22 +141,30 @@ class cmsBackend extends cmsController {
         }
 
         if($this->useItemSeoOptions){
+
+            $meta_item_fields = '';
+            if(method_exists($this, 'getMetaItemFields')){
+                $meta_item_fields = $this->getMetaItemFields();
+                $meta_item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', $meta_item_fields).'}</a>';
+            }
+
             $form->addFieldset(LANG_CP_SEOMETA, 'seo_items', array(
                 'childs' => array(
                     new fieldString('tag_title', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'hint' => LANG_CP_SEOMETA_ITEM_HINT
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields) : '')
                     )),
                     new fieldString('tag_desc', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields) : '')
                     )),
                     new fieldString('tag_h1', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
-                        'hint'  => LANG_CP_SEOMETA_ITEM_HINT
+                        'hint' => ($meta_item_fields ? sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields) : '')
                     ))
                 )
             ));
+
         }
 
         return $form;

@@ -45,8 +45,20 @@ class actionContentCategoryView extends cmsAction {
         if (!$ctype['is_cats'] && $slug != 'index') { return cmsCore::error404(); }
 
         if ($ctype['is_cats'] && $slug != 'index') {
+
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
+
+            list($slug,
+                $ctype,
+                $category
+            ) = cmsEventsManager::hook(['content_get_category_by_slug', "content_{$ctype['name']}_get_category_by_slug"], array(
+                $slug,
+                $ctype,
+                $category
+            ), null, $this->request);
+
             if (!$category){ return cmsCore::error404(); }
+
         }
 
         // Получаем список подкатегорий для текущей
@@ -236,42 +248,13 @@ class actionContentCategoryView extends cmsAction {
         }
 
         $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-        $page_header = !empty($category['seo_h1']) ? $category['seo_h1'] : (!empty($category['title']) ? $category['title'] : $list_header);
         $rss_query   = !empty($category['id']) ? "?category={$category['id']}" : '';
 
         $base_ds_url = href_to_rel($ctype['name']) . '%s' . (isset($category['slug']) ? '/'.$category['slug'] : '');
 
         if (!$is_frontpage){
 
-            $filter_titles = $this->getFilterTitles();
-
-            $seo_title = $seo_desc = $seo_keys = '';
-
-            if (!empty($ctype['seo_title']) && empty($category['title'])){ $seo_title = $ctype['seo_title']; }
-            if (!empty($category['seo_title'])){ $seo_title = $category['seo_title']; }
-            if (!$seo_title) { $seo_title = (!empty($category['title']) ? $category['title'] : $list_header); }
-            if (!empty($current_dataset['title'])){ $seo_title .= ' · '.$current_dataset['title']; }
-            if (!empty($current_dataset['seo_title'])){ $seo_title = $current_dataset['seo_title']; }
-            if (!empty($filter_titles)){ $seo_title .= ', '.implode(', ', $filter_titles); }
-
-            $this->cms_template->setPageTitle($seo_title);
-
-            if (!empty($ctype['seo_keys'])){ $seo_keys = $ctype['seo_keys']; }
-            if (!empty($ctype['seo_desc'])){ $seo_desc = $ctype['seo_desc']; }
-            if (!empty($category['seo_keys'])){ $seo_keys = $category['seo_keys']; }
-            if (!empty($category['seo_desc'])){ $seo_desc = $category['seo_desc']; }
-            if (!empty($current_dataset['seo_keys'])){ $seo_keys = $current_dataset['seo_keys']; }
-            if (!empty($current_dataset['seo_desc'])){ $seo_desc = $current_dataset['seo_desc']; }
-
-            $this->cms_template->setPageKeywords($seo_keys);
-            $this->cms_template->setPageDescription($seo_desc);
-
-            $meta_item = !empty($category['id']) ? $category : (!empty($current_dataset['id']) ? $current_dataset : array());
-
-            $this->cms_template->
-                    setPageKeywordsItem($meta_item)->
-                    setPageDescriptionItem($meta_item)->
-                    setPageTitleItem($meta_item);
+            $category_seo = $this->applyCategorySeo($ctype, $category, $current_dataset);
 
         }
 
@@ -290,10 +273,10 @@ class actionContentCategoryView extends cmsAction {
         }
 
         return $this->cms_template->render($tpl_file, array(
+            'category_seo'    => (!empty($category_seo) ? $category_seo : []),
             'base_ds_url'     => $base_ds_url,
             'base_url'        => $base_url,
             'rss_query'       => $rss_query,
-            'page_header'     => $page_header,
             'list_styles'     => $list_styles,
             'is_frontpage'    => $is_frontpage,
             'is_hide_items'   => $is_hide_items,

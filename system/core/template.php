@@ -24,6 +24,8 @@ class cmsTemplate {
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
 	protected $head_preload = array();
+	protected $page_h1;
+	protected $page_h1_item;
 	protected $title;
 	protected $title_item;
 	protected $metadesc;
@@ -586,6 +588,54 @@ class cmsTemplate {
 
 // ========================================================================== //
 // ========================================================================== //
+
+    /**
+     * Проверяет наличие тега h1
+     * @return boolean
+     */
+	public function hasPageH1(){
+    	return !empty($this->page_h1);
+	}
+
+    /**
+     * Печатает значение тега h1 страницы
+     */
+	public function pageH1(){
+    	echo !empty($this->page_h1_item) ? string_replace_keys_values_extended($this->page_h1, $this->page_h1_item) : $this->page_h1;
+	}
+
+    /**
+     * Устанавливает значение тега h1 страницы
+     *
+     * @param string $title
+     * @return $this
+     */
+    public function setPageH1($title) {
+
+        if (is_array($title)){ $title = implode(', ', $title); }
+
+        $this->page_h1 = $title;
+
+        return $this;
+
+    }
+
+    /**
+     * Добавляет к значению тега h1 строку
+     *
+     * @param string $title Строка
+     * @param string $separator Разделитель
+     * @return $this
+     */
+	public function addToPageH1($title, $separator = ', '){
+        if (is_array($title)){ $title = implode($separator, $title); }
+        $this->page_h1 .= $separator.$title;
+        return $this;
+	}
+
+	public function setPageH1Item($item){
+        $this->page_h1_item = $item; return $this;
+	}
 
 	/**
 	 * Устанавливает заголовок страницы

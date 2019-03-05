@@ -46,4 +46,20 @@ class backendUsers extends cmsBackend {
         return !$this->cms_core->db->isFieldExists('{users}', $value);
     }
 
+    public function getMetaItemFields() {
+
+        $item_fields = [];
+
+        $_item_fields = cmsCore::getModel('content')->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        foreach ($_item_fields as $field) {
+
+            $item_fields[] = $field['name'];
+
+        }
+
+        return $item_fields;
+
+    }
+
 }

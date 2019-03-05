@@ -11,6 +11,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}content_types` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
     }
 
+    if(!$core->db->isFieldExists('content_datasets', 'seo_h1')){
+        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_h1` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_title`;");
+    }
+
     $content_model = cmsCore::getModel('content');
 
     if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'users' AND hook = 'sessionclean'")){

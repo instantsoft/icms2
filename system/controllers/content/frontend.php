@@ -1111,11 +1111,218 @@ class content extends cmsFrontend {
 
     }
 
+    public function applyCategorySeo($ctype, $category, $dataset) {
+
+        // паттерны
+        $h1_pattern = $title_pattern = $keys_pattern = $desc_pattern = '';
+
+        $meta_item = [
+            'title'             => null,
+            'description'       => null,
+            'ds_title'          => null,
+            'ds_description'    => null,
+            'ctype_title'       => (empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list']),
+            'ctype_description' => ($ctype['description'] ? strip_tags($ctype['description']) : null),
+            'ctype_label1'      => (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : null),
+            'ctype_label2'      => (!empty($ctype['labels']['two']) ? $ctype['labels']['two'] : null),
+            'ctype_label10'     => (!empty($ctype['labels']['many']) ? $ctype['labels']['many'] : null),
+            'filter_string'     => null
+        ];
+
+        $filter_titles = $this->getFilterTitles();
+
+        if (!empty($filter_titles)){
+            $meta_item['filter_string'] = implode(', ', $filter_titles);
+        }
+
+        if (!empty($dataset['title'])){
+            $meta_item['ds_title'] = $dataset['title'];
+        }
+
+        if (!empty($dataset['description'])){
+            $meta_item['ds_description'] = strip_tags($dataset['description']);
+        }
+
+        if (!empty($category['title'])){
+            $meta_item['title'] = $category['title'];
+        }
+
+        if (!empty($category['description'])){
+            $meta_item['description'] = strip_tags($category['description']);
+        }
+
+        if (!empty($ctype['options']['seo_cat_h1_pattern'])){
+            $h1_pattern = $ctype['options']['seo_cat_h1_pattern'];
+        }
+        if (!empty($dataset['seo_h1'])){
+            $h1_pattern = $dataset['seo_h1'];
+        }
+        if (!empty($ctype['options']['seo_cat_title_pattern'])){
+            $title_pattern = $ctype['options']['seo_cat_title_pattern'];
+        }
+        if (!empty($dataset['seo_title'])){
+            $title_pattern = $dataset['seo_title'];
+        }
+        if (!empty($ctype['options']['seo_cat_keys_pattern'])){
+            $keys_pattern = $ctype['options']['seo_cat_keys_pattern'];
+        }
+        if (!empty($dataset['seo_keys'])){
+            $keys_pattern = $dataset['seo_keys'];
+        }
+        if (!empty($ctype['options']['seo_cat_desc_pattern'])){
+            $desc_pattern = $ctype['options']['seo_cat_desc_pattern'];
+        }
+        if (!empty($dataset['seo_desc'])){
+            $desc_pattern = $dataset['seo_desc'];
+        }
+
+        /**
+         * формируем h1
+         */
+        // По умолчанию, это заголовок типа контента
+        $h1_str = $title_str = $meta_item['ctype_title'];
+        // заголовок категории
+        if(!empty($category['title'])){
+            $h1_str = $title_str = $category['title'];
+        }
+        // есть паттерн
+        if($h1_pattern){
+
+            $h1_str = $h1_pattern;
+
+            $this->cms_template->setPageH1Item($meta_item);
+
+        }
+        // то, что задано вручную для катеории в приоритете
+        if(!empty($category['seo_h1'])){
+
+            $h1_str = $category['seo_h1'];
+
+            // задан набор и он не первый
+            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
+                $h1_str .= ' / '.$dataset['title'];
+            }
+
+            // убираем обработку значений
+            $this->cms_template->setPageH1Item(null);
+
+        }
+
+        /**
+         * Формируем title
+         */
+        // есть паттерн
+        if($title_pattern){
+
+            $title_str = $title_pattern;
+
+            $this->cms_template->setPageTitleItem($meta_item);
+
+        }
+        // заданное вручную в приоритете
+        if (!empty($category['seo_title'])){
+
+            $title_str = $category['seo_title'];
+
+            // задан набор и он не первый
+            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
+                $title_str .= ' / '.$dataset['title'];
+            }
+
+            // если есть фильтр
+            if(!empty($meta_item['filter_string'])){
+                $title_str .= ', '.$meta_item['filter_string'];
+            }
+
+            // убираем обработку значений
+            $this->cms_template->setPageTitleItem(null);
+
+        }
+
+        /**
+         * Формируем ключи (хотя по сути они давно устаревшие)
+         */
+        $keys_str = $ctype['seo_keys'];
+        // есть паттерн
+        if($keys_pattern){
+
+            $keys_str = $keys_pattern;
+
+            $this->cms_template->setPageKeywordsItem($meta_item);
+
+        }
+        // ключи для категории в приоритете
+        if (!empty($category['seo_keys'])){
+
+            $keys_str = $category['seo_keys'];
+
+            // задан набор и он не первый
+            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
+                $keys_str .= ', '.$dataset['title'];
+            }
+
+            // если есть фильтр
+            if(!empty($meta_item['filter_string'])){
+                $keys_str .= ', '.$meta_item['filter_string'];
+            }
+
+            $this->cms_template->setPageKeywordsItem(null);
+
+        }
+
+        /**
+         * Формируем описание
+         */
+        $desc_str = $ctype['seo_desc'];
+        // есть паттерн
+        if($desc_pattern){
+
+            $desc_str = $desc_pattern;
+
+            $this->cms_template->setPageDescriptionItem($meta_item);
+
+        }
+        // описание для категории в приоритете
+        if (!empty($category['seo_desc'])){
+
+            $desc_str = $category['seo_desc'];
+
+            // задан набор и он не первый
+            if (!empty($dataset['title']) && empty($dataset['first_ds'])){
+                $desc_str .= ', '.$dataset['title'];
+            }
+
+            // если есть фильтр
+            if(!empty($meta_item['filter_string'])){
+                $desc_str .= ': '.$meta_item['filter_string'];
+            }
+
+            $this->cms_template->setPageDescriptionItem(null);
+
+        }
+
+        $this->cms_template->setPageH1($h1_str);
+        $this->cms_template->setPageTitle($title_str);
+        $this->cms_template->setPageKeywords($keys_str);
+        $this->cms_template->setPageDescription($desc_str);
+
+        return array(
+            'meta_item' => $meta_item,
+            'h1_str'    => $h1_str,
+            'title_str' => $title_str,
+            'keys_str'  => $keys_str,
+            'desc_str'  => $desc_str
+        );
+
+    }
+
     public function getCtypeDatasets($ctype, $params) {
+
+        $first_ds = false;
 
         $list_type = $this->getListContext();
 
-        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($params, $list_type) {
+        $datasets = $this->model->getContentDatasets($ctype['id'], true, function ($item, $model) use ($params, $list_type, $first_ds) {
 
             $is_view = !$item['cats_view'] || in_array($params['cat_id'], $item['cats_view']);
             $is_user_hide = $item['cats_hide'] && in_array($params['cat_id'], $item['cats_hide']);
@@ -1128,6 +1335,8 @@ class content extends cmsFrontend {
             if (!$is_view || $is_user_hide) { return false; }
 
             $item['title'] = string_replace_user_properties($item['title']);
+
+            $item['first_ds'] = $first_ds ? false : true; $first_ds = true;
 
             return $item;
 

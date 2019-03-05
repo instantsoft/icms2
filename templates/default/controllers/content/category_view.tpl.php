@@ -55,7 +55,7 @@
     }
 
 ?>
-<?php if ($page_header && !$request->isInternal() && !$is_frontpage){  ?>
+<?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>
     <?php if (!empty($list_styles)){ ?>
         <div class="content_list_styles">
             <?php foreach ($list_styles as $list_style) { ?>
@@ -66,10 +66,7 @@
         </div>
     <?php } ?>
     <h1>
-        <?php echo $page_header; ?>
-        <?php if ($dataset && !empty($current_dataset['title'])){ ?>
-            <span> / <?php echo $current_dataset['title']; ?></span>
-        <?php } ?>
+        <?php $this->pageH1(); ?>
         <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
             <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
         <?php } ?>

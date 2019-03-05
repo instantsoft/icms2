@@ -557,12 +557,46 @@ icms.pagebar = function(id, initial_page, has_next, is_modal){
 
 };
 
-
 $.expr[':'].Contains = $.expr.createPseudo(function(arg) {
     return function( elem ) {
         return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
     };
 });
+function setCaretPosition(field, pos) {
+    var $field = $(field);
+    if ($field[0].setSelectionRange) {
+        $field.focus();
+        $field[0].setSelectionRange(pos, pos);
+    } else if ($field[0].createTextRange) {
+        var range = $field[0].createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    }
+}
+function getCaretPosition(field) {
+    var $field = $(field);
+    if($field.length){
+        if (document.selection) {
+            $field.focus();
+            var Sel = document.selection.createRange();
+            Sel.moveStart ('character', -$field.val().length);
+            return Sel.text.length;
+        } else {
+            return $field[0].selectionStart || 0;
+        }
+    }
+    return 0;
+}
+function addTextToPosition(field_id, text){
+	var field = $(field_id);
+	var value = $(field).val();
+	var pos = getCaretPosition(field);
+    $(field).val(value.substring(0, pos) + text + value.substring(pos, value.length));
+    setCaretPosition(field, pos+text.length);
+    return false;
+}
 function toggleFilter(){
     var filter = $('.filter-panel');
     $('.filter-link', filter).toggle('fast');
