@@ -109,6 +109,7 @@
     define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
     define('LANG_PARSER_NUMBER_UNITS_SEP',   'Отделитель единиц измерения от числа');
     define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
+    define('LANG_PARSER_NUMBER_SAVE_ZERO',   'Сохранять нулевое значение');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
     define('LANG_PARSER_CITY_AUTO_DETECT',   'Определять страну автоматически');

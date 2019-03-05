@@ -32,7 +32,7 @@
         <?php } ?>
 
         <?php if (!empty($fieldset['fields'])) { ?>
-            <?php foreach ($fieldset['fields'] as $name => $field) { ?>
+            <?php foreach ($fieldset['fields'] as $field) { ?>
 
                 <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $field['options']['wrap_type']; ?>_field" <?php if($field['options']['wrap_width']){ ?> style="width: <?php echo $field['options']['wrap_width']; ?>;"<?php } ?>>
                     <?php if ($field['options']['label_in_item'] != 'none') { ?>
