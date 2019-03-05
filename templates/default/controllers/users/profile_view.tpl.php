@@ -84,7 +84,7 @@
             </div>
         <?php } ?>
         
-        <?php $this->block('profile_blocks'); ?>
+        <?php $this->block('users_profile_view_blocks'); ?>
 
     </div>
 
