@@ -5,6 +5,15 @@ class formAdminCtypesBasic extends cmsForm {
 
         $template = new cmsTemplate(cmsConfig::get('template'));
 
+        $meta_ctype_fields = '<a href="#">{'.implode('}</a> <a href="#">{', [
+            'ctype_title',
+            'ctype_description',
+            'ctype_label1',
+            'ctype_label2',
+            'ctype_label10',
+            'filter_string'
+        ]).'}</a>';
+
         $meta_item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', [
             'title',
             'description',
@@ -406,24 +415,29 @@ class formAdminCtypesBasic extends cmsForm {
                 'is_collapsed' => true,
                 'title' => LANG_CP_SEOMETA_DEFAULT,
                 'childs' => array(
+                    new fieldString('options:seo_ctype_h1_pattern', array(
+                        'title' => LANG_CP_SEOMETA_ITEM_H1,
+                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields)
+                    )),
                     new fieldString('seo_title', array(
-                        'title' => LANG_SEO_TITLE,
+                        'title' => LANG_CP_SEOMETA_ITEM_TITLE,
+                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
                         )
                     )),
                     new fieldString('seo_keys', array(
-                        'title' => LANG_SEO_KEYS,
-                        'hint' => LANG_SEO_KEYS_HINT,
+                        'title' => LANG_CP_SEOMETA_ITEM_KEYS,
+                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
                         )
                     )),
                     new fieldText('seo_desc', array(
-                        'title' => LANG_SEO_DESC,
-                        'hint' => LANG_SEO_DESC_HINT,
+                        'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
