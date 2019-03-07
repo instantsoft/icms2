@@ -1849,7 +1849,7 @@ class modelContent extends cmsModel {
         }
 
         if (empty($item['slug'])){
-            $item = $this->getContentItem($ctype['name'], $item['id']);
+            $item = array_merge($item, $this->getContentItem($ctype['name'], $item['id']));
             $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
         }
 

@@ -137,6 +137,8 @@ class actionContentItemEdit extends cmsAction {
 			}
 		}
 
+        $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
+
         if ($is_submitted){
 
             // Парсим форму и получаем поля записи
@@ -279,7 +281,7 @@ class actionContentItemEdit extends cmsAction {
 
                 } else {
 
-                    if($is_moderator && !$is_owner){
+                    if($show_save_button && $is_moderator && !$is_owner){
 
                         $item['reason']   = LANG_PM_MODERATION_REWORK_DRAFT;
                         $item['page_url'] = href_to_abs($ctype['name'], 'edit', $item['id']);
@@ -309,8 +311,6 @@ class actionContentItemEdit extends cmsAction {
         }
 
         $back_url = $this->request->get('back', '');
-
-        $show_save_button = ($is_owner || (!$is_premoderation && $item['is_approved']));
 
         $button_draft_text = LANG_CONTENT_SAVE_DRAFT;
 

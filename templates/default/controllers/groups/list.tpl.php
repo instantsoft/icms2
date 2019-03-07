@@ -68,7 +68,7 @@
 
                 <div class="actions">
 
-                    <?php if ($dataset_name == 'popular') { ?>
+                    <?php if (!$dataset_name || $dataset_name == 'popular') { ?>
 
                         <?php echo $group['members_count'] ? html_spellcount($group['members_count'], LANG_GROUPS_MEMBERS_SPELLCOUNT) : '&mdash;'; ?>
 
