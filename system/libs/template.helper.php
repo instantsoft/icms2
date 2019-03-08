@@ -209,7 +209,6 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     if($datepicker){
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
-    $attributes['style'] = 'position:relative;z-index:2;'.(!empty($attributes['style']) ? $attributes['style'] : '');
     $attr_str = html_attr_str($attributes);
 	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';

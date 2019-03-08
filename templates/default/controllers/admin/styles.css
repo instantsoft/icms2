@@ -1078,7 +1078,6 @@ ul.errors li .hint strong { color:#666666; }
     float:right;
     position: relative;
     font-size: small;
-    z-index:2;
 }
 
 .datagrid .filter td{
@@ -1191,7 +1190,6 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid_select_actions {
     float: right;
     font-size: small;
-    z-index: 2;
     margin: 0 15px 0 0;
     line-height: 32px;
     position: relative;
@@ -1271,6 +1269,7 @@ ul.errors li .hint strong { color:#666666; }
     position:relative;
     color:#AAA;
     font-size:small;
+    float: left;
 }
 .jPaginate a{
     line-height:15px;
