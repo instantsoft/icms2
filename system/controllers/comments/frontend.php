@@ -4,6 +4,8 @@ class comments extends cmsFrontend {
 
     public $target_controller;
     public $target_subject;
+    public $target_id;
+    public $target_user_id;
 
 	protected $useOptions = true;
     public $useSeoOptions = true;

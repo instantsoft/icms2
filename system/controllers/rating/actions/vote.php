@@ -19,11 +19,15 @@ class actionRatingVote extends cmsAction{
         $target_controller = $this->request->get('controller', '');
         $target_subject    = $this->request->get('subject', '');
         $target_id         = $this->request->get('id', 0);
+        $score             = $this->request->get('score', 0);
 
         $is_valid = ($this->validate_sysname($target_controller)===true) &&
                     ($this->validate_sysname($target_subject)===true) &&
                     is_numeric($target_id) &&
-                    in_array($direction, array('up', 'down'));
+                    (
+                        ($direction && in_array($direction, array('up', 'down'))) ||
+                        ($score && is_numeric($score))
+                    );
 
         if (!$is_valid){
             return $this->cms_template->renderJSON(array(
@@ -32,13 +36,18 @@ class actionRatingVote extends cmsAction{
             ));
         }
 
+        // приоритет за $score
+        if(!$score){
+            $score = ($direction == 'up' ? 1 : -1);
+        }
+
         // Объединяем всю информацию о голосе
         $vote = array(
             'user_id'           => ($this->cms_user->id ? $this->cms_user->id : null),
             'target_controller' => $target_controller,
             'target_subject'    => $target_subject,
             'target_id'         => $target_id,
-            'score'             => ($direction == 'up' ? 1 : -1),
+            'score'             => $score,
             'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 

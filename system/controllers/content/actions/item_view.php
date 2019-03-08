@@ -374,34 +374,6 @@ class actionContentItemView extends cmsAction {
 
         }
 
-        // Рейтинг
-        if ($ctype['is_rating'] &&  $this->isControllerEnabled('rating')){
-
-            $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name']
-            ), cmsRequest::CTX_INTERNAL));
-
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($item['user_id'] != $this->cms_user->id);
-
-            $item['rating_widget'] = $rating_controller->getWidget($item['id'], $item['rating'], $is_rating_allowed);
-
-        }
-
-        // Комментарии
-        if ($ctype['is_comments'] && $item['is_approved'] && $item['is_comments_on'] &&  $this->isControllerEnabled('comments')){
-
-            $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name'],
-                'target_user_id' => $item['user_id'],
-                'target_id' => $item['id']
-            ), cmsRequest::CTX_INTERNAL));
-
-            $item['comments_widget'] = $comments_controller->getWidget();
-
-        }
-
         // Информация о модераторе для админа и владельца записи
         if ($item['approved_by'] && ($this->cms_user->is_admin || $this->cms_user->id == $item['user_id'])){
             $item['approved_by'] = cmsCore::getModel('users')->getUser($item['approved_by']);

@@ -297,7 +297,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (7, 'Лента активности', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (8, 'Группы', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (9, 'Редактор разметки', 'markitup', 1, '---\nset: default-ru\nskin: simple\nimages_upload: 1\nimages_w: 400\nimages_h: 400\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
+(10, 'Рейтинг', 'rating', 1, '---\nis_hidden: 1\nis_show: 1\nallow_guest_vote: null\ntemplate: widget\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (11, 'Стена', 'wall', 1, '---\nlimit: 15\norder_by: date_last_reply\nshow_entries: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (12, 'Капча reCAPTCHA', 'recaptcha', 1, '---\npublic_key:\nprivate_key:\ntheme: light\nlang: ru\nsize: normal\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (13, 'Модерация', 'moderation', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -799,7 +799,13 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (152, 'engine_start', 'content', 152, 1),
 (153, 'content_category_after_update', 'subscriptions', 153, 1),
 (154, 'grid_admin_content_items_args', 'admin', 154, 1),
-(155, 'user_notify_types', 'rating', 155, 1);
+(155, 'user_notify_types', 'rating', 155, 1),
+(156, 'content_before_item', 'comments', 156, 1),
+(157, 'content_before_item', 'rating', 157, 1),
+(158, 'content_item_form', 'comments', 158, 1),
+(159, 'ctype_basic_form', 'comments', 159, 1),
+(160, 'ctype_basic_form', 'rating', 160, 1),
+(161, 'ctype_basic_form', 'groups', 161, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

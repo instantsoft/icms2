@@ -9,6 +9,7 @@ define('LANG_RATING_IS_HIDDEN', 'Hide overall rating unless a user votes');
 define('LANG_RATING_SHOW_INFO', 'Show voters and their votes');
 define('LANG_RATING_NO_VOTES', 'No votes yet');
 define('LANG_RATING_ALLOW_GUEST_VOTE', 'Allow guests vote');
+define('LANG_RATING_TEMPLATE', 'Rating block template');
 define('LANG_RATING_UP', 'positively');
 define('LANG_RATING_DOWN', 'negatively');
 define('LANG_RATING_PM', '%s %s rated your item <a href="%s">%s</a>');

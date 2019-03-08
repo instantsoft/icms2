@@ -3,6 +3,9 @@
     return array(
 
         'hooks' => array(
+            'ctype_basic_form',
+            'content_item_form',
+            'content_before_item',
             'content_after_update',
             'admin_dashboard_chart',
             'user_privacy_types',

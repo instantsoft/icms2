@@ -35,7 +35,9 @@ class rating extends cmsFrontend {
         // т.е. просто улучшение юзабилити
         $is_voted = cmsUser::getCookie($this->target_subject.$target_id.$this->target_controller);
 
-        return $this->cms_template->renderInternal($this, 'widget', array(
+        $template_name = !empty($this->options['template']) ? $this->options['template'] : 'widget';
+
+        return $this->cms_template->renderInternal($this, $template_name, array(
             'options'           => $this->getOptions(),
             'target_controller' => $this->target_controller,
             'target_subject'    => $this->target_subject,
