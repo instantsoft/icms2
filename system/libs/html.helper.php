@@ -294,6 +294,8 @@ function html_wysiwyg($field_id, $content = '', $wysiwyg = false, $config = arra
 		return '<textarea class="error_wysiwyg" id="'.$field_id.'" name="'.$field_id.'">'.html($content, false).'</textarea>';
 	}
 
+    list($field_id, $content, $wysiwyg, $config) = cmsEventsManager::hook(['display_wysiwyg_editor', 'display_'.$wysiwyg.'_wysiwyg_editor'], array($field_id, $content, $wysiwyg, $config));
+
     $class_name = 'cmsWysiwyg' . ucfirst($wysiwyg);
 
     $editor = new $class_name();

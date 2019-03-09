@@ -40,7 +40,15 @@ class cmsEventsManager {
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? $data : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hook => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? $data : $default_return;
+
+        }
 
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach($listeners as $listener){
@@ -84,7 +92,15 @@ class cmsEventsManager {
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? false : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hookAll => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? false : $default_return;
+
+        }
 
         $results = array();
 

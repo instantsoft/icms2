@@ -21,7 +21,8 @@ class actionAdminContentItemsAjax extends cmsAction {
         // Одновременно смениться и тип контента, и настройка diff_order не могут
         $diff_order = cmsUser::getUPS('admin.grid_filter.content.diff_order');
 
-        if($filter_str && mb_strpos($filter_str, 'ctype_changed=1') !== false && $diff_order){ // Изменён тип контента и должна быть сохранена сортировка
+        // Изменён тип контента и должна быть сохранена сортировка
+        if($filter_str && mb_strpos($filter_str, 'ctype_changed=1') !== false && $diff_order){
             // Проверим, что эта сортировка есть в бд, иначе будет использоваться пришедшая
             $ups_filter_str = cmsUser::getUPS('admin.grid_filter.content.'.$ctype['name']);
             if($ups_filter_str){
@@ -29,7 +30,8 @@ class actionAdminContentItemsAjax extends cmsAction {
             }
             // Чтобы заполнить поля поиска фильтра
             $grid['options']['load_columns'] = true;
-        }else{
+
+        } else {
             $filter_str = cmsUser::getUPSActual('admin.grid_filter.content.'.$ctype['name'], $filter_str);
         }
 

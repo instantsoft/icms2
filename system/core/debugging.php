@@ -121,6 +121,7 @@ class cmsDebugging {
     }
 
     public static function getTime($target, $decimals = self::DECIMALS) {
+        if(!isset(self::$start_time[$target])){ return 0; }
         return number_format((microtime(true) - self::$start_time[$target]), $decimals);
     }
 

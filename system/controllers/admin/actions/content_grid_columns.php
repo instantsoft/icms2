@@ -7,30 +7,36 @@ class actionAdminContentGridColumns extends cmsAction {
         if( !$this->request->isAjax()
                 ||
             !is_numeric($ctype_id)
-        ){return cmsCore::error404();}
+        ){ return cmsCore::error404(); }
 
         $items = $this->getContentGridColumnsSettings($ctype_id);
 
-        if(!$items){return cmsCore::error404();}
+        if(!$items){ return cmsCore::error404(); }
 
         if($this->request->has('submit')){
+
             $new_config = $this->request->get('columns', array());
+
             cmsUser::setUPS('admin.grid_columns.content.'.$ctype_id, $new_config);
             cmsUser::setUPS('admin.grid_columns.content.'.$ctype_id.'.changed', true);
+
             return $this->cms_template->renderJSON(array(
                 'error' => false
             ));
+
         }
 
         if($this->request->has('reset')){
+
             cmsUser::deleteUPS('admin.grid_columns.content.'.$ctype_id);
+
             return $this->cms_template->renderJSON(array(
                 'error' => false
             ));
+
         }
 
         $default = $this->getContentGridColumnsSettingsDefault();
-
 
         $saved = cmsUser::getUPS('admin.grid_columns.content.'.$ctype_id)?:array();
 

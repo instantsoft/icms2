@@ -382,7 +382,10 @@ class actionContentItemView extends cmsAction {
         list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
-		if (!empty($ctype['options']['hits_on']) && $this->cms_user->id != $item['user_id'] && !$this->cms_user->is_admin){
+        // счетчик просмотров увеличивается, если включен в настройках,
+        // не запрещён в записи (флаг disable_increment_hits, который может быть определён ранее в хуках)
+        // и если смотрит не автор
+		if (!empty($ctype['options']['hits_on']) && empty($item['disable_increment_hits']) && $this->cms_user->id != $item['user_id']){
 			$this->model->incrementHitsCounter($ctype['name'], $item['id']);
 		}
 

@@ -650,7 +650,7 @@
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Для просмотра сообщения требуется почтовый клиент с поддержкой HTML');
 
-    define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
+    define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="https://instantcms.ru/">InstantCMS</a>');
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="https://ru.icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');
 
@@ -658,6 +658,7 @@
     define('LANG_DEBUG',                     'Отладка');
     define('LANG_DEBUG_TAB_DB',              'SQL');
     define('LANG_DEBUG_TAB_CACHE',           'Кэш');
-    define('LANG_DEBUG_TAB_EVENTS',          'События');
+    define('LANG_DEBUG_TAB_EVENTS_EMPTY',    'Неактивные события');
+    define('LANG_DEBUG_TAB_EVENTS',          'Отработавшие события');
     define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
     define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');
