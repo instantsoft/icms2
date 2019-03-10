@@ -70,7 +70,7 @@ class widgetContentCategories extends cmsWidget {
         $ctype_default = cmsConfig::get('ctype_default');
 
         return array(
-            'ctype_name'   => ($ctype_name == $ctype_default ? '' : $ctype_name),
+            'ctype_name'   => (($ctype_default && in_array($ctype_name, $ctype_default)) ? '' : $ctype_name),
             'cats'         => $cats,
             'active_cat'   => $active_cat,
             'cover_preset' => $this->getOption('cover_preset'),

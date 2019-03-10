@@ -436,8 +436,8 @@
     define('LANG_CP_SETTINGS_MERGED_CLEAN_FAIL','Unable to clear the folder <b>%s</b>. Check permissions or clean it manually');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'The cache is successfully cleared');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Error clearing cache');
-    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content type');
-    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Page URLs of this content type will not contain the content type\'s system name');
+    define('LANG_CP_SETTINGS_CTYPE_DEF',        'Default content types');
+    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'Page URLs of this content types will not contain the content type\'s system name');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Show on the homepage');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Only widgets');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'User profile or authorization form');

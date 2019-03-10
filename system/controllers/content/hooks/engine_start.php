@@ -37,7 +37,8 @@ class onContentEngineStart extends cmsAction {
 
             $this->cms_core->uri_controller_before_remap = $this->cms_core->uri_controller;
 
-            $this->cms_core->uri = $this->cms_config->ctype_default.'/'.$this->cms_core->uri;
+            // передаём первый из списка
+            $this->cms_core->uri = $this->cms_config->ctype_default[0].'/'.$this->cms_core->uri;
 
         }
 

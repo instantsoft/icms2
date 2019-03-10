@@ -28,7 +28,7 @@ class content extends cmsFrontend {
 		$action_name = parent::parseRoute($uri);
 
 		if (!$action_name && $this->cms_config->ctype_default){
-			$action_name = parent::parseRoute($this->cms_config->ctype_default . '/' . $uri);
+			$action_name = parent::parseRoute($this->cms_config->ctype_default[0] . '/' . $uri);
 		}
 
 		return $action_name;
@@ -101,7 +101,7 @@ class content extends cmsFrontend {
         $tree = $this->model->getCategoriesTree($ctype['name']);
         if (!$tree) { return $result; }
 
-        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+        $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
         foreach($tree as $cat){
 
@@ -639,7 +639,7 @@ class content extends cmsFrontend {
 
             $fieldset_id = $form->addFieldset( LANG_SLUG );
             $form->addField($fieldset_id, new fieldString('slug', array(
-                'prefix' => '/'.((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : ''),
+                'prefix' => '/'.((!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)) ? $ctype['name'].'/' : ''),
                 'suffix' => '.html',
                 'rules' => $slug_field_rules
             )));

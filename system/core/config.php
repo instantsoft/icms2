@@ -105,6 +105,14 @@ class cmsConfig {
         // таймзона может быть изменена в процессе работы
         $this->set('cfg_time_zone', $this->data['time_zone']);
 
+        // переходная проверка на версии 2.11.1
+        if(!empty($this->data['ctype_default']) && !is_array($this->data['ctype_default'])){
+            $this->data['ctype_default'] = [$this->data['ctype_default']];
+        }
+        if(empty($this->data['ctype_default'])){
+            $this->data['ctype_default'] = [];
+        }
+
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
         }

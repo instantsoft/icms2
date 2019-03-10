@@ -132,7 +132,7 @@ function href_to_rel($controller, $action = '', $params = false){
 
 	$ctype_default = cmsConfig::get('ctype_default');
 
-	if ($ctype_default && $action && $ctype_default == $controller && $action){
+	if ($ctype_default && $action && in_array($controller, $ctype_default) && $action){
 		if (preg_match('/([a-z0-9\-\/{}]+)(\.html|\/view\-[a-z0-9\-_]+)$/i', $action)){
 			$controller = '';
 		}

@@ -46,7 +46,7 @@ class onContentSitemapUrls extends cmsAction {
 
             $items = $this->model->limit(false)->getCategoriesTree($ctype['name'], false);
 
-            $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+            $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
             if ($items){
                 foreach($items as $item){

@@ -9,7 +9,7 @@ class actionAdminWidgetsPageAutocomplete extends cmsAction {
             !($term = $this->request->get('term', ''))
                 ||
             !($ctype_name = $this->request->get('ctype', ''))
-        ){cmsCore::error404();}
+        ){ cmsCore::error404(); }
 
 
         $content_model = cmsCore::getModel('content');
@@ -22,12 +22,14 @@ class actionAdminWidgetsPageAutocomplete extends cmsAction {
 
         $result = array();
 
+        $ctype_default = cmsConfig::get('ctype_default');
+
         foreach($items as $item){
 
             $result[] = array(
                 'id'    => $item['id'],
                 'label' => $item['title'],
-                'value' => ((cmsConfig::get('ctype_default') !== $ctype['name']) ? $ctype['name'].'/' : '').$item['slug'].'.html'
+                'value' => (!in_array($ctype['name'], $ctype_default) ? $ctype['name'].'/' : '').$item['slug'].'.html'
             );
 
         }

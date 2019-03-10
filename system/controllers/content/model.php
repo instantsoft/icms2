@@ -2603,7 +2603,9 @@ class modelContent extends cmsModel {
 
 	public function incrementHitsCounter($ctype_name, $id){
 
-		$this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
+
+		return $this->filterEqual('id', $id)->increment($this->table_prefix.$ctype_name, 'hits_count');
 
 	}
 

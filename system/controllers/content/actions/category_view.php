@@ -4,8 +4,7 @@ class actionContentCategoryView extends cmsAction {
 
     public function run(){
 
-        // Получаем SLUG категории
-        $slug = $this->request->get('slug', '');
+        list($ctype, $category, $slug) = $this->getCategoryAndSlugAndCtype();
 
         // Текущий набор
         $dataset = $this->request->get('dataset', '');
@@ -16,50 +15,7 @@ class actionContentCategoryView extends cmsAction {
         // Номер страницы
         $page = $this->request->get('page', 1);
 
-        // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name', '');
-        $ctype = $this->model->getContentTypeByName($ctype_name);
-
-        if (!$ctype) {
-            // смотрим, не переопределено ли
-            $_ctype_name = $this->getCtypeByAlias($ctype_name);
-            if($_ctype_name){
-                $ctype = $this->model->getContentTypeByName($_ctype_name);
-            }
-            if(!$ctype){
-                return cmsCore::error404();
-            } else {
-                $this->cms_core->uri_controller_before_remap = $ctype_name;
-            }
-
-        } elseif(!$this->cms_core->uri_controller_before_remap && !$dataset && $this->cms_config->ctype_default && $this->cms_config->ctype_default === $ctype_name && $slug !== 'index'){
-            $this->redirect(href_to($slug), 301);
-        }
-
-        if (!$ctype['options']['list_on']) { return cmsCore::error404(); }
-
-        $category = array('id' => false, 'description' => (!empty($ctype['description']) ? $ctype['description'] : ''));
-
         $subcats = array();
-
-        if (!$ctype['is_cats'] && $slug != 'index') { return cmsCore::error404(); }
-
-        if ($ctype['is_cats'] && $slug != 'index') {
-
-            $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
-
-            list($slug,
-                $ctype,
-                $category
-            ) = cmsEventsManager::hook(['content_get_category_by_slug', "content_{$ctype['name']}_get_category_by_slug"], array(
-                $slug,
-                $ctype,
-                $category
-            ), null, $this->request);
-
-            if (!$category){ return cmsCore::error404(); }
-
-        }
 
         // Получаем список подкатегорий для текущей
         if ($ctype['is_cats']) {
@@ -117,7 +73,7 @@ class actionContentCategoryView extends cmsAction {
         $this->model->enableHiddenParentsFilter();
 
         // Формируем базовые URL для страниц
-        $base_url = $this->cms_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+        $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
         $page_url = href_to($ctype['name']);
 
@@ -295,18 +251,110 @@ class actionContentCategoryView extends cmsAction {
 
     }
 
-    private function getCtypeByAlias($ctype_name) {
+    private function getCategoryAndSlugAndCtype() {
 
-        $mapping = cmsConfig::getControllersMapping();
-        if($mapping){
-            foreach($mapping as $name=>$alias){
-                if ($alias == $ctype_name) {
-                    return $name;
+        $slug = $this->request->get('slug', '');
+
+        $_ctype_name = $this->request->get('ctype_name');
+
+        if(!$_ctype_name){ return cmsCore::error404(); }
+
+        $ctype_names = is_array($_ctype_name) ? $_ctype_name : [$_ctype_name];
+
+        // есть типы контента по умолчанию
+        if ($this->cms_config->ctype_default){
+            foreach ($this->cms_config->ctype_default as $ctype_default) {
+                if(!in_array($ctype_default, $ctype_names)){
+                    $ctype_names[] = $ctype_default;
                 }
             }
         }
 
-        return false;
+        foreach ($ctype_names as $ctype_name) {
+
+            $ctype = $this->model->getContentTypeByName($ctype_name);
+            // типы контента тут должны быть известные
+            if (!$ctype) { return cmsCore::error404(); }
+
+            // если типов контента по умолчанию нет, сразу отдаём 404
+            // чтобы не перебирать дальше
+            if(!$this->cms_config->ctype_default && empty($ctype['options']['list_on'])){
+                return cmsCore::error404();
+            }
+
+            // значит переданный $_ctype_name = корневая страница типа контента
+            if ($slug === 'index') {
+                return [$ctype, ['id' => false, 'description' => (!empty($ctype['description']) ? $ctype['description'] : '')], $slug];
+            }
+
+            // если типов контента по умолчанию нет, сразу отдаём 404
+            // чтобы не перебирать дальше
+            if(!$this->cms_config->ctype_default && !$ctype['is_cats']){
+                return cmsCore::error404();
+            }
+
+            $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
+
+            list($slug,
+                $ctype,
+                $category
+            ) = cmsEventsManager::hook(['content_get_category_by_slug', "content_{$ctype['name']}_get_category_by_slug"], array(
+                $slug,
+                $ctype,
+                $category
+            ), null, $this->request);
+
+            if (!$category){
+
+                // если тип контента не входит в список умолчаний, сразу 404
+                if(!$this->cms_config->ctype_default || !in_array($ctype['name'], $this->cms_config->ctype_default)){
+                    return cmsCore::error404();
+                }
+
+                continue;
+
+            }
+
+            // дошли до сюда, а категории выключены
+            if (!$ctype['is_cats']) { return cmsCore::error404(); }
+
+            // список выключен
+            if (empty($ctype['options']['list_on'])) { return cmsCore::error404(); }
+
+            // должно быть точное совпадение
+            if ($slug !== $category['slug']){
+                if(($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default))){
+                    $this->redirect(href_to($category['slug']), 301);
+                }
+                $this->redirect(href_to($ctype['name'], $category['slug']), 301);
+            }
+
+            // редирект со старых адресов
+            if((!$this->cms_core->uri_controller_before_remap &&
+                    !$this->request->get('dataset', '') &&
+                    $this->cms_config->ctype_default &&
+                    in_array($ctype['name'], $this->cms_config->ctype_default))){
+                $this->redirect(href_to($category['slug']), 301);
+            }
+
+            // если тип контента сменился
+            if($ctype['name'] !== $_ctype_name){
+
+                // новый uri
+                $this->cms_core->uri = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri);
+                $this->cms_core->uri_before_remap = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri_before_remap);
+
+                // обновляем страницы и маски
+                $this->cms_core->setMatchedPages(null)->loadMatchedPages();
+
+            }
+
+            return [$ctype, $category, $slug];
+
+        }
+
+        // ничего не нашли
+        return cmsCore::error404();
 
     }
 

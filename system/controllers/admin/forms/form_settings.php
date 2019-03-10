@@ -56,10 +56,9 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('ctype_default', array(
                         'title' => LANG_CP_SETTINGS_CTYPE_DEF,
+                        'is_chosen_multiple' => true,
 						'hint' => LANG_CP_SETTINGS_CTYPE_DEF_HINT,
                         'generator' => function($item) use($ctypes){
-
-							$items[''] = LANG_NO;
 
                             if ($ctypes) {
                                 foreach ($ctypes as $ctype) {

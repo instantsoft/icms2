@@ -81,7 +81,7 @@
                     response(cache[term]);
                     return;
                 }
-                $.getJSON('/admin/widgets/page_autocomplete', request, function(data, status, xhr){
+                $.getJSON('<?php echo href_to('admin', 'widgets', 'page_autocomplete'); ?>', request, function(data, status, xhr){
                     cache[term] = data;
                     response(data);
                 });

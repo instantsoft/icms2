@@ -13,6 +13,7 @@ class cmsCore {
     public $uri_params     = array();
     public $uri_query      = array();
     private $matched_pages = null;
+    private $widgets_pages = null;
 
     private static $language = 'ru';
     private static $language_href_prefix = '';
@@ -763,10 +764,11 @@ class cmsCore {
             return $this;
         }
 
-        $widgets_model = cmsCore::getModel('widgets');
-        $pages = $widgets_model->getPages();
+        if($this->widgets_pages === null){
+            $this->widgets_pages = cmsCore::getModel('widgets')->getPages();
+        }
 
-        $this->matched_pages = $this->detectMatchedWidgetPages($pages);
+        $this->matched_pages = $this->detectMatchedWidgetPages($this->widgets_pages);
 
         return $this;
 

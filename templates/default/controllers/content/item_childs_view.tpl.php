@@ -15,7 +15,7 @@
     }
 
     if (isset($item['category']['path'])){
-        $base_url = $this->site_config->ctype_default == $ctype['name'] ? '' : $ctype['name'];
+        $base_url = ($this->site_config->ctype_default && in_array($ctype['name'], $this->site_config->ctype_default)) ? '' : $ctype['name'];
         foreach($item['category']['path'] as $c){
             $this->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
         }
