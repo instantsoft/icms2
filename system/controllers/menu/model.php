@@ -180,10 +180,10 @@ class modelMenu extends cmsModel {
                         'menu_item_id'  => $item['id'],
                         'menu_item_url' => $item['url'],
                         'menu_item'     => $item
-                    ));
+                    ), false);
 
                     // если хук вернул результат
-                    if ($hook_result && cmsController::enabled($controller)){
+                    if ($hook_result){
 
                         // получаем новый URL пункта меню
                         $item['url'] = isset($hook_result['url']) ? $hook_result['url'] : '';
