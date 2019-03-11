@@ -408,9 +408,18 @@ class cmsTemplate {
         $first_level_limit = 0;
         $index = 0;
 
+        $core = cmsCore::getInstance();
+
         // для определения активного пункта меню
-        $current_url = trim(cmsCore::getInstance()->uri_before_remap, '/');
+        // оригинальный урл
+        $current_url = trim($core->uri_before_remap, '/');
+        // подготовленный для работы cms
+        $current_ourl = trim($core->uri, '/');
+
         $href_lang = cmsCore::getLanguageHrefPrefix();
+
+        $root_len = strlen($this->site_config->root);
+        $lang_len = $href_lang ? strlen($href_lang) : 0;
 
         foreach($menu as $id=>$item){
 
@@ -440,13 +449,15 @@ class cmsTemplate {
                 if (!isset($item['url'])) { continue; }
 
                 $url = isset($item['url_mask']) ? $item['url_mask'] : urldecode($item['url']);
-                $url = mb_substr($url, mb_strlen($this->site_config->root));
+                $url = mb_substr($url, $root_len);
                 if($href_lang){
-                    $url = mb_substr($url, mb_strlen($href_lang));
+                    $url = mb_substr($url, $lang_len);
                 }
                 $url = trim($url, '/');
 
                 if (!$url) { continue; }
+
+                $url_len = mb_strlen($url);
 
                 //полное совпадение ссылки и адреса?
                 if ($current_url == $url){
@@ -455,8 +466,8 @@ class cmsTemplate {
                 } else {
 
                     //частичное совпадение ссылки и адреса (по началу строки)?
-                    $url_first_part = mb_substr($current_url, 0, mb_strlen($url));
-                    if ($url_first_part == $url){
+                    $url_first_parts = [mb_substr($current_ourl, 0, $url_len), mb_substr($current_url, 0, $url_len)];
+                    if (in_array($url, $url_first_parts)){
                         $active_ids[] = $id;
                         $is_strict = false;  // не используется нигде
                     }

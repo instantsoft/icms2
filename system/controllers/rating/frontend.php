@@ -44,7 +44,7 @@ class rating extends cmsFrontend {
             'target_id'         => $target_id,
             'is_guest'          => !$this->cms_user->is_logged,
             'is_voted'          => $is_voted,
-            'is_enabled'        => ($is_voted ? false : $is_enabled),
+            'is_enabled'        => $is_enabled,
             'current_rating'    => $current_rating ? $current_rating : 0,
             'user'              => $this->cms_user
         ));
