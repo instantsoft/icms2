@@ -180,7 +180,7 @@ class modelMenu extends cmsModel {
                         'menu_item_id'  => $item['id'],
                         'menu_item_url' => $item['url'],
                         'menu_item'     => $item
-                    ));
+                    ), false);
 
                     // если хук вернул результат
                     if ($hook_result){
