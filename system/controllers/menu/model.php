@@ -183,7 +183,7 @@ class modelMenu extends cmsModel {
                     ));
 
                     // если хук вернул результат
-                    if ($hook_result){
+                    if ($hook_result && cmsController::enabled($controller)){
 
                         // получаем новый URL пункта меню
                         $item['url'] = isset($hook_result['url']) ? $hook_result['url'] : '';
