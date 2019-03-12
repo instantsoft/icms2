@@ -110,7 +110,8 @@ class actionAdminIndex extends cmsAction {
         }
 
         return $this->cms_template->render('index', array(
-            'dashboard_blocks' => $_result_dashboard_blocks
+            'dashboard_blocks' => $_result_dashboard_blocks,
+            'options'=>$this->options
         ));
 
     }
