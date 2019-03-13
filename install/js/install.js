@@ -64,7 +64,12 @@ function submitStep(){
             return;
         }
 
-        alert(result.message);
+        swal({
+            type: 'error',
+            title: 'Oops...',
+            text: result.message,
+            focusConfirm: false
+        });
 
     }, 'json');
 

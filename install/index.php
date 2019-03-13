@@ -64,5 +64,6 @@ echo render('main', array(
     'is_lang_selected' => $is_lang_selected,
     'lang'             => LANG,
     'current_step'     => $current_step,
-    'step_html'        => $step_result['html']
+    'step_html'        => $step_result['html'],
+    'langs'            => get_langs(),
 ));

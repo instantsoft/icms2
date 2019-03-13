@@ -35,7 +35,7 @@ body {
 
 .image{ float:right; margin:10px; }
 
-#layout a{ color:#09c; transition: color ease-in-out .2s; }
+#layout a{ color:#09c; transition: color ease-in-out .2s; text-decoration: none;}
 #layout a:hover{ color:#F90; }
 
 #layout a.ajaxlink{ color:#09c; border-bottom: dashed 1px #09c; text-decoration: none; }
@@ -59,20 +59,23 @@ body {
 }
 
 #langs {
-    height:30px;
-    line-height:30px;
-    display: inline-block;
-    background:#d0dee5;
-    padding:0 10px;
-    padding-left:5px;
+    display: flex;
+    float: right;
 }
 
-#langs a {
-    padding-left:20px;
-    margin-left:5px;
-    background: no-repeat left center;
+#langs a.language {
     text-decoration: none;
     color:#7D929D;
+    display: block;
+    width: 35px;
+}
+
+#langs a.language  > img {
+    max-width: 100%;
+}
+
+#langs a.language + a.language {
+    margin-left: 10px;
 }
 
 #langs a.selected {
@@ -160,6 +163,8 @@ body {
     resize: vertical;
 }
 
+#layout #body .page {padding-bottom: 50px;}
+
 #layout #body .grid{
     width:100%;
     border-top: solid 1px #ECECEC;
@@ -178,8 +183,10 @@ body {
     padding:10px;
     padding-top:8px;
     text-align:right;
-    margin:-20px;
-    margin-top:20px;
+    position:absolute;
+    left: 0;
+    right:0;
+    bottom:0;
 }
 
 #layout #body .buttons input{
@@ -330,6 +337,11 @@ form .opt-group label{
     outline:none;
     width:99%;
     margin-top: 6px;
+}
+
+.swal2-popup .swal2-styled:focus {
+    outline: 0!important;
+    box-shadow: none!important;
 }
 
 .input{
