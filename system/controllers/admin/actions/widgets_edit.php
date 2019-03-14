@@ -4,8 +4,12 @@ class actionAdminWidgetsEdit extends cmsAction {
 
     public function run($binded_id = false) {
 
-        if (!$this->request->isAjax() || !$binded_id) {
+        if (!$binded_id) {
             return cmsCore::error404();
+        }
+
+        if($this->request->has('is_iframe')){
+            $this->cms_template->setLayout('controllers/admin/widget_edit_layout');
         }
 
         $template = $this->request->get('template', '');

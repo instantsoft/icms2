@@ -133,6 +133,10 @@
 .nyroModalPrev:hover:after, .nyroModalNext:hover:after {
 	opacity: 1;
 }
+.nyroModalCont > .nyroModalIframe > iframe {
+    min-width: 640px;
+    min-height: 480px;
+}
 .sk-circle {
   width: 50px;
   height: 50px;
@@ -283,4 +287,26 @@
 		max-height:100%;
 		margin:auto;
 	}
+    .nyroModalCont > .nyroModalIframe > iframe {
+        min-width: 580px;
+        min-height: 360px;
+    }
+}
+@media screen and (max-width:540px){
+    .nyroModalCont > .nyroModalIframe > iframe {
+        min-width: 500px;
+        min-height: 300px;
+    }
+}
+@media only screen and (max-width : 480px) {
+    .nyroModalCont > .nyroModalIframe > iframe {
+        min-width: 420px;
+        min-height: 280px;
+    }
+}
+@media screen and (max-width:350px) {
+    .nyroModalCont > .nyroModalIframe > iframe {
+        min-width: 300px;
+        min-height: 200px;
+    }
 }

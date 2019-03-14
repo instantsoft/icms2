@@ -21,7 +21,13 @@ class actionPhotosSetCover extends cmsAction{
 
         cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
-        $this->redirect(href_to('photos', $photo['slug'] . '.html'));
+        $back_url = $this->request->get('back', '');
+
+        if ($back_url){
+            $this->redirect($back_url);
+        } else {
+            $this->redirect(href_to('photos', $photo['slug'] . '.html'));
+        }
 
     }
 

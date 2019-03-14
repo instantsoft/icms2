@@ -2796,6 +2796,10 @@ input[type=radio]:checked ~ label{
 .pattern_fields > a:hover {
     background-color: #64889b;
 }
+#widgets_layout {
+    width: 100%;
+    height: 100%;
+}
 @media screen and (max-width: 1440px){
     .addon-card {
         width: calc(50% - 10px);

@@ -1,25 +1,9 @@
 function widgetEdit(id, edit_url, template){
 
-    icms.modal.openAjax(edit_url + '/' + id, {template:template}, function (){
-        icms.modal.setCallback('close', function(){
-            icms.forms.form_changed = false;
-        });
-        var h = 0, m = false;
-        $('.modal_form .form-tabs .tab').each(function(indx, element){
-            var th = +$(this).height();
-            if (th > h){ h = th; m = true; }
-        });
-        if(m){
-            $('.modal_form .form-tabs .tab').first().css({height: h+'px'});
-            setTimeout(function(){ icms.modal.resize(); }, 10);
-        }
-    });
+    icms.modal.openAjax(edit_url + '/' + id, {template:template, is_iframe: true});
 
     return false;
 
-}
-function widgetUpdated(widget, result){
-    location.reload();
 }
 function widgetDelete(id, delete_url, LANG_CP_WIDGET_DELETE_CONFIRM){
 

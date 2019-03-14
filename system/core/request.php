@@ -81,6 +81,15 @@ class cmsRequest {
     }
 
     /**
+     * Устанавливает текущий контекст использования
+     * @param integer $context
+     * @return $this
+     */
+    public function setContext($context){
+        $this->context = $context; return $this;
+    }
+
+    /**
      * Возвращает true, если запрос вызван через URL
      * @return boolean
      */

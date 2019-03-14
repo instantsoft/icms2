@@ -42,8 +42,9 @@ icms.modal = (function ($) {
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+        $.nmManual(url+(data.is_iframe ? '?'+$.param(data) : ''), {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
                 if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+                if(data.is_iframe){ nm.filters.push('link'); nm.filters.push('iframe'); }
         }}, ajax:{data: data, type: "POST"}});
         return false;
 
