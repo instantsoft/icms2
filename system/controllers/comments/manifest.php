@@ -4,6 +4,7 @@
 
         'hooks' => array(
             'ctype_basic_form',
+            'photos_before_item',
             'content_item_form',
             'content_before_item',
             'content_after_update',

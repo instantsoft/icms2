@@ -805,7 +805,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (158, 'content_item_form', 'comments', 158, 1),
 (159, 'ctype_basic_form', 'comments', 159, 1),
 (160, 'ctype_basic_form', 'rating', 160, 1),
-(161, 'ctype_basic_form', 'groups', 161, 1);
+(161, 'ctype_basic_form', 'groups', 161, 1),
+(162, 'photos_before_item', 'rating', 162, 1),
+(163, 'photos_before_item', 'comments', 163, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

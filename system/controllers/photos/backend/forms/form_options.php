@@ -110,10 +110,7 @@ class formPhotosOptions extends cmsForm {
 
                     new fieldNumber('related_limit', array(
                         'title'   => LANG_PHOTOS_RELATED_LIMIT,
-                        'default' => 20,
-                        'rules'   => array(
-                            array('required')
-                        )
+                        'default' => 20
                     )),
 
                     new fieldString('url_pattern', array(

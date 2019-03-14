@@ -128,33 +128,6 @@ class actionPhotosView extends cmsAction {
 			$this->model->incrementCounter($photo['id']);
 		}
 
-        // Рейтинг
-        if ($ctype['is_rating'] &&  $this->isControllerEnabled('rating')){
-
-            $rating_controller = cmsCore::getController('rating', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => $ctype['name']
-            ), cmsRequest::CTX_INTERNAL));
-
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($photo['user_id'] != $this->cms_user->id);
-
-            $photo['rating_widget'] = $rating_controller->getWidget($photo['id'], $photo['rating'], $is_rating_allowed);
-
-        }
-
-        // Комментарии
-        if ($ctype['is_comments'] && $this->isControllerEnabled('comments')){
-
-            $comments_controller = cmsCore::getController('comments', new cmsRequest(array(
-                'target_controller' => $this->name,
-                'target_subject' => 'photo',
-                'target_id' => $photo['id']
-            ), cmsRequest::CTX_INTERNAL));
-
-            $photo['comments_widget'] = $comments_controller->getWidget();
-
-        }
-
         $is_can_set_cover = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
                 (cmsUser::isAllowed($ctype['name'], 'edit', 'own') && $album['user_id'] == $this->cms_user->id));
         $is_can_edit   = (cmsUser::isAllowed($ctype['name'], 'edit', 'all') ||
@@ -366,6 +339,8 @@ class actionPhotosView extends cmsAction {
     }
 
     private function getRelatedPhoto($photo) {
+
+        if(empty($this->options['related_limit'])){ return []; }
 
         $this->related_title = LANG_PHOTOS_RELATED;
 
