@@ -47,7 +47,7 @@ class actionGeoCountry extends cmsAction {
 
         }
 
-        $this->setH1((isset($country['name']) ? $country['name'] : LANG_GEO_ADD_COUNTRY));
+        $this->cms_template->setPageH1((isset($country['name']) ? $country['name'] : LANG_GEO_ADD_COUNTRY));
 
         return $this->cms_template->render('backend/country', array(
             'do'      => $country_id ? 'edit' : 'add',

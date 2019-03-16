@@ -128,6 +128,7 @@
     define('LANG_CP_CT_GROUPS_ALLOW',           'Создание в группах');
     define('LANG_CP_CT_GROUPS_ALLOW_ONLY',      'Создание только в группах');
     define('LANG_CP_COMMENTS',                  'Комментарии');
+    define('LANG_CP_COMMENTS_REPLACE_LABEL',    'Замена фразы для ');
     define('LANG_CP_COMMENTS_ON',               'Включить комментарии');
     define('LANG_CP_RATING',                    'Рейтинг');
     define('LANG_CP_RATING_ON',                 'Включить рейтинг');

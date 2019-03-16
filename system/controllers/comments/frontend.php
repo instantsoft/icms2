@@ -6,6 +6,7 @@ class comments extends cmsFrontend {
     public $target_subject;
     public $target_id;
     public $target_user_id;
+    public $labels;
 
 	protected $useOptions = true;
     public $useSeoOptions = true;
@@ -20,6 +21,26 @@ class comments extends cmsFrontend {
         $this->target_subject    = $this->request->get('target_subject', '');
         $this->target_id         = $this->request->get('target_id', 0);
         $this->target_user_id    = $this->request->get('target_user_id', 0);
+
+        $this->setLabels($this->request->get('labels', []));
+
+    }
+
+    public function setLabels($labels) {
+
+        $this->labels = (object) array_merge([
+            'comments'   => LANG_COMMENTS,
+            'spellcount' => LANG_COMMENT1 . '|' . LANG_COMMENT2 . '|' . LANG_COMMENT10,
+            'add'        => LANG_COMMENT_ADD,
+            'none'       => LANG_COMMENTS_NONE,
+            'low_karma'  => LANG_COMMENTS_LOW_KARMA,
+            'login'      => LANG_COMMENTS_LOGIN,
+            'track'      => LANG_COMMENTS_TRACK,
+            'refresh'    => LANG_COMMENTS_REFRESH,
+            'commenting' => LANG_RULE_CONTENT_COMMENT
+        ], array_filter($labels));
+
+        return $this;
 
     }
 
@@ -64,13 +85,16 @@ class comments extends cmsFrontend {
 
         return array(
             'name'  => 'icms',
-            'title' => ($comments ? html_spellcount(sizeof($comments), LANG_COMMENT1, LANG_COMMENT2, LANG_COMMENT10) : LANG_COMMENTS),
+            'title' => ($comments ? html_spellcount(sizeof($comments), $this->labels->spellcount) : $this->labels->comments),
             'html'  => $this->cms_template->renderInternal($this, 'list', array(
                 'user'              => $this->cms_user,
                 'target_controller' => $this->target_controller,
                 'target_subject'    => $this->target_subject,
                 'target_id'         => $this->target_id,
                 'target_user_id'    => $this->target_user_id,
+                'is_karma_allowed'  => $this->cms_user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $this->cms_user->karma),
+                'is_guests_allowed' => !empty($this->options['is_guests']),
+                'can_add'           => cmsUser::isAllowed('comments', 'add') || (!$this->cms_user->is_logged && !empty($this->options['is_guests'])),
                 'is_tracking'       => $is_tracking,
                 'is_highlight_new'  => $is_highlight_new,
                 'comments'          => $comments,

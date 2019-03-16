@@ -13,6 +13,14 @@ class onCommentsContentBeforeItem extends cmsAction {
             $this->target_id         = $item['id'];
             $this->target_user_id    = $item['user_id'];
 
+            $labels = get_localized_value('comments_labels', $ctype['options']);
+
+            if($labels){
+
+                $this->setLabels($labels);
+
+            }
+
             $item['comments_widget'] = $this->getWidget();
 
         }

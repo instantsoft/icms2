@@ -9,7 +9,15 @@ class onCommentsContentItemForm extends cmsAction {
         // если разрешено отключать комментарии к записи
         if(cmsUser::isAllowed($ctype['name'], 'disable_comments') && !empty($ctype['is_comments'])){
 
-            $fieldset_id = $form->addFieldset(LANG_RULE_CONTENT_COMMENT, 'is_comment', array(
+            $labels = get_localized_value('comments_labels', $ctype['options']);
+
+            if($labels){
+
+                $this->setLabels($labels);
+
+            }
+
+            $fieldset_id = $form->addFieldset($this->labels->commenting, 'is_comment', array(
                 'is_collapsed' => !empty($ctype['options']['is_collapsed']) && in_array('is_comment', $ctype['options']['is_collapsed'])
             ));
 

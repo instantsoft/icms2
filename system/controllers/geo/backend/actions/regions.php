@@ -36,7 +36,7 @@ class actionGeoRegions extends cmsAction {
 
         }
 
-        $this->setH1($country['name']);
+        $this->cms_template->setPageH1($country['name']);
 
         return $this->cms_template->render('backend/regions', array(
 			'grid'    => $grid,

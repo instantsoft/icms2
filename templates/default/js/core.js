@@ -437,9 +437,9 @@ icms.forms = (function ($) {
                         }
 
                         if(display){
-                            $('#f_'+_this.inputNameToId(field)).show();
-                        }else{
-                            $('#f_'+_this.inputNameToId(field)).hide();
+                            $('#f_'+_this.inputNameToId(field)).removeClass('hide_field').prev('.field_tabbed').removeClass('hide_field');
+                        } else {
+                            $('#f_'+_this.inputNameToId(field)).addClass('hide_field').prev('.field_tabbed').addClass('hide_field');
                         }
 
                     }}
@@ -630,6 +630,20 @@ function renderHtmlAvatar(wrap){
                 'font-size': Math.round((h*0.625))+'px'
             });
         });
+    });
+}
+function initMultyTabs(selector, tab_wrap_field){
+    tab_wrap_field = tab_wrap_field || '.field';
+    $(selector).each(function(indx, element){
+        var tab = $(' > li > a', $(this));
+        $(tab).closest('li').eq(0).addClass('active');
+		$(tab).on('click', function() {
+            var tab_field = $(this).attr('href');
+			$(this).closest('li').addClass('active').siblings().removeClass('active');
+            $(element).nextAll(tab_wrap_field+':lt('+$(tab).closest('li').length+')').hide();
+            $(tab_field).show();
+            return false;
+		});
     });
 }
 function initTabs(selector){

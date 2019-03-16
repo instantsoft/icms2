@@ -1095,7 +1095,24 @@ class cmsCore {
      */
     public static function getLanguages(){
 
-        return self::getDirsList('system/languages');
+        $default_lang = cmsConfig::get('language');
+
+        $langs = self::getDirsList('system/languages');
+
+        foreach ($langs as $key => $lang) {
+            if ($lang === self::$language) {
+                $_lang       = $langs[0];
+                $langs[0]    = $lang;
+                $langs[$key] = $_lang;
+            }
+            if ($default_lang !== self::$language && $lang === $default_lang) {
+                $_lang       = $langs[1];
+                $langs[1]    = $lang;
+                $langs[$key] = $_lang;
+            }
+        }
+
+        return $langs;
 
     }
 

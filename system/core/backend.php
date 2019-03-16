@@ -2,8 +2,6 @@
 
 class cmsBackend extends cmsController {
 
-    private $h1 = '';
-
     public $maintained_ctype = false;
 
     protected $backend_menu = array();
@@ -45,18 +43,6 @@ class cmsBackend extends cmsController {
             );
         }
 
-    }
-
-    public function setH1($title) {
-
-        if (is_array($title)){ $title = implode(' -> ', $title); }
-
-        $this->h1 = ' -> '.$title;
-
-    }
-
-    public function getH1() {
-        return $this->h1;
     }
 
 //============================================================================//

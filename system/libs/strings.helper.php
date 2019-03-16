@@ -854,6 +854,19 @@ function multi_array_unique($array) {
 
 }
 
+function get_localized_value($field, $data) {
+
+    $lang = cmsCore::getLanguageHrefPrefix();
+
+    $field .= ($lang ? '_'.$lang : '');
+
+    if(array_key_exists($field, $data)){
+        return $data[$field];
+    }
+
+    return null;
+
+}
 //============================================================================//
 
 /**

@@ -8,6 +8,10 @@ class onRatingContentBeforeList extends cmsAction {
 
         if ($ctype['is_rating'] && $items){
 
+            if(!empty($ctype['options']['rating_template'])){
+                $this->setOption('template', $ctype['options']['rating_template']);
+            }
+
             $this->setContext('content', $ctype['name']);
 
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');

@@ -2,8 +2,6 @@
 
 $this->addJS($this->getJavascriptFileName('jquery-scroll'));
 $this->addJS($this->getJavascriptFileName('comments'));
-$is_guests_allowed =  !empty($this->controller->options['is_guests']);
-$is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('comments', 'karma', $user->karma);
 
 ?>
 <?php if ($rss_link){ ?>
@@ -14,16 +12,16 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 <?php if ($user->is_logged){ ?>
     <?php if ($is_karma_allowed){ ?>
         <div class="track">
-            <label><input type="checkbox" id="is_track" name="is_track" value="1" <?php if($is_tracking){ ?>checked="checked"<?php } ?> /> <?php echo LANG_COMMENTS_TRACK; ?></label>
+            <label><input type="checkbox" id="is_track" name="is_track" value="1" <?php if($is_tracking){ ?>checked="checked"<?php } ?> /> <?php echo $this->controller->labels->track; ?></label>
         </div>
     <?php } ?>
     <div id="comments_refresh_panel">
-        <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo LANG_COMMENTS_REFRESH; ?>"></a>
+        <a href="#refresh" class="refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>"></a>
     </div>
 <?php } ?>
-<?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
+<?php if ($can_add){ ?>
     <div id="comments_add_link">
-        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo LANG_COMMENT_ADD; ?></a>
+        <a href="#reply" class="ajaxlink" onclick="return icms.comments.add()"><?php echo $this->controller->labels->add; ?></a>
     </div>
 <?php } ?>
 <div id="comments_list">
@@ -31,7 +29,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
     <?php if (!$comments){ ?>
 
         <div class="no_comments">
-            <?php echo LANG_COMMENTS_NONE; ?>
+            <?php echo $this->controller->labels->none; ?>
         </div>
 
         <?php if (!$user->is_logged && !$is_guests_allowed) { ?>
@@ -39,7 +37,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                 <?php
                     $reg_url = href_to('auth', 'register');
                     $log_url = href_to('auth', 'login');
-                    printf(LANG_COMMENTS_LOGIN, $log_url, $reg_url);
+                    printf($this->controller->labels->login, $log_url, $reg_url);
                 ?>
             </div>
         <?php } ?>
@@ -48,7 +46,13 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
 
     <?php if ($comments){ ?>
 
-        <?php echo $this->renderChild('comment', array('comments'=>$comments, 'target_user_id'=>$target_user_id, 'user'=>$user, 'is_highlight_new'=>$is_highlight_new, 'is_can_rate' => $is_can_rate)); ?>
+        <?php echo $this->renderChild('comment', array(
+            'comments'         => $comments,
+            'target_user_id'   => $target_user_id,
+            'user'             => $user,
+            'is_highlight_new' => $is_highlight_new,
+            'is_can_rate'      => $is_can_rate
+        )); ?>
 
     <?php } ?>
 
@@ -63,7 +67,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
         data-rate-url="<?php echo $this->href_to('rate'); ?>"
 ></div>
 
-<?php if (($user->is_logged && cmsUser::isAllowed('comments', 'add')) || (!$user->is_logged && $is_guests_allowed)){ ?>
+<?php if ($can_add){ ?>
     <div id="comments_add_form">
         <?php if ($is_karma_allowed || (!$user->is_logged && $is_guests_allowed)){ ?>
             <div class="preview_box"></div>
@@ -92,6 +96,7 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                         <?php } ?>
                     </div>
                 <?php } ?>
+                <?php $this->block('comments_add_form'); ?>
                 <?php echo $user->is_logged ? html_editor('content') : html_textarea('content'); ?>
                 <div class="buttons">
                     <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.comments.preview()'); ?>
@@ -102,8 +107,9 @@ $is_karma_allowed = $user->is_logged && !cmsUser::isPermittedLimitHigher('commen
                     <?php echo LANG_LOADING; ?>
                 </div>
             </form>
+            <?php $this->block('comments_add_form_after'); ?>
         <?php } else { ?>
-            <p><?php printf(LANG_COMMENTS_LOW_KARMA, cmsUser::getPermissionValue('comments', 'karma')); ?></p>
+            <p><?php printf($this->controller->labels->low_karma, cmsUser::getPermissionValue('comments', 'karma')); ?></p>
         <?php } ?>
     </div>
 <?php } ?>

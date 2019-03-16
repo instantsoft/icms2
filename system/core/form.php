@@ -31,7 +31,11 @@ class cmsForm {
      * @param array $structure
      */
     public function setStructure($structure = array()) {
+
         $this->structure = $structure;
+
+        return $this;
+
     }
 
     /**
@@ -40,6 +44,122 @@ class cmsForm {
      */
     public function getStructure(){
         return $this->structure;
+    }
+
+    /**
+     * Возвращает подготовленный массив полей формы
+     * @return array
+     */
+    public function getFormStructure(){
+
+        $default_lang = cmsConfig::get('language');
+
+        $langs = cmsCore::getLanguages();
+
+        $structure = $this->structure;
+
+        foreach($structure as $fid => $fieldset){
+
+            if (!isset($fieldset['childs'])) { continue; }
+
+            $childs = [];
+
+            foreach($fieldset['childs'] as $id => $field){
+
+                $name = $field->getName();
+
+                // проверяем является ли поле элементом массива
+                $is_array = strpos($name, ':');
+
+                $field->classes = [
+                    'field',
+                    'ft_'.strtolower(substr(get_class($field), 5))
+                ];
+
+                if($field->getOption('is_required')){ $field->classes[] = 'reguired_field'; }
+
+                if (!empty($field->groups_edit)){
+                    if (!in_array(0, $field->groups_edit)){
+                        $field->classes[] = 'groups-limit';
+                        foreach($field->groups_edit as $group_id){
+                            $field->classes[] = 'group-' . $group_id;
+                        }
+                    }
+                }
+
+                $field->styles = [];
+
+                if (isset($field->is_visible)){
+                    if (!$field->is_visible){
+                        $field->styles[] = 'display:none';
+                    }
+                }
+
+                if($field->visible_depend){
+                     $field->classes[] = 'child_field';
+                }
+
+                if($field->multilanguage){
+                     $field->classes[] = 'multilanguage';
+                }
+
+                if(!$field->multilanguage || $field->is_hidden || $field->getOption('is_hidden')){
+
+                    $childs[] = $field;
+
+                    continue;
+
+                }
+
+                $_childs = []; $first = true;
+
+                foreach ($langs as $lang) {
+
+                    if(!$first){
+
+                        $field = clone $field;
+
+                        $field->styles[] = 'display:none';
+
+                    }
+
+                    $field->element_title = $field->title.' ['.strtoupper($lang).']';
+
+                    if($default_lang !== $lang) {
+
+                        if($is_array){
+
+                            $name_parts = explode(':', $name);
+
+                            $name_parts[count($name_parts)-2] .= '_'.$lang;
+
+                            $field->setName(implode(':', $name_parts));
+
+                        } else {
+                            $field->setName($name.'_'.$lang);
+                        }
+
+                    }
+
+                    $field->field_tab_title = strtoupper($lang);
+
+                    $_childs[$lang] = $field;
+
+                    $first = false;
+
+                }
+
+                $childs[] = $_childs;
+
+            }
+
+            $structure[$fid]['childs'] = $childs;
+
+        }
+
+
+        return $structure;
+
     }
 
 //============================================================================//
@@ -373,56 +493,62 @@ class cmsForm {
 
         $result = array();
 
-        foreach($this->structure as $fieldset){
+        foreach($this->getFormStructure() as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
             foreach($fieldset['childs'] as $field){
 
-                $name = $field->getName();
+                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                // если поле отключено, пропускаем поле
-                if (in_array($name, $this->disabled_fields)){ continue; }
+                foreach ($_field as $field) {
 
-                $is_array = strpos($name, ':');
+                    $name = $field->getName();
 
-                $value = $request->get($name, null, $field->getDefaultVarType());
+                    // если поле отключено, пропускаем поле
+                    if (in_array($name, $this->disabled_fields)){ continue; }
 
-                if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
+                    $is_array = strpos($name, ':');
 
-                $old_value = null;
+                    $value = $request->get($name, null, $field->getDefaultVarType());
 
-                if($item){
-                    if ($is_array === false){
-                        $old_value = array_key_exists($name, $item) ? $item[$name] : null;
+                    if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
+
+                    $old_value = null;
+
+                    if($item){
+                        if ($is_array === false){
+                            $old_value = array_key_exists($name, $item) ? $item[$name] : null;
+                        }
+                        if ($is_array !== false){
+                            $old_value = array_value_recursive($name, $item);
+                        }
                     }
+
+                    $field->setItem($item);
+
+                    $value = $field->store($value, $is_submitted, $old_value);
+                    if ($value === false) { continue; }
+
+                    if ($is_array === false){
+                        $result[$name] = $value;
+                    }
+
                     if ($is_array !== false){
-                        $old_value = array_value_recursive($name, $item);
+                        $result = set_array_value_recursive($name, $result, $value);
                     }
-                }
 
-                $field->setItem($item);
+                    // если нужна денормализация
+                    if($is_submitted && $field->is_denormalization){
 
-                $value = $field->store($value, $is_submitted, $old_value);
-                if ($value === false) { continue; }
+                        $d_name = $field->getDenormalName();
 
-                if ($is_array === false){
-                    $result[$name] = $value;
-                }
+                        if ($is_array === false){
+                            $result[$d_name] = $field->storeCachedValue($value);
+                        } else {
+                            $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
+                        }
 
-                if ($is_array !== false){
-                    $result = set_array_value_recursive($name, $result, $value);
-                }
-
-                // если нужна денормализация
-                if($is_submitted && $field->is_denormalization){
-
-                    $d_name = $field->getDenormalName();
-
-                    if ($is_array === false){
-                        $result[$d_name] = $field->storeCachedValue($value);
-                    } else {
-                        $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
                     }
 
                 }
@@ -463,73 +589,79 @@ class cmsForm {
         //
         // Перебираем поля формы
         //
-        foreach($this->structure as $fieldset){
+        foreach($this->getFormStructure() as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
             foreach($fieldset['childs'] as $field){
 
-                $name = $field->getName();
+                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                // если поле отключено, пропускаем поле
-                if (in_array($name, $this->disabled_fields)){ continue; }
+                foreach ($_field as $field) {
 
-                // правила
-                $rules = $field->getRules();
+                    $name = $field->getName();
 
-                // если нет правил, пропускаем поле
-                if (!$rules){ continue; }
+                    // если поле отключено, пропускаем поле
+                    if (in_array($name, $this->disabled_fields)){ continue; }
 
-                // проверяем является ли поле элементом массива
-                $is_array = strpos($name, ':');
+                    // правила
+                    $rules = $field->getRules();
 
-                //
-                // получаем значение поля из массива данных
-                //
-                if ($is_array === false){
-                    $value = array_key_exists($name, $data) ? $data[$name] : '';
-                }
+                    // если нет правил, пропускаем поле
+                    if (!$rules){ continue; }
 
-                if ($is_array !== false){
-                    $value = array_value_recursive($name, $data);
-                }
+                    // проверяем является ли поле элементом массива
+                    $is_array = strpos($name, ':');
 
-                if ($data) { $field->setItem($data); }
-
-                //
-                // перебираем правила для поля
-                // и проверяем каждое из них
-                //
-                foreach($rules as $rule){
-
-                    if (!$rule) { continue; }
-
-                    // каждое правило это массив
-                    // первый элемент - название функции-валидатора
-                    $validate_function = "validate_{$rule[0]}";
-
-                    // к остальным элементам добавляем $value, т.к.
-                    // в валидаторах $value всегда последний аргумент
-                    $rule[] = $value;
-
-                    // убираем название валидатора из массива,
-                    // оставляем только параметры (аргументы)
-                    unset($rule[0]);
-
-                    // вызываем валидатор и объединяем результат с предыдущими
-                    // методы валидации могут быть как в самом поле
-                    // так и в контроллерах, приоритет за полем
-                    if(method_exists($field, $validate_function)){
-                        $result = call_user_func_array(array($field, $validate_function), $rule);
-                    } else {
-                        $result = call_user_func_array(array($controller, $validate_function), $rule);
+                    //
+                    // получаем значение поля из массива данных
+                    //
+                    if ($is_array === false){
+                        $value = array_key_exists($name, $data) ? $data[$name] : '';
                     }
 
-                    // если получилось false, то дальше не проверяем, т.к.
-                    // ошибка уже найдена
-                    if ($result !== true) {
-                        $errors[$name] = $result;
-                        break;
+                    if ($is_array !== false){
+                        $value = array_value_recursive($name, $data);
+                    }
+
+                    if ($data) { $field->setItem($data); }
+
+                    //
+                    // перебираем правила для поля
+                    // и проверяем каждое из них
+                    //
+                    foreach($rules as $rule){
+
+                        if (!$rule) { continue; }
+
+                        // каждое правило это массив
+                        // первый элемент - название функции-валидатора
+                        $validate_function = "validate_{$rule[0]}";
+
+                        // к остальным элементам добавляем $value, т.к.
+                        // в валидаторах $value всегда последний аргумент
+                        $rule[] = $value;
+
+                        // убираем название валидатора из массива,
+                        // оставляем только параметры (аргументы)
+                        unset($rule[0]);
+
+                        // вызываем валидатор и объединяем результат с предыдущими
+                        // методы валидации могут быть как в самом поле
+                        // так и в контроллерах, приоритет за полем
+                        if(method_exists($field, $validate_function)){
+                            $result = call_user_func_array(array($field, $validate_function), $rule);
+                        } else {
+                            $result = call_user_func_array(array($controller, $validate_function), $rule);
+                        }
+
+                        // если получилось false, то дальше не проверяем, т.к.
+                        // ошибка уже найдена
+                        if ($result !== true) {
+                            $errors[$name] = $result;
+                            break;
+                        }
+
                     }
 
                 }

@@ -47,7 +47,7 @@
             </ul>
         <?php } ?>
 
-        <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
+        <?php foreach($form->getFormStructure() as $fieldset_id => $fieldset){ ?>
 
         <?php if ($fieldset['type'] == 'html'){ ?>
             <div id="fset_<?php echo $fieldset_id; ?>"><?php if (!empty($fieldset['content'])) { echo $fieldset['content']; } ?></div>
@@ -65,95 +65,83 @@
                 <?php } ?>
 
                 <?php if (is_array($fieldset['childs'])){ ?>
-                <?php foreach($fieldset['childs'] as $field) { ?>
+                <?php foreach($fieldset['childs'] as $field) {
 
-                    <?php
+                        if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                        if ($data) { $field->setItem($data); }
+                        $first_field_key = array_keys($_field)[0];
 
-                        $name = $field->getName();
+                        if(!is_numeric($first_field_key)){ ?>
 
-                        if (is_array($errors) && isset($errors[$name])){
-                            $error = $errors[$name];
-                        } else {
-                            $error = false;
-                        }
+                            <ul class="field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
+                                <?php foreach ($_field as $key => $field) { ?>
+                                <li class="field_tabbed_<?php echo $key; ?>">
+                                    <a href="#f_<?php echo $field->id; ?>">
+                                        <?php echo isset($field->field_tab_title) ? $field->field_tab_title : ''; ?>
+                                    </a>
+                                </li>
+                                <?php } ?>
+                            </ul>
 
-                        $value = $field->getDefaultValue();
-                        $rel = isset($field->rel) ? $field->rel : null;
+                        <?php }
 
-                        if (strpos($name, ':') !== false){
-                            $name_parts = explode(':', $name);
-                            $_value = array_value_recursive($name_parts, $data);
-                            if ($_value !== null){
-                                $value = $_value;
+                        foreach ($_field as $key => $field) {
+
+                            if ($data) { $field->setItem($data); }
+
+                            $name = $field->getName();
+
+                            if (is_array($errors) && isset($errors[$name])){
+                                $error = $errors[$name];
+                            } else {
+                                $error = false;
                             }
-                            $name = array_shift($name_parts) . '[' . implode('][', $name_parts) . ']';
-                        } else {
-                            if (is_array($data) && array_key_exists($name, $data)){
-                                $value = $data[$name];
-                            }
-                        }
 
-                        $classes = array(
-                            'field',
-                            'ft_'.strtolower(substr(get_class($field), 5))
-                        );
+                            $value = $field->getDefaultValue();
 
-                        if($field->getOption('is_required')){ $classes[] = 'reguired_field'; }
-
-                        if ($error){
-                            $classes[] = 'field_error';
-                        }
-
-                        if (!empty($field->groups_edit)){
-                            if (!in_array(0, $field->groups_edit)){
-                                $classes[] = 'groups-limit';
-                                foreach($field->groups_edit as $group_id){
-                                    $classes[] = 'group-' . $group_id;
+                            if (strpos($name, ':') !== false){
+                                $name_parts = explode(':', $name);
+                                $_value = array_value_recursive($name_parts, $data);
+                                if ($_value !== null){
+                                    $value = $_value;
+                                }
+                            } else {
+                                if (is_array($data) && array_key_exists($name, $data)){
+                                    $value = $data[$name];
                                 }
                             }
-                        }
 
-                        $styles = array();
-
-                        if (isset($field->is_visible)){
-                            if (!$field->is_visible){
-                                $styles[] = 'display:none';
+                            if ($error){
+                                $field->classes[] = 'field_error';
                             }
+
+                            if($field->visible_depend){
+                                $visible_depend[] = $field;
+                            }
+
+                        ?>
+
+                        <div id="<?php echo 'f_'.$field->id; ?>" class="<?php echo implode(' ', $field->classes); ?>" <?php if (isset($field->rel)) { ?>rel="<?php echo $field->rel; ?>"<?php } ?> <?php if ($field->styles) { ?>style="<?php echo implode(';', $field->styles); ?>"<?php } ?>>
+
+                            <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
+
+                                <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
+
+                                <?php echo $field->getInput($value); ?>
+
+                                <?php if(!empty($field->hint)) { ?><div class="hint"><?php echo $field->hint; ?></div><?php } ?>
+
+                            <?php } else { ?>
+
+                                <?php echo html_input('hidden', $field->element_name, $value, array('id' => $field->id)); ?>
+
+                            <?php } ?>
+
+                        </div> <?php
+
                         }
 
-                        if($field->visible_depend){
-                            $visible_depend[] = $field;
-                            $classes[] = 'child_field';
-                        }
-
-                        $classes = implode(' ', $classes);
-                        $styles = implode(';', $styles);
-                        $id = 'f_'.$field->id;
-
-                    ?>
-
-                    <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>" <?php if ($rel) { ?>rel="<?php echo $rel; ?>"<?php } ?> <?php if ($styles) { ?>style="<?php echo $styles; ?>"<?php } ?>>
-
-                        <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
-
-                            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
-
-                            <?php echo $field->getInput($value); ?>
-
-                            <?php if(!empty($field->hint)) { ?><div class="hint"><?php echo $field->hint; ?></div><?php } ?>
-
-                        <?php } else { ?>
-
-                            <?php echo html_input('hidden', $name, $value, array('id' => $name)); ?>
-
-                        <?php } ?>
-
-                    </div>
-
-                <?php } ?>
-                <?php } ?>
+                } } ?>
 
             </fieldset>
         </div>
@@ -169,6 +157,7 @@
             <?php if ($form->is_tabbed){ ?>
                 initTabs('#<?php echo $form_id; ?>');
             <?php } ?>
+                initMultyTabs('.field_tabbed');
                 $('.is_collapsed legend').on('click', function (){
                     var _fieldset = $(this).closest('.is_collapsed');
                     $(_fieldset).toggleClass('is_collapse do_expand');

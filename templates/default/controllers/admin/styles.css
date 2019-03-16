@@ -699,7 +699,7 @@ form .hint {
 .is_collapsed.do_expand > legend {
     cursor: pointer;
 }
-.is_collapse > .field {
+.is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
     display: none !important;
 }
 /*============================================================================*/
@@ -762,7 +762,7 @@ form .hint {
 }
 
 .tabs-menu > ul,
-.tabs-menu > ul > li {
+.tabs-menu > ul > li, ul.field_tabbed, ul.field_tabbed > li {
     margin:0; padding:0;
     list-style:none;
 }
@@ -823,7 +823,46 @@ form .hint {
 }
 
 .tabs-menu > select { display:none; }
-
+ul.field_tabbed {
+    border-bottom: 1px solid #DDD;
+    display: block;
+    height: 27px;
+    margin: 10px 0 0 0;
+}
+ul.field_tabbed > li {
+    float: left;
+    background-color: #DDD;
+    border: 1px solid #DDD;
+    margin: 0 5px 0 0;
+    background-repeat: no-repeat;
+    background-position: 4px center;
+    background-size: auto 16px;
+}
+ul.field_tabbed > li.field_tabbed_ru {
+    background-image: url("../../images/languages/ru.svg");
+}
+ul.field_tabbed > li.field_tabbed_en {
+    background-image: url("../../images/languages/en.svg");
+}
+ul.field_tabbed > li > a {
+    text-decoration: none;
+    display: block;
+    padding: 5px 10px;
+}
+ul.field_tabbed > li.field_tabbed_ru > a, ul.field_tabbed > li.field_tabbed_en > a {
+    padding-left: 40px;
+}
+ul.field_tabbed > li.active {
+    background-color: #FFF;
+    border-bottom: 1px solid #FFF;
+}
+.field.multilanguage {
+    padding: 5px 0 10px 10px;
+    border-left: 1px solid #DDD;
+}
+.field.multilanguage.child_field, .field_tabbed.child_field {
+    margin-left: 20px;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 

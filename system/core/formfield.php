@@ -123,6 +123,13 @@ class cmsFormField {
 
     public $context = null;
 
+
+    /**
+     * Формировать поле формы на нескольких языках
+     * @var boolean
+     */
+    public $multilanguage = false;
+
     /**
      * @param string $name Имя поля
      * @param array $options Массив опций

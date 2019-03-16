@@ -156,7 +156,7 @@ class actionModerationLogs extends cmsAction {
         }
 
         if($additional_h1){
-            $this->setH1($additional_h1);
+            $this->cms_template->setPageH1($additional_h1);
         }
 
         $this->model->resetFilters();
