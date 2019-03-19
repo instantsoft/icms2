@@ -14,3 +14,5 @@ define('LANG_RATING_UP', 'положительно');
 define('LANG_RATING_DOWN', 'отрицательно');
 define('LANG_RATING_PM', '%s %s оценил вашу запись <a href="%s">%s</a>');
 define('LANG_RATING_NOTIFY_VOTE',  'Уведомлять об оценках записей');
+define('LANG_RATING_ITEM_LABEL',  'Подпись перед блоком в записи');
+define('LANG_RATING_LIST_LABEL',  'Подпись перед блоком в списке');

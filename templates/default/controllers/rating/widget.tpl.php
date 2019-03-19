@@ -1,6 +1,6 @@
 <?php $is_first_widget = $this->addJS('templates/default/js/rating.js'); ?>
 
-<div class="rating_widget" id="rating-<?php echo $target_subject; ?>-<?php echo $target_id; ?>"
+<div class="rating_widget <?php echo $target_controller.'_'.$target_subject; ?>_rating" id="rating-<?php echo $target_subject; ?>-<?php echo $target_id; ?>"
     <?php if ($is_enabled || $options['is_show']){ ?>
         data-target-controller="<?php echo $target_controller; ?>"
         data-target-subject="<?php echo $target_subject; ?>"
@@ -10,7 +10,9 @@
         <?php } ?>
     <?php } ?>
 >
-
+    <?php if($label){ ?>
+        <div class="rating_label"><?php echo $label; ?></div>
+    <?php } ?>
     <div class="arrow up">
         <?php if ($is_enabled){ ?>
             <a href="#vote-up" class="vote-up" title="<?php echo LANG_RATING_VOTE_UP; ?>">

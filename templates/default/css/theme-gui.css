@@ -1285,7 +1285,7 @@ ul.field_tabbed > li.active {
     fill: #d8d8d8 !important;
 }
 .stars[data-stars] .star polygon {
-    fill: #ffca28;
+    fill: #ff9f16;
 }
 .stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
     fill: #d8d8d8;
@@ -1301,6 +1301,12 @@ ul.field_tabbed > li.active {
 }
 .stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
     fill: #d8d8d8;
+}
+.rating_label {
+    float: left;
+    margin: 0 10px 0 0;
+    font-size: 12px;
+    font-weight: bold;
 }
 /* Comments Widget ========================================================== */
 #comments_widget .bad {

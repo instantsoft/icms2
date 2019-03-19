@@ -117,7 +117,11 @@ class comments extends cmsFrontend {
         }
 
         return $this->cms_template->renderInternal($this, 'tab_list', array(
-            'comment_systems' => $comment_systems
+            'comment_systems' => $comment_systems,
+            'target_controller' => $this->target_controller,
+            'target_subject'    => $this->target_subject,
+            'target_id'         => $this->target_id,
+            'target_user_id'    => $this->target_user_id
         ));
 
     }

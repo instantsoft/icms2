@@ -33,6 +33,18 @@ class onRatingCtypeBasicForm extends cmsAction {
             'visible_depend' => array('is_rating' => array('show' => array('1')))
         )));
 
+        $form->addField($fieldset, new fieldString('options:rating_item_label', array(
+            'title' => LANG_RATING_ITEM_LABEL,
+            'multilanguage' => true,
+            'visible_depend' => array('is_rating' => array('show' => array('1')))
+        )));
+
+        $form->addField($fieldset, new fieldString('options:rating_list_label', array(
+            'title' => LANG_RATING_LIST_LABEL,
+            'multilanguage' => true,
+            'visible_depend' => array('is_rating' => array('show' => array('1')))
+        )));
+
         return $form;
 
     }

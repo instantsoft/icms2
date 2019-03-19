@@ -19,6 +19,10 @@ class onRatingContentBeforeItem extends cmsAction {
                 $this->setOption('template', $ctype['options']['rating_template']);
             }
 
+            if(!empty($ctype['options']['rating_item_label'])){
+                $this->setLabel($ctype['options']['rating_item_label']);
+            }
+
             $item['rating_widget'] = $this->getWidget($item['id'], $item['rating'], $is_rating_allowed);
 
         }

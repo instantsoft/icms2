@@ -9,6 +9,7 @@ class rating extends cmsFrontend {
 
     private $user_voted = [];
     private $total_voted = 0;
+    private $label = '';
 
     public function __construct($request){
 
@@ -17,6 +18,10 @@ class rating extends cmsFrontend {
         $this->target_controller = $this->request->get('target_controller', '');
         $this->target_subject    = $this->request->get('target_subject', '');
 
+    }
+
+    public function setLabel($label) {
+        $this->label = $label; return $this;
     }
 
     public function loadCurrentUserVoted($target_ids) {
@@ -64,6 +69,7 @@ class rating extends cmsFrontend {
         return $this->cms_template->renderInternal($this, $template_name, array(
             'show_rating'       => $current_rating && !($this->options['is_hidden'] && !$is_voted && ($is_enabled || !$this->cms_user->is_logged)),
             'options'           => $this->options,
+            'label'             => $this->label,
             'total_voted'       => $this->total_voted,
             'target_controller' => $this->target_controller,
             'target_subject'    => $this->target_subject,

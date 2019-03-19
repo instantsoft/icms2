@@ -72,14 +72,19 @@ body {
 #langs a.language  > img {
     display: block;
     height: 20px;
+    filter: grayscale(0.8);
+    opacity: 0.8;
+}
+#langs a.language:hover > img {
+    opacity: 1;
 }
 
 #langs a.language + a.language {
     margin-left: 10px;
 }
 
-#langs a.selected {
-    color:#354247;
+#langs a.selected > img {
+    filter: grayscale(0);
 }
 
 #langs a:hover {
@@ -353,6 +358,10 @@ select.input {
 .swal2-popup .swal2-styled:focus {
     outline: 0!important;
     box-shadow: none!important;
+}
+.swal2-popup {
+    width: 30em !important;
+    border-radius: 0 !important;
 }
 .icon-folder { background-image:url("../images/icons/folder.png"); }
 .icon-url { background-image:url("../images/icons/url.png"); }

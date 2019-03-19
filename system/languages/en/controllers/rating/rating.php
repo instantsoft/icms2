@@ -14,3 +14,5 @@ define('LANG_RATING_UP', 'positively');
 define('LANG_RATING_DOWN', 'negatively');
 define('LANG_RATING_PM', '%s %s rated your item <a href="%s">%s</a>');
 define('LANG_RATING_NOTIFY_VOTE',  'Notify on new item vote');
+define('LANG_RATING_ITEM_LABEL',  'Inscription before the item rating block');
+define('LANG_RATING_LIST_LABEL',  'Inscription before the list item rating block');
