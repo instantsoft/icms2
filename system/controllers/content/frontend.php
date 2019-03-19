@@ -1364,4 +1364,8 @@ class content extends cmsFrontend {
 
     }
 
+    public function validate_rating_score($score) {
+        return $score >= 1 && $score <= 5;
+    }
+
 }

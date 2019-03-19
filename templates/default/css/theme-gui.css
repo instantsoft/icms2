@@ -1167,7 +1167,6 @@ ul.field_tabbed > li.active {
 .rating_widget .arrow,
 .rating_widget .score{
     float:left;
-    height:15px;
 }
 
 .rating_widget .score { margin: 0 10px; cursor:help; font-weight: bold; font-size: 14px; position: relative; }
@@ -1257,7 +1256,52 @@ ul.field_tabbed > li.active {
 .rating_info_pagination a:hover { background-color:#EDEDED; }
 .rating_info_pagination a.active,
 .rating_info_pagination a.active:hover { color:#FFF; background-color: #34495e; }
-
+.stars.is_enabled {
+    cursor: pointer;
+}
+.stars.is_enabled:hover .star polygon {
+    fill: #ffca28 !important;
+}
+.stars {
+    display: flex;
+}
+.stars.clickable {
+    cursor: pointer;
+}
+.stars .star {
+    width: 20px;
+    height: 23px;
+    margin: 0 4px 0 0;
+}
+.stars .star:last-child {
+    margin-right: 0;
+}
+.stars .star polygon {
+    fill: #d8d8d8;
+    fill-rule:nonzero;
+    transition: fill 0.3s ease;
+}
+.stars.is_enabled .star:hover ~ .star polygon {
+    fill: #d8d8d8 !important;
+}
+.stars[data-stars] .star polygon {
+    fill: #ffca28;
+}
+.stars[data-stars="1"] .star:nth-child(1) ~ .star polygon {
+    fill: #d8d8d8;
+}
+.stars[data-stars="2"] .star:nth-child(2) ~ .star polygon {
+    fill: #d8d8d8;
+}
+.stars[data-stars="3"] .star:nth-child(3) ~ .star polygon {
+    fill: #d8d8d8;
+}
+.stars[data-stars="4"] .star:nth-child(4) ~ .star polygon {
+    fill: #d8d8d8;
+}
+.stars[data-stars="5"] .star:nth-child(5) ~ .star polygon {
+    fill: #d8d8d8;
+}
 /* Comments Widget ========================================================== */
 #comments_widget .bad {
     transition: all 0.5s ease;

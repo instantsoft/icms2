@@ -59,20 +59,23 @@ body {
 }
 
 #langs {
-    height:30px;
-    line-height:30px;
-    display: inline-block;
-    background:#d0dee5;
-    padding:0 10px;
-    padding-left:5px;
+    display: flex;
+    float: right;
+    margin: 5px 0 0 0;
 }
 
-#langs a {
-    padding-left:20px;
-    margin-left:5px;
-    background: no-repeat left center;
+#langs a.language {
     text-decoration: none;
     color:#7D929D;
+    display: block;
+}
+#langs a.language  > img {
+    display: block;
+    height: 20px;
+}
+
+#langs a.language + a.language {
+    margin-left: 10px;
 }
 
 #langs a.selected {
@@ -159,7 +162,7 @@ body {
     font-size:12px;
     resize: vertical;
 }
-
+#layout #body .page {padding-bottom: 50px;}
 #layout #body .grid{
     width:100%;
     border-top: solid 1px #ECECEC;
@@ -178,8 +181,10 @@ body {
     padding:10px;
     padding-top:8px;
     text-align:right;
-    margin:-20px;
-    margin-top:20px;
+    position:absolute;
+    left: 0;
+    right:0;
+    bottom:0;
 }
 
 #layout #body .buttons input{
@@ -345,7 +350,10 @@ select.input {
     background: no-repeat 4px center;
     width:95%;
 }
-
+.swal2-popup .swal2-styled:focus {
+    outline: 0!important;
+    box-shadow: none!important;
+}
 .icon-folder { background-image:url("../images/icons/folder.png"); }
 .icon-url { background-image:url("../images/icons/url.png"); }
 .icon-email { background-image:url("../images/icons/email.png"); }

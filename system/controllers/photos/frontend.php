@@ -103,4 +103,8 @@ class photos extends cmsFrontend {
         return md5(cmsUser::getIp().$this->cms_config->host);
     }
 
+    public function validate_rating_score($score) {
+        return $score >= 1 && $score <= 5;
+    }
+
 }

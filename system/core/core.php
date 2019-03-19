@@ -515,10 +515,11 @@ class cmsCore {
      * Подключает указанный языковой файл.
      * Если файл не указан, то подключаются все PHP-файлы из папки текущего языка
      *
-     * @param string $file
-     * @return bool
+     * @param string $file Относительный путь к файлу
+     * @param string $default Язык по умолчанию, если в текущем не найдено
+     * @return boolean
      */
-    public static function loadLanguage($file=false){
+    public static function loadLanguage($file = false, $default = 'ru') {
 
         $lang_dir = 'system/languages/'. self::$language;
 
@@ -532,7 +533,14 @@ class cmsCore {
 
             // Если файл указан, то подключаем только его
             $lang_file = $lang_dir .'/'.$file.'.php';
-            return self::includeFile($lang_file);
+
+            $result = self::includeFile($lang_file);
+
+            if(!$result){
+                $result = self::includeFile('system/languages/'. $default .'/'.$file.'.php');
+            }
+
+            return $result;
 
         }
 

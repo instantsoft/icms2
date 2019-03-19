@@ -14,6 +14,9 @@ class onRatingContentBeforeList extends cmsAction {
 
             $this->setContext('content', $ctype['name']);
 
+            // вызывать после установки контекста
+            $this->loadCurrentUserVoted(array_keys($items));
+
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');
 
             foreach($items as $id => $item){

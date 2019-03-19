@@ -24,7 +24,7 @@
     </div>
 
     <div class="score" title="<?php echo LANG_RATING; ?>">
-        <?php if ($options['is_hidden'] && !$is_voted && ($is_enabled || $is_guest)){ ?>
+        <?php if (!$show_rating){ ?>
             <span>&mdash;</span>
         <?php } else { ?>
             <span class="<?php echo html_signed_class($current_rating); ?><?php if ($options['is_show']) { ?> clickable<?php } ?>">

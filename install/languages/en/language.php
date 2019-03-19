@@ -3,6 +3,7 @@
     define('LANG_PAGE_TITLE',               'InstantCMS Installation');
     define('LANG_INSTALLATION_WIZARD',      'Installation wizard');
     define('LANG_NEXT',                     'Next &rarr;');
+    define('LANG_ERROR',                    'Error');
 
     define('LANG_MANUAL',                   '<a href="http://docs.instantcms.ru/en/manual/install" target="_blank" rel="noopener noreferrer">Installation Manual</a>');
 

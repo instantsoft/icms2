@@ -684,7 +684,7 @@ aside .menu .item, section .menu .item {
 
 @media screen and (max-width: 480px) {
     #layout footer #nav { display: none !important; }
-    #breadcrumbs ul li:last-child {
+    #breadcrumbs > ul li:last-child {
         display: none;
     }
     h1 {

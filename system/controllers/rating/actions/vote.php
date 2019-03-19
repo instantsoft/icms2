@@ -1,6 +1,6 @@
 <?php
 
-class actionRatingVote extends cmsAction{
+class actionRatingVote extends cmsAction {
 
     public function run(){
 
@@ -36,9 +36,37 @@ class actionRatingVote extends cmsAction{
             ));
         }
 
+        // Проверяем наличие контроллера и модели
+        if (!(cmsCore::isControllerExists($target_controller) &&
+                    cmsCore::isModelExists($target_controller) &&
+                    cmsController::enabled($target_controller))){
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'message' => LANG_ERROR
+            ));
+        }
+
+        // получаем контроллер цели
+        $controller = cmsCore::getController($target_controller, $this->request);
+
+        // флаг, что рейтинг считать как среднее арифметическое
+        $average_rating = true;
+
         // приоритет за $score
         if(!$score){
+
             $score = ($direction == 'up' ? 1 : -1);
+
+            $average_rating = false;
+
+        } else {
+            // валидация оценки
+            if(method_exists($controller, 'validate_rating_score') && !$controller->validate_rating_score($score)){
+                return $this->cms_template->renderJSON(array(
+                    'success' => false,
+                    'message' => LANG_ERROR
+                ));
+            }
         }
 
         // Объединяем всю информацию о голосе
@@ -51,9 +79,7 @@ class actionRatingVote extends cmsAction{
             'ip'                => sprintf('%u', ip2long(cmsUser::getIp()))
         );
 
-        $target_model = cmsCore::getModel( $target_controller );
-
-        $target = $target_model->getRatingTarget($target_subject, $target_id);
+        $target = $controller->model->getRatingTarget($target_subject, $target_id);
 
         if (!$target){
             return $this->cms_template->renderJSON(array(
@@ -93,9 +119,15 @@ class actionRatingVote extends cmsAction{
         // Добавляем голос в лог
         $this->model->addVote($vote);
 
+        // как считать суммарный рейтинг
+        if($average_rating){
+            $rating = round($this->model->getTargetAverageRating($vote), 0, PHP_ROUND_HALF_DOWN);
+        } else {
+            $rating = (int)$target['rating'] + $vote['score'];
+        }
+
         // Обновляем суммарный рейтинг цели
-        $rating = (int)$target['rating'] + $vote['score'];
-        $target_model->updateRating($target_subject, $target_id, $rating);
+        $controller->model->updateRating($target_subject, $target_id, $rating);
 
         // Оповещаем всех об изменении рейтинга
         cmsEventsManager::hook('rating_vote', array(
@@ -124,6 +156,8 @@ class actionRatingVote extends cmsAction{
         // Собираем результат
         $result = array(
             'success'   => true,
+            'rating_value' => $rating,
+            'show_info' => !empty($this->options['is_show']),
             'rating'    => html_signed_num($rating),
             'css_class' => html_signed_class($rating) . ($this->options['is_show'] ? ' clickable' : ''),
             'message'   => LANG_RATING_VOTED

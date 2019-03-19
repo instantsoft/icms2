@@ -403,14 +403,13 @@ article div.content_categories:last-child {
     font-size: 11px;
     color:#95a5a6;
     clear: both;
+    line-height: 24px;
 }
 
 .content_item .info_bar .bar_item,
 .content_list_item .info_bar .bar_item {
     float:left;
     padding: 3px 10px;
-    height:18px;
-    line-height:18px;
 }
 
 .content_item .info_bar .bar_item a,
