@@ -23,7 +23,17 @@ class onRatingContentBeforeItem extends cmsAction {
                 $this->setLabel($ctype['options']['rating_item_label']);
             }
 
+            // запоминаем в этой ячейке для совместимости
             $item['rating_widget'] = $this->getWidget($item['id'], $item['rating'], $is_rating_allowed);
+
+            // с версий выше 2.11 инфобар в отдельном массиве
+            if(!isset($item['info_bar'])){ $item['info_bar'] = []; }
+
+            // добавляем блок рейтинга в самое начало
+            array_unshift($item['info_bar'], [
+                'css'   => 'bi_rating',
+                'html'  => $item['rating_widget']
+            ]);
 
         }
 

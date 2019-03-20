@@ -7,6 +7,7 @@ class comments extends cmsFrontend {
     public $target_id;
     public $target_user_id;
     public $labels;
+    public $comments_title;
 
 	protected $useOptions = true;
     public $useSeoOptions = true;
@@ -83,9 +84,13 @@ class comments extends cmsFrontend {
             ));
         }
 
+        if(!$this->comments_title){
+            $this->comments_title = ($comments ? html_spellcount(sizeof($comments), $this->labels->spellcount) : $this->labels->comments);
+        }
+
         return array(
             'name'  => 'icms',
-            'title' => ($comments ? html_spellcount(sizeof($comments), $this->labels->spellcount) : $this->labels->comments),
+            'title' => $this->comments_title,
             'html'  => $this->cms_template->renderInternal($this, 'list', array(
                 'user'              => $this->cms_user,
                 'target_controller' => $this->target_controller,

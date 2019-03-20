@@ -55,6 +55,9 @@ class widgetContentSlider extends cmsWidget {
         $items = $model->limit($limit)->getContentItems($ctype['name']);
         if (!$items) { return false; }
 
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
+
         list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));
 

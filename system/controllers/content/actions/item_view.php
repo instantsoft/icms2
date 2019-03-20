@@ -146,6 +146,7 @@ class actionContentItemView extends cmsAction {
         // Парсим значения полей
         foreach($fields as $name=>$field){
             $fields[ $name ]['html'] = $field['handler']->setItem($item)->parse( $item[$name] );
+            $fields[ $name ]['string_value'] = $field['handler']->getStringValue( $item[$name] );
         }
 
         // формируем связи (дочерние списки)
@@ -338,6 +339,9 @@ class actionContentItemView extends cmsAction {
             $item['approved_by'] = cmsCore::getModel('users')->getUser($item['approved_by']);
         }
 
+        // формируем инфобар
+        $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields);
+
         list($ctype, $item, $fields) = cmsEventsManager::hook('content_before_item', array($ctype, $item, $fields));
         list($ctype, $item, $fields) = cmsEventsManager::hook("content_{$ctype['name']}_before_item", array($ctype, $item, $fields));
 
@@ -377,18 +381,7 @@ class actionContentItemView extends cmsAction {
         cmsModel::cacheResult('current_ctype_props_props_fieldsets', $props_fieldsets);
 
         // SEO параметры
-        $seo_desc = $seo_keys = '';
-        $seo_title = $item['title'];
-
-        if (!empty($ctype['seo_keys'])){ $seo_keys = $ctype['seo_keys']; }
-        if (!empty($ctype['seo_desc'])){ $seo_desc = $ctype['seo_desc']; }
-        if (!empty($item['seo_keys'])){ $seo_keys = $item['seo_keys']; }
-        if (!empty($item['seo_desc'])){ $seo_desc = $item['seo_desc']; }
-        if (!empty($item['seo_title'])){ $seo_title = $item['seo_title']; }
-
-        $this->cms_template->setPageKeywords($seo_keys);
-        $this->cms_template->setPageDescription($seo_desc);
-        $this->cms_template->setPageTitle($seo_title);
+        $item_seo = $this->applyItemSeo($ctype, $item, $fields);
 
         // глубиномер
         if (empty($ctype['options']['item_off_breadcrumb']) && empty($item['off_breadcrumb'])){
@@ -444,6 +437,7 @@ class actionContentItemView extends cmsAction {
         }
 
         return $this->cms_template->render('item_view', array(
+            'item_seo'         => $item_seo,
             'ctype'            => $ctype,
             'fields'           => $fields,
             'fields_fieldsets' => $fields_fieldsets,
@@ -693,6 +687,111 @@ class actionContentItemView extends cmsAction {
 
         // ничего не нашли
         return cmsCore::error404();
+
+    }
+
+    public function applyItemSeo($ctype, $item, $fields) {
+
+        $seo_desc = $seo_keys = ''; $seo_title = $item['title'];
+
+        $meta_item = $this->prepareItemSeo($item, $fields, $ctype);
+
+        if(!empty($ctype['options']['seo_title_pattern'])){
+
+            $seo_title = $ctype['options']['seo_title_pattern'];
+
+            $this->cms_template->setPageTitleItem($meta_item);
+        }
+
+        if(!empty($ctype['options']['seo_keys_pattern'])){
+
+            $seo_keys = $ctype['options']['seo_keys_pattern'];
+
+            $this->cms_template->setPageKeywordsItem($meta_item);
+        }
+
+        if(!empty($ctype['options']['seo_desc_pattern'])){
+
+            $seo_desc = $ctype['options']['seo_desc_pattern'];
+
+            $this->cms_template->setPageDescriptionItem($meta_item);
+        }
+
+        // приоритет за заданными в записи
+        if (!empty($item['seo_title'])){ $seo_title = $item['seo_title']; }
+        if (!empty($item['seo_keys'])){ $seo_keys = $item['seo_keys']; }
+        if (!empty($item['seo_desc'])){ $seo_desc = $item['seo_desc']; }
+
+        $this->cms_template->setPageTitle($seo_title);
+        $this->cms_template->setPageKeywords($seo_keys);
+        $this->cms_template->setPageDescription($seo_desc);
+
+        return array(
+            'meta_item' => $meta_item,
+            'title_str' => $seo_title,
+            'keys_str'  => $seo_keys,
+            'desc_str'  => $seo_desc
+        );
+
+    }
+
+    public function getItemInfoBar($ctype, $item, $fields) {
+
+        $bar = [];
+
+        if (!empty($fields['date_pub']['is_in_item'])){
+            $bar[] = [
+                'css'   => 'bi_date_pub',
+                'html'  => $fields['date_pub']['html'],
+                'title' => $fields['date_pub']['title']
+            ];
+        }
+
+        if (!$item['is_pub']){
+            $bar[] = [
+                'css'   => 'bi_not_pub',
+                'html'  => LANG_CONTENT_NOT_IS_PUB
+            ];
+        }
+
+        if (!empty($ctype['options']['hits_on'])){
+            $bar[] = [
+                'css'   => 'bi_hits',
+                'html'  => $item['hits_count'],
+                'title' => LANG_HITS
+            ];
+        }
+
+        if (!empty($fields['user']['is_in_item'])){
+            $bar[] = [
+                'css'   => 'bi_user',
+                'html'  => $fields['user']['html'],
+                'title' => $fields['user']['title']
+            ];
+            if (!empty($item['folder_title'])){
+                $bar[] = [
+                    'css'  => 'bi_folder',
+                    'html' => $item['folder_title'],
+                    'href' => href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id']))
+                ];
+            }
+        }
+
+        if (!empty($ctype['options']['share_code'])){
+            $bar[] = [
+                'css'   => 'bi_share',
+                'html'  => $ctype['options']['share_code']
+            ];
+        }
+
+        if (!$item['is_approved']){
+            $bar[] = [
+                'css'   => 'bi_not_approved',
+                'html'  => $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED
+            ];
+        }
+
+        return $bar;
 
     }
 

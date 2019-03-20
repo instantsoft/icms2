@@ -21,11 +21,41 @@ class onCommentsContentBeforeItem extends cmsAction {
 
             }
 
+            if (!empty($ctype['options']['comments_title_pattern'])){
+                $this->comments_title = string_replace_keys_values_extended($ctype['options']['comments_title_pattern'], $this->getItemSeo($item, $fields));
+            }
+
             $item['comments_widget'] = $this->getWidget();
 
         }
 
         return array($ctype, $item, $fields);
+
+    }
+
+    private function getItemSeo($item, $fields) {
+
+        $_item = $item;
+
+        foreach ($fields as $field) {
+
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
+
+            if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
+                $_item[$field['name']] = null; continue;
+            }
+
+            $_item[$field['name']] = $field['string_value'];
+
+        }
+
+        if(!empty($item['category']['title'])){
+            $_item['category'] = $item['category']['title'];
+        } else {
+            $_item['category'] = null;
+        }
+
+        return $_item;
 
     }
 

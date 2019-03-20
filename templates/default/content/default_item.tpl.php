@@ -85,61 +85,19 @@
         </div>
     <?php } ?>
 
-    <?php
-        $show_bar = !empty($item['rating_widget']) ||
-                    !empty($fields['date_pub']['is_in_item']) ||
-                    !empty($fields['user']['is_in_item']) ||
-					!empty($ctype['options']['hits_on']) ||
-					!$item['is_pub'] ||
-                    !$item['is_approved'];
-    ?>
-
     <?php if ($ctype['item_append_html']){ ?>
         <div class="append_html"><?php echo $ctype['item_append_html']; ?></div>
     <?php } ?>
 
-    <?php if ($show_bar){ ?>
+    <?php if (!empty($item['info_bar'])){ ?>
         <div class="info_bar">
-            <?php if (!empty($item['rating_widget'])){ ?>
-                <div class="bar_item bi_rating">
-                    <?php echo $item['rating_widget']; ?>
-                </div>
-            <?php } ?>
-            <?php if (!empty($fields['date_pub']['is_in_item'])){ ?>
-                <div class="bar_item bi_date_pub" title="<?php html( $fields['date_pub']['title'] ); ?>">
-                    <?php echo $fields['date_pub']['html']; ?>
-                </div>
-            <?php } ?>
-            <?php if (!$item['is_pub']){ ?>
-                <div class="bar_item bi_not_pub">
-                    <?php echo LANG_CONTENT_NOT_IS_PUB; ?>
-                </div>
-            <?php } ?>
-            <?php if (!empty($ctype['options']['hits_on'])){ ?>
-                <div class="bar_item bi_hits" title="<?php echo LANG_HITS; ?>">
-                    <?php echo $item['hits_count']; ?>
-                </div>
-            <?php } ?>
-            <?php if (!empty($fields['user']['is_in_item'])){ ?>
-                <div class="bar_item bi_user" title="<?php html( $fields['user']['title'] ); ?>">
-                    <?php echo $fields['user']['html']; ?>
-                </div>
-                <?php if (!empty($item['folder_title'])){ ?>
-                    <div class="bar_item bi_folder">
-                        <a href="<?php echo href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id'])); ?>"><?php echo $item['folder_title']; ?></a>
-                    </div>
-                <?php } ?>
-            <?php } ?>
-            <?php if (!empty($ctype['options']['share_code'])){ ?>
-                <div class="bar_item bi_share">
-                    <div class="share">
-                        <?php echo $ctype['options']['share_code']; ?>
-                    </div>
-                </div>
-            <?php } ?>
-            <?php if (!$item['is_approved']){ ?>
-                <div class="bar_item bi_not_approved">
-                    <?php echo $item['is_draft'] ? LANG_CONTENT_DRAFT_NOTICE : LANG_CONTENT_NOT_APPROVED; ?>
+            <?php foreach($item['info_bar'] as $bar){ ?>
+                <div class="bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                    <?php if (!empty($bar['href'])){ ?>
+                        <a href="<?php echo $bar['href']; ?>"><?php echo $bar['html']; ?></a>
+                    <?php } else { ?>
+                        <?php echo $bar['html']; ?>
+                    <?php } ?>
                 </div>
             <?php } ?>
         </div>

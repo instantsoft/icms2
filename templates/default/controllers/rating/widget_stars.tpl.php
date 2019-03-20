@@ -1,6 +1,6 @@
 <?php $this->addJS('templates/default/js/rating_stars.js'); ?>
 
-<div class="rating_stars_widget" id="rating-<?php echo $target_subject; ?>-<?php echo $target_id; ?>"
+<div class="rating_stars_widget <?php echo $target_controller.'_'.$target_subject; ?>_rating" id="rating-<?php echo $target_subject; ?>-<?php echo $target_id; ?>"
         data-url="<?php echo $this->href_to('vote'); ?>"
     <?php if ($is_enabled || $options['is_show']){ ?>
         data-target-controller="<?php echo $target_controller; ?>"

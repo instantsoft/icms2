@@ -102,6 +102,9 @@ class widgetContentList extends cmsWidget {
             }
         }
 
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
+
 		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 

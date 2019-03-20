@@ -10,6 +10,16 @@ class cmsForm {
 
     protected $controller;
 
+    protected $data = [];
+
+    public function setData($key, $value) {
+        $this->data[$key] = $value; return $this;
+    }
+
+    public function getData($key) {
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+    }
+
     /**
      * Сохраняет ссылку на контроллер контекста
      * @param object $controller_obj

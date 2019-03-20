@@ -1076,10 +1076,14 @@ class content extends cmsFrontend {
             if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
-                $_item[$field['name']] = ''; continue;
+                $_item[$field['name']] = null; continue;
             }
 
-            $_item[$field['name']] = $field['handler']->setItem($item)->getStringValue($item[$field['name']]);
+            if(isset($field['string_value'])){
+                $_item[$field['name']] = $field['string_value'];
+            } else {
+                $_item[$field['name']] = $field['handler']->setItem($item)->getStringValue($item[$field['name']]);
+            }
 
         }
 
@@ -1090,7 +1094,7 @@ class content extends cmsFrontend {
         if(!empty($item['category']['title'])){
             $_item['category'] = $item['category']['title'];
         } else {
-            $_item['category'] = '';
+            $_item['category'] = null;
         }
 
         return $_item;

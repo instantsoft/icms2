@@ -25,7 +25,7 @@ class formAdminCtypesBasic extends cmsForm {
             'filter_string'
         ]).'}</a>';
 
-        $item_fields = ['category'];
+        $item_fields = ['category', 'hits_count', 'comments', 'rating', 'tags'];
 
         if(!empty($ctype['name'])){
 
@@ -40,6 +40,10 @@ class formAdminCtypesBasic extends cmsForm {
         }
 
         $item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', $item_fields).'}</a>';
+
+        $this->setData('meta_item_fields', $meta_item_fields);
+        $this->setData('meta_ctype_fields', $meta_ctype_fields);
+        $this->setData('item_fields', $item_fields);
 
         return array(
             'titles' => array(
@@ -312,7 +316,7 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('url_pattern', array(
                         'title' => LANG_CP_URL_PATTERN,
-                        'prefix' => '/articles/',
+                        'prefix' => '/'.(!empty($ctype['name']) ? $ctype['name'] : '').'/',
                         'suffix' => '.html',
                         'default' => '{id}-{title}',
                         'options'=>array(
