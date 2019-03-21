@@ -2149,38 +2149,69 @@ class cmsTemplate {
 //============================================================================//
 //============================================================================//
     /**
-     * Возвращает все названия шаблонов для списка записей типов контента
+     * Возвращает массив шаблонов по маске,
+     * учитывая наследование
+     *
+     * @param string $path
+     * @param string $pattern
      * @return array
      */
-    public function getAvailableContentListStyles(){
+    public function getAvailableTemplatesFiles($path, $pattern='*.*', $template_name = false) {
 
-        $styles = $files = array();
+        if(!$template_name){
+            $template_name = $this->site_config->template;
+        }
+
+        $files = $__files = [];
 
         $inherit_names = array('default');
-        if(file_exists($this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php')){
-            $names = include $this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php';
+        if(file_exists($this->site_config->root_path.'templates/'.$template_name.'/inherit.php')){
+            $names = include $this->site_config->root_path.'templates/'.$template_name.'/inherit.php';
             if($names){
                 foreach ($names as $name) {
                     $inherit_names[] = $name;
                 }
             }
         }
-        if($this->site_config->template !== 'default'){
-            $inherit_names[] = $this->site_config->template;
+        if($template_name !== 'default'){
+            $inherit_names[] = $template_name;
         }
         $inherit_names = array_reverse($inherit_names);
 
         foreach ($inherit_names as $name) {
-            $_files = cmsCore::getFilesList('templates/'.$name.'/content', 'default_list*.tpl.php', true);
+            $_files = cmsCore::getFilesList('templates/'.$name.'/'.$path, $pattern, true);
             $files = array_merge($files, $_files);
         }
 
         $files = array_unique($files);
-        if (!$files) { return $styles; }
+
+        if($files){
+            foreach ($files as $file) {
+                $k = str_replace('.tpl', '', $file);
+                $__files[$k] = $k;
+            }
+            $files = $__files; asort($files);
+        }
+
+        return $files;
+
+    }
+
+
+    /**
+     * Возвращает все названия шаблонов для списка записей типов контента
+     * @return array
+     */
+    public function getAvailableContentListStyles(){
+
+        $files = $this->getAvailableTemplatesFiles('content', 'default_list*.tpl.php');
+        if (!$files) { return []; }
+
+        $styles = [];
 
         foreach($files as $file){
 
-            preg_match('/^default_list_([a-z0-9_\-]*)\.tpl$/i', $file, $matches);
+            preg_match('/^default_list_([a-z0-9_\-]*)$/i', $file, $matches);
 
             if (!$matches){
                 $styles[''] = 'default_list (' . LANG_CP_LISTVIEW_STYLE_BASIC .')';
@@ -2200,37 +2231,19 @@ class cmsTemplate {
      * Возвращает все названия шаблонов для просмотра записи типа контента
      * Такие файлы должны называться по принципу: CTYPENAME_item_TPLNAME.tpl.php
      *
+     * @param string $ctype_name Имя типа контента
      * @return array
      */
     public function getAvailableContentItemStyles($ctype_name){
 
-        $styles = $files = array();
+        $files = $this->getAvailableTemplatesFiles('content', $ctype_name.'_item_*.tpl.php');
+        if (!$files) { return []; }
 
-        $inherit_names = array('default');
-        if(file_exists($this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php')){
-            $names = include $this->site_config->root_path.'templates/'.$this->site_config->template . '/inherit.php';
-            if($names){
-                foreach ($names as $name) {
-                    $inherit_names[] = $name;
-                }
-            }
-        }
-        if($this->site_config->template !== 'default'){
-            $inherit_names[] = $this->site_config->template;
-        }
-        $inherit_names = array_reverse($inherit_names);
-
-        foreach ($inherit_names as $name) {
-            $_files = cmsCore::getFilesList('templates/'.$name.'/content', $ctype_name.'_item_*.tpl.php', true);
-            $files = array_merge($files, $_files);
-        }
-
-        $files = array_unique($files);
-        if (!$files) { return $styles; }
+        $styles = [];
 
         foreach($files as $file){
 
-            preg_match('/^'.$ctype_name.'_item_([a-z0-9_\-]*)\.tpl$/i', $file, $matches);
+            preg_match('/^'.$ctype_name.'_item_([a-z0-9_\-]*)$/i', $file, $matches);
 
             if(!empty($matches[1])){
                 $styles[$matches[1]] = pathinfo($file, PATHINFO_BASENAME);

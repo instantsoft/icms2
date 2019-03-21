@@ -18,6 +18,29 @@ class formCommentsOptions extends cmsForm {
                         'hint' => LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT
                     )),
 
+                    new fieldListMultiple('show_list', array(
+                        'title' => LANG_COMMENTS_SHOW_LIST,
+                        'default' => 0,
+                        'show_all'=> true,
+                        'generator' => function($item) {
+
+                            $items = [];
+
+                            $comments_targets = cmsEventsManager::hookAll('comments_targets');
+
+                            if (is_array($comments_targets)){
+                                foreach($comments_targets as $comments_target){
+                                    foreach($comments_target['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    )),
+
                     new fieldCheckbox('is_guests', array(
                         'title' => LANG_COMMENTS_OPT_IS_GUESTS,
                         'hint' => LANG_COMMENTS_OPT_IS_GUESTS_HINT,

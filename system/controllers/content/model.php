@@ -2690,6 +2690,19 @@ class modelContent extends cmsModel {
 
     }
 
+    public function getCommentsOptions($ctype_name) {
+
+        $ctype = $this->getContentTypeByName($ctype_name);
+
+        return [
+            'enable' => $ctype['is_comments'],
+            'title_pattern' => (!empty($ctype['options']['comments_title_pattern']) ? $ctype['options']['comments_title_pattern'] : ''),
+            'labels' => (!empty($ctype['options']['comments_labels']) ? $ctype['options']['comments_labels'] : []),
+            'template' => (!empty($ctype['options']['comments_template']) ? $ctype['options']['comments_template'] : '')
+        ];
+
+    }
+
     public function getTargetItemInfo($ctype_name, $id){
 
         $item = $this->getContentItem($ctype_name, $id);

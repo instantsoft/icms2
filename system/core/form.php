@@ -63,6 +63,7 @@ class cmsForm {
     public function getFormStructure(){
 
         $default_lang = cmsConfig::get('language');
+        $is_change_lang = cmsConfig::get('is_user_change_lang');
 
         $langs = cmsCore::getLanguages();
 
@@ -109,11 +110,13 @@ class cmsForm {
                      $field->classes[] = 'child_field';
                 }
 
-                if($field->multilanguage){
+                $is_multilanguage = $field->multilanguage && $is_change_lang;
+
+                if($is_multilanguage){
                      $field->classes[] = 'multilanguage';
                 }
 
-                if(!$field->multilanguage || $field->is_hidden || $field->getOption('is_hidden')){
+                if(!$is_multilanguage || $field->is_hidden || $field->getOption('is_hidden')){
 
                     $childs[] = $field;
 
@@ -125,15 +128,17 @@ class cmsForm {
 
                 foreach ($langs as $lang) {
 
-                    if(!$first){
-
-                        $field = clone $field;
-
-                        $field->styles[] = 'display:none';
-
+                    if($default_lang !== $lang) {
+                        $_field = clone $field;
+                    } else {
+                        $_field = $field;
                     }
 
-                    $field->element_title = $field->title.' ['.strtoupper($lang).']';
+                    if(!$first){
+                        $_field->styles[] = 'display:none';
+                    }
+
+                    $_field->element_title = $_field->title.' ['.strtoupper($lang).']';
 
                     if($default_lang !== $lang) {
 
@@ -143,17 +148,17 @@ class cmsForm {
 
                             $name_parts[count($name_parts)-2] .= '_'.$lang;
 
-                            $field->setName(implode(':', $name_parts));
+                            $_field->setName(implode(':', $name_parts));
 
                         } else {
-                            $field->setName($name.'_'.$lang);
+                            $_field->setName($name.'_'.$lang);
                         }
 
                     }
 
-                    $field->field_tab_title = strtoupper($lang);
+                    $_field->field_tab_title = strtoupper($lang);
 
-                    $_childs[$lang] = $field;
+                    $_childs[$lang] = $_field;
 
                     $first = false;
 

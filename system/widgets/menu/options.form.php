@@ -36,24 +36,7 @@ class formWidgetMenuOptions extends cmsForm {
                         'hint'  => LANG_WD_MENU_TEMPLATE_HINT,
                         'default' => 'menu',
                         'generator' => function($item) use ($template_name) {
-
-                            $default_tpls = cmsCore::getFilesList('templates/default/assets/ui/', 'menu*.tpl.php');
-                            $current_tpls = cmsCore::getFilesList('templates/'.$template_name.'/assets/ui/', 'menu*.tpl.php');
-
-                            $tpls = array_unique(array_merge($current_tpls, $default_tpls));
-
-                            $items = array();
-
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
-                                }
-                            }
-
-                            asort($items);
-
-                            return $items;
-
+                            return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'menu*.tpl.php', $template_name);
                         }
                     )),
 
@@ -70,10 +53,10 @@ class formWidgetMenuOptions extends cmsForm {
                         'title' => LANG_WD_MENU_MAX_ITEMS,
                         'hint' => LANG_WD_MENU_MAX_ITEMS_HINT,
                         'default' => 0
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

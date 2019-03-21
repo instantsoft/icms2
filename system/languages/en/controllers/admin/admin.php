@@ -130,6 +130,7 @@
     define('LANG_CP_COMMENTS',                  'Comments');
     define('LANG_CP_COMMENTS_REPLACE_LABEL',    'Replacing the phrase for ');
     define('LANG_CP_COMMENTS_TITLE_PATTERN',    'Comment Block Header Pattern');
+    define('LANG_CP_COMMENTS_TEMPLATE',         'Comments template');
     define('LANG_CP_COMMENTS_ON',               'Enable comments');
     define('LANG_CP_RATING',                    'Rating');
     define('LANG_CP_RATING_ON',                 'Enable rating');

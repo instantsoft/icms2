@@ -49,14 +49,14 @@ class widgetContentSlider extends cmsWidget {
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
         $model->enableHiddenParentsFilter();
 
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
+
 		list($ctype, $model) = cmsEventsManager::hook('content_list_filter', array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));
 
         $items = $model->limit($limit)->getContentItems($ctype['name']);
         if (!$items) { return false; }
-
-        // выключаем формирование рейтинга в хуках
-        $ctype['is_rating'] = 0;
 
         list($ctype, $items) = cmsEventsManager::hook("content_before_list", array($ctype, $items));
         list($ctype, $items) = cmsEventsManager::hook("content_{$ctype['name']}_before_list", array($ctype, $items));

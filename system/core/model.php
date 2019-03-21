@@ -644,15 +644,24 @@ class cmsModel {
             return $item;
         }
 
+        if(!is_array($item)){ return $item; }
+
         $postfix = '_' . $this->lang;
 
         foreach ($item as $key => $value) {
 
-            if (!isset($item[$key . $postfix])) {
+            $lang_key = $key . $postfix;
+
+            if (!isset($item[$lang_key])) {
+
+                if(is_array($value) && $value){
+                    $item[$key] = $this->replaceTranslatedField($value, $table_name);
+                }
+
                 continue;
             }
 
-            $item[$key] = $item[$key . $postfix];
+            $item[$key] = $item[$lang_key];
 
         }
 
@@ -1598,7 +1607,7 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getItem($table_name, $item_callback=false){
+    public function getItem($table_name, $item_callback = false){
 
         $select = implode(', ', $this->select);
 
@@ -1628,7 +1637,15 @@ class cmsModel {
             $cache = cmsCache::getInstance();
 
             if (false !== ($item = $cache->get($cache_key))){
+
+                $item = call_user_func_array($item_callback, array($item, $this));
+
+                if($this->localized){
+                    $item = $this->replaceTranslatedField($item, $table_name);
+                }
+
                 $this->stopCache();
+
                 return $item;
             }
 
@@ -1640,18 +1657,23 @@ class cmsModel {
 
         $item = $this->db->fetchAssoc($result);
 
-        if($this->localized){
-            $item = $this->replaceTranslatedField($item, $table_name);
+        // для кеша формируем массив без обработки коллбэком
+        if ($this->cache_key){
+            $_item[] = $item;
         }
 
         if(is_callable($item_callback)){
             $item = call_user_func_array($item_callback, array($item, $this));
         }
 
+        if($this->localized){
+            $item = $this->replaceTranslatedField($item, $table_name);
+        }
+
         // если указан ключ кеша для этого запроса
         // то сохраняем результаты в кеше
         if ($this->cache_key){
-            $cache->set($cache_key, $item);
+            $cache->set($cache_key, $_item);
             $this->stopCache();
         }
 
@@ -1763,12 +1785,12 @@ class cmsModel {
 
                     foreach ($_items as $key => $item) {
 
+                        $item = call_user_func_array($item_callback, array($item, $this));
+                        if ($item === false){ continue; }
+
                         if($this->localized){
                             $item = $this->replaceTranslatedField($item, $table_name);
                         }
-
-                        $item = call_user_func_array($item_callback, array($item, $this));
-                        if ($item === false){ continue; }
 
                         $items[$key] = $item;
 
@@ -1803,15 +1825,15 @@ class cmsModel {
                 }
             }
 
-            if($this->localized){
-                $item = $this->replaceTranslatedField($item, $table_name);
-            }
-
             // если задан коллбек для обработки строк,
             // то пропускаем строку через него
             if (is_callable($item_callback)){
                 $item = call_user_func_array($item_callback, array($item, $this));
                 if ($item === false){ continue; }
+            }
+
+            if($this->localized){
+                $item = $this->replaceTranslatedField($item, $table_name);
             }
 
             // добавляем обработанную строку в результирующий массив

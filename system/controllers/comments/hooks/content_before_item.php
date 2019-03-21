@@ -13,16 +13,18 @@ class onCommentsContentBeforeItem extends cmsAction {
             $this->target_id         = $item['id'];
             $this->target_user_id    = $item['user_id'];
 
-            $labels = get_localized_value('comments_labels', $ctype['options']);
+            if(!empty($ctype['options']['comments_labels'])){
 
-            if($labels){
-
-                $this->setLabels($labels);
+                $this->setLabels($ctype['options']['comments_labels']);
 
             }
 
             if (!empty($ctype['options']['comments_title_pattern'])){
                 $this->comments_title = string_replace_keys_values_extended($ctype['options']['comments_title_pattern'], $this->getItemSeo($item, $fields));
+            }
+
+            if (!empty($ctype['options']['comments_template'])){
+                $this->comment_template = $ctype['options']['comments_template'];
             }
 
             $item['comments_widget'] = $this->getWidget();

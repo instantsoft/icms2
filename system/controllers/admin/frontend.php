@@ -14,6 +14,14 @@ class admin extends cmsFrontend {
 
     public $install_folder_exists = false;
 
+    function __construct( cmsRequest $request){
+
+        parent::__construct($request);
+
+        cmsModel::globalLocalizedOff();
+
+    }
+
 	public function routeAction($action_name) {
 
         if($this->request->isStandard()){
@@ -583,16 +591,7 @@ class admin extends cmsFrontend {
                 'title' => LANG_WIDGET_WRAPPER_TPL,
 				'hint'  => LANG_WIDGET_WRAPPER_TPL_HINT,
                 'generator' => function($item) use ($template){
-                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/widgets', 'wrapper*.tpl.php');
-                    $default_tpls = cmsCore::getFilesList('templates/default/widgets', 'wrapper*.tpl.php');
-                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
-                    $items = array();
-                    if ($tpls) {
-                        foreach ($tpls as $tpl) {
-                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
-                        }
-                    }
-                    return $items;
+                    return $this->cms_template->getAvailableTemplatesFiles('widgets', 'wrapper*.tpl.php', $template);
                 }
             )));
 
@@ -602,17 +601,7 @@ class admin extends cmsFrontend {
                 'default' => $widget_name,
                 'generator' => function($item) use ($template){
                     $w_path = cmsCore::getWidgetPath($item['name'], $item['controller']);
-                    $current_tpls = cmsCore::getFilesList('templates/'.$template.'/'.$w_path, '*.tpl.php');
-                    $default_tpls = cmsCore::getFilesList('templates/default/'.$w_path, '*.tpl.php');
-                    $tpls = array_unique(array_merge($current_tpls, $default_tpls));
-                    $items = array();
-                    if ($tpls) {
-                        foreach ($tpls as $tpl) {
-                            $items[str_replace('.tpl.php', '', $tpl)] = str_replace('.tpl.php', '', $tpl);
-                        }
-                        asort($items);
-                    }
-                    return $items;
+                    return $this->cms_template->getAvailableTemplatesFiles($w_path, '*.tpl.php', $template);
                }
             )));
 
@@ -665,15 +654,13 @@ class admin extends cmsFrontend {
                 'default' => 0,
                 'show_all'=> true,
                 'generator' => function($item) use ($template){
-                    $layouts = cmsCore::getFilesList('templates/'.$template.'/', '*.tpl.php');
-                    $items = array();
+                    $layouts = $this->cms_template->getAvailableTemplatesFiles('', '*.tpl.php', $template);
+                    $items = [];
                     if ($layouts) {
                         foreach ($layouts as $layout) {
-                            $name = str_replace('.tpl.php', '', $layout);
-                            if($name == 'admin'){ continue; }
-                            $items[$name] = string_lang('LANG_'.$template.'_THEME_LAYOUT_'.$name, $name);
+                            if($layout == 'admin'){ continue; }
+                            $items[$layout] = string_lang('LANG_'.$template.'_THEME_LAYOUT_'.$layout, $layout);
                         }
-                        asort($items);
                     }
                     return $items;
                }

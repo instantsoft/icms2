@@ -322,7 +322,7 @@ class actionContentCategoryView extends cmsAction {
             if (empty($ctype['options']['list_on'])) { return cmsCore::error404(); }
 
             // должно быть точное совпадение
-            if ($slug !== $category['slug']){
+            if ($slug !== 'index' && strlen($slug) === strlen($category['slug']) && $slug !== $category['slug']){
                 if(($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default))){
                     $this->redirect(href_to($category['slug']), 301);
                 }

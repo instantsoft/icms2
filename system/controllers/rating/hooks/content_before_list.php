@@ -17,7 +17,7 @@ class onRatingContentBeforeList extends cmsAction {
             // вызывать после установки контекста
             $this->loadCurrentUserVoted(array_keys($items));
 
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate');
+            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate', true, true);
 
             if(!empty($ctype['options']['rating_list_label'])){
                 $this->setLabel($ctype['options']['rating_list_label']);

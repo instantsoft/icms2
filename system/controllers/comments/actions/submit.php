@@ -288,6 +288,14 @@ class actionCommentsSubmit extends cmsAction {
 
         }
 
+        // получаем опции, если есть
+        $target_options = [];
+        if(method_exists($target_model, 'getCommentsOptions')){
+            $target_options = $target_model->getCommentsOptions($this->target_subject);
+        }
+
+        $template_name = !empty($target_options['template']) ? $target_options['template'] : $this->comment_template;
+
         // Формируем и возвращаем результат
         return $this->cms_template->renderJSON(array(
             'error'     => false,
@@ -295,7 +303,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => $this->cms_template->render('comment', array(
+            'html'      => $this->cms_template->render($template_name, array(
                 'comments'       => array($comment),
                 'target_user_id' => $this->target_user_id,
                 'user'           => $this->cms_user

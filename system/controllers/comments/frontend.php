@@ -8,6 +8,7 @@ class comments extends cmsFrontend {
     public $target_user_id;
     public $labels;
     public $comments_title;
+    public $comment_template = 'comment';
 
 	protected $useOptions = true;
     public $useSeoOptions = true;

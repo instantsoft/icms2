@@ -46,7 +46,7 @@ $this->addJS($this->getJavascriptFileName('comments'));
 
     <?php if ($comments){ ?>
 
-        <?php echo $this->renderChild('comment', array(
+        <?php echo $this->renderChild($this->controller->comment_template, array(
             'comments'         => $comments,
             'target_user_id'   => $target_user_id,
             'user'             => $user,

@@ -13,7 +13,7 @@ class onRatingContentBeforeItem extends cmsAction {
             $this->loadCurrentUserVoted([$item['id']]);
             $this->loadCurrentTotalVoted($item['id']);
 
-            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate') && ($item['user_id'] != $this->cms_user->id);
+            $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate', true, true) && ($item['user_id'] != $this->cms_user->id);
 
             if(!empty($ctype['options']['rating_template'])){
                 $this->setOption('template', $ctype['options']['rating_template']);

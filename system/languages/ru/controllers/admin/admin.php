@@ -130,6 +130,7 @@
     define('LANG_CP_COMMENTS',                  'Комментарии');
     define('LANG_CP_COMMENTS_REPLACE_LABEL',    'Замена фразы для ');
     define('LANG_CP_COMMENTS_TITLE_PATTERN',    'Паттерн заголовка блока комментариев');
+    define('LANG_CP_COMMENTS_TEMPLATE',         'Шаблон комментариев');
     define('LANG_CP_COMMENTS_ON',               'Включить комментарии');
     define('LANG_CP_RATING',                    'Рейтинг');
     define('LANG_CP_RATING_ON',                 'Включить рейтинг');

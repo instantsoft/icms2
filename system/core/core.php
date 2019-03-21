@@ -75,6 +75,9 @@ class cmsCore {
                     // язык по умолчанию без префиксов, дубли нам не нужны
                     if($segments[0] != $config->language){
 
+                        // включаем для моделей поддержку
+                        cmsModel::globalLocalizedOn();
+
                         self::$language = self::$language_href_prefix = $segments[0]; unset($segments[0]);
 
                         $_SERVER['REQUEST_URI'] = $config->root.implode('/', $segments);
