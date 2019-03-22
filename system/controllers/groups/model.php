@@ -291,6 +291,8 @@ class modelGroups extends cmsModel {
 
     public function getUserGroups($user_id){
 
+        $this->useCache('groups.list');
+
         $this->select('g.id', 'id');
         $this->select('g.*');
 

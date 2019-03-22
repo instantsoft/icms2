@@ -98,8 +98,14 @@ class actionAdminSettings extends cmsAction {
 
                 }
 
-                if (!$values['cache_enabled'] && $values['cache_method'] == 'files'){
-                    files_clear_directory($this->cms_config->cache_path.'data/');
+                if (!$values['cache_enabled']){
+
+                    $cacher = cmsCache::getCacher((object)$values);
+
+                    $cacher->start();
+                        $cacher->clean();
+                    $cacher->stop();
+
                 }
 
                 $values = cmsEventsManager::hook('site_settings_before_update', $values);

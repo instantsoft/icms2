@@ -13,15 +13,21 @@ class cmsCache {
         return self::$instance;
     }
 
+    public static function getCacher($config) {
+
+        $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
+
+        return new $cacher_class($config);
+
+    }
+
     public function __construct() {
 
         $config = cmsConfig::getInstance();
 
         if ($config->cache_enabled) {
 
-            $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
-
-            $this->cacher = new $cacher_class($config);
+            $this->cacher = self::getCacher($config);
 
             $this->cache_ttl = $config->cache_ttl;
 

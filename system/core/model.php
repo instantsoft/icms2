@@ -1636,9 +1636,13 @@ class cmsModel {
             $cache_key = $this->cache_key . '.' . md5($sql);
             $cache = cmsCache::getInstance();
 
-            if (false !== ($item = $cache->get($cache_key))){
+            $item = $cache->get($cache_key);
 
-                $item = call_user_func_array($item_callback, array($item, $this));
+            if ($item){
+
+                if(is_callable($item_callback)){
+                    $item = call_user_func_array($item_callback, array($item, $this));
+                }
 
                 if($this->localized){
                     $item = $this->replaceTranslatedField($item, $table_name);
@@ -1659,7 +1663,7 @@ class cmsModel {
 
         // для кеша формируем массив без обработки коллбэком
         if ($this->cache_key){
-            $_item[] = $item;
+            $_item = $item;
         }
 
         if(is_callable($item_callback)){

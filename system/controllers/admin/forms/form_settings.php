@@ -22,6 +22,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldString('off_reason', array(
                         'title' => LANG_CP_SETTINGS_SITE_REASON,
+                        'visible_depend' => array('is_site_on' => array('show' => array('0')))
                     )),
 
                     new fieldString('sitename', array(
@@ -292,15 +293,6 @@ class formAdminSettings extends cmsForm {
                 'title' => LANG_CP_SETTINGS_MAIL,
                 'childs' => array(
 
-                    new fieldList('mail_transport', array(
-                        'title' => LANG_CP_SETTINGS_MAIL_TRANSPORT,
-                        'items' => array(
-                            'mail' => 'PHP mail()',
-                            'smtp' => 'SMTP',
-                            'sendmail' => 'Sendmail',
-                        )
-                    )),
-
                     new fieldString('mail_from', array(
                         'title' => LANG_CP_SETTINGS_MAIL_FROM,
                         'rules' => array(
@@ -312,25 +304,39 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_MAIL_FROM_NAME
                     )),
 
+                    new fieldList('mail_transport', array(
+                        'title' => LANG_CP_SETTINGS_MAIL_TRANSPORT,
+                        'items' => array(
+                            'mail' => 'PHP mail()',
+                            'smtp' => 'SMTP',
+                            'sendmail' => 'Sendmail',
+                        )
+                    )),
+
                     new fieldString('mail_smtp_server', array(
                         'title' => LANG_CP_SETTINGS_MAIL_SMTP_HOST,
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
                     )),
 
                     new fieldNumber('mail_smtp_port', array(
                         'title' => LANG_CP_SETTINGS_MAIL_SMTP_PORT,
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
                     )),
 
                     new fieldCheckbox('mail_smtp_auth', array(
                         'title' => LANG_CP_SETTINGS_MAIL_SMTP_AUTH,
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
                     )),
 
                     new fieldString('mail_smtp_user', array(
                         'title' => LANG_CP_SETTINGS_MAIL_SMTP_USER,
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
                     )),
 
                     new fieldString('mail_smtp_pass', array(
                         'title' => LANG_CP_SETTINGS_MAIL_SMTP_PASS,
-                        'is_password' => true
+                        'is_password' => true,
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
                     )),
 
                     new fieldList('mail_smtp_enc', array(
@@ -339,8 +345,9 @@ class formAdminSettings extends cmsForm {
 							0 => LANG_CP_SETTINGS_MAIL_SMTP_ENC_NO,
 							'ssl' => LANG_CP_SETTINGS_MAIL_SMTP_ENC_SSL,
 							'tls' => LANG_CP_SETTINGS_MAIL_SMTP_ENC_TLS,
-						)
-                    )),
+						),
+                        'visible_depend' => array('mail_transport' => array('show' => array('smtp')))
+                    ))
 
                 )
             ),
@@ -356,6 +363,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldNumber('cache_ttl', array(
                         'title' => LANG_CP_SETTINGS_CACHE_TTL,
+                        'visible_depend' => array('cache_enabled' => array('show' => array('1')))
                     )),
 
                     new fieldList('cache_method', array(
@@ -365,16 +373,25 @@ class formAdminSettings extends cmsForm {
                             'files' => 'Files',
                             'memory' => 'Memcache' . (extension_loaded('memcache') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
                             'memcached' => 'Memcached' . (extension_loaded('memcached') ? '' : ' ('.LANG_CP_SETTINGS_CACHE_METHOD_NO.')'),
-                        )
+                        ),
+                        'visible_depend' => array('cache_enabled' => array('show' => array('1')))
                     )),
 
                     new fieldString('cache_host', array(
                         'title' => LANG_CP_SETTINGS_CACHE_HOST,
+                        'visible_depend' => array(
+                            'cache_method' => array('show' => array('memory', 'memcached')),
+                            'cache_enabled' => array('hide' => array('0'))
+                        )
                     )),
 
                     new fieldNumber('cache_port', array(
                         'title' => LANG_CP_SETTINGS_CACHE_PORT,
-                    )),
+                        'visible_depend' => array(
+                            'cache_method' => array('show' => array('memory', 'memcached')),
+                            'cache_enabled' => array('hide' => array('0'))
+                        )
+                    ))
 
                 )
             ),
