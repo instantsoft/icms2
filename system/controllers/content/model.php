@@ -570,7 +570,7 @@ class modelContent extends cmsModel {
 
         $this->orderBy('ordering');
 
-        return $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
+        $fields = $this->get($table_name, function($item, $model) use ($ctype_name, $item_id){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
             $item['options'] = array_merge($model->getDefaultContentFieldOptions(), $item['options']);
@@ -598,19 +598,29 @@ class modelContent extends cmsModel {
 
             $item['rules'] = $rules;
 
-            $field_class = 'field' . string_to_camel('_', $item['type']);
-
-            $handler = new $field_class($item['name']);
-
-            $item['handler_title'] = $handler->getTitle();
-
-            $handler->setOptions($item);
-
-            $item['handler'] = $handler;
-
             return $item;
 
         }, 'name');
+
+        // чтобы сработала мультиязычность, если необходима
+        // поэтому перебираем тут, а не выше
+        if($fields){
+            foreach ($fields as $name => $field) {
+
+                $field_class = 'field' . string_to_camel('_', $field['type']);
+
+                $field['handler'] = new $field_class($field['name']);
+
+                $field['handler_title'] = $field['handler']->getTitle();
+
+                $field['handler']->setOptions($field);
+
+                $fields[$name] = $field;
+
+            }
+        }
+
+        return $fields;
 
     }
 
