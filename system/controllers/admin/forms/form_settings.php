@@ -104,11 +104,12 @@ class formAdminSettings extends cmsForm {
                     )),
 
                     new fieldString('metakeys', array(
-                        'title' => LANG_CP_SETTINGS_METAKEYS
+                        'title' => LANG_CP_SETTINGS_METAKEYS,
+			'visible_depend' => array('disable_metakeys' => array('hide' => array('1')))
                     )),
 
                     new fieldText('metadesc', array(
-                        'title' => LANG_CP_SETTINGS_METADESC,
+                        'title' => LANG_CP_SETTINGS_METADESC
                     )),
 
                     new fieldCheckbox('is_no_meta', array(
