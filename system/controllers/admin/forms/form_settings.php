@@ -9,6 +9,13 @@ class formAdminSettings extends cmsForm {
         $is_js_cache = cmsCore::getFilesList('cache/static/js', '*.js');
         $ctypes = cmsCore::getModel('content')->getContentTypes();
 
+        $open_basedir = @ini_get('open_basedir'); $open_basedir_hint = '';
+
+        if($open_basedir){
+            $open_basedirs = explode(PATH_SEPARATOR, $open_basedir);
+            $open_basedir_hint = LANG_CP_SETTINGS_SESSIONS_BASEDIR.implode(' '.LANG_OR.' ', $open_basedirs);
+        }
+
         return array(
 
             array(
@@ -415,7 +422,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldString('session_save_path', array(
                         'title' => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH,
-                        'hint'  => LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT,
+                        'hint'  => sprintf(LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT, $open_basedir_hint),
                         'rules' => array(
                             array('required'),
                         )

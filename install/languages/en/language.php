@@ -63,6 +63,9 @@
     define('LANG_PATHS_UPLOAD_HOST',        'Upload URL');
     define('LANG_PATHS_CACHE',              'Cache');
     define('LANG_PATHS_CACHE_PATH',         'Cache path');
+    define('LANG_PATHS_SESSION',            'Sessions');
+    define('LANG_PATHS_SESSION_PATH',       'Session save path');
+    define('LANG_PATHS_SESSIONS_BASEDIR',    'The full path to the file system, which must be in one of the paths ');
 
     define('LANG_DATABASE_INFO',            'Provide your MySQL database connection details');
     define('LANG_DATABASE_CHARSET_INFO',    'The database encoding should be <b>utf8_general_ci</b>');

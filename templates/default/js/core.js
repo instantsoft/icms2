@@ -26,7 +26,7 @@ $(document).ready(function(){
 
     });
 
-    var dropdown = $('<select class="mobile_menu_select">').appendTo("nav");
+    var dropdown = $('<select class="mobile_menu_select" />').appendTo("nav");
     $("<option value='/'></option>").appendTo(dropdown);
 
     $("nav .menu li > a").each(function() {
@@ -54,7 +54,7 @@ $(document).ready(function(){
 
             var tabs = $(this);
 
-            var dropdown = $('<select class="mobile_menu_select">').prependTo(tabs);
+            var dropdown = $('<select class="mobile_menu_select" />').prependTo(tabs);
             $("> ul > li > a", tabs).each(function() {
                 var el = $(this);
                 var attr = {

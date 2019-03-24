@@ -266,69 +266,7 @@ class content extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = isset($total) ? $total : $this->model->getContentItemsCount($ctype['name']);
-        $items = isset($items) ? $items : $this->model->getContentItems($ctype['name'], function ($item, $model, $ctype_name, $user)
-                use ($ctype, $hide_except_title, $fields, $list_type){
-
-            $item['ctype'] = $ctype;
-            $item['ctype_name'] = $ctype['name'];
-            $item['is_private_item'] = $item['is_private'] && $hide_except_title;
-            $item['private_item_hint'] = LANG_PRIVACY_HINT;
-            $item['fields'] = array();
-
-            // для приватности друзей
-            // другие проверки приватности (например для групп) в хуках content_before_list
-            if($item['is_private'] == 1){
-                $item['is_private_item'] = $item['is_private_item'] && !$item['user']['is_friend'];
-                $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
-            }
-
-            // строим поля списка
-            foreach($fields as $field){
-
-                if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; }
-
-                // разрешен показ в списке, проверяем в каких именно
-                if(!empty($field['options']['context_list']) && array_search('0', $field['options']['context_list']) === false){
-                    if(!in_array($list_type, $field['options']['context_list'])){
-                        continue;
-                    }
-                }
-
-                // проверяем что группа пользователя имеет доступ к чтению этого поля
-                if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
-                    // если группа пользователя не имеет доступ к чтению этого поля,
-                    // проверяем на доступ к нему для авторов
-                    if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
-                    if (!in_array('is_read', $field['options']['author_access'])){ continue; }
-                    if ($item['user_id'] != $user->id){ continue; }
-                }
-
-                if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
-
-                if (!isset($field['options']['label_in_list'])) {
-                    $label_pos = 'none';
-                } else {
-                    $label_pos = $field['options']['label_in_list'];
-                }
-
-                $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
-                if (!$field_html) { continue; }
-
-                $item['fields'][$field['name']] = array(
-                    'label_pos' => $label_pos,
-                    'type'      => $field['type'],
-                    'name'      => $field['name'],
-                    'title'     => $field['title'],
-                    'html'      => $field_html
-                );
-
-            }
-
-            $item['is_new'] = (strtotime($item['date_pub']) > strtotime($user->date_log));
-
-            return $item;
-
-        });
+        $items = isset($items) ? $items : $this->model->getContentItems($ctype['name']);
         // если задано максимальное кол-во, ограничиваем им
         if($this->max_items_count){
             $total = min($total, $this->max_items_count);
@@ -341,6 +279,72 @@ class content extends cmsFrontend {
         // если запрос через URL
         if($this->request->isStandard()){
             if(!$items && $page > 1){ cmsCore::error404(); }
+        }
+
+        // заполняем поля для шаблона
+        if($items){
+            foreach ($items as $key => $item) {
+
+                $item['ctype'] = $ctype;
+                $item['ctype_name'] = $ctype['name'];
+                $item['is_private_item'] = $item['is_private'] && $hide_except_title;
+                $item['private_item_hint'] = LANG_PRIVACY_HINT;
+                $item['fields'] = array();
+
+                // для приватности друзей
+                // другие проверки приватности (например для групп) в хуках content_before_list
+                if($item['is_private'] == 1){
+                    $item['is_private_item'] = $item['is_private_item'] && !$item['user']['is_friend'];
+                    $item['private_item_hint'] = LANG_PRIVACY_PRIVATE_HINT;
+                }
+
+                // строим поля списка
+                foreach($fields as $field){
+
+                    if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; }
+
+                    // разрешен показ в списке, проверяем в каких именно
+                    if(!empty($field['options']['context_list']) && array_search('0', $field['options']['context_list']) === false){
+                        if(!in_array($list_type, $field['options']['context_list'])){
+                            continue;
+                        }
+                    }
+
+                    // проверяем что группа пользователя имеет доступ к чтению этого поля
+                    if ($field['groups_read'] && !$this->cms_user->isInGroups($field['groups_read'])) {
+                        // если группа пользователя не имеет доступ к чтению этого поля,
+                        // проверяем на доступ к нему для авторов
+                        if (empty($item['user_id']) || empty($field['options']['author_access'])){ continue; }
+                        if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                        if ($item['user_id'] != $this->cms_user->id){ continue; }
+                    }
+
+                    if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
+
+                    if (!isset($field['options']['label_in_list'])) {
+                        $label_pos = 'none';
+                    } else {
+                        $label_pos = $field['options']['label_in_list'];
+                    }
+
+                    $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $item['fields'][$field['name']] = array(
+                        'label_pos' => $label_pos,
+                        'type'      => $field['type'],
+                        'name'      => $field['name'],
+                        'title'     => $field['title'],
+                        'html'      => $field_html
+                    );
+
+                }
+
+                $item['is_new'] = (strtotime($item['date_pub']) > strtotime($this->cms_user->date_log));
+
+                $items[$key] = $item;
+
+            }
         }
 
         list($ctype, $items) = cmsEventsManager::hook('content_before_list', array($ctype, $items));

@@ -2009,6 +2009,8 @@ class modelContent extends cmsModel {
 
         $pattern = trim($pattern, '/');
 
+        $disallow_numeric = (count($names) <= 1);
+
         foreach($names as $idx=>$field_name){
             if (!empty($item[$field_name])){
 
@@ -2018,7 +2020,7 @@ class modelContent extends cmsModel {
 
                     $value = $fields[$field_name]['handler']->getStringValue($value);
 
-                    $value = lang_slug(trim($value, '/'));
+                    $value = lang_slug(trim($value, '/'), $disallow_numeric);
 
                 }
 
@@ -2039,7 +2041,7 @@ class modelContent extends cmsModel {
             return $this->filterNotEqual('id', $item['id'])->
                 filterLike('slug', $slug)->
                 getCount($this->table_prefix.$ctype['name'], 'id', true);
-            };
+        };
 
         if($get_scount($slug)){
             if(mb_strlen($slug) >= $slug_len){

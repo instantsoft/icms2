@@ -288,8 +288,7 @@ class fieldNumber extends cmsFormField {
 
         $value = str_replace(',', '.', trim($value));
 
-        $value = $this->getOption('decimal_s') ? (float)$value : (int)$value;
-        if(!$this->getOption('save_zero') && !$value){return null;}
+        if(!$this->getOption('save_zero') && !$value){ return null; }
 
         return $this->getOption('is_abs') ? abs($value) : $value;
 

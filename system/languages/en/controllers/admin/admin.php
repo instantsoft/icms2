@@ -398,7 +398,8 @@
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
-    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
+    define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', which must enter one of the paths ');
+    define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
 
     define('LANG_CP_CHECK_SPOOFING_TYPE', 'Control of changing the IP address when entering the admin area');
     define('LANG_CP_CHECK_SPOOFING_TYPE_OPT1', 'By changing the subnet');

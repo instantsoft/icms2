@@ -1195,7 +1195,7 @@ class cmsController {
 
     public function validate_url($value){
         if (empty($value)) { return true; }
-        if (!is_string($value) || !preg_match("/^((http:\/\/|https:\/\/)?(www\.)?([\w\-\.]+)?[\w\-]+(\.\w{2,14})(\/)?$)/ui", $value)){ return ERR_VALIDATE_URL; }
+        if (!is_string($value) || !preg_match('_^(?:(?:https?)://)(?:(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?:/[^\s]*)?$_iuS', $value)){ return ERR_VALIDATE_URL; }
         return true;
     }
 

@@ -39,9 +39,11 @@ function lang_date($date_string){
 
 /**
  * Converts string from current language to SLUG
+ * @param string $string Input string
+ * @param boolean $disallow_numeric Disallow numeric SLUG
  * @return string
  */
-function lang_slug($string){
+function lang_slug($string, $disallow_numeric = true){
 
     $string    = strip_tags(trim($string));
     $string    = mb_strtolower($string, 'utf-8');
@@ -66,7 +68,7 @@ function lang_slug($string){
     }
 
     if (!$slug){ $slug = 'untitled'; }
-    if (is_numeric($slug)){ $slug .= strtolower(date('F')); }
+    if ($disallow_numeric && is_numeric($slug)){ $slug .= strtolower(date('F')); }
 
     return $slug;
 

@@ -63,6 +63,9 @@
     define('LANG_PATHS_UPLOAD_HOST',        'URL для загрузок');
     define('LANG_PATHS_CACHE',              'Кеш');
     define('LANG_PATHS_CACHE_PATH',         'Папка для кеша');
+    define('LANG_PATHS_SESSION',            'Сессии');
+    define('LANG_PATHS_SESSION_PATH',       'Директория хранения сессий');
+    define('LANG_PATHS_SESSIONS_BASEDIR',    'Полный путь в файловой системе, который должен входить в один из путей ');
 
     define('LANG_DATABASE_INFO',            'Укажите реквизиты для подключения к базе данных MySQL');
     define('LANG_DATABASE_CHARSET_INFO',    'База данных должна быть в кодировке <b>utf8_general_ci</b>');

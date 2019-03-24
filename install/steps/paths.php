@@ -8,7 +8,20 @@ function step($is_submit){
 
     $root = str_replace(DOC_ROOT, '', str_replace(DS, '/', dirname(PATH)));
 
+    $sp = session_save_path();
+
+    if (!$sp) {
+        $sp = rtrim(sys_get_temp_dir(), '/');
+    }
+
+    $uniq = uniqid();
+
+    if(mkdir($sp.DS.$uniq, 0755, true) && is_writable($sp.DS.$uniq)){
+        $sp = $sp.DS.$uniq;
+    }
+
     $paths = array(
+        'session_save_path' => $sp,
         'root' => $root . '/',
         'upload' => $root . '/' . 'upload' . '/',
         'cache' => $root . '/' . 'cache' . '/'
@@ -28,9 +41,17 @@ function step($is_submit){
         'upload' => $protocol . rtrim($_SERVER['HTTP_HOST'], '/') . $root . '/upload',
     );
 
+    $open_basedir = @ini_get('open_basedir'); $open_basedir_hint = '';
+
+    if($open_basedir){
+        $open_basedirs = explode(PATH_SEPARATOR, $open_basedir);
+        $open_basedir_hint = LANG_PATHS_SESSIONS_BASEDIR.implode(', ', $open_basedirs);
+    }
+
     $result = array(
         'html' => render('step_paths', array(
             'doc_root' => DOC_ROOT,
+            'open_basedir_hint' => $open_basedir_hint,
             'root' => $root,
             'paths' => $paths,
             'hosts' => $hosts
@@ -55,6 +76,15 @@ function check_writables(){
     $upload = rtrim(DOC_ROOT . $paths['upload'], '/');
     $cache = rtrim(DOC_ROOT . $paths['cache'], '/');
 
+    if (empty($paths['upload']) || empty($paths['cache']) ||
+            empty($paths['session_save_path']) || empty($hosts['root']) ||
+            empty($hosts['upload']) || empty($paths['root'])){
+        return array(
+            'error' => true,
+            'message' => LANG_ADMIN_ERROR
+        );
+    }
+
     if (!is_writable($upload)){
         $error = true;
         $message = LANG_PATHS_UPLOAD_PATH . ' '. LANG_PATHS_NOT_WRITABLE . "\n" . LANG_PATHS_WRITABLE_HINT;
@@ -63,6 +93,11 @@ function check_writables(){
     if (!is_writable($cache)){
         $error = true;
         $message = LANG_PATHS_CACHE_PATH . ' '. LANG_PATHS_NOT_WRITABLE . "\n" . LANG_PATHS_WRITABLE_HINT;
+    } else
+
+    if (!is_writable($paths['session_save_path'])){
+        $error = true;
+        $message = LANG_PATHS_SESSION_PATH . ' '. LANG_PATHS_NOT_WRITABLE . "\n" . LANG_PATHS_WRITABLE_HINT;
     }
 
     if (!$error){

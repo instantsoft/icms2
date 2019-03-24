@@ -24,17 +24,17 @@ class cmsTemplate {
 	protected $head_js_no_merge = array();
 	protected $head_css_no_merge = array();
 	protected $head_preload = array();
-	protected $page_h1;
-	protected $page_h1_item;
-	protected $title;
-	protected $title_item;
-	protected $metadesc;
-	protected $metadesc_item;
-	protected $metakeys;
-	protected $metakeys_item;
+	public $page_h1;
+	public $page_h1_item;
+	public $title;
+	public $title_item;
+	public $metadesc;
+	public $metadesc_item;
+	public $metakeys;
+	public $metakeys_item;
 
-    protected $breadcrumbs = array();
-    protected $menus = array();
+    public $breadcrumbs = array();
+    public $menus = array();
     protected $db_menus = array();
     protected $menu_loaded = false;
     protected $not_found_tpls = array();

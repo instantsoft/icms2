@@ -31,6 +31,7 @@ class onCommentsCtypeBasicForm extends cmsAction {
         foreach (array_keys((array)$this->labels) as $label_key) {
             $form->addField($fieldset, new fieldString('options:comments_labels:'.$label_key, array(
                 'title' => LANG_CP_COMMENTS_REPLACE_LABEL.' "<b>'.html($this->labels->{$label_key}, false).'</b>"',
+                'is_clean_disable' => true,
                 'multilanguage' => true,
                 'visible_depend' => array('is_comments' => array('show' => array('1')))
             )));
