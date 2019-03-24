@@ -117,7 +117,7 @@ class cmsBackend extends cmsController {
                 )
             ));
 		
-	 if(!cmsConfig::get('disable_metakeys')){ 		
+	 if(!$this->cms_config->disable_metakeys){ 		
 	    $form->addFieldToBeginning('seo_basic', 			
 		new fieldString('seo_keys', array(
 			'title' => LANG_SEO_KEYS,
