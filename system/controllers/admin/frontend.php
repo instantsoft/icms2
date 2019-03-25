@@ -14,14 +14,6 @@ class admin extends cmsFrontend {
 
     public $install_folder_exists = false;
 
-    function __construct( cmsRequest $request){
-
-        parent::__construct($request);
-
-        cmsModel::globalLocalizedOff();
-
-    }
-
 	public function routeAction($action_name) {
 
         if($this->request->isStandard()){
@@ -56,6 +48,8 @@ class admin extends cmsFrontend {
         parent::before($action_name);
 
         if(!$this->request->isInternal()){
+
+            cmsModel::globalLocalizedOff();
 
             if (!$this->cms_user->is_logged) { cmsCore::errorForbidden('', true); }
 
