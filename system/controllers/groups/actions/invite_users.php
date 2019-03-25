@@ -83,6 +83,8 @@ class actionGroupsInviteUsers extends cmsAction {
 
     private function getInviteUsersDatasets(){
 
+        $users_options = cmsController::loadOptions('users');
+
         $datasets = array();
 
         $datasets[''] = array(
@@ -90,13 +92,17 @@ class actionGroupsInviteUsers extends cmsAction {
                 'title' => LANG_ALL
         );
 
-        $datasets['friends'] = array(
-            'name' => 'friends',
-            'title' => LANG_USERS_FRIENDS,
-            'filter' => function($model, $dset){
-                return $model->filterFriends(cmsUser::getInstance()->id);
-            }
-        );
+        if (!empty($users_options['is_friends_on'])){
+
+            $datasets['friends'] = array(
+                'name' => 'friends',
+                'title' => LANG_USERS_FRIENDS,
+                'filter' => function($model, $dset){
+                    return $model->filterFriends(cmsUser::getInstance()->id);
+                }
+            );
+
+        }
 
         return cmsEventsManager::hook('group_invite_users_datasets', $datasets);
 

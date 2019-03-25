@@ -12,8 +12,12 @@ class actionContentItemEdit extends cmsAction {
         if (!$id) { cmsCore::error404(); }
 
         // Получаем нужную запись
-        $item = $this->model->getContentItem($ctype['name'], $id);
+        // принудительно отключаем локализацию, должны быть чистые данные
+        $item = $this->model->localizedOff()->getContentItem($ctype['name'], $id);
         if (!$item) { cmsCore::error404(); }
+
+        // возвращаем как было
+        $this->model->localizedRestore();
 
         $item['ctype_id'] = $ctype['id'];
         $item['ctype_name'] = $ctype['name'];
@@ -113,7 +117,10 @@ class actionContentItemEdit extends cmsAction {
 
             $item_props = $this->model->getContentProps($ctype['name'], $category_id);
             $item_props_fields = $this->getPropsFields($item_props);
-            $item['props'] = $this->model->getPropsValues($ctype['name'], $id);
+
+            $item['props'] = $this->model->localizedOff()->getPropsValues($ctype['name'], $id);
+            $this->model->localizedRestore();
+
             foreach($item_props_fields as $field){
                 $form->addField('props', $field);
             }

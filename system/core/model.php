@@ -627,6 +627,10 @@ class cmsModel {
         $this->localized = false; return $this;
     }
 
+    public function localizedRestore() {
+        $this->localized = self::$global_localized; return $this;
+    }
+
     public static function globalLocalizedOn() {
         self::$global_localized = true;
     }

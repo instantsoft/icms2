@@ -18,8 +18,10 @@ class actionContentCategoryEdit extends cmsAction {
         $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
-        $category = $this->model->getCategory($ctype['name'], $id);
+        $category = $this->model->localizedOff()->getCategory($ctype['name'], $id);
         if (!$category) { cmsCore::error404(); }
+
+        $this->model->localizedRestore();
 
         $form = $this->getCategoryForm($ctype, 'edit');
 
