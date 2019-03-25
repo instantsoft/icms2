@@ -403,6 +403,7 @@ class modelUsers extends cmsModel {
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
         $inCache->clean('users.user.'.$user['id']);
+        $inCache->clean('users.status');
 
         $this->filterEqual('child_ctype_id', null);
         $this->filterEqual('child_item_id', $user['id']);
@@ -1135,6 +1136,8 @@ class modelUsers extends cmsModel {
         cmsCache::getInstance()->clean('users.list');
         cmsCache::getInstance()->clean('users.user.'.$user_id);
 
+        $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_statuses');
+
         return $this->update('{users}', $user_id, array(
             'status_text' => null,
             'status_id' => null
@@ -1142,11 +1145,17 @@ class modelUsers extends cmsModel {
 
     }
 
-    public function increaseUserStatusRepliesCount($status_id){
+    public function increaseUserStatusRepliesCount($status_id, $is_increment = true){
 
         cmsCache::getInstance()->clean('users.status');
 
-        $this->filterEqual('id', $status_id)->increment('{users}_statuses', 'replies_count');
+        $this->filterEqual('id', $status_id);
+
+        if($is_increment){
+            $this->increment('{users}_statuses', 'replies_count');
+        } else {
+            $this->decrement('{users}_statuses', 'replies_count');
+        }
 
     }
 

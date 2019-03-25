@@ -86,13 +86,20 @@ class modelWall extends cmsModel {
 
     public function getEntryPageNumber($id, $target, $perpage){
 
-        $entries = $this->getEntries($target['profile_type'], $target['profile_id']);
+        $this->selectOnly('id')->limit(false)->
+                filterEqual('profile_id', $target['profile_id'])->
+                filterEqual('parent_id', 0)->
+                filterEqual('profile_type', $target['profile_type']);
+
+        $entries = $this->get('wall_entries');
 
         $index = 0;
 
-        foreach ($entries as $e){
-            $index++;
-            if ($e['id'] == $id){ break; }
+        if($entries){
+            foreach ($entries as $e){
+                $index++;
+                if ($e['id'] == $id){ break; }
+            }
         }
 
         if (!$index) { return 1; }

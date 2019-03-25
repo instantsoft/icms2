@@ -2,6 +2,16 @@
 
 class actionContentCategoryView extends cmsAction {
 
+    private $is_remapped, $remap_redirect_ctype = false;
+
+    public function __construct($controller, $params = array()) {
+
+        parent::__construct($controller, $params);
+
+        $this->is_remapped = $this->cms_core->uri_controller_before_remap ? true : false;
+
+    }
+
     public function run(){
 
         list($ctype, $category, $slug) = $this->getCategoryAndSlugAndCtype();
@@ -93,14 +103,10 @@ class actionContentCategoryView extends cmsAction {
 
         // если не на главной
         if(!$is_frontpage){
-            // если название переопределено, то редиректим со старого на новый адрес
-            $mapping = cmsConfig::getControllersMapping();
-            if($mapping){
-                foreach($mapping as $name=>$alias){
-                    if ($name == $ctype['name'] && !$this->cms_core->uri_controller_before_remap) {
-                        $this->redirect(href_to($alias . ($dataset ? '-'.$dataset : ''), isset($category['slug']) ? $category['slug'] : ''), 301);
-                    }
-                }
+            // если название переопределено, а мы по оригинальному адресу,
+            // то редиректим со старого на новый адрес
+            if ($this->remap_redirect_ctype) {
+                $this->redirect(href_to($this->remap_redirect_ctype . ($dataset ? '-'.$dataset : ''), !empty($category['slug']) ? $category['slug'] : ''), 301);
             }
         }
 
@@ -272,6 +278,8 @@ class actionContentCategoryView extends cmsAction {
 
         foreach ($ctype_names as $ctype_name) {
 
+            $ctype_name = $this->getCtypeByAlias($ctype_name);
+
             $ctype = $this->model->getContentTypeByName($ctype_name);
             // типы контента тут должны быть известные
             if (!$ctype) { return cmsCore::error404(); }
@@ -338,7 +346,7 @@ class actionContentCategoryView extends cmsAction {
             }
 
             // если тип контента сменился
-            if($ctype['name'] !== $_ctype_name){
+            if($ctype['name'] !== $ctype_name){
 
                 // новый uri
                 $this->cms_core->uri = preg_replace("#^{$_ctype_name}/#", $ctype['name'].'/', $this->cms_core->uri);
@@ -356,6 +364,35 @@ class actionContentCategoryView extends cmsAction {
         // ничего не нашли
         return cmsCore::error404();
 
+    }
+
+    private function getCtypeByAlias($ctype_name) {
+
+        $mapping = cmsConfig::getControllersMapping();
+
+        if ($mapping) {
+            foreach ($mapping as $name => $alias) {
+
+                if($this->is_remapped){
+                    break;
+                }
+
+                if ($alias == $ctype_name) {
+
+                    $this->is_remapped = true;
+
+                    $ctype_name = $name;
+
+                    break;
+
+                }
+                if ($name == $ctype_name) {
+                    $this->remap_redirect_ctype = $alias;
+                }
+            }
+        }
+
+        return $ctype_name;
     }
 
 }
