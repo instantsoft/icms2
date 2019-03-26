@@ -270,7 +270,7 @@ article div.content_categories:last-child {
 
 .ft_date .value .time {
     padding-left:16px;
-    background:url("../images/icons/clock-small.png") no-repeat left center;
+    background:url("../images/icons/clock-small.svg") no-repeat left center;
 }
 
 .ft_color .color-block, .content_item_props .value .color-block {
@@ -433,7 +433,7 @@ article div.content_categories:last-child {
 
 .content_list_item .info_bar .bi_user, .content_item .info_bar .bi_user, .content_list .info_bar .bi_user {
     padding-left:25px;
-    background: url("../images/icons/user-small.png") no-repeat 5px center;
+    background: url("../images/icons/user-small.svg") no-repeat 5px center;
 }
 
 .content_item .info_bar .bi_hits,
@@ -680,9 +680,9 @@ article div.content_categories:last-child {
 .content_list.tiled .tags_bar a:hover {
     color:#d35400;
 }
-.content_list.tiled .info_bar .bi_date{
+.content_list.tiled .info_bar .bi_date_pub{
     padding-left:25px;
-    background: url("../images/icons/clock-small.png") no-repeat 5px center;
+    background: url("../images/icons/calendar-small.svg") no-repeat 5px center;
 }
 /* ========================================================================== */
 
@@ -835,7 +835,7 @@ article div.content_categories:last-child {
 }
 #content_bind_form .result-pane ul li .details .user {
 	margin-right:4px;
-	background: url(../images/icons/user-small.png) no-repeat left center;
+	background: url(../images/icons/user-small.svg) no-repeat left center;
 	padding-left:18px;
 	display:inline-block;
 	height:16px;

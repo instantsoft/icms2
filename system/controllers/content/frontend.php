@@ -342,6 +342,9 @@ class content extends cmsFrontend {
 
                 $item['is_new'] = (strtotime($item['date_pub']) > strtotime($this->cms_user->date_log));
 
+                // формируем инфобар
+                $item['info_bar'] = $this->getItemInfoBar($ctype, $item, $fields, 'list');
+
                 $items[$key] = $item;
 
             }
@@ -378,6 +381,67 @@ class content extends cmsFrontend {
         $this->cms_template->restoreContext();
 
         return $html;
+
+    }
+
+
+    public function getItemInfoBar($ctype, $item, $fields, $subject = 'item') {
+
+        $bar = [];
+
+        if (!empty($fields['date_pub']['is_in_'.$subject])){
+            $bar[] = [
+                'css'   => 'bi_date_pub'.(!empty($item['is_new']) ? ' highlight_new' : ''),
+                'html'  => isset($fields['date_pub']['html']) ? $fields['date_pub']['html'] : $fields['date_pub']['handler']->parse($item['date_pub']),
+                'title' => $fields['date_pub']['title']
+            ];
+        }
+
+        if (!$item['is_pub']){
+            $bar[] = [
+                'css'   => 'bi_not_pub',
+                'html'  => LANG_CONTENT_NOT_IS_PUB
+            ];
+        }
+
+        if (!empty($ctype['options']['hits_on'])){
+            $bar[] = [
+                'css'   => 'bi_hits',
+                'html'  => $item['hits_count'],
+                'title' => LANG_HITS
+            ];
+        }
+
+        if (!empty($fields['user']['is_in_'.$subject])){
+            $bar[] = [
+                'css'   => 'bi_user',
+                'html'  => isset($fields['user']['html']) ? $fields['user']['html'] : $fields['user']['handler']->parse($item['user']),
+                'title' => $fields['user']['title']
+            ];
+            if (!empty($item['folder_title'])){
+                $bar[] = [
+                    'css'  => 'bi_folder',
+                    'html' => $item['folder_title'],
+                    'href' => href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id']))
+                ];
+            }
+        }
+
+        if (!empty($ctype['options']['share_code']) && $subject === 'item'){
+            $bar[] = [
+                'css'   => 'bi_share',
+                'html'  => $ctype['options']['share_code']
+            ];
+        }
+
+        if (!$item['is_approved']){
+            $bar[] = [
+                'css'   => 'bi_not_approved'.(!empty($item['is_new_item']) ? ' is_edit_item' : ''),
+                'html'  => !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED
+            ];
+        }
+
+        return $bar;
 
     }
 

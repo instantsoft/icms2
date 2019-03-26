@@ -232,6 +232,10 @@ icms.forms = (function ($) {
 
         current_value = current_value || '';
 
+        if(!$.isArray(current_value)){
+            current_value = [current_value];
+        }
+
 		$.post(url, {value: value}, function(result){
 
 			for(var k in result){if(result.hasOwnProperty(k)){
@@ -242,7 +246,7 @@ icms.forms = (function ($) {
                     var _value = k;
                     var title = result[k];
                 }
-				child_list.append('<option value="'+_value+'"'+(_value === current_value ? ' selected' : '')+'>'+title+'</option>');
+				child_list.append('<option value="'+_value+'"'+($.inArray(_value, current_value) !== -1 ? ' selected' : '')+'>'+title+'</option>');
 			}}
 
             $(child_list).trigger('chosen:updated');

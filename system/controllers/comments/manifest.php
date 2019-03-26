@@ -7,6 +7,7 @@
             'photos_before_item',
             'content_item_form',
             'content_before_item',
+            'content_before_list',
             'content_after_update',
             'admin_dashboard_chart',
             'user_privacy_types',
