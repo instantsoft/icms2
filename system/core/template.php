@@ -313,8 +313,15 @@ class cmsTemplate {
 
                 $widget = $group[0];
                 if ($wrapper){ $widget['wrapper'] = $wrapper; }
-                $tpl_file = $this->getTemplateFileName('widgets/' . $widget['wrapper']);
-                include($tpl_file);
+
+                if(!empty($widget['wrapper'])){
+
+                    $tpl_file = $this->getTemplateFileName('widgets/' . $widget['wrapper']);
+                    include($tpl_file);
+
+                } else {
+                    echo $widget['body'];
+                }
 
             } else {
 
@@ -2401,6 +2408,34 @@ class cmsTemplate {
         return $this;
 
     }
+
+    /**
+     * Добавляет произвольный HTML код на позицию виджета
+     * 
+     * @param string $position
+     * @param string $html
+     * @return $this
+     */
+    public function renderWidgetHtml($position, $html) {
+
+        $this->widgets_group_index++;
+
+        $this->widgets[$position][$this->widgets_group_index][] = array(
+            'id'          => false,
+            'bind_id'     => false,
+            'title'       => false,
+            'links'       => false,
+            'wrapper'     => false,
+            'class'       => false,
+            'class_title' => false,
+            'class_wrap'  => false,
+            'body'        => $html
+        );
+
+        return $this;
+
+    }
+
 
 //============================================================================//
 //============================================================================//

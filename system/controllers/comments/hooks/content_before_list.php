@@ -8,6 +8,12 @@ class onCommentsContentBeforeList extends cmsAction {
 
         if ($ctype['is_comments'] && $items){
 
+            if(!empty($ctype['options']['comments_labels'])){
+
+                $this->setLabels($ctype['options']['comments_labels']);
+
+            }
+
             foreach($items as $id => $item){
 
                 if (!$item['is_comments_on']){
@@ -19,7 +25,7 @@ class onCommentsContentBeforeList extends cmsAction {
 
                 $info_bar = [
                     'css'   => 'bi_comments',
-                    'title' => LANG_COMMENTS,
+                    'title' => $this->labels->comments,
                     'html'  => intval($item['comments'])
                 ];
 

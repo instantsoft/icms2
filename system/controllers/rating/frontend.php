@@ -67,7 +67,7 @@ class rating extends cmsFrontend {
         $template_name = !empty($this->options['template']) ? $this->options['template'] : 'widget';
 
         return $this->cms_template->renderInternal($this, $template_name, array(
-            'show_rating'       => $current_rating && !($this->options['is_hidden'] && !$is_voted && ($is_enabled || !$this->cms_user->is_logged)),
+            'show_rating'       => !($this->options['is_hidden'] && !$is_voted && ($is_enabled || !$this->cms_user->is_logged)),
             'options'           => $this->options,
             'label'             => $this->label,
             'total_voted'       => $this->total_voted,

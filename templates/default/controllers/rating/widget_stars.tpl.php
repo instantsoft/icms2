@@ -15,8 +15,8 @@
         <div class="rating_label"><?php echo $label; ?></div>
     <?php } ?>
     <div class="stars<?php if ($options['is_show'] && $show_rating) { ?> clickable<?php } ?><?php if (!$is_voted && $is_enabled){ ?> is_enabled<?php } ?>"
-         title="<?php if ($is_enabled){ ?><?php echo LANG_RATING; ?><?php } else { ?><?php html($is_voted ? LANG_RATING_VOTED : LANG_RATING_DISABLED); ?><?php } ?>"
-        <?php if ($show_rating){ ?>
+         title="<?php if ($is_enabled){ ?><?php echo $is_voted ? LANG_RATING_VOTED : LANG_RATING; ?><?php } else { ?><?php html(LANG_RATING_DISABLED); ?><?php } ?>"
+        <?php if ($show_rating && $current_rating){ ?>
         data-stars="<?php echo $current_rating; ?>"
         <?php } ?>
          >
