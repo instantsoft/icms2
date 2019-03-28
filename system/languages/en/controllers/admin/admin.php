@@ -10,6 +10,7 @@
     define('LANG_CP_DASHBOARD_NEWS',            'InstantCMS news');
     define('LANG_CP_DASHBOARD_NEWS_O',          'Official');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Blogs');
+    define('LANG_CP_PAGE_OPTIONS',              'Customize this page');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');

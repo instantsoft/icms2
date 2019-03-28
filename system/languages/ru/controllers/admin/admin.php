@@ -10,6 +10,7 @@
     define('LANG_CP_DASHBOARD_NEWS',            'Новости InstantCMS');
     define('LANG_CP_DASHBOARD_NEWS_O',          'Официальные');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Блоги');
+    define('LANG_CP_PAGE_OPTIONS',              'Настроить эту страницу');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');

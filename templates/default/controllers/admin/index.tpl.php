@@ -4,11 +4,16 @@
     $this->addJS('templates/default/js/admin-dashboard.js');
     $this->addJS('templates/default/js/jquery-cookie.js');
 ?>
+<div class="page_options_block">
+    <a class="ajax-modal ajaxlink" href="<?php echo $this->href_to('index_page_settings'); ?>" title="<?php echo LANG_CONFIG; ?>">
+        <?php echo LANG_CP_PAGE_OPTIONS; ?>
+    </a>
+</div>
 <h1><?php echo LANG_ADMIN_CONTROLLER; ?></h1>
 
 <div id="dashboard" data-save_order_url="<?php echo $this->href_to('index_save_order'); ?>">
-<?php foreach ($dashboard_blocks as $key => $dashboard_block) { ?>
-    <div class="col <?php echo (isset($dashboard_block['class']) ? $dashboard_block['class'] : 'col1'); ?>" id="db_<?php echo $dashboard_block['id']; ?>" data-id="<?php echo $dashboard_block['id']; ?>">
+<?php foreach ($dashboard_blocks as $dashboard_block) { ?>
+    <div class="col <?php echo (isset($dashboard_block['class']) ? $dashboard_block['class'] : 'col1'); ?>" id="db_<?php echo $dashboard_block['name']; ?>" data-name="<?php echo $dashboard_block['name']; ?>">
         <div class="actions-toolbar">
             <span class="drag"></span>
         </div>
@@ -17,16 +22,3 @@
     </div>
 <?php } ?>
 </div>
-<script>
-    $(function() {
-        $(document).tooltip({
-            items: '.tooltip',
-            show: { duration: 0 },
-            hide: { duration: 0 },
-            position: {
-                my: "center",
-                at: "top-20"
-            }
-        });
-    });
-</script>

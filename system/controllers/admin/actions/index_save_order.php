@@ -9,8 +9,10 @@ class actionAdminIndexSaveOrder extends cmsAction {
         $items = $this->request->get('items', array());
         if (!$items || !is_array($items)) { cmsCore::error404(); }
 
-        foreach ($items as $order_id => $block_id) {
-            $options['dashboard_order'][(int)$block_id] = (int)$order_id;
+        $options = [];
+
+        foreach ($items as $order_id => $name) {
+            $options['dashboard_order'][$name] = (int)$order_id;
         }
 
         cmsController::saveOptions('admin', array_merge($this->options, $options));

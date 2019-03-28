@@ -2209,6 +2209,8 @@ class cmsModel {
 
         if(!$yaml){ return array(); }
 
+        if(is_array($yaml)){ return $yaml; }
+
         if($yaml === "---\n- 0\n"){ return array(); }
 
         return Spyc::YAMLLoadString($yaml);

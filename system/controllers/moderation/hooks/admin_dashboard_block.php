@@ -13,30 +13,44 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
     }
 
-	public function run(){
+	public function run($options){
 
-        $moderation_data = $this->getModerationData();
+        if(!empty($options['only_titles'])){
 
-        $moderation_trash_data = $this->getModerationTrashData();
+            return [
+                'moderation_all' => sprintf(LANG_MODERATION_TITLE, '-'),
+                'moderation_removal' => sprintf(LANG_MODERATION_CLEAR_TITLE, '-')
+            ];
 
-        if(!$moderation_data && !$moderation_trash_data){
-            return false;
         }
 
-        $dashboard_blocks = array();
+        $dashboard_blocks = [];
 
-        if($moderation_data){
-            $dashboard_blocks[] = array(
-                'title' => sprintf(LANG_MODERATION_TITLE, $moderation_data['total']),
-                'html'  => $moderation_data['html']
-            );
+        if(!array_key_exists('moderation_all', $options['dashboard_enabled'])  || !empty($options['dashboard_enabled']['moderation_all'])){
+
+            $moderation_data = $this->getModerationData();
+
+            if($moderation_data){
+                $dashboard_blocks[] = array(
+                    'title' => sprintf(LANG_MODERATION_TITLE, $moderation_data['total']),
+                    'name' => 'moderation_all',
+                    'html'  => $moderation_data['html']
+                );
+            }
+
         }
 
-        if($moderation_trash_data){
-            $dashboard_blocks[] = array(
-                'title' => sprintf(LANG_MODERATION_CLEAR_TITLE, $moderation_trash_data['total']),
-                'html'  => $moderation_trash_data['html']
-            );
+        if(!array_key_exists('moderation_removal', $options['dashboard_enabled'])  || !empty($options['dashboard_enabled']['moderation_removal'])){
+
+            $moderation_trash_data = $this->getModerationTrashData();
+
+            if($moderation_trash_data){
+                $dashboard_blocks[] = array(
+                    'title' => sprintf(LANG_MODERATION_CLEAR_TITLE, $moderation_trash_data['total']),
+                    'name' => 'moderation_removal',
+                    'html'  => $moderation_trash_data['html']
+                );
+            }
         }
 
         return $dashboard_blocks;

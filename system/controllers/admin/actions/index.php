@@ -7,110 +7,53 @@ class actionAdminIndex extends cmsAction {
         //
         // формируем виджеты главной админки
         //
+        $result_dashboard_blocks = [];
 
-        // Виджет статистики
-
-        $chart_nav = cmsEventsManager::hookAll('admin_dashboard_chart');
-
-        $cookie = cmsUser::getCookie('dashboard_chart');
-
-        $defaults = array(
-            'controller' => 'users',
-            'section'    => 'reg',
-            'period'     => 7
-        );
-
-        if ($cookie){
-            $cookie = json_decode($cookie, true);
-            if(is_array($cookie)){
-                $defaults = array(
-                    'controller' => $cookie['c'],
-                    'section'    => $cookie['s'],
-                    'period'     => $cookie['p']
-                );
-            }
+        if(empty($this->options['dashboard_enabled'])){
+            $this->setOption('dashboard_enabled', []);
         }
 
-        $dashboard_blocks[] = array(
-            'title' => LANG_CP_DASHBOARD_STATS,
-            'class' => 'col3',
-            'html'  => $this->cms_template->getRenderedChild('index_chart', array(
-                'chart_nav' => $chart_nav,
-                'defaults'  => $defaults
-            ))
-        );
+        if(empty($this->options['dashboard_order'])){
+            $this->setOption('dashboard_order', []);
+        }
 
-        $uploader   = new cmsUploader();
-        $extensions = get_loaded_extensions();
+        $dashboard_blocks = cmsEventsManager::hookAll('admin_dashboard_block', $this->options, array());
 
-        $sysinfo = array(
-            LANG_CP_DASHBOARD_SI_ICMS  => cmsCore::getVersion(),
-            LANG_CP_DASHBOARD_SI_PHP   => implode('.', array(PHP_MAJOR_VERSION, PHP_MINOR_VERSION, PHP_RELEASE_VERSION)),
-            LANG_CP_DASHBOARD_SI_ML    => files_format_bytes(files_convert_bytes(@ini_get('memory_limit'))),
-            LANG_CP_DASHBOARD_SI_MAX   => $uploader->getMaxUploadSize(),
-            LANG_CP_DASHBOARD_SI_IP    => filter_input(INPUT_SERVER, 'SERVER_ADDR'),
-            LANG_CP_DASHBOARD_SI_ROOT  => PATH,
-            LANG_CP_DASHBOARD_SI_SESSION_TYPE => @ini_get('session.save_handler'),
-            LANG_CP_DASHBOARD_SI_SESSION => session_save_path(),
-            LANG_CP_DASHBOARD_SI_ZEND  => in_array('Zend OPcache', $extensions),
-            LANG_CP_DASHBOARD_SI_ION   => in_array('ionCube Loader', $extensions),
-            LANG_CP_DASHBOARD_SI_ZENDG => in_array('Zend Guard Loader', $extensions)
-        );
+        // по умолчанию порядок заведомо большой
+        $order_id = 1000;
 
-        $dashboard_blocks[] = array(
-            'title' => LANG_CP_DASHBOARD_NEWS,
-            'html'  => $this->cms_template->getRenderedChild('index_news', array())
-        );
+        foreach ($dashboard_blocks as $cname => $dashboard_block) {
 
-        $dashboard_blocks[] = array(
-            'title' => LANG_CP_DASHBOARD_SYSINFO,
-            'html'  => $this->cms_template->getRenderedChild('index_sysinfo', array(
-                'sysinfo' => $sysinfo
-            ))
-        );
-
-        $dashboard_blocks[] = array(
-            'title' => LANG_CP_DASHBOARD_RESOURCES,
-            'html'  => $this->cms_template->getRenderedChild('index_resources', array())
-        );
-
-        $dashboard_blocks = array_merge($dashboard_blocks, cmsEventsManager::hookAll('admin_dashboard_block', false, array()));
-
-        $_block_id = 0;
-        foreach ($dashboard_blocks as $dashboard_block) {
             // в одном хуке можно создавать несколько виджетов админки
             // для этого хук должен вернуть массив виджетов
-            if(!isset($dashboard_block['title'])){
-                foreach ($dashboard_block as $sub_dashboard_block) {
-                    $sub_dashboard_block['id'] = $_block_id;
-                    $result_dashboard_blocks[$_block_id] = $sub_dashboard_block;
-                    $_block_id++;
-                }
-            } else {
-                $dashboard_block['id'] = $_block_id;
-                $result_dashboard_blocks[$_block_id] = $dashboard_block;
+            if(isset($dashboard_block['title'])){
+                $dashboard_block = [$dashboard_block];
             }
-            $_block_id++;
-        }
 
-        // формируем с учетом порядка
-        if(!empty($this->options['dashboard_order'])){
-            $order_id = 1000;
-            foreach ($result_dashboard_blocks as $block_id => $block) {
-                if(isset($this->options['dashboard_order'][$block_id])){
-                    $order_id = $this->options['dashboard_order'][$block_id];
-                } else {
+            foreach ($dashboard_block as $key => $sub_dashboard_block) {
+
+                if(!isset($sub_dashboard_block['name'])){
+                    $sub_dashboard_block['name'] = $cname.'_'.$key;
+                }
+
+                if(isset($this->options['dashboard_order'][$sub_dashboard_block['name']])){
+                    $order_id = $this->options['dashboard_order'][$sub_dashboard_block['name']];
+                }
+
+                $result_dashboard_blocks[$order_id] = $sub_dashboard_block;
+
+                if(!isset($this->options['dashboard_order'][$sub_dashboard_block['name']])){
                     $order_id += 1;
                 }
-                $_result_dashboard_blocks[$order_id] = $block;
+
             }
-            ksort($_result_dashboard_blocks);
-        } else {
-            $_result_dashboard_blocks = $result_dashboard_blocks;
+
         }
 
+        ksort($result_dashboard_blocks);
+
         return $this->cms_template->render('index', array(
-            'dashboard_blocks' => $_result_dashboard_blocks
+            'dashboard_blocks' => $result_dashboard_blocks
         ));
 
     }

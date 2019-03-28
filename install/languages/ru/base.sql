@@ -288,7 +288,7 @@ CREATE TABLE `{#}controllers` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Компоненты';
 
 INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES
-(1, 'Панель управления', 'admin', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
+(1, 'Панель управления', 'admin', 1, '---\ndashboard_order:\n  stat: 0\n  activity: 1\n  news: 2\n  sysinfo: 3\n  resources: 4\n  users_online: 5\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
 (2, 'Контент', 'content', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips:\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys:\nseo_desc:\nis_guests_moderate: 1\nrestricted_emails:\nrestricted_names:\nlimit_nesting: 5\nshow_author_email: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -810,7 +810,9 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (163, 'photos_before_item', 'comments', 163, 1),
 (164, 'comments_targets', 'content', 164, 1),
 (165, 'comments_targets', 'photos', 165, 1),
-(166, 'content_before_list', 'comments', 166, 1);
+(166, 'content_before_list', 'comments', 166, 1),
+(167, 'admin_dashboard_block', 'admin', 167, 1),
+(168, 'admin_dashboard_block', 'activity', 168, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
