@@ -21,7 +21,8 @@ class formAuthRegistration extends cmsForm {
                         'title' => LANG_PASSWORD,
                         'is_password' => true,
                         'options'=>array(
-                            'min_length'=> 6
+                            'min_length'=> 6,
+                            'max_length'=> 72
                         ),
                         'rules' => array(
                             array('required')
@@ -31,7 +32,8 @@ class formAuthRegistration extends cmsForm {
                         'title' => LANG_RETYPE_PASSWORD,
                         'is_password' => true,
                         'options'=>array(
-                            'min_length'=> 6
+                            'min_length'=> 6,
+                            'max_length'=> 72
                         ),
                         'rules' => array(
                             array('required')

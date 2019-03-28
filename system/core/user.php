@@ -216,11 +216,12 @@ class cmsUser {
     public static function setUserSession($user, $last_ip = false){
 
         self::sessionSet('user', array(
-            'id'        => $user['id'],
-            'groups'    => $user['groups'],
-            'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups']),
-            'is_admin'  => $user['is_admin']
+            'id'          => $user['id'],
+            'is_old_auth' => !empty($user['is_old_auth']),
+            'groups'      => $user['groups'],
+            'time_zone'   => $user['time_zone'],
+            'perms'       => self::getPermissions($user['groups']),
+            'is_admin'    => $user['is_admin']
         ));
 
         self::restrictSessionToIp($last_ip);
@@ -276,11 +277,7 @@ class cmsUser {
 
         $model = cmsCore::getModel('users');
 
-        $model->filterIsNull('is_deleted');
-        $model->filterEqual('email', $email);
-        $model->filterFunc('password', "MD5(CONCAT(MD5('".$model->db->escape($password)."'), i.password_salt))");
-
-        $user = $model->getUser();
+        $user = $model->getUserByAuth($email, $password);
 
         if(!$user) {
             $user = cmsEventsManager::hook('user_auth_error', array('email'=>$email,'password'=>$password));

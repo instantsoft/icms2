@@ -109,6 +109,9 @@
     define('LANG_ADMIN_ERROR',              'Заполните все поля');
     define('LANG_ADMIN_EMAIL_ERROR',        'Указан некорректный адрес e-mail');
     define('LANG_ADMIN_PASS_ERROR',         'Пароли не совпадают');
+    define('LANG_ADMIN_PASS_HASH_ERROR',    'Ошибка создания хэша пароля, попробуйте еще раз');
+    define('LANG_VALIDATE_MIN_LENGTH',      'Слишком короткое значение поля %s (мин. длина: %s)');
+    define('LANG_VALIDATE_MAX_LENGTH',      'Слишком длинное значение поля %s (макс. длина: %s)');
 
     define('LANG_CONFIG_INFO',              'Сейчас будет создан файл конфигурации сайта.');
     define('LANG_CONFIG_PATH',              'Место расположения файла:');

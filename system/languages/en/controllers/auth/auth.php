@@ -73,3 +73,4 @@ define('LANG_AUTH_INVITES_STARGET', 'To whom to issue invitations');
 define('LANG_AUTH_INVITES_SGROUP', 'Group of users');
 define('LANG_AUTH_INVITES_SUSER', 'Or user');
 define('LANG_AUTH_INVITES_SPARAMS', 'Issuing parameters to a group of users');
+define('LANG_AUTH_IS_OLD_AUTH', 'You have not changed your password for a long time, <a href="%s">you can do it now</a>.');

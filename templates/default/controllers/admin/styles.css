@@ -2493,7 +2493,7 @@ td > .spinner > div {
 }
 #addons_list_wrap {
     word-wrap: break-word;
-    margin: 15px 0 -20px 0;
+    margin: 15px 0 0 0;
 }
 #addons_list {
     width: 100%;
@@ -2849,6 +2849,16 @@ input[type=radio]:checked ~ label{
         width: calc(50% - 10px);
     }
 }
+@media screen and (max-width: 1200px){
+    #cp_header #logo {
+        position: absolute;
+        top: -22px;
+        left: 10px;
+    }
+    #cp_top_line #left_links {
+        margin-left: 140px;
+    }
+}
 @media screen and (max-width: 1080px){
     .addon-card {
         width: 100%;
@@ -2876,11 +2886,6 @@ input[type=radio]:checked ~ label{
     }
     #cp_top_line #left_links {
         display: none;
-    }
-    #cp_header #logo {
-        position: absolute;
-        top: -22px;
-        left: 10px;
     }
 }
 @media screen and (max-width: 815px) {

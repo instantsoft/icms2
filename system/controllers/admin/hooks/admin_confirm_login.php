@@ -27,12 +27,7 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                 if (!$data['errors']){
 
-                    $model = cmsCore::getModel('users');
-
-                    $model->filterEqual('email', $this->cms_user->email);
-                    $model->filterFunc('password', "MD5(CONCAT(MD5('".$model->db->escape($form_data['password'])."'), i.password_salt))");
-
-                    $user = $model->getUser();
+                    $user = $this->model_users->getUserByAuth($this->cms_user->email, $form_data['password']);
 
                     if($user){
 

@@ -13,7 +13,8 @@ class formUsersPassword extends cmsForm {
                         'title' => LANG_OLD_PASS,
                         'is_password' => true,
                         'options'=>array(
-                            'min_length'=> 6
+                            'min_length'=> 6,
+                            'max_length'=> 72
                         ),
                         'rules' => array(
                             array('required')
@@ -23,7 +24,8 @@ class formUsersPassword extends cmsForm {
                         'title' => LANG_NEW_PASS,
                         'is_password' => true,
                         'options'=>array(
-                            'min_length'=> 6
+                            'min_length'=> 6,
+                            'max_length'=> 72
                         ),
                         'rules' => array(
                             array('required')
@@ -33,7 +35,8 @@ class formUsersPassword extends cmsForm {
                         'title' => LANG_RETYPE_NEW_PASS,
                         'is_password' => true,
                         'options'=>array(
-                            'min_length'=> 6
+                            'min_length'=> 6,
+                            'max_length'=> 72
                         ),
                         'rules' => array(
                             array('required')

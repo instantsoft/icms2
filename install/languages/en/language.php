@@ -109,6 +109,9 @@
     define('LANG_ADMIN_ERROR',              'All fields are required');
     define('LANG_ADMIN_EMAIL_ERROR',        'Incorrect e-mail address');
     define('LANG_ADMIN_PASS_ERROR',         'Passwords do not match');
+    define('LANG_ADMIN_PASS_HASH_ERROR',    'Error creating password hash, try again');
+    define('LANG_VALIDATE_MIN_LENGTH',      'Too short %s field value (min. length: %s)');
+    define('LANG_VALIDATE_MAX_LENGTH',      'Too long %s field value (max. length: %s)');
 
     define('LANG_CONFIG_INFO',              'The configuration file will be created now.');
     define('LANG_CONFIG_PATH',              'File location:');

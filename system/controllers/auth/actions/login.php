@@ -37,13 +37,18 @@ class actionAuthLogin extends cmsAction {
 
                 if ($logged_id){
 
+                    $userSession = cmsUser::sessionGet('user');
+
                     if ($is_site_offline){
-						$userSession = cmsUser::sessionGet('user');
                         if (empty($userSession['perms']['auth']['view_closed']) && empty($userSession['is_admin'])){
                             cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
                             cmsUser::logout();
                             $this->redirectBack();
                         }
+                    }
+
+                    if(!empty($userSession['is_old_auth'])){
+                        cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to('users', $logged_id, ['edit', 'password'])), 'info');
                     }
 
                     cmsEventsManager::hook('auth_login', $logged_id);

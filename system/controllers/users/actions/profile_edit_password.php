@@ -25,9 +25,9 @@ class actionUsersProfileEditPassword extends cmsAction {
 
             if (!$errors){
 
-                $password_hash = md5(md5($data['password']) . $this->cms_user->password_salt);
+                $user = $this->model->getUserByAuth($profile['email'], $data['password']);
 
-                if ($password_hash != $this->cms_user->password){
+                if (!$user){
                     $errors = array('password' => LANG_OLD_PASS_INCORRECT);
                 }
 

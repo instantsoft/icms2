@@ -11,6 +11,10 @@ function install_package(){
         'options' => null
     ));
 
+    if(!$core->db->isFieldExists('{users}', 'password_hash')){
+        $core->db->query("ALTER TABLE `{users}` ADD `password_hash` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Хеш пароля' AFTER `email`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

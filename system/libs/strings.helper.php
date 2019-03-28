@@ -185,9 +185,9 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $salt = substr(md5(mt_rand(0, 65535).cmsConfig::get('db_pass')), mt_rand(0, 16), mt_rand(8, 15));
+    $salt = substr(md5(md5(mt_rand(0, 65535).md5(md5(cmsConfig::get('db_pass'))))), mt_rand(0, 16), mt_rand(8, 15));
 
-    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . $seed);
+    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . md5(md5($seed)));
 
     if ($length < 32) { $string = substr($string, 0, $length); }
 

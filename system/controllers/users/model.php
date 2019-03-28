@@ -43,7 +43,7 @@ class modelUsers extends cmsModel {
 
         return $this->get('{users}', function($user) use ($actions){
 
-            unset($user['pass_token'], $user['password'], $user['password_salt']);
+            unset($user['pass_token'], $user['password'], $user['password_salt'], $user['password_hash']);
 
             $user['groups']          = cmsModel::yamlToArray($user['groups']);
             $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
@@ -130,7 +130,49 @@ class modelUsers extends cmsModel {
 
     public function getUserByEmail($email){
 
+        if(!$email){ return false; }
+
         return $this->filterEqual('email', $email)->getUser();
+
+    }
+
+    public function getUserByAuth($email, $password) {
+
+        if(!$password){ return false; }
+
+        $this->filterIsNull('is_deleted');
+
+        $user = $this->getUserByEmail($email);
+
+        // совместимость с ранее захэшированными паролями
+        // ищем юзера по email, если есть,
+        // проверяем по двум алгоритмам
+        if($user){
+
+            // старый механизм
+            if(empty($user['password_hash'])){
+
+                $password_hash = md5(md5($password) . $user['password_salt']);
+
+                if ($password_hash !== $user['password']){
+                    $user = false;
+                } else {
+                    // ставим метку в массив, что старая авторизация
+                    $user['is_old_auth'] = true;
+                }
+
+            // новый механизм
+            } else {
+
+                if (!password_verify($password, $user['password_hash'])) {
+                    $user = false;
+                }
+
+            }
+
+        }
+
+        return $user;
 
     }
 
@@ -215,27 +257,39 @@ class modelUsers extends cmsModel {
 
     public function addUser($user){
 
-        $errors = false;
+        if ($user['password1'] !== $user['password2']){
 
-        if ($user['password1'] != $user['password2']){
-            $errors['password1'] = LANG_REG_PASS_NOT_EQUAL;
-            $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
-            return array( 'success'=>false, 'errors'=>$errors );
+            return [
+                'success' => false,
+                'errors'  => [
+                    'password1' => LANG_REG_PASS_NOT_EQUAL,
+                    'password2' => LANG_REG_PASS_NOT_EQUAL
+                ]
+            ];
+
+        }
+
+        $user['password_hash'] = password_hash($user['password1'], PASSWORD_BCRYPT);
+
+        if ($user['password_hash'] === false) {
+
+            return [
+                'success' => false,
+                'errors'  => [
+                    'password1' => LANG_ERROR,
+                    'password2' => LANG_ERROR
+                ]
+            ];
+
         }
 
         $date_reg = date('Y-m-d H:i:s');
         $date_log = $date_reg;
 
-        $password_salt = string_random();
-        $password_salt = substr($password_salt, mt_rand(1,8), 16);
-        $password_hash = md5(md5($user['password1']) . $password_salt);
-
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
         $user = array_merge($user, array(
             'groups'         => $groups,
-            'password'       => $password_hash,
-            'password_salt'  => $password_salt,
             'date_reg'       => $date_reg,
             'date_log'       => $date_log,
             'time_zone'      => cmsConfig::get('time_zone'),
@@ -288,16 +342,20 @@ class modelUsers extends cmsModel {
                 $errors['password1'] = sprintf(ERR_VALIDATE_MIN_LENGTH, 6);
             }
 
-            if ($user['password1'] != $user['password2']){
+            if ($user['password1'] !== $user['password2']){
                 $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
             }
 
-            $password_salt = string_random();
-            $password_salt = substr($password_salt, mt_rand(1,8), 16);
-            $password_hash = md5(md5($user['password1']) . $password_salt);
+            // старым ячейкам стави null (< 2.12.1)
+            $user['password']      = null;
+            $user['password_salt'] = null;
 
-            $user['password']      = $password_hash;
-            $user['password_salt'] = $password_salt;
+            // хэш пароля пишем в новую ячейку (>=2.12.1)
+            $user['password_hash'] = password_hash($user['password1'], PASSWORD_BCRYPT);
+
+            if ($user['password_hash'] === false) {
+                $errors['password1'] = LANG_ERROR;
+            }
 
         }
 
