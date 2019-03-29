@@ -13,6 +13,10 @@ class formAuthOptions extends cmsForm {
             'profileedit' => LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT
         );
 
+        $model = new cmsModel();
+
+        $show_notify_old_auth_options = $model->filterIsNull('password_hash')->getCount('{users}');
+
         return array(
 
             array(
@@ -26,6 +30,7 @@ class formAuthOptions extends cmsForm {
 
                     new fieldString('reg_reason', array(
                         'title' => LANG_REG_CFG_DISABLED_NOTICE,
+                        'visible_depend' => array('is_reg_enabled' => array('show' => array('0')))
                     )),
 
                     new fieldCheckbox('is_reg_invites', array(
@@ -68,6 +73,12 @@ class formAuthOptions extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_AUTHORIZATION,
                 'childs' => array(
+
+                    new fieldCheckbox('notify_old_auth', array(
+                        'title' => LANG_REG_CFG_NOTIFY_OLD_AUTH,
+                        'hint' => LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT,
+                        'is_visible' => $show_notify_old_auth_options
+                    )),
 
                     new fieldCheckbox('auth_captcha', array(
                         'title' => LANG_REG_CFG_AUTH_CAPTCHA,

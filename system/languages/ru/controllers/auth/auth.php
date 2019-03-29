@@ -38,6 +38,8 @@ define('LANG_REG_CFG_DISABLED_NOTICE', 'Причина отключения ре
 define('LANG_REG_CFG_IS_INVITES', 'Регистрация только по приглашениям');
 define('LANG_REG_CFG_REG_CAPTCHA', 'Показывать капчу для защиты от спамовых регистраций');
 define('LANG_REG_CFG_AUTH_CAPTCHA', 'Показывать капчу после неудачной авторизации');
+define('LANG_REG_CFG_NOTIFY_OLD_AUTH', 'Показывать предупреждение о смене пароля');
+define('LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT', 'Для пользователей, зарегистрированных до версии InstantCMS 2.12.1, чтобы перейти на <a target="_blank" href="https://docs.instantcms.ru/manual/components/auth#вкладка-авторизация">новую систему хранения паролей</a>.');
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'После первой авторизации на сайте');
 define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Компоненты, доступные без авторизации');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'После следующих авторизаций на сайте');

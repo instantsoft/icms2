@@ -47,7 +47,7 @@ class actionAuthLogin extends cmsAction {
                         }
                     }
 
-                    if(!empty($userSession['is_old_auth'])){
+                    if(!empty($userSession['is_old_auth']) && !empty($this->options['notify_old_auth'])){
                         cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to('users', $logged_id, ['edit', 'password'])), 'info');
                     }
 

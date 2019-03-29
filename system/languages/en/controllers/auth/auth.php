@@ -38,6 +38,8 @@ define('LANG_REG_CFG_DISABLED_NOTICE', 'Reason why registration is disabled');
 define('LANG_REG_CFG_IS_INVITES', 'Registration is by invitation only');
 define('LANG_REG_CFG_REG_CAPTCHA', 'Show CAPTCHA to protect from spam registrations');
 define('LANG_REG_CFG_AUTH_CAPTCHA', 'Show CAPTCHA after failed log in');
+define('LANG_REG_CFG_NOTIFY_OLD_AUTH', 'Show password change warning');
+define('LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT', 'For users registered to InstantCMS version 2.12.1, to switch to a <a target="_blank" href="https://docs.instantcms.ru/manual/components/auth#вкладка-авторизация">new password storage system</a>.');
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'After first login');
 define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Components available without authorization');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'After consequent authorization');
