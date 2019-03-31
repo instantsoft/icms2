@@ -28,8 +28,25 @@ class modelWidgets extends cmsModel {
 
     public function deletePage($id) {
 
-        $this->filterEqual('page_id', $id);
-        $this->deleteFiltered('widgets_bind');
+        // получаем привязанные виджеты
+        $wb = $this->selectOnly('bind_id')->
+                filterEqual('page_id', $id)->
+                get('widgets_bind_pages', false, 'bind_id');
+
+        // если есть, удаляем привязки и удаляем общие настройки
+        if ($wb) {
+
+            // удаляем привязки
+            $this->filterEqual('page_id', $id);
+            $this->deleteFiltered('widgets_bind_pages');
+
+            // настройки виджетов
+            $this->filterIn('id', array_keys($wb));
+            $this->deleteFiltered('widgets_bind');
+
+            cmsCache::getInstance()->clean('widgets.bind_pages');
+
+        }
 
         cmsCache::getInstance()->clean('widgets.pages');
 
