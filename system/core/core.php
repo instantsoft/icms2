@@ -1108,19 +1108,26 @@ class cmsCore {
 
         $default_lang = cmsConfig::get('language');
 
-        $langs = self::getDirsList('system/languages');
+        $langs = self::getDirsList('system/languages', true);
 
-        foreach ($langs as $key => $lang) {
-            if ($lang === self::$language) {
-                $_lang       = $langs[0];
-                $langs[0]    = $lang;
-                $langs[$key] = $_lang;
+        $current_lang_key = array_search(self::$language, $langs);
+
+        if($current_lang_key !== 0){
+
+            list($langs[0], $langs[$current_lang_key]) = [$langs[$current_lang_key], $langs[0]];
+
+        }
+
+        if($default_lang !== self::$language){
+
+            $default_lang_key = array_search($default_lang, $langs);
+
+            if($default_lang_key !== 1){
+
+                list($langs[1], $langs[$default_lang_key]) = [$langs[$default_lang_key], $langs[1]];
+
             }
-            if ($default_lang !== self::$language && $lang === $default_lang) {
-                $_lang       = $langs[1];
-                $langs[1]    = $lang;
-                $langs[$key] = $_lang;
-            }
+
         }
 
         return $langs;
@@ -1164,7 +1171,7 @@ class cmsCore {
         }
 
         if($asc_sort){
-            asort($list);
+            sort($list);
         }
 
         return $list;
