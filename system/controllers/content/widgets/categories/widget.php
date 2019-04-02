@@ -10,7 +10,7 @@ class widgetContentCategories extends cmsWidget {
 
         $ctype_name = $this->getOption('ctype_name');
 
-        $active_cat = false;
+        $active_cat = false; $path = [];
 
         if (!$ctype_name) {
 
@@ -53,7 +53,7 @@ class widgetContentCategories extends cmsWidget {
 
         $model = isset($model) ? $model : cmsCore::getModel('content');
 
-        $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
+        $cats = $model->filterIsNull('is_hidden')->getCategoriesTree($ctype_name, $this->getOption('is_root'));
         if (!$cats) { return false; }
 
         if ($active_cat) {
@@ -67,14 +67,72 @@ class widgetContentCategories extends cmsWidget {
 
         }
 
+        // считаем вручную кол-во вложенных
+        // т.к. у нас могут быть скрытые категории
+        // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
+        $childs_count = [];
+
+        // результирующее дерево
+        $tree = [];
+
+        $show_full_tree = $this->getOption('show_full_tree');
+        $cover_preset   = $this->getOption('cover_preset');
+
+        foreach($cats as $cat){
+
+            if($cat['parent_id'] > 1){
+                if(!isset($childs_count[$cat['parent_id']])){
+                    $childs_count[$cat['parent_id']] = 1;
+                } else {
+                    $childs_count[$cat['parent_id']] += 1;
+                }
+            }
+
+            $cat['childs_count'] = 0;
+            $cat['img_src'] = html_image_src($cat['cover'], $cover_preset, true);
+
+            $css_classes = [];
+
+            if (!empty($active_cat['id']) && $cat['id'] == $active_cat['id']) {
+                $css_classes[] = 'active';
+            }
+
+            if (!(isset($path[$cat['id']]) || isset($path[$cat['parent_id']]) || $cat['ns_level'] <= 1) && !$show_full_tree) {
+                $css_classes[] = 'folder_hidden';
+            }
+
+            if($cat['img_src']){
+                $css_classes[] = 'set_cover_preset';
+            }
+
+            $cat['css_classes'] = $css_classes;
+
+            $tree[$cat['id']] = $cat;
+
+        }
+
+        if($childs_count){
+            foreach ($childs_count as $id => $count) {
+                if(isset($tree[$id])){
+
+                    $tree[$id]['childs_count'] = $count;
+
+                    if($count){
+                        $tree[$id]['css_classes'][] = 'folder';
+                    }
+
+                }
+            }
+        }
+
         $ctype_default = cmsConfig::get('ctype_default');
 
         return array(
             'ctype_name'   => (($ctype_default && in_array($ctype_name, $ctype_default)) ? '' : $ctype_name),
-            'cats'         => $cats,
-            'active_cat'   => $active_cat,
-            'cover_preset' => $this->getOption('cover_preset'),
-            'path'         => (!empty($path) ? $path : array())
+            'cats'         => $tree,
+            'active_cat'   => $active_cat, // в шаблоне не используется, совместимость
+            'cover_preset' => $cover_preset,
+            'path'         => (!empty($path) ? $path : array()) // в шаблоне не используется, совместимость
         );
 
     }

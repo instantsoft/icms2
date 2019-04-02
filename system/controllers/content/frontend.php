@@ -94,32 +94,51 @@ class content extends cmsFrontend {
 
     public function getMenuCategoriesItems($menu_item_id, $ctype){
 
-        $result = array('url' => href_to($ctype['name']), 'items' => false);
+        $result = array('url' => href_to($ctype['name']), 'items' => []);
 
         if (!$ctype['is_cats']) { return $result; }
 
-        $tree = $this->model->getCategoriesTree($ctype['name']);
+        $this->model->filterIsNull('is_hidden');
+
+        $tree = $this->model->getCategoriesTree($ctype['name'], false);
         if (!$tree) { return $result; }
 
         $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
+        // считаем вручную кол-во вложенных
+        // т.к. у нас могут быть скрытые категории
+        // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
+        $childs_count = [];
+
         foreach($tree as $cat){
-
-            if ($cat['id']==1) { continue; }
-
-            if(!empty($cat['is_hidden'])){ continue; }
 
             $item_id   = 'content.'.$ctype['name'].'.'.$cat['id'];
             $parent_id = 'content.'.$ctype['name'].'.'.$cat['parent_id'];
 
-            $result['items'][] = array(
+            if($cat['parent_id'] > 1){
+                if(!isset($childs_count[$cat['parent_id']])){
+                    $childs_count[$cat['parent_id']] = 1;
+                } else {
+                    $childs_count[$cat['parent_id']] += 1;
+                }
+            }
+
+            $result['items'][$cat['id']] = array(
                 'id'           => $item_id,
                 'parent_id'    => ($cat['parent_id'] == 1 ? $menu_item_id : $parent_id),
                 'title'        => $cat['title'],
-                'childs_count' => ($cat['ns_right'] - $cat['ns_left']) - 1,
+                'childs_count' => 0,
                 'url'          => href_to($base_url, $cat['slug'])
             );
 
+        }
+
+        if($childs_count){
+            foreach ($childs_count as $id => $count) {
+                if(isset($result['items'][$id])){
+                    $result['items'][$id]['childs_count'] = $count;
+                }
+            }
         }
 
         return $result;
@@ -1148,9 +1167,9 @@ class content extends cmsFrontend {
             }
 
             if(isset($field['string_value'])){
-                $_item[$field['name']] = $field['string_value'];
+                $_item[$field['name']] = strip_tags($field['string_value']);
             } else {
-                $_item[$field['name']] = $field['handler']->setItem($item)->getStringValue($item[$field['name']]);
+                $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
             }
 
         }

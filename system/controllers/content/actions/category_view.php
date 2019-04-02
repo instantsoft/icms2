@@ -30,7 +30,7 @@ class actionContentCategoryView extends cmsAction {
         // Получаем список подкатегорий для текущей
         if ($ctype['is_cats']) {
             $current_cat_id = $category['id'] ? $category['id'] : 1;
-            $subcats = $this->model->getSubCategories($ctype['name'], $current_cat_id);
+            $subcats = $this->model->filterIsNull('is_hidden')->getSubCategories($ctype['name'], $current_cat_id);
         }
 
         // Получаем список наборов

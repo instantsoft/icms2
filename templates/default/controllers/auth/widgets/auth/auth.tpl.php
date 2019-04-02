@@ -25,4 +25,10 @@
         </div>
 
     </form>
+    <?php if($hooks_html){ ?>
+        <div class="widget_log_in_openid">
+            <div class="widget_log_in_openid_title"><?php echo LANG_LOG_IN_OPENID; ?></div>
+            <?php echo html_each($hooks_html); ?>
+        </div>
+    <?php } ?>
 </div>

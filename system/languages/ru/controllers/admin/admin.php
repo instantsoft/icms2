@@ -443,7 +443,7 @@
     define('LANG_CP_SETTINGS_CACHE_CLEAN_SUCCESS', 'Кеш успешно очищен');
     define('LANG_CP_SETTINGS_CACHE_CLEAN_FAIL', 'Ошибка очистки кеша');
     define('LANG_CP_SETTINGS_CTYPE_DEF',        'Типы контента по умолчанию');
-    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей и категорий заданных типов контента не будет добавляться его системное имя');
+    define('LANG_CP_SETTINGS_CTYPE_DEF_HINT',	'В URL записей и категорий заданных типов контента не будет добавляться их системное имя');
     define('LANG_CP_SETTINGS_FP_SHOW',          'Выводить на главной странице');
     define('LANG_CP_SETTINGS_FP_SHOW_NONE',     'Только виджеты');
     define('LANG_CP_SETTINGS_FP_SHOW_PROFILE',  'Профиль / авторизация');

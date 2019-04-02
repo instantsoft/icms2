@@ -93,7 +93,6 @@
             <?php foreach($subcats as $c){ ?>
 
             <?php
-                if(!empty($c['is_hidden'])){ continue; }
                 $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
                 $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
                 $img_src  = html_image_src($c['cover'], $ctype['options']['cover_preset'], true);
