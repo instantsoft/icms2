@@ -353,6 +353,7 @@ class content extends cmsFrontend {
                         'label_pos' => $label_pos,
                         'type'      => $field['type'],
                         'name'      => $field['name'],
+                        'options'   => $field['options'],
                         'title'     => $field['title'],
                         'html'      => $field_html
                     );

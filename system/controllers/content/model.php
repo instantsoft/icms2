@@ -2401,6 +2401,7 @@ class modelContent extends cmsModel {
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
+        $this->select('u.groups', 'user_groups');
         $this->select('f.title', 'folder_title');
         $this->join('{users}', 'u', 'u.id = i.user_id');
         $this->joinLeft('content_folders', 'f', 'f.id = i.folder_id');
@@ -2422,6 +2423,7 @@ class modelContent extends cmsModel {
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
                 'avatar'    => $item['user_avatar'],
+                'groups'    => $item['user_groups'],
                 'is_friend' => $user->isFriend($item['user_id'])
             );
 
@@ -2463,6 +2465,7 @@ class modelContent extends cmsModel {
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
+                'groups'   => $item['user_groups'],
                 'nickname' => $item['user_nickname'],
                 'avatar'   => $item['user_avatar']
             );

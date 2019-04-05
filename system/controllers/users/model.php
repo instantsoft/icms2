@@ -98,6 +98,49 @@ class modelUsers extends cmsModel {
 
     }
 
+    public function makeProfileFields($fields, &$profiles, $user) {
+
+        if($fields && $profiles){
+            foreach ($profiles as $key => $profile) {
+                foreach($fields as $field){
+
+                    if ($field['is_system'] || !$field['is_in_list'] || !isset($profile[$field['name']])) { continue; }
+
+                    // проверяем что группа пользователя имеет доступ к чтению этого поля
+                    if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                        // если группа пользователя не имеет доступ к чтению этого поля,
+                        // проверяем на доступ к нему для авторов
+                        if (empty($field['options']['author_access'])){ continue; }
+                        if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                        if ($profile['id'] != $user->id){ continue; }
+                    }
+
+                    if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; }
+
+                    if (!isset($field['options']['label_in_list'])) {
+                        $label_pos = 'none';
+                    } else {
+                        $label_pos = $field['options']['label_in_list'];
+                    }
+
+                    $field_html = $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $profiles[$key]['fields'][$field['name']] = array(
+                        'label_pos' => $label_pos,
+                        'type'      => $field['type'],
+                        'options'   => $field['options'],
+                        'name'      => $field['name'],
+                        'title'     => $field['title'],
+                        'html'      => $field_html
+                    );
+
+                }
+            }
+        }
+
+    }
+
 //============================================================================//
 //============================================================================//
 

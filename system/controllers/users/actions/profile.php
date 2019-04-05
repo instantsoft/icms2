@@ -29,6 +29,12 @@ class actionUsersProfile extends cmsAction {
         // Получаем поля
         $fields = $content->model->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
 
+        // Парсим значения полей
+        foreach($fields as $name => $field){
+            $fields[$name]['html'] = $field['handler']->setItem($profile)->parse($profile[$name]);
+            $fields[$name]['string_value'] = $field['handler']->getStringValue($profile[$name]);
+        }
+
         // Друзья
         $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : false;
 
@@ -69,9 +75,7 @@ class actionUsersProfile extends cmsAction {
 
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
 
-            if (in_array($field['name'], array('nickname', 'avatar'))){ return false; }
-
-            if (empty($profile[$field['name']]) || !$field['is_in_item']) { return false; }
+            if ($field['is_system'] || !$field['is_in_item'] || empty($profile[$field['name']])) { return false; }
 
             // проверяем что группа пользователя имеет доступ к чтению этого поля
             if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {

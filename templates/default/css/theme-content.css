@@ -149,7 +149,6 @@ article div.content_categories:last-child {
 
 .content_item .field{
     margin-bottom: 15px;
-    overflow:hidden;
     color:#555;
     box-sizing: border-box;
 }

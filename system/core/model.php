@@ -1318,6 +1318,7 @@ class cmsModel {
             $user_fields = array(
                 $as . '.nickname'   => 'user_nickname',
                 $as . '.is_deleted' => 'user_is_deleted',
+                $as . '.groups'     => 'user_groups',
                 $as . '.avatar'     => 'user_avatar'
             );
         }

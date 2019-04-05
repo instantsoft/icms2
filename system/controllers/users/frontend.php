@@ -269,6 +269,10 @@ class users extends cmsFrontend {
             if(!$profiles && $page > 1){ cmsCore::error404(); }
         }
 
+        $this->model->makeProfileFields($fields, $profiles, $this->cms_user);
+
+        list($profiles, $fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $fields]);
+
         return $this->cms_template->renderInternal($this, 'list', array(
             'page_url'     => $page_url,
             'fields'       => $fields,

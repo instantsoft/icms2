@@ -34,6 +34,8 @@ class actionAdminCtypesPropsEdit extends cmsAction {
                 // сохраняем поле
                 $content_model->updateContentProp($ctype['name'], $prop_id, $prop);
 
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                 $this->redirectToAction('ctypes', array('props', $ctype['id']));
 
             }

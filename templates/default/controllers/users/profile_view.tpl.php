@@ -83,7 +83,7 @@
                 </div>
             </div>
         <?php } ?>
-        
+
         <?php $this->block('users_profile_view_blocks'); ?>
 
     </div>
@@ -121,9 +121,7 @@
                             <?php } ?>
 
                             <div class="value">
-                                <?php
-                                    echo $field['handler']->setItem($profile)->parse( $profile[$field['name']] );
-                                ?>
+                                <?php echo $field['html']; ?>
                             </div>
 
                         </div>

@@ -35,7 +35,7 @@
 
                 <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_list']){ ?>
                     <div class="icon">
-                        <a href="<?php echo $this->href_to($profile['id']); ?>" <?php if (!empty($profile['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
+                        <a href="<?php echo href_to_profile($profile); ?>" <?php if (!empty($profile['is_online'])){ ?>class="peer_online" title="<?php echo LANG_ONLINE; ?>"<?php } else { ?> class="peer_no_online"<?php } ?>>
                             <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname'], $profile['is_deleted']); ?>
                         </a>
                     </div>
@@ -43,33 +43,24 @@
 
                 <div class="title">
                     <?php if (!empty($fields['nickname']) && $fields['nickname']['is_in_list']){ ?>
-                        <a href="<?php echo $this->href_to($profile['id']); ?>">
+                        <a href="<?php echo href_to_profile($profile); ?>">
                             <?php html($profile['nickname']); ?>
                         </a>
                     <?php } ?>
                     <div class="fields">
-                        <?php foreach($fields as $field){ ?>
-
-                            <?php if ($field['is_system'] || !$field['is_in_list'] || !isset($profile[$field['name']])) { continue; } ?>
-                            <?php if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; } ?>
-                            <?php if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; } ?>
-
-                            <?php
-                                if (!isset($field['options']['label_in_list'])) {
-                                    $label_pos = 'none';
-                                } else {
-                                    $label_pos = $field['options']['label_in_list'];
-                                }
-                            ?>
-
-                            <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-                                <?php if ($label_pos != 'none'){ ?>
-                                    <div class="title_<?php echo $label_pos; ?>"><?php echo $field['title'] . ($label_pos=='left' ? ': ' : ''); ?></div>
-                                <?php } ?>
-                                <div class="value">
-                                    <?php echo $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]); ?>
+                        <?php if (!empty($profile['fields'])){ ?>
+                            <?php foreach($profile['fields'] as $field){ ?>
+                                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                                    <?php if ($field['label_pos'] != 'none'){ ?>
+                                        <div class="title_<?php echo $field['label_pos']; ?>">
+                                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="value">
+                                        <?php echo $field['html']; ?>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php } ?>
                         <?php } ?>
                     </div>
                 </div>

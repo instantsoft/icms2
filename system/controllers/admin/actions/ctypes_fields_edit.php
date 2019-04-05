@@ -68,6 +68,8 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
                 // сохраняем поле
                 $content_model->updateContentField($ctype['name'], $field_id, $_field);
 
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                 $this->redirectToAction('ctypes', array('fields', $ctype['id']));
 
             }

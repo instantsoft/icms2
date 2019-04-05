@@ -59,34 +59,9 @@ class widgetUsersList extends cmsWidget {
         $profiles = $model->limit($this->getOption('limit', 10))->getUsers();
         if (!$profiles) { return false; }
 
-        if($fields){
-            foreach ($profiles as $key => $profile) {
-                foreach($fields as $field){
+        $model->makeProfileFields($fields, $profiles, $user);
 
-                    if (!isset($profile[$field['name']])) { continue; }
-                    if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) { continue; }
-                    if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; }
-
-                    if (!isset($field['options']['label_in_list'])) {
-                        $label_pos = 'none';
-                    } else {
-                        $label_pos = $field['options']['label_in_list'];
-                    }
-
-                    $field_html = $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]);
-                    if (!$field_html) { continue; }
-
-                    $profiles[$key]['fields'][$field['name']] = array(
-                        'label_pos' => $label_pos,
-                        'type'      => $field['type'],
-                        'name'      => $field['name'],
-                        'title'     => $field['title'],
-                        'html'      => $field_html
-                    );
-
-                }
-            }
-        }
+        list($profiles, $fields) = cmsEventsManager::hook('profiles_before_list', [$profiles, $fields]);
 
         return array(
             'profiles'   => $profiles,
