@@ -1,21 +1,24 @@
 <?php
 /**
- * 2.12.1 => 2.12.1
+ * 2.12.0 => 2.12.1
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    $admin->model->filterEqual('name', 'admin')->updateFiltered('controllers', array(
+        'options' => null
+    ));
+
+    if(!$core->db->isFieldExists('{users}', 'password_hash')){
+        $core->db->query("ALTER TABLE `{users}` ADD `password_hash` VARCHAR(255) NULL DEFAULT NULL COMMENT 'Хеш пароля' AFTER `email`;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    add_perms(array(
-        'content' => array(
-            'limit24'
-        )
-    ), 'number');
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////

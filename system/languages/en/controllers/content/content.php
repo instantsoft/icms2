@@ -3,6 +3,7 @@
     define('LANG_CONTENT_CONTROLLER',       'Content');
     define('LANG_CONTENT_IS_IN_GROUPS_ONLY', 'You must be a member of any group');
     define('LANG_CONTENT_COUNT_LIMIT',       'You have already added the maximum number of %s allowed');
+    define('LANG_CONTENT_COUNT_LIMIT24',     'You have already added the maximum number of %s allowed per day. You can add %s tomorrow.');
     define('LANG_CONTENT_KARMA_LIMIT',       'Not enough reputation points. Required: %s');
 	define('LANG_CONTENT_PUB',				 'Publication settings');
 	define('LANG_CONTENT_DATE_PUB',			 'Publication start date');
@@ -36,6 +37,7 @@
     define('LANG_RULE_CONTENT_PRIVACY',      'Configuring privacy settings');
     define('LANG_RULE_CONTENT_VIEW_ALL',     'Viewing private entries');
     define('LANG_RULE_CONTENT_LIMIT',       'Maximum number of entries');
+    define('LANG_RULE_CONTENT_LIMIT24',     'Maximum number of entries per day');
     define('LANG_RULE_CONTENT_KARMA',       'Reputation limit');
     define('LANG_RULE_CONTENT_PUB_LATE',     'Selecting publication start date');
     define('LANG_RULE_CONTENT_PUB_LONG',     'Selecting publication end date');

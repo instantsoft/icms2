@@ -40,6 +40,14 @@ class actionContentItemAdd extends cmsAction {
             $this->redirectBack();
         }
 
+        // проверяем что не превышен лимит на число записей в сутки
+        $user_items_24count = $this->model->getUserContentItemsCount24($ctype['name'], $this->cms_user->id, false);
+
+        if (cmsUser::isPermittedLimitReached($ctype['name'], 'limit24', $user_items_24count)){
+            cmsUser::addSessionMessage(sprintf(LANG_CONTENT_COUNT_LIMIT24, $ctype['labels']['many'], $ctype['labels']['two']), 'error');
+            $this->redirectBack();
+        }
+
         // Проверяем ограничение по карме
         if (cmsUser::isPermittedLimitHigher($ctype['name'], 'karma', $this->cms_user->karma)){
             cmsUser::addSessionMessage(sprintf(LANG_CONTENT_KARMA_LIMIT, cmsUser::getPermissionValue($ctype['name'], 'karma')), 'error');

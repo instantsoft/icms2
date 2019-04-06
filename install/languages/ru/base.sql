@@ -1111,7 +1111,8 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (43, 'users', 'bind_off_parent', 'list', 'own,all'),
 (44, 'groups', 'content_access', 'flag', NULL),
 (45, 'auth', 'view_closed', 'flag', NULL),
-(46, 'content', 'view_list', 'list', 'other,all');
+(46, 'content', 'view_list', 'list', 'other,all'),
+(47, 'content', 'limit24', 'number', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
