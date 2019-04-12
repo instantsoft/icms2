@@ -242,7 +242,7 @@ class actionCommentsSubmit extends cmsAction {
         }
 
         // Сохраняем комментарий
-        $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment));
+        $comment_id = $this->model->addComment(cmsEventsManager::hook('comment_before_add', $comment, null, $this->request));
 
         // успешно добавился?
         if(!$comment_id){
@@ -251,6 +251,8 @@ class actionCommentsSubmit extends cmsAction {
 
         // Получаем и рендерим добавленный комментарий
         $comment = $this->model->getComment($comment_id);
+
+        $comment = cmsEventsManager::hook('comment_after_add', $comment, null, $this->request);
 
         $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
 
@@ -331,15 +333,20 @@ class actionCommentsSubmit extends cmsAction {
             }
         }
 
-        list($this->comment_id, $this->content, $this->content_html) = cmsEventsManager::hook('comment_before_update', array(
+        list($this->comment_id, $this->content, $this->content_html, $data) = cmsEventsManager::hook('comment_before_update', array(
             $this->comment_id,
             $this->content,
-            $this->content_html
-        ));
+            $this->content_html,
+            array()
+        ), null, $this->request);
 
-        $this->model->updateCommentContent($this->comment_id, $this->content, $this->content_html);
+        $this->model->updateCommentContent($this->comment_id, $this->content, $this->content_html, $data);
 
-        $this->content_html = cmsEventsManager::hook('parse_text', $this->content_html);
+        $comment = $this->model->getComment($this->comment_id);
+
+        $comment = cmsEventsManager::hook('comment_after_update', $comment, null, $this->request);
+
+        $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
 
         return $this->cms_template->renderJSON(array(
             'error'     => false,
@@ -347,7 +354,7 @@ class actionCommentsSubmit extends cmsAction {
             'id'        => $this->comment_id,
             'parent_id' => isset($comment['parent_id']) ? $comment['parent_id'] : 0,
             'level'     => isset($comment['level']) ? $comment['level'] : 0,
-            'html'      => $this->content_html
+            'html'      => $comment['content_html']
         ));
 
     }

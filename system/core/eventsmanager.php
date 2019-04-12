@@ -16,7 +16,7 @@ class cmsEventsManager {
      * Входящие данные $data передаются каждому слушателю по очереди,
      * на выходе возвращается измененный слушателями параметр $data
      *
-     * @param string || array $event_name Название события/событий
+     * @param mixed $event_name Название события/массив событий
      * @param mixed $data Параметр события
      * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
      * @param object $_request Объект запроса
@@ -178,12 +178,14 @@ class cmsEventsManager {
 
             if (!cmsController::enabled($controller_name)) { continue; }
 
-            foreach($hooks as $event_name){
-
-                $structure[ $event_name ][] = $controller_name;
-
+            foreach($hooks as $ordering => $event_name){
+                $structure[ $event_name ][$ordering] = $controller_name;
             }
 
+        }
+
+        foreach($structure as $event_name => $controllers){
+            ksort($structure[$event_name]);
         }
 
         $cache->set($cache_key, $structure, 86400);

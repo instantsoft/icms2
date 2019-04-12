@@ -11,7 +11,13 @@ class onRatingContentBeforeItem extends cmsAction {
             $this->setContext('content', $ctype['name']);
 
             $this->loadCurrentUserVoted([$item['id']]);
-            $this->loadCurrentTotalVoted($item['id']);
+
+            // мы можем формировать рейтинг как-то иначе
+            if(isset($item['rating_total_voted'])){
+                $this->setTotalVoted($item['rating_total_voted']);
+            } else {
+                $this->loadCurrentTotalVoted($item['id']);
+            }
 
             $is_rating_allowed = cmsUser::isAllowed($ctype['name'], 'rate', true, true) && ($item['user_id'] != $this->cms_user->id);
 

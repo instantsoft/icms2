@@ -1503,6 +1503,7 @@ class cmsTemplate {
     public function setContext($controller_obj){
         if ($this->controller) { $this->controllers_queue[] = $this->controller; }
         $this->controller = $controller_obj;
+        return $this;
     }
 
     /**
@@ -2411,7 +2412,7 @@ class cmsTemplate {
 
     /**
      * Добавляет произвольный HTML код на позицию виджета
-     * 
+     *
      * @param string $position
      * @param string $html
      * @return $this

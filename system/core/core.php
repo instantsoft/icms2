@@ -457,9 +457,13 @@ class cmsCore {
 
         if($controllers_events){
             foreach($controllers_events as $event){
-
-                $events[ $event['listener'] ][] = $event['event'];
-
+                // для сохранения сортировки + совместимость
+                if(!isset($events[ $event['listener'] ][$event['ordering']])){
+                    $events[ $event['listener'] ][$event['ordering']] = $event['event'];
+                } else {
+                    // если вдруг по какой-то причине порядок одинаковый
+                    $events[ $event['listener'] ][intval($event['ordering'].'00'.$event['id'])] = $event['event'];
+                }
             }
         }
 

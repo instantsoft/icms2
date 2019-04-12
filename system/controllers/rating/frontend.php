@@ -34,13 +34,19 @@ class rating extends cmsFrontend {
 
     }
 
+    public function setTotalVoted($total_voted) {
+
+        $this->total_voted = $total_voted;
+
+        return $this;
+
+    }
+
     public function loadCurrentTotalVoted($target_id) {
 
         $this->model->filterVotes($this->target_controller, $this->target_subject, $target_id);
 
-        $this->total_voted = $this->model->getVotesCount(true);
-
-        return $this;
+        return $this->setTotalVoted($this->model->getVotesCount(true));
 
     }
 

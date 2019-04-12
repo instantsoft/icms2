@@ -60,6 +60,8 @@ icms.comments = (function ($) {
 
         $('textarea', form).val('').focus();
 
+        icms.events.run('icms_comments_add_form', form);
+
         return false;
     };
 
@@ -569,6 +571,7 @@ icms.comments = (function ($) {
             $('#comments_widget #comments_list .links .edit').show();
             $('#comments_widget #comments_list .links .reply').show();
             $('.preview_box', form).html('').hide();
+            icms.events.run('icms_comments_restore_form', form);
         }
     };
 

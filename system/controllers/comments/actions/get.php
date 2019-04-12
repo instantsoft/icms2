@@ -31,11 +31,15 @@ class actionCommentsGet extends cmsAction {
             }
         }
 
-        return $this->cms_template->renderJSON([
+        $result = [
             'error' => false,
             'id'    => $comment['id'],
             'html'  => string_strip_br($comment['content'])
-        ]);
+        ];
+
+        list($result, $comment) = cmsEventsManager::hook('comment_before_render_json', [$result, $comment]);
+
+        return $this->cms_template->renderJSON($result);
 
     }
 

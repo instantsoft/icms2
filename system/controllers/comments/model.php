@@ -22,15 +22,15 @@ class modelComments extends cmsModel {
 
     }
 
-    public function updateCommentContent($id, $content, $content_html){
+    public function updateCommentContent($id, $content, $content_html, $data = []){
 
         cmsCache::getInstance()->clean('comments.list');
 
-        return $this->update('comments', $id, array(
+        return $this->update('comments', $id, array_merge([
             'date_last_modified' => null,
-            'content'      => $content,
-            'content_html' => $content_html
-        ));
+            'content'            => $content,
+            'content_html'       => $content_html
+        ], $data));
 
     }
 
