@@ -13,6 +13,62 @@ class formCommentsOptions extends cmsForm {
                 'title' => LANG_BASIC_OPTIONS,
                 'childs' => array(
 
+                    new fieldList('editor', array(
+                        'title' => LANG_PARSER_HTML_EDITOR,
+                        'default' => cmsConfig::get('default_editor'),
+                        'generator' => function($item){
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('editor_presets', array(
+                        'title'        => LANG_PARSER_HTML_EDITOR_GR,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_SELECT,
+                        'multiple_keys' => array(
+                            'group_id' => 'field', 'preset_id' => 'field_select'
+                        ),
+                        'generator' => function($item){
+                            $users_model = cmsCore::getModel('users');
+
+                            $items = [];
+
+                            $groups = $users_model->getGroups(true);
+
+                            foreach($groups as $group){
+                                $items[$group['id']] = $group['title'];
+                            }
+
+                            return $items;
+                        },
+                        'values_generator' => function() {
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
                     new fieldCheckbox('disable_icms_comments', array(
                         'title' => LANG_COMMENTS_DISABLE_ICMS_COMMENTS,
                         'hint' => LANG_COMMENTS_DISABLE_ICMS_COMMENTS_HINT

@@ -13,6 +13,7 @@ function grid_scheduler($controller){
         ),
         'title' => array(
             'title' => LANG_CP_SCHEDULER_TASK,
+            'href' => href_to($controller->name, 'settings', array('scheduler', 'edit', '{id}')),
         ),
         'controller' => array(
             'title' => LANG_CP_SCHEDULER_TASK_CONTROLLER,

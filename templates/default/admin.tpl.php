@@ -120,5 +120,6 @@
         <?php } ?>
         });
     </script>
+    <?php $this->bottom(); ?>
 </body>
 </html>

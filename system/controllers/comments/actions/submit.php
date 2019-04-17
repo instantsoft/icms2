@@ -97,8 +97,17 @@ class actionCommentsSubmit extends cmsAction {
             return $this->cms_template->renderJSON(array('error' => true, 'message' => LANG_COMMENT_ERROR));
         }
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         // Типографируем текст
-        $this->content_html = cmsEventsManager::hook('html_filter', $this->content);
+        $this->content_html = cmsEventsManager::hook('html_filter', [
+            'text'         => $this->content,
+            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+            'build_smiles' => $editor_params['editor'] == 'markitup'
+        ]);
 
 		if (!$this->content_html){
 			return $this->cms_template->renderJSON(array(

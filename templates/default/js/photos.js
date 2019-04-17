@@ -167,7 +167,7 @@ icms.photos = (function ($) {
 
         onSubmit = onSubmit || function(){ return true; };
 
-        uploader = new qq.FileUploader({
+        var uploader = new qq.FileUploader({
             element: document.getElementById('album-photos-uploader'),
             action: upload_url,
             debug: false,
@@ -201,7 +201,11 @@ icms.photos = (function ($) {
 
                 $('.previews_list', widget).append(preview_block);
 
-                $('#mcontent_'+result.id).markItUp(mySettings);
+                var wysiwyg_name = $(widget).data('wysiwyg_name');
+
+                if(wysiwyg_name){
+                    window['init_'+wysiwyg_name]('mcontent_'+result.id);
+                }
 
             }
 

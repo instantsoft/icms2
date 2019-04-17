@@ -111,6 +111,7 @@
     define('LANG_CP_DISABLE_DRAFTS',            'Отключить черновики');
     define('LANG_CP_IS_PUB_CONTROL_HINT',		'Позволяет выбирать дату и срок публикации для каждой записи тем пользователям, которым это разрешено в разделе "Доступ"');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Что делать после окончания срока публикации');
+    define('LANG_CP_NOTIFY_END_DATE_DAYS',      'За сколько дней до окончания публикации уведомлять пользователей');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Скрыть');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Удалить');
     define('LANG_CP_CATEGORIES_ON',             'Включить категории');

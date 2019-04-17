@@ -1,0 +1,78 @@
+<?php
+
+class actionWysiwygsPresetsAdd extends cmsAction {
+
+    public function run($id = null){
+
+        $preset = [];
+
+        $do = 'add';
+
+        if($id){
+
+            $do = 'edit';
+
+            $preset = $this->model->getPreset($id);
+
+            if (!$preset) {
+                return cmsCore::error404();
+            }
+
+        }
+
+        $form = $this->getForm('preset', array($do));
+
+        if($do == 'edit'){
+
+            $form->hideField('basic', 'wysiwyg_name');
+
+            $this->cms_template->setPageH1(ucfirst($preset['wysiwyg_name']));
+
+        }
+
+        if ($this->request->has('submit')){
+
+            $wysiwyg_name = $this->request->get('wysiwyg_name', '');
+
+            $form_options = $this->getWysiwygOptionsForm($wysiwyg_name, [$do]);
+
+            $structure = $form_options->getStructure();
+
+            foreach($structure as $key => $fieldset){
+                $form->addFieldset($fieldset['title'], $key, $fieldset);
+            }
+
+            $preset = $form->parse($this->request, true);
+
+            $errors = $form->validate($this,  $preset);
+
+            if (!$errors){
+
+                if($do == 'add'){
+                    $this->model->addPreset($preset);
+                } else {
+                    $this->model->updatePreset($id, $preset);
+                }
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
+                $this->redirectToAction('presets');
+
+            }
+
+            if ($errors){
+				cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
+            }
+
+        }
+
+        return $this->cms_template->render('backend/preset', array(
+            'do'     => $do,
+            'preset' => $preset,
+            'form'   => $form,
+            'errors' => isset($errors) ? $errors : false
+        ));
+
+    }
+
+}

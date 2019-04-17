@@ -31,7 +31,7 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        $('textarea', form).val('').focus();
+        icms.forms.wysiwygInsertText('content', '');
 
         return false;
 
@@ -226,7 +226,7 @@ icms.wall = (function ($) {
 
             icms.wall.restoreForm(false);
 
-            $('textarea', form).val(result.html).focus();
+            icms.forms.wysiwygInsertText('content', result.html);
 
         }, 'json');
 
@@ -316,7 +316,7 @@ icms.wall = (function ($) {
 
         if (clear_text) {
             form.hide();
-            $('textarea', form).val('');
+            icms.forms.wysiwygInsertText('content', '');
             $('#wall_widget #wall_add_link').show();
             $('#wall_widget #entries_list .links .edit').show();
             $('#wall_widget #entries_list .links .reply').show();

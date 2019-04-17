@@ -58,7 +58,7 @@ icms.comments = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        $('textarea', form).val('').focus();
+        icms.forms.wysiwygInsertText('content', '');
 
         icms.events.run('icms_comments_add_form', form);
 
@@ -344,7 +344,7 @@ icms.comments = (function ($) {
 
             icms.comments.restoreForm(false);
 
-            $('textarea', form).val(result.html).focus();
+            icms.forms.wysiwygInsertText('content', result.html);
 
             icms.events.run('icms_comments_edit', result);
 
@@ -566,7 +566,7 @@ icms.comments = (function ($) {
 
         if (clear_text) {
             form.hide();
-            $('textarea', form).val('');
+            icms.forms.wysiwygInsertText('content', '');
             $('#comments_widget #comments_add_link').show();
             $('#comments_widget #comments_list .links .edit').show();
             $('#comments_widget #comments_list .links .reply').show();

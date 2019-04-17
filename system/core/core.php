@@ -543,7 +543,7 @@ class cmsCore {
 
             $result = self::includeFile($lang_file);
 
-            if(!$result){
+            if(!$result && $default !== self::$language){
                 $result = self::includeFile('system/languages/'. $default .'/'.$file.'.php');
             }
 

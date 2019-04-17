@@ -1,6 +1,29 @@
 <?php
 class images extends cmsFrontend {
 
+    public $request_params = array(
+        'target_controller' => array(
+            'default' => '',
+            'rules'   => array(
+                array('sysname'),
+                array('max_length', 32)
+            )
+        ),
+        'target_subject' => array(
+            'default' => '',
+            'rules'   => array(
+                array('sysname'),
+                array('max_length', 32)
+            )
+        ),
+        'target_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('digits')
+            )
+        )
+    );
+
 	private $allowed_extensions = 'jpg,jpeg,png,gif,bmp,webp';
 
     public $allowed_mime = array(
@@ -169,6 +192,23 @@ class images extends cmsFrontend {
 
     }
 
+    public function actionUploadWithPreset($name, $preset_name){
+
+        if (!cmsUser::isLogged()) {
+
+            return $this->cms_template->renderJSON(array(
+                'success' => false,
+                'error'   => 'auth error'
+            ));
+
+        }
+
+        $result = $this->uploadWithPreset($name, $preset_name);
+
+        return $this->cms_template->renderJSON($result);
+
+    }
+
 //============================================================================//
 //============================================================================//
 
@@ -228,7 +268,19 @@ class images extends cmsFrontend {
 		files_delete_file($result['path'], 2);
         unset($result['path']);
 
+        $file_context = array(
+            'target_controller' => $this->request->get('target_controller'),
+            'target_subject' => $this->request->get('target_subject'),
+            'target_id' => $this->request->get('target_id')
+        );
+
+        if($file_context['target_controller']){
+            $this->registerUploadFile($file_context);
+        }
+
         $this->registerFile($result['image']);
+
+        unset($result['error']);
 
         return $result;
 

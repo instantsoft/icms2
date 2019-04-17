@@ -6,8 +6,6 @@
 
     $this->setPageTitle($title);
 
-    $user = cmsUser::getInstance();
-
     if ($ctype['options']['list_on']){
         $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
     }
@@ -44,6 +42,7 @@
 
     <?php $this->renderChild('widget', array(
         'photos'     => $photos,
+        'editor_params' => $editor_params,
         'album'      => $album,
         'is_edit'    => $is_edit,
         'ctype'      => $ctype,

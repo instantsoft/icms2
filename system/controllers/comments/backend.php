@@ -8,6 +8,8 @@ class backendComments extends cmsBackend {
 
     protected $useDefaultModerationAction = true;
 
+    protected $useOptions = true;
+
     public function __construct( cmsRequest $request){
 
         parent::__construct($request);

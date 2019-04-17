@@ -45,8 +45,17 @@ class actionWallSubmit extends cmsAction {
 
         if (!$permissions || !is_array($permissions)){ return $this->error(); }
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         // Типографируем текст
-        $content_html = cmsEventsManager::hook('html_filter', $content);
+        $content_html = cmsEventsManager::hook('html_filter', [
+            'text'         => $content,
+            'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+            'build_smiles' => $editor_params['editor'] == 'markitup'
+        ]);
 
         if($this->validate_required($content_html) !== true){
             return $this->error(ERR_VALIDATE_REQUIRED);

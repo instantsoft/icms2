@@ -14,9 +14,53 @@ class fieldHtml extends cmsFormField {
                 'title' => LANG_PARSER_HTML_EDITOR,
                 'default' => cmsConfig::get('default_editor'),
                 'generator' => function($item){
-                    $items = array();
+                    $items = [];
                     $editors = cmsCore::getWysiwygs();
-                    foreach($editors as $editor){ $items[$editor] = $editor; }
+                    foreach($editors as $editor){
+                        $items[$editor] = ucfirst($editor);
+                    }
+                    $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                    if($ps){
+                        foreach ($ps as $key => $value) {
+                            $items[$key] = $value;
+                        }
+                    }
+                    return $items;
+                }
+            )),
+            new fieldList('editor_presets', array(
+                'title'        => LANG_PARSER_HTML_EDITOR_GR,
+                'is_multiple'  => true,
+                'dynamic_list' => true,
+                'select_title' => LANG_SELECT,
+                'multiple_keys' => array(
+                    'group_id' => 'field', 'preset_id' => 'field_select'
+                ),
+                'generator' => function($item){
+                    $users_model = cmsCore::getModel('users');
+
+                    $items = [];
+
+                    $groups = $users_model->getGroups(false);
+
+                    foreach($groups as $group){
+                        $items[$group['id']] = $group['title'];
+                    }
+
+                    return $items;
+                },
+                'values_generator' => function() {
+                    $items = [];
+                    $editors = cmsCore::getWysiwygs();
+                    foreach($editors as $editor){
+                        $items[$editor] = ucfirst($editor);
+                    }
+                    $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                    if($ps){
+                        foreach ($ps as $key => $value) {
+                            $items[$key] = $value;
+                        }
+                    }
                     return $items;
                 }
             )),
@@ -52,7 +96,7 @@ class fieldHtml extends cmsFormField {
         if ($this->getOption('is_html_filter')){
             $value = cmsEventsManager::hook('html_filter', array(
                 'text'                => $value,
-                'is_auto_br'          => false,
+                'is_auto_br'          => $this->getOption('editor') == 'markitup',
                 'build_smiles'        => $this->getOption('editor') == 'markitup', // пока что только так
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
@@ -171,6 +215,18 @@ class fieldHtml extends cmsFormField {
         }
 
         return $paths;
+
+    }
+
+    public function getInput($value){
+
+        $this->data = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->getOption('editor'),
+            'options' => $this->getOption('editor_options', []),
+            'presets' => $this->getOption('editor_presets', [])
+        ]);
+
+        return parent::getInput($value);
 
     }
 

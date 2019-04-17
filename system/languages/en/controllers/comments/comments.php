@@ -75,3 +75,4 @@ define('LANG_COMMENTS_APPROVE', 'Approve');
 define('LANG_COMMENTS_MODERATE_HINT', 'The comment will be published after being moderated');
 define('LANG_COMMENTS_LIMIT_NESTING', 'The maximum comments nesting level');
 define('LANG_COMMENTS_RSS_TITLE', 'Comment on %s');
+define('LANG_COMMENTS_NEW_NOTIFY', '<a href="%s">%s</a> adds a new comment on the "%s" page');

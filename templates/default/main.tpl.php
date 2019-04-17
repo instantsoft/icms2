@@ -140,6 +140,6 @@
         </footer>
 
     </div>
-
+    <?php $this->bottom(); ?>
 </body>
 </html>

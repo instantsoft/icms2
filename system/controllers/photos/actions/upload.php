@@ -63,6 +63,11 @@ class actionPhotosUpload extends cmsAction{
             $this->redirect(href_to('albums', 'add').($group_id ? '?group_id='.$group_id : ''));
         }
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         if ($this->request->has('submit')){
 
             if (!isset($albums[$album_id])){ $this->redirectBack(); }
@@ -111,7 +116,11 @@ class actionPhotosUpload extends cmsAction{
                     'album_id'   => $album['id'],
                     'title'      => strip_tags($photo_titles[$photo_id] ? $photo_titles[$photo_id] : sprintf(LANG_PHOTOS_PHOTO_UNTITLED, $photo_id)),
                     'content_source' => ($photo_contents[$photo_id] ? $photo_contents[$photo_id] : null),
-                    'content'    => ($photo_contents[$photo_id] ? cmsEventsManager::hook('html_filter', $photo_contents[$photo_id]) : null),
+                    'content'        => ($photo_contents[$photo_id] ? cmsEventsManager::hook('html_filter', [
+                        'text'         => $photo_contents[$photo_id],
+                        'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+                        'build_smiles' => $editor_params['editor'] == 'markitup'
+                    ]) : null),
                     'is_private' => (isset($photo_is_privates[$photo_id]) ? (int)$photo_is_privates[$photo_id] : 0),
                     'type'       => (isset($photo_types[$photo_id]) ? (int)$photo_types[$photo_id] : null),
                     'ordering'   => $last_order
@@ -187,6 +196,7 @@ class actionPhotosUpload extends cmsAction{
 
         $this->cms_template->render('upload', array(
             'title'         => LANG_PHOTOS_UPLOAD,
+            'editor_params' => $editor_params,
             'is_edit'       => false,
             'ctype'         => $ctype,
             'albums'        => $albums,

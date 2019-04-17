@@ -79,6 +79,8 @@ class widgetGroupsList extends cmsWidget {
             }
         }
 
+        cmsCore::loadControllerLanguage('groups');
+
         return array(
             'fields'            => $fields,
             'fields_is_in_list' => $fields_is_in_list,

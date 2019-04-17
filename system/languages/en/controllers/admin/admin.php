@@ -111,6 +111,7 @@
     define('LANG_CP_DISABLE_DRAFTS',            'Disable drafts');
 	define('LANG_CP_IS_PUB_CONTROL_HINT',		'Users with the corresponding permission configured on the "Permissions" tab can specify the custom date and publication period for each entry');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS',    'Expired entry action');
+    define('LANG_CP_NOTIFY_END_DATE_DAYS',      'How many days before the end of the publication notify users');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_HIDE','Hide');
     define('LANG_CP_IS_PUB_CONTROL_PROCESS_DEL','Delete');
     define('LANG_CP_CATEGORIES_ON',             'Enable categories');

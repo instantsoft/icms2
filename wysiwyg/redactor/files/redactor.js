@@ -4893,7 +4893,7 @@
 				$.proxy(function(data)
 				{
 					var json = (typeof data === 'string' ? $.parseJSON(data) : data);
-		        	$s.attr('src', json.filelink);
+		        	$s.attr('src', json.image.url);
 		        	$s.removeAttr('data-mozilla-paste-image');
 
 		        	this.sync();
@@ -4921,7 +4921,7 @@
 				{
 					var json = (typeof data === 'string' ? $.parseJSON(data) : data);
 
-					var html = '<img src="' + json.filelink + '" id="clipboard-image-marker" />';
+					var html = '<img src="' + json.image.url + '" id="clipboard-image-marker" />';
 					this.execCommand('inserthtml', html, false);
 
 					var image = $(this.$editor.find('img#clipboard-image-marker'));
@@ -6761,7 +6761,7 @@
 				var html = '';
 				if (link !== true)
 				{
-					html = '<img id="image-marker" src="' + json.filelink + '" />';
+					html = '<img id="image-marker" src="' + json.image.url + '" />';
 
 					var parent = this.getParent();
 					if (this.opts.paragraphy && $(parent).closest('li').length == 0)
@@ -7520,7 +7520,7 @@
 					if (directupload)
 					{
 					    var $img = $('<img>');
-						$img.attr('src', json.filelink).attr('id', 'drag-image-marker');
+						$img.attr('src', json.image.url).attr('id', 'drag-image-marker');
 
 						this.insertNodeToCaretPositionFromPoint(e, $img[0]);
 

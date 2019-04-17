@@ -89,11 +89,17 @@ class comments extends cmsFrontend {
             $this->comments_title = ($comments ? html_spellcount(sizeof($comments), $this->labels->spellcount) : $this->labels->comments);
         }
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         return array(
             'name'  => 'icms',
             'title' => $this->comments_title,
             'html'  => $this->cms_template->renderInternal($this, 'list', array(
                 'user'              => $this->cms_user,
+                'editor_params'     => $editor_params,
                 'target_controller' => $this->target_controller,
                 'target_subject'    => $this->target_subject,
                 'target_id'         => $this->target_id,
@@ -159,17 +165,29 @@ class comments extends cmsFrontend {
         // проверяем что кто-либо остался в списке
         if (!$subscribers) { return; }
 
-        $messenger = cmsCore::getController('messages');
-
-        $messenger->addRecipients($subscribers);
-
-        $messenger->sendNoticeEmail('comments_new', array(
+        $notice_data = [
             'page_url'        => href_to_abs($comment['target_url']) . "#comment_{$comment['id']}",
             'page_title'      => $comment['target_title'],
             'author_url'      => href_to_abs('users', $comment['user_id']),
             'author_nickname' => $comment['user_nickname'],
             'comment'         => $comment['content']
-        ));
+        ];
+
+        $messenger = cmsCore::getController('messages');
+
+        $messenger->addRecipients($subscribers);
+
+        $messenger->sendNoticePM(array(
+            'content' => sprintf(LANG_COMMENTS_NEW_NOTIFY, $notice_data['author_url'], $notice_data['author_nickname'], $notice_data['page_title']),
+            'actions' => array(
+                'view' => array(
+                    'title' => LANG_COMMENTS_VIEW,
+                    'href'  => $notice_data['page_url']
+                )
+            )
+        ), 'comments_new');
+
+        $messenger->sendNoticeEmail('comments_new', $notice_data);
 
     }
 

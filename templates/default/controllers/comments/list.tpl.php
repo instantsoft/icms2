@@ -1,8 +1,6 @@
 <?php // Шаблон списка комментариев и формы добавления //
-
-$this->addJS($this->getJavascriptFileName('jquery-scroll'));
-$this->addJS($this->getJavascriptFileName('comments'));
-
+$this->addTplJSName('jquery-scroll');
+$this->addTplJSName('comments');
 ?>
 <?php if ($rss_link){ ?>
     <div class="content_list_rss_icon">
@@ -83,7 +81,7 @@ $this->addJS($this->getJavascriptFileName('comments'));
                 <?php echo html_input('hidden', 'timestamp', time()); ?>
                 <?php if (!$user->is_logged) { ?>
                     <?php
-                        $this->addJS('templates/default/js/jquery-cookie.js');
+                        $this->addTplJSName('jquery-cookie');
                     ?>
                     <div class="author_data">
                         <div class="name field">
@@ -97,9 +95,9 @@ $this->addJS($this->getJavascriptFileName('comments'));
                     </div>
                 <?php } ?>
                 <?php $this->block('comments_add_form'); ?>
-                <?php echo $user->is_logged ? html_editor('content') : html_textarea('content'); ?>
+                <?php echo html_wysiwyg('content', '', $editor_params['editor'], $editor_params['options']); ?>
                 <div class="buttons">
-                    <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.comments.preview()'); ?>
+                    <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.comments.preview()', array('class'=>'button-preview')); ?>
                     <?php echo html_button(LANG_SEND, 'submit', 'icms.comments.submit()'); ?>
                     <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.comments.restoreForm()', array('class'=>'button-cancel')); ?>
                 </div>

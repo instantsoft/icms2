@@ -1,11 +1,23 @@
 <?php
 /**
- * 2.12.1 => 2.12.1
+ * 2.12.1 => 2.12.2
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+
+    $core->db->query("DELETE FROM `{#}controllers` WHERE `name` = 'markitup'");
+
+    if(!$core->db->getRowsCount('scheduler_tasks', "controller = 'content' AND hook = 'publication_notify'")){
+        $core->db->query("INSERT INTO `{#}scheduler_tasks` (`title`, `controller`, `hook`, `period`, `is_strict_period`, `date_last_run`, `is_active`, `is_new`) VALUES ('Рассылает уведомления об окончании публикации', 'content', 'publication_notify', 1440, 1, DATE_FORMAT(NOW(), '%Y-%m-%d 00:00:05'), 1, 1);");
+    }
+
+    save_controller_options(['photos', 'wall', 'comments']);
+
+    if(!$core->db->getRowsCount('controllers', "name = 'wysiwygs'")){
+        $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES ('Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);");
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
@@ -100,10 +112,6 @@ function save_controller_options($controllers) {
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
             $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
-            if($controller == 'auth'){
-                $options['is_site_only_auth_users'] = cmsConfig::get('is_site_only_auth_users');
-                $options['guests_allow_controllers'] = array('auth', 'geo');
-            }
             cmsCore::getModel('content')->filterEqual('name', $controller)->updateFiltered('controllers', array(
                 'options' => $options
             ));

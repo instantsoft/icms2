@@ -4,6 +4,7 @@
 
         'hooks' => array(
             'engine_start',
+            'user_notify_types',
             'tags_search_subjects',
             'fulltext_search',
             'admin_dashboard_chart',

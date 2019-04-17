@@ -15,6 +15,7 @@ class cmsTemplate {
     protected $site_config;
 
 	protected $head = array();
+	protected $bottom = array();
 	protected $head_main_css = array();
 	protected $head_css = array();
 	protected $head_main_js = array();
@@ -182,6 +183,10 @@ class cmsTemplate {
         return $this;
 
 	}
+
+    public function bottom(){
+        foreach ($this->bottom as $id => $tag){	echo "\t". $tag . "\n";	}
+    }
 
     /**
      * Выводит javascript теги
@@ -800,7 +805,7 @@ class cmsTemplate {
      * @return bool
      */
     public function isToolbar(){
-        if (!isset($this->menus['toolbar'])){ return false; }
+        if (empty($this->menus['toolbar'])){ return false; }
         return (bool)sizeof($this->menus['toolbar']);
     }
 
@@ -914,6 +919,16 @@ class cmsTemplate {
             $hash = count($this->head);
         }
 		$this->head[$hash] = $tag;
+        return $this;
+	}
+
+	public function addBottom($tag, $request = false){
+        if(!$request){ $request = cmsCore::getInstance()->request; }
+        if($request->isAjax()){
+            echo $tag;
+        } else {
+            $this->bottom[] = $tag;
+        }
         return $this;
 	}
 
@@ -1795,11 +1810,30 @@ class cmsTemplate {
 	}
 
     /**
-     * Выводит массив $data в шаблон $tpl_file (в папке шаблонов этого компонента)
-     * @param string $tpl_file
-     * @param array $data
+     * Печатает HTML код формы
+     *
+     * @param object $form Объект формы
+     * @param array $data Массив данных формы
+     * @param array $attributes Атрибуты формы
+     * @param mixed $errors Массив ошибок полей
      */
-    public function renderForm($form, $data, $attributes = array(), $errors = false) {
+    public function renderForm($form, $data, $attributes = [], $errors = false) {
+
+        $attributes = array_replace_recursive([
+            'is_ajax'      => false,
+            'submit'       => ['title' => LANG_SAVE, 'show' => true],
+            'cancel'       => ['title' => LANG_CANCEL, 'href' => href_to_home(), 'show' => false],
+            'action'       => '',
+            'append_html'  => '',
+            'prepend_html' => '',
+            'form_id'      => md5(microtime(true)),
+            'method'       => 'post'
+        ], $attributes);
+
+        if($attributes['method'] === 'ajax'){
+            $attributes['method']  = 'post';
+            $attributes['is_ajax'] = true;
+        }
 
         $form_tpl_file = 'form';
 

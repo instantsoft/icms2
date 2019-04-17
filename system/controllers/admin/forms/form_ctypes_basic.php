@@ -96,6 +96,19 @@ class formAdminCtypesBasic extends cmsForm {
                         ),
                         'visible_depend' => array('is_date_range' => array('show' => array('1')))
                     )),
+                    new fieldNumber('options:notify_end_date_days', array(
+                        'title' => LANG_CP_NOTIFY_END_DATE_DAYS,
+                        'units' => LANG_DAYS,
+                        'default' => 1,
+                        'visible_depend' => array('is_date_range' => array('show' => array('1')))
+                    )),
+					new fieldString('options:notify_end_date_notice', array(
+                        'title' => LANG_MESSAGE,
+                        'multilanguage' => true,
+                        'is_clean_disable' => true,
+                        'default' => 'Через %s публикация вашего контента <a href="%s">%s</a> будет прекращена.',
+                        'visible_depend' => array('is_date_range' => array('show' => array('1')))
+                    )),
                     new fieldCheckbox('options:disable_drafts', array(
                         'title' => LANG_CP_DISABLE_DRAFTS
                     ))

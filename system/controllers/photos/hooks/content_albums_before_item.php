@@ -6,7 +6,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
         list($ctype, $album, $fields) = $data;
 
-        $is_allow = $album['is_public'] || ($album['user_id'] == $this->cms_user->id) || $this->cms_user->is_admin;
+        $is_allow = $album['is_public'] || !$album['id'] || ($album['user_id'] == $this->cms_user->id) || $this->cms_user->is_admin;
 
         if ($is_allow && cmsUser::isAllowed($ctype['name'], 'add')) {
 

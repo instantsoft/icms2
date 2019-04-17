@@ -704,7 +704,11 @@ class cmsController {
         $form = cmsForm::getForm($form_file, $_form_name, $params, $this);
 
         if($form === false){
-            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
+            return cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $form_file));
+        }
+
+        if(is_string($form)){
+            return cmsCore::error($form);
         }
 
         list($form, $params) = cmsEventsManager::hook('form_'.$this->name.'_'.$form_name, array($form, $params));

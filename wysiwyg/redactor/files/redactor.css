@@ -790,6 +790,16 @@ body .redactor_air .redactor_toolbar {
 .redactor_dropdown_box_smiles img {
     cursor: pointer;
 }
+#wall_add_form .redactor_box, #wall_add_form  .redactor_toolbar, #comments_add_form .redactor_box, #comments_add_form  .redactor_toolbar {
+    background: transparent;
+    box-shadow: none;
+}
+#wall_add_form .redactor_box, #comments_add_form .redactor_box, #comments_edit_form .redactor_box {
+    margin: 0 0 15px 0;
+}
+#wall_add_form .button-preview, #comments_add_form .button-preview {
+    display: none;
+}
 /* =ProgressBar
 -----------------------------------------------------------------------------*/
 #redactor-progress {

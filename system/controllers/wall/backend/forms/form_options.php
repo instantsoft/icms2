@@ -37,6 +37,62 @@ class formWallOptions extends cmsForm {
                             'date_pub' => LANG_DATE_PUB,
                             'date_last_reply' => LANG_WALL_SORTING_DATE_LAST_REPLY
                         )
+                    )),
+
+                    new fieldList('editor', array(
+                        'title' => LANG_PARSER_HTML_EDITOR,
+                        'default' => cmsConfig::get('default_editor'),
+                        'generator' => function($item){
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('editor_presets', array(
+                        'title'        => LANG_PARSER_HTML_EDITOR_GR,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_SELECT,
+                        'multiple_keys' => array(
+                            'group_id' => 'field', 'preset_id' => 'field_select'
+                        ),
+                        'generator' => function($item){
+                            $users_model = cmsCore::getModel('users');
+
+                            $items = [];
+
+                            $groups = $users_model->getGroups(false);
+
+                            foreach($groups as $group){
+                                $items[$group['id']] = $group['title'];
+                            }
+
+                            return $items;
+                        },
+                        'values_generator' => function() {
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
                     ))
 
                 )

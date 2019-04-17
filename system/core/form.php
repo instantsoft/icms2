@@ -146,7 +146,9 @@ class cmsForm {
 
                             $name_parts = explode(':', $name);
 
-                            $name_parts[count($name_parts)-2] .= '_'.$lang;
+                            $count = count($name_parts);
+
+                            $name_parts[$count-($count > 2 ? 2 : 1)] .= '_'.$lang;
 
                             $_field->setName(implode(':', $name_parts));
 
@@ -834,6 +836,10 @@ class cmsForm {
         include_once $form_file;
 
         $form_class = 'form' . string_to_camel('_', $form_name);
+
+        if(!class_exists($form_class, false)){
+            return sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $form_file), $form_class);
+        }
 
         $form = new $form_class();
 
