@@ -613,6 +613,11 @@ aside .menu .item, section .menu .item {
 .width_480 {
     width: 480px;
 }
+hr {
+    border-color: #ccc;
+    border-style: solid;
+    border-width: 1px 0 0 0;
+}
 /* Media Queries ============================================================ */
 
 @media screen and (max-width: 980px) {

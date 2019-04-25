@@ -1323,7 +1323,7 @@ CREATE TABLE `{#}uploaded_files` (
   `name` varchar(255) DEFAULT NULL COMMENT 'Имя файла',
   `size` int(11) unsigned DEFAULT NULL COMMENT 'Размер файла',
   `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Счетчик скачиваний',
-  `type` enum('file','image','audio','video') NOT NULL DEFAULT 'file' COMMENT 'Тип файла',
+  `type` varchar(32) DEFAULT 'file' COMMENT  'Тип файла',
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Контроллер привязки',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Субъект привязки',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'ID субъекта',

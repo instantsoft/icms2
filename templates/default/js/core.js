@@ -120,7 +120,7 @@ icms.menu = (function ($) {
 
 icms.forms = (function ($) {
 
-    this.wysiwygs_insert_pool = {insert: {}, add: {}};
+    this.wysiwygs_insert_pool = {insert: {}, add: {}, init: {}, save: {}};
     this.submitted = false;
     this.form_changed = false;
     this.csrf_token = false;
@@ -135,9 +135,35 @@ icms.forms = (function ($) {
         this.wysiwygs_insert_pool.add[field_name] = callback;
     };
 
+    this.addWysiwygsInitPool = function (field_name, callback){
+        this.wysiwygs_insert_pool.init[field_name] = callback;
+    };
+
+    this.addWysiwygsSavePool = function (field_name, callback){
+        this.wysiwygs_insert_pool.save[field_name] = callback;
+    };
+
+    this.wysiwygBeforeSubmit = function (){
+        for(var field_name in this.wysiwygs_insert_pool.save) {
+            if(this.wysiwygs_insert_pool.save.hasOwnProperty(field_name)){
+                if (typeof(this.wysiwygs_insert_pool.save[field_name]) === 'function') {
+                    this.wysiwygs_insert_pool.save[field_name](field_name);
+                }
+            }
+        }
+        return this;
+    };
+
+    this.wysiwygInit = function (field_name){
+        if (typeof(this.wysiwygs_insert_pool.insert[field_name]) === 'function') {
+            this.wysiwygs_insert_pool.init[field_name](field_name);
+        }
+        return this;
+    };
+
     this.wysiwygInsertText = function (field_name, text){
         if (typeof(this.wysiwygs_insert_pool.insert[field_name]) === 'function') {
-            this.wysiwygs_insert_pool.insert[field_name]($('#'+field_name), text);
+            this.wysiwygs_insert_pool.insert[field_name](field_name, text);
         } else {
             $('#'+field_name).val(text).focus();
         }
@@ -146,7 +172,7 @@ icms.forms = (function ($) {
 
     this.wysiwygAddText = function (field_name, text){
         if (typeof(this.wysiwygs_insert_pool.add[field_name]) === 'function') {
-            this.wysiwygs_insert_pool.add[field_name]($('#'+field_name), text);
+            this.wysiwygs_insert_pool.add[field_name](field_name, text);
         } else {
             addTextToPosition($('#'+field_name), text);
         }
@@ -224,6 +250,7 @@ icms.forms = (function ($) {
     };
 
 	this.toJSON = function(form) {
+        _this.wysiwygBeforeSubmit();
         var o = {};
         var a = form.serializeArray();
         $.each(a, function() {

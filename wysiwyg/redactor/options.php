@@ -3,7 +3,7 @@ class formWysiwygRedactorOptions extends cmsForm {
 
     public function init($do) {
 
-        $buttons = ['html', 'undo', 'redo', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'video', 'file', 'table', 'link', 'alignment', '|', 'horizontalrule', 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'];
+        $buttons = ['html', 'undo', 'redo', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'video', 'table', 'link', 'alignment', '|', 'horizontalrule', 'underline', 'alignleft', 'aligncenter', 'alignright', 'justify'];
 
         return array(
 

@@ -460,8 +460,12 @@ class cmsController {
                 // проверяем максимальное число аргументов экшена
                 if ($this->name != 'admin'){
                     $rf = new ReflectionMethod($this, $method_name);
-                    $max_params = $rf->getNumberOfParameters();
-                    if ($max_params < count($params)) { cmsCore::error404(); }
+                    // кол-во переданных параметров
+                    $current_params = count($params);
+                    // передано больше чем нужно параметров
+                    if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
+                    // передано меньше чем нужно параметров
+                    if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
                 }
 
                 // сохраняем название текущего экшена
@@ -519,8 +523,12 @@ class cmsController {
         // проверяем максимальное число аргументов экшена
         if ($this->name != 'admin'){
             $rf = new ReflectionMethod($class_name, 'run');
-            $max_params = $rf->getNumberOfParameters();
-            if ($max_params < count($params)) { cmsCore::error404(); }
+            // кол-во переданных параметров
+            $current_params = count($params);
+            // передано больше чем нужно параметров
+            if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
+            // передано меньше чем нужно параметров
+            if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
         }
 
         // сохраняем название текущего экшена

@@ -155,6 +155,10 @@ class cmsWysiwygMarkitup {
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
         if($dom_id){
+            if(!empty($this->options['wysiwyg_toolbar'])){
+                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                unset($this->options['wysiwyg_toolbar']);
+            }
             echo html_textarea($field_id, $content, [
                 'id' => $dom_id,
                 'class' => 'markitup_redactor'

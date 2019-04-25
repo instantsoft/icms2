@@ -65,6 +65,10 @@ class cmsWysiwygRedactor {
         $dom_id = str_replace(array('[',']'), array('_', ''), $field_id);
 
         if($dom_id){
+            if(!empty($this->options['wysiwyg_toolbar'])){
+                echo '<div data-field_id="'.$dom_id.'" id="wysiwyg_toolbar_'.$dom_id.'" class="wysiwyg_toolbar_wrap">'.$this->options['wysiwyg_toolbar'].'</div>';
+                unset($this->options['wysiwyg_toolbar']);
+            }
             echo html_textarea($field_id, $content, array('id' => $dom_id, 'class' => 'imperavi_redactor'));
         }
 
@@ -86,11 +90,11 @@ class cmsWysiwygRedactor {
                 };
                 $('#'+dom_id).redactor(imperavi_options);
                 icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
-                    $(field_element).redactor('set', text);
+                    $('#'+field_element).redactor('set', text);
                     $(field_element).redactor('focus');
                 });
                 icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
-                    $(field_element).redactor('insertText', text);
+                    $('#'+field_element).redactor('insertText', text);
                 });
             }
         </script>

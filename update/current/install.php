@@ -19,6 +19,8 @@ function install_package(){
         $core->db->query("INSERT INTO `{#}controllers` (`title`, `name`, `is_enabled`, `options`, `author`, `url`, `version`, `is_backend`) VALUES ('Wysiwyg редакторы', 'wysiwygs', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1);");
     }
 
+    $core->db->query("ALTER TABLE `{#}uploaded_files` CHANGE `type` `type` VARCHAR(32) NULL DEFAULT 'file' COMMENT 'Тип файла';");
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

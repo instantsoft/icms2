@@ -50,7 +50,7 @@ $.Redactor.opts.langs['ru'] = {
 	text: 'Текст',
 	mailto: 'Эл. почта',
 	web: 'URL',
-	video_html_code: 'Код видео ролика или ссылка на YouTube/Vimeo/Facebook',
+	video_html_code: 'Код видео ролика или ссылка на YouTube/Vimeo/Facebook/Rutube',
 	file: 'Файл',
 	upload: 'Загрузить',
 	download: 'Скачать',

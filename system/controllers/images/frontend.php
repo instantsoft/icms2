@@ -262,6 +262,7 @@ class images extends cmsFrontend {
 		}
 
 		$result['image'] = $image;
+		$result['location'] = $image['url'];
 
         list($result, $preset) = cmsEventsManager::hook('images_after_resize_by_preset', array($result, $preset), null, $this->request);
 

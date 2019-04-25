@@ -1324,7 +1324,7 @@ CREATE TABLE `{#}uploaded_files` (
   `name` varchar(255) DEFAULT NULL COMMENT 'File name',
   `size` int(11) unsigned DEFAULT NULL COMMENT 'File size',
   `counter` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Download counter',
-  `type` enum('file','image','audio','video') NOT NULL DEFAULT 'file' COMMENT 'File type',
+  `type` varchar(32) DEFAULT 'file' COMMENT  'File type',
   `target_controller` varchar(32) DEFAULT NULL COMMENT 'Controller',
   `target_subject` varchar(32) DEFAULT NULL COMMENT 'Subject',
   `target_id` int(11) unsigned DEFAULT NULL COMMENT 'Subject ID',

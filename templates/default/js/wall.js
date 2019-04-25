@@ -31,7 +31,7 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        icms.forms.wysiwygInsertText('content', '');
+        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
 
         return false;
 
@@ -214,6 +214,8 @@ icms.wall = (function ($) {
         $('.loading', form).show();
         $('.buttons', form).hide();
         $('textarea', form).prop('disabled', true);
+
+        icms.forms.wysiwygInit('content');
 
         var url = $('#wall_urls').data('get-url');
 

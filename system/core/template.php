@@ -652,7 +652,7 @@ class cmsTemplate {
      */
 	public function addToPageH1($title, $separator = ', '){
         if (is_array($title)){ $title = implode($separator, $title); }
-        $this->page_h1 .= $separator.$title;
+        $this->page_h1 .= ($this->page_h1 ? $separator : '').$separator.$title;
         return $this;
 	}
 

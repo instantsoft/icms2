@@ -136,7 +136,7 @@ class actionAdminInstallFinish extends cmsAction {
             'author'      => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'         => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
             'version'     => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
-            'is_backend'  => file_exists($controller_root_path.'backend.php'),
+            'is_backend'  => (file_exists($controller_root_path.'backend.php') || $form),
             'files'       => (!empty($manifest['contents']) ? $manifest['contents'] : null),
             'addon_id'    => (!empty($manifest['info']['addon_id']) ? (int)$manifest['info']['addon_id'] : null),
             'is_external' => 1

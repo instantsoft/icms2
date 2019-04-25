@@ -42,11 +42,13 @@ class modelFiles extends cmsModel {
 
         $this->selectOnly('id');
         $this->select('path');
+        $this->select('name', 'title');
 
         return $this->get('uploaded_files', function($item, $model){
 
             $item['image'] = cmsConfig::get('upload_host') . '/' . $item['path'];
             $item['thumb'] = $item['image'];
+            $item['value'] = $item['image'];
 
             return $item;
 

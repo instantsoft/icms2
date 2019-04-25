@@ -30,6 +30,7 @@
 	var reUrlYoutube = /https?:\/\/(?:[0-9A-Z-]+\.)?(?:youtu\.be\/|youtube\.com\S*[^\w\-\s])([\w\-]{11})(?=[^\w\-]|$)(?![?=&+%\w.-]*(?:['"][^<>]*>|<\/a>))[?=&+%\w.-]*/ig;
 	var reUrlVimeo = /https?:\/\/(www\.)?vimeo.com\/(\d+)($|\/)/;
     var reUrlFacebook = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:facebook\.com(?:\/[^\/]+\/videos\/|\/video\.php\?v=))([0-9]+)(?:.+)?$/;
+	var reUrlRutube = /^(?:(?:https|http)?:\/\/)?(?:www\.)?(?:rutube\.ru\/video\/)([a-z0-9]+)(?:.+)?$/;
 
 	$.fn.redactor = function(options)
 	{
@@ -5916,6 +5917,10 @@
             else if (data.match(reUrlFacebook))
             {
                 data = data.replace(reUrlFacebook, iframeStart + 'https://www.facebook.com/video/embed?video_id=$1' + iframeEnd);
+            }
+			else if (data.match(reUrlRutube))
+            {
+                data = data.replace(reUrlRutube, iframeStart + '//rutube.ru/play/embed/$1' + iframeEnd);
             }
 
 			this.selectionRestore();

@@ -59,18 +59,18 @@ class onTypographHtmlFilter extends cmsAction {
             'table', 'tbody', 'thead', 'tfoot', 'tr', 'td', 'th',
             'h1','h2','h3','h4','h5','h6',
             'pre', 'code', 'blockquote',
-            'video', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
+            'video', 'source', 'audio', 'youtube', 'facebook', 'figure', 'figcaption',
             'object', 'param', 'embed', 'iframe', 'spoiler'
         ));
 
         // Устанавливаем коротие теги. (не имеющие закрывающего тега)
         $jevix->cfgSetTagShort(array(
-            'br', 'img', 'hr', 'embed', 'input'
+            'br', 'img', 'hr', 'embed', 'input', 'source'
         ));
 
         // Устанавливаем преформатированные теги. (в них все будет заменятся на HTML сущности)
         $jevix->cfgSetTagPreformatted(array(
-            'pre', 'video', 'code'
+            'pre', 'code'
         ));
 
         // Устанавливаем теги, которые необходимо вырезать из текста вместе с контентом.
@@ -101,12 +101,19 @@ class onTypographHtmlFilter extends cmsAction {
         $jevix->cfgAllowTagParams('code', array('type' => '#text'));
         $jevix->cfgAllowTagParams('figure', array('style' => '#text', 'class' => '#text'));
         $jevix->cfgAllowTagParams('figcaption', array('style' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('h2', array('id' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('h3', array('id' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('h4', array('id' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('h5', array('id' => '#text', 'class' => '#text'));
+        $jevix->cfgAllowTagParams('video', array('controls' => '#text', 'class' => '#text', 'width' => '#int', 'height' => '#int'));
+        $jevix->cfgAllowTagParams('source', array('src' => '#text', 'type' => '#text'));
 
         // Устанавливаем параметры тегов являющиеся обязательными. Без них вырезает тег оставляя содержимое.
         $jevix->cfgSetTagParamsRequired('img', 'src');
         $jevix->cfgSetTagParamsRequired('a', 'href');
 
         // Устанавливаем теги которые может содержать тег контейнер
+        $jevix->cfgSetTagChilds('video',array('source'),false,true);
         $jevix->cfgSetTagChilds('ul',array('li'),false,true);
         $jevix->cfgSetTagChilds('ol',array('li'),false,true);
         $jevix->cfgSetTagChilds('table',array('tr', 'tbody', 'thead', 'tfoot', 'th', 'td'),false,true);
@@ -131,7 +138,7 @@ class onTypographHtmlFilter extends cmsAction {
         // Отключаем типографирование в определенном теге
         $jevix->cfgSetTagNoTypography(array('pre', 'youtube', 'iframe', 'code'));
 
-        $jevix->cfgSetTagNoAutoBr(array('ul','ol','code'));
+        $jevix->cfgSetTagNoAutoBr(array('ul','ol','code','video'));
 
         // Ставим колбэк для youtube
         $jevix->cfgSetTagCallbackFull('youtube', array($this, 'parseYouTubeVideo'));

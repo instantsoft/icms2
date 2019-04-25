@@ -151,7 +151,7 @@
     define('LANG_CP_SEOMETA_ITEM_KEYS',         'Шаблон генерации ключевых слов');
     define('LANG_CP_SEOMETA_ITEM_DESC',         'Шаблон генерации META-описаний');
     define('LANG_CP_SEOMETA_ITEM_H1',           'Шаблон генерации тега h1');
-    define('LANG_CP_SEOMETA_FIELDS',            ' <span class="pattern_fields_panel_hint">Кликните на поле, чтобы увидеть доступные выражения.</span><span class="pattern_fields_panel">Доступные выражения: <b class="pattern_fields">%s</b> Подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>.</span>');
+    define('LANG_CP_SEOMETA_FIELDS',            ' <span class="pattern_fields_panel_hint">Кликните на поле, чтобы увидеть доступные выражения.</span><span class="pattern_fields_panel">Доступные выражения: <b class="pattern_fields">%s</b>');
     define('LANG_CP_SEOMETA_ITEM_DS',           'Переопределяет шаблон, заданный для категорий типов контента.'.LANG_CP_SEOMETA_FIELDS);
     define('LANG_CP_SEOMETA_ITEM_HINT',         'Используйте поля, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> (для записи типа контента) и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_CP_AUTO_URL',                  'Генерировать URL автоматически');

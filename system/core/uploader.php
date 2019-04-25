@@ -11,6 +11,7 @@ class cmsUploader {
     private $upload_errors = array();
 
     private $allowed_mime = false;
+    private $allowed_mime_ext = [];
 
     public function __construct() {
         $this->upload_errors = array(
@@ -28,7 +29,18 @@ class cmsUploader {
     }
 
     public function setAllowedMime($types) {
-        $this->allowed_mime = $types; return $this;
+
+        $this->allowed_mime = $types;
+
+        $mime_types = cmsCore::includeAndCall('system/libs/mimetypes.php', 'getMimeTypes');
+
+        foreach ($this->allowed_mime as $mime) {
+            if(isset($mime_types[$mime])){
+                $this->allowed_mime_ext[] = $mime_types[$mime];
+            }
+        }
+
+        return $this;
     }
 
     public function setFileName($name) {
@@ -238,7 +250,7 @@ class cmsUploader {
         if($this->allowed_mime !== false){
             if(!$this->isMimeTypeAllowed($source)){
                 return array(
-                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
                     'success' => false,
                     'name'    => $dest_name
                 );
@@ -354,7 +366,7 @@ class cmsUploader {
             if(!$this->isMimeTypeAllowed($destination)){
                 @unlink($destination);
                 return array(
-                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
                     'success' => false,
                     'name'    => $dest_name
                 );
@@ -470,7 +482,7 @@ class cmsUploader {
             if(!$this->isMimeTypeAllowed($destination)){
                 @unlink($destination);
                 return array(
-                    'error'   => LANG_UPLOAD_ERR_MIME,
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
                     'success' => false,
                     'name'    => $orig_name,
                     'path'    => ''
