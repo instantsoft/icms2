@@ -402,7 +402,7 @@ class cmsController {
             return true;
         }
 
-        $action_file = $this->root_path . 'actions/' . $action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         if (is_readable($action_file)){
             return true;
@@ -445,7 +445,7 @@ class cmsController {
         $method_name = 'action' . string_to_camel('_', $action_name);
 
         // проверяем наличие экшена его в отдельном файле
-        $action_file = $this->root_path . 'actions/' . $action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         if(is_readable($action_file)){
 
@@ -501,12 +501,21 @@ class cmsController {
     }
 
     /**
-     * Выполняет экшен, находящийся в отдельном файле ./actions/$action_name.php
-     * @param str $action_name
+     * Возвращает путь к файлу экшена (./actions/$action_name.php по умолчанию)
+     * @param string $action_name
+     * @return string
+     */
+    public function getExternalActionPath($action_name) {
+        return $this->root_path . 'actions/'.$action_name.'.php';
+    }
+
+    /**
+     * Выполняет экшен, находящийся в отдельном файле
+     * @param string $action_name
      */
     public function runExternalAction($action_name, $params = array()){
 
-        $action_file = $this->root_path . 'actions/'.$action_name.'.php';
+        $action_file = $this->getExternalActionPath($action_name);
 
         $class_name = 'action' . string_to_camel('_', $this->name) . string_to_camel('_', $action_name);
 
