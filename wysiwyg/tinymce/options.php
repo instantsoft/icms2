@@ -16,7 +16,10 @@ class formWysiwygTinymceOptions extends cmsForm {
             new fieldString('options:toolbar', array(
                 'title' => LANG_TINYMCE_TOOLBAR,
                 'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $buttons).'</a>'),
-                'default' => ''
+                'default' => '',
+                'options'=>array(
+                    'max_length' => 1000
+                )
             )),
 
             new fieldString('options:quickbars_selection_toolbar', array(

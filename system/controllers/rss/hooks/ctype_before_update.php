@@ -19,13 +19,13 @@ class onRssCtypeBeforeUpdate extends cmsAction {
                     'image'       => '',
                     'image_size'  => 'normal'
                 ),
-                'is_enabled'  => $ctype['options']['is_rss']
+                'is_enabled'  => !empty($ctype['options']['is_rss'])
             ));
 
         } else {
 
             $this->model->updateFeed($feed['id'], array(
-                'is_enabled' => $ctype['options']['is_rss'],
+                'is_enabled' => !empty($ctype['options']['is_rss']),
                 'title' => $ctype['title']
             ));
 

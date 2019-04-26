@@ -65,6 +65,7 @@ define('LANG_RULE_COMMENTS_DELETE', 'Deleting comments');
 define('LANG_RULE_COMMENTS_VIEW_ALL', 'Viewing private comments');
 define('LANG_RULE_COMMENTS_RATE', 'Rate comments');
 define('LANG_RULE_COMMENTS_KARMA', 'Reputation points that allow to add comments');
+define('LANG_RULE_CONTENT_COMMENT',      'Posting comments');
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Comment rating will effect author\'s rating');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Increase/decrease author\'s reputation for +/- in comments');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Full delete all');

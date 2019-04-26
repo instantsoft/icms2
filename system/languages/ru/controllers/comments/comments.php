@@ -65,6 +65,7 @@ define('LANG_RULE_COMMENTS_DELETE', 'Удаление комментариев')
 define('LANG_RULE_COMMENTS_VIEW_ALL', 'Просмотр приватных комментариев');
 define('LANG_RULE_COMMENTS_RATE', 'Оценка комментариев');
 define('LANG_RULE_COMMENTS_KARMA', 'Репутация для добавления комментариев');
+define('LANG_RULE_CONTENT_COMMENT',      'Комментирование');
 define('LANG_COMMENTS_UPDATE_USER_RATING', 'Рейтинг комментариев повлияет на рейтинг автора');
 define('LANG_COMMENTS_UPDATE_USER_RATING_HINT', 'Увеличить/уменьшить рейтинг автора за +/- в комментариях');
 define('LANG_PERM_OPTION_FULL_DELETE', 'Все удалять полностью');

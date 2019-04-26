@@ -17,6 +17,9 @@ class cmsWysiwygTinymce {
 
     private $buttons_mapping = [
         'wordcount','toc','template','paste','nonbreaking','media','insertdatetime','image','hr','fullscreen','charmap','anchor','smiles',
+        'icmsspoiler' => [
+            'spoiler-add', 'spoiler-remove'
+        ],
         'textcolor' => [
             'forecolor', 'backcolor'
         ],
@@ -26,14 +29,11 @@ class cmsWysiwygTinymce {
         'link' => [
             'link', 'unlink', 'openlink'
         ],
-        'imagetools' => [
-            'rotateleft', 'rotateright', 'flipv', 'fliph', 'editimage', 'imageoptions'
-        ],
         'table' => [
             'table', 'tabledelete', 'tablecellprops', 'tablemergecells', 'tablesplitcells', 'tableinsertrowbefore',
             'tableinsertrowafter', 'tabledeleterow', 'tablerowprops', 'tablecutrow', 'tablecopyrow', 'tablepasterowbefore',
             'tablepasterowafter', 'tableinsertcolbefore', 'tableinsertcolafter', 'tabledeletecol'
-        ],
+        ]
     ];
 
     private $options = [
@@ -44,15 +44,12 @@ class cmsWysiwygTinymce {
         'min_height'            => 300,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
-        'branding'              => false,
         'menubar'               => false,
         'statusbar'             => false,
         'relative_urls'         => false,
-        'images_reuse_filename' => true,
         'paste_data_images'     => true,
-        'image_caption'         => true,
+        'image_caption'         => false,
         'toolbar_drawer'        => false,
-        'file_picker_types'     => 'file image media',
         'toc_header'            => 'div',
         'resize'                => 'both',
         'theme'                 => 'silver',
@@ -155,15 +152,14 @@ class cmsWysiwygTinymce {
             $this->options['plugins'][] = 'code';
         }
 
-        if(in_array('quickbars', $this->options['plugins'])){
-            $this->options['toolbar'] = false;
-        }
-
         $this->options['plugins'] = implode(' ', $this->options['plugins']);
 
         foreach ($this->options as $key => $value) {
             if(!$value){
                 $this->options[$key] = false;
+            }
+            if($value === 1){
+                $this->options[$key] = true;
             }
         }
 

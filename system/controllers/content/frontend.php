@@ -851,6 +851,9 @@ class content extends cmsFrontend {
 				$form->addField($pub_fieldset_id, new fieldDate('date_pub_end', array(
 					'title' => LANG_CONTENT_DATE_PUB_END,
 					'hint' => LANG_CONTENT_DATE_PUB_END_HINT,
+					'options' => array(
+						'show_time' => true
+					)
 				)));
 			}
             if($action=='edit'){

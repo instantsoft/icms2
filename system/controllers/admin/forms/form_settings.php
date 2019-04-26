@@ -234,9 +234,17 @@ class formAdminSettings extends cmsForm {
                         'title' => LANG_CP_SETTINGS_EDITOR,
                         'default' => 'redactor',
                         'generator' => function($item){
-                            $items = array();
+                            $items = [];
                             $editors = cmsCore::getWysiwygs();
-                            foreach($editors as $editor){ $items[$editor] = $editor; }
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
                             return $items;
                         }
                     )),

@@ -31,7 +31,6 @@
     define('LANG_RULE_CONTENT_ADD_CAT',      'Создание категорий');
     define('LANG_RULE_CONTENT_EDIT_CAT',     'Редактирование категорий');
     define('LANG_RULE_CONTENT_DELETE_CAT',   'Удаление категорий');
-    define('LANG_RULE_CONTENT_COMMENT',      'Комментирование');
     define('LANG_RULE_CONTENT_DISABLE_COMMENTS', 'Отключение комментариев к записи');
     define('LANG_RULE_CONTENT_RATE',         'Оценка рейтинга');
     define('LANG_RULE_CONTENT_PRIVACY',      'Управление приватностью');

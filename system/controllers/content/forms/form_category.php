@@ -47,10 +47,7 @@ class formContentCategory extends cmsForm {
                     )),
 
                     new fieldHtml('description', array(
-                        'title' => LANG_CATEGORY_DESCRIPTION,
-                        'options' => array(
-                            'editor' => cmsConfig::get('default_editor')
-                        )
+                        'title' => LANG_CATEGORY_DESCRIPTION
                     )),
 
                     new fieldCheckbox('is_hidden', array(
