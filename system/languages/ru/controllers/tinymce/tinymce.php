@@ -21,3 +21,7 @@ define('LANG_TINYMCE_STATUSBAR', 'Показывать строку состоя
 define('LANG_TINYMCE_MIN_HEIGHT', 'Минимальная высота редактора');
 define('LANG_TINYMCE_MAX_HEIGHT', 'Максимальная высота редактора');
 define('LANG_TINYMCE_ALLOW_MIME_TYPES', 'Разрешенные типы файлов для группы "%s"');
+define('LANG_TINYMCE_PASTE_AS_TEXT', 'Вставлять текст, очищая форматирование (плагин paste)');
+define('LANG_TINYMCE_BLOCK_FORMATS', 'Доступные форматы');
+define('LANG_TINYMCE_P', 'Параграф');
+define('LANG_TINYMCE_SP', 'Спойлер');

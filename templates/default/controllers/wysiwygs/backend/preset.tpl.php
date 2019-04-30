@@ -53,8 +53,35 @@
 
                 $('#tab-basic').after(data.html);
 
+                $('.form-tabs').find('.field.ft_string > input, .field.ft_text > textarea').each(function(indx, element){
+                    $(this).trigger('input');
+                });
+
                 icms.events.run('loadwwoptions', data);
             }, 'json');
         }).triggerHandler('change');
+
+        $('.form-tabs').on('input', '.field.ft_string > input, .field.ft_text > textarea', function (){
+            if($(this).val().length === 0){ return; }
+            var btns = $(this).val().split(' ');
+            var panel = $(this).closest('.field').find('.pattern_fields');
+            $('a', panel).show().css('background-color', '');
+            for(var idx in btns){
+                var btn = btns[idx].trim();
+                if(btn.length < 2){
+                    continue;
+                }
+                $('a:contains("'+btn+'")', panel).filter(function() {
+                    var result = $(this).text().trim() === btn;
+                    if(!result){
+                        var matcher = new RegExp('^'+ btn);
+                        if(matcher.test($(this).text())){
+                            $(this).css('background-color', '#728994');
+                        }
+                    }
+                    return result;
+                }).hide();
+            }
+        });
     });
 </script>

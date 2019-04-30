@@ -23,6 +23,13 @@ class actionAuthLogin extends cmsAction {
 
         if ($is_submit){
 
+            if (!$password || !$email || $this->validate_email($email) !== true){
+
+                cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
+                $this->redirectBack();
+
+            }
+
             $is_captcha_valid = true;
 
             if (cmsUser::sessionGet('is_auth_captcha') && $this->options['auth_captcha']){

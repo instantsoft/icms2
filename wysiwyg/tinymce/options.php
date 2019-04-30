@@ -7,16 +7,16 @@ class formWysiwygTinymceOptions extends cmsForm {
 
         $editor = new cmsWysiwygTinymce();
 
-        list($plugins, $buttons, $quickbars_insert_buttons, $quickbars_selection_buttons) = $editor->getParams();
+        list($plugins, $buttons, $quickbars_insert_buttons, $quickbars_selection_buttons, $block_formats) = $editor->getParams();
 
         $groups = cmsCore::getModel('users')->getGroups(false);
 
         $childs = array(
 
-            new fieldString('options:toolbar', array(
+            new fieldText('options:toolbar', array(
                 'title' => LANG_TINYMCE_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $buttons).'</a>'),
-                'default' => '',
+                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $buttons).' </a>'),
+                'default' => 'formatselect | bold italic forecolor | link image',
                 'options'=>array(
                     'max_length' => 1000
                 )
@@ -24,13 +24,13 @@ class formWysiwygTinymceOptions extends cmsForm {
 
             new fieldString('options:quickbars_selection_toolbar', array(
                 'title' => LANG_TINYMCE_QUICKBARS_SELECTION_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_selection_buttons).'</a>'),
+                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_selection_buttons).' </a>'),
                 'default' => 'bold italic underline | quicklink h2 h3 blockquote'
             )),
 
             new fieldString('options:quickbars_insert_toolbar', array(
                 'title' => LANG_TINYMCE_QUICKBARS_INSERT_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_insert_buttons).'</a>'),
+                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_insert_buttons).' </a>'),
                 'default' => 'quickimage quicktable'
             )),
 
@@ -61,6 +61,13 @@ class formWysiwygTinymceOptions extends cmsForm {
                     'div' => sprintf(LANG_TINYMCE_TAG, '<div>')
                 ],
                 'default' => 'p',
+            )),
+
+            new fieldList('options:block_formats', array(
+                'title' => LANG_TINYMCE_BLOCK_FORMATS,
+                'is_chosen_multiple' => true,
+                'items' => $block_formats,
+                'default' => ['p','h2','h3']
             )),
 
             new fieldList('options:toolbar_drawer', array(
@@ -102,9 +109,14 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'default' => false
             )),
 
+            new fieldCheckbox('options:paste_as_text', array(
+                'title' => LANG_TINYMCE_PASTE_AS_TEXT,
+                'default' => false
+            )),
+
             new fieldNumber('options:min_height', array(
                 'title' => LANG_TINYMCE_MIN_HEIGHT,
-                'default' => 200
+                'default' => 350
             )),
 
             new fieldNumber('options:max_height', array(

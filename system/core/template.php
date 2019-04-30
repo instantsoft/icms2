@@ -2185,6 +2185,10 @@ class cmsTemplate {
      * @return string
      */
     public function renderFormField($field_type, $data = array()) {
+        $input_js_file = $this->getJavascriptFileName('fields/'.$field_type.'_input');
+        if($input_js_file){
+            $this->addJSFromContext($input_js_file);
+        }
         return $this->getRenderedAsset('fields/'.$field_type, $data);
     }
 

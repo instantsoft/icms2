@@ -11,8 +11,10 @@ function step($is_submit){
     $sp = session_save_path();
 
     if (!$sp) {
-        $sp = rtrim(sys_get_temp_dir(), '/');
+        $sp = sys_get_temp_dir();
     }
+
+    $sp = rtrim($sp, '/');
 
     $uniq = uniqid();
 

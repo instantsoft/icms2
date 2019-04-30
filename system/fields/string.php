@@ -109,6 +109,18 @@ class fieldString extends cmsFormField {
         $this->data['autocomplete'] = $this->getProperty('autocomplete');
         $this->data['attributes']   = $this->getProperty('attributes')?:array('autocomplete' => 'off');
 
+        if($this->data['autocomplete']){
+            if(empty($this->data['autocomplete']['data'])){
+                $this->data['autocomplete']['data'] = false;
+            }
+            if(empty($this->data['autocomplete']['url'])){
+                $this->data['autocomplete']['url'] = false;
+            }
+            if(empty($this->data['autocomplete']['multiple_separator'])){
+                $this->data['autocomplete']['multiple_separator'] = ', ';
+            }
+        }
+
         $this->data['attributes']['id'] = $this->id;
         $this->data['attributes']['required'] = (array_search(array('required'), $this->getRules()) !== false);
 

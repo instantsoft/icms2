@@ -647,7 +647,7 @@ function addTextToPosition(field_id, text){
 	var field = $(field_id);
 	var value = $(field).val();
 	var pos = getCaretPosition(field);
-    $(field).val(value.substring(0, pos) + text + value.substring(pos, value.length));
+    $(field).val(value.substring(0, pos) + text + value.substring(pos, value.length)).trigger('input');
     setCaretPosition(field, pos+text.length);
     return false;
 }

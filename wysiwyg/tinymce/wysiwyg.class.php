@@ -7,6 +7,15 @@ class cmsWysiwygTinymce {
         '|','bold','italic','underline','strikethrough','alignleft','aligncenter','alignright','alignjustify','alignnone','styleselect','formatselect','fontselect','fontsizeselect','cut','copy','paste','outdent','indent','blockquote','undo','redo','removeformat','subscript','superscript','visualaid','insert'
     ];
 
+    private $block_formats = [
+        'p' => LANG_TINYMCE_P,
+        'h2' => LANG_TITLE.' 2',
+        'h3' => LANG_TITLE.' 3',
+        'h4' => LANG_TITLE.' 4',
+        'h5' => LANG_TITLE.' 5',
+        'h6' => LANG_TITLE.' 6'
+    ];
+
     private $quickbars_selection_buttons = [
         'bold', 'italic', 'underline', '|', 'quicklink', 'h2', 'h3', 'blockquote'
     ];
@@ -16,12 +25,10 @@ class cmsWysiwygTinymce {
     ];
 
     private $buttons_mapping = [
-        'wordcount','toc','template','paste','nonbreaking','media','insertdatetime','image','hr','fullscreen','charmap','anchor','smiles',
+        'wordcount','toc','template','nonbreaking','media','insertdatetime','image','hr','fullscreen',
+        'charmap','anchor','smiles',
         'icmsspoiler' => [
             'spoiler-add', 'spoiler-remove'
-        ],
-        'textcolor' => [
-            'forecolor', 'backcolor'
         ],
         'lists' => [
             'bullist', 'numlist'
@@ -41,7 +48,7 @@ class cmsWysiwygTinymce {
             'autoresize'
         ],
         'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
-        'min_height'            => 300,
+        'min_height'            => 350,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
         'menubar'               => false,
@@ -50,10 +57,17 @@ class cmsWysiwygTinymce {
         'paste_data_images'     => true,
         'image_caption'         => false,
         'toolbar_drawer'        => false,
+        'spoiler_caption'       => LANG_TINYMCE_SP,
         'toc_header'            => 'div',
         'resize'                => 'both',
         'theme'                 => 'silver',
+        'mobile'                => [
+            'theme' => 'silver',
+            'plugins' => ['lists','autolink'],
+            'toolbar' => ['bold', 'italic', 'underline', 'bullist', 'numlist']
+        ],
         'smiles_url'            => false,
+        'paste_as_text'         => false,
         'file_picker_types'     => 'file media',
         'file_upload'           => [],
         'allow_mime_types'      => [],
@@ -64,6 +78,10 @@ class cmsWysiwygTinymce {
     public function __construct($config = []) {
 
         $this->options = array_replace_recursive($this->options, $config);
+
+        if(!$this->options['plugins']){
+            $this->options['plugins'] = [];
+        }
 
         $user = cmsUser::getInstance();
         $core = cmsCore::getInstance();
@@ -148,18 +166,38 @@ class cmsWysiwygTinymce {
         $this->options['smiles_url'] = href_to('typograph', 'get_smiles');
 
         if ($user->is_admin) {
-            $this->options['toolbar'] = 'code | '.$this->options['toolbar'];
+            $this->options['toolbar'] = 'code '.$this->options['toolbar'];
             $this->options['plugins'][] = 'code';
         }
 
         $this->options['plugins'] = implode(' ', $this->options['plugins']);
 
+        if(!empty($this->options['block_formats'])){
+
+            $block_formats = [];
+
+            foreach ($this->options['block_formats'] as $tag) {
+                $block_formats[] = $this->block_formats[$tag].'='.$tag.';';
+            }
+
+            $this->options['block_formats'] = implode(' ', $block_formats);
+
+        } else {
+            unset($this->options['block_formats']);
+        }
+
         foreach ($this->options as $key => $value) {
             if(!$value){
                 $this->options[$key] = false;
+                continue;
             }
             if($value === 1){
                 $this->options[$key] = true;
+                continue;
+            }
+            if(is_numeric($value)){
+                $this->options[$key] = intval($value);
+                continue;
             }
         }
 
@@ -269,7 +307,7 @@ class cmsWysiwygTinymce {
             }
         }
 
-        return cmsEventsManager::hook('wysiwyg_tinymce_form_options', [$plugins, $buttons, $this->quickbars_insert_buttons, $this->quickbars_selection_buttons]);
+        return cmsEventsManager::hook('wysiwyg_tinymce_form_options', [$plugins, $buttons, $this->quickbars_insert_buttons, $this->quickbars_selection_buttons, $this->block_formats]);
 
     }
 

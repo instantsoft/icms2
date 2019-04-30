@@ -21,3 +21,7 @@ define('LANG_TINYMCE_STATUSBAR', 'Show status bar');
 define('LANG_TINYMCE_MIN_HEIGHT', 'Minimum editor height');
 define('LANG_TINYMCE_MAX_HEIGHT', 'Maximum editor height');
 define('LANG_TINYMCE_ALLOW_MIME_TYPES', 'Allowed file types for "%s" group');
+define('LANG_TINYMCE_PASTE_AS_TEXT', 'Paste text, clearing formatting (paste plugin)');
+define('LANG_TINYMCE_BLOCK_FORMATS', 'Available formats');
+define('LANG_TINYMCE_P', 'Paragraph');
+define('LANG_TINYMCE_SP', 'Spoiler');

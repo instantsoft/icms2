@@ -187,7 +187,7 @@ nav .menu ul {
 }
 
 nav .menu {
-    position: relative; z-index: 5; float: left;
+    z-index: 5; float: left;
     height: 50px;
     line-height: 50px;
 }

@@ -30,6 +30,8 @@ class actionWysiwygsPresetsAdd extends cmsAction {
 
         }
 
+        $errors = [];
+
         if ($this->request->has('submit')){
 
             $wysiwyg_name = $this->request->get('wysiwyg_name', '');
@@ -83,7 +85,7 @@ class actionWysiwygsPresetsAdd extends cmsAction {
             'do'     => $do,
             'preset' => $preset,
             'form'   => $form,
-            'errors' => isset($errors) ? $errors : false
+            'errors' => $errors
         ));
 
     }
