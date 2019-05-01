@@ -48,7 +48,7 @@ class cmsWysiwygTinymce {
             'autoresize'
         ],
         'toolbar' => 'formatselect | bold italic strikethrough forecolor backcolor | link image media table | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat',
-        'min_height'            => 350,
+        'min_height'            => 200,
         'max_height'            => 700,
         'browser_spellcheck'    => true,
         'menubar'               => false,

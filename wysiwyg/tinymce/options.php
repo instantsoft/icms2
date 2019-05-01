@@ -9,6 +9,8 @@ class formWysiwygTinymceOptions extends cmsForm {
 
         list($plugins, $buttons, $quickbars_insert_buttons, $quickbars_selection_buttons, $block_formats) = $editor->getParams();
 
+        asort($buttons); asort($plugins); asort($quickbars_insert_buttons); asort($quickbars_selection_buttons);
+
         $groups = cmsCore::getModel('users')->getGroups(false);
 
         $childs = array(

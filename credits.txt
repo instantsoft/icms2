@@ -58,6 +58,10 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Jay Salvat
         http://markitup.jaysalvat.com/
 
+    TinyMCE The world's most popular JavaScript library for rich text editing
+        by Tiny Technologies Inc.
+        https://www.tiny.cloud/
+
     real_date_diff function
         by Oleg Savvateev
         http://savvateev.org/blog/37/

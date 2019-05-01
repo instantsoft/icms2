@@ -1729,7 +1729,7 @@ class cmsTemplate {
 
         if (!$request) { $request = $this->controller->request; }
 
-        $hook_name = 'process_render_'.$this->controller->name.'_'.basename($tpl_file, '.tpl.php');
+        $hook_name = 'process_render_'.$this->controller->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
@@ -1783,7 +1783,7 @@ class cmsTemplate {
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$controller_name.'/'.$tpl_file);
 
-        $hook_name = 'process_render_'.$controller_name.'_'.basename($tpl_file, '.tpl.php');
+        $hook_name = 'process_render_'.$controller_name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
@@ -2146,7 +2146,7 @@ class cmsTemplate {
 
         $file_name = basename($tpl_file, '.tpl.php');
 
-        $hook_name = 'render_asset_'.basename(str_replace($file_name.'.tpl.php', '', $tpl_file)).'_'.$file_name;
+        $hook_name = str_replace('-', '_', 'render_asset_'.basename(str_replace($file_name.'.tpl.php', '', $tpl_file)).'_'.$file_name);
 
         list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
 
@@ -2416,7 +2416,7 @@ class cmsTemplate {
 
         $tpl_file = $this->getTemplateFileName($tpl_path . '/' . $widget->getTemplate());
 
-        $hook_name = 'render_wdget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename($tpl_file, '.tpl.php');
+        $hook_name = 'render_wdget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($widget, $tpl_file, $data) = cmsEventsManager::hook($hook_name, [$widget, $tpl_file, $data]);
 

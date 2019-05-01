@@ -417,6 +417,9 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
 }
 /**
  * Изменяет размер изображения $src, сохраняя измененное в $dest
+ *
+ * УСТАРЕВШАЯ ФУНКЦИЯ
+ *
  * @param string $src Полный путь к исходному изображению
  * @param string $dest Полный путь куда сохранять измененное изображение
  * @param int $maxwidth Максимальная ширина в px
@@ -425,7 +428,7 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
  * @param int $quality Качество результирующего изображения от 1 до 100
  * @return boolean
  */
-function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
+function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false, $quality = 95) {
 
     if (!file_exists($src)) { return false; }
 
@@ -441,165 +444,33 @@ function img_resize($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $q
 
     }
 
-    $image_params = img_get_params($src);
-    if ($image_params === false) { return false; }
-
-    $new_width  = $image_params['width'];
-    $new_height = $image_params['height'];
-
-    // Определяем исходный формат по MIME-информации, предоставленной
-    // функцией getimagesize, и выбираем соответствующую формату
-    // imagecreatefrom-функцию.
-    $format = strtolower(substr($image_params['mime'], strpos($image_params['mime'], '/') + 1));
-    $icfunc = 'imagecreatefrom'.$format;
-    $igfunc = 'image'.$format;
-
-    if (!function_exists($icfunc)) { return false; }
-    if (!function_exists($igfunc)) { return false; }
-
-    if (($new_height <= $maxheight) && ($new_width <= $maxwidth)) {
-        return copy($src, $dest);
+    try {
+        $image = new cmsImages($src);
+    } catch (Exception $exc) {
+        return false;
     }
 
-    $isrc = $icfunc($src);
+    if($is_square){
 
-    // автоповорот изображений
-    if(isset($image_params['exif']['orientation'])) {
-        $actions = array();
-        switch ($image_params['exif']['orientation']) {
-            case 1: break;
-            case 2: $actions = array('img_flip' => 'x'); break;
-            case 3: $actions = array('img_rotate' => -180); break;
-            case 4: $actions = array('img_flip' => 'y'); break;
-            case 5: $actions = array('img_flip' => 'y', 'img_rotate' => 90); break;
-            case 6: $actions = array('img_rotate' => 90); break;
-            case 7: $actions = array('img_flip' => 'x', 'img_rotate' => 90); break;
-            case 8: $actions = array('img_rotate' => -90); break;
-        }
-        if($actions){
-            foreach ($actions as $orient_func => $func_param) {
-
-                $orient_result = $orient_func($func_param, $isrc, $new_width, $new_height);
-
-                $isrc       = $orient_result['image_res'];
-                $new_width  = $image_params['width'] = $orient_result['width'];
-                $new_height = $image_params['height'] = $orient_result['height'];
-
-            }
-        }
-    }
-
-    if ($is_square) {
-
-        $idest = imagecreatetruecolor($maxwidth, $maxwidth);
-
-        // Определяем пропорции целевого и исходного изображения
-        $target_ratio = $maxwidth / $maxheight;
-        $source_ratio = $new_width / $new_height;
-
-        if ($format == 'jpeg') {
-
-            imagefill($idest, 0, 0, 0xFFFFFF);
-
-        } else if ($format == 'png' || $format == 'gif') {
-
-            $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-            imagefill($idest, 0, 0, $trans);
-            imagealphablending($idest, true);
-            imagesavealpha($idest, true);
-
-        }
-
-        // вырезаем серединку по x, если фото горизонтальное
-        if ($source_ratio > $target_ratio) {
-            imagecopyresampled($idest, $isrc, 0, 0, round(( max($new_width, $new_height) - min($new_width, $new_height) ) / 2), 0, $maxwidth, $maxheight, $maxwidth * ($new_height / $maxheight), $new_height);
-        }
-
-        // вырезаем верхушку по y, если фото вертикальное
-        if ($source_ratio < $target_ratio) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $maxheight * ($new_width / $maxwidth));
-        }
-
-        // картинка масштабируется без вырезок
-        if ($source_ratio == $target_ratio) {
-            imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $maxwidth, $maxheight, $new_width, $new_height);
-        }
+        $image->crop($maxwidth, $maxheight, true, cmsImages::CROPCENTER);
 
     } else {
 
         if(!$maxwidth || !$maxheight){
 
-            $ratio = $new_height / $new_width;
-
             if(!$maxwidth){
-
-                $new_height = min($maxheight, $new_height);
-                $new_width  = $new_height / $ratio;
-
+                $image->resizeToHeight($maxheight, true);
             } else {
-
-                $new_width  = min($maxwidth, $new_width);
-                $new_height = $new_width * $ratio;
-
+                $image->resizeToWidth($maxwidth, true);
             }
 
         } else {
-
-            if ($new_width > $maxwidth) {
-
-                $wscale = $maxwidth / $new_width;
-
-                $new_width  *= $wscale;
-                $new_height *= $wscale;
-
-            }
-
-            if ($new_height > $maxheight) {
-
-                $hscale = $maxheight / $new_height;
-
-                $new_width  *= $hscale;
-                $new_height *= $hscale;
-
-            }
-
+            $image->resizeToBestFit($maxwidth, $maxheight, true);
         }
 
-        $idest = imagecreatetruecolor($new_width, $new_height);
-
-        if ($format == 'jpeg') {
-
-            imagefill($idest, 0, 0, 0xFFFFFF);
-
-        } else if ($format == 'png' || $format == 'gif') {
-
-            $trans = imagecolorallocatealpha($idest, 255, 255, 255, 127);
-            imagefill($idest, 0, 0, $trans);
-            imagealphablending($idest, true);
-            imagesavealpha($idest, true);
-
-        }
-
-        imagecopyresampled($idest, $isrc, 0, 0, 0, 0, $new_width, $new_height, $image_params['width'], $image_params['height']);
-
     }
 
-    if ($format == 'jpeg') {
-        imageinterlace($idest, 1);
-    }
-
-    if ($format == 'png') {
-        $quality = (9 - ceil((9*$quality)/100));
-    }
-    if ($format == 'gif') {
-        $quality = NULL;
-    }
-
-    // вывод картинки и очистка памяти
-    $igfunc($idest, $dest, $quality);
-
-    imagedestroy($isrc);
-    imagedestroy($idest);
+    $image->save($dest, null, $quality);
 
     return true;
 
@@ -670,50 +541,6 @@ function img_get_params($path){
         'mime'        => $s['mime'],
         'exif'        => $exif_data,
         'filesize'    => round(filesize($path))
-    );
-
-}
-function img_flip($direction, $image_res, $width, $height) {
-
-    $new_image_res = imagecreatetruecolor($width, $height);
-
-    imagealphablending($new_image_res, false);
-    imagesavealpha($new_image_res, true);
-
-    switch (strtolower($direction)) {
-        case 'y':
-            for ($y = 0; $y < $height; $y++) {
-                imagecopy($new_image_res, $image_res, 0, $y, 0, $height - $y - 1, $width, 1);
-            }
-            break;
-        default:
-            for ($x = 0; $x < $width; $x++) {
-                imagecopy($new_image_res, $image_res, $x, 0, $width - $x - 1, 0, 1, $height);
-            }
-            break;
-    }
-
-    return array(
-        'width'     => $width,
-        'height'    => $height,
-        'image_res' => $new_image_res
-    );
-
-}
-function img_rotate($angle, $image_res) {
-
-    if ($angle < -360) {
-        $angle = -360;
-    } else if ($angle > 360) {
-        $angle = 360;
-    }
-
-    $new_image_res = imagerotate($image_res, -$angle, 0);
-
-    return array(
-        'width'     => imagesx($new_image_res),
-        'height'    => imagesy($new_image_res),
-        'image_res' => $new_image_res
     );
 
 }
