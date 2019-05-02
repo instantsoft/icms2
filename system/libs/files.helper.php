@@ -220,7 +220,7 @@ function files_user_file_hash($file_path = ''){
 function files_sanitize_name($filename){
 
 	$path_parts = pathinfo($filename);
-    $filename = lang_slug($path_parts['filename']) . '.' . (isset($path_parts['extension']) ? $path_parts['extension'] : '');
+    $filename = lang_slug($path_parts['filename']) . (isset($path_parts['extension']) ?  '.' . $path_parts['extension'] : '');
     $filename = mb_strtolower($filename);
     $filename = preg_replace(array('/[\&]/', '/[\@]/', '/[\#]/'), array('-and-', '-at-', '-number-'), $filename);
     $filename = preg_replace('/[^(\x20-\x7F)]*/','', $filename);
@@ -230,6 +230,35 @@ function files_sanitize_name($filename){
     $filename = preg_replace('/[\-]+/', '-', $filename);
 
 	return $filename;
+
+}
+
+/**
+ * Возвращает/создаёт путь к директории хранения
+ *
+ * @param integer $user_id
+ * @return string
+ */
+function files_get_upload_dir($user_id = 0) {
+
+    $dir_num_user = sprintf('%03d', intval($user_id/100));
+
+    $file_name   = md5(microtime(true));
+    $first_dir   = substr($file_name, 0, 1);
+    $second_dir  = substr($file_name, 1, 1);
+    $upload_path = cmsConfig::get('upload_path');
+
+    $dest_dir = $upload_path."{$dir_num_user}/u{$user_id}/{$first_dir}/{$second_dir}/";
+
+    if(!is_dir($dest_dir)){
+        @mkdir($dest_dir, 0777, true);
+        @chmod($dest_dir, 0777);
+        @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
+        @chmod($upload_path . "{$dir_num_user}/u{$user_id}", 0777);
+        @chmod($upload_path . "{$dir_num_user}", 0777);
+    }
+
+    return $dest_dir;
 
 }
 
@@ -299,6 +328,9 @@ function file_save_from_url($url, $destination){
 }
 /**
  * Накладывает ваттермарк на изображение
+ *
+ * УСТАРЕВШАЯ ФУНКЦИЯ
+ *
  * @param string $src_file Путь (относительно папки upload) к файлу, на который нужно наложить ватермарк
  * @param string $wm_file Путь (относительно папки upload) к файлу ватермарка
  * @param string $wm_origin Позиция ватермарка: top-left|top|top-right|left|center|right|bottom-left|bottom|bottom-right
@@ -360,7 +392,7 @@ function img_add_watermark($src_file, $wm_file, $wm_origin, $wm_margin, $quality
             $x = $wm_margin;
             $y = $wm_margin;
             break;
-        case 'top':
+        case 'top-center':
             $x = ($img_width/2) - ($wm_width/2);
             $y = $wm_margin;
             break;
@@ -452,20 +484,20 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
 
     if($is_square){
 
-        $image->crop($maxwidth, $maxheight, true, cmsImages::CROPCENTER);
+        $image->crop($maxwidth, $maxheight, false, cmsImages::CROPCENTER);
 
     } else {
 
         if(!$maxwidth || !$maxheight){
 
             if(!$maxwidth){
-                $image->resizeToHeight($maxheight, true);
+                $image->resizeToHeight($maxheight);
             } else {
-                $image->resizeToWidth($maxwidth, true);
+                $image->resizeToWidth($maxwidth);
             }
 
         } else {
-            $image->resizeToBestFit($maxwidth, $maxheight, true);
+            $image->resizeToBestFit($maxwidth, $maxheight);
         }
 
     }

@@ -241,18 +241,27 @@ class actionPhotosUpload extends cmsAction{
             ));
         }
 
-        $result = $this->cms_uploader->upload('qqfile');
+        $result = $this->cms_uploader->setAllowedMime([
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp'
+        ])->upload('qqfile');
 
         if ($result['success']){
-            if (!$this->cms_uploader->isImage($result['path'])){
+
+            try {
+                $image = new cmsImages($result['path']);
+            } catch (Exception $exc) {
                 $result['success'] = false;
                 $result['error']   = LANG_UPLOAD_ERR_MIME;
             }
+
         }
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $this->cms_template->renderJSON($result);
         }
@@ -265,19 +274,11 @@ class actionPhotosUpload extends cmsAction{
 				continue;
 			}
 
-			$path = $this->cms_uploader->resizeImage($result['path'], array(
-				'width'     => $p['width'],
-                'height'    => $p['height'],
-                'is_square' => $p['is_square'],
-                'quality'   => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality'])
-            ));
-			if (!$path) { continue; }
+            $resized_path = $image->resizeByPreset($p);
 
-			if ($p['is_watermark'] && $p['wm_image']){
-				img_add_watermark($path, $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
-			}
+            if (!$resized_path) { continue; }
 
-			$result['paths'][$p['name']] = $path;
+			$result['paths'][$p['name']] = $resized_path;
 
 		}
 

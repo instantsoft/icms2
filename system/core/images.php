@@ -7,21 +7,17 @@
 class cmsImages {
 
     const CROPTOP             = 1;
-    const CROPCENTRE          = 2;
     const CROPCENTER          = 2;
     const CROPBOTTOM          = 3;
     const CROPLEFT            = 4;
     const CROPRIGHT           = 5;
     const CROPTOPCENTER       = 6;
-    const IMG_FLIP_HORIZONTAL = 0;
-    const IMG_FLIP_VERTICAL   = 1;
-    const IMG_FLIP_BOTH       = 2;
 
     public $quality_jpg       = 95;
     public $quality_webp      = 95;
     public $quality_png       = 6;
     public $quality_truecolor = true;
-    public $gamma_correct     = true;
+    public $gamma_correct     = false;
     public $interlace         = 1;
     public $source_type;
 
@@ -47,6 +43,150 @@ class cmsImages {
      */
     public static function createFromString($image_data) {
         return new self('data://application/octet-stream;base64,' . base64_encode($image_data));
+    }
+
+    /**
+     * Выполняет ресайз изображения согласно параметров пресета
+     *
+     * @param array $preset
+     * @param string $file_name
+     * @param integer $user_id
+     * @return string Полный путь к полученному изображению
+     */
+    public function resizeByPreset($preset, $file_name = null, $user_id = null) {
+
+        $dest_ext  = $this->getSourceExt();
+        $dest_dir  = files_get_upload_dir($user_id === null ? cmsUser::get('id') : $user_id);
+
+        if($file_name){
+            $dest_name = files_sanitize_name($file_name.' '.$preset['name']);
+        } else {
+            $dest_name = substr(md5(microtime(true)), 0, 8);
+        }
+
+        $dest_file = $dest_dir . $dest_name . '.' .$dest_ext;
+
+        while (file_exists($dest_file)) {
+            $dest_file = $dest_dir . $dest_name . '_' . substr(md5(microtime(true)), 0, 2) . '.' .$dest_ext;
+        }
+
+        if(!empty($preset['is_square'])){
+
+            $this->crop($preset['width'], $preset['height'], !empty($preset['allow_enlarge']), $preset['crop_position']);
+
+        } else {
+
+            if(!$preset['width'] || !$preset['height']){
+
+                if(!$preset['width']){
+                    $this->resizeToHeight($preset['height'], !empty($preset['allow_enlarge']));
+                } else {
+                    $this->resizeToWidth($preset['width'], !empty($preset['allow_enlarge']));
+                }
+
+            } else {
+                $this->resizeToBestFit($preset['width'], $preset['height'], !empty($preset['allow_enlarge']));
+            }
+
+        }
+
+        if (!empty($preset['is_watermark']) && $preset['wm_image']){
+
+            $this->addFilter(function ($dest_image, $cmsImages) use ($preset) {
+
+                $wm_file = cmsConfig::get('upload_path').$preset['wm_image']['original'];
+
+                $wm_size = getimagesize($wm_file);
+                if ($wm_size === false) { return false; }
+
+                $wm_width  = $wm_size[0];
+                $wm_height = $wm_size[1];
+
+                $wm_format = strtolower(substr($wm_size['mime'], strpos($wm_size['mime'], '/' ) + 1));
+                $wm_func   = 'imagecreatefrom'.$wm_format;
+                if (!function_exists($wm_func)) { return false; }
+
+                $wm = $wm_func($wm_file);
+
+                $img_width  = imagesx($dest_image);
+                $img_height = imagesy($dest_image);
+
+                $wm_margin = intval($preset['wm_margin']);
+
+                switch($preset['wm_origin']){
+                    case 'top-left':
+                        $x = $wm_margin;
+                        $y = $wm_margin;
+                        break;
+                    case 'top-center':
+                        $x = ($img_width/2) - ($wm_width/2);
+                        $y = $wm_margin;
+                        break;
+                    case 'top-right':
+                        $x = ($img_width - $wm_width - $wm_margin);
+                        $y = $wm_margin;
+                        break;
+                    case 'left':
+                        $x = $wm_margin;
+                        $y = ($img_height/2) - ($wm_height/2);
+                        break;
+                    case 'center':
+                        $x = ($img_width/2) - ($wm_width/2);
+                        $y = ($img_height/2) - ($wm_height/2);
+                        break;
+                    case 'right':
+                        $x = ($img_width - $wm_width - $wm_margin);
+                        $y = ($img_height/2) - ($wm_height/2);
+                        break;
+                    case 'bottom-left':
+                        $x = $wm_margin;
+                        $y = ($img_height - $wm_height - $wm_margin);
+                        break;
+                    case 'bottom':
+                        $x = ($img_width/2) - ($wm_width/2);
+                        $y = ($img_height - $wm_height - $wm_margin);
+                        break;
+                    case 'bottom-right':
+                        $x = ($img_width - $wm_width - $wm_margin);
+                        $y = ($img_height - $wm_height - $wm_margin);
+                        break;
+                }
+
+                imagealphablending($dest_image, true);
+
+                imagecopy($dest_image, $wm, $x, $y, 0, 0, $wm_width, $wm_height);
+
+                imagedestroy($wm);
+
+            });
+
+        }
+
+        $this->gamma(!empty($preset['gamma_correct']));
+
+        $this->save($dest_file, null, $preset['quality']);
+
+        return str_replace(cmsConfig::get('upload_path'), '', $dest_file);
+
+    }
+
+    /**
+     * Возвращает расширение исходного файла
+     * @return string
+     */
+    public function getSourceExt() {
+        switch ($this->source_type) {
+            case IMAGETYPE_GIF:
+                return 'gif';
+            case IMAGETYPE_JPEG:
+                return 'jpg';
+            case IMAGETYPE_PNG:
+                return 'png';
+            case IMAGETYPE_WEBP:
+                return 'webp';
+            default:
+                return '';
+        }
     }
 
     /**
@@ -701,7 +841,6 @@ class cmsImages {
                 $size = $expected_size;
                 break;
             case self::CROPCENTER:
-            case self::CROPCENTRE:
                 $size = $expected_size / 2;
                 break;
             case self::CROPTOPCENTER:
@@ -712,7 +851,7 @@ class cmsImages {
     }
 
     /**
-     * Включить/выключить коррекцию гамма-цвета на изображении, включено по умолчанию
+     * Включить/выключить коррекцию гамма-цвета на изображении, выключено по умолчанию
      *
      * @param bool $enable
      * @return \cmsImages

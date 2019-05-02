@@ -21,6 +21,18 @@ function install_package(){
 
     $core->db->query("ALTER TABLE `{#}uploaded_files` CHANGE `type` `type` VARCHAR(32) NULL DEFAULT 'file' COMMENT 'Тип файла';");
 
+    if(!$core->db->isFieldExists('images_presets', 'gamma_correct')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `gamma_correct` TINYINT(1) UNSIGNED NULL DEFAULT NULL;");
+    }
+
+    if(!$core->db->isFieldExists('images_presets', 'crop_position')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `crop_position` TINYINT(1) UNSIGNED NULL DEFAULT '2';");
+    }
+
+    if(!$core->db->isFieldExists('images_presets', 'allow_enlarge')){
+        $core->db->query("ALTER TABLE `{#}images_presets` ADD `allow_enlarge` TINYINT(1) UNSIGNED NULL DEFAULT NULL;");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

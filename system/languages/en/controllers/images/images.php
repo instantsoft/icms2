@@ -26,3 +26,10 @@
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_C', 'Center');
     define('LANG_IMAGES_PRESET_WM_MARGIN', 'Indent from image edges');
     define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Delete the "{title}" preset?');
+    define('LANG_IMAGES_PRESET_GAMMA_CORRECT', 'Apply gamma correction to image');
+    define('LANG_IMAGES_PRESET_CROP_POSITION', 'Crop mode');
+    define('LANG_IMAGES_PRESET_CCENTER', 'Center');
+    define('LANG_IMAGES_PRESET_TOP_CENTER', 'Top center');
+    define('LANG_IMAGES_PRESET_CBOTTOM', 'Bottom');
+    define('LANG_IMAGES_PRESET_CRIGHT', 'Right');
+    define('LANG_IMAGES_PRESET_ALLOW_ENLARGE', 'Allow enlarge');

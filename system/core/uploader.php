@@ -127,6 +127,9 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Этот метод устаревший, используйте класс cmsImages
+     */
     public function resizeImage($source_file, $size){
 
         $dest_dir  = $this->getUploadDestinationDirectory();
@@ -544,7 +547,6 @@ class cmsUploader {
 
     }
 
-//============================================================================//
     /**
      * Удаляет файл
      * @param string $file_path
@@ -554,34 +556,14 @@ class cmsUploader {
         return @unlink($file_path);
     }
 
-//============================================================================//
     /**
      * Создаёт дерево директорий для загрузки файла
      * @return string
      */
     public function getUploadDestinationDirectory(){
-
-        $dir_num_user = sprintf('%03d', intval($this->user_id/100));
-
-        $file_name  = md5(md5($this->site_cfg->db_user) . md5($this->site_cfg->db_base) .microtime(true));
-        $first_dir  = substr($file_name, 0, 1);
-        $second_dir = substr($file_name, 1, 1);
-
-        $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
-
-        if(!is_dir($dest_dir)){
-            @mkdir($dest_dir, 0777, true);
-            @chmod($dest_dir, 0777);
-            @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
-            @chmod($this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}", 0777);
-            @chmod($this->site_cfg->upload_path . "{$dir_num_user}", 0777);
-        }
-
-        return $dest_dir;
-
+        return files_get_upload_dir($this->user_id);
     }
 
-//============================================================================//
     /**
      * Проверяет файл, является ли он изображением
      * @param string $src
@@ -593,13 +575,6 @@ class cmsUploader {
 
         return $size !== false;
 
-    }
-
-    /**
-     * Это устаревший метод, используйте функцию img_resize
-     */
-    public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
-        return img_resize($src, $dest, $maxwidth, $maxheight, $is_square, $quality);
     }
 
 }

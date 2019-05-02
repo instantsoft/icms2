@@ -915,7 +915,7 @@ CREATE TABLE `{#}groups_member_roles` (
   `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0',
   KEY `user_id` (`user_id`),
   KEY `group_id` (`group_id`,`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Roles of group members';
 
 DROP TABLE IF EXISTS `{#}images_presets`;
 CREATE TABLE `{#}images_presets` (
@@ -930,13 +930,13 @@ CREATE TABLE `{#}images_presets` (
   `wm_origin` varchar(16) DEFAULT NULL,
   `wm_margin` int(11) unsigned DEFAULT NULL,
   `is_internal` tinyint(1) unsigned DEFAULT NULL,
-  `quality` tinyint(1) NOT NULL DEFAULT '90',
+  `quality` tinyint(1) unsigned DEFAULT '90',
+  `gamma_correct` tinyint(1) unsigned DEFAULT NULL,
+  `crop_position` tinyint(1) unsigned DEFAULT '2',
+  `allow_enlarge` tinyint(1) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `name` (`name`),
-  KEY `is_square` (`is_square`),
-  KEY `is_watermark` (`is_watermark`),
-  KEY `is_internal` (`is_internal`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+  KEY `name` (`name`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Presets for image conversion';
 
 INSERT INTO `{#}images_presets` (`id`, `name`, `title`, `width`, `height`, `is_square`, `is_watermark`, `wm_image`, `wm_origin`, `wm_margin`, `is_internal`, `quality`) VALUES
 (1, 'micro', 'Micro', 32, 32, 1, NULL, NULL, NULL, NULL, NULL, 75),

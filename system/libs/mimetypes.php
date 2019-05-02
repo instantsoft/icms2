@@ -2,6 +2,7 @@
 
 function getMimeTypes(){
     return array(
+        'image/webp' => 'webp',
         'application/postscript' => 'ps',
         'audio/x-aiff' => 'aiff',
         'text/plain' => 'txt',
