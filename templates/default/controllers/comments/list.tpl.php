@@ -55,7 +55,8 @@ $this->addTplJSName('comments');
     <?php } ?>
 
 </div>
-
+<?php // #comments_urls deprecated
+?>
 <div id="comments_urls" style="display: none"
         data-get-url="<?php echo $this->href_to('get'); ?>"
         data-approve-url="<?php echo $this->href_to('approve'); ?>"
@@ -111,8 +112,23 @@ $this->addTplJSName('comments');
         <?php } ?>
     </div>
 <?php } ?>
+<?php $this->block('comments_list_after'); ?>
 
 <script type="text/javascript">
     <?php echo $this->getLangJS('LANG_SEND', 'LANG_SAVE', 'LANG_COMMENT_DELETED', 'LANG_COMMENT_DELETE_CONFIRM', 'LANG_MODERATION_REFUSE_REASON'); ?>
     <?php if ($is_highlight_new){ ?>icms.comments.showFirstSelected();<?php } ?>
+    icms.comments.init({
+        get:'<?php echo $this->href_to('get'); ?>',
+        approve:'<?php echo $this->href_to('approve'); ?>',
+        delete:'<?php echo $this->href_to('delete'); ?>',
+        refresh:'<?php echo $this->href_to('refresh'); ?>',
+        track:'<?php echo $this->href_to('track'); ?>',
+        rate:'<?php echo $this->href_to('rate'); ?>'
+        },{
+        tc:'<?php echo $target_controller; ?>',
+        ts:'<?php echo $target_subject; ?>',
+        ti:'<?php echo $target_id; ?>',
+        tud:'<?php echo $target_user_id; ?>',
+        timestamp:'<?php echo time(); ?>'
+        });
 </script>

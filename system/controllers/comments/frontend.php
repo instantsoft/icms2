@@ -56,13 +56,15 @@ class comments extends cmsFrontend {
 
         cmsEventsManager::hook('comments_list_filter', $this->model);
 
-        $comments = $this->model->filterCommentTarget(
+        $comments_count = $this->model->filterCommentTarget(
                 $this->target_controller,
                 $this->target_subject,
                 $this->target_id
-            )->getComments();
+            )->getCommentsCount();
+        $comments = $this->model->getComments();
 
         $comments = cmsEventsManager::hook('comments_before_list', $comments);
+        list($comments, $comments_count) = cmsEventsManager::hook('comments_before_list_this', [$comments, $comments_count, $this]);
 
         $is_tracking = $this->model->filterCommentTarget(
                 $this->target_controller,
@@ -86,7 +88,7 @@ class comments extends cmsFrontend {
         }
 
         if(!$this->comments_title){
-            $this->comments_title = ($comments ? html_spellcount(sizeof($comments), $this->labels->spellcount) : $this->labels->comments);
+            $this->comments_title = ($comments_count ? html_spellcount($comments_count, $this->labels->spellcount) : $this->labels->comments);
         }
 
         $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
