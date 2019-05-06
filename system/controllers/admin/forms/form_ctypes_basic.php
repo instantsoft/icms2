@@ -5,25 +5,25 @@ class formAdminCtypesBasic extends cmsForm {
 
         $template = new cmsTemplate(cmsConfig::get('template'));
 
-        $meta_ctype_fields = '<a href="#">{'.implode('}</a> <a href="#">{', [
-            'ctype_title',
-            'ctype_description',
-            'ctype_label1',
-            'ctype_label2',
-            'ctype_label10',
+        $meta_ctype_fields = [
+            LANG_CONTENT_TYPE.': '.LANG_TITLE => 'ctype_title',
+            LANG_CONTENT_TYPE.': '.LANG_DESCRIPTION => 'ctype_description',
+            LANG_CP_NUMERALS_1_LABEL => 'ctype_label1',
+            LANG_CP_NUMERALS_2_LABEL => 'ctype_label2',
+            LANG_CP_NUMERALS_10_LABEL => 'ctype_label10',
             'filter_string'
-        ]).'}</a>';
+        ];
 
-        $meta_item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', [
-            'title',
-            'description',
-            'ctype_title',
-            'ctype_description',
-            'ctype_label1',
-            'ctype_label2',
-            'ctype_label10',
+        $meta_item_fields = [
+            LANG_TITLE => 'title',
+            LANG_DESCRIPTION => 'description',
+            LANG_CONTENT_TYPE.': '.LANG_TITLE => 'ctype_title',
+            LANG_CONTENT_TYPE.': '.LANG_DESCRIPTION => 'ctype_description',
+            LANG_CP_NUMERALS_1_LABEL => 'ctype_label1',
+            LANG_CP_NUMERALS_2_LABEL => 'ctype_label2',
+            LANG_CP_NUMERALS_10_LABEL => 'ctype_label10',
             'filter_string'
-        ]).'}</a>';
+        ];
 
         $item_fields = ['category', 'hits_count', 'comments', 'rating', 'tags'];
 
@@ -33,13 +33,15 @@ class formAdminCtypesBasic extends cmsForm {
 
             foreach ($_item_fields as $field) {
 
-                $item_fields[] = $field['name'];
+                if(!isset($item_fields[$field['title']])){ // Заголовок поля может повторяться
+                    $item_fields[$field['title']] = $field['name'];
+                }else{
+                    $item_fields[] = $field['name'];
+                }
 
             }
 
         }
-
-        $item_fields = '<a href="#">{'.implode('}</a> <a href="#">{', $item_fields).'}</a>';
 
         $this->setData('meta_item_fields', $meta_item_fields);
         $this->setData('meta_ctype_fields', $meta_ctype_fields);
@@ -342,15 +344,21 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('options:seo_title_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $item_fields
+                        ]
                     )),
                     new fieldString('options:seo_keys_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $item_fields
+                        ]
                     )),
                     new fieldString('options:seo_desc_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $item_fields
+                        ]
                     ))
                 )
             ),
@@ -377,19 +385,27 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('options:seo_cat_h1_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_item_fields
+                        ]
                     )),
                     new fieldString('options:seo_cat_title_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_item_fields
+                        ]
                     )),
                     new fieldString('options:seo_cat_keys_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_item_fields
+                        ]
                     )),
                     new fieldString('options:seo_cat_desc_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_item_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_item_fields
+                        ]
                     ))
                 )
             ),
@@ -400,11 +416,15 @@ class formAdminCtypesBasic extends cmsForm {
                 'childs' => array(
                     new fieldString('options:seo_ctype_h1_pattern', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields)
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_ctype_fields
+                        ]
                     )),
                     new fieldString('seo_title', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_ctype_fields
+                        ],
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
@@ -412,7 +432,9 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldString('seo_keys', array(
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_ctype_fields
+                        ],
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true
@@ -420,7 +442,9 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $meta_ctype_fields),
+                        'patterns_hint' => [
+                            'patterns' =>  $meta_ctype_fields
+                        ],
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true

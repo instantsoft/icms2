@@ -24,7 +24,9 @@ class onCommentsCtypeBasicForm extends cmsAction {
         $form->addField($fieldset, new fieldString('options:comments_title_pattern', array(
             'title' => LANG_CP_COMMENTS_TITLE_PATTERN,
             'multilanguage' => true,
-            'hint' => sprintf(LANG_CP_SEOMETA_FIELDS, $item_fields),
+            'patterns_hint' => [
+                'patterns' =>  $item_fields
+            ],
             'visible_depend' => array('is_comments' => array('show' => array('1')))
         )));
 
