@@ -169,20 +169,13 @@ class cmsWysiwygMarkitup {
 
         <script type="text/javascript">
             <?php if($dom_id){ ?>
+                markitup_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options['set']); ?>;
                 $(function(){
                     init_markitup('<?php echo $dom_id; ?>');
                 });
+            <?php } else { ?>
+                markitup_global_options['default'] = <?php echo json_encode($this->options['set']); ?>;
             <?php } ?>
-            function init_markitup (dom_id){
-                var mconfig = <?php echo json_encode($this->options['set']); ?>;
-                if(mconfig.markupSet[9] && mconfig.markupSet[9].beforeInsert === true){
-                    mconfig.markupSet[9].beforeInsert = function(markItUp) { InlineUpload.display(markItUp); };
-                }
-                if(mconfig.markupSet[14] && mconfig.markupSet[14].beforeInsert === true){
-                    mconfig.markupSet[14].beforeInsert = function(markItUp) { insertSmiles.displayPanel(markItUp); };
-                }
-                $('#'+dom_id).markItUp(mconfig);
-            }
         </script>
 
         <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
@@ -199,6 +192,29 @@ class cmsWysiwygMarkitup {
         $template->addJSFromContext('wysiwyg/markitup/insert_smiles.js');
         $template->addJSFromContext('wysiwyg/markitup/jquery.markitup.js');
         $template->addCSSFromContext('wysiwyg/markitup/skins/'.$this->options['skin'].'/style.css');
+
+        ob_start(); ?>
+
+        <script type="text/javascript">
+            var markitup_global_options = {};
+            function init_markitup (dom_id){
+                var mconfig = {};
+                if(markitup_global_options.hasOwnProperty('field_'+dom_id)){
+                    mconfig = markitup_global_options['field_'+dom_id];
+                } else if(markitup_global_options.hasOwnProperty('default')) {
+                    mconfig = markitup_global_options.default;
+                }
+                if(mconfig.markupSet[9] && mconfig.markupSet[9].beforeInsert === true){
+                    mconfig.markupSet[9].beforeInsert = function(markItUp) { InlineUpload.display(markItUp); };
+                }
+                if(mconfig.markupSet[14] && mconfig.markupSet[14].beforeInsert === true){
+                    mconfig.markupSet[14].beforeInsert = function(markItUp) { insertSmiles.displayPanel(markItUp); };
+                }
+                $('#'+dom_id).markItUp(mconfig);
+            }
+        </script>
+
+        <?php $template->addBottom(ob_get_clean());
 
         return true;
 

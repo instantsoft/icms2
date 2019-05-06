@@ -482,10 +482,6 @@ class Jevix{
 			$this->text = $text;
 		}
 
-
-		if(!empty($this->autoReplace)){
-			$this->text = str_ireplace($this->autoReplace['from'], $this->autoReplace['to'], $this->text);
-		}
 		$this->textBuf = $this->strToArray($this->text);
 		$this->textLen = count($this->textBuf);
 		$this->getCh();
@@ -1226,10 +1222,13 @@ class Jevix{
 				}
 
 			// Текст
-			} elseif($this->text($text)){
-				$content.=$text;
-			}
-		}
+            } elseif ($this->text($text)) {
+                if (!empty($this->autoReplace)) {
+                    $text = str_ireplace($this->autoReplace['from'], $this->autoReplace['to'], $text);
+                }
+                $content .= $text;
+            }
+        }
 
 		return true;
 	}
@@ -1260,20 +1259,32 @@ class Jevix{
 		return true;
 	}
 
-	protected function dash(&$dash){
-		if($this->curCh != '-') return false;
-		$dash = '';
-		$this->saveState();
-		$this->getCh();
-		// Несколько подряд
-		while($this->curCh == '-') $this->getCh();
-		if(!$this->skipNL() && !$this->skipSpaces()){
-			$this->restoreState();
-			return false;
-		}
-		$dash = $this->dash;
-		return true;
-	}
+    protected function dash(&$dash) {
+        if ($this->curCh != '-') { return false; }
+        $dash = '';
+        $this->saveState();
+        $this->getCh();
+        // Несколько подряд
+        while ($this->curCh == '-') {
+            $this->getCh();
+        }
+        /*
+         * количество переводов строк
+         */
+        $iNL = 0;
+        if (!$this->skipNL($iNL) && !$this->skipSpaces()) {
+            $this->restoreState();
+            return false;
+        }
+        $dash = $this->dash;
+        if ($iNL) {
+            /*
+             * вернуть нужное количествово переводов строк
+             */
+            $dash .= str_repeat($this->br, $iNL);
+        }
+        return true;
+    }
 
 	protected function punctuation(&$punctuation){
 		if(!($this->curChClass & self::PUNCTUATUON)) return false;

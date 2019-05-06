@@ -52,14 +52,16 @@ class fieldAge extends cmsFormField {
 
         if(is_array($value)){
 
+            $range = constant('LANG_' . $this->getOption('range').'10');
+
             $result_string = '';
 
             if (!empty($value['from'])){
-                $result_string .= LANG_FROM.' '.$this->getStringValue($value['from']).' ';
+                $result_string .= LANG_FROM.' '.$value['from'].' ';
             }
 
             if (!empty($value['to'])){
-                $result_string .= LANG_TO.' '.$this->getStringValue($value['to']);
+                $result_string .= LANG_TO.' '.$value['to'];
             }
 
             return $result_string.' '.constant('LANG_' . $this->getOption('range').'10');

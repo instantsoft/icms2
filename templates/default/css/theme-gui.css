@@ -2130,7 +2130,7 @@ span.get_replies {
     background: url("../images/loader16.gif") no-repeat center center #EDEDED;
 }
 #pm_notices_window {
-    width:550px;
+    max-width: 550px;
     overflow: auto;
     height: 100%;
 }

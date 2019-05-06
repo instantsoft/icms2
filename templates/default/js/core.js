@@ -155,7 +155,7 @@ icms.forms = (function ($) {
     };
 
     this.wysiwygInit = function (field_name){
-        if (typeof(this.wysiwygs_insert_pool.insert[field_name]) === 'function') {
+        if (typeof(this.wysiwygs_insert_pool.init[field_name]) === 'function') {
             this.wysiwygs_insert_pool.init[field_name](field_name);
         }
         return this;

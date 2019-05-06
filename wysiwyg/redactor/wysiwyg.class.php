@@ -13,11 +13,6 @@ class cmsWysiwygRedactor {
 
         $user = cmsUser::getInstance();
         $core = cmsCore::getInstance();
-        $lang = cmsCore::getLanguageName();
-
-        if($lang !== 'en'){
-            $this->options['lang'] = $lang;
-        }
 
         $this->options['smilesUrl'] = href_to('typograph', 'get_smiles');
 
@@ -76,12 +71,52 @@ class cmsWysiwygRedactor {
 
         <script type="text/javascript">
             <?php if($dom_id){ ?>
+                redactor_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
                     init_redactor('<?php echo $dom_id; ?>');
                 });
+            <?php } else { ?>
+                redactor_global_options['default'] = <?php echo json_encode($this->options); ?>;
             <?php } ?>
+        </script>
+
+        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
+
+	}
+
+    private function loadRedactor() {
+
+        if(self::$redactor_loaded){ return false; }
+
+        $lang = cmsCore::getLanguageName();
+
+        $template = cmsTemplate::getInstance();
+
+        $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
+        $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
+        $template->addJSFromContext('templates/default/js/files.js');
+
+        if(!empty($this->options['plugins'])){
+            foreach($this->options['plugins'] as $plugin){
+                $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
+            }
+        }
+
+        if($lang !== 'en'){
+            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$lang.'.js');
+        }
+
+        ob_start(); ?>
+
+        <script type="text/javascript">
+            var redactor_global_options = {};
             function init_redactor (dom_id){
-                var imperavi_options = <?php echo json_encode($this->options); ?>;
+                var imperavi_options = {};
+                if(redactor_global_options.hasOwnProperty('field_'+dom_id)){
+                    imperavi_options = redactor_global_options['field_'+dom_id];
+                } else if(redactor_global_options.hasOwnProperty('default')) {
+                    imperavi_options = redactor_global_options.default;
+                }
                 icms.files.url_delete = '<?php echo href_to('files', 'delete'); ?>';
                 imperavi_options.imageDeleteCallback = function (element){
                     if(confirm('<?php echo LANG_PARSER_IMAGE_DELETE; ?>')){
@@ -99,29 +134,7 @@ class cmsWysiwygRedactor {
             }
         </script>
 
-        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
-	}
-
-    private function loadRedactor() {
-
-        if(self::$redactor_loaded){ return false; }
-
-        $template = cmsTemplate::getInstance();
-
-        $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
-        $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
-        $template->addJSFromContext('templates/default/js/files.js');
-
-        if(!empty($this->options['plugins'])){
-            foreach($this->options['plugins'] as $plugin){
-                $template->addJSFromContext('wysiwyg/redactor/files/plugins/'.$plugin.'/'.$plugin.'.js');
-            }
-        }
-
-        if($this->options['lang'] !== 'en'){
-            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$this->options['lang'].'.js');
-        }
+        <?php $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
 

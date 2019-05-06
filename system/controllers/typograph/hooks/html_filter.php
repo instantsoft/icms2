@@ -135,6 +135,8 @@ class onTypographHtmlFilter extends cmsAction {
         // обрабатываем внешние ссылки
         $jevix->cfgSetTagCallbackFull('a', array($this, 'linkRedirectPrefix'));
 
+        $jevix->cfgSetTagCallbackFull('img', array($this, 'parseImg'));
+
         // Отключаем типографирование в определенном теге
         $jevix->cfgSetTagNoTypography(array('pre', 'youtube', 'iframe', 'code'));
 
@@ -169,7 +171,7 @@ class onTypographHtmlFilter extends cmsAction {
 
             $params['class']  = (isset($params['class']) ? $params['class'].' external_link' : 'external_link');
             $params['target'] = '_blank';
-            $params['rel']    = 'noopener noreferrer';
+            $params['rel']    = 'noopener';
 
             if($this->build_redirect_link){
                 $params['href'] = href_to('redirect').'?url='.urlencode($params['href']);
@@ -186,6 +188,41 @@ class onTypographHtmlFilter extends cmsAction {
         }
 
         $tag_string .= '>'.$content.'</a>';
+
+        return $tag_string;
+
+    }
+
+    public function parseImg($tag, $params, $content) {
+
+        if(!empty($params['style'])){
+
+            $styles = explode(';', rtrim(trim($params['style']), ';'));
+
+            foreach ($styles as $k => $style) {
+
+                list($css_name, $css_value) = explode(':', $style);
+
+                if(trim($css_name) == 'height'){ unset($styles[$k]); }
+
+            }
+
+            $params['style'] = implode(';', $styles);
+
+        }
+
+        $tag_string = '<img';
+
+        foreach($params as $param => $value) {
+            if (in_array($param, ['width', 'height'])) {
+                continue;
+            }
+            if ($value != '') {
+                $tag_string.=' '.$param.'="'.$value.'"';
+            }
+        }
+
+        $tag_string .= '>';
 
         return $tag_string;
 

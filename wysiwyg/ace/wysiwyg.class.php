@@ -41,15 +41,44 @@ class cmsWysiwygAce {
 
         <script type="text/javascript">
             <?php if($dom_id){ ?>
+                ace_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
                     init_ace('<?php echo $dom_id; ?>');
                 });
+            <?php } else { ?>
+                ace_global_options['default'] = <?php echo json_encode($this->options); ?>;
             <?php } ?>
+        </script>
+
+       <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
+
+	}
+
+    private function loadRedactor() {
+
+        if(self::$redactor_loaded){ return false; }
+
+        $template = cmsTemplate::getInstance();
+
+        $template->addJSFromContext('wysiwyg/ace/files/ace.js');
+        $template->addJSFromContext('wysiwyg/ace/files/ext-emmet.js');
+        $template->addJSFromContext('wysiwyg/ace/files/ext-language_tools.js');
+
+        ob_start(); ?>
+
+        <script type="text/javascript">
+            var ace_global_options = {};
             function init_ace (dom_id){
+                var aceconfig = {};
+                if(ace_global_options.hasOwnProperty('field_'+dom_id)){
+                    aceconfig = ace_global_options['field_'+dom_id];
+                } else if(ace_global_options.hasOwnProperty('default')) {
+                    aceconfig = ace_global_options.default;
+                }
                 var textarea = $('#'+dom_id).hide();
                 $('<pre class="ace_redactor" id="'+dom_id+'_ace">'+$(textarea).html()+'</pre><div class="scrollmargin"></div>').insertAfter(textarea);
                 ace.require('ace/ext/language_tools');
-                var editor = ace.edit(dom_id+'_ace', <?php echo json_encode($this->options); ?>);
+                var editor = ace.edit(dom_id+'_ace', aceconfig);
                 editor.getSession().on('changeAnnotation', function() {
                     var annotations = editor.getSession().getAnnotations()||[], i = len = annotations.length;
                     while (i--) {
@@ -75,19 +104,7 @@ class cmsWysiwygAce {
             }
         </script>
 
-       <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
-	}
-
-    private function loadRedactor() {
-
-        if(self::$redactor_loaded){ return false; }
-
-        $template = cmsTemplate::getInstance();
-
-        $template->addJSFromContext('wysiwyg/ace/files/ace.js');
-        $template->addJSFromContext('wysiwyg/ace/files/ext-emmet.js');
-        $template->addJSFromContext('wysiwyg/ace/files/ext-language_tools.js');
+        <?php $template->addBottom(ob_get_clean());
 
     }
 

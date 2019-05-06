@@ -166,6 +166,8 @@ class cmsImages {
 
         $this->save($dest_file, null, $preset['quality']);
 
+        $this->filters = [];
+
         return str_replace(cmsConfig::get('upload_path'), '', $dest_file);
 
     }
@@ -644,13 +646,30 @@ class cmsImages {
             return $this;
         }
 
-        $ratio  = $this->getSourceHeight() / $this->getSourceWidth();
-        $width  = $max_width;
-        $height = $width * $ratio;
+        $ratio = $this->getSourceHeight() / $this->getSourceWidth();
 
-        if ($height > $max_height) {
+        if($this->getSourceHeight() < $this->getSourceWidth()){
+
             $height = $max_height;
             $width  = $height / $ratio;
+
+            if ($width > $max_width && $max_height < $max_width) {
+                $width  = $max_width;
+                $height = $width * $ratio;
+            }
+
+        } elseif($this->getSourceHeight() > $this->getSourceWidth()){
+
+            $width  = $max_width;
+            $height = $width * $ratio;
+
+            if ($height > $max_height && $max_height > $max_width) {
+                $height = $max_height;
+                $width  = $height / $ratio;
+            }
+
+        } else {
+            return $this->resizeToLongSide(($max_width > $max_height ? $max_width : $max_height), $allow_enlarge);
         }
 
         return $this->resize($width, $height, $allow_enlarge);
@@ -693,8 +712,8 @@ class cmsImages {
 
         $this->source_x = 0;
         $this->source_y = 0;
-        $this->dest_w   = $width;
-        $this->dest_h   = $height;
+        $this->dest_w   = round($width);
+        $this->dest_h   = round($height);
         $this->source_w = $this->getSourceWidth();
         $this->source_h = $this->getSourceHeight();
 

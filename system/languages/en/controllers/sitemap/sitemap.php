@@ -21,4 +21,4 @@ define('LANG_SITEMAP_SHOW_CHANGEFREQ', 'Generate changefreq tag');
 define('LANG_SITEMAP_SHOW_PRIORITY', 'Generate priority tag');
 define('LANG_SITEMAP_GENERATE_HTML_SITEMAP', 'Generate HTML Site Map');
 define('LANG_SITEMAP_ROBOTS_TXT', 'Robots.txt file');
-define('LANG_SITEMAP_ROBOTS_TXT_HINT', 'Do not specify the Host and Sitemap directives here, they are automatically generated.');
+define('LANG_SITEMAP_ROBOTS_TXT_HINT', 'Do not specify the Sitemap directive here, it will be generated automatically.');

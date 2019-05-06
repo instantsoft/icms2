@@ -25,7 +25,7 @@ class cmsWysiwygTinymce {
     ];
 
     private $buttons_mapping = [
-        'wordcount','toc','template','nonbreaking','media','insertdatetime','image','hr','fullscreen',
+        'wordcount','toc','template','nonbreaking','media','insertdatetime','image','hr','fullscreen','code',
         'charmap','anchor','smiles',
         'icmsspoiler' => [
             'spoiler-add', 'spoiler-remove'
@@ -62,9 +62,7 @@ class cmsWysiwygTinymce {
         'resize'                => 'both',
         'theme'                 => 'silver',
         'mobile'                => [
-            'theme' => 'silver',
-            'plugins' => ['lists','autolink'],
-            'toolbar' => ['bold', 'italic', 'underline', 'bullist', 'numlist']
+            'theme' => 'silver'
         ],
         'smiles_url'            => false,
         'paste_as_text'         => false,
@@ -91,8 +89,10 @@ class cmsWysiwygTinymce {
             $this->options['language'] = $lang;
         }
 
-        // формируем плагины по кнопкам тулбара
+        // формируем плагины по кнопкам тулбаров
         $toolbar = explode(' ', preg_replace('#\s+#', ' ', $this->options['toolbar']));
+        $quickbars_selection_toolbar = !empty($this->options['quickbars_selection_toolbar']) ? explode(' ', preg_replace('#\s+#', ' ', $this->options['quickbars_selection_toolbar'])) : [];
+        $quickbars_insert_toolbar = !empty($this->options['quickbars_insert_toolbar']) ? explode(' ', preg_replace('#\s+#', ' ', $this->options['quickbars_insert_toolbar'])) : [];
 
         foreach ($this->buttons_mapping as $pname => $buttons) {
             if(is_numeric($pname)){
@@ -104,10 +104,18 @@ class cmsWysiwygTinymce {
             }
             foreach ($buttons as $button) {
                 if(in_array($button, $toolbar)){
-                    $this->options['plugins'][] = $pname; break;
+                    $this->options['plugins'][] = $pname;
+                }
+                if(in_array($button, $quickbars_selection_toolbar)){
+                    $this->options['plugins'][] = $pname;
+                }
+                if(in_array($button, $quickbars_insert_toolbar)){
+                    $this->options['plugins'][] = $pname;
                 }
             }
         }
+
+        $this->options['plugins'] = array_unique($this->options['plugins']);
 
         if ($user->is_logged) {
 
@@ -165,11 +173,6 @@ class cmsWysiwygTinymce {
 
         $this->options['smiles_url'] = href_to('typograph', 'get_smiles');
 
-        if ($user->is_admin) {
-            $this->options['toolbar'] = 'code '.$this->options['toolbar'];
-            $this->options['plugins'][] = 'code';
-        }
-
         $this->options['plugins'] = implode(' ', $this->options['plugins']);
 
         if(!empty($this->options['block_formats'])){
@@ -221,12 +224,39 @@ class cmsWysiwygTinymce {
 
         <script type="text/javascript">
             <?php if($dom_id){ ?>
+                tiny_global_options['field_<?php echo $dom_id; ?>'] = <?php echo json_encode($this->options); ?>;
                 $(function(){
                     init_tinymce('<?php echo $dom_id; ?>');
                 });
+            <?php } else { ?>
+                tiny_global_options['default'] = <?php echo json_encode($this->options); ?>;
             <?php } ?>
+        </script>
+
+        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
+
+	}
+
+    private function loadRedactor() {
+
+        if(self::$redactor_loaded){ return false; }
+
+        $template = cmsTemplate::getInstance();
+
+        $template->addJSFromContext('wysiwyg/tinymce/files/tinymce.min.js');
+        $template->addJSFromContext('templates/default/js/files.js');
+
+        ob_start(); ?>
+
+        <script type="text/javascript">
+            var tiny_global_options = {};
             function init_tinymce (dom_id){
-                var tinymce_options = <?php echo json_encode($this->options); ?>;
+                var tinymce_options = {};
+                if(tiny_global_options.hasOwnProperty('field_'+dom_id)){
+                    tinymce_options = tiny_global_options['field_'+dom_id];
+                } else if(tiny_global_options.hasOwnProperty('default')) {
+                    tinymce_options = tiny_global_options.default;
+                }
                 icms.files.url_delete = '<?php echo href_to('files', 'delete'); ?>';
                 tinymce_options.selector = '#'+dom_id;
                 tinymce_options.init_instance_callback = function (editor) {
@@ -257,18 +287,7 @@ class cmsWysiwygTinymce {
             }
         </script>
 
-        <?php cmsTemplate::getInstance()->addBottom(ob_get_clean());
-
-	}
-
-    private function loadRedactor() {
-
-        if(self::$redactor_loaded){ return false; }
-
-        $template = cmsTemplate::getInstance();
-
-        $template->addJSFromContext('wysiwyg/tinymce/files/tinymce.min.js');
-        $template->addJSFromContext('templates/default/js/files.js');
+        <?php $template->addBottom(ob_get_clean());
 
         self::$redactor_loaded = true;
 
