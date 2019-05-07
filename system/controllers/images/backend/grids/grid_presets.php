@@ -43,13 +43,11 @@ function grid_presets($controller){
         'is_square' => array(
             'title' => LANG_IMAGES_PRESET_CROP,
 			'flag' => true,
-			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'images_presets', 'is_square')),
             'width' => 120
         ),
         'is_watermark' => array(
             'title' => LANG_IMAGES_PRESET_WM,
 			'flag' => true,
-			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'images_presets', 'is_watermark')),
             'width' => 100
         ),
     );

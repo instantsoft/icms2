@@ -79,6 +79,22 @@ class cmsForm {
 
                 $name = $field->getName();
 
+                if(!empty($field->patterns_hint['patterns'])) {
+
+                    $field->patterns_hint['pattern_fields'] = [];
+
+                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['', ''] : $field->patterns_hint['wrap_symbols'];
+
+                    foreach($field->patterns_hint['patterns'] as $pattern => $p_title){
+                        if(is_numeric($pattern)){
+                            $field->patterns_hint['pattern_fields'][] = '<a href="#">'.$wrap_symbols[0].$p_title.$wrap_symbols[1].'</a>';
+                        } else {
+                            $field->patterns_hint['pattern_fields'][] = '<a title="'.html($p_title, false).'" href="#">'.$wrap_symbols[0].$pattern.$wrap_symbols[1].'</a>';
+                        }
+                    }
+
+                }
+
                 // проверяем является ли поле элементом массива
                 $is_array = strpos($name, ':');
 

@@ -25,7 +25,7 @@ class cmsWysiwygTinymce {
     ];
 
     private $buttons_mapping = [
-        'wordcount','toc','template','nonbreaking','media','insertdatetime','image','hr','fullscreen','code',
+        'wordcount','toc','nonbreaking','media','insertdatetime','image','hr','fullscreen','code',
         'charmap','anchor','smiles',
         'icmsspoiler' => [
             'spoiler-add', 'spoiler-remove'

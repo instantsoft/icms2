@@ -94,26 +94,20 @@ $visible_depend = []; $index = 0;
 
                             <?php echo $field->getInput($value); ?>
 
-                            <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?><div class="hint"><?php
-                                if(!empty($field->hint)) { echo $field->hint; }
-                                if(!empty($field->patterns_hint['patterns'])){
-
-                                    $pattern_fields = [];
-
-                                    foreach($field->patterns_hint['patterns'] as $p_title => $pattern){
-                                        $pattern_fields[] = '<a'.(!is_numeric($p_title) ? (' title="'.$p_title.'"') : '').' href="#">{'.$pattern.'}</a>';
-                                    }
-
-                                    ?>
-                                    <span class="pattern_fields_panel_hint">
-                                        <?php echo !empty($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
-                                    </span>
-                                    <span class="pattern_fields_panel">
-                                        <?php echo sprintf(!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN, implode(' ', $pattern_fields)); ?>
-                                        <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
-                                    </span>
-                                <?php }
-                            ?></div><?php } ?>
+                            <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
+                                <div class="hint">
+                                    <?php if(!empty($field->hint)) { echo $field->hint; } ?>
+                                    <?php if(!empty($field->patterns_hint['patterns'])){ ?>
+                                        <span class="pattern_fields_panel_hint">
+                                            <?php echo !empty($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
+                                        </span>
+                                        <span class="pattern_fields_panel">
+                                            <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
+                                            <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
+                                        </span>
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
 
                         <?php } else { ?>
 

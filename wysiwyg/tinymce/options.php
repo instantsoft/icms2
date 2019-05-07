@@ -17,7 +17,11 @@ class formWysiwygTinymceOptions extends cmsForm {
 
             new fieldText('options:toolbar', array(
                 'title' => LANG_TINYMCE_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $buttons).' </a>'),
+                'patterns_hint' => [
+                    'patterns' =>  $buttons,
+                    'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
+                    'wrap_symbols' =>  ['',' ']
+                ],
                 'default' => 'formatselect | bold italic forecolor | link image',
                 'options'=>array(
                     'max_length' => 1000
@@ -26,13 +30,21 @@ class formWysiwygTinymceOptions extends cmsForm {
 
             new fieldString('options:quickbars_selection_toolbar', array(
                 'title' => LANG_TINYMCE_QUICKBARS_SELECTION_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_selection_buttons).' </a>'),
+                'patterns_hint' => [
+                    'patterns' =>  $quickbars_selection_buttons,
+                    'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
+                    'wrap_symbols' =>  ['',' ']
+                ],
                 'default' => 'bold italic underline | quicklink h2 h3 blockquote'
             )),
 
             new fieldString('options:quickbars_insert_toolbar', array(
                 'title' => LANG_TINYMCE_QUICKBARS_INSERT_TOOLBAR,
-                'hint'  => sprintf(LANG_CP_SEOMETA_FIELDS, '<a href="#">'.implode(' </a> <a href="#">', $quickbars_insert_buttons).' </a>'),
+                'patterns_hint' => [
+                    'patterns' =>  $quickbars_insert_buttons,
+                    'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
+                    'wrap_symbols' =>  ['',' ']
+                ],
                 'default' => 'quickimage quicktable'
             )),
 

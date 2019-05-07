@@ -25,7 +25,8 @@ class onCommentsCtypeBasicForm extends cmsAction {
             'title' => LANG_CP_COMMENTS_TITLE_PATTERN,
             'multilanguage' => true,
             'patterns_hint' => [
-                'patterns' =>  $item_fields
+                'patterns' =>  $item_fields,
+                'wrap_symbols' =>  ['{','}']
             ],
             'visible_depend' => array('is_comments' => array('show' => array('1')))
         )));

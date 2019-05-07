@@ -158,7 +158,8 @@
     //
     define('LANG_CP_SEOMETA_DS_HINT',           'Overrides the pattern specified for content type categories.');
     define('LANG_CP_SEOMETA_HINT_PANEL',        'Click on the field to see the available fields.');
-    define('LANG_CP_SEOMETA_HINT_PATTERN',      'Available expressions: <b class="pattern_fields">%s</b> More details in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">the documentation</a>.');
+    define('LANG_CP_SEOMETA_HINT_PATTERN_DOC',  'More details in <a target="_blank" href="https://docs.instantcms.ru/en/manual/settings/seo-patterns">the documentation</a>.');
+    define('LANG_CP_SEOMETA_HINT_PATTERN',      'Available expressions: <b class="pattern_fields">%s</b> ');
     define('LANG_CP_AUTO_URL',                  'Autogenerate URL');
     define('LANG_CP_FIXED_URL',                 'Keep URL after editing');
     define('LANG_CP_URL_PATTERN',               'URL pattern');
