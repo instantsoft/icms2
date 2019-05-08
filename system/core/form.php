@@ -83,7 +83,7 @@ class cmsForm {
 
                     $field->patterns_hint['pattern_fields'] = [];
 
-                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['', ''] : $field->patterns_hint['wrap_symbols'];
+                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['{','}'] : $field->patterns_hint['wrap_symbols'];
 
                     foreach($field->patterns_hint['patterns'] as $pattern => $p_title){
                         if(is_numeric($pattern)){

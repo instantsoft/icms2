@@ -35,8 +35,6 @@ class formAdminCtypesDataset extends cmsForm {
 
         }
 
-        $wrap_symbols = ['{','}'];
-
         $form = array(
             'basic' => array(
                 'type' => 'fieldset',
@@ -174,7 +172,7 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldString('seo_h1', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : ''),
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_h1_pattern']) ? $ctype['options']['seo_cat_h1_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
@@ -184,7 +182,7 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldString('seo_title', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : ''),
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_title_pattern']) ? $ctype['options']['seo_cat_title_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
@@ -194,7 +192,7 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldString('seo_keys', array(
                         'title' => LANG_CP_SEOMETA_ITEM_KEYS,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : ''),
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_keys_pattern']) ? $ctype['options']['seo_cat_keys_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,
@@ -204,7 +202,7 @@ class formAdminCtypesDataset extends cmsForm {
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
-                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : ''),
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_desc_pattern']) ? $ctype['options']['seo_cat_desc_pattern'] : null),
                         'options'=>array(
                             'max_length'=> 256,

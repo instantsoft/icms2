@@ -20,7 +20,7 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'patterns_hint' => [
                     'patterns' =>  $buttons,
                     'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
-                    'wrap_symbols' =>  ['',' ']
+                    'wrap_symbols' =>  ['','']
                 ],
                 'default' => 'formatselect | bold italic forecolor | link image',
                 'options'=>array(
@@ -33,7 +33,7 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'patterns_hint' => [
                     'patterns' =>  $quickbars_selection_buttons,
                     'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
-                    'wrap_symbols' =>  ['',' ']
+                    'wrap_symbols' =>  ['','']
                 ],
                 'default' => 'bold italic underline | quicklink h2 h3 blockquote'
             )),
@@ -43,7 +43,7 @@ class formWysiwygTinymceOptions extends cmsForm {
                 'patterns_hint' => [
                     'patterns' =>  $quickbars_insert_buttons,
                     'text_pattern' =>  LANG_CP_SEOMETA_HINT_PATTERN,
-                    'wrap_symbols' =>  ['',' ']
+                    'wrap_symbols' =>  ['','']
                 ],
                 'default' => 'quickimage quicktable'
             )),

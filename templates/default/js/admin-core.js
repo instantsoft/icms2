@@ -76,6 +76,8 @@ $(function(){
         $(this).closest('.field').find('.pattern_fields_panel').show();
     });
     $('.form-tabs').on('click', '.pattern_fields > ', function (){
-        return addTextToPosition($(this).closest('.field').find('input, textarea'), $(this).text());
+        var spacer = $(this).closest('.hint').data('spacer') || false;
+        var spacer_stop = $(this).closest('.hint').data('spacer_stop') || false;
+        return addTextToPosition($(this).closest('.field').find('input, textarea'), $(this).text(), spacer, spacer_stop);
     });
 });
