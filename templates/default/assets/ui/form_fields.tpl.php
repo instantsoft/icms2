@@ -95,7 +95,12 @@ $visible_depend = []; $index = 0;
                             <?php echo $field->getInput($value); ?>
 
                             <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
-                                <div class="hint">
+                                <div class="hint"<?php
+                                    if(!empty($field->patterns_hint['patterns'])){
+                                        echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
+                                        echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
+                                    }
+                                ?>>
                                     <?php if(!empty($field->hint)) { echo $field->hint; } ?>
                                     <?php if(!empty($field->patterns_hint['patterns'])){ ?>
                                         <span class="pattern_fields_panel_hint">

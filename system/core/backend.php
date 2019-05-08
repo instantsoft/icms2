@@ -138,21 +138,19 @@ class cmsBackend extends cmsController {
                 $meta_item_fields = $this->getMetaItemFields();
             }
 
-            $wrap_symbols = ['{','}'];
-
             $form->addFieldset(LANG_CP_SEOMETA, 'seo_items', array(
                 'childs' => array(
                     new fieldString('tag_title', array(
                         'title' => LANG_CP_SEOMETA_ITEM_TITLE,
-                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : '')
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
                     )),
                     new fieldString('tag_desc', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
-                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : '')
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
                     )),
                     new fieldString('tag_h1', array(
                         'title' => LANG_CP_SEOMETA_ITEM_H1,
-                        'patterns_hint' => ($meta_item_fields ? ['patterns' =>  $meta_item_fields, 'wrap_symbols' =>  $wrap_symbols] : '')
+                        'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : '')
                     ))
                 )
             ));

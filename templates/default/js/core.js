@@ -643,11 +643,49 @@ function getCaretPosition(field) {
     }
     return 0;
 }
-function addTextToPosition(field_id, text){
+function addTextToPosition(field_id, text, spacer, spacer_stop){
 	var field = $(field_id);
 	var value = $(field).val();
 	var pos = getCaretPosition(field);
-    $(field).val(value.substring(0, pos) + text + value.substring(pos, value.length)).trigger('input');
+    var value1 = value.substring(0, pos);
+    var value2 = value.substring(pos, value.length);
+    if(spacer){
+        var check1 = function(spacer){ // проверка перед вставляемым
+            if(value1.length >= spacer.length){
+                if(value1.substring(pos - spacer.length, pos) !== spacer){
+                    return true;
+                }
+            }
+            return false;
+        };
+        var check2 = function(spacer){ // проверка после вставляемого текста
+            if(value2.length >= spacer.length){
+                if(value2.substring(0, spacer.length) !== spacer){
+                    return true;
+                }
+            }
+            return false;
+        };
+        var insert1 = true, insert2 = true;
+        if(spacer_stop){
+            for(var ss in spacer_stop){if(spacer_stop.hasOwnProperty(ss)){
+                if(insert1 && (!spacer_stop[ss] || spacer_stop[ss] == 1) && !check1(ss)){
+                    insert1 = false;
+                }
+                if(insert2 && (!spacer_stop[ss] || spacer_stop[ss] == 2) && !check2(ss)){
+                    insert2 = false;
+                }
+            }}
+        }
+
+        if(insert1 && check1(spacer)){
+            text = spacer+text;
+        }
+        if(insert2 && check2(spacer)){
+            text += spacer;
+        }
+    }
+    $(field).val(value1 + text + value2).trigger('input');
     setCaretPosition(field, pos+text.length);
     return false;
 }
