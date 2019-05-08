@@ -360,6 +360,7 @@ icms.datagrid = (function ($) {
             _this.setOrdering();
             _this.bind_sortable();
             _this.bind_filter();
+            $('.datagrid tfoot td').attr('colspan', $('.datagrid thead th').length);
         }
 
         if(!result.rows.length){
