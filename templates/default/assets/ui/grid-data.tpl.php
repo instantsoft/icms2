@@ -21,7 +21,10 @@
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
     </div>
-<?php } ?>
+<?php }
+    $columnsCount = 0;
+
+?>
 
 <div class="datagrid_wrapper">
     <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?>" cellpadding="0" cellspacing="0" border="0">
@@ -43,7 +46,7 @@
         <tbody>
             <?php if ($options['is_filter']){ ?>
             <tr class="filter">
-                <?php foreach($columns as $name=>$column){ ?>
+                <?php foreach($columns as $name=>$column){ $columnsCount++;?>
                     <td>
                         <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
                             <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
@@ -65,7 +68,7 @@
                         <?php } ?>
                     </td>
                 <?php } ?>
-                <?php if ($actions) { ?>
+                <?php if ($actions) { $columnsCount++ ?>
                     <td>
                         &nbsp;
                     </td>
@@ -73,6 +76,13 @@
             </tr>
             <?php } ?>
         </tbody>
+        <?php if ($options['is_footer']) { ?>
+        <tfoot style="display:none">
+            <tr>
+                <td colspan="<?= $columnsCount ?>"></td>
+            </tr>
+        </tfoot>
+        <?php } ?>
     </table>
     <div class="datagrid_loading">
         <div class="loading_overlay"></div>
@@ -127,6 +137,7 @@
         is_actions: <?php echo intval($options['is_actions']); ?>,
         is_pagination: <?php echo intval($options['is_pagination']); ?>,
         is_selectable: <?php echo intval($options['is_selectable']); ?>,
+        is_footer: <?php echo intval($options['is_footer']) ?>,
         order_by: '<?php echo isset($filter['order_by']) ? $filter['order_by'] : $options['order_by']; ?>',
         order_to: '<?php echo isset($filter['order_to']) ? $filter['order_to'] : $options['order_to']; ?>'
     });

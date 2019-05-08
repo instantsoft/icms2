@@ -1869,13 +1869,17 @@ class cmsTemplate {
             $this->addJS( $this->getJavascriptFileName('datagrid-drag') );
         }
 
+        if (!isset($grid['options']['is_footer'])){
+            $grid['options']['is_footer'] = false;
+        }
+
         $grid['source_url'] = $source_url;
 
         $this->renderAsset('ui/grid-data', $grid);
 
     }
 
-    public function renderGridRowsJSON($grid, $dataset, $total = 1, $pages_count = 1) {
+    public function renderGridRowsJSON($grid, $dataset, $total = 1, $pages_count = 1, $start = 0) {
 
         $rows = $titles = array();
         $row_index = 0;
@@ -2079,12 +2083,21 @@ class cmsTemplate {
             }
         }
 
+        if ($row_index) {
+            $end = $start+$row_index;
+            $start++;
+        } else {
+            $end = 0;
+            $start = 0;
+        }
+
         $result = array(
             'titles'      => $titles,
             'rows'        => $rows,
             'pages_count' => $pages_count,
             'total'       => $total,
-            'columns'     => $columns
+            'columns'     => $columns,
+            'footer'      => sprintf(LANG_PAGES_SHOWN, $start, $end, $total),
         );
 
         echo json_encode($result);

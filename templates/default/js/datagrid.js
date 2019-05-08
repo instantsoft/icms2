@@ -365,6 +365,9 @@ icms.datagrid = (function ($) {
         if(!result.rows.length){
             var columns_count = $('.datagrid thead th').length;
             $('.datagrid tbody').append('<tr class="empty_tr"><td colspan="'+columns_count+'"><span class="empty">'+LANG_LIST_EMPTY+'</span></td></tr>');
+            if (_this.options.is_footer) {
+                $('.datagrid tfoot').hide();
+            }
             if (_this.callback) { _this.callback(); }
             _this.checkSelectedCount();
             return;
@@ -419,6 +422,11 @@ icms.datagrid = (function ($) {
                 });
 
             }
+        }
+
+        if (_this.options.is_footer) {
+            $('.datagrid tfoot').show();
+            $('.datagrid tfoot td').text(result.footer);
         }
 
         _this.options.pages_count = result.pages_count;

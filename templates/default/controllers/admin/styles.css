@@ -1300,6 +1300,13 @@ ul.errors li .hint strong { color:#666666; }
 .datagrid_image_preview{
     max-width:500px;
 }
+
+.datagrid tfoot td {
+    background: #9DB1B9 !important;   
+    line-height: 20px;
+    font-weight: bold;
+    color: #FFF;
+}
 /* ========================================================================== */
 /* ========================================================================== */
 
