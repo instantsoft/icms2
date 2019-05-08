@@ -653,7 +653,7 @@ class cmsImages {
             $height = $max_height;
             $width  = $height / $ratio;
 
-            if ($width > $max_width && $max_height < $max_width) {
+            if ($width > $max_width) {
                 $width  = $max_width;
                 $height = $width * $ratio;
             }
@@ -663,7 +663,7 @@ class cmsImages {
             $width  = $max_width;
             $height = $width * $ratio;
 
-            if ($height > $max_height && $max_height > $max_width) {
+            if ($height > $max_height) {
                 $height = $max_height;
                 $width  = $height / $ratio;
             }
