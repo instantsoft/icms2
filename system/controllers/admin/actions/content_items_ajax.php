@@ -85,6 +85,8 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $content_model->setPerPage($perpage);
 
+        $start = $content_model->getLimitOffset();
+
         $content_model->joinLeft(
                 'moderators_logs',
                 'mlog',
@@ -96,7 +98,7 @@ class actionAdminContentItemsAjax extends cmsAction {
 
         $items = $content_model->getContentItems($ctype['name']);
 
-        $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $items, $total, $pages, $start);
 
         $this->halt();
 

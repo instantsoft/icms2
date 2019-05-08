@@ -12,7 +12,8 @@ function grid_content_items($controller, $ctype_name=false){
         'is_selectable' => true,
         'order_by' => 'id',
         'order_to' => 'desc',
-        'show_id' => true
+        'show_id' => true,
+        'is_footer' => true,
     );
 
     $columns = array(
