@@ -1484,6 +1484,18 @@ class cmsModel {
         return $this;
     }
 
+    public function getLimitOffset() {
+        $limit = explode(',', $this->limit);
+        return intval($limit[0]);
+    }
+
+    public function getLimitSize() {
+        $limit = explode(',', $this->limit);
+        return intval(isset($limit[1]) ? $limit[1] : 0);
+    }
+
+
+
 //============================================================================//
 //============================== Транзакции ==================================//
 
