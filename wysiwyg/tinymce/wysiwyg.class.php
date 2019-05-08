@@ -54,6 +54,7 @@ class cmsWysiwygTinymce {
         'menubar'               => false,
         'statusbar'             => false,
         'relative_urls'         => false,
+        'convert_urls'          => false,
         'paste_data_images'     => true,
         'image_caption'         => false,
         'toolbar_drawer'        => false,

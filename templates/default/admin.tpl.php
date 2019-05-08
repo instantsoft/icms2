@@ -17,6 +17,9 @@
     <?php $this->addMainJS('templates/default/js/modal.js'); ?>
     <?php $this->addMainJS('templates/default/js/messages.js'); ?>
     <?php $this->addMainJS('templates/default/js/admin-core.js'); ?>
+    <?php if ($config->debug){ ?>
+        <?php $this->addTplCSSName('debug'); ?>
+    <?php } ?>
     <?php $this->head(false); ?>
 </head>
 <body>
@@ -96,9 +99,25 @@
             <a href="https://instantcms.ru/">InstantCMS</a> v<?php echo cmsCore::getVersion(); ?> &mdash;
             &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
+            <?php if ($config->debug){ ?>
+                 &mdash;
+                <span class="item">
+                    <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
+                </span> &mdash;
+                <span class="item">
+                    Time: <?php echo cmsDebugging::getTime('cms', 4); ?> s
+                </span> &mdash;
+                <span class="item">
+                    Mem: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?> Mb
+                </span>
+            <?php } ?>
         </div>
     </div>
-
+    <?php if ($config->debug){ ?>
+        <div id="debug_block">
+            <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance())); ?>
+        </div>
+    <?php } ?>
     <script type="text/javascript">
         $(function(){
         <?php if(empty($this->options['disable_help_anim'])){ ?>

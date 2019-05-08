@@ -18,6 +18,9 @@
     <?php if (cmsUser::isLogged()){ ?>
         <?php $this->addMainTplJSName('messages'); ?>
     <?php } ?>
+    <?php if ($config->debug && cmsUser::isAdmin()){ ?>
+        <?php $this->addTplCSSName('debug'); ?>
+    <?php } ?>
     <?php $this->head(); ?>
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <meta name="generator" content="InstantCMS" />

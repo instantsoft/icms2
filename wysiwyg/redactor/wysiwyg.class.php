@@ -9,10 +9,17 @@ class cmsWysiwygRedactor {
         'plugins' => []
     ];
 
+    private $lang = 'en';
+
     public function __construct($config = []) {
 
         $user = cmsUser::getInstance();
         $core = cmsCore::getInstance();
+        $this->lang = cmsCore::getLanguageName();
+
+        if($this->lang !== 'en'){
+            $this->options['lang'] = $this->lang;
+        }
 
         $this->options['smilesUrl'] = href_to('typograph', 'get_smiles');
 
@@ -88,8 +95,6 @@ class cmsWysiwygRedactor {
 
         if(self::$redactor_loaded){ return false; }
 
-        $lang = cmsCore::getLanguageName();
-
         $template = cmsTemplate::getInstance();
 
         $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
@@ -102,8 +107,8 @@ class cmsWysiwygRedactor {
             }
         }
 
-        if($lang !== 'en'){
-            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$lang.'.js');
+        if($this->lang !== 'en'){
+            $template->addJSFromContext('wysiwyg/redactor/files/lang/'.$this->lang.'.js');
         }
 
         ob_start(); ?>

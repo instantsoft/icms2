@@ -214,7 +214,7 @@ class onTypographHtmlFilter extends cmsAction {
         $tag_string = '<img';
 
         foreach($params as $param => $value) {
-            if (in_array($param, ['width', 'height'])) {
+            if (in_array($param, ['height'])) {
                 continue;
             }
             if ($value != '') {
