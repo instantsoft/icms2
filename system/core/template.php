@@ -40,6 +40,7 @@ class cmsTemplate {
     protected $menu_loaded = false;
     protected $not_found_tpls = array();
 
+    public $widgets_rendered = false;
     protected $widgets = array();
     protected $widgets_group_index = 0;
 
@@ -348,6 +349,10 @@ class cmsTemplate {
      * @return boolean
      */
     public function hasWidgetsOn($position){
+
+        if(!$this->widgets_rendered){
+            cmsCore::getInstance()->runWidgets();
+        }
 
         if (func_num_args() > 1){
             $positions = func_get_args();

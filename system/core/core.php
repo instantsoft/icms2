@@ -806,14 +806,20 @@ class cmsCore {
      */
     public function runWidgets(){
 
+        $template = cmsTemplate::getInstance();
+
+        if($template->widgets_rendered){
+            return $this;
+        }
+
+        $template->widgets_rendered = true;
+
         $controllers_without_widgets = cmsConfig::get('controllers_without_widgets');
 
         if ($controllers_without_widgets && in_array($this->controller, $controllers_without_widgets)) { return; }
 
         $matched_pages = $this->loadMatchedPages()->getMatchedPages();
         if (!$matched_pages) { return; }
-
-        $template = cmsTemplate::getInstance();
 
         $widgets_list = cmsCore::getModel('widgets')->getWidgetsForPages(array_keys($matched_pages), $template->getName());
 
@@ -867,6 +873,8 @@ class cmsCore {
             }
 
         }
+
+        return $this;
 
     }
 
