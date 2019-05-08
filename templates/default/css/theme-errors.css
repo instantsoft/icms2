@@ -94,7 +94,7 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
     margin: auto;
     text-align: center;
     padding-top:160px;
-    background: url("../images/errors/maintenance.png") no-repeat center 20px #FAFAFA;
+    background: url("../images/errors/maintenance.png") no-repeat center 20px;
 }
 
 #error-maintenance h1{ margin:0; }
