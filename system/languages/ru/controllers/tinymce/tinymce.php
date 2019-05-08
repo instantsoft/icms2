@@ -25,3 +25,4 @@ define('LANG_TINYMCE_PASTE_AS_TEXT', 'Вставлять текст, очища�
 define('LANG_TINYMCE_BLOCK_FORMATS', 'Доступные форматы');
 define('LANG_TINYMCE_P', 'Параграф');
 define('LANG_TINYMCE_SP', 'Спойлер');
+define('LANG_TINYMCE_IMG_PRESET', 'Пресет загружаемых изображений');

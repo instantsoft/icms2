@@ -139,7 +139,7 @@ class formWysiwygTinymceOptions extends cmsForm {
             )),
 
             new fieldList('options:images_preset', array(
-                'title'     => LANG_PARSER_SMALL_IMAGE_PRESET,
+                'title'     => LANG_TINYMCE_IMG_PRESET,
                 'generator' => function (){
                     return cmsCore::getModel('images')->getPresetsList(true);
                 },

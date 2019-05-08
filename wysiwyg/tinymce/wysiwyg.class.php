@@ -28,7 +28,7 @@ class cmsWysiwygTinymce {
         'wordcount','toc','nonbreaking','media','insertdatetime','image','hr','fullscreen','code',
         'charmap','anchor','smiles',
         'icmsspoiler' => [
-            'spoiler-add', 'spoiler-remove'
+            'spoiler-add'
         ],
         'lists' => [
             'bullist', 'numlist'

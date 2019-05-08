@@ -937,6 +937,29 @@ a.hashtag {
     border-top: none;
     background-color: transparent;
 }
+.mce-toc {
+    background-color: #eff0f1;
+    box-sizing: border-box;
+    padding: 15px 20px;
+    margin: 0 0 10px 0;
+}
+.mce-toc > div {
+    font-size: 16px;
+    margin: 0 0 10px 0;
+}
+.mce-toc ul {
+    list-style: none;
+    margin: 0;
+}
+.mce-toc ul li {
+    margin: 0 0 5px 0;
+}
+.mce-toc ul li:last-child {
+    margin: 0;
+}
+.mce-toc ul li > a {
+    text-decoration: none;
+}
 @media screen and (max-width: 980px) {
 	.share .ya-share2__container_size_s .ya-share2__item {
 		margin-right: 10px;

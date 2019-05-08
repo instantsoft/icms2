@@ -25,3 +25,4 @@ define('LANG_TINYMCE_PASTE_AS_TEXT', 'Paste text, clearing formatting (paste plu
 define('LANG_TINYMCE_BLOCK_FORMATS', 'Available formats');
 define('LANG_TINYMCE_P', 'Paragraph');
 define('LANG_TINYMCE_SP', 'Spoiler');
+define('LANG_TINYMCE_IMG_PRESET', 'Images preset');
