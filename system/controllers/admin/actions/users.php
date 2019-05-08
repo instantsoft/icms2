@@ -52,10 +52,11 @@ class actionAdminUsers extends cmsAction {
             $total = $this->model_users->getUsersCount();
             $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
             $pages = ceil($total / $perpage);
+            $start = $this->model_users->getLimitOffset();
 
             $users = $this->model_users->getUsers();
 
-            $this->cms_template->renderGridRowsJSON($grid, $users, $total, $pages);
+            $this->cms_template->renderGridRowsJSON($grid, $users, $total, $pages, $start);
 
             $this->halt();
 

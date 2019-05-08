@@ -10,7 +10,8 @@ function grid_users($controller){
         'is_draggable' => false,
         'order_by' => 'id',
         'order_to' => 'asc',
-        'show_id' => true
+        'show_id' => true,
+        'is_footer' => true,
     );
 
     $columns = array(
