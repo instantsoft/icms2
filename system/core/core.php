@@ -482,6 +482,8 @@ class cmsCore {
 
         $controllers = cmsCore::getDirsList('system/controllers', true);
 
+        $index = 0;
+
         foreach($controllers as $controller_name){
 
             $manifest_file = cmsConfig::get('root_path') . 'system/controllers/' . $controller_name . '/manifest.php';
@@ -492,7 +494,13 @@ class cmsCore {
 
             if (empty($manifest['hooks']) || !is_array($manifest['hooks'])) { continue; }
 
-            $manifests_events[ $controller_name ] = $manifest['hooks'];
+            foreach ($manifest['hooks'] as $hook) {
+
+                $manifests_events[ $controller_name ][$index] = $hook;
+
+                $index++;
+
+            }
 
         }
 
