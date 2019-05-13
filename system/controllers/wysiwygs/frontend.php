@@ -26,33 +26,29 @@ class wysiwygs extends cmsFrontend {
 
         if(!empty($options['presets'])){
 
-            if($this->cms_user->is_logged){
+            $preset_id = 0;
 
-                $preset_id = 0;
-
-                foreach ($this->cms_user->groups as $group_id) {
-                    foreach ($options['presets'] as $editor_preset) {
-                        if($group_id == $editor_preset['group_id']){
-                            if(is_numeric($editor_preset['preset_id'])){
-                                $preset_id = $editor_preset['preset_id'];
-                            } else {
-                                $preset_id = 0;
-                                $result['editor']  = $editor_preset['preset_id'];
-                                $result['options'] = [];
-                            }
+            foreach ($this->cms_user->groups as $group_id) {
+                foreach ($options['presets'] as $editor_preset) {
+                    if($group_id == $editor_preset['group_id']){
+                        if(is_numeric($editor_preset['preset_id'])){
+                            $preset_id = $editor_preset['preset_id'];
+                        } else {
+                            $preset_id = 0;
+                            $result['editor']  = $editor_preset['preset_id'];
+                            $result['options'] = [];
                         }
                     }
                 }
+            }
 
-                if($preset_id){
+            if($preset_id){
 
-                    $preset = $this->model->getPreset($preset_id);
+                $preset = $this->model->getPreset($preset_id);
 
-                    if($preset){
-                        $result['editor']  = $preset['wysiwyg_name'];
-                        $result['options'] = $preset['options'];
-                    }
-
+                if($preset){
+                    $result['editor']  = $preset['wysiwyg_name'];
+                    $result['options'] = $preset['options'];
                 }
 
             }
