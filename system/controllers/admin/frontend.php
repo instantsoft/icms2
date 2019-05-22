@@ -43,6 +43,10 @@ class admin extends cmsFrontend {
 
 	}
 
+    protected function validateParamsCount($class, $method_name, &$params) {
+        // проверка на кол-во параметров в контроллере admin отключена
+    }
+
     public function before($action_name) {
 
         parent::before($action_name);

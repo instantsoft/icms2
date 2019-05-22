@@ -457,16 +457,7 @@ class cmsController {
             // Если файла нет, ищем метод класса
             if (method_exists($this, $method_name)){
 
-                // проверяем максимальное число аргументов экшена
-                if ($this->name != 'admin'){
-                    $rf = new ReflectionMethod($this, $method_name);
-                    // кол-во переданных параметров
-                    $current_params = count($params);
-                    // передано больше чем нужно параметров
-                    if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
-                    // передано меньше чем нужно параметров
-                    if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
-                }
+                $this->validateParamsCount($this, $method_name, $params);
 
                 // сохраняем название текущего экшена
                 $this->current_action = $action_name;
@@ -501,6 +492,25 @@ class cmsController {
     }
 
     /**
+     * Проверяем максимальное число аргументов экшена
+     * Выбрасываем ошибку, если количество параметров не соответствует кол-ву аргументов
+     * Для отключения проверки, можно переопределить этот метод с пустой реализацией
+     * (например см. в контроллере admin)
+     * @param string|object $class Имя класса или текущий объект контроллера $this
+     * @param string $method_name Имя метода
+     * @param array $params Массив параметров
+     */
+    protected function validateParamsCount($class, $method_name, &$params) {
+        $rf = new ReflectionMethod($class, $method_name);
+        // кол-во переданных параметров
+        $current_params = count($params);
+        // передано больше чем нужно параметров
+        if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
+        // передано меньше чем нужно параметров
+        if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
+    }
+
+    /**
      * Возвращает путь к файлу экшена (./actions/$action_name.php по умолчанию)
      * @param string $action_name
      * @return string
@@ -529,16 +539,7 @@ class cmsController {
             cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
         }
 
-        // проверяем максимальное число аргументов экшена
-        if ($this->name != 'admin'){
-            $rf = new ReflectionMethod($class_name, 'run');
-            // кол-во переданных параметров
-            $current_params = count($params);
-            // передано больше чем нужно параметров
-            if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
-            // передано меньше чем нужно параметров
-            if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
-        }
+        $this->validateParamsCount($class_name, 'run', $params);
 
         // сохраняем название текущего экшена
         $this->current_action = $action_name;
