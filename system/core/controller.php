@@ -457,7 +457,7 @@ class cmsController {
             // Если файла нет, ищем метод класса
             if (method_exists($this, $method_name)){
 
-                $this->validateParamsCount($this, $method_name, $params);
+                if (!$this->validateParamsCount($this, $method_name, $params)) { cmsCore::error404(); }
 
                 // сохраняем название текущего экшена
                 $this->current_action = $action_name;
@@ -493,21 +493,22 @@ class cmsController {
 
     /**
      * Проверяем максимальное число аргументов экшена
-     * Выбрасываем ошибку, если количество параметров не соответствует кол-ву аргументов
-     * Для отключения проверки, можно переопределить этот метод с пустой реализацией
-     * (например см. в контроллере admin)
+     * Возвращает false если переданных количество параметров не соответствует кол-ву аргументов экшена
+     * Для отключения проверки, можно переопределить этот метод (например см. в контроллере admin)
      * @param string|object $class Имя класса или текущий объект контроллера $this
      * @param string $method_name Имя метода
      * @param array $params Массив параметров
+     * @return bool Результат проверки
      */
-    protected function validateParamsCount($class, $method_name, &$params) {
+    protected function validateParamsCount($class, $method_name, $params) {
         $rf = new ReflectionMethod($class, $method_name);
         // кол-во переданных параметров
         $current_params = count($params);
         // передано больше чем нужно параметров
-        if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
+        if ($rf->getNumberOfParameters() < $current_params) return false;
         // передано меньше чем нужно параметров
-        if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
+        if ($rf->getNumberOfRequiredParameters() > $current_params) return false;
+        return true;
     }
 
     /**
@@ -539,7 +540,7 @@ class cmsController {
             cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
         }
 
-        $this->validateParamsCount($class_name, 'run', $params);
+        if (!$this->validateParamsCount($class_name, 'run', $params)) { cmsCore::error404(); }
 
         // сохраняем название текущего экшена
         $this->current_action = $action_name;
