@@ -611,6 +611,32 @@ class cmsDatabase {
 		}
 	}
 
+    /**
+     * Возвращает ассоциативный массив из строк полученных после запроса
+     * @param string $table Имя таблицы (без префикса)
+     * @param string $keyField Столбец таблицы, используемый как ключ ассоциативного массива, по умолчанию id
+     * @param string $valueField Столбец таблицы, возвращаемый как значение в ассоциативном массиве, по умолчанию null - возвращает всю строку
+     * @param string $where Условие WHERE
+     * @param string $order Порядок сортировки ORDER, по умолчанию - 'id ASC' (в порядке возрастания id)
+     * @return boolean|array
+     */
+    public function getPairs($table, $keyField = 'id', $valueField = null, $where='1', $order='id ASC', $quiet = false){
+        $fields = '*';
+        if (isset($valueField)) $fields = $keyField.', '.$valueField;
+        $sql = "SELECT {$fields} FROM {#}{$table} WHERE {$where} ORDER BY {$order}";
+        $result = $this->query($sql, false, $quiet);
+        if(!$this->mysqli->errno){
+            $data=array();
+            while($item = $this->fetchAssoc($result)){
+                $data[$item[$keyField]] = (isset($valueField) ? $item[$valueField] : $item);
+            }
+            $this->freeResult($result);
+            return $data;
+        } else {
+            return false;
+        }
+    }
+
 //============================================================================//
 //============================================================================//
 
