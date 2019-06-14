@@ -1513,6 +1513,34 @@ class cmsTemplate {
 
     }
 
+    /**
+     * Возвращает путь к файлу шаблона внутри папки templates контроллера
+     * @param string $controller_name Имя контроллера
+     * @param string $relative_path Путь относительно папки templates внутри папки контроллера. Без первого слеша
+     * @param boolean $return_abs_path Возвращать полный путь в файловой системе, по умолчанию true
+     * @return string | boolean
+     */
+    public function getControllerTplFilePath($controller_name, $relative_path, $return_abs_path = true) {
+
+        $exists = false;
+
+        $file = 'system/controllers/'.$controller_name.'/templates/'.$relative_path;
+        if(is_readable($this->site_config->root_path.$file)){
+            if($return_abs_path){
+                $exists = $this->site_config->root_path.$file;
+            } else {
+                $exists = $file;
+            }
+        }
+
+        if(!$exists){
+            $this->not_found_tpls[] = $file;
+        }
+
+        return $exists;
+
+    }
+
 // ========================================================================== //
 // ========================================================================== //
 
@@ -1559,6 +1587,30 @@ class cmsTemplate {
     public function getTemplateFileName($filename, $is_check = false){
 
         $tpl_file = $this->getTplFilePath($filename.'.tpl.php');
+
+        if (!$tpl_file){
+            if (!$is_check){
+                $last_not_found_tpl = end($this->not_found_tpls);
+                cmsCore::error(ERR_TEMPLATE_NOT_FOUND . ': ' . $this->site_config->root.$last_not_found_tpl);
+            } else {
+                return false;
+            }
+        }
+
+        return $tpl_file;
+
+    }
+
+    /**
+     * Возвращает путь к tpl-файлу, определяя его наличие в папке templates внутри папки контроллера
+     * @param string $controller_name Имя контроллера
+     * @param string $filename Путь относительно папки templates контроллера
+     * @param boolean $is_check Если true, то не выдаст фатальную ошибку в случае отсутствия файла
+     * @return string
+     */
+    public function getControllerTemplateFileName($controller_name, $filename, $is_check = false){
+
+        $tpl_file = $this->getControllerTplFilePath($controller_name, $filename.'.tpl.php');
 
         if (!$tpl_file){
             if (!$is_check){
@@ -1701,10 +1753,12 @@ class cmsTemplate {
 
         if ($css_file){ $this->addCSSFromContext($css_file, $request); }
 
-        $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
+        $tpl_file_path = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file, true);
+        if ($tpl_file_path === false) {
+            $tpl_file_path = $this->getControllerTemplateFileName($this->controller->name, $tpl_file);
+        }
 
-        return $this->processRender($tpl_file, $data, $request);
-
+        return $this->processRender($tpl_file_path, $data, $request);
     }
 
     /**
@@ -1786,14 +1840,16 @@ class cmsTemplate {
 
         if (!$request) { $request = $this->controller->request; }
 
-        $tpl_file = $this->getTemplateFileName('controllers/'.$controller_name.'/'.$tpl_file);
+        $tpl_file_path = $this->getTemplateFileName('controllers/'.$controller_name.'/'.$tpl_file, true);
+        if ($tpl_file_path === false) {
+            $tpl_file_path = $this->getControllerTemplateFileName($controller_name, $tpl_file);
+        }
 
         $hook_name = 'process_render_'.$controller_name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
-        list($tpl_file, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file, $data, $request]);
+        list($tpl_file_path, $data, $request) = cmsEventsManager::hook($hook_name, [$tpl_file_path, $data, $request]);
 
-        extract($data); include($tpl_file);
-
+        extract($data); include($tpl_file_path);
     }
 
     /**
