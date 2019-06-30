@@ -28,6 +28,7 @@ class actionAdminUsersAdd extends cmsAction {
                 $result = $users_model->addUser($user);
 
                 if ($result['success']){
+                    cmsEventsManager::hook('user_registered', $user);
                     cmsUser::addSessionMessage(sprintf(LANG_CP_USER_CREATED, $user['nickname']), 'success');
                     $this->redirectToAction('users');
                 } else {
