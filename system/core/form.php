@@ -680,9 +680,11 @@ class cmsForm {
                         unset($rule[0]);
 
                         // вызываем валидатор и объединяем результат с предыдущими
-                        // методы валидации могут быть как в самом поле
-                        // так и в контроллерах, приоритет за полем
-                        if(method_exists($field, $validate_function)){
+                        // методы валидации могут быть определены (в порядке приоритета): 
+                        // в классе формы, в классе поля, в контроллерах
+                        if (method_exists($this, $validate_function)) {
+                            $result = call_user_func_array([$this, $validate_function], $rule);
+                        } elseif (method_exists($field, $validate_function)){
                             $result = call_user_func_array(array($field, $validate_function), $rule);
                         } else {
                             $result = call_user_func_array(array($controller, $validate_function), $rule);
