@@ -34,6 +34,10 @@ class cmsUser {
         return self::getInstance()->$key;
     }
 
+    public static function getId() {
+        return self::getInstance()->id;
+    }
+
     public static function getIp(){
 
         if(self::$_ip === null){
