@@ -195,6 +195,42 @@ class cmsForm {
 
     }
 
+    /**
+     * Возвращает поле с указанным именем, или null если такого поля нет в форме
+     * @param string $name Имя поля
+     * @param string $fieldset_id ID набора полей (если не указано,
+     *                            производится поиск по всем наборам в форме)
+     * @return cmsFormField
+     */
+    public function getField($name, $fieldset_id = null) {
+        if (isset($fieldset_id)) {
+            if (isset($this->structure[$fieldset_id])) {
+                foreach ($this->structure[$fieldset_id]['childs'] as $field) {
+                    if ($field->getName() == $name) return $field;
+                }
+            }
+        } else {
+            foreach ($this->structure as $fieldset) {
+                foreach ($fieldset['childs'] as $field) {
+                    if ($field->getName() == $name) return $field;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Присутствует ли поле с указанным именем в форме
+     * @param string $name Имя поля
+     * @param string $fieldset_id ID набора полей (если не указано,
+     *                            производится поиск по всем наборам в форме)
+     * @return bool
+     */
+    public function hasField($name, $fieldset_id = null) {
+        return $this->getField($name, $fieldset_id) !== null;
+    }
+
+
 //============================================================================//
 //============================================================================//
 
@@ -413,32 +449,18 @@ class cmsForm {
      * @param mixed $value Новое значение
      */
     public function setFieldAttribute($fieldset_id, $field_name, $attr_name, $value){
-        foreach( $this->structure[ $fieldset_id ]['childs'] as $field) {
-            if ($field->getName() == $field_name){
-                $field->setOption($attr_name, $value);
-                break;
-            }
-        }
+        $field = $this->getField($field_name, $fieldset_id);
+        if ($field) $field->setOption($attr_name, $value);
     }
 
     public function setFieldAttributeByName($field_name, $attr_name, $value){
-        foreach($this->structure as $fieldset){
-            foreach( $fieldset['childs'] as $field) {
-                if ($field->getName() == $field_name){
-                    $field->setOption($attr_name, $value);
-                    break;
-                }
-            }
-        }
+        $field = $this->getField($field_name);
+        if ($field) $field->setOption($attr_name, $value);
     }
 
     public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
-        foreach( $this->structure[ $fieldset_id ]['childs'] as $field) {
-            if ($field->getName() == $field_name){
-                $field->{$attr_name} = $value;
-                break;
-            }
-        }
+        $field = $this->getField($field_name, $fieldset_id);
+        if ($field) $field->{$attr_name} = $value;
     }
 //============================================================================//
 //============================================================================//
