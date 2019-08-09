@@ -79,7 +79,7 @@ icms.menu = (function ($) {
                         value   : el.attr('href'),
                         text    : el.text()
                     };
-                    if(window.location.pathname.indexOf(el.attr('href')) === 0){
+                    if(el.parent('li').hasClass('active')){
                         attr.selected = true;
                     }
                     $("<option>", attr).appendTo(dropdown);
