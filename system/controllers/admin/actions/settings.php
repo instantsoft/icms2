@@ -140,7 +140,7 @@ class actionAdminSettings extends cmsAction {
 
         $tpls = cmsCore::getTemplates();
         foreach ($tpls as $tpl) {
-            if(file_exists($this->cms_config->root_path.'templates/'.$tpl.'/options.form.php')){
+            if(file_exists($this->cms_config->root_path.cmsTemplate::TEMPLATE_BASE_PATH.$tpl.'/options.form.php')){
                 $templates_has_options[] = $tpl;
             }
         }

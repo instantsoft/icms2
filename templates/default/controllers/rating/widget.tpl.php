@@ -1,4 +1,4 @@
-<?php $is_first_widget = $this->addJS('templates/default/js/rating.js'); ?>
+<?php $is_first_widget = $this->addTplJSName('rating'); ?>
 
 <div class="rating_widget <?php echo $target_controller.'_'.$target_subject; ?>_rating" id="rating-<?php echo $target_subject; ?>-<?php echo $target_id; ?>"
     <?php if ($is_enabled || $options['is_show']){ ?>
@@ -55,4 +55,4 @@
             url: '<?php echo $this->href_to('vote'); ?>'
         });
     </script>
-<?php }?>
+<?php }

@@ -1,7 +1,10 @@
 <?php
-$this->addCSS($this->getStylesFileName('photos'));
-$this->addJS($this->getJavascriptFileName('photos'));
-$this->addJS($this->getJavascriptFileName('jquery-flex-images'));
+
+    $this->addTplJSName([
+        'photos',
+        'jquery-flex-images'
+    ]);
+    $this->addTplCSSName('photos');
 
 $photo_wrap_id = 'widget-photos-'.$widget->id;
 

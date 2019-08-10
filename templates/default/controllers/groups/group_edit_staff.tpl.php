@@ -1,8 +1,10 @@
 <?php
 
-    $this->addJS($this->getJavascriptFileName('groups'));
-    $this->addJS($this->getJavascriptFileName('jquery-ui'));
-    $this->addCSS($this->getTemplateStylesFileName('jquery-ui'));
+    $this->addTplJSName([
+        'groups',
+        'jquery-ui'
+        ]);
+    $this->addTplCSSName('jquery-ui');
 
 ?>
 

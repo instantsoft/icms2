@@ -1,8 +1,13 @@
 <?php
-$this->addCSS($this->getStylesFileName('photos'));
-$this->addJS($this->getJavascriptFileName('photos'));
-$this->addJS($this->getJavascriptFileName('jquery-owl.carousel'));
-$this->addCSS('templates/default/css/jquery-owl.carousel.css');
+
+    $this->addTplJSName([
+        'photos',
+        'jquery-owl.carousel'
+        ]);
+    $this->addTplCSSName([
+        'photos',
+        'jquery-owl.carousel'
+        ]);
 
 $photo_wrap_id = 'widget-photos-'.$widget->id;
 

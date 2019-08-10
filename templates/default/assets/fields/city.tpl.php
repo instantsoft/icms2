@@ -1,12 +1,12 @@
-<?php $this->addJS('templates/default/js/geo.js'); ?>
+<?php $this->addTplJSNameFromContext('geo'); ?>
 
 <?php if ($field->title) { ?><label><?php echo $field->title; ?></label><?php } ?>
 
 <?php if(!is_array($value)){ ?>
 
     <?php
-    $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
-    $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
+    $this->addTplJSNameFromContext('jquery-chosen');
+    $this->addTplCSSNameFromContext('jquery-chosen');
     ?>
 
     <div class="location_list location_group_<?php echo $field->data['location_group']; ?>">
@@ -34,4 +34,4 @@
 
     </div>
 
-<?php } ?>
+<?php }

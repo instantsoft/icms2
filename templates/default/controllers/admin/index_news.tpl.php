@@ -1,4 +1,4 @@
-<?php $this->addJS('templates/default/js/jquery.scrollbar.js'); ?>
+<?php $this->addTplJSName('jquery.scrollbar'); ?>
 <ul class="news_targets_tabs">
     <li class="active_news" data-target="icms"><?php echo LANG_CP_DASHBOARD_NEWS_O; ?></li>
     <li data-target="icms_blogs"><?php echo LANG_CP_DASHBOARD_NEWS_A; ?></li>

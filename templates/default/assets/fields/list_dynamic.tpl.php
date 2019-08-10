@@ -1,5 +1,5 @@
 <?php
-    $this->addJSFromContext($this->getJavascriptFileName('fields/list_dynamic'));
+    $this->addTplJSNameFromContext('fields/list_dynamic');
  ?>
     <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 <div id="list_wrap_<?php echo $field->id; ?>" class="dynamic_list_wrap">

@@ -99,7 +99,7 @@ class cmsWysiwygRedactor {
 
         $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
         $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
-        $template->addJSFromContext('templates/default/js/files.js');
+        $template->addTplJSNameFromContext('files');
 
         if(!empty($this->options['plugins'])){
             foreach($this->options['plugins'] as $plugin){

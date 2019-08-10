@@ -1,4 +1,4 @@
-<?php $this->addJS($this->getJavascriptFileName('groups')); ?>
+<?php $this->addTplJSName('groups'); ?>
 <h1><?php echo LANG_GROUPS_REQUESTS ?></h1>
 
 <?php $this->renderChild('group_edit_header', array('group' => $group)); ?>

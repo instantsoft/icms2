@@ -245,7 +245,7 @@ class cmsWysiwygTinymce {
         $template = cmsTemplate::getInstance();
 
         $template->addJSFromContext('wysiwyg/tinymce/files/tinymce.min.js');
-        $template->addJSFromContext('templates/default/js/files.js');
+        $template->addTplJSNameFromContext('files');
 
         ob_start(); ?>
 

@@ -1,6 +1,6 @@
 <?php
 
-    $this->addJS('templates/default/js/users.js');
+    $this->addTplJSName('users');
 
     $this->setPageTitle(LANG_USERS_EDIT_PROFILE);
 
