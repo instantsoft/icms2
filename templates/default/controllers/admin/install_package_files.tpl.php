@@ -1,8 +1,10 @@
 <?php
 
-    $this->addJSFromContext('templates/default/js/jquery-cookie.js');
-    $this->addJSFromContext('templates/default/js/datatree.js');
-    $this->addCSSFromContext('templates/default/css/datatree.css');
+    $this->addTplJSNameFromContext([
+        'jquery-cookie',
+        'datatree'
+        ]);
+    $this->addTplCSSNameFromContext('datatree');
 
     if(empty($hide_title)){
 

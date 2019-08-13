@@ -181,7 +181,7 @@
     define('LANG_CP_LIST_STYLE_NAMES',          'Названия для стилей списка');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Стили для других списков');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Выберите список');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/templates/%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Обычный');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Журнальный');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Плитка');

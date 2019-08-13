@@ -3,12 +3,21 @@
 <html>
 <head>
 	<title><?php echo LANG_ERROR; ?></title>
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-gui.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-errors.css">
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery-modal.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/core.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/modal.js"></script>
+    <?php $this->addMainTplCSSName([
+        'theme-modal',
+        'theme-gui',
+        'theme-errors'
+        ]); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
+    <?php $this->addMainTplJSName([
+        'jquery-modal',
+        'core',
+        'modal'
+        ]); ?>
+    <?php
+    $this->printCssTags();
+    $this->printJavascriptTags();
+    ?>
 </head>
 <body id="error_body">
     <div id="site_error_wrap">

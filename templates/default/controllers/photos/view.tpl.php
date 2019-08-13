@@ -1,9 +1,11 @@
 <?php
 
-    $this->addJS($this->getJavascriptFileName('photos'));
-    $this->addJS($this->getJavascriptFileName('jquery-owl.carousel'));
-    $this->addJS($this->getJavascriptFileName('screenfull'));
-    $this->addCSS('templates/default/css/jquery-owl.carousel.css');
+    $this->addTplJSName([
+        'photos',
+        'jquery-owl.carousel',
+        'screenfull'
+        ]);
+    $this->addTplCSSName('jquery-owl.carousel');
 
     $this->setPageTitle($photo['title']);
     $this->setPageDescription($photo['content'] ? string_get_meta_description($photo['content']) : ($photo['title'].' — '.$album['title']));

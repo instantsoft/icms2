@@ -19,6 +19,7 @@ class cmsCore {
     private static $language_href_prefix = '';
     private static $core_version = null;
     private static $controllers_instance = array();
+    private static $templates = null;
 
     public $controller = '';
     private $defined_controllers = array();
@@ -1116,7 +1117,26 @@ class cmsCore {
      */
     public static function getTemplates(){
 
-        return self::getDirsList('templates');
+        if(self::$templates !== null){
+            return self::$templates;
+        }
+
+        if(cmsTemplate::TEMPLATE_BASE_PATH){
+            return self::$templates = self::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH);
+        }
+
+        $root_path = cmsConfig::get('root_path');
+        $all_dirs = self::getDirsList('');
+        $result = [];
+
+        foreach($all_dirs as $dir){
+            // В папке шаблона в обязательном порядке должны быть два файла
+            if(file_exists($root_path.$dir.'/main.tpl.php') && file_exists($root_path.$dir.'/scheme.html')){
+                $result[] = $dir;
+            }
+        }
+
+        return self::$templates = $result;
 
     }
 

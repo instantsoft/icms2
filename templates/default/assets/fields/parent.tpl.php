@@ -1,5 +1,5 @@
 <?php
-    $this->addJS('templates/default/js/content-bind.js');
+    $this->addTplJSNameFromContext('content-bind');
     $ids = array();
 ?>
 

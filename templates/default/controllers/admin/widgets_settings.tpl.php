@@ -1,8 +1,5 @@
 <?php
-    $options_js_file = $this->getJavascriptFileName('widgets_options/'.$widget['controller'].'_'.$widget['name']);
-    if($options_js_file){
-        $this->addJSFromContext($options_js_file);
-    }
+    $this->addTplJSNameFromContext('widgets_options/'.$widget['controller'].'_'.$widget['name']);
 ?>
 <div class="modal_form">
 <?php

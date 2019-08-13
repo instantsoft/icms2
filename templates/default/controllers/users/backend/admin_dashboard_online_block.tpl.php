@@ -1,4 +1,4 @@
-<?php $this->addJS('templates/default/js/jquery.scrollbar.js'); ?>
+<?php $this->addTplJSName('jquery.scrollbar'); ?>
 <div id="icms_users_wrap">
     <div class="icms_users_wrap scrollbar-macosx">
         <ul class="links adb_list">

@@ -26,10 +26,11 @@ $(function(){
 });
 </script>
 <?php $this->addBottom(ob_get_clean()); } ?>
-<?php if($field->data['autocomplete']){ ?>
-    <?php $this->addJSFromContext($this->getJavascriptFileName('jquery-ui')); ?>
-    <?php $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-ui')); ?>
-    <?php ob_start(); ?>
+<?php if($field->data['autocomplete']){
+        $this->addTplJSNameFromContext('jquery-ui');
+        $this->addTplCSSNameFromContext('jquery-ui');
+        
+        ob_start(); ?>
     <script type="text/javascript">
         initAutocomplete('<?php echo $field->id; ?>', <?php echo (!empty($field->data['autocomplete']['multiple']) ? 'true' : 'false') ?>, '<?php echo $field->data['autocomplete']['url']; ?>', <?php echo (!empty($field->data['autocomplete']['data']) ? json_encode($field->data['autocomplete']['data']) : 'false') ?>, '<?php echo $field->data['autocomplete']['multiple_separator'] ?>');
     </script>

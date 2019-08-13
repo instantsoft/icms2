@@ -1,9 +1,11 @@
 <?php
-	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
-	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
-    $this->addJSFromContext( $this->getJavascriptFileName('jquery-ui') );
-    $this->addCSSFromContext('templates/default/css/jquery-ui.css');
-    $this->addCSSFromContext( $this->getStylesFileName('images') );
+	$this->addTplJSNameFromContext([
+        'fileuploader',
+        'images-upload',
+        'jquery-ui'
+        ]);
+    $this->addTplCSSNameFromContext('jquery-ui');
+    $this->addTplCSSFromContext('controllers/images/styles');
 ?>
 
 <div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_multi">

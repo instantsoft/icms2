@@ -1,6 +1,6 @@
 <?php
-    $this->addJSFromContext('templates/default/js/colorpicker.js');
-    $this->addCSSFromContext('templates/default/css/colorpicker.css');
+    $this->addTplJSNameFromContext('colorpicker');
+    $this->addTplCSSNameFromContext('colorpicker');
 ?>
 
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>

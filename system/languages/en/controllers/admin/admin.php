@@ -185,7 +185,7 @@
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Table');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');

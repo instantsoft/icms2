@@ -36,7 +36,7 @@
         </div>
     <?php } ?>
     <?php if(!$is_ajax){ ?>
-        <?php $this->addJS( $this->getJavascriptFileName('subscriptions') ); ?>
+        <?php $this->addTplJSName('subscriptions'); ?>
         <?php $this->renderAsset('ui/pagebar', array('has_next' => $has_next, 'page' => $page, 'base_url' => $base_url)); ?>
     <?php } ?>
 <?php }

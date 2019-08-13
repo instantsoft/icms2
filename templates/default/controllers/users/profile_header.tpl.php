@@ -1,4 +1,4 @@
-<?php $this->addJS('templates/default/js/users.js'); ?>
+<?php $this->addTplJSName('users'); ?>
 <?php $user = cmsUser::getInstance(); ?>
 <div id="user_profile_title">
 

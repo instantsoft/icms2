@@ -1,8 +1,11 @@
 <?php
-    $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/datatree.js');
-    $this->addCSS('templates/default/css/datatree.css');
-    $this->addJS('templates/default/js/admin-content.js');
+
+    $this->addTplJSName([
+        'jquery-cookie',
+        'datatree',
+        'admin-content'
+        ]);
+    $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_USERS);
 

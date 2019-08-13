@@ -19,16 +19,16 @@
     <?php
     } elseif($field->data['is_chosen_multiple'] && !$field->native_tag) {
 
-        $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
-        $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
+        $this->addTplJSNameFromContext('jquery-chosen');
+        $this->addTplCSSNameFromContext('jquery-chosen');
 
         echo html_select($field->element_name, $field->data['items'], $value, ($field->data['dom_attr'] + array('multiple' => true)));
 
     } else {
 
         if (!$field->native_tag) {
-            $this->addJSFromContext($this->getJavascriptFileName('jquery-chosen'));
-            $this->addCSSFromContext($this->getTemplateStylesFileName('jquery-chosen'));
+            $this->addTplJSNameFromContext('jquery-chosen');
+            $this->addTplCSSNameFromContext('jquery-chosen');
         }
 
         echo html_select($field->element_name, $field->data['items'], $value, $field->data['dom_attr']);

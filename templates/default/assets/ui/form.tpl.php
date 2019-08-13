@@ -1,4 +1,4 @@
-<?php $this->addJS($this->getJavascriptFileName('jquery-cookie')); ?>
+<?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
