@@ -1,3 +1,4 @@
+<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>

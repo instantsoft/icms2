@@ -190,7 +190,7 @@ class content extends cmsFrontend {
         return $this->filter_titles;
     }
 
-    public function renderItemsList($ctype, $page_url, $hide_filter = false, $category_id = 0, $filters = [], $dataset = false, $ext_hidden_params = []){
+    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
 
         $props = $props_fields = false;
 

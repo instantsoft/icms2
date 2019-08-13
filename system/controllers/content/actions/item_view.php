@@ -406,10 +406,8 @@ class actionContentItemView extends cmsAction {
 
                         $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
-                        if(!empty($item['category']['path'])){
-                            foreach($item['category']['path'] as $c){
-                                $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
-                            }
+                        foreach($item['category']['path'] as $c){
+                            $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
                         }
 
                     }

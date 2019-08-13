@@ -295,6 +295,12 @@ class actionContentCategoryView extends cmsAction {
                 return [$ctype, ['id' => false, 'description' => (!empty($ctype['description']) ? $ctype['description'] : '')], $slug];
             }
 
+            // если типов контента по умолчанию нет, сразу отдаём 404
+            // чтобы не перебирать дальше
+            if(!$this->cms_config->ctype_default && !$ctype['is_cats']){
+                return cmsCore::error404();
+            }
+
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
 
             list($slug,

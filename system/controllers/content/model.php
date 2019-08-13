@@ -194,7 +194,6 @@ class modelContent extends cmsModel {
         $this->db->dropTable("{$table_name}");
         $this->db->dropTable("{$table_name}_fields");
         $this->db->dropTable("{$table_name}_cats");
-        $this->db->dropTable("{$table_name}_filters");
         $this->db->dropTable("{$table_name}_cats_bind");
         $this->db->dropTable("{$table_name}_props");
         $this->db->dropTable("{$table_name}_props_bind");
@@ -1782,13 +1781,6 @@ class modelContent extends cmsModel {
 
 	}
 
-    public function isFiltersTableExists($ctype_name) {
-
-		$table_name = $this->getContentTypeTableName($ctype_name).'_filters';
-
-        return $this->db->isTableExists($table_name);
-
-    }
 //============================================================================//
 
     public function filterPropValue($ctype_name, $prop, $value){
