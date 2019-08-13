@@ -124,21 +124,22 @@ function files_tree_to_array($path){
  */
 function files_normalize_path($path) {
 
-  $parts = explode('/', $path);
-  $safe = array();
-  foreach ($parts as $idx => $part) {
-    if (empty($part) || ('.' == $part)) {
-      continue;
-    } elseif ('..' == $part) {
-      array_pop($safe);
-      continue;
-    } else {
-      $safe[] = $part;
-    }
-  }
+    $parts = explode('/', $path);
+    $safe  = array();
 
-  $path = implode('/', $safe);
-  return $path;
+    foreach ($parts as $idx => $part) {
+        if (empty($part) || ('.' == $part)) {
+            continue;
+        } elseif ('..' == $part) {
+            array_pop($safe);
+            continue;
+        } else {
+            $safe[] = $part;
+        }
+    }
+
+    $path = implode('/', $safe);
+    return $path;
 
 }
 
