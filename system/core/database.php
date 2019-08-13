@@ -463,9 +463,10 @@ class cmsDatabase {
 	 * @param array $data Массив[Название поля] = значение поля
 	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
+     * @param boolean $ignore Пропускать записи, если при вставке возникают ошибки (INSERT IGNORE)
 	 * @return boolean|integer ID вставленной записи
 	 */
-	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false){
+	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false, $ignore = false){
 
         if(empty($data) || !is_array($data)) { return false; }
 
@@ -487,7 +488,7 @@ class cmsDatabase {
         $fields = implode(', ', $fields);
         $values = implode(', ', $values);
 
-        $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
+        $sql = "INSERT ".($ignore ? 'IGNORE ': '')."INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
         if ($this->query($sql)) { return $this->lastId(); }
 
