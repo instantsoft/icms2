@@ -273,6 +273,8 @@ class modelWidgets extends cmsModel {
 
             if ($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3) {
 
+                $device_types = [];
+
                 foreach ($bind['device_types'] as $dt) {
                     $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');
                 }
