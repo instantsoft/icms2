@@ -2380,6 +2380,8 @@ class cmsTemplate {
      */
     public function renderPage(){
 
+        $core = cmsCore::getInstance();
+
         $config = $this->site_config;
 
         $layout = $this->getLayout();
@@ -2421,7 +2423,7 @@ class cmsTemplate {
 
         $tpl_file = $this->getTemplateFileName($tpl_path . '/' . $widget->getTemplate());
 
-        $hook_name = 'render_wdget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
+        $hook_name = 'render_widget_'.($widget->controller ? $widget->controller.'_' : '').$widget->name.'_'.basename(str_replace('-', '_', $tpl_file), '.tpl.php');
 
         list($widget, $tpl_file, $data) = cmsEventsManager::hook($hook_name, [$widget, $tpl_file, $data]);
 
