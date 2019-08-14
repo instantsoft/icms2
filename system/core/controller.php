@@ -505,9 +505,9 @@ class cmsController {
         // кол-во переданных параметров
         $current_params = count($params);
         // передано больше чем нужно параметров
-        if ($rf->getNumberOfParameters() < $current_params) return false;
+        if ($rf->getNumberOfParameters() < $current_params) { return false; }
         // передано меньше чем нужно параметров
-        if ($rf->getNumberOfRequiredParameters() > $current_params) return false;
+        if ($rf->getNumberOfRequiredParameters() > $current_params) { return false; }
         return true;
     }
 
