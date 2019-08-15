@@ -161,6 +161,17 @@ class auth extends cmsFrontend {
 
         }
 
+        // Капча
+        if ($this->options['reg_captcha']){
+
+            $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
+
+            $form->addField($fieldset_id,
+                new fieldCaptcha('capcha')
+            );
+
+        }
+
         return array($form, $fieldsets);
 
     }

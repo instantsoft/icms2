@@ -559,6 +559,7 @@ class cmsForm {
                     }
 
                     $field->setItem($item);
+                    $field->request = $request;
 
                     $value = $field->store($value, $is_submitted, $old_value);
                     if ($value === false) { continue; }
@@ -680,7 +681,7 @@ class cmsForm {
                         unset($rule[0]);
 
                         // вызываем валидатор и объединяем результат с предыдущими
-                        // методы валидации могут быть определены (в порядке приоритета): 
+                        // методы валидации могут быть определены (в порядке приоритета):
                         // в классе формы, в классе поля, в контроллерах
                         if (method_exists($this, $validate_function)) {
                             $result = call_user_func_array([$this, $validate_function], $rule);

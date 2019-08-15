@@ -7,7 +7,7 @@
 
 <form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $attributes['method']; ?>"
-      <?php if (!empty($attributes['is_ajax'])){ ?>
+      <?php if ($this->controller->request->isAjax()){ ?>
         class="modal"
       <?php } ?>
       enctype="multipart/form-data"

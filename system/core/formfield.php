@@ -68,6 +68,12 @@ class cmsFormField {
      */
     public $item = null;
     /**
+     * Контекст запроса
+     * Устанавливается в методе parse объекта класса cmsForm
+     * @var object
+     */
+    public $request = null;
+    /**
      * ID поля, если запись о нём есть в таблице
      * @var integer
      */

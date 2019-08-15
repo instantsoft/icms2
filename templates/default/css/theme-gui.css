@@ -2221,11 +2221,7 @@ span.get_replies {
 
 /* Login Form and Window ================================================= */
 
-.login_form h3, .right_cell h3 { margin-top: 0; }
-
 .login_layout { margin:0; width:100%; border-collapse: collapse; }
-
-.login_layout td { padding:0; }
 
 .login_layout .center_cell {
     width:60px;
@@ -2241,18 +2237,9 @@ span.get_replies {
     color:#A3CAE0;
     margin-top:100px;
 }
-
-.login_form .label{ color:#68809B; font-size:16px; }
-.login_form .input{ width:100%; }
-.login_form .input:focus{ box-shadow: 0 0 4px #BDC3C7;  }
-.login_form .options { margin-top: 10px; margin-bottom: 30px; font-size:13px; color:#68809B; line-height: 14px; vertical-align:middle;}
-
-.login_form .options input,
-.login_form .options label{
-    vertical-align:middle;
+.auth_remember::after {
+    content: ' | ';
 }
-.login_form .submit { margin: 0; }
-.login_form .reg_link { font-size:13px; padding-left: 15px; color:#34495e; }
 
 .content_multi_cats_data {
 	display:none;

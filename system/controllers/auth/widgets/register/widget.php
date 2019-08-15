@@ -15,13 +15,8 @@ class widgetAuthRegister extends cmsWidget {
 
         list($form, $fieldsets) = $auth->getRegistrationForm();
 
-        if ($auth->options['reg_captcha']){
-            $captcha_html = cmsEventsManager::hook('captcha_html');
-        }
-
         return array(
-            'form'         => $form,
-            'captcha_html' => isset($captcha_html) ? $captcha_html : false
+            'form' => $form,
         );
 
     }
