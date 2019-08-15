@@ -1,5 +1,5 @@
 <?php
-$this->addTplCSSName('groups');
+$this->addTplCSSFromContext('controllers/groups/styles');
 ?>
 <div class="groups-list striped-list list-64">
     <?php foreach($groups as $group){ ?>

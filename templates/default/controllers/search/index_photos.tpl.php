@@ -4,7 +4,7 @@
         'photos',
         'jquery-flex-images'
     ]);
-    $this->addTplCSSName('photos');
+    $this->addTplCSS('controllers/photos/styles');
 
     $this->setPageTitle(LANG_SEARCH_TITLE);
 

@@ -1,5 +1,5 @@
 <?php
-$this->addTplCSSName('photos');
+$this->addTplCSSFromContext('controllers/photos/styles');
 
 if( $ctype['options']['list_show_filter'] ) {
     $this->renderAsset('ui/filter-panel', array(
