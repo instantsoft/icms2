@@ -339,10 +339,16 @@ class content extends cmsFrontend {
                 $filter_link = $page_url['filter_link'];
             }
 
+            if(!empty($ctype['labels']['many'])){
+                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one'], $ctype['labels']['two'], $ctype['labels']['many'], 0);
+            } else {
+                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
+            }
+
             return $this->cms_template->renderJSON([
-                'count' => $total,
+                'count'       => $total,
                 'filter_link' => $filter_link,
-                'hint' => LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0),
+                'hint'        => $hint
             ]);
 
         }
