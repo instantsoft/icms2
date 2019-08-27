@@ -490,8 +490,9 @@
 .filter-panel .input_checkbox_list { overflow:hidden; }
 .filter-panel .input_checkbox_list label { float:left; margin-right: 5px; color:#34495e; font-size:12px; }
 
-.filter-panel .buttons { overflow:hidden; clear: both; margin-top: 5px; }
-.filter-panel .buttons .button-submit { float:left; padding:8px; }
+.filter-panel .buttons { overflow:hidden; clear: both; margin-top: 5px; position: relative; }
+.filter-panel .spinner { display: none;}
+.filter-panel .buttons .button-submit { float:left; padding:8px; transition: all ease-in-out .2s; }
 .filter-panel .buttons .link { float:left; height:32px; line-height: 32px; margin-left: 10px; }
 .filter-panel .buttons .link a { color:#34495e; }
 .filter-panel .buttons .link a:hover { color:#d35400; }

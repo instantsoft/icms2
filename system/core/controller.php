@@ -1323,4 +1323,67 @@ class cmsController {
         return true;
     }
 
+    public function validate_date($value){
+
+        if (empty($value)) { return true; }
+
+        if (!is_array($value)){
+
+            $time = strtotime($value);
+
+            if ($time !== false && $time > 0){
+                return true;
+            }
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
+    }
+
+    public function validate_date_range($value){
+
+        if (empty($value)) { return true; }
+
+        if (!empty($value['date']) && !is_array($value['date'])){
+
+            if(isset($value['hours']) && isset($value['mins']) &&
+                    !is_array($value['hours']) && !is_array($value['mins'])){
+                return $this->validate_date(sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']));
+            }
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+
+                if(is_array($value['from'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['from']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            if (!empty($value['to'])){
+
+                if(is_array($value['to'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['to']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            return true;
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
+    }
+
 }

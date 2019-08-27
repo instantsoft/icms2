@@ -101,6 +101,14 @@ class actionContentCategoryView extends cmsAction {
 
         }
 
+        if($this->list_filter){
+            $page_url = [
+                'base'        => $page_url . '/' . $this->list_filter['slug'],
+                'filter_link' => $page_url . '/' . $this->list_filter['slug'],
+                'cancel'      => $page_url
+            ];
+        }
+
         // если не на главной
         if(!$is_frontpage){
             // если название переопределено, а мы по оригинальному адресу,
@@ -170,7 +178,7 @@ class actionContentCategoryView extends cmsAction {
                     $list_styles[] = array(
                         'title' => (isset($style_titles[$list_style]) ? $style_titles[$list_style] : ''),
                         'style' => $list_style,
-                        'url'   => $page_url.'?style='.$list_style,
+                        'url'   => (!empty($page_url['base']) ? $page_url['base'] : $page_url).'?style='.$list_style,
                         'class' => $list_style.($current_style === $list_style ? ' active' : ''),
                     );
                 }
@@ -231,6 +239,21 @@ class actionContentCategoryView extends cmsAction {
                     $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));
                 }
             }
+
+        }
+
+        // Мы в фильтре
+        if($this->list_filter){
+
+            if($subcats){
+                foreach ($subcats as $key => $sub) {
+                    $subcats[$key]['slug'] .= '/' . $this->list_filter['slug'];
+                }
+            }
+
+            $base_ds_url .= '/'.$this->list_filter['slug'];
+
+            $this->cms_template->addBreadcrumb($this->list_filter['title'], (!empty($page_url['base']) ? $page_url['base'] : $page_url));
 
         }
 
@@ -296,6 +319,78 @@ class actionContentCategoryView extends cmsAction {
             }
 
             $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
+
+            // Урлы фильтров
+            // Если категорию не нашли
+            if(!$category){
+
+                $filters_segments = [];
+
+                $segments = explode('/', $slug);
+
+                // отсекаем справа по сегменту и ищем категорию
+                while (count($segments) >= 1) {
+
+                    $filters_segments[] = array_pop($segments);
+
+                    if(!$segments){
+
+                        $category = array(
+                            'id' => false,
+                            'description' => (!empty($ctype['description']) ? $ctype['description'] : '')
+                        );
+
+                        $slug = 'index';
+
+                        break;
+
+                    }
+
+                    $slug = implode('/', $segments);
+
+                    $category = $this->model->getCategoryBySLUG($ctype['name'], $slug);
+
+                    // если нашли, то это отсеченное - slug фильтра,
+                    // оставшееся - slug категории
+                    if($category){
+                        break;
+                    }
+
+                }
+                // Если нашли, ищем фильтр
+                if($category){
+
+                    $filters_segments = array_reverse($filters_segments);
+
+                    $filter = $this->model->getContentFilter($ctype, implode('/', $filters_segments));
+
+                    if($filter){
+
+                        if(!empty($filter['filters'])){
+                            foreach ($filter['filters'] as $fname => $fvalue) {
+                                if($fvalue && !$this->request->has($fname)){
+                                    $this->request->set($fname, $fvalue);
+                                }
+                            }
+                        }
+
+                        $category['description'] .= $filter['description'];
+
+                        $this->list_filter = $filter;
+
+                    } else {
+
+                        // Не нашли, значит и категорию не нашли
+                        // чтобы в хуке ниже при необходимости были исходные условия
+                        $category = false;
+
+                        $slug = $this->request->get('slug', '');
+
+                    }
+
+                }
+
+            }
 
             list($slug,
                 $ctype,

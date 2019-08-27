@@ -104,9 +104,13 @@ class fieldNumber extends cmsFormField {
 
     public function getRules() {
 
-        $this->rules[] = array('number');
+        if($this->context == 'filter' && $this->getOption('filter_range')){
+            $this->rules[] = array('number_range');
+        } else {
+            $this->rules[] = array('number');
+        }
 
-        return $this->rules;
+        return parent::getRules();
 
     }
 
@@ -228,7 +232,11 @@ class fieldNumber extends cmsFormField {
 
     }
 
-    public function getDefaultVarType($is_filter=false) {
+    public function getDefaultVarType($is_filter = false) {
+
+        if($this->context == 'filter'){
+            $is_filter = true;
+        }
 
         if ($is_filter && $this->getOption('filter_range')){
             $this->var_type = 'array';
@@ -240,16 +248,22 @@ class fieldNumber extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $units = $this->getProperty('units')?:$this->getOption('units');
-
         if ($this->getOption('filter_range')){
 
             $from = !empty($value['from']) ? $value['from'] : false;
             $to = !empty($value['to']) ? $value['to'] : false;
 
-            return LANG_FROM . ' ' . html_input('text', $this->element_name.'[from]', $from, array('class'=>'input-small')) . ' ' .
-                    LANG_TO . ' ' . html_input('text', $this->element_name.'[to]', $to, array('class'=>'input-small')) .
-                    ($units ? ' ' . $units : '');
+            if(!$this->show_filter_input_title){
+                $this->title = false;
+            }
+
+            $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
+
+            return cmsTemplate::getInstance()->renderFormField($this->class.'_range', array(
+                'field' => $this,
+                'from'  => $from,
+                'to'    => $to
+            ));
 
         } elseif($value && !is_array($value)) {
 
@@ -286,11 +300,28 @@ class fieldNumber extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null){
 
-        $value = str_replace(',', '.', trim($value));
+        if (!is_array($value)){
 
-        if(!$this->getOption('save_zero') && !$value){ return null; }
+            $value = str_replace(',', '.', trim($value));
 
-        return $this->getOption('is_abs') ? abs($value) : $value;
+            if(!$this->getOption('save_zero') && !$value){ return null; }
+
+            return $this->getOption('is_abs') ? abs($value) : $value;
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+                $value['from'] = $this->store($value['from'], $is_submitted, $old_value);
+            }
+            if (!empty($value['to'])){
+                $value['to'] = $this->store($value['to'], $is_submitted, $old_value);
+            }
+
+            return $value;
+
+        }
+
+        return null;
 
     }
 
@@ -313,6 +344,42 @@ class fieldNumber extends cmsFormField {
         }
 
         return $value;
+
+    }
+
+    public function validate_number_range($value){
+
+        if (empty($value)) { return true; }
+
+        if (!in_array(gettype($value), ['array'])){ return ERR_VALIDATE_NUMBER; }
+
+        if(empty($value['from']) && empty($value['to'])) {
+            return true;
+        }
+
+        $rgxp = "/^([\-]?)([0-9\.,]+)$/i";
+
+        if (!empty($value['from'])){
+
+            if(is_array($value['from'])){
+                return ERR_VALIDATE_NUMBER;
+            }
+
+            if (!preg_match($rgxp, $value['from'])){ return ERR_VALIDATE_NUMBER; }
+
+        }
+
+        if (!empty($value['to']) && !is_array($value['to'])){
+
+            if(is_array($value['to'])){
+                return ERR_VALIDATE_NUMBER;
+            }
+
+            if (!preg_match($rgxp, $value['to'])){ return ERR_VALIDATE_NUMBER; }
+
+        }
+
+        return true;
 
     }
 

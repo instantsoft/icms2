@@ -190,28 +190,92 @@ icms.forms = (function ($) {
         this.csrf_token = csrf_token;
     };
 
+    this.getFilterFormParams = function(form){
+
+        var form_params = _this.toJSON(form);
+
+        var o = {};
+        for(var name in form_params){if(form_params.hasOwnProperty(name)){
+            if(name === 'page'){ continue; }
+            if(form_params[name] && form_params[name] !== '0'){
+                o[name] = form_params[name];
+            }
+        }}
+
+        return o;
+
+    };
+
     this.initFilterForm = function(selector){
 
-        $($(selector).find('.buttons input[type = submit]')).on('click', function (){
+        var change = function (){
 
             var form = $(this.closest('form'));
+
+            var sbutton = $(form).find('.buttons input[type = submit]');
+            var spinner = $(form).find('.spinner.filter_loader');
+
+            $(sbutton).prop('disabled', true);
+            $(spinner).show();
+
+            var o = _this.getFilterFormParams(form);
+
+            if(Object.keys(o).length > 0){
+                var submit_uri = $(form).attr('action');
+            } else {
+                var submit_uri = $(form).find('.cancel_filter_link').attr('href');
+            }
+
+            o.show_count = 1;
+
+            var query_string = $.param(o);
+
+            $.get(submit_uri+'?'+query_string, function(result){
+                if(result.filter_link){
+                    $(form).data('filter_link', result.filter_link);
+                } else {
+                    $(form).removeData('filter_link');
+                }
+                $(sbutton).val(result.hint).prop('disabled', false);
+                $(spinner).fadeOut('slow');
+            }, 'json');
+
+        };
+
+        var delay = function () {
+            var timer = 0;
+            return function () {
+                var context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    change.apply(context, args);
+                }, 500);
+            };
+        }
+
+        $(selector).find('select, input[type=checkbox]').on('change', change);
+        $(selector).find('input:not([type=checkbox]), textarea').on('input', delay());
+
+        $(selector).find('.buttons input[type = submit]').on('click', function (){
+
+            var form = $(this.closest('form'));
+
+            var filter_link = $(form).data('filter_link');
+
+            if(filter_link){
+                window.location.href = filter_link;
+                return false;
+            }
+
             var submit_uri = $(form).attr('action');
 
-            var form_params = _this.toJSON(form);
-
-            var o = {};
-            for(var name in form_params){if(form_params.hasOwnProperty(name)){
-                if(name === 'page'){ continue; }
-                if(form_params[name] && form_params[name] !== '0'){
-                    o[name] = form_params[name];
-                }
-            }}
+            var o = _this.getFilterFormParams(form);
 
             var query_string = $.param(o);
             if(query_string.length > 0){
                 window.location.href = submit_uri+'?'+query_string;
             } else {
-                window.location.href = submit_uri;
+                window.location.href = $(form).find('.cancel_filter_link').attr('href');
             }
 
             return false;

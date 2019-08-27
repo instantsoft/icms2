@@ -144,9 +144,11 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getUser($id=false){
+    public function getUser($id = false) {
 
-        $this->useCache('users.user.'.$id);
+        if($id){
+            $this->useCache('users.user.'.$id);
+        }
 
         $this->select('u.nickname', 'inviter_nickname');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');

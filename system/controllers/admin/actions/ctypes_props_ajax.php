@@ -2,9 +2,9 @@
 
 class actionAdminCtypesPropsAjax extends cmsAction {
 
-    public function run($ctype_name, $category_id=false){
+    public function run($ctype_name, $category_id = false) {
 
-        if (!$this->request->isAjax()) { cmsCore::error404(); }
+        if (!$this->request->isAjax()) {  cmsCore::error404(); }
 
         if (!$ctype_name) { cmsCore::error404(); }
 
@@ -16,7 +16,7 @@ class actionAdminCtypesPropsAjax extends cmsAction {
 
         $fields = $content_model->getContentPropsBinds($ctype_name, $category_id);
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $fields);
+        $this->cms_template->renderGridRowsJSON($grid, $fields);
 
         $this->halt();
 

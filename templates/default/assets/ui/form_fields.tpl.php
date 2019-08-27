@@ -92,7 +92,7 @@ $visible_depend = []; $index = 0;
 
                             <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
 
-                            <?php echo $field->getInput($value); ?>
+                            <?php echo $field->{$field->display_input}($value); ?>
 
                             <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
                                 <div class="hint"<?php

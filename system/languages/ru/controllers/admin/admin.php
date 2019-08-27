@@ -68,6 +68,7 @@
     define('LANG_CP_CTYPE_PROPS',               'Свойства');
     define('LANG_CP_CTYPE_PERMISSIONS',         'Доступ');
     define('LANG_CP_CTYPE_DATASETS',            'Наборы');
+    define('LANG_CP_CTYPE_FILTERS',             'Фильтры');
     define('LANG_CP_CTYPE_DATASET',             'Набор');
 
     define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Настройки столбцов');
@@ -273,6 +274,14 @@
     define('LANG_CP_PROP_VALUES_HINT',          'Одно значение в каждой строке');
     define('LANG_CP_PROP_CATS',                 'Привязать свойство к категориям');
     define('LANG_CP_PROP_UNITS',                'Единицы измерения');
+    define('LANG_CP_FILTER_ADD',                'Создать фильтр');
+    define('LANG_CP_FILTER_NO_TABLE',           'Фильтры выключены, <a href="%s">включите их</a>.');
+    define('LANG_CP_FILTER_TABLE_SUCCESS',      'Механизм фильтров успешно включен');
+    define('LANG_CP_FILTER_DELETE_CONFIRM',     'Удалить фильтр "{title}"?');
+    define('LANG_CP_FILTER_ERROR_SLUG',         'Есть категория с таким же URI, задайте другое');
+    define('LANG_CP_FILTER_DESC_HINT',          'Дополнит описание категории');
+    define('LANG_CP_FILTER_FIELDS',             'Фильтры полей');
+    define('LANG_CP_FILTER_PROPS',              'Фильтры свойств');
 
     define('LANG_CP_DATASET',                   'Набор');
     define('LANG_CP_DATASET_ADD',               'Создать набор');
@@ -657,6 +666,7 @@
     define('LANG_HELP_URL_CTYPES_FIELD',            'https://docs.instantcms.ru/manual/ctypes/fields/add');
     define('LANG_HELP_URL_CTYPES_PROPS',            'https://docs.instantcms.ru/manual/ctypes/props');
     define('LANG_HELP_URL_CTYPES_PROP',             'https://docs.instantcms.ru/manual/ctypes/props/add');
+    define('LANG_HELP_URL_CTYPES_FILTERS',          'https://docs.instantcms.ru/manual/ctypes/filters');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'https://docs.instantcms.ru/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'https://docs.instantcms.ru/manual/ctypes/datasets/add');
     define('LANG_HELP_URL_CTYPES_RELATIONS',        'https://docs.instantcms.ru/manual/ctypes/relations');

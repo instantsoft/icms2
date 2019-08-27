@@ -216,6 +216,11 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             ),
             array(
+                'title' => LANG_CP_CTYPE_FILTERS,
+                'url' => href_to($this->name, 'ctypes', array('filters', $id)),
+                'disabled' => ($do == 'add')
+            ),
+            array(
                 'title' => LANG_MODERATORS,
                 'url' => href_to($this->name, 'ctypes', array('moderators', $id)),
                 'disabled' => ($do == 'add')

@@ -58,10 +58,10 @@ class actionAdminUsersEdit extends cmsAction {
         }
 
         return $this->cms_template->render('user', array(
-                    'do'     => 'edit',
-                    'user'   => $user,
-                    'form'   => $form,
-                    'errors' => isset($errors) ? $errors : false
+            'do'     => 'edit',
+            'user'   => $user,
+            'form'   => $form,
+            'errors' => isset($errors) ? $errors : false
         ));
 
     }

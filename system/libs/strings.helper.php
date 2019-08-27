@@ -739,6 +739,20 @@ function array_collection_to_list($collection, $key, $value=false){
 }
 
 /**
+ * Рекурсивная версия array_filter
+ * @param array $input
+ * @return array
+ */
+function array_filter_recursive($input) {
+    foreach ($input as &$value) {
+        if (is_array($value)) {
+            $value = array_filter_recursive($value);
+        }
+    }
+    return array_filter($input);
+}
+
+/**
  * Возвращает значение ячейки массива
  * по переданной вложенности $needle
  *

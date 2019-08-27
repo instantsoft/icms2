@@ -47,7 +47,9 @@ class fieldListBitmask extends cmsFormField {
             $this->data['selected'] = array();
         }
 
-        $this->element_title = '';
+        if(!$this->show_filter_input_title){
+            $this->element_title = '';
+        }
 
         return parent::getInput($value);
 

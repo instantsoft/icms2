@@ -2,7 +2,7 @@
 
 class actionAdminCtypesProps extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id) {
 
         if (!$ctype_id) { cmsCore::error404(); }
 
@@ -17,11 +17,11 @@ class actionAdminCtypesProps extends cmsAction {
 
         $grid = $this->loadDataGrid('ctype_props');
 
-        return cmsTemplate::getInstance()->render('ctypes_props', array(
+        return $this->cms_template->render('ctypes_props', array(
             'ctype' => $ctype,
-            'cats' => $cats,
+            'cats'  => $cats,
             'props' => $props,
-            'grid' => $grid,
+            'grid'  => $grid
         ));
 
     }

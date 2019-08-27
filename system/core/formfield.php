@@ -129,6 +129,19 @@ class cmsFormField {
 
     public $context = null;
 
+    /**
+     * Метод для вывода поля в форме
+     * @var string
+     */
+    public $display_input = 'getInput';
+
+    /**
+     * Показывать заголовок поля
+     * при выводе поля для фильтра
+     *
+     * @var boolean
+     */
+    public $show_filter_input_title = false;
 
     /**
      * Формировать поле формы на нескольких языках
@@ -389,7 +402,11 @@ class cmsFormField {
      * @return string
      */
     public function getFilterInput($value){
-        $this->element_title = false;
+
+        if(!$this->show_filter_input_title){
+            $this->element_title = false;
+        }
+
         // при фильтрации все поля необязательны
         $required_key = array_search(array('required'), $this->getRules());
         if($required_key !== false){

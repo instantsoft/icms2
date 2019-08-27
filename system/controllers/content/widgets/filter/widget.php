@@ -106,9 +106,17 @@ class widgetContentFilter extends cmsWidget {
 
 		foreach($fields as $name => $field){
 
+            $field['handler']->setItem(['ctype_name' => $ctype_name, 'id' => null, 'category' => $category])->setContext('filter');
+
+            $field['handler']->id = $field['handler']->id.'_filter'.$this->id;
+
+            $fields[$name] = $field;
+
 			if (!$core->request->has($name)){ continue; }
 
-			$value = $core->request->get($name, false, $field['handler']->getDefaultVarType(true));
+			$value = $core->request->get($name, false, $field['handler']->getDefaultVarType());
+
+            $value = $field['handler']->store($value, false);
 			if (!$value) { continue; }
 
 			$filters[$name] = $value;
@@ -116,15 +124,25 @@ class widgetContentFilter extends cmsWidget {
 		}
 
 		if (!empty($props)){
-			foreach($props as $prop){
+			foreach($props as $key => $prop){
 
 				$name = 'p'.$prop['id'];
 
-				if (!$core->request->has($name)){ continue; }
-
                 $prop['handler'] = $props_fields[$prop['id']];
 
-				$value = $core->request->get($name, false, $prop['handler']->getDefaultVarType(true));
+                $prop['handler']->setItem(['ctype_name' => $ctype_name, 'id' => null, 'category' => $category])->
+                        setName("p{$prop['id']}")->
+                        setContext('filter');
+
+                $prop['handler']->id = $prop['handler']->id.'_filter'.$this->id;
+
+                $props[$key] = $prop;
+
+				if (!$core->request->has($name)){ continue; }
+
+				$value = $core->request->get($name, false, $prop['handler']->getDefaultVarType());
+
+                $value = $prop['handler']->store($value, false);
 				if (!$value) { continue; }
 
 				$filters[$name] = $value;

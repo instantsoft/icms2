@@ -200,6 +200,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     } else {
         $id = $name;
     }
+    $attributes['autocomplete'] = 'off';
     $datepicker_default = array(
         'showStatus' => true,
         'changeYear' => true,
