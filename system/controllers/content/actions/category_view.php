@@ -412,8 +412,8 @@ class actionContentCategoryView extends cmsAction {
 
             }
 
-            // дошли до сюда, а категории выключены
-            if (!$ctype['is_cats']) { return cmsCore::error404(); }
+            // дошли до сюда, а категории выключены и фильтров нет
+            if (!$ctype['is_cats'] && !$this->list_filter) { return cmsCore::error404(); }
 
             // список выключен
             if (empty($ctype['options']['list_on'])) { return cmsCore::error404(); }

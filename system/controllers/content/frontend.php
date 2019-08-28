@@ -192,7 +192,30 @@ class content extends cmsFrontend {
         return $this->filter_titles;
     }
 
+    public function getActiveFiltersQuery() {
+
+        $filter_query_params = [];
+
+        if($this->list_filter && $this->active_filters){
+
+            foreach ($this->active_filters as $fname => $fvalue) {
+                if(!isset($this->list_filter['filters'][$fname])){
+                    $filter_query_params[$fname] = $fvalue;
+                }
+            }
+
+        } else {
+            $filter_query_params = $this->active_filters;
+        }
+
+        return $filter_query_params ? http_build_query($filter_query_params) : '';
+
+    }
+
     public function renderItemsList($ctype, $page_url, $hide_filter = false, $category_id = 0, $filters = [], $dataset = false, $ext_hidden_params = []){
+
+        // Обнуляем активные фильтры для их заполнения
+        $this->active_filters = $filters;
 
         $props = $props_fields = false;
 
@@ -209,7 +232,7 @@ class content extends cmsFrontend {
 
             // для фильтров свойств, привязанных к категории
             if(!empty($this->list_filter['filters']['category_id'])){
-                $filters['category_id'] = $category_id;
+                $this->active_filters['category_id'] = $category_id;
             }
 
             // Получаем поля-свойства
@@ -233,7 +256,7 @@ class content extends cmsFrontend {
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
 
-                $filters[$name] = $value;
+                $this->active_filters[$name] = $value;
 
                 $filter_title = $field['handler']->getStringValue($value);
 
@@ -266,7 +289,7 @@ class content extends cmsFrontend {
 
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
-                    $filters[$name] = $value;
+                    $this->active_filters[$name] = $value;
 
                     $filter_title = $prop['handler']->getStringValue($value);
 
@@ -283,16 +306,10 @@ class content extends cmsFrontend {
         // полями, которых в нём нет
         if($this->list_filter){
 
-            $filter_query_params = [];
+            $filter_query = $this->getActiveFiltersQuery();
 
-            foreach ($filters as $fname => $fvalue) {
-                if(!isset($this->list_filter['filters'][$fname])){
-                    $filter_query_params[$fname] = $fvalue;
-                }
-            }
-
-            if($filter_query_params){
-                $page_url['filter_link'] .= '?'.http_build_query($filter_query_params);
+            if($filter_query){
+                $page_url['filter_link'] .= '?'.$filter_query;
             }
 
         }
@@ -322,12 +339,28 @@ class content extends cmsFrontend {
         // Получаем количество и список записей
         $total = isset($total) ? $total : $this->model->getContentItemsCount($ctype['name']);
 
+        // Единый порядок массива для вычисления хэша
+        array_multisort($this->active_filters);
+
         if($this->request->has('show_count')){
 
-            array_multisort($filters);
+            if(!empty($ctype['labels']['many'])){
+                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one'], $ctype['labels']['two'], $ctype['labels']['many'], 0);
+            } else {
+                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
+            }
+
+            // урлы фильтров только для категорий
+            if($this->list_type !== 'category_view'){
+                return $this->cms_template->renderJSON([
+                    'count'       => $total,
+                    'filter_link' => false,
+                    'hint'        => $hint
+                ]);
+            }
 
             // Узнаём совпадение фильтров
-            $search_filter = cmsCore::getModel('content')->getContentFilter($ctype, md5(json_encode($filters)), true);
+            $search_filter = cmsCore::getModel('content')->getContentFilter($ctype, md5(json_encode($this->active_filters)), true);
 
             $filter_link = false;
 
@@ -335,14 +368,8 @@ class content extends cmsFrontend {
                 $filter_link = (is_array($page_url) ? (!empty($page_url['cancel']) ? $page_url['cancel'] : $page_url['base']) : $page_url).'/'.$search_filter['slug'];
             }
 
-            if($this->list_filter && !empty($filter_query_params)){
+            if($this->list_filter && !empty($filter_query)){
                 $filter_link = $page_url['filter_link'];
-            }
-
-            if(!empty($ctype['labels']['many'])){
-                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one'], $ctype['labels']['two'], $ctype['labels']['many'], 0);
-            } else {
-                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
             }
 
             return $this->cms_template->renderJSON([
@@ -455,7 +482,7 @@ class content extends cmsFrontend {
             'fields'            => $fields,
             'props'             => $props,
             'props_fields'      => $props_fields,
-            'filters'           => $filters,
+            'filters'           => $this->active_filters,
             'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
             'perpage'           => $perpage,

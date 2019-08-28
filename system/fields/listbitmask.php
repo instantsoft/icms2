@@ -36,22 +36,11 @@ class fieldListBitmask extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $this->data['items']    = $this->getListItems();
-        $this->data['selected'] = array();
-
-        if(is_array($value)){
-            foreach ($value as $k => $v) {
-                if(is_numeric($v)){ $this->data['selected'][$k] = (int)$v; }
-            }
-        } else {
-            $this->data['selected'] = array();
-        }
-
         if(!$this->show_filter_input_title){
             $this->element_title = '';
         }
 
-        return parent::getInput($value);
+        return $this->getInput($value);
 
     }
 
@@ -156,16 +145,22 @@ class fieldListBitmask extends cmsFormField {
         }
     }
 
-	public function parseValue($values){
+	public function parseValue($values, $return_as_array = false){
 
-		if (!$values) { return ''; }
+		if (!$values || !is_array($values)) { return ''; }
 
 		$items = $this->getListItems();
-		$value = '';
+		$value = $return_as_array ? [] : '';
 
 		if ($items){
 			foreach($items as $key => $title){
-				$value .= in_array($key, $values) ? '1' : '0';
+                if($return_as_array){
+                    if(in_array($key, $values)){
+                        $value[] = $key;
+                    }
+                } else {
+                    $value .= in_array($key, $values) ? '1' : '0';
+                }
 			}
 		}
 
@@ -175,9 +170,9 @@ class fieldListBitmask extends cmsFormField {
 
 	public function store($value, $is_submitted, $old_value=null){
 
-        $value = $this->parseValue($value);
+        $value = $this->parseValue($value, ($this->context === 'filter'));
 
-		if (mb_strpos($value, '1') === false){
+		if (is_string($value) && mb_strpos($value, '1') === false){
 			return '';
 		}
 
@@ -201,19 +196,24 @@ class fieldListBitmask extends cmsFormField {
     public function getInput($value){
 
         $this->data['items']    = $this->getListItems();
-        $this->data['selected'] = array();
+        $this->data['selected'] = [];
 
         if($value){
             if(!is_array($value)){
                 $pos = 0;
                 foreach($this->data['items'] as $key => $title){
                     if(mb_substr($value, $pos, 1) == 1){
-                        $this->data['selected'][] = $key;
+                        $this->data['selected'][] = is_numeric($key) ? intval($key) : $key;
                     }
                     $pos++;
-                    if($pos+1 > mb_strlen($value)){break;}
+                    if($pos+1 > mb_strlen($value)){ break; }
                 }
-            }else{
+            } else {
+
+                foreach ($value as $k => $v) {
+                    $this->data['selected'][] = is_numeric($v) ? intval($v) : $v;
+                }
+
                 $this->data['selected'] = $value;
             }
         }

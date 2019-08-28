@@ -110,6 +110,7 @@
     define('LANG_GROUPS_PROFILE_ACTIVITY',  'Activity');
     define('LANG_GROUPS_PROFILE_MEMBERS',   'Members');
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'member|members|members');
+    define('LANG_GROUPS_GROUP_SPELLCOUNT',   'group|groups|groups');
     define('LANG_GROUPS_CTYPES',             'Group content types');
     define('LANG_GROUPS10',                  'groups');
     define('LANG_GROUPS_CTYPE_ACCESS',       'To view a item, you must be a member of the %s group');

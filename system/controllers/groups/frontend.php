@@ -397,6 +397,19 @@ class groups extends cmsFrontend {
 
         // Получаем количество и список записей
         $total  = $this->model->getGroupsCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $groups = $this->model->getGroups();
 
         // если задано максимальное кол-во, ограничиваем им

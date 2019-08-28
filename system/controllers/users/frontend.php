@@ -262,7 +262,20 @@ class users extends cmsFrontend {
         }
 
         // Получаем количество и список записей
-        $total    = $this->model->getUsersCount();
+        $total = $this->model->getUsersCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $profiles = $this->model->getUsers($actions);
 
         if($this->request->isStandard()){

@@ -18,7 +18,7 @@ class cmsController {
      * Контекст списка записей
      * @var string
      */
-    private $list_type = 'category_view';
+    protected $list_type = 'category_view';
     /**
      * Если для контроллера задан ремап
      * и это свойство установлено в true
@@ -65,6 +65,8 @@ class cmsController {
 
     protected $callbacks = array();
     protected $useOptions = false;
+
+    protected $active_filters = array();
 
     /**
      * Неизвестные экшены определять
@@ -700,6 +702,24 @@ class cmsController {
 
         return call_user_func_array(array($hook_object, 'run'), $params);
 
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function getActiveFiltersQuery() {
+        return $this->active_filters ? http_build_query($this->active_filters) : '';
+    }
+
+    public function getActiveFilters() {
+        return $this->active_filters;
+    }
+
+    public function setActiveFilter($key, $value) {
+
+        $this->active_filters[$key] = $value;
+
+        return $this;
     }
 
 //============================================================================//

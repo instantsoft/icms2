@@ -105,7 +105,13 @@ class fieldNumber extends cmsFormField {
     public function getRules() {
 
         if($this->context == 'filter' && $this->getOption('filter_range')){
+
+            // Если в настройках поля в админке указали "только целые числа"
+            $rules_number_exists = array_search(['digits'], $this->rules);
+            if($rules_number_exists !== false){ unset($this->rules[$rules_number_exists]); }
+
             $this->rules[] = array('number_range');
+
         } else {
             $this->rules[] = array('number');
         }

@@ -110,6 +110,7 @@
     define('LANG_GROUPS_PROFILE_ACTIVITY',  'Активность');
     define('LANG_GROUPS_PROFILE_MEMBERS',   'Участники');
     define('LANG_GROUPS_MEMBERS_SPELLCOUNT', 'участник|участника|участников');
+    define('LANG_GROUPS_GROUP_SPELLCOUNT',   'группа|группы|групп');
     define('LANG_GROUPS10',                  'групп');
     define('LANG_GROUPS_CTYPES',             'Типы контента для создания в группах');
     define('LANG_GROUPS_CTYPE_ACCESS',       'Для просмотра записи вы должны быть участником группы %s');
