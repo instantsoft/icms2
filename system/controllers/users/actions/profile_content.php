@@ -108,7 +108,7 @@ class actionUsersProfileContent extends cmsAction {
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
-        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''));
+        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
 
         $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 

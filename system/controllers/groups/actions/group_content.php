@@ -90,7 +90,7 @@ class actionGroupsGroupContent extends cmsAction {
             'dataset'         => $dataset,
             'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
-            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : '')),
+            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset),
             'filter_titles'   => $this->controller_content->getFilterTitles(),
         ));
 
