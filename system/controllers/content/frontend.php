@@ -1219,6 +1219,10 @@ class content extends cmsFrontend {
 
         }
 
+        if(!empty($item['tags']) && is_array($item['tags'])){
+            $_item['tags'] = implode(', ', $item['tags']);
+        }
+
         if(!isset($item['category']) && !empty($item['category_id'])){
             $item['category'] = $this->model->getCategory($ctype['name'], $item['category_id']);
         }
