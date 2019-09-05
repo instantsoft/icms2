@@ -272,10 +272,18 @@ icms.forms = (function ($) {
             var o = _this.getFilterFormParams(form);
 
             var query_string = $.param(o);
+
             if(query_string.length > 0){
                 window.location.href = submit_uri+'?'+query_string;
             } else {
-                window.location.href = $(form).find('.cancel_filter_link').attr('href');
+
+                var cancel_filter_link = $(form).find('.cancel_filter_link').attr('href');
+
+                if(!cancel_filter_link){
+                    cancel_filter_link = submit_uri;
+                }
+                
+                window.location.href = cancel_filter_link;
             }
 
             return false;

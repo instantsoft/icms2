@@ -316,7 +316,7 @@ function real_date_diff($date1, $date2 = null){
     $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
 
     //Преобразуем даты в массив
-    $pattern = '/(\d+)-(\d+)-(\d+)(\s+(\d+):(\d+):(\d+))?/';
+    $pattern = '/(\d+)\-(\d+)\-(\d+)(\s+(\d+)\:(\d+)\:(\d+))?/';
     preg_match($pattern, $date1, $matches);
     $d1 = array((int)$matches[1], (int)$matches[2], (int)$matches[3], (int)$matches[5], (int)$matches[6], (int)$matches[7]);
     preg_match($pattern, $date2, $matches);
@@ -557,7 +557,7 @@ function string_replace_keys_values_extended($string, $data){
  * @return string
  */
 function string_make_links($string){
-    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
+    return preg_replace('@(https?:\/\/([\-\w\.]+[\-\w])+(:\d+)?(\/([\w/_\.#\-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
 }
 
 //============================================================================//
