@@ -105,3 +105,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
     jQuery CSS Customizable Scrollbar
         by Yuriy Khabarov
         https://github.com/gromo/jquery.scrollbar/
+
+    PHP Class for handling Google Authenticator 2-factor authentication
+        by Michael Kliewe
+        http://www.phpgangsta.de/
