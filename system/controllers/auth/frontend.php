@@ -4,10 +4,31 @@ class auth extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
+    public function getOptions(){
+
+        $options = parent::getOptions();
+
+        if($options['2fa']){
+
+            foreach ($options['2fa'] as $o2fa) {
+
+                $params = explode(':', $o2fa);
+
+                $options['2fa_params'][$o2fa] = [
+                    'controller' => $params[0],
+                    'action' => !empty($params[1]) ? $params[1] : 'login_2fa'
+                ];
+
+            }
+
+        }
+
+        return $options;
+
+    }
+
 	public function actionIndex(){
-
         $this->executeAction('login');
-
   	}
 
     public function actionLogout(){

@@ -13,7 +13,6 @@ class formAuthLogin extends cmsForm {
                     new fieldString('login_email', array(
                         'title' => LANG_EMAIL,
                         'type'  => 'email',
-                        'attributes' => ['autofocus' => true],
                         'rules' => array(
                             array('required'),
                             array('email')

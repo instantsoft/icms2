@@ -75,7 +75,7 @@ class cmsController {
      */
     protected $unknown_action_as_index_param = false;
 
-    function __construct( cmsRequest $request){
+    public function __construct( cmsRequest $request){
 
         self::loadControllers();
 
@@ -120,7 +120,7 @@ class cmsController {
      * Этот метод переопределяется в дочерних классах
      * где задается начальный набор функций, которые будут применены в коллбэках
      */
-    public function loadCallback() { $this->callbacks = array(); }
+    public function loadCallback() {}
     /**
      * Устанавливает один или множество коллбэков
      * @param string $name Назначение - обычно название метода, где будет применяться
@@ -524,7 +524,9 @@ class cmsController {
 
     /**
      * Выполняет экшен, находящийся в отдельном файле
-     * @param string $action_name
+     * @param string $action_name Название экшена
+     * @param array $params Параметры
+     * @return mixed
      */
     public function runExternalAction($action_name, $params = array()){
 

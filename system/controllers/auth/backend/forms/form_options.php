@@ -96,6 +96,28 @@ class formAuthOptions extends cmsForm {
                         'items'   => $auth_redirect_items
                     )),
 
+                    new fieldList('2fa', array(
+                        'title' => LANG_REG_CFG_AUTH_2FA,
+                        'is_chosen_multiple' => true,
+                        'generator' => function(){
+
+                            $providers = cmsEventsManager::hookAll('auth_twofactor_list');
+
+                            $items = ['' => LANG_NO];
+
+                            if (is_array($providers)){
+                                foreach($providers as $provider){
+                                    foreach($provider['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    ))
+
                 )
             ),
 

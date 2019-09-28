@@ -282,7 +282,7 @@ icms.forms = (function ($) {
                 if(!cancel_filter_link){
                     cancel_filter_link = submit_uri;
                 }
-                
+
                 window.location.href = cancel_filter_link;
             }
 

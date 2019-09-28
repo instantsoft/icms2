@@ -51,7 +51,7 @@ icms.photos = (function ($) {
         this.big_img = $('#photo_container').data('full-size-img');
         this.page_url = $('#photo_container img').data('page-url');
 
-        if (screenfull.enabled) {
+        if (screenfull.isEnabled) {
             $('#fullscreen_photo').removeClass('disabled-act');
             this.bindFullScreen();
             $(document).on(screenfull.raw.fullscreenchange, function (){

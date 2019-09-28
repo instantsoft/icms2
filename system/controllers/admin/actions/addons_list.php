@@ -83,7 +83,7 @@ class actionAdminAddonsList extends cmsAction {
 
         $datasets = $this->getAddonsMethod('content.get_datasets.addons', array(), true);
 
-        if($dataset_id == 0){
+        if(!empty($datasets['response']['items']) && $dataset_id == 0){
             $first_dataset = reset($datasets['response']['items']);
             $dataset_id = $first_dataset['id'];
         }

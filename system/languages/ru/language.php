@@ -222,6 +222,7 @@
     define('LANG_REG_FIRST_TIME',            'Впервые у нас?');
     define('LANG_REG_ALREADY',               'Уже зарегистрированы?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_SECURITY',                  'Безопасность');
     define('LANG_PASSWORD',                  'Пароль');
     define('LANG_RETYPE_PASSWORD',           'Повторите пароль');
     define('LANG_USER_GROUP',                'Группа');

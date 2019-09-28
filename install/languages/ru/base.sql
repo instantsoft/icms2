@@ -813,7 +813,12 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (166, 'content_before_list', 'comments', 166, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
 (168, 'admin_dashboard_block', 'activity', 168, 1),
-(169, 'user_notify_types', 'content', 169, 1);
+(169, 'user_notify_types', 'content', 169, 1),
+(170, 'form_users_password_2fa', 'authga', 170, 1),
+(171, 'controller_auth_after_save_options', 'authga', 171, 1),
+(172, 'form_users_password', 'auth', 172, 1),
+(173, 'auth_twofactor_list', 'authga', 173, 1),
+(174, 'users_before_edit_password', 'authga', 174, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1348,6 +1353,7 @@ CREATE TABLE `{#}users` (
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
+  `2fa` varchar(32) DEFAULT NULL,
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Удалён',
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',

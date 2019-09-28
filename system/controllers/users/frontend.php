@@ -208,7 +208,7 @@ class users extends cmsFrontend {
         }
 
         $menu[] = array(
-            'title' => LANG_PASSWORD,
+            'title' => LANG_SECURITY,
             'controller' => $this->name,
             'action' => $profile['id'],
             'params' => array('edit', 'password'),

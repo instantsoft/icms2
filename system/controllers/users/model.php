@@ -381,6 +381,8 @@ class modelUsers extends cmsModel {
 
         }
 
+        unset($user['password']);
+
         if (!empty($user['password1']) && !$errors){
 
             if (mb_strlen($user['password1']) < 6) {

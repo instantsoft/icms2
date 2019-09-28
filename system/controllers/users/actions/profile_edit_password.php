@@ -9,31 +9,23 @@ class actionUsersProfileEditPassword extends cmsAction {
         // проверяем наличие доступа
         if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
-        $form = $this->getForm('password');
+        $form = $this->getForm('password', [$profile]);
 
-        $is_submitted = $this->request->has('submit');
+        $data = array(
+            '2fa' => $profile['2fa']
+        );
 
-        $data = array();
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             cmsCore::loadControllerLanguage('auth');
 
-            $data = $form->parse($this->request, $is_submitted);
+            $data = $form->parse($this->request, true);
 
-            $errors = $form->validate($this,  $data);
-
-            if (!$errors){
-
-                $user = $this->model->getUserByAuth($profile['email'], $data['password']);
-
-                if (!$user){
-                    $errors = array('password' => LANG_OLD_PASS_INCORRECT);
-                }
-
-            }
+            $errors = $form->validate($this, $data);
 
             if (!$errors){
+
+                list($profile, $data, $form) = cmsEventsManager::hook('users_before_edit_password', [$profile, $data, $form]);
 
                 $profile = array_merge($profile, $data);
 

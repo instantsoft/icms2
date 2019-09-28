@@ -181,9 +181,13 @@ class cmsBackend extends cmsController {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
+                $options = cmsEventsManager::hook("controller_{$this->name}_before_save_options", $options);
+
                 cmsController::saveOptions($this->name, $options);
 
                 $this->processCallback(__FUNCTION__, array($options));
+
+                cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 
                 $this->redirectToAction('options');
 

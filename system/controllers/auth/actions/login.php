@@ -64,38 +64,65 @@ class actionAuthLogin extends cmsAction {
 
             if (!$errors){
 
-                $logged_id  = cmsUser::login($data['login_email'], $data['login_password'], $data['remember']);
+                $logged_user = cmsUser::login($data['login_email'], $data['login_password'], $data['remember'], false);
 
-                if ($logged_id){
+                if ($logged_user){
 
                     cmsUser::sessionUnset('is_auth_captcha');
 
-                    $userSession = cmsUser::sessionGet('user');
+                    // Включена ли двухфакторная авторизация
+                    if(!empty($logged_user['2fa']) && !empty($this->options['2fa_params'][$logged_user['2fa']])){
+
+                        $twofa_params = $this->options['2fa_params'][$logged_user['2fa']];
+
+                        $context_request = clone $this->request;
+
+                        // Чтобы сработало свойство $lock_explicit_call в экшене $twofa_params['action']
+                        $context_request->setContext(cmsRequest::CTX_INTERNAL);
+
+                        $result = cmsCore::getController($twofa_params['controller'], $context_request)->
+                                executeAction($twofa_params['action'], [$logged_user, $form, $data]);
+
+                        // передаём управление другому экшену
+                        if($result !== true){
+
+                            $this->cms_template->addOutput($result);
+
+                            return $result;
+                        }
+
+                        $this->cms_template->restoreContext();
+
+                    }
 
                     // Запрещаем и разавторизовываем пользователей,
                     // если сайт выключен и доступа к просмотру нет
                     if ($is_site_offline){
-                        if (empty($userSession['perms']['auth']['view_closed']) && empty($userSession['is_admin'])){
+                        if (empty($logged_user['permissions']['auth']['view_closed']) && empty($logged_user['is_admin'])){
+
                             cmsUser::addSessionMessage(LANG_LOGIN_ADMIN_ONLY, 'error');
-                            cmsUser::logout();
                             $this->redirectBack();
+
                         }
                     }
 
+                    // завершаем авторизацию
+                    cmsUser::loginComplete($logged_user, $data['remember']);
+
                     // Переходное сообщение для нового типа хранения паролей
-                    if(!empty($userSession['is_old_auth']) && !empty($this->options['notify_old_auth'])){
-                        cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to('users', $logged_id, ['edit', 'password'])), 'info');
+                    if(!empty($logged_user['is_old_auth']) && !empty($this->options['notify_old_auth'])){
+                        cmsUser::addSessionMessage(sprintf(LANG_AUTH_IS_OLD_AUTH, href_to('users', $logged_user['id'], ['edit', 'password'])), 'info');
                     }
 
-                    cmsEventsManager::hook('auth_login', $logged_id);
+                    cmsEventsManager::hook('auth_login', $logged_user['id']);
 
                     $auth_redirect = $this->options['auth_redirect'];
 
-                    $is_first_auth = cmsUser::getUPS('first_auth', $logged_id);
+                    $is_first_auth = cmsUser::getUPS('first_auth', $logged_user['id']);
 
                     if ($is_first_auth){
                         $auth_redirect = $this->options['first_auth_redirect'];
-                        cmsUser::deleteUPS('first_auth', $logged_id);
+                        cmsUser::deleteUPS('first_auth', $logged_user['id']);
                     }
 
                     if ($back_url){

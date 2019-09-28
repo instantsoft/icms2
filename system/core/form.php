@@ -6,7 +6,8 @@ class cmsForm {
 
     private $params          = array();
     private $structure       = array();
-    private $disabled_fields = array();
+
+    protected $disabled_fields = array();
 
     protected $controller;
 
@@ -509,7 +510,7 @@ class cmsForm {
      * @param string $field_name Название поля
      */
     public function disableField($field_name){
-        $this->disabled_fields[] = $field_name;
+        $this->disabled_fields[] = $field_name; return $this;
     }
 
 //============================================================================//
@@ -667,6 +668,20 @@ class cmsForm {
                     foreach($rules as $rule){
 
                         if (!$rule) { continue; }
+
+                        // если правило - это колбэк
+                        if (is_callable($rule[0]) && ($rule[0] instanceof Closure)){
+
+                            $result = $rule[0]($controller, $data, $value);
+
+                            if ($result !== true) {
+                                $errors[$name] = $result;
+                                break;
+                            }
+
+                            continue;
+
+                        }
 
                         // каждое правило это массив
                         // первый элемент - название функции-валидатора

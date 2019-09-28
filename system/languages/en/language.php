@@ -223,6 +223,7 @@
     define('LANG_REG_FIRST_TIME',            'Is it your first visit?');
     define('LANG_REG_ALREADY',               'Already registered?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_SECURITY',                  'Security');
     define('LANG_PASSWORD',                  'Password');
     define('LANG_RETYPE_PASSWORD',           'Repeat password');
     define('LANG_USER_GROUP',                'Group');
