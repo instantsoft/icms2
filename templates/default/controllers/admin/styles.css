@@ -193,9 +193,12 @@ span.wrap > span.counter:after {
 
 #cp_header #logo a {
     display: block;
-    background: url("../../images/admin/logo.png") no-repeat center;
+    background-image: url(../../images/logo.svg);
     width: 140px;
     height: 80px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
 }
 
 #cp_header #menu ul,

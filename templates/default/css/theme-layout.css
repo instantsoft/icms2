@@ -37,9 +37,12 @@ body {
 #layout header #logo a, #layout header #logo > span{
     display: block;
     float: left;
-    width: 180px;
+    width: 170px;
+    background-size: contain;
     height: 50px;
-    background: url("../images/logo.png") no-repeat left center;
+    background-image: url(../images/logo.svg);
+    background-repeat: no-repeat;
+    background-position: left center;
 }
 
 /* Header Navigation ======================================================== */

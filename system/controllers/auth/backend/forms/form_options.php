@@ -103,7 +103,7 @@ class formAuthOptions extends cmsForm {
 
                             $providers = cmsEventsManager::hookAll('auth_twofactor_list');
 
-                            $items = ['' => LANG_NO];
+                            $items = [];
 
                             if (is_array($providers)){
                                 foreach($providers as $provider){

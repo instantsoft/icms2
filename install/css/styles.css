@@ -46,7 +46,7 @@ body {
 
 #layout #header .logo {
     padding-left: 220px;
-    background: url("../images/logo.png") no-repeat left center;
+    background: url("../images/logo.svg") no-repeat left center;
 }
 
 #layout #header .logo span {

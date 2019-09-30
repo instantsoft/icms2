@@ -450,10 +450,16 @@ class cmsCore {
 
         $events = array();
 
+        $db = cmsDatabase::getInstance();
+
+        if(!$db->ready()){
+            return $events;
+        }
+
         if($is_enabled){
-            $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+            $controllers_events = $db->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
         } else {
-            $controllers_events = cmsDatabase::getInstance()->getRows('events', '1', '*', 'ordering ASC', true);
+            $controllers_events = $db->getRows('events', '1', '*', 'ordering ASC', true);
         }
 
         if($controllers_events){
