@@ -1,6 +1,12 @@
-# InstantCMS
+<p>
+  <a href="https://instantcms.ru">
+    <img alt="InstantCMS" src="https://instantcms.ru/templates/ic4/images/InstantCMS-logo-gray.svg" />
+  </a>
+</p>
 
-Is a free open source CMS (content management system) that allows you to build websites for any purpose
+#### Is a free open source CMS (content management system) that allows you to build websites for any purpose
+
+[![LICENSE](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](./LICENSE)
 
 ## Key features
 
