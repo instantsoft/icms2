@@ -837,7 +837,9 @@ class modelContent extends cmsModel {
             cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
         }
 
-        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.fields.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return $result;
 

@@ -131,6 +131,8 @@ class fieldListBitmask extends cmsFormField {
 
             $items = string_explode_list($this->getDefaultValue());
 
+            ksort($items);
+
         }
 
         return $items;
@@ -141,6 +143,7 @@ class fieldListBitmask extends cmsFormField {
         parent::setOptions($options);
         if (!isset($this->items) && $this->hasDefaultValue()){
             $this->items = string_explode_list($this->getDefaultValue());
+            ksort($this->items);
             $this->default = null;
         }
     }
@@ -226,9 +229,48 @@ class fieldListBitmask extends cmsFormField {
         $items = $model->limit(false)->
                 selectOnly('id')->
                 select($field_old['name'])->
-                get($content_table_name, false, false);
+                get($content_table_name, function($item, $model)use($field_old){
+                    return $item[$field_old['name']];
+                });
 
-        dump($field);
+        if(!$items || trim($field_old['values']) == trim($field['values'])){
+            return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
+        }
+
+        $old_rows = string_explode_list($field_old['values']);
+        ksort($old_rows);
+        $new_rows = string_explode_list($field['values']);
+        ksort($new_rows);
+
+        foreach ($items as $id => $item_value) {
+
+            if(!$item_value){ continue; }
+
+            // Формируем старый массив значений
+            $old_item_values = [];
+
+			$pos = 0;
+
+			foreach($old_rows as $key => $value){
+				if (substr($item_value, $pos, 1) == 1){
+                    $old_item_values[] = $key;
+				}
+				$pos++;
+			}
+
+            // Формируем новую битовую маску
+            $new_item_value = '';
+
+			foreach($new_rows as $nkey => $title){
+                $new_item_value .= in_array($nkey, $old_item_values) ? '1' : '0';
+			}
+
+            // записываем обратно в базу
+            $model->update($content_table_name, $id, [
+                $field_old['name'] => $new_item_value
+            ], true);
+
+        }
 
         return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
 
