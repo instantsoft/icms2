@@ -8,7 +8,7 @@ class auth extends cmsFrontend {
 
         $options = parent::getOptions();
 
-        if($options['2fa']){
+        if(!empty($options['2fa'])){
 
             foreach ($options['2fa'] as $o2fa) {
 

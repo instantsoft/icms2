@@ -15,23 +15,25 @@ class onGroupsFulltextSearch extends cmsAction {
 
         $fields = $this->loadGroupsFields()->getGroupsFields();
 
-        foreach($fields as $field){
+        if($fields){
+            foreach($fields as $field){
 
-            // в настройках полей должно быть включено их участие в индексе
-            $is_text = $field['handler']->getOption('in_fulltext_search');
+                // в настройках полей должно быть включено их участие в индексе
+                $is_text = $field['handler']->getOption('in_fulltext_search');
 
-            if ($is_text && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
+                if ($is_text && (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
 
-                $match_fields['groups'][]  = $field['name'];
-                $select_fields['groups'][] = $field['name'];
+                    $match_fields['groups'][]  = $field['name'];
+                    $select_fields['groups'][] = $field['name'];
+
+                }
+
+                if ($field['name'] == 'logo' &&
+                        (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
+                    $select_fields['groups']['image'] = $field['name'];
+                }
 
             }
-
-            if ($field['name'] == 'logo' &&
-                    (!$field['groups_read'] || $this->cms_user->isInGroups($field['groups_read']))){
-                $select_fields['groups']['image'] = $field['name'];
-            }
-
         }
 
         return array(

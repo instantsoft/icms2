@@ -214,11 +214,23 @@ class fieldListBitmask extends cmsFormField {
                     $this->data['selected'][] = is_numeric($v) ? intval($v) : $v;
                 }
 
-                $this->data['selected'] = $value;
             }
         }
 
         return parent::getInput($value);
+
+    }
+
+    public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
+
+        $items = $model->limit(false)->
+                selectOnly('id')->
+                select($field_old['name'])->
+                get($content_table_name, false, false);
+
+        dump($field);
+
+        return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
 
     }
 

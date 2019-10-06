@@ -130,3 +130,8 @@ a:hover, a.ajaxlink:hover { color: #d35400; }
     box-sizing: border-box;
     padding: 20px;
 }
+.modal_padding {
+    padding: 10px;
+    box-sizing: border-box;
+    min-width: 460px;
+}
