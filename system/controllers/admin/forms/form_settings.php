@@ -453,6 +453,31 @@ class formAdminSettings extends cmsForm {
 
             array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_SETTINGS_DB,
+                'childs' => array(
+
+                    new fieldList('db_charset', array(
+                        'title' => LANG_CP_SETTINGS_DB_CHARSET,
+                        'hint' => LANG_CP_SETTINGS_DB_CHARSET_HINT,
+                        'default' => 'utf8',
+                        'items' => array(
+                            'utf8mb4' => 'UTF8mb4',
+                            'utf8' => 'UTF8'
+                        ),
+                        'rules' => array(
+                            array('required')
+                        )
+                    )),
+
+                    new fieldCheckbox('clear_sql_mode', array(
+                        'title' => LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE
+                    ))
+
+                )
+            ),
+
+            array(
+                'type' => 'fieldset',
                 'title' => LANG_CP_SETTINGS_DEBUG,
                 'childs' => array(
 

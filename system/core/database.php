@@ -57,7 +57,9 @@ class cmsDatabase {
      * Настройки базы данных
      * @var array
      */
-    private $options = array();
+    private $options = [
+        'db_charset' => 'utf8'
+    ];
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -78,7 +80,7 @@ class cmsDatabase {
 	}
 
     public function setOptions($options) {
-        $this->options = $options;
+        $this->options = array_merge($this->options, $options);
     }
 
     public function setOption($key, $value) {
@@ -122,7 +124,7 @@ class cmsDatabase {
 
         }
 
-        $this->mysqli->set_charset('utf8');
+        $this->mysqli->set_charset($this->options['db_charset']);
 
         if(!empty($this->options['clear_sql_mode'])){
             $this->mysqli->query("SET sql_mode=''");
@@ -778,7 +780,7 @@ class cmsDatabase {
 
         }
 
-        $sql .= ") ENGINE={$engine} DEFAULT CHARSET=utf8";
+        $sql .= ") ENGINE={$engine} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -844,7 +846,7 @@ class cmsDatabase {
                   KEY `parent_id` (`parent_id`,`ns_left`),
                   KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
                   KEY `ordering` (`ordering`)
-                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
+                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -862,7 +864,7 @@ class cmsDatabase {
 				  `category_id` int(11) UNSIGNED DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
-				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
+				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -1049,13 +1051,17 @@ class cmsDatabase {
 
     public function importDump($file, $delimiter = ';'){
 
-        if (!is_file($file)){ return false; }
+        clearstatcache();
+
+        if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
+
+        if (!is_readable($file)){ return false; }
 
         @set_time_limit(0);
 
         $file = fopen($file, 'r');
 
-        $query = array();
+        $query = []; $success = false;
 
         while (feof($file) === false){
 
@@ -1063,9 +1069,11 @@ class cmsDatabase {
 
             if (preg_match('~' . preg_quote($delimiter, '~').'\s*$~iS', end($query)) === 1){
 
+                $success = true;
+
                 $query = trim(implode('', $query));
 
-                $result = $this->query(str_replace('InnoDB', $this->options['db_engine'], $query));
+                $result = $this->query(str_replace(['InnoDB','CHARSET=utf8'], [$this->options['db_engine'],'CHARSET='.$this->options['db_charset']], $query));
 
                 if ($result === false) {
                     return false;
@@ -1081,7 +1089,7 @@ class cmsDatabase {
 
         fclose($file);
 
-        return true;
+        return $success;
 
     }
 

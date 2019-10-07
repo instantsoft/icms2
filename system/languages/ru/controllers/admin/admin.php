@@ -409,6 +409,10 @@
     define('LANG_CP_SETTINGS_MAIL',             'Почта');
     define('LANG_CP_SETTINGS_CACHE',            'Кеширование');
     define('LANG_CP_SETTINGS_DEBUG',            'Отладка');
+    define('LANG_CP_SETTINGS_DB',               'База данных');
+    define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Включить режим пустого sql_mode для MySQL');
+    define('LANG_CP_SETTINGS_DB_CHARSET',       'Кодировка');
+    define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Изменение кодировки может занять продолжительное время');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
