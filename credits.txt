@@ -109,3 +109,7 @@ Third-party plugins, libraries and resources included in InstantCMS:
     PHP Class for handling Google Authenticator 2-factor authentication
         by Michael Kliewe
         http://www.phpgangsta.de/
+
+    Free Bootstrap Admin Template
+        by Łukasz Holeczek, woothu, xidedix
+        https://coreui.io/

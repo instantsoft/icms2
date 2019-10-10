@@ -294,7 +294,7 @@ class cmsTemplate {
      */
     public function toolbar(){
         if (!$this->isToolbar()){ return; }
-        $this->menu('toolbar', false);
+        $this->menu('toolbar', false, 'nav-pills');
     }
 
     /**
@@ -942,6 +942,10 @@ class cmsTemplate {
         }
         return $this;
 	}
+
+    public function getTemplateFilePath($path) {
+        return $this->site_config->root . self::TEMPLATE_BASE_PATH. $this->name .'/'.$path;
+    }
 
     public function getHeadFilePath($file){
 
@@ -1939,11 +1943,18 @@ class cmsTemplate {
     /**
      * Формирует HTML код файла шаблона (в папке шаблонов текущего компонента)
      * И подключает css файл контроллера (если есть)
+     * Если $tpl_file массив, то название шаблона равно названию текущего экшена
      *
-     * @param string $tpl_file Название файла шаблона
+     * @param string|array $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
+     * @param object $request Объект запроса
+     * @return string
      */
-    public function render($tpl_file, $data = array(), $request = false) {
+    public function render($tpl_file, $data = [], $request = false) {
+
+        if(is_array($tpl_file)){
+            $data = $tpl_file; $tpl_file = $this->controller->current_action;
+        }
 
         $css_file = $this->getStylesFileName();
 

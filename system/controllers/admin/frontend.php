@@ -68,10 +68,11 @@ class admin extends cmsFrontend {
 
                 $this->cms_template->setLayout('admin');
 
-                $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+                $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu($this->cms_template->name === 'admincoreui'));
 
                 $this->cms_template->setLayoutParams(array(
                     'user' => $this->cms_user,
+                    'su'   => $this->getSystemUtilization(),
                     'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
                 ));
@@ -91,8 +92,62 @@ class admin extends cmsFrontend {
 
     }
 
-//============================================================================//
-//============================================================================//
+    function getSystemUtilization() {
+
+        $total_size = disk_total_space(PATH);
+        $free_space = disk_free_space(PATH);
+        $taken_space = ($total_size -$free_space);
+        $percent = round($taken_space/$total_size*100);
+
+        $su = [
+            'disk' => [
+                'title'   => LANG_CP_SU_DISK,
+                'hint'    => files_format_bytes($taken_space).'/'.files_format_bytes($total_size),
+                'percent' => $percent,
+                'style'   => ($percent <= 50 ? 'info' : ($percent <= 75 ? 'warning' : 'danger'))
+            ]
+        ];
+
+        if(function_exists('sys_getloadavg')){
+
+            $cpu_count = cmsUser::sessionGet('cpu_count');
+
+            if(!$cpu_count){
+
+                // Ну а вдруг ;-)
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $cmd = 'echo %NUMBER_OF_PROCESSORS%';
+                } else {
+                    $cmd = "grep -P '^physical id' /proc/cpuinfo|wc -l";
+                }
+                $cpu_count = console_exec_command($cmd);
+
+                if(!empty($cpu_count[0])){
+                    $cpu_count = $cpu_count[0];
+                } else {
+                    $cpu_count = $cpu_count[0];
+                }
+
+                cmsUser::sessionSet('cpu_count', $cpu_count);
+
+            }
+
+            $la = sys_getloadavg();
+
+            $current_load_average = round(100*($la[2]/$cpu_count));
+
+            $su['cpu'] = [
+                'title'   => LANG_CP_SU_CPU,
+                'hint'    => $current_load_average.'%',
+                'percent' => $current_load_average,
+                'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
+            ];
+
+        }
+
+        return cmsEventsManager::hook('admin_system_utilization', $su);
+
+    }
 
     public function buildDatasetFieldsList($controller_name, $fields) {
 
@@ -114,68 +169,88 @@ class admin extends cmsFrontend {
 
     }
 
-    public function getAdminMenu(){
+    public function getAdminMenu($show_submenu = false){
 
-        return cmsEventsManager::hook('adminpanel_menu', array(
+        $menu = cmsEventsManager::hook('adminpanel_menu', array(
 
             array(
                 'title' => LANG_CP_SECTION_CONTENT,
                 'url' => href_to($this->name, 'content'),
                 'options' => array(
-                    'class' => 'item-content'
+                    'class' => 'item-content',
+                    'icon'  => 'nav-icon icon-docs'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_CTYPES,
                 'url' => href_to($this->name, 'ctypes'),
                 'options' => array(
-                    'class' => 'item-ctypes'
+                    'class' => 'item-ctypes',
+                    'icon'  => 'nav-icon icon-equalizer'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_MENU,
                 'url' => href_to($this->name, 'menu'),
                 'options' => array(
-                    'class' => 'item-menu'
+                    'class' => 'item-menu',
+                    'icon'  => 'nav-icon icon-menu'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_WIDGETS,
                 'url' => href_to($this->name, 'widgets'),
                 'options' => array(
-                    'class' => 'item-widgets'
+                    'class' => 'item-widgets',
+                    'icon'  => 'nav-icon icon-grid'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_CONTROLLERS,
                 'url' => href_to($this->name, 'controllers'),
                 'options' => array(
-                    'class' => 'item-controllers'
+                    'class' => 'item-controllers',
+                    'icon'  => 'nav-icon icon-layers'
                 )
             ),
             array(
                 'title' => LANG_CP_OFICIAL_ADDONS,
                 'url' => href_to($this->name, 'addons_list'),
                 'options' => array(
-                    'class' => 'item-addons'
+                    'class' => 'item-addons',
+                    'icon'  => 'nav-icon icon-puzzle'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_USERS,
                 'url' => href_to($this->name, 'users'),
                 'options' => array(
-                    'class' => 'item-users'
+                    'class' => 'item-users',
+                    'icon'  => 'nav-icon icon-people'
                 )
             ),
             array(
                 'title' => LANG_CP_SECTION_SETTINGS,
-                'url' => href_to($this->name, 'settings'),
+                'url' => $show_submenu ? '' : href_to($this->name, 'settings'),
+                'childs_count' => 2,
                 'options' => array(
-                    'class' => 'item-settings'
+                    'class' => 'item-settings',
+                    'icon'  => 'nav-icon icon-settings'
                 )
             )
 
         ));
+
+        // Совместимость со старой админкой
+        if($show_submenu){
+            $settings_menu = $this->getSettingsMenu();
+
+            foreach ($settings_menu as $value) {
+                $menu[] = $value;
+            }
+        }
+
+        return $menu;
 
     }
 
@@ -328,11 +403,19 @@ class admin extends cmsFrontend {
 
             array(
                 'title' => LANG_BASIC_OPTIONS,
-                'url' => href_to($this->name, 'settings')
+                'url' => href_to($this->name, 'settings'),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-globe'
+                )
             ),
             array(
                 'title' => LANG_CP_SCHEDULER,
-                'url' => href_to($this->name, 'settings', array('scheduler'))
+                'url' => href_to($this->name, 'settings', array('scheduler')),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-clock'
+                )
             ),
 
         ));

@@ -147,14 +147,16 @@ class actionAuthLogin extends cmsAction {
             $ajax_page_redirect = true;
         }
 
-        return $this->cms_template->render('login', array(
+        // Мы не передаём название шаблона для вывода
+        // Оно берется из названия текущего экшена
+        return $this->cms_template->render([
             'ajax_page_redirect' => $ajax_page_redirect,
             'errors'     => (isset($errors) ? $errors : false),
             'data'       => $data,
             'form'       => $form,
             'back_url'   => $back_url,
             'hooks_html' => cmsEventsManager::hookAll('login_form_html')
-        ));
+        ]);
 
     }
 
