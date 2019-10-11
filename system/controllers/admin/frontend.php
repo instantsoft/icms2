@@ -125,7 +125,7 @@ class admin extends cmsFrontend {
                 if(!empty($cpu_count[0])){
                     $cpu_count = $cpu_count[0];
                 } else {
-                    $cpu_count = $cpu_count[0];
+                    $cpu_count = 1;
                 }
 
                 cmsUser::sessionSet('cpu_count', $cpu_count);
@@ -171,7 +171,7 @@ class admin extends cmsFrontend {
 
     public function getAdminMenu($show_submenu = false){
 
-        $menu = cmsEventsManager::hook('adminpanel_menu', array(
+        $menu = [
 
             array(
                 'title' => LANG_CP_SECTION_CONTENT,
@@ -239,10 +239,19 @@ class admin extends cmsFrontend {
                 )
             )
 
-        ));
+        ];
 
         // Совместимость со старой админкой
         if($show_submenu){
+
+            array_unshift($menu, [
+                'title' => LANG_ADMIN_CONTROLLER,
+                'url' => href_to($this->name),
+                'options' => array(
+                    'icon'  => 'nav-icon icon-speedometer'
+                )
+            ]);
+
             $settings_menu = $this->getSettingsMenu();
 
             foreach ($settings_menu as $value) {
@@ -250,7 +259,7 @@ class admin extends cmsFrontend {
             }
         }
 
-        return $menu;
+        return cmsEventsManager::hook('adminpanel_menu', $menu);
 
     }
 

@@ -25,7 +25,7 @@ function grid_users($controller){
             'filter'  => 'like',
             'handler' => function($nickname, $user) {
                 if ($user['is_admin']) {
-                    $nickname = '<b class="tooltip" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
+                    $nickname = '<b title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
                 }
                 return $nickname;
             }

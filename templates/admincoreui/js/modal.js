@@ -40,19 +40,19 @@ icms.modal = (function ($) {
 	this.bind = function(selector) {
         $(selector).on('click', function (){
 
-            var _this = this;
+            var title = $(this).attr('title');
+            if(!title){
+                title = $(this).data('original-title');
+            }
 
-            icms.modal.showModalSpinner();
+            var url = $(this).attr('href');
 
-            $.get($(_this).attr('href'), function(result){
-
-                var title = $(_this).attr('title');
-                if(!title){
-                    title = $(_this).data('original-title');
-                }
-
-                icms.modal.showModalContent(title, result);
-            }, 'html');
+            if(url.charAt(0) === '#'){
+                $('#icms_modal').modal('show');
+                icms.modal.showModalContent(title, $(url).html());
+            } else {
+                icms.modal.openAjax(url, {}, false, title);
+            }
 
             return false;
         });
@@ -66,29 +66,36 @@ icms.modal = (function ($) {
 		icms.modal.showModalContent(title, html, style);
 	};
 
+    this.openIframe = function(url, title){
+
+    };
+
     this.openAjax = function(url, data, open_callback, title){
 
-        open_callback = open_callback || function(){};
-        title = title || '';
+        open_callback = open_callback || false;
+        title = title || false;
+        data = data || {};
 
-        if (typeof(data)=='undefined'){
-            $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
-                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
-            }}});
-            return false;
+        if(open_callback){
+            this.setCallback('open', open_callback);
         }
 
-        $.nmManual(url+(data.is_iframe ? '?'+$.param(data) : ''), {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
-                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
-                if(data.is_iframe){ nm.filters.push('link'); nm.filters.push('iframe'); }
-        }}, ajax:{data: data, type: "POST"}});
+        if(data.is_iframe){
+            return this.openIframe(url+'?'+$.param(data), title);
+        }
+
+        this.showModalSpinner();
+
+        $.get(url, data, function(result){
+            icms.modal.showModalContent(title, result);
+        }, 'html');
+
         return false;
 
     };
 
     this.bindGallery = function(selector){
         $(selector).attr('rel', 'gal');
-        $(selector).nyroModal({anim: {def: 'show'}});
     };
 
     this.close = function(){

@@ -1,7 +1,7 @@
 <?php
 $visible_depend = []; $index = 0; $active_tab = false;
 ?>
-<div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } ?>form-tabs">
+<div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } else { ?>card mb-0 rounded-0 <?php } ?>form-tabs">
 
     <?php if($form->is_tabbed){ ?>
         <ul class="nav nav-tabs" role="tablist">
@@ -15,6 +15,8 @@ $visible_depend = []; $index = 0; $active_tab = false;
             <?php } ?>
         </ul>
         <div class="tab-content">
+    <?php } else { ?>
+         <div class="card-body">
     <?php } ?>
 
     <?php foreach($form->getFormStructure() as $fieldset_id => $fieldset){ ?>
@@ -98,7 +100,7 @@ $visible_depend = []; $index = 0; $active_tab = false;
                             <?php echo $field->{$field->display_input}($value); ?>
 
                             <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
-                                <div class="hint text-muted small"<?php
+                                <div class="hint text-muted small mt-1"<?php
                                     if(!empty($field->patterns_hint['patterns'])){
                                         echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
                                         echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
@@ -137,7 +139,7 @@ $visible_depend = []; $index = 0; $active_tab = false;
 
     <?php $index++; } ?>
 
-    <?php if($form->is_tabbed){ ?></div><?php } ?>
+    </div>
 
 </div>
 <script type="text/javascript">

@@ -43,7 +43,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
 
             $dashboard_blocks[] = array(
                 'title' => LANG_CP_DASHBOARD_STATS,
-                'class' => 'col3',
+                'class' => 'col-12',
                 'name' => 'stat',
                 'html'  => $this->cms_template->getRenderedChild('index_chart', array(
                     'chart_nav' => $chart_nav,

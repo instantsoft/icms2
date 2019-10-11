@@ -73,7 +73,140 @@
 .cp_toolbar .logs .item { background: url("../../images/icons/logs.png") no-repeat left center; }
 
 
-
+form .child_field{padding-left:20px}
+.parent_field {
+    margin-left: 25px;
+}
+.field.multilanguage.child_field, .field_tabbed.child_field {
+    margin-left: 20px;
+}
+.select_deselect {
+    margin: 10px 0 0 5px;
+}
+.select_deselect a {
+    text-decoration: none;
+    margin: 0 10px 0 0;
+    font-size: 13px;
+}
+.symbols_count {
+    font-size: 80%;
+    margin: 3px 0 0 0;
+    display: none;
+    color: #73818f;
+}
+.symbols_count > span {
+    display: inline-block;
+    padding: 2px 5px;
+    margin: 0 3px 0 0;
+}
+.symbols_count .symbols_num {
+    background-color: 	#c8ced3;
+    border: 1px solid 	#acb4bc;
+    color: #FFF;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+.symbols_count .symbols_num:hover {
+    opacity: 0.8;
+}
+.symbols_count .overflowing, .symbols_count .overflowing_min {
+    background-color: #f86c6b;
+    color: #FFF;
+    border-color: #dc4c4b;
+}
+.datagrid tr:hover .grid_field_edit:not(.edit_by_click) {
+    display: flex;
+}
+.datagrid tr:hover .grid_field_value:not(.edit_by_click) {
+    display: none;
+}
+.datagrid tr .edit_by_click.edit_by_click_visible {
+    display: block;
+}
+.datagrid tr .edit_by_click.edit_by_click_hidden {
+    display: none;
+}
+.grid_field_edit > .button {
+    margin: 0 0 0 10px;
+}
+.grid_field_edit > .button[disabled] {
+    display: none;
+}
+.grid_field_edit {
+    display: none;
+    position: relative;
+}
+.grid_field_value {
+    display: inline-block;
+}
+.grid_field_edit > .input {
+    width: 60%;
+}
+.is_collapsed {
+    transition: all 0.3s ease;
+}
+.is_collapse {
+    position: relative;
+    background: #f0f3f5;
+    height: 30px;
+    box-sizing: border-box;
+    line-height: 30px;
+    cursor: pointer;
+    padding-left: 10px;
+}
+.is_collapse > legend {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    left: 0;
+}
+.is_collapsed > legend:before {
+    content: '+';
+    display: inline-block;
+    margin: 0 10px 0 10px;
+    font-size: 16px;
+}
+.is_collapsed.do_expand > legend:before {
+    content: '-';
+}
+.is_collapsed.do_expand > legend {
+    cursor: pointer;
+}
+.is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
+    display: none !important;
+}
+.chosen-container-single .chosen-single {
+    border-radius: 2px;
+}
+#site_settings #fset_2 .chosen-container,
+#site_settings #fset_5 .chosen-container { width:300px !important; }
+#site_settings #fset_2 label { display: block; }
+#site_settings #f_template .hint, #site_settings #f_template_mobile .hint, #site_settings #f_template_tablet .hint, #site_settings #f_template_admin .hint, #site_settings #f_cache_method .hint, #site_settings #f_merge_css .hint, #site_settings #f_merge_js .hint {
+    display: inline-block;
+}
+.pattern_fields_panel {
+    display: none;
+}
+.pattern_fields > a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 4px 5px;
+    border-radius: 2px;
+    background-color: #8ad4ee;
+    color: #FFF;
+    margin: 0 0 2px 0;
+}
+.pattern_fields > a:hover {
+    background-color: #20a8d8;
+}
+.ace_redactor {
+    height: 350px;
+}
+#addons_count {
+    display: none;
+}
 .need-scrollbar {
     position: relative;
     max-height: 420px;

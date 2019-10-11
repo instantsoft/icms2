@@ -389,8 +389,8 @@ function html_select($name, $items, $selected = '', $attributes = array()){
     $name = isset($attributes['multiple']) ? $name . '[]' : $name;
 
     $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
-    $html = '<select name="'.$name.'" '.$attr_str.$class.'>'."\n";
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+    $html = '<select class="form-control '.$class.'" name="'.$name.'" '.$attr_str.'>'."\n";
 
     $optgroup = false;
 
@@ -465,13 +465,13 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $title = ltrim($title, '- ');
 
-            $html .= "\t" . '<label '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
+            $html .= "\t" . '<label class="form-check" '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
                     '<span>'.htmlspecialchars($title).'</span></label><br>' . "\n";
 
         } else {
 
-            $html .= "\t" . '<label>' .
+            $html .= "\t" . '<label class="form-check form-check-inline">' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
                     '<span>'.htmlspecialchars($title) . '</span></label>' . "\n";
 
@@ -489,7 +489,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
  * @return html
  */
 function html_category_list($tree, $selected_id=0){
-	$html = '<select name="category_id" id="category_id" class="combobox">'."\n";
+	$html = '<select name="category_id" id="category_id" class="combobox form-control">'."\n";
 	foreach ($tree as $cat){
 		$padding = str_repeat('---', $cat['ns_level']).' ';
 		if ($selected_id == $cat['id']) { $selected = 'selected'; } else { $selected = ''; }
@@ -514,9 +514,9 @@ function html_switch($name, $active){
 
 function html_bool_span($value, $condition){
     if ($condition){
-        return '<span class="positive">' . $value . '</span>';
+        return '<span class="positive text-success">' . $value . '</span>';
     } else {
-        return '<span class="negative">' . $value . '</span>';
+        return '<span class="negative text-danger">' . $value . '</span>';
     }
 }
 

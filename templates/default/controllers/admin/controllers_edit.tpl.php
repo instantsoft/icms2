@@ -19,7 +19,7 @@
 
     <?php if (isset($this->menus['backend'])){ ?>
         <div class="pills-menu">
-            <?php $this->menu('backend'); ?>
+            <?php $this->menu('backend', true, 'nav-pills'); ?>
         </div>
     <?php } ?>
 

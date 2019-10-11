@@ -23,8 +23,8 @@
     </nav>
 <?php } ?>
 
-<div class="datagrid_wrapper dataTables_wrapper dt-bootstrap4 no-footer">
-    <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered datatable dataTable no-footer">
+<div class="datagrid_wrapper table-responsive-md">
+    <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered table-hover table-light">
         <thead>
             <tr>
                 <?php foreach($columns as $name=>$column){ ?>

@@ -322,7 +322,7 @@ legend {
   max-width: 100%;
   padding: 0;
   margin-bottom: .5rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   line-height: inherit;
   color: inherit;
   white-space: normal;
@@ -379,10 +379,12 @@ h1, .h1 {
   font-size: 2.1875rem;
 }
 h1 {
-    background: #f3f3f3;
-    border-bottom: solid 1px #dae0e4;
+    background: #63c2de;
+    border-bottom: solid 1px #20a8d8;
     margin: 0 -30px 1.5rem -30px;
     padding: 15px 30px;
+    color: #FFF;
+    font-size: 1.53125rem;
 }
 #breadcrumb + div > h1 {
     margin-top: -1.5rem ;

@@ -15,6 +15,7 @@
         ]); ?>
     <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
     <?php $this->addMainTplJSName([
+        'jquery-ui',
         'vendors/popper.js/js/popper.min',
         'vendors/bootstrap/js/bootstrap.min',
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
@@ -94,6 +95,9 @@
                     <a class="dropdown-item" href="<?php echo href_to_profile($user); ?>">
                         <i class="fa fa-user"></i> <?php echo LANG_MY_PROFILE; ?>
                     </a>
+                    <a class="dropdown-item" href="<?php echo href_to('admin', 'users', ['edit', $user->id]); ?>">
+                        <i class="fa fa-edit"></i> <?php echo LANG_EDIT; ?>
+                    </a>
                     <a class="dropdown-item" href="<?php echo href_to('auth', 'logout'); ?>">
                         <i class="fa fa-sign-out"></i> <?php echo LANG_LOG_OUT; ?>
                     </a>
@@ -104,7 +108,7 @@
     <div class="app-body">
         <div class="sidebar">
             <nav class="sidebar-nav">
-                <?php $this->menu('cp_main'); ?>
+                <?php $this->menu('cp_main', true, ''); ?>
                 <div class="nav-title"><?php echo LANG_CP_SU; ?></div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
                     <div class="nav-item px-3 d-compact-none d-minimized-none" id="su-<?php echo $sukey; ?>">

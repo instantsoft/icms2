@@ -16,9 +16,7 @@
     </li>
 </ul>
 
-<div class="need-scrollbar pr-2" id="icms_news_wrap" role="tabpanel">
-
-</div>
+<div class="need-scrollbar pr-2" id="icms_news_wrap" role="tabpanel"></div>
 
 <script>
     $(function() {
