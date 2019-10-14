@@ -15,6 +15,7 @@
         ]); ?>
     <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
     <?php $this->addMainTplJSName([
+        'jquery-cookie',
         'jquery-ui',
         'vendors/popper.js/js/popper.min',
         'vendors/bootstrap/js/bootstrap.min',
@@ -27,7 +28,7 @@
         ]); ?>
     <?php $this->head(false); ?>
 </head>
-<body class="app app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+<body class="app app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show<?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
     <header class="app-header navbar">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
@@ -57,11 +58,6 @@
                     <span class="btn btn-warning text-white">
                         <i class="fa fa-warning fa-lg"></i> <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
                     </span>
-                </li>
-            <?php } ?>
-            <?php if($this->controller->install_folder_exists){ ?>
-                <li class="nav-item px-3" id="install_folder_exists">
-                    <span class="btn btn-danger"><i class="fa fa-warning fa-lg"></i> <?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?></span>
                 </li>
             <?php } ?>
         </ul>
@@ -108,7 +104,7 @@
     <div class="app-body">
         <div class="sidebar">
             <nav class="sidebar-nav">
-                <?php $this->menu('cp_main', true, ''); ?>
+                <?php $this->menu('cp_main', true, '', 0, true); ?>
                 <div class="nav-title"><?php echo LANG_CP_SU; ?></div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
                     <div class="nav-item px-3 d-compact-none d-minimized-none" id="su-<?php echo $sukey; ?>">
@@ -124,11 +120,18 @@
                     </div>
                 <?php } ?>
             </nav>
-            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
+            <button class="sidebar-minimizer brand-minimizer" type="button" data-current_state="<?php if($hide_sidebar){ ?>1<?php } else { ?>0<?php } ?>"></button>
         </div>
         <main class="main">
             <?php if($this->isBreadcrumbs()){ ?>
                 <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
+            <?php } ?>
+            <?php if($this->hasMenu('admin_toolbar')){ ?>
+                <nav class="bg-white mt-n4 border-bottom">
+                    <div class="container-fluid py-2">
+                        <?php $this->menu('admin_toolbar', true, 'nav-pills'); ?>
+                    </div>
+                </nav>
             <?php } ?>
             <div class="container-fluid">
                 <?php $this->body(); ?>
@@ -160,18 +163,20 @@
     <?php if ($config->debug){ ?>
         <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance())); ?>
     <?php } ?>
-    <?php
-    $messages = cmsUser::getSessionMessages();
-    if ($messages){ ?>
-        <script>
-            toastr.options = {closeButton: true};
-            $(function(){
+    <?php $messages = cmsUser::getSessionMessages(); ?>
+    <script>
+        toastr.options = {closeButton: true};
+        $(function(){
+        <?php if($this->controller->install_folder_exists){ ?>
+            toastr.error('<?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?>');
+        <?php } ?>
+        <?php if ($messages){ ?>
             <?php foreach($messages as $message){ ?>
                 toastr.<?php echo str_replace('message_', '', $message['class']); ?>('<?php html($message['text']); ?>');
              <?php } ?>
-            });
-        </script>
-    <?php } ?>
+        <?php } ?>
+        });
+    </script>
     <?php $this->bottom(); ?>
 </body>
 </html>

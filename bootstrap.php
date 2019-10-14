@@ -59,7 +59,7 @@ if(defined('SESSION_START')){
     // Устанавливаем директорию сессий
     cmsUser::setSessionSavePath($config->session_save_handler, $config->session_save_path);
 
-    cmsUser::sessionStart($config->cookie_domain);
+    cmsUser::sessionStart($config->cookie_domain, $config->session_name);
 
     // таймзона сессии
     $session_time_zone = cmsUser::sessionGet('user:time_zone');

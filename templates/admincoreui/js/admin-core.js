@@ -20,6 +20,23 @@ icms.admin = (function ($) {
             return addTextToPosition($(this).closest('.field').find('input, textarea'), $(this).text(), spacer, spacer_stop);
         });
 
+        $('.auto_copy_value').on('click', function (){
+            $(this).closest('.input-prefix-suffix').find('input').val($(this).data('value'));
+            return false;
+        });
+
+        $('.sidebar-minimizer').on('click', function (){
+            var current = $(this).data('current_state');
+            console.log(current);
+            if(current == 1){
+                var new_state = 0;
+            } else {
+                var new_state = 1;
+            }
+            $(this).data('current_state', new_state);
+            $.cookie('icms[hide_sidebar]', new_state, { expires: 30, path: '/'});
+        });
+
     };
 
     this.dbCardSpinner = function (el){

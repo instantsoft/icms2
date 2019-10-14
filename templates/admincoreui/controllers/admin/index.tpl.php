@@ -17,7 +17,7 @@
 
 <div id="dashboard" class="animated fadeIn row align-content-around" data-save_order_url="<?php echo $this->href_to('index_save_order'); ?>">
 <?php foreach ($dashboard_blocks as $dashboard_block) { ?>
-    <div class="<?php echo (isset($dashboard_block['class']) ? $dashboard_block['class'] : 'col-6 '); ?> mb-4">
+    <div class="<?php echo (isset($dashboard_block['class']) ? $dashboard_block['class'] : 'col-md-6 '); ?> mb-4">
         <div class="card mb-0 h-100" id="db_<?php echo $dashboard_block['name']; ?>" data-name="<?php echo $dashboard_block['name']; ?>">
             <div class="card-header">
                 <?php echo $dashboard_block['title']; ?> <span class="db_spinner sk-spinner sk-spinner-pulse bg-blue ml-3" style="display: none"></span>

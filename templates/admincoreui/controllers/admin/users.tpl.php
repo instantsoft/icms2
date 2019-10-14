@@ -1,10 +1,10 @@
 <?php
 
     $this->addTplJSName([
-        'jquery-cookie',
         'datatree',
         'admin-content'
-        ]);
+    ]);
+
     $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_USERS);
@@ -81,72 +81,68 @@
 
 ?>
 
-<h1><?php echo LANG_CP_SECTION_USERS; ?></h1>
+<h1><?php echo LANG_CP_SECTION_USERS; ?> <span></span></h1>
 
-<table class="layout">
-    <tr>
-        <td class="" valign="top">
-
-            <div id="datatree">
-                <ul id="treeData" style="display: none">
+<div class="row grid-layout align-content-around">
+    <div class="col-2">
+        <div class="card mb-0 h-100">
+            <div id="datatree" class="card-body">
+                <ul id="treeData">
                     <?php foreach($groups as $id=>$group){ ?>
                         <li id="<?php echo $group['id'];?>" class="folder"><?php echo $group['title']; ?></li>
                     <?php } ?>
                 </ul>
             </div>
+        </div>
+    </div>
+    <div class="col-10">
+        <?php $this->renderGrid(false, $grid); ?>
+    </div>
+</div>
 
-            <script type="text/javascript">
-                $(function(){
-                    $(document).on('click', '.datagrid .filter_ip', function (){
-                        $('#filter_ip').val($(this).text()).trigger('input');
-                        return false;
-                    });
-                    $('.cp_toolbar .delete_filter a').hide();
-                    $("#datatree").dynatree({
+<script type="text/javascript">
+    $(function(){
+        $(document).on('click', '.datagrid .filter_ip', function (){
+            $('#filter_ip').val($(this).text()).trigger('input');
+            return false;
+        });
+        $('.cp_toolbar .delete_filter a').hide();
+        $("#datatree").dynatree({
 
-                        onPostInit: function(isReloading, isError){
-                            var path = $.cookie('icms[users_tree_path]');
-                            if (!path) { path = '/0'; }
-                            $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
-                                if(status == "loaded") {
-                                    node.expand();
-                                }else if(status == "ok") {
-                                    node.activate();
-                                    node.expand();
-                                    icms.datagrid.init();
-                                }
-                            });
-                        },
-
-                        onActivate: function(node){
-                            node.expand();
-                            $.cookie('icms[users_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
-                            var key = node.data.key;
-                            icms.datagrid.setURL("<?php echo $this->href_to('users'); ?>/" + key);
-                            $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
-                            $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
-                            $('.cp_toolbar .transfer a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'messages', 'pmailing')); ?>/" + key);
-                            if (key == 0){
-                                $('.cp_toolbar .edit a').hide();
-                                $('.cp_toolbar .permissions a').hide();
-                                $('.cp_toolbar .delete a').hide();
-                            } else {
-                                $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
-                                $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
-                                $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
-                            }
-                            icms.datagrid.loadRows();
-                        }
-
-                    });
+            onPostInit: function(isReloading, isError){
+                var path = $.cookie('icms[users_tree_path]');
+                if (!path) { path = '/0'; }
+                $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
+                    if(status == "loaded") {
+                        node.expand();
+                    }else if(status == "ok") {
+                        node.activate();
+                        node.expand();
+                        icms.datagrid.init();
+                    }
                 });
-            </script>
+            },
 
-        </td>
-        <td class="main" valign="top">
+            onActivate: function(node){
+                node.expand();
+                $.cookie('icms[users_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
+                var key = node.data.key;
+                icms.datagrid.setURL("<?php echo $this->href_to('users'); ?>/" + key);
+                $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
+                $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
+                $('.cp_toolbar .transfer a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'messages', 'pmailing')); ?>/" + key);
+                if (key == 0){
+                    $('.cp_toolbar .edit a').hide();
+                    $('.cp_toolbar .permissions a').hide();
+                    $('.cp_toolbar .delete a').hide();
+                } else {
+                    $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
+                    $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
+                    $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
+                }
+                icms.datagrid.loadRows();
+            }
 
-            <?php $this->renderGrid($this->href_to('users'), $grid); ?>
-
-        </td>
-    </tr>
-</table>
+        });
+    });
+</script>

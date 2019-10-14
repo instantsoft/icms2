@@ -460,7 +460,9 @@ class cmsUser {
 
     }
 
-    public static function sessionStart($cookie_domain = false){
+    public static function sessionStart($cookie_domain = false, $session_name = 'ICMSSID'){
+
+        session_name($session_name);
 
         if($cookie_domain){
             $cookie_domain = '.'.$cookie_domain;

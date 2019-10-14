@@ -1,22 +1,17 @@
 <?php
     $this->addTplJSName([
-        'jquery-cookie',
         'datatree',
         'admin-props'
     ]);
     $this->addTplCSSName('datatree');
-?>
 
-<h1><?php echo LANG_CONTENT_TYPE; ?>: <span><?php echo $ctype['title']; ?></span></h1>
-
-<?php
     $this->setPageTitle(LANG_CP_CTYPE_PROPS, $ctype['title']);
 
     $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
     $this->addBreadcrumb($ctype['title'], $this->href_to('ctypes', array('edit', $ctype['id'])));
     $this->addBreadcrumb(LANG_CP_CTYPE_PROPS);
 
-    $this->addMenuItems('ctype', $this->controller->getCtypeMenu('props', $ctype['id']));
+    $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('props', $ctype['id']));
 
     if ($cats){
 
@@ -63,20 +58,16 @@
 
 ?>
 
-<div class="pills-menu">
-    <?php $this->menu('ctype'); ?>
-</div>
-
 <?php if (!$cats){ ?>
-    <p><?php printf(LANG_CP_PROPS_NO_CATS, $ctype['title']); ?></p>
-    <p><?php printf(LANG_CP_PROPS_NO_CATS_ADD, $this->href_to('content', array('cats_add', $ctype['id'], 1)) . '?back=' . href_to_current()); ?></p>
+    <p class="alert alert-info mt-4"><?php printf(LANG_CP_PROPS_NO_CATS, $ctype['title']); ?></p>
+    <p class="alert alert-success mt-4"><?php printf(LANG_CP_PROPS_NO_CATS_ADD, $this->href_to('content', array('cats_add', $ctype['id'], 1)) . '?back=' . href_to_current()); ?></p>
 <?php } ?>
 
 <?php if ($cats){ ?>
 
 <table class="layout-no-fit">
     <tr>
-        <td class="sidebar" valign="top">
+        <td class="" valign="top">
 
             <div id="datatree">
                 <ul id="treeData" style="display: none">

@@ -60,9 +60,7 @@ class actionAuthLogin extends cmsAction {
                     cmsUser::sessionSet('is_auth_captcha', true);
                 }
 
-            }
-
-            if (!$errors){
+            } else {
 
                 $logged_user = cmsUser::login($data['login_email'], $data['login_password'], $data['remember'], false);
 
@@ -95,7 +93,7 @@ class actionAuthLogin extends cmsAction {
 
                     }
 
-                    // Запрещаем и разавторизовываем пользователей,
+                    // Не даём авторизоваться
                     // если сайт выключен и доступа к просмотру нет
                     if ($is_site_offline){
                         if (empty($logged_user['permissions']['auth']['view_closed']) && empty($logged_user['is_admin'])){
@@ -129,6 +127,14 @@ class actionAuthLogin extends cmsAction {
                         $this->redirect($back_url);
                     } else {
                         $this->redirect($this->getAuthRedirectUrl($auth_redirect));
+                    }
+
+                } else {
+
+                    cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
+
+                    if ($this->options['auth_captcha'] && !$is_site_offline){
+                        cmsUser::sessionSet('is_auth_captcha', true);
                     }
 
                 }

@@ -92,6 +92,7 @@ function create_config($path, $file){
         'check_spoofing_type'   => 0,
         'production_time'       => time(),
         'session_save_handler'  => 'files',
+        'session_name'          => strtoupper(uniqid('icms')),
         'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],
         'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
         'controllers_without_widgets' => array('admin')

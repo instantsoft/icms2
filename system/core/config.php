@@ -139,6 +139,10 @@ class cmsConfig {
             $this->data['controllers_without_widgets'] = array('admin');
         }
 
+        if(!isset($this->data['session_name'])){
+            $this->data['session_name'] = 'ICMSSID';
+        }
+
 		$this->upload_host_abs = $this->upload_host;
 
 		if (mb_strpos($this->upload_host, $this->host) === 0){

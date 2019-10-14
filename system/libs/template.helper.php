@@ -211,7 +211,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
     $attr_str = html_attr_str($attributes);
-	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
+	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="form-control date-input"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
     $html .= 'var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected;';
     $html .= '$(function(){ $("#'.$id.'").datepicker(datepicker_params); });function datepickerSelected(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);}';

@@ -72,6 +72,7 @@ class admin extends cmsFrontend {
 
                 $this->cms_template->setLayoutParams(array(
                     'user' => $this->cms_user,
+                    'hide_sidebar' => cmsUser::getCookie('hide_sidebar', 'integer'),
                     'su'   => $this->getSystemUtilization(),
                     'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
@@ -171,86 +172,131 @@ class admin extends cmsFrontend {
 
     public function getAdminMenu($show_submenu = false){
 
-        $menu = [
+        $menu = []; $controllers = [];
 
-            array(
-                'title' => LANG_CP_SECTION_CONTENT,
-                'url' => href_to($this->name, 'content'),
-                'options' => array(
-                    'class' => 'item-content',
-                    'icon'  => 'nav-icon icon-docs'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_CTYPES,
-                'url' => href_to($this->name, 'ctypes'),
-                'options' => array(
-                    'class' => 'item-ctypes',
-                    'icon'  => 'nav-icon icon-equalizer'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_MENU,
-                'url' => href_to($this->name, 'menu'),
-                'options' => array(
-                    'class' => 'item-menu',
-                    'icon'  => 'nav-icon icon-menu'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_WIDGETS,
-                'url' => href_to($this->name, 'widgets'),
-                'options' => array(
-                    'class' => 'item-widgets',
-                    'icon'  => 'nav-icon icon-grid'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_CONTROLLERS,
-                'url' => href_to($this->name, 'controllers'),
-                'options' => array(
-                    'class' => 'item-controllers',
-                    'icon'  => 'nav-icon icon-layers'
-                )
-            ),
-            array(
-                'title' => LANG_CP_OFICIAL_ADDONS,
-                'url' => href_to($this->name, 'addons_list'),
-                'options' => array(
-                    'class' => 'item-addons',
-                    'icon'  => 'nav-icon icon-puzzle'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_USERS,
-                'url' => href_to($this->name, 'users'),
-                'options' => array(
-                    'class' => 'item-users',
-                    'icon'  => 'nav-icon icon-people'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_SETTINGS,
-                'url' => $show_submenu ? '' : href_to($this->name, 'settings'),
-                'childs_count' => 2,
-                'options' => array(
-                    'class' => 'item-settings',
-                    'icon'  => 'nav-icon icon-settings'
-                )
+        $model_content = cmsCore::getModel('content');
+
+        $ctypes = $model_content->getContentTypes();
+
+        $_controllers = $this->model->getInstalledControllers();
+
+        if($show_submenu){
+            foreach ($_controllers as $cont) {
+                if(!$cont['is_enabled'] || !$cont['is_backend']){
+                    continue;
+                }
+                $controllers[] = $cont;
+            }
+        }
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CONTENT,
+            'url' => href_to($this->name, 'content'),
+            'childs_count' => ($ctypes && $show_submenu) ? count($ctypes) : null,
+            'options' => array(
+                'class' => 'item-content',
+                'icon'  => 'nav-icon icon-docs'
             )
+        ];
 
+        if($show_submenu){
+            foreach ($ctypes as $ctype) {
+
+                $count = $this->model->getTableItemsCount24($this->model->getContentTypeTableName($ctype['name']));
+
+                $menu[] = [
+                    'title' => $ctype['title'],
+                    'url' => href_to($this->name, 'content', $ctype['id']),
+                    'level' => 2,
+                    'counter' => $count,
+                    'options' => array(
+                        'icon'  => 'nav-icon icon-arrow-right'
+                    )
+                ];
+            }
+        }
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CTYPES,
+            'url' => href_to($this->name, 'ctypes'),
+            'options' => array(
+                'class' => 'item-ctypes',
+                'icon'  => 'nav-icon icon-equalizer'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_MENU,
+            'url' => href_to($this->name, 'menu'),
+            'options' => array(
+                'class' => 'item-menu',
+                'icon'  => 'nav-icon icon-menu'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_WIDGETS,
+            'url' => href_to($this->name, 'widgets'),
+            'options' => array(
+                'class' => 'item-widgets',
+                'icon'  => 'nav-icon icon-grid'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CONTROLLERS,
+            'url' => href_to($this->name, 'controllers'),
+            'childs_count' => ($controllers && $show_submenu) ? count($controllers) : null,
+            'options' => array(
+                'class' => 'item-controllers',
+                'icon'  => 'nav-icon icon-layers'
+            )
+        ];
+
+        if($show_submenu){
+            foreach ($controllers as $cont) {
+
+                $menu[] = [
+                    'title' => $cont['title'],
+                    'url' => href_to($this->name, 'controllers', ['edit', $cont['name']]),
+                    'level' => 2,
+                    'options' => array(
+                        'icon'  => 'nav-icon icon-arrow-right'
+                    )
+                ];
+            }
+        }
+
+        $menu[] = [
+            'title' => LANG_CP_OFICIAL_ADDONS,
+            'url' => href_to($this->name, 'addons_list'),
+            'options' => array(
+                'class' => 'item-addons',
+                'icon'  => 'nav-icon icon-puzzle'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_USERS,
+            'url' => href_to($this->name, 'users'),
+            'options' => array(
+                'class' => 'item-users',
+                'icon'  => 'nav-icon icon-people'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_SETTINGS,
+            'url' => href_to($this->name, 'settings'),
+            'childs_count' => 2,
+            'options' => array(
+                'class' => 'item-settings',
+                'icon'  => 'nav-icon icon-settings'
+            )
         ];
 
         // Совместимость со старой админкой
         if($show_submenu){
-
-            array_unshift($menu, [
-                'title' => LANG_ADMIN_CONTROLLER,
-                'url' => href_to($this->name),
-                'options' => array(
-                    'icon'  => 'nav-icon icon-speedometer'
-                )
-            ]);
 
             $settings_menu = $this->getSettingsMenu();
 

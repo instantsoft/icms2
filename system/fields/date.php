@@ -23,7 +23,7 @@ class fieldDate extends cmsFormField {
 
     public function getRules() {
 
-        if(($this->context == 'filter' && $this->getOption('filter_range')) || $this->getOption('show_time')){
+        if($this->context == 'filter' && $this->getOption('filter_range')){
             $this->rules[] = array('date_range');
         } else {
             $this->rules[] = array('date');

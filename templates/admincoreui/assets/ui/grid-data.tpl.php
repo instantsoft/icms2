@@ -1,4 +1,7 @@
-<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage; ?>
+<?php
+$this->addTplCSSName('datatables.min');
+$perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage;
+?>
 
 <form id="datagrid_filter">
     <?php if ($options['is_pagination']) { ?>
@@ -23,18 +26,18 @@
     </nav>
 <?php } ?>
 
-<div class="datagrid_wrapper table-responsive-md">
-    <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered table-hover table-light">
+<div class="datagrid_wrapper table-responsive-md dataTables_wrapper dt-bootstrap4">
+    <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered dataTable bg-white">
         <thead>
             <tr>
                 <?php foreach($columns as $name=>$column){ ?>
                     <?php if ($name=='id' && !$options['show_id']){ continue; } ?>
-                    <th <?php if (isset($column['width'])){ ?>width="<?php echo $column['width']; ?>"<?php } ?> rel="<?php echo $name; ?>" <?php if($options['is_sortable']){ ?>class="sortable"<?php } ?>>
+                    <th rel="<?php echo $name; ?>" <?php if($options['is_sortable']){ ?>class="sortable"<?php } ?>>
                         <?php echo $column['title']; ?>
                     </th>
                 <?php } ?>
                 <?php if($actions){ ?>
-                    <th width="<?php echo (sizeof($actions) * 30); ?>" class="center" rel="dg_actions">
+                    <th class="center" rel="dg_actions">
                         <?php echo LANG_CP_ACTIONS; ?>
                     </th>
                 <?php } ?>

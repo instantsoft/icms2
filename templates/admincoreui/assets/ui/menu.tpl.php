@@ -18,7 +18,10 @@
 
             $css_classes = ['nav-item'];
             $css_aclasses = ['nav-link'];
-            if ($is_active) { $css_aclasses[] = 'active'; }
+            if ($is_active) {
+                $css_aclasses[] = 'active';
+                $css_classes[] = 'open';
+            }
             if ($item['childs_count'] > 0) {
                 $css_classes[] = 'nav-dropdown';
                 $css_aclasses[] = 'nav-dropdown-toggle';

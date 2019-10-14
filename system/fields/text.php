@@ -84,7 +84,7 @@ class fieldText extends cmsFormField {
     public function getInput($value){
 
         $this->data['attributes']               = $this->getProperty('attributes')?:[];
-        $this->data['attributes']['rows']       = $this->getOption('size');
+        $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
         $this->data['attributes']['id']         = $this->id;
         $this->data['attributes']['required']   = (array_search(array('required'), $this->getRules()) !== false);
 

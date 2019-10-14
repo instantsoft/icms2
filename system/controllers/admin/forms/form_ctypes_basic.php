@@ -49,6 +49,7 @@ class formAdminCtypesBasic extends cmsForm {
 
         return array(
             'titles' => array(
+                'title' => LANG_BASIC_OPTIONS,
                 'type' => 'fieldset',
                 'childs' => array(
                     new fieldString('name', array(

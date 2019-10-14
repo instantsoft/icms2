@@ -1,10 +1,10 @@
 <?php
 $visible_depend = []; $index = 0; $active_tab = false;
 ?>
-<div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } else { ?>card mb-0 rounded-0 <?php } ?>form-tabs">
+<div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs<?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
 
     <?php if($form->is_tabbed){ ?>
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs flex-wrap" role="tablist">
             <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
                 <?php if (empty($fieldset['childs'])) { continue; } ?>
                 <li class="nav-item">
@@ -93,9 +93,9 @@ $visible_depend = []; $index = 0; $active_tab = false;
 
                     ?>
 
-                    <div id="<?php echo 'f_'.$field->id; ?>" class="form-group <?php echo implode(' ', $field->classes); ?>" <?php if (isset($field->rel)) { ?>rel="<?php echo $field->rel; ?>"<?php } ?> <?php if ($field->styles) { ?>style="<?php echo implode(';', $field->styles); ?>"<?php } ?>>
+                    <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
 
-                        <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
+                        <div id="<?php echo 'f_'.$field->id; ?>" class="form-group <?php echo implode(' ', $field->classes); ?>" <?php if (isset($field->rel)) { ?>rel="<?php echo $field->rel; ?>"<?php } ?> <?php if ($field->styles) { ?>style="<?php echo implode(';', $field->styles); ?>"<?php } ?>>
 
                             <?php echo $field->{$field->display_input}($value); ?>
 
@@ -121,16 +121,15 @@ $visible_depend = []; $index = 0; $active_tab = false;
 
                             <?php if ($error){ ?><div class="invalid-feedback"><?php echo $error; ?></div><?php } ?>
 
+                        </div>
 
-                        <?php } else { ?>
+                    <?php } else { ?>
 
-                            <?php echo html_input('hidden', $field->element_name, $value, array('id' => $field->id)); ?>
+                        <?php echo html_input('hidden', $field->element_name, $value, array('id' => $field->id)); ?>
 
-                        <?php } ?>
+                    <?php } ?>
 
-                    </div> <?php
-
-                    }
+                <?php }
 
             } } ?>
 

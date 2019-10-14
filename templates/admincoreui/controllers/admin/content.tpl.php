@@ -3,7 +3,7 @@
         'jquery-cookie',
         'datatree',
         'admin-content'
-        ]);
+    ]);
     $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_CONTENT);
@@ -100,7 +100,7 @@
 
 ?>
 
-<h1><?php echo LANG_CP_SECTION_CONTENT; ?></h1>
+<h1><?php echo LANG_CP_SECTION_CONTENT; ?> <span class="text-muted"><?php if($ctype){ echo $ctype['title']; } ?></span></h1>
 
 <table class="layout">
     <tr>
@@ -118,7 +118,7 @@
                 $(function(){
 
                     $('.cp_toolbar .delete_filter a').hide();
-                    current_ctype = 0;
+                    var current_ctype = <?php echo $ctype_id; ?>;
                     is_loaded = false;
 
                     $('#datagrid_filter').append('<?php echo html_input('hidden', 'ctype_changed'); ?>');
@@ -128,19 +128,16 @@
                         debugLevel: 0,
 
                         onPostInit: function(isReloading, isError){
-                            var path = $.cookie('icms[content_tree_path]');
-                            if (!path) { path = '1.1'; }
-                            if (path) {
-                                $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
-                                    if(status == "loaded") {
-                                        node.expand();
-                                    }else if(status == "ok") {
-                                        node.activate();
-                                        node.expand();
-                                        icms.datagrid.init();
-                                    }
-                                });
-                            }
+                            var path = '<?php echo $key_path; ?>';
+                            $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
+                                if(status == "loaded") {
+                                    node.expand();
+                                }else if(status == "ok") {
+                                    node.activate();
+                                    node.expand();
+                                    icms.datagrid.init();
+                                }
+                            });
                         },
 
                         onActivate: function(node){
@@ -166,13 +163,22 @@
                                 $('.cp_toolbar .edit_folder a').show();
                                 $('.cp_toolbar .delete_folder a').show();
                             }
+                            var root_node = null;
+                            node.visitParents(function (_node) {
+                                if(_node.parent !== null){
+                                    root_node = _node;
+                                }
+                            }, true);
+                            $('h1 > span').html(root_node.data.title);
+                            $('.nav-item.item-content a').removeClass('active');
+                            $('a[title='+root_node.data.title+']').addClass('active');
                             if(key[0] !== current_ctype){
                                 current_ctype = key[0];
                                 contentCancelFilter(true);
                             }else{
                                 icms.datagrid.loadRows();
                             }
-                            $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"></a>');
+                            $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"><i class="icon-settings"></i></a>');
                         },
 
                         onLazyRead: function(node){

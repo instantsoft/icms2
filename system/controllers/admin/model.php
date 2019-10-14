@@ -192,4 +192,12 @@ class modelAdmin extends cmsModel{
 
     }
 
+    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub'){
+
+        $this->filterDateYounger($date_pub_field, 1);
+
+        return $this->getCount($table_name, 'id', true);
+
+    }
+
 }

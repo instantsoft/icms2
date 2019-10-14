@@ -1,7 +1,7 @@
-<div class="form-check">
-    <?php echo html_checkbox($field->element_name, (bool)$value, 1, array('id'=>$field->id)); ?>
+<div class="custom-control custom-switch">
+    <?php echo html_checkbox($field->element_name, (bool)$value, 1, array('id'=>$field->id, 'class' => 'custom-control-input')); ?>
     <?php if ($field->title) { ?>
-        <label class="form-check-label" for="<?php echo $field->id; ?>">
+        <label class="custom-control-label" for="<?php echo $field->id; ?>">
             <?php echo $field->title; ?>
         </label>
     <?php } ?>
