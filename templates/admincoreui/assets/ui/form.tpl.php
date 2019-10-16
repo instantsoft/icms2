@@ -1,8 +1,6 @@
 <?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
-    <nav class="cp_toolbar navbar navbar-light bg-light my-3 py-1">
-        <?php $this->toolbar(); ?>
-    </nav>
+    <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
 <form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"

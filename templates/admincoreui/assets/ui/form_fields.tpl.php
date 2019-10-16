@@ -45,9 +45,9 @@ $visible_depend = []; $index = 0; $active_tab = false;
 
                     if(!is_numeric($first_field_key)){ ?>
 
-                        <ul class="field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
+                        <ul class="nav nav-tabs flex-wrap field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
                             <?php foreach ($_field as $key => $field) { ?>
-                            <li class="field_tabbed_<?php echo $key; ?>">
+                            <li class="nav-item field_tabbed_<?php echo $key; ?>">
                                 <a href="#f_<?php echo $field->id; ?>">
                                     <?php echo isset($field->field_tab_title) ? $field->field_tab_title : ''; ?>
                                 </a>

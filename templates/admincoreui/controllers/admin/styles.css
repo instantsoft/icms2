@@ -1,7 +1,10 @@
-.cp_toolbar .nav-pills .nav-item:first-child .nav-link {
+.cp_toolbar .nav-pills > .nav-item:first-child .nav-link {
     padding-left: 0;
 }
-.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before {
+.cp_toolbar .dropdown-menu {
+    min-width: 13rem;
+}
+.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_on::before, .flag_lock_off::before {
     font-family: 'simple-line-icons';
     vertical-align: text-bottom;
     font-size: 1.1rem;
@@ -36,10 +39,10 @@
 .cp_toolbar .cancel > a::before {
     content: "\e050";
 }
-.cp_toolbar .delete > a::before {
+.cp_toolbar .delete > a::before, .cp_toolbar .delete_folder > a::before {
     content: "\e082";
 }
-.cp_toolbar .cancel > a, .cp_toolbar .delete > a {
+.cp_toolbar .cancel > a, .cp_toolbar .delete > a, .cp_toolbar .delete_folder > a, .cp_toolbar .delete_filter > a, .cp_toolbar .basket_put > a {
     color: #f86c6b;
 }
 .cp_toolbar .install > a::before {
@@ -60,22 +63,36 @@
 .cp_toolbar .settings > a::before, .theme_settings::before {
     content: "\e09a";
 }
-
-
-.cp_toolbar .add_folder .item { background: url("../../images/icons/folder_add.png") no-repeat left center; }
-.cp_toolbar .edit_folder .item { background: url("../../images/icons/folder_edit.png") no-repeat left center; }
-.cp_toolbar .delete_folder .item { background: url("../../images/icons/folder_delete.png") no-repeat left center; }
-.cp_toolbar .tree_folder .item { background: url("../../images/icons/folders_explorer.png") no-repeat left center; }
-.cp_toolbar .edit .item { background: url("../../images/icons/edit.png") no-repeat left center; }
-.cp_toolbar .basket_put .item { background: url("../../images/icons/basket_put.png") no-repeat left center; }
-.cp_toolbar .move .item { background: url("../../images/icons/move_to_folder.png") no-repeat left center; }
-
-.cp_toolbar .filter .item { background: url("../../images/icons/filter.png") no-repeat left center; }
-.cp_toolbar .delete_filter .item { background: url("../../images/icons/filter_delete.png") no-repeat left center; }
-
-.cp_toolbar .addons .item { background: url("../../images/icons/package_go.png") no-repeat left center; }
-.cp_toolbar .logs .item { background: url("../../images/icons/logs.png") no-repeat left center; }
-
+.cp_toolbar .filter > a::before {
+    content: "\e091";
+}
+.cp_toolbar .delete_filter > a::before {
+    content: "\e092";
+}
+.cp_toolbar .add_folder > a::before {
+    content: "\e039";
+}
+.cp_toolbar .edit_folder > a::before {
+    content: "\e060";
+}
+.cp_toolbar .basket_put > a::before {
+    content: "\e054";
+}
+.cp_toolbar .move > a::before {
+    content: "\e023";
+}
+.cp_toolbar .logs > a::before {
+    content: "\e04f";
+}
+.cp_toolbar .tree_folder > a::before {
+    content: "\e06c";
+}
+.cp_toolbar .users > a::before {
+    content: "\e001";
+}
+.cp_toolbar .add_user > a::before {
+    content: "\e002";
+}
 h1:not(.error) {
     background: #63c2de;
     border-bottom: solid 1px #20a8d8;
@@ -111,7 +128,7 @@ h1 > span:empty {
 }
 .app-header {
   background-color: #34699f;
-  background-image: url(../images/header_bg.jpg);
+  background-image: url(../../images/header_bg.jpg);
   border: none;
 }
 .navbar-nav .nav-link {
@@ -144,6 +161,8 @@ form .field_error .invalid-feedback {
     cursor: pointer;
     color: #20a8d8;
 }
+.positive { color:#4dbd74; }
+.negative { color:	#f86c6b; }
 .theme_settings {
     margin-left: 10px;
 }
@@ -158,6 +177,47 @@ form .field_error .invalid-feedback {
 }
 .ajax-form .card-body {
     padding: 0;
+}
+ul.field_tabbed > li {
+    background-repeat: no-repeat;
+    background-position: 4px center;
+    background-size: auto 16px;
+}
+ul.field_tabbed > li.field_tabbed_ru {
+    background-image: url("../../images/languages/ru.svg");
+}
+ul.field_tabbed > li.field_tabbed_en {
+    background-image: url("../../images/languages/en.svg");
+}
+.datagrid .flag_trigger,
+.datagrid .flag_lock_on,
+.datagrid .flag_lock_off,
+.datagrid .flag_trigger a {
+    text-align: center;
+    color: #acb4bc;
+}
+.datagrid .flag_trigger a {
+    color: inherit;
+    text-decoration: none;
+}
+.datagrid .flag_trigger:empty::before,
+.datagrid .flag_trigger a::before {
+    content: "\e080";
+}
+.datagrid .flag_trigger.loading{
+    animation: sk-pulseScaleOut 0.5s infinite linear;
+}
+
+.datagrid .flag_on { color: #4dbd74; }
+.datagrid .flag_middle { color: #ffc107; }
+.datagrid .flag_lock_on { color: #f86c6b; }
+
+.datagrid .flag_lock_on:empty::before, .datagrid .flag_lock_off:empty::before {
+    content: "\e08e";
+}
+
+.datagrid .is_deleted .flag_trigger, .datagrid .is_deleted .flag_trigger a {
+    opacity: 0.2;
 }
 fieldset > div:last-child, .tab-pane:last-child > fieldset {
     margin-bottom: 0;
@@ -309,6 +369,74 @@ form .child_field{padding-left:20px}
 .need-scrollbar {
     position: relative;
     max-height: 420px;
+}
+th[rel="id"] {
+    width: 50px;
+}
+.datagrid_loading{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 31px;
+}
+.datagrid tr.selected td,
+.datagrid tr.selected:hover td {
+    background:#ffe79d;
+}
+.datagrid tr.dragged td {
+    background: #e4e7ea;
+    box-shadow:inset 0 1px 2px #acb4bc !important;
+    cursor:move !important;
+}
+.datagrid .empty{
+    color:#8f9ba6;
+}
+
+.spinner {
+    margin: 60px auto 0;
+    width: 70px;
+    text-align: center;
+}
+.spinner > div {
+    vertical-align: middle;
+    width: 18px;
+    height: 18px;
+    background-color: #acb4bc;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+.spinner .bounce1 {
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+.spinner .bounce2 {
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+@-webkit-keyframes sk-bouncedelay {
+    0%, 80%, 100% { -webkit-transform: scale(0) }
+    40% { -webkit-transform: scale(1.0) }
+}
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+td > .spinner {
+    margin: 0;
+    display: inline-block;
+}
+td > .spinner > div {
+    width: 12px;
+    height: 12px;
+    background-color: #dadada;
 }
 .sk-spinner-pulse {
     display: inline-flex;

@@ -21,12 +21,10 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
 <form id="datagrid_form" action="" method="post"></form>
 
 <?php if ($options['is_toolbar'] && $this->isToolbar()){ ?>
-    <nav class="cp_toolbar navbar navbar-light bg-light my-3 py-1">
-        <?php $this->toolbar(); ?>
-    </nav>
+    <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
-<div class="datagrid_wrapper table-responsive-md dataTables_wrapper dt-bootstrap4">
+<div class="position-relative datagrid_wrapper table-responsive-md dataTables_wrapper dt-bootstrap4 mb-4">
     <table id="datagrid" class="datagrid <?php if ($options['is_selectable']) { ?>datagrid_selectable<?php } ?> table table-striped table-bordered dataTable bg-white">
         <thead>
             <tr>
@@ -77,14 +75,6 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
             <?php } ?>
         </tbody>
     </table>
-    <div class="datagrid_loading">
-        <div class="loading_overlay"></div>
-        <div class="spinner">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
-            <div class="bounce3"></div>
-        </div>
-    </div>
 <?php if ($options['is_pagination']){ ?>
     <div class="row">
         <div class="col-sm-12 col-md-6">
@@ -103,6 +93,13 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
         </div>
     </div>
 <?php } ?>
+    <div class="datagrid_loading">
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
+    </div>
 </div>
 
 <?php if ($options['is_pagination'] || $options['is_selectable']){ ?>

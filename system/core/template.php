@@ -291,10 +291,12 @@ class cmsTemplate {
 
     /**
      * Выводит глобальный тулбар
+     * @param string $template_name Название шаблона в assets/ui
+     * @return
      */
-    public function toolbar(){
+    public function toolbar($template_name = 'menu'){
         if (!$this->isToolbar()){ return; }
-        $this->menu('toolbar', false, 'nav-pills');
+        $this->menu('toolbar', false, 'nav-pills', 0, false, $template_name);
     }
 
     /**
@@ -777,9 +779,11 @@ class cmsTemplate {
         $item = array(
             'title' => $button['title'],
             'url' => isset($button['href']) ? $button['href'] : '',
-            'level' => 1,
+            'level' => isset($button['level']) ? $button['level'] : 1,
+            'childs_count' => isset($button['childs_count']) ? $button['childs_count'] : 0,
             'counter' => isset($button['counter']) ? $button['counter'] : null,
             'options' => array(
+                'icon' => isset($button['icon']) ? $button['icon'] : null,
                 'class' => isset($button['class']) ? $button['class'] : null,
                 'target' => isset($button['target']) ? $button['target'] : '',
                 'onclick' => isset($button['onclick']) ? $button['onclick'] : null,

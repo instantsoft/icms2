@@ -14,7 +14,7 @@
     <body class="app flex-row align-items-center bg-dark">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6">
+                <div class="col-lg-7">
                     <div class="clearfix">
                         <h1 class="error float-left display-3 mr-4 text-danger">503</h1>
                         <p class="pt-3 text-danger"><b><i class="icon-fire icons font-2xl"></i> <?php echo $message; ?></b></p>

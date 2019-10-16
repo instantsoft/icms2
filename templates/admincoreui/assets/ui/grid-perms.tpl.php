@@ -1,13 +1,11 @@
 <?php if ($this->isToolbar()){ ?>
-<nav class="cp_toolbar navbar navbar-light bg-light my-3 py-1">
-    <?php $this->toolbar(); ?>
-</nav>
+    <?php $this->toolbar('menu-toolbar'); ?>
 <?php } ?>
 
 <form action="<?php echo $submit_url; ?>" method="post">
 
-    <div class="datagrid_wrapper perms_grid table-responsive-md">
-        <table id="datagrid" class="datagrid table table-striped table-bordered table-hover table-light" cellpadding="0" cellspacing="0" border="0">
+    <div class="datagrid_wrapper perms_grid table-responsive-md dataTables_wrapper dt-bootstrap4">
+        <table id="datagrid" class="datagrid table table-striped table-bordered dataTable bg-white">
             <thead>
                 <tr>
                     <th><?php echo LANG_PERM_RULE; ?></th>
@@ -19,13 +17,11 @@
             <tbody>
                 <?php foreach($rules as $rule){ ?>
                     <tr>
-                        <td>
-                            <div>
+                        <td class="align-middle">
                             <?php echo $rule['title']; ?>
                             <?php if(!empty($rule['title_hint'])){ ?>
-                                <div class="hint"><?php echo $rule['title_hint']; ?></div>
+                                <div class="hint text-muted small"><?php echo $rule['title_hint']; ?></div>
                             <?php } ?>
-                            </div>
                         </td>
 
                         <?php foreach($groups as $group){ ?>
@@ -40,7 +36,7 @@
                                             null;
                             ?>
 
-                            <td class="center" data-label="<?php html($group['title']); ?>">
+                            <td class="center align-middle text-center" data-label="<?php html($group['title']); ?>">
                                 <?php if ($rule['type'] == 'flag'){ ?>
                                     <label class="switch switch-pill switch-primary m-0 align-middle">
                                         <?php echo html_checkbox("value[{$rule['id']}][{$group['id']}]", $default, 1, array('class' => 'switch-input')); ?>
@@ -63,7 +59,7 @@
         </table>
     </div>
 
-    <div class="buttons  my-3">
+    <div class="buttons my-3">
         <?php echo html_submit(LANG_SAVE); ?>
     </div>
 

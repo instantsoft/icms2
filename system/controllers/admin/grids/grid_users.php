@@ -25,7 +25,7 @@ function grid_users($controller){
             'filter'  => 'like',
             'handler' => function($nickname, $user) {
                 if ($user['is_admin']) {
-                    $nickname = '<b title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
+                    $nickname = '<b data-toggle="tooltip" data-placement="top" title="' . LANG_USER_IS_ADMIN . '">' . $nickname . '</b>';
                 }
                 return $nickname;
             }
@@ -54,7 +54,7 @@ function grid_users($controller){
             'filter' => 'date',
             'handler' => function($date, $user){
                 $ld = $user['is_online'] ? LANG_ONLINE : LANG_USERS_PROFILE_LOGDATE.' '.string_date_age_max($user['date_log'], true);
-                return '<span class="tooltip" title="'.$ld.'">'.html_date($date).'</span>';
+                return '<span data-toggle="tooltip" data-placement="top" title="'.$ld.'">'.html_date($date).'</span>';
             }
         ),
         'karma' => array(
@@ -76,7 +76,7 @@ function grid_users($controller){
             'width' => 24,
             'handler' => function($value, $user){
                 $title = $user['is_locked'] ? ($user['lock_reason'] ? $user['lock_reason'] : LANG_TO.' '.strip_tags(html_date($user['lock_until']))) : '';
-                return '<div class="tooltip" title="'.$title.'">'.$value.'</div>';
+                return '<div data-toggle="tooltip" data-placement="top" title="'.$title.'">'.$value.'</div>';
             }
         ),
         'is_deleted' => array(

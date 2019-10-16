@@ -81,6 +81,18 @@ class actionAdminControllersEdit extends cmsAction {
 
         $this->cms_template->setMenuItems('backend', $backend_menu);
 
+        if($ctype){
+
+            $this->cms_template->addMenuItem('breadcrumb-menu', [
+                'title' => LANG_CONTENT_TYPE.' «'.$ctype['title'].'»',
+                'url'   => $this->cms_template->href_to('ctypes', array('edit', $ctype['id'])),
+                'options' => array(
+                    'icon'  => 'icon-settings'
+                )
+            ]);
+
+        }
+
         $html = $backend_controller->runAction($action_name, $params);
 
         return $this->cms_template->render('controllers_edit', array(

@@ -111,6 +111,7 @@ icms.modal = (function ($) {
                 break;
             case 'close':
                 $(document).on('hidden.bs.modal', '#icms_modal', function (e) {
+                    icms.forms.form_changed = false;
                     callback();
                 });
                 break;

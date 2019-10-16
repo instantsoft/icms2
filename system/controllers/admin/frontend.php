@@ -208,10 +208,7 @@ class admin extends cmsFrontend {
                     'title' => $ctype['title'],
                     'url' => href_to($this->name, 'content', $ctype['id']),
                     'level' => 2,
-                    'counter' => $count,
-                    'options' => array(
-                        'icon'  => 'nav-icon icon-arrow-right'
-                    )
+                    'counter' => $count
                 ];
             }
         }
@@ -259,10 +256,7 @@ class admin extends cmsFrontend {
                 $menu[] = [
                     'title' => $cont['title'],
                     'url' => href_to($this->name, 'controllers', ['edit', $cont['name']]),
-                    'level' => 2,
-                    'options' => array(
-                        'icon'  => 'nav-icon icon-arrow-right'
-                    )
+                    'level' => 2
                 ];
             }
         }
@@ -375,7 +369,10 @@ class admin extends cmsFrontend {
                     if(cmsCore::getController($ctype['name'])->options){
                         $ctype_menu[] = array(
                             'title' => LANG_CP_CONTROLLERS_OPTIONS,
-                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options'))
+                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options')),
+                            'options' => array(
+                                'icon'  => 'nav-icon icon-settings'
+                            )
                         );
                     }
                 }
@@ -473,6 +470,28 @@ class admin extends cmsFrontend {
                 )
             ),
 
+        ));
+
+    }
+
+    public function getUserGroupsMenu($action = 'view', $id = 0) {
+
+        return cmsEventsManager::hook('admin_user_groups_menu', array(
+            array(
+                'title' => LANG_CONFIG,
+                'url' => $action != 'add' ? href_to($this->name, 'users', array('group_edit', $id)) : href_to($this->name, 'users', 'group_add'),
+                'options' => array(
+                    'icon'  => 'nav-icon icon-globe'
+                )
+            ),
+            array(
+                'title' => LANG_PERMISSIONS,
+                'disabled' => $action == 'add' ? true : null,
+                'url' => href_to($this->name, 'users', array('group_perms', $id)),
+                'options' => array(
+                    'icon'  => 'nav-icon icon-key'
+                )
+            )
         ));
 
     }

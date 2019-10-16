@@ -12,7 +12,7 @@
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
         'style'
-        ]); ?>
+    ]); ?>
     <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
     <?php $this->addMainTplJSName([
         'jquery-cookie',
@@ -25,7 +25,7 @@
         'core',
         'modal',
         'admin-core'
-        ]); ?>
+    ]); ?>
     <?php $this->head(false); ?>
 </head>
 <body class="app app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show<?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
@@ -116,7 +116,7 @@
                         <div class="progress progress-xs">
                             <div class="progress-bar bg-<?php echo $su_item['style']; ?>" role="progressbar" style="width: <?php echo $su_item['percent']; ?>%" aria-valuenow="<?php echo $su_item['percent']; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
-                        <small class="text-muted"><?php echo $su_item['hint']; ?>%</small>
+                        <small class="text-muted"><?php echo $su_item['hint']; ?></small>
                     </div>
                 <?php } ?>
             </nav>
@@ -127,7 +127,7 @@
                 <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
             <?php } ?>
             <?php if($this->hasMenu('admin_toolbar')){ ?>
-                <nav class="bg-white mt-n4 border-bottom">
+                <nav class="bg-white mt-n4 border-bottom mb-4">
                     <div class="container-fluid py-2">
                         <?php $this->menu('admin_toolbar', true, 'nav-pills'); ?>
                     </div>
@@ -165,7 +165,6 @@
     <?php } ?>
     <?php $messages = cmsUser::getSessionMessages(); ?>
     <script>
-        toastr.options = {closeButton: true};
         $(function(){
         <?php if($this->controller->install_folder_exists){ ?>
             toastr.error('<?php echo LANG_CP_INSTALL_FOLDER_EXISTS; ?>');

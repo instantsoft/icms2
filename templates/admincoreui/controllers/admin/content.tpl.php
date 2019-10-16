@@ -21,7 +21,7 @@
         'class' => 'filter',
         'title' => LANG_FILTER,
         'href'  => null,
-        'onclick' => "return icms.modal.openAjax($(this).attr('href'))"
+        'onclick' => "return icms.modal.openAjax($(this).attr('href'),{},false,$(this).attr('title'))"
     ));
 
     $this->addToolButton(array(

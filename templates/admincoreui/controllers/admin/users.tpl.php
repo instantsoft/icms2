@@ -11,11 +11,36 @@
 
     $this->addBreadcrumb(LANG_CP_SECTION_USERS, $this->href_to('users'));
 
+    if(cmsController::enabled('messages')){
+        $this->addMenuItem('breadcrumb-menu', [
+            'title' => LANG_CP_USER_PMAILING,
+            'url' => $this->href_to('controllers', array('edit', 'messages', 'pmailing')),
+            'options' => [
+                'icon' => 'icon-envelope-letter'
+            ]
+        ]);
+    }
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_CONFIG,
+        'url' => $this->href_to('controllers', array('edit', 'users')),
+        'options' => [
+            'icon' => 'icon-settings'
+        ]
+    ]);
+
+	$this->addToolButton(array(
+		'class' => 'help',
+		'title' => LANG_HELP,
+		'target' => '_blank',
+		'href'  => LANG_HELP_URL_USERS
+	));
+
     $this->addToolButton(array(
         'class' => 'filter',
         'title' => LANG_FILTER,
         'href'  => null,
-        'onclick' => "return icms.modal.openAjax($(this).attr('href'))"
+        'onclick' => "return icms.modal.openAjax($(this).attr('href'),{},false,$(this).attr('title'))"
     ));
 
     $this->addToolButton(array(
@@ -25,63 +50,51 @@
         'onclick' => "return contentCancelFilter()"
     ));
 
-    if(cmsController::enabled('messages')){
-        $this->addToolButton(array(
-            'class' => 'transfer',
-            'title' => LANG_CP_USER_PMAILING,
-            'href'  => $this->href_to('controllers', array('edit', 'messages', 'pmailing'))
-        ));
-    }
-
     $this->addToolButton(array(
-        'class' => 'settings',
-        'title' => LANG_CONFIG,
-        'href'  => $this->href_to('controllers', array('edit', 'users'))
-    ));
-
-    $this->addToolButton(array(
-        'class' => 'add',
+        'class' => 'add_user',
         'title' => LANG_CP_USER_ADD,
         'href'  => $this->href_to('users', 'add')
     ));
 
     $this->addToolButton(array(
+        'class' => 'users',
+        'childs_count' => 4,
+        'title' => LANG_GROUP,
+        'href'  => ''
+    ));
+
+    $this->addToolButton(array(
         'class' => 'add_folder',
+        'level' => 2,
         'title' => LANG_CP_USER_GROUP_ADD,
         'href'  => $this->href_to('users', 'group_add')
     ));
 
     $this->addToolButton(array(
         'class' => 'edit',
+        'level' => 2,
         'title' => LANG_CP_USER_GROUP_EDIT,
         'href'  => $this->href_to('users', 'group_edit')
     ));
 
     $this->addToolButton(array(
         'class' => 'permissions',
+        'level' => 2,
         'title' => LANG_CP_USER_GROUP_PERMS,
         'href'  => $this->href_to('users', 'group_perms')
     ));
 
     $this->addToolButton(array(
         'class' => 'delete',
+        'level' => 2,
         'title' => LANG_CP_USER_GROUP_DELETE,
         'href'  => $this->href_to('users', 'group_delete'),
         'onclick' => "return confirm('".LANG_CP_USER_GROUP_DELETE_CONFIRM."')"
     ));
 
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_USERS
-	));
-
     $this->applyToolbarHook('admin_users_toolbar');
 
 ?>
-
-<h1><?php echo LANG_CP_SECTION_USERS; ?> <span></span></h1>
 
 <div class="row grid-layout align-content-around">
     <div class="col-2">
@@ -129,8 +142,7 @@
                 var key = node.data.key;
                 icms.datagrid.setURL("<?php echo $this->href_to('users'); ?>/" + key);
                 $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
-                $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
-                $('.cp_toolbar .transfer a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'messages', 'pmailing')); ?>/" + key);
+                $('.cp_toolbar .add_user a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
                 if (key == 0){
                     $('.cp_toolbar .edit a').hide();
                     $('.cp_toolbar .permissions a').hide();

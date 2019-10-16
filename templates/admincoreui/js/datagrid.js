@@ -438,6 +438,8 @@ icms.datagrid = (function ($) {
 
 		});
 
+        $('[data-toggle="tooltip"]').tooltip();
+
         if (_this.callback) { _this.callback(); }
 
         icms.events.run('datagrid_rows_loaded', result);

@@ -1,5 +1,5 @@
+toastr.options = {progressBar: true};
 var icms = icms || {};
-
 icms.admin = (function ($) {
 
     this.onDocumentReady = function(){

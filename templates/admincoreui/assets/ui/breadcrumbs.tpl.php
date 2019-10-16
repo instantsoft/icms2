@@ -6,7 +6,7 @@
         </li>
         <?php if ($breadcrumbs) { ?>
 
-            <?php foreach($breadcrumbs as $id=>$item){ ?>
+            <?php foreach($breadcrumbs as $id => $item){ ?>
 
                 <?php if (in_array($item['href'], $listed)){ continue; } ?>
 
@@ -22,6 +22,20 @@
 
             <?php } ?>
 
+        <?php } ?>
+        <?php if($this->hasMenu('breadcrumb-menu')){ ?>
+            <li class="breadcrumb-menu d-sm-down-none">
+                <div class="btn-group" role="group">
+                    <?php foreach($this->menus['breadcrumb-menu'] as $item){ ?>
+                        <a class="btn" href="<?php html($item['url']); ?>">
+                            <?php if (!empty($item['options']['icon'])) { ?>
+                                <i class="<?php echo $item['options']['icon']; ?>"></i>
+                            <?php } ?>
+                            <?php html($item['title']); ?>
+                        </a>
+                    <?php } ?>
+                </div>
+            </li>
         <?php } ?>
     </ol>
 </nav>
