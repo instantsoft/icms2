@@ -29,15 +29,25 @@
         ]
     ]);
 
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_USERS,
+        'options' => [
+            'icon' => 'icon-question'
+        ]
+    ]);
+
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_USERS
+        'class' => 'menu d-xl-none',
+		'data'  => [
+            'toggle' =>'quickview',
+            'toggle-element' => '#left-quickview'
+        ],
+		'title' => LANG_GROUPS
 	));
 
     $this->addToolButton(array(
-        'class' => 'filter',
+        'class' => 'filter pl-md-0',
         'title' => LANG_FILTER,
         'href'  => null,
         'onclick' => "return icms.modal.openAjax($(this).attr('href'),{},false,$(this).attr('title'))"
@@ -95,20 +105,18 @@
     $this->applyToolbarHook('admin_users_toolbar');
 
 ?>
-
-<div class="row grid-layout align-content-around">
-    <div class="col-2">
-        <div class="card mb-0 h-100">
-            <div id="datatree" class="card-body">
-                <ul id="treeData">
-                    <?php foreach($groups as $id=>$group){ ?>
-                        <li id="<?php echo $group['id'];?>" class="folder"><?php echo $group['title']; ?></li>
-                    <?php } ?>
-                </ul>
-            </div>
+<div class="row align-items-stretch">
+    <div class="col-xl-2 quickview-wrapper" id="left-quickview">
+        <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
+        <div id="datatree" class="bg-white h-100 pt-3">
+            <ul id="treeData">
+                <?php foreach($groups as $id=>$group){ ?>
+                    <li id="<?php echo $group['id'];?>" class="folder"><?php echo $group['title']; ?></li>
+                <?php } ?>
+            </ul>
         </div>
     </div>
-    <div class="col-10">
+    <div class="col-xl-10">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>
@@ -119,9 +127,8 @@
             $('#filter_ip').val($(this).text()).trigger('input');
             return false;
         });
-        $('.cp_toolbar .delete_filter a').hide();
+        $('.cp_toolbar .delete_filter').hide();
         $("#datatree").dynatree({
-
             onPostInit: function(isReloading, isError){
                 var path = $.cookie('icms[users_tree_path]');
                 if (!path) { path = '/0'; }
@@ -135,7 +142,6 @@
                     }
                 });
             },
-
             onActivate: function(node){
                 node.expand();
                 $.cookie('icms[users_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
@@ -144,17 +150,16 @@
                 $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
                 $('.cp_toolbar .add_user a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
                 if (key == 0){
-                    $('.cp_toolbar .edit a').hide();
-                    $('.cp_toolbar .permissions a').hide();
-                    $('.cp_toolbar .delete a').hide();
+                    $('.cp_toolbar .edit').hide();
+                    $('.cp_toolbar .permissions').hide();
+                    $('.cp_toolbar .delete').hide();
                 } else {
-                    $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
-                    $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
-                    $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
+                    $('.cp_toolbar .edit').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
+                    $('.cp_toolbar .permissions').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
+                    $('.cp_toolbar .delete').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
                 }
                 icms.datagrid.loadRows();
             }
-
         });
     });
 </script>

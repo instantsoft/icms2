@@ -23,12 +23,13 @@
         'href'  => $this->href_to('settings', array('scheduler'))
     ));
 
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_SETTINGS_SCHEDULER_TASK
-	));
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_SETTINGS_SCHEDULER_TASK,
+        'options' => [
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->renderForm($form, $task, array(
         'action' => '',

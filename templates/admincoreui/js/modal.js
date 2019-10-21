@@ -2,6 +2,8 @@ var icms = icms || {};
 
 icms.modal = (function ($) {
 
+    this.bined = [];
+
     this.onDocumentReady = function() {
         icms.modal.bind('a.ajax-modal');
         icms.modal.bind('.ajax-modal > a');
@@ -38,6 +40,11 @@ icms.modal = (function ($) {
     };
 
 	this.bind = function(selector) {
+        if($.inArray(selector, this.bined) !== -1){
+            return;
+        }
+        this.bined.push(selector);
+
         $(selector).on('click', function (){
 
             var title = $(this).attr('title');

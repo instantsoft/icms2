@@ -16,6 +16,7 @@ function grid_users($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
             'filter' => 'exact'
         ),
@@ -38,6 +39,7 @@ function grid_users($controller){
         'ip' => array(
             'title' => LANG_USERS_PROFILE_LAST_IP,
             'width' => 130,
+            'class' => 'd-none d-lg-table-cell',
             'filter' => 'like',
             'handler' => function($value){
                 if(!$value){
@@ -50,6 +52,7 @@ function grid_users($controller){
         ),
         'date_reg' => array(
             'title' => LANG_REGISTRATION,
+            'class' => 'd-none d-md-table-cell',
             'width' => 80,
             'filter' => 'date',
             'handler' => function($date, $user){
@@ -59,6 +62,7 @@ function grid_users($controller){
         ),
         'karma' => array(
             'title' => LANG_KARMA,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 60,
             'filter' => 'exact',
             'handler' => function($value){
@@ -67,11 +71,13 @@ function grid_users($controller){
         ),
         'rating' => array(
             'title' => LANG_RATING,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 60,
             'filter' => 'exact'
         ),
         'is_locked' => array(
             'title' => LANG_CP_USER_LOCKED,
+            'class' => 'd-none d-sm-table-cell',
             'flag' => 'flag_lock',
             'width' => 24,
             'handler' => function($value, $user){

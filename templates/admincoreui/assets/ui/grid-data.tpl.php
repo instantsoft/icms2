@@ -30,7 +30,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
             <tr>
                 <?php foreach($columns as $name=>$column){ ?>
                     <?php if ($name=='id' && !$options['show_id']){ continue; } ?>
-                    <th rel="<?php echo $name; ?>" <?php if($options['is_sortable']){ ?>class="sortable"<?php } ?>>
+                    <th rel="<?php echo $name; ?>" class="<?php if(!empty($column['class'])){ echo $column['class']; } ?> <?php if($options['is_sortable']){ ?>sortable<?php } ?>">
                         <?php echo $column['title']; ?>
                     </th>
                 <?php } ?>
@@ -45,21 +45,21 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
             <?php if ($options['is_filter']){ ?>
             <tr class="filter">
                 <?php foreach($columns as $name=>$column){ ?>
-                    <td>
+                    <td <?php if(!empty($column['class'])){ ?>class="<?php echo $column['class']; ?>"<?php } ?>>
                         <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
                             <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
                             <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input form-control-sm')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
 
                             <?php } else { ?>
                                 <?php if (!empty($column['filter_select'])){ ?>
 
-                                    <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
+                                    <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'custom-select custom-select-sm'))); ?>
 
                                 <?php } else { ?>
 
-                                    <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
+                                    <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'form-control-sm'))); ?>
 
                                 <?php } ?>
                             <?php } ?>

@@ -139,7 +139,7 @@
         </main>
     </div>
     <footer class="app-footer">
-        <div>
+        <div class="d-none d-md-block">
             <?php if ($config->debug){ ?>
                 <span class="item">
                     <a href="#debug_block" data-toggle="modal" data-target="#debug_block" title="<?php echo LANG_DEBUG; ?>">
@@ -154,7 +154,7 @@
                 </span>
             <?php } ?>
         </div>
-        <div class="ml-auto">
+        <div class="ml-auto mr-auto mr-md-0">
             <a href="https://instantcms.ru/">InstantCMS</a> &mdash;
             &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>

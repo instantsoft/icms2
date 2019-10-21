@@ -4,23 +4,34 @@ function grid_scheduler($controller){
 
     $options = array(
         'show_id' => false,
-        'is_filter' => false,
+        'is_filter' => true
     );
 
     $columns = array(
-        'id' => array(
-
-        ),
+        'id' => array(),
         'title' => array(
             'title' => LANG_CP_SCHEDULER_TASK,
             'href' => href_to($controller->name, 'settings', array('scheduler', 'edit', '{id}')),
         ),
         'controller' => array(
             'title' => LANG_CP_SCHEDULER_TASK_CONTROLLER,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150,
+            'filter' => 'like',
+            'filter_select' => array(
+                'items' => function($name)use($controller){
+                    $controllers = $controller->model->getInstalledControllers();
+                    $items = array('' => '');
+                    foreach($controllers as $cont){
+                        $items[$cont['name']] = $cont['title'];
+                    }
+                    return $items;
+                }
+            )
         ),
         'hook' => array(
             'title' => LANG_CP_SCHEDULER_TASK_HOOK,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150,
         ),
         'is_active' => array(
@@ -31,10 +42,12 @@ function grid_scheduler($controller){
         ),
         'period' => array(
             'title' => LANG_CP_SCHEDULER_TASK_PERIOD,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150,
         ),
         'date_last_run' => array(
             'title' => LANG_CP_SCHEDULER_TASK_LAST_RUN,
+            'class' => 'd-none d-md-table-cell',
             'width' => 150,
             'handler' => function($value){
                 return (empty($value) ? '&mdash;' : html_date_time($value));
@@ -68,4 +81,3 @@ function grid_scheduler($controller){
     );
 
 }
-

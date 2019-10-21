@@ -106,15 +106,15 @@ function check_db(){
     }
 
     $success = import_dump($mysqli, 'base.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
-    if($success){
+    if($success === true){
         $success = import_dump($mysqli, 'geo.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
     }
 
-    if ($success && !empty($db['is_install_demo_content'])) {
+    if ($success === true && !empty($db['is_install_demo_content'])) {
         $success = import_dump($mysqli, 'base_demo_content.sql', $db['prefix'], $db['engine'], ';', $db['db_charset']);
     }
 
-    if ($success){
+    if ($success === true){
 
         $dir_install_upload = PATH . DS . 'upload';
         $dir_upload = DOC_ROOT . DS . 'upload';
@@ -127,8 +127,8 @@ function check_db(){
     }
 
     return array(
-        'error' => !$success,
-        'message' => LANG_DATABASE_BASE_ERROR
+        'error' => $success !== true,
+        'message' => is_string($success) ? $success : LANG_DATABASE_BASE_ERROR
     );
 
 }
@@ -204,8 +204,8 @@ function import_dump($mysqli, $file, $prefix, $engine='MyISAM', $delimiter = ';'
 
             $result = $mysqli->query($query);
 
-            if ($result === false) {
-                return false;
+            if ($mysqli->errno) {
+                return $mysqli->error."\n\n".$query;
             }
 
         }

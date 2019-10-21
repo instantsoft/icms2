@@ -324,9 +324,10 @@ icms.datagrid = (function ($) {
             htr.find('> th').remove();
             ftr.find('> td').remove();
             for(var key in result.columns)if(result.columns.hasOwnProperty(key)){
-                htr.append('<th rel="'+result.columns[key]['name']+'"'+(result.columns[key]['sortable'] ? ' class="sortable sorting"' : '')+'>'+result.columns[key]['title']+'</th>');
+                if (key==0 && !_this.options.show_id) { continue; }
+                htr.append('<th rel="'+result.columns[key]['name']+'" class="'+result.classes[key]+' '+(result.columns[key]['sortable'] ? ' sortable sorting' : '')+'">'+result.columns[key]['title']+'</th>');
                 if(result.columns[key]['name'] !== 'dg_actions'){
-                    ftr.append('<td'+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' class="with_filter"' : '')+'>'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
+                    ftr.append('<td class="'+result.classes[key]+' '+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' with_filter' : '')+'">'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
                 }else{
                     ftr.append(ftr_last);
                 }
@@ -359,22 +360,17 @@ icms.datagrid = (function ($) {
             var row_html = '<tr id="tr_id_'+(row[0] > 0 ? row[0] : i)+'" data-id="'+((typeof row[0] === 'number' || typeof row[0] === 'string') ? row[0] : '')+'">';
             $.each(row, function(index){
                 if (index>0 || _this.options.show_id) {
-                        row_html = row_html + '<td data-label="'+result.titles[index]+'">' + this + '</td>';
+                    row_html = row_html + '<td class="'+result.classes[index]+'" data-label="'+result.titles[index]+'">' + this + '</td>';
                 }
             });
             row_html = row_html + '</tr>';
             $('.datagrid tbody').append(row_html);
         });
 
-        $('.datagrid tbody tr:odd').addClass('odd');
-
         if (_this.options.is_draggable) {
             $('#datagrid').tableDnD({
                 onDragClass: 'dragged',
-                onDrop: function(table, row) {
-                    $('.datagrid tbody tr').removeClass('odd');
-                    $('.datagrid tbody tr:odd').addClass('odd');
-                }
+                onDrop: function(table, row) {}
             });
         }
 
@@ -383,23 +379,23 @@ icms.datagrid = (function ($) {
             if (result.pages_count != _this.options.pages_count){
 
                 $('.datagrid_pagination').paginate({
-                            count 		: result.pages_count,
-                            start 		: 1,
-                            display     : 7,
-                            border					: false,
-                            images					: false,
-                            rotate                  : false,
-                            mouse					: 'press',
-                            border_color  			: '#fff',
-                            text_color  			: '#333',
-                            background_color    	: '#fff',
-                            border_hover_color		: '#7d929d',
-                            text_hover_color  		: '#fff',
-                            background_hover_color	: '#7d929d',
-                            onChange     			: function(page){
-                                _this.setPage(page);
-                                _this.loadRows();
-                            }
+                    count 		: result.pages_count,
+                    start 		: 1,
+                    display     : 7,
+                    border					: false,
+                    images					: false,
+                    rotate                  : false,
+                    mouse					: 'press',
+                    border_color  			: '#fff',
+                    text_color  			: '#333',
+                    background_color    	: '#fff',
+                    border_hover_color		: '#7d929d',
+                    text_hover_color  		: '#fff',
+                    background_hover_color	: '#7d929d',
+                    onChange     			: function(page){
+                        _this.setPage(page);
+                        _this.loadRows();
+                    }
                 });
 
             }

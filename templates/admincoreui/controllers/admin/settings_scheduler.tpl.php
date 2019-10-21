@@ -12,11 +12,13 @@
         'title' => LANG_CP_SCHEDULER_TASK_ADD,
         'href'  => $this->href_to('settings', array('scheduler', 'add'))
     ));
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_SETTINGS_SCHEDULER
-	));
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_SETTINGS_SCHEDULER,
+        'options' => [
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->renderGrid($this->href_to('settings', array('scheduler', 'ajax')), $grid);

@@ -27,7 +27,6 @@ icms.admin = (function ($) {
 
         $('.sidebar-minimizer').on('click', function (){
             var current = $(this).data('current_state');
-            console.log(current);
             if(current == 1){
                 var new_state = 0;
             } else {
@@ -35,6 +34,11 @@ icms.admin = (function ($) {
             }
             $(this).data('current_state', new_state);
             $.cookie('icms[hide_sidebar]', new_state, { expires: 30, path: '/'});
+        });
+
+        $('[data-toggle="quickview"]').on('click', function (){
+            $($(this).data('toggle-element')).toggleClass('open');
+            return false;
         });
 
     };

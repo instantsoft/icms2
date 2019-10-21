@@ -27,7 +27,7 @@
             <li class="breadcrumb-menu d-sm-down-none">
                 <div class="btn-group" role="group">
                     <?php foreach($this->menus['breadcrumb-menu'] as $item){ ?>
-                        <a class="btn" href="<?php html($item['url']); ?>">
+                        <a class="btn<?php if (!empty($item['options']['class'])) { ?> <?php echo $item['options']['class']; ?><?php } ?>" href="<?php html($item['url']); ?>">
                             <?php if (!empty($item['options']['icon'])) { ?>
                                 <i class="<?php echo $item['options']['icon']; ?>"></i>
                             <?php } ?>
