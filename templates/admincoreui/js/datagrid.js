@@ -8,6 +8,7 @@ icms.datagrid = (function ($) {
     this.is_loading = true;
     this.callback = false;
 	this.was_init = false;
+    this.timeout_order = 0;
 
     this.setOptions = function(options){
         _this.options = options;
@@ -175,6 +176,30 @@ icms.datagrid = (function ($) {
 
     };
 
+    this.submitOrdering = function(url){
+
+        $('#datagrid_form').html('');
+        $('#datagrid_form').attr('action', url);
+
+        $('.datagrid tbody tr').each(function(){
+            var item_id = $(this).data('id');
+            $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+item_id+'" />');
+        });
+
+        var form_data = icms.forms.toJSON($('#datagrid_form'));
+
+        $.post(url, form_data, function(result){
+            clearTimeout(_this.timeout_order);
+            _this.timeout_order = setTimeout(function (){
+                toastr.success(result.success_text);
+            }, 1500);
+            _this.loadRows();
+        }, 'json');
+
+        return false;
+
+    };
+
     this.submit = function(url, confirm_message){
 
         var selected_rows_count = _this.selectedRowsCount();
@@ -327,7 +352,7 @@ icms.datagrid = (function ($) {
                 if (key==0 && !_this.options.show_id) { continue; }
                 htr.append('<th rel="'+result.columns[key]['name']+'" class="'+result.classes[key]+' '+(result.columns[key]['sortable'] ? ' sortable sorting' : '')+'">'+result.columns[key]['title']+'</th>');
                 if(result.columns[key]['name'] !== 'dg_actions'){
-                    ftr.append('<td class="'+result.classes[key]+' '+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' with_filter' : '')+'">'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
+                    ftr.append('<td class="p-2 '+result.classes[key]+' '+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' with_filter' : '')+'">'+(result.columns[key]['filter']||'&nbsp;')+'</td>');
                 }else{
                     ftr.append(ftr_last);
                 }
@@ -370,7 +395,14 @@ icms.datagrid = (function ($) {
         if (_this.options.is_draggable) {
             $('#datagrid').tableDnD({
                 onDragClass: 'dragged',
-                onDrop: function(table, row) {}
+                onDragStart: function(table, row) {
+                    clearTimeout(_this.timeout_order);
+                },
+                onDrop: function(table, row) {
+                    if (_this.options.drag_save_url) {
+                        _this.submitOrdering(_this.options.drag_save_url);
+                    }
+                }
             });
         }
 

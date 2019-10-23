@@ -16,10 +16,12 @@ function grid_comments_list($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30
         ),
         'date_pub' => array(
             'title'   => LANG_DATE,
+            'class' => 'd-none d-lg-table-cell',
             'width'   => 110,
             'handler' => function($value, $item) {
                 return html_date($value, true);
@@ -49,6 +51,7 @@ function grid_comments_list($controller){
         ),
         'author_url' => array(
             'title'   => LANG_COMMENTS_IP,
+            'class'   => 'd-none d-lg-table-cell',
             'width'   => 120,
             'filter'  => 'like',
             'handler' => function($value) {
@@ -60,6 +63,7 @@ function grid_comments_list($controller){
         ),
         'rating' => array(
             'title'   => LANG_RATING,
+            'class'   => 'd-none d-lg-table-cell',
             'width'   => 50,
             'handler' => function($value, $row) {
                 return '<span class="' . html_signed_class($value) . '">' . html_signed_num($value) . '</span>';
@@ -68,6 +72,7 @@ function grid_comments_list($controller){
         ),
         'is_deleted' => array(
             'title'       => LANG_COMMENTS_IS_DELETED,
+            'class'       => 'd-none d-lg-table-cell',
             'flag'        => 'flag_lock',
             'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'comments', 'is_deleted')),
             'width'       => 50,
@@ -87,6 +92,7 @@ function grid_comments_list($controller){
         ),
         'is_private' => array(
             'title'  => LANG_COMMENTS_IS_PRIVATE,
+            'class'  => 'd-none d-lg-table-cell',
             'flag'   => true,
             'width'  => 50,
             'filter' => 'exact'
@@ -96,7 +102,7 @@ function grid_comments_list($controller){
     $actions = array(
         array(
             'title' => LANG_COMMENTS_VIEW,
-            'class' => 'view tooltip',
+            'class' => 'view',
             'href'  => rel_to_href('{target_url}').'#comment_{id}'
         ),
         array(

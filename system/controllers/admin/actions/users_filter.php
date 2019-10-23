@@ -2,7 +2,7 @@
 
 class actionAdminUsersFilter extends cmsAction {
 
-    public function run($group_id){
+    public function run($group_id = false){
 
         $fields  = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}');
 

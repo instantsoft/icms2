@@ -798,6 +798,7 @@ class cmsController {
             'is_pagination' => true,
             'is_toolbar'    => true,
             'is_draggable'  => false,
+            'drag_save_url' => '',
             'is_selectable' => false,
             'load_columns'  => false
         );

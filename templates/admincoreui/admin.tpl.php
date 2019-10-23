@@ -122,7 +122,7 @@
             </nav>
             <button class="sidebar-minimizer brand-minimizer" type="button" data-current_state="<?php if($hide_sidebar){ ?>1<?php } else { ?>0<?php } ?>"></button>
         </div>
-        <main class="main">
+        <main class="main" id="wrapper">
             <?php if($this->isBreadcrumbs()){ ?>
                 <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
             <?php } ?>

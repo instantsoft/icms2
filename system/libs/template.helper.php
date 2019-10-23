@@ -514,11 +514,11 @@ function html_switch($name, $active){
 	return $html;
 }
 
-function html_bool_span($value, $condition){
+function html_bool_span($value, $condition, $classes = ['negative badge badge-danger', 'positive badge badge-success']){
     if ($condition){
-        return '<span class="positive text-success">' . $value . '</span>';
+        return '<span class="'.$classes[1].'">' . $value . '</span>';
     } else {
-        return '<span class="negative text-danger">' . $value . '</span>';
+        return '<span class="'.$classes[0].'">' . $value . '</span>';
     }
 }
 

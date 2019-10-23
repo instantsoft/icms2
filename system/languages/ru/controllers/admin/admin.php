@@ -544,7 +544,7 @@
     define('LANG_CP_ADDDONS_DS_INSTALLED',      'Установленные');
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Установка завершена');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Пакет дополнения был успешно установлен');
-    define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Папка <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
+    define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Директория <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
     define('LANG_CP_INSTALL_PACKAGE_INFO',      'Информация о пакете');
     define('LANG_CP_INSTALL_PACKAGE_FILE',      'Файл пакета');
     define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'Файл с расширением <b>.icp</b> или <b>.zip</b>');
@@ -553,15 +553,16 @@
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную папку и обновите страницу');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную директорию и обновите страницу');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Нажмите "Продолжить", если вы распаковали пакет вручную в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Сервер не поддерживает функцию parse_ini_file');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Установка пакетов расширения невозможна');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Обратитесь к хостеру с просьбой включить функцию <b>parse_ini_file</b> для PHP на вашем сервере');
     define('LANG_CP_INSTALL_NOT_ZIP',           'Сервер не поддерживает автоматическую распаковку ZIP-архивов');
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Автоматическая распаковка архива не возможна');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Обратитесь к хостеру с просьбой обеспечить работу класса <b>ZipArchive</b> для PHP на вашем сервере');
-    define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_ERROR',             'Ошибка установки пакета');
     define('LANG_CP_INSTALL_PERM_ERROR',        'Файл %s недоступен для чтения');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');

@@ -166,6 +166,9 @@ ul li ul span.dynatree-node a{
     text-overflow: ellipsis;
     overflow: hidden;
 }
+.no-overflow ul li ul span.dynatree-node a {
+    max-width: none;
+}
 span.dynatree-folder a{
     font-weight: bold;
 }

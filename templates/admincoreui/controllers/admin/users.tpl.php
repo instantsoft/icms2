@@ -33,6 +33,7 @@
         'title' => LANG_HELP,
         'url'   => LANG_HELP_URL_USERS,
         'options' => [
+            'target' => '_blank',
             'icon' => 'icon-question'
         ]
     ]);
@@ -105,7 +106,7 @@
     $this->applyToolbarHook('admin_users_toolbar');
 
 ?>
-<div class="row align-items-stretch">
+<div class="row align-items-stretch mb-4">
     <div class="col-xl-2 quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="bg-white h-100 pt-3">
@@ -127,7 +128,7 @@
             $('#filter_ip').val($(this).text()).trigger('input');
             return false;
         });
-        $('.cp_toolbar .delete_filter').hide();
+        $('.cp_toolbar .delete_filter a').hide();
         $("#datatree").dynatree({
             onPostInit: function(isReloading, isError){
                 var path = $.cookie('icms[users_tree_path]');
@@ -150,13 +151,13 @@
                 $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
                 $('.cp_toolbar .add_user a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
                 if (key == 0){
-                    $('.cp_toolbar .edit').hide();
-                    $('.cp_toolbar .permissions').hide();
-                    $('.cp_toolbar .delete').hide();
+                    $('.cp_toolbar .edit a').hide();
+                    $('.cp_toolbar .permissions a').hide();
+                    $('.cp_toolbar .delete a').hide();
                 } else {
-                    $('.cp_toolbar .edit').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
-                    $('.cp_toolbar .permissions').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
-                    $('.cp_toolbar .delete').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
+                    $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
+                    $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
+                    $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
                 }
                 icms.datagrid.loadRows();
             }

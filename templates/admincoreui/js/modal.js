@@ -24,14 +24,15 @@ icms.modal = (function ($) {
         $('#icms_modal').modal('show'); return this;
     };
 
-    this.showModalContent = function (title, content, style){
+    this.showModalContent = function (title, content, style, style_body){
         style = style || false;
+        style_body = style_body || '';
         $('#icms_modal').find('.modal-dialog').removeClass('modal-danger modal-warning');
         if(style){
             $('#icms_modal').find('.modal-dialog').addClass('modal-'+style);
         }
         $('#icms_modal #icms-modal-spinner').addClass('d-none').removeClass('d-flex');
-        $('#icms_modal').find('.modal-dialog').fadeIn('fast').find('.modal-body').html(content);
+        $('#icms_modal').find('.modal-dialog').fadeIn('fast').find('.modal-body').addClass(style_body).html(content);
         if(title){
             $('#icms_modal').find('.modal-header').show().find('.modal-title').html(title);
         } else {
@@ -45,7 +46,7 @@ icms.modal = (function ($) {
         }
         this.bined.push(selector);
 
-        $(selector).on('click', function (){
+        $('body').on('click', selector, function (){
 
             var title = $(this).attr('title');
             if(!title){
@@ -69,8 +70,9 @@ icms.modal = (function ($) {
         $(selector).modal('show');
 	};
 
-	this.openHtml = function(html, title, style) {
-		icms.modal.showModalContent(title, html, style);
+	this.openHtml = function(html, title, style, style_body) {
+        $('#icms_modal').modal('show');
+		icms.modal.showModalContent(title, html, style, style_body);
 	};
 
     this.openIframe = function(url, title){

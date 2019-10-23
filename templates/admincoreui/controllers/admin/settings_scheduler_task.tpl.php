@@ -27,6 +27,7 @@
         'title' => LANG_HELP,
         'url'   => LANG_HELP_URL_SETTINGS_SCHEDULER_TASK,
         'options' => [
+            'target' => '_blank',
             'icon' => 'icon-question'
         ]
     ]);

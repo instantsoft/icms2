@@ -41,6 +41,10 @@ icms.admin = (function ($) {
             return false;
         });
 
+        $('.custom-file-input').on('change',function(){
+            $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
+        });
+
     };
 
     this.dbCardSpinner = function (el){

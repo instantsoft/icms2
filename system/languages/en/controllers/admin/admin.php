@@ -551,6 +551,7 @@
     define('LANG_CP_INSTALL_ERR_FIX',           'Solution');
     define('LANG_CP_INSTALL_ERR_WA',            'Workaround');
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Folder <b>%s</b> is not writable');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Click "Continue" if you unzipped the package manually into a directory <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Automatic upload is impossible');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Make this folder writable and reload this page');
     define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Change the file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');

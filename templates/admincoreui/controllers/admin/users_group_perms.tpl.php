@@ -17,12 +17,14 @@
         'href'  => $this->href_to('users')
     ));
 
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_USERS_GROUP
-	));
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_USERS_GROUP,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->setMenuItems('admin_toolbar', $menu);
 

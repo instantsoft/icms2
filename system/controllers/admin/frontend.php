@@ -496,6 +496,41 @@ class admin extends cmsFrontend {
 
     }
 
+    public function getAddonsMenu() {
+
+        return cmsEventsManager::hook('admin_addons_menu', array(
+            array(
+                'title' => LANG_CP_OFICIAL_ADDONS,
+                'url' => href_to($this->name, 'addons_list'),
+                'options' => array(
+                    'icon'  => 'icon-puzzle'
+                )
+            ),
+            array(
+                'title' => LANG_CP_INSTALL_PACKAGE,
+                'url'   => href_to($this->name, 'install'),
+                'options' => array(
+                    'icon'  => 'icon-cloud-upload'
+                )
+            ),
+            array(
+                'title' => LANG_CP_SECTION_CONTROLLERS,
+                'url'   => href_to($this->name, 'controllers'),
+                'options' => array(
+                    'icon'  => 'icon-layers'
+                )
+            ),
+            array(
+                'title' => LANG_EVENTS_MANAGEMENT,
+                'url'   => href_to($this->name, 'controllers', 'events'),
+                'options' => array(
+                    'icon'  => 'icon-bag'
+                )
+            )
+        ));
+
+    }
+
 //============================================================================//
 //============================================================================//
 

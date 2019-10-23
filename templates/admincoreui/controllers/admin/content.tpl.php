@@ -10,7 +10,7 @@
     $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
 
 	$this->addToolButton(array(
-        'class' => 'menu',
+        'class' => 'menu d-xl-none',
 		'data'  => [
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'

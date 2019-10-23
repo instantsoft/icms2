@@ -45,7 +45,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
             <?php if ($options['is_filter']){ ?>
             <tr class="filter">
                 <?php foreach($columns as $name=>$column){ ?>
-                    <td <?php if(!empty($column['class'])){ ?>class="<?php echo $column['class']; ?>"<?php } ?>>
+                    <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
                         <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
                             <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
                             <?php if(strpos($name, 'date_') === 0){ ?>
@@ -67,7 +67,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
                     </td>
                 <?php } ?>
                 <?php if ($actions) { ?>
-                    <td>
+                    <td class="p-2">
                         &nbsp;
                     </td>
                 <?php } ?>
@@ -83,7 +83,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
                     <?php echo LANG_PAGES_SHOW_PERPAGE; ?>
                     <select class="custom-select custom-select-sm form-control form-control-sm">
                         <?php
-                        $perpages = array(15,30,50,100,200);
+                        $perpages = array(15,30,50,100,200,500);
                         foreach($perpages as $p){ ?>
                             <option value="<?php echo $p; ?>"<?php if($p===$perpage){ ?> selected<?php } ?>><?php echo $p; ?></option>
                         <?php } ?>
@@ -128,6 +128,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
         is_sortable: <?php echo intval($options['is_sortable']); ?>,
         is_filter: <?php echo intval($options['is_filter']); ?>,
         is_draggable: <?php echo intval($options['is_draggable']); ?>,
+        drag_save_url: '<?php echo $options['drag_save_url']; ?>',
         is_actions: <?php echo intval($options['is_actions']); ?>,
         is_pagination: <?php echo intval($options['is_pagination']); ?>,
         is_selectable: <?php echo intval($options['is_selectable']); ?>,

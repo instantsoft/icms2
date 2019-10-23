@@ -3,22 +3,30 @@
     $this->addBreadcrumb(LANG_CP_OFICIAL_ADDONS);
 
     $this->addTplJSName([
-        'jquery-cookie',
         'datatree'
-        ]);
+    ]);
+
     $this->addTplCSSName('datatree');
+
+    $this->addMenuItems('admin_toolbar', $this->controller->getAddonsMenu());
 ?>
 
 <?php if($error_text){ ?>
 
-    <h1><?php echo LANG_CP_OFICIAL_ADDONS; ?></h1>
-    <p><?php echo $error_text; ?></p>
+    <p class="alert alert-info mt-4"><?php echo $error_text; ?></p>
 
 <?php return; } ?>
 
-<h1><?php echo LANG_CP_OFICIAL_ADDONS; ?></h1>
-
 <?php
+
+	$this->addToolButton(array(
+        'class' => 'menu d-xl-none',
+		'data'  => [
+            'toggle' =>'quickview',
+            'toggle-element' => '#left-quickview'
+        ],
+		'title' => LANG_CATEGORIES
+	));
 
     foreach ($datasets as $dataset) {
         $this->addToolButton(array(
@@ -29,70 +37,61 @@
         ));
     }
 
-	$this->addToolButton(array(
-		'class' => 'install right',
-		'title' => LANG_CP_INSTALL_PACKAGE,
-		'href'  => $this->href_to('install')
-	));
-
 ?>
-<table class="layout addons_list_table">
-    <tr>
-        <td class="" valign="top">
-            <div id="datatree">
-                <ul id="treeData" style="display: none">
-                    <li id="0.0" class="folder"><?php echo LANG_ALL; ?></li>
-                    <?php foreach($cats as $cat){ ?>
-                        <li id="<?php echo $cat['id'];?>.0" class="folder"><?php echo $cat['title']; ?></li>
-                    <?php } ?>
-                </ul>
-            </div>
-        </td>
-        <td class="main" valign="top">
-            <div class="cp_toolbar" id="addons_toolbar">
+<div class="row align-items-stretch addons_list_table mb-4">
+    <div class="col-xl-2 quickview-wrapper" id="left-quickview">
+        <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
+        <div id="datatree" class="bg-white h-100 pt-3">
+            <ul id="treeData">
+                <li id="0.0" class="folder"><?php echo LANG_ALL; ?></li>
+                <?php foreach($cats as $cat){ ?>
+                    <li id="<?php echo $cat['id'];?>.0" class="folder"><?php echo $cat['title']; ?></li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xl-10">
+        <?php if ($this->isToolbar()){ ?>
+            <nav class="cp_toolbar navbar navbar-light bg-light my-3 pl-2" id="addons_toolbar">
                 <?php $this->toolbar(); ?>
+            </nav>
+        <?php } ?>
+        <div id="filter_toolbar" class="row mb-3 align-items-center">
+            <div class="col-md-5">
+                <?php echo html_input('text', 'title', '', array('id' => 'search_addon_title', 'placeholder' => LANG_CP_FIND_ADDON_TITLE, 'autocomplete' => 'off')); ?>
             </div>
-            <div id="filter_toolbar">
-                <div class="left">
-                    <div class="field">
-                        <?php echo html_input('text', 'title', '', array('id' => 'search_addon_title', 'placeholder' => LANG_CP_FIND_ADDON_TITLE, 'autocomplete' => 'off')); ?>
-                    </div>
-                    <div class="field">
-                        <ul class="radio_buttons_list row_radio" id="is_paid">
-                            <li>
-                                <input checked type="radio" id="a-all" name="is_paid" value="0">
-                                <label for="a-all"><?php echo LANG_ALL; ?></label>
-                                <div class="check"><div class="inside"></div></div>
-                            </li>
-                            <li>
-                                <input type="radio" id="a-pay" name="is_paid" value="1">
-                                <label for="a-pay"><?php echo LANG_CP_FIND_ADDON_FREE; ?></label>
-                                <div class="check"><div class="inside"></div></div>
-                            </li>
-                            <li>
-                                <input type="radio" id="a-nopay" name="is_paid" value="2">
-                                <label for="a-nopay"><?php echo LANG_CP_FIND_ADDON_BUY; ?></label>
-                                <div class="check"><div class="inside"></div></div>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="col-md-4 mt-2 mt-md-0" id="is_paid">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input checked class="custom-control-input" type="radio" id="a-all" name="is_paid" value="0">
+                    <label class="custom-control-label" for="a-all"><?php echo LANG_ALL; ?></label>
                 </div>
-                <div class="right" id="addons_count"><?php echo LANG_CP_FIND_FOUND; ?>: <span></span></div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" id="a-pay" name="is_paid" value="1">
+                    <label class="custom-control-label" for="a-pay"><?php echo LANG_CP_FIND_ADDON_FREE; ?></label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input class="custom-control-input" type="radio" id="a-nopay" name="is_paid" value="2">
+                    <label class="custom-control-label" for="a-nopay"><?php echo LANG_CP_FIND_ADDON_BUY; ?></label>
+                </div>
             </div>
-            <div id="addons_list_wrap">
-                <div id="addons_list"></div>
-                <div id="show_more" data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>" data-more="<?php echo LANG_SHOW_MORE; ?>">
-                    <?php echo LANG_SHOW_MORE; ?>
-                </div>
-                <div class="spinner">
+            <div class="col-md-3 text-muted text-right" id="addons_count">
+                <div class="spinner mr-2">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
                 </div>
+                <?php echo LANG_CP_FIND_FOUND; ?>: <span></span>
             </div>
-        </td>
-    </tr>
-</table>
+        </div>
+        <div id="addons_list_wrap">
+            <div id="addons_list"></div>
+            <button type="button" class="btn btn-primary btn-block" style="display: none" id="show_more" data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>" data-more="<?php echo LANG_SHOW_MORE; ?>">
+                <?php echo LANG_SHOW_MORE; ?>
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
     var current_cat_id = <?php echo $cat_id; ?>;
     var current_ds_id  = <?php echo $dataset_id; ?>;
@@ -102,14 +101,15 @@
     var addon_title    = '';
     var addon_is_paid  = 0;
     $(function() {
-        $('#addons_list').on('click', '.button-video > a', function(e){
+        $('#addons_toolbar li:not(.menu):first a').addClass('active');
+        $('#addons_list').on('click', 'a.button-video', function(e){
             var id = $(this).data('id');
-            var frame = '<iframe width="640" height="480" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe>';
-            icms.modal.openHtml(frame, '<?php echo LANG_CP_PACKAGE_VIDEO_TITLE; ?>');
+            var frame = '<div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="https://www.youtube.com/embed/'+id+'" frameborder="0" allowfullscreen></iframe></div>';
+            icms.modal.openHtml(frame, '<?php echo LANG_CP_PACKAGE_VIDEO_TITLE; ?>', false, 'p-0');
             return false;
         });
-        $('#addons_list').on('click', '.button-install .do_install', function(e){
-            $(this).html($('#addons_list_wrap #addons_list ~ .spinner').clone().show());
+        $('#addons_list').on('click', '.do_install', function(e){
+            $(this).html($('#addons_count .spinner').clone().show());
             $(this).prev().find('input[type=submit]').trigger('click');
             return false;
         });
@@ -127,8 +127,8 @@
         });
         $('#addons_toolbar .addons_dataset a').on('click', function(e){
             current_ds_id = $(this).data('id');
-            $('#addons_toolbar .addons_dataset').removeClass('active');
-            $(this).parent().addClass('active');
+            $('#addons_toolbar a').removeClass('active');
+            $(this).addClass('active');
             current_page = 1;
             loadAddons();
             return false;
@@ -139,9 +139,8 @@
                 loadAddons(true);
             } else {
                 $('body,html').animate({
-                    scrollTop: $('#wrapper').offset().top
-                    }, 500
-                );
+                    scrollTop: +$('#wrapper').offset().top-56
+                }, 500);
             }
             return false;
         });
@@ -171,11 +170,9 @@
     function loadAddons(is_append){
         is_append = is_append || false;
         if(!is_append){
-            $('table.layout').css({height: ''});
             $('#show_more').hide().html($('#show_more').data('more'));
-            $('#addons_list').html('');
         }
-        $('#addons_list_wrap > .spinner').show(); $('#addons_count').hide();
+        $('#addons_count .spinner').show();
         $.post('<?php echo $this->href_to('addons_list'); ?>', {
             dataset_id: current_ds_id,
             cat_id: current_cat_id,
@@ -183,8 +180,12 @@
             title: addon_title,
             page: current_page
         }, function(result){
-            $('#addons_list_wrap > .spinner').hide();
-            $('#addons_list').append(result);
+            $('#addons_count .spinner').hide();
+            if(!is_append){
+                $('#addons_list').html(result);
+            } else {
+                $('#addons_list').append(result);
+            }
             if(has_next == 1){
                 $('#show_more').show();
                 current_page += 1;
@@ -196,9 +197,7 @@
                 }
                 current_page = 1;
             }
-            $('#addons_count').fadeIn().find('span').html(addons_count);
-            $(window).triggerHandler('resize');
-            icms.modal.bind('a.ajax-modal');
+            $('#addons_count').find('span').html(addons_count);
         });
     };
 </script>

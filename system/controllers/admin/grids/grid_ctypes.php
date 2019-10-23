@@ -3,11 +3,12 @@
 function grid_ctypes($controller){
 
     $options = array(
-        'is_sortable' => false,
-        'is_filter' => false,
-        'is_draggable' => true,
-        'order_by' => 'ordering',
-        'order_to' => 'asc'
+        'is_sortable'   => false,
+        'is_filter'     => false,
+        'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('ctypes', array('reorder')),
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc'
     );
 
     $columns = array(
@@ -41,13 +42,13 @@ function grid_ctypes($controller){
             'title' => LANG_CATEGORIES,
             'width' => 90,
             'handler' => function($value, $ctype){
-                return '<div class="'.(!$value ? '' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+                return html_bool_span(($value ? LANG_YES : LANG_NO), $value, ['badge badge-dark', 'positive badge badge-success']);
             }
         ),
         'is_folders' => array(
             'title' => LANG_CP_FOLDERS,
             'handler' => function($value, $ctype){
-                return '<div class="'.(!$value ? '' : 'positive').'">'.($value ? LANG_YES : LANG_NO).'</div>';
+                return html_bool_span(($value ? LANG_YES : LANG_NO), $value, ['badge badge-dark', 'positive badge badge-success']);
             }
         )
     );

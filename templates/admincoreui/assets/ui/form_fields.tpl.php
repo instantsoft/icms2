@@ -100,7 +100,7 @@ $visible_depend = []; $index = 0; $active_tab = false;
                             <?php echo $field->{$field->display_input}($value); ?>
 
                             <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
-                                <div class="hint text-muted small mt-1"<?php
+                                <div class="hint form-text text-muted small mt-1"<?php
                                     if(!empty($field->patterns_hint['patterns'])){
                                         echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
                                         echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
