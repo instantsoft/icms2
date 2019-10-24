@@ -61,4 +61,4 @@
     <div id="wall_profile_wall">
         <?php echo $wall_html; ?>
     </div>
-<?php }
+<?php } ?>
