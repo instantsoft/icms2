@@ -49,8 +49,7 @@ function contentCancelFilter(ctype_changed){
 }
 
 function contentCatsReorder(button){
-    var url = button.attr('href');
-    icms.modal.openAjax(url);
+    icms.modal.openAjax(button.attr('href'),{},false,$(button).attr('title'));
     return false;
 }
 

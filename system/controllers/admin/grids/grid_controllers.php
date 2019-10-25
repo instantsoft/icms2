@@ -22,6 +22,7 @@ function grid_controllers($controller){
         ),
         'slug' => array(
             'title' => LANG_ADMIN_CONTROLLER_SLUG,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 300,
             'editable' => array(
                 'table' => 'controllers',
@@ -48,11 +49,13 @@ function grid_controllers($controller){
         ),
         'version' => array(
             'title' => LANG_VERSION,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 70,
             'filter' => 'like'
         ),
         'author' => array(
             'title' => LANG_AUTHOR,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 250,
             'href' => '{url}',
             'filter' => 'like'

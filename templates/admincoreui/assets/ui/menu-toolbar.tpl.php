@@ -1,4 +1,4 @@
-<nav class="cp_toolbar navbar navbar-light bg-light my-3 pl-0 py-1">
+<nav class="cp_toolbar navbar navbar-light bg-light my-2 pl-0 py-1">
 <ul class="nav <?php echo $css_class; ?>">
 
     <?php $last_level = 0; ?>

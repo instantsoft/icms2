@@ -2,14 +2,6 @@
 $this->addBreadcrumb(LANG_COMMENTS_LIST);
 $this->setPageTitle(LANG_COMMENTS_LIST);
 
-
-$this->addToolButton(array(
-    'class' => 'help',
-    'title' => LANG_HELP,
-    'target' => '_blank',
-    'href'  => LANG_HELP_URL_COM_COMMENTS
-));
-
 $this->addToolButton(array(
     'class' => 'delete show_on_selected',
     'title' => LANG_DELETE,

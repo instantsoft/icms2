@@ -17,6 +17,7 @@ function grid_controllers_events ($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30
         ),
         'event' => array(
@@ -26,6 +27,7 @@ function grid_controllers_events ($controller){
         'listener' => array(
             'title'  => LANG_EVENTS_LISTENER,
             'width'  => 200,
+            'class' => 'd-none d-lg-table-cell',
             'filter' => 'like',
             'filter_select' => array(
                 'items' => function($name){
@@ -44,6 +46,7 @@ function grid_controllers_events ($controller){
         ),
         'ordering' => array(
             'title' => LANG_ORDER,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 70
         ),
         'is_enabled' => array(

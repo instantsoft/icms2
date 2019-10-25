@@ -24,7 +24,6 @@
 
     define('LANG_STEP_START_1',             'The InstantCMS installation wizard will check whether your server meets the system requirements.');
     define('LANG_STEP_START_2',             'The wizard will ask you a series of questions that are required for the correct installation and configuration.');
-    define('LANG_STEP_START_3',             'Before you start, you have to create a empty MySQL database encoded in <b>utf8_general_ci</b>');
 
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');

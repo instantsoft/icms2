@@ -93,6 +93,18 @@ class actionAdminControllersEdit extends cmsAction {
 
         }
 
+        $help_href_const = 'LANG_HELP_URL_COM_'.strtoupper($backend_controller->name);
+        if(defined($help_href_const)){
+            $this->cms_template->addMenuItem('breadcrumb-menu', [
+                'title' => LANG_HELP,
+                'url'   => constant($help_href_const),
+                'options' => [
+                    'target' => '_blank',
+                    'icon' => 'icon-question'
+                ]
+            ]);
+        }
+
         $html = $backend_controller->runAction($action_name, $params);
 
         return $this->cms_template->render('controllers_edit', array(

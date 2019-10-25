@@ -208,7 +208,7 @@ form .ft_date select {
     width: 70px;
     display: inline-block;
 }
-form .field .input-number, form .field .input-small {
+form .ft_number .input-group, form .field .input-small {
     width: 150px;
 }
 form .date-input, form .short-input {
@@ -381,6 +381,9 @@ form .child_field{padding-left:20px}
     box-sizing: border-box;
     display: block;
     left: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .is_collapsed > legend:before {
     content: '+';
@@ -425,12 +428,12 @@ form .child_field{padding-left:20px}
 .ace_redactor {
     height: 350px;
 }
-#addons_count .spinner, .do_install .spinner {
+#addons_count .spinner, .do_install .spinner, .loading-icon .spinner {
     margin: 0;
     width: auto;
     display: inline-block;
 }
-#addons_count .spinner > div, .do_install .spinner > div {
+#addons_count .spinner > div, .do_install .spinner > div, .loading-icon .spinner > div {
     width: 10px;
     height: 10px;
 }
@@ -455,6 +458,9 @@ form .child_field{padding-left:20px}
 }
 th[rel="id"] {
     width: 50px;
+}
+th[rel="is_enabled"] {
+    width: 90px;
 }
 .datagrid_loading{
     position: absolute;

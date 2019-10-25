@@ -52,11 +52,11 @@
     </div>
     <div class="col-xl-10">
         <?php if ($this->isToolbar()){ ?>
-            <nav class="cp_toolbar navbar navbar-light bg-light my-3 pl-2" id="addons_toolbar">
+            <nav class="cp_toolbar navbar navbar-light bg-light my-2 pl-2" id="addons_toolbar">
                 <?php $this->toolbar(); ?>
             </nav>
         <?php } ?>
-        <div id="filter_toolbar" class="row mb-3 align-items-center">
+        <div id="filter_toolbar" class="row mb-4 align-items-center">
             <div class="col-md-5">
                 <?php echo html_input('text', 'title', '', array('id' => 'search_addon_title', 'placeholder' => LANG_CP_FIND_ADDON_TITLE, 'autocomplete' => 'off')); ?>
             </div>

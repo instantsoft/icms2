@@ -14,6 +14,7 @@ function grid_ctypes($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
             'filter' => 'exact'
         ),
@@ -28,18 +29,14 @@ function grid_ctypes($controller){
             'width' => 150,
             'filter' => 'like'
         ),
-        'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-			'flag' => true,
-			'flag_toggle' => href_to($controller->name, 'toggle_item', array('{id}', 'content_types', 'is_enabled')),
-            'width' => 80
-        ),
         'url_pattern' => array(
             'title' => LANG_CP_URL_PATTERN,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 200
         ),
         'is_cats' => array(
             'title' => LANG_CATEGORIES,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 90,
             'handler' => function($value, $ctype){
                 return html_bool_span(($value ? LANG_YES : LANG_NO), $value, ['badge badge-dark', 'positive badge badge-success']);
@@ -47,9 +44,16 @@ function grid_ctypes($controller){
         ),
         'is_folders' => array(
             'title' => LANG_CP_FOLDERS,
+            'class' => 'd-none d-lg-table-cell',
             'handler' => function($value, $ctype){
                 return html_bool_span(($value ? LANG_YES : LANG_NO), $value, ['badge badge-dark', 'positive badge badge-success']);
             }
+        ),
+        'is_enabled' => array(
+            'title' => LANG_IS_ENABLED,
+			'flag' => true,
+			'flag_toggle' => href_to($controller->name, 'toggle_item', array('{id}', 'content_types', 'is_enabled')),
+            'width' => 80
         )
     );
 

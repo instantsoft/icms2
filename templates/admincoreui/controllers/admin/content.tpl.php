@@ -8,6 +8,17 @@
     $this->setPageTitle(LANG_CP_SECTION_CONTENT);
 
     $this->addBreadcrumb(LANG_CP_SECTION_CONTENT, $this->href_to('content'));
+    // туда будет подставляться активный пункт дерева
+    $this->addBreadcrumb('', $this->href_to('content').'?last');
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_CONTENT,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
 	$this->addToolButton(array(
         'class' => 'menu d-xl-none',
@@ -17,13 +28,6 @@
         ],
 		'title' => LANG_CATEGORIES
 	));
-
-    $this->addToolButton(array(
-        'class' => 'help',
-        'title' => LANG_HELP,
-        'target' => '_blank',
-        'href'  => LANG_HELP_URL_CONTENT,
-    ));
 
     $this->addToolButton(array(
         'class' => 'filter',
@@ -108,11 +112,10 @@
 
 ?>
 
-<h1><?php echo LANG_CP_SECTION_CONTENT; ?> <span class="text-muted"><?php if($ctype){ echo $ctype['title']; } ?></span></h1>
-
-<div class="row align-items-stretch">
-    <div class="col-md-2" id="left-quickview">
-        <div id="datatree" class="card-body bg-white h-100">
+<div class="row align-items-stretch mb-4">
+    <div class="col-xl-2 quickview-wrapper" id="left-quickview">
+        <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
+        <div id="datatree" class="card-body bg-white h-100 pt-3">
             <ul id="treeData">
                 <?php foreach($ctypes as $id=>$ctype){ ?>
                     <li id="<?php echo $ctype['id'];?>.1" class="lazy folder"><?php echo $ctype['title']; ?></li>
@@ -120,7 +123,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-10">
+    <div class="col-xl-10">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>
@@ -180,7 +183,7 @@
                         root_node = _node;
                     }
                 }, true);
-                $('h1 > span').html(root_node.data.title);
+                $('.breadcrumb-item.active').html(root_node.data.title);
                 $('.nav-item.item-content a').removeClass('active');
                 $('a[title='+root_node.data.title+']').addClass('active');
                 if(key[0] !== current_ctype){

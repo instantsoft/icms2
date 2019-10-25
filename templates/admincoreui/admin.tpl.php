@@ -11,12 +11,14 @@
         'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
+        'jquery-ui',
         'style'
     ]); ?>
     <?php $this->addMainTplJSName('vendors/jquery/js/jquery.min', true); ?>
     <?php $this->addMainTplJSName([
         'jquery-cookie',
         'jquery-ui',
+        'i18n/jquery-ui/'.cmsCore::getLanguageName(),
         'vendors/popper.js/js/popper.min',
         'vendors/bootstrap/js/bootstrap.min',
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
