@@ -12966,7 +12966,7 @@ canvas {
 }
 
 .sidebar .nav-dropdown.open {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgb(75, 84, 90);
 }
 
 .sidebar .nav-dropdown.open > .nav-dropdown-items {

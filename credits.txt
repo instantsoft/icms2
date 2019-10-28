@@ -2,6 +2,10 @@
 
 Third-party plugins, libraries and resources included in InstantCMS:
 
+    PhotoSwipe
+        by Dmitry Semenov
+        http://photoswipe.com
+
     FatCow Free Icons
         by FatCow Team
         http://www.fatcow.com/free-icons

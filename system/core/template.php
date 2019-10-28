@@ -2293,7 +2293,7 @@ class cmsTemplate {
                                 $action['href'] .= (strpos($action['href'], '?') !== false ? '&' : '?').'csrf_token='.cmsForm::getCSRFToken();
                             }
 
-                            $actions_html .= '<a class="'.$action['class'].'" href="'.$action['href'].'" title="'.$action['title'].'" '.$confirm_attr.'></a>';
+                            $actions_html .= '<a data-toggle="tooltip" data-placement="top" class="'.$action['class'].'" href="'.$action['href'].'" title="'.$action['title'].'" '.$confirm_attr.'></a>';
 
                         }
 

@@ -43,7 +43,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
         </thead>
         <tbody>
             <?php if ($options['is_filter']){ ?>
-            <tr class="filter">
+            <tr class="filter table-align-middle">
                 <?php foreach($columns as $name=>$column){ ?>
                     <td class="p-2 <?php if(!empty($column['class'])){ ?><?php echo $column['class']; ?><?php } ?>">
                         <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
@@ -67,7 +67,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
                     </td>
                 <?php } ?>
                 <?php if ($actions) { ?>
-                    <td class="p-2">
+                    <td class="text-right">
                         &nbsp;
                     </td>
                 <?php } ?>
@@ -75,12 +75,13 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
             <?php } ?>
         </tbody>
     </table>
-<?php if ($options['is_pagination']){ ?>
+<?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
     <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-lg-5 d-flex">
+            <div class="datagrid_pagination mr-2"></div>
             <div class="dataTables_length datagrid_resize">
                 <label>
-                    <?php echo LANG_PAGES_SHOW_PERPAGE; ?>
+                    <small class="text-muted mr-2"><?php echo LANG_PAGES_SHOW_PERPAGE; ?></small>
                     <select class="custom-select custom-select-sm form-control form-control-sm">
                         <?php
                         $perpages = array(15,30,50,100,200,500);
@@ -90,6 +91,16 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
                     </select>
                 </label>
             </div>
+        </div>
+        <div class="col-sm-12 col-lg-7 text-right">
+            <?php if ($options['is_selectable']){ ?>
+                <div class="datagrid_navigation datagrid_select_actions">
+                    <small class="shint text-muted mr-2"><?php echo LANG_CP_SELECT_HINT; ?></small>
+                    <button type="button" class="btn btn-primary btn-sm sall"><?php echo LANG_SELECT_ALL; ?></button>
+                    <button type="button" class="btn btn-warning btn-sm sremove"><?php echo LANG_DESELECT_ALL; ?></button>
+                    <button type="button" class="btn btn-secondary btn-sm sinvert"><?php echo LANG_INVERT_ALL; ?></button>
+                </div>
+            <?php } ?>
         </div>
     </div>
 <?php } ?>
@@ -102,23 +113,9 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
     </div>
 </div>
 
-<?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
-<div class="datagrid_navigation">
-<?php if ($options['is_selectable']){ ?>
-    <div class="datagrid_select_actions">
-        <strong class="shint"><?php echo LANG_CP_SELECT_HINT; ?></strong>
-        <span class="sall"><?php echo LANG_SELECT_ALL; ?></span>
-        <span class="sremove"><?php echo LANG_DESELECT_ALL; ?></span>
-        <span class="sinvert"><?php echo LANG_INVERT_ALL; ?></span>
-    </div>
-<?php } ?>
-    <div class="datagrid_pagination"></div>
-</div>
-<?php } ?>
-
 <script>
 
-    <?php echo $this->getLangJS('LANG_LIST_EMPTY', 'LANG_LIST_NONE_SELECTED'); ?>
+    <?php echo $this->getLangJS('LANG_LIST_EMPTY', 'LANG_LIST_NONE_SELECTED', 'LANG_PAGE_FIRST', 'LANG_PAGE_LAST'); ?>
 
     icms.datagrid.setOptions({
         url: '<?php echo $source_url; ?>',

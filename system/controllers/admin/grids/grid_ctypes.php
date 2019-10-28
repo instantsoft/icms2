@@ -59,8 +59,8 @@ function grid_ctypes($controller){
 
     $actions = array(
         array(
-            'title' => LANG_EDIT,
-            'class' => 'edit',
+            'title' => LANG_OPTIONS,
+            'class' => 'config',
             'href' => href_to($controller->name, 'ctypes', array('edit', '{id}'))
         ),
         array(

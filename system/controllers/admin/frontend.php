@@ -1030,7 +1030,7 @@ class admin extends cmsFrontend {
                 $items[$type][$key]['handler_only'] = function($value, $item) use($presets){
                     if(!$value){return '';}
                     $value = !is_array($value) ? cmsModel::yamlToArray($value) : $value;
-                    return html_image($value, $presets, '', array('class' => 'grid_image_preview'));
+                    return html_image($value, $presets, '', array('class' => 'grid_image_preview img-thumbnail'));
                 };
             }
         }

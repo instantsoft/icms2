@@ -97,17 +97,17 @@ function grid_users($controller){
     $actions = array(
         array(
             'title' => LANG_PROFILE,
-            'class' => 'view tooltip',
+            'class' => 'view',
             'href' => href_to('users', '{id}')
         ),
         array(
             'title' => LANG_EDIT,
-            'class' => 'edit tooltip',
+            'class' => 'edit',
             'href'  => href_to('users', '{id}', array('edit')) . '?back=' . href_to($controller->name, 'users')
         ),
         array(
             'title' => LANG_DELETE,
-            'class' => 'delete tooltip',
+            'class' => 'delete',
             'href' => href_to($controller->name, 'users', array('delete', '{id}')),
             'confirm' => LANG_CP_USER_DELETE_CONFIRM
         ),

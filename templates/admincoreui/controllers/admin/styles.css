@@ -1,10 +1,17 @@
+.blur_block {
+    -webkit-filter:blur(2px);
+    -moz-filter:blur(2px);
+    -ms-filter:blur(2px);
+    -o-filter:blur(2px);
+    filter:blur(2px);
+}
 .cp_toolbar .dropdown-menu {
     min-width: 13rem;
 }
 .row .cp_toolbar {
     margin-top: 0 !important;
 }
-.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_on::before, .flag_lock_off::before {
+.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_on::before, .flag_lock_off::before, .datagrid td > .actions > a::before {
     font-family: 'simple-line-icons';
     vertical-align: text-bottom;
     font-size: 1.1rem;
@@ -18,6 +25,32 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+.datagrid .actions{
+    display: flex;
+}
+.datagrid .actions a {
+    display: inline-block;
+    text-decoration: none;
+}
+.datagrid .actions > a::before {
+    margin: 0;
+    padding: 0 3px;
+}
+.datagrid .actions > a.view::before { content: "\e087"; }
+.datagrid .actions > a.edit::before { content: "\e05f"; }
+.datagrid .actions > a.config::before { content: "\e052"; }
+.datagrid .actions > a.labels::before { content: "\e04c"; }
+.datagrid .actions > a.fields::before { content: "\e067"; }
+.datagrid .actions > a.filter::before { content: "\e041"; }
+.datagrid .actions > a.permissions::before { content: "\e08c"; }
+.datagrid .actions > a.relations::before { content: "\e02b"; }
+.datagrid .actions > a.delete::before { content: "\e082"; }
+.datagrid .actions > a.unbind::before { content: "\e050"; }
+.datagrid .actions > a.user::before { content: "\e001"; }
+.datagrid .actions > a.rss::before { content: "\e03b"; }
+.datagrid .actions > a.play::before { content: "\e071"; }
+.datagrid .actions > a.accept::before { content: "\e080"; }
+.datagrid .actions > a.basket_put::before, .datagrid .actions > a.basket_remove::before { content: "\e054"; }
 .cp_toolbar .transfer > a::before {
     content: "\e01f";
 }
@@ -33,7 +66,7 @@
 .cp_toolbar .save > a::before {
     content: "\e022";
 }
-.cp_toolbar .save > a {
+.cp_toolbar .save > a, .datagrid .actions > a.basket_remove, .datagrid .actions > a.accept {
     color: #4dbd74;
 }
 .cp_toolbar .cancel > a::before {
@@ -42,7 +75,7 @@
 .cp_toolbar .delete > a::before, .cp_toolbar .delete_folder > a::before {
     content: "\e082";
 }
-.cp_toolbar .cancel > a, .cp_toolbar .delete > a, .cp_toolbar .delete_folder > a, .cp_toolbar .delete_filter > a, .cp_toolbar .basket_put > a {
+.cp_toolbar .cancel > a, .cp_toolbar .delete > a, .cp_toolbar .delete_folder > a, .cp_toolbar .delete_filter > a, .cp_toolbar .basket_put > a, .datagrid .actions > a.delete {
     color: #f86c6b;
 }
 .cp_toolbar .install > a::before {
@@ -68,6 +101,9 @@
 }
 .cp_toolbar .delete_filter > a::before {
     content: "\e092";
+}
+.cp_toolbar .folder > a::before {
+    content: "\e089";
 }
 .cp_toolbar .add_folder > a::before {
     content: "\e039";
@@ -271,10 +307,11 @@ ul.field_tabbed > li.field_tabbed_en {
 }
 
 .datagrid .flag_on { color: #4dbd74; }
-.datagrid .flag_middle { color: #ffc107; }
+.datagrid .flag_middle, .datagrid .actions > a.basket_put { color: #ffc107; }
 .datagrid .flag_lock_on { color: #f86c6b; }
 
-.datagrid .flag_lock_on:empty::before, .datagrid .flag_lock_off:empty::before {
+.datagrid .flag_lock_on:empty::before, .datagrid .flag_lock_off:empty::before,
+.datagrid .flag_lock_on a::before, .datagrid .flag_lock_off a::before {
     content: "\e08e";
 }
 
@@ -461,6 +498,9 @@ th[rel="id"] {
 }
 th[rel="is_enabled"] {
     width: 90px;
+}
+th[rel="dg_actions"] {
+    width: 70px;
 }
 .datagrid_loading{
     position: absolute;

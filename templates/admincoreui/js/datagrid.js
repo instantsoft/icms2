@@ -146,7 +146,7 @@ icms.datagrid = (function ($) {
             });
             $.post(action_url, {data: fields}, function(data){
                 $(s_button).prop('disabled', false).parent().removeClass('process_save');
-                if(data.error){ icms.modal.alert(data.error); } else {
+                if(data.error){ toastr.error(data.error); } else {
                     $(tr_wrap).find('.grid_field_edit').addClass('success').removeClass('edit_by_click_visible');
                     $(tr_wrap).find('.grid_field_value').removeClass('edit_by_click_hidden');
                     for(var _field in fields){
@@ -191,8 +191,8 @@ icms.datagrid = (function ($) {
         $.post(url, form_data, function(result){
             clearTimeout(_this.timeout_order);
             _this.timeout_order = setTimeout(function (){
-                toastr.success(result.success_text);
-            }, 1500);
+                toastr.success(result.success_text, '', {preventDuplicates: true});
+            }, 1000);
             _this.loadRows();
         }, 'json');
 
@@ -263,7 +263,7 @@ icms.datagrid = (function ($) {
         var selected_rows_count = $('.datagrid tr.selected').length;
 
         if (_this.options.is_selectable && !selected_rows_count) {
-            icms.modal.alert(LANG_LIST_NONE_SELECTED, 'ui_warning');
+            toastr.warning(LANG_LIST_NONE_SELECTED);
             return 0;
         }
 
@@ -409,27 +409,18 @@ icms.datagrid = (function ($) {
         if (_this.options.is_pagination && result.pages_count > 1) {
             $('.datagrid_pagination').show();
             if (result.pages_count != _this.options.pages_count){
-
-                $('.datagrid_pagination').paginate({
-                    count 		: result.pages_count,
-                    start 		: 1,
-                    display     : 7,
-                    border					: false,
-                    images					: false,
-                    rotate                  : false,
-                    mouse					: 'press',
-                    border_color  			: '#fff',
-                    text_color  			: '#333',
-                    background_color    	: '#fff',
-                    border_hover_color		: '#7d929d',
-                    text_hover_color  		: '#fff',
-                    background_hover_color	: '#7d929d',
-                    onChange     			: function(page){
-                        _this.setPage(page);
-                        _this.loadRows();
-                    }
+                $('.datagrid_pagination').bootpag({
+                    total: result.pages_count,
+                    page: 1,
+                    maxVisible: 3,
+                    href: "#grid-page-{{number}}",
+                    firstLastUse: true,
+                    first: LANG_PAGE_FIRST,
+                    last: LANG_PAGE_LAST
+                }).on('page', function (event, num) {
+                    _this.setPage(num);
+                    _this.loadRows();
                 });
-
             }
         }
 

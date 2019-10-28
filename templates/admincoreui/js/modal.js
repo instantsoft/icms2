@@ -2,8 +2,6 @@ var icms = icms || {};
 
 icms.modal = (function ($) {
 
-    this.bined = [];
-
     this.onDocumentReady = function() {
         icms.modal.bind('a.ajax-modal');
         icms.modal.bind('.ajax-modal > a');
@@ -41,29 +39,44 @@ icms.modal = (function ($) {
     };
 
 	this.bind = function(selector) {
-        if($.inArray(selector, this.bined) !== -1){
-            return;
-        }
-        this.bined.push(selector);
 
-        $('body').on('click', selector, function (){
-
-            var title = $(this).attr('title');
-            if(!title){
-                title = $(this).data('original-title');
-            }
+        $(selector).each(function (){
 
             var url = $(this).attr('href');
 
-            if(url.charAt(0) === '#'){
-                $('#icms_modal').modal('show');
-                icms.modal.showModalContent(title, $(url).html());
+            if((new RegExp('[^\.]\.(jpg|jpeg|png|tiff|gif|bmp)\\s*$', 'i')).test(url)){
+                $(this).jqPhotoSwipe({
+                    galleryOpen: function (gallery) {
+                        gallery.toggleDesktopZoom();
+                    },
+                    maxSpreadZoom: 1,
+                    bgOpacity: 0.85,
+                    shareEl: false,
+                    forceSingleGallery: true
+                });
             } else {
-                icms.modal.openAjax(url, {}, false, title);
+
+                $(this).off('click').on('click', function (){
+
+                    var title = $(this).attr('title');
+                    if(!title){
+                        title = $(this).data('original-title');
+                    }
+
+                    if(url.charAt(0) === '#'){
+                        $('#icms_modal').modal('show');
+                        icms.modal.showModalContent(title, $(url).html());
+                    } else {
+                        icms.modal.openAjax(url, {}, false, title);
+                    }
+
+                    return false;
+                });
+
             }
 
-            return false;
         });
+
 	};
 
 	this.open = function(selector) {
@@ -104,7 +117,9 @@ icms.modal = (function ($) {
     };
 
     this.bindGallery = function(selector){
-        $(selector).attr('rel', 'gal');
+        $(selector).jqPhotoSwipe({
+            forceSingleGallery: true
+        });
     };
 
     this.close = function(){

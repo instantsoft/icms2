@@ -8,7 +8,8 @@
         <?php $this->addMainTplCSSName([
             'vendors/simple-line-icons/css/simple-line-icons',
             'style'
-            ]); ?>
+        ]); ?>
+        <?php $this->addCSS($this->getStylesFileName('admin')); ?>
         <?php $this->head(false); ?>
     </head>
     <?php if($show_login_link){ ?>

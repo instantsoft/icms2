@@ -11,6 +11,8 @@
         'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
+        'vendors/photoswipe/photoswipe',
+        'vendors/photoswipe/default-skin/default-skin',
         'jquery-ui',
         'style'
     ]); ?>
@@ -24,6 +26,9 @@
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
         'vendors/@coreui/coreui/js/coreui.min',
         'vendors/toastr/toastr.min',
+        'vendors/photoswipe/photoswipe.min',
+        'vendors/photoswipe/photoswipe-ui-default.min',
+        'vendors/photoswipe/jqPhotoSwipe.min',
         'core',
         'modal',
         'admin-core'
@@ -31,7 +36,7 @@
     <?php $this->head(false); ?>
 </head>
 <body class="app app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show<?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
-    <header class="app-header navbar">
+    <header class="app-header navbar" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -104,7 +109,7 @@
         </ul>
     </header>
     <div class="app-body">
-        <div class="sidebar">
+        <div class="sidebar" id="cp_left_sidebar">
             <nav class="sidebar-nav">
                 <?php $this->menu('cp_main', true, '', 0, true); ?>
                 <div class="nav-title"><?php echo LANG_CP_SU; ?></div>
@@ -140,7 +145,7 @@
             </div>
         </main>
     </div>
-    <footer class="app-footer">
+    <footer class="app-footer" id="cp_footer">
         <div class="d-none d-md-block">
             <?php if ($config->debug){ ?>
                 <span class="item">

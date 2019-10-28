@@ -26,7 +26,7 @@
             'toggle' =>'quickview',
             'toggle-element' => '#left-quickview'
         ],
-		'title' => LANG_CATEGORIES
+		'title' => LANG_MENU
 	));
 
     $this->addToolButton(array(
@@ -56,19 +56,29 @@
     ));
 
     $this->addToolButton(array(
+        'class' => 'folder',
+        'childs_count' => 4,
+        'title' => LANG_CATEGORIES,
+        'href'  => ''
+    ));
+
+    $this->addToolButton(array(
         'class' => 'add_folder',
+        'level' => 2,
         'title' => LANG_CP_CONTENT_CATS_ADD,
         'href'  => $this->href_to('content', array('cats_add'))
     ));
 
     $this->addToolButton(array(
         'class' => 'edit_folder',
-        'title' => LANG_CP_CONTENT_CATS_EDIT,
+        'level' => 2,
+        'title' => LANG_EDIT,
         'href'  => $this->href_to('content', array('cats_edit'))
     ));
 
     $this->addToolButton(array(
         'class' => 'delete_folder',
+        'level' => 2,
         'title' => LANG_DELETE_CATEGORY,
         'href'  => $this->href_to('content', array('cats_delete')),
         'confirm' => LANG_DELETE_CATEGORY_CONFIRM
@@ -76,6 +86,7 @@
 
     $this->addToolButton(array(
         'class' => 'tree_folder',
+        'level' => 2,
         'title' => LANG_CP_CONTENT_CATS_ORDER,
         'href'  => $this->href_to('content', array('cats_order')),
         'onclick' => 'return contentCatsReorder($(this))'
@@ -186,13 +197,14 @@
                 $('.breadcrumb-item.active').html(root_node.data.title);
                 $('.nav-item.item-content a').removeClass('active');
                 $('a[title='+root_node.data.title+']').addClass('active');
+                window.history.pushState(null, null, '<?php echo $this->href_to('content'); ?>/'+key[0]);
                 if(key[0] !== current_ctype){
                     current_ctype = key[0];
                     contentCancelFilter(true);
                 }else{
                     icms.datagrid.loadRows();
                 }
-                $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"><i class="icon-settings"></i></a>');
+                $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings text-decoration-none" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"><i class="icon-settings icons d-block font-xl"></i></a>');
             },
 
             onLazyRead: function(node){
@@ -210,23 +222,6 @@
                 $(this).parents('tr').addClass($(this).data('class'));
             });
         };
-        $('.datagrid').tooltip({
-          items: 'td > a:has(.grid_image_preview)',
-          content: function(){
-            var element = $(this);
-            if(element.is('a')){
-              return '<img class="datagrid_image_preview" alt="" src="'+element.attr('href')+'" />';
-            }
-          },
-          position: {
-              using: function(position, feedback){
-                  position['max-width'] = '500px';
-                  $(this).css(position);
-              }
-          },
-          hide: {duration: 0},
-          show: {duration: 0}
-        });
     });
 
 </script>
