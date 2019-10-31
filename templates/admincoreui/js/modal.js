@@ -108,9 +108,17 @@ icms.modal = (function ($) {
 
         this.showModalSpinner();
 
-        $.get(url, data, function(result){
-            icms.modal.showModalContent(title, result);
-        }, 'html');
+        $.ajax({
+            url: url,
+            data: data,
+            success: function(result){
+                icms.modal.showModalContent(title, result);
+            },
+            error: function(result){
+                icms.modal.showModalContent(title, $('#data-wrap', result.responseText).html());
+            },
+            dataType: 'html'
+        });
 
         return false;
 

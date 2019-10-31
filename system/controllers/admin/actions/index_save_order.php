@@ -17,7 +17,10 @@ class actionAdminIndexSaveOrder extends cmsAction {
 
         cmsController::saveOptions('admin', array_merge($this->options, $options));
 
-        $this->halt();
+        return $this->cms_template->renderJSON(array(
+            'error' => false,
+            'success_text' => LANG_CP_ORDER_SUCCESS
+        ));
 
     }
 

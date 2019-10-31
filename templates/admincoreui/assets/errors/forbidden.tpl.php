@@ -53,7 +53,7 @@
                                                     </div>
                                                     <div class="col-auto">
                                                         <div class="form-check text-muted mb-2">
-                                                            <input name="remember" class="form-check-input" type="checkbox" id="remember">
+                                                            <input name="remember" class="form-check-input" value="1" type="checkbox" id="remember">
                                                             <label class="form-check-label" for="remember">
                                                                 <?php echo LANG_REMEMBER_ME; ?>
                                                             </label>

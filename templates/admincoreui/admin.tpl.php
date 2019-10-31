@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
     <?php $this->addMainTplCSSName([
-        'vendors/@coreui/icons/css/coreui-icons.min',
         'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
@@ -20,6 +19,7 @@
     <?php $this->addMainTplJSName([
         'jquery-cookie',
         'jquery-ui',
+        'jquery-ui.touch-punch',
         'i18n/jquery-ui/'.cmsCore::getLanguageName(),
         'vendors/popper.js/js/popper.min',
         'vendors/bootstrap/js/bootstrap.min',
@@ -35,7 +35,7 @@
     ]); ?>
     <?php $this->head(false); ?>
 </head>
-<body class="app app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show<?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
+<body class="app app header-fixed sidebar-fixed aside-menu-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
     <header class="app-header navbar" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
@@ -44,7 +44,7 @@
             <img class="navbar-brand-full" src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" width="135" alt="InstantCMS Logo">
             <img class="navbar-brand-minimized" src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" width="50" height="50" alt="InstantCMS Logo">
         </a>
-        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
+        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-current_state="<?php if($close_sidebar){ ?>1<?php } else { ?>0<?php } ?>" data-toggle="sidebar-lg-show">
             <span class="navbar-toggler-icon"></span>
         </button>
         <ul class="nav navbar-nav d-md-down-none">
@@ -112,7 +112,12 @@
         <div class="sidebar" id="cp_left_sidebar">
             <nav class="sidebar-nav">
                 <?php $this->menu('cp_main', true, '', 0, true); ?>
-                <div class="nav-title"><?php echo LANG_CP_SU; ?></div>
+                <div class="nav-title">
+                    <?php echo LANG_CP_SU; ?>
+                    <a class="ml-2 ajax-modal" href="<?php echo href_to('admin', 'settings', ['sys_info']); ?>" title="<?php echo LANG_CP_DASHBOARD_SYSINFO; ?>">
+                        <i class="icon-info icons"></i>
+                    </a>
+                </div>
                 <?php foreach ($su as $sukey => $su_item) { ?>
                     <div class="nav-item px-3 d-compact-none d-minimized-none" id="su-<?php echo $sukey; ?>">
                         <div class="text-uppercase mb-1">
@@ -130,9 +135,7 @@
             <button class="sidebar-minimizer brand-minimizer" type="button" data-current_state="<?php if($hide_sidebar){ ?>1<?php } else { ?>0<?php } ?>"></button>
         </div>
         <main class="main" id="wrapper">
-            <?php if($this->isBreadcrumbs()){ ?>
-                <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
-            <?php } ?>
+            <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
             <?php if($this->hasMenu('admin_toolbar')){ ?>
                 <nav class="bg-white mt-n4 border-bottom mb-4">
                     <div class="container-fluid py-2">
@@ -163,7 +166,7 @@
         </div>
         <div class="ml-auto mr-auto mr-md-0">
             <a href="https://instantcms.ru/">InstantCMS</a> &mdash;
-            &copy; <a href="http://www.instantsoft.ru/">InstantSoft</a> <?php echo date('Y'); ?> &mdash;
+            <a href="http://www.instantsoft.ru/">InstantSoft</a> &copy;  <?php echo date('Y'); ?> &mdash;
             <a href="<?php echo href_to('admin', 'credits'); ?>"><?php echo LANG_CP_3RDPARTY_CREDITS; ?></a>
         </div>
     </footer>

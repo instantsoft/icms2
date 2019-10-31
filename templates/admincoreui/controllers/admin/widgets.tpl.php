@@ -1,14 +1,22 @@
 <?php
 
     $this->addTplJSName([
-        'jquery-cookie',
         'datatree',
         'admin-widgets'
-        ]);
+    ]);
     $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_WIDGETS);
     $this->addBreadcrumb(LANG_CP_SECTION_WIDGETS, $this->href_to('widgets'));
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_WIDGETS,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->addToolButton(array(
         'class' => 'add',
@@ -31,18 +39,10 @@
         'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
         'href'    => $this->href_to('widgets', array('unbind_all_widgets', $template_name))
     ));
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_WIDGETS
-	));
 
     $this->applyToolbarHook('admin_widgets_toolbar');
 
 ?>
-
-<h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>
 
 <table class="layout">
     <tr>

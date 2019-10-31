@@ -36,6 +36,17 @@ icms.admin = (function ($) {
             $.cookie('icms[hide_sidebar]', new_state, { expires: 30, path: '/'});
         });
 
+        $('.sidebar-toggler').on('click', function (){
+            var current = $(this).data('current_state');
+            if(current == 1){
+                var new_state = 0;
+            } else {
+                var new_state = 1;
+            }
+            $(this).data('current_state', new_state);
+            $.cookie('icms[close_sidebar]', new_state, { expires: 30, path: '/'});
+        });
+
         $('[data-toggle="quickview"]').on('click', function (){
             $($(this).data('toggle-element')).toggleClass('open');
             return false;

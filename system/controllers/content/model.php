@@ -2618,7 +2618,7 @@ class modelContent extends cmsModel {
 
     public function getUserContentItemsCount24($ctype_name, $user_id){
 
-        $this->filterDateYounger('date_pub', 1);
+        $this->filter("DATE(DATE_FORMAT(i.date_pub, '%Y-%m-%d')) = CURDATE()");
 
         return $this->getUserContentItemsCount($ctype_name, $user_id, false);
 

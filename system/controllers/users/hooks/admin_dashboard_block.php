@@ -20,9 +20,10 @@ class onUsersAdminDashboardBlock extends cmsAction {
             if (!$profiles) { return false; }
 
             $dashboard_blocks[] = array(
-                'title' => LANG_CP_USERS_ONLINE.' '.html_spellcount(count($profiles), LANG_USERS_SPELL),
-                'name' => 'users_online',
-                'html'  => $this->cms_template->renderInternal($this, 'backend/admin_dashboard_online_block', array(
+                'title'   => LANG_CP_USERS_ONLINE,
+                'counter' => html_spellcount(count($profiles), LANG_USERS_SPELL),
+                'name'    => 'users_online',
+                'html'    => $this->cms_template->renderInternal($this, 'backend/admin_dashboard_online_block', array(
                     'profiles' => $profiles
                 ))
             );

@@ -17,6 +17,9 @@
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
+    define('LANG_CP_DASHBOARD_SI_WS',           'Web server');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'MYSQL server');
+    define('LANG_CP_DASHBOARD_APACHE_NGINX',    'a two-tier configuration, Nginx version is %s');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
@@ -399,6 +402,14 @@
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
     define('LANG_CP_USER_SEARCH_NOT_FOUND',     'No users by specified criteria');
     define('LANG_CP_USERS_ONLINE',              'Online now');
+    define('LANG_CP_USERS_UNCONFIRMED',         'Unverified Accounts');
+    define('LANG_CP_USERS_ALL',                 'Total Users');
+    define('LANG_CP_USERS_ISDELETED',           'Deleted');
+    define('LANG_CP_USERS_LOCKED',              'Blocked');
+
+    define('LANG_CP_TOTAL',       'Total');
+    define('LANG_CP_ONMODERATE',  'Moderation');
+    define('LANG_CP_NOTPUB',      'Unpublished');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');

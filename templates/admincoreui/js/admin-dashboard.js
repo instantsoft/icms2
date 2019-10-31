@@ -1,13 +1,14 @@
 $(function(){
 
-    var ctx, chart, controller, section, period, dataUrl;
+    var ctx, chart, controller, section, period, dataUrl, type;
     var chart_data = {};
 
     function initChart(){
 
-        ctx = $("#chart-canvas").get(0).getContext("2d");
+        ctx = $("#chart-canvas");
         period = $('#chart').data('period');
         dataUrl = $('#chart').data('url');
+        type = $('#chart').data('type');
 
         $('#chart select').on('change', function(e){
 
@@ -20,7 +21,7 @@ $(function(){
 
         }).triggerHandler('change');
 
-        $('#chart .pills-menu a').on('click', function(e){
+        $('#menu-period input').on('click', function(e){
 
             e.preventDefault();
 
@@ -28,40 +29,57 @@ $(function(){
 
             period = $link.data('period');
 
-            loadChartData();
+            $('#menu-period label').removeClass('active')
+            $(this).closest('label').addClass('active');
 
-            $('#chart .pills-menu li').removeClass('active')
-            $link.parent('li').addClass('active');
+            loadChartData();
 
         });
 
-        $(window).on('resize', function (){
-            renderChart();
+        $('#toggle-type').on('click', function(e){
+
+            if($(this).hasClass('btn-primary')){
+                type = 'bar';
+            } else {
+                type = 'line';
+            }
+
+            $(this).toggleClass('btn-primary btn-outline-secondary');
+
+            loadChartData();
+
         });
 
     };
 
     function loadChartData(){
 
+        $('#chart-spinner').show();
+
         $.cookie('icms[dashboard_chart]', JSON.stringify({
-            c: controller, s: section, p: period
+            c: controller, s: section, p: period, t: type
         }));
 
         $.post(dataUrl, {id: controller, section: section, period: period}, function(result){
 
-            chart_data = {
-                labels: result.labels,
-                datasets: [{
-                    label: "",
-					fillColor : "rgba(100, 131, 157, 0.1)",
-					strokeColor : "#3498DB",
-					pointColor : "rgba(100, 131, 157, 1)",
-					pointStrokeColor : "#fff",
-					pointHighlightFill : "#fff",
-					pointHighlightStroke : "rgba(220,220,220,1)",
-                    data: result.values
-                }]
-            };
+            chart_data = result.result.chart_data;
+
+            $('.chart-footer-show').remove();
+            if(result.result.footer.length > 0){
+                $('#chart-footer').show();
+                for (var item in result.result.footer) {
+
+                    var list_template = $('#chart-footer-tpl').clone(true).addClass('chart-footer-show');
+                    $('.text-muted', list_template).html(result.result.footer[item].title);
+                    $('strong', list_template).html(result.result.footer[item].count);
+                    if(result.result.footer[item].progress){
+                        $('.callout', list_template).addClass('callout-'+result.result.footer[item].progress);
+                    }
+                    $('#chart-footer > .row').append($(list_template).show());
+                }
+            } else {
+                $('#chart-footer').hide();
+            }
 
             renderChart();
 
@@ -72,31 +90,63 @@ $(function(){
 
     function renderChart(){
         if (chart) { chart.destroy(); }
-        chart = new Chart(ctx).Bar(chart_data);
+        var progress = $('#chart-spinner');
+        chart = new Chart(ctx, {
+            type: type,
+            options: {
+                animation: {
+					onComplete: function() {
+						$(progress).hide();
+                    }
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    mode: 'point'
+                },
+                maintainAspectRatio: false,
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            drawOnChartArea: false
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            stepSize: 1,
+                            beginAtZero: true
+                        }
+                    }]
+                },
+            },
+            data: chart_data
+        });
     }
 
     $('#dashboard').sortable({
-        items: ".col:not(.disabled)",
-        handle: '.drag',
+        items: ".is-sortable:not(.disabled)",
+        handle: '.card-header',
         cursor: 'move',
-        opacity: 0.9,
+        opacity: 0.85,
         delay: 150,
-        revert: true,
+        connectWith:".is-sortable:not(.disabled)",tolerance:'pointer',forcePlaceholderSize:true,
         placeholder: 'colplaceholder',
         start: function(event, ui) {
             $(ui.placeholder).addClass($(ui.item).attr('class'));
             $(ui.placeholder).height($(ui.item).height());
         },
         update: function(event, ui) {
-            renderChart();
             var id_list = new Array();
-            $('#dashboard .col:not(.disabled)').each(function(){
+            $('#dashboard .is-sortable:not(.disabled)').each(function(){
                 var name = $(this).data('name');
                 id_list.push(name);
             });
-            $.post($('#dashboard').data('save_order_url'), {items: id_list}, function(){});
+            $.post($('#dashboard').data('save_order_url'), {items: id_list}, function(result){
+                toastr.success(result.success_text, '', {preventDuplicates: true});
+            }, 'json');
         }
-    });
+    }).disableSelection();
 
     if($('#chart select').length > 0){
         initChart();

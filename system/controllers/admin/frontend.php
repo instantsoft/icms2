@@ -73,6 +73,7 @@ class admin extends cmsFrontend {
                 $this->cms_template->setLayoutParams(array(
                     'user' => $this->cms_user,
                     'hide_sidebar' => cmsUser::getCookie('hide_sidebar', 'integer'),
+                    'close_sidebar' => cmsUser::getCookie('close_sidebar', 'integer'),
                     'su'   => $this->getSystemUtilization(),
                     'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)

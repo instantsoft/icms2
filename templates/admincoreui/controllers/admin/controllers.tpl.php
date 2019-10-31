@@ -15,6 +15,4 @@
         ]
     ]);
 
-?>
-
-<?php $this->renderGrid($this->href_to('controllers', array('ajax')), $grid);
+    $this->renderGrid($this->href_to('controllers', array('ajax')), $grid);

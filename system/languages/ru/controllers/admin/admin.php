@@ -16,6 +16,9 @@
     define('LANG_CP_SU_CPU',                    'Процессор');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
+    define('LANG_CP_DASHBOARD_SI_WS',           'Веб сервер');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'Mysql сервер');
+    define('LANG_CP_DASHBOARD_APACHE_NGINX',    'двухуровневая конфигурация, версия Nginx - %s');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
@@ -400,6 +403,14 @@
     define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
     define('LANG_CP_USER_SEARCH_NOT_FOUND',     'Нет пользователей по заданным критериям');
     define('LANG_CP_USERS_ONLINE',              'Сейчас на сайте');
+    define('LANG_CP_USERS_UNCONFIRMED',         'Неподтверждённые аккаунты');
+    define('LANG_CP_USERS_ALL',                 'Всего пользователей');
+    define('LANG_CP_USERS_ISDELETED',           'Удалённые');
+    define('LANG_CP_USERS_LOCKED',              'Заблокированные');
+
+    define('LANG_CP_TOTAL',       'Всего');
+    define('LANG_CP_ONMODERATE',  'На модерации');
+    define('LANG_CP_NOTPUB',      'Неопубликованных');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');

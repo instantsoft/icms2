@@ -14,7 +14,7 @@
     <body class="app flex-row align-items-center">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6">
+                <div class="col-md-6" id="data-wrap">
                     <div class="clearfix">
                         <h1 class="float-left display-3 mr-4 error">404</h1>
                         <h4 class="pt-3"><?php echo ERR_PAGE_NOT_FOUND; ?></h4>

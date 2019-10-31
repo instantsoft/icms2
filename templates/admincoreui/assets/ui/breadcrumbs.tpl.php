@@ -2,7 +2,14 @@
 <nav id="breadcrumb" aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>"><i class="icon-home icons"></i></a>
+            <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>">
+                <?php if (!$breadcrumbs) { ?>
+                    <i class="icon-speedometer icons"></i>
+                    <?php echo LANG_ADMIN_CONTROLLER; ?>
+                <?php } else { ?>
+                    <i class="icon-home icons"></i>
+                <?php } ?>
+            </a>
         </li>
         <?php if ($breadcrumbs) { ?>
 
@@ -27,7 +34,7 @@
             <li class="breadcrumb-menu d-sm-down-none">
                 <div class="btn-group" role="group">
                     <?php foreach($this->menus['breadcrumb-menu'] as $item){ ?>
-                        <a <?php if (isset($item['options']['target'])) { ?>target="<?php echo $item['options']['target']; ?>"<?php } ?> class="btn<?php if (!empty($item['options']['class'])) { ?> <?php echo $item['options']['class']; ?><?php } ?>" href="<?php html($item['url']); ?>">
+                        <a <?php if (isset($item['options']['title'])) { ?>title="<?php html($item['options']['title']); ?>"<?php } ?> <?php if (isset($item['options']['target'])) { ?>target="<?php echo $item['options']['target']; ?>"<?php } ?> class="btn<?php if (!empty($item['options']['class'])) { ?> <?php echo $item['options']['class']; ?><?php } ?>" href="<?php html($item['url']); ?>">
                             <?php if (!empty($item['options']['icon'])) { ?>
                                 <i class="<?php echo $item['options']['icon']; ?>"></i>
                             <?php } ?>
