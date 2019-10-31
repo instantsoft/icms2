@@ -18,12 +18,15 @@
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
-	$this->addToolButton(array(
-		'class'  => 'help',
-		'title'  => LANG_HELP,
-		'target' => '_blank',
-		'href'   => LANG_HELP_URL_CTYPES_LABELS
-	));
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_CTYPES_LABELS,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->renderForm($form, $ctype, array(
         'action' => '',

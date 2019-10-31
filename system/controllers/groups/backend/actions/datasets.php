@@ -6,7 +6,7 @@ class actionGroupsDatasets extends cmsAction {
 
         $admin = cmsCore::getController('admin');
 
-        $grid = $admin->loadDataGrid('ctype_datasets');
+        $grid = $admin->loadDataGrid('ctype_datasets', href_to('admin', 'ctypes', array('datasets_reorder', 'groups')));
 
         if ($this->request->isAjax()) {
 

@@ -1,6 +1,6 @@
 <?php
 
-function grid_ctype_relations($controller){
+function grid_ctype_relations($controller, $drag_save_url){
 
     cmsCore::loadAllControllersLanguages();
 
@@ -9,6 +9,7 @@ function grid_ctype_relations($controller){
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
+        'drag_save_url' => $drag_save_url,
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false

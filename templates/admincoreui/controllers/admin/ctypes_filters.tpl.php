@@ -8,6 +8,15 @@
 
     $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('datasets', $ctype['id']));
 
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_CTYPES_FILTERS,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
+
     if($table_exists){
         $this->addToolButton(array(
             'class' => 'add',
@@ -18,12 +27,6 @@
             'class' => 'view_list',
             'title' => LANG_CP_CTYPE_TO_LIST,
             'href'  => $this->href_to('ctypes')
-        ));
-        $this->addToolButton(array(
-            'class' => 'help',
-            'title' => LANG_HELP,
-            'target' => '_blank',
-            'href'  => LANG_HELP_URL_CTYPES_FILTERS
         ));
     }
 ?>

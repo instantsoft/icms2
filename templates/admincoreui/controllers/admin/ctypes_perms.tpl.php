@@ -14,17 +14,21 @@
         'href'  => null,
         'onclick' => "icms.forms.submit()"
     ));
+
     $this->addToolButton(array(
         'class' => 'view_list',
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
-	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
-		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_PERMS
-	));
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_CTYPES_PERMS,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $submit_url = $this->href_to('ctypes', array('perms_save', $ctype['name']));
 

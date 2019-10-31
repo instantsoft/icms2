@@ -2186,6 +2186,10 @@ class cmsModel {
      */
     public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
+        if(function_exists('yaml_emit')){
+            return yaml_emit($input_array);
+        }
+
         if(!empty($input_array)){
 
             foreach ($input_array as $key => $value) {
@@ -2213,6 +2217,10 @@ class cmsModel {
         if(is_array($yaml)){ return $yaml; }
 
         if($yaml === "---\n- 0\n"){ return array(); }
+
+        if(function_exists('yaml_parse')){
+            return yaml_parse($yaml);
+        }
 
         return Spyc::YAMLLoadString($yaml);
 

@@ -1,15 +1,16 @@
 <?php
 
-function grid_ctype_fields($controller){
+function grid_ctype_fields($controller, $ctype_name){
 
     $options = array(
-        'is_sortable' => false,
-        'is_filter' => false,
+        'is_sortable'   => false,
+        'is_filter'     => false,
         'is_pagination' => false,
-        'is_draggable' => true,
-        'order_by' => 'ordering',
-        'order_to' => 'asc',
-        'show_id' => false
+        'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('ctypes', array('fields_reorder', $ctype_name)),
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc',
+        'show_id'       => false
     );
 
     $columns = array(
@@ -85,4 +86,3 @@ function grid_ctype_fields($controller){
     );
 
 }
-

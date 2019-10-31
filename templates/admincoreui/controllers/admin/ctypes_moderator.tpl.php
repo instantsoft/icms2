@@ -8,7 +8,7 @@
     <td class="d-none d-lg-table-cell"><?php echo html_date($moderator['date_assigned']);?></td>
     <?php if(empty($not_use_trash)){ ?>
         <td>
-            <a title="<?php echo LANG_MODERATOR_TRASH_LEFT_TIME; ?>" class="ajax-modal ajaxlink trash_left_time_num" href="<?php echo href_to('admin', 'controllers', array('edit', 'moderation', 'edit_trash_left_time', $moderator['id'])); ?>">
+            <a title="<?php echo LANG_MODERATOR_TRASH_LEFT_TIME; ?>" class="ajax-modal ajaxlink btn btn-warning trash_left_time_num" href="<?php echo href_to('admin', 'controllers', array('edit', 'moderation', 'edit_trash_left_time', $moderator['id'])); ?>">
             <?php if($moderator['trash_left_time'] !== null){ ?>
                 <?php if($moderator['trash_left_time']){ ?>
                     <?php echo html_spellcount($moderator['trash_left_time'], LANG_HOUR1, LANG_HOUR2, LANG_HOUR10);?>

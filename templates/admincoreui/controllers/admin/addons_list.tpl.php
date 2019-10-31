@@ -86,7 +86,12 @@
         <div id="addons_list_wrap">
             <div id="addons_list"></div>
             <button type="button" class="btn btn-primary btn-block" style="display: none" id="show_more" data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>" data-more="<?php echo LANG_SHOW_MORE; ?>">
-                <?php echo LANG_SHOW_MORE; ?>
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <span><?php echo LANG_SHOW_MORE; ?></span>
             </button>
         </div>
     </div>
@@ -135,7 +140,8 @@
         });
         $('#show_more').on('click', function(e){
             if(has_next == 1){
-                $('#show_more').hide();
+                $('.spinner', this).show();
+                $('span', this).hide();
                 loadAddons(true);
             } else {
                 $('body,html').animate({
@@ -170,7 +176,7 @@
     function loadAddons(is_append){
         is_append = is_append || false;
         if(!is_append){
-            $('#show_more').hide().html($('#show_more').data('more'));
+            $('#show_more').hide().find('span').html($('#show_more').data('more'));
         }
         $('#addons_count .spinner').show();
         $.post('<?php echo $this->href_to('addons_list'); ?>', {
@@ -180,6 +186,8 @@
             title: addon_title,
             page: current_page
         }, function(result){
+            $('#show_more .spinner').hide();
+            $('#show_more span').show();
             $('#addons_count .spinner').hide();
             if(!is_append){
                 $('#addons_list').html(result);
@@ -191,7 +199,7 @@
                 current_page += 1;
             } else {
                 if(current_page > 1){
-                    $('#show_more').show().html($('#show_more').data('to-first'));
+                    $('#show_more').show().find('span').html($('#show_more').data('to-first'));
                 } else {
                     $('#show_more').hide();
                 }

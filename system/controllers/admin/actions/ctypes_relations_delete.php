@@ -40,6 +40,8 @@ class actionAdminCtypesRelationsDelete extends cmsAction {
 
         }
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $this->redirectBack();
 
     }

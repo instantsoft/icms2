@@ -56,10 +56,31 @@ icms.admin = (function ($) {
             $(this).next('.custom-file-label').html($(this).val().replace('C:\\fakepath\\', ''));
         });
 
+        if($('#breadcrumb .breadcrumb-item').length > 4){
+
+            var prev_href = $('.breadcrumb-item.active').prev().find('a').attr('href');
+
+            $('#admin_toolbar a.nav-link[href="'+prev_href+'"]').addClass('active');
+
+        }
+
     };
 
     this.dbCardSpinner = function (el){
         return $(el).closest('.card').find('.db_spinner');
+    };
+
+    this.goToLinkAnimated = function (link){
+
+        link = $(link);
+
+        $(link).prop('disabled', true);
+        $(link).html('<div class="spinner mr-2"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+
+        window.location.href = link.attr('href');
+
+        return false;
+
     };
 
     return this;

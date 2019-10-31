@@ -80,7 +80,7 @@
             <fieldset>
                 <legend><?php echo LANG_CP_PACKAGE_DESCRIPTION; ?></legend>
                 <p class="m-0">
-                    <?php echo nl2br(implode("\n", $manifest['description']['text'])); ?>
+                    <?php echo string_make_links(nl2br(implode("\n", $manifest['description']['text']))); ?>
                 </p>
             </fieldset>
             <?php } ?>

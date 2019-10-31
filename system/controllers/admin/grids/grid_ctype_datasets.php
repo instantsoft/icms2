@@ -1,12 +1,13 @@
 <?php
 
-function grid_ctype_datasets($controller){
+function grid_ctype_datasets($controller, $drag_save_url){
 
     $options = array(
         'is_sortable'   => false,
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
+        'drag_save_url' => $drag_save_url,
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false

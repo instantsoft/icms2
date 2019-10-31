@@ -62,7 +62,7 @@
                 </a>
             <?php } ?>
 
-            <?php if ($item['childs_count'] > 0) { ?><ul class="dropdown-menu"><?php } ?>
+            <?php if ($item['childs_count'] > 0) { ?><ul class="dropdown-menu animate slideIn"><?php } ?>
 
         <?php $last_level = $item['level']; ?>
 

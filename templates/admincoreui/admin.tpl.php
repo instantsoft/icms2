@@ -36,7 +36,7 @@
     <?php $this->head(false); ?>
 </head>
 <body class="app app header-fixed sidebar-fixed aside-menu-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?>">
-    <header class="app-header navbar" id="cp_header">
+    <header class="app-header navbar shadow-sm" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -137,7 +137,7 @@
         <main class="main" id="wrapper">
             <?php $this->breadcrumbs(array('home_url' => href_to('admin'), 'strip_last'=>false, 'separator'=>'')); ?>
             <?php if($this->hasMenu('admin_toolbar')){ ?>
-                <nav class="bg-white mt-n4 border-bottom mb-4">
+                <nav class="bg-white mt-n4 border-bottom mb-4" id="admin_toolbar">
                     <div class="container-fluid py-2">
                         <?php $this->menu('admin_toolbar', true, 'nav-pills'); ?>
                     </div>
@@ -181,7 +181,7 @@
         <?php } ?>
         <?php if ($messages){ ?>
             <?php foreach($messages as $message){ ?>
-                toastr.<?php echo str_replace('message_', '', $message['class']); ?>('<?php html($message['text']); ?>');
+                toastr.<?php echo str_replace('message_', '', $message['class']); ?>('<?php echo $message['text']; ?>');
              <?php } ?>
         <?php } ?>
         });

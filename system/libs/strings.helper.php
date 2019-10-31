@@ -185,9 +185,18 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $salt = substr(md5(md5(mt_rand(0, 65535).md5(md5(cmsConfig::get('db_pass'))))), mt_rand(0, 16), mt_rand(8, 15));
+    $rand_funct = 'mt_rand';
+    if (function_exists('random_int')) {
+        $rand_funct = 'random_int';
+    }
 
-    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . md5(md5($seed)));
+    if(function_exists('random_bytes')){
+        $salt = bin2hex(random_bytes(128));
+    } else {
+        $salt = substr(md5(md5($rand_funct(0, PHP_INT_MAX).md5(md5(cmsConfig::get('db_pass'))))), $rand_funct(0, 16), $rand_funct(8, 15));
+    }
+
+    $string = md5(md5(md5($salt) . chr($rand_funct(0, 127)) . microtime(true) . chr($rand_funct(0, 127))) . chr($rand_funct(0, 127)) . md5(md5($seed)));
 
     if ($length < 32) { $string = substr($string, 0, $length); }
 
@@ -557,7 +566,7 @@ function string_replace_keys_values_extended($string, $data){
  * @return string
  */
 function string_make_links($string){
-    return preg_replace('@(https?:\/\/([\-\w\.]+[\-\w])+(:\d+)?(\/([\w/_\.#\-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
+    return preg_replace('@(https?:\/\/([\-\w\.]+[\-\w])+(:\d+)?(\/([\w/_\.#\-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" class="auto-link" target="_blank" rel="noopener noreferrer">$1</a>', $string);
 }
 
 //============================================================================//

@@ -19,39 +19,31 @@
 
 <?php if (!empty($update['version'])){ ?>
 
-    <h2><?php printf(LANG_CP_UPDATE_AVAILABLE, $update['version']); ?></h2>
-    <h3><?php echo LANG_CP_UPDATE_DATE; ?>: <?php echo html_date($update['date']); ?></h3>
+<div class="card card-accent-success">
+    <div class="card-header">
+        <?php printf(LANG_CP_UPDATE_AVAILABLE, $update['version']); ?>
+    </div>
+    <div class="card-body">
 
-    <?php if (!function_exists('curl_init')){ ?>
+        <h4><?php echo LANG_CP_UPDATE_DATE; ?>: <?php echo html_date($update['date']); ?></h4>
 
-        <div class="alert alert-danger" role="alert">
-            <?php echo LANG_CP_UPDATE_MANUAL_1; ?><br>
-            <?php echo LANG_CP_UPDATE_MANUAL_2; ?><br>
-            <a href="<?php echo $update['url'];?>"><?php echo LANG_CP_UPDATE_DOWNLOAD; ?></a>
-        </div>
+        <?php if (!function_exists('curl_init')){ ?>
 
-    <?php } else { ?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo LANG_CP_UPDATE_MANUAL_1; ?><br>
+                <?php echo LANG_CP_UPDATE_MANUAL_2; ?><br>
+                <a href="<?php echo $update['url'];?>"><?php echo LANG_CP_UPDATE_DOWNLOAD; ?></a>
+            </div>
 
-        <h3>
-            <a href="<?php echo $this->href_to('update', 'install');?>" onclick="return installUpdate(this)"><?php echo LANG_CP_UPDATE_INSTALL; ?></a>
-            <span class="wait" style="display:none"><?php echo LANG_LOADING; ?></span>
-        </h3>
+        <?php } else { ?>
 
-        <script>
-            function installUpdate(link){
+            <a class="btn btn-success mt-3 loading-icon" href="<?php echo $this->href_to('update', 'install');?>" onclick="return icms.admin.goToLinkAnimated(this)">
+                <?php echo LANG_CP_UPDATE_INSTALL; ?>
+            </a>
 
-                link = $(link);
+        <?php } ?>
 
-                link.parent('h3').addClass('loading').find('.wait').show();
-                link.hide();
-
-                window.location.href = link.attr('href');
-
-                return false;
-
-            }
-        </script>
-
-    <?php } ?>
+    </div>
+</div>
 
 <?php } ?>

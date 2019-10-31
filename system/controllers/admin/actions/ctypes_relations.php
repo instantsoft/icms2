@@ -11,7 +11,7 @@ class actionAdminCtypesRelations extends cmsAction {
         $ctype = $content_model->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $grid = $this->loadDataGrid('ctype_relations');
+        $grid = $this->loadDataGrid('ctype_relations', href_to('admin', 'ctypes', ['relations_reorder', $ctype['id']]));
 
         if ($this->request->isAjax()) {
 

@@ -13,22 +13,20 @@
         'title' => LANG_CP_FIELD_ADD,
         'href'  => $this->href_to('ctypes', array('fields_add', $ctype['id']))
     ));
-    $this->addToolButton(array(
-        'class'   => 'save',
-        'title'   => LANG_SAVE_ORDER,
-        'href'    => null,
-        'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('fields_reorder', $ctype['name']))}')"
-    ));
+
     $this->addToolButton(array(
         'class' => 'view_list',
         'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
-	$this->addToolButton(array(
-		'class'  => 'help',
-		'title'  => LANG_HELP,
-		'target' => '_blank',
-		'href'   => LANG_HELP_URL_CTYPES_FIELDS
-	));
+
+    $this->addMenuItem('breadcrumb-menu', [
+        'title' => LANG_HELP,
+        'url'   => LANG_HELP_URL_CTYPES_FIELDS,
+        'options' => [
+            'target' => '_blank',
+            'icon' => 'icon-question'
+        ]
+    ]);
 
     $this->renderGrid($this->href_to('ctypes', array('fields_ajax', $ctype['name'])), $grid);

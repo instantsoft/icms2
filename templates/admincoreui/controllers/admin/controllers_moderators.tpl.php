@@ -41,7 +41,11 @@
     </table>
 </div>
 
-<div id="ctype_moderators_add" class="card mt-0">
+<div id="ctype_moderators_add" class="card mt-0"
+    data-url_submit="<?php echo $this->href_to('moderators_add'); ?>"
+    data-url_delete="<?php echo $this->href_to('moderators_delete'); ?>"
+    data-url_autocomplete="<?php echo href_to('admin', 'users', 'autocomplete'); ?>"
+    >
     <div class="card-body">
         <h4><?php echo LANG_MODERATOR_ADD; ?></h4>
         <div class="hint text-muted"><?php echo LANG_MODERATOR_ADD_HINT; ?></div>
@@ -54,26 +58,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(function(){
-        icms.adminModerators.url_submit = '<?php echo $this->href_to('moderators_add'); ?>';
-        icms.adminModerators.url_delete = '<?php echo $this->href_to('moderators_delete'); ?>';
-        var cache = {};
-        $( "#user_email" ).autocomplete({
-            minLength: 2,
-            delay: 500,
-            source: function( request, response ) {
-                var term = request.term;
-                if ( term in cache ) {
-                    response( cache[ term ] );
-                    return;
-                }
-                $.getJSON('<?php echo href_to('admin', 'users', 'autocomplete'); ?>', request, function( data, status, xhr ) {
-                    cache[ term ] = data;
-                    response( data );
-                });
-            }
-        });
-    });
-</script>
