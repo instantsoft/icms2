@@ -696,14 +696,15 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
 
 /**
  * Вырезает из строки CSS/JS-комментарии, табуляции, переносы строк и лишние пробелы
-  *
+ *
  * @param string $string
-  * @return string
+ * @return string
  */
 function string_compress($string){
 
     $string = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $string);
-    $string = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $string);
+    $string = preg_replace('/\s{2,}/', '', $string);
+    $string = str_replace(["\r\n", "\r", "\n", "\t"], '', $string);
 
     return $string;
 

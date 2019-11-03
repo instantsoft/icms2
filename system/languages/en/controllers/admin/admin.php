@@ -270,9 +270,12 @@
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create Categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create Property');
     define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete the "{title}" property?\n The property will be removed from all categories');
+    define('LANG_CP_PROPS_UNBIND_CONFIRM',      'Unbind property "{title}" from current category?');
     define('LANG_CP_PROPS_BIND',                'Bind property');
+    define('LANG_CP_PROPS_BIND_SC',             'Property successfully bound');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'including nested categories');
     define('LANG_CP_PROPS_UNBIND',              'Unbind property');
+    define('LANG_CP_PROPS_UNBIND_SC',           'Property successfully unbinded');
     define('LANG_CP_PROP_TITLE',                'Property title');
     define('LANG_CP_PROP_IS_ACTIVE',            'Show property on the site');
     define('LANG_CP_PROP_VALUES',               'List items');

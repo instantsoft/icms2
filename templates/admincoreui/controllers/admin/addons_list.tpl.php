@@ -41,7 +41,7 @@
 <div class="row align-items-stretch addons_list_table mb-4">
     <div class="col-xl-2 quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
-        <div id="datatree" class="bg-white h-100 pt-3">
+        <div id="datatree" class="bg-white h-100 pt-3 pb-3">
             <ul id="treeData">
                 <li id="0.0" class="folder"><?php echo LANG_ALL; ?></li>
                 <?php foreach($cats as $cat){ ?>
@@ -206,6 +206,7 @@
                 current_page = 1;
             }
             $('#addons_count').find('span').html(addons_count);
+            icms.modal.bind('a.ajax-modal');
         });
     };
 </script>

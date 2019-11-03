@@ -11,7 +11,7 @@
 .row .cp_toolbar {
     margin-top: 0 !important;
 }
-.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_on::before, .flag_lock_off::before, .datagrid td > .actions > a::before {
+.cp_toolbar .nav-link::before, .has-icon::before, .theme_settings::before, .flag_trigger::before, .flag_trigger a::before, .flag_lock_on::before, .flag_lock_off::before, .datagrid td > .actions > a::before, .grid_field_value::after {
     font-family: 'simple-line-icons';
     vertical-align: text-bottom;
     font-size: 1.1rem;
@@ -132,15 +132,18 @@
 .cp_toolbar .menu > a::before {
     content: "\e601";
 }
+.cp_toolbar .items > a::before {
+    content: "\e040";
+}
 .quickview-wrapper .quickview-toggle {
     display: none;
 }
 @media (max-width: 1199.98px) {
     .quickview-wrapper {
         position: fixed;
-        left: -260px;
+        left: -80%;
         top: 55px;
-        width: 260px;
+        width: 80%;
         background: #fff;
         bottom: 0;
         z-index: 1020;
@@ -169,6 +172,18 @@
     .quickview-wrapper .quickview-toggle:hover {
       opacity: 1;
     }
+    .quickview-wrapper-show .main::before {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1018;
+      width: 100%;
+      height: 100%;
+      content: "";
+      background: rgba(0, 0, 0, 0.7);
+      -webkit-animation: opacity 0.25s;
+      animation: opacity 0.25s;
+    }
 }
 .modal.fade.slide-left.show .modal-dialog {
   -webkit-transform: translate3d(0, 0, 0);
@@ -192,6 +207,9 @@
 }
 .modal.fade.slide-left .modal-content, .modal.fade.slide-left .modal-header {
   border-radius: 0px;
+}
+.modal-body img {
+    max-width: 100%;
 }
 h1:not(.error) {
     background: #63c2de;
@@ -276,16 +294,25 @@ form .field_error .invalid-feedback {
 .ajax-form .card-body {
     padding: 0;
 }
-ul.field_tabbed > li {
+ul.field_tabbed > li > a {
     background-repeat: no-repeat;
-    background-position: 4px center;
+    background-position: 0.25rem 0.5rem;
     background-size: auto 16px;
+    padding-left: 40px;
+    filter: grayscale(60%);
 }
-ul.field_tabbed > li.field_tabbed_ru {
+ul.field_tabbed > li > a.active {
+    filter: grayscale(0%);
+}
+ul.field_tabbed > li.field_tabbed_ru > a {
     background-image: url("../../images/languages/ru.svg");
 }
-ul.field_tabbed > li.field_tabbed_en {
+ul.field_tabbed > li.field_tabbed_en > a {
     background-image: url("../../images/languages/en.svg");
+}
+.field.multilanguage {
+    padding: 0.5rem 0 0.5rem 1rem;
+    border-left: 1px solid #c8ced3;
 }
 .datagrid .flag_trigger,
 .datagrid .flag_lock_on,
@@ -335,7 +362,7 @@ legend {
     padding: 0 10px;
     margin: 0;
 }
-form .child_field{padding-left:20px}
+form .child_field{margin-left: 20px}
 .parent_field {
     margin-left: 25px;
 }
@@ -376,28 +403,37 @@ form .child_field{padding-left:20px}
     color: #FFF;
     border-color: #dc4c4b;
 }
-
-.datagrid tr .edit_by_click.edit_by_click_visible {
-    display: block;
+.datagrid tr .grid_field_value::after {
+    transition: opacity 0.3s;
+    content: "\e05f";
+    display: inline-block;
+    margin: 0 0 0 10px;
+    cursor: pointer;
+    color: #c8ced3;
+    opacity: 0;
 }
-.datagrid tr .edit_by_click.edit_by_click_hidden {
-    display: none;
+.datagrid tr:hover .grid_field_value::after {
+    opacity: 1;
 }
 .grid_field_edit > .button {
-    margin: 0 0 0 10px;
+    margin: 1rem 0 0 0;
 }
 .grid_field_edit > .button[disabled] {
     display: none;
 }
 .grid_field_edit {
     display: none;
-    position: relative;
+    position: absolute;
+    background-color: #FFF;
+    padding: 1rem;
+    box-shadow: 0px 0px 5px #c8ced3;
+    width: 270px;
+    top: 2rem;
+    left: 0.75rem;
+    z-index: 1;
 }
 .grid_field_value {
     display: inline-block;
-}
-.grid_field_edit > .input {
-    width: 60%;
 }
 .is_collapsed {
     transition: all 0.3s ease;
@@ -464,7 +500,7 @@ form .child_field{padding-left:20px}
 .ace_redactor {
     height: 350px;
 }
-#addons_count .spinner, .do_install .spinner, .loading-icon .spinner, .btn .spinner {
+#addons_count .spinner, .do_install .spinner, .loading-icon .spinner, .btn .spinner, .grid_field_edit .spinner {
     margin: 0;
     width: auto;
     display: inline-block;
@@ -511,7 +547,11 @@ th[rel="dg_actions"] {
     width: 100%;
     height: 31px;
 }
+.datagrid tr td {
+    transition:all .5s ease;
+}
 .datagrid tr.selected td,
+.datagrid tr.current-edit-line td,
 .datagrid tr.selected:hover td {
     background:#ffe79d;
 }
@@ -739,8 +779,24 @@ td > .spinner > div {
     opacity: 0;
   }
 }
-
 .slideIn {
   -webkit-animation-name: slideIn;
   animation-name: slideIn;
+}
+@keyframes shake {
+  from, to {
+    transform: translate3d(0, 0, 0);
+  }
+
+  10%, 30%, 50%, 70%, 90% {
+    transform: translate3d(-10px, 0, 0);
+  }
+
+  20%, 40%, 60%, 80% {
+    transform: translate3d(10px, 0, 0);
+  }
+}
+
+.animate-shake {
+  animation-name: shake;
 }

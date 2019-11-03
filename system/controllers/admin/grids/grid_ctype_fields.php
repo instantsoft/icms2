@@ -24,6 +24,7 @@ function grid_ctype_fields($controller, $ctype_name){
         ),
         'fieldset' => array(
             'title' => LANG_CP_FIELD_FIELDSET,
+            'class' => 'd-none d-lg-table-cell',
             'handler' => function($value, $row){
                 return $value ? $value : '&mdash;';
             }
@@ -36,6 +37,7 @@ function grid_ctype_fields($controller, $ctype_name){
         ),
         'is_in_list' => array(
             'title' => LANG_CP_FIELD_IN_LIST_SHORT,
+            'class' => 'd-none d-md-table-cell',
             'flag'  => true,
 			'flag_toggle' => href_to($controller->name, 'ctypes', array('fields_toggle', 'list', '{ctype_id}', '{id}')),
             'width' => 60,
@@ -48,16 +50,19 @@ function grid_ctype_fields($controller, $ctype_name){
         ),
         'is_in_item' => array(
             'title' => LANG_CP_FIELD_IN_ITEM_SHORT,
+            'class' => 'd-none d-md-table-cell',
             'flag'  => true,
 			'flag_toggle' => href_to($controller->name, 'ctypes', array('fields_toggle', 'item', '{ctype_id}', '{id}')),
             'width' => 60,
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 120,
         ),
         'handler_title' => array(
             'title' => LANG_CP_FIELD_TYPE,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150,
         ),
     );

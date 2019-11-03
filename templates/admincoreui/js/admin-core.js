@@ -1,11 +1,11 @@
-toastr.options = {progressBar: true};
+toastr.options = {progressBar: true, preventDuplicates: true};
 var icms = icms || {};
 icms.admin = (function ($) {
 
     this.onDocumentReady = function(){
 
         $('.need-scrollbar').each(function (){
-            const ps = new PerfectScrollbar('#'+$(this).attr('id'));
+            new PerfectScrollbar('#'+$(this).attr('id'));
         });
 
         $('.form-tabs').on('focus', '.field.ft_string > input, .field.ft_text > textarea', function (){
@@ -47,8 +47,16 @@ icms.admin = (function ($) {
             $.cookie('icms[close_sidebar]', new_state, { expires: 30, path: '/'});
         });
 
-        $('[data-toggle="quickview"]').on('click', function (){
-            $($(this).data('toggle-element')).toggleClass('open');
+        var quickview_ps = false;
+
+        $('[data-toggle="quickview"]').on('click', function (e){
+            e.preventDefault();
+            var quickview = $(this).data('toggle-element');
+            if(quickview_ps === false){
+                quickview_ps = new PerfectScrollbar(quickview);
+            }
+            $('body').toggleClass('quickview-wrapper-show');
+            $(quickview).toggleClass('open no-overflow');
             return false;
         });
 

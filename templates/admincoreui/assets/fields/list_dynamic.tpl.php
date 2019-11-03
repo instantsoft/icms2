@@ -17,10 +17,10 @@
         <i class="icon-plus icons"></i> <?php echo isset($field->add_title) ? $field->add_title : LANG_ADD; ?>
     </a>
 
-    <div class="list_template" style="display:none">
+    <div class="list_template form-inline" style="display:none">
         <span class="title"><input type="hidden" name="" value=""></span>
-        <span class="to"><select name=""></select></span>
-        <span class="value"><input style="display:none" class="input" type="text" name="" value=""></span>
+        <span class="to"><select class="custom-select mx-2" name=""></select></span>
+        <span class="value"><input style="display:none" class="input form-control mx-2" type="text" name="" value=""></span>
         <span class="delete"><a class="ajaxlink unset_value" href="#"><?php echo LANG_CANCEL; ?></a></span>
     </div>
     <?php if (!$field->data['is_ns_value_items']) { ?>

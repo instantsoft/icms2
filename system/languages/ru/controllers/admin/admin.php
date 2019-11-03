@@ -271,9 +271,12 @@
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Создайте категории</a> чтобы добавлять свойства.');
     define('LANG_CP_PROPS_ADD',                 'Создать свойство');
     define('LANG_CP_PROPS_DELETE_CONFIRM',      'Удалить свойство "{title}"?\nСвойство будет удалено из всех категорий');
+    define('LANG_CP_PROPS_UNBIND_CONFIRM',      'Отвязать свойство "{title}" от текущей категории?');
     define('LANG_CP_PROPS_BIND',                'Привязать свойство');
+    define('LANG_CP_PROPS_BIND_SC',             'Свойство успешно привязано');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'включая вложенные категории');
     define('LANG_CP_PROPS_UNBIND',              'Отвязать свойство');
+    define('LANG_CP_PROPS_UNBIND_SC',           'Свойство успешно отвязано');
     define('LANG_CP_PROP_TITLE',                'Название свойства');
     define('LANG_CP_PROP_IS_ACTIVE',            'Показывать на сайте');
     define('LANG_CP_PROP_VALUES',               'Элементы списка');

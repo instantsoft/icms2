@@ -1,6 +1,6 @@
 ul.dynatree-container{
     white-space: nowrap;
-    padding: 0;
+    padding: 0 0 1rem 0;
     margin: 0;
     overflow: auto;
     min-height: 0%;
@@ -227,8 +227,4 @@ span.dynatree-drop-target.dynatree-drop-accept a{
     background-color: #20a8d8 !important;
     color: #FFF !important;
     text-decoration: none;
-}
-span.custom1 a{
-    background-color: maroon;
-    color: yellow;
 }

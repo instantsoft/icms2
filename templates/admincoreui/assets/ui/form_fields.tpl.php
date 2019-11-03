@@ -41,14 +41,14 @@ $visible_depend = []; $index = 0; $active_tab = false;
 
                     if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                    $first_field_key = array_keys($_field)[0];
+                    $first_field_key = array_keys($_field)[0]; $lang_active_tab = true;
 
                     if(!is_numeric($first_field_key)){ ?>
 
                         <ul class="nav nav-tabs flex-wrap field_tabbed<?php echo $_field[$first_field_key]->visible_depend ? ' child_field' : ''; ?>">
                             <?php foreach ($_field as $key => $field) { ?>
                             <li class="nav-item field_tabbed_<?php echo $key; ?>">
-                                <a href="#f_<?php echo $field->id; ?>">
+                                <a class="nav-link <?php echo $lang_active_tab ? 'active' : ''; $lang_active_tab = false; ?>" href="#f_<?php echo $field->id; ?>">
                                     <?php echo isset($field->field_tab_title) ? $field->field_tab_title : ''; ?>
                                 </a>
                             </li>
@@ -143,6 +143,7 @@ $visible_depend = []; $index = 0; $active_tab = false;
 </div>
 <script type="text/javascript">
     $(function (){
+        initMultyTabs('.field_tabbed');
     <?php if($visible_depend){ foreach($visible_depend as $field){ ?>
         icms.forms.addVisibleDepend('<?php echo $attributes['form_id']; ?>', '<?php echo $field->name; ?>', <?php echo json_encode($field->visible_depend); ?>);
     <?php } ?>

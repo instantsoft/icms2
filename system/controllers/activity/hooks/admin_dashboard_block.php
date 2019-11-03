@@ -23,6 +23,12 @@ class onActivityAdminDashboardBlock extends cmsAction {
             $dashboard_blocks[] = array(
                 'title' => LANG_ACTIVITY,
                 'name' => 'activity',
+                'actions' => [
+                    [
+                        'url' => href_to('admin', 'controllers', ['edit', $this->name]),
+                        'icon' => 'icon-settings'
+                    ]
+                ],
                 'html'  => $this->cms_template->renderInternal($this, 'backend/admin_dashboard_block_activity', array(
                     'items' => $items
                 ))

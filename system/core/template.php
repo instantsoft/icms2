@@ -1501,10 +1501,14 @@ class cmsTemplate {
             if (in_array($file, $this->head_js_no_merge)) { continue; }
             $file_path = $this->site_config->root_path . strtok($file, '?');
             $contents = file_get_contents($file_path);
-            $merged_contents .= $contents;
+            $merged_contents .= "\n".$contents;
         }
 
-        file_put_contents($cache_file_path, $merged_contents);
+        $merged_contents = preg_replace('@/\\*[\\s\\S]*?\\*/@', '', $merged_contents);
+        $merged_contents = str_replace(["\t"], '', $merged_contents);
+        $merged_contents = preg_replace('/ {2,}/', '', $merged_contents);
+
+        file_put_contents($cache_file_path, trim($merged_contents));
 
         return $cache_file;
 

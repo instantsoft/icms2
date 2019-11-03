@@ -713,3 +713,17 @@ function insertJavascript(filepath, onloadCallback) {
     }
     $('head').append(el);
 }
+function initMultyTabs(selector, tab_wrap_field){
+    tab_wrap_field = tab_wrap_field || '.field';
+    $(selector).each(function(indx, element){
+        var tab = $(' > li > a', $(this));
+        $(tab).eq(0).addClass('active');
+		$(tab).on('click', function() {
+            var tab_field = $(this).attr('href');
+			$(this).addClass('active').closest('li').siblings().find('a').removeClass('active');
+            $(element).nextAll(tab_wrap_field+':lt('+$(tab).closest('li').length+')').hide();
+            $(tab_field).show();
+            return false;
+		});
+    });
+}

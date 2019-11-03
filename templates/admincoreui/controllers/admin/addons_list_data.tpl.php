@@ -12,14 +12,14 @@
 ?>
     <div class="col-lg-6 mb-4 addon-card-<?php echo $item['slug']; ?>">
         <div class="card h-100 mb-0">
-            <div class="card-header py-2 d-flex align-items-center">
-                <div>
+            <div class="card-header py-2 row align-items-center mx-0">
+                <div class="col-md-6 p-0">
                     <?php echo $item['type']; ?> <?php echo LANG_FROM; ?>
                     <a target="_blank" href="<?php echo $item['user']['page_url']; ?>">
                         <?php echo $item['user']['nickname']; ?>
                     </a>
                 </div>
-                <div class="rating_stars ml-auto d-flex align-items-center" title="<?php echo LANG_RATING; ?>: <?php echo round($item['score'], 2); ?>">
+                <div class="col-md-6 p-0 rating_stars d-flex align-items-center justify-content-md-end" title="<?php echo LANG_RATING; ?>: <?php echo round($item['score'], 2); ?>">
                     <div class="text-muted mr-2">
                         <?php if($item['price']){ ?>
                             <?php echo html_spellcount($item['followers_count'], LANG_SUBSCRIBERS_SPELL); ?>
@@ -107,7 +107,7 @@
                         <span><?php echo LANG_CP_PACKAGE_DEMO; ?></span>
                     </a>
                 <?php } ?>
-                <div class="float-right small">
+                <div class="float-md-right mt-2 mt-md-0 small">
                     <?php echo LANG_CP_LAST_UPDATE; ?>: <?php echo string_date_age_max($latest_version['date_released'], true); ?><br>
                     <?php if($item['compatibility'] && in_array($core_version, $item['compatibility'])){ ?>
                         <?php echo LANG_CP_INSTALL_COMPATIBILITY_YES; ?>

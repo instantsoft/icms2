@@ -56,7 +56,7 @@
     ));
 
     $this->addToolButton(array(
-        'class' => 'folder',
+        'class' => 'folder animated',
         'childs_count' => 4,
         'title' => LANG_CATEGORIES,
         'href'  => ''
@@ -93,13 +93,22 @@
     ));
 
     $this->addToolButton(array(
+        'class' => 'items animated animate_on_selected',
+        'childs_count' => 4,
+        'title' => LANG_CP_WIDGETS_FA_ITEMS,
+        'href'  => ''
+    ));
+
+    $this->addToolButton(array(
         'class' => 'add',
+        'level' => 2,
         'title' => LANG_CP_CONTENT_ITEM_ADD,
         'href'  => $this->href_to('content', array('item_add'))
     ));
 
     $this->addToolButton(array(
         'class' => 'move show_on_selected',
+        'level' => 2,
         'title' => LANG_MOVE,
         'href'  => null,
         'onclick' => 'return icms.datagrid.submitAjax($(this))'
@@ -107,6 +116,7 @@
 
     $this->addToolButton(array(
         'class' => 'delete show_on_selected',
+        'level' => 2,
         'title' => LANG_DELETE,
         'href'  => null,
         'onclick' => "return icms.datagrid.submit($(this), '".LANG_DELETE_SELECTED_CONFIRM."')",
@@ -114,6 +124,7 @@
 
     $this->addToolButton(array(
         'class' => 'basket_put show_on_selected',
+        'level' => 2,
         'title' => LANG_BASKET_DELETE,
         'href'  => null,
         'onclick' => "return icms.datagrid.submit($(this), '".LANG_TRASH_DELETE_SELECTED_CONFIRM."')",
@@ -184,7 +195,9 @@
                 if (key[1] == 1){
                     $('.cp_toolbar .edit_folder a').hide();
                     $('.cp_toolbar .delete_folder a').hide();
+                    $('.cp_toolbar .folder').removeClass('animate-shake');
                 } else {
+                    $('.cp_toolbar .folder').addClass('animate-shake');
                     $('.cp_toolbar .edit_folder a').show();
                     $('.cp_toolbar .delete_folder a').show();
                 }

@@ -68,7 +68,7 @@
     ));
 
     $this->addToolButton(array(
-        'class' => 'users',
+        'class' => 'users animated',
         'childs_count' => 4,
         'title' => LANG_GROUP,
         'href'  => ''
@@ -154,7 +154,9 @@
                     $('.cp_toolbar .edit a').hide();
                     $('.cp_toolbar .permissions a').hide();
                     $('.cp_toolbar .delete a').hide();
+                    $('.cp_toolbar .users').removeClass('animate-shake');
                 } else {
+                    $('.cp_toolbar .users').addClass('animate-shake');
                     $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
                     $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
                     $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());

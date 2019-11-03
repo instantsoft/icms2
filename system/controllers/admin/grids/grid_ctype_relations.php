@@ -18,6 +18,7 @@ function grid_ctype_relations($controller, $drag_save_url){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
         ),
         'title' => array(
@@ -26,6 +27,7 @@ function grid_ctype_relations($controller, $drag_save_url){
         ),
         'layout' => array(
             'title' => LANG_CP_RELATION_LAYOUT_TYPE,
+            'class' => 'd-none d-lg-table-cell',
             'handler' => function($value, $row){
                 return constant('LANG_CP_RELATION_LAYOUT_' . strtoupper($value));
             }

@@ -50,9 +50,11 @@ icms.datagrid = (function ($) {
         if(totals > 0){
             $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').show();
             $('.cp_toolbar .show_on_selected').show();
+            $('.cp_toolbar .animate_on_selected').addClass('animate-shake');
         } else {
             $('.datagrid_select_actions .sremove, .datagrid_select_actions .sinvert').hide();
             $('.cp_toolbar .show_on_selected').hide();
+            $('.cp_toolbar .animate_on_selected').removeClass('animate-shake');
         }
         if(total === totals){
             $('.datagrid_select_actions .shint, .datagrid_select_actions .sall, .datagrid_select_actions .sinvert').hide();
@@ -137,18 +139,19 @@ icms.datagrid = (function ($) {
 
         $(document).on('click', '.inline_submit', function(){
             var s_button = $(this);
-            $(s_button).prop('disabled', true).parent().addClass('process_save');
-            var tr_wrap = $(this).closest('tr');
-            var action_url = $(this).data('action');
+            $(s_button).prop('disabled', true);
+            $(s_button).closest('.grid_field_edit').append('<div class="spinner mt-3"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
+            var tr_wrap = $(s_button).closest('tr');
+            var action_url = $(s_button).data('action');
             var fields = {};
             $(tr_wrap).find('.grid_field_edit input.input').each(function (){
                 fields[$(this).attr('name')] = $(this).val();
             });
             $.post(action_url, {data: fields}, function(data){
-                $(s_button).prop('disabled', false).parent().removeClass('process_save');
+                $(s_button).prop('disabled', false).closest('.grid_field_edit').find('.spinner').remove();
                 if(data.error){ toastr.error(data.error); } else {
-                    $(tr_wrap).find('.grid_field_edit').addClass('success').removeClass('edit_by_click_visible');
-                    $(tr_wrap).find('.grid_field_value').removeClass('edit_by_click_hidden');
+                    $(tr_wrap).find('.grid_field_edit input').addClass('is-valid');
+                    $('body').trigger('click');
                     for(var _field in fields){
                         var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
                         if($(g_value_wrap).children().length){
@@ -157,21 +160,43 @@ icms.datagrid = (function ($) {
                             $(g_value_wrap).html(data.values[_field]);
                         }
                     }
+                    toastr.success(data.info);
                 }
             }, 'json');
             return false;
         });
         $(document).on('input', '.grid_field_edit input.input', function(){
-            $(this).parent().removeClass('success');
+            $(this).removeClass('is-valid');
         });
         $(document).on('keypress', '.grid_field_edit input.input', function(e){
             if (e.which == 13) {
                 $(this).closest('tr').find('.inline_submit').trigger('click');
             }
         });
-        $(document).on('click', '.grid_field_value.edit_by_click', function(event){
+        $(document).on('click', '.grid_field_value', function(event){
             if (event.target.nodeName === 'A') { return true; }
-            $(this).addClass('edit_by_click_hidden').parent().find('.grid_field_edit').addClass('edit_by_click_visible').find('input.input').focus();
+            var table = $(this).closest('table');
+            var current_tr = $(this).closest('tr');
+            $(table).find('tr').not(current_tr).removeClass('current-edit-line');
+            $(current_tr).addClass('current-edit-line');
+            $(current_tr).find('td').css('position', 'relative');
+            var grid_field_edit = $(this).closest('td').find('.grid_field_edit');
+            if($('.inline_submit', grid_field_edit).length === 0){
+                $(grid_field_edit).append($(current_tr).find('.inline_submit').clone(true));
+            }
+            $(grid_field_edit).show().find('input.input').focus();
+            var hide_func = function (){
+                $(document).one('click', function(event) {
+                    if ($(event.target).closest(grid_field_edit).length > 0) { hide_func(); return; }
+                    $(grid_field_edit).hide();
+                    if (!$(event.target).hasClass('grid_field_value')) {
+                        setTimeout(function (){
+                            $(current_tr).removeClass('current-edit-line');
+                        }, 500);
+                    }
+                });
+            };
+            hide_func();
         });
 
     };
@@ -191,7 +216,7 @@ icms.datagrid = (function ($) {
         $.post(url, form_data, function(result){
             clearTimeout(_this.timeout_order);
             _this.timeout_order = setTimeout(function (){
-                toastr.success(result.success_text, '', {preventDuplicates: true});
+                toastr.success(result.success_text);
             }, 1000);
             _this.loadRows();
         }, 'json');

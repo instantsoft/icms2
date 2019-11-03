@@ -27,6 +27,7 @@ function grid_ctype_datasets($controller, $drag_save_url){
         ),
         'max_count' => array(
             'title'   => LANG_LIST_LIMIT,
+            'class' => 'd-none d-lg-table-cell',
             'width'   => 130,
             'handler' => function($value, $row) {
                 return $value ? $value : '&mdash;';
@@ -34,6 +35,7 @@ function grid_ctype_datasets($controller, $drag_save_url){
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150
         ),
         'is_visible' => array(

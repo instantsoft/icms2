@@ -50,6 +50,7 @@ class actionAdminInlineSave extends cmsAction {
 
 		$this->cms_template->renderJSON(array(
 			'error'  => false,
+			'info'   => LANG_SUCCESS_MSG,
 			'values' => $_data
 		));
 

@@ -26,6 +26,20 @@
                     <?php if(!empty($dashboard_block['counter'])){ ?>
                         <span class="badge py-1 badge-pill badge-success float-right"> <?php echo $dashboard_block['counter']; ?></span>
                     <?php } ?>
+                    <?php if(!empty($dashboard_block['actions'])){ ?>
+                        <div class="card-header-actions">
+                            <?php foreach ($dashboard_block['actions'] as $act) { ?>
+                                <a class="card-header-action" href="<?php echo $act['url']; ?>">
+                                    <?php if(!empty($act['icon'])){ ?>
+                                        <i class="<?php echo $act['icon']; ?>"></i>
+                                    <?php } ?>
+                                    <?php if(!empty($act['title'])){ ?>
+                                        <?php echo $act['title']; ?>
+                                    <?php } ?>
+                                </a>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                 </div>
             <?php } ?>
             <div class="card-body"><?php echo $dashboard_block['html']; ?></div>
