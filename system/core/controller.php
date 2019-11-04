@@ -811,8 +811,12 @@ class cmsController {
 
         $args = array($this);
         if ($params) {
-            if (is_array($params)){ $args = array($this) + $params; }
-            else { $args[] = $params; }
+            if (!is_array($params)){
+                $params = [$params];
+            }
+            foreach ($params as $p) {
+                $args[] = $p;
+            }
         }
 
         $grid = call_user_func_array('grid_'.$grid_name, $args);

@@ -79,6 +79,10 @@ class actionAdminControllersEdit extends cmsAction {
         $css_file = $this->cms_template->getStylesFileName($controller_info['name'], 'backend');
         if ($css_file){ $this->cms_template->addCSS($css_file); }
 
+        $backend_sub_menu = $backend_controller->getBackendSubMenu();
+
+        $this->cms_template->setMenuItems('breadcrumb-menu', $backend_sub_menu);
+
         $this->cms_template->setMenuItems('backend', $backend_menu);
 
         if($ctype){

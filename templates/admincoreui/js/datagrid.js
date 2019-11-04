@@ -144,8 +144,10 @@ icms.datagrid = (function ($) {
             var tr_wrap = $(s_button).closest('tr');
             var action_url = $(s_button).data('action');
             var fields = {};
+            var placeholders = {};
             $(tr_wrap).find('.grid_field_edit input.input').each(function (){
                 fields[$(this).attr('name')] = $(this).val();
+                placeholders[$(this).attr('name')] = $(this).attr('placeholder') ? $(this).attr('placeholder') : '';
             });
             $.post(action_url, {data: fields}, function(data){
                 $(s_button).prop('disabled', false).closest('.grid_field_edit').find('.spinner').remove();
@@ -154,10 +156,12 @@ icms.datagrid = (function ($) {
                     $('body').trigger('click');
                     for(var _field in fields){
                         var g_value_wrap = $(tr_wrap).find('.'+_field+'_grid_value');
+                        var new_value = data.values[_field] ? data.values[_field] : placeholders[_field];
+                        console.log(new_value);
                         if($(g_value_wrap).children().length){
-                            $(g_value_wrap).find('*').last().html(data.values[_field]);
+                            $(g_value_wrap).find('*').last().html(new_value);
                         } else {
-                            $(g_value_wrap).html(data.values[_field]);
+                            $(g_value_wrap).html(new_value);
                         }
                     }
                     toastr.success(data.info);

@@ -9,7 +9,7 @@ class actionAdminCtypesDatasets extends cmsAction {
         $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $grid = $this->loadDataGrid('ctype_datasets', href_to('admin', 'ctypes', ['datasets_reorder', $ctype['id']]));
+    $grid = $this->loadDataGrid('ctype_datasets', [href_to('admin', 'ctypes', ['datasets_reorder', $ctype['id']]), href_to($this->name, 'ctypes', array('datasets_edit', '{id}'))]);
 
         if ($this->request->isAjax()) {
 

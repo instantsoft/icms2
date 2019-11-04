@@ -4,6 +4,7 @@
     if ($do=='edit') { $this->setPageTitle(LANG_CP_DATASET . ': ' . $dataset['title']); }
 
     if($ctype['id']){
+        $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('datasets', $ctype['id']));
         $this->addBreadcrumb(LANG_CP_SECTION_CTYPES, $this->href_to('ctypes'));
     } else {
         $this->addBreadcrumb(LANG_CP_SECTION_CONTROLLERS, $this->href_to('controllers'));
@@ -15,8 +16,6 @@
     } else {
         $cancel_url = $this->href_to('controllers', 'edit/'.$ctype['name'].'/datasets');
     }
-
-    $this->addMenuItems('admin_toolbar', $this->controller->getCtypeMenu('datasets', $ctype['id']));
 
     if ($do=='add'){
 

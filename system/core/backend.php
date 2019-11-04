@@ -5,6 +5,7 @@ class cmsBackend extends cmsController {
     public $maintained_ctype = false;
 
     protected $backend_menu = array();
+    protected $backend_sub_menu = array();
 
     public $queue = array(
         'queues'           => array(),
@@ -47,6 +48,10 @@ class cmsBackend extends cmsController {
 
 //============================================================================//
 //============================================================================//
+
+    public function getBackendSubMenu(){
+        return $this->backend_sub_menu;
+    }
 
     public function getBackendMenu(){
         return $this->backend_menu;

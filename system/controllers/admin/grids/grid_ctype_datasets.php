@@ -1,6 +1,6 @@
 <?php
 
-function grid_ctype_datasets($controller, $drag_save_url){
+function grid_ctype_datasets($controller, $drag_save_url, $edit_url){
 
     $options = array(
         'is_sortable'   => false,
@@ -20,7 +20,7 @@ function grid_ctype_datasets($controller, $drag_save_url){
         ),
         'title' => array(
             'title'    => LANG_CP_DATASET_TITLE,
-            'href'     => href_to($controller->name, 'ctypes', array('datasets_edit', '{id}')),
+            'href'     => $edit_url,
             'editable' => array(
                 'table' => 'content_datasets'
             )
@@ -50,7 +50,7 @@ function grid_ctype_datasets($controller, $drag_save_url){
         array(
             'title' => LANG_EDIT,
             'class' => 'edit',
-            'href'  => href_to($controller->name, 'ctypes', array('datasets_edit', '{id}'))
+            'href'  => $edit_url
         ),
         array(
             'title'   => LANG_DELETE,

@@ -21,22 +21,22 @@ class actionUsersMigrationsEdit extends cmsAction {
 
                 $this->model->updateMigrationRule($rule_id, $rule);
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('migrations');
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/migration', array(
-            'do' => 'edit',
-            'rule' => $rule,
-            'form' => $form,
+        return $this->cms_template->render('backend/migration', array(
+            'do'     => 'edit',
+            'rule'   => $rule,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

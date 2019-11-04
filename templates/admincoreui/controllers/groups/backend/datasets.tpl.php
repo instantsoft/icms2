@@ -7,7 +7,7 @@
     $this->addToolButton(array(
         'class' => 'add',
         'title' => LANG_CP_DATASET_ADD,
-        'href'  => href_to('admin', 'ctypes', array('datasets_add', 'groups'))
+        'href'  => $this->href_to('datasets', 'add')
     ));
 
 	$this->addToolButton(array(

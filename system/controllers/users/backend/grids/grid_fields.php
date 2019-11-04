@@ -7,6 +7,7 @@ function grid_fields($controller){
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('fields_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false
@@ -26,6 +27,7 @@ function grid_fields($controller){
         ),
         'fieldset' => array(
             'title'   => LANG_CP_FIELD_FIELDSET,
+            'class'   => 'd-none d-lg-table-cell',
             'width'   => 150,
             'handler' => function($value, $row) {
                 return $value ? $value : '&mdash;';
@@ -51,10 +53,12 @@ function grid_fields($controller){
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150
         ),
         'handler_title' => array(
             'title' => LANG_CP_FIELD_TYPE,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150
         ),
     );
