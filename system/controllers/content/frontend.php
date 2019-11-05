@@ -96,7 +96,7 @@ class content extends cmsFrontend {
 
     public function getMenuCategoriesItems($menu_item_id, $ctype){
 
-        $result = array('url' => href_to($ctype['name']), 'items' => []);
+        $result = array('url' => href_to($ctype['name']), 'items' => false);
 
         if (!$ctype['is_cats']) { return $result; }
 
@@ -110,7 +110,7 @@ class content extends cmsFrontend {
         // считаем вручную кол-во вложенных
         // т.к. у нас могут быть скрытые категории
         // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
-        $childs_count = [];
+        $childs_count = []; $result['items'] = [];
 
         foreach($tree as $cat){
 
