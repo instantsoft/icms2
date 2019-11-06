@@ -48,6 +48,7 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
             }
 
+            $widget['device_type_names'] = $widget['device_types'];
             $widget['device_types'] = $device_types;
 
             return $this->cms_template->renderJSON(array(

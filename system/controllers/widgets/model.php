@@ -294,6 +294,7 @@ class modelWidgets extends cmsModel {
                 'title'        => $bind['title'],
                 'position'     => $bind['position'],
                 'languages'    => $bind['languages'],
+                'device_type_names' => $bind['device_types'],
                 'device_types' => $device_types,
                 'name'         => $bind['name'],
                 'is_tab_prev'  => (bool) $bind['is_tab_prev'],

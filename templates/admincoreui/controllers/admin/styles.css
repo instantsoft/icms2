@@ -297,6 +297,18 @@ form .field_error .invalid-feedback {
 .ajax-form .card-body {
     padding: 0;
 }
+.icon-svg  {
+    display: inline-block;
+    line-height: 1;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 1.5rem;
+    min-height: 16px;
+    vertical-align: text-bottom;
+}
+.disabled .icon-svg  {
+    filter: grayscale(70%);
+}
 ul.field_tabbed > li > a {
     background-repeat: no-repeat;
     background-position: 0.25rem 0.5rem;
@@ -307,10 +319,10 @@ ul.field_tabbed > li > a {
 ul.field_tabbed > li > a.active {
     filter: grayscale(0%);
 }
-ul.field_tabbed > li.field_tabbed_ru > a {
+ul.field_tabbed > li.field_tabbed_ru > a, .icon-lang-ru {
     background-image: url("../../images/languages/ru.svg");
 }
-ul.field_tabbed > li.field_tabbed_en > a {
+ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
     background-image: url("../../images/languages/en.svg");
 }
 .field.multilanguage {
@@ -532,7 +544,9 @@ form .child_field{margin-left: 20px}
 }
 #cp-widgets-list li > .title, #cp-widgets-layout .position li > .title {
     display: inline-block;
-    padding: .5rem 1rem .5rem .5rem;
+    padding: .5rem;
+}
+#cp-widgets-layout .position li:not(.disabled) > .title {
     cursor: move;
 }
 #cp-widgets-layout .position li.placeholder{
@@ -586,6 +600,10 @@ form .child_field{margin-left: 20px}
 }
 #cp-widgets-layout li .actions, #cp-widgets-list li .actions {
     padding: .5rem 1rem .5rem .5rem;
+}
+#cp-widgets-layout .position .device_restrictions, #cp-widgets-layout .position .lang_restrictions {
+    background-color: #f9d46b;
+    border: solid 1px #ccab49;
 }
 #site_settings #fset_2 .chosen-container,
 #site_settings #fset_5 .chosen-container { width:300px !important; }

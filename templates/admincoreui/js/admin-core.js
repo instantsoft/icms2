@@ -47,16 +47,23 @@ icms.admin = (function ($) {
             $.cookie('icms[close_sidebar]', new_state, { expires: 30, path: '/'});
         });
 
-        var quickview_ps = false;
+        var quickview_ps = null;
 
         $('[data-toggle="quickview"]').on('click', function (e){
             e.preventDefault();
             var quickview = $(this).data('toggle-element');
-            if(quickview_ps === false){
+            var is_open = $(quickview).hasClass('open');
+            if(is_open){
+                if(quickview_ps !== null){
+                    quickview_ps.destroy();
+                }
+                $('body').removeClass('quickview-wrapper-show');
+                $(quickview).removeClass('open no-overflow');
+            } else {
                 quickview_ps = new PerfectScrollbar(quickview);
+                $('body').addClass('quickview-wrapper-show');
+                $(quickview).addClass('open no-overflow');
             }
-            $('body').toggleClass('quickview-wrapper-show');
-            $(quickview).toggleClass('open no-overflow');
             return false;
         });
 

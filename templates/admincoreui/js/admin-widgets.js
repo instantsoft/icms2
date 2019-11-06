@@ -88,7 +88,12 @@ $(function() {
         connectToSortable: "#cp-widgets-layout .position",
         helper: "clone",
         zIndex: 100,
-        revert: "invalid"
+        revert: "invalid",
+        start: function( event, ui ) {
+            if($('#left-quickview.open').length > 0){
+                $('#left-quickview .quickview-toggle.close').trigger('click');
+            }
+        }
     }).disableSelection();
 
     $('#cp-widgets-layout').on('click', 'li .actions > a', function (){
@@ -189,10 +194,21 @@ function createWidgetNode(widget){
 
     if (widget.device_types){
         widget_dom.addClass('device_restrictions');
-        widget_dom.append('<span class="wd_device_types">'+widget.device_types.join(', ')+'</span>');
+        var device_icons = '';
+        for (var key in widget.device_type_names) {
+            if(widget.device_type_names[key] === 'mobile'){
+                widget.device_type_names[key] = 'smartphone';
+            }
+            device_icons = device_icons+'<i title="'+widget.device_types[key]+'" class="icon-screen-'+widget.device_type_names[key]+' icons mr-1"></i>';
+        }
+        widget_dom.append('<span class="wd_device_types mr-2">'+device_icons+'</span>');
     }
     if (widget.languages){
-        widget_dom.append('<span class="wd_languages">'+widget.languages.join(', ')+'</span>');
+        var lang_icons = '';
+        for (var key in widget.languages) {
+            lang_icons = lang_icons+'<i title="'+widget.languages[key]+'" class="icon-lang-'+widget.languages[key]+' icon-svg  mr-1"></i>';
+        }
+        widget_dom.append(lang_icons);
     }
 
     $('#cp-widgets-layout #pos-'+widget.position).append(widget_dom);
@@ -319,20 +335,7 @@ function widgetEdit(link){
     var widget_dom = $('#cp-widgets-layout li[bind-id='+id+']');
     var template = $('#cp-widgets-layout').data('template');
 
-    icms.modal.openAjax(edit_url + '/' + id, {template:template}, function (){
-        icms.modal.setCallback('close', function(){
-            icms.forms.form_changed = false;
-        });
-        var h = 0, m = false;
-        $('.modal_form .form-tabs .tab').each(function(){
-            var th = +$(this).height();
-            if (th > h){ h = th; m = true; }
-        });
-        if(m){
-            $('.modal_form .form-tabs .tab').first().css({height: h+'px'});
-            setTimeout(function(){ icms.modal.resize(); }, 10);
-        }
-    }, widget_dom.attr('data-name'));
+    icms.modal.openAjax(edit_url + '/' + id, {template:template}, function (){}, widget_dom.attr('data-name'));
 
     return false;
 
@@ -342,15 +345,26 @@ function widgetUpdated(widget, result){
 
     var widget_dom = $( "#cp-widgets-layout li[bind-id=" + result.widget.id + ']');
 
-    widget_dom.html(result.widget.title);
+    widget_dom.html('<span class="title">'+result.widget.title+'</span>');
 
     if (result.widget.device_types){
-        widget_dom.append('<span class="wd_device_types">'+result.widget.device_types.join(', ')+'</span>');
+        var device_icons = '';
+        for (var key in result.widget.device_type_names) {
+            if(result.widget.device_type_names[key] === 'mobile'){
+                result.widget.device_type_names[key] = 'smartphone';
+            }
+            device_icons = device_icons+'<i title="'+result.widget.device_types[key]+'" class="icon-screen-'+result.widget.device_type_names[key]+' icons mr-1"></i>';
+        }
+        widget_dom.append('<span class="wd_device_types">'+device_icons+'</span>');
         widget_dom.addClass('device_restrictions');
     }
 
     if (result.widget.languages){
-        widget_dom.append('<span class="wd_languages">'+result.widget.languages.join(', ')+'</span>');
+        var lang_icons = '';
+        for (var key in result.widget.languages) {
+            lang_icons = lang_icons+'<i title="'+result.widget.languages[key]+'" class="icon-lang-'+result.widget.languages[key]+' icon-svg  mr-1"></i>';
+        }
+        widget_dom.append(lang_icons);
     }
 
     widgetAddActionButtons(widget_dom);
