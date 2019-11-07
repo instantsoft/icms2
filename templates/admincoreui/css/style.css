@@ -12693,14 +12693,14 @@ canvas {
   flex: 1;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 260px;
+  width: 200px;
 }
 
 .sidebar .sidebar-nav {
   position: relative;
   -ms-flex: 1;
   flex: 1;
-  width: 260px;
+  width: 200px;
 }
 
 .sidebar > .sidebar-nav {
@@ -12709,7 +12709,7 @@ canvas {
 }
 
 .sidebar .nav {
-  width: 260px;
+  width: 200px;
   -ms-flex-direction: column;
   flex-direction: column;
   min-height: 100%;
@@ -13196,10 +13196,10 @@ canvas {
     display: none;
   }
   .sidebar-minimized .sidebar .nav-dropdown-items .nav-item {
-    width: 260px;
+    width: 200px;
   }
   .sidebar-minimized .sidebar .nav-dropdown-items .nav-item .nav-link {
-    width: 260px;
+    width: 200px;
   }
   .sidebar-minimized .sidebar .nav > .nav-dropdown > .nav-dropdown-items {
     display: none;
@@ -13867,8 +13867,8 @@ app-root {
 }
 
 .app-body .sidebar {
-  -ms-flex: 0 0 260px;
-  flex: 0 0 260px;
+  -ms-flex: 0 0 200px;
+  flex: 0 0 200px;
   -ms-flex-order: -1;
   order: -1;
 }
@@ -13879,7 +13879,7 @@ app-root {
 }
 
 html:not([dir="rtl"]) .sidebar {
-  margin-left: -260px;
+  margin-left: -200px;
 }
 
 html:not([dir="rtl"]) .aside-menu {
@@ -13888,7 +13888,7 @@ html:not([dir="rtl"]) .aside-menu {
 }
 
 html[dir="rtl"] .sidebar {
-  margin-right: -260px;
+  margin-right: -200px;
 }
 
 html[dir="rtl"] .aside-menu {
@@ -13908,7 +13908,7 @@ html[dir="rtl"] .aside-menu {
   .sidebar-fixed .sidebar {
     position: fixed;
     z-index: 1019;
-    width: 260px;
+    width: 200px;
     height: 100vh;
   }
   .sidebar-fixed .app-header + .app-body .sidebar {
@@ -14058,7 +14058,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed.sidebar-compact .main,
   html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14073,7 +14073,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-sm-show.sidebar-fixed.sidebar-minimized .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
 }
 
@@ -14089,7 +14089,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 576px) {
   html:not([dir="rtl"]) .sidebar-sm-show.breadcrumb-fixed .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed .breadcrumb {
-    left: 260px;
+    left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-sm-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14121,7 +14121,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-sm-show.sidebar-fixed .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
   html[dir="rtl"] .sidebar-sm-show.sidebar-fixed.sidebar-compact .main,
   html[dir="rtl"] .sidebar-sm-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14136,7 +14136,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-sm-show.sidebar-fixed.sidebar-minimized .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
 }
 
@@ -14152,7 +14152,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 576px) {
   html[dir="rtl"] .sidebar-sm-show.breadcrumb-fixed .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed .breadcrumb {
-    right: 260px;
+    right: 200px;
   }
   html[dir="rtl"] .sidebar-sm-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14203,7 +14203,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed.sidebar-compact .main,
   html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14218,7 +14218,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-md-show.sidebar-fixed.sidebar-minimized .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
 }
 
@@ -14234,7 +14234,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 768px) {
   html:not([dir="rtl"]) .sidebar-md-show.breadcrumb-fixed .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed .breadcrumb {
-    left: 260px;
+    left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-md-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14266,7 +14266,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-md-show.sidebar-fixed .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
   html[dir="rtl"] .sidebar-md-show.sidebar-fixed.sidebar-compact .main,
   html[dir="rtl"] .sidebar-md-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14281,7 +14281,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-md-show.sidebar-fixed.sidebar-minimized .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
 }
 
@@ -14297,7 +14297,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 768px) {
   html[dir="rtl"] .sidebar-md-show.breadcrumb-fixed .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed .breadcrumb {
-    right: 260px;
+    right: 200px;
   }
   html[dir="rtl"] .sidebar-md-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14348,7 +14348,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed.sidebar-compact .main,
   html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14363,7 +14363,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed.sidebar-minimized .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
 }
 
@@ -14379,7 +14379,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 992px) {
   html:not([dir="rtl"]) .sidebar-lg-show.breadcrumb-fixed .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed .breadcrumb {
-    left: 260px;
+    left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-lg-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14411,7 +14411,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-lg-show.sidebar-fixed .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
   html[dir="rtl"] .sidebar-lg-show.sidebar-fixed.sidebar-compact .main,
   html[dir="rtl"] .sidebar-lg-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14426,7 +14426,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-lg-show.sidebar-fixed.sidebar-minimized .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
 }
 
@@ -14442,7 +14442,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 992px) {
   html[dir="rtl"] .sidebar-lg-show.breadcrumb-fixed .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed .breadcrumb {
-    right: 260px;
+    right: 200px;
   }
   html[dir="rtl"] .sidebar-lg-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14493,7 +14493,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-xl-show.sidebar-fixed .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-xl-show.sidebar-fixed.sidebar-compact .main,
   html:not([dir="rtl"]) .sidebar-xl-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14508,7 +14508,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html:not([dir="rtl"]) .sidebar-xl-show.sidebar-fixed.sidebar-minimized .app-footer,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-left: 260px;
+    margin-left: 200px;
   }
 }
 
@@ -14524,7 +14524,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 1200px) {
   html:not([dir="rtl"]) .sidebar-xl-show.breadcrumb-fixed .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed .breadcrumb {
-    left: 260px;
+    left: 200px;
   }
   html:not([dir="rtl"]) .sidebar-xl-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html:not([dir="rtl"]) .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14556,7 +14556,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-xl-show.sidebar-fixed .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
   html[dir="rtl"] .sidebar-xl-show.sidebar-fixed.sidebar-compact .main,
   html[dir="rtl"] .sidebar-xl-show.sidebar-fixed.sidebar-compact .app-footer,
@@ -14571,7 +14571,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   html[dir="rtl"] .sidebar-xl-show.sidebar-fixed.sidebar-minimized .app-footer,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .main,
   html[dir="rtl"] .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
-    margin-right: 260px;
+    margin-right: 200px;
   }
 }
 
@@ -14587,7 +14587,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
 @media (min-width: 1200px) {
   html[dir="rtl"] .sidebar-xl-show.breadcrumb-fixed .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed .breadcrumb {
-    right: 260px;
+    right: 200px;
   }
   html[dir="rtl"] .sidebar-xl-show.breadcrumb-fixed.sidebar-compact .breadcrumb,
   html[dir="rtl"] .sidebar-show.breadcrumb-fixed.sidebar-compact .breadcrumb {
@@ -14682,7 +14682,7 @@ html[dir="rtl"] .aside-menu-show .aside-menu {
   .sidebar {
     position: fixed;
     z-index: 1019;
-    width: 260px;
+    width: 200px;
     height: calc(100vh - 55px);
   }
   .sidebar-minimizer {

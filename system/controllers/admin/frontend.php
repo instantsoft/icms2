@@ -173,46 +173,27 @@ class admin extends cmsFrontend {
 
     public function getAdminMenu($show_submenu = false){
 
-        $menu = []; $controllers = [];
+        $menu = []; $ctype_new_count = 0;
 
         $model_content = cmsCore::getModel('content');
 
         $ctypes = $model_content->getContentTypes();
 
-        $_controllers = $this->model->getInstalledControllers();
-
         if($show_submenu){
-            foreach ($_controllers as $cont) {
-                if(!$cont['is_enabled'] || !$cont['is_backend']){
-                    continue;
-                }
-                $controllers[] = $cont;
+            foreach ($ctypes as $ctype) {
+                $ctype_new_count += $this->model->getTableItemsCount24($this->model->getContentTypeTableName($ctype['name']));
             }
         }
 
         $menu[] = [
             'title' => LANG_CP_SECTION_CONTENT,
             'url' => href_to($this->name, 'content'),
-            'childs_count' => ($ctypes && $show_submenu) ? count($ctypes) : null,
+            'counter' => ($ctypes && $show_submenu) ? $ctype_new_count : null,
             'options' => array(
                 'class' => 'item-content',
                 'icon'  => 'nav-icon icon-docs'
             )
         ];
-
-        if($show_submenu){
-            foreach ($ctypes as $ctype) {
-
-                $count = $this->model->getTableItemsCount24($this->model->getContentTypeTableName($ctype['name']));
-
-                $menu[] = [
-                    'title' => $ctype['title'],
-                    'url' => href_to($this->name, 'content', $ctype['id']),
-                    'level' => 2,
-                    'counter' => $count
-                ];
-            }
-        }
 
         $menu[] = [
             'title' => LANG_CP_SECTION_CTYPES,
@@ -244,23 +225,11 @@ class admin extends cmsFrontend {
         $menu[] = [
             'title' => LANG_CP_SECTION_CONTROLLERS,
             'url' => href_to($this->name, 'controllers'),
-            'childs_count' => ($controllers && $show_submenu) ? count($controllers) : null,
             'options' => array(
                 'class' => 'item-controllers',
                 'icon'  => 'nav-icon icon-layers'
             )
         ];
-
-        if($show_submenu){
-            foreach ($controllers as $cont) {
-
-                $menu[] = [
-                    'title' => $cont['title'],
-                    'url' => href_to($this->name, 'controllers', ['edit', $cont['name']]),
-                    'level' => 2
-                ];
-            }
-        }
 
         $menu[] = [
             'title' => LANG_CP_OFICIAL_ADDONS,
@@ -283,22 +252,11 @@ class admin extends cmsFrontend {
         $menu[] = [
             'title' => LANG_CP_SECTION_SETTINGS,
             'url' => href_to($this->name, 'settings'),
-            'childs_count' => 2,
             'options' => array(
                 'class' => 'item-settings',
                 'icon'  => 'nav-icon icon-settings'
             )
         ];
-
-        // Совместимость со старой админкой
-        if($show_submenu){
-
-            $settings_menu = $this->getSettingsMenu();
-
-            foreach ($settings_menu as $value) {
-                $menu[] = $value;
-            }
-        }
 
         return cmsEventsManager::hook('adminpanel_menu', $menu);
 

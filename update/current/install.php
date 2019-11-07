@@ -12,7 +12,7 @@ function install_package(){
     }
 
     if(!$core->db->isFieldExists('widgets', 'image_hint_path')){
-        $core->db->query("ALTER TABLE `{#}widgets` ADD `image_hint_path` VARCHAR(100) NULL DEFAULT NULL COMMENT");
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `image_hint_path` VARCHAR(100) NULL DEFAULT NULL");
     }
 
     ////////////////////////////////////////////////////////////////////////////

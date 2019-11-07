@@ -541,6 +541,7 @@ form .child_field{margin-left: 20px}
     border-radius: 2px;
     margin-bottom: 0.5rem;
     transition:border-color .2s ease, background 0.1s linear;
+    overflow: hidden;
 }
 #cp-widgets-list li > .title, #cp-widgets-layout .position li > .title {
     display: inline-block;

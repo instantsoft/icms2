@@ -11,7 +11,7 @@
     define('LANG_CP_DASHBOARD_NEWS_O',          'Официальные');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Блоги');
     define('LANG_CP_PAGE_OPTIONS',              'Настроить эту страницу');
-    define('LANG_CP_SU',                        'Использование системы');
+    define('LANG_CP_SU',                        'Система');
     define('LANG_CP_SU_DISK',                   'Место на диске');
     define('LANG_CP_SU_CPU',                    'Процессор');
 

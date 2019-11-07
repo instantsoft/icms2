@@ -166,7 +166,7 @@
     </div>
 </div>
 <div id="actions-template" style="display:none">
-    <span class="actions float-md-right d-flex">
+    <span class="actions float-lg-right d-flex">
         <a class="hide mr-3" href="#" data-func="widgetToggle" title="<?php echo LANG_HIDE; ?>"><i class="icon-check icons font-xl d-block"></i></a>
         <a class="copy mr-3" href="#" data-func="widgetCopy" title="<?php echo LANG_COPY; ?>"><i class="icon-docs icons font-xl d-block"></i></a>
         <a class="edit mr-3" href="#" data-func="widgetEdit" title="<?php echo LANG_EDIT; ?>"><i class="icon-pencil icons font-xl d-block"></i></a>
