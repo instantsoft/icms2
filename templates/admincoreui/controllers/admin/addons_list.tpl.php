@@ -39,9 +39,9 @@
 
 ?>
 <div class="row align-items-stretch addons_list_table mb-4">
-    <div class="col-xl-3 quickview-wrapper" id="left-quickview">
+    <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
-        <div id="datatree" class="bg-white h-100 pt-3 pb-3">
+        <div id="datatree" class="bg-white h-100 pt-3 pb-3 pr-3">
             <ul id="treeData">
                 <li id="0.0" class="folder"><?php echo LANG_ALL; ?></li>
                 <?php foreach($cats as $cat){ ?>
@@ -50,17 +50,17 @@
             </ul>
         </div>
     </div>
-    <div class="col-xl-9">
+    <div class="col">
         <?php if ($this->isToolbar()){ ?>
             <nav class="cp_toolbar navbar navbar-light bg-light my-2 pl-2" id="addons_toolbar">
                 <?php $this->toolbar(); ?>
             </nav>
         <?php } ?>
         <div id="filter_toolbar" class="row mb-4 align-items-center">
-            <div class="col-md-5">
+            <div class="col-lg-4">
                 <?php echo html_input('text', 'title', '', array('id' => 'search_addon_title', 'placeholder' => LANG_CP_FIND_ADDON_TITLE, 'autocomplete' => 'off')); ?>
             </div>
-            <div class="col-md-4 mt-2 mt-md-0" id="is_paid">
+            <div class="col-auto col-lg-6 mt-2 mt-lg-0" id="is_paid">
                 <div class="custom-control custom-radio custom-control-inline">
                     <input checked class="custom-control-input" type="radio" id="a-all" name="is_paid" value="0">
                     <label class="custom-control-label" for="a-all"><?php echo LANG_ALL; ?></label>
@@ -69,18 +69,18 @@
                     <input class="custom-control-input" type="radio" id="a-pay" name="is_paid" value="1">
                     <label class="custom-control-label" for="a-pay"><?php echo LANG_CP_FIND_ADDON_FREE; ?></label>
                 </div>
-                <div class="custom-control custom-radio custom-control-inline">
+                <div class="custom-control custom-radio custom-control-inline mr-0">
                     <input class="custom-control-input" type="radio" id="a-nopay" name="is_paid" value="2">
                     <label class="custom-control-label" for="a-nopay"><?php echo LANG_CP_FIND_ADDON_BUY; ?></label>
                 </div>
             </div>
-            <div class="col-md-3 text-muted text-right" id="addons_count">
+            <div class="col-auto col-lg-2 text-muted text-right small mt-2 mt-lg-0" id="addons_count">
                 <div class="spinner mr-2">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
                 </div>
-                <?php echo LANG_CP_FIND_FOUND; ?>: <span></span>
+                <strong><?php echo LANG_CP_TOTAL; ?>: <span></span></strong>
             </div>
         </div>
         <div id="addons_list_wrap">
@@ -179,6 +179,7 @@
             $('#show_more').hide().find('span').html($('#show_more').data('more'));
         }
         $('#addons_count .spinner').show();
+        $('#addons_count strong').hide();
         $.post('<?php echo $this->href_to('addons_list'); ?>', {
             dataset_id: current_ds_id,
             cat_id: current_cat_id,
@@ -188,6 +189,7 @@
         }, function(result){
             $('#show_more .spinner').hide();
             $('#show_more span').show();
+            $('#addons_count strong').show();
             $('#addons_count .spinner').hide();
             if(!is_append){
                 $('#addons_list').html(result);

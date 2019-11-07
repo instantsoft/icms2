@@ -26,6 +26,7 @@ function grid_ctypes($controller){
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 150,
             'filter' => 'like'
         ),
@@ -51,6 +52,7 @@ function grid_ctypes($controller){
         ),
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,
+            'class' => 'd-none d-sm-table-cell',
 			'flag' => true,
 			'flag_toggle' => href_to($controller->name, 'toggle_item', array('{id}', 'content_types', 'is_enabled')),
             'width' => 80

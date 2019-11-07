@@ -36,6 +36,7 @@ function grid_scheduler($controller){
         ),
         'is_active' => array(
             'title' => LANG_IS_ENABLED,
+            'class' => 'd-none d-sm-table-cell',
             'flag'  => true,
             'width' => 60,
             'flag_toggle' => href_to($controller->name, 'settings/scheduler', array('toggle', '{id}'))

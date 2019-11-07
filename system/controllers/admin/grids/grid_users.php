@@ -62,7 +62,7 @@ function grid_users($controller){
         ),
         'karma' => array(
             'title' => LANG_KARMA,
-            'class' => 'd-none d-lg-table-cell',
+            'class' => 'd-none d-xxl-table-cell',
             'width' => 60,
             'filter' => 'exact',
             'handler' => function($value){
@@ -71,7 +71,7 @@ function grid_users($controller){
         ),
         'rating' => array(
             'title' => LANG_RATING,
-            'class' => 'd-none d-lg-table-cell',
+            'class' => 'd-none d-xxl-table-cell',
             'width' => 60,
             'filter' => 'exact'
         ),
@@ -87,6 +87,7 @@ function grid_users($controller){
         ),
         'is_deleted' => array(
             'title' => LANG_ADMIN_IS_DELETED,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 24,
             'handler' => function($value, $user){
                 return html_bool_span(($value ? LANG_YES : LANG_NO), !$value);

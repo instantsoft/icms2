@@ -77,7 +77,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
     </table>
 <?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
     <div class="row">
-        <div class="col-sm-12 col-lg-5 d-flex">
+        <div class="col-auto col-lg-5 d-flex">
             <div class="datagrid_pagination mr-2"></div>
             <div class="dataTables_length datagrid_resize">
                 <label>
@@ -92,7 +92,7 @@ $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage
                 </label>
             </div>
         </div>
-        <div class="col-sm-12 col-lg-7 text-right">
+        <div class="col col-lg-7 text-right">
             <?php if ($options['is_selectable']){ ?>
                 <div class="datagrid_navigation datagrid_select_actions">
                     <small class="shint text-muted mr-2"><?php echo LANG_CP_SELECT_HINT; ?></small>

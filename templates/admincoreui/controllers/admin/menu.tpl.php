@@ -59,7 +59,7 @@
 ?>
 
 <div class="row align-items-stretch mb-4">
-    <div class="col-xl-3 quickview-wrapper" id="left-quickview">
+    <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="card-body bg-white h-100 pt-3">
             <ul id="treeData">
@@ -69,7 +69,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xl-9">
+    <div class="col">
         <?php $this->renderGrid($this->href_to('menu', array('items_ajax', 1, 0)), $grid); ?>
     </div>
 </div>

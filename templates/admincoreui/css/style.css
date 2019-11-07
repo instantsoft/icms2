@@ -6861,6 +6861,12 @@ button.bg-dark:focus {
   }
 }
 
+@media (min-width: 1400px) {
+  .d-xxl-table-cell {
+    display: table-cell !important;
+  }
+}
+
 @media print {
   .d-print-none {
     display: none !important;
@@ -16348,4 +16354,3 @@ body {
 .was-validated .form-control:invalid, .form-control.is-invalid {
   background-position: right calc(0.375em + 0.1875rem) center;
 }
-/*# sourceMappingURL=style.css.map */

@@ -40,6 +40,7 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'is_approved' => array(
             'title' => LANG_MODERATION,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 150,
             'handler' => function($value, $item) use ($controller, $ctype_name){
                 if($item['is_deleted']){
@@ -69,6 +70,7 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'is_pub' => array(
             'title' => LANG_ON,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 40,
             'flag' => true,
 			'flag_toggle' => href_to($controller->name, 'content', array('item_toggle', $ctype_name, '{id}'))

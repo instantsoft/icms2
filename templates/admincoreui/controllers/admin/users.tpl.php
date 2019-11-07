@@ -107,9 +107,9 @@
 
 ?>
 <div class="row align-items-stretch mb-4">
-    <div class="col-xl-3 quickview-wrapper" id="left-quickview">
+    <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
-        <div id="datatree" class="bg-white h-100 pt-3">
+        <div id="datatree" class="bg-white h-100 pt-3 pb-3 pr-3">
             <ul id="treeData">
                 <?php foreach($groups as $id=>$group){ ?>
                     <li id="<?php echo $group['id'];?>" class="folder"><?php echo $group['title']; ?></li>
@@ -117,7 +117,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xl-9">
+    <div class="col">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>

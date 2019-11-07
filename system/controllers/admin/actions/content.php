@@ -4,7 +4,7 @@ class actionAdminContent extends cmsAction {
 
     public function run($do = false) {
 
-        $ctype_id = false;
+        $ctype_id = 0; $ctype = [];
 
         // если нужно, передаем управление другому экшену
         if ($do){

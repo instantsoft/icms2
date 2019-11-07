@@ -135,7 +135,7 @@
 ?>
 
 <div class="row align-items-stretch mb-4">
-    <div class="col-xl-3 quickview-wrapper" id="left-quickview">
+    <div class="col-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="card-body bg-white h-100 pt-3">
             <ul id="treeData">
@@ -145,7 +145,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xl-9">
+    <div class="col">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>
@@ -160,9 +160,7 @@
         $('#datagrid_filter').append('<?php echo html_input('hidden', 'ctype_changed'); ?>');
 
         $("#datatree").dynatree({
-
             debugLevel: 0,
-
             onPostInit: function(isReloading, isError){
                 var path = '<?php echo $key_path; ?>';
                 $("#datatree").dynatree("getTree").loadKeyPath(path, function(node, status){
@@ -175,7 +173,6 @@
                     }
                 });
             },
-
             onActivate: function(node){
                 node.expand();
                 $.cookie('icms[content_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
@@ -208,8 +205,6 @@
                     }
                 }, true);
                 $('.breadcrumb-item.active').html(root_node.data.title);
-                $('.nav-item.item-content a').removeClass('active');
-                $('a[title='+root_node.data.title+']').addClass('active');
                 window.history.pushState(null, null, '<?php echo $this->href_to('content'); ?>/'+key[0]);
                 if(key[0] !== current_ctype){
                     current_ctype = key[0];
@@ -219,7 +214,6 @@
                 }
                 $('.datagrid > tbody > tr.filter > td:last').html('<a title="<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>" class="columns_settings text-decoration-none" href="<?php echo $this->href_to('content', array('grid_columns')); ?>/'+key[0]+'" onclick="return icms.modal.openAjax($(this).attr(\'href\'), {}, undefined, \'<?php echo LANG_CP_GRID_COLYMNS_SETTINGS; ?>\')"><i class="icon-settings icons d-block font-xl"></i></a>');
             },
-
             onLazyRead: function(node){
                 node.appendAjax({
                     url: "<?php echo $this->href_to('content', array('tree_ajax')); ?>",
@@ -228,7 +222,6 @@
                     }
                 });
             }
-
         });
         icms.datagrid.callback = function (){
             $('#datagrid td > span[rel = set_class]').each(function(indx){
