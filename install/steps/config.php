@@ -47,7 +47,7 @@ function create_config($path, $file){
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
         'template'				=> 'default',
-        'template_admin'		=> 'default',
+        'template_admin'		=> 'admincoreui',
         'template_mobile'		=> '',
         'template_tablet'		=> '',
         'db_host'				=> $_SESSION['install']['db']['host'],

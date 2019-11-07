@@ -546,7 +546,7 @@ form .child_field{margin-left: 20px}
     display: inline-block;
     padding: .5rem;
 }
-#cp-widgets-layout .position li:not(.disabled) > .title {
+#cp-widgets-layout .position li:not(.disabled) > .title, #cp-widgets-list li > .title {
     cursor: move;
 }
 #cp-widgets-layout .position li.placeholder{
@@ -604,6 +604,11 @@ form .child_field{margin-left: 20px}
 #cp-widgets-layout .position .device_restrictions, #cp-widgets-layout .position .lang_restrictions {
     background-color: #f9d46b;
     border: solid 1px #ccab49;
+}
+#cp-widgets-list li > img, #cp-widgets-layout .position li > img {
+    width: 100%;
+    border-radius: inherit;
+    display: block;
 }
 #site_settings #fset_2 .chosen-container,
 #site_settings #fset_5 .chosen-container { width:300px !important; }

@@ -352,6 +352,8 @@
     define('LANG_CP_MENU_IS_FIXED',             'This menu cannot be deleted');
 
     define('LANG_CP_WIDGETS_PAGE',              'Page');
+    define('LANG_CP_WIDGETS_PAGES',             'Pages');
+    define('LANG_CP_WIDGETS_ALL',               'All widgets');
     define('LANG_CP_WIDGETS_ADD',               'Add Widget');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Add Page');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Edit');
@@ -362,6 +364,7 @@
     define('LANG_CP_WIDGET_COPY_CONFIRM',       'Copy the widget, duplicating it at the same position?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
     define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Are you sure you want to permanently remove the widget from the system?');
+    define('LANG_CP_WIDGET_REMOVE_SUCCESS',     'Widget successfully deleted');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
     define('LANG_CP_WIDGET_PAGE_URLS',          'URL binding');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');

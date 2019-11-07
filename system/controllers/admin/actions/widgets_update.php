@@ -54,7 +54,8 @@ class actionAdminWidgetsUpdate extends cmsAction {
             return $this->cms_template->renderJSON(array(
                 'errors'   => false,
                 'callback' => 'widgetUpdated',
-                'widget'   => $widget
+                'widget'   => $widget,
+                'success_text' => LANG_CP_SAVE_SUCCESS
             ));
 
         }

@@ -75,10 +75,10 @@
         <div class="card-body bg-white h-100 pt-3 no-overflow">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#datatree">Страницы</a>
+                    <a class="nav-link active" data-toggle="tab" href="#datatree"><?php echo LANG_CP_WIDGETS_PAGES; ?></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#all-widgets">Все виджеты</a>
+                    <a class="nav-link" data-toggle="tab" href="#all-widgets"><?php echo LANG_CP_WIDGETS_ALL; ?></a>
                 </li>
             </ul>
             <div class="tab-content border-right-0 border-bottom-0 border-left-0">
@@ -108,12 +108,17 @@
                                         </a>
                                         <ul class="mt-3 px-2 list-unstyled collapse <?php echo !$controller_name ? 'show' : ''; ?>" id="w-<?php echo $controller_name; ?>" data-parent="#accordion">
                                             <?php foreach($widgets as $widget){ ?>
-                                                <li rel="new" data-id="<?php echo $widget['id']; ?>">
+                                            <li rel="new" data-id="<?php echo $widget['id']; ?>">
                                                     <span class="title"><?php echo $widget['title']; ?></span>
                                                     <?php if($widget['is_external']){ ?>
-                                                        <span class="actions">
-                                                            <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
+                                                        <span class="actions float-md-right d-flex">
+                                                            <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>">
+                                                                <i class="icon-close icons font-xl d-block"></i>
+                                                            </a>
                                                         </span>
+                                                    <?php } ?>
+                                                    <?php if($widget['image_hint_path']){ ?>
+                                                        <img src="<?php echo $widget['image_hint_path']; ?>">
                                                     <?php } ?>
                                                 </li>
                                             <?php } ?>

@@ -1694,6 +1694,7 @@ CREATE TABLE `{#}widgets` (
   `is_external` tinyint(1) DEFAULT '1',
   `files` text COMMENT 'Список файлов виджета (для стороних виджетов)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
+  `image_hint_path` varchar(100) DEFAULT NULL COMMENT 'Поясняющее изображение',
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
   KEY `name` (`name`),

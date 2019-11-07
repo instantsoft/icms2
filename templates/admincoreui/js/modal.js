@@ -98,10 +98,6 @@ icms.modal = (function ($) {
         title = title || false;
         data = data || {};
 
-        if(open_callback){
-            this.setCallback('open', open_callback);
-        }
-
         if(data.is_iframe){
             return this.openIframe(url+'?'+$.param(data), title);
         }
@@ -113,6 +109,9 @@ icms.modal = (function ($) {
             data: data,
             success: function(result){
                 icms.modal.showModalContent(title, result);
+                if(open_callback){
+                    open_callback();
+                }
             },
             error: function(result){
                 icms.modal.showModalContent(title, $('#data-wrap', result.responseText).html());

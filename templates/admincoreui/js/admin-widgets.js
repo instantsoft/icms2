@@ -86,6 +86,7 @@ $(function() {
 
     $( "#cp-widgets-list ul li" ).draggable({
         connectToSortable: "#cp-widgets-layout .position",
+        handle: '.title',
         helper: "clone",
         zIndex: 100,
         revert: "invalid",
@@ -222,6 +223,10 @@ function createWidgetNode(widget){
         widget_dom.addClass('hide').find('.actions .hide').attr('title', LANG_SHOW);
     }
 
+    if (widget.image_hint_path){
+        widget_dom.append('<img src="'+widget.image_hint_path+'">');
+    }
+
     widgetsMarkTabbed();
 
     return widget_dom;
@@ -239,9 +244,12 @@ function widgetsMarkTabbed(){
 }
 
 function widgetAddActionButtons(widget_dom){
-
-    widget_dom.not('.disabled').append( $('#actions-template').html() );
-
+    widget_dom.find('.actions').remove();
+    if(widget_dom.find('img').length > 0){
+        $('img', widget_dom).before($('#actions-template').html());
+    } else {
+        widget_dom.not('.disabled').append($('#actions-template').html());
+    }
 }
 
 function widgetCopy(link){
@@ -379,7 +387,13 @@ function widgetUpdated(widget, result){
         widget_dom.removeClass('device_restrictions');
     }
 
+    if (result.widget.image_hint_path){
+        widget_dom.append('<img src="'+result.widget.image_hint_path+'">');
+    }
+
     widgetsMarkTabbed();
+
+    toastr.success(result.success_text);
 
     icms.modal.close();
 
@@ -422,7 +436,9 @@ function widgetRemove(id){
 
         icms.modal.openAjax($('#cp-widgets-layout').data('files-url')+'/'+id+'/0', undefined, function (){
 
-            $.post($('#cp-widgets-layout').data('remove-url')+'/'+id, {}, function(){});
+            $.post($('#cp-widgets-layout').data('remove-url')+'/'+id, {}, function(result){
+                toastr.success(result.success_text);
+            }, 'json');
 
         }, LANG_CP_PACKAGE_CONTENTS);
 
@@ -478,9 +494,4 @@ function widgetsSavePositionOrderings(position){
 
     return true;
 
-}
-
-function widgetGetListItems(list_id, url){
-	console.log('#'+list_id);
-	console.log(url);
 }

@@ -143,7 +143,7 @@ $(function(){
                 id_list.push(name);
             });
             $.post($('#dashboard').data('save_order_url'), {items: id_list}, function(result){
-                toastr.success(result.success_text, '', {preventDuplicates: true});
+                toastr.success(result.success_text);
             }, 'json');
         }
     }).disableSelection();

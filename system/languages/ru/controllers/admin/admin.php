@@ -353,6 +353,8 @@
     define('LANG_CP_MENU_IS_FIXED',             'Нельзя удалить системное меню');
 
     define('LANG_CP_WIDGETS_PAGE',              'Страница');
+    define('LANG_CP_WIDGETS_PAGES',             'Страницы');
+    define('LANG_CP_WIDGETS_ALL',               'Все виджеты');
     define('LANG_CP_WIDGETS_ADD',               'Создать виджет');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Создать страницу');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
@@ -363,6 +365,7 @@
     define('LANG_CP_WIDGET_COPY_CONFIRM',       'Копировать виджет, дублируя его на этой же позиции?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Вы действительно хотите окончательно удалить виджет из системы?');
+    define('LANG_CP_WIDGET_REMOVE_SUCCESS',     'Виджет успешно удалён');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
     define('LANG_CP_WIDGET_PAGE_URLS',          'Фильтрация URL');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');

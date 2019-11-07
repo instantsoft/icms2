@@ -193,7 +193,12 @@ class modelWidgets extends cmsModel {
         $widgets = $this->orderByList(array(
                     array('by' => 'controller', 'to' => 'asc'),
                     array('by' => 'name', 'to' => 'asc')
-                ))->get('widgets');
+                ))->get('widgets', function ($item, $model){
+                    if($item['image_hint_path']){
+                        $item['image_hint_path'] = cmsConfig::get('upload_host').'/'.$item['image_hint_path'];
+                    }
+                    return $item;
+                });
 
         if (!$widgets) { return false; }
 
@@ -222,12 +227,16 @@ class modelWidgets extends cmsModel {
         $this->select('w.controller', 'controller');
         $this->select('w.name', 'name');
         $this->select('w.title', 'widget_title');
+        $this->select('w.image_hint_path', 'image_hint_path');
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
         $this->useCache('widgets.bind');
 
         return $this->getItemById('widgets_bind', $id, function($item, $model) {
+            if($item['image_hint_path']){
+                $item['image_hint_path'] = cmsConfig::get('upload_host').'/'.$item['image_hint_path'];
+            }
             $item['options']          = cmsModel::yamlToArray($item['options']);
             $item['groups_view']      = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide']      = cmsModel::yamlToArray($item['groups_hide']);
@@ -257,6 +266,7 @@ class modelWidgets extends cmsModel {
             filterIsNull('bp.position')->
             filterEnd()->
             select('w.title', 'name')->
+            select('w.image_hint_path', 'image_hint_path')->
             select('bp.*')->
             select('IFNULL(bp.bind_id,i.id)', 'bind_id')->
             joinInner('widgets', 'w', 'w.id = i.widget_id')->
@@ -287,6 +297,10 @@ class modelWidgets extends cmsModel {
                 $bind['position'] = '_unused';
             }
 
+            if($bind['image_hint_path']){
+                $bind['image_hint_path'] = cmsConfig::get('upload_host').'/'.$bind['image_hint_path'];
+            }
+
             $positions[$bind['position']][] = array(
                 'id'           => $bind['id'],
                 'bind_id'      => $bind['bind_id'],
@@ -294,6 +308,7 @@ class modelWidgets extends cmsModel {
                 'title'        => $bind['title'],
                 'position'     => $bind['position'],
                 'languages'    => $bind['languages'],
+                'image_hint_path' => $bind['image_hint_path'],
                 'device_type_names' => $bind['device_types'],
                 'device_types' => $device_types,
                 'name'         => $bind['name'],

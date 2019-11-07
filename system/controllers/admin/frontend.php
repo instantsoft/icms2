@@ -600,6 +600,12 @@ class admin extends cmsFrontend {
                                             $manifest['info']['image'];
         }
 
+        if (isset($manifest['info']['image_hint'])){
+            $manifest['info']['image_hint'] = $this->cms_config->upload_path .
+                                            $this->installer_upload_path . '/' .
+                                            $manifest['info']['image_hint'];
+        }
+
         if((isset($manifest['install']) || isset($manifest['update']))){
 
             $action = (isset($manifest['install']) ? 'install' : 'update');

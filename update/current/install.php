@@ -11,6 +11,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{users}` ADD `2fa` VARCHAR(32) NULL DEFAULT NULL AFTER `ip`");
     }
 
+    if(!$core->db->isFieldExists('widgets', 'image_hint_path')){
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `image_hint_path` VARCHAR(100) NULL DEFAULT NULL COMMENT");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
