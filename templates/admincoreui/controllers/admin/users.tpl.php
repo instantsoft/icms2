@@ -107,7 +107,7 @@
 
 ?>
 <div class="row align-items-stretch mb-4">
-    <div class="col-xl-2 quickview-wrapper" id="left-quickview">
+    <div class="col-xl-3 quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div id="datatree" class="bg-white h-100 pt-3">
             <ul id="treeData">
@@ -117,7 +117,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xl-10">
+    <div class="col-xl-9">
         <?php $this->renderGrid(false, $grid); ?>
     </div>
 </div>
