@@ -143,6 +143,7 @@
 }
 @media (max-width: 1199.98px) {
     .quickview-wrapper {
+        will-change: transform;
         position: fixed;
         left: -80%;
         top: 55px;
@@ -685,11 +686,42 @@ th[rel="dg_actions"] {
 .datagrid .empty{
     color:#8f9ba6;
 }
+.datagrid tbody > tr:not(.filter) > td:first-child::before, .is-sortable .card-header > .db-sortable-handle::before {
+    height: 20px;
+    width: 20px;
+    background-image: url("../../images/datatree/drag_indicator.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    content: '';
+    display: block;
+    left: -20px;
+    position: absolute;
+    top: 0.75rem;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.3s;
+    will-change: opacity;
+}
+.datagrid tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before {
+    opacity: 1;
+}
+.is-sortable .card-header > .db-sortable-handle::before {
+    left: 0;
+}
 .card-body > .card-footer {
     margin: 1.25rem -1.25rem -1.25rem -1.25rem;
 }
-.is-sortable .card-header {
+.is-sortable .card-header > .db-sortable-handle, .datagrid tbody > tr:not(.filter) > td:first-child {
     cursor: move;
+}
+.is-sortable .card-header > .db-sortable-handle {
+    display: inline-block;
+    margin: -0.75rem -1.25rem;
+    padding: 0.75rem 1.25rem;
+}
+.datagrid tbody > tr > td:first-child, .is-sortable .card-header > .db-sortable-handle {
+    position: relative;
 }
 .colplaceholder{
     background:rgba(0,0,0,.025);
@@ -739,6 +771,9 @@ td > .spinner > div {
     width: 12px;
     height: 12px;
     background-color: #dadada;
+}
+.dropdown-menu > .spinner {
+    margin: 1rem auto;
 }
 .sk-spinner-pulse {
     display: inline-flex;

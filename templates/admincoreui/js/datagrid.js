@@ -424,6 +424,7 @@ icms.datagrid = (function ($) {
         if (_this.options.is_draggable) {
             $('#datagrid').tableDnD({
                 onDragClass: 'dragged',
+                dragHandle: "tbody > tr:not(.filter) > td:first-child",
                 onDragStart: function(table, row) {
                     clearTimeout(_this.timeout_order);
                 },

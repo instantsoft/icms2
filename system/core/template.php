@@ -1645,21 +1645,35 @@ class cmsTemplate {
     /**
      * Возвращает HTML-разметку схемы позиций виджетов
      * @param string $name Имя шаблона
-     * @return boolean
+     * @return boolean|string
      */
     public function getSchemeHTML($name = '') {
 
-        $name = $name ? $name : $this->name;
-
-        $scheme_file = $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$name.'/scheme.html';
-
-        if (!file_exists($scheme_file)) { return false; }
+        $scheme_file = $this->getSchemeHTMLFile($name);
+        if (!$scheme_file) { return false; }
 
         ob_start();
 
         include($scheme_file);
 
         return ob_get_clean();
+
+    }
+
+    /**
+     * Возвращает путь к файлу схемы позиций виджетов
+     * @param string $name
+     * @return boolean|string
+     */
+    public function getSchemeHTMLFile($name = '') {
+
+        $name = $name ? $name : $this->name;
+
+        $scheme_file = $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$name.'/scheme.html';
+
+        if (!is_readable($scheme_file)) { return false; }
+
+        return $scheme_file;
 
     }
 

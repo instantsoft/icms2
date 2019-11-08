@@ -22,7 +22,8 @@
         <div class="card mb-0 h-100 <?php echo (isset($dashboard_block['child_class']) ? $dashboard_block['child_class'] : ''); ?>" id="db_<?php echo $dashboard_block['name']; ?>" data-name="<?php echo $dashboard_block['name']; ?>">
             <?php if(empty($dashboard_block['hide_title'])){ ?>
                 <div class="card-header">
-                    <?php echo $dashboard_block['title']; ?> <span class="db_spinner sk-spinner sk-spinner-pulse bg-blue ml-3" style="display: none"></span>
+                    <span class="db-sortable-handle"><?php echo $dashboard_block['title']; ?></span>
+                    <span class="db_spinner sk-spinner sk-spinner-pulse bg-blue ml-3" style="display: none"></span>
                     <?php if(!empty($dashboard_block['counter'])){ ?>
                         <span class="badge py-1 badge-pill badge-success float-right"> <?php echo $dashboard_block['counter']; ?></span>
                     <?php } ?>

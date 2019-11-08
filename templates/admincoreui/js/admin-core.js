@@ -101,3 +101,104 @@ icms.admin = (function ($) {
     return this;
 
 }).call(icms.admin || {},jQuery);
+
+icms.notices = (function ($) {
+
+    this.onDocumentReady = function(){
+
+        $('#notices_counter').on('click',function(e){
+            e.preventDefault();
+            $.post($(this).attr('href'), {}, function(html){
+                $('#pm_notices_list').html(html);
+            });
+        });
+        $('#pm_notices_list').on('click', function (e) {
+            e.stopPropagation();
+        });
+
+    };
+
+    this.noticeAction = function(id, name){
+
+        var pm_notices_window = $('#pm_notices_list');
+
+        var url = $('#pm_notices_window').data('action-url');
+
+        var form_data = {
+            notice_id: id,
+            action_name: name
+        };
+
+        $.post(url, form_data, function(result) {
+
+            if (result.error) {
+                return false;
+            }
+
+            if (result.href){
+                window.location.href = result.href;
+            }
+
+            $('#notice-'+id, pm_notices_window).fadeOut(300, function(){
+                $(this).remove();
+                var count = $('.item', pm_notices_window).length;
+                icms.notices.setNoticesCounter(count);
+                if (count==0){
+                    $('body').trigger('click');
+                }
+            });
+
+        }, "json");
+
+        return false;
+
+    };
+
+    this.noticeClear = function(){
+
+        if(confirm(LANG_PM_CLEAR_NOTICE_CONFIRM)){
+
+            var pm_notices_window = $('#pm_notices_list');
+            var url = $('#pm_notices_window').data('action-url');
+
+            $.post(url, {action_name: 'clear_notice'}, function(result) {
+
+                if (result.error) {
+                    return false;
+                }
+
+                $('.item', pm_notices_window).fadeOut('fast', function(){
+                    $(this).remove();
+                    var count = $('.item', pm_notices_window).length;
+                    icms.notices.setNoticesCounter(count);
+                    if (count==0){
+                        $('body').trigger('click');
+                    }
+                });
+
+            }, 'json');
+
+            return true;
+
+        }
+
+        return false;
+
+    };
+
+    this.setNoticesCounter = function(value){
+
+        var button = $('#notices_counter');
+
+        $('.badge', button).remove();
+
+        if (value > 0){
+            var html = '<span class="badge badge-pill badge-danger">' + value + '</span>';
+            $(button).append(html);
+        }
+
+    };
+
+	return this;
+
+}).call(icms.notices || {},jQuery);

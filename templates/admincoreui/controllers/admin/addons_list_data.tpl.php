@@ -13,13 +13,13 @@
     <div class="col-xl-6 mb-4 addon-card-<?php echo $item['slug']; ?>">
         <div class="card h-100 mb-0">
             <div class="card-header py-2 row align-items-center mx-0">
-                <div class="col-md-8 p-0">
+                <div class="col-sm-8 p-0">
                     <?php echo $item['type']; ?> <?php echo LANG_FROM; ?>
                     <a target="_blank" href="<?php echo $item['user']['page_url']; ?>">
                         <?php echo $item['user']['nickname']; ?>
                     </a>
                 </div>
-                <div class="col-md-4 p-0 rating_stars d-flex align-items-center justify-content-md-end" title="<?php echo LANG_RATING; ?>: <?php echo round($item['score'], 2); ?>">
+                <div class="col-sm-4 p-0 rating_stars d-flex align-items-center justify-content-sm-end" title="<?php echo LANG_RATING; ?>: <?php echo round($item['score'], 2); ?>">
                     <?php
                         $value = $item['score'];
                         $value *= 10; $step = 0.5 * 10;

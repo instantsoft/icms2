@@ -69,15 +69,22 @@
             <?php } ?>
         </ul>
         <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item d-md-down-none">
-                <a  id="notices_counter" class="nav-link ajax-modal" href="<?php echo href_to('messages', 'notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
+            <li class="nav-item d-sm-down-none">
+                <a data-toggle="dropdown" id="notices_counter" class="nav-link" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
                     <i class="icon-bell font-xl"></i>
                     <?php if($notices_count){ ?>
                         <span class="badge badge-pill badge-danger"><?php echo $notices_count; ?></span>
                     <?php } ?>
                 </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-menu-xl" id="pm_notices_list">
+                    <div class="spinner">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                </div>
             </li>
-            <li class="nav-item d-md-down-none">
+            <li class="nav-item">
                 <a class="nav-link" href="<?php echo href_to_home(); ?>" target="_blank" title="<?php echo LANG_CP_BACK_TO_SITE; ?>" data-toggle="tooltip" data-placement="bottom">
                     <i class="icon-share-alt icons font-xl"></i>
                 </a>

@@ -1,8 +1,8 @@
 <div id="chart" data-url="<?php echo $this->href_to('index_chart_data'); ?>" data-period="<?php html($defaults['period']); ?>" data-type="<?php html($defaults['type']); ?>">
     <div class="row mb-3">
-        <div class="col-sm-4 form-inline">
+        <div class="col-auto form-inline">
             <div class="form-group">
-                <label class="mr-3"><?php echo LANG_CP_DASHBOARD_STATS; ?></label>
+                <label class="mr-3 d-none d-md-block"><?php echo LANG_CP_DASHBOARD_STATS; ?></label>
                 <select class="custom-select form-control">
                     <?php foreach($chart_nav as $section){ ?>
                         <optgroup label="<?php echo $section['title']; ?>">
@@ -19,11 +19,11 @@
             </div>
             <span id="chart-spinner" class="db_spinner sk-spinner sk-spinner-pulse bg-blue ml-3" data-percent="0%"></span>
         </div>
-        <div class="col-sm-8 d-none d-sm-block">
+        <div class="col">
             <button id="toggle-type" class="d-none d-md-block btn <?php if($defaults['type'] == 'line'){ ?>btn-primary<?php } else { ?>btn-outline-secondary<?php } ?> float-right" type="button">
                 <i class="icon-graph"></i>
             </button>
-            <div id="menu-period" class="btn-group btn-group-toggle float-right mr-3">
+            <div id="menu-period" class="btn-group btn-group-toggle float-sm-right mr-3">
                 <label class="btn btn-outline-secondary<?php if ($defaults['period'] == 7) { ?> active<?php } ?>">
                     <input type="radio" name="period" autocomplete="off"  <?php if ($defaults['period'] == 7) { ?> checked=""<?php } ?> data-period="7" /> <?php echo LANG_WEEK; ?>
                 </label>

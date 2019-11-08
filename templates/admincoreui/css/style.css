@@ -12130,6 +12130,9 @@ canvas {
 .dropdown-menu-lg {
   width: 250px;
 }
+.dropdown-menu-xl {
+  width: 300px;
+}
 
 .app-header .navbar-nav .dropdown-menu {
   position: absolute;

@@ -29,7 +29,9 @@ class actionAdminWidgets extends cmsAction {
         cmsCore::loadTemplateLanguage($template_name);
 
         foreach ($tpls as $tpl) {
-            $templates[$tpl] = $tpl;
+            if($this->cms_template->getSchemeHTMLFile($tpl)){
+                $templates[$tpl] = $tpl;
+            }
         }
 
         $scheme_html = $this->getSchemeHTML($template_name);

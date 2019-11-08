@@ -126,7 +126,7 @@ $(function(){
 
     $('#dashboard').sortable({
         items: ".is-sortable:not(.disabled)",
-        handle: '.card-header',
+        handle: '.card-header > .db-sortable-handle',
         cursor: 'move',
         opacity: 0.85,
         delay: 150,
