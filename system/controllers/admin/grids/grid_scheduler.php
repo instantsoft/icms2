@@ -3,8 +3,13 @@
 function grid_scheduler($controller){
 
     $options = array(
-        'show_id' => false,
-        'is_filter' => true
+        'is_sortable'   => false,
+        'is_draggable'  => true,
+        'drag_save_url' => href_to('admin', 'reorder', ['scheduler_tasks']),
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc',
+        'show_id'       => false,
+        'is_filter'     => true
     );
 
     $columns = array(

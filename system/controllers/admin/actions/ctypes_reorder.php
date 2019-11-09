@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @deprecated Используется в шаблоне старой админки
+ * href_to('admin', 'reorder', ['content_types'])
+ */
 class actionAdminCtypesReorder extends cmsAction {
 
     public function run(){
@@ -8,13 +11,6 @@ class actionAdminCtypesReorder extends cmsAction {
         if (!$items){ cmsCore::error404(); }
 
         cmsCore::getModel('content')->reorderContentTypes($items);
-
-        if ($this->request->isAjax()){
-			return $this->cms_template->renderJSON(array(
-				'error' => false,
-				'success_text' => LANG_CP_ORDER_SUCCESS
-			));
-        }
 
         cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 

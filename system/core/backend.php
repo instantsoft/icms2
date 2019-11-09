@@ -71,19 +71,25 @@ class cmsBackend extends cmsController {
 //=========                Скрытие/показ записей                     =========//
 //============================================================================//
 
-    public function actionToggleItem($item_id=false, $table=false, $field='is_pub'){
+    public function actionToggleItem($item_id = false, $table = false, $field = 'is_pub') {
 
-		if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
-			$this->cms_template->renderJSON(array(
-				'error' => true,
+        if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
+			return $this->cms_template->renderJSON(array(
+				'error' => true
+			));
+		}
+
+		if (!$this->model->db->isTableExists($table)){
+			return $this->cms_template->renderJSON(array(
+				'error' => true
 			));
 		}
 
         $i = $this->model->getItemByField($table, 'id', $item_id);
 
 		if (!$i || !array_key_exists($field, $i)){
-			$this->cms_template->renderJSON(array(
-				'error' => true,
+			return $this->cms_template->renderJSON(array(
+				'error' => true
 			));
 		}
 
@@ -95,7 +101,7 @@ class cmsBackend extends cmsController {
 
         $this->processCallback('actiontoggle_'.$table.'_'.$field, array($i));
 
-		$this->cms_template->renderJSON(array(
+		return $this->cms_template->renderJSON(array(
 			'error' => false,
 			'is_on' => $i[$field]
 		));

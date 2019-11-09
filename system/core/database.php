@@ -244,6 +244,19 @@ class cmsDatabase {
 	}
 
     /**
+     * Формирует префиксы таблиц в SQL запросе
+     * @param string $sql
+     * @return string
+     */
+    public function replacePrefix($sql) {
+        return str_replace([
+            '{#}{users}', '{users}', '{#}'
+        ], [
+            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
+        ], $sql);
+    }
+
+    /**
      * Выполняет запрос в базе
      * @param string $sql Строка запроса
      * @param array|string $params Аргументы запроса, которые будут переданы в vsprintf
@@ -256,11 +269,7 @@ class cmsDatabase {
             cmsDebugging::pointStart('db');
         }
 
-        $sql = str_replace(array(
-            '{#}{users}', '{users}', '{#}'
-        ), array(
-            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
-        ), $sql);
+        $sql = $this->replacePrefix($sql);
 
         if ($params){
 
@@ -903,11 +912,17 @@ class cmsDatabase {
 
     public function isTableExists($table_name){
 
-		$this->query("SELECT 1 FROM `{#}{$table_name}` LIMIT 1", false, true);
+		$result = $this->query('show tables');
 
-		if ($this->mysqli->errno){ return false; }
+        $tables = [];
 
-		return true;
+        while($data = $this->fetchRow($result)){
+            $tables[] = $data[0];
+        }
+
+        $table_name = $this->replacePrefix('{#}'.$table_name);
+
+		return in_array($table_name, $tables, true);
 
 	}
 

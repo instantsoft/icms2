@@ -19,6 +19,12 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `is_cacheable` TINYINT(1) UNSIGNED NULL DEFAULT '1'");
     }
 
+    if(!$core->db->isFieldExists('scheduler_tasks', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `ordering` INT(11) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    cmsUser::deleteUPSlist('admin.grid_filter.set_scheduler');
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

@@ -6,7 +6,7 @@ function grid_ctypes($controller){
         'is_sortable'   => false,
         'is_filter'     => false,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('ctypes', array('reorder')),
+        'drag_save_url' => href_to('admin', 'reorder', ['content_types']),
         'order_by'      => 'ordering',
         'order_to'      => 'asc'
     );

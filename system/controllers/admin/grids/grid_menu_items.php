@@ -8,7 +8,7 @@ function grid_menu_items($controller){
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('menu', array('items_reorder')),
+        'drag_save_url' => href_to('admin', 'reorder', ['menu_items']),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false

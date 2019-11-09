@@ -210,7 +210,7 @@ icms.datagrid = (function ($) {
         $('#datagrid_form').html('');
         $('#datagrid_form').attr('action', url);
 
-        $('.datagrid tbody tr').each(function(){
+        $('.datagrid tbody tr:not(.filter)').each(function(){
             var item_id = $(this).data('id');
             $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+item_id+'" />');
         });
@@ -251,7 +251,7 @@ icms.datagrid = (function ($) {
         }
 
         if (_this.options.is_draggable){
-            $('.datagrid tbody tr').each(function(){
+            $('.datagrid tbody tr:not(.filter)').each(function(){
                 var item_id = $(this).data('id');
                 $('#datagrid_form').append('<input type="hidden" name="items[]" value="'+item_id+'" />');
             });
@@ -422,7 +422,7 @@ icms.datagrid = (function ($) {
         });
 
         if (_this.options.is_draggable) {
-            $('#datagrid').tableDnD({
+            $('#datagrid').addClass('table-dragged').tableDnD({
                 onDragClass: 'dragged',
                 dragHandle: "tbody > tr:not(.filter) > td:first-child",
                 onDragStart: function(table, row) {

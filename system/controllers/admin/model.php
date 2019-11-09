@@ -123,8 +123,11 @@ class modelAdmin extends cmsModel{
 
     public function getPendingSchedulerTasks(){
 
-        $tasks = $this->filterEqual('is_active', 1)->getSchedulerTasks();
-        $pending = array();
+        $tasks = $this->filterEqual('is_active', 1)->
+                orderBy('ordering', 'asc')->
+                getSchedulerTasks();
+
+        $pending = [];
 
         if($tasks){
 	        foreach($tasks as $task){

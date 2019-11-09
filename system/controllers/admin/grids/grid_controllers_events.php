@@ -8,7 +8,7 @@ function grid_controllers_events ($controller){
         'is_sortable'   => false,
         'is_filter'     => true,
         'is_draggable'  => true,
-        'drag_save_url' => $controller->cms_template->href_to('controllers', array('events_reorder')),
+        'drag_save_url' => href_to('admin', 'reorder', ['events']),
         'is_pagination' => false,
         'order_by'      => 'ordering',
         'order_to'      => 'asc'

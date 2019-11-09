@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @deprecated Используется в шаблоне старой админки
+ * по новому сохранение тут href_to('admin', 'reorder', ['menu_items'])
+ */
 class actionAdminMenuItemsReorder extends cmsAction {
 
     public function run(){
@@ -8,13 +11,6 @@ class actionAdminMenuItemsReorder extends cmsAction {
         if (!$items){ cmsCore::error404(); }
 
         cmsCore::getModel('menu')->reorderMenuItems($items);
-
-        if ($this->request->isAjax()){
-			return $this->cms_template->renderJSON(array(
-				'error' => false,
-				'success_text' => LANG_CP_ORDER_SUCCESS
-			));
-        }
 
         cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 

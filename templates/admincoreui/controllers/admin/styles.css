@@ -332,6 +332,10 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 .datagrid .flag_trigger a::before {
     content: "\e080";
 }
+.datagrid .flag_trigger.flag_off:empty::before,
+.datagrid .flag_trigger.flag_off a::before {
+    content: "\e082";
+}
 .datagrid .flag_trigger.loading{
     animation: sk-pulseScaleOut 0.5s infinite linear;
 }
@@ -686,7 +690,7 @@ th[rel="dg_actions"] {
 .datagrid .empty{
     color:#8f9ba6;
 }
-.datagrid tbody > tr:not(.filter) > td:first-child::before, .is-sortable .card-header > .db-sortable-handle::before {
+.datagrid.table-dragged tbody > tr:not(.filter) > td:first-child::before, .is-sortable .card-header > .db-sortable-handle::before {
     height: 20px;
     width: 20px;
     background-image: url("../../images/datatree/drag_indicator.svg");
@@ -703,7 +707,7 @@ th[rel="dg_actions"] {
     transition: opacity 0.3s;
     will-change: opacity;
 }
-.datagrid tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before {
+.datagrid.table-dragged tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before {
     opacity: 1;
 }
 .is-sortable .card-header > .db-sortable-handle::before {
@@ -712,7 +716,7 @@ th[rel="dg_actions"] {
 .card-body > .card-footer {
     margin: 1.25rem -1.25rem -1.25rem -1.25rem;
 }
-.is-sortable .card-header > .db-sortable-handle, .datagrid tbody > tr:not(.filter) > td:first-child {
+.is-sortable .card-header > .db-sortable-handle, .datagrid.table-dragged tbody > tr:not(.filter) > td:first-child {
     cursor: move;
 }
 .is-sortable .card-header > .db-sortable-handle {
@@ -720,7 +724,7 @@ th[rel="dg_actions"] {
     margin: -0.75rem -1.25rem;
     padding: 0.75rem 1.25rem;
 }
-.datagrid tbody > tr > td:first-child, .is-sortable .card-header > .db-sortable-handle {
+.datagrid.table-dragged tbody > tr > td:first-child, .is-sortable .card-header > .db-sortable-handle {
     position: relative;
 }
 .colplaceholder{
