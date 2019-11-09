@@ -893,9 +893,7 @@ class cmsCore {
 
     }
 
-    public function runWidget($widget){
-
-        $result = false;
+    public static function getWidgetObject($widget) {
 
         $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
@@ -908,7 +906,15 @@ class cmsCore {
             cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
         }
 
-        $widget_object = new $class($widget);
+        return new $class($widget);
+
+    }
+
+    public function runWidget($widget){
+
+        $result = false;
+
+        $widget_object = cmsCore::getWidgetObject($widget);
 
         $cache_key = 'widgets'.$widget['id'];
         $cache = cmsCache::getInstance();

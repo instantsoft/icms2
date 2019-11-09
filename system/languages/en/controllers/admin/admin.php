@@ -14,6 +14,7 @@
     define('LANG_CP_SU',                        'System utilization');
     define('LANG_CP_SU_DISK',                   'Disk space');
     define('LANG_CP_SU_CPU',                    'CPU');
+    define('LANG_CP_CACHE',                     'Caching');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');

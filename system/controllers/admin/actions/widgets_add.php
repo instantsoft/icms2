@@ -35,9 +35,9 @@ class actionAdminWidgetsAdd extends cmsAction {
             return $this->cms_template->renderJSON(array('error' => true));
         }
 
-        cmsCore::loadWidgetLanguage($widget_bind['name'], $widget_bind['controller']);
+        $widget_object = cmsCore::getWidgetObject($widget_bind);
 
-        $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template);
+        $form = $this->getWidgetOptionsForm($widget_bind['name'], $widget_bind['controller'], false, $template, $widget_object->isAllowCacheableOption());
         $data = $form->parse(new cmsRequest($widget_bind));
 
         $widgets_model->updateWidgetBinding($res['id'], $data);

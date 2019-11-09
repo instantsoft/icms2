@@ -15,6 +15,10 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}widgets` ADD `image_hint_path` VARCHAR(100) NULL DEFAULT NULL");
     }
 
+    if(!$core->db->isFieldExists('widgets_bind', 'is_cacheable')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `is_cacheable` TINYINT(1) UNSIGNED NULL DEFAULT '1'");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

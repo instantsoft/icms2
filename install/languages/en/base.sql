@@ -1742,6 +1742,7 @@ CREATE TABLE `{#}widgets_bind` (
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
   `device_types` varchar(50) DEFAULT NULL,
+  `is_cacheable` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `widget_id` (`widget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Site widgets';

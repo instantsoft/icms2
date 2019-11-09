@@ -14,6 +14,7 @@
     define('LANG_CP_SU',                        'Система');
     define('LANG_CP_SU_DISK',                   'Место на диске');
     define('LANG_CP_SU_CPU',                    'Процессор');
+    define('LANG_CP_CACHE',                     'Кэширование');
 
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_WS',           'Веб сервер');

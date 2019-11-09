@@ -712,7 +712,7 @@ class admin extends cmsFrontend {
 
     }
 
-    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template = false){
+    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template = false, $allow_set_cacheable = true){
 
         if(!$template){
             $template = $this->cms_config->template;
@@ -862,6 +862,13 @@ class admin extends cmsFrontend {
                 'title'   => LANG_WIDGET_TAB_PREV,
                 'default' => false
             )));
+
+            // Управление кэшированием
+            if($this->cms_config->cache_enabled && $allow_set_cacheable){
+                $form->addField($title_fieldset_id, new fieldCheckbox('is_cacheable', array(
+                    'title' => LANG_CP_CACHE
+                )));
+            }
 
             // Ссылки в заголовке
             $form->addField($title_fieldset_id, new fieldText('links', array(
