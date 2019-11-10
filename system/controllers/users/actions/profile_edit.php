@@ -97,8 +97,12 @@ class actionUsersProfileEdit extends cmsAction {
 
             if (!$errors){
 
+                list($profile, $old) = cmsEventsManager::hook('users_before_update', [$profile, $old]);
+
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUser($profile['id'], $profile);
+
+                list($profile, $old) = cmsEventsManager::hook('users_after_update', [$profile, $old]);
 
                 // Отдельно обновляем часовой пояс в сессии
                 cmsUser::sessionSet('user:time_zone', $profile['time_zone']);

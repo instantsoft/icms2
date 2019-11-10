@@ -1205,7 +1205,7 @@ class content extends cmsFrontend {
 
         foreach ($fields as $field) {
 
-            if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = null;  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
                 $_item[$field['name']] = null; continue;

@@ -334,7 +334,7 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 }
 .datagrid .flag_trigger.flag_off:empty::before,
 .datagrid .flag_trigger.flag_off a::before {
-    content: "\e082";
+    content: "\e081";
 }
 .datagrid .flag_trigger.loading{
     animation: sk-pulseScaleOut 0.5s infinite linear;
