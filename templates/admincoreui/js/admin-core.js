@@ -4,6 +4,15 @@ icms.admin = (function ($) {
 
     this.onDocumentReady = function(){
 
+        toolbarScroll.init();
+
+        $('.cp_toolbar').on('click', 'a.scroll_top', function(event){
+            $('body,html').animate({
+                scrollTop: 0 ,
+            }, 200);
+            return false;
+        });
+
         $('.need-scrollbar').each(function (){
             new PerfectScrollbar('#'+$(this).attr('id'));
         });
@@ -214,26 +223,23 @@ toolbarScroll = {
         if(this.toolbar.length == 0){
             return;
         }
-        this.offset  = (this.toolbar).offset().top;
-        if((+$('#wrapper').height() - +$(this.win).height()) <= (this.offset + 20)){
-            return;
-        }
+        this.offset  = (this.toolbar).offset().top-55;
         if(this.spacer_init === false){
             this.spacer_init = true;
             $(this.toolbar).after($('<div id="fixed_toolbar_spacer" />').hide());
             this.spacer = $('#fixed_toolbar_spacer');
-            $('ul', this.toolbar).append('<li class="scroll_top"><a class="item" href="#"></a></li>');
+            $(this.toolbar).append('<a class="btn btn-success scroll_top" href="#"><i class="icon-arrow-up-circle icons font-2xl"></i></a>');
         }
         this.run();
     },
     run: function (){
-        handler = function (){
+        var handler = function (){
             toolbarScroll.doAutoScroll();
         };
         this.win.off('scroll', handler).on('scroll', handler).trigger('scroll');
     },
     doAutoScroll: function (){
-        scroll_top = this.win.scrollTop();
+        var scroll_top = this.win.scrollTop();
         if (scroll_top > this.offset) {
             if(!$(this.toolbar).hasClass('fixed_toolbar')){
                 $(this.toolbar).addClass('fixed_toolbar');

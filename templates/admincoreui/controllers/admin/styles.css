@@ -138,23 +138,28 @@
 .cp_toolbar .gridicon > a::before {
     content: "\e06a";
 }
-.cp_toolbar {
-    transition: all ease-in-out .2s;
+.scroll_top {
+    display: none;
 }
-.fixed_toolbar {
-    position: fixed;
-    top: 55px;
-    left: 0;
-    right: 0;
-    width: auto;
-    z-index: 1020;
-    box-shadow: 0px 2px 3px #c8ced3;
-    border-top: none;
-    margin: 0 0 0 200px !important;
-}
-#fixed_toolbar_spacer {
-    margin: 0.5rem 0 !important;
-    height: 45px;
+@media (min-width: 1200px) {
+    .fixed_toolbar {
+        position: fixed;
+        top: 55px;
+        left: 200px;
+        right: 1.5rem;
+        width: auto;
+        z-index: 1020;
+        box-shadow: 0px 2px 3px #c8ced3;
+        border-top: none;
+        margin: 0 0 0 1.5rem !important;
+    }
+    #fixed_toolbar_spacer {
+        margin: 0.5rem 0 !important;
+        height: 45px;
+    }
+    .fixed_toolbar .scroll_top {
+        display: inline-block;
+    }
 }
 .quickview-wrapper .quickview-toggle {
     display: none;
