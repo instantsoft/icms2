@@ -71,7 +71,7 @@ class cmsBackend extends cmsController {
 //=========                Скрытие/показ записей                     =========//
 //============================================================================//
 
-    public function actionToggleItem($item_id = false, $table = false, $field = 'is_pub') {
+    public function actionToggleItem($item_id = false, $table = false, $field = 'is_pub', $zero_as_null = false) {
 
         if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
 			return $this->cms_template->renderJSON(array(
@@ -93,7 +93,7 @@ class cmsBackend extends cmsController {
 			));
 		}
 
-        $i[$field] = $i[$field] ? 0 : 1;
+        $i[$field] = $i[$field] ? ($zero_as_null ? null : 0) : 1;
 
 		$this->model->update($table, $item_id, array(
 			$field => $i[$field]
@@ -103,7 +103,7 @@ class cmsBackend extends cmsController {
 
 		return $this->cms_template->renderJSON(array(
 			'error' => false,
-			'is_on' => $i[$field]
+			'is_on' => intval($i[$field])
 		));
 
     }

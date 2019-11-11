@@ -38,7 +38,7 @@ class widgetCommentsList extends cmsWidget {
             $model->filterIn('target_subject', $show_targets);
         }
 
-        $items = $model->filterNotEqual('is_deleted', 1)->limit($limit)->getComments();
+        $items = $model->filterIsNull('is_deleted')->limit($limit)->getComments();
         if (!$items) { return false; }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);

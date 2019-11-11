@@ -74,7 +74,7 @@ function grid_comments_list($controller){
             'title'       => LANG_COMMENTS_IS_DELETED,
             'class'       => 'd-none d-lg-table-cell',
             'flag'        => 'flag_lock',
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'comments', 'is_deleted')),
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'comments', 'is_deleted', 1)),
             'width'       => 50,
             'filter'      => 'exact'
         ),
