@@ -443,6 +443,7 @@ class formAdminCtypesBasic extends cmsForm {
                     )),
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_SEOMETA_ITEM_DESC,
+                        'is_strip_tags' => true,
                         'patterns_hint' => [
                             'patterns' =>  $meta_ctype_fields
                         ],

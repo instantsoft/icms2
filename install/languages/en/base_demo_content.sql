@@ -626,15 +626,15 @@ INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
 (3, 'footer', 'Footer menu', 1);
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(7, 1, 0, 'Sites', 'http://www.dmoz.org', 9, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(8, 1, 7, 'Yahoo', 'http://www.yahoo.com', 10, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(9, 1, 7, 'Google', 'http://www.google.com', 11, NULL, NULL, NULL),
-(10, 1, 9, 'Google Maps', 'http://maps.google.com', 14, NULL, NULL, NULL),
-(11, 1, 9, 'Google Docs', 'http://docs.google.com', 12, NULL, NULL, NULL),
-(12, 1, 9, 'GMail', 'http://www.gmail.com', 13, NULL, NULL, NULL),
+(7, 1, 0, 'Sites', NULL, 9, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(8, 1, 7, 'Yahoo', 'https://www.yahoo.com', 10, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(9, 1, 7, 'Google', 'https://www.google.com', 11, NULL, NULL, NULL),
+(10, 1, 9, 'Google Maps', 'https://maps.google.com', 14, NULL, NULL, NULL),
+(11, 1, 9, 'Google Docs', 'https://docs.google.com', 12, NULL, NULL, NULL),
+(12, 1, 9, 'GMail', 'https://www.gmail.com', 13, NULL, NULL, NULL),
 (18, 3, 0, 'About', 'pages/about.html', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (19, 3, 0, 'Site Rules', 'pages/terms.html', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(21, 1, 7, 'Bing', 'http://www.bing.com', 15, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(21, 1, 7, 'Bing', 'https://www.bing.com', 15, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (27, 1, 0, 'Blogs', 'posts', 3, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (40, 1, 0, 'News', '{content:news}', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (42, 1, 0, 'Articles', '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);

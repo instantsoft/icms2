@@ -257,7 +257,7 @@ class comments extends cmsFrontend {
         $this->model->limitPage($page, $perpage);
 
         // Скрываем удаленные
-        $this->model->filterIsNull('is_deleted');
+        $this->model->filterNotEqual('is_deleted', 1);
 
         cmsEventsManager::hook('comments_list_filter', $this->model);
 

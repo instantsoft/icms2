@@ -24,6 +24,9 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
         }
 
+        // запрещаем автоматически подключать файл css стилей контроллера
+        $this->template_disable_auto_insert_css = true;
+
         $dashboard_blocks = [];
 
         if(!array_key_exists('moderation_all', $options['dashboard_enabled'])  || !empty($options['dashboard_enabled']['moderation_all'])){

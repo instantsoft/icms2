@@ -27,7 +27,7 @@ class actionCommentsIndex extends cmsAction{
         );
 
         // фильтруем
-        if(!empty($this->options['show_list']) && $this->options['show_list'] !== [0]){
+        if(!empty($this->options['show_list']) && $this->options['show_list'] != [0]){
 
             $show_controllers = $show_targets = [];
 

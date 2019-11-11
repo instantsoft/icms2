@@ -82,6 +82,7 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldText('values', array(
                         'size' => 8,
+                        'is_strip_tags' => true,
                         'hint' => LANG_CP_PROP_VALUES_HINT
                     )),
                     new fieldCheckbox('options:is_filter_multi', array(

@@ -1978,9 +1978,12 @@ class cmsTemplate {
             $data = $tpl_file; $tpl_file = $this->controller->current_action;
         }
 
-        $css_file = $this->getStylesFileName();
+        if(empty($this->controller->template_disable_auto_insert_css)){
 
-        if ($css_file){ $this->addCSSFromContext($css_file, $request); }
+            $css_file = $this->getStylesFileName();
+
+            if ($css_file){ $this->addCSSFromContext($css_file, $request); }
+        }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 

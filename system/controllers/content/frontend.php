@@ -646,6 +646,7 @@ class content extends cmsFrontend {
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+                    'is_strip_tags' => true,
                     'options'=>array(
                         'max_length'=> 256,
                         'show_symbol_count'=>true
@@ -890,6 +891,7 @@ class content extends cmsFrontend {
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+                    'is_strip_tags' => true,
                     'options'=>array(
                         'max_length'=> 256,
                         'show_symbol_count'=>true

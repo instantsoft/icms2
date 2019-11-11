@@ -204,6 +204,7 @@ class formAdminCtypesDataset extends cmsForm {
                         'hint' => ($meta_item_fields ? LANG_CP_SEOMETA_DS_HINT : ''),
                         'patterns_hint' => ($meta_item_fields ? [ 'patterns' =>  $meta_item_fields ] : ''),
                         'default' => (!empty($ctype['options']['seo_cat_desc_pattern']) ? $ctype['options']['seo_cat_desc_pattern'] : null),
+                        'is_strip_tags' => true,
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true

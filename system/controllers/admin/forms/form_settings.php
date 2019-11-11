@@ -118,7 +118,8 @@ class formAdminSettings extends cmsForm {
                     )),
 
                     new fieldText('metadesc', array(
-                        'title' => LANG_CP_SETTINGS_METADESC
+                        'title' => LANG_CP_SETTINGS_METADESC,
+                        'is_strip_tags' => true
                     )),
 
                     new fieldCheckbox('is_no_meta', array(
@@ -154,7 +155,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE,
-                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="theme_settings inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
+                        'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a><a class="theme_settings inthemer" target="_blank" href="https://addons.instantcms.ru/addons/inthemer.html">'.LANG_CP_SETTINGS_TEMPLATE_INTH.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array();
@@ -169,7 +170,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_admin', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_ADMIN,
-                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -184,7 +185,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_mobile', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_MOBILE,
-                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -199,7 +200,7 @@ class formAdminSettings extends cmsForm {
 
                     new fieldList('template_tablet', array(
                         'title' => LANG_CP_SETTINGS_TEMPLATE_TABLET,
-                        'hint' => '<a class="theme_settings" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
+                        'hint' => '<a class="theme_settings theme_settings_options" href="#" data-url="'.href_to('admin', 'settings', 'theme').'">'.LANG_CP_SETTINGS_TEMPLATE_OPTIONS.'</a>',
                         'generator' => function($item) {
                             $tpls = cmsCore::getTemplates();
                             $items = array(''=>LANG_BY_DEFAULT);
@@ -503,7 +504,8 @@ class formAdminSettings extends cmsForm {
 
                     new fieldText('allow_ips', array(
                         'title' => LANG_CP_SETTINGS_ALLOW_IPS,
-                        'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp())
+                        'hint'  => sprintf(LANG_CP_SETTINGS_ALLOW_IPS_HINT, cmsUser::getIp()),
+                        'is_strip_tags' => true
                     )),
 
                     new fieldList('check_spoofing_type', array(

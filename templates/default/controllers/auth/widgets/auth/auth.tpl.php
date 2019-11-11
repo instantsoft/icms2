@@ -6,7 +6,7 @@
             'cancel' => array(
                 'show'  => true,
                 'title' => LANG_REGISTRATION,
-                'href'  => $this->href_to('register')),
+                'href'  => href_to('auth', 'register')),
             'submit' => array(
                 'title' => LANG_LOG_IN
             )

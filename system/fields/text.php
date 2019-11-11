@@ -77,6 +77,13 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        if($this->getProperty('is_strip_tags') === true){
+            return trim(strip_tags($value));
+        }
+        return parent::store($value, $is_submitted, $old_value);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
     }

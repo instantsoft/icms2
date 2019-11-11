@@ -136,7 +136,8 @@ class formUsersField extends cmsForm {
                 'title' => LANG_CP_FIELD_VALUES,
                 'childs' => array(
                     new fieldText('values', array(
-                        'size' => 8
+                        'size' => 8,
+                        'is_strip_tags' => true
                     ))
                 )
             ),

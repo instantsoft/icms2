@@ -281,7 +281,7 @@ class modelWidgets extends cmsModel {
             $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
             $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
 
-            if ($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3) {
+            if ($bind['device_types'] && count($bind['device_types']) < 3) {
 
                 $device_types = [];
 
@@ -529,17 +529,8 @@ class modelWidgets extends cmsModel {
                     $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                     $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
                     $item['languages'] = cmsModel::yamlToArray($item['languages']);
-                    if(!$item['languages'] || $item['languages'] === array(0)){
-                        $item['languages'] = array();
-                    }
                     $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
-                    if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
-                        $item['template_layouts'] = array();
-                    }
                     $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
-                    if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
-                        $item['device_types'] = array();
-                    }
 
                     return $item;
 

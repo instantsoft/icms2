@@ -2,7 +2,7 @@
 
 class actionAdminCtypesLabels extends cmsAction {
 
-    public function run($id){
+    public function run($id = null){
 
         if (!$id) { cmsCore::error404(); }
 

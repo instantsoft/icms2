@@ -20,6 +20,9 @@ class onActivityAdminDashboardBlock extends cmsAction {
 
             $items = $this->model->getEntries();
 
+            // запрещаем автоматически подключать файл css стилей контроллера
+            $this->template_disable_auto_insert_css = true;
+
             $dashboard_blocks[] = array(
                 'title' => LANG_ACTIVITY,
                 'name' => 'activity',

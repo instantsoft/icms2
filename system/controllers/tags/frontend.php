@@ -9,7 +9,7 @@ class tags extends cmsFrontend {
 
     public function getTagsWidgetParams($options) {
 
-        if(!empty($options['subjects']) && $options['subjects'] !== array(0)){
+        if(!empty($options['subjects']) && $options['subjects'] !== array('0')){
 
             $tag_ids = $this->model->selectOnly('tag_id')->
                     filterEqual('target_controller', 'content')->
@@ -58,7 +58,7 @@ class tags extends cmsFrontend {
         }
 
         return array(
-            'subjects' => ((!empty($options['subjects']) && $options['subjects'] !== array(0)) ? $options['subjects'] : array()),
+            'subjects' => ((!empty($options['subjects']) && $options['subjects'] !== array('0')) ? $options['subjects'] : array()),
             'style'    => $options['style'],
             'max_fs'   => $options['max_fs'],
             'min_fs'   => $options['min_fs'],

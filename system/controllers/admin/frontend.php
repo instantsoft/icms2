@@ -873,7 +873,8 @@ class admin extends cmsFrontend {
             // Ссылки в заголовке
             $form->addField($title_fieldset_id, new fieldText('links', array(
                 'title' => LANG_WIDGET_TITLE_LINKS,
-                'hint'  => LANG_WIDGET_TITLE_LINKS_HINT
+                'hint'  => LANG_WIDGET_TITLE_LINKS_HINT,
+                'is_strip_tags' => true
             )));
 
 		return cmsEventsManager::hook('widget_options_full_form', $form);

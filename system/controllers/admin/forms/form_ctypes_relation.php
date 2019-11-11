@@ -122,6 +122,7 @@ class formAdminCtypesRelation extends cmsForm {
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_RELATION_TAB_SEO_DESC,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
+                        'is_strip_tags' => true,
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true

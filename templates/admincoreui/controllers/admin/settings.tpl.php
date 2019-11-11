@@ -47,7 +47,7 @@
         if($.inArray(theme, templates_has_options) === -1){
             theme = false;
         }
-        var theme_config_link = $(obj).parent().find('.hint a.theme_settings');
+        var theme_config_link = $(obj).closest('.field').find('.hint a.theme_settings_options');
         if(theme){
             theme_config_link.show().attr('href', theme_config_link.data('url')+'/'+theme);
         } else {
