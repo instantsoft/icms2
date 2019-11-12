@@ -153,6 +153,9 @@
         border-top: none;
         margin: 0 0 0 1.5rem !important;
     }
+    .sidebar-minimized .fixed_toolbar {
+        left: 50px;
+    }
     #fixed_toolbar_spacer {
         margin: 0.5rem 0 !important;
         height: 45px;

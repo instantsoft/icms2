@@ -39,7 +39,7 @@ function grid_users($controller){
         'ip' => array(
             'title' => LANG_USERS_PROFILE_LAST_IP,
             'width' => 130,
-            'class' => 'd-none d-lg-table-cell',
+            'class' => 'd-none d-xxl-table-cell',
             'filter' => 'like',
             'handler' => function($value){
                 if(!$value){
