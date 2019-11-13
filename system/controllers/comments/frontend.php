@@ -263,6 +263,9 @@ class comments extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = !empty($this->count) ? $this->count : $this->model->getCommentsCount();
+
+        cmsEventsManager::hook('comments_list_filter_after_count', $this->model);
+
         $items = $this->model->getComments();
 
         // если запрос через URL

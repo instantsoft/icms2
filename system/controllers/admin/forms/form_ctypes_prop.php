@@ -96,6 +96,7 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldList('cats', array(
                             'is_multiple' => true,
+                            'multiple_select_deselect' => true,
                             'is_tree' => true,
                             'generator' => function($prop) use($model){
                                 $ctype = $model->getContentType($prop['ctype_id']);

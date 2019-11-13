@@ -357,6 +357,7 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 .datagrid .flag_trigger:empty::before,
 .datagrid .flag_trigger a::before {
     content: "\e080";
+    font-weight: bold;
 }
 .datagrid .flag_trigger.flag_off:empty::before,
 .datagrid .flag_trigger.flag_off a::before {
@@ -402,13 +403,9 @@ form .child_field{margin-left: 20px}
 .field.multilanguage.child_field, .field_tabbed.child_field {
     margin-left: 20px;
 }
-.select_deselect {
-    margin: 10px 0 0 5px;
-}
 .select_deselect a {
     text-decoration: none;
-    margin: 0 10px 0 0;
-    font-size: 13px;
+    margin: 0 0.75rem 0 0;
 }
 .symbols_count {
     font-size: 80%;

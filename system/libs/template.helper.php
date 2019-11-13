@@ -467,9 +467,9 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $title = ltrim($title, '- ');
 
-            $html .= "\t" . '<label class="form-check" '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
+            $html .= "\t" . '<label class="form-check form-check-block" '. ($level>0 ? 'style="margin-left:'.($level*0.75).'rem"' : ''). '>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    '<span>'.htmlspecialchars($title).'</span></label><br>' . "\n";
+                    '<span>'.htmlspecialchars($title).'</span></label>' . "\n";
 
         } else {
 

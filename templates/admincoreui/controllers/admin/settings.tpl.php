@@ -15,6 +15,12 @@
         ]
     ]);
 
+    $this->addToolButton(array(
+        'class' => 'save',
+        'title' => LANG_SAVE,
+        'href'  => "javascript:icms.forms.submit()"
+    ));
+
 	$this->addToolButton(array(
 		'class' => 'transfer ajax-modal',
 		'title' => LANG_MAILCHECK_MENU,

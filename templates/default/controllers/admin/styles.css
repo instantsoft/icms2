@@ -441,12 +441,11 @@ form .field label > input[type=checkbox] {
     position: relative;
     bottom: -1.3px;
 }
-
 form .field .input_checkbox_list label {
     display: inline-table;
     color:#666;
 }
-form .field .input_checkbox_list.block_labels > label {
+form .field .input_checkbox_list.block_labels > label, form .field .input_checkbox_list label.form-check-block {
     display: block;
 }
 form .ft_list .loading{

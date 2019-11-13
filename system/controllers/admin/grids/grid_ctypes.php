@@ -61,6 +61,14 @@ function grid_ctypes($controller){
 
     $actions = array(
         array(
+            'title' => LANG_VIEW,
+            'class' => 'view',
+            'href'  => href_to('{name}'),
+            'handler' => function($row){
+                return !empty($row['options']['list_on']);
+            }
+        ),
+        array(
             'title' => LANG_OPTIONS,
             'class' => 'config',
             'href' => href_to($controller->name, 'ctypes', array('edit', '{id}'))

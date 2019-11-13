@@ -818,7 +818,8 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (171, 'controller_auth_after_save_options', 'authga', 171, 1),
 (172, 'form_users_password', 'auth', 172, 1),
 (173, 'auth_twofactor_list', 'authga', 173, 1),
-(174, 'users_before_edit_password', 'authga', 174, 1);
+(174, 'users_before_edit_password', 'authga', 174, 1),
+(175, 'admin_inline_save_subscriptions', 'activity', 175, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
