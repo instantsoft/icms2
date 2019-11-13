@@ -55,6 +55,7 @@ $.Redactor.opts.langs['ru'] = {
 	upload: 'Загрузить',
 	download: 'Скачать',
 	choose: 'Выбрать',
+	empty_img_list: 'Нет ранее загруженных изображений для этого контекста',
 	or_choose: 'Или выберите',
 	drop_file_here: 'Перетащите файлы сюда',
 	align_left:	'По левому краю',

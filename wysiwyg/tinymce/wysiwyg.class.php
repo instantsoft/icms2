@@ -129,7 +129,7 @@ class cmsWysiwygTinymce {
             }
 
             if($context['action']){
-                $upload_params['target_subject'] = $context['action'];
+                $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
             }
 
             if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){

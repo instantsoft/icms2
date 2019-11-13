@@ -278,6 +278,7 @@
 					upload: 'Upload',
 					download: 'Download',
 					choose: 'Choose',
+					empty_img_list: 'You have no images',
 					or_choose: 'Or choose',
 					drop_file_here: 'Drop file here',
 					align_left: 'Align text to the left',
@@ -6207,6 +6208,9 @@
 
 					$.getJSON(this.opts.imageGetJson, $.proxy(function(data)
 					{
+                        if(data.error){
+                            alert(data.message); return;
+                        }
 						var folders = {}, count = 0;
 						$.each(data, $.proxy(function(key, val)
 						{
@@ -6218,6 +6222,7 @@
 
 						}, this));
 
+                        $('#redactor_image_box .empty_list').show();
 						var folderclass = false;
 						$.each(data, $.proxy(function(key, val)
 						{
@@ -6235,7 +6240,7 @@
 							var img = $('<img src="' + val.thumb + '" class="redactorfolder redactorfolder' + folderkey + '" rel="' + val.image + '" title="' + thumbtitle + '" />');
 							$('#redactor_image_box').append(img);
 							$(img).click($.proxy(this.imageThumbClick, this));
-
+                            $('#redactor_image_box .empty_list').hide();
 						}, this));
 						if (!$.isEmptyObject(folders))
 						{
@@ -6857,7 +6862,7 @@
 							+ '<input type="file" id="redactor_file" name="' + this.opts.imageUploadParam + '" />'
 						+ '</div>'
 						+ '<div id="redactor_tab2" class="redactor_tab" style="display: none;">'
-							+ '<div id="redactor_image_box"></div>'
+							+ '<div id="redactor_image_box"><span class="empty_list">' + this.opts.curLang.empty_img_list + '</span></div>'
 						+ '</div>'
 					+ '</form>'
 					+ '<div id="redactor_tab3" class="redactor_tab" style="display: none;">'
@@ -7406,9 +7411,10 @@
 
 					var json = $.parseJSON(jsonString);
 
-					if (typeof json.error == 'undefined') this.uploadOptions.success(json);
+					if (typeof json.error == 'undefined') { this.uploadOptions.success(json); }
 					else
 					{
+                        console.log(json);
 						this.uploadOptions.error(this, json);
 						this.modalClose();
 					}

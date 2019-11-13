@@ -765,7 +765,7 @@ body .redactor_air .redactor_toolbar {
   text-align: center;
 }
 .redactor_droparea .redactor_dropareabox,
-.redactor_dropalternative {
+.redactor_dropalternative, .empty_list {
   color: #555;
   font-size: 12px;
 }
