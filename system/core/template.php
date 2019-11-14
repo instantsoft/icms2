@@ -1975,7 +1975,7 @@ class cmsTemplate {
     public function render($tpl_file, $data = [], $request = false) {
 
         if(is_array($tpl_file)){
-            $data = $tpl_file; $tpl_file = $this->controller->current_action;
+            $data = $tpl_file; $tpl_file = $this->controller->current_template_name;
         }
 
         if(empty($this->controller->template_disable_auto_insert_css)){

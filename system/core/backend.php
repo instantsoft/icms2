@@ -46,6 +46,14 @@ class cmsBackend extends cmsController {
 
     }
 
+    public function setCurrentAction($action_name) {
+
+        $this->current_action = $action_name;
+        $this->current_template_name = 'backend/'.$action_name;
+
+        return $this;
+    }
+
 //============================================================================//
 //============================================================================//
 

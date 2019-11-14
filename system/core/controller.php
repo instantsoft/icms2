@@ -9,6 +9,7 @@ class cmsController {
 	public $model = null;
     public $request;
     public $current_action;
+    public $current_template_name;
     public $current_params;
     public $options;
     public $root_url;
@@ -462,7 +463,7 @@ class cmsController {
                 if (!$this->validateParamsCount($this, $method_name, $params)) { cmsCore::error404(); }
 
                 // сохраняем название текущего экшена
-                $this->current_action = $action_name;
+                $this->setCurrentAction($action_name);
 
                 // если есть нужный экшен, то вызываем его
                 $result = call_user_func_array(array($this, $method_name), $params);
@@ -523,6 +524,21 @@ class cmsController {
     }
 
     /**
+     * Устанавливает имя текущего экшена
+     * и шаблона экшена (если он не будет передан в cmsTemplate->render)
+     *
+     * @param string $action_name
+     * @return $this
+     */
+    public function setCurrentAction($action_name) {
+
+        $this->current_action = $action_name;
+        $this->current_template_name = $action_name;
+
+        return $this;
+    }
+
+    /**
      * Выполняет экшен, находящийся в отдельном файле
      * @param string $action_name Название экшена
      * @param array $params Параметры
@@ -547,7 +563,7 @@ class cmsController {
         if (!$this->validateParamsCount($class_name, 'run', $params)) { cmsCore::error404(); }
 
         // сохраняем название текущего экшена
-        $this->current_action = $action_name;
+        $this->setCurrentAction($action_name);
 
         $action_object = new $class_name($this, $params);
 
@@ -805,7 +821,9 @@ class cmsController {
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
 
-        if (!is_readable($grid_file)){ return false; }
+        if (!is_readable($grid_file)){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $grid_file));
+        }
 
         include($grid_file);
 
@@ -1358,7 +1376,7 @@ class cmsController {
 
             $time = strtotime($value);
 
-            if ($time !== false && $time > 0){
+            if ($time !== false){
                 return true;
             }
 
