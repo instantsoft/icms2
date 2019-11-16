@@ -84,6 +84,7 @@
     define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Префикс');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Должен быть включен показ поля в фильтре.');
@@ -100,6 +101,9 @@
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Выбор диапазона ползунком');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Шаг ползунка');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Показывать поля ввода вместе с ползунком');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов дробной части');

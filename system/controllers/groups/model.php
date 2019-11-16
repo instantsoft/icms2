@@ -285,6 +285,10 @@ class modelGroups extends cmsModel {
         return $this->getGroup($id);
     }
 
+    public function getContentTypeTableName($name){
+        return 'groups';
+    }
+
     public function getGroupBySlug($slug){
         return $this->getGroup($slug, 'slug');
     }

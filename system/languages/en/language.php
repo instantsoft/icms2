@@ -85,6 +85,7 @@
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
@@ -101,6 +102,9 @@
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Range as slider');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Slider step');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Show input fields with slider');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');

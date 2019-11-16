@@ -145,7 +145,7 @@
     .fixed_toolbar {
         position: fixed;
         top: 55px;
-        left: 200px;
+        left: 0;
         right: 1.5rem;
         width: auto;
         z-index: 1019;
@@ -153,7 +153,10 @@
         border-top: none;
         margin: 0 0 0 1.5rem !important;
     }
-    .sidebar-minimized .fixed_toolbar {
+    .sidebar-lg-show .fixed_toolbar {
+        left: 200px;
+    }
+    .sidebar-lg-show.sidebar-minimized .fixed_toolbar {
         left: 50px;
     }
     #fixed_toolbar_spacer {

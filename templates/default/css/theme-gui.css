@@ -751,7 +751,9 @@ select { width:100%; }
 .input-small { width: 65px !important; }
 .input-number { width: 110px !important; }
 .input-number-units { margin-left: 5px; }
-
+.slider-range-hint {
+    margin-top: 7px;
+}
 .city-input {
     display: inline-block;
     margin-bottom:2px;

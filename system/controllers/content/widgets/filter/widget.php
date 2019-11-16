@@ -22,7 +22,7 @@ class widgetContentFilter extends cmsWidget {
                 $category = $current_ctype_category;
             }
 
-        } else {
+        } elseif(!$ctype_name) {
 
             $item = cmsModel::getCachedResult('current_ctype_item');
             if($item){

@@ -230,6 +230,10 @@ class modelUsers extends cmsModel {
         return $this->getUser($id);
     }
 
+    public function getContentTypeTableName($name){
+        return '{users}';
+    }
+
 //============================================================================//
 //============================================================================//
 

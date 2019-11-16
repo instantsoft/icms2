@@ -81,6 +81,24 @@ class fieldNumber extends cmsFormField {
                 'title' => LANG_PARSER_NUMBER_FILTER_RANGE,
                 'default' => false
             )),
+                new fieldCheckbox('filter_range_slide', array(
+                    'title' => LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE,
+                    'default' => false,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+                new fieldCheckbox('filter_range_show_input', array(
+                    'title' => LANG_PARSER_NUMBER_FILTER_RANGE_SI,
+                    'default' => false,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+                new fieldNumber('filter_range_slide_step', array(
+                    'title'   => LANG_PARSER_NUMBER_FILTER_STEP,
+                    'default' => 1,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+            new fieldString('prefix', array(
+                'title' => LANG_PARSER_PREFIX,
+            )),
             new fieldString('units', array(
                 'title' => LANG_PARSER_NUMBER_UNITS,
             )),
@@ -171,8 +189,9 @@ class fieldNumber extends cmsFormField {
     public function parse($value){
 
         $units = $this->getProperty('units')?:$this->getOption('units');
+        $prefix = $this->getProperty('prefix')?:$this->getOption('prefix', '');
 
-        return $this->formatFloatValue($value).$this->getOption('units_sep').$units;
+        return $prefix.' '.$this->formatFloatValue($value).$this->getOption('units_sep').$units;
 
     }
 
@@ -265,7 +284,47 @@ class fieldNumber extends cmsFormField {
 
             $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
 
-            return cmsTemplate::getInstance()->renderFormField($this->class.'_range', array(
+            $tpl_name = $this->class.'_range';
+
+            if($this->getOption('filter_range_slide') && strpos($this->name, ':') === false){
+
+                // получаем минимум и максимум
+                if(!empty($this->item['ctype_name'])){
+
+                    $tpl_name = $this->class.'_range_slide';
+
+                    $controller_name = 'content';
+
+                    if(cmsCore::isControllerExists($this->item['ctype_name'])){
+                        $controller_name = $this->item['ctype_name'];
+                    }
+
+                    $model = cmsCore::getModel($controller_name);
+
+                    $max_value = $model->getMax($model->getContentTypeTableName($this->item['ctype_name']), $this->name, null);
+                    $min_value = $model->getMin($model->getContentTypeTableName($this->item['ctype_name']), $this->name, null);
+
+                    // Нет ничего, не показываем в фильтре
+                    if($max_value === null && $min_value === null){
+                        return '';
+                    }
+                    // одно значение
+                    if($max_value === $min_value){
+                        return '';
+                    }
+
+                    $this->data['slide_params'] = [
+                        'min'  => $min_value,
+                        'max'  => $max_value,
+                        'step' => $this->getOption('filter_range_slide_step', 1),
+                        'values' => [($from ?: $min_value), ($to ?: $max_value)]
+                    ];
+
+                }
+
+            }
+
+            return cmsTemplate::getInstance()->renderFormField($tpl_name, array(
                 'field' => $this,
                 'from'  => $from,
                 'to'    => $to
@@ -334,6 +393,8 @@ class fieldNumber extends cmsFormField {
     public function getInput($value){
 
         $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
+        $this->data['prefix'] = $this->getProperty('prefix')?:$this->getOption('prefix', '');
+
         return parent::getInput(!empty($this->options['is_digits']) ? (int)$value : $value);
 
     }

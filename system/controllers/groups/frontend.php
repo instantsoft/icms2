@@ -384,10 +384,17 @@ class groups extends cmsFrontend {
 
             if (!$field['is_in_filter']) { continue; }
 
+            $field['handler']->setItem(['ctype_name' => 'groups', 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
+            $value = $field['handler']->store($value, false);
+			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;

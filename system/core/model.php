@@ -1899,9 +1899,9 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getMax($table, $field, $default = 0){
+    public function getMax($table, $field, $default = 0, $dir = 'MAX'){
 
-        $sql = "SELECT MAX(i.{$field}) as {$field}
+        $sql = "SELECT {$dir}(i.{$field}) as {$field}
                 FROM {#}{$table} i
                 ";
 
@@ -1921,6 +1921,10 @@ class cmsModel {
 
         return $max[$field];
 
+    }
+
+    public function getMin($table, $field, $default = 0){
+        return $this->getMax($table, $field, $default, 'MIN');
     }
 
     /**
