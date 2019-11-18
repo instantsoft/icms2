@@ -125,6 +125,7 @@ function widgetsSelectPage(key){
     } else {
         page_id = null;
         page_controller = 'core';
+        $('#cp-widgets-layout .position:not([rel="_copy"])').html('<i class="icon-lock icons font-xl d-block text-secondary"></i>');
         return false;
     }
 

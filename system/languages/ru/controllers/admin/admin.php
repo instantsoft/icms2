@@ -15,7 +15,8 @@
     define('LANG_CP_SU_DISK',                   'Место на диске');
     define('LANG_CP_SU_CPU',                    'Процессор');
     define('LANG_CP_CACHE',                     'Кэширование');
-
+    define('LANG_CP_WO_AUTO_GROUP',             'Автоматически определять группу');
+    define('LANG_CP_WO_AUTO_GROUP_HINT',        'На страницах групп виджет выведет указанные записи группы');
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
     define('LANG_CP_DASHBOARD_SI_WS',           'Веб сервер');
     define('LANG_CP_DASHBOARD_SQL_SERVER',      'Mysql сервер');
