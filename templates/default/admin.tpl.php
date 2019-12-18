@@ -84,7 +84,7 @@
                 if ($messages){ ?>
                     <div class="sess_messages animated fadeIn">
                         <?php foreach($messages as $message){ ?>
-                            <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                            <div class="message_<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
                          <?php } ?>
                     </div>
                 <?php } ?>

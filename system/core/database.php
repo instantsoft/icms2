@@ -451,6 +451,8 @@ class cmsDatabase {
             $table_fields = $this->getTableFields($table);
         }
 
+        $set = [];
+
 		foreach ($data as $field=>$value) {
             if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
@@ -458,6 +460,8 @@ class cmsDatabase {
             $value = $this->prepareValue($field, $value, $array_as_json);
 			$set[] = "`{$field}` = {$value}";
 		}
+
+        if(!$set){ return false; }
 
         $set = implode(', ', $set);
 
@@ -485,6 +489,8 @@ class cmsDatabase {
             $table_fields = $this->getTableFields($table);
         }
 
+        $fields = $values = [];
+
         foreach ($data as $field => $value){
 
             if(!$skip_check_fields && !in_array($field, $table_fields)){
@@ -495,6 +501,8 @@ class cmsDatabase {
             $values[] = $this->prepareValue($field, $value, $array_as_json);
 
         }
+
+        if(!$fields){ return false; }
 
         $fields = implode(', ', $fields);
         $values = implode(', ', $values);

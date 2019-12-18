@@ -4,7 +4,7 @@
 
 <?php if ($is_backend){ ?>
 
-    <?php if (isset($this->menus['backend'])){ ?>
+    <?php if (isset($this->menus['backend']) && empty($this->menus['admin_toolbar'])){ ?>
         <?php $this->setMenuItems('admin_toolbar', $this->menus['backend']); ?>
     <?php } ?>
 

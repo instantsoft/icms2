@@ -138,6 +138,10 @@
 .cp_toolbar .gridicon > a::before {
     content: "\e06a";
 }
+thead.list_thead {
+    background-color: #acb4bc;
+    color: #FFF;
+}
 .scroll_top {
     display: none;
 }

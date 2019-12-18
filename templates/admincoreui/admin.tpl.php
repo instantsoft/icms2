@@ -188,7 +188,7 @@
         <?php } ?>
         <?php if ($messages){ ?>
             <?php foreach($messages as $message){ ?>
-                toastr.<?php echo str_replace('message_', '', $message['class']); ?>('<?php echo $message['text']; ?>');
+                toastr.<?php echo $message['class']; ?>('<?php echo $message['text']; ?>');
              <?php } ?>
         <?php } ?>
         });

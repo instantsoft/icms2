@@ -665,8 +665,8 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function addSessionMessage($message, $class='info'){
-        self::sessionPush('core_message', array('class' => 'message_'.$class, 'text' => $message));
+    public static function addSessionMessage($message, $class = 'info'){
+        self::sessionPush('core_message', array('class' => $class, 'text' => $message));
     }
 
     public static function getSessionMessages(){

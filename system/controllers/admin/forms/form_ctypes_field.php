@@ -66,7 +66,7 @@ class formAdminCtypesField extends cmsForm {
                     new fieldString('new_fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
                         'rules' => array(
-                            array('max_length', 100)
+                            array('max_length', 32)
                         )
                     )),
                 )
