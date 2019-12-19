@@ -5637,7 +5637,7 @@
 
 			this.modalInit(this.opts.curLang.table, this.opts.modal_table, 300, $.proxy(function()
 			{
-				$('#redactor_insert_table_btn').click($.proxy(this.tableInsert, this));
+				$('#redactor_insert_table_btn').on('click', $.proxy(this.tableInsert, this));
 
 				setTimeout(function()
 				{
@@ -5890,7 +5890,7 @@
 
 			this.modalInit(this.opts.curLang.video, this.opts.modal_video, 600, $.proxy(function()
 			{
-				$('#redactor_insert_video_btn').click($.proxy(this.videoInsert, this));
+				$('#redactor_insert_video_btn').on('click', $.proxy(this.videoInsert, this));
 
 				setTimeout(function()
 				{
@@ -6239,7 +6239,7 @@
 
 							var img = $('<img src="' + val.thumb + '" class="redactorfolder redactorfolder' + folderkey + '" rel="' + val.image + '" title="' + thumbtitle + '" />');
 							$('#redactor_image_box').append(img);
-							$(img).click($.proxy(this.imageThumbClick, this));
+							$(img).on('click', $.proxy(this.imageThumbClick, this));
                             $('#redactor_image_box .empty_list').hide();
 						}, this));
 						if (!$.isEmptyObject(folders))
@@ -6333,7 +6333,7 @@
 					$('#redactor-tab-control-3').hide();
 				}
 
-				$('#redactor_upload_btn').click($.proxy(this.imageCallbackLink, this));
+				$('#redactor_upload_btn').on('click', $.proxy(this.imageCallbackLink, this));
 
 				if (!this.opts.imageUpload && !this.opts.imageGetJson)
 				{
@@ -6378,13 +6378,13 @@
 					}
 				}
 
-				$('#redactor_image_delete_btn').click($.proxy(function()
+				$('#redactor_image_delete_btn').on('click', $.proxy(function()
 				{
 					this.imageRemove($el);
 
 				}, this));
 
-				$('#redactorSaveBtn').click($.proxy(function()
+				$('#redactorSaveBtn').on('click', $.proxy(function()
 				{
 					this.imageSave($el);
 
@@ -6964,7 +6964,7 @@
 			{
 				if (e.which === 13)
 				{
-					this.$redactorModal.find('.redactor_modal_action_btn').click();
+					this.$redactorModal.find('.redactor_modal_action_btn').trigger('click');
 					e.preventDefault();
 				}
 			}, this));
@@ -7318,7 +7318,7 @@
 			}
 			else if (this.uploadOptions.trigger)
 			{
-				$('#' + this.uploadOptions.trigger).click($.proxy(this.uploadSubmit, this));
+				$('#' + this.uploadOptions.trigger).on('click', $.proxy(this.uploadSubmit, this));
 			}
 		},
 		uploadSubmit: function(e)
@@ -7337,7 +7337,7 @@
 			$(d).appendTo("body");
 			if (this.uploadOptions.start) this.uploadOptions.start();
 
-			$( '#' + this.id ).load($.proxy(this.uploadLoaded, this));
+			$( '#' + this.id ).one('load', $.proxy(this.uploadLoaded, this));
 
 			return this.id;
 		},

@@ -55,7 +55,7 @@
             add += value;
             $('#url_mask'+into).val(add);
         };
-        $('#fast_add_submit').click(function(){
+        $('#fast_add_submit').on('click', function(){
             var type = $('#fast_add_type').val();
             if(type === 'items'){
                 madd($('#fast_add_item').val());

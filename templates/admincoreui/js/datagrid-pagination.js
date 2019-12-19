@@ -178,7 +178,7 @@
             me.append(p.join(''));
             $bootpag = me.find('ul.bootpag');
 
-            me.find('li').click(function paginationClick(){
+            me.find('li').on('click', function paginationClick(){
 
                 var me = $(this);
                 if(me.hasClass(settings.disabledClass) || me.hasClass(settings.activeClass)){

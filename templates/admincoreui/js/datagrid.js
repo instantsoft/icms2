@@ -15,7 +15,7 @@ icms.datagrid = (function ($) {
     };
 
     this.bind_sortable = function(){
-        $('.datagrid th.sortable').click(function(){
+        $('.datagrid th.sortable').on('click', function(){
 			console.log('click');
             _this.clickHeader($(this).attr('rel'));
         });
