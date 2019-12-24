@@ -812,6 +812,7 @@ class cmsController {
             'is_filter'     => true,
             'is_actions'    => true,
             'is_pagination' => true,
+            'perpage'       => 30,
             'is_toolbar'    => true,
             'is_draggable'  => false,
             'drag_save_url' => '',

@@ -191,12 +191,14 @@ class users extends cmsFrontend {
             );
         }
 
-        $menu[] = array(
-            'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'notices'),
-        );
+        if(cmsEventsManager::getEventListeners('user_notify_types')){
+            $menu[] = array(
+                'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
+                'controller' => $this->name,
+                'action' => $profile['id'],
+                'params' => array('edit', 'notices'),
+            );
+        }
 
         if (!empty($this->options['is_friends_on'])){
             $menu[] = array(

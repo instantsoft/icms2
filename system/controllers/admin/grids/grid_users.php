@@ -47,7 +47,7 @@ function grid_users($controller){
                 } elseif(strpos($value, '127.') === 0){
                     return $value;
                 }
-                return '<a href="#" class="ajaxlink filter_ip tooltip" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target tooltip" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"></a>';
+                return '<a href="#" class="ajaxlink filter_ip" data-toggle="tooltip" data-placement="top" title="'.LANG_CP_USER_FIND_BYIP.'">'.$value.'</a> <a class="view_target" data-toggle="tooltip" data-placement="top" href="https://apps.db.ripe.net/search/query.html?searchtext='.$value.'#resultsAnchor" target="_blank" rel="noopener noreferrer" title="'.LANG_CP_USER_RIPE_SEARCH.'"><i class="icon-globe icons"></i></a>';
             }
         ),
         'date_reg' => array(

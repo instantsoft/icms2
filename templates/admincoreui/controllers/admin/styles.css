@@ -50,6 +50,7 @@
 .datagrid .actions > a.rss::before { content: "\e03b"; }
 .datagrid .actions > a.play::before { content: "\e071"; }
 .datagrid .actions > a.accept::before { content: "\e080"; }
+.datagrid .actions > a.copy::before { content: "\e040"; }
 .datagrid .actions > a.basket_put::before, .datagrid .actions > a.basket_remove::before { content: "\e054"; }
 .cp_toolbar .transfer > a::before {
     content: "\e01f";

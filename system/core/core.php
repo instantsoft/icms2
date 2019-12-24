@@ -361,13 +361,16 @@ class cmsCore {
      * @param cmsRequest $request
      * @return controller_class
      */
-    public static function getController($controller_name, $request=null){
+    public static function getController($controller_name, $request = null){
 
         $config = cmsConfig::getInstance();
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
         if (!class_exists($controller_name, false)) {
+            if(!is_readable($ctrl_file)){
+                return self::error404();
+            }
             include_once($ctrl_file);
         }
 
@@ -776,7 +779,7 @@ class cmsCore {
                 return self::error404();
             }
 
-            $controller->redirectTo($slug, $this->uri_action, $this->uri_params, $this->uri_query, 301);
+            $controller->redirectTo($slug, ($this->uri_action === 'index' ? '' : $this->uri_action), $this->uri_params, $this->uri_query, 301);
         }
 
         // запускаем действие

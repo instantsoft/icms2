@@ -61,7 +61,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
             $album['filter_values']['orderto'] = 'desc';
         }
 
-        if($album['filter_values']['type'] && !in_array($album['filter_values']['type'], array_keys($album['filter_panel']['type']))){
+        if($album['filter_values']['type'] && !isset($album['filter_panel']['type'][$album['filter_values']['type']])){
             $album['filter_values']['type'] = '';
         }
 

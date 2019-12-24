@@ -1994,10 +1994,14 @@ class cmsTemplate {
     /**
      * Печатает HTML код шаблона и завершает работу
      *
-     * @param string $tpl_file Название файла шаблона
+     * @param string|array $tpl_file Название файла шаблона
      * @param array $data Массив параметров, передаваемых в шаблон
      */
     public function renderPlain($tpl_file, $data = array()) {
+
+        if(is_array($tpl_file)){
+            $data = $tpl_file; $tpl_file = $this->controller->current_template_name;
+        }
 
         $tpl_file = $this->getTemplateFileName('controllers/'.$this->controller->name.'/'.$tpl_file);
 

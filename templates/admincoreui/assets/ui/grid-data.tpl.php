@@ -1,6 +1,6 @@
 <?php
 $this->addTplCSSName('datatables.min');
-$perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage;
+$perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perpage'];
 ?>
 
 <form id="datagrid_filter">
