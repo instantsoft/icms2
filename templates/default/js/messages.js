@@ -3,6 +3,9 @@ var Notification = window.Notification || window.mozNotification || window.webki
 
 icms.messages = (function ($) {
 
+    var self = this;
+
+    this.is_modal = true;
     this.contactId = null;
     this.msg_ids = [];
 
@@ -153,9 +156,11 @@ icms.messages = (function ($) {
         var url = pm_window.data('contact-url');
         var form_data = {contact_id: id};
 
-        icms.modal.setCallback('close', function(){
-            icms.messages.options.isRefresh = false;
-        });
+        if(self.is_modal){
+            icms.modal.setCallback('close', function(){
+                icms.messages.options.isRefresh = false;
+            });
+        }
 
         this.msg_ids = [];
 
@@ -174,7 +179,7 @@ icms.messages = (function ($) {
 
             icms.messages.scrollChat();
 
-            $('.composer textarea', pm_window).on('keydown', function(event){
+            $('.composer form', pm_window).on('keydown', function(event){
                 if (event.keyCode === 10 || event.keyCode == 13 && event.ctrlKey) {
                     icms.messages.send();
                 }
@@ -214,9 +219,11 @@ icms.messages = (function ($) {
         $('#pm_chat').stop().animate({
             scrollTop: $('#pm_chat')[0].scrollHeight
         }, 500);
-        $('.nyroModalCont').stop().animate({
-            scrollTop: $('.nyroModalCont')[0].scrollHeight
-        }, 500);
+        if(self.is_modal){
+            $('.nyroModalCont').stop().animate({
+                scrollTop: $('.nyroModalCont')[0].scrollHeight
+            }, 500);
+        }
     };
 
     //====================================================================//
@@ -225,11 +232,10 @@ icms.messages = (function ($) {
 
         var form = $('#pm_contact .composer form');
 
-        var content = $('textarea', form).val();
-
-        if (!content) {return;}
-
         var form_data = icms.forms.toJSON( form );
+
+        if (!form_data.content) {return;}
+
         var url = form.attr('action');
 
         $('.buttons', form).addClass('sending').find('.button').prop('disabled', true);
@@ -239,7 +245,8 @@ icms.messages = (function ($) {
             $('.buttons', form).removeClass('sending').find('.button').prop('disabled', false);
 
             if (!result.error){
-                $('textarea', form).val('').focus();
+                icms.forms.wysiwygInsertText('content', '');
+                $('textarea', form).focus();
                 icms.messages.addMessage(result);
             } else {
                 if (result.message.length){
@@ -379,7 +386,9 @@ icms.messages = (function ($) {
                     var next_id = $('.contact', pm_window).eq(0).attr('rel');
                     icms.messages.selectContact(next_id);
                 } else {
-                    icms.modal.close();
+                    if(self.is_modal){
+                        icms.modal.close();
+                    }
                 }
 
             }, 'json');
@@ -413,7 +422,9 @@ icms.messages = (function ($) {
                     var next_id = $('.contact', pm_window).eq(0).attr('rel');
                     icms.messages.selectContact(next_id);
                 } else {
-                    icms.modal.close();
+                    if(self.is_modal){
+                        icms.modal.close();
+                    }
                 }
 
             }, 'json');
@@ -513,7 +524,9 @@ icms.messages = (function ($) {
                 $(this).remove();
                 var count = $('.item', pm_notices_window).length;
                 icms.messages.setNoticesCounter(count);
-                if (count==0){icms.modal.close();} else {icms.modal.resize();}
+                if(self.is_modal){
+                    if (count==0){icms.modal.close();} else {icms.modal.resize();}
+                }
             });
 
         }, "json");
@@ -541,7 +554,9 @@ icms.messages = (function ($) {
                     $(this).remove();
                     var count = $('.item', pm_notices_window).length;
                     icms.messages.setNoticesCounter(count);
-                    if (count==0){icms.modal.close();} else {icms.modal.resize();}
+                    if(self.is_modal){
+                        if (count==0){icms.modal.close();} else {icms.modal.resize();}
+                    }
                 });
 
             }, 'json');

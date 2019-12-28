@@ -9,7 +9,7 @@
     echo $this->getLangJS('LANG_PM_DELETE_CONTACT_CONFIRM', 'LANG_PM_IGNORE_CONTACT_CONFIRM', 'LANG_YES', 'LANG_NO');
 ?></script>
 
-<div id="pm_window"
+<div id="pm_window"<?php if($is_modal){ ?> class="modal-messages"<?php } ?>
      data-contact-url="<?php echo $this->href_to('contact'); ?>"
      data-refresh-url="<?php echo $this->href_to('refresh'); ?>"
      data-show-older-url="<?php echo $this->href_to('show_older'); ?>"
@@ -58,26 +58,31 @@
         </div>
 
         <script type="text/javascript">
+            <?php if(!$is_modal){ ?>
+                icms.messages.is_modal = false;
+            <?php } ?>
             icms.messages.options.refreshInterval = <?php echo $refresh_time; ?>;
             icms.messages.initUserSearch();
             icms.messages.selectContact(<?php echo $first_id; ?>);
             icms.messages.bindMyMsg();
-            var resize_func = function(){
-                var pm_window = $('#pm_window:visible');
-                if ($(pm_window).length == 0){
-                    $(window).off('resize', resize_func);
-                    return false;
-                }
-                icms.modal.resize();
-            };
-            $(window).on('resize', resize_func);
-            $('#pm_window').on('click', '.toogle-actions', function(){
-                $('.actions').toggleClass('actions-active');
-                $(this).toggleClass('toogle-actions-active');
-            });
-            icms.modal.setCallback('close', function (){
-                $('#popup-manager').removeClass('nyroModalMessage');
-            });
+            <?php if($is_modal){ ?>
+                var resize_func = function(){
+                    var pm_window = $('#pm_window:visible');
+                    if ($(pm_window).length == 0){
+                        $(window).off('resize', resize_func);
+                        return false;
+                    }
+                    icms.modal.resize();
+                };
+                $(window).on('resize', resize_func);
+                $('#pm_window').on('click', '.toogle-actions', function(){
+                    $('.actions').toggleClass('actions-active');
+                    $(this).toggleClass('toogle-actions-active');
+                });
+                icms.modal.setCallback('close', function (){
+                    $('#popup-manager').removeClass('nyroModalMessage');
+                });
+            <?php } ?>
         </script>
 
     <?php } ?>

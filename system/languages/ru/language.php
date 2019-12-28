@@ -300,6 +300,7 @@
     define('LANG_PERM_RULE',                 'Правило доступа');
     define('LANG_PERM_OPTION_NULL',          'Нет');
     define('LANG_PERM_OPTION_YES',           'Да');
+    define('LANG_PERM_OPTION_ALLOW',         'Разрешить');
     define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
     define('LANG_PERM_OPTION_PREMOD_OWN',    'Только свои с премодерацией');
     define('LANG_PERM_OPTION_PREMOD_ALL',    'Все с премодерацией');

@@ -87,7 +87,8 @@ class cmsTemplate {
                 }
             }
             // шаблон админки, можем определить только тут
-            $controller = cmsCore::getInstance()->uri_controller;
+            $controller = cmsCore::getControllerNameByAlias(cmsCore::getInstance()->uri_controller);
+            $controller = $controller ? $controller : cmsCore::getInstance()->uri_controller;
             if($controller === 'admin' && $this->site_config->template_admin){
                 $template = $this->site_config->template_admin;
             }

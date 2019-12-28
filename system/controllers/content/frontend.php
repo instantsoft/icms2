@@ -172,7 +172,9 @@ class content extends cmsFrontend {
 
                 if (cmsUser::isDenied($ctype_name, 'view_list')) {
 
-                    if (cmsUser::isDenied($ctype_name, 'view_list', 'other')) {
+                    if (cmsUser::isDenied($ctype_name, 'view_list', 'allow')) {
+                        $result = true;
+                    } else if (cmsUser::isDenied($ctype_name, 'view_list', 'other')) {
                         $result = false;
                     } else {
                         $result = null;

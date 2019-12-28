@@ -2192,7 +2192,7 @@ class cmsModel {
 
         $array = [];
 
-        if(function_exists('yaml_emit')){
+        if(cmsConfig::get('native_yaml')){
 
             if(!empty($input_array)){
                 $array = $input_array;

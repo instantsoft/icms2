@@ -301,6 +301,7 @@
     define('LANG_PERM_RULE',                 'Permission rule');
     define('LANG_PERM_OPTION_NULL',          'No');
     define('LANG_PERM_OPTION_YES',           'Yes');
+    define('LANG_PERM_OPTION_ALLOW',         'Allow');
     define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
     define('LANG_PERM_OPTION_PREMOD_OWN',    'Only own with premoderation');
     define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');

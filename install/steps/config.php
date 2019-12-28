@@ -91,6 +91,7 @@ function create_config($path, $file){
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
         'production_time'       => time(),
+        'native_yaml'           => function_exists('yaml_emit') ? 1 : 0, // менять лету не стоит, форматы разнятся
         'session_save_handler'  => 'files',
         'session_name'          => strtoupper(uniqid('icms')),
         'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],

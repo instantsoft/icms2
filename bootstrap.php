@@ -78,7 +78,7 @@ date_default_timezone_set($config->time_zone);
 cmsCore::loadLib('html.helper');
 cmsCore::loadLib('strings.helper');
 cmsCore::loadLib('files.helper');
-if(!function_exists('yaml_emit')){
+if(!$config->native_yaml){
     cmsCore::loadLib('spyc.class');
 }
 

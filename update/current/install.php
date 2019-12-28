@@ -1,6 +1,6 @@
 <?php
 /**
- * 2.12.2 => 2.12.3
+ * 2.12.2 => 2.13.0
  */
 function install_package(){
 
@@ -24,6 +24,8 @@ function install_package(){
     }
 
     cmsUser::deleteUPSlist('admin.grid_filter.set_scheduler');
+
+    save_controller_options(['messages']);
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////

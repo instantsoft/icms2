@@ -131,7 +131,7 @@ class cmsWysiwygRedactor {
                 $('#'+dom_id).redactor(imperavi_options);
                 icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
                     $('#'+field_element).redactor('set', text);
-                    $(field_element).redactor('focus');
+                    $('#'+field_element).redactor('focus');
                 });
                 icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
                     $('#'+field_element).redactor('insertText', text);

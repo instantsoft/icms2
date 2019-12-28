@@ -143,6 +143,10 @@ class cmsConfig {
             $this->data['session_name'] = 'ICMSSID';
         }
 
+        if(empty($this->data['native_yaml']) || !function_exists('yaml_emit')){
+            $this->data['native_yaml'] = 0;
+        }
+
 		$this->upload_host_abs = $this->upload_host;
 
 		if (mb_strpos($this->upload_host, $this->host) === 0){

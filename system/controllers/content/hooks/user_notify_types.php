@@ -23,7 +23,7 @@ class onContentUserNotifyTypes extends cmsAction {
 
         }
 
-        return $types ? $types : false;;
+        return $types ? $types : false;
 
     }
 
