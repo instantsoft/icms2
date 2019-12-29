@@ -87,7 +87,7 @@
                 });
             },
             select: function(event, ui){
-                icms.events.run('autocomplete_select', this);
+                icms.events.run('autocomplete_select', ui);
             }
         });
 

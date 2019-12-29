@@ -129,7 +129,7 @@
             return false;
         });
         $('.cp_toolbar .delete_filter a').hide();
-        $("#datatree").dynatree({
+        var dtree = $("#datatree").dynatree({
             onPostInit: function(isReloading, isError){
                 var path = $.cookie('icms[users_tree_path]');
                 if (!path) { path = '/0'; }
@@ -162,6 +162,32 @@
                     $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
                 }
                 icms.datagrid.loadRows();
+            },
+            dnd: {
+                onDragStart: function(node) {
+                    return node.data.key == 0 ? false : true;
+                },
+                autoExpandMS: 1000,
+                preventVoidMoves: true,
+                onDragEnter: function(node, sourceNode) {
+                    if(node.parent !== sourceNode.parent){
+                        return false;
+                    }
+                    return ["before", "after"];
+                },
+                onDragOver: function(node, sourceNode, hitMode) {
+                    if(node.isDescendantOf(sourceNode)){ return false; }
+                    if(hitMode === "over" ){ return "after"; }
+                },
+                onDrop: function(node, sourceNode, hitMode, ui, draggable) {
+                    sourceNode.move(node, hitMode);
+                    node.expand(true);
+                    var dict = $('#datatree').dynatree('getTree').toDict();
+                    $.post('<?php echo $this->href_to('users', 'group_reorder'); ?>', {items: dict}, function(result){
+                        toastr.success(result.success_text);
+                    }, 'json');
+                },
+                onDragLeave: function(node, sourceNode) {}
             }
         });
     });

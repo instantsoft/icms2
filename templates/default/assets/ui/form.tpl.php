@@ -22,7 +22,9 @@
     <script type="text/javascript">
         <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
         $(function (){
+        <?php if ($form->show_unsave_notice){ ?>
             icms.forms.initUnsaveNotice();
+        <?php } ?>
         <?php if ($form->is_tabbed){ ?>
             initTabs('#<?php echo $attributes['form_id']; ?>');
         <?php } ?>

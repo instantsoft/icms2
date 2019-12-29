@@ -23,6 +23,12 @@ function install_package(){
         $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `ordering` INT(11) UNSIGNED NULL DEFAULT NULL");
     }
 
+    if(!$core->db->isFieldExists('{users}_groups', 'ordering')){
+        $core->db->query("ALTER TABLE `{users}_groups` ADD `ordering` INT(11) UNSIGNED NULL DEFAULT '1'");
+        $core->db->query("UPDATE `{users}_groups` SET `ordering` = `id` WHERE 1");
+        $core->db->query("ALTER TABLE `{users}_groups` ADD KEY `ordering` (`ordering`);");
+    }
+
     cmsUser::deleteUPSlist('admin.grid_filter.set_scheduler');
 
     save_controller_options(['messages']);

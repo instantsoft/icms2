@@ -2,6 +2,8 @@
 
 class formAuthLogin extends cmsForm {
 
+    public $show_unsave_notice = false;
+
     public function init() {
 
         return array(

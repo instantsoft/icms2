@@ -1494,24 +1494,23 @@ CREATE TABLE `{#}users_friends` (
 
 DROP TABLE IF EXISTS `{#}users_groups`;
 CREATE TABLE `{#}users_groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL COMMENT 'System name',
-  `title` varchar(32) NOT NULL COMMENT 'Group title',
-  `is_fixed` tinyint(1) unsigned DEFAULT NULL COMMENT 'System?',
-  `is_public` tinyint(1) unsigned DEFAULT NULL COMMENT 'Choose group upon registration?',
-  `is_filter` tinyint(1) unsigned DEFAULT NULL COMMENT 'Show group in the user filter?',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL COMMENT 'System name',
+  `title` varchar(32) DEFAULT NULL COMMENT 'Group title',
+  `is_fixed` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'System?',
+  `is_public` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Choose group upon registration?',
+  `is_filter` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Show group in the user filter?',
+  `ordering` int(11) UNSIGNED DEFAULT '1' COMMENT 'Ordering',
   PRIMARY KEY (`id`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_public` (`is_public`),
-  KEY `is_filter` (`is_filter`)
+  KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='User groups';
 
-INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`) VALUES
-(1, 'guests', 'Guests', 1, NULL, NULL),
-(3, 'newbies', 'Newbies', NULL, NULL, NULL),
-(4, 'members', 'Members', NULL, NULL, NULL),
-(5, 'moderators', 'Moderators', NULL, NULL, NULL),
-(6, 'admins', 'Administrators', NULL, NULL, 1);
+INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`, `ordering`) VALUES
+(1, 'guests', 'Guests', 1, NULL, NULL, 1),
+(3, 'newbies', 'Newbies', NULL, NULL, NULL, 2),
+(4, 'members', 'Members', NULL, NULL, NULL, 3),
+(5, 'moderators', 'Moderators', NULL, NULL, NULL, 4),
+(6, 'admins', 'Administrators', NULL, NULL, 1, 5);
 
 DROP TABLE IF EXISTS `{#}users_groups_members`;
 CREATE TABLE `{#}users_groups_members` (

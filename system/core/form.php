@@ -3,6 +3,7 @@
 class cmsForm {
 
     public $is_tabbed = false;
+    public $show_unsave_notice = true;
 
     private $params          = array();
     private $structure       = array();

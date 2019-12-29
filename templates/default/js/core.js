@@ -220,7 +220,7 @@ icms.forms = (function ($) {
 
             var o = _this.getFilterFormParams(form);
 
-            if(Object.keys(o).length > 0){
+            if(Object.keys(o).length > 0 || $(form).find('.cancel_filter_link').length == 0){
                 var submit_uri = $(form).attr('action');
             } else {
                 var submit_uri = $(form).find('.cancel_filter_link').attr('href');

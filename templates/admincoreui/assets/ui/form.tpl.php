@@ -20,7 +20,9 @@
     <script type="text/javascript">
         <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
         $(function (){
-            icms.forms.initUnsaveNotice();
+            <?php if ($form->show_unsave_notice){ ?>
+                icms.forms.initUnsaveNotice();
+            <?php } ?>
             $('.is_collapsed legend').on('click', function (){
                 var _fieldset = $(this).closest('.is_collapsed');
                 $(_fieldset).toggleClass('is_collapse do_expand');

@@ -765,24 +765,18 @@ class modelUsers extends cmsModel {
 
         if (!$is_guests) { $this->filterNotEqual('id', GUEST_GROUP_ID); }
 
+        $this->orderBy('ordering', 'asc');
+
         return $this->get('{users}_groups');
 
     }
 
     public function getPublicGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_public', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_public', 1)->getGroup();
     }
 
     public function getFilteredGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_filter', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_filter', 1)->getGroup();
     }
 
     public function getGroup($id=false){

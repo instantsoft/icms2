@@ -1479,24 +1479,23 @@ CREATE TABLE `{#}users_friends` (
 
 DROP TABLE IF EXISTS `{#}users_groups`;
 CREATE TABLE `{#}users_groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL COMMENT 'Системное имя',
-  `title` varchar(32) NOT NULL COMMENT 'Название группы',
-  `is_fixed` tinyint(1) unsigned DEFAULT NULL COMMENT 'Системная?',
-  `is_public` tinyint(1) unsigned DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
-  `is_filter` tinyint(1) unsigned DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL COMMENT 'Системное имя',
+  `title` varchar(32) DEFAULT NULL COMMENT 'Название группы',
+  `is_fixed` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Системная?',
+  `is_public` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
+  `is_filter` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
+  `ordering` int(11) UNSIGNED DEFAULT '1' COMMENT 'Порядок',
   PRIMARY KEY (`id`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_public` (`is_public`),
-  KEY `is_filter` (`is_filter`)
+  KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Группы пользователей';
 
-INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`) VALUES
-(1, 'guests', 'Гости', 1, NULL, NULL),
-(3, 'newbies', 'Новые', NULL, NULL, NULL),
-(4, 'members', 'Пользователи', NULL, NULL, NULL),
-(5, 'moderators', 'Модераторы', NULL, NULL, NULL),
-(6, 'admins', 'Администраторы', NULL, NULL, 1);
+INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`, `ordering`) VALUES
+(1, 'guests', 'Гости', 1, NULL, NULL, 1),
+(3, 'newbies', 'Новые', NULL, NULL, NULL, 2),
+(4, 'members', 'Пользователи', NULL, NULL, NULL, 3),
+(5, 'moderators', 'Модераторы', NULL, NULL, NULL, 4),
+(6, 'admins', 'Администраторы', NULL, NULL, 1, 5);
 
 DROP TABLE IF EXISTS `{#}users_groups_members`;
 CREATE TABLE `{#}users_groups_members` (

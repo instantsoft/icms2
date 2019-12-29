@@ -57,10 +57,16 @@ class actionUsersProfileContent extends cmsAction {
         $current_dataset = array();
         if ($datasets){
 
+            $keys = array_keys($datasets);
+
+            if(!$dataset){
+                $dataset = $keys[0];
+            }
+
             if($dataset && !empty($datasets[$dataset])){
 
-                $keys = array_keys($datasets);
-                $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+
+                $current_dataset = $datasets[$dataset];
                 $this->controller_content->model->applyDatasetFilters($current_dataset);
                 // устанавливаем максимальное количество записей для набора, если задано
                 if(!empty($current_dataset['max_count'])){
