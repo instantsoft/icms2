@@ -93,7 +93,7 @@ function initAutocomplete (field, multiple, url, data, separator){
                 }
                 $(this).val(new_string);
                 setCaretPosition('#'+field, position);
-                icms.events.run('autocomplete_select', this);
+                icms.events.run('autocomplete_select', ui);
                 return false;
             }
         });
@@ -110,7 +110,7 @@ function initAutocomplete (field, multiple, url, data, separator){
                 loadSource(term, response);
             },
             select: function( event, ui ) {
-                icms.events.run('autocomplete_select', this);
+                icms.events.run('autocomplete_select', ui);
             }
         });
     }
