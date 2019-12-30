@@ -1,0 +1,11 @@
+[subject: Mail Change Notification - {site}]
+
+Hello {nickname}.
+
+You have successfully changed your current email address to {new_email}.
+If you didn't do this, please contact the site administrator.
+
+
+--
+ Regards, {site}
+ <small> Email has been sent automatically, please do not reply to it. </small>

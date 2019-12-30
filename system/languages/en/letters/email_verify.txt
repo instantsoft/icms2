@@ -1,0 +1,17 @@
+[subject: Mail Change Confirmation - {site}]
+
+Hello {nickname}.
+
+To confirm the new email address, follow the link:
+
+<a href="{page_url}">{page_url}</a>
+
+Or use the verification code: {hash}
+
+This must be done before {valid_until}.
+
+After this date, your request to change the mail will be canceled.
+
+--
+ Regards, {site}
+ <small> Email has been sent automatically, please do not reply to it. </small>

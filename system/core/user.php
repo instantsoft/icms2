@@ -741,11 +741,13 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitReached($subject, $permission, $current_value=0){
+    public static function isPermittedLimitReached($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }
@@ -755,11 +757,13 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitHigher($subject, $permission, $current_value=0){
+    public static function isPermittedLimitHigher($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }

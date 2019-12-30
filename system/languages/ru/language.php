@@ -226,6 +226,10 @@
     define('LANG_REG_FIRST_TIME',            'Впервые у нас?');
     define('LANG_REG_ALREADY',               'Уже зарегистрированы?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'Новый адрес e-mail');
+    define('LANG_EMAIL_NEW_HASH',            'Код подтверждения нового e-mail адреса');
+    define('LANG_CONFIRM_CODE_ERROR',        'Введён неверный код подтверждения');
+    define('LANG_EMAIL_NEW_HINT',            'На новый почтовый ящик придёт письмо с подтверждением');
     define('LANG_SECURITY',                  'Безопасность');
     define('LANG_PASSWORD',                  'Пароль');
     define('LANG_RETYPE_PASSWORD',           'Повторите пароль');

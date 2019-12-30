@@ -38,8 +38,17 @@ function install_package(){
     ////////////////////////////////////////////////////////////////////////////
 
     add_perms(array(
+        'users' => array(
+            'change_email'
+        )
+    ), 'flag');
+
+    add_perms(array(
         'content' => array(
             'limit24'
+        ),
+        'users' => array(
+            'change_email_period'
         )
     ), 'number');
 

@@ -227,6 +227,10 @@
     define('LANG_REG_FIRST_TIME',            'Is it your first visit?');
     define('LANG_REG_ALREADY',               'Already registered?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'New e-mail address');
+    define('LANG_EMAIL_NEW_HASH',            'Confirmation code for the new e-mail address');
+    define('LANG_EMAIL_NEW_HINT',            'A confirmation link will be sent to your new address.');
+    define('LANG_CONFIRM_CODE_ERROR',        'Invalid verification code entered');
     define('LANG_SECURITY',                  'Security');
     define('LANG_PASSWORD',                  'Password');
     define('LANG_RETYPE_PASSWORD',           'Repeat password');

@@ -1118,7 +1118,9 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (44, 'groups', 'content_access', 'flag', NULL),
 (45, 'auth', 'view_closed', 'flag', NULL),
 (46, 'content', 'view_list', 'list', 'all,other,allow'),
-(47, 'content', 'limit24', 'number', NULL);
+(47, 'content', 'limit24', 'number', NULL),
+(48, 'users', 'change_email', 'flag', NULL),
+(49, 'users', 'change_email_period', 'number', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
