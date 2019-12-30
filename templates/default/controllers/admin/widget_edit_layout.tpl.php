@@ -30,5 +30,6 @@
             window.parent.location.reload();
         }
     </script>
+    <?php $this->bottom(); ?>
 </body>
 </html>
