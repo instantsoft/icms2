@@ -12,6 +12,8 @@ class actionAdminUsersEdit extends cmsAction {
             return cmsCore::error404();
         }
 
+        $old_email = $user['email'];
+
         $form = $this->getForm('user', array('edit'));
 
         if ($this->request->has('submit')) {
@@ -28,6 +30,24 @@ class actionAdminUsersEdit extends cmsAction {
             $errors = $form->validate($this, $user);
 
             if (!$errors) {
+
+                if($user['email'] && $old_email != $user['email']){
+
+                    cmsUser::setUPS('users.change_email_'.md5($user['email']), [
+                        'accepted'  => 1,
+                        'email'     => $old_email,
+                        'timestamp' => time(),
+                        'hash'      => string_random()
+                    ]);
+
+                    cmsUser::setUPS('users.change_email_'.md5($old_email), [
+                        'accepted'  => 1,
+                        'email'     => $user['email'],
+                        'timestamp' => time(),
+                        'hash'      => string_random()
+                    ]);
+
+                }
 
                 $result = $this->model_users->updateUser($id, $user);
 

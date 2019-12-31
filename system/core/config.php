@@ -131,6 +131,10 @@ class cmsConfig {
 
         }
 
+        if(empty($this->data['db_charset'])){
+            $this->data['db_charset'] = 'utf8';
+        }
+
         if(empty($this->data['session_save_handler'])){
             $this->data['session_save_handler'] = 'files';
         }
