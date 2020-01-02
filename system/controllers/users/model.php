@@ -772,11 +772,11 @@ class modelUsers extends cmsModel {
     }
 
     public function getPublicGroups(){
-        return $this->filterEqual('is_public', 1)->getGroup();
+        return $this->filterEqual('is_public', 1)->getGroups();
     }
 
     public function getFilteredGroups(){
-        return $this->filterEqual('is_filter', 1)->getGroup();
+        return $this->filterEqual('is_filter', 1)->getGroups();
     }
 
     public function getGroup($id=false){

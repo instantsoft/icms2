@@ -46,6 +46,9 @@
                 setThemeConfigURL(this);
             }).triggerHandler('change');
         });
+        $('#db_charset').change(function(){
+            icms.modal.alert('<?php echo LANG_CP_DB_CHARSET_HINT; ?>', 'danger');
+        });
     });
 
     function setThemeConfigURL(obj){

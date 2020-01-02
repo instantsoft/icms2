@@ -747,6 +747,7 @@
     define('LANG_MAILCHECK_ERROR', 'When sending a letter error occurred: <br><b>%s</b>');
     define('LANG_MAILCHECK_SUCCESS', 'A letter has been sent successfully');
     define('LANG_MAILCHECK_MENU', 'Check mail settings');
+    define('LANG_CP_DB_CHARSET_HINT', 'Attention! Before changing this option, please backup your database!');
     define('LANG_MAILCHECK_TO', 'Send message to');
     define('LANG_MAILCHECK_SUBJECT', 'Message subject');
     define('LANG_MAILCHECK_BODY', 'Message contents');

@@ -747,6 +747,7 @@
     define('LANG_MAILCHECK_ERROR', 'При отправке письма произошла ошибка: <br><b>%s</b>');
     define('LANG_MAILCHECK_SUCCESS', 'Письмо успешно отправлено');
     define('LANG_MAILCHECK_MENU', 'Проверить настройки почты');
+    define('LANG_CP_DB_CHARSET_HINT', 'Внимание! Перед изменением этой опции, пожалуйста, сделайте бэкап базы данных!');
     define('LANG_MAILCHECK_TO', 'Кому');
     define('LANG_MAILCHECK_SUBJECT', 'Тема');
     define('LANG_MAILCHECK_BODY', 'Сообщение');

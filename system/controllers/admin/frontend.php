@@ -125,7 +125,7 @@ class admin extends cmsFrontend {
                 $cpu_count = console_exec_command($cmd);
 
                 if(!empty($cpu_count[0])){
-                    $cpu_count = $cpu_count[0];
+                    $cpu_count = trim($cpu_count[0]) ? trim($cpu_count[0]) : 1;
                 } else {
                     $cpu_count = 1;
                 }
