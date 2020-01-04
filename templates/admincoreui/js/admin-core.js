@@ -1,4 +1,4 @@
-toastr.options = {progressBar: true, preventDuplicates: true};
+toastr.options = {progressBar: true, preventDuplicates: true, timeOut: 2000};
 var icms = icms || {};
 icms.admin = (function ($) {
 

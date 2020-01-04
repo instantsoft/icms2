@@ -2228,7 +2228,7 @@ class cmsModel {
         if($yaml === "---\n- 0\n"){ return array(); }
         if($yaml === "---\n- \"0\"\n...\n"){ return array(); }
 
-        if(function_exists('yaml_parse')){
+        if(cmsConfig::get('native_yaml')){
             return yaml_parse($yaml);
         }
 
