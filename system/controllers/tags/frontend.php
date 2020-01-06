@@ -9,7 +9,9 @@ class tags extends cmsFrontend {
 
     public function getTagsWidgetParams($options) {
 
-        if(!empty($options['subjects']) && $options['subjects'] !== array('0')){
+        $options['subjects'] = array_filter($options['subjects']);
+
+        if(!empty($options['subjects'])){
 
             $tag_ids = $this->model->selectOnly('tag_id')->
                     filterEqual('target_controller', 'content')->

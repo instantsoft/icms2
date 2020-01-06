@@ -1,3 +1,4 @@
+<?php $config = cmsConfig::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>

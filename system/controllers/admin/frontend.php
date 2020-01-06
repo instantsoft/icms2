@@ -138,6 +138,13 @@ class admin extends cmsFrontend {
 
             $current_load_average = round(100*($la[2]/$cpu_count));
 
+            // вероятно определили неверно
+            if($current_load_average > 100){
+                $cpu_count = round($current_load_average/100);
+                cmsUser::sessionSet('cpu_count', $cpu_count);
+                $current_load_average = round(100*($la[2]/$cpu_count));
+            }
+
             $su['cpu'] = [
                 'title'   => LANG_CP_SU_CPU,
                 'hint'    => $current_load_average.'%',
