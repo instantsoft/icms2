@@ -221,6 +221,8 @@ class modelMenu extends cmsModel {
             if (isset($hook_result['items']) && is_array($hook_result['items'])) {
                 foreach($hook_result['items'] as $i) {
                     $i['menu_id'] = $item['menu_id'];
+                    $i['options'] = isset($i['options']) ? $i['options'] : [];
+                    $i['options'] = array_merge($item['options'], $i['options']);
                     $items[$i['id']] = $i;
                 }
             }

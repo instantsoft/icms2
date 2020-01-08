@@ -40,7 +40,10 @@ class actionContentCategoryView extends cmsAction {
 
         // Если это не главная, но данный контент выводится на главной и сейчас
         // открыта индексная страница контента - редиректим на главную
-        if (!$is_frontpage && $this->cms_config->frontpage == "content:{$ctype['name']}" && $slug == 'index' && !$dataset && $page==1){
+        if (!$this->request->isAjax() && !$is_frontpage &&
+                $this->cms_config->frontpage == "content:{$ctype['name']}" && $slug == 'index' &&
+                        !$dataset && $page==1 && !$this->list_filter){
+
 			$query = $this->cms_core->uri_query;
 			if ($query){
 				$this->redirect(href_to_home() . '?' . http_build_query($query));

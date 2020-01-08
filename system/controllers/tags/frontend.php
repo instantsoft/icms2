@@ -9,7 +9,9 @@ class tags extends cmsFrontend {
 
     public function getTagsWidgetParams($options) {
 
-        $options['subjects'] = array_filter($options['subjects']);
+        if(!empty($options['subjects'])){
+            $options['subjects'] = array_filter($options['subjects']);
+        }
 
         if(!empty($options['subjects'])){
 

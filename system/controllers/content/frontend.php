@@ -1338,7 +1338,7 @@ class content extends cmsFrontend {
             if ($this->list_filter['seo_title']){
                 $title_pattern = $this->list_filter['seo_title'];
             }
-            if ($this->list_filtert['seo_keys']){
+            if ($this->list_filter['seo_keys']){
                 $keys_pattern = $this->list_filter['seo_keys'];
             }
             if ($this->list_filter['seo_desc']){
