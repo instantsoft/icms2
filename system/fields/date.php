@@ -163,6 +163,10 @@ class fieldDate extends cmsFormField {
 
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function getInput($value){
 
         if($value){

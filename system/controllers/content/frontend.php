@@ -253,7 +253,7 @@ class content extends cmsFrontend {
 
 			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
 
-            $value = $field['handler']->store($value, false);
+            $value = $field['handler']->storeFilter($value);
 			if (!$value) { continue; }
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
@@ -286,7 +286,7 @@ class content extends cmsFrontend {
 
 				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType());
 
-                $value = $prop['handler']->store($value, false);
+                $value = $prop['handler']->storeFilter($value);
 				if (!$value) { continue; }
 
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){

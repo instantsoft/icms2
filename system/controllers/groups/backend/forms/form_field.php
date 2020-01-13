@@ -136,8 +136,7 @@ class formGroupsField extends cmsForm {
                 'title' => LANG_CP_FIELD_VALUES,
                 'childs' => array(
                     new fieldText('values', array(
-                        'size' => 8,
-                        'is_strip_tags' => true
+                        'size' => 8
                     ))
                 )
             ),

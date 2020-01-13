@@ -116,7 +116,7 @@ class widgetContentFilter extends cmsWidget {
 
 			$value = $core->request->get($name, false, $field['handler']->getDefaultVarType());
 
-            $value = $field['handler']->store($value, false);
+            $value = $field['handler']->storeFilter($value);
 			if (!$value) { continue; }
 
 			$filters[$name] = $value;
@@ -142,7 +142,7 @@ class widgetContentFilter extends cmsWidget {
 
 				$value = $core->request->get($name, false, $prop['handler']->getDefaultVarType());
 
-                $value = $prop['handler']->store($value, false);
+                $value = $prop['handler']->storeFilter($value);
 				if (!$value) { continue; }
 
 				$filters[$name] = $value;

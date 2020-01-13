@@ -176,6 +176,10 @@ class fieldAge extends cmsFormField {
 
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function getInput($value){
 
         $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';

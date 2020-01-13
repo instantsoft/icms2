@@ -183,6 +183,10 @@ class fieldListBitmask extends cmsFormField {
 
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function applyFilter($model, $values) {
 
 		if (!is_array($values)) { return parent::applyFilter($model, $values); }

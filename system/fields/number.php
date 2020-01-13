@@ -390,6 +390,10 @@ class fieldNumber extends cmsFormField {
 
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function getInput($value){
 
         $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');

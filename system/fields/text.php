@@ -84,6 +84,10 @@ class fieldText extends cmsFormField {
         return parent::store($value, $is_submitted, $old_value);
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
     }

@@ -393,7 +393,7 @@ class groups extends cmsFrontend {
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
 
-            $value = $field['handler']->store($value, false);
+            $value = $field['handler']->storeFilter($value);
 			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){

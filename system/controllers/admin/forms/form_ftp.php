@@ -35,6 +35,7 @@ class formAdminFtp extends cmsForm {
                     new fieldString('pass', array(
                         'title' => LANG_CP_FTP_PASS,
                         'is_password' => true,
+                        'is_clean_disable' => true
                     )),
 
                     new fieldString('path', array(
