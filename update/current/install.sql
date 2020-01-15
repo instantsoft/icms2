@@ -1,1 +1,1 @@
-UPDATE `{#}perms_rules` SET `options` = 'all,other,allow' WHERE `controller` = 'content' AND `name` = 'view_list';
+UPDATE `{#}comments` SET `user_id`= NULL WHERE `user_id` = 0;

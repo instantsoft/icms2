@@ -1,15 +1,56 @@
 <?php
 /**
- * 2.13.0 => 2.13.1
+ * 2.12.2 => 2.13.0
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->isFieldExists('{users}', '2fa')){
+        $core->db->query("ALTER TABLE `{users}` ADD `2fa` VARCHAR(32) NULL DEFAULT NULL AFTER `ip`");
+    }
+
+    if(!$core->db->isFieldExists('widgets', 'image_hint_path')){
+        $core->db->query("ALTER TABLE `{#}widgets` ADD `image_hint_path` VARCHAR(100) NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('widgets_bind', 'is_cacheable')){
+        $core->db->query("ALTER TABLE `{#}widgets_bind` ADD `is_cacheable` TINYINT(1) UNSIGNED NULL DEFAULT '1'");
+    }
+
+    if(!$core->db->isFieldExists('scheduler_tasks', 'ordering')){
+        $core->db->query("ALTER TABLE `{#}scheduler_tasks` ADD `ordering` INT(11) UNSIGNED NULL DEFAULT NULL");
+    }
+
+    if(!$core->db->isFieldExists('{users}_groups', 'ordering')){
+        $core->db->query("ALTER TABLE `{users}_groups` ADD `ordering` INT(11) UNSIGNED NULL DEFAULT '1'");
+        $core->db->query("UPDATE `{users}_groups` SET `ordering` = `id` WHERE 1");
+        $core->db->query("ALTER TABLE `{users}_groups` ADD KEY `ordering` (`ordering`);");
+    }
+
+    cmsUser::deleteUPSlist('admin.grid_filter.set_scheduler');
+
+    save_controller_options(['messages']);
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    add_perms(array(
+        'users' => array(
+            'change_email'
+        )
+    ), 'flag');
+
+    add_perms(array(
+        'content' => array(
+            'limit24'
+        ),
+        'users' => array(
+            'change_email_period'
+        )
+    ), 'number');
 
     ////////////////////////////////////////////////////////////////////////////
     ///////////////// Индексы //////////////////////////////////////////////////

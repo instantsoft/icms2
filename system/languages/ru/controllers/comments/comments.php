@@ -36,7 +36,7 @@ define('LANG_COMMENTS_DELETED', ' удалены');
 define('LANG_COMMENT_DELETE_CONFIRM', 'Удалить комментарий пользователя %s?');
 define('LANG_COMMENT_ERROR_NAME', 'Вы не указали свое имя');
 define('LANG_COMMENT_ERROR_EMAIL', 'Указан некорректный адрес e-mail');
-define('LANG_COMMENT_ERROR_TIME', "Вы можете оставить комментарий один раз в %s\nПожалуйста, попробуйте позже");
+define('LANG_COMMENT_ERROR_TIME', "Вы можете оставить комментарий один раз в %s.\nПожалуйста, попробуйте позже.");
 define('LANG_COMMENT_ERROR_IP', 'Комментарии с вашего IP адреса запрещены');
 define('LANG_COMMENT_SHOW_PARENT', 'Ответ на');
 define('LANG_COMMENT_SHOW_CHILD', 'Вернуться к ответу');
