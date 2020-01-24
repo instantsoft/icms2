@@ -77,7 +77,7 @@ class modelMenu extends cmsModel {
 
         $this->select('COUNT(childs.id)', 'childs_count');
 
-        $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id');
+        $this->joinLeft('menu_items', 'childs', 'childs.parent_id = i.id AND childs.is_enabled = 1');
 
         if($menu_id !== false){
             $this->filterEqual('menu_id', $menu_id);

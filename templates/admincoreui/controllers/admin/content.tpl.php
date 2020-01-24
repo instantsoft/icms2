@@ -94,7 +94,7 @@
 
     $this->addToolButton(array(
         'class' => 'items animated animate_on_selected',
-        'childs_count' => 4,
+        'childs_count' => 5,
         'title' => LANG_CP_WIDGETS_FA_ITEMS,
         'href'  => ''
     ));
@@ -104,6 +104,14 @@
         'level' => 2,
         'title' => LANG_CP_CONTENT_ITEM_ADD,
         'href'  => $this->href_to('content', array('item_add'))
+    ));
+
+    $this->addToolButton(array(
+        'class' => 'edit show_on_selected',
+        'level' => 2,
+        'title' => LANG_CP_CONTENT_ITEMS_EDIT,
+        'href'  => null,
+        'onclick' => 'return icms.datagrid.submitAjax($(this))'
     ));
 
     $this->addToolButton(array(
@@ -181,6 +189,7 @@
                 $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('content', array('filter')); ?>/" + key[0]);
                 $('.cp_toolbar .settings a').attr('href', "<?php echo $this->href_to('ctypes', array('edit')); ?>/" + key[0]);
                 $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('content', array('item_add')); ?>/" + key[0] + "/" + key[1]);
+                $('.cp_toolbar .edit a').data('url', "<?php echo $this->href_to('content', array('items_edit')); ?>/" + key[0]);
                 $('.cp_toolbar .add_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_add')); ?>/" + key[0] + "/" + key[1]);
                 $('.cp_toolbar .edit_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_edit')); ?>/" + key[0] + "/" + key[1]);
                 $('.cp_toolbar .delete_folder a').attr('href', "<?php echo $this->href_to('content', array('cats_delete')); ?>/" + key[0] + "/" + key[1] + '?csrf_token='+icms.forms.getCsrfToken());

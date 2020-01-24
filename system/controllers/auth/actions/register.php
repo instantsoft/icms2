@@ -56,7 +56,7 @@ class actionAuthRegister extends cmsAction {
                     if (empty($field['groups_add'])) { continue; }
                     if (in_array(0, $field['groups_add'])) { continue; }
 
-                    if (!in_array($user['group_id'], $field['groups_add'])){
+                    if (!cmsUser::isUserInGroups($field['groups_add'], $user['groups'])){
                         $form->disableField($field['name']);
                         unset($user[$field['name']]);
                     }

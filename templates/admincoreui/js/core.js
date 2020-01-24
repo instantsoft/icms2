@@ -318,13 +318,13 @@ icms.forms = (function ($) {
 
             if (typeof(result.errors)=='object'){
 
-                $('.is-invalid', form).removeClass('field_error');
+                $('.field_error', form).removeClass('field_error');
                 $('.invalid-feedback', form).remove();
 
                 for(var field_id in result.errors){
                     var id = field_id.replace(':', '_');
                     $('#'+id, form).addClass('is-invalid');
-                    $('#f_'+id, form).append('<div class="invalid-feedback">' + result.errors[field_id] + '</div>');
+                    $('#f_'+id, form).addClass('field_error').append('<div class="invalid-feedback">' + result.errors[field_id] + '</div>');
                     $(form).find('ul.tabbed > li > a[href = "#'+$('#f_'+id, form).parents('.tab').attr('id')+'"]').trigger('click');
                 }
 

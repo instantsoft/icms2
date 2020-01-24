@@ -272,14 +272,19 @@ icms.datagrid = (function ($) {
             if (!confirm(confirm_message)){return false;}
         }
 
-        if (typeof(url) != 'string') {url = $(url).data('url');}
+        var title = false;
+
+        if (typeof(url) != 'string') {
+            title = $(url).attr('title');
+            url = $(url).data('url');
+        }
 
         _this.selected_rows = [];
         $('.datagrid tr.selected').each(function(){
             _this.selected_rows.push($(this).data('id'));
         });
 
-        icms.modal.openAjax(url, {selected: _this.selected_rows});
+        icms.modal.openAjax(url, {selected: _this.selected_rows}, false, title);
 
         return false;
 

@@ -98,6 +98,11 @@
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Создать запись');
+    define('LANG_CP_CONTENT_ITEMS_EDIT',        'Изменить записи');
+    define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Добавить значения к существующим');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Выберите поля, которые хотите изменить');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S2',     'Этими значениями будут заменены поля выбранных записей');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_ADD_HINT', '<span class="text-danger">Значение будет добавлено в конец существующего</span>');
     define('LANG_CP_CONTENT_CATS_ADD',          'Создать категории');
     define('LANG_CP_CONTENT_CATS_EDIT',         'Редактировать категорию');
     define('LANG_CP_CONTENT_CATS_ORDER',        'Порядок');

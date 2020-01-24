@@ -150,6 +150,14 @@ class cmsFormField {
     public $multilanguage = false;
 
     /**
+     * Тип поля
+     * по факту имя файла
+     *
+     * @var string
+     */
+    public $field_type;
+
+    /**
      * @param string $name Имя поля
      * @param array $options Массив опций
      */
@@ -157,7 +165,8 @@ class cmsFormField {
 
         $this->setName($name);
 
-        $this->class = substr(mb_strtolower(get_called_class()), 5);
+        $this->field_type = substr(mb_strtolower(get_called_class()), 5);
+        $this->class = $this->field_type;
 
         if ($options){
             $this->setOptions($options);

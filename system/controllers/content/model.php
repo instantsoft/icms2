@@ -2005,11 +2005,13 @@ class modelContent extends cmsModel {
 
             if ($ctype['is_auto_url']){
                 $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
-            } else {
-                $item['slug'] = lang_slug( $item['slug'] );
+            } elseif(!empty($item['slug'])) {
+                $item['slug'] = lang_slug($item['slug']);
             }
 
-            $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            if(!empty($item['slug'])) {
+                $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            }
 
         }
 
@@ -2047,7 +2049,7 @@ class modelContent extends cmsModel {
         unset($update_item['user']);
         unset($update_item['user_nickname']);
 
-		$add_cats = array();
+		$add_cats = [];
 
 		if (isset($update_item['add_cats'])){
 			$add_cats = $update_item['add_cats'];

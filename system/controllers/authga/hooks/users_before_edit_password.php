@@ -2,11 +2,11 @@
 
 class onAuthgaUsersBeforeEditPassword extends cmsAction {
 
-    public function run($data){
+    public function run($_data){
 
-        list($profile, $data, $form) = $data;
+        list($profile, $data, $form) = $_data;
 
-        if($data['2fa'] !== $this->name && $profile['2fa'] === $this->name){
+        if(array_key_exists('2fa', $data) && $data['2fa'] !== $this->name && $profile['2fa'] === $this->name){
             $profile['ga_secret'] = null;
         }
 

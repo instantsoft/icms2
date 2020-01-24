@@ -747,7 +747,7 @@ class content extends cmsFrontend {
         }
 
         // Если есть поля-свойства, то добавляем область для них
-        if ($ctype['props']){
+        if (!empty($ctype['props'])){
             $form->addFieldset('', 'props', array(
                 'is_empty' => true,
                 'class' => 'highlight'
