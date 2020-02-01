@@ -13,17 +13,26 @@ class actionAuthVerify extends cmsAction {
 
         $reg_email = cmsUser::getCookie('reg_email');
 
+        $reg_user = [];
+
         if($reg_email && $this->validate_email($reg_email) === true){
 
-            $reg_user = $users_model->getUserByEmail($reg_email);
+            $reg_user = $users_model->filterNotNull('pass_token')->
+                    filterEqual('is_locked', 1)->
+                    getUserByEmail($reg_email);
 
-            $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
-            if($reg_user['resubmit_extime'] < 0){
-                $reg_user['resubmit_extime'] = 0;
+            if($reg_user){
+
+                $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
+                if($reg_user['resubmit_extime'] < 0){
+                    $reg_user['resubmit_extime'] = 0;
+                }
+
             }
 
         } else {
-            $reg_user = array();
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
         }
 
         $form = $this->getForm('verify', array($reg_user));
@@ -79,11 +88,12 @@ class actionAuthVerify extends cmsAction {
 
         }
 
-        return $this->cms_template->render('verify', array(
+        return $this->cms_template->render([
+            'reg_email' => $reg_email,
             'data'   => $data,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
+        ]);
 
     }
 

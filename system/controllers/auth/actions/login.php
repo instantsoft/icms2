@@ -1,6 +1,8 @@
 <?php
 class actionAuthLogin extends cmsAction {
 
+    private $is_added_capcha_field = false;
+
     public function run(){
 
         $is_site_offline = !cmsConfig::get('is_site_on');
@@ -25,13 +27,7 @@ class actionAuthLogin extends cmsAction {
         $form = $this->getForm('login');
 
         if (cmsUser::sessionGet('is_auth_captcha')){
-
-            $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
-
-            $form->addField($fieldset_id,
-                new fieldCaptcha('capcha')
-            );
-
+            $form = $this->addCapchaField($form);
         }
 
         if ($back_url){
@@ -57,7 +53,10 @@ class actionAuthLogin extends cmsAction {
                 cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
 
                 if ($this->options['auth_captcha'] && !$is_site_offline){
+
                     cmsUser::sessionSet('is_auth_captcha', true);
+
+                    $form = $this->addCapchaField($form);
                 }
 
             } else {
@@ -134,7 +133,10 @@ class actionAuthLogin extends cmsAction {
                     cmsUser::addSessionMessage(LANG_LOGIN_ERROR, 'error');
 
                     if ($this->options['auth_captcha'] && !$is_site_offline){
+
                         cmsUser::sessionSet('is_auth_captcha', true);
+
+                        $form = $this->addCapchaField($form);
                     }
 
                 }
@@ -163,6 +165,24 @@ class actionAuthLogin extends cmsAction {
             'back_url'   => $back_url,
             'hooks_html' => cmsEventsManager::hookAll('login_form_html')
         ]);
+
+    }
+
+    private function addCapchaField($form) {
+
+        if($this->is_added_capcha_field){
+            return $form;
+        }
+
+        $fieldset_id = $form->addFieldset(LANG_CAPTCHA_CODE, 'regcaptcha');
+
+        $form->addField($fieldset_id,
+            new fieldCaptcha('capcha')
+        );
+
+        $this->is_added_capcha_field = true;
+
+        return $form;
 
     }
 

@@ -33,6 +33,7 @@ class actionCommentsApprove extends cmsAction {
 
         $this->model->approveComment($comment['id']);
 
+        $comment['url'] = $comment['target_url'] . '#comment_'.$comment['id'];
         $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
         $comment['title'] = $comment['target_title'];
 

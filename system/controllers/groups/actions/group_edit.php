@@ -23,7 +23,7 @@ class actionGroupsGroupEdit extends cmsAction {
 
         $form = $this->getGroupForm($group, 'edit');
 
-        if (!$group['access']['is_owner']){
+        if (!$group['access']['is_owner'] && !$group['access']['is_moderator']){
             $form->removeFieldset('group_options');
         }
 

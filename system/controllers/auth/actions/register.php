@@ -8,12 +8,15 @@ class actionAuthRegister extends cmsAction {
         // если аккаунт не подтверждён и время не вышло
         // редиректим на верификацию
         $reg_email = cmsUser::getCookie('reg_email');
-        if($reg_email && $this->validate_email($reg_email) === true){
+        if($reg_email && $this->validate_email($reg_email) === true && !$this->request->get('clean_reg_email')){
 
             cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $reg_email), 'info');
 
             $this->redirectToAction('verify');
 
+        } else {
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
         }
 
         list($form, $fieldsets) = $this->getRegistrationForm();

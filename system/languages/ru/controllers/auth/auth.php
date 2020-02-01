@@ -78,3 +78,4 @@ define('LANG_AUTH_INVITES_SGROUP', 'Группе пользователей');
 define('LANG_AUTH_INVITES_SUSER', 'Или пользователю');
 define('LANG_AUTH_INVITES_SPARAMS', 'Параметры выдачи группе пользователей');
 define('LANG_AUTH_IS_OLD_AUTH', 'Вы давно не меняли пароль, можно <a href="%s">сделать это сейчас</a>.');
+define('LANG_AUTH_CLEAN_REG_EMAIL', 'Я указал неверный email');
