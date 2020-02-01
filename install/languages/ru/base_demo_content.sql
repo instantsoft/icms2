@@ -931,7 +931,7 @@ INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_upda
 (1, 1, 1, 2, CURRENT_TIMESTAMP);
 
 INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
-(3, 'footer', 'Нижнее меню', 1);
+(3, 'footer', 'Нижнее меню', NULL);
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
 (6, 1, 0, 'Фото', 'albums', 4, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
