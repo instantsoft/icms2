@@ -445,6 +445,8 @@
     define('LANG_CP_SETTINGS_SESSIONS',         'Sessions');
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
+    define('LANG_CP_SETTINGS_SESSION_NAME', 'Session name');
+    define ('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Must be the same for all sites with a single authorization');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', which must enter one of the paths ');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');

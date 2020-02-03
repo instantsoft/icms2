@@ -446,6 +446,8 @@
     define('LANG_CP_SETTINGS_SESSIONS',         'Сессии');
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Время жизни сессий');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Метод хранения сессий');
+    define('LANG_CP_SETTINGS_SESSION_NAME', 'Имя сессии');
+    define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Должно быть одинаково для всех сайтов с единой авторизацией');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', который должен входить в один из путей ');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
