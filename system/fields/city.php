@@ -54,7 +54,7 @@ class fieldCity extends cmsFormField {
     }
 
     public function getStringValue($value){
-        return htmlspecialchars($this->item[$this->getDenormalName()]);
+        return !empty($this->item[$this->getDenormalName()]) ? htmlspecialchars($this->item[$this->getDenormalName()]) : '';
     }
 
     public function store($value, $is_submitted, $old_value=null){

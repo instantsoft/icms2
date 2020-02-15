@@ -343,7 +343,7 @@ class actionContentItemAdd extends cmsAction {
         return $this->cms_template->render('item_form', array(
             'do'               => 'add',
             'page_title'       => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
-            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : false)),
+            'cancel_url'       => ($back_url ? $back_url : ($ctype['options']['list_on'] ? href_to($ctype['name']) : $this->getBackURL())),
             'parent'           => isset($parent) ? $parent : false,
             'ctype'            => $ctype,
             'item'             => $item,

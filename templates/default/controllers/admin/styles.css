@@ -2815,6 +2815,9 @@ input[type=radio]:checked ~ label{
     padding: 0 20px;
     margin: 20px 0 0 0;
 }
+.nyroModalLink > h3 {
+    margin: 15px;
+}
 .inline_button {
     float: left;
     margin: 17px 0 0;

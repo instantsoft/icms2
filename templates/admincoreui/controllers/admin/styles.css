@@ -228,6 +228,20 @@ thead.list_thead {
         left: -100%;
         width: 100%;
     }
+    .main .container-fluid {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+    .main .container-fluid.print-body-wrap {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+    .buttons.my-3 {
+        margin-left: 1rem !important;
+    }
+    #dashboard .card, #dashboard .card-header:first-child {
+        border-radius: 0;
+    }
 }
 .card-summary > span:not(:last-of-type):after {
     content: '•';

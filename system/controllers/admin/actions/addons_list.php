@@ -147,7 +147,7 @@ class actionAdminAddonsList extends cmsAction {
             $item['install'] = array(
                 'need_update'   => false,
                 'need_install'  => true,
-                'install_url'   => 'https://addons.instantcms.ru/addons/download/'.$item['id'].'/'.$latest_version['id'],
+                'install_url'   => ($item['versions'] ? 'https://addons.instantcms.ru/addons/download/'.$item['id'].'/'.$latest_version['id'] : ''),
                 'installed_url' => '',
                 'install_title' => LANG_CP_DO_INSTALL
             );

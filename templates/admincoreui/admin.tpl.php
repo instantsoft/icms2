@@ -150,7 +150,7 @@
                     </div>
                 </nav>
             <?php } ?>
-            <div class="container-fluid">
+            <div class="container-fluid print-body-wrap">
                 <?php $this->body(); ?>
             </div>
         </main>
