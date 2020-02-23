@@ -1670,11 +1670,12 @@ class cmsTemplate {
 
         $name = $name ? $name : $this->name;
 
-        $scheme_file = $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$name.'/scheme.html';
+        $scheme_file = $this->site_config->root_path.self::TEMPLATE_BASE_PATH.$name.'/scheme.';
 
-        if (!is_readable($scheme_file)) { return false; }
+        if (is_readable($scheme_file.'php')) { return $scheme_file.'php'; }
+        if (is_readable($scheme_file.'html')) { return $scheme_file.'html'; }
 
-        return $scheme_file;
+        return false;
 
     }
 

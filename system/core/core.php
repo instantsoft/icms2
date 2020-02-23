@@ -1145,8 +1145,8 @@ class cmsCore {
         $result = [];
 
         foreach($all_dirs as $dir){
-            // В папке шаблона в обязательном порядке должны быть два файла
-            if(file_exists($root_path.$dir.'/main.tpl.php') && file_exists($root_path.$dir.'/scheme.html')){
+            // В папке шаблона в обязательном порядке должны быть как минимум эти файлы
+            if(file_exists($root_path.$dir.'/main.tpl.php') && (file_exists($root_path.$dir.'/scheme.html') || file_exists($root_path.$dir.'/scheme.php'))){
                 $result[] = $dir;
             }
         }

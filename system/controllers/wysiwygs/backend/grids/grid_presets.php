@@ -33,6 +33,11 @@ function grid_presets($controller){
 
     $actions = array(
         array(
+            'title' => LANG_COPY,
+            'class' => 'copy',
+            'href'  => href_to($controller->root_url, 'presets_add', array('{id}', 1)),
+        ),
+        array(
             'title' => LANG_EDIT,
             'class' => 'edit',
             'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
@@ -41,7 +46,7 @@ function grid_presets($controller){
             'title' => LANG_DELETE,
             'class' => 'delete',
             'href' => href_to($controller->root_url, 'presets_delete', array('{id}')),
-            'confirm' => 'Удалить пресет "{title}"?'
+            'confirm' => LANG_WW_PRESET_DELETE_CONFIRM
         )
     );
 

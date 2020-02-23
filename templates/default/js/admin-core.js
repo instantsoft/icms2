@@ -4,7 +4,7 @@ function fitLayout(){
     $('table.layout').height(hh2 - hh1 - 2 + fit_layout_delta);
     $('table.layout').width( $('#cp_body').width() + 40 );
 }
-toolbarScroll = {
+var toolbarScroll = {
     win: null,
     toolbar: null,
     spacer: null,

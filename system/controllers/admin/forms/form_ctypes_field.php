@@ -8,6 +8,7 @@ class formAdminCtypesField extends cmsForm {
         return array(
             'basic' => array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
@@ -101,7 +102,8 @@ class formAdminCtypesField extends cmsForm {
 
                             return $items;
 
-                        }
+                        },
+                        'visible_depend' => array('is_in_list' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,

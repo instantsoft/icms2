@@ -72,6 +72,8 @@ class admin extends cmsFrontend {
 
                 $this->cms_template->setLayoutParams(array(
                     'user' => $this->cms_user,
+                    'current_lang' => cmsCore::getLanguageName(),
+                    'langs' => cmsCore::getLanguages(),
                     'hide_sidebar' => cmsUser::getCookie('hide_sidebar', 'integer'),
                     'close_sidebar' => cmsUser::getCookie('close_sidebar', 'integer'),
                     'su'   => $this->getSystemUtilization(),

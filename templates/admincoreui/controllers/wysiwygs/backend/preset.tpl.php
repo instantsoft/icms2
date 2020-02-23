@@ -52,7 +52,7 @@
                     icms.modal.alert(data.message, 'ui_error'); return;
                 }
 
-                $('#tab-basic').after($('#tab-0', $(data.html)));
+                $('#tab-basic').after($(data.html));
 
                 $('.form-tabs').find('.field.ft_string > input, .field.ft_text > textarea').each(function(indx, element){
                     $(this).trigger('input');

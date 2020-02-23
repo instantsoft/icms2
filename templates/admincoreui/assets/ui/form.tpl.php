@@ -15,26 +15,29 @@
 
     <?php echo $attributes['prepend_html']; ?>
 
-    <?php include 'form_fields.tpl.php'; ?>
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs<?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
 
-    <script type="text/javascript">
-        <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
-        $(function (){
-            <?php if ($form->show_unsave_notice){ ?>
-                icms.forms.initUnsaveNotice();
-            <?php } ?>
-            $('.is_collapsed legend').on('click', function (){
-                var _fieldset = $(this).closest('.is_collapsed');
-                $(_fieldset).toggleClass('is_collapse do_expand');
-                $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
-            });
-            $('.is_collapsed').each(function (){
-                if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
-                    $(this).addClass('do_expand').removeClass('is_collapse'); return;
-                }
-            });
-        });
-    </script>
+        <?php if($form->is_tabbed){ ?>
+            <ul class="nav nav-tabs flex-wrap" role="tablist">
+                <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
+                    <?php if (empty($fieldset['childs'])) { continue; } ?>
+                    <li class="nav-item">
+                        <a class="nav-link<?php if(empty($active_tab)){ $active_tab = true; ?> active<?php } ?>" href="#tab-<?php echo $fieldset_id; ?>" data-toggle="tab" role="tab">
+                            <?php echo $fieldset['title']; ?>
+                        </a>
+                    </li>
+                <?php } ?>
+            </ul>
+            <div class="tab-content">
+        <?php } else { ?>
+             <div class="card-body">
+        <?php } ?>
+
+        <?php include 'form_fields.tpl.php'; ?>
+
+        </div>
+
+    </div>
 
     <?php if(!empty($attributes['hook'])){ ?>
 
@@ -65,12 +68,19 @@
     </div>
 
 </form>
-<?php if (!empty($attributes['is_ajax'])){ ?>
-    <script type="text/javascript">
-        $(function (){
-            $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
-                return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
-            });
+<?php ob_start(); ?>
+<script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
+    $(function (){
+        <?php if ($form->show_unsave_notice){ ?>
+            icms.forms.initUnsaveNotice();
+        <?php } ?>
+        icms.forms.initCollapsedFieldset();
+    <?php if (!empty($attributes['is_ajax'])){ ?>
+        $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
+            return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
         });
-    </script>
-<?php }
+    <?php } ?>
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

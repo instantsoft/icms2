@@ -211,7 +211,7 @@ icms.notices = (function ($) {
 	return this;
 
 }).call(icms.notices || {},jQuery);
-toolbarScroll = {
+var toolbarScroll = {
     win: null,
     toolbar: null,
     spacer: null,

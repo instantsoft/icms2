@@ -1,4 +1,9 @@
-<?php if($options) {
+<?php
+/**
+ * Это устаревший файл, оставленный для совместимости
+ * в CMS не используется
+ */
+if($options) {
     $visible_depend = array();
     ?>
     <?php foreach($options as $field) {

@@ -69,6 +69,20 @@
             <?php } ?>
         </ul>
         <ul class="nav navbar-nav ml-auto">
+            <?php if ($config->is_user_change_lang && count($langs) > 1){ ?>
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#" role="button">
+                        <?php echo strtoupper($current_lang); ?>
+                    </a>
+                    <div class="dropdown-menu">
+                        <?php foreach ($langs as $lang) { ?>
+                            <a class="dropdown-item<?php if($lang == $current_lang){ ?> active<?php } ?>" href="<?php html(($config->language == $lang ? '' : '/'.$lang).$_SERVER['REQUEST_URI']); ?>">
+                                <?php echo strtoupper($lang); ?>
+                            </a>
+                        <?php } ?>
+                    </div>
+                </li>
+            <?php } ?>
             <li class="nav-item d-sm-down-none">
                 <a data-toggle="dropdown" id="notices_counter" class="nav-link" href="<?php echo href_to('admin', 'messages_notices'); ?>" title="<?php echo LANG_ADMIN_NOTICES; ?>" data-toggle="tooltip" data-placement="left">
                     <i class="icon-bell font-xl"></i>

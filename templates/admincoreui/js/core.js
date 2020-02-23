@@ -224,6 +224,19 @@ icms.forms = (function ($) {
 
     };
 
+    this.initCollapsedFieldset = function(){
+        $('.is_collapsed legend').on('click', function (){
+            var _fieldset = $(this).closest('.is_collapsed');
+            $(_fieldset).toggleClass('is_collapse do_expand');
+            $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
+        });
+        $('.is_collapsed').each(function (){
+            if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
+                $(this).addClass('do_expand').removeClass('is_collapse'); return;
+            }
+        });
+    };
+
 	this.toJSON = function(form) {
         _this.wysiwygBeforeSubmit();
         var o = {};
