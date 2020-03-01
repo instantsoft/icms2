@@ -41,8 +41,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <a class="navbar-brand" href="<?php echo href_to('admin'); ?>">
-            <img class="navbar-brand-full" src="<?php echo $this->getTemplateFilePath('images/logo.svg'); ?>" width="135" alt="InstantCMS Logo">
-            <img class="navbar-brand-minimized" src="<?php echo $this->getTemplateFilePath('images/small_logo.svg'); ?>" width="50" height="50" alt="InstantCMS Logo">
+            <img class="navbar-brand-full" src="<?php echo $this->getTemplateFilePath('images/logo.svg', true); ?>" width="135" alt="InstantCMS Logo">
+            <img class="navbar-brand-minimized" src="<?php echo $this->getTemplateFilePath('images/small_logo.svg', true); ?>" width="50" height="50" alt="InstantCMS Logo">
         </a>
         <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-current_state="<?php if($close_sidebar){ ?>1<?php } else { ?>0<?php } ?>" data-toggle="sidebar-lg-show">
             <span class="navbar-toggler-icon"></span>

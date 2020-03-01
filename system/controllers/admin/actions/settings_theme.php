@@ -21,6 +21,9 @@ class actionAdminSettingsTheme extends cmsAction {
 
             if (!$errors){
 
+                list($template_name, $options) = cmsEventsManager::hook('template_before_save_options', [$template_name, $options]);
+                $options = cmsEventsManager::hook('template_'.$template_name.'_before_save_options', $options);
+
                 if($template->saveOptions($options)){
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                 } else {

@@ -2,6 +2,14 @@
 
 Third-party plugins, libraries and resources included in InstantCMS:
 
+    SCSSPHP
+        by Leaf Corcoran
+        http://scssphp.github.io/scssphp
+
+    Bootstrap
+        by Twitter, Inc
+        https://getbootstrap.com
+
     PhotoSwipe
         by Dmitry Semenov
         http://photoswipe.com

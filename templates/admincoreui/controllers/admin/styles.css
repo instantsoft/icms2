@@ -531,7 +531,7 @@ form .child_field{margin-left: 20px}
 .chosen-container-single .chosen-single {
     border-radius: 2px;
 }
-#cp-widgets-layout table {
+#cp-widgets-layout table, .widgets-layout-scheme {
     width: 100%;
     margin: 0;
     border: solid 1px #acb4bc;
@@ -540,8 +540,20 @@ form .child_field{margin-left: 20px}
     border-collapse: separate !important;
     border-spacing: 2px;
 }
-#cp-widgets-layout table:first-child {
+#cp-widgets-layout table:first-child, .widgets-layout-scheme:first-child {
     border-top: solid 1px #acb4bc;
+}
+.widgets-layout-scheme .widgets-layout-scheme-col {
+    border-right: solid 1px #acb4bc;
+}
+.widgets-layout-scheme .widgets-layout-scheme-col:last-child {
+    border-right: none;
+}
+.widgets-layout-scheme .widgets-layout-scheme-col:first-child{
+    border-left: solid 1px #acb4bc;
+}
+.widgets-layout-scheme .widgets-layout-scheme-col .widgets-layout-scheme-col:first-child{
+    border-left: none;
 }
 #cp-widgets-layout table td {
     vertical-align: top;
@@ -560,19 +572,44 @@ form .child_field{margin-left: 20px}
 #cp-widgets-layout .position:last-child {
     margin-bottom: 0;
 }
+#cp-widgets-layout .widgets-layout-scheme-col .position {
+    padding: 0.25rem;
+}
 #cp-widgets-layout table td.filled {
     text-align: center;
     vertical-align: middle;
 }
-#cp-widgets-layout table td .block, #cp-widgets-layout table td.filled {
+#cp-widgets-layout table td .block, #cp-widgets-layout table td.filled, .widgets-layout-scheme .filled, .widgets-layout-scheme .block {
     background-color: #c8ced3 !important;
     color: #5c6873;
 }
-#cp-widgets-layout table td .block {
+#cp-widgets-layout table td .block, .widgets-layout-scheme .block {
     border: solid 1px #acb4bc;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     min-height: 2.5rem;
+}
+.widgets-layout-scheme .block {
+    margin-bottom: 0;
+}
+#cp-widgets-layout table td .block:last-child, .widgets-layout-scheme .block:last-child {
+    margin-bottom: 0;
+}
+.layout-col-title {
+    background-color: #17a2b8;
+    color: #FFF;
+    padding: 0.25rem 1rem 0.25rem 1.15rem;
+}
+.layout-col-title > span {
+    position: relative;
+    cursor: move;
+}
+.widgets-layout-scheme:not(.disable-sortable) > .filled > .cell > span {
+    cursor: move;
+}
+.widgets-layout-scheme .widgets-layout-scheme-col .block {
+    background-color: #ffc107 !important;
+    border: solid 1px #c39508;
 }
 #cp-widgets-list li, #cp-widgets-layout .position li {
     background-color: #fff3cd;
@@ -582,6 +619,14 @@ form .child_field{margin-left: 20px}
     margin-bottom: 0.5rem;
     transition:border-color .2s ease, background 0.1s linear;
     overflow: hidden;
+}
+#cp-widgets-layout .widgets-layout-scheme-col .position li {
+    margin-bottom: 0.25rem;
+}
+.widgets-layout-scheme-placeholder {
+    width: 100%;
+    background: #b0cbc1;
+    border: solid 1px #b0cbc1;
 }
 #cp-widgets-list li > .title, #cp-widgets-layout .position li > .title {
     display: inline-block;
@@ -738,7 +783,10 @@ th[rel="dg_actions"] {
 .datagrid .empty{
     color:#8f9ba6;
 }
-.datagrid.table-dragged tbody > tr:not(.filter) > td:first-child::before, .is-sortable .card-header > .db-sortable-handle::before {
+.datagrid.table-dragged tbody > tr:not(.filter) > td:first-child::before,
+.is-sortable .card-header > .db-sortable-handle::before,
+.layout-col-title > span::before,
+.widgets-layout-scheme:not(.disable-sortable) > .layout-row-title > .cell > span::before {
     height: 20px;
     width: 20px;
     background-image: url("../../images/datatree/drag_indicator.svg");
@@ -755,7 +803,15 @@ th[rel="dg_actions"] {
     transition: opacity 0.3s;
     will-change: opacity;
 }
-.datagrid.table-dragged tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before {
+.widgets-layout-scheme:not(.disable-sortable) > .layout-row-title > .cell > span::before {
+    top: 50%;
+    margin-top: -10px;
+}
+.layout-col-title > span::before {
+    top: 0.05rem;
+    left: -19px;
+}
+.datagrid.table-dragged tbody > tr:hover > td:first-child::before, .is-sortable .card-header:hover > .db-sortable-handle::before, .widgets-layout-scheme:not(.disable-sortable) > .layout-row-title:hover > .cell > span::before, .layout-col-title:hover > span::before {
     opacity: 1;
 }
 .is-sortable .card-header > .db-sortable-handle::before {

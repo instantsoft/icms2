@@ -50,4 +50,11 @@ class fieldListGroups extends cmsFormField {
 
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        if(is_array($value)){
+            $value = array_filter($value);
+        }
+        return parent::store($value, $is_submitted, $old_value);
+    }
+
 }

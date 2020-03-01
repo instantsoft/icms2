@@ -28,21 +28,32 @@
         ],
 		'title' => LANG_MENU
 	));
+
+    $this->addToolButton(array(
+        'class' => 'view_list',
+        'childs_count' => 2,
+        'title' => LANG_CP_WIDGETS_PAGES,
+        'href'  => ''
+    ));
     $this->addToolButton(array(
         'class' => 'add',
+        'level' => 2,
         'title' => LANG_CP_WIDGETS_ADD_PAGE,
         'href'  => $this->href_to('widgets', 'page_add')
     ));
     $this->addToolButton(array(
         'class' => 'edit',
+        'level' => 2,
         'title' => LANG_CP_WIDGETS_EDIT_PAGE,
         'href'  => $this->href_to('widgets', 'page_edit')
     ));
     $this->addToolButton(array(
         'class' => 'delete',
+        'level' => 2,
         'title' => LANG_CP_WIDGETS_DELETE_PAGE,
         'href'  => $this->href_to('widgets', 'page_delete')
     ));
+
     $this->addToolButton(array(
         'class'   => 'cancel',
         'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
@@ -62,6 +73,14 @@
             'level' => 2,
             'title' => $template,
             'href'  => $this->href_to('widgets').'?template_name='.$template
+        ));
+    }
+
+    if($is_dynamic_scheme){
+        $this->addToolButton(array(
+            'class' => 'add ajax-modal',
+            'title' => LANG_CP_WIDGETS_ADD_ROW,
+            'href'  => $this->href_to('widgets', ['row_add', $template_name])
         ));
     }
 
@@ -137,6 +156,8 @@
             <?php $this->toolbar('menu-toolbar'); ?>
         <?php } ?>
         <div id="cp-widgets-layout"
+             data-scheme-row-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_rows']); ?>"
+             data-scheme-col-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_cols']); ?>"
              data-template="<?php echo $template_name; ?>"
              data-toggle-url="<?php echo $this->href_to('widgets', 'toggle'); ?>"
              data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"

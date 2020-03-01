@@ -423,6 +423,9 @@ icms.forms = (function ($) {
                 if (result.success_text){
                     icms.modal.alert(result.success_text);
                 }
+                if (result.redirect_uri){
+                    window.location.href = result.redirect_uri;
+                }
                 return;
             }
 

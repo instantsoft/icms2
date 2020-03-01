@@ -166,14 +166,14 @@ class cmsTemplate {
 
         if ($is_seo_meta){
 			if (!empty($this->metakeys) && empty($this->site_config->disable_metakeys)){
-				echo "\t". '<meta name="keywords" content="'.html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false).'">' . "\n";
+				echo '<meta name="keywords" content="'.html((!empty($this->metakeys_item) ? string_replace_keys_values_extended($this->metakeys, $this->metakeys_item) : $this->metakeys), false).'">' . "\n\t\t";
 			}
 			if (!empty($this->metadesc)){
-				echo "\t". '<meta name="description" content="'.html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false).'">' ."\n";
+				echo '<meta name="description" content="'.html((!empty($this->metadesc_item) ? string_replace_keys_values_extended($this->metadesc, $this->metadesc_item) : $this->metadesc), false).'">' ."\n\t\t";
 			}
         }
 
-		foreach ($this->head as $id => $tag){	echo "\t". $tag . "\n";	}
+		foreach ($this->head as $id => $tag){ echo $tag . "\n\t\t"; }
 
         if($print_css){
             $this->printCssTags();
@@ -221,7 +221,7 @@ class cmsTemplate {
 
             $this->head_preload[] = '<'.$file.'>; rel=preload; as=script';
 
-            echo "\t" . $this->getJSTag($file) . "\n";
+            echo $this->getJSTag($file) . "\n\t\t";
 
         }
 
@@ -255,7 +255,7 @@ class cmsTemplate {
 
             $this->head_preload[] = '<'.$file.'>; rel=preload; as=style';
 
-            echo "\t" . $this->getCSSTag($file) . "\n";
+            echo $this->getCSSTag($file) . "\n\t\t";
 
         }
 
@@ -352,11 +352,11 @@ class cmsTemplate {
     /**
      * Проверяет наличие виджетов на позиции/позициях
      *
-     * @param string $position Название позиции
-     *                         Можно передавать сколь угодно дополнительных параметров
+     * @param string|array $positions Название позиции/позиций
+     * Можно передавать сколь угодно дополнительных параметров как название позиции
      * @return boolean
      */
-    public function hasWidgetsOn($position){
+    public function hasWidgetsOn($positions){
 
         if(!$this->widgets_rendered){
             cmsCore::getInstance()->runWidgets();
@@ -364,8 +364,8 @@ class cmsTemplate {
 
         if (func_num_args() > 1){
             $positions = func_get_args();
-        } else {
-            $positions = array($position);
+        } elseif(!is_array($positions)) {
+            $positions = array($positions);
         }
 
         $has = false;
@@ -948,7 +948,10 @@ class cmsTemplate {
         return $this;
 	}
 
-    public function getTemplateFilePath($path) {
+    public function getTemplateFilePath($path, $with_inheritance = false) {
+        if($with_inheritance){
+            return $this->site_config->root . $this->getTplFilePath($path, false);
+        }
         return $this->site_config->root . self::TEMPLATE_BASE_PATH. $this->name .'/'.$path;
     }
 
@@ -2687,6 +2690,11 @@ class cmsTemplate {
 
             if($this->layout_params){
                 extract($this->layout_params);
+            }
+
+            // Нет файла схемы, грузим схему из базы
+            if(!$this->getSchemeHTMLFile()){
+                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
             }
 
             ob_start();

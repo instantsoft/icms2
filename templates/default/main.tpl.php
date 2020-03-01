@@ -14,9 +14,6 @@
     <?php $this->addMainTplJSName('jquery-modal'); ?>
     <?php $this->addMainTplJSName('core'); ?>
     <?php $this->addMainTplJSName('modal'); ?>
-    <?php if (cmsUser::isLogged()){ ?>
-        <?php $this->addMainTplJSName('messages'); ?>
-    <?php } ?>
     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
         <?php $this->addTplCSSName('debug'); ?>
     <?php } ?>

@@ -2,6 +2,226 @@
 
 class modelWidgets extends cmsModel {
 
+    public function getLayoutRow($id) {
+        return $this->getItemById('layout_rows', $id, function($item, $model) {
+            $item['groups'] = cmsModel::stringToArray($item['groups']);
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            return $item;
+        });
+    }
+
+    public function getLayoutCol($id) {
+        return $this->getItemById('layout_cols', $id, function($item, $model) {
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            return $item;
+        });
+    }
+
+    public function getLayoutRows($template_name) {
+
+        $this->filterEqual('r.template', $template_name);
+
+        $this->select('r.nested_position', 'nested_position');
+        $this->select('r.parent_id', 'parent_id');
+        $this->select('r.title', 'row_title');
+        $this->select('r.groups', 'groups');
+        $this->select('r.options', 'row_options');
+        $this->select('r.class', 'row_class');
+
+        $this->joinInner('layout_rows', 'r', 'r.id = i.row_id');
+
+        $this->useCache('layout.rows');
+
+        $this->orderByList(array(
+            ['by' => 'r.ordering', 'to' => 'asc'],
+            ['by' => 'i.ordering', 'to' => 'asc']
+        ));
+
+        $items = $this->get('layout_cols', function($item, $model) {
+
+            $item['groups'] = cmsModel::stringToArray($item['groups']);
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            $item['row_options'] = cmsModel::stringToArray($item['row_options']);
+            return $item;
+
+        }, false);
+
+        $rows = $ns_rows = [];
+
+        if($items){
+
+            $last_row_id = 0;
+
+            foreach ($items as $item) {
+                if($item['parent_id']){
+
+                    if($last_row_id != $item['row_id']){
+
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = [
+                            'id'        => $item['row_id'],
+                            'parent_id' => $item['parent_id'],
+                            'nested_position' => $item['nested_position'],
+                            'title'     => $item['row_title'],
+                            'groups'    => $item['groups'],
+                            'options'   => $item['row_options'],
+                            'positions' => [$item['name']],
+                            'has_body'  => $item['is_body'],
+                            'cols'      => [$item['id'] => $item]
+                        ];
+
+                    } else {
+                        if($item['is_body']){
+                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_body'] = true;
+                        }
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
+                    }
+
+                    $last_row_id = $item['row_id'];
+
+                }
+            }
+
+            $last_row_id = 0;
+
+            foreach ($items as $item) {
+
+                if($item['parent_id']){
+                    continue;
+                }
+                if(isset($ns_rows[$item['id']])){
+                    $item['rows'] = $ns_rows[$item['id']];
+                }
+
+                if($last_row_id != $item['row_id']){
+
+                    $rows[$item['row_id']] = [
+                        'id'        => $item['row_id'],
+                        'parent_id' => $item['parent_id'],
+                        'title'     => $item['row_title'],
+                        'groups'    => $item['groups'],
+                        'options'   => $item['row_options'],
+                        'positions' => [$item['name']],
+                        'has_body'  => $item['is_body'],
+                        'cols'      => [$item['id'] => $item]
+                    ];
+
+                } else {
+                    if($item['is_body']){
+                        $rows[$item['row_id']]['has_body'] = true;
+                    }
+                    $rows[$item['row_id']]['positions'][] = $item['name'];
+                    $rows[$item['row_id']]['cols'][$item['id']] = $item;
+                }
+
+                $last_row_id = $item['row_id'];
+            }
+
+        }
+
+        return $rows;
+
+    }
+
+    public function addLayoutRow($row) {
+
+        $row['ordering'] = $this->filterEqual('template', $row['template'])->
+                        getNextOrdering('layout_rows');
+
+        $row_id = $this->insert('layout_rows', $row, true);
+
+        if(!empty($row['cols_count'])){
+            for($i = 0; $i < $row['cols_count']; ++$i) {
+                $this->addLayoutCol([
+                    'row_id' => $row_id,
+                    'title' => $i+1,
+                    'options' => [
+                        'default_col_class' => 'col'
+                    ]
+                ]);
+            }
+        }
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $row_id;
+
+    }
+
+    public function updateLayoutRow($id, $row) {
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->update('layout_rows', $id, $row, false, true);
+
+    }
+
+    public function deleteLayoutRow($id) {
+
+        $this->filterEqual('row_id', $id);
+        $this->deleteFiltered('layout_cols');
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->delete('layout_rows', $id);
+
+    }
+
+    public function deleteLayoutCol($id) {
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->delete('layout_cols', $id);
+
+    }
+
+    public function addLayoutCol($col) {
+
+        $col['ordering'] = $this->filterEqual('row_id', $col['row_id'])->
+                        getNextOrdering('layout_cols');
+
+        $id = $this->insert('layout_cols', $col, true);
+
+        if(empty($col['name'])){
+
+            $this->update('layout_cols', $id, [
+                'name' => 'pos_'.$id
+            ]);
+
+        } else {
+            cmsCache::getInstance()->clean('layout.rows');
+        }
+
+        return $id;
+
+    }
+
+    public function updateLayoutCol($id, $col) {
+
+        if(!empty($col['is_body'])){
+
+            $template = $this->filterEqual('id', $col['row_id'])->getFieldFiltered('layout_rows', 'template');
+
+            $rows = $this->selectOnly('id')->get('layout_rows', function($item, $model) {
+                return $item['id'];
+            }, false);
+
+            $this->filterIn('row_id', $rows);
+
+            $this->updateFiltered('layout_cols', [
+                'is_body' => null
+            ]);
+
+        }
+
+        $this->update('layout_cols', $id, $col, false, true);
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $id;
+
+    }
+
     public function addPage($page) {
 
         if (isset($page['url_mask']) && is_array($page['url_mask'])) {
