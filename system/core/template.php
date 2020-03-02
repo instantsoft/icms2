@@ -2672,6 +2672,41 @@ class cmsTemplate {
 //============================================================================//
 
     /**
+     * Выводит, зависимый от текущего лайоута, шаблон
+     * из директории layout_childs
+     *
+     * @param string $child
+     * @param array $data
+     */
+    public function renderLayoutChild($child, $data = []){
+
+        $core = cmsCore::getInstance();
+
+        $config = $this->site_config;
+
+        $layout = $this->getLayout();
+
+        $template_file = $this->getTplFilePath('layout_childs/'.$layout.'_'.$child.'.tpl.php');
+
+        $device_type = cmsRequest::getDeviceType();
+
+        if($template_file){
+
+            if($this->layout_params){
+                extract($this->layout_params);
+            }
+
+            extract($data);
+
+            include($template_file);
+
+        } else {
+            cmsCore::error(ERR_TEMPLATE_NOT_FOUND. ': '. $this->name.':'.$layout.'_'.$child);
+        }
+
+    }
+
+    /**
      * Выводит окончательный вид страницы в браузер
      */
     public function renderPage(){
@@ -2694,7 +2729,7 @@ class cmsTemplate {
 
             // Нет файла схемы, грузим схему из базы
             if(!$this->getSchemeHTMLFile()){
-                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
+                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name, cmsUser::getInstance());
             }
 
             ob_start();

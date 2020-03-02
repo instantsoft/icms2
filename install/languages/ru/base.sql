@@ -1,3 +1,34 @@
+DROP TABLE IF EXISTS `{#}layout_cols`;
+CREATE TABLE `{#}layout_cols` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID ряда',
+  `title` varchar(255) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL COMMENT 'Название позиции',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде',
+  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить тело страницы',
+  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить глубиномер',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс колонки',
+  `options` text COMMENT 'Опции колонки',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE,
+  KEY `row_id` (`row_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Колонки схемы позиций';
+
+DROP TABLE IF EXISTS `{#}layout_rows`;
+CREATE TABLE `{#}layout_rows` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID колонки родителя',
+  `title` varchar(255) DEFAULT NULL,
+  `template` varchar(30) DEFAULT NULL COMMENT 'Привязка к шаблону',
+  `ordering` int(11) DEFAULT NULL COMMENT 'Порядок ряда в исходном коде',
+  `groups` text COMMENT 'Доступ для показа',
+  `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Позиция вложенного ряда',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс ряда',
+  `options` text COMMENT 'Опции ряда',
+  PRIMARY KEY (`id`),
+  KEY `template` (`template`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';
+
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -819,7 +850,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (172, 'form_users_password', 'auth', 172, 1),
 (173, 'auth_twofactor_list', 'authga', 173, 1),
 (174, 'users_before_edit_password', 'authga', 174, 1),
-(175, 'admin_inline_save_subscriptions', 'activity', 175, 1);
+(175, 'admin_inline_save_subscriptions', 'activity', 175, 1),
+(176, 'admin_col_scheme_options_modern', 'bootstrap4', 176, 1),
+(177, 'template_modern_before_save_options', 'bootstrap4', 177, 1),
+(178, 'admin_row_scheme_options_modern', 'bootstrap4', 178, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

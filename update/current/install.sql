@@ -4,14 +4,15 @@ CREATE TABLE `{#}layout_cols` (
   `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID ряда',
   `title` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT 'Название позиции',
-  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде	',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде',
   `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить тело страницы',
+  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить глубиномер',
   `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс колонки',
   `options` text COMMENT 'Опции колонки',
   PRIMARY KEY (`id`),
   KEY `name` (`name`) USING BTREE,
   KEY `row_id` (`row_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Позиции схемы позиций';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Колонки схемы позиций';
 
 DROP TABLE IF EXISTS `{#}layout_rows`;
 CREATE TABLE `{#}layout_rows` (
@@ -26,4 +27,4 @@ CREATE TABLE `{#}layout_rows` (
   `options` text COMMENT 'Опции ряда',
   PRIMARY KEY (`id`),
   KEY `template` (`template`,`ordering`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Строки схемы позиций виджетов';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';

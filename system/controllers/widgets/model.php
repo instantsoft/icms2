@@ -17,7 +17,7 @@ class modelWidgets extends cmsModel {
         });
     }
 
-    public function getLayoutRows($template_name) {
+    public function getLayoutRows($template_name, $user = null) {
 
         $this->filterEqual('r.template', $template_name);
 
@@ -37,9 +37,17 @@ class modelWidgets extends cmsModel {
             ['by' => 'i.ordering', 'to' => 'asc']
         ));
 
-        $items = $this->get('layout_cols', function($item, $model) {
+        $items = $this->get('layout_cols', function($item, $model) use($user) {
 
             $item['groups'] = cmsModel::stringToArray($item['groups']);
+
+            if($user instanceof cmsUser){
+                if ((!empty($item['groups']['view']) && !$user->isInGroups($item['groups']['view'])) ||
+                        ($item['groups']['hide'] && $user->isInGroups($item['groups']['hide']))) {
+                    return false;
+                }
+            }
+
             $item['options'] = cmsModel::stringToArray($item['options']);
             $item['row_options'] = cmsModel::stringToArray($item['row_options']);
             return $item;
@@ -63,6 +71,7 @@ class modelWidgets extends cmsModel {
                             'nested_position' => $item['nested_position'],
                             'title'     => $item['row_title'],
                             'groups'    => $item['groups'],
+                            'class'     => $item['row_class'],
                             'options'   => $item['row_options'],
                             'positions' => [$item['name']],
                             'has_breadcrumb' => $item['is_breadcrumb'],
@@ -104,6 +113,7 @@ class modelWidgets extends cmsModel {
                         'parent_id' => $item['parent_id'],
                         'title'     => $item['row_title'],
                         'groups'    => $item['groups'],
+                        'class'     => $item['row_class'],
                         'options'   => $item['row_options'],
                         'positions' => [$item['name']],
                         'has_body'  => $item['is_body'],

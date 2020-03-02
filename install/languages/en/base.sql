@@ -1,3 +1,34 @@
+DROP TABLE IF EXISTS `{#}layout_cols`;
+CREATE TABLE `{#}layout_cols` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Row id',
+  `title` varchar(255) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL COMMENT 'Position title',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Column order in source code',
+  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Display page body',
+  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Display breadcrumb',
+  `class` varchar(100) DEFAULT NULL COMMENT 'Column CSS class',
+  `options` text COMMENT 'Column options',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE,
+  KEY `row_id` (`row_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Scheme position columns';
+
+DROP TABLE IF EXISTS `{#}layout_rows`;
+CREATE TABLE `{#}layout_rows` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Parent column ID',
+  `title` varchar(255) DEFAULT NULL,
+  `template` varchar(30) DEFAULT NULL COMMENT 'Binding to the template',
+  `ordering` int(11) DEFAULT NULL COMMENT 'Row order in source code',
+  `groups` text COMMENT 'Display Access',
+  `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Nested row position',
+  `class` varchar(100) DEFAULT NULL COMMENT 'Row CSS class',
+  `options` text COMMENT 'Row options',
+  PRIMARY KEY (`id`),
+  KEY `template` (`template`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Scheme position rows';
+
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -819,7 +850,10 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (172, 'form_users_password', 'auth', 172, 1),
 (173, 'auth_twofactor_list', 'authga', 173, 1),
 (174, 'users_before_edit_password', 'authga', 174, 1),
-(175, 'admin_inline_save_subscriptions', 'activity', 175, 1);
+(175, 'admin_inline_save_subscriptions', 'activity', 175, 1),
+(176, 'admin_col_scheme_options_modern', 'bootstrap4', 176, 1),
+(177, 'template_modern_before_save_options', 'bootstrap4', 177, 1),
+(178, 'admin_row_scheme_options_modern', 'bootstrap4', 178, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
