@@ -26,6 +26,9 @@ class formAdminWidgetsCols extends cmsForm {
                     new fieldCheckbox('is_body', array(
                         'title' => LANG_CP_WIDGETS_COL_IS_BODY
                     )),
+                    new fieldCheckbox('is_breadcrumb', array(
+                        'title' => LANG_CP_WIDGETS_COL_IS_BREADCRUMB
+                    )),
                     new fieldString('class', array(
                         'title' => LANG_CP_WIDGETS_COL_CLASS,
                         'rules' => array(

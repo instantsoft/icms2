@@ -36,6 +36,7 @@
     }
 
 ?>
+<?php ob_start(); ?>
 <script type="text/javascript">
     <?php if ($field->data['parent']) { ?>
         $('#<?php echo str_replace(':', '_', $field->data['parent']['list']); ?>').on('change', function(){
@@ -46,3 +47,4 @@
         $('#<?php echo $field->data['dom_attr']['id']; ?>').chosen({no_results_text: '<?php echo LANG_LIST_EMPTY; ?>', placeholder_text_single: '<?php echo LANG_SELECT; ?>', placeholder_text_multiple: '<?php echo LANG_SELECT_MULTIPLE; ?>', disable_search_threshold: 8, width: '100%', allow_single_deselect: true, search_placeholder: '<?php echo LANG_BEGIN_TYPING; ?>', search_contains: true, hide_results_on_select: false});
     <?php } ?>
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

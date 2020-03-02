@@ -61,6 +61,7 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     'div'     => '<div>',
                     'footer'  => '<footer>',
                     'header'  => '<header>',
+                    'nav'     => '<nav>',
                     'section' => '<section>'
                 )
             ));

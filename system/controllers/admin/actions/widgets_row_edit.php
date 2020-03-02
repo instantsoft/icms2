@@ -7,24 +7,12 @@ class actionAdminWidgetsRowEdit extends cmsAction {
         $row = $this->model_widgets->getLayoutRow($id);
         if (!$row) { cmsCore::error404(); }
 
-        $do = 'edit';
-
-        $form = $this->getForm('widgets_rows', [$do]);
+        $form = $this->getSchemeRowForm('edit', $row);
 
         $form->removeField('basic', 'cols_count');
 
         if(!$row['parent_id']){
             $form->removeField('basic', 'nested_position');
-        }
-
-        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, []]);
-
-        if($row_scheme_options){
-            foreach ($row_scheme_options as $controller_name => $fields) {
-                foreach ($fields as $field) {
-                    $form->addField('basic', $field);
-                }
-            }
         }
 
         if ($this->request->has('title')){

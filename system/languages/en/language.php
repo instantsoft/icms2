@@ -537,6 +537,7 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
+    define('LANG_PAGE_BREADCRUMB',           'Breadcrumb');
     define('LANG_PAGE_MENU',                 'Page menu');
     define('LANG_PAGE_HEADER',               'Page header');
     define('LANG_PAGE_FOOTER',               'Page footer');

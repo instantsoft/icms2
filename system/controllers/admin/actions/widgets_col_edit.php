@@ -10,17 +10,7 @@ class actionAdminWidgetsColEdit extends cmsAction {
         $row = $this->model_widgets->getLayoutRow($col['row_id']);
         if (!$row) { cmsCore::error404(); }
 
-        $form = $this->getForm('widgets_cols', ['edit', $col['id']]);
-
-        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['edit', $row, $col]);
-
-        if($col_scheme_options){
-            foreach ($col_scheme_options as $controller_name => $fields) {
-                foreach ($fields as $field) {
-                    $form->addField('basic', $field);
-                }
-            }
-        }
+        $form = $this->getSchemeColForm('edit', $row, $col);
 
         if ($this->request->has('title')){
 

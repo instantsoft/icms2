@@ -1032,4 +1032,40 @@ class admin extends cmsFrontend {
         );
     }
 
+    public function getSchemeColForm($do, $row, $col = []){
+
+        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0)]);
+
+        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
+
+        if($col_scheme_options){
+            foreach ($col_scheme_options as $controller_name => $fields) {
+                foreach ($fields as $field) {
+                    $form->addField('basic', $field);
+                }
+            }
+        }
+
+        return $form;
+
+    }
+
+    public function getSchemeRowForm($do, $row, $col = []){
+
+        $form = $this->getForm('widgets_rows', [$do]);
+
+        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, $col]);
+
+        if($row_scheme_options){
+            foreach ($row_scheme_options as $controller_name => $fields) {
+                foreach ($fields as $field) {
+                    $form->addField('basic', $field);
+                }
+            }
+        }
+
+        return $form;
+
+    }
+
 }

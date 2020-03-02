@@ -65,11 +65,15 @@ class modelWidgets extends cmsModel {
                             'groups'    => $item['groups'],
                             'options'   => $item['row_options'],
                             'positions' => [$item['name']],
+                            'has_breadcrumb' => $item['is_breadcrumb'],
                             'has_body'  => $item['is_body'],
                             'cols'      => [$item['id'] => $item]
                         ];
 
                     } else {
+                        if($item['is_breadcrumb']){
+                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_breadcrumb'] = true;
+                        }
                         if($item['is_body']){
                             $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_body'] = true;
                         }
@@ -103,10 +107,14 @@ class modelWidgets extends cmsModel {
                         'options'   => $item['row_options'],
                         'positions' => [$item['name']],
                         'has_body'  => $item['is_body'],
+                        'has_breadcrumb' => $item['is_breadcrumb'],
                         'cols'      => [$item['id'] => $item]
                     ];
 
                 } else {
+                    if($item['is_breadcrumb']){
+                        $rows[$item['row_id']]['has_breadcrumb'] = true;
+                    }
                     if($item['is_body']){
                         $rows[$item['row_id']]['has_body'] = true;
                     }
@@ -123,7 +131,7 @@ class modelWidgets extends cmsModel {
 
     }
 
-    public function addLayoutRow($row) {
+    public function addLayoutRow($row, $default_col = []) {
 
         $row['ordering'] = $this->filterEqual('template', $row['template'])->
                         getNextOrdering('layout_rows');
@@ -135,9 +143,7 @@ class modelWidgets extends cmsModel {
                 $this->addLayoutCol([
                     'row_id' => $row_id,
                     'title' => $i+1,
-                    'options' => [
-                        'default_col_class' => 'col'
-                    ]
+                    'options' => $default_col['options']
                 ]);
             }
         }

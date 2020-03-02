@@ -536,6 +536,7 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');
+    define('LANG_PAGE_BREADCRUMB',           'Глубиномер');
     define('LANG_PAGE_MENU',                 'Меню страницы');
     define('LANG_PAGE_HEADER',               'Шапка страницы');
     define('LANG_PAGE_FOOTER',               'Подвал страницы');

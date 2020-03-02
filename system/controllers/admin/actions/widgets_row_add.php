@@ -10,19 +10,7 @@ class actionAdminWidgetsRowAdd extends cmsAction {
             return cmsCore::error404();
         }
 
-        $do = 'add';
-
-        $form = $this->getForm('widgets_rows', [$do]);
-
-        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$template_name, [$do, [], []]);
-
-        if($row_scheme_options){
-            foreach ($row_scheme_options as $controller_name => $fields) {
-                foreach ($fields as $field) {
-                    $form->addField('basic', $field);
-                }
-            }
-        }
+        $form = $this->getSchemeRowForm('add', ['template' => $template_name]);
 
         $is_submitted = $this->request->has('title');
 
@@ -36,7 +24,10 @@ class actionAdminWidgetsRowAdd extends cmsAction {
 
             if (!$errors){
 
-                $this->model_widgets->addLayoutRow($row);
+                // Для заполнения дефолтными настройками
+                $default_col = $this->getSchemeColForm('add', $row)->parse(new cmsRequest([]), false);
+
+                $this->model_widgets->addLayoutRow($row, $default_col);
 
                 return $this->cms_template->renderJSON(array(
                     'errors' => false,

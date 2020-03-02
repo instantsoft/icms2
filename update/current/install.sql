@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `{#}layout_cols`;
-CREATE `{#}layout_cols` (
+CREATE TABLE `{#}layout_cols` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID ряда',
   `title` varchar(255) DEFAULT NULL,
@@ -14,7 +14,7 @@ CREATE `{#}layout_cols` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Позиции схемы позиций';
 
 DROP TABLE IF EXISTS `{#}layout_rows`;
-CREATE `{#}layout_rows` (
+CREATE TABLE `{#}layout_rows` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID колонки родителя',
   `title` varchar(255) DEFAULT NULL,

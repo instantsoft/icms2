@@ -11,18 +11,35 @@
             'vendors/bootstrap/bootstrap.min',
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
+        <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
+        <?php $this->addMainTplJSName('core'); ?>
+        <?php $this->addMainTplJSName('modal'); ?>
         <?php if ($config->debug && cmsUser::isAdmin()) { ?>
             <?php $this->addTplCSSName('debug'); ?>
         <?php } ?>
 
-        <?php $this->head(); ?>
+        <?php $this->head(true, false, true); ?>
 
     </head>
     <body id="<?php echo $device_type; ?>_device_type">
 
+        <?php if (!$config->is_site_on){ ?>
+            <div id="site_off_notice" class="bg-warning">
+                <div class="container py-2 text-secondary">
+                    <?php if (cmsUser::isAdmin()){ ?>
+                        <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
+                    <?php } else { ?>
+                        <?php echo ERR_SITE_OFFLINE; ?>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php } ?>
+
         <?php foreach ($rows as $row) { ?>
 
-            <?php if((!$row['has_body'] || ($row['has_body'] && !$this->isBody())) && !$this->hasWidgetsOn($row['positions'])){ ?>
+            <?php if((!$row['has_body'] || ($row['has_body'] && !$this->isBody())) &&
+                    (!$row['has_breadcrumb'] || ($row['has_breadcrumb'] && (!$config->show_breadcrumbs || !$core->uri || !$this->isBreadcrumbs()))) &&
+                    !$this->hasWidgetsOn($row['positions'])){ ?>
                 <?php continue; ?>
             <?php } ?>
 
@@ -48,8 +65,13 @@
 
             <div class="<?php echo implode(' ', $row_class); ?>">
             <?php foreach ($row['cols'] as $col) { ?>
+
                 <?php if($col['is_body']){ ?>
                     <?php if(!$this->isBody()){ ?>
+                        <?php continue; ?>
+                    <?php } ?>
+                <?php } elseif($col['is_breadcrumb']) { ?>
+                    <?php if (!$config->show_breadcrumbs || !$core->uri || !$this->isBreadcrumbs()){ ?>
                         <?php continue; ?>
                     <?php } ?>
                 <?php } else { ?>
@@ -70,21 +92,18 @@
                     <?php if(!empty($col['rows']['before'])){ ?>
 
                     <?php } ?>
+
                     <?php if($col['is_body']){ ?>
-                        <?php if ($this->isBody()){ ?>
-                            <?php if ($config->show_breadcrumbs && $core->uri && $this->isBreadcrumbs()){ ?>
-                                <div id="breadcrumbs">
-                                    <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
-                                </div>
-                            <?php } ?>
-                            <div id="controller_wrap">
-                                <?php $this->block('before_body'); ?>
-                                <?php $this->body(); ?>
-                            </div>
-                        <?php } ?>
+                        <div id="controller_wrap">
+                            <?php $this->block('before_body'); ?>
+                            <?php $this->body(); ?>
+                        </div>
+                    <?php } elseif($col['is_breadcrumb']) { ?>
+                        <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
                     <?php } else { ?>
                         <?php $this->widgets($col['name']); ?>
                     <?php } ?>
+
                     <?php if(!empty($col['rows']['after'])){ ?>
 
                     <?php } ?>
@@ -104,6 +123,7 @@
             <?php $this->renderAsset('ui/debug', array('core' => $core)); ?>
         <?php } ?>
         <?php $messages = cmsUser::getSessionMessages(); ?>
+        <?php $this->printJavascriptTags(); ?>
         <script>
             $(function(){
             <?php if ($messages){ ?>

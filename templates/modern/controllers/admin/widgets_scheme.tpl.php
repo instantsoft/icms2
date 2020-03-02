@@ -54,6 +54,8 @@
                 </div>
                 <?php if($col['is_body']){ ?>
                     {block:LANG_PAGE_BODY}
+                <?php } elseif($col['is_breadcrumb']) { ?>
+                    {block:LANG_PAGE_BREADCRUMB}
                 <?php } else { ?>
                     {position:<?php echo $col['name']; ?>}
                 <?php } ?>

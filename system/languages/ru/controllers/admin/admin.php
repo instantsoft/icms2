@@ -394,6 +394,7 @@
     define('LANG_CP_WIDGETS_COL_NAME',          'Название позиции');
     define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Не указано, будет сгенерировано автоматически. Должно быть уникальным.');
     define('LANG_CP_WIDGETS_COL_IS_BODY',       'Выводить тело страницы');
+    define('LANG_CP_WIDGETS_COL_IS_BREADCRUMB', 'Выводить глубиномер');
     define('LANG_CP_WIDGETS_PAGE',              'Страница');
     define('LANG_CP_WIDGETS_PAGES',             'Страницы');
     define('LANG_CP_WIDGETS_ALL',               'Все виджеты');

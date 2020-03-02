@@ -9,6 +9,7 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
         return [
             new fieldList('options:default_col_class', array(
                 'title' => LANG_CP_WIDGETS_COL_WIDTH_D,
+                'default' => 'col',
                 'items' => array(
                     'col'    => LANG_AUTO,
                     'col-1'  => '8.33%',

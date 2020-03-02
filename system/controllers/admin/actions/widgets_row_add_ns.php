@@ -4,8 +4,6 @@ class actionAdminWidgetsRowAddNs extends cmsAction {
 
     public function run($col_id){
 
-        $do = 'add_ns';
-
         $col = $this->model_widgets->getLayoutCol($col_id);
         if (!$col) { cmsCore::error404(); }
 
@@ -14,17 +12,7 @@ class actionAdminWidgetsRowAddNs extends cmsAction {
 
         $row_data = ['template' => $row['template']];
 
-        $form = $this->getForm('widgets_rows', [$do]);
-
-        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, $col]);
-
-        if($row_scheme_options){
-            foreach ($row_scheme_options as $controller_name => $fields) {
-                foreach ($fields as $field) {
-                    $form->addField('basic', $field);
-                }
-            }
-        }
+        $form = $this->getSchemeRowForm('add_ns', $row_data, $col);
 
         if ($this->request->has('title')){
 
@@ -36,7 +24,10 @@ class actionAdminWidgetsRowAddNs extends cmsAction {
 
                 $_row['parent_id'] = $col['id'];
 
-                $this->model_widgets->addLayoutRow($_row);
+                // Для заполнения дефолтными настройками
+                $default_col = $this->getSchemeColForm('add', $row)->parse(new cmsRequest([]), false);
+
+                $this->model_widgets->addLayoutRow($_row, $default_col);
 
                 return $this->cms_template->renderJSON(array(
                     'errors' => false,
