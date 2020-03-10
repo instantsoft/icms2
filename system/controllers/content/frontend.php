@@ -603,6 +603,7 @@ class content extends cmsFrontend {
             $fieldset_id = $form->addFieldset(LANG_CATEGORY_COVER);
             $form->addField($fieldset_id, new fieldImage('cover', array(
                 'options' => array(
+                    'allow_import_link' => true,
                     'sizes' => $ctype['options']['cover_sizes']
                 )
             )));

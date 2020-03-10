@@ -8,7 +8,7 @@ class formUsersOptions extends cmsForm {
 
         return array(
 
-            array(
+            'list' => array(
                 'type' => 'fieldset',
                 'title' => LANG_USERS_LIST,
                 'childs' => array(
@@ -41,7 +41,7 @@ class formUsersOptions extends cmsForm {
                 )
             ),
 
-            array(
+            'view' => array(
                 'type' => 'fieldset',
                 'title' => LANG_USERS_PROFILE,
                 'childs' => array(
@@ -54,10 +54,6 @@ class formUsersOptions extends cmsForm {
                         'title' => LANG_USERS_OPT_STATUSES_ENABLED,
                     )),
 
-                    new fieldCheckbox('is_wall', array(
-                        'title' => LANG_USERS_OPT_WALL_ENABLED,
-                    )),
-
                     new fieldCheckbox('is_themes_on', array(
                         'title' => LANG_USERS_OPT_THEME,
                         'hint' => LANG_USERS_OPT_THEME_HINT,
@@ -67,12 +63,12 @@ class formUsersOptions extends cmsForm {
                         'title' => LANG_USERS_OPT_MAX_TABS,
                         'hint' => LANG_USERS_OPT_MAX_TABS_HINT,
                         'default' => 6
-                    )),
+                    ))
 
                 )
             ),
 
-            array(
+            'sociality' => array(
                 'type' => 'fieldset',
                 'title' => LANG_USERS_SOCIALITY,
                 'childs' => array(

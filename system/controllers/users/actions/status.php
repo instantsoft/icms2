@@ -33,40 +33,40 @@ class actionUsersStatus extends cmsAction {
             return $this->cms_template->renderJSON(array( 'error' => true, 'message' => sprintf(ERR_VALIDATE_MAX_LENGTH, 140)));
         }
 
-        // Добавляем запись на стену
-        $wall_model = cmsCore::getModel('wall');
-
-        $wall_entry_id = $wall_model->addEntry(array(
-            'controller'   => 'users',
-            'profile_type' => 'user',
-            'profile_id'   => $user_id,
-            'user_id'      => $user_id,
-            'content'      => $content,
-            'content_html' => $content
-        ));
-
         // сохраняем статус
         $status_id = $this->model->addUserStatus(array(
-            'user_id'       => $user_id,
-            'content'       => $status_content,
-            'wall_entry_id' => $wall_entry_id
+            'user_id' => $user_id,
+            'content' => $status_content
         ));
 
-        if ($status_id){
+        list($status_id,
+            $user_id,
+            $content,
+            $status_content,
+            $status_link) = cmsEventsManager::hook('user_add_status', [
+                $status_id,
+                $user_id,
+                $content,
+                $status_content,
+                false
+            ]);
 
-            $wall_model->updateEntryStatusId($wall_entry_id, $status_id);
-
-            cmsCore::getController('activity')->addEntry($this->name, 'status', array(
-                'subject_title' => $status_content,
-                'reply_url' => href_to_rel($this->name, $user_id) . "?wid={$wall_entry_id}&reply=1"
-            ));
-
-        }
+        list($status_id,
+            $user_id,
+            $content,
+            $status_content,
+            $status_link) = cmsEventsManager::hook('user_add_status_after', [
+                $status_id,
+                $user_id,
+                $content,
+                $status_content,
+                $status_link
+            ]);
 
         return $this->cms_template->renderJSON(array(
-            'error'         => $status_id ? false : true,
-            'wall_entry_id' => $wall_entry_id,
-            'content'       => $status_content
+            'error'       => $status_id ? false : true,
+            'status_link' => rel_to_href($status_link),
+            'content'     => $status_content
         ));
 
     }

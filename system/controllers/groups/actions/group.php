@@ -6,18 +6,7 @@ class actionGroupsGroup extends cmsAction {
 
     public function run($group){
 
-        // Стена
-        if ($this->options['is_wall']){
-
-            $wall_html = cmsCore::getController('wall', $this->request)->getWidget(LANG_GROUPS_WALL, array(
-                'controller'   => 'groups',
-                'profile_type' => 'group',
-                'profile_id'   => $group['id']
-            ), $group['access']['wall']);
-
-        }
-
-        $fields = array();
+        $fields = [];
 
         // Парсим значения полей
         foreach($group['fields'] as $name => $field){
@@ -62,10 +51,11 @@ class actionGroupsGroup extends cmsAction {
         $this->cms_template->addBreadcrumb($group['title']);
 
         return $this->cms_template->render('group_view', array(
+            'options'          => $this->options,
             'group'            => $group,
             'fields_fieldsets' => $fields_fieldsets,
             'user'             => $this->cms_user,
-            'wall_html'        => isset($wall_html) ? $wall_html : false
+            'wall_html'        => false // Не используется, чтобы нотиса в старых шаблонах не было
         ));
 
     }

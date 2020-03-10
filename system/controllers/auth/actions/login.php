@@ -26,7 +26,7 @@ class actionAuthLogin extends cmsAction {
 
         $form = $this->getForm('login');
 
-        if (cmsUser::sessionGet('is_auth_captcha')){
+        if ($this->options['auth_captcha'] && cmsUser::sessionGet('is_auth_captcha')){
             $form = $this->addCapchaField($form);
         }
 

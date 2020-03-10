@@ -51,26 +51,6 @@ class actionUsersProfile extends cmsAction {
             return cmsUser::get('id') == $profile['id'] ? true : $content->checkListPerm($ctype['name']);
         });
 
-        //
-        // Стена
-        //
-        if ($this->options['is_wall']){
-
-            $wall_target = array(
-                'controller'   => 'users',
-                'profile_type' => 'user',
-                'profile_id'   => $profile['id']
-            );
-
-            $wall_permissions = $this->runHook('wall_permissions', array(
-                'profile_type' => 'user',
-                'profile_id'   => $profile
-            ));
-
-            $wall_html = $this->controller_wall->getWidget(LANG_USERS_PROFILE_WALL, $wall_target, $wall_permissions);
-
-        }
-
         list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
 
         $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
@@ -92,6 +72,7 @@ class actionUsersProfile extends cmsAction {
         }, $profile);
 
         return $this->cms_template->render('profile_view', array(
+            'options'        => $this->options,
             'profile'        => $profile,
             'user'           => $this->cms_user,
             'is_own_profile' => $this->is_own_profile,
@@ -102,7 +83,7 @@ class actionUsersProfile extends cmsAction {
             'content_counts' => $content_counts,
             'fields'         => $fields,
             'fieldsets'      => $fieldsets,
-            'wall_html'      => isset($wall_html) ? $wall_html : false,
+            'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было
             'tabs'           => $this->getProfileMenu($profile)
         ));
 

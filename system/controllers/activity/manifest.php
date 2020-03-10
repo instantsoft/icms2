@@ -3,6 +3,7 @@
     return array(
 
         'hooks' => array(
+            'user_add_status_after',
             'content_after_add_approve',
             'admin_dashboard_block',
             'content_after_update_approve',

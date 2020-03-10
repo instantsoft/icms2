@@ -853,7 +853,14 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (175, 'admin_inline_save_subscriptions', 'activity', 175, 1),
 (176, 'admin_col_scheme_options_modern', 'bootstrap4', 176, 1),
 (177, 'template_modern_before_save_options', 'bootstrap4', 177, 1),
-(178, 'admin_row_scheme_options_modern', 'bootstrap4', 178, 1);
+(178, 'admin_row_scheme_options_modern', 'bootstrap4', 178, 1),
+(179, 'process_render_users_profile_view', 'wall', 179, 1),
+(180, 'process_render_groups_group_view', 'wall', 180, 1),
+(181, 'user_add_status_after', 'activity', 181, 1),
+(182, 'user_add_status', 'wall', 182, 1),
+(183, 'form_groups_options', 'wall', 183, 1),
+(184, 'form_users_options', 'wall', 184, 1),
+(185, 'user_privacy_types', 'wall', 185, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (

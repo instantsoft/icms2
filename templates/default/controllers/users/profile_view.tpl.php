@@ -138,11 +138,7 @@
 
 </div>
 
-<?php if ($wall_html){ ?>
-    <div id="user_profile_wall">
-        <?php echo $wall_html; ?>
-    </div>
-<?php } ?>
+<?php $this->block('users_profile_view_bottom'); ?>
 
 <script>
     $(function() {

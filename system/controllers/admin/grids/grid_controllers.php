@@ -3,7 +3,7 @@
 function grid_controllers($controller){
 
     $denied = array(
-        'admin','auth','images','content','moderation','users','wall'
+        'admin','auth','images','content','moderation','users'
     );
 
     $options = array(

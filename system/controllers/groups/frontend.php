@@ -284,7 +284,7 @@ class groups extends cmsFrontend {
                 groups::EDIT_POLICY_STAFF => LANG_GROUPS_GROUP_EDIT_STAFF,
             )
         )));
-        if ($this->options['is_wall']){
+        if ($this->options['is_wall'] && cmsController::enabled('wall')){
             $form->addField($fieldset_id, new fieldList('wall_policy', array(
                 'title' => LANG_GROUPS_GROUP_WALL_POLICY,
                 'items' => array(

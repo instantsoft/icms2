@@ -33,7 +33,7 @@
                     <?php } ?>
                 </span>
                 <?php if ($user->is_logged){ ?>
-                    <?php if ($this->controller->options['is_wall']){ ?>
+                    <?php if ($this->controller->options['is_wall'] && cmsController::enabled('wall')){ ?>
                         <span class="reply">
                             <?php if (empty($profile['status']['replies_count'])) { ?>
                                 <a href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>"><?php echo LANG_REPLY; ?></a>

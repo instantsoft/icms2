@@ -57,8 +57,4 @@
 
 </div>
 
-<?php if ($wall_html){ ?>
-    <div id="wall_profile_wall">
-        <?php echo $wall_html; ?>
-    </div>
-<?php }
+<?php $this->block('groups_group_view_bottom'); ?>
