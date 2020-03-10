@@ -34,12 +34,22 @@ class backendUsers extends cmsBackend {
             array(
                 'title' => LANG_USERS_CFG_MIGRATION,
                 'url' => href_to($this->root_url, 'migrations')
-            ),
-            array(
-                'title' => LANG_USERS,
-                'url' => href_to('admin', 'users')
             )
         );
+    }
+
+    public function getBackendSubMenu(){
+
+        $this->backend_sub_menu[] = [
+            'title' => LANG_USERS,
+            'url'   => href_to('admin', 'users'),
+            'options' => [
+                'icon' => 'icon-people'
+            ]
+        ];
+
+        return $this->backend_sub_menu;
+
     }
 
     public function validate_unique_field($value){

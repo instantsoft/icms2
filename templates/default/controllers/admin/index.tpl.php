@@ -1,8 +1,10 @@
 <?php
     $this->setPageTitle(LANG_ADMIN_CONTROLLER);
-    $this->addJS('templates/default/js/admin-chart.js');
-    $this->addJS('templates/default/js/admin-dashboard.js');
-    $this->addJS('templates/default/js/jquery-cookie.js');
+    $this->addTplJSName([
+        'jquery-cookie',
+        'admin-chart',
+        'admin-dashboard'
+        ]);
 ?>
 <div class="page_options_block">
     <a class="ajax-modal ajaxlink" href="<?php echo $this->href_to('index_page_settings'); ?>" title="<?php echo LANG_CONFIG; ?>">

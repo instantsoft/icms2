@@ -124,21 +124,22 @@ function files_tree_to_array($path){
  */
 function files_normalize_path($path) {
 
-  $parts = explode('/', $path);
-  $safe = array();
-  foreach ($parts as $idx => $part) {
-    if (empty($part) || ('.' == $part)) {
-      continue;
-    } elseif ('..' == $part) {
-      array_pop($safe);
-      continue;
-    } else {
-      $safe[] = $part;
-    }
-  }
+    $parts = explode('/', $path);
+    $safe  = array();
 
-  $path = implode('/', $safe);
-  return $path;
+    foreach ($parts as $idx => $part) {
+        if (empty($part) || ('.' == $part)) {
+            continue;
+        } elseif ('..' == $part) {
+            array_pop($safe);
+            continue;
+        } else {
+            $safe[] = $part;
+        }
+    }
+
+    $path = implode('/', $safe);
+    return $path;
 
 }
 
@@ -512,57 +513,72 @@ function img_resize($src, $dest, $maxwidth, $maxheight = 160, $is_square = false
  * @param string $path Полный путь к файлу
  * @return boolean|array
  */
-function img_get_params($path){
+function img_get_params($path) {
 
     $s = getimagesize($path);
     if ($s === false) { return false; }
 
     $exif_data = array();
+
     $exif = (function_exists('exif_read_data') && $s['mime'] === 'image/jpeg' ? (@exif_read_data($path, null, true)) : null);
-    if($exif){
-        if(isset($exif['COMPUTED']['ApertureFNumber'])){
+
+    if ($exif) {
+        if (isset($exif['COMPUTED']['ApertureFNumber'])) {
             $exif_data['aperturefnumber'] = $exif['COMPUTED']['ApertureFNumber'];
-        } elseif(isset($exif['EXIF']['FNumber'])){
+        } elseif (isset($exif['EXIF']['FNumber'])) {
             $num = explode('/', $exif['EXIF']['FNumber']);
-            $exif_data['aperturefnumber'] = 'f/'.($num[0]/$num[1]);
+            $exif_data['aperturefnumber'] = 'f/' . ($num[0] / $num[1]);
         }
-        if(isset($exif['EXIF']['ExposureTime'])){
-            $exif_data['exposuretime'] = $exif['EXIF']['ExposureTime'];
-        } elseif(isset($exif['IFD0']['ExposureTime'])){
+        if (isset($exif['EXIF']['ExposureTime'])) {
+            $num = explode('/', $exif['EXIF']['ExposureTime']);
+            $exif_data['exposuretime'] = ($num[0] == 1) ? $exif['EXIF']['ExposureTime'] : '1/' . round($num[1] / $num[0]) . 's';
+        } elseif (isset($exif['IFD0']['ExposureTime'])) {
             $exif_data['exposuretime'] = $exif['IFD0']['ExposureTime'];
         }
-        if(isset($exif['IFD0']['Make'])){
-            $exif_data['camera'] = $exif['IFD0']['Make'];
+        $make = false;
+        if (isset($exif['IFD0']['Make'])) {
+            $exif['IFD0']['Make'] = trim($exif['IFD0']['Make']);
+            if ($exif['IFD0']['Make'] != 'NIKON CORPORATION' && $exif['IFD0']['Make'] != 'Canon' && $exif['IFD0']['Make'] != 'Lenovo ') {
+                $exif_data['camera'] = $exif['IFD0']['Make'];
+                $make = true;
+            }
         }
-        if(isset($exif['IFD0']['Model'])){
-            $exif_data['camera'] = $exif['IFD0']['Model'];
+        if (isset($exif['IFD0']['Model'])) {
+            $exif_data['camera'] = $make ? $exif['IFD0']['Make'] . ' ' . $exif['IFD0']['Model'] : $exif['IFD0']['Model'];
         }
-        if(isset($exif['IFD0']['DateTime'])){
-            $exif_data['date'] = $exif['IFD0']['DateTime'];
-        } elseif(isset($exif['EXIF']['DateTimeOriginal'])){
+
+        if (isset($exif['EXIF']['DateTimeOriginal'])) {
             $exif_data['date'] = $exif['EXIF']['DateTimeOriginal'];
-        } elseif(isset($exif['EXIF']['DateTimeDigitized'])){
+        } elseif (isset($exif['EXIF']['DateTimeDigitized'])) {
             $exif_data['date'] = $exif['EXIF']['DateTimeDigitized'];
         }
-        if(isset($exif['EXIF']['ISOSpeedRatings'])){
+
+        if (isset($exif['EXIF']['ISOSpeedRatings'])) {
             $exif_data['isospeedratings'] = $exif['EXIF']['ISOSpeedRatings'];
-            if(is_array($exif_data['isospeedratings'])){
+            if (is_array($exif_data['isospeedratings'])) {
                 $exif_data['isospeedratings'] = current($exif_data['isospeedratings']);
             }
         }
-        if(isset($exif['EXIF']['FocalLength'])){
-            $exif_data['focallength'] = $exif['EXIF']['FocalLength'];
+
+        if (isset($exif['EXIF']['FocalLength'])) {
+            $num = explode('/', $exif['EXIF']['FocalLength']);
+            $exif_data['focallength'] = floor($num[0] / $num[1]) . 'mm';
         }
-        if(isset($exif['IFD0']['Orientation'])){
+
+        if (isset($exif['EXIF']['FocalLengthIn35mmFilm'])) {
+            $exif_data['focallengthin35mmfilm'] = $exif['EXIF']['FocalLengthIn35mmFilm'] . 'mm';
+        }
+
+        if (isset($exif['IFD0']['Orientation'])) {
             $exif_data['orientation'] = $exif['IFD0']['Orientation'];
         }
     }
 
     $orientation = 'square';
-    if($s[0] > $s[1]){
+    if ($s[0] > $s[1]) {
         $orientation = 'landscape';
     }
-    if($s[0] < $s[1]){
+    if ($s[0] < $s[1]) {
         $orientation = 'portrait';
     }
 

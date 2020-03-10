@@ -81,6 +81,24 @@ class fieldNumber extends cmsFormField {
                 'title' => LANG_PARSER_NUMBER_FILTER_RANGE,
                 'default' => false
             )),
+                new fieldCheckbox('filter_range_slide', array(
+                    'title' => LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE,
+                    'default' => false,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+                new fieldCheckbox('filter_range_show_input', array(
+                    'title' => LANG_PARSER_NUMBER_FILTER_RANGE_SI,
+                    'default' => false,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+                new fieldNumber('filter_range_slide_step', array(
+                    'title'   => LANG_PARSER_NUMBER_FILTER_STEP,
+                    'default' => 1,
+                    'visible_depend' => array('options:filter_range' => array('show' => array('1')))
+                )),
+            new fieldString('prefix', array(
+                'title' => LANG_PARSER_PREFIX,
+            )),
             new fieldString('units', array(
                 'title' => LANG_PARSER_NUMBER_UNITS,
             )),
@@ -104,9 +122,19 @@ class fieldNumber extends cmsFormField {
 
     public function getRules() {
 
-        $this->rules[] = array('number');
+        if($this->context == 'filter' && $this->getOption('filter_range')){
 
-        return $this->rules;
+            // Если в настройках поля в админке указали "только целые числа"
+            $rules_number_exists = array_search(['digits'], $this->rules);
+            if($rules_number_exists !== false){ unset($this->rules[$rules_number_exists]); }
+
+            $this->rules[] = array('number_range');
+
+        } else {
+            $this->rules[] = array('number');
+        }
+
+        return parent::getRules();
 
     }
 
@@ -161,8 +189,9 @@ class fieldNumber extends cmsFormField {
     public function parse($value){
 
         $units = $this->getProperty('units')?:$this->getOption('units');
+        $prefix = $this->getProperty('prefix')?:$this->getOption('prefix', '');
 
-        return $this->formatFloatValue($value).$this->getOption('units_sep').$units;
+        return $prefix.' '.$this->formatFloatValue($value).$this->getOption('units_sep').$units;
 
     }
 
@@ -228,7 +257,11 @@ class fieldNumber extends cmsFormField {
 
     }
 
-    public function getDefaultVarType($is_filter=false) {
+    public function getDefaultVarType($is_filter = false) {
+
+        if($this->context == 'filter'){
+            $is_filter = true;
+        }
 
         if ($is_filter && $this->getOption('filter_range')){
             $this->var_type = 'array';
@@ -240,16 +273,62 @@ class fieldNumber extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $units = $this->getProperty('units')?:$this->getOption('units');
-
         if ($this->getOption('filter_range')){
 
             $from = !empty($value['from']) ? $value['from'] : false;
             $to = !empty($value['to']) ? $value['to'] : false;
 
-            return LANG_FROM . ' ' . html_input('text', $this->element_name.'[from]', $from, array('class'=>'input-small')) . ' ' .
-                    LANG_TO . ' ' . html_input('text', $this->element_name.'[to]', $to, array('class'=>'input-small')) .
-                    ($units ? ' ' . $units : '');
+            if(!$this->show_filter_input_title){
+                $this->title = false;
+            }
+
+            $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
+
+            $tpl_name = $this->class.'_range';
+
+            if($this->getOption('filter_range_slide') && strpos($this->name, ':') === false){
+
+                // получаем минимум и максимум
+                if(!empty($this->item['ctype_name'])){
+
+                    $tpl_name = $this->class.'_range_slide';
+
+                    $controller_name = 'content';
+
+                    if(cmsCore::isControllerExists($this->item['ctype_name'])){
+                        $controller_name = $this->item['ctype_name'];
+                    }
+
+                    $model = cmsCore::getModel($controller_name);
+
+                    $max_value = $model->getMax($model->getContentTypeTableName($this->item['ctype_name']), $this->name, null);
+                    $min_value = $model->getMin($model->getContentTypeTableName($this->item['ctype_name']), $this->name, null);
+
+                    // Нет ничего, не показываем в фильтре
+                    if($max_value === null && $min_value === null){
+                        return '';
+                    }
+                    // одно значение
+                    if($max_value === $min_value){
+                        return '';
+                    }
+
+                    $this->data['slide_params'] = [
+                        'min'  => $min_value,
+                        'max'  => $max_value,
+                        'step' => $this->getOption('filter_range_slide_step', 1),
+                        'values' => [($from ?: $min_value), ($to ?: $max_value)]
+                    ];
+
+                }
+
+            }
+
+            return cmsTemplate::getInstance()->renderFormField($tpl_name, array(
+                'field' => $this,
+                'from'  => $from,
+                'to'    => $to
+            ));
 
         } elseif($value && !is_array($value)) {
 
@@ -286,17 +365,40 @@ class fieldNumber extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value = null){
 
-        $value = str_replace(',', '.', trim($value));
+        if (!is_array($value)){
 
-        if(!$this->getOption('save_zero') && !$value){ return null; }
+            $value = str_replace(',', '.', trim($value));
 
-        return $this->getOption('is_abs') ? abs($value) : $value;
+            if(!$this->getOption('save_zero') && !$value){ return null; }
 
+            return $this->getOption('is_abs') ? abs($value) : $value;
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+                $value['from'] = $this->store($value['from'], $is_submitted, $old_value);
+            }
+            if (!empty($value['to'])){
+                $value['to'] = $this->store($value['to'], $is_submitted, $old_value);
+            }
+
+            return $value;
+
+        }
+
+        return null;
+
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
     public function getInput($value){
 
         $this->data['units'] = $this->getProperty('units')?:$this->getOption('units');
+        $this->data['prefix'] = $this->getProperty('prefix')?:$this->getOption('prefix', '');
+
         return parent::getInput(!empty($this->options['is_digits']) ? (int)$value : $value);
 
     }
@@ -313,6 +415,42 @@ class fieldNumber extends cmsFormField {
         }
 
         return $value;
+
+    }
+
+    public function validate_number_range($value){
+
+        if (empty($value)) { return true; }
+
+        if (!in_array(gettype($value), ['array'])){ return ERR_VALIDATE_NUMBER; }
+
+        if(empty($value['from']) && empty($value['to'])) {
+            return true;
+        }
+
+        $rgxp = "/^([\-]?)([0-9\.,]+)$/i";
+
+        if (!empty($value['from'])){
+
+            if(is_array($value['from'])){
+                return ERR_VALIDATE_NUMBER;
+            }
+
+            if (!preg_match($rgxp, $value['from'])){ return ERR_VALIDATE_NUMBER; }
+
+        }
+
+        if (!empty($value['to']) && !is_array($value['to'])){
+
+            if(is_array($value['to'])){
+                return ERR_VALIDATE_NUMBER;
+            }
+
+            if (!preg_match($rgxp, $value['to'])){ return ERR_VALIDATE_NUMBER; }
+
+        }
+
+        return true;
 
     }
 

@@ -61,8 +61,6 @@ define('LANG_PHOTOS_O_TARGET', 'Album types');
 define('LANG_PHOTOS_O_ORIENTATION', 'Photos orientation');
 define('LANG_PHOTOS_O_TYPE', 'Photos type');
 define('LANG_PHOTOS_O_TYPE1', 'Photo type');
-define('LANG_PHOTOS_O_AUTO_GROUP', 'Automatically detect group\'s page');
-define('LANG_PHOTOS_O_AUTO_GROUP_HINT', 'On group page widget displays the group albums photo');
 define('LANG_EXIF_APERTUREFNUMBER', 'f-number');
 define('LANG_EXIF_EXPOSURETIME', 'Shutter speed');
 define('LANG_EXIF_ISOSPEEDRATINGS', 'Film speed');

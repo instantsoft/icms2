@@ -40,6 +40,7 @@ class formAdminContentCategory extends cmsForm {
                     new fieldText('title', array(
                         'title' => LANG_CP_CONTENT_CATS_TITLES,
                         'hint' => LANG_CP_CONTENT_CATS_TITLES_HINT,
+                        'is_strip_tags' => true,
                         'rules' => array(
                             array('required'),
                         )

@@ -26,9 +26,9 @@ class actionAdminWidgetsEdit extends cmsAction {
             $widget['tpl_wrap'] = 'wrapper';
         }
 
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $widget_object = cmsCore::getWidgetObject($widget);
 
-        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template);
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], $widget['options'], $template, $widget_object->isAllowCacheableOption());
 
         return $this->cms_template->render('widgets_settings', array(
             'form'   => $form,

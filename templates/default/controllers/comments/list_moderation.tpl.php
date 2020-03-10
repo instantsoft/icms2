@@ -1,6 +1,8 @@
 <?php
-$this->addJS($this->getJavascriptFileName('jquery-scroll'));
-$this->addJS($this->getJavascriptFileName('comments'));
+$this->addTplJSName([
+    'jquery-scroll',
+    'comments']
+    );
 ?>
 <?php if ($items){ ?>
     <div id="comments_list" class="striped-list">

@@ -1,7 +1,7 @@
 <!--noindex-->
 <?php if(!$is_domain_banned){ ?>
 
-    <?php $this->addJS('templates/default/js/jquery-cookie.js');; ?>
+    <?php $this->addTplJSName('jquery-cookie');; ?>
 
     <?php if($user->is_logged){ ?>
         <div class="accept_redirect">

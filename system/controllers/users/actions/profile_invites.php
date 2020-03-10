@@ -27,6 +27,7 @@ class actionUsersProfileInvites extends cmsAction {
             $form->addField($fieldset_id, new fieldText('emails', array(
                 'title' => LANG_USERS_INVITES_EMAILS,
                 'hint'  => LANG_USERS_INVITES_EMAILS_HINT,
+                'is_strip_tags' => true,
                 'rules' => array(
                     array('required')
                 )

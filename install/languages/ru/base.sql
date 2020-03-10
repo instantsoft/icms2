@@ -1,3 +1,34 @@
+DROP TABLE IF EXISTS `{#}layout_cols`;
+CREATE TABLE `{#}layout_cols` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID ряда',
+  `title` varchar(255) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL COMMENT 'Название позиции',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде',
+  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить тело страницы',
+  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить глубиномер',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс колонки',
+  `options` text COMMENT 'Опции колонки',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE,
+  KEY `row_id` (`row_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Колонки схемы позиций';
+
+DROP TABLE IF EXISTS `{#}layout_rows`;
+CREATE TABLE `{#}layout_rows` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID колонки родителя',
+  `title` varchar(255) DEFAULT NULL,
+  `template` varchar(30) DEFAULT NULL COMMENT 'Привязка к шаблону',
+  `ordering` int(11) DEFAULT NULL COMMENT 'Порядок ряда в исходном коде',
+  `groups` text COMMENT 'Доступ для показа',
+  `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Позиция вложенного ряда',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс ряда',
+  `options` text COMMENT 'Опции ряда',
+  PRIMARY KEY (`id`),
+  KEY `template` (`template`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';
+
 DROP TABLE IF EXISTS `{#}jobs`;
 CREATE TABLE `{#}jobs` (
   `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -292,7 +323,7 @@ INSERT INTO `{#}controllers` (`id`, `title`, `name`, `is_enabled`, `options`, `a
 (2, 'Контент', 'content', 1, NULL, 'InstantCMS Team', 'https://instantcms.ru', '2.0', 0),
 (3, 'Профили пользователей', 'users', 1, '---\nis_ds_online: 1\nis_ds_rating: 1\nis_ds_popular: 1\nis_filter: 1\nis_auth_only: null\nis_status: 1\nis_wall: 1\nis_themes_on: 1\nmax_tabs: 6\nis_friends_on: 1\nis_karma_comments: 1\nkarma_time: 30\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (4, 'Комментарии', 'comments', 1, '---\ndisable_icms_comments: null\nis_guests: 1\nguest_ip_delay: 1\nrestricted_ips:\ndim_negative: 1\nupdate_user_rating: 1\nlimit: 20\nseo_keys:\nseo_desc:\nis_guests_moderate: 1\nrestricted_emails:\nrestricted_names:\nlimit_nesting: 5\nshow_author_email: 1\neditor: redactor\neditor_presets: null\nshow_list:\n  - 0\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
-(5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed: \n  - 0\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
+(5, 'Личные сообщения', 'messages', 1, '---\nlimit: 10\ngroups_allowed:\n  - 0\neditor: markitup\neditor_presets: null\ntime_delete_old: 0\nrealtime_mode: ajax\nrefresh_time: 15\nsocket_host:\nsocket_port: 3000\nuse_queue: null\n', 'InstantCMS Team', 'https://instantcms.ru/', '2.0', 1),
 (6, 'Авторизация и регистрация', 'auth', 1, '---\nis_reg_enabled: 1\nreg_reason: >\n  К сожалению, нам пока\n  не нужны новые\n  пользователи\nis_reg_invites: null\nreg_captcha: null\nverify_email: null\nverify_exp: 48\nauth_captcha: null\nrestricted_emails: |\n  *@shitmail.me\r\n  *@mailspeed.ru\r\n  *@temp-mail.ru\r\n  *@guerrillamail.com\r\n  *@12minutemail.com\r\n  *@mytempemail.com\r\n  *@spamobox.com\r\n  *@disposableinbox.com\r\n  *@filzmail.com\r\n  *@freemail.ms\r\n  *@anonymbox.com\r\n  *@lroid.com\r\n  *@yopmail.com\r\n  *@TempEmail.net\r\n  *@spambog.com\r\n  *@mailforspam.com\r\n  *@spam.su\r\n  *@no-spam.ws\r\n  *@mailinator.com\r\n  *@spamavert.com\r\n  *@trashcanmail.com\nrestricted_names: |\n  admin*\r\n  админ*\r\n  модератор\r\n  moderator\nrestricted_ips:\nis_invites: 1\nis_invites_strict: 1\ninvites_period: 7\ninvites_qty: 3\ninvites_min_karma: 0\ninvites_min_rating: 0\ninvites_min_days: 0\nreg_auto_auth: 1\nfirst_auth_redirect: profileedit\nauth_redirect: none\ndef_groups:\n  - 3\nis_site_only_auth_users: null\nguests_allow_controllers:\n  - auth\n  - geo\nseo_keys:\nseo_desc:\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (7, 'Лента активности', 'activity', 1, '---\ntypes:\n  - 10\n  - 11\n  - 17\n  - 16\n  - 14\n  - 13\n  - 18\n  - 7\n  - 19\n  - 12\n  - 8\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
 (8, 'Группы', 'groups', 1, '---\nis_ds_rating: 1\nis_ds_popular: 1\nis_wall: 1\n', 'InstantCMS Team', 'https://instantcms.ru', '2.0', 1),
@@ -813,7 +844,16 @@ INSERT INTO `{#}events` (`id`, `event`, `listener`, `ordering`, `is_enabled`) VA
 (166, 'content_before_list', 'comments', 166, 1),
 (167, 'admin_dashboard_block', 'admin', 167, 1),
 (168, 'admin_dashboard_block', 'activity', 168, 1),
-(169, 'user_notify_types', 'content', 169, 1);
+(169, 'user_notify_types', 'content', 169, 1),
+(170, 'form_users_password_2fa', 'authga', 170, 1),
+(171, 'controller_auth_after_save_options', 'authga', 171, 1),
+(172, 'form_users_password', 'auth', 172, 1),
+(173, 'auth_twofactor_list', 'authga', 173, 1),
+(174, 'users_before_edit_password', 'authga', 174, 1),
+(175, 'admin_inline_save_subscriptions', 'activity', 175, 1),
+(176, 'admin_col_scheme_options_modern', 'bootstrap4', 176, 1),
+(177, 'template_modern_before_save_options', 'bootstrap4', 177, 1),
+(178, 'admin_row_scheme_options_modern', 'bootstrap4', 178, 1);
 
 DROP TABLE IF EXISTS `{#}groups`;
 CREATE TABLE `{#}groups` (
@@ -1111,8 +1151,10 @@ INSERT INTO `{#}perms_rules` (`id`, `controller`, `name`, `type`, `options`) VAL
 (43, 'users', 'bind_off_parent', 'list', 'own,all'),
 (44, 'groups', 'content_access', 'flag', NULL),
 (45, 'auth', 'view_closed', 'flag', NULL),
-(46, 'content', 'view_list', 'list', 'other,all'),
-(47, 'content', 'limit24', 'number', NULL);
+(46, 'content', 'view_list', 'list', 'all,other,allow'),
+(47, 'content', 'limit24', 'number', NULL),
+(48, 'users', 'change_email', 'flag', NULL),
+(49, 'users', 'change_email_period', 'number', NULL);
 
 DROP TABLE IF EXISTS `{#}perms_users`;
 CREATE TABLE `{#}perms_users` (
@@ -1262,6 +1304,7 @@ CREATE TABLE `{#}scheduler_tasks` (
   `is_active` tinyint(1) UNSIGNED DEFAULT NULL,
   `is_new` tinyint(1) UNSIGNED DEFAULT '1',
   `consistent_run` tinyint(1) UNSIGNED DEFAULT NULL,
+  `ordering` int(11) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `period` (`period`),
   KEY `date_last_run` (`date_last_run`),
@@ -1348,6 +1391,7 @@ CREATE TABLE `{#}users` (
   `date_log` timestamp NULL DEFAULT NULL COMMENT 'Дата последней авторизации',
   `date_group` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Время последней смены группы',
   `ip` varchar(45) DEFAULT NULL,
+  `2fa` varchar(32) DEFAULT NULL,
   `is_deleted` tinyint(1) unsigned DEFAULT NULL COMMENT 'Удалён',
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
@@ -1471,24 +1515,23 @@ CREATE TABLE `{#}users_friends` (
 
 DROP TABLE IF EXISTS `{#}users_groups`;
 CREATE TABLE `{#}users_groups` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) NOT NULL COMMENT 'Системное имя',
-  `title` varchar(32) NOT NULL COMMENT 'Название группы',
-  `is_fixed` tinyint(1) unsigned DEFAULT NULL COMMENT 'Системная?',
-  `is_public` tinyint(1) unsigned DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
-  `is_filter` tinyint(1) unsigned DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL COMMENT 'Системное имя',
+  `title` varchar(32) DEFAULT NULL COMMENT 'Название группы',
+  `is_fixed` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Системная?',
+  `is_public` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Группу можно выбрать при регистрации?',
+  `is_filter` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить группу в фильтре пользователей?',
+  `ordering` int(11) UNSIGNED DEFAULT '1' COMMENT 'Порядок',
   PRIMARY KEY (`id`),
-  KEY `is_fixed` (`is_fixed`),
-  KEY `is_public` (`is_public`),
-  KEY `is_filter` (`is_filter`)
+  KEY `ordering` (`ordering`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Группы пользователей';
 
-INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`) VALUES
-(1, 'guests', 'Гости', 1, NULL, NULL),
-(3, 'newbies', 'Новые', NULL, NULL, NULL),
-(4, 'members', 'Пользователи', NULL, NULL, NULL),
-(5, 'moderators', 'Модераторы', NULL, NULL, NULL),
-(6, 'admins', 'Администраторы', NULL, NULL, 1);
+INSERT INTO `{#}users_groups` (`id`, `name`, `title`, `is_fixed`, `is_public`, `is_filter`, `ordering`) VALUES
+(1, 'guests', 'Гости', 1, NULL, NULL, 1),
+(3, 'newbies', 'Новые', NULL, NULL, NULL, 2),
+(4, 'members', 'Пользователи', NULL, NULL, NULL, 3),
+(5, 'moderators', 'Модераторы', NULL, NULL, NULL, 4),
+(6, 'admins', 'Администраторы', NULL, NULL, 1, 5);
 
 DROP TABLE IF EXISTS `{#}users_groups_members`;
 CREATE TABLE `{#}users_groups_members` (
@@ -1688,6 +1731,7 @@ CREATE TABLE `{#}widgets` (
   `is_external` tinyint(1) DEFAULT '1',
   `files` text COMMENT 'Список файлов виджета (для стороних виджетов)',
   `addon_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID дополнения в официальном каталоге',
+  `image_hint_path` varchar(100) DEFAULT NULL COMMENT 'Поясняющее изображение',
   PRIMARY KEY (`id`),
   KEY `version` (`version`),
   KEY `name` (`name`),
@@ -1734,6 +1778,7 @@ CREATE TABLE `{#}widgets_bind` (
   `tpl_body` varchar(128) DEFAULT NULL,
   `tpl_wrap` varchar(128) DEFAULT NULL,
   `device_types` varchar(50) DEFAULT NULL,
+  `is_cacheable` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `widget_id` (`widget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Виджеты сайта';
@@ -1809,4 +1854,5 @@ CREATE TABLE `{#}wysiwygs_presets` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Пресеты для wysiwyg редакторов';
 
 INSERT INTO `{#}wysiwygs_presets` (`id`, `wysiwyg_name`, `options`, `title`) VALUES
-(1, 'markitup', '{\"buttons\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"7\",\"14\"],\"skin\":\"simple\"}', 'Фотографии');
+(1, 'markitup', '{\"buttons\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"7\",\"14\"],\"skin\":\"simple\"}', 'Фотографии'),
+(2, 'redactor', '{\"plugins\":[\"smiles\"],\"buttons\":[\"bold\",\"italic\",\"deleted\",\"unorderedlist\",\"image\",\"video\",\"link\"],\"convertVideoLinks\":1,\"convertDivs\":null,\"toolbarFixedBox\":null,\"autoresize\":null,\"pastePlainText\":1,\"removeEmptyTags\":1,\"linkNofollow\":1,\"minHeight\":\"58\",\"placeholder\":\"\\u0412\\u0432\\u0435\\u0434\\u0438\\u0442\\u0435 \\u0441\\u043e\\u043e\\u0431\\u0449\\u0435\\u043d\\u0438\\u0435\"}', 'Редактор для личных сообщений');

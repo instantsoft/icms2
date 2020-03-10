@@ -129,7 +129,7 @@ class cmsWysiwygTinymce {
             }
 
             if($context['action']){
-                $upload_params['target_subject'] = $context['action'];
+                $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
             }
 
             if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
@@ -245,7 +245,7 @@ class cmsWysiwygTinymce {
         $template = cmsTemplate::getInstance();
 
         $template->addJSFromContext('wysiwyg/tinymce/files/tinymce.min.js');
-        $template->addJSFromContext('templates/default/js/files.js');
+        $template->addTplJSNameFromContext('files');
 
         ob_start(); ?>
 

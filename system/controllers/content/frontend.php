@@ -6,6 +6,8 @@ class content extends cmsFrontend {
     public $max_items_count = 0;
     public $request_page_name = 'page';
 
+    public $list_filter = false;
+
     private $check_list_perm = true;
 
     private $filter_titles = array();
@@ -94,7 +96,7 @@ class content extends cmsFrontend {
 
     public function getMenuCategoriesItems($menu_item_id, $ctype){
 
-        $result = array('url' => href_to($ctype['name']), 'items' => []);
+        $result = array('url' => href_to($ctype['name']), 'items' => false);
 
         if (!$ctype['is_cats']) { return $result; }
 
@@ -108,7 +110,7 @@ class content extends cmsFrontend {
         // считаем вручную кол-во вложенных
         // т.к. у нас могут быть скрытые категории
         // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
-        $childs_count = [];
+        $childs_count = []; $result['items'] = [];
 
         foreach($tree as $cat){
 
@@ -170,7 +172,9 @@ class content extends cmsFrontend {
 
                 if (cmsUser::isDenied($ctype_name, 'view_list')) {
 
-                    if (cmsUser::isDenied($ctype_name, 'view_list', 'other')) {
+                    if (cmsUser::isDenied($ctype_name, 'view_list', 'allow')) {
+                        $result = true;
+                    } else if (cmsUser::isDenied($ctype_name, 'view_list', 'other')) {
                         $result = false;
                     } else {
                         $result = null;
@@ -190,7 +194,30 @@ class content extends cmsFrontend {
         return $this->filter_titles;
     }
 
-    public function renderItemsList($ctype, $page_url, $hide_filter=false, $category_id=0, $filters = array(), $dataset=false, $ext_hidden_params=array()){
+    public function getActiveFiltersQuery() {
+
+        $filter_query_params = [];
+
+        if($this->list_filter && $this->active_filters){
+
+            foreach ($this->active_filters as $fname => $fvalue) {
+                if(!isset($this->list_filter['filters'][$fname])){
+                    $filter_query_params[$fname] = $fvalue;
+                }
+            }
+
+        } else {
+            $filter_query_params = $this->active_filters;
+        }
+
+        return $filter_query_params ? http_build_query($filter_query_params) : '';
+
+    }
+
+    public function renderItemsList($ctype, $page_url, $hide_filter = false, $category_id = 0, $filters = [], $dataset = false, $ext_hidden_params = []){
+
+        // Обнуляем активные фильтры для их заполнения
+        $this->active_filters = $filters;
 
         $props = $props_fields = false;
 
@@ -204,6 +231,12 @@ class content extends cmsFrontend {
         if ($hide_filter) { $ctype['options']['list_show_filter'] = false; }
 
         if ($category_id && $category_id>1){
+
+            // для фильтров свойств, привязанных к категории
+            if(!empty($this->list_filter['filters']['category_id'])){
+                $this->active_filters['category_id'] = $category_id;
+            }
+
             // Получаем поля-свойства
             $props = cmsCore::getModel('content')->getContentProps($ctype['name'], $category_id);
             $props_fields = $this->getPropsFields($props);
@@ -212,19 +245,24 @@ class content extends cmsFrontend {
 		// проверяем запросы фильтрации по полям
 		foreach($fields as $name => $field){
 
-			if (!$field['is_in_filter']) { continue; }
+            $field['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
 			if (!$this->request->has($name)){ continue; }
 
-			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
+			$value = $this->request->get($name, false, $field['handler']->getDefaultVarType());
+
+            $value = $field['handler']->storeFilter($value);
 			if (!$value) { continue; }
 
 			if($field['handler']->applyFilter($this->model, $value) !== false){
 
-                $filters[$name] = $value;
+                $this->active_filters[$name] = $value;
 
                 $filter_title = $field['handler']->getStringValue($value);
 
-                if($filter_title){
+                if($filter_title && !isset($this->list_filter['filters'][$name])){
                     $this->filter_titles[] = mb_strtolower($field['title'].' '.$filter_title);
                 }
 
@@ -234,25 +272,30 @@ class content extends cmsFrontend {
 
 		// проверяем запросы фильтрации по свойствам
 		if (isset($props) && is_array($props)){
-			foreach($props as $prop){
+			foreach($props as $key => $prop){
 
 				$name = "p{$prop['id']}";
 
-				if (!$prop['is_in_filter']) { continue; }
-				if (!$this->request->has($name)){ continue; }
-
                 $prop['handler'] = $props_fields[$prop['id']];
 
-				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType(true));
+                $prop['handler']->setItem(['ctype_name' => $ctype['name'], 'id' => null])->setContext('filter');
+
+                $props[$key] = $prop;
+
+				if (!$this->request->has($name)){ continue; }
+
+				$value = $this->request->get($name, false, $prop['handler']->getDefaultVarType());
+
+                $value = $prop['handler']->storeFilter($value);
 				if (!$value) { continue; }
 
 				if($this->model->filterPropValue($ctype['name'], $prop, $value) !== false){
 
-                    $filters[$name] = $value;
+                    $this->active_filters[$name] = $value;
 
                     $filter_title = $prop['handler']->getStringValue($value);
 
-                    if($filter_title){
+                    if($filter_title && !isset($this->list_filter['filters'][$name])){
                         $this->filter_titles[] = mb_strtolower($prop['title'].' '.$filter_title);
                     }
 
@@ -260,6 +303,18 @@ class content extends cmsFrontend {
 
 			}
 		}
+
+        // Если мы в фильтре, дополняем его урл
+        // полями, которых в нём нет
+        if($this->list_filter){
+
+            $filter_query = $this->getActiveFiltersQuery();
+
+            if($filter_query){
+                $page_url['filter_link'] .= '?'.$filter_query;
+            }
+
+        }
 
         // применяем приватность
         // флаг показа только названий
@@ -285,6 +340,48 @@ class content extends cmsFrontend {
 
         // Получаем количество и список записей
         $total = isset($total) ? $total : $this->model->getContentItemsCount($ctype['name']);
+
+        // Единый порядок массива для вычисления хэша
+        array_multisort($this->active_filters);
+
+        if($this->request->has('show_count')){
+
+            if(!empty($ctype['labels']['many'])){
+                $hint = LANG_SHOW.' '.html_spellcount($total, $ctype['labels']['one'], $ctype['labels']['two'], $ctype['labels']['many'], 0);
+            } else {
+                $hint = LANG_SHOW.' '.html_spellcount($total, LANG_CONTENT_SHOW_FILTER_COUNT, false, false, 0);
+            }
+
+            // урлы фильтров только для категорий
+            if($this->list_type !== 'category_view'){
+                return $this->cms_template->renderJSON([
+                    'count'       => $total,
+                    'filter_link' => false,
+                    'hint'        => $hint
+                ]);
+            }
+
+            // Узнаём совпадение фильтров
+            $search_filter = cmsCore::getModel('content')->getContentFilter($ctype, md5(json_encode($this->active_filters)), true);
+
+            $filter_link = false;
+
+            if($search_filter){
+                $filter_link = (is_array($page_url) ? (!empty($page_url['cancel']) ? $page_url['cancel'] : $page_url['base']) : $page_url).'/'.$search_filter['slug'];
+            }
+
+            if($this->list_filter && !empty($filter_query)){
+                $filter_link = $page_url['filter_link'];
+            }
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => $filter_link,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $items = isset($items) ? $items : $this->model->getContentItems($ctype['name']);
         // если задано максимальное кол-во, ограничиваем им
         if($this->max_items_count){
@@ -387,7 +484,7 @@ class content extends cmsFrontend {
             'fields'            => $fields,
             'props'             => $props,
             'props_fields'      => $props_fields,
-            'filters'           => $filters,
+            'filters'           => $this->active_filters,
             'ext_hidden_params' => $ext_hidden_params,
             'page'              => $page,
             'perpage'           => $perpage,
@@ -551,6 +648,7 @@ class content extends cmsFrontend {
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+                    'is_strip_tags' => true,
                     'options'=>array(
                         'max_length'=> 256,
                         'show_symbol_count'=>true
@@ -649,7 +747,7 @@ class content extends cmsFrontend {
         }
 
         // Если есть поля-свойства, то добавляем область для них
-        if ($ctype['props']){
+        if (!empty($ctype['props'])){
             $form->addFieldset('', 'props', array(
                 'is_empty' => true,
                 'class' => 'highlight'
@@ -795,6 +893,7 @@ class content extends cmsFrontend {
                 $form->addField($fieldset_id, new fieldText('seo_desc', array(
                     'title' => LANG_SEO_DESC,
                     'hint' => LANG_SEO_DESC_HINT,
+                    'is_strip_tags' => true,
                     'options'=>array(
                         'max_length'=> 256,
                         'show_symbol_count'=>true
@@ -977,78 +1076,24 @@ class content extends cmsFrontend {
 
         foreach($props as $prop) {
 
-            $field_name = "props:{$prop['id']}";
+            $prop['rules'] = [];
+            $prop['default'] = $prop['values'];
 
-            $rules = array();
-
-            if (!empty($prop['options']['is_required'])) { $rules[] = array('required'); }
+            if (!empty($prop['options']['is_required'])) { $prop['rules'][] = [('required')]; }
+            if (!empty($prop['options']['is_filter_multi'])){ $prop['options']['filter_multiple'] = 1; }
+            if (!empty($prop['options']['is_filter_range'])){ $prop['options']['filter_range'] = 1; }
 
             switch($prop['type']){
-
-                case 'list':
-
-                    $rules[] = array('digits');
-
-                    $field = new fieldList($field_name, array(
-                        'title' => $prop['title'],
-                        'items' => string_explode_list($prop['values']),
-                        'rules' => $rules
-                    ));
-
-                    if (!empty($prop['options']['is_filter_multi'])){ $field->setOption('filter_multiple', true); }
-
-                    break;
-
                 case 'list_multiple':
-
-                    $field = new fieldListBitmask($field_name, array(
-                        'title' => $prop['title'],
-                        'items' => string_explode_list($prop['values']),
-                        'rules' => $rules
-                    ));
-
+                    $prop['type'] = 'listbitmask';
                     break;
-
-                case 'color':
-
-                    $field = new fieldColor($field_name, array(
-                        'title' => $prop['title'],
-                        'rules' => $rules
-                    ));
-
-                    break;
-
-                case 'checkbox':
-
-                    $field = new fieldCheckbox($field_name, array(
-                        'title' => $prop['title'],
-                        'rules' => $rules
-                    ));
-
-                    break;
-
-                case 'string':
-
-                    $field = new fieldString($field_name, array(
-                        'title' => $prop['title'],
-                        'rules' => $rules
-                    ));
-
-                    break;
-
-                case 'number':
-
-                    $field = new fieldNumber($field_name, array(
-                        'title' => $prop['title'],
-                        'units' => !empty($prop['options']['units']) ? $prop['options']['units'] : false,
-                        'rules' => $rules
-                    ));
-
-                    if (!empty($prop['options']['is_filter_range'])){ $field->setOption('filter_range', true); }
-
-                    break;
-
             }
+
+            $field_class = 'field' . string_to_camel('_', $prop['type']);
+
+            $field = new $field_class('props:'.$prop['id']);
+
+            $field->setOptions($prop);
 
             $fields[$prop['id']] = $field;
 
@@ -1164,7 +1209,7 @@ class content extends cmsFrontend {
 
         foreach ($fields as $field) {
 
-            if (!isset($item[$field['name']])) { $_item[$field['name']] = '';  continue; }
+            if (!isset($item[$field['name']])) { $_item[$field['name']] = null;  continue; }
 
             if (empty($item[$field['name']]) && $item[$field['name']] !== '0') {
                 $_item[$field['name']] = null; continue;
@@ -1176,6 +1221,10 @@ class content extends cmsFrontend {
                 $_item[$field['name']] = strip_tags($field['handler']->setItem($item)->getStringValue($item[$field['name']]));
             }
 
+        }
+
+        if(!empty($item['tags']) && is_array($item['tags'])){
+            $_item['tags'] = implode(', ', $item['tags']);
         }
 
         if(!isset($item['category']) && !empty($item['category_id'])){
@@ -1202,6 +1251,8 @@ class content extends cmsFrontend {
             'description'       => null,
             'ds_title'          => null,
             'ds_description'    => null,
+            'f_title'           => null,
+            'f_description'     => null,
             'ctype_title'       => (empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list']),
             'ctype_description' => ($ctype['description'] ? strip_tags($ctype['description']) : null),
             'ctype_label1'      => (!empty($ctype['labels']['one']) ? $ctype['labels']['one'] : null),
@@ -1272,6 +1323,27 @@ class content extends cmsFrontend {
         }
         if (!empty($dataset['seo_desc'])){
             $desc_pattern = $dataset['seo_desc'];
+        }
+
+        if($this->list_filter){
+            if ($this->list_filter['title']){
+                $meta_item['f_title'] = $this->list_filter['title'];
+            }
+            if ($this->list_filter['description']){
+                $meta_item['f_description'] = strip_tags($this->list_filter['description']);
+            }
+            if ($this->list_filter['seo_h1']){
+                $h1_pattern = $this->list_filter['seo_h1'];
+            }
+            if ($this->list_filter['seo_title']){
+                $title_pattern = $this->list_filter['seo_title'];
+            }
+            if ($this->list_filter['seo_keys']){
+                $keys_pattern = $this->list_filter['seo_keys'];
+            }
+            if ($this->list_filter['seo_desc']){
+                $desc_pattern = $this->list_filter['seo_desc'];
+            }
         }
 
         /**

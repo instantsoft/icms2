@@ -33,6 +33,7 @@ class actionCommentsApprove extends cmsAction {
 
         $this->model->approveComment($comment['id']);
 
+        $comment['url'] = $comment['target_url'] . '#comment_'.$comment['id'];
         $comment['page_url'] = href_to_abs($comment['target_url']) . '#comment_'.$comment['id'];
         $comment['title'] = $comment['target_title'];
 
@@ -58,7 +59,7 @@ class actionCommentsApprove extends cmsAction {
         // Уведомляем об ответе на комментарий
         if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
 
-        $comment = cmsEventsManager::hook('comment_after_add', $comment);
+        $comment = cmsEventsManager::hook('comment_after_add', $comment, null, $this->request);
 
         return $this->cms_template->renderJSON(array(
             'error'     => false,

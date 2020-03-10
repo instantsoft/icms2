@@ -3,14 +3,15 @@
 function grid_menu_items($controller){
 
     $options = array(
-        'is_auto_init' => false,
-        'is_sortable' => false,
-        'is_filter' => false,
+        'is_auto_init'  => false,
+        'is_sortable'   => false,
+        'is_filter'     => false,
         'is_pagination' => false,
-        'is_draggable' => true,
-        'order_by' => 'ordering',
-        'order_to' => 'asc',
-        'show_id' => false
+        'is_draggable'  => true,
+        'drag_save_url' => href_to('admin', 'reorder', ['menu_items']),
+        'order_by'      => 'ordering',
+        'order_to'      => 'asc',
+        'show_id'       => false
     );
 
     $columns = array(
@@ -28,6 +29,7 @@ function grid_menu_items($controller){
         ),
         'url' => array(
             'title' => LANG_CP_MENU_ITEM_URL,
+            'class' => 'd-none d-lg-table-cell',
             'editable' => array(
                 'table' => 'menu_items'
             )
@@ -61,4 +63,3 @@ function grid_menu_items($controller){
     );
 
 }
-

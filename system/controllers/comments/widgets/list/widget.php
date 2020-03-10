@@ -11,7 +11,7 @@ class widgetCommentsList extends cmsWidget {
             return false;
         }
 
-        $show_list    = $this->getOption('show_list', []);
+        $show_list    = array_filter($this->getOption('show_list', []));
         $show_avatars = $this->getOption('show_avatars', true);
         $show_text    = $this->getOption('show_text', false);
         $limit        = $this->getOption('limit', 10);
@@ -26,7 +26,7 @@ class widgetCommentsList extends cmsWidget {
 
         cmsEventsManager::hook('comments_list_filter', $model);
 
-        if($show_list && $show_list !== [0]){
+        if($show_list){
 
             $show_controllers = $show_targets = [];
 

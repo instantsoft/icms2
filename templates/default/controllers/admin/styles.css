@@ -193,9 +193,12 @@ span.wrap > span.counter:after {
 
 #cp_header #logo a {
     display: block;
-    background: url("../../images/admin/logo.png") no-repeat center;
+    background-image: url(../../images/logo.svg);
     width: 140px;
     height: 80px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
 }
 
 #cp_header #menu ul,
@@ -438,12 +441,11 @@ form .field label > input[type=checkbox] {
     position: relative;
     bottom: -1.3px;
 }
-
 form .field .input_checkbox_list label {
     display: inline-table;
     color:#666;
 }
-form .field .input_checkbox_list.block_labels > label {
+form .field .input_checkbox_list.block_labels > label, form .field .input_checkbox_list label.form-check-block {
     display: block;
 }
 form .ft_list .loading{
@@ -2812,6 +2814,9 @@ input[type=radio]:checked ~ label{
 .nyroModalCont #file_list_wrap > p {
     padding: 0 20px;
     margin: 20px 0 0 0;
+}
+.nyroModalLink > h3 {
+    margin: 15px;
 }
 .inline_button {
     float: left;

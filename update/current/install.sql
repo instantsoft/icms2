@@ -1,11 +1,30 @@
-DROP TABLE IF EXISTS `{#}wysiwygs_presets`;
-CREATE TABLE `{#}wysiwygs_presets` (
+DROP TABLE IF EXISTS `{#}layout_cols`;
+CREATE TABLE `{#}layout_cols` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `wysiwyg_name` varchar(40) DEFAULT NULL COMMENT 'Имя редактора',
-  `options` text COMMENT 'Опции',
-  `title` varchar(100) DEFAULT NULL COMMENT 'Название пресета',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Пресеты для wysiwyg редакторов';
+  `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID ряда',
+  `title` varchar(255) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL COMMENT 'Название позиции',
+  `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде',
+  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить тело страницы',
+  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить глубиномер',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс колонки',
+  `options` text COMMENT 'Опции колонки',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE,
+  KEY `row_id` (`row_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Колонки схемы позиций';
 
-INSERT INTO `{#}wysiwygs_presets` (`id`, `wysiwyg_name`, `options`, `title`) VALUES
-(1, 'markitup', '{\"buttons\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"7\",\"14\"],\"skin\":\"simple\"}', 'Фотографии');
+DROP TABLE IF EXISTS `{#}layout_rows`;
+CREATE TABLE `{#}layout_rows` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'ID колонки родителя',
+  `title` varchar(255) DEFAULT NULL,
+  `template` varchar(30) DEFAULT NULL COMMENT 'Привязка к шаблону',
+  `ordering` int(11) DEFAULT NULL COMMENT 'Порядок ряда в исходном коде',
+  `groups` text COMMENT 'Доступ для показа',
+  `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Позиция вложенного ряда',
+  `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс ряда',
+  `options` text COMMENT 'Опции ряда',
+  PRIMARY KEY (`id`),
+  KEY `template` (`template`,`ordering`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Ряды схемы позиций виджетов';

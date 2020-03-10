@@ -1,7 +1,6 @@
 <h1><?php echo LANG_STEP_DATABASE; ?></h1>
 
-<p><?php echo LANG_DATABASE_INFO; ?><br>
-<?php echo LANG_DATABASE_CHARSET_INFO; ?></p>
+<p><?php echo LANG_DATABASE_INFO; ?></p>
 
 <form id="step-form">
 
@@ -36,6 +35,14 @@
             <?php } else { ?>
                 <input type="text" class="input input-icon icon-db" name="db[base]" value="<?php echo isset($cfg['db_base']) ? htmlspecialchars($cfg['db_base']) : ''; ?>" />
             <?php } ?>
+        </div>
+
+        <div class="field">
+            <label><?php echo LANG_DATABASE_CHARSET; ?></label>
+            <select class="input" name="db[db_charset]">
+                <option value="utf8" <?php if(@$cfg['db_charset'] == 'utf8'){?>selected="selected"<?php } ?>>UTF8</option>
+                <option value="utf8mb4" <?php if(@$cfg['db_charset'] == 'utf8mb4'){?>selected="selected"<?php } ?>>UTF8mb4</option>
+            </select>
         </div>
 
         <div class="field">

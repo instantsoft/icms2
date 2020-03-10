@@ -40,8 +40,8 @@
         'method' => 'post'
     ), $errors);
 
-    $this->addJSFromContext('templates/default/js/jquery-ui.js');
-    $this->addCSSFromContext('templates/default/css/jquery-ui.css');
+    $this->addTplJSNameFromContext('jquery-ui');
+    $this->addTplCSSNameFromContext('jquery-ui');
 ?>
 <script>
     $(document).ready(function(){
@@ -87,7 +87,7 @@
                 });
             },
             select: function(event, ui){
-                icms.events.run('autocomplete_select', this);
+                icms.events.run('autocomplete_select', ui);
             }
         });
 

@@ -26,6 +26,8 @@
 		'href'  => LANG_HELP_URL_USERS_GROUP
 	));
 
+    $this->setMenuItems('users_group', $menu);
+
 ?>
 
 <div class="pills-menu">

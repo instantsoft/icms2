@@ -43,6 +43,8 @@ define('LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT', 'For users registered to InstantCMS 
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'After first login');
 define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Components available without authorization');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'After consequent authorization');
+define('LANG_REG_CFG_AUTH_2FA', 'Two-Factor Authentication');
+define('LANG_REG_TWOFA_APP', 'Authentication application');
 define('LANG_REG_CFG_AUTH_REDIRECT_NONE', 'Stay on page, at which the logged');
 define('LANG_REG_CFG_AUTH_REDIRECT_INDEX', 'Open homepage');
 define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE', 'Open profile');
@@ -76,3 +78,4 @@ define('LANG_AUTH_INVITES_SGROUP', 'Group of users');
 define('LANG_AUTH_INVITES_SUSER', 'Or user');
 define('LANG_AUTH_INVITES_SPARAMS', 'Issuing parameters to a group of users');
 define('LANG_AUTH_IS_OLD_AUTH', 'You have not changed your password for a long time, <a href="%s">you can do it now</a>.');
+define('LANG_AUTH_CLEAN_REG_EMAIL', 'I entered an invalid email');

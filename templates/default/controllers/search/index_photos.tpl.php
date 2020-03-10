@@ -1,8 +1,10 @@
 <?php
 
-    $this->addCSS($this->getStylesFileName('photos'));
-    $this->addJS( $this->getJavascriptFileName('photos') );
-    $this->addJS( $this->getJavascriptFileName('jquery-flex-images') );
+    $this->addTplJSName([
+        'photos',
+        'jquery-flex-images'
+    ]);
+    $this->addTplCSS('controllers/photos/styles');
 
     $this->setPageTitle(LANG_SEARCH_TITLE);
 

@@ -49,7 +49,10 @@ class formAuthOptions extends cmsForm {
                     new fieldListGroups('def_groups', array(
                         'title' => LANG_REG_CFG_DEF_GROUP_ID,
                         'show_all' => false,
-						'default' => array(3)
+						'default' => array(3),
+                        'rules' => array(
+                            array('required')
+                        )
                     )),
 
                     new fieldCheckbox('verify_email', array(
@@ -95,6 +98,28 @@ class formAuthOptions extends cmsForm {
                         'default' => 'none',
                         'items'   => $auth_redirect_items
                     )),
+
+                    new fieldList('2fa', array(
+                        'title' => LANG_REG_CFG_AUTH_2FA,
+                        'is_chosen_multiple' => true,
+                        'generator' => function(){
+
+                            $providers = cmsEventsManager::hookAll('auth_twofactor_list');
+
+                            $items = [];
+
+                            if (is_array($providers)){
+                                foreach($providers as $provider){
+                                    foreach($provider['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    ))
 
                 )
             ),

@@ -154,7 +154,8 @@ class fieldFile extends cmsFormField {
 
     public function getFilterInput($value=false) {
 
-        return html_checkbox($this->name, (bool)$value);
+        return ($this->show_filter_input_title ? '<label for="'.$this->id.'">'.$this->title.'</label>' : '') .
+               html_checkbox($this->name, (bool)$value);
 
     }
 

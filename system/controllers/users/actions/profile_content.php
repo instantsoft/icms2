@@ -57,10 +57,16 @@ class actionUsersProfileContent extends cmsAction {
         $current_dataset = array();
         if ($datasets){
 
+            $keys = array_keys($datasets);
+
+            if(!$dataset){
+                $dataset = $keys[0];
+            }
+
             if($dataset && !empty($datasets[$dataset])){
 
-                $keys = array_keys($datasets);
-                $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+
+                $current_dataset = $datasets[$dataset];
                 $this->controller_content->model->applyDatasetFilters($current_dataset);
                 // устанавливаем максимальное количество записей для набора, если задано
                 if(!empty($current_dataset['max_count'])){
@@ -108,7 +114,7 @@ class actionUsersProfileContent extends cmsAction {
         cmsModel::cacheResult('current_ctype', $ctype);
         cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
-        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''));
+        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
 
         $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 

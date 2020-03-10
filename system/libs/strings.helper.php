@@ -185,9 +185,18 @@ function string_in_mask_list($string, $mask_list){
  */
 function string_random($length=32, $seed=''){
 
-    $salt = substr(md5(md5(mt_rand(0, 65535).md5(md5(cmsConfig::get('db_pass'))))), mt_rand(0, 16), mt_rand(8, 15));
+    $rand_funct = 'mt_rand';
+    if (function_exists('random_int')) {
+        $rand_funct = 'random_int';
+    }
 
-    $string = md5(md5(md5($salt) . chr(mt_rand(0, 127)) . microtime(true) . chr(mt_rand(0, 127))) . chr(mt_rand(0, 127)) . md5(md5($seed)));
+    if(function_exists('random_bytes')){
+        $salt = bin2hex(random_bytes(128));
+    } else {
+        $salt = substr(md5(md5($rand_funct(0, PHP_INT_MAX).md5(md5(cmsConfig::get('db_pass'))))), $rand_funct(0, 16), $rand_funct(8, 15));
+    }
+
+    $string = md5(md5(md5($salt) . chr($rand_funct(0, 127)) . microtime(true) . chr($rand_funct(0, 127))) . chr($rand_funct(0, 127)) . md5(md5($seed)));
 
     if ($length < 32) { $string = substr($string, 0, $length); }
 
@@ -316,7 +325,7 @@ function real_date_diff($date1, $date2 = null){
     $date2 = $cd['year'].'-'.$cd['mon'].'-'.$cd['mday'].' '.$cd['hours'].':'.$cd['minutes'].':'.$cd['seconds'];
 
     //Преобразуем даты в массив
-    $pattern = '/(\d+)-(\d+)-(\d+)(\s+(\d+):(\d+):(\d+))?/';
+    $pattern = '/(\d+)\-(\d+)\-(\d+)(\s+(\d+)\:(\d+)\:(\d+))?/';
     preg_match($pattern, $date1, $matches);
     $d1 = array((int)$matches[1], (int)$matches[2], (int)$matches[3], (int)$matches[5], (int)$matches[6], (int)$matches[7]);
     preg_match($pattern, $date2, $matches);
@@ -557,7 +566,7 @@ function string_replace_keys_values_extended($string, $data){
  * @return string
  */
 function string_make_links($string){
-    return preg_replace('@(https?://([-\w\.]+[-\w])+(:\d+)?(/([\w/_\.#-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $string);
+    return preg_replace('@(https?:\/\/([\-\w\.]+[\-\w])+(:\d+)?(\/([\w/_\.#\-]*(\?\S+)?[^\.\s])?)?)@', '<a href="$1" class="auto-link" target="_blank" rel="noopener noreferrer">$1</a>', $string);
 }
 
 //============================================================================//
@@ -687,14 +696,15 @@ function string_short($string, $length = 0, $postfix = '', $type = 's'){
 
 /**
  * Вырезает из строки CSS/JS-комментарии, табуляции, переносы строк и лишние пробелы
-  *
+ *
  * @param string $string
-  * @return string
+ * @return string
  */
 function string_compress($string){
 
     $string = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $string);
-    $string = str_replace(array("\r\n", "\r", "\n", "\t", '  ', '    ', '    '), '', $string);
+    $string = preg_replace('/\s{2,}/', '', $string);
+    $string = str_replace(["\r\n", "\r", "\n", "\t"], '', $string);
 
     return $string;
 
@@ -736,6 +746,20 @@ function array_collection_to_list($collection, $key, $value=false){
 
     return $list;
 
+}
+
+/**
+ * Рекурсивная версия array_filter
+ * @param array $input
+ * @return array
+ */
+function array_filter_recursive($input) {
+    foreach ($input as &$value) {
+        if (is_array($value)) {
+            $value = array_filter_recursive($value);
+        }
+    }
+    return array_filter($input);
 }
 
 /**

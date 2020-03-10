@@ -9,6 +9,7 @@ class fieldList extends cmsFormField {
     public $var_type    = 'string';
     public $native_tag  = false;
     public $dynamic_list = false;
+    public $show_empty_value = true;
 
     public function getOptions(){
         return array(
@@ -31,26 +32,28 @@ class fieldList extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $items = $this->getListItems(false);
+        if(!$this->show_filter_input_title){
+            $this->title = false;
+        }
 
-         if (!$this->getOption('filter_multiple')){
+        if (!$this->getOption('filter_multiple')) {
 
-            $items = array(''=>'') + $items;
-            return html_select($this->name, $items, $value);
+            return parent::getFilterInput($value);
 
-         } else {
+        } else {
 
-             $value = is_array($value) ? $value : array();
+            $value = is_array($value) ? $value : array();
 
-             if($this->getOption('filter_multiple_checkbox')){
-                 return html_select_multiple($this->name, $items, $value);
-             }
+            if ($this->getOption('filter_multiple_checkbox')) {
+                $this->setProperty('is_multiple', true);
+                $this->setProperty('show_empty_value', false);
+            } else {
+                $this->setProperty('is_chosen_multiple', true);
+            }
 
-             $this->setProperty('is_chosen_multiple', true);
+            return parent::getFilterInput($value);
 
-             return parent::getFilterInput($value);
-
-         }
+        }
 
     }
 
@@ -96,7 +99,7 @@ class fieldList extends cmsFormField {
 
     }
 
-    public function getListItems($show_empty_value = true){
+    public function getListItems(){
 
         $items = array();
 
@@ -111,7 +114,7 @@ class fieldList extends cmsFormField {
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = ($show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
+            $items = ($this->show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
 
         }
 
@@ -142,7 +145,11 @@ class fieldList extends cmsFormField {
         return string_explode_list($string);
     }
 
-    public function getDefaultVarType($is_filter=false) {
+    public function getDefaultVarType($is_filter = false) {
+
+        if($this->context == 'filter'){
+            $is_filter = true;
+        }
 
         if ($is_filter && $this->getOption('filter_multiple')){
             $this->var_type = 'array';

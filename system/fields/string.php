@@ -99,6 +99,10 @@ class fieldString extends cmsFormField {
         return strip_tags(trim($value));
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function getStringValue($value){
         return $value;
     }

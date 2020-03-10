@@ -1,18 +1,24 @@
-<?php
-    $config = cmsConfig::getInstance();
-?>
+<?php $config = cmsConfig::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title><?php echo ERR_SITE_OFFLINE; ?> &mdash; <?php echo $config->sitename; ?></title>
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-errors.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-modal.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-gui.css">
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-text.css">
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/jquery-modal.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/core.js"></script>
-    <script type="text/javascript" src="<?php echo $config->root; ?>templates/default/js/modal.js"></script>
+    <?php $this->addMainTplCSSName([
+        'theme-modal',
+        'theme-gui',
+        'theme-errors',
+        'theme-text'
+        ]); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
+    <?php $this->addMainTplJSName([
+        'jquery-modal',
+        'core',
+        'modal'
+        ]); ?>
+    <?php
+    $this->printCssTags();
+    $this->printJavascriptTags();
+    ?>
 </head>
 <body>
 
@@ -21,7 +27,7 @@
     if ($messages){ ?>
         <div class="sess_messages">
             <?php foreach($messages as $message){ ?>
-                <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                <div class="message_<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
              <?php } ?>
         </div>
     <?php } ?>

@@ -202,6 +202,21 @@ class actionAdminInstallFinish extends cmsAction {
 
     }
 
+    private function copyWidgetImageHint($manifest) {
+
+        if (empty($manifest['info']['image_hint'])){
+            return null;
+        }
+
+        $file_path = 'package-images/widgets/'.($manifest['package']['controller'] ? $manifest['package']['controller'].'_' : '').$manifest['package']['name'].'.'.strtolower(pathinfo($manifest['info']['image_hint'], PATHINFO_EXTENSION));
+
+        if(copy($manifest['info']['image_hint'], $this->cms_config->upload_path.$file_path)){
+            return $file_path;
+        }
+
+        return null;
+    }
+
     private function widgetInstall($manifest) {
 
         $model = new cmsModel();
@@ -215,6 +230,7 @@ class actionAdminInstallFinish extends cmsAction {
             'version'     => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build'],
             'files'       => (!empty($manifest['contents']) ? $manifest['contents'] : null),
             'addon_id'    => (!empty($manifest['info']['addon_id']) ? (int)$manifest['info']['addon_id'] : null),
+            'image_hint_path' => $this->copyWidgetImageHint($manifest),
             'is_external' => 1
         ));
 
@@ -230,6 +246,7 @@ class actionAdminInstallFinish extends cmsAction {
             'title'      => $manifest['info']['title'],
             'author'     => (isset($manifest['author']['name']) ? $manifest['author']['name'] : LANG_CP_PACKAGE_NONAME),
             'url'        => (isset($manifest['author']['url']) ? $manifest['author']['url'] : null),
+            'image_hint_path' => $this->copyWidgetImageHint($manifest),
             'version'    => $manifest['version']['major'] . '.' . $manifest['version']['minor'] . '.' . $manifest['version']['build']
         );
 

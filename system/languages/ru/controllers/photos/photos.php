@@ -53,8 +53,6 @@
     define('LANG_PHOTOS_ALBUM',                 'Альбом');
     define('LANG_PHOTOS_WP_ITEM',               'Страница фотографии');
     define('LANG_PHOTOS_WP_UPLOAD',             'Загрузка фотографий');
-    define('LANG_PHOTOS_O_AUTO_GROUP',          'Автоматически определять группу');
-    define('LANG_PHOTOS_O_AUTO_GROUP_HINT',     'На страницах групп виджет выведет фотографии альбомов группы');
     define('LANG_PHOTOS_O_AUTO_USER',           'Автоматически определять профиль пользователя');
     define('LANG_PHOTOS_O_AUTO_USER_HINT',      'На страницах профилей виджет выведет фотографии просматриваемого пользователя');
     define('LANG_PHOTOS_O_AUTO_CTYPE_ITEM',     'Автоматически определять запись типа контента');

@@ -25,4 +25,4 @@
 	define('LANG_GEO_SUCCESS_DELETE_COUNTRY', 'The country, its regions and cities have successfully removed');
 	define('LANG_GEO_AUTO_DETECT_PROVIDER', 'Auto-detect location service');
 	define('LANG_GEO_DEFAULT_COUNTRY_ID', 'Default site country');
-    define('LANG_HELP_URL_GEO', 'https://docs.instantcms.ru/en/manual/components/geo');
+    define('LANG_HELP_URL_COM_GEO', 'https://docs.instantcms.ru/en/manual/components/geo');

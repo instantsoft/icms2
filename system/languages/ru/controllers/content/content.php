@@ -68,3 +68,4 @@
     define('LANG_CONTENT_CONTEXT_LT_MODERATION_LIST', 'В списке модерации');
     define('LANG_CONTENT_CONTEXT_LT_PROFILE_CONTENT', 'В профиле');
     define('LANG_CONTENT_NOTIFY_END_DATE',  'Уведомлять о скором окончании публикации ваших %s');
+    define('LANG_CONTENT_SHOW_FILTER_COUNT',  'предложение|предложения|предложений');

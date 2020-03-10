@@ -22,9 +22,9 @@ class actionAdminWidgetsUpdate extends cmsAction {
             return cmsCore::error404();
         }
 
-        cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
+        $widget_object = cmsCore::getWidgetObject($widget);
 
-        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], false, $template);
+        $form = $this->getWidgetOptionsForm($widget['name'], $widget['controller'], false, $template, $widget_object->isAllowCacheableOption());
 
         $widget = $form->parse($this->request, true);
 
@@ -48,12 +48,14 @@ class actionAdminWidgetsUpdate extends cmsAction {
 
             }
 
+            $widget['device_type_names'] = $widget['device_types'];
             $widget['device_types'] = $device_types;
 
             return $this->cms_template->renderJSON(array(
                 'errors'   => false,
                 'callback' => 'widgetUpdated',
-                'widget'   => $widget
+                'widget'   => $widget,
+                'success_text' => LANG_CP_SAVE_SUCCESS
             ));
 
         }

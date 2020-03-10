@@ -11,8 +11,16 @@
     define('LANG_CP_DASHBOARD_NEWS_O',          'Официальные');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Блоги');
     define('LANG_CP_PAGE_OPTIONS',              'Настроить эту страницу');
-
+    define('LANG_CP_SU',                        'Система');
+    define('LANG_CP_SU_DISK',                   'Место на диске');
+    define('LANG_CP_SU_CPU',                    'Процессор');
+    define('LANG_CP_CACHE',                     'Кэширование');
+    define('LANG_CP_WO_AUTO_GROUP',             'Автоматически определять группу');
+    define('LANG_CP_WO_AUTO_GROUP_HINT',        'На страницах групп виджет выведет указанные записи группы');
     define('LANG_CP_DASHBOARD_SI_ICMS',         'Версия InstantCMS');
+    define('LANG_CP_DASHBOARD_SI_WS',           'Веб сервер');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'Mysql сервер');
+    define('LANG_CP_DASHBOARD_APACHE_NGINX',    'двухуровневая конфигурация, версия Nginx - %s');
     define('LANG_CP_DASHBOARD_SI_PHP',          'Версия PHP');
     define('LANG_CP_DASHBOARD_SI_ML',           'Лимит памяти');
     define('LANG_CP_DASHBOARD_SI_IP',           'IP адрес сервера');
@@ -68,6 +76,7 @@
     define('LANG_CP_CTYPE_PROPS',               'Свойства');
     define('LANG_CP_CTYPE_PERMISSIONS',         'Доступ');
     define('LANG_CP_CTYPE_DATASETS',            'Наборы');
+    define('LANG_CP_CTYPE_FILTERS',             'Фильтры');
     define('LANG_CP_CTYPE_DATASET',             'Набор');
 
     define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Настройки столбцов');
@@ -89,6 +98,11 @@
     define('LANG_CP_SYSTEM_NAME_HINT',          'Используется в URL и при создании таблиц в базе данных<br>После создания не изменяется!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Создать запись');
+    define('LANG_CP_CONTENT_ITEMS_EDIT',        'Изменить записи');
+    define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Добавить значения к существующим');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Выберите поля, которые хотите изменить');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S2',     'Этими значениями будут заменены поля выбранных записей');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_ADD_HINT', '<span class="text-danger">Значение будет добавлено в конец существующего</span>');
     define('LANG_CP_CONTENT_CATS_ADD',          'Создать категории');
     define('LANG_CP_CONTENT_CATS_EDIT',         'Редактировать категорию');
     define('LANG_CP_CONTENT_CATS_ORDER',        'Порядок');
@@ -181,7 +195,7 @@
     define('LANG_CP_LIST_STYLE_NAMES',          'Названия для стилей списка');
     define('LANG_CP_CONTEXT_LIST_STYLE',        'Стили для других списков');
     define('LANG_CP_CONTEXT_SELECT_LIST',       'Выберите список');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/templates/%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Перечислены шаблоны из папки <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b>. Можно указать несколько шаблонов, при этом появится возможность переключать их пользователям.');
     define('LANG_CP_LISTVIEW_STYLE_BASIC',      'Обычный');
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Журнальный');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Плитка');
@@ -264,15 +278,26 @@
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Создайте категории</a> чтобы добавлять свойства.');
     define('LANG_CP_PROPS_ADD',                 'Создать свойство');
     define('LANG_CP_PROPS_DELETE_CONFIRM',      'Удалить свойство "{title}"?\nСвойство будет удалено из всех категорий');
+    define('LANG_CP_PROPS_UNBIND_CONFIRM',      'Отвязать свойство "{title}" от текущей категории?');
     define('LANG_CP_PROPS_BIND',                'Привязать свойство');
+    define('LANG_CP_PROPS_BIND_SC',             'Свойство успешно привязано');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'включая вложенные категории');
     define('LANG_CP_PROPS_UNBIND',              'Отвязать свойство');
+    define('LANG_CP_PROPS_UNBIND_SC',           'Свойство успешно отвязано');
     define('LANG_CP_PROP_TITLE',                'Название свойства');
     define('LANG_CP_PROP_IS_ACTIVE',            'Показывать на сайте');
     define('LANG_CP_PROP_VALUES',               'Элементы списка');
     define('LANG_CP_PROP_VALUES_HINT',          'Одно значение в каждой строке');
     define('LANG_CP_PROP_CATS',                 'Привязать свойство к категориям');
     define('LANG_CP_PROP_UNITS',                'Единицы измерения');
+    define('LANG_CP_FILTER_ADD',                'Создать фильтр');
+    define('LANG_CP_FILTER_NO_TABLE',           'Фильтры выключены, <a href="%s">включите их</a>.');
+    define('LANG_CP_FILTER_TABLE_SUCCESS',      'Механизм фильтров успешно включен');
+    define('LANG_CP_FILTER_DELETE_CONFIRM',     'Удалить фильтр "{title}"?');
+    define('LANG_CP_FILTER_ERROR_SLUG',         'Есть категория с таким же URI, задайте другое');
+    define('LANG_CP_FILTER_DESC_HINT',          'Дополнит описание категории');
+    define('LANG_CP_FILTER_FIELDS',             'Фильтры полей');
+    define('LANG_CP_FILTER_PROPS',              'Фильтры свойств');
 
     define('LANG_CP_DATASET',                   'Набор');
     define('LANG_CP_DATASET_ADD',               'Создать набор');
@@ -334,7 +359,45 @@
     define('LANG_CP_MENU_ITEM_TARGET_TOP',      'Поверх всех фреймов');
     define('LANG_CP_MENU_IS_FIXED',             'Нельзя удалить системное меню');
 
+    define('LANG_CP_WIDGETS_ROW_NONE',          'Вы еще не создали ни одного ряда');
+    define('LANG_CP_WIDGETS_COL_VA',            'Вертикальное выравнивание колонок');
+    define('LANG_CP_WIDGETS_COL_VA1',           'По верхнему краю');
+    define('LANG_CP_WIDGETS_COL_VA2',           'Посередине');
+    define('LANG_CP_WIDGETS_COL_VA3',           'По нижнему краю');
+    define('LANG_CP_WIDGETS_COL_HA',            'Горизонтальное выравнивание колонок');
+    define('LANG_CP_WIDGETS_COL_HA1',           'Слева направо');
+    define('LANG_CP_WIDGETS_COL_HA3',           'Справа налево');
+    define('LANG_CP_WIDGETS_COL_HA4',           'Пространство вокруг');
+    define('LANG_CP_WIDGETS_COL_HA5',           'Пространство между');
+    define('LANG_CP_WIDGETS_COL_CLASS',         'Дополнительный CSS класс колонки');
+    define('LANG_CP_WIDGETS_ROW_CLASS',         'Дополнительный CSS класс ряда');
+    define('LANG_CP_WIDGETS_COL_ORDER',         'Визуальный порядок колонки для разрешений %s');
+    define('LANG_CP_WIDGETS_COL_D_ORDER',       'Визуальный порядок колонки по умолчанию');
+    define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Ширина по умолчанию');
+    define('LANG_CP_WIDGETS_COL_WIDTH',         'Ширина для разрешений %s');
+    define('LANG_CP_WIDGETS_COL_AUTO',          'По ширине содержимого');
+    define('LANG_CP_WIDGETS_ADD_COL',           'Добавить колонку');
+    define('LANG_CP_WIDGETS_ADD_ROW',           'Добавить ряд');
+    define('LANG_CP_WIDGETS_ADD_ROW_P',         'Добавить вложенный ряд');
+    define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'Без отступов между колонками');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION', 'Позиция вывода');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION1', 'В начале');
+    define('LANG_CP_WIDGETS_ROW_NESTED_POSITION2', 'В конце');
+    define('LANG_CP_WIDGETS_ROW_CONT',          'Контейнер ряда');
+    define('LANG_CP_WIDGETS_ROW_CONT_CSS',      'CSS класс контейнера ряда');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Родительский тег блока');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'CSS класс родительского тег блока');
+    define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Без контейнера');
+    define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Удалить ряд?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Удалить колонку (вложенные также удалятся)?\nВиджеты переместятся в неиспользуемые');
+    define('LANG_CP_WIDGETS_COL_COUNT',         'Количество колонок');
+    define('LANG_CP_WIDGETS_COL_NAME',          'Название позиции');
+    define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Не указано, будет сгенерировано автоматически. Должно быть уникальным.');
+    define('LANG_CP_WIDGETS_COL_IS_BODY',       'Выводить тело страницы');
+    define('LANG_CP_WIDGETS_COL_IS_BREADCRUMB', 'Выводить глубиномер');
     define('LANG_CP_WIDGETS_PAGE',              'Страница');
+    define('LANG_CP_WIDGETS_PAGES',             'Страницы');
+    define('LANG_CP_WIDGETS_ALL',               'Все виджеты');
     define('LANG_CP_WIDGETS_ADD',               'Создать виджет');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Создать страницу');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Редактировать');
@@ -345,6 +408,7 @@
     define('LANG_CP_WIDGET_COPY_CONFIRM',       'Копировать виджет, дублируя его на этой же позиции?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Удалить виджет?');
     define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Вы действительно хотите окончательно удалить виджет из системы?');
+    define('LANG_CP_WIDGET_REMOVE_SUCCESS',     'Виджет успешно удалён');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Страница &laquo;%s&raquo; создана');
     define('LANG_CP_WIDGET_PAGE_URLS',          'Фильтрация URL');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Положительные маски');
@@ -388,6 +452,14 @@
     define('LANG_CP_USER_RIPE_SEARCH',          'Найти в базе RIPE');
     define('LANG_CP_USER_SEARCH_NOT_FOUND',     'Нет пользователей по заданным критериям');
     define('LANG_CP_USERS_ONLINE',              'Сейчас на сайте');
+    define('LANG_CP_USERS_UNCONFIRMED',         'Неподтверждённые аккаунты');
+    define('LANG_CP_USERS_ALL',                 'Всего пользователей');
+    define('LANG_CP_USERS_ISDELETED',           'Удалённые');
+    define('LANG_CP_USERS_LOCKED',              'Заблокированные');
+
+    define('LANG_CP_TOTAL',       'Всего');
+    define('LANG_CP_ONMODERATE',  'На модерации');
+    define('LANG_CP_NOTPUB',      'Неопубликованных');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Настройки компонента');
     define('LANG_CP_CONTROLLERS_ADD',           'Установить компонент');
@@ -400,12 +472,18 @@
     define('LANG_CP_SETTINGS_MAIL',             'Почта');
     define('LANG_CP_SETTINGS_CACHE',            'Кеширование');
     define('LANG_CP_SETTINGS_DEBUG',            'Отладка');
+    define('LANG_CP_SETTINGS_DB',               'База данных');
+    define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Включить режим пустого sql_mode для MySQL');
+    define('LANG_CP_SETTINGS_DB_CHARSET',       'Кодировка');
+    define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Изменение кодировки может занять продолжительное время');
     define('LANG_CP_SETTINGS_MISC',             'Прочие');
     define('LANG_CP_SETTINGS_SECURITY',         'Безопасность');
 
     define('LANG_CP_SETTINGS_SESSIONS',         'Сессии');
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Время жизни сессий');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Метод хранения сессий');
+    define('LANG_CP_SETTINGS_SESSION_NAME', 'Имя сессии');
+    define('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Должно быть одинаково для всех сайтов с единой авторизацией');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Путь хранения сессий');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', который должен входить в один из путей ');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'Для файлов должен быть указан полный путь%s. <br />Для Memcache с префиксом "tcp://", например, <b>tcp://localhost:11211</b>. Для Memcached без префикса "tcp://", например, <b>localhost:11211</b>.');
@@ -528,7 +606,7 @@
     define('LANG_CP_ADDDONS_DS_INSTALLED',      'Установленные');
     define('LANG_CP_INSTALL_PACKAGE_DONE',      'Установка завершена');
     define('LANG_CP_INSTALL_PACKAGE_DONE_INFO', 'Пакет дополнения был успешно установлен');
-    define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Папка <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
+    define('LANG_CP_INSTALL_PACKAGE_NOT_CLEARED', 'Директория <b>%s</b> не была очищена из-за нехватки прав, сделайте это вручную');
     define('LANG_CP_INSTALL_PACKAGE_INFO',      'Информация о пакете');
     define('LANG_CP_INSTALL_PACKAGE_FILE',      'Файл пакета');
     define('LANG_CP_INSTALL_PACKAGE_FILE_HINT', 'Файл с расширением <b>.icp</b> или <b>.zip</b>');
@@ -537,15 +615,16 @@
     define('LANG_CP_INSTALL_ERR_WA',            'Обход проблемы');
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Директория <b>%s</b> недоступна для записи');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Автоматическая загрузка пакета невозможна');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную папку и обновите страницу');
-    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Выставьте права 777 на указанную директорию и обновите страницу');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Нажмите "Продолжить", если вы распаковали пакет вручную в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE', 'Сервер не поддерживает функцию parse_ini_file');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT', 'Установка пакетов расширения невозможна');
     define('LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX', 'Обратитесь к хостеру с просьбой включить функцию <b>parse_ini_file</b> для PHP на вашем сервере');
     define('LANG_CP_INSTALL_NOT_ZIP',           'Сервер не поддерживает автоматическую распаковку ZIP-архивов');
     define('LANG_CP_INSTALL_NOT_ZIP_HINT',      'Автоматическая распаковка архива не возможна');
     define('LANG_CP_INSTALL_NOT_ZIP_FIX',       'Обратитесь к хостеру с просьбой обеспечить работу класса <b>ZipArchive</b> для PHP на вашем сервере');
-    define('LANG_CP_INSTALL_NOT_ZIP_WA',   'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в папку <b>%s</b>');
+    define('LANG_CP_INSTALL_NOT_ZIP_WA',        'Смените расширение пакета на <b>.zip</b>, распакуйте и загрузите содержимое в директорию <b>%s</b>');
     define('LANG_CP_INSTALL_ERROR',             'Ошибка установки пакета');
     define('LANG_CP_INSTALL_PERM_ERROR',        'Файл %s недоступен для чтения');
     define('LANG_CP_INSTALL_ZIP_ERROR',         'Ошибка распаковки пакета');
@@ -657,6 +736,7 @@
     define('LANG_HELP_URL_CTYPES_FIELD',            'https://docs.instantcms.ru/manual/ctypes/fields/add');
     define('LANG_HELP_URL_CTYPES_PROPS',            'https://docs.instantcms.ru/manual/ctypes/props');
     define('LANG_HELP_URL_CTYPES_PROP',             'https://docs.instantcms.ru/manual/ctypes/props/add');
+    define('LANG_HELP_URL_CTYPES_FILTERS',          'https://docs.instantcms.ru/manual/ctypes/filters');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'https://docs.instantcms.ru/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'https://docs.instantcms.ru/manual/ctypes/datasets/add');
     define('LANG_HELP_URL_CTYPES_RELATIONS',        'https://docs.instantcms.ru/manual/ctypes/relations');
@@ -710,6 +790,7 @@
     define('LANG_MAILCHECK_ERROR', 'При отправке письма произошла ошибка: <br><b>%s</b>');
     define('LANG_MAILCHECK_SUCCESS', 'Письмо успешно отправлено');
     define('LANG_MAILCHECK_MENU', 'Проверить настройки почты');
+    define('LANG_CP_DB_CHARSET_HINT', 'Внимание! Перед изменением этой опции, пожалуйста, сделайте бэкап базы данных!');
     define('LANG_MAILCHECK_TO', 'Кому');
     define('LANG_MAILCHECK_SUBJECT', 'Тема');
     define('LANG_MAILCHECK_BODY', 'Сообщение');

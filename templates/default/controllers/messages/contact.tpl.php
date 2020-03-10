@@ -65,8 +65,8 @@
                 <?php echo html_input('hidden', 'last_date', '', array('id' => 'msg_last_date')); ?>
                 <?php echo html_input('hidden', 'contact_id', $contact['id']); ?>
                 <?php echo html_csrf_token(); ?>
-                <div class="editor">
-                    <?php echo html_editor('content'); ?>
+                <div class="editor editor-<?php echo $editor_params['editor']; ?>">
+                    <?php echo html_wysiwyg('content', '', $editor_params['editor'], $editor_params['options']); ?>
                 </div>
                 <div class="buttons">
                     <span id="error_wrap"></span>

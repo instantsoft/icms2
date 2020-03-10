@@ -488,12 +488,12 @@ class modelComments extends cmsModel {
     public function getGuestLastCommentTime($ip){
 
         $time = $this->
-                    filterEqual('user_id', 0)->
+                    filterIsNull('user_id')->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
 
-        return strtotime($time);
+        return $time ? strtotime($time) : 0;
 
     }
 

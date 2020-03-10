@@ -1,8 +1,8 @@
 <?php
 
 define('LANG_MODERATION_CONTROLLER', 'Moderation');
-define('LANG_MODERATION_TITLE', 'Content moderation (%s)');
-define('LANG_MODERATION_CLEAR_TITLE', 'Materials for removal (%s)');
+define('LANG_MODERATION_TITLE', 'Content moderation');
+define('LANG_MODERATION_CLEAR_TITLE', 'Materials for removal');
 define('LANG_MODERATION_CLEAR_THROUGH', 'It will be removed through %s');
 define('LANG_MODERATION_ALL_LIST', 'All moderation list');
 define('LANG_MODERATION_LOG_DELETE', 'Keep a log of deletions');

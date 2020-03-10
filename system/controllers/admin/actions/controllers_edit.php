@@ -79,7 +79,35 @@ class actionAdminControllersEdit extends cmsAction {
         $css_file = $this->cms_template->getStylesFileName($controller_info['name'], 'backend');
         if ($css_file){ $this->cms_template->addCSS($css_file); }
 
+        $backend_sub_menu = $backend_controller->getBackendSubMenu();
+
+        $this->cms_template->setMenuItems('breadcrumb-menu', $backend_sub_menu);
+
         $this->cms_template->setMenuItems('backend', $backend_menu);
+
+        if($ctype){
+
+            $this->cms_template->addMenuItem('breadcrumb-menu', [
+                'title' => LANG_CONTENT_TYPE.' «'.$ctype['title'].'»',
+                'url'   => $this->cms_template->href_to('ctypes', array('edit', $ctype['id'])),
+                'options' => array(
+                    'icon'  => 'icon-settings'
+                )
+            ]);
+
+        }
+
+        $help_href_const = 'LANG_HELP_URL_COM_'.strtoupper($backend_controller->name);
+        if(defined($help_href_const)){
+            $this->cms_template->addMenuItem('breadcrumb-menu', [
+                'title' => LANG_HELP,
+                'url'   => constant($help_href_const),
+                'options' => [
+                    'target' => '_blank',
+                    'icon' => 'icon-question'
+                ]
+            ]);
+        }
 
         $html = $backend_controller->runAction($action_name, $params);
 

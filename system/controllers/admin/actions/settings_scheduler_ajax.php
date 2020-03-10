@@ -8,8 +8,6 @@ class actionAdminSettingsSchedulerAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('scheduler');
 
-        $this->model->setPerPage(admin::perpage);
-
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
 
@@ -20,13 +18,19 @@ class actionAdminSettingsSchedulerAjax extends cmsAction {
             $this->model->applyGridFilter($grid, $filter);
         }
 
+        $grid['filter'] = $filter;
+
         $total = $this->model->getSchedulerTasksCount();
+
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
+
+        $this->model->setPerPage($perpage);
+
         $pages = ceil($total / $perpage);
 
-        $ctypes = $this->model->getSchedulerTasks();
+        $tasks = $this->model->getSchedulerTasks();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $ctypes, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $tasks, $total, $pages);
 
         $this->halt();
 

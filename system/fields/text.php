@@ -77,6 +77,17 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        if($this->getProperty('is_strip_tags') === true){
+            return trim(strip_tags($value));
+        }
+        return parent::store($value, $is_submitted, $old_value);
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
     }
@@ -84,7 +95,7 @@ class fieldText extends cmsFormField {
     public function getInput($value){
 
         $this->data['attributes']               = $this->getProperty('attributes')?:[];
-        $this->data['attributes']['rows']       = $this->getOption('size');
+        $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
         $this->data['attributes']['id']         = $this->id;
         $this->data['attributes']['required']   = (array_search(array('required'), $this->getRules()) !== false);
 

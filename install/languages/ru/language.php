@@ -24,7 +24,6 @@
 
     define('LANG_STEP_START_1',             'Мастер установки InstantCMS проверит удовлетворяет ли ваш сервер системным требованиям.');
     define('LANG_STEP_START_2',             'В процессе работы мастер задаст несколько вопросов, необходимых для корректной установки и настройки InstantCMS.');
-    define('LANG_STEP_START_3',             'Перед началом установки необходимо иметь базу данных MySQL в кодировке <b>utf8_general_ci</b>');
 
     define('LANG_LICENSE_AGREE',            'Я согласен с условиями лицензии');
     define('LANG_LICENSE_ERROR',            'Вы должны согласиться с условиями лицензии');
@@ -68,7 +67,6 @@
     define('LANG_PATHS_SESSIONS_BASEDIR',    'Полный путь в файловой системе, который должен входить в один из путей ');
 
     define('LANG_DATABASE_INFO',            'Укажите реквизиты для подключения к базе данных MySQL');
-    define('LANG_DATABASE_CHARSET_INFO',    'База данных должна быть в кодировке <b>utf8_general_ci</b>');
     define('LANG_DATABASE_HOST',            'Сервер MySQL');
     define('LANG_DATABASE_USER',            'Пользователь');
     define('LANG_DATABASE_PASS',            'Пароль');
@@ -76,6 +74,7 @@
     define('LANG_DATABASE_BASE_HINT',       'Если не существует, будет создана');
     define('LANG_DATABASE_ENGINE',          'Движок базы данных');
     define('LANG_DATABASE_ENGINE_HINT',     'Не знаете что выбрать? Выбирайте InnoDB.');
+    define('LANG_DATABASE_CHARSET',         'Кодировка базы данных');
     define('LANG_DATABASE_PREFIX',          'Префикс таблиц');
     define('LANG_DATABASE_USERS_TABLE',     'Таблица с пользователями');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Создать новую');
@@ -89,6 +88,7 @@
     define('LANG_DATABASE_ENGINE_NO',       'Выбранный движок БД не поддерживается');
     define('LANG_DATABASE_ENGINE_DISABLED', 'Выбранный движок БД поддерживается, но отключен в настройках MySQL');
     define('LANG_DATABASE_ENGINE_ERROR',    'Выбранный движок БД не поддерживается сервером');
+    define('LANG_DATABASE_CH_ERROR',        'Выбранная кодировка БД не поддерживается сервером');
 
     define('LANG_SITE_SITENAME',            "Название сайта");
     define('LANG_SITE_HOMETITLE',           "Заголовок главной страницы");

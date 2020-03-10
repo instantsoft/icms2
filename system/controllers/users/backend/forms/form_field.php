@@ -7,6 +7,7 @@ class formUsersField extends cmsForm {
         return array(
             'basic' => array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
@@ -62,7 +63,7 @@ class formUsersField extends cmsForm {
                     new fieldString('new_fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
                         'rules' => array(
-                            array('max_length', 100)
+                            array('max_length', 32)
                         )
                     )),
                 )

@@ -41,18 +41,16 @@ class actionAdminCtypesPropsEdit extends cmsAction {
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_prop', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'prop' => $prop,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_prop', array(
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'prop'   => $prop,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

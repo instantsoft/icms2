@@ -6,12 +6,19 @@ class onAdminAdminDashboardBlock extends cmsAction {
 
         if(!empty($options['only_titles'])){
 
-            return [
+            $titles = [
                 'stat' => LANG_CP_DASHBOARD_STATS,
                 'news' => LANG_CP_DASHBOARD_NEWS,
-                'sysinfo' => LANG_CP_DASHBOARD_SYSINFO,
                 'resources' => LANG_CP_DASHBOARD_RESOURCES,
             ];
+
+            // совместимость
+            // в новом шаблоне этого виджета нет
+            if($this->cms_template->name != 'admincoreui'){
+                $titles['sysinfo'] = LANG_CP_DASHBOARD_SYSINFO;
+            }
+
+            return $titles;
 
         }
 
@@ -25,6 +32,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
             $cookie = cmsUser::getCookie('dashboard_chart');
 
             $defaults = array(
+                'type'       => 'bar',
                 'controller' => 'users',
                 'section'    => 'reg',
                 'period'     => 7
@@ -34,6 +42,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
                 $cookie = json_decode($cookie, true);
                 if(is_array($cookie)){
                     $defaults = array(
+                        'type'       => !empty($cookie['t']) ? $cookie['t'] : 'bar',
                         'controller' => $cookie['c'],
                         'section'    => $cookie['s'],
                         'period'     => $cookie['p']
@@ -43,7 +52,8 @@ class onAdminAdminDashboardBlock extends cmsAction {
 
             $dashboard_blocks[] = array(
                 'title' => LANG_CP_DASHBOARD_STATS,
-                'class' => 'col3',
+                'hide_title' => true, // работает на новом шаблоне админки
+                'class' => 'col-12',
                 'name' => 'stat',
                 'html'  => $this->cms_template->getRenderedChild('index_chart', array(
                     'chart_nav' => $chart_nav,
@@ -65,7 +75,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
         }
 
         // Информация о системе
-        if(!array_key_exists('sysinfo', $options['dashboard_enabled'])  || !empty($options['dashboard_enabled']['sysinfo'])){
+        if($this->cms_template->name != 'admincoreui' && (!array_key_exists('sysinfo', $options['dashboard_enabled'])  || !empty($options['dashboard_enabled']['sysinfo']))){
 
             $uploader   = new cmsUploader();
             $extensions = get_loaded_extensions();
@@ -100,6 +110,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
 
             $dashboard_blocks[] = array(
                 'title' => LANG_CP_DASHBOARD_RESOURCES,
+                'child_class' => 'bg-info',
                 'name' => 'resources',
                 'html'  => $this->cms_template->getRenderedChild('index_resources', array())
             );

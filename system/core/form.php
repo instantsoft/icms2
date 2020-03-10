@@ -3,10 +3,12 @@
 class cmsForm {
 
     public $is_tabbed = false;
+    public $show_unsave_notice = true;
 
     private $params          = array();
     private $structure       = array();
-    private $disabled_fields = array();
+
+    protected $disabled_fields = array();
 
     protected $controller;
 
@@ -531,7 +533,7 @@ class cmsForm {
      * @param string $field_name Название поля
      */
     public function disableField($field_name){
-        $this->disabled_fields[] = $field_name;
+        $this->disabled_fields[] = $field_name; return $this;
     }
 
 //============================================================================//
@@ -581,6 +583,7 @@ class cmsForm {
                     }
 
                     $field->setItem($item);
+                    $field->request = $request;
 
                     $value = $field->store($value, $is_submitted, $old_value);
                     if ($value === false) { continue; }
@@ -689,6 +692,20 @@ class cmsForm {
 
                         if (!$rule) { continue; }
 
+                        // если правило - это колбэк
+                        if (is_callable($rule[0]) && ($rule[0] instanceof Closure)){
+
+                            $result = $rule[0]($controller, $data, $value);
+
+                            if ($result !== true) {
+                                $errors[$name] = $result;
+                                break;
+                            }
+
+                            continue;
+
+                        }
+
                         // каждое правило это массив
                         // первый элемент - название функции-валидатора
                         $validate_function = "validate_{$rule[0]}";
@@ -702,9 +719,11 @@ class cmsForm {
                         unset($rule[0]);
 
                         // вызываем валидатор и объединяем результат с предыдущими
-                        // методы валидации могут быть как в самом поле
-                        // так и в контроллерах, приоритет за полем
-                        if(method_exists($field, $validate_function)){
+                        // методы валидации могут быть определены (в порядке приоритета):
+                        // в классе формы, в классе поля, в контроллерах
+                        if (method_exists($this, $validate_function)) {
+                            $result = call_user_func_array([$this, $validate_function], $rule);
+                        } elseif (method_exists($field, $validate_function)){
                             $result = call_user_func_array(array($field, $validate_function), $rule);
                         } else {
                             $result = call_user_func_array(array($controller, $validate_function), $rule);

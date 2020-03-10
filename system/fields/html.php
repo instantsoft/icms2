@@ -88,7 +88,7 @@ class fieldHtml extends cmsFormField {
     }
 
     public function getFilterInput($value) {
-        return html_input('text', $this->name, $value);
+        return ($this->show_filter_input_title ? '<label for="'.$this->id.'">'.$this->title.'</label>' : '') . html_input('text', $this->name, $value);
     }
 
     public function parse($value){

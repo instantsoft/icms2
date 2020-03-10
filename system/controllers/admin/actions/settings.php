@@ -108,6 +108,43 @@ class actionAdminSettings extends cmsAction {
 
                 }
 
+                if($values['db_charset'] !== $this->cms_config->db_charset){
+
+                    $collations = [
+                        'utf8' => 'utf8_general_ci',
+                        'utf8mb4' => 'utf8mb4_general_ci'
+                    ];
+
+                    $collation_name = $collations[$values['db_charset']];
+
+                    $r = $this->model->db->query("SELECT 1 FROM `information_schema`.`COLLATIONS` WHERE `COLLATION_NAME` = '{$collation_name}' AND `CHARACTER_SET_NAME` = '{$values['db_charset']}' AND `IS_COMPILED` = 'Yes'");
+
+                    // если кодировка поддерживается, меняем для таблиц
+                    if ($r && $this->model->db->numRows($r)) {
+
+                        $sql = "SELECT CONCAT('ALTER TABLE `', t.`TABLE_SCHEMA`, '`.`', t.`TABLE_NAME`, '` CONVERT TO CHARACTER SET {$values['db_charset']} COLLATE {$collation_name};') as sqlcode FROM `information_schema`.`TABLES` t WHERE 1 AND t.`TABLE_SCHEMA` = '{$this->cms_config->db_base}'";
+
+                        $res = $this->model->db->query($sql, false, true);
+                        if($res !== false){
+
+                            while($item = $this->model->db->fetchAssoc($res)){
+                                $this->model->db->query($item['sqlcode'], false, true);
+                            }
+
+                            $this->model->db->freeResult($res);
+
+                        }
+
+                        // меняем кодировку по умолчанию для базы
+                        $this->model->db->query("ALTER DATABASE {$this->cms_config->db_base} CHARACTER SET {$values['db_charset']} COLLATE {$collation_name}");
+
+                    } else {
+                        // Не меняем, если не поддерживается
+                        $values['db_charset'] = $this->cms_config->db_charset;
+                    }
+
+                }
+
                 $values = cmsEventsManager::hook('site_settings_before_update', $values);
 
                 $result = $this->cms_config->save($values);
@@ -140,7 +177,7 @@ class actionAdminSettings extends cmsAction {
 
         $tpls = cmsCore::getTemplates();
         foreach ($tpls as $tpl) {
-            if(file_exists($this->cms_config->root_path.'templates/'.$tpl.'/options.form.php')){
+            if(file_exists($this->cms_config->root_path.cmsTemplate::TEMPLATE_BASE_PATH.$tpl.'/options.form.php')){
                 $templates_has_options[] = $tpl;
             }
         }

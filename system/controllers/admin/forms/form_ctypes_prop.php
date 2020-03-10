@@ -39,7 +39,7 @@ class formAdminCtypesProp extends cmsForm {
                     new fieldString('new_fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
                         'rules' => array(
-                            array('max_length', 100)
+                            array('max_length', 32)
                         )
                     )),
                 )
@@ -82,6 +82,7 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldText('values', array(
                         'size' => 8,
+                        'is_strip_tags' => true,
                         'hint' => LANG_CP_PROP_VALUES_HINT
                     )),
                     new fieldCheckbox('options:is_filter_multi', array(
@@ -95,6 +96,7 @@ class formAdminCtypesProp extends cmsForm {
                 'childs' => array(
                     new fieldList('cats', array(
                             'is_multiple' => true,
+                            'multiple_select_deselect' => true,
                             'is_tree' => true,
                             'generator' => function($prop) use($model){
                                 $ctype = $model->getContentType($prop['ctype_id']);

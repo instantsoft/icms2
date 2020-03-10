@@ -19,6 +19,19 @@ class onTagsContentItemForm extends cmsAction {
                 'autocomplete' => array(
                     'multiple' => true,
                     'url'      => href_to('tags', 'autocomplete')
+                ),
+                'rules' => array(
+                    array(function($controller, $data, $value){
+
+                        if(!$value){ return true; }
+
+                        if(strpos($value, '?') !== false){
+                            return ERR_VALIDATE_INVALID;
+                        }
+
+                        return true;
+
+                    })
                 )
             )));
 

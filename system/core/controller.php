@@ -9,6 +9,7 @@ class cmsController {
 	public $model = null;
     public $request;
     public $current_action;
+    public $current_template_name;
     public $current_params;
     public $options;
     public $root_url;
@@ -18,7 +19,7 @@ class cmsController {
      * Контекст списка записей
      * @var string
      */
-    private $list_type = 'category_view';
+    protected $list_type = 'category_view';
     /**
      * Если для контроллера задан ремап
      * и это свойство установлено в true
@@ -66,6 +67,8 @@ class cmsController {
     protected $callbacks = array();
     protected $useOptions = false;
 
+    protected $active_filters = array();
+
     /**
      * Неизвестные экшены определять
      * как первый параметр экшена index
@@ -73,7 +76,7 @@ class cmsController {
      */
     protected $unknown_action_as_index_param = false;
 
-    function __construct( cmsRequest $request){
+    public function __construct( cmsRequest $request){
 
         self::loadControllers();
 
@@ -118,7 +121,7 @@ class cmsController {
      * Этот метод переопределяется в дочерних классах
      * где задается начальный набор функций, которые будут применены в коллбэках
      */
-    public function loadCallback() { $this->callbacks = array(); }
+    public function loadCallback() {}
     /**
      * Устанавливает один или множество коллбэков
      * @param string $name Назначение - обычно название метода, где будет применяться
@@ -457,19 +460,10 @@ class cmsController {
             // Если файла нет, ищем метод класса
             if (method_exists($this, $method_name)){
 
-                // проверяем максимальное число аргументов экшена
-                if ($this->name != 'admin'){
-                    $rf = new ReflectionMethod($this, $method_name);
-                    // кол-во переданных параметров
-                    $current_params = count($params);
-                    // передано больше чем нужно параметров
-                    if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
-                    // передано меньше чем нужно параметров
-                    if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
-                }
+                if (!$this->validateParamsCount($this, $method_name, $params)) { cmsCore::error404(); }
 
                 // сохраняем название текущего экшена
-                $this->current_action = $action_name;
+                $this->setCurrentAction($action_name);
 
                 // если есть нужный экшен, то вызываем его
                 $result = call_user_func_array(array($this, $method_name), $params);
@@ -501,6 +495,26 @@ class cmsController {
     }
 
     /**
+     * Проверяем максимальное число аргументов экшена
+     * Возвращает false если переданных количество параметров не соответствует кол-ву аргументов экшена
+     * Для отключения проверки, можно переопределить этот метод (например см. в контроллере admin)
+     * @param string|object $class Имя класса или текущий объект контроллера $this
+     * @param string $method_name Имя метода
+     * @param array $params Массив параметров
+     * @return bool Результат проверки
+     */
+    protected function validateParamsCount($class, $method_name, $params) {
+        $rf = new ReflectionMethod($class, $method_name);
+        // кол-во переданных параметров
+        $current_params = count($params);
+        // передано больше чем нужно параметров
+        if ($rf->getNumberOfParameters() < $current_params) { return false; }
+        // передано меньше чем нужно параметров
+        if ($rf->getNumberOfRequiredParameters() > $current_params) { return false; }
+        return true;
+    }
+
+    /**
      * Возвращает путь к файлу экшена (./actions/$action_name.php по умолчанию)
      * @param string $action_name
      * @return string
@@ -510,8 +524,25 @@ class cmsController {
     }
 
     /**
-     * Выполняет экшен, находящийся в отдельном файле
+     * Устанавливает имя текущего экшена
+     * и шаблона экшена (если он не будет передан в cmsTemplate->render)
+     *
      * @param string $action_name
+     * @return $this
+     */
+    public function setCurrentAction($action_name) {
+
+        $this->current_action = $action_name;
+        $this->current_template_name = $action_name;
+
+        return $this;
+    }
+
+    /**
+     * Выполняет экшен, находящийся в отдельном файле
+     * @param string $action_name Название экшена
+     * @param array $params Параметры
+     * @return mixed
      */
     public function runExternalAction($action_name, $params = array()){
 
@@ -529,19 +560,10 @@ class cmsController {
             cmsCore::error(sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $action_file), $class_name));
         }
 
-        // проверяем максимальное число аргументов экшена
-        if ($this->name != 'admin'){
-            $rf = new ReflectionMethod($class_name, 'run');
-            // кол-во переданных параметров
-            $current_params = count($params);
-            // передано больше чем нужно параметров
-            if ($rf->getNumberOfParameters() < $current_params) { cmsCore::error404(); }
-            // передано меньше чем нужно параметров
-            if ($rf->getNumberOfRequiredParameters() > $current_params) { cmsCore::error404(); }
-        }
+        if (!$this->validateParamsCount($class_name, 'run', $params)) { cmsCore::error404(); }
 
         // сохраняем название текущего экшена
-        $this->current_action = $action_name;
+        $this->setCurrentAction($action_name);
 
         $action_object = new $class_name($this, $params);
 
@@ -703,6 +725,24 @@ class cmsController {
 //============================================================================//
 //============================================================================//
 
+    public function getActiveFiltersQuery() {
+        return $this->active_filters ? http_build_query($this->active_filters) : '';
+    }
+
+    public function getActiveFilters() {
+        return $this->active_filters;
+    }
+
+    public function setActiveFilter($key, $value) {
+
+        $this->active_filters[$key] = $value;
+
+        return $this;
+    }
+
+//============================================================================//
+//============================================================================//
+
     /**
      * Загружает и возвращает описание структуры формы
      * в контексте текущего контроллера и, в свою очередь,
@@ -772,22 +812,30 @@ class cmsController {
             'is_filter'     => true,
             'is_actions'    => true,
             'is_pagination' => true,
+            'perpage'       => 30,
             'is_toolbar'    => true,
             'is_draggable'  => false,
+            'drag_save_url' => '',
             'is_selectable' => false,
             'load_columns'  => false
         );
 
         $grid_file = $this->root_path . 'grids/grid_' . $grid_name . '.php';
 
-        if (!is_readable($grid_file)){ return false; }
+        if (!is_readable($grid_file)){
+            cmsCore::error(ERR_FILE_NOT_FOUND . ': '. str_replace(PATH, '', $grid_file));
+        }
 
         include($grid_file);
 
         $args = array($this);
         if ($params) {
-            if (is_array($params)){ $args = array($this) + $params; }
-            else { $args[] = $params; }
+            if (!is_array($params)){
+                $params = [$params];
+            }
+            foreach ($params as $p) {
+                $args[] = $p;
+            }
         }
 
         $grid = call_user_func_array('grid_'.$grid_name, $args);
@@ -1319,6 +1367,69 @@ class cmsController {
         $result = !$this->cms_core->db->getRow('content_datasets', $where);
         if (!$result) { return ERR_VALIDATE_UNIQUE; }
         return true;
+    }
+
+    public function validate_date($value){
+
+        if (empty($value)) { return true; }
+
+        if (!is_array($value)){
+
+            $time = strtotime($value);
+
+            if ($time !== false){
+                return true;
+            }
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
+    }
+
+    public function validate_date_range($value){
+
+        if (empty($value)) { return true; }
+
+        if (!empty($value['date']) && !is_array($value['date'])){
+
+            if(isset($value['hours']) && isset($value['mins']) &&
+                    !is_array($value['hours']) && !is_array($value['mins'])){
+                return $this->validate_date(sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']));
+            }
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+
+                if(is_array($value['from'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['from']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            if (!empty($value['to'])){
+
+                if(is_array($value['to'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if($this->validate_date($value['to']) !== true){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            return true;
+
+        }
+
+        return ERR_VALIDATE_INVALID;
+
     }
 
 }

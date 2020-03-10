@@ -1,4 +1,4 @@
-<?php $this->addJS($this->getJavascriptFileName('jquery-cookie')); ?>
+<?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
@@ -7,7 +7,7 @@
 
 <form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $attributes['method']; ?>"
-      <?php if (!empty($attributes['is_ajax'])){ ?>
+      <?php if ($this->controller->request->isAjax()){ ?>
         class="modal"
       <?php } ?>
       enctype="multipart/form-data"
@@ -17,27 +17,20 @@
 
     <?php echo $attributes['prepend_html']; ?>
 
-    <?php include 'form_fields.tpl.php'; ?>
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } ?>form-tabs">
 
-    <script type="text/javascript">
-        <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
-        $(function (){
-            icms.forms.initUnsaveNotice();
-        <?php if ($form->is_tabbed){ ?>
-            initTabs('#<?php echo $attributes['form_id']; ?>');
+        <?php if($form->is_tabbed){ ?>
+            <ul class="tabbed">
+                <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
+                    <?php if (empty($fieldset['childs'])) { continue; } ?>
+                    <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
+                <?php } ?>
+            </ul>
         <?php } ?>
-            $('.is_collapsed legend').on('click', function (){
-                var _fieldset = $(this).closest('.is_collapsed');
-                $(_fieldset).toggleClass('is_collapse do_expand');
-                $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
-            });
-            $('.is_collapsed').each(function (){
-                if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
-                    $(this).addClass('do_expand').removeClass('is_collapse'); return;
-                }
-            });
-        });
-    </script>
+
+        <?php include 'form_fields.tpl.php'; ?>
+
+    </div>
 
     <?php if(!empty($attributes['hook'])){ ?>
 
@@ -68,12 +61,31 @@
     </div>
 
 </form>
-<?php if (!empty($attributes['is_ajax'])){ ?>
-    <script type="text/javascript">
-        $(function (){
-            $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
-                return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
-            });
+<?php ob_start(); ?>
+<script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
+    $(function (){
+    <?php if ($form->show_unsave_notice){ ?>
+        icms.forms.initUnsaveNotice();
+    <?php } ?>
+    <?php if ($form->is_tabbed){ ?>
+        initTabs('#<?php echo $attributes['form_id']; ?>');
+    <?php } ?>
+        $('.is_collapsed legend').on('click', function (){
+            var _fieldset = $(this).closest('.is_collapsed');
+            $(_fieldset).toggleClass('is_collapse do_expand');
+            $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
         });
-    </script>
-<?php }
+        $('.is_collapsed').each(function (){
+            if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
+                $(this).addClass('do_expand').removeClass('is_collapse'); return;
+            }
+        });
+    <?php if (!empty($attributes['is_ajax'])){ ?>
+        $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
+            return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
+        });
+    <?php } ?>
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>

@@ -37,7 +37,7 @@ class cmsWysiwygRedactor {
             }
 
             if($context['action']){
-                $upload_params['target_subject'] = $context['action'];
+                $upload_params['target_subject'] = mb_substr($context['action'], 0, 32);
             }
 
             if(strpos($core->uri, '/add/') === false && !empty($context['params'][1]) && is_numeric($context['params'][1])){
@@ -99,7 +99,7 @@ class cmsWysiwygRedactor {
 
         $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
         $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
-        $template->addJSFromContext('templates/default/js/files.js');
+        $template->addTplJSNameFromContext('files');
 
         if(!empty($this->options['plugins'])){
             foreach($this->options['plugins'] as $plugin){
@@ -131,7 +131,7 @@ class cmsWysiwygRedactor {
                 $('#'+dom_id).redactor(imperavi_options);
                 icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
                     $('#'+field_element).redactor('set', text);
-                    $(field_element).redactor('focus');
+                    $('#'+field_element).redactor('focus');
                 });
                 icms.forms.addWysiwygsAddPool(dom_id, function(field_element, text){
                     $('#'+field_element).redactor('insertText', text);

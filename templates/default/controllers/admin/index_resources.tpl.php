@@ -5,7 +5,7 @@
         <a href="http://www.instantcms.ru/sponsorship.html">?</a>
     </div>
     <a href="">
-        <img src="<?php echo href_to('templates/default/images/'); ?>">
+        <img src="<?php echo href_to(cmsTemplate::TEMPLATE_BASE_PATH.'default/images/'); ?>">
     </a>
 </div>
 

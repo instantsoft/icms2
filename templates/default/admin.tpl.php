@@ -5,18 +5,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
-    <?php $this->addMainCSS('templates/default/css/theme-modal.css'); ?>
-    <?php $this->addMainCSS('templates/default/css/jquery-ui.css'); ?>
-    <?php $this->addMainCSS('templates/default/css/animate.css'); ?>
-    <?php $this->addMainJS('templates/default/js/jquery.js'); ?>
-    <?php $this->addMainJS('templates/default/js/jquery-ui.js'); ?>
-    <?php $this->addMainJS('templates/default/js/i18n/jquery-ui/'.cmsCore::getLanguageName().'.js'); ?>
-    <?php $this->addMainJS('templates/default/js/jquery-ui.touch-punch.js'); ?>
-    <?php $this->addMainJS('templates/default/js/jquery-modal.js'); ?>
-    <?php $this->addMainJS('templates/default/js/core.js'); ?>
-    <?php $this->addMainJS('templates/default/js/modal.js'); ?>
-    <?php $this->addMainJS('templates/default/js/messages.js'); ?>
-    <?php $this->addMainJS('templates/default/js/admin-core.js'); ?>
+    <?php $this->addMainTplCSSName([
+        'theme-modal',
+        'jquery-ui',
+        'animate'
+        ]); ?>
+    <?php $this->addMainTplJSName('jquery', true); ?>
+    <?php $this->addMainTplJSName([
+        'jquery-ui',
+        'i18n/jquery-ui/'.cmsCore::getLanguageName(),
+        'jquery-ui.touch-punch',
+        'jquery-modal',
+        'core',
+        'modal',
+        'messages',
+        'admin-core'
+        ]); ?>
     <?php if ($config->debug){ ?>
         <?php $this->addTplCSSName('debug'); ?>
     <?php } ?>
@@ -80,7 +84,7 @@
                 if ($messages){ ?>
                     <div class="sess_messages animated fadeIn">
                         <?php foreach($messages as $message){ ?>
-                            <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                            <div class="message_<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
                          <?php } ?>
                     </div>
                 <?php } ?>

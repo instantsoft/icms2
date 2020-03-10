@@ -85,6 +85,7 @@
     define('LANG_MOBILE_DEVICES',  'Phones');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Prefix');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'AutoLink');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Enabling this option breaks (by comma) the field value into separate words and each makes a reference. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Option "Show in filter" should be enabled.');
@@ -101,6 +102,9 @@
     define('LANG_PARSER_HIDDEN',             'Hidden field');
     define('LANG_PARSER_NUMBER',             'Number');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Filter by range');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Range as slider');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Slider step');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Show input fields with slider');
     define('LANG_PARSER_NUMBER_UNITS',       'Units');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'The number of digits of the whole part');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Number of digits after the decimal point');
@@ -223,6 +227,11 @@
     define('LANG_REG_FIRST_TIME',            'Is it your first visit?');
     define('LANG_REG_ALREADY',               'Already registered?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'New e-mail address');
+    define('LANG_EMAIL_NEW_HASH',            'Confirmation code for the new e-mail address');
+    define('LANG_EMAIL_NEW_HINT',            'A confirmation link will be sent to your new address.');
+    define('LANG_CONFIRM_CODE_ERROR',        'Invalid verification code entered');
+    define('LANG_SECURITY',                  'Security');
     define('LANG_PASSWORD',                  'Password');
     define('LANG_RETYPE_PASSWORD',           'Repeat password');
     define('LANG_USER_GROUP',                'Group');
@@ -296,6 +305,7 @@
     define('LANG_PERM_RULE',                 'Permission rule');
     define('LANG_PERM_OPTION_NULL',          'No');
     define('LANG_PERM_OPTION_YES',           'Yes');
+    define('LANG_PERM_OPTION_ALLOW',         'Allow');
     define('LANG_PERM_OPTION_PREMOD',        'With premoderation');
     define('LANG_PERM_OPTION_PREMOD_OWN',    'Only own with premoderation');
     define('LANG_PERM_OPTION_PREMOD_ALL',    'All with premoderation');
@@ -527,6 +537,7 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Page body');
+    define('LANG_PAGE_BREADCRUMB',           'Breadcrumb');
     define('LANG_PAGE_MENU',                 'Page menu');
     define('LANG_PAGE_HEADER',               'Page header');
     define('LANG_PAGE_FOOTER',               'Page footer');

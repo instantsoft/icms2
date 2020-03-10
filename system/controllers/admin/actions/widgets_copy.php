@@ -28,6 +28,7 @@ class actionAdminWidgetsCopy extends cmsAction {
             $device_types = false;
         }
 
+        $widget_bind['device_type_names'] = $widget_bind['device_types'];
         $widget_bind['device_types'] = $device_types;
         $widget_bind['name']         = $widget_bind['widget_title'];
 

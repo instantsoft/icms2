@@ -5,6 +5,11 @@
 <?php
     $this->renderForm($form, $data, array(
         'submit' => array('title' => LANG_CONTINUE),
+        'cancel' => array(
+            'title' => LANG_AUTH_CLEAN_REG_EMAIL,
+            'show' => ($reg_email ? true : false),
+            'href' => $this->href_to('register').'?clean_reg_email=1'
+        ),
         'action' => '',
         'method' => 'post',
     ), $errors);
@@ -12,7 +17,7 @@
 
 <script>
     <?php echo $this->getLangJS('LANG_SECOND1', 'LANG_SECOND2', 'LANG_SECOND10'); ?>
-    vTimer = {
+    var vTimer = {
         timeout_id: null,
         cur_time: 0,
         interval: 1000,

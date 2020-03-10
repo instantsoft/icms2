@@ -88,4 +88,8 @@ class fieldUrl extends cmsFormField {
         return strip_tags($value);
     }
 
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
 }

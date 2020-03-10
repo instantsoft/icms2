@@ -44,7 +44,8 @@ class fieldImages extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList();
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+                'rules' => [['required']]
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
@@ -84,13 +85,13 @@ class fieldImages extends cmsFormField {
             if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
                 $html .= html_gif_image($paths, 'small', $title.' '.$key, array('class'=>'img-'.$this->getName()));
             } else {
-                $html .= '<a title="'.html($title, false).'" class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, $title.' '.$key).'</a>';
+                $html .= '<a title="'.html($title, false).'" class="img-'.$this->getName().' '.$a_class.'" href="'.html_image_src($paths, $this->getOption('size_full'), true).'">'.html_image($paths, $small_preset, $title.' '.$key, ['class' => 'img-thumbnail']).'</a>';
             }
 
         }
 
         if($html){
-            $html .= '<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>';
+            cmsTemplate::getInstance()->addBottom('<script>$(function() { icms.modal.bindGallery(".img-'.$this->getName().'"); });</script>');
         }
 
         return $html;

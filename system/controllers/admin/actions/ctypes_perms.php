@@ -2,7 +2,7 @@
 
 class actionAdminCtypesPerms extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id = null){
 
         if (!$ctype_id) { cmsCore::error404(); }
 

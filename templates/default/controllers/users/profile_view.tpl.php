@@ -1,7 +1,7 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
+    $this->addTplJSName('jquery-ui');
+    $this->addTplCSSName('jquery-ui');
 
     $this->setPagePatternTitle($profile, 'nickname');
     $this->setPagePatternDescription($profile, 'nickname');

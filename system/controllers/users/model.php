@@ -144,9 +144,11 @@ class modelUsers extends cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getUser($id=false){
+    public function getUser($id = false) {
 
-        $this->useCache('users.user.'.$id);
+        if($id){
+            $this->useCache('users.user.'.$id);
+        }
 
         $this->select('u.nickname', 'inviter_nickname');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
@@ -226,6 +228,10 @@ class modelUsers extends cmsModel {
      */
     public function getContentItem($id){
         return $this->getUser($id);
+    }
+
+    public function getContentTypeTableName($name){
+        return '{users}';
     }
 
 //============================================================================//
@@ -378,6 +384,8 @@ class modelUsers extends cmsModel {
             }
 
         }
+
+        unset($user['password']);
 
         if (!empty($user['password1']) && !$errors){
 
@@ -757,24 +765,18 @@ class modelUsers extends cmsModel {
 
         if (!$is_guests) { $this->filterNotEqual('id', GUEST_GROUP_ID); }
 
+        $this->orderBy('ordering', 'asc');
+
         return $this->get('{users}_groups');
 
     }
 
     public function getPublicGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_public', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_public', 1)->getGroups();
     }
 
     public function getFilteredGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_filter', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_filter', 1)->getGroups();
     }
 
     public function getGroup($id=false){

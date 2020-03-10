@@ -5,6 +5,7 @@ class cmsBackend extends cmsController {
     public $maintained_ctype = false;
 
     protected $backend_menu = array();
+    protected $backend_sub_menu = array();
 
     public $queue = array(
         'queues'           => array(),
@@ -45,8 +46,20 @@ class cmsBackend extends cmsController {
 
     }
 
+    public function setCurrentAction($action_name) {
+
+        $this->current_action = $action_name;
+        $this->current_template_name = 'backend/'.$action_name;
+
+        return $this;
+    }
+
 //============================================================================//
 //============================================================================//
+
+    public function getBackendSubMenu(){
+        return $this->backend_sub_menu;
+    }
 
     public function getBackendMenu(){
         return $this->backend_menu;
@@ -66,23 +79,29 @@ class cmsBackend extends cmsController {
 //=========                Скрытие/показ записей                     =========//
 //============================================================================//
 
-    public function actionToggleItem($item_id=false, $table=false, $field='is_pub'){
+    public function actionToggleItem($item_id = false, $table = false, $field = 'is_pub', $zero_as_null = false) {
 
-		if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
-			$this->cms_template->renderJSON(array(
-				'error' => true,
+        if (!$item_id || !$table || !is_numeric($item_id) || $this->validate_regexp("/^([a-z0-9\_{}]*)$/", urldecode($table)) !== true){
+			return $this->cms_template->renderJSON(array(
+				'error' => true
+			));
+		}
+
+		if (!$this->model->db->isTableExists($table)){
+			return $this->cms_template->renderJSON(array(
+				'error' => true
 			));
 		}
 
         $i = $this->model->getItemByField($table, 'id', $item_id);
 
 		if (!$i || !array_key_exists($field, $i)){
-			$this->cms_template->renderJSON(array(
-				'error' => true,
+			return $this->cms_template->renderJSON(array(
+				'error' => true
 			));
 		}
 
-        $i[$field] = $i[$field] ? 0 : 1;
+        $i[$field] = $i[$field] ? ($zero_as_null ? null : 0) : 1;
 
 		$this->model->update($table, $item_id, array(
 			$field => $i[$field]
@@ -90,9 +109,9 @@ class cmsBackend extends cmsController {
 
         $this->processCallback('actiontoggle_'.$table.'_'.$field, array($i));
 
-		$this->cms_template->renderJSON(array(
+		return $this->cms_template->renderJSON(array(
 			'error' => false,
-			'is_on' => $i[$field]
+			'is_on' => intval($i[$field])
 		));
 
     }
@@ -108,27 +127,28 @@ class cmsBackend extends cmsController {
                 'childs' => array(
                     new fieldText('seo_desc', array(
                         'title' => LANG_SEO_DESC,
-                        'hint' => LANG_SEO_DESC_HINT,
+                        'hint'  => LANG_SEO_DESC_HINT,
+                        'is_strip_tags' => true,
                         'options'=>array(
-                            'max_length'=> 256,
-                            'show_symbol_count'=>true
+                            'max_length'        => 256,
+                            'show_symbol_count' => true
                         )
                     ))
                 )
             ));
 
-	 if(!$this->cms_config->disable_metakeys){
-	    $form->addFieldToBeginning('seo_basic',
-		new fieldString('seo_keys', array(
-			'title' => LANG_SEO_KEYS,
-			'hint' => LANG_SEO_KEYS_HINT,
-			'options'=>array(
-				'max_length'=> 256,
-				'show_symbol_count'=>true
-			)
-		     ))
-		);
-	    }
+            if (!$this->cms_config->disable_metakeys) {
+                $form->addFieldToBeginning('seo_basic',
+                    new fieldString('seo_keys', array(
+                        'title'   => LANG_SEO_KEYS,
+                        'hint'    => LANG_SEO_KEYS_HINT,
+                        'options' => array(
+                            'max_length'        => 256,
+                            'show_symbol_count' => true
+                        )
+                    ))
+                );
+            }
         }
 
         if($this->useItemSeoOptions){
@@ -181,9 +201,13 @@ class cmsBackend extends cmsController {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
+                $options = cmsEventsManager::hook("controller_{$this->name}_before_save_options", $options);
+
                 cmsController::saveOptions($this->name, $options);
 
                 $this->processCallback(__FUNCTION__, array($options));
+
+                cmsEventsManager::hook("controller_{$this->name}_after_save_options", $options);
 
                 $this->redirectToAction('options');
 

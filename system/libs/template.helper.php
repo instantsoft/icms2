@@ -140,21 +140,21 @@ function html_input($type='text', $name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'input';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="'.$type.'" class="'.$class.'" name="'.$name.'" value="'.html($value, false).'" '.$attr_str.'/>';
+	return '<input type="'.$type.'" class="form-control '.$class.'" name="'.$name.'" value="'.html($value, false).'" '.$attr_str.'/>';
 }
 
 function html_file_input($name, $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'file-input';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="file" class="'.$class.'" name="'.$name.'" '.$attr_str.'/>';
+	return '<input type="file" class="form-control-file '.$class.'" name="'.$name.'" '.$attr_str.'/>';
 }
 
 function html_textarea($name='', $value='', $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'textarea';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	$html = '<textarea name="'.$name.'" class="'.$class.'" '.$attr_str.'>'.html($value, false).'</textarea>';
+	$html = '<textarea name="'.$name.'" class="form-control '.$class.'" '.$attr_str.'>'.html($value, false).'</textarea>';
 	return $html;
 }
 
@@ -167,13 +167,13 @@ function html_checkbox($name, $checked=false, $value=1, $attributes=array()){
     $attr_str = html_attr_str($attributes);
     $class = 'input-checkbox';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input type="checkbox" class="'.$class.'" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
+	return '<input type="checkbox" class="form-check-input '.$class.'" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
 }
 
 function html_radio($name, $checked=false, $value=1, $attributes=array()){
     if ($checked) { $attributes['checked'] = 'checked'; }
     $attr_str = html_attr_str($attributes);
-	return '<input type="radio" class="input_radio" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
+	return '<input type="radio" class="form-control input_radio" name="'.$name.'" value="'.$value.'" '.$attr_str.'/>';
 }
 
 function html_date($date=false, $is_time=false){
@@ -200,6 +200,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     } else {
         $id = $name;
     }
+    $attributes['autocomplete'] = 'off';
     $datepicker_default = array(
         'showStatus' => true,
         'changeYear' => true,
@@ -209,8 +210,10 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     if($datepicker){
         $datepicker_default = array_merge($datepicker_default, $datepicker);
     }
+    $class = 'form-control date-input';
+    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
     $attr_str = html_attr_str($attributes);
-	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="date-input"  id="'.$id.'" '.$attr_str.'/>';
+	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="'.$class.'"  id="'.$id.'" '.$attr_str.'/>';
     $html .= '<script type="text/javascript">';
     $html .= 'var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected;';
     $html .= '$(function(){ $("#'.$id.'").datepicker(datepicker_params); });function datepickerSelected(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);}';
@@ -225,7 +228,7 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
  */
 function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
     $attr_str = html_attr_str($attributes);
-    $class = 'button-submit button';
+    $class = 'button-submit button btn btn-primary';
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
 	return '<input class="'.$class.'" type="submit" name="'.$name.'" value="'.htmlspecialchars($caption).'" '.$attr_str.'/>';
 }
@@ -243,7 +246,7 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
 
     $attr_str = html_attr_str($attributes);
 
-    $class = 'button';
+    $class = 'button btn btn-secondary';
 
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
 
@@ -263,7 +266,7 @@ function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_emp
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-    $img = '<img src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
+    $img = '<img class="img-thumbnail" src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
 
     if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
 
@@ -388,8 +391,8 @@ function html_select($name, $items, $selected = '', $attributes = array()){
     $name = isset($attributes['multiple']) ? $name . '[]' : $name;
 
     $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
-    $html = '<select name="'.$name.'" '.$attr_str.$class.'>'."\n";
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
+    $html = '<select class="form-control '.$class.'" name="'.$name.'" '.$attr_str.'>'."\n";
 
     $optgroup = false;
 
@@ -464,13 +467,13 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
 
             $title = ltrim($title, '- ');
 
-            $html .= "\t" . '<label '. ($level>0 ? 'style="margin-left:'.($level*20).'px"' : ''). '>' .
+            $html .= "\t" . '<label class="form-check form-check-block" '. ($level>0 ? 'style="margin-left:'.($level*0.75).'rem"' : ''). '>' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
-                    '<span>'.htmlspecialchars($title).'</span></label><br>' . "\n";
+                    '<span>'.htmlspecialchars($title).'</span></label>' . "\n";
 
         } else {
 
-            $html .= "\t" . '<label>' .
+            $html .= "\t" . '<label class="form-check form-check-inline">' .
                     html_checkbox($name.'[]', $checked, $value) . ' ' .
                     '<span>'.htmlspecialchars($title) . '</span></label>' . "\n";
 
@@ -488,7 +491,7 @@ function html_select_multiple($name, $items, $selected=array(), $attributes=arra
  * @return html
  */
 function html_category_list($tree, $selected_id=0){
-	$html = '<select name="category_id" id="category_id" class="combobox">'."\n";
+	$html = '<select name="category_id" id="category_id" class="combobox form-control">'."\n";
 	foreach ($tree as $cat){
 		$padding = str_repeat('---', $cat['ns_level']).' ';
 		if ($selected_id == $cat['id']) { $selected = 'selected'; } else { $selected = ''; }
@@ -511,11 +514,11 @@ function html_switch($name, $active){
 	return $html;
 }
 
-function html_bool_span($value, $condition){
+function html_bool_span($value, $condition, $classes = ['negative badge badge-danger', 'positive badge badge-success']){
     if ($condition){
-        return '<span class="positive">' . $value . '</span>';
+        return '<span class="'.$classes[1].'">' . $value . '</span>';
     } else {
-        return '<span class="negative">' . $value . '</span>';
+        return '<span class="'.$classes[0].'">' . $value . '</span>';
     }
 }
 

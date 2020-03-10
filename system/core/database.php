@@ -57,7 +57,9 @@ class cmsDatabase {
      * Настройки базы данных
      * @var array
      */
-    private $options = array();
+    private $options = [
+        'db_charset' => 'utf8'
+    ];
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -78,7 +80,7 @@ class cmsDatabase {
 	}
 
     public function setOptions($options) {
-        $this->options = $options;
+        $this->options = array_merge($this->options, $options);
     }
 
     public function setOption($key, $value) {
@@ -122,7 +124,7 @@ class cmsDatabase {
 
         }
 
-        $this->mysqli->set_charset('utf8');
+        $this->mysqli->set_charset($this->options['db_charset']);
 
         if(!empty($this->options['clear_sql_mode'])){
             $this->mysqli->query("SET sql_mode=''");
@@ -242,6 +244,19 @@ class cmsDatabase {
 	}
 
     /**
+     * Формирует префиксы таблиц в SQL запросе
+     * @param string $sql
+     * @return string
+     */
+    public function replacePrefix($sql) {
+        return str_replace([
+            '{#}{users}', '{users}', '{#}'
+        ], [
+            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
+        ], $sql);
+    }
+
+    /**
      * Выполняет запрос в базе
      * @param string $sql Строка запроса
      * @param array|string $params Аргументы запроса, которые будут переданы в vsprintf
@@ -254,11 +269,7 @@ class cmsDatabase {
             cmsDebugging::pointStart('db');
         }
 
-        $sql = str_replace(array(
-            '{#}{users}', '{users}', '{#}'
-        ), array(
-            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
-        ), $sql);
+        $sql = $this->replacePrefix($sql);
 
         if ($params){
 
@@ -440,6 +451,8 @@ class cmsDatabase {
             $table_fields = $this->getTableFields($table);
         }
 
+        $set = [];
+
 		foreach ($data as $field=>$value) {
             if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
@@ -447,6 +460,8 @@ class cmsDatabase {
             $value = $this->prepareValue($field, $value, $array_as_json);
 			$set[] = "`{$field}` = {$value}";
 		}
+
+        if(!$set){ return false; }
 
         $set = implode(', ', $set);
 
@@ -463,15 +478,18 @@ class cmsDatabase {
 	 * @param array $data Массив[Название поля] = значение поля
 	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
      * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
+     * @param boolean $ignore Пропускать записи, если при вставке возникают ошибки (INSERT IGNORE)
 	 * @return boolean|integer ID вставленной записи
 	 */
-	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false){
+	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false, $ignore = false){
 
         if(empty($data) || !is_array($data)) { return false; }
 
         if(!$skip_check_fields){
             $table_fields = $this->getTableFields($table);
         }
+
+        $fields = $values = [];
 
         foreach ($data as $field => $value){
 
@@ -484,10 +502,12 @@ class cmsDatabase {
 
         }
 
+        if(!$fields){ return false; }
+
         $fields = implode(', ', $fields);
         $values = implode(', ', $values);
 
-        $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
+        $sql = "INSERT ".($ignore ? 'IGNORE ': '')."INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
         if ($this->query($sql)) { return $this->lastId(); }
 
@@ -777,7 +797,7 @@ class cmsDatabase {
 
         }
 
-        $sql .= ") ENGINE={$engine} DEFAULT CHARSET=utf8";
+        $sql .= ") ENGINE={$engine} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -843,7 +863,7 @@ class cmsDatabase {
                   KEY `parent_id` (`parent_id`,`ns_left`),
                   KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
                   KEY `ordering` (`ordering`)
-                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
+                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -861,7 +881,7 @@ class cmsDatabase {
 				  `category_id` int(11) UNSIGNED DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
-				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET=utf8";
+				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -900,11 +920,17 @@ class cmsDatabase {
 
     public function isTableExists($table_name){
 
-		$this->query("SELECT 1 FROM `{#}{$table_name}` LIMIT 1", false, true);
+		$result = $this->query('show tables');
 
-		if ($this->mysqli->errno){ return false; }
+        $tables = [];
 
-		return true;
+        while($data = $this->fetchRow($result)){
+            $tables[] = $data[0];
+        }
+
+        $table_name = $this->replacePrefix('{#}'.$table_name);
+
+		return in_array($table_name, $tables, true);
 
 	}
 
@@ -1048,13 +1074,17 @@ class cmsDatabase {
 
     public function importDump($file, $delimiter = ';'){
 
-        if (!is_file($file)){ return false; }
+        clearstatcache();
+
+        if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
+
+        if (!is_readable($file)){ return false; }
 
         @set_time_limit(0);
 
         $file = fopen($file, 'r');
 
-        $query = array();
+        $query = []; $success = false;
 
         while (feof($file) === false){
 
@@ -1062,9 +1092,11 @@ class cmsDatabase {
 
             if (preg_match('~' . preg_quote($delimiter, '~').'\s*$~iS', end($query)) === 1){
 
+                $success = true;
+
                 $query = trim(implode('', $query));
 
-                $result = $this->query(str_replace('InnoDB', $this->options['db_engine'], $query));
+                $result = $this->query(str_replace(['InnoDB','CHARSET=utf8'], [$this->options['db_engine'],'CHARSET='.$this->options['db_charset']], $query));
 
                 if ($result === false) {
                     return false;
@@ -1080,7 +1112,7 @@ class cmsDatabase {
 
         fclose($file);
 
-        return true;
+        return $success;
 
     }
 

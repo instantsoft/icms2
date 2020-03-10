@@ -84,6 +84,7 @@
     define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Префикс');
     define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
     define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');
     define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Должен быть включен показ поля в фильтре.');
@@ -100,6 +101,9 @@
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Выбор диапазона ползунком');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Шаг ползунка');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Показывать поля ввода вместе с ползунком');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
     define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
     define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов дробной части');
@@ -222,6 +226,11 @@
     define('LANG_REG_FIRST_TIME',            'Впервые у нас?');
     define('LANG_REG_ALREADY',               'Уже зарегистрированы?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'Новый адрес e-mail');
+    define('LANG_EMAIL_NEW_HASH',            'Код подтверждения нового e-mail адреса');
+    define('LANG_CONFIRM_CODE_ERROR',        'Введён неверный код подтверждения');
+    define('LANG_EMAIL_NEW_HINT',            'На новый почтовый ящик придёт письмо с подтверждением');
+    define('LANG_SECURITY',                  'Безопасность');
     define('LANG_PASSWORD',                  'Пароль');
     define('LANG_RETYPE_PASSWORD',           'Повторите пароль');
     define('LANG_USER_GROUP',                'Группа');
@@ -295,6 +304,7 @@
     define('LANG_PERM_RULE',                 'Правило доступа');
     define('LANG_PERM_OPTION_NULL',          'Нет');
     define('LANG_PERM_OPTION_YES',           'Да');
+    define('LANG_PERM_OPTION_ALLOW',         'Разрешить');
     define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
     define('LANG_PERM_OPTION_PREMOD_OWN',    'Только свои с премодерацией');
     define('LANG_PERM_OPTION_PREMOD_ALL',    'Все с премодерацией');
@@ -526,6 +536,7 @@
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');
+    define('LANG_PAGE_BREADCRUMB',           'Глубиномер');
     define('LANG_PAGE_MENU',                 'Меню страницы');
     define('LANG_PAGE_HEADER',               'Шапка страницы');
     define('LANG_PAGE_FOOTER',               'Подвал страницы');

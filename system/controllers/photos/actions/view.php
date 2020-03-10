@@ -357,6 +357,8 @@ class actionPhotosView extends cmsAction {
         $photos = $this->getPhotosList();
         if (!$photos) {
 
+            $this->model->limit($this->options['related_limit']);
+
             $this->model->filterEqual('album_id', $photo['album_id']);
 
             $this->model->filterNotEqual('id', $photo['id']);

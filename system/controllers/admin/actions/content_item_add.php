@@ -7,6 +7,7 @@ class actionAdminContentItemAdd extends cmsAction {
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
         $params = $category_id>1 ? array($category_id) : false;
 

@@ -2,12 +2,13 @@
 
 class formUsersPassword extends cmsForm {
 
-    public function init() {
+    public function init($profile) {
 
         return array(
 
             'basic' => array(
                 'type' => 'fieldset',
+                'title' => LANG_PASSWORD,
                 'childs' => array(
                     new fieldString('password', array(
                         'title' => LANG_OLD_PASS,
@@ -17,7 +18,18 @@ class formUsersPassword extends cmsForm {
                             'max_length'=> 72
                         ),
                         'rules' => array(
-                            array('required')
+                            array('required'),
+                            array(function($controller, $data, $value)use($profile){
+
+                                $user = cmsCore::getModel('users')->getUserByAuth($profile['email'], $value);
+
+                                if (!$user){
+                                    return LANG_OLD_PASS_INCORRECT;
+                                }
+
+                                return true;
+
+                            })
                         )
                     )),
                     new fieldString('password1', array(
@@ -26,9 +38,6 @@ class formUsersPassword extends cmsForm {
                         'options'=>array(
                             'min_length'=> 6,
                             'max_length'=> 72
-                        ),
-                        'rules' => array(
-                            array('required')
                         )
                     )),
                     new fieldString('password2', array(
@@ -37,9 +46,6 @@ class formUsersPassword extends cmsForm {
                         'options'=>array(
                             'min_length'=> 6,
                             'max_length'=> 72
-                        ),
-                        'rules' => array(
-                            array('required')
                         )
                     ))
                 )

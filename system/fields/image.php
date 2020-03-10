@@ -45,7 +45,8 @@ class fieldImage extends cmsFormField {
                     $presets = cmsCore::getModel('images')->getPresetsList();
                     $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
                     return $presets;
-                }
+                },
+                'rules' => [['required']]
             )),
             new fieldCheckbox('allow_import_link', array(
                 'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK

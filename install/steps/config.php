@@ -47,7 +47,7 @@ function create_config($path, $file){
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
         'template'				=> 'default',
-        'template_admin'		=> 'default',
+        'template_admin'		=> 'admincoreui',
         'template_mobile'		=> '',
         'template_tablet'		=> '',
         'db_host'				=> $_SESSION['install']['db']['host'],
@@ -56,6 +56,7 @@ function create_config($path, $file){
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
         'db_engine'				=> $_SESSION['install']['db']['engine'],
+        'db_charset'		    => $_SESSION['install']['db']['db_charset'],
         'clear_sql_mode'	    => $_SESSION['install']['db']['clear_sql_mode'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
@@ -90,7 +91,9 @@ function create_config($path, $file){
         'show_breadcrumbs'		=> 1,
         'check_spoofing_type'   => 0,
         'production_time'       => time(),
+        'native_yaml'           => function_exists('yaml_emit') ? 0 : 0, // отключим пока что для всех, не везде совместимо работает
         'session_save_handler'  => 'files',
+        'session_name'          => strtoupper(uniqid('icms')),
         'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],
         'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
         'controllers_without_widgets' => array('admin')

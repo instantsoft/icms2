@@ -6,39 +6,40 @@ class actionAdminMenuItemEdit extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $menu_model = cmsCore::getModel('menu');
+        $item = $this->model_menu->getMenuItem($id);
+        if (!$item) { cmsCore::error404(); }
+
+        $menu = $this->model_menu->getMenu($item['menu_id']);
+        if (!$menu) { cmsCore::error404(); }
 
         $form = $this->getForm('menu_item');
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit')){
 
-        $item = $menu_model->getMenuItem($id);
-
-        if ($is_submitted){
-
-            $item = $form->parse($this->request, $is_submitted);
+            $item = $form->parse($this->request, true);
             $errors = $form->validate($this, $item);
 
             if (!$errors){
 
-                $menu_model->updateMenuItem($id, $item);
+                $this->model_menu->updateMenuItem($id, $item);
+
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 $this->redirectToAction('menu');
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('menu_item', array(
-            'do' => 'edit',
-            'item' => $item,
-            'form' => $form,
+        return $this->cms_template->render('menu_item', array(
+            'do'     => 'edit',
+            'menu'   => $menu,
+            'item'   => $item,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

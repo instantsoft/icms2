@@ -37,6 +37,10 @@
     define('LANG_USERS_OPT_MAX_TABS',       'Maximum number of tabs');
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Other tabs will be hidden under the «More...» item<br>0 — unlimited number');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Allow to view profiles only to authorized users');
+    define('LANG_RULE_USERS_CHANGE_EMAIL',   'Allow email change');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD', 'Email Change Period, days');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD_HINT', 'Not specified, can always be changed');
+    define('LANG_USERS_EMAIL_VERIFY', 'An email has been sent to <b>%s</b>. Follow the link from the letter to activate the mail change');
     define('LANG_USERS_OPT_WALL_ENABLED',   'Enable profile wall');
     define('LANG_USERS_OPT_STATUSES_ENABLED',   'Enable profile status');
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Explain reputation vote');

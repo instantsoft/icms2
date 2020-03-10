@@ -18,11 +18,14 @@ class onModerationAdminDashboardBlock extends cmsAction {
         if(!empty($options['only_titles'])){
 
             return [
-                'moderation_all' => sprintf(LANG_MODERATION_TITLE, '-'),
-                'moderation_removal' => sprintf(LANG_MODERATION_CLEAR_TITLE, '-')
+                'moderation_all' => LANG_MODERATION_TITLE,
+                'moderation_removal' => LANG_MODERATION_CLEAR_TITLE
             ];
 
         }
+
+        // запрещаем автоматически подключать файл css стилей контроллера
+        $this->template_disable_auto_insert_css = true;
 
         $dashboard_blocks = [];
 
@@ -32,9 +35,10 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
             if($moderation_data){
                 $dashboard_blocks[] = array(
-                    'title' => sprintf(LANG_MODERATION_TITLE, $moderation_data['total']),
-                    'name' => 'moderation_all',
-                    'html'  => $moderation_data['html']
+                    'title'   => LANG_MODERATION_TITLE,
+                    'counter' => $moderation_data['total'],
+                    'name'    => 'moderation_all',
+                    'html'    => $moderation_data['html']
                 );
             }
 
@@ -46,9 +50,10 @@ class onModerationAdminDashboardBlock extends cmsAction {
 
             if($moderation_trash_data){
                 $dashboard_blocks[] = array(
-                    'title' => sprintf(LANG_MODERATION_CLEAR_TITLE, $moderation_trash_data['total']),
-                    'name' => 'moderation_removal',
-                    'html'  => $moderation_trash_data['html']
+                    'title'   => LANG_MODERATION_CLEAR_TITLE,
+                    'counter' => $moderation_trash_data['total'],
+                    'name'    => 'moderation_removal',
+                    'html'    => $moderation_trash_data['html']
                 );
             }
         }

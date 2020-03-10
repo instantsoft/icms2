@@ -1899,9 +1899,9 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getMax($table, $field, $default = 0){
+    public function getMax($table, $field, $default = 0, $dir = 'MAX'){
 
-        $sql = "SELECT MAX(i.{$field}) as {$field}
+        $sql = "SELECT {$dir}(i.{$field}) as {$field}
                 FROM {#}{$table} i
                 ";
 
@@ -1921,6 +1921,10 @@ class cmsModel {
 
         return $max[$field];
 
+    }
+
+    public function getMin($table, $field, $default = 0){
+        return $this->getMax($table, $field, $default, 'MIN');
     }
 
     /**
@@ -2186,6 +2190,17 @@ class cmsModel {
      */
     public static function arrayToYaml($input_array, $indent = 2, $word_wrap = 40) {
 
+        $array = [];
+
+        if(cmsConfig::get('native_yaml')){
+
+            if(!empty($input_array)){
+                $array = $input_array;
+            }
+
+            return yaml_emit($array, YAML_UTF8_ENCODING);
+        }
+
         if(!empty($input_array)){
 
             foreach ($input_array as $key => $value) {
@@ -2193,8 +2208,6 @@ class cmsModel {
                 $array[$_k] = $value;
             }
 
-        } else {
-            $array = array();
         }
 
         return Spyc::YAMLDump($array, $indent, $word_wrap);
@@ -2213,6 +2226,11 @@ class cmsModel {
         if(is_array($yaml)){ return $yaml; }
 
         if($yaml === "---\n- 0\n"){ return array(); }
+        if($yaml === "---\n- \"0\"\n...\n"){ return array(); }
+
+        if(cmsConfig::get('native_yaml')){
+            return yaml_parse($yaml);
+        }
 
         return Spyc::YAMLLoadString($yaml);
 

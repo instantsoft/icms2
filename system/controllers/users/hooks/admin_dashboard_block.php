@@ -19,10 +19,14 @@ class onUsersAdminDashboardBlock extends cmsAction {
             $profiles = cmsCore::getModel('users')->filterOnlineUsers()->getUsers();
             if (!$profiles) { return false; }
 
+            // запрещаем автоматически подключать файл css стилей контроллера
+            $this->template_disable_auto_insert_css = true;
+
             $dashboard_blocks[] = array(
-                'title' => LANG_CP_USERS_ONLINE.' '.html_spellcount(count($profiles), LANG_USERS_SPELL),
-                'name' => 'users_online',
-                'html'  => $this->cms_template->renderInternal($this, 'backend/admin_dashboard_online_block', array(
+                'title'   => LANG_CP_USERS_ONLINE,
+                'counter' => html_spellcount(count($profiles), LANG_USERS_SPELL),
+                'name'    => 'users_online',
+                'html'    => $this->cms_template->renderInternal($this, 'backend/admin_dashboard_online_block', array(
                     'profiles' => $profiles
                 ))
             );

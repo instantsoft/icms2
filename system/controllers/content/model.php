@@ -194,6 +194,7 @@ class modelContent extends cmsModel {
         $this->db->dropTable("{$table_name}");
         $this->db->dropTable("{$table_name}_fields");
         $this->db->dropTable("{$table_name}_cats");
+        $this->db->dropTable("{$table_name}_filters");
         $this->db->dropTable("{$table_name}_cats_bind");
         $this->db->dropTable("{$table_name}_props");
         $this->db->dropTable("{$table_name}_props_bind");
@@ -836,7 +837,9 @@ class modelContent extends cmsModel {
             cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
         }
 
-        cmsCache::getInstance()->clean("content.fields.{$ctype_name}");
+        cmsCache::getInstance()->clean('content.fields.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.list.'.$ctype_name);
+        cmsCache::getInstance()->clean('content.item.'.$ctype_name);
 
         return $result;
 
@@ -967,7 +970,7 @@ class modelContent extends cmsModel {
 
     }
 
-    public function getContentPropsBinds($ctype_name, $category_id=false){
+    public function getContentPropsBinds($ctype_name, $category_id = false) {
 
         $props_table_name = $this->table_prefix . $ctype_name . '_props';
         $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
@@ -980,16 +983,17 @@ class modelContent extends cmsModel {
         $this->join($props_table_name, 'p', 'p.id = i.prop_id');
 
         if ($category_id){
-            $this->filterEqual('cat_id', $category_id);
+            $this->filterEqual('i.cat_id', $category_id);
         }
 
-        $this->orderBy('ordering');
+        $this->orderBy('i.ordering');
+        $this->groupBy('p.id');
 
         return $this->get($bind_table_name);
 
     }
 
-    public function getContentProps($ctype_name, $category_id=false){
+    public function getContentProps($ctype_name, $category_id = false) {
 
         $props_table_name = $this->table_prefix . $ctype_name . '_props';
         $bind_table_name = $this->table_prefix . $ctype_name . '_props_bind';
@@ -1491,6 +1495,106 @@ class modelContent extends cmsModel {
     }
 
 //============================================================================//
+//=============================   Фильтры   ==================================//
+//============================================================================//
+
+    public function getContentFilters($ctype_name){
+
+        $this->useCache('content.filters.'.$ctype_name);
+
+        $table_name = $this->getContentTypeTableName($ctype_name).'_filters';
+
+        return $this->get($table_name, function($item, $model){
+
+            $item['filters'] = cmsModel::stringToArray($item['filters']);
+
+            return $item;
+        });
+
+    }
+
+    public function addContentFilter($filter, $ctype){
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $filter['filters'] = array_filter_recursive($filter['filters']);
+        array_multisort($filter['filters']);
+        $filter['hash'] = md5(json_encode($filter['filters']));
+
+        $filter['id'] = $this->insert($table_name, $filter, true);
+
+        cmsEventsManager::hook('ctype_filter_add', array($filter, $ctype, $this));
+        cmsEventsManager::hook('ctype_filter_'.$ctype['name'].'_add', array($filter, $ctype, $this));
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return $filter['id'];
+
+    }
+
+    public function updateContentFilter($filter, $ctype){
+
+        list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_update', array($filter, $ctype));
+        list($filter, $ctype) = cmsEventsManager::hook('ctype_filter_'.$ctype['name'].'_update', array($filter, $ctype));
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $filter['filters'] = array_filter_recursive($filter['filters']);
+        array_multisort($filter['filters']);
+        $filter['hash'] = md5(json_encode($filter['filters']));
+
+        $this->update($table_name, $filter['id'], $filter, false, true);
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return true;
+
+    }
+
+    public function getContentFilter($ctype, $id, $by_hash = false){
+
+        if(!$this->isFiltersTableExists($ctype['name'])){
+            return false;
+        }
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $this->useCache('content.filters.'.$ctype['name']);
+
+        $field_name = 'id';
+        if(!is_numeric($id)){
+            if($by_hash){
+                $field_name = 'hash';
+            } else {
+                $field_name = 'slug';
+            }
+        }
+
+        $this->filterEqual($field_name, $id);
+
+        return $this->getItem($table_name, function($item, $model){
+
+            $item['filters'] = cmsModel::stringToArray($item['filters']);
+
+            return $item;
+
+        });
+
+    }
+
+    public function deleteContentFilter($ctype, $id){
+
+        $table_name = $this->getContentTypeTableName($ctype['name']).'_filters';
+
+        $this->delete($table_name, $id);
+
+        cmsCache::getInstance()->clean('content.filters.'.$ctype['name']);
+
+        return true;
+
+    }
+
+//============================================================================//
 //==============================   НАБОРЫ   ==================================//
 //============================================================================//
 
@@ -1781,6 +1885,13 @@ class modelContent extends cmsModel {
 
 	}
 
+    public function isFiltersTableExists($ctype_name) {
+
+		$table_name = $this->getContentTypeTableName($ctype_name).'_filters';
+
+        return $this->db->isTableExists($table_name);
+
+    }
 //============================================================================//
 
     public function filterPropValue($ctype_name, $prop, $value){
@@ -1894,11 +2005,13 @@ class modelContent extends cmsModel {
 
             if ($ctype['is_auto_url']){
                 $item['slug'] = $this->getItemSlug($ctype, $item, $fields);
-            } else {
-                $item['slug'] = lang_slug( $item['slug'] );
+            } elseif(!empty($item['slug'])) {
+                $item['slug'] = lang_slug($item['slug']);
             }
 
-            $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            if(!empty($item['slug'])) {
+                $this->update($table_name, $id, array( 'slug' => $item['slug'] ));
+            }
 
         }
 
@@ -1936,7 +2049,7 @@ class modelContent extends cmsModel {
         unset($update_item['user']);
         unset($update_item['user_nickname']);
 
-		$add_cats = array();
+		$add_cats = [];
 
 		if (isset($update_item['add_cats'])){
 			$add_cats = $update_item['add_cats'];
@@ -2507,7 +2620,7 @@ class modelContent extends cmsModel {
 
     public function getUserContentItemsCount24($ctype_name, $user_id){
 
-        $this->filterDateYounger('date_pub', 1);
+        $this->filter("DATE(DATE_FORMAT(i.date_pub, '%Y-%m-%d')) = CURDATE()");
 
         return $this->getUserContentItemsCount($ctype_name, $user_id, false);
 

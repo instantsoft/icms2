@@ -5,7 +5,7 @@ class onGroupsAdminDashboardChart extends cmsAction {
 	public function run(){
 
         $data = array(
-            'id' => 'users',
+            'id' => 'groups',
             'title' => LANG_GROUPS,
             'sections' => array(
                 'grps' => array(

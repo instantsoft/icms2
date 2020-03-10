@@ -21,6 +21,18 @@ class fieldDate extends cmsFormField {
         );
     }
 
+    public function getRules() {
+
+        if($this->context == 'filter' && $this->getOption('filter_range')){
+            $this->rules[] = array('date_range');
+        } else {
+            $this->rules[] = array('date');
+        }
+
+        return $this->rules;
+
+    }
+
     public function parse($value){
         return $value ? html_date($value, $this->getOption('show_time')) : null;
     }
@@ -56,7 +68,9 @@ class fieldDate extends cmsFormField {
             $from = !empty($value['from']) ? date('d.m.Y', strtotime($value['from'])) : false;
             $to = !empty($value['to']) ? date('d.m.Y', strtotime($value['to'])) : false;
 
-            $this->title = false;
+            if(!$this->show_filter_input_title){
+                $this->title = false;
+            }
 
             return cmsTemplate::getInstance()->renderFormField($this->class.'_range', array(
                 'field' => $this,
@@ -103,7 +117,11 @@ class fieldDate extends cmsFormField {
 
     }
 
-    public function getDefaultVarType($is_filter=false) {
+    public function getDefaultVarType($is_filter = false) {
+
+        if($this->context == 'filter'){
+            $is_filter = true;
+        }
 
         if (($is_filter && $this->getOption('filter_range')) || $this->getOption('show_time')){
             $this->var_type = 'array';
@@ -115,7 +133,10 @@ class fieldDate extends cmsFormField {
 
     public function store($value, $is_submitted, $old_value=null){
 
-        if($value){
+        if(!$value){ return null; }
+
+        if (!is_array($value) || !empty($value['date'])){
+
             if(is_array($value)){
                 if(!empty($value['date'])){
                     $value = sprintf('%s %02d:%02d', $value['date'], $value['hours'], $value['mins']);
@@ -124,10 +145,26 @@ class fieldDate extends cmsFormField {
             } else {
                 return date('Y-m-d', strtotime($value));
             }
+
+        } elseif(!empty($value['from']) || !empty($value['to'])) {
+
+            if (!empty($value['from'])){
+                $value['from'] = $this->store($value['from'], $is_submitted, $old_value);
+            }
+            if (!empty($value['to'])){
+                $value['to'] = $this->store($value['to'], $is_submitted, $old_value);
+            }
+
+            return $value;
+
         }
 
         return null;
 
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
     public function getInput($value){

@@ -22,7 +22,8 @@
     ));
 
     $this->renderControllerChild('admin', 'form_field', array(
-        'fields_options_link' => $this->href_to('fields_options'),
+        'fields_options_link' => href_to('admin', 'ctypes', array('fields_options')),
+        'ctype_name'          => 'groups',
         'do'                  => $do,
         'errors'              => $errors,
         'form'                => $form,

@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @deprecated Используется в шаблоне старой админки
+ * href_to('admin', 'reorder', ['content_types'])
+ */
 class actionAdminCtypesReorder extends cmsAction {
 
     public function run(){

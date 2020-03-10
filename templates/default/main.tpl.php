@@ -1,4 +1,3 @@
-<?php $core = cmsCore::getInstance(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,9 +14,6 @@
     <?php $this->addMainTplJSName('jquery-modal'); ?>
     <?php $this->addMainTplJSName('core'); ?>
     <?php $this->addMainTplJSName('modal'); ?>
-    <?php if (cmsUser::isLogged()){ ?>
-        <?php $this->addMainTplJSName('messages'); ?>
-    <?php } ?>
     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
         <?php $this->addTplCSSName('debug'); ?>
     <?php } ?>
@@ -69,7 +65,7 @@
             if ($messages){ ?>
                 <div class="sess_messages">
                     <?php foreach($messages as $message){ ?>
-                        <div class="<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
+                        <div class="message_<?php echo $message['class']; ?>"><?php echo $message['text']; ?></div>
                      <?php } ?>
                 </div>
             <?php } ?>

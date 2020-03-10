@@ -31,6 +31,7 @@ class actionModerationEditTrashLeftTime extends cmsAction {
 
                 $this->cms_template->renderJSON(array(
                     'errors'          => false,
+                    'id'              => $mod['user_id'],
                     'trash_left_time' => $trash_left_time,
                     'callback'        => 'leftTimeSuccess'
                 ));

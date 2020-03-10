@@ -15,6 +15,7 @@ class actionAdminContentTreeAjax extends cmsAction {
         list ($ctype_id, $parent_id) = explode('.', $id);
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
         $items = $content_model->getSubCategoriesTree($ctype['name'], $parent_id);
 

@@ -2,17 +2,17 @@
 
 class actionAdminUsersEdit extends cmsAction {
 
-    public function run($id) {
+    public function run($id = false) {
 
-        if (!$id) {
-            cmsCore::error404();
-        }
+        if (!$id) { cmsCore::error404(); }
 
         $user = $this->model_users->getUser($id);
 
         if (!$user) {
             return cmsCore::error404();
         }
+
+        $old_email = $user['email'];
 
         $form = $this->getForm('user', array('edit'));
 
@@ -30,6 +30,24 @@ class actionAdminUsersEdit extends cmsAction {
             $errors = $form->validate($this, $user);
 
             if (!$errors) {
+
+                if($user['email'] && $old_email != $user['email']){
+
+                    cmsUser::setUPS('users.change_email_'.md5($user['email']), [
+                        'accepted'  => 1,
+                        'email'     => $old_email,
+                        'timestamp' => time(),
+                        'hash'      => string_random()
+                    ]);
+
+                    cmsUser::setUPS('users.change_email_'.md5($old_email), [
+                        'accepted'  => 1,
+                        'email'     => $user['email'],
+                        'timestamp' => time(),
+                        'hash'      => string_random()
+                    ]);
+
+                }
 
                 $result = $this->model_users->updateUser($id, $user);
 
@@ -58,10 +76,10 @@ class actionAdminUsersEdit extends cmsAction {
         }
 
         return $this->cms_template->render('user', array(
-                    'do'     => 'edit',
-                    'user'   => $user,
-                    'form'   => $form,
-                    'errors' => isset($errors) ? $errors : false
+            'do'     => 'edit',
+            'user'   => $user,
+            'form'   => $form,
+            'errors' => isset($errors) ? $errors : false
         ));
 
     }

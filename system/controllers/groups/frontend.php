@@ -384,10 +384,17 @@ class groups extends cmsFrontend {
 
             if (!$field['is_in_filter']) { continue; }
 
+            $field['handler']->setItem(['ctype_name' => 'groups', 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
+            $value = $field['handler']->storeFilter($value);
+			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;
@@ -397,6 +404,19 @@ class groups extends cmsFrontend {
 
         // Получаем количество и список записей
         $total  = $this->model->getGroupsCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_GROUPS_GROUP_SPELLCOUNT, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $groups = $this->model->getGroups();
 
         // если задано максимальное кол-во, ограничиваем им

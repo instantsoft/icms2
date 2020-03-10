@@ -36,20 +36,11 @@ class fieldListBitmask extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $this->data['items']    = $this->getListItems();
-        $this->data['selected'] = array();
-
-        if(is_array($value)){
-            foreach ($value as $k => $v) {
-                if(is_numeric($v)){ $this->data['selected'][$k] = (int)$v; }
-            }
-        } else {
-            $this->data['selected'] = array();
+        if(!$this->show_filter_input_title){
+            $this->element_title = '';
         }
 
-        $this->element_title = '';
-
-        return parent::getInput($value);
+        return $this->getInput($value);
 
     }
 
@@ -140,6 +131,8 @@ class fieldListBitmask extends cmsFormField {
 
             $items = string_explode_list($this->getDefaultValue());
 
+            ksort($items);
+
         }
 
         return $items;
@@ -150,20 +143,27 @@ class fieldListBitmask extends cmsFormField {
         parent::setOptions($options);
         if (!isset($this->items) && $this->hasDefaultValue()){
             $this->items = string_explode_list($this->getDefaultValue());
+            ksort($this->items);
             $this->default = null;
         }
     }
 
-	public function parseValue($values){
+	public function parseValue($values, $return_as_array = false){
 
-		if (!$values) { return ''; }
+		if (!$values || !is_array($values)) { return ''; }
 
 		$items = $this->getListItems();
-		$value = '';
+		$value = $return_as_array ? [] : '';
 
 		if ($items){
 			foreach($items as $key => $title){
-				$value .= in_array($key, $values) ? '1' : '0';
+                if($return_as_array){
+                    if(in_array($key, $values)){
+                        $value[] = $key;
+                    }
+                } else {
+                    $value .= in_array($key, $values) ? '1' : '0';
+                }
 			}
 		}
 
@@ -173,14 +173,18 @@ class fieldListBitmask extends cmsFormField {
 
 	public function store($value, $is_submitted, $old_value=null){
 
-        $value = $this->parseValue($value);
+        $value = $this->parseValue($value, ($this->context === 'filter'));
 
-		if (mb_strpos($value, '1') === false){
+		if (is_string($value) && mb_strpos($value, '1') === false){
 			return '';
 		}
 
         return $value;
 
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
     public function applyFilter($model, $values) {
@@ -199,24 +203,80 @@ class fieldListBitmask extends cmsFormField {
     public function getInput($value){
 
         $this->data['items']    = $this->getListItems();
-        $this->data['selected'] = array();
+        $this->data['selected'] = [];
 
         if($value){
             if(!is_array($value)){
                 $pos = 0;
                 foreach($this->data['items'] as $key => $title){
                     if(mb_substr($value, $pos, 1) == 1){
-                        $this->data['selected'][] = $key;
+                        $this->data['selected'][] = is_numeric($key) ? intval($key) : $key;
                     }
                     $pos++;
-                    if($pos+1 > mb_strlen($value)){break;}
+                    if($pos+1 > mb_strlen($value)){ break; }
                 }
-            }else{
-                $this->data['selected'] = $value;
+            } else {
+
+                foreach ($value as $k => $v) {
+                    $this->data['selected'][] = is_numeric($v) ? intval($v) : $v;
+                }
+
             }
         }
 
         return parent::getInput($value);
+
+    }
+
+    public function hookAfterUpdate($content_table_name, $field, $field_old, $model){
+
+        $items = $model->limit(false)->
+                selectOnly('id')->
+                select($field_old['name'])->
+                get($content_table_name, function($item, $model)use($field_old){
+                    return $item[$field_old['name']];
+                });
+
+        if(!$items || trim($field_old['values']) == trim($field['values'])){
+            return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
+        }
+
+        $old_rows = string_explode_list($field_old['values']);
+        ksort($old_rows);
+        $new_rows = string_explode_list($field['values']);
+        ksort($new_rows);
+
+        foreach ($items as $id => $item_value) {
+
+            if(!$item_value){ continue; }
+
+            // Формируем старый массив значений
+            $old_item_values = [];
+
+			$pos = 0;
+
+			foreach($old_rows as $key => $value){
+				if (substr($item_value, $pos, 1) == 1){
+                    $old_item_values[] = $key;
+				}
+				$pos++;
+			}
+
+            // Формируем новую битовую маску
+            $new_item_value = '';
+
+			foreach($new_rows as $nkey => $title){
+                $new_item_value .= in_array($nkey, $old_item_values) ? '1' : '0';
+			}
+
+            // записываем обратно в базу
+            $model->update($content_table_name, $id, [
+                $field_old['name'] => $new_item_value
+            ], true);
+
+        }
+
+        return parent::hookAfterUpdate($content_table_name, $field, $field_old, $model);
 
     }
 

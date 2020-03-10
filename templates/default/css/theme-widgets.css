@@ -624,13 +624,19 @@ header .widget_user_avatar .menu ul li, header .widget_user_avatar .menu ul li a
 .widget_tags_cloud li.colored > a {
     color: inherit;
 }
-/* ========================================================================== */
-
-.widget_auth .field { overflow: hidden; }
-.widget_auth .field a { float:right; font-size:12px; margin-top:4px; }
-.widget_auth .field label { float:left; }
-.widget_auth .buttons { margin-top:15px; }
-
+.widget_auth form fieldset {
+    padding: 0;
+    border: none;
+}
+.widget_auth form fieldset legend {
+    display: none;
+}
+.widget_auth .auth_remember::after {
+    content: '';
+}
+.widget_auth .auth_restore_link {
+    display: block;
+}
 @media screen and (max-width: 640px) {
     .widget_content_slider .items .item .title { display:none !important; }
     .widget_content_slider .items { width:60px  !important; }

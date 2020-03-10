@@ -8,8 +8,6 @@
 
 <p><?php echo LANG_STEP_START_2; ?></p>
 
-<p><?php echo LANG_STEP_START_3; ?></p>
-
 <p>
     <?php echo LANG_MANUAL; ?>
 </p>

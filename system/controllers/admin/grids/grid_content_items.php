@@ -18,6 +18,7 @@ function grid_content_items($controller, $ctype_name=false){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
             'filter' => 'exact'
         ),
@@ -28,6 +29,7 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'date_pub' => array(
             'title' => LANG_DATE,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 110,
             'handler' => function($value, $item){
                 if($item['is_deleted']){
@@ -38,6 +40,7 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'is_approved' => array(
             'title' => LANG_MODERATION,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 150,
             'handler' => function($value, $item) use ($controller, $ctype_name){
                 if($item['is_deleted']){
@@ -67,12 +70,14 @@ function grid_content_items($controller, $ctype_name=false){
         ),
         'is_pub' => array(
             'title' => LANG_ON,
+            'class' => 'd-none d-sm-table-cell',
             'width' => 40,
             'flag' => true,
 			'flag_toggle' => href_to($controller->name, 'content', array('item_toggle', $ctype_name, '{id}'))
         ),
         'user_nickname' => array(
             'title' => LANG_AUTHOR,
+            'class' => 'd-none d-lg-table-cell',
             'href' => href_to('users', '{user_id}'),
             'order_by' => 'u.nickname',
         ),

@@ -43,6 +43,8 @@ define('LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT', 'Для пользователей, 
 define('LANG_REG_CFG_FIRST_AUTH_REDIRECT', 'После первой авторизации на сайте');
 define('LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS', 'Компоненты, доступные без авторизации');
 define('LANG_REG_CFG_AUTH_REDIRECT', 'После следующих авторизаций на сайте');
+define('LANG_REG_CFG_AUTH_2FA', 'Двухфакторная аутентификация');
+define('LANG_REG_TWOFA_APP', 'Приложение для аутентификации');
 define('LANG_REG_CFG_AUTH_REDIRECT_NONE', 'Оставаться на странице, с которой авторизовались');
 define('LANG_REG_CFG_AUTH_REDIRECT_INDEX', 'Открыть главную страницу');
 define('LANG_REG_CFG_AUTH_REDIRECT_PROFILE', 'Открыть профиль');
@@ -76,3 +78,4 @@ define('LANG_AUTH_INVITES_SGROUP', 'Группе пользователей');
 define('LANG_AUTH_INVITES_SUSER', 'Или пользователю');
 define('LANG_AUTH_INVITES_SPARAMS', 'Параметры выдачи группе пользователей');
 define('LANG_AUTH_IS_OLD_AUTH', 'Вы давно не меняли пароль, можно <a href="%s">сделать это сейчас</a>.');
+define('LANG_AUTH_CLEAN_REG_EMAIL', 'Я указал неверный email');

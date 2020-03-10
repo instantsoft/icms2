@@ -2,6 +2,242 @@
 
 class modelWidgets extends cmsModel {
 
+    public function getLayoutRow($id) {
+        return $this->getItemById('layout_rows', $id, function($item, $model) {
+            $item['groups'] = cmsModel::stringToArray($item['groups']);
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            return $item;
+        });
+    }
+
+    public function getLayoutCol($id) {
+        return $this->getItemById('layout_cols', $id, function($item, $model) {
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            return $item;
+        });
+    }
+
+    public function getLayoutRows($template_name, $user = null) {
+
+        $this->filterEqual('r.template', $template_name);
+
+        $this->select('r.nested_position', 'nested_position');
+        $this->select('r.parent_id', 'parent_id');
+        $this->select('r.title', 'row_title');
+        $this->select('r.groups', 'groups');
+        $this->select('r.options', 'row_options');
+        $this->select('r.class', 'row_class');
+
+        $this->joinInner('layout_rows', 'r', 'r.id = i.row_id');
+
+        $this->useCache('layout.rows');
+
+        $this->orderByList(array(
+            ['by' => 'r.ordering', 'to' => 'asc'],
+            ['by' => 'i.ordering', 'to' => 'asc']
+        ));
+
+        $items = $this->get('layout_cols', function($item, $model) use($user) {
+
+            $item['groups'] = cmsModel::stringToArray($item['groups']);
+
+            if($user instanceof cmsUser){
+                if ((!empty($item['groups']['view']) && !$user->isInGroups($item['groups']['view'])) ||
+                        ($item['groups']['hide'] && $user->isInGroups($item['groups']['hide']))) {
+                    return false;
+                }
+            }
+
+            $item['options'] = cmsModel::stringToArray($item['options']);
+            $item['row_options'] = cmsModel::stringToArray($item['row_options']);
+            return $item;
+
+        }, false);
+
+        $rows = $ns_rows = [];
+
+        if($items){
+
+            $last_row_id = 0;
+
+            foreach ($items as $item) {
+                if($item['parent_id']){
+
+                    if($last_row_id != $item['row_id']){
+
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = [
+                            'id'        => $item['row_id'],
+                            'parent_id' => $item['parent_id'],
+                            'nested_position' => $item['nested_position'],
+                            'title'     => $item['row_title'],
+                            'groups'    => $item['groups'],
+                            'class'     => $item['row_class'],
+                            'options'   => $item['row_options'],
+                            'positions' => [$item['name']],
+                            'has_breadcrumb' => $item['is_breadcrumb'],
+                            'has_body'  => $item['is_body'],
+                            'cols'      => [$item['id'] => $item]
+                        ];
+
+                    } else {
+                        if($item['is_breadcrumb']){
+                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_breadcrumb'] = true;
+                        }
+                        if($item['is_body']){
+                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_body'] = true;
+                        }
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
+                        $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
+                    }
+
+                    $last_row_id = $item['row_id'];
+
+                }
+            }
+
+            $last_row_id = 0;
+
+            foreach ($items as $item) {
+
+                if($item['parent_id']){
+                    continue;
+                }
+                if(isset($ns_rows[$item['id']])){
+                    $item['rows'] = $ns_rows[$item['id']];
+                }
+
+                if($last_row_id != $item['row_id']){
+
+                    $rows[$item['row_id']] = [
+                        'id'        => $item['row_id'],
+                        'parent_id' => $item['parent_id'],
+                        'title'     => $item['row_title'],
+                        'groups'    => $item['groups'],
+                        'class'     => $item['row_class'],
+                        'options'   => $item['row_options'],
+                        'positions' => [$item['name']],
+                        'has_body'  => $item['is_body'],
+                        'has_breadcrumb' => $item['is_breadcrumb'],
+                        'cols'      => [$item['id'] => $item]
+                    ];
+
+                } else {
+                    if($item['is_breadcrumb']){
+                        $rows[$item['row_id']]['has_breadcrumb'] = true;
+                    }
+                    if($item['is_body']){
+                        $rows[$item['row_id']]['has_body'] = true;
+                    }
+                    $rows[$item['row_id']]['positions'][] = $item['name'];
+                    $rows[$item['row_id']]['cols'][$item['id']] = $item;
+                }
+
+                $last_row_id = $item['row_id'];
+            }
+
+        }
+
+        return $rows;
+
+    }
+
+    public function addLayoutRow($row, $default_col = []) {
+
+        $row['ordering'] = $this->filterEqual('template', $row['template'])->
+                        getNextOrdering('layout_rows');
+
+        $row_id = $this->insert('layout_rows', $row, true);
+
+        if(!empty($row['cols_count'])){
+            for($i = 0; $i < $row['cols_count']; ++$i) {
+                $this->addLayoutCol([
+                    'row_id' => $row_id,
+                    'title' => $i+1,
+                    'options' => $default_col['options']
+                ]);
+            }
+        }
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $row_id;
+
+    }
+
+    public function updateLayoutRow($id, $row) {
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->update('layout_rows', $id, $row, false, true);
+
+    }
+
+    public function deleteLayoutRow($id) {
+
+        $this->filterEqual('row_id', $id);
+        $this->deleteFiltered('layout_cols');
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->delete('layout_rows', $id);
+
+    }
+
+    public function deleteLayoutCol($id) {
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $this->delete('layout_cols', $id);
+
+    }
+
+    public function addLayoutCol($col) {
+
+        $col['ordering'] = $this->filterEqual('row_id', $col['row_id'])->
+                        getNextOrdering('layout_cols');
+
+        $id = $this->insert('layout_cols', $col, true);
+
+        if(empty($col['name'])){
+
+            $this->update('layout_cols', $id, [
+                'name' => 'pos_'.$id
+            ]);
+
+        } else {
+            cmsCache::getInstance()->clean('layout.rows');
+        }
+
+        return $id;
+
+    }
+
+    public function updateLayoutCol($id, $col) {
+
+        if(!empty($col['is_body'])){
+
+            $template = $this->filterEqual('id', $col['row_id'])->getFieldFiltered('layout_rows', 'template');
+
+            $rows = $this->selectOnly('id')->get('layout_rows', function($item, $model) {
+                return $item['id'];
+            }, false);
+
+            $this->filterIn('row_id', $rows);
+
+            $this->updateFiltered('layout_cols', [
+                'is_body' => null
+            ]);
+
+        }
+
+        $this->update('layout_cols', $id, $col, false, true);
+
+        cmsCache::getInstance()->clean('layout.rows');
+
+        return $id;
+
+    }
+
     public function addPage($page) {
 
         if (isset($page['url_mask']) && is_array($page['url_mask'])) {
@@ -193,7 +429,12 @@ class modelWidgets extends cmsModel {
         $widgets = $this->orderByList(array(
                     array('by' => 'controller', 'to' => 'asc'),
                     array('by' => 'name', 'to' => 'asc')
-                ))->get('widgets');
+                ))->get('widgets', function ($item, $model){
+                    if($item['image_hint_path']){
+                        $item['image_hint_path'] = cmsConfig::get('upload_host').'/'.$item['image_hint_path'];
+                    }
+                    return $item;
+                });
 
         if (!$widgets) { return false; }
 
@@ -222,12 +463,16 @@ class modelWidgets extends cmsModel {
         $this->select('w.controller', 'controller');
         $this->select('w.name', 'name');
         $this->select('w.title', 'widget_title');
+        $this->select('w.image_hint_path', 'image_hint_path');
 
         $this->join('widgets', 'w', 'w.id = i.widget_id');
 
         $this->useCache('widgets.bind');
 
         return $this->getItemById('widgets_bind', $id, function($item, $model) {
+            if($item['image_hint_path']){
+                $item['image_hint_path'] = cmsConfig::get('upload_host').'/'.$item['image_hint_path'];
+            }
             $item['options']          = cmsModel::yamlToArray($item['options']);
             $item['groups_view']      = cmsModel::yamlToArray($item['groups_view']);
             $item['groups_hide']      = cmsModel::yamlToArray($item['groups_hide']);
@@ -257,6 +502,7 @@ class modelWidgets extends cmsModel {
             filterIsNull('bp.position')->
             filterEnd()->
             select('w.title', 'name')->
+            select('w.image_hint_path', 'image_hint_path')->
             select('bp.*')->
             select('IFNULL(bp.bind_id,i.id)', 'bind_id')->
             joinInner('widgets', 'w', 'w.id = i.widget_id')->
@@ -271,7 +517,9 @@ class modelWidgets extends cmsModel {
             $bind['languages']    = cmsModel::yamlToArray($bind['languages']);
             $bind['device_types'] = cmsModel::yamlToArray($bind['device_types']);
 
-            if ($bind['device_types'] && $bind['device_types'] !== array(0) && count($bind['device_types']) < 3) {
+            if ($bind['device_types'] && count($bind['device_types']) < 3) {
+
+                $device_types = [];
 
                 foreach ($bind['device_types'] as $dt) {
                     $device_types[] = string_lang('LANG_' . $dt . '_DEVICES');
@@ -285,6 +533,10 @@ class modelWidgets extends cmsModel {
                 $bind['position'] = '_unused';
             }
 
+            if($bind['image_hint_path']){
+                $bind['image_hint_path'] = cmsConfig::get('upload_host').'/'.$bind['image_hint_path'];
+            }
+
             $positions[$bind['position']][] = array(
                 'id'           => $bind['id'],
                 'bind_id'      => $bind['bind_id'],
@@ -292,6 +544,8 @@ class modelWidgets extends cmsModel {
                 'title'        => $bind['title'],
                 'position'     => $bind['position'],
                 'languages'    => $bind['languages'],
+                'image_hint_path' => $bind['image_hint_path'],
+                'device_type_names' => $bind['device_types'],
                 'device_types' => $device_types,
                 'name'         => $bind['name'],
                 'is_tab_prev'  => (bool) $bind['is_tab_prev'],
@@ -511,17 +765,8 @@ class modelWidgets extends cmsModel {
                     $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
                     $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
                     $item['languages'] = cmsModel::yamlToArray($item['languages']);
-                    if(!$item['languages'] || $item['languages'] === array(0)){
-                        $item['languages'] = array();
-                    }
                     $item['template_layouts'] = cmsModel::yamlToArray($item['template_layouts']);
-                    if(!$item['template_layouts'] || $item['template_layouts'] === array(0)){
-                        $item['template_layouts'] = array();
-                    }
                     $item['device_types'] = cmsModel::yamlToArray($item['device_types']);
-                    if(!$item['device_types'] || $item['device_types'] === array(0) || count($item['device_types']) == 3){
-                        $item['device_types'] = array();
-                    }
 
                     return $item;
 

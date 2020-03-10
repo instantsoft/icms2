@@ -217,10 +217,11 @@ class cmsUser {
 
         self::sessionSet('user', array(
             'id'          => $user['id'],
+            '2fa'         => !empty($user['2fa']),
             'is_old_auth' => !empty($user['is_old_auth']),
             'groups'      => $user['groups'],
             'time_zone'   => $user['time_zone'],
-            'perms'       => self::getPermissions($user['groups']),
+            'perms'       => isset($user['permissions']) ? $user['permissions'] : self::getPermissions($user['groups']),
             'is_admin'    => $user['is_admin']
         ));
 
@@ -257,7 +258,7 @@ class cmsUser {
 
         self::setUserSession($user, $user['ip']);
 
-        return $user['id'];
+        return intval($user['id']);
 
     }
 
@@ -267,9 +268,10 @@ class cmsUser {
      * @param string $email
      * @param string $password
      * @param boolean $remember
-     * @return integer
+     * @param boolean $complete_login
+     * @return integer|array
      */
-    public static function login($email, $password, $remember = false) {
+    public static function login($email, $password, $remember = false, $complete_login = true) {
 
         if (!$email || !$password){
             return 0;
@@ -280,20 +282,49 @@ class cmsUser {
         $user = $model->getUserByAuth($email, $password);
 
         if(!$user) {
-            $user = cmsEventsManager::hook('user_auth_error', array('email'=>$email,'password'=>$password));
+            $user = cmsEventsManager::hook('user_auth_error', array('email' => $email, 'password' => $password));
         }
 
         if (empty($user['id'])) { return 0; }
 
         $user = cmsEventsManager::hook('user_login', $user);
 
+        $user['permissions'] = self::getPermissions($user['groups']);
+
+        if($complete_login){
+
+            self::loginComplete($user, $remember);
+
+            return intval($user['id']);
+
+        }
+
+        return $user;
+
+    }
+
+    /**
+     * Завершает авторизацию, устанавливая сессию
+     * и другие параметры авторизации
+     *
+     * @param array $user
+     * @param boolean $remember
+     * @return boolean
+     */
+    public static function loginComplete($user, $remember = false) {
+
         self::setUserSession($user);
+
+        $model = cmsCore::getModel('users');
 
         if ($remember){
 
-            $auth_token = string_random(32, $email);
+            $auth_token = string_random(32, $user['email']);
+
             self::setCookie('auth', $auth_token, self::AUTH_TOKEN_EXPIRATION_INT);
+
             $model->setAuthToken($user['id'], $auth_token);
+
             $model->deleteExpiredToken($user['id'], self::AUTH_TOKEN_EXPIRATION_INT);
 
             self::$auth_token = $auth_token;
@@ -302,7 +333,7 @@ class cmsUser {
 
         $model->updateUserIp($user['id']);
 
-        return $user['id'];
+        return true;
 
     }
 
@@ -429,7 +460,9 @@ class cmsUser {
 
     }
 
-    public static function sessionStart($cookie_domain = false){
+    public static function sessionStart($cookie_domain = false, $session_name = 'ICMSSID'){
+
+        session_name($session_name);
 
         if($cookie_domain){
             $cookie_domain = '.'.$cookie_domain;
@@ -632,8 +665,8 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function addSessionMessage($message, $class='info'){
-        self::sessionPush('core_message', array('class' => 'message_'.$class, 'text' => $message));
+    public static function addSessionMessage($message, $class = 'info'){
+        self::sessionPush('core_message', array('class' => $class, 'text' => $message));
     }
 
     public static function getSessionMessages(){
@@ -708,11 +741,13 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitReached($subject, $permission, $current_value=0){
+    public static function isPermittedLimitReached($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }
@@ -722,11 +757,13 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitHigher($subject, $permission, $current_value=0){
+    public static function isPermittedLimitHigher($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }

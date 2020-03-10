@@ -12,7 +12,7 @@ class images extends cmsFrontend {
         'target_subject' => array(
             'default' => '',
             'rules'   => array(
-                array('sysname'),
+                array('regexp', "/^([a-z0-9\-_\/\.]*)$/"),
                 array('max_length', 32)
             )
         ),

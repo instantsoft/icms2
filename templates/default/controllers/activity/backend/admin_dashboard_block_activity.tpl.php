@@ -1,4 +1,4 @@
-<?php $this->addJS('templates/default/js/jquery.scrollbar.js'); ?>
+<?php $this->addTplJSName('jquery.scrollbar'); ?>
 <div id="activity_wrap">
     <div class="activity_wrap scrollbar-macosx">
         <?php if ($items){ ?>

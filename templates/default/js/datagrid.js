@@ -340,6 +340,7 @@ icms.datagrid = (function ($) {
             htr.find('> th').remove();
             ftr.find('> td').remove();
             for(var key in result.columns)if(result.columns.hasOwnProperty(key)){
+                if (key==0 && !_this.options.show_id) { continue; }
                 htr.append('<th width="'+result.columns[key]['width']+'" rel="'+result.columns[key]['name']+'"'+(result.columns[key]['sortable'] ? ' class="sortable"' : '')+'>'+result.columns[key]['title']+'</th>');
                 if(result.columns[key]['name'] !== 'dg_actions'){
                     ftr.append('<td'+((result.columns[key]['filter'] && $('<div>'+result.columns[key]['filter']+'</div>').find('input').val()) ? ' class="with_filter"' : '')+'>'+(result.columns[key]['filter']||'&nbsp;')+'</td>');

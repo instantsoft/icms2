@@ -1,5 +1,5 @@
 <?php
-    $this->addJS('templates/default/js/content-bind.js');
+    $this->addTplJSNameFromContext('content-bind');
     $ids = array();
 ?>
 
@@ -34,7 +34,7 @@
             var modal_title = '<?php html(sprintf(LANG_CONTENT_SELECT_ITEM, $parent_ctype['labels']['create'])); ?>';
         <?php } ?>
 
-        var $container = $('#<?php echo $field->element_name; ?>').closest('div.field');
+        var $container = $('#<?php echo $field->id; ?>').closest('div.field');
 
         $container.find('a.add').click(function(e){
 

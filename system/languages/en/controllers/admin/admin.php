@@ -11,9 +11,17 @@
     define('LANG_CP_DASHBOARD_NEWS_O',          'Official');
     define('LANG_CP_DASHBOARD_NEWS_A',          'Blogs');
     define('LANG_CP_PAGE_OPTIONS',              'Customize this page');
-
+    define('LANG_CP_SU',                        'System utilization');
+    define('LANG_CP_SU_DISK',                   'Disk space');
+    define('LANG_CP_SU_CPU',                    'CPU');
+    define('LANG_CP_CACHE',                     'Caching');
+    define('LANG_CP_WO_AUTO_GROUP',             'Automatically detect group\'s page');
+    define('LANG_CP_WO_AUTO_GROUP_HINT',        'On group page widget displays the group\'s items');
     define('LANG_CP_DASHBOARD_SI_ICMS',         'InstantCMS version');
     define('LANG_CP_DASHBOARD_SI_PHP',          'PHP version');
+    define('LANG_CP_DASHBOARD_SI_WS',           'Web server');
+    define('LANG_CP_DASHBOARD_SQL_SERVER',      'MYSQL server');
+    define('LANG_CP_DASHBOARD_APACHE_NGINX',    'a two-tier configuration, Nginx version is %s');
     define('LANG_CP_DASHBOARD_SI_ML',           'Memory limit');
     define('LANG_CP_DASHBOARD_SI_IP',           'Server IP');
     define('LANG_CP_DASHBOARD_SI_ROOT',         'Root folder');
@@ -68,6 +76,7 @@
     define('LANG_CP_CTYPE_PROPS',               'Properties');
     define('LANG_CP_CTYPE_PERMISSIONS',         'Permissions');
     define('LANG_CP_CTYPE_DATASETS',            'Datasets');
+    define('LANG_CP_CTYPE_FILTERS',             'Filters');
     define('LANG_CP_CTYPE_DATASET',             'Dataset');
 
     define('LANG_CP_GRID_COLYMNS_SETTINGS',     'Columns settings');
@@ -89,6 +98,11 @@
     define('LANG_CP_SYSTEM_NAME_HINT',          'Used in URLs and database table names<br>Cannot be changed later!');
 
     define('LANG_CP_CONTENT_ITEM_ADD',          'Add Entry');
+    define('LANG_CP_CONTENT_ITEMS_EDIT',        'Change entries');
+    define('LANG_CP_CONTENT_FIELDS_IS_ADD',     'Add Values to Existing');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S1',     'Select the fields you want to change');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_S2',     'These values will replace the fields of the selected items');
+    define('LANG_CP_CONTENT_ITEMS_EDIT_ADD_HINT', '<span class="text-danger">The value will be added to an existing</span>');
     define('LANG_CP_CONTENT_CATS_ADD',          'Add Category');
     define('LANG_CP_CONTENT_CATS_EDIT',         'Edit Category');
     define('LANG_CP_CONTENT_CATS_ORDER',        'Reorder');
@@ -185,7 +199,7 @@
     define('LANG_CP_LISTVIEW_STYLE_FEATURED',   'Featured list');
     define('LANG_CP_LISTVIEW_STYLE_TILES',      'Tiles');
     define('LANG_CP_LISTVIEW_STYLE_TABLE',      'Table');
-    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/templates/%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
+    define('LANG_CP_LISTVIEW_STYLE_HINT',       'Templates from the <b>/'.cmsTemplate::TEMPLATE_BASE_PATH.'%s/content</b> folder. You can specify multiple templates. A switch appears in the list.');
     define('LANG_CP_ITEMVIEW_OPTIONS',          'Entry view options');
     define('LANG_CP_ITEMVIEW_ON',               'Entry view enabled');
     define('LANG_CP_ITEMVIEW_FIELDS_GROUP',     'Group the fields');
@@ -263,15 +277,26 @@
     define('LANG_CP_PROPS_NO_CATS_ADD',         '<a href="%s">Create Categories</a> to add properties.');
     define('LANG_CP_PROPS_ADD',                 'Create Property');
     define('LANG_CP_PROPS_DELETE_CONFIRM',      'Delete the "{title}" property?\n The property will be removed from all categories');
+    define('LANG_CP_PROPS_UNBIND_CONFIRM',      'Unbind property "{title}" from current category?');
     define('LANG_CP_PROPS_BIND',                'Bind property');
+    define('LANG_CP_PROPS_BIND_SC',             'Property successfully bound');
     define('LANG_CP_PROPS_BIND_RECURSIVE',      'including nested categories');
     define('LANG_CP_PROPS_UNBIND',              'Unbind property');
+    define('LANG_CP_PROPS_UNBIND_SC',           'Property successfully unbinded');
     define('LANG_CP_PROP_TITLE',                'Property title');
     define('LANG_CP_PROP_IS_ACTIVE',            'Show property on the site');
     define('LANG_CP_PROP_VALUES',               'List items');
     define('LANG_CP_PROP_VALUES_HINT',          'One item per line');
     define('LANG_CP_PROP_CATS',                 'Bind property to categories');
     define('LANG_CP_PROP_UNITS',                'Units');
+    define('LANG_CP_FILTER_ADD',                'Add filter');
+    define('LANG_CP_FILTER_NO_TABLE',           'Filters is disabled, <a href="%s">enable it</a>.');
+    define('LANG_CP_FILTER_TABLE_SUCCESS',      'Filter engine successfully enabled');
+    define('LANG_CP_FILTER_DELETE_CONFIRM',     'Delete filter "{title}"?');
+    define('LANG_CP_FILTER_ERROR_SLUG',         'A category with the same URI already exists, specify another');
+    define('LANG_CP_FILTER_DESC_HINT',          'Additional description of the category');
+    define('LANG_CP_FILTER_FIELDS',             'Fields filters');
+    define('LANG_CP_FILTER_PROPS',              'Props filters');
 
     define('LANG_CP_DATASET',                   'Dataset');
     define('LANG_CP_DATASET_ADD',               'Add Dataset');
@@ -333,7 +358,42 @@
     define('LANG_CP_MENU_ITEM_TARGET_TOP',      'On top of all frames');
     define('LANG_CP_MENU_IS_FIXED',             'This menu cannot be deleted');
 
+    define('LANG_CP_WIDGETS_ROW_NONE',          'You have not created a single row');
+    define ('LANG_CP_WIDGETS_COL_VA',           'Vertical Column Alignment');
+    define ('LANG_CP_WIDGETS_COL_VA1',          'Top');
+    define ('LANG_CP_WIDGETS_COL_VA2',          'Middle');
+    define ('LANG_CP_WIDGETS_COL_VA3',          'Bottom');
+    define ('LANG_CP_WIDGETS_COL_HA',           'Horizontal column alignment');
+    define ('LANG_CP_WIDGETS_COL_HA1',          'Left to right');
+    define ('LANG_CP_WIDGETS_COL_HA3',          'Right to Left');
+    define ('LANG_CP_WIDGETS_COL_HA4',          'Space Around');
+    define ('LANG_CP_WIDGETS_COL_HA5',          'Space Between');
+    define('LANG_CP_WIDGETS_COL_CLASS',         'Extra CSS Column Class');
+    define('LANG_CP_WIDGETS_ROW_CLASS',         'Extra CSS Row Class');
+    define('LANG_CP_WIDGETS_COL_ORDER',         'Visual order column for %s resolutions');
+    define('LANG_CP_WIDGETS_COL_D_ORDER',       'Default visual column order');
+    define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Default width');
+    define('LANG_CP_WIDGETS_COL_WIDTH',         'Width for %s resolutions');
+    define('LANG_CP_WIDGETS_COL_AUTO',          'Variable width content');
+    define('LANG_CP_WIDGETS_ADD_COL',           'Add col');
+    define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');
+    define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
+    define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');
+    define('LANG_CP_WIDGETS_ROW_CONT',          'Row container');
+    define('LANG_CP_WIDGETS_ROW_CONT_CSS',      'Row container CSS class');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG',   'Parent Block Tag');
+    define('LANG_CP_WIDGETS_ROW_PARRENT_TAG_C', 'Parent Block Tag CSS class');
+    define('LANG_CP_WIDGETS_ROW_CONT_NO',       'Without container');
+    define('LANG_CP_WIDGETS_ROW_DEL_CONFIRM',   'Delete row?\nThe widgets will be moved to the Unused Widgets section');
+    define('LANG_CP_WIDGETS_COL_DEL_CONFIRM',   'Delete col?\nThe widgets will be moved to the Unused Widgets section');
+    define('LANG_CP_WIDGETS_COL_COUNT',         'Columns count');
+    define('LANG_CP_WIDGETS_COL_NAME',          'Position name');
+    define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Not specified, will be generated automatically. Must be unique.');
+    define('LANG_CP_WIDGETS_COL_IS_BODY',       'Display page body');
+    define('LANG_CP_WIDGETS_COL_IS_BREADCRUMB', 'Display breadcrumb');
     define('LANG_CP_WIDGETS_PAGE',              'Page');
+    define('LANG_CP_WIDGETS_PAGES',             'Pages');
+    define('LANG_CP_WIDGETS_ALL',               'All widgets');
     define('LANG_CP_WIDGETS_ADD',               'Add Widget');
     define('LANG_CP_WIDGETS_ADD_PAGE',          'Add Page');
     define('LANG_CP_WIDGETS_EDIT_PAGE',         'Edit');
@@ -344,6 +404,7 @@
     define('LANG_CP_WIDGET_COPY_CONFIRM',       'Copy the widget, duplicating it at the same position?');
     define('LANG_CP_WIDGET_DELETE_CONFIRM',     'Delete widget?');
     define('LANG_CP_WIDGET_REMOVE_CONFIRM',     'Are you sure you want to permanently remove the widget from the system?');
+    define('LANG_CP_WIDGET_REMOVE_SUCCESS',     'Widget successfully deleted');
     define('LANG_CP_WIDGET_PAGE_CREATED',       'Page &laquo;%s&raquo; has been created');
     define('LANG_CP_WIDGET_PAGE_URLS',          'URL binding');
     define('LANG_CP_WIDGET_PAGE_URL_MASK',      'Positive masks');
@@ -387,6 +448,14 @@
     define('LANG_CP_USER_RIPE_SEARCH',          'Find in RIPE database');
     define('LANG_CP_USER_SEARCH_NOT_FOUND',     'No users by specified criteria');
     define('LANG_CP_USERS_ONLINE',              'Online now');
+    define('LANG_CP_USERS_UNCONFIRMED',         'Unverified Accounts');
+    define('LANG_CP_USERS_ALL',                 'Total Users');
+    define('LANG_CP_USERS_ISDELETED',           'Deleted');
+    define('LANG_CP_USERS_LOCKED',              'Blocked');
+
+    define('LANG_CP_TOTAL',       'Total');
+    define('LANG_CP_ONMODERATE',  'Moderation');
+    define('LANG_CP_NOTPUB',      'Unpublished');
 
     define('LANG_CP_CONTROLLERS_OPTIONS',       'Component options');
     define('LANG_CP_CONTROLLERS_ADD',           'Install Component');
@@ -399,12 +468,18 @@
     define('LANG_CP_SETTINGS_MAIL',             'Mail');
     define('LANG_CP_SETTINGS_CACHE',            'Cache');
     define('LANG_CP_SETTINGS_DEBUG',            'Debugging');
+    define('LANG_CP_SETTINGS_DB',               'Database');
+    define('LANG_CP_SETTINGS_DB_CLEAR_SQL_MODE', 'Enable empty sql_mode for MySQL');
+    define('LANG_CP_SETTINGS_DB_CHARSET',       'Charset');
+    define('LANG_CP_SETTINGS_DB_CHARSET_HINT',  'Changing the charset may take a long time');
     define('LANG_CP_SETTINGS_MISC',             'Misc');
     define('LANG_CP_SETTINGS_SECURITY',         'Security');
 
     define('LANG_CP_SETTINGS_SESSIONS',         'Sessions');
     define('LANG_CP_SETTINGS_SESSION_MAXLIFETIME', 'Sessions maxlifetime');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_HANDLER', 'Sessions save handler');
+    define('LANG_CP_SETTINGS_SESSION_NAME', 'Session name');
+    define ('LANG_CP_SETTINGS_SESSION_NAME_HINT', 'Must be the same for all sites with a single authorization');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH', 'Sessions save path');
     define('LANG_CP_SETTINGS_SESSIONS_BASEDIR', ', which must enter one of the paths ');
     define('LANG_CP_SETTINGS_SESSIONS_SAVE_PATH_HINT', 'For files, the full path must be specified%s. For Memcache "tcp://" prefixed must be specified, for example, <b>tcp://localhost:11211</b>. For Memcached must be without the "tcp://" prefix, for example, <b>localhost: 11211</b>.');
@@ -535,6 +610,7 @@
     define('LANG_CP_INSTALL_ERR_FIX',           'Solution');
     define('LANG_CP_INSTALL_ERR_WA',            'Workaround');
     define('LANG_CP_INSTALL_NOT_WRITABLE',      'Folder <b>%s</b> is not writable');
+    define('LANG_CP_INSTALL_NOT_WRITABLE_CUSTOM', 'Click "Continue" if you unzipped the package manually into a directory <b>%s</b>');
     define('LANG_CP_INSTALL_NOT_WRITABLE_HINT', 'Automatic upload is impossible');
     define('LANG_CP_INSTALL_NOT_WRITABLE_FIX',  'Make this folder writable and reload this page');
     define('LANG_CP_INSTALL_NOT_WRITABLE_WA',   'Change the file extension to <b>.zip</b>, unpack and upload its contents to the <b>%s</b> folder');
@@ -657,6 +733,7 @@
     define('LANG_HELP_URL_CTYPES_FIELD',            'https://docs.instantcms.ru/en/manual/ctypes/fields/add');
     define('LANG_HELP_URL_CTYPES_PROPS',            'https://docs.instantcms.ru/en/manual/ctypes/props');
     define('LANG_HELP_URL_CTYPES_PROP',             'https://docs.instantcms.ru/en/manual/ctypes/props/add');
+    define('LANG_HELP_URL_CTYPES_FILTERS',          'https://docs.instantcms.ru/en/manual/ctypes/filters');
     define('LANG_HELP_URL_CTYPES_DATASETS',         'https://docs.instantcms.ru/en/manual/ctypes/datasets');
     define('LANG_HELP_URL_CTYPES_DATASET',          'https://docs.instantcms.ru/en/manual/ctypes/datasets/add');
     define('LANG_HELP_URL_CTYPES_RELATIONS',        'https://docs.instantcms.ru/en/manual/ctypes/relations');
@@ -710,6 +787,7 @@
     define('LANG_MAILCHECK_ERROR', 'When sending a letter error occurred: <br><b>%s</b>');
     define('LANG_MAILCHECK_SUCCESS', 'A letter has been sent successfully');
     define('LANG_MAILCHECK_MENU', 'Check mail settings');
+    define('LANG_CP_DB_CHARSET_HINT', 'Attention! Before changing this option, please backup your database!');
     define('LANG_MAILCHECK_TO', 'Send message to');
     define('LANG_MAILCHECK_SUBJECT', 'Message subject');
     define('LANG_MAILCHECK_BODY', 'Message contents');

@@ -8,7 +8,7 @@
 <script type="text/javascript">
     function leftTimeSuccess (form_data, result){
         if(result.trash_left_time){
-            $('#moderator-1 .trash_left_time_num').html(result.trash_left_time);
+            $('#moderator-'+result.id+' .trash_left_time_num').html(result.trash_left_time);
         }
         icms.modal.close();
     }

@@ -2,6 +2,18 @@
 
 Third-party plugins, libraries and resources included in InstantCMS:
 
+    SCSSPHP
+        by Leaf Corcoran
+        http://scssphp.github.io/scssphp
+
+    Bootstrap
+        by Twitter, Inc
+        https://getbootstrap.com
+
+    PhotoSwipe
+        by Dmitry Semenov
+        http://photoswipe.com
+
     FatCow Free Icons
         by FatCow Team
         http://www.fatcow.com/free-icons
@@ -105,3 +117,11 @@ Third-party plugins, libraries and resources included in InstantCMS:
     jQuery CSS Customizable Scrollbar
         by Yuriy Khabarov
         https://github.com/gromo/jquery.scrollbar/
+
+    PHP Class for handling Google Authenticator 2-factor authentication
+        by Michael Kliewe
+        http://www.phpgangsta.de/
+
+    Free Bootstrap Admin Template
+        by Łukasz Holeczek, woothu, xidedix
+        https://coreui.io/

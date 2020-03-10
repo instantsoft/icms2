@@ -191,12 +191,14 @@ class users extends cmsFrontend {
             );
         }
 
-        $menu[] = array(
-            'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
-            'controller' => $this->name,
-            'action' => $profile['id'],
-            'params' => array('edit', 'notices'),
-        );
+        if(cmsEventsManager::getEventListeners('user_notify_types')){
+            $menu[] = array(
+                'title' => LANG_USERS_EDIT_PROFILE_NOTICES,
+                'controller' => $this->name,
+                'action' => $profile['id'],
+                'params' => array('edit', 'notices'),
+            );
+        }
 
         if (!empty($this->options['is_friends_on'])){
             $menu[] = array(
@@ -208,7 +210,7 @@ class users extends cmsFrontend {
         }
 
         $menu[] = array(
-            'title' => LANG_PASSWORD,
+            'title' => LANG_SECURITY,
             'controller' => $this->name,
             'action' => $profile['id'],
             'params' => array('edit', 'password'),
@@ -250,10 +252,17 @@ class users extends cmsFrontend {
 
             if (!$field['is_in_filter']) { continue; }
 
+            $field['handler']->setItem(['ctype_name' => 'users', 'id' => null])->setContext('filter');
+
+            $fields[$name] = $field;
+
             if (!$this->request->has($name)){ continue; }
 
             $value = $this->request->get($name, false, $field['handler']->getDefaultVarType(true));
             if (!$value) { continue; }
+
+            $value = $field['handler']->storeFilter($value);
+			if (!$value) { continue; }
 
             if($field['handler']->applyFilter($this->model, $value) !== false){
                 $filters[$name] = $value;
@@ -262,7 +271,20 @@ class users extends cmsFrontend {
         }
 
         // Получаем количество и список записей
-        $total    = $this->model->getUsersCount();
+        $total = $this->model->getUsersCount();
+
+        if($this->request->has('show_count')){
+
+            $hint = LANG_SHOW.' '.html_spellcount($total, LANG_USERS_SPELL, false, false, 0);
+
+            return $this->cms_template->renderJSON([
+                'count'       => $total,
+                'filter_link' => false,
+                'hint'        => $hint
+            ]);
+
+        }
+
         $profiles = $this->model->getUsers($actions);
 
         if($this->request->isStandard()){

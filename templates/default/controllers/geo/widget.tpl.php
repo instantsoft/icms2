@@ -1,6 +1,6 @@
 <?php
-$this->addJSFromContext('templates/default/js/jquery-chosen.js');
-$this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+$this->addTplJSNameFromContext('jquery-chosen');
+$this->addTplCSSNameFromContext('jquery-chosen');
 ?>
 <div id="geo_window">
 

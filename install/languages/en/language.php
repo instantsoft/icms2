@@ -24,7 +24,6 @@
 
     define('LANG_STEP_START_1',             'The InstantCMS installation wizard will check whether your server meets the system requirements.');
     define('LANG_STEP_START_2',             'The wizard will ask you a series of questions that are required for the correct installation and configuration.');
-    define('LANG_STEP_START_3',             'Before you start, you have to create a empty MySQL database encoded in <b>utf8_general_ci</b>');
 
     define('LANG_LICENSE_AGREE',            'I agree to the license terms');
     define('LANG_LICENSE_ERROR',            'You need to agree to the license terms');
@@ -68,7 +67,6 @@
     define('LANG_PATHS_SESSIONS_BASEDIR',    'The full path to the file system, which must be in one of the paths ');
 
     define('LANG_DATABASE_INFO',            'Provide your MySQL database connection details');
-    define('LANG_DATABASE_CHARSET_INFO',    'The database encoding should be <b>utf8_general_ci</b>');
     define('LANG_DATABASE_HOST',            'MySQL Server');
     define('LANG_DATABASE_USER',            'Username');
     define('LANG_DATABASE_PASS',            'Password');
@@ -76,6 +74,7 @@
     define('LANG_DATABASE_BASE_HINT',       'Create if not exists');
     define('LANG_DATABASE_ENGINE',          'Database engine');
     define('LANG_DATABASE_ENGINE_HINT',     'If you don\'t know what to choose, select InnoDB.');
+    define('LANG_DATABASE_CHARSET',         'Database collation');
     define('LANG_DATABASE_PREFIX',          'Table prefix');
     define('LANG_DATABASE_USERS_TABLE',     'User table');
     define('LANG_DATABASE_USERS_TABLE_NEW', 'Create new');
@@ -89,6 +88,7 @@
     define('LANG_DATABASE_ENGINE_NO',       'Database engine is not supported');
     define('LANG_DATABASE_ENGINE_DISABLED', 'Database engine is supported but has been disabled in MySQL settings');
     define('LANG_DATABASE_ENGINE_ERROR',    'Database engine is not supported by the server');
+    define('LANG_DATABASE_CH_ERROR',        'Table collation is not supported by the server');
 
     define('LANG_SITE_SITENAME',            "Site name");
     define('LANG_SITE_HOMETITLE',           "Main page title");

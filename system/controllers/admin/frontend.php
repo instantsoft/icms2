@@ -43,6 +43,11 @@ class admin extends cmsFrontend {
 
 	}
 
+    protected function validateParamsCount($class, $method_name, $params) {
+        // проверка на кол-во параметров в контроллере admin отключена
+        return true;
+    }
+
     public function before($action_name) {
 
         parent::before($action_name);
@@ -63,10 +68,15 @@ class admin extends cmsFrontend {
 
                 $this->cms_template->setLayout('admin');
 
-                $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu());
+                $this->cms_template->setMenuItems('cp_main', $this->getAdminMenu($this->cms_template->name === 'admincoreui'));
 
                 $this->cms_template->setLayoutParams(array(
                     'user' => $this->cms_user,
+                    'current_lang' => cmsCore::getLanguageName(),
+                    'langs' => cmsCore::getLanguages(),
+                    'hide_sidebar' => cmsUser::getCookie('hide_sidebar', 'integer'),
+                    'close_sidebar' => cmsUser::getCookie('close_sidebar', 'integer'),
+                    'su'   => $this->getSystemUtilization(),
                     'update' => ($this->cms_config->is_check_updates ? $this->cms_updater->checkUpdate(true) : array()),
                     'notices_count' => cmsCore::getModel('messages')->getNoticesCount($this->cms_user->id)
                 ));
@@ -86,8 +96,69 @@ class admin extends cmsFrontend {
 
     }
 
-//============================================================================//
-//============================================================================//
+    function getSystemUtilization() {
+
+        $total_size = disk_total_space(PATH);
+        $free_space = disk_free_space(PATH);
+        $taken_space = ($total_size -$free_space);
+        $percent = round($taken_space/$total_size*100);
+
+        $su = [
+            'disk' => [
+                'title'   => LANG_CP_SU_DISK,
+                'hint'    => files_format_bytes($taken_space).'/'.files_format_bytes($total_size),
+                'percent' => $percent,
+                'style'   => ($percent <= 50 ? 'info' : ($percent <= 75 ? 'warning' : 'danger'))
+            ]
+        ];
+
+        if(function_exists('sys_getloadavg')){
+
+            $cpu_count = cmsUser::sessionGet('cpu_count');
+
+            if(!$cpu_count){
+
+                // Ну а вдруг ;-)
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    $cmd = 'echo %NUMBER_OF_PROCESSORS%';
+                } else {
+                    $cmd = "grep -P '^physical id' /proc/cpuinfo|wc -l";
+                }
+                $cpu_count = console_exec_command($cmd);
+
+                if(!empty($cpu_count[0])){
+                    $cpu_count = trim($cpu_count[0]) ? trim($cpu_count[0]) : 1;
+                } else {
+                    $cpu_count = 1;
+                }
+
+                cmsUser::sessionSet('cpu_count', $cpu_count);
+
+            }
+
+            $la = sys_getloadavg();
+
+            $current_load_average = round(100*($la[2]/$cpu_count));
+
+            // вероятно определили неверно
+            if($current_load_average > 100){
+                $cpu_count = round($current_load_average/100);
+                cmsUser::sessionSet('cpu_count', $cpu_count);
+                $current_load_average = round(100*($la[2]/$cpu_count));
+            }
+
+            $su['cpu'] = [
+                'title'   => LANG_CP_SU_CPU,
+                'hint'    => $current_load_average.'%',
+                'percent' => $current_load_average,
+                'style'   => ($current_load_average <= 50 ? 'info' : ($current_load_average <= 75 ? 'warning' : 'danger'))
+            ];
+
+        }
+
+        return cmsEventsManager::hook('admin_system_utilization', $su);
+
+    }
 
     public function buildDatasetFieldsList($controller_name, $fields) {
 
@@ -109,68 +180,94 @@ class admin extends cmsFrontend {
 
     }
 
-    public function getAdminMenu(){
+    public function getAdminMenu($show_submenu = false){
 
-        return cmsEventsManager::hook('adminpanel_menu', array(
+        $menu = []; $ctype_new_count = 0;
 
-            array(
-                'title' => LANG_CP_SECTION_CONTENT,
-                'url' => href_to($this->name, 'content'),
-                'options' => array(
-                    'class' => 'item-content'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_CTYPES,
-                'url' => href_to($this->name, 'ctypes'),
-                'options' => array(
-                    'class' => 'item-ctypes'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_MENU,
-                'url' => href_to($this->name, 'menu'),
-                'options' => array(
-                    'class' => 'item-menu'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_WIDGETS,
-                'url' => href_to($this->name, 'widgets'),
-                'options' => array(
-                    'class' => 'item-widgets'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_CONTROLLERS,
-                'url' => href_to($this->name, 'controllers'),
-                'options' => array(
-                    'class' => 'item-controllers'
-                )
-            ),
-            array(
-                'title' => LANG_CP_OFICIAL_ADDONS,
-                'url' => href_to($this->name, 'addons_list'),
-                'options' => array(
-                    'class' => 'item-addons'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_USERS,
-                'url' => href_to($this->name, 'users'),
-                'options' => array(
-                    'class' => 'item-users'
-                )
-            ),
-            array(
-                'title' => LANG_CP_SECTION_SETTINGS,
-                'url' => href_to($this->name, 'settings'),
-                'options' => array(
-                    'class' => 'item-settings'
-                )
+        $model_content = cmsCore::getModel('content');
+
+        $ctypes = $model_content->getContentTypes();
+
+        if($show_submenu){
+            foreach ($ctypes as $ctype) {
+                $ctype_new_count += $this->model->getTableItemsCount24($this->model->getContentTypeTableName($ctype['name']));
+            }
+        }
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CONTENT,
+            'url' => href_to($this->name, 'content'),
+            'counter' => ($ctypes && $show_submenu) ? $ctype_new_count : null,
+            'options' => array(
+                'class' => 'item-content',
+                'icon'  => 'nav-icon icon-docs'
             )
+        ];
 
-        ));
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CTYPES,
+            'url' => href_to($this->name, 'ctypes'),
+            'options' => array(
+                'class' => 'item-ctypes',
+                'icon'  => 'nav-icon icon-equalizer'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_MENU,
+            'url' => href_to($this->name, 'menu'),
+            'options' => array(
+                'class' => 'item-menu',
+                'icon'  => 'nav-icon icon-menu'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_WIDGETS,
+            'url' => href_to($this->name, 'widgets'),
+            'options' => array(
+                'class' => 'item-widgets',
+                'icon'  => 'nav-icon icon-grid'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_CONTROLLERS,
+            'url' => href_to($this->name, 'controllers'),
+            'options' => array(
+                'class' => 'item-controllers',
+                'icon'  => 'nav-icon icon-layers'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_OFICIAL_ADDONS,
+            'url' => href_to($this->name, 'addons_list'),
+            'options' => array(
+                'class' => 'item-addons',
+                'icon'  => 'nav-icon icon-puzzle'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_USERS,
+            'url' => href_to($this->name, 'users'),
+            'options' => array(
+                'class' => 'item-users',
+                'icon'  => 'nav-icon icon-people'
+            )
+        ];
+
+        $menu[] = [
+            'title' => LANG_CP_SECTION_SETTINGS,
+            'url' => href_to($this->name, 'settings'),
+            'options' => array(
+                'class' => 'item-settings',
+                'icon'  => 'nav-icon icon-settings'
+            )
+        ];
+
+        return cmsEventsManager::hook('adminpanel_menu', $menu);
 
     }
 
@@ -211,6 +308,11 @@ class admin extends cmsFrontend {
                 'disabled' => ($do == 'add')
             ),
             array(
+                'title' => LANG_CP_CTYPE_FILTERS,
+                'url' => href_to($this->name, 'ctypes', array('filters', $id)),
+                'disabled' => ($do == 'add')
+            ),
+            array(
                 'title' => LANG_MODERATORS,
                 'url' => href_to($this->name, 'ctypes', array('moderators', $id)),
                 'disabled' => ($do == 'add')
@@ -235,7 +337,10 @@ class admin extends cmsFrontend {
                     if(cmsCore::getController($ctype['name'])->options){
                         $ctype_menu[] = array(
                             'title' => LANG_CP_CONTROLLERS_OPTIONS,
-                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options'))
+                            'url'   => href_to($this->name, 'controllers', array('edit', $ctype['name'], 'options')),
+                            'options' => array(
+                                'icon'  => 'nav-icon icon-settings'
+                            )
                         );
                     }
                 }
@@ -318,13 +423,78 @@ class admin extends cmsFrontend {
 
             array(
                 'title' => LANG_BASIC_OPTIONS,
-                'url' => href_to($this->name, 'settings')
+                'url' => href_to($this->name, 'settings'),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-globe'
+                )
             ),
             array(
                 'title' => LANG_CP_SCHEDULER,
-                'url' => href_to($this->name, 'settings', array('scheduler'))
+                'url' => href_to($this->name, 'settings', array('scheduler')),
+                'level' => 2,
+                'options' => array(
+                    'icon'  => 'nav-icon icon-clock'
+                )
             ),
 
+        ));
+
+    }
+
+    public function getUserGroupsMenu($action = 'view', $id = 0) {
+
+        return cmsEventsManager::hook('admin_user_groups_menu', array(
+            array(
+                'title' => LANG_CONFIG,
+                'url' => $action != 'add' ? href_to($this->name, 'users', array('group_edit', $id)) : href_to($this->name, 'users', 'group_add'),
+                'options' => array(
+                    'icon'  => 'nav-icon icon-globe'
+                )
+            ),
+            array(
+                'title' => LANG_PERMISSIONS,
+                'disabled' => $action == 'add' ? true : null,
+                'url' => href_to($this->name, 'users', array('group_perms', $id)),
+                'options' => array(
+                    'icon'  => 'nav-icon icon-key'
+                )
+            )
+        ));
+
+    }
+
+    public function getAddonsMenu() {
+
+        return cmsEventsManager::hook('admin_addons_menu', array(
+            array(
+                'title' => LANG_CP_OFICIAL_ADDONS,
+                'url' => href_to($this->name, 'addons_list'),
+                'options' => array(
+                    'icon'  => 'icon-puzzle'
+                )
+            ),
+            array(
+                'title' => LANG_CP_INSTALL_PACKAGE,
+                'url'   => href_to($this->name, 'install'),
+                'options' => array(
+                    'icon'  => 'icon-cloud-upload'
+                )
+            ),
+            array(
+                'title' => LANG_CP_SECTION_CONTROLLERS,
+                'url'   => href_to($this->name, 'controllers'),
+                'options' => array(
+                    'icon'  => 'icon-layers'
+                )
+            ),
+            array(
+                'title' => LANG_EVENTS_MANAGEMENT,
+                'url'   => href_to($this->name, 'controllers', 'events'),
+                'options' => array(
+                    'icon'  => 'icon-bag'
+                )
+            )
         ));
 
     }
@@ -395,6 +565,12 @@ class admin extends cmsFrontend {
             $manifest['info']['image'] = $this->cms_config->upload_host . '/' .
                                             $this->installer_upload_path . '/' .
                                             $manifest['info']['image'];
+        }
+
+        if (isset($manifest['info']['image_hint'])){
+            $manifest['info']['image_hint'] = $this->cms_config->upload_path .
+                                            $this->installer_upload_path . '/' .
+                                            $manifest['info']['image_hint'];
         }
 
         if((isset($manifest['install']) || isset($manifest['update']))){
@@ -545,7 +721,7 @@ class admin extends cmsFrontend {
 
     }
 
-    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template = false){
+    public function getWidgetOptionsForm($widget_name, $controller_name = false, $options = false, $template = false, $allow_set_cacheable = true){
 
         if(!$template){
             $template = $this->cms_config->template;
@@ -696,10 +872,18 @@ class admin extends cmsFrontend {
                 'default' => false
             )));
 
+            // Управление кэшированием
+            if($this->cms_config->cache_enabled && $allow_set_cacheable){
+                $form->addField($title_fieldset_id, new fieldCheckbox('is_cacheable', array(
+                    'title' => LANG_CP_CACHE
+                )));
+            }
+
             // Ссылки в заголовке
             $form->addField($title_fieldset_id, new fieldText('links', array(
                 'title' => LANG_WIDGET_TITLE_LINKS,
-                'hint'  => LANG_WIDGET_TITLE_LINKS_HINT
+                'hint'  => LANG_WIDGET_TITLE_LINKS_HINT,
+                'is_strip_tags' => true
             )));
 
 		return cmsEventsManager::hook('widget_options_full_form', $form);
@@ -828,7 +1012,7 @@ class admin extends cmsFrontend {
                 $items[$type][$key]['handler_only'] = function($value, $item) use($presets){
                     if(!$value){return '';}
                     $value = !is_array($value) ? cmsModel::yamlToArray($value) : $value;
-                    return html_image($value, $presets, '', array('class' => 'grid_image_preview'));
+                    return html_image($value, $presets, '', array('class' => 'grid_image_preview img-thumbnail'));
                 };
             }
         }
@@ -846,6 +1030,42 @@ class admin extends cmsFrontend {
             ),
             'user' => array()
         );
+    }
+
+    public function getSchemeColForm($do, $row, $col = []){
+
+        $form = $this->getForm('widgets_cols', [$do, (!empty($col['id']) ? $col['id'] : 0)]);
+
+        $col_scheme_options = cmsEventsManager::hookAll('admin_col_scheme_options_'.$row['template'], ['add', $row, []]);
+
+        if($col_scheme_options){
+            foreach ($col_scheme_options as $controller_name => $fields) {
+                foreach ($fields as $field) {
+                    $form->addField('basic', $field);
+                }
+            }
+        }
+
+        return $form;
+
+    }
+
+    public function getSchemeRowForm($do, $row, $col = []){
+
+        $form = $this->getForm('widgets_rows', [$do]);
+
+        $row_scheme_options = cmsEventsManager::hookAll('admin_row_scheme_options_'.$row['template'], [$do, $row, $col]);
+
+        if($row_scheme_options){
+            foreach ($row_scheme_options as $controller_name => $fields) {
+                foreach ($fields as $field) {
+                    $form->addField('basic', $field);
+                }
+            }
+        }
+
+        return $form;
+
     }
 
 }

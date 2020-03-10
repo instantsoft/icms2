@@ -2,7 +2,7 @@
 
 class actionWysiwygsPresetsAdd extends cmsAction {
 
-    public function run($id = null){
+    public function run($id = null, $is_copy = null){
 
         $preset = [];
 
@@ -10,12 +10,16 @@ class actionWysiwygsPresetsAdd extends cmsAction {
 
         if($id){
 
-            $do = 'edit';
+            $do = $is_copy ? 'add' : 'edit';
 
             $preset = $this->model->getPreset($id);
 
             if (!$preset) {
                 return cmsCore::error404();
+            }
+
+            if($is_copy){
+                $preset['title'] .= ' (1)';
             }
 
         }

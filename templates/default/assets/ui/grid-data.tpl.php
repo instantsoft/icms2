@@ -1,4 +1,4 @@
-<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage; ?>
+<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perpage']; ?>
 
 <form id="datagrid_filter">
     <?php if ($options['is_pagination']) { ?>

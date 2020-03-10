@@ -26,6 +26,7 @@ class actionGroupsGroupContent extends cmsAction {
 
             $keys = array_keys($datasets);
             $current_dataset = $dataset ? $datasets[$dataset] : $datasets[$keys[0]];
+
             $this->controller_content->model->applyDatasetFilters($current_dataset);
             // устанавливаем максимальное количество записей для набора, если задано
             if(!empty($current_dataset['max_count'])){
@@ -41,8 +42,7 @@ class actionGroupsGroupContent extends cmsAction {
 
         $this->controller_content->model->
                 filterEqual('parent_id', $group['id'])->
-                filterEqual('parent_type', 'group')->
-                orderBy('date_pub', 'desc')->forceIndex('parent_id');
+                filterEqual('parent_type', 'group');
 
         $page_url = href_to($this->name, $group['slug'], array('content', $ctype_name));
 
@@ -90,7 +90,7 @@ class actionGroupsGroupContent extends cmsAction {
             'dataset'         => $dataset,
             'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
-            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : '')),
+            'html'            => $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset),
             'filter_titles'   => $this->controller_content->getFilterTitles(),
         ));
 

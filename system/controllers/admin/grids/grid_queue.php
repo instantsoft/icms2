@@ -23,6 +23,7 @@ function grid_queue($controller, $contex_controller){
         ),
         'date_started' => array(
             'title' => LANG_CP_QUEUE_DATE_STARTED,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 130,
             'handler' => function($value, $item){
                 if(!$value || ($value && !$item['attempts'])){
@@ -34,6 +35,7 @@ function grid_queue($controller, $contex_controller){
         ),
         'last_error' => array(
             'title'  => LANG_ERROR,
+            'class' => 'd-none d-lg-table-cell',
             'handler' => function($value, $item){
                 return html_bool_span($value, false);
             }

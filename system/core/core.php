@@ -19,6 +19,7 @@ class cmsCore {
     private static $language_href_prefix = '';
     private static $core_version = null;
     private static $controllers_instance = array();
+    private static $templates = null;
 
     public $controller = '';
     private $defined_controllers = array();
@@ -360,13 +361,16 @@ class cmsCore {
      * @param cmsRequest $request
      * @return controller_class
      */
-    public static function getController($controller_name, $request=null){
+    public static function getController($controller_name, $request = null){
 
         $config = cmsConfig::getInstance();
 
         $ctrl_file = $config->root_path . 'system/controllers/'.$controller_name.'/frontend.php';
 
         if (!class_exists($controller_name, false)) {
+            if(!is_readable($ctrl_file)){
+                return self::error404();
+            }
             include_once($ctrl_file);
         }
 
@@ -449,10 +453,16 @@ class cmsCore {
 
         $events = array();
 
+        $db = cmsDatabase::getInstance();
+
+        if(!$db->ready()){
+            return $events;
+        }
+
         if($is_enabled){
-            $controllers_events = cmsDatabase::getInstance()->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
+            $controllers_events = $db->getRows('events FORCE INDEX (is_enabled)', '`is_enabled` = 1', '*', 'ordering ASC', true);
         } else {
-            $controllers_events = cmsDatabase::getInstance()->getRows('events', '1', '*', 'ordering ASC', true);
+            $controllers_events = $db->getRows('events', '1', '*', 'ordering ASC', true);
         }
 
         if($controllers_events){
@@ -769,7 +779,7 @@ class cmsCore {
                 return self::error404();
             }
 
-            $controller->redirectTo($slug, $this->uri_action, $this->uri_params, $this->uri_query, 301);
+            $controller->redirectTo($slug, ($this->uri_action === 'index' ? '' : $this->uri_action), $this->uri_params, $this->uri_query, 301);
         }
 
         // запускаем действие
@@ -886,9 +896,7 @@ class cmsCore {
 
     }
 
-    public function runWidget($widget){
-
-        $result = false;
+    public static function getWidgetObject($widget) {
 
         $file = 'system/'.cmsCore::getWidgetPath($widget['name'], $widget['controller']).'/widget.php';
 
@@ -901,7 +909,15 @@ class cmsCore {
             cmsCore::loadWidgetLanguage($widget['name'], $widget['controller']);
         }
 
-        $widget_object = new $class($widget);
+        return new $class($widget);
+
+    }
+
+    public function runWidget($widget){
+
+        $result = false;
+
+        $widget_object = cmsCore::getWidgetObject($widget);
 
         $cache_key = 'widgets'.$widget['id'];
         $cache = cmsCache::getInstance();
@@ -1116,7 +1132,26 @@ class cmsCore {
      */
     public static function getTemplates(){
 
-        return self::getDirsList('templates');
+        if(self::$templates !== null){
+            return self::$templates;
+        }
+
+        if(cmsTemplate::TEMPLATE_BASE_PATH){
+            return self::$templates = self::getDirsList(cmsTemplate::TEMPLATE_BASE_PATH);
+        }
+
+        $root_path = cmsConfig::get('root_path');
+        $all_dirs = self::getDirsList('');
+        $result = [];
+
+        foreach($all_dirs as $dir){
+            // В папке шаблона в обязательном порядке должны быть как минимум эти файлы
+            if(file_exists($root_path.$dir.'/main.tpl.php') && (file_exists($root_path.$dir.'/scheme.html') || file_exists($root_path.$dir.'/scheme.php'))){
+                $result[] = $dir;
+            }
+        }
+
+        return self::$templates = $result;
 
     }
 

@@ -131,12 +131,24 @@ class cmsConfig {
 
         }
 
+        if(empty($this->data['db_charset'])){
+            $this->data['db_charset'] = 'utf8';
+        }
+
         if(empty($this->data['session_save_handler'])){
             $this->data['session_save_handler'] = 'files';
         }
 
         if(!isset($this->data['controllers_without_widgets'])){
             $this->data['controllers_without_widgets'] = array('admin');
+        }
+
+        if(!isset($this->data['session_name'])){
+            $this->data['session_name'] = 'ICMSSID';
+        }
+
+        if(empty($this->data['native_yaml']) || !function_exists('yaml_emit')){
+            $this->data['native_yaml'] = 0;
         }
 
 		$this->upload_host_abs = $this->upload_host;

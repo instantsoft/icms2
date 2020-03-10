@@ -150,7 +150,7 @@ class actionAdminInstallFtp extends cmsAction {
 
                     if (!@ftp_chdir($conn_id, $dst_dir."/".$file)) {
                         $result = @ftp_mkdir($conn_id, $dst_dir."/".$file);
-                        if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED);}
+                        if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED.': '.$dst_dir."/".$file);}
                         if($is_function_exists_ftp_chmod){
                             @ftp_chmod($conn_id, 0755, $dst_dir."/".$file);
                         }

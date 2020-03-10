@@ -1,6 +1,6 @@
 <?php
 
-function grid_ctype_relations($controller){
+function grid_ctype_relations($controller, $drag_save_url){
 
     cmsCore::loadAllControllersLanguages();
 
@@ -9,6 +9,7 @@ function grid_ctype_relations($controller){
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
+        'drag_save_url' => $drag_save_url,
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false
@@ -17,6 +18,7 @@ function grid_ctype_relations($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30,
         ),
         'title' => array(
@@ -25,6 +27,7 @@ function grid_ctype_relations($controller){
         ),
         'layout' => array(
             'title' => LANG_CP_RELATION_LAYOUT_TYPE,
+            'class' => 'd-none d-lg-table-cell',
             'handler' => function($value, $row){
                 return constant('LANG_CP_RELATION_LAYOUT_' . strtoupper($value));
             }

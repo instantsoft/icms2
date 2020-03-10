@@ -81,6 +81,7 @@ class formPhotosOptions extends cmsForm {
                     new fieldText('types', array(
                         'title'   => LANG_PHOTOS_TYPES,
                         'hint'    => LANG_PHOTOS_TYPES_HINT,
+                        'is_strip_tags' => true,
                         'default' => "1 | Фото\n2 | Векторы\n3 | Иллюстрации",
                         'size'    => 8
                     )),

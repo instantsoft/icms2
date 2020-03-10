@@ -17,7 +17,7 @@ class messages extends cmsFrontend {
 
         if(!$this->request->isInternal()){
 
-            if (!$this->request->isAjax()){ cmsCore::error404(); }
+            if (!$this->request->isAjax() && $action_name !== 'index'){ cmsCore::error404(); }
 
             if (!cmsUser::isLogged()){ cmsCore::error404(); }
 

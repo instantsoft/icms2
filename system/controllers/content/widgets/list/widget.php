@@ -102,6 +102,17 @@ class widgetContentList extends cmsWidget {
             }
         }
 
+        // мы на странице группы?
+        $current_group = cmsModel::getCachedResult('current_group');
+        if($this->getOption('auto_group') && $current_group){
+
+            $this->disableCache();
+
+            $model->filterEqual('parent_id', $current_group['id'])->
+                filterEqual('parent_type', 'group');
+
+        }
+
         // выключаем формирование рейтинга в хуках
         $ctype['is_rating'] = 0;
 

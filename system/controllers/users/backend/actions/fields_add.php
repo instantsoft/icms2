@@ -21,9 +21,10 @@ class actionUsersFieldsAdd extends cmsAction {
             $field_class = "field" . string_to_camel('_', $field_type);
             $field_object = new $field_class(null, null);
             $field_options = $field_object->getOptions();
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
             foreach($field_options as $option_field){
                 $option_field->setName("options:{$option_field->name}");
-                $form->addField('type', $option_field);
+                $form->addField('field_settings', $option_field);
             }
 
             $field = $form->parse($this->request, true);

@@ -190,7 +190,7 @@ class modelActivity extends cmsModel{
 
 				foreach($item['images'] as $key => $image){
 					if (strpos($image['src'], 'http') !== 0) {
-						if (!file_exists($config->upload_path . '/' . $image['src'])){
+						if (!file_exists($config->upload_path . $image['src'])){
 							continue;
 						}
 						$image['src'] = $config->upload_host . '/' . $image['src'];

@@ -6,8 +6,8 @@
                 <div class="links">
                     <?php $links = string_parse_list($widget['links']); ?>
                     <?php foreach($links as $link){ ?>
-                        <a href="<?php echo (strpos($link['value'], 'http') === 0) ? $link['value'] : href_to($link['value']); ?>">
-                            <?php echo $link['id']; ?>
+                        <a href="<?php html((strpos($link['value'], 'http') === 0) ? $link['value'] : href_to($link['value'])); ?>">
+                            <?php html($link['id']); ?>
                         </a>
                     <?php } ?>
                 </div>

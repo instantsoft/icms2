@@ -68,6 +68,12 @@ class cmsFormField {
      */
     public $item = null;
     /**
+     * Контекст запроса
+     * Устанавливается в методе parse объекта класса cmsForm
+     * @var object
+     */
+    public $request = null;
+    /**
      * ID поля, если запись о нём есть в таблице
      * @var integer
      */
@@ -123,12 +129,33 @@ class cmsFormField {
 
     public $context = null;
 
+    /**
+     * Метод для вывода поля в форме
+     * @var string
+     */
+    public $display_input = 'getInput';
+
+    /**
+     * Показывать заголовок поля
+     * при выводе поля для фильтра
+     *
+     * @var boolean
+     */
+    public $show_filter_input_title = false;
 
     /**
      * Формировать поле формы на нескольких языках
      * @var boolean
      */
     public $multilanguage = false;
+
+    /**
+     * Тип поля
+     * по факту имя файла
+     *
+     * @var string
+     */
+    public $field_type;
 
     /**
      * @param string $name Имя поля
@@ -138,7 +165,8 @@ class cmsFormField {
 
         $this->setName($name);
 
-        $this->class = substr(mb_strtolower(get_called_class()), 5);
+        $this->field_type = substr(mb_strtolower(get_called_class()), 5);
+        $this->class = $this->field_type;
 
         if ($options){
             $this->setOptions($options);
@@ -383,7 +411,11 @@ class cmsFormField {
      * @return string
      */
     public function getFilterInput($value){
-        $this->element_title = false;
+
+        if(!$this->show_filter_input_title){
+            $this->element_title = false;
+        }
+
         // при фильтрации все поля необязательны
         $required_key = array_search(array('required'), $this->getRules());
         if($required_key !== false){
@@ -445,6 +477,17 @@ class cmsFormField {
         if($this->store_array_as_json && is_array($value)){
             return cmsModel::arrayToString($value);
         }
+        return $value;
+    }
+
+    /**
+     * Подготавливает входную переменную
+     * из поля фильтра
+     *
+     * @param mixed $value Значение поля из формы фильтра
+     * @return mixed
+     */
+    public function storeFilter($value){
         return $value;
     }
 

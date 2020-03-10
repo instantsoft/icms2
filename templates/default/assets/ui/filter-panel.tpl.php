@@ -24,7 +24,7 @@
                     <?php if (!$field['is_in_filter']){ continue; } ?>
                     <?php if (!empty($field['filter_view']) && !$user->isInGroups($field['filter_view'])) { continue; } ?>
                     <?php $value = isset($filters[$name]) ? $filters[$name] : null; ?>
-                    <?php $output = $field['handler']->setContext('filter')->setItem(array('ctype_name' => $css_prefix, 'id' => null))->getFilterInput($value); ?>
+                    <?php $output = $field['handler']->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>
                     <?php $fields_count++; ?>
                     <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
@@ -34,37 +34,44 @@
                         </div>
                     </div>
                 <?php } ?>
-                <?php if (!empty($props_fields)){ ?>
+                <?php if (!empty($props)){ ?>
                     <?php foreach($props as $prop){ ?>
                         <?php
                             if (!$prop['is_in_filter']){ continue; }
                             $fields_count++;
-                            $field = $props_fields[$prop['id']];
-                            $field->setName("p{$prop['id']}");
-                            if ($prop['type'] == 'list' && !empty($prop['options']['is_filter_multi'])){ $field->setOption('filter_multiple', true); }
-                            if ($prop['type'] == 'number' && !empty($prop['options']['is_filter_range'])){ $field->setOption('filter_range', true); }
+                            $prop['handler']->setName("p{$prop['id']}");
                             $value = isset($filters["p{$prop['id']}"]) ? $filters["p{$prop['id']}"] : null;
                         ?>
                         <div class="field ft_<?php echo $prop['type']; ?> f_prop_<?php echo $prop['id']; ?>">
                             <div class="title"><?php echo $prop['title']; ?></div>
                             <div class="value">
-                                <?php echo $field->getFilterInput($value); ?>
+                                <?php echo $prop['handler']->getFilterInput($value); ?>
                             </div>
                         </div>
                     <?php } ?>
                 <?php } ?>
             </div>
             <?php if ($fields_count) { ?>
+                <div class="spinner filter_loader"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
                 <div class="buttons">
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
                         <div class="link">
-                            <a href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
+                            <a class="cancel_filter_link" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
                                 <?php echo LANG_CANCEL; ?>
                             </a>
                         </div>
                         <div class="link">
-                            # <a href="<?php echo $form_url.$form_url_sep.http_build_query($filters); ?>"><?php echo LANG_FILTER_URL; ?></a>
+                            <?php
+                            if(!empty($page_url['filter_link'])){
+                                $filter_url = $page_url['filter_link'];
+                            } else {
+                                $filter_url = $form_url.$form_url_sep.http_build_query($filters);
+                            }
+                            ?>
+                            # <a href="<?php echo $filter_url; ?>">
+                                <?php echo LANG_FILTER_URL; ?>
+                            </a>
                         </div>
                         <?php
                             $hooks_html = cmsEventsManager::hookAll('content_filter_buttons_html', array($css_prefix, $form_url, $filters));

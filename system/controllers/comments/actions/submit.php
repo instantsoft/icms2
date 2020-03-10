@@ -261,8 +261,6 @@ class actionCommentsSubmit extends cmsAction {
         // Получаем и рендерим добавленный комментарий
         $comment = $this->model->getComment($comment_id);
 
-        $comment = cmsEventsManager::hook('comment_after_add', $comment, null, $this->request);
-
         $comment['content_html'] = cmsEventsManager::hook('parse_text', $comment['content_html']);
 
         // Уведомление модерации
@@ -295,7 +293,7 @@ class actionCommentsSubmit extends cmsAction {
             // Уведомляем об ответе на комментарий
             if ($parent_comment){ $this->notifyParent($comment, $parent_comment); }
 
-            $comment = cmsEventsManager::hook('comment_after_add', $comment);
+            $comment = cmsEventsManager::hook('comment_after_add', $comment, null, $this->request);
 
         }
 

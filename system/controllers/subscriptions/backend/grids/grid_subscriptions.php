@@ -15,6 +15,7 @@ function grid_subscriptions ($controller){
     $columns = array(
         'id' => array(
             'title' => 'id',
+            'class' => 'd-none d-lg-table-cell',
             'width' => 30
         ),
         'title' => array(
@@ -26,6 +27,7 @@ function grid_subscriptions ($controller){
         ),
         'controller' => array(
             'title'  => LANG_EVENTS_LISTENER,
+            'class' => 'd-none d-lg-table-cell',
             'width'  => 200,
             'filter' => 'like',
             'filter_select' => array(
@@ -45,6 +47,7 @@ function grid_subscriptions ($controller){
         ),
         'subject' => array(
             'title' => LANG_CP_SUBJECT,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 200
         ),
         'subscribers_count' => array(

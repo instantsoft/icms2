@@ -16,12 +16,14 @@ define('VALID_RUN', true);
 
 /**
  * Константа, наличие которой говорит о том, что нам нужны сессии
+ * и bootstrap.php их включит
  */
 define('SESSION_START', true);
 
 header('Content-type:text/html; charset=utf-8');
 header('X-Powered-By: InstantCMS');
 
+// Подключаем файл первоначальной инициализации окружения InstantCMS
 require_once 'bootstrap.php';
 
 if ($config->emulate_lag) { usleep(350000); }

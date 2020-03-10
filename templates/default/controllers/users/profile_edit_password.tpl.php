@@ -1,13 +1,13 @@
 <?php
 
-    $this->setPageTitle(LANG_CHANGE_PASS);
+    $this->setPageTitle(LANG_SECURITY);
 
     if($this->controller->listIsAllowed()){
         $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
     $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
     $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE, href_to('users', $id, 'edit'));
-    $this->addBreadcrumb(LANG_CHANGE_PASS);
+    $this->addBreadcrumb(LANG_SECURITY);
 
     $this->addToolButton(array(
         'class' => 'save',
@@ -20,7 +20,6 @@
         'title' => LANG_CANCEL,
         'href'  => href_to('users', $id)
     ));
-
 
 ?>
 

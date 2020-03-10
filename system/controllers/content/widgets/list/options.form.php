@@ -76,6 +76,11 @@ class formWidgetContentListOptions extends cmsForm {
                         },
                     )),
 
+                    new fieldCheckbox('options:auto_group', array(
+                        'title'   => LANG_CP_WO_AUTO_GROUP,
+                        'hint'    => LANG_CP_WO_AUTO_GROUP_HINT
+                    )),
+
 					new fieldList('options:category_id', array(
 						'title' => LANG_CATEGORY,
 						'parent' => array(
