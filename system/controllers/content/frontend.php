@@ -56,7 +56,7 @@ class content extends cmsFrontend {
                 $result['items'][] = array(
                     'id'           => 'content_add' . $ctype['id'],
                     'parent_id'    => $menu_item_id,
-                    'title'        => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
+                    'title'        => string_ucfirst($ctype['labels']['create']),
                     'childs_count' => 0,
                     'url'          => href_to($ctype['name'], 'add')
                 );
