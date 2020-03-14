@@ -35,6 +35,7 @@
     ]); ?>
     <?php $this->head(false); ?>
 </head>
+<?php $messages = cmsUser::getSessionMessages(); ?>
 <body class="app header-fixed sidebar-fixed <?php if(!$close_sidebar){ ?>sidebar-lg-show<?php } ?> <?php if($hide_sidebar){ ?> brand-minimized sidebar-minimized<?php } ?> <?php echo $device_type; ?>_device_type">
     <header class="app-header navbar shadow-sm" id="cp_header">
         <button class="navbar-toggler sidebar-toggler d-lg-none mr-auto" type="button" data-toggle="sidebar-show">
@@ -165,6 +166,17 @@
                 </nav>
             <?php } ?>
             <div class="container-fluid print-body-wrap">
+                <?php if ($messages){ ?>
+                    <?php foreach($messages as $message){ ?>
+                        <?php if (empty($message['is_keep'])){ continue; } ?>
+                        <div class="alert alert-<?php echo str_replace('error', 'danger', $message['class']); ?>" role="alert">
+                            <?php echo $message['text']; ?>
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                     <?php } ?>
+                <?php } ?>
                 <?php $this->body(); ?>
             </div>
         </main>
@@ -194,7 +206,6 @@
     <?php if ($config->debug){ ?>
         <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance())); ?>
     <?php } ?>
-    <?php $messages = cmsUser::getSessionMessages(); ?>
     <script>
         $(function(){
         <?php if($this->controller->install_folder_exists){ ?>
@@ -202,6 +213,7 @@
         <?php } ?>
         <?php if ($messages){ ?>
             <?php foreach($messages as $message){ ?>
+                <?php if (!empty($message['is_keep'])){ continue; } ?>
                 toastr.<?php echo $message['class']; ?>('<?php echo $message['text']; ?>');
              <?php } ?>
         <?php } ?>

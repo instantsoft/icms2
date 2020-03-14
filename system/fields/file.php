@@ -165,12 +165,18 @@ class fieldFile extends cmsFormField {
 
     public function getInput($value){
 
-        $this->data['allowed_extensions']   = $this->getOption('extensions');
-        $this->data['max_size_mb']          = $this->getOption('max_size_mb');
+        $this->data['attributes'] = $this->getProperty('attributes')?:array();
 
-        if($this->data['max_size_mb']){
+        $this->data['attributes']['class'] = 'custom-file-input';
+        $this->data['attributes']['id'] = $this->id;
+        $this->data['attributes']['required'] = (array_search(array('required'), $this->getRules()) !== false);
+
+        $this->data['allowed_extensions'] = $this->getOption('extensions');
+        $this->data['max_size_mb']        = $this->getOption('max_size_mb');
+
+        if ($this->data['max_size_mb']) {
             $this->data['max_size_mb'] *= 1048576;
-        }else{
+        } else {
             $this->data['max_size_mb'] = files_convert_bytes(ini_get('post_max_size'));
         }
 

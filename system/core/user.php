@@ -665,19 +665,20 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public static function addSessionMessage($message, $class = 'info'){
-        self::sessionPush('core_message', array('class' => $class, 'text' => $message));
+    public static function addSessionMessage($message, $class = 'info', $is_keep = false){
+        self::sessionPush('core_message', ['class' => $class, 'text' => $message, 'is_keep' => $is_keep]);
     }
 
-    public static function getSessionMessages(){
+    public static function getSessionMessages($is_clear = true){
 
         if (self::isSessionSet('core_message')){
             $messages = self::sessionGet('core_message');
         } else {
             $messages = false;
         }
-
-        self::clearSessionMessages();
+        if($is_clear){
+            self::clearSessionMessages();
+        }
         return $messages;
 
     }

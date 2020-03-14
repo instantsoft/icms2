@@ -302,7 +302,7 @@ form .ft_date select {
     display: inline-block;
 }
 form .ft_number .input-group, form .field .input-small {
-    width: 150px;
+    width: 220px;
 }
 form .date-input, form .short-input {
     width: 150px;
@@ -830,6 +830,10 @@ th[rel="dg_actions"] {
 }
 .datagrid.table-dragged tbody > tr > td:first-child, .is-sortable .card-header > .db-sortable-handle {
     position: relative;
+}
+.loading{
+    padding-left: 22px;
+    background:url("../../images/datatree/loading.svg") no-repeat left center;
 }
 .colplaceholder{
     background:rgba(0,0,0,.025);

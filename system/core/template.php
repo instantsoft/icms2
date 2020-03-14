@@ -1087,6 +1087,10 @@ class cmsTemplate {
                 return false;
             }
 
+            if (isset($this->head_js[$hash])) {
+                unset($this->head_js[$hash]);
+            }
+
             if($at_begin === true){ // На случай, если здесь "Комментарий к скрипту"
                 $this->head_main_js = [$hash => $file] + $this->head_main_js;
             } else {
