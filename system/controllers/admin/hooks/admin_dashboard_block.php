@@ -53,7 +53,7 @@ class onAdminAdminDashboardBlock extends cmsAction {
             $dashboard_blocks[] = array(
                 'title' => LANG_CP_DASHBOARD_STATS,
                 'hide_title' => true, // работает на новом шаблоне админки
-                'class' => 'col-12',
+                'class' => 'col-12 col3',
                 'name' => 'stat',
                 'html'  => $this->cms_template->getRenderedChild('index_chart', array(
                     'chart_nav' => $chart_nav,

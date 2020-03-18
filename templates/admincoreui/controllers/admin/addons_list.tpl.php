@@ -115,8 +115,11 @@
         });
         $('#addons_list').on('click', '.do_install', function(e){
             $(this).html($('#addons_count .spinner').clone().show());
-            $(this).prev().find('input[type=submit]').trigger('click');
-            return false;
+            var install_form_btn = $(this).prev().find('input[type=submit]');
+            if(install_form_btn.length > 0){
+                $(this).prev().find('input[type=submit]').trigger('click');
+                return false;
+            }
         });
         $('#search_addon_title').on('keyup', function(e){
             if(e.keyCode==13){
