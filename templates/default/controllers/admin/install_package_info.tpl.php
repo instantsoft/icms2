@@ -1,8 +1,10 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/datatree.js');
-    $this->addCSS('templates/default/css/datatree.css');
+    $this->addTplJSName([
+        'jquery-cookie',
+        'datatree'
+        ]);
+    $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_INSTALL_PACKAGE);
     $this->addBreadcrumb(LANG_CP_INSTALL_PACKAGE);
@@ -54,7 +56,7 @@
                             <a class="mail" href="mailto:<?php echo $manifest['author']['email']; ?>"></a>
                         <?php } ?>
                         <?php if (isset($manifest['author']['url'])) { ?>
-                            <a class="url" href="<?php echo $manifest['author']['url']; ?>" target="_blank"></a>
+                            <a rel="noopener noreferrer" class="url" href="<?php echo $manifest['author']['url']; ?>" target="_blank"></a>
                         <?php } ?>
                     </p>
                     <?php } ?>
@@ -117,7 +119,7 @@
                         <?php } ?>
                         <?php if (!empty($manifest['depends_results']['dependent_type']) && isset($manifest['depends']['dependent_version'])) { ?>
                             <li>
-                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank"><?php echo $manifest['depends']['dependent_title']; ?></a>:
+                                <?php echo LANG_CP_PACKAGE_DEPENDS_PACKAGE; ?> <a href="<?php echo $manifest['depends']['dependent_url']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $manifest['depends']['dependent_title']; ?></a>:
                                 <?php echo html_bool_span($manifest['depends']['dependent_version'], $manifest['depends_results']['dependent_version']); ?>
                             </li>
                             <?php if (!$manifest['depends_results']['dependent_version']){ $depends_pass = false; } ?>
@@ -157,7 +159,7 @@
 
         <div class="buttons">
             <?php if ($depends_pass){ echo html_button(LANG_INSTALL, 'cancel', "location.href='".$this->href_to('install', 'ftp')."'", array('class'=>'button-submit')); } ?>
-            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('')."'"); ?>
+            <?php echo html_button(LANG_CANCEL, 'cancel', "location.href='".$this->href_to('addons_list')."'"); ?>
         </div>
 
     </form>

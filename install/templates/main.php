@@ -3,9 +3,11 @@
 <head>
 	<title><?php echo LANG_PAGE_TITLE; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link type="text/css" rel="stylesheet" href="css/sweetalert2.min.css">
     <link type="text/css" rel="stylesheet" href="css/styles.css">
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/install.js"></script>
+    <script type="text/javascript" src="js/sweetalert2.all.min.js"></script>
 </head>
 <body>
 
@@ -14,6 +16,13 @@
         <div id="header" class="section">
             <div class="logo">
                 <span><?php echo LANG_INSTALLATION_WIZARD; ?></span>
+                <div id="langs">
+                    <?php foreach($langs as $id){ ?>
+                        <a class="language<?php if ($id===$lang) { ?> selected<?php } ?>" href="?lang=<?php echo $id; ?>">
+                            <img src="languages/<?php echo $id; ?>/flag.svg" alt="<?php echo strtoupper($id); ?>" title="<?php echo strtoupper($id); ?>">
+                        </a>
+                    <?php } ?>
+                </div>
             </div>
         </div>
 
@@ -31,7 +40,7 @@
                 </td>
 
                 <td id="body" valign="top">
-                    <?php echo $step_html; ?>
+                    <div class="page"><?php echo $step_html; ?></div>
                 </td>
 
             </tr>
@@ -39,7 +48,7 @@
 
         <div id="footer" class="section">
             <div id="copyright">
-                <a href="http://www.instantsoft.ru">InstantSoft</a> &copy; <?php echo date('Y'); ?>
+                <a href="http://instantsoft.ru" target="_blank">InstantSoft</a>, <a href="https://instantcms.ru/" target="_blank">InstantCMS</a> &copy; 2008 – <?php echo date('Y'); ?>
             </div>
             <div id="version">
                 <?php echo get_version(); ?>
@@ -50,6 +59,8 @@
 
     <script>
         var current_step = <?php echo $current_step; ?>;
+        var LANG_ERROR = '<?php echo LANG_ERROR; ?>';
+        var LANG_MANUAL = '<?php echo LANG_MANUAL; ?>';
     </script>
 
 </body>

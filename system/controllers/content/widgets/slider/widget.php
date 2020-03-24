@@ -42,25 +42,15 @@ class widgetContentSlider extends cmsWidget {
 			$model->filterCategory($ctype['name'], $category, true);
 		}
 
-        // Приватность
+        // применяем приватность
         // флаг показа только названий
-        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
-
-        // Сначала проверяем настройки типа контента
-        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
-            $model->disablePrivacyFilter();
-            if($ctype['options']['privacy_type'] != 'show_title'){
-                $hide_except_title = false;
-            }
-        }
-
-        // А потом, если разрешено правами доступа, отключаем фильтр приватности
-        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
-            $model->disablePrivacyFilter(); $hide_except_title = false;
-        }
+        $hide_except_title = $model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $model->filterHiddenParents();
+        $model->enableHiddenParentsFilter();
+
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
 
 		list($ctype, $model) = cmsEventsManager::hook('content_list_filter', array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));

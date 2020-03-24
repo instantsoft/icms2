@@ -6,7 +6,7 @@ class onCommentsUserTabShow extends cmsAction {
 
         $this->model->filterEqual('user_id', $profile['id']);
 
-        if($profile['id'] == $this->cms_user->id || cmsUser::isAllowed('comments', 'is_moderator')){
+        if($profile['id'] == $this->cms_user->id || $this->cms_user->is_admin || cmsCore::getModel('moderation')->userIsContentModerator($this->name, $this->cms_user->id)){
 
             $this->model->disableApprovedFilter();
 

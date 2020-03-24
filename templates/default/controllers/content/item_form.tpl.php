@@ -1,24 +1,44 @@
 <?php
 
-    $this->addJS('templates/default/js/content.js');
-    $this->addJS('templates/default/js/jquery-chosen.js');
-    $this->addCSS('templates/default/css/jquery-chosen.css');
-
-    $page_title =   $do=='add' ?
-                    sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) :
-                    $item['title'];
+    $this->addTplJSName('content');
+    $this->addTplJSName('jquery-chosen');
+    $this->addTplCSSName('jquery-chosen');
 
     $this->setPageTitle($page_title);
 
-    if ($ctype['options']['list_on'] && !$parent){
-        $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
+    if(!empty($group)){
+
+        $this->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+        $this->addBreadcrumb($group['title'], href_to('groups', $group['slug']));
+        if ($ctype['options']['list_on']){
+            $this->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), href_to('groups', $group['slug'], array('content', $ctype['name'])));
+        }
+
+    } else {
+
+        if ($ctype['options']['list_on'] && !$parent){
+            $this->addBreadcrumb($ctype['title'], href_to($ctype['name']));
+        }
+
     }
 
-    $this->addToolButton(array(
-        'class' => 'save',
-        'title' => LANG_SAVE,
-        'href'  => "javascript:icms.forms.submit()"
-    ));
+    $this->addBreadcrumb($page_title);
+
+    if(!empty($show_save_button) || !isset($show_save_button)){
+        $this->addToolButton(array(
+            'class' => 'save',
+            'title' => $button_save_text,
+            'href'  => "javascript:icms.forms.submit()"
+        ));
+    }
+
+    if(!$hide_draft_btn){
+        $this->addToolButton(array(
+            'class' => 'save_draft',
+            'title' => $button_draft_text,
+            'href'  => "javascript:icms.forms.submit('.button.to_draft')"
+        ));
+    }
 
     if ($cancel_url){
         $this->addToolButton(array(
@@ -28,10 +48,6 @@
         ));
     }
 
-	$is_multi_cats = !empty($ctype['options']['is_cats_multi']);
-
-    $this->addBreadcrumb($page_title);
-
 ?>
 
 <h1><?php echo html($page_title) ?></h1>
@@ -39,7 +55,19 @@
 <?php
     $this->renderForm($form, $item, array(
         'action' => '',
+        'submit' => array('title' => $button_save_text, 'show' => (isset($show_save_button) ? $show_save_button : true)),
         'cancel' => array('show' => (bool)$cancel_url, 'href' => $cancel_url),
+        'buttons' => array(
+            array(
+                'title' => $button_draft_text,
+                'hide' => $hide_draft_btn,
+                'name' => 'to_draft',
+                'attributes' => array(
+                    'type' => 'submit',
+                    'class' => 'to_draft'
+                )
+            )
+        ),
         'method' => 'post',
         'toolbar' => false,
         'hook' => array(

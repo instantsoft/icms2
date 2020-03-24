@@ -1,6 +1,6 @@
 <?php if ($items){ ?>
 
-    <?php $this->addJS('templates/default/js/slider.js'); ?>
+    <?php $this->addTplJSName('slider'); ?>
 
     <div id="content-slider-<?php echo $widget->id; ?>" class="widget_content_slider" data-id="<?php echo $widget->id; ?>" data-delay="<?php echo $delay; ?>">
 

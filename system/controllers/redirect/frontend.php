@@ -7,9 +7,11 @@ class redirect extends cmsFrontend {
 
         header('X-Frame-Options: DENY');
 
-        // $original_url для кириллических доменов
-        $url = $original_url = urldecode($this->request->get('url', ''));
+        $url = urldecode($this->request->get('url', ''));
         if (!$url) { cmsCore::error404(); }
+
+        // $original_url для кириллических доменов
+        $original_url = $url;
 
         if ($this->request->isAjax()){ cmsCore::error404(); }
 
@@ -94,9 +96,9 @@ class redirect extends cmsFrontend {
         }
 
         return $this->cms_template->render('index', array(
-            'url'                     => $url,
+            'url'                     => html($url, false),
             'user'                    => $this->cms_user,
-            'original_url'            => $original_url,
+            'original_url'            => html($original_url, false),
             'is_domain_banned'        => $is_domain_banned,
             'is_domain_in_black_list' => $is_domain_in_black_list,
             'sitename'                => cmsConfig::get('sitename'),

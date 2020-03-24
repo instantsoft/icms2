@@ -13,11 +13,11 @@ class formAuthRestore extends cmsForm {
                     new fieldString('email', array(
                         'rules' => array(
                             array('required'),
-                            array('email'),
+                            array('email')
                         )
-                    )),
+                    ))
                 )
-            ),
+            )
 
         );
 

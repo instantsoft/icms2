@@ -34,9 +34,25 @@ class modelPhotos extends cmsModel{
         );
     }
 
+    public function filterApprovedOnly(){
+
+        if ($this->approved_filtered) { return $this; }
+
+        // Этот фильтр может применяться при подсчете числа записей
+        // и при выборке самих записей
+        // используем флаг чтобы фильтр не применился дважды
+        $this->approved_filtered = true;
+
+        $this->join('con_albums', 'al', 'al.id = i.album_id');
+
+        return $this->filterEqual('al.is_approved', 1);
+
+    }
+
     public function getPhotosCount($album_id){
 
         if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         $this->filterEqual('album_id', $album_id);
 
@@ -59,6 +75,7 @@ class modelPhotos extends cmsModel{
             $this->joinUser();
 
             if (!$this->privacy_filter_disabled) { $this->filterPrivacy(); }
+            if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
         } else {
 
@@ -113,6 +130,7 @@ class modelPhotos extends cmsModel{
 
     public function getOrphanPhotos($user_id){
         $this->disablePrivacyFilter();
+        $this->disableApprovedFilter();
         return $this->filterIsNull('slug')->getUserPhotos($user_id, false, function($item, $model){
             $item['is_private'] = 0;
             return $item;
@@ -160,7 +178,7 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getPrevPhoto($item, $order_field) {
+    public function getPrevPhoto($item, $order_field, $orderto) {
 
         $this->filterStart()->
             filterGt($order_field, $item[$order_field])->
@@ -175,11 +193,11 @@ class modelPhotos extends cmsModel{
         $this->orderByList(array(
             array(
                 'by' => $order_field,
-                'to' => 'asc'
+                'to' => $orderto
             ),
             array(
                 'by' => 'id',
-                'to' => 'asc'
+                'to' => $orderto
             )
         ));
 
@@ -191,7 +209,7 @@ class modelPhotos extends cmsModel{
 
     }
 
-    public function getNextPhoto($item, $order_field) {
+    public function getNextPhoto($item, $order_field, $orderto) {
 
         $this->filterStart()->
             filterLt($order_field, $item[$order_field])->
@@ -206,11 +224,11 @@ class modelPhotos extends cmsModel{
         $this->orderByList(array(
             array(
                 'by' => $order_field,
-                'to' => 'desc'
+                'to' => $orderto
             ),
             array(
                 'by' => 'id',
-                'to' => 'desc'
+                'to' => $orderto
             )
         ));
 
@@ -473,6 +491,7 @@ class modelPhotos extends cmsModel{
         if (!$album) { return false; }
 
         $album['ctype'] = $content_model->getContentTypeByName('albums');
+        $album['ctype_name'] = $album['ctype']['name'];
 
         return $album;
 
@@ -483,7 +502,13 @@ class modelPhotos extends cmsModel{
 
     public function getRatingTarget($subject, $id){
 
-        return $this->getPhoto($id);
+        $item = $this->getPhoto($id);
+
+        if($item){
+            $item['page_url'] = href_to('photos', $item['slug'].'.html');
+        }
+
+        return $item;
 
     }
 

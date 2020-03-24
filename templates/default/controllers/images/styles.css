@@ -24,7 +24,7 @@
 .widget_image_single .preview img,
 .widget_image_single .preview a,
 .widget_image_multi .preview img,
-.widget_image_multi .preview a { float:left; width: 64px; height: 64px; text-decoration: none; }
+.widget_image_multi .preview a { float:left; width: 64px; height: 64px; text-decoration: none; object-fit: scale-down; }
 .widget_image_single .preview a, .widget_image_multi .preview a { margin: 0 5px 0 15px; }
 .widget_image_multi .preview img { cursor: move; }
 .widget_image_multi .previews_list{

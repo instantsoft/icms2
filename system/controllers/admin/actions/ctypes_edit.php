@@ -6,12 +6,10 @@ class actionAdminCtypesEdit extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($id);
+        $ctype = $this->model_content->getContentType($id);
         if (!$ctype) { cmsCore::error404(); }
 
-        $form = $this->getForm('ctypes_basic', array('edit'));
+        $form = $this->getForm('ctypes_basic', array('edit', $ctype));
 
         $form = cmsEventsManager::hook('ctype_basic_form', $form);
         $form = cmsEventsManager::hook('ctype_basic_'.$ctype['name'].'_form', $form);
@@ -20,10 +18,16 @@ class actionAdminCtypesEdit extends cmsAction {
 
         $ctype = cmsEventsManager::hook('ctype_before_edit', $ctype);
 
+        $template = new cmsTemplate($this->cms_config->template);
+
         // Если есть собственный шаблон для типа контента
         // то удаляем поле выбора стиля
-        $tpl_file = $this->cms_template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
-        if ($tpl_file) { $form->removeField('listview', 'options:list_style'); }
+        $tpl_file = $template->getTemplateFileName('content/'.$ctype['name'].'_list', true);
+        if ($tpl_file) {
+            $form->removeField('listview', 'options:list_style');
+            $form->removeField('listview', 'options:list_style_names');
+            $form->removeField('listview', 'options:context_list_style');
+        }
 
         if ($this->request->has('submit')){
 
@@ -35,7 +39,7 @@ class actionAdminCtypesEdit extends cmsAction {
                 $ctype = cmsEventsManager::hook("ctype_before_update", $ctype);
                 $ctype = cmsEventsManager::hook("ctype_{$ctype['name']}_before_update", $ctype);
 
-                $content_model->updateContentType($id, $ctype);
+                $this->model_content->updateContentType($id, $ctype);
 
                 $ctype['id'] = $id;
                 cmsEventsManager::hook("ctype_after_update", $ctype);
@@ -43,11 +47,13 @@ class actionAdminCtypesEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
-                $this->redirectToAction('ctypes');
+                $this->redirectToAction('ctypes', array('edit', $ctype['id']));
 
             }
 
             if ($errors){
+
+                $ctype['id'] = $id;
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 

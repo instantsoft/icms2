@@ -48,6 +48,8 @@ class actionAdminMenuEdit extends cmsAction {
 
                 }
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('menu');
 
             }

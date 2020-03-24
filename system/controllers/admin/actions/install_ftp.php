@@ -18,16 +18,17 @@ class actionAdminInstallFtp extends cmsAction {
 
             $account = array_merge($account, $form->parse($this->request, true, $account));
 
+            cmsUser::setUPS('admin.install.ftp', array(
+                'host'    => $account['host'],
+                'port'    => $account['port'],
+                'path'    => $account['path'],
+                'is_pasv' => $account['is_pasv']
+            ));
+
             if($account['save_to_session']){
                 cmsUser::sessionSet('ftp_account', $account);
             } else {
                 cmsUser::sessionUnset('ftp_account');
-                cmsUser::setUPS('admin.install.ftp', array(
-                    'host'    => $account['host'],
-                    'port'    => $account['port'],
-                    'path'    => $account['path'],
-                    'is_pasv' => $account['is_pasv']
-                ));
             }
 
             $errors = $form->validate($this, $account);
@@ -70,7 +71,7 @@ class actionAdminInstallFtp extends cmsAction {
     private function uploadPackageToFTP($account){
 
         $connection = @ftp_connect($account['host'], $account['port'], 30);
-        if (!$connection){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }
+        if (!$connection){ cmsUser::addSessionMessage(LANG_CP_FTP_CONNECT_FAILED, 'error'); return false; }
 
         $session = @ftp_login($connection, $account['user'], $account['pass']);
         if (!$session){ cmsUser::addSessionMessage(LANG_CP_FTP_AUTH_FAILED, 'error'); return false; }
@@ -149,7 +150,7 @@ class actionAdminInstallFtp extends cmsAction {
 
                     if (!@ftp_chdir($conn_id, $dst_dir."/".$file)) {
                         $result = @ftp_mkdir($conn_id, $dst_dir."/".$file);
-                        if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED);}
+                        if (!$result) {throw new Exception(LANG_CP_FTP_MKDIR_FAILED.': '.$dst_dir."/".$file);}
                         if($is_function_exists_ftp_chmod){
                             @ftp_chmod($conn_id, 0755, $dst_dir."/".$file);
                         }

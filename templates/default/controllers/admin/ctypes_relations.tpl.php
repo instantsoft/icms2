@@ -16,6 +16,17 @@
         'title' => LANG_CP_RELATION_ADD,
         'href'  => $this->href_to('ctypes', array('relations_add', $ctype['id']))
     ));
+    $this->addToolButton(array(
+        'class' => 'save',
+        'title' => LANG_SAVE_ORDER,
+        'href'  => null,
+        'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('relations_reorder', $ctype['id']))}')"
+    ));
+    $this->addToolButton(array(
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
+        'href'  => $this->href_to('ctypes')
+    ));
 	$this->addToolButton(array(
 		'class' => 'help',
 		'title' => LANG_HELP,
@@ -29,4 +40,4 @@
     <?php $this->menu('ctype'); ?>
 </div>
 
-<?php $this->renderGrid($this->href_to('ctypes', array('relations_ajax', $ctype['id'])), $grid);
+<?php $this->renderGrid($this->href_to('ctypes', array('relations', $ctype['id'])), $grid);

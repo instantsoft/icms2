@@ -34,23 +34,23 @@ class actionAdminCtypesPropsEdit extends cmsAction {
                 // сохраняем поле
                 $content_model->updateContentProp($ctype['name'], $prop_id, $prop);
 
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                 $this->redirectToAction('ctypes', array('props', $ctype['id']));
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_prop', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'prop' => $prop,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_prop', array(
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'prop'   => $prop,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

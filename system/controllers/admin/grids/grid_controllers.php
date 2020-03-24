@@ -3,7 +3,7 @@
 function grid_controllers($controller){
 
     $denied = array(
-        'admin','auth','markitup','images','content','moderation','users','wall','tags'
+        'admin','auth','images','content','moderation','users'
     );
 
     $options = array(
@@ -20,11 +20,26 @@ function grid_controllers($controller){
                 return $item['is_backend'];
             }
         ),
+        'slug' => array(
+            'title' => LANG_ADMIN_CONTROLLER_SLUG,
+            'class' => 'd-none d-lg-table-cell',
+            'width' => 300,
+            'editable' => array(
+                'table' => 'controllers',
+                'attributes' => array('placeholder' => '{name}')
+            ),
+            'handler' => function ($v, $row){
+                if(!$v){
+                    return $row['name'];
+                }
+                return $v;
+            }
+        ),
         'is_enabled' => array(
             'title' => LANG_IS_ENABLED,
 			'flag' => true,
 			'flag_toggle' => href_to($controller->name, 'controllers', array('toggle', '{id}')),
-            'width' => 80,
+            'width' => 70,
             'handler' => function ($v, $row) use ($denied){
                 if(in_array($row['name'], $denied)){
                     return '';
@@ -34,18 +49,28 @@ function grid_controllers($controller){
         ),
         'version' => array(
             'title' => LANG_VERSION,
-            'width' => 150,
+            'class' => 'd-none d-lg-table-cell',
+            'width' => 70,
             'filter' => 'like'
         ),
         'author' => array(
             'title' => LANG_AUTHOR,
-            'width' => 150,
+            'class' => 'd-none d-lg-table-cell',
+            'width' => 250,
             'href' => '{url}',
             'filter' => 'like'
         )
     );
 
     $actions = array(
+        array(
+            'title' => LANG_CP_PACKAGE_CONTENTS,
+            'class' => 'view ajax-modal',
+            'href' => href_to($controller->name, 'package_files_list', array('controllers', '{id}')),
+            'handler' => function($row){
+                return $row['files'];
+            }
+        ),
         array(
             'title' => LANG_CONFIG,
             'class' => 'config',
@@ -72,4 +97,3 @@ function grid_controllers($controller){
     );
 
 }
-

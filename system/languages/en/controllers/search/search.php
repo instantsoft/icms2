@@ -16,3 +16,4 @@
     define('LANG_SEARCH_TYPE_EXACT',         'exact match ');
     define('LANG_SEARCH_TOO_SHORT',          'Too short search words');
     define('LANG_SEARCH_NO_RESULTS',         'Nothing found');
+    define('LANG_SEARCH_H1',                 'Search results for «%s»');

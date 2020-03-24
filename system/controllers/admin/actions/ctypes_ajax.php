@@ -8,9 +8,7 @@ class actionAdminCtypesAjax extends cmsAction {
 
         $grid = $this->loadDataGrid('ctypes');
 
-        $content_model = cmsCore::getModel('content');
-
-        $content_model->setPerPage(admin::perpage);
+        $this->model_content->setPerPage(admin::perpage);
 
         $filter     = array();
         $filter_str = $this->request->get('filter', '');
@@ -19,16 +17,16 @@ class actionAdminCtypesAjax extends cmsAction {
 
         if ($filter_str){
             parse_str($filter_str, $filter);
-            $content_model->applyGridFilter($grid, $filter);
+            $this->model_content->applyGridFilter($grid, $filter);
         }
 
-        $total = $content_model->getContentTypesCountFiltered();
+        $total = $this->model_content->getContentTypesCountFiltered();
         $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
         $pages = ceil($total / $perpage);
 
-        $ctypes = $content_model->getContentTypesFiltered();
+        $ctypes = $this->model_content->getContentTypesFiltered();
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $ctypes, $total, $pages);
+        $this->cms_template->renderGridRowsJSON($grid, $ctypes, $total, $pages);
 
         $this->halt();
 

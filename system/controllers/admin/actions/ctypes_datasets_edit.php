@@ -2,36 +2,74 @@
 
 class actionAdminCtypesDatasetsEdit extends cmsAction {
 
-    public function run($ctype_id, $dataset_id){
+    public function run($dataset_id){
 
-        if (!$ctype_id || !$dataset_id) { cmsCore::error404(); }
+        if (!$dataset_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
+        $dataset = $old_dataset = $this->model_content->getContentDataset($dataset_id);
+        if (!$dataset) { cmsCore::error404(); }
 
-        $ctype = $content_model->getContentType($ctype_id);
-        if (!$ctype) { cmsCore::error404(); }
+        if($dataset['ctype_id']){
 
-        $form = $this->getForm('ctypes_dataset', array('edit', $ctype['id']));
+            $ctype = $this->model_content->getContentType($dataset['ctype_id']);
+            if (!$ctype) { cmsCore::error404(); }
 
-        $cats = $content_model->getSubCategories($ctype['name']);
+            $controller_name = 'content';
 
-        $dataset = $old_dataset = $content_model->getContentDataset($dataset_id);
-        $fields  = $content_model->getContentFields($ctype['name']);
+        } else {
+
+            cmsCore::loadControllerLanguage($dataset['target_controller']);
+
+            $ctype = array(
+                'title' => string_lang($dataset['target_controller'].'_controller'),
+                'name'  => $dataset['target_controller'],
+                'id'    => null
+            );
+
+            $this->model_content->setTablePrefix('');
+
+            $controller_name = $dataset['target_controller'];
+
+        }
+
+        $fields  = $this->model_content->getContentFields($ctype['name']);
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
+        $cats_list = array();
+
+        if($ctype['id']){
+
+            $cats = $this->model_content->getCategoriesTree($ctype['name'], false);
+
+            if ($cats){
+                foreach($cats as $c){
+                    $cats_list[$c['id']] = str_repeat('-- ', $c['ns_level']-1).' '.$c['title'];
+                }
+            }
+
+        }
+
+        $fields_list = $this->buildDatasetFieldsList($controller_name, $fields);
+
+        $form = $this->getForm('ctypes_dataset', array('edit', $ctype, $cats_list, $fields_list));
 
         if ($this->request->has('submit')){
 
             $dataset = $form->parse($this->request, true);
 
-            $dataset['filters'] = $this->request->get('filters');
-            $dataset['sorting'] = $this->request->get('sorting');
-
             $errors = $form->validate($this,  $dataset);
 
             if (!$errors){
 
-                $content_model->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
+                $this->model_content->updateContentDataset($dataset_id, $dataset, $ctype, $old_dataset);
 
-                $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
+                if($ctype['id']){
+                    $this->redirectToAction('ctypes', array('datasets', $ctype['id']));
+                }
+
+                $this->redirect(href_to('admin', 'controllers', array('edit', $ctype['name'], 'datasets')));
 
             }
 
@@ -45,8 +83,6 @@ class actionAdminCtypesDatasetsEdit extends cmsAction {
             'do'      => 'edit',
             'ctype'   => $ctype,
             'dataset' => $dataset,
-            'fields'  => $fields,
-            'cats'    => array_collection_to_list($cats, 'id', 'title'),
             'form'    => $form,
             'errors'  => isset($errors) ? $errors : false
         ));

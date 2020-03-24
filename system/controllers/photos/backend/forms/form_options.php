@@ -81,6 +81,7 @@ class formPhotosOptions extends cmsForm {
                     new fieldText('types', array(
                         'title'   => LANG_PHOTOS_TYPES,
                         'hint'    => LANG_PHOTOS_TYPES_HINT,
+                        'is_strip_tags' => true,
                         'default' => "1 | Фото\n2 | Векторы\n3 | Иллюстрации",
                         'size'    => 8
                     )),
@@ -89,6 +90,15 @@ class formPhotosOptions extends cmsForm {
                         'title'   => LANG_SORTING,
                         'default' => 'date_pub',
                         'items'   => modelPhotos::getOrderList()
+                    )),
+
+                    new fieldList('orderto', array(
+                        'title'   => LANG_PHOTOS_SORT_ORDERTO,
+                        'default' => 'desc',
+                        'items'   => array(
+                            'asc'  => LANG_SORTING_ASC,
+                            'desc' => LANG_SORTING_DESC
+                        )
                     )),
 
                     new fieldNumber('limit', array(
@@ -101,10 +111,7 @@ class formPhotosOptions extends cmsForm {
 
                     new fieldNumber('related_limit', array(
                         'title'   => LANG_PHOTOS_RELATED_LIMIT,
-                        'default' => 20,
-                        'rules'   => array(
-                            array('required')
-                        )
+                        'default' => 20
                     )),
 
                     new fieldString('url_pattern', array(
@@ -115,6 +122,62 @@ class formPhotosOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
+                    )),
+
+                    new fieldList('editor', array(
+                        'title' => LANG_PARSER_HTML_EDITOR,
+                        'default' => cmsConfig::get('default_editor'),
+                        'generator' => function($item){
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
+                    )),
+
+                    new fieldList('editor_presets', array(
+                        'title'        => LANG_PARSER_HTML_EDITOR_GR,
+                        'is_multiple'  => true,
+                        'dynamic_list' => true,
+                        'select_title' => LANG_SELECT,
+                        'multiple_keys' => array(
+                            'group_id' => 'field', 'preset_id' => 'field_select'
+                        ),
+                        'generator' => function($item){
+                            $users_model = cmsCore::getModel('users');
+
+                            $items = [];
+
+                            $groups = $users_model->getGroups(false);
+
+                            foreach($groups as $group){
+                                $items[$group['id']] = $group['title'];
+                            }
+
+                            return $items;
+                        },
+                        'values_generator' => function() {
+                            $items = ['' => 'Textarea'];
+                            $editors = cmsCore::getWysiwygs();
+                            foreach($editors as $editor){
+                                $items[$editor] = ucfirst($editor);
+                            }
+                            $ps = cmsCore::getModel('wysiwygs')->getPresetsList();
+                            if($ps){
+                                foreach ($ps as $key => $value) {
+                                    $items[$key] = $value;
+                                }
+                            }
+                            return $items;
+                        }
                     ))
 
                 )

@@ -8,7 +8,8 @@
     define('LANG_IMAGES_PRESET_SIZE_W_HINT', 'Не указано - определится пропорционально высоте');
     define('LANG_IMAGES_PRESET_SIZE_H', 'Высота');
     define('LANG_IMAGES_PRESET_SIZE_H_HINT', 'Не указано - определится пропорционально ширине');
-    define('LANG_IMAGES_PRESET_SQUARE', 'Квадратный');
+    define('LANG_IMAGES_PRESET_SQUARE', 'Обрезать строго по размеру');
+    define('LANG_IMAGES_PRESET_CROP', 'Строгая обрезка');
     define('LANG_IMAGES_PRESET_QUALITY', 'Качество');
     define('LANG_IMAGES_PRESET_WM', 'Водяной знак');
     define('LANG_IMAGES_PRESET_WM_ON', 'Накладывать водяной знак');
@@ -25,3 +26,10 @@
 	define('LANG_IMAGES_PRESET_WM_ORIGIN_C', 'Центр');
     define('LANG_IMAGES_PRESET_WM_MARGIN', 'Отступ от краев изображения');
     define('LANG_IMAGES_PRESET_DELETE_CONFIRM', 'Удалить пресет "{title}"?');
+    define('LANG_IMAGES_PRESET_GAMMA_CORRECT', 'Применить гамма коррекцию к изображению');
+    define('LANG_IMAGES_PRESET_CROP_POSITION', 'Режим обрезки');
+    define('LANG_IMAGES_PRESET_CCENTER', 'По центру');
+    define('LANG_IMAGES_PRESET_TOP_CENTER', 'Сверху по центру');
+    define('LANG_IMAGES_PRESET_CBOTTOM', 'Снизу');
+    define('LANG_IMAGES_PRESET_CRIGHT', 'Справа');
+    define('LANG_IMAGES_PRESET_ALLOW_ENLARGE', 'Увеличивать до размеров пресета');

@@ -9,7 +9,7 @@ class messages extends cmsFrontend {
 
     /**
      * Все запросы могут быть выполнены только авторизованными и только по аякс
-     * @param type $action_name
+     * @param string $action_name
      */
     public function before($action_name) {
 
@@ -17,7 +17,7 @@ class messages extends cmsFrontend {
 
         if(!$this->request->isInternal()){
 
-            if (!$this->request->isAjax()){ cmsCore::error404(); }
+            if (!$this->request->isAjax() && $action_name !== 'index'){ cmsCore::error404(); }
 
             if (!cmsUser::isLogged()){ cmsCore::error404(); }
 
@@ -29,7 +29,8 @@ class messages extends cmsFrontend {
 
     /**
      * Устанавливает отправителя сообщения
-     * @param int $user_id
+     * @param integer $user_id
+     * @return \messages
      */
     public function setSender($user_id){
         $this->sender_id = $user_id; return $this;
@@ -37,7 +38,8 @@ class messages extends cmsFrontend {
 
     /**
      * Добавляет получателя сообщения
-     * @param int $user_id
+     * @param integer $user_id
+     * @return \messages
      */
     public function addRecipient($user_id){
         $this->recipients[] = $user_id; return $this;
@@ -46,11 +48,16 @@ class messages extends cmsFrontend {
     /**
      * Добавляет список получателей сообщения
      * @param array $list
+     * @return \messages
      */
     public function addRecipients($list){
         $this->recipients = array_merge($this->recipients, $list); return $this;
     }
 
+    /**
+     * Очищает список получателей сообщения
+     * @return \messages
+     */
     public function clearRecipients(){
         $this->recipients = array(); return $this;
     }
@@ -58,7 +65,7 @@ class messages extends cmsFrontend {
     /**
      * Отправляет сообщение
      * @param string $content
-     * @return int | false
+     * @return integer | false
      */
     public function sendMessage($content){
 
@@ -87,6 +94,10 @@ class messages extends cmsFrontend {
 
     }
 
+    /**
+     * Устанавливает флаг игнорирования опций уведомлений пользователя
+     * @return \messages
+     */
     public function ignoreNotifyOptions(){
         $this->is_ignore_options = true; return $this;
     }
@@ -127,16 +138,19 @@ class messages extends cmsFrontend {
     /**
      * Отправляет email-уведомления указанного типа всем
      * подписанным пользователям
-     * @param string $notice_type
+     * @param string $letter_name
      * @param string $notice Массив ключей и значений для замены в тексте письма
+     * @param string $notice_type
      * @return boolean
      */
-    public function sendNoticeEmail($notice_type, $notice=array()){
+    public function sendNoticeEmail($letter_name, $notice = array(), $notice_type = false){
 
         if (!$this->recipients){ return; }
 
-        $letter_text = cmsCore::getLanguageTextFile("letters/{$notice_type}");
+        $letter_text = cmsCore::getLanguageTextFile("letters/{$letter_name}");
         if (!$letter_text){ return false; }
+
+        if(!$notice_type){ $notice_type = $letter_name; }
 
         $options_only = $this->is_ignore_options ? false : array('email', 'both');
         $recipients = cmsCore::getModel('users')->getNotifiedUsers($notice_type, $this->recipients, $options_only);
@@ -167,15 +181,29 @@ class messages extends cmsFrontend {
 
     }
 
-    public function sendEmail($to, $letter, $data=array(), $is_nl2br_text=true){
+    /**
+     * Отправляет Email сообщение
+     * @param array | string $to
+     * @param array | string $letter
+     * @param array $data
+     * @param boolean $is_nl2br_text
+     * @return boolean
+     */
+    public function sendEmail($to, $letter, $data = array(), $is_nl2br_text = true){
 
-		if (is_array($to)){
-			if (empty($to['email'])) { return false; }
-			if (empty($to['name'])){ $to['name'] = false; }
-		} else {
-			if (empty($to)) { return false; }
-			$to = array('email' => $to, 'name' => false);
-		}
+        if(!is_array($to)){
+            $to = array('email' => $to);
+        }
+
+        $to = array_merge(array(
+            'email'          => false,
+            'name'           => false,
+            'email_reply_to' => false,
+            'name_reply_to'  => false,
+            'custom_headers' => array()
+        ), $to);
+
+        if (empty($to['email'])) { return false; }
 
 		if (is_array($letter)){
 			if (empty($letter['text'])){ $letter['text'] = cmsCore::getLanguageTextFile("letters/{$letter['name']}"); }
@@ -185,10 +213,8 @@ class messages extends cmsFrontend {
 
         if (!$letter['text']){ return false; }
 
-        $config = cmsConfig::getInstance();
-
         $data = array_merge(array(
-            'site' => $config->sitename,
+            'site' => $this->cms_config->sitename,
             'date' => html_date(),
             'time' => html_time()
         ), $data);
@@ -206,9 +232,42 @@ class messages extends cmsFrontend {
             return $before_send['success'];
         }
 
+        // если используем очередь
+        if(!empty($this->options['use_queue'])){
+
+            cmsQueue::pushOn('email', array(
+                'controller' => $this->name,
+                'hook'       => 'queue_send_email',
+                'params'     => array(
+                    $to, $letter, $is_nl2br_text
+                )
+            ));
+
+            return true;
+
+        }
+
         $mailer = new cmsMailer();
 
+        list($letter, $is_nl2br_text, $to) = cmsEventsManager::hook('process_email_letter', array($letter, $is_nl2br_text, $to));
+
         $mailer->addTo($to['email'], $to['name']);
+
+        if (!empty($to['email_reply_to'])){
+            $mailer->setReplyTo($to['email_reply_to'], $to['name_reply_to']);
+        }
+
+        if (!empty($to['custom_headers'])){
+            foreach ($to['custom_headers'] as $name => $value) {
+                $mailer->addCustomHeader($name, $value);
+            }
+        }
+
+        if (!empty($to['attachments'])){
+            foreach ($to['attachments'] as $attach) {
+                $mailer->addAttachment($attach);
+            }
+        }
 
         $letter['text'] = $mailer->parseSubject($letter['text']);
         $letter['text'] = $mailer->parseAttachments($letter['text']);

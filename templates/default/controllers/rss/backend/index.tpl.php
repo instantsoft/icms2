@@ -7,4 +7,4 @@
 	));
 ?>
 
-<?php $this->renderGrid($this->href_to('ajax'), $grid);
+<?php $this->renderGrid($this->href_to(''), $grid);

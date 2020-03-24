@@ -1,0 +1,90 @@
+.subscribe,.unsubscribe{
+    background-color:#3498db;
+    color:#fff !important;
+    padding:4px 10px;
+    text-decoration:none;
+    border-radius:2px
+}
+.subscribe:hover,.unsubscribe:hover{
+    background-color:#2980b9;
+    color:#fff;
+    text-decoration:none
+}
+.unsubscribe{
+    background-color:#bdc3c7;
+}
+.unsubscribe:hover{
+    background-color:#95a5a6;
+}
+.count-subscribers{
+    position: relative;
+    border:1px solid #bdc3c7;
+    border-radius:2px;
+    color:#95a5a6;
+    font-size:13px;
+    line-height:16px;
+    margin-left:6px;
+    padding:4px 6px;
+    text-align:center;
+    cursor: pointer;
+}
+.count-subscribers:after {
+    border-color:transparent #bdc3c7;
+    border-style:solid;
+    border-width:5px 5px 5px 0;
+    content:"";
+    left:-5px;
+    position:absolute;
+    top:6px;
+    transition: all 0.3s ease;
+}
+.count-subscribers:hover {
+    border-color: #95a5a6;
+    color:#95a5a6;
+}
+.count-subscribers:hover:after {
+    border-color:transparent #95a5a6;
+}
+.subscribe_wrap {
+    float: right;
+    line-height: 26px;
+    margin-left: 10px;
+    position: relative;
+}
+.filter-panel .buttons .subscribe_wrap{
+    line-height: 32px;
+}
+.subscribe_wrap .spinner {
+    margin: 0;
+    left: -35px;
+    top: 0;
+    width: 35px;
+    line-height: inherit;
+    height: auto;
+    display: none;
+}
+.subscribe_wrap .spinner > div {
+    width: 10px;
+    height: 10px;
+    background-color: #3498db;
+}
+.subscribe_wrap .unsubscribe + .spinner > div {
+    background-color: #bdc3c7;
+}
+.list_subscribers_wrap {
+    width: 460px;
+    padding: 10px 20px;
+}
+.subscriptions_buttons .subscribe_wrap {
+    float: none;
+    margin: 0;
+}
+.subscriptions_buttons_item {
+    margin: 0 0 10px 0;
+}
+.subscriptions_buttons_item:last-child {
+    margin-bottom: 0;
+}
+.subscribe_wrap .style-svg {
+    margin: -2px 2px 0 0;
+}

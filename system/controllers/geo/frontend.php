@@ -1,6 +1,8 @@
 <?php
 class geo extends cmsFrontend {
 
+    protected $useOptions = true;
+
     public function actionWidget($field_id, $city_id = false){
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
@@ -17,17 +19,29 @@ class geo extends cmsFrontend {
         if (!$city_id){
 
             $geo = $this->getGeoByIp();
-            if(!empty($geo['city']['id'])){
-                $city_id = $geo['city']['id'];
+
+            if($geo){
+
+                if(!empty($geo['city']['id'])){
+                    $city_id = $geo['city']['id'];
+                }
+                if(!empty($geo['city']['region_id'])){
+                    $region_id = $geo['city']['region_id'];
+                }
+                if(!empty($geo['city']['country_id'])){
+                    $country_id = $geo['city']['country_id'];
+                }
+                if(!empty($geo['region']['id']) && !$region_id){
+                    $region_id = $geo['region']['id'];
+                }
+                if(!empty($geo['country']['id']) && !$country_id){
+                    $country_id = $geo['country']['id'];
+                }
+
             }
-            if(!empty($geo['city']['region_id'])){
-                $region_id = $geo['city']['region_id'];
-            }
-            if(!empty($geo['city']['country_id'])){
-                $country_id = $geo['city']['country_id'];
-            }
-            if(!empty($geo['country']['id']) && !$country_id){
-                $country_id = $geo['country']['id'];
+
+            if(!$country_id && !empty($this->options['default_country_id'])){
+                $country_id = $this->options['default_country_id'];
             }
 
         }
@@ -107,29 +121,51 @@ class geo extends cmsFrontend {
 
     public function getGeoByIp() {
 
-        $cached_geo = cmsUser::sessionGet('geo_data');
-        if($cached_geo){ return $cached_geo; }
+        if(empty($this->options['auto_detect'])){ return false; }
 
-        $out = simplexml_load_string(file_get_contents_from_url('http://ipgeobase.ru:7020/geo?ip='.cmsUser::getIp()));
+        $geo = $this->getAutoDetectGeoByIp();
 
-        $data = array();
-
-        if($out && is_object($out) && !empty($out->ip[0])){
-            foreach ($out->ip[0] as $key=>$value) {
-                $data[$key] = (string)$value;
-            }
+        if(!empty($this->options['default_country_id']) && empty($geo['country']['id']) && empty($geo['city']['country_id'])){
+            $geo['country']['id'] = $this->options['default_country_id'];
         }
+
+        return $geo;
+
+    }
+
+    public function getAutoDetectGeoByIp($ip = '') {
 
         $geo = array(
             'city'    => array(
                 'id'   => null,
                 'name' => null
             ),
-            'country' => array(
+            'region'   => array(
                 'id'   => null,
                 'name' => null
             ),
+            'country' => array(
+                'id'   => null,
+                'name' => null
+            )
         );
+
+        if(empty($this->options['auto_detect_provider'])){ return $geo; }
+
+        if(!$ip){ $ip = cmsUser::getIp(); }
+
+        $cache_key = 'geo_data:'.md5($ip);
+
+        $cached_geo = cmsUser::sessionGet($cache_key);
+        if($cached_geo){ return $cached_geo; }
+
+        $geo_class_name = 'icms' . string_to_camel('_', $this->options['auto_detect_provider']);
+
+        if(!cmsCore::includeFile('system/controllers/geo/iplookups/'.$this->options['auto_detect_provider'].'.php')){
+            return $geo;
+        }
+
+        $data = call_user_func(array($geo_class_name, 'detect'), $ip);
 
         if(isset($data['country'])){
             $geo['country'] = $this->model->getItemByField('geo_countries', 'alpha2', $data['country']);
@@ -145,7 +181,7 @@ class geo extends cmsFrontend {
 
         }
 
-        cmsUser::sessionSet('geo_data', $geo);
+        cmsUser::sessionSet($cache_key, $geo);
 
         return $geo;
 

@@ -26,26 +26,31 @@ INSERT INTO `{#}comments` (`id`, `parent_id`, `level`, `ordering`, `user_id`, `d
 (2, 1, 2, 2, 1, CURRENT_TIMESTAMP, 'content', 'articles', 4, 'articles/4-undersaturated-diamond-preconditions-and-development.html', 'Undersaturated diamond: preconditions and development', NULL, NULL, NULL, 'I didn''t understand anything', 'I didn''t understand anything', NULL, 0, 0);
 
 INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`) VALUES
-(1, 5, 'all', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(1, 5, 'all', 'Latest', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (2, 5, 'reviews', 'Reviews', 2, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 2\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
 (3, 5, 'translations', 'Translations', 3, 1, '---\n- \n  field: kind\n  condition: eq\n  value: 3\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_reviews', '---\n- 0\n', NULL),
 (4, 5, 'featured', 'Editor''s choice', 4, 1, '---\n- \n  field: featured\n  condition: eq\n  value: 1\n', '---\n- \n  by: date_pub\n  to: desc\n', 'dataset_featured', '---\n- 0\n', NULL),
 (5, 5, 'rating', 'Top articles', 5, 1, '---\n- \n  field: rating\n  condition: gt\n  value: 0\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_rating', '---\n- 0\n', NULL),
-(6, 6, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(6, 6, 'latest', 'Latest', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
 (7, 6, 'daily', 'Daily top', 2, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 1\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
 (8, 6, 'weekly', 'Weekly top', 3, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 7\n', '---\n- \n  by: rating\n  to: desc\n', 'dataset_daily', '---\n- 0\n', NULL),
 (9, 6, 'monthly', 'Monthly top', 4, 1, '---\n- \n  field: date_pub\n  condition: dy\n  value: 31\n', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
-(10, 10, 'latest', 'Latest', 1, 1, '0', '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
-(11, 10, 'discussed', 'Discussed', 2, 1, '0', '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
-(12, 10, 'popular', 'Popular', 3, 1, '0', '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL);
+(10, 10, 'latest', 'Latest', 1, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL),
+(11, 10, 'discussed', 'Discussed', 2, 1, NULL, '---\n- \n  by: comments\n  to: desc\n', 'dataset_discussed', '---\n- 0\n', NULL),
+(12, 10, 'popular', 'Popular', 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'dataset_popular', '---\n- 0\n', NULL);
+
+INSERT INTO `{#}content_datasets` (`id`, `ctype_id`, `name`, `title`, `description`, `ordering`, `is_visible`, `filters`, `sorting`, `index`, `groups_view`, `groups_hide`, `seo_keys`, `seo_desc`, `seo_title`, `cats_view`, `cats_hide`, `max_count`, `target_controller`) VALUES
+(13, NULL, 'rating', 'Top Groups', NULL, 3, 1, NULL, '---\n- \n  by: rating\n  to: desc\n', 'rating', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
+(14, NULL, 'all', 'New Groups', NULL, 2, 1, NULL, '---\n- \n  by: date_pub\n  to: desc\n', 'date_pub', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups'),
+(15, NULL, 'popular', 'Popular', NULL, 1, 1, NULL, '---\n- \n  by: members_count\n  to: desc\n', 'members_count', '---\n- 0\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 'groups');
 
 INSERT INTO `{#}content_folders` (`id`, `ctype_id`, `user_id`, `title`) VALUES
 (5, 6, 1, 'My thoughts');
 
-INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_premod_add`, `is_premod_edit`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
-(5, 'Articles', 'articles', 'Text materials', NULL, NULL, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nhits_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: 1\n', '---\none: article\ntwo: articles\nmany: articles\ncreate: article\nlist:\nprofile:\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
-(6, 'Blog posts', 'posts', 'Blog posts', NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: post\ntwo: posts\nmany: posts\ncreate: post\nlist: Blogs Posts\nprofile: Blog\n', NULL, NULL, NULL, NULL, NULL),
-(10, 'News', 'news', 'Information', NULL, 1, NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\n', '---\none: news\ntwo: news\nmany: news\ncreate: news\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `{#}content_types` (`id`, `title`, `name`, `description`, `is_date_range`, `is_cats`, `is_cats_recursive`, `is_folders`, `is_in_groups`, `is_in_groups_only`, `is_comments`, `is_comments_tree`, `is_rating`, `is_rating_pos`, `is_tags`, `is_auto_keys`, `is_auto_desc`, `is_auto_url`, `is_fixed_url`, `url_pattern`, `options`, `labels`, `seo_keys`, `seo_desc`, `seo_title`, `item_append_html`, `is_fixed`) VALUES
+(5, 'Articles', 'articles', '<p>Text materials</p>', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: 1\nis_cats_only_last: null\nis_show_cats: 1\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: 1\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nhits_on: 1\nis_cats_keys: 1\nis_cats_desc: 1\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: article\ntwo: articles\nmany: articles\ncreate: article\nlist:\nprofile:\n', 'статьи, разные, интересные, полезные', NULL, NULL, NULL, NULL),
+(6, 'Blog posts', 'posts', '<p>Blog posts</p>', NULL, NULL, NULL, 1, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: null\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: 1\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style:\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: post\ntwo: posts\nmany: posts\ncreate: post\nlist: Blogs Posts\nprofile: Blog\n', NULL, NULL, NULL, NULL, NULL),
+(10, 'News', 'news', '<p>Information</p>', NULL, 1, 1, NULL, NULL, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, 1, '{id}-{title}', '---\nis_cats_change: 1\nis_cats_open_root: null\nis_cats_only_last: null\nis_show_cats: null\nis_tags_in_list: null\nis_tags_in_item: 1\nis_rss: 1\nlist_on: 1\nprofile_on: 1\nlist_show_filter: null\nlist_expand_filter: null\nlist_style: featured\nitem_on: 1\nis_cats_keys: null\nis_cats_desc: null\nis_cats_auto_url: 1\nseo_title_pattern:\nseo_keys_pattern: \'{content|string_get_meta_keywords}\'\nseo_desc_pattern: \'{content|string_get_meta_description}\'\n', '---\none: news\ntwo: news\nmany: news\ncreate: news\nlist:\nprofile:\n', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `{#}con_albums` (`id`, `title`, `content`, `slug`, `seo_keys`, `seo_desc`, `seo_title`, `tags`, `date_pub`, `date_last_modified`, `date_pub_end`, `is_pub`, `hits_count`, `user_id`, `parent_id`, `parent_type`, `parent_title`, `parent_url`, `is_parent_hidden`, `category_id`, `folder_id`, `is_comments_on`, `comments`, `rating`, `is_approved`, `approved_by`, `date_approved`, `is_private`, `cover_image`, `photos_count`, `is_public`) VALUES
 (16, 'The beauty of the surrounding nature', 'Photos from the deviantart.com', '16-the-beauty-of-the-surrounding-nature', 'photos, deviantart.com', 'Photos from the deviantart.com', NULL, 'example, photo', '2013-11-13 16:48:18', '2013-11-22 16:32:38', NULL, 1, 0, 1, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 0, 0, 1, NULL, '2013-11-22 16:32:38', 0, '---\nbig: u1/004/4f11cd73.jpg\nnormal: u1/004/5b0ff517.jpg\nsmall: u1/004/5edb4681.jpg', 4, NULL),
@@ -65,6 +70,7 @@ CREATE TABLE `{#}con_articles` (
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `template` varchar(150) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
   `date_pub_end` timestamp NULL DEFAULT NULL,
@@ -123,6 +129,7 @@ CREATE TABLE `{#}con_articles_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -130,6 +137,8 @@ CREATE TABLE `{#}con_articles_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -170,6 +179,7 @@ CREATE TABLE `{#}con_articles_fields` (
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
   `is_in_list` tinyint(1) DEFAULT NULL,
@@ -182,6 +192,7 @@ CREATE TABLE `{#}con_articles_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -200,7 +211,7 @@ INSERT INTO `{#}con_articles_fields` (`id`, `ctype_id`, `name`, `title`, `hint`,
 (2, 5, 'date_pub', 'Publication date', NULL, 2, NULL, 'date', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (3, 5, 'user', 'Author', NULL, 3, NULL, 'user', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (4, 5, 'content', 'Article content', 'Place full article text here', 7, 'Article content', 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(5, 5, 'teaser', 'Article teaser', 'Short article description, will be displayed in the list of articles', 6, 'Article content', 'html', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: null\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(5, 5, 'teaser', 'Article teaser', 'Short article description, will be displayed in the list of articles', 6, 'Article content', 'html', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (6, 5, 'kind', 'Article type', NULL, 4, 'About article', 'list', NULL, 1, 1, NULL, NULL, NULL, NULL, '1 | Basic article\r\n2 | Review\r\n3 | Translation', '---\nfilter_multiple: 1\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (7, 5, 'notice', 'Editor''s comment', 'The field is available only for administrators and moderators', 9, 'Ancillary Data', 'text', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 2048\nis_html_filter: null\nlabel_in_list: top\nlabel_in_item: top\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 5\n- 6\n'),
 (8, 5, 'source', 'Source', 'Source text link', 5, 'About article', 'url', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nredirect: 1\nauto_http: 1\nlabel_in_list: left\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
@@ -250,6 +261,7 @@ CREATE TABLE `{#}con_news` (
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `template` varchar(150) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
   `date_pub_end` timestamp NULL DEFAULT NULL,
@@ -308,6 +320,7 @@ CREATE TABLE `{#}con_news_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -315,6 +328,8 @@ CREATE TABLE `{#}con_news_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -357,6 +372,7 @@ CREATE TABLE `{#}con_news_fields` (
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
   `is_in_list` tinyint(1) DEFAULT NULL,
@@ -369,6 +385,7 @@ CREATE TABLE `{#}con_news_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -386,7 +403,7 @@ INSERT INTO `{#}con_news_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `or
 (1, 10, 'title', 'News title', NULL, 1, NULL, 'caption', 1, 1, 1, NULL, 1, 1, 0, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (2, 10, 'date_pub', 'Publication date', NULL, 6, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (3, 10, 'user', 'Author', NULL, 5, NULL, 'user', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(4, 10, 'content', 'News content', NULL, 4, NULL, 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: null\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(4, 10, 'content', 'News content', NULL, 4, NULL, 'html', NULL, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len:\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (5, 10, 'teaser', 'Short news description', 'Will be displayed in the list of news', 3, NULL, 'string', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '---\nmin_length: 0\nmax_length: 255\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (6, 10, 'photo', 'Photo', NULL, 2, NULL, 'image', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nsize_teaser: small\nsize_full: normal\nsize_modal: big\nsizes:\n  - normal\n  - micro\n  - small\n  - big\nallow_import_link: null\nlabel_in_list: none\nlabel_in_item: none\nwrap_type: left\nwrap_width:\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n');
 
@@ -442,6 +459,7 @@ CREATE TABLE `{#}con_posts` (
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
   `tags` varchar(1000) DEFAULT NULL,
+  `template` varchar(150) DEFAULT NULL,
   `date_pub` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_last_modified` timestamp NULL DEFAULT NULL,
   `date_pub_end` timestamp NULL DEFAULT NULL,
@@ -491,6 +509,7 @@ CREATE TABLE `{#}con_posts_cats` (
   `seo_keys` varchar(256) DEFAULT NULL,
   `seo_desc` varchar(256) DEFAULT NULL,
   `seo_title` varchar(256) DEFAULT NULL,
+  `seo_h1` varchar(256) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
   `ns_left` int(11) DEFAULT NULL,
   `ns_right` int(11) DEFAULT NULL,
@@ -498,6 +517,8 @@ CREATE TABLE `{#}con_posts_cats` (
   `ns_differ` varchar(32) NOT NULL DEFAULT '',
   `ns_ignore` tinyint(4) NOT NULL DEFAULT '0',
   `allow_add` text,
+  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+  `cover` text,
   PRIMARY KEY (`id`),
   KEY `ordering` (`ordering`),
   KEY `slug` (`slug`),
@@ -527,6 +548,7 @@ CREATE TABLE `{#}con_posts_fields` (
   `title` varchar(100) DEFAULT NULL,
   `hint` varchar(200) DEFAULT NULL,
   `ordering` int(11) DEFAULT NULL,
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   `fieldset` varchar(32) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
   `is_in_list` tinyint(1) DEFAULT NULL,
@@ -539,6 +561,7 @@ CREATE TABLE `{#}con_posts_fields` (
   `values` text,
   `options` text,
   `groups_read` text,
+  `groups_add` text,
   `groups_edit` text,
   `filter_view` text,
   PRIMARY KEY (`id`),
@@ -556,7 +579,7 @@ INSERT INTO `{#}con_posts_fields` (`id`, `ctype_id`, `name`, `title`, `hint`, `o
 (1, 6, 'title', 'Title', NULL, 1, NULL, 'caption', 1, 1, 1, NULL, 1, 1, 0, NULL, '---\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (2, 6, 'date_pub', 'Publication date', NULL, 2, NULL, 'date', 1, 1, 1, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (3, 6, 'user', 'Author', NULL, 3, NULL, 'user', 1, 1, NULL, NULL, 1, 1, 1, NULL, '---\nlabel_in_list: none\nlabel_in_item: left\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
-(4, 6, 'content', 'Post content', NULL, 5, NULL, 'html', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: null\nteaser_len: 500\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
+(4, 6, 'content', 'Post content', NULL, 5, NULL, 'html', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, '---\neditor: redactor\nis_html_filter: 1\nteaser_len: 500\nlabel_in_list: none\nlabel_in_item: none\nis_required: 1\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n'),
 (5, 6, 'picture', 'Teaser image', NULL, 4, NULL, 'image', 1, 1, NULL, NULL, NULL, NULL, NULL, NULL, '---\nsize_teaser: normal\nsize_full: normal\nsizes:\n  - small\n  - normal\nlabel_in_list: none\nlabel_in_item: none\nis_required: null\nis_digits: null\nis_alphanumeric: null\nis_email: null\nis_unique: null\nprofile_value:\n', '---\n- 0\n', '---\n- 0\n');
 
 DROP TABLE IF EXISTS `{#}con_posts_props`;
@@ -600,18 +623,18 @@ INSERT INTO `{#}groups_members` (`id`, `group_id`, `user_id`, `role`, `date_upda
 (1, 1, 1, 2, CURRENT_TIMESTAMP);
 
 INSERT INTO `{#}menu` (`id`, `name`, `title`, `is_fixed`) VALUES
-(3, 'footer', 'Footer menu', 1);
+(3, 'footer', 'Footer menu', NULL);
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(7, 1, 0, 'Sites', 'http://www.dmoz.org', 9, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(8, 1, 7, 'Yahoo', 'http://www.yahoo.com', 10, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(9, 1, 7, 'Google', 'http://www.google.com', 11, NULL, NULL, NULL),
-(10, 1, 9, 'Google Maps', 'http://maps.google.com', 14, NULL, NULL, NULL),
-(11, 1, 9, 'Google Docs', 'http://docs.google.com', 12, NULL, NULL, NULL),
-(12, 1, 9, 'GMail', 'http://www.gmail.com', 13, NULL, NULL, NULL),
+(7, 1, 0, 'Sites', NULL, 9, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(8, 1, 7, 'Yahoo', 'https://www.yahoo.com', 10, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(9, 1, 7, 'Google', 'https://www.google.com', 11, NULL, NULL, NULL),
+(10, 1, 9, 'Google Maps', 'https://maps.google.com', 14, NULL, NULL, NULL),
+(11, 1, 9, 'Google Docs', 'https://docs.google.com', 12, NULL, NULL, NULL),
+(12, 1, 9, 'GMail', 'https://www.gmail.com', 13, NULL, NULL, NULL),
 (18, 3, 0, 'About', 'pages/about.html', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (19, 3, 0, 'Site Rules', 'pages/terms.html', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
-(21, 1, 7, 'Bing', 'http://www.bing.com', 15, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
+(21, 1, 7, 'Bing', 'https://www.bing.com', 15, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (27, 1, 0, 'Blogs', 'posts', 3, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (40, 1, 0, 'News', '{content:news}', 1, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (42, 1, 0, 'Articles', '{content:articles}', 2, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL);
@@ -620,9 +643,9 @@ INSERT INTO `{#}moderators` (`id`, `user_id`, `date_assigned`, `ctype_name`, `co
 (1, 1, CURRENT_TIMESTAMP, 'articles', 0, 0, 0);
 
 INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
-(1, 4, 'articles', '1'),
-(1, 5, 'articles', '1'),
-(1, 6, 'articles', '1'),
+(1, 4, 'articles', 'yes'),
+(1, 5, 'articles', 'yes'),
+(1, 6, 'articles', 'yes'),
 (4, 5, 'articles', '1'),
 (4, 6, 'articles', '1'),
 (3, 4, 'articles', 'own'),
@@ -643,9 +666,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 6, 'articles', '1'),
 (13, 5, 'articles', '1'),
 (13, 6, 'articles', '1'),
-(1, 4, 'posts', '1'),
-(1, 5, 'posts', '1'),
-(1, 6, 'posts', '1'),
+(1, 4, 'posts', 'yes'),
+(1, 5, 'posts', 'yes'),
+(1, 6, 'posts', 'yes'),
 (3, 4, 'posts', 'own'),
 (3, 5, 'posts', 'all'),
 (3, 6, 'posts', 'all'),
@@ -657,9 +680,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 4, 'posts', '1'),
 (8, 5, 'posts', '1'),
 (8, 6, 'posts', '1'),
-(1, 4, 'board', '1'),
-(1, 5, 'board', '1'),
-(1, 6, 'board', '1'),
+(1, 4, 'board', 'yes'),
+(1, 5, 'board', 'yes'),
+(1, 6, 'board', 'yes'),
 (4, 5, 'board', '1'),
 (4, 6, 'board', '1'),
 (3, 4, 'board', 'own'),
@@ -678,9 +701,9 @@ INSERT INTO `{#}perms_users` (`rule_id`, `group_id`, `subject`, `value`) VALUES
 (8, 6, 'board', '1'),
 (13, 5, 'board', '1'),
 (13, 6, 'board', '1'),
-(1, 4, 'news', '1'),
-(1, 5, 'news', '1'),
-(1, 6, 'news', '1'),
+(1, 4, 'news', 'yes'),
+(1, 5, 'news', 'yes'),
+(1, 6, 'news', 'yes'),
 (4, 6, 'news', '1'),
 (3, 4, 'news', 'own'),
 (3, 5, 'news', 'all'),
@@ -736,19 +759,33 @@ INSERT INTO `{#}wall_entries` (`id`, `date_pub`, `controller`, `profile_type`, `
 (1, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 0, 1, 'We are all made of stars © Moby', 'We are all made of stars © Moby'),
 (2, CURRENT_TIMESTAMP, 'users', 'user', 1, 1, 1, NULL, 'Thank you for viewing my profile page!', 'Thank you for viewing my profile page!');
 
-INSERT INTO `{#}widgets_bind` (`id`, `template`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_enabled`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `page_id`, `position`, `ordering`, `tpl_body`, `tpl_wrap`) VALUES
-(6, 'default', 8, 'Online now', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', 1, 'right-bottom', 1, NULL, NULL),
-(8, 'default', 10, 'Tag cloud', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', 1, 'right-bottom', 4, NULL, NULL),
-(9, 'default', 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', 1, 'left-bottom', 4, NULL, NULL),
-(10, 'default', 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 2, NULL, NULL),
-(11, 'default', 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', 1, 'left-bottom', 5, NULL, NULL),
-(12, 'default', 5, 'Content cats', NULL, NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', 147, 'right-bottom', 1, NULL, NULL),
-(13, 'default', 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', 1, 'left-bottom', 3, NULL, NULL),
-(14, 'default', 2, 'New users', 'All | users', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', 1, 'right-bottom', 2, NULL, NULL),
-(15, 'default', 3, 'Bottom menu', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', 0, 'footer', 1, NULL, NULL),
-(16, 'default', 4, 'News', 'All | news\r\nDiscussed | news-discussed', NULL, NULL, NULL, 1, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ndataset:\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nlimit: 5\n', 1, 'left-bottom', 1, NULL, NULL),
-(17, 'default', 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', 1, 'left-top', 1, NULL, NULL),
-(21, 'default', 13, 'Search', NULL, NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '', 1, 'right-top', 1, NULL, NULL);
+INSERT INTO `{#}widgets_bind` (`id`, `template_layouts`, `languages`, `widget_id`, `title`, `links`, `class`, `class_title`, `class_wrap`, `is_title`, `is_tab_prev`, `groups_view`, `groups_hide`, `options`, `tpl_body`, `tpl_wrap`, `device_types`) VALUES
+(6, NULL, NULL, 8, 'Now Online', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nis_avatars: 1\ngroups: null\n', NULL, NULL, NULL),
+(8, NULL, NULL, 10, 'Tag cloud', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nordering: tag\nstyle: cloud\nmax_fs: 22\nmin_fs: 12\nlimit: 10\n', NULL, NULL, NULL),
+(9, NULL, NULL, 6, 'Activity feed', 'All | activity\r\n{My friends | activity/index/friends}\r\n{My | activity/index/my}', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\ndataset: all\nshow_avatars: 1\ndate_group: null\nlimit: 5\n', NULL, NULL, NULL),
+(10, NULL, NULL, 4, 'Articles', 'All | articles\r\n{Add article | articles/add}', 'columns-2', NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 5\ndataset:\nimage_field:\nteaser_field:\nstyle: basic\nshow_details: 1\nlimit: 5\n', NULL, NULL, NULL),
+(11, NULL, NULL, 7, 'Latest comments', 'All | comments\r\n{My friends | comments/index/friends}\r\n{My | comments/index/my}', NULL, NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nshow_avatars: 1\nshow_text: 1\nlimit: 10\n', NULL, NULL, NULL),
+(12, NULL, NULL, 5, 'Content cats', NULL, NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_name: 0\nis_root: null\n', NULL, NULL, NULL),
+(13, NULL, NULL, 4, 'Photo albums', 'All albums | albums\r\n{Upload photos | photos/upload}', NULL, NULL, NULL, 1, 1, '---\n- 0\n', NULL, '---\nctype_id: 7\ndataset:\nimage_field: cover_image\nteaser_field:\nstyle: tiles_big\nshow_details: null\nlimit: 5\n', NULL, NULL, NULL),
+(14, NULL, NULL, 2, 'New users', 'All | users', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nshow: all\ndataset: latest\nstyle: tiles\ngroups: null\nlimit: 10\n', NULL, NULL, NULL),
+(15, NULL, NULL, 3, 'Bottom menu', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nmenu: footer\nis_detect: 1\nmax_items: 0\n', NULL, NULL, NULL),
+(16, NULL, NULL, 4, 'News', 'All | news\r\nDiscussed | news-discussed\r\n{Private | news/from_friends}', NULL, NULL, NULL, 1, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nteaser_field:\nstyle: featured\nshow_details: 1\nteaser_len:\nlimit: 5\n', NULL, NULL, NULL),
+(17, NULL, NULL, 11, 'Content slider', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '---\nctype_id: 10\ncategory_id: 1\ndataset: 0\nimage_field: photo\nbig_image_field:\nbig_image_preset: big\nteaser_field: teaser\ndelay: 5\nlimit: 5\n', NULL, NULL, NULL),
+(21, NULL, NULL, 13, 'Search', NULL, NULL, NULL, NULL, NULL, NULL, '---\n- 0\n', NULL, '', NULL, NULL, NULL);
+
+INSERT INTO `{#}widgets_bind_pages` (`id`, `bind_id`, `template`, `is_enabled`, `page_id`, `position`, `ordering`) VALUES
+(7, 6, 'default', 1, 1, 'right-bottom', 1),
+(8, 8, 'default', 1, 1, 'right-bottom', 4),
+(9, 9, 'default', 1, 1, 'left-bottom', 4),
+(10, 10, 'default', 1, 1, 'left-bottom', 2),
+(11, 11, 'default', 1, 1, 'left-bottom', 5),
+(12, 12, 'default', 1, 147, 'right-bottom', 1),
+(13, 13, 'default', 1, 1, 'left-bottom', 3),
+(14, 14, 'default', 1, 1, 'right-bottom', 2),
+(15, 15, 'default', 1, 0, 'footer', 1),
+(16, 16, 'default', 1, 1, 'left-bottom', 1),
+(17, 17, 'default', 1, 1, 'left-top', 1),
+(19, 21, 'default', 1, 1, 'right-top', 1);
 
 INSERT INTO `{#}widgets_pages` (`id`, `controller`, `name`, `title_const`, `title_subject`, `title`, `url_mask`, `url_mask_not`) VALUES
 (143, 'content', 'pages.all', 'LANG_WP_CONTENT_ALL_PAGES', NULL, NULL, 'pages\npages-*\npages/*', NULL),

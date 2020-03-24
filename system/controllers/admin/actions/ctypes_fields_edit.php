@@ -25,31 +25,31 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         if ($field['is_system']) {
             $form->hideField('basic', 'hint');
             $form->hideField('visibility', 'options:relation_id');
-            $form->hideFieldset('type');
+            $form->hideField('type', 'type');
             $form->hideFieldset('group');
             $form->hideFieldset('format');
             $form->hideFieldset('values');
             $form->hideFieldset('labels');
+            $form->hideFieldset('wrap');
             $form->hideFieldset('edit_access');
         }
 
         // удалим выбор типа для полей с фиксированным типом
-        if ($field['is_fixed_type']) { $form->removeFieldset('type'); }
+        if ($field['is_fixed_type']) { $form->hideField('type', 'type'); }
 
         if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            if (!$field['is_system'] && !$field['is_fixed_type']){
-                $field_type = $this->request->get('type');
-                $field_class = "field" . string_to_camel('_', $field_type);
-                $field_object = new $field_class(null, null);
-                $field_options = $field_object->getOptions();
-                foreach($field_options as $option_field){
-                    $option_field->setName("options:{$option_field->name}");
-                    $form->addField('type', $option_field);
-                }
+            $field_type = $this->request->get('type', '');
+            $field_class = 'field' . string_to_camel('_', $field_type);
+            $field_object = new $field_class(null, null);
+            $field_options = $field_object->getOptions();
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+            foreach($field_options as $option_field){
+                $option_field->setName("options:{$option_field->name}");
+                $form->addField('field_settings', $option_field);
             }
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
@@ -68,6 +68,8 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
                 // сохраняем поле
                 $content_model->updateContentField($ctype['name'], $field_id, $_field);
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 $this->redirectToAction('ctypes', array('fields', $ctype['id']));
 

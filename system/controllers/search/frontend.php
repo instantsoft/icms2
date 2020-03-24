@@ -5,6 +5,8 @@ class search extends cmsFrontend {
     protected $useOptions = true;
     public $useSeoOptions = true;
 
+    protected $unknown_action_as_index_param = true;
+
     public function parseHashTag($text) {
 
         if(!$text){ return $text; }
@@ -13,7 +15,7 @@ class search extends cmsFrontend {
                 !in_array($this->cms_core->controller, $this->options['types'])) {
             $link = href_to('search');
         } else {
-            $link = href_to('search', 'index', $this->cms_core->controller);
+            $link = href_to('search', $this->cms_core->controller);
         }
 
         if(preg_match_all('/\B#([а-яёa-z]{1}[а-яёa-z0-9\-_]{3,19})/ui', $text, $match) && !empty($match[1])){

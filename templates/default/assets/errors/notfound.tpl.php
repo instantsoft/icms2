@@ -5,7 +5,12 @@
 <html>
 <head>
 	<title><?php echo ERR_PAGE_NOT_FOUND; ?></title>
-    <link type="text/css" rel="stylesheet" href="<?php echo $config->root; ?>templates/default/css/theme-errors.css">
+    <?php $this->addMainTplCSSName([
+        'theme-errors'
+        ]); ?>
+    <?php
+    $this->printCssTags();
+    ?>
 </head>
 <body>
 
@@ -16,7 +21,7 @@
 	        <?php echo html_input('text', 'q', '', array('placeholder'=>ERR_SEARCH_QUERY_INPUT)); ?>
 			<button type="submit" name="submit" class="button-submit"><?php echo ERR_SEARCH_TITLE; ?></button>
 	    </form>
-        <p><a href="<?php echo $config->host; ?>"><?php echo LANG_BACK_TO_HOME; ?></a></p>
+        <p><a href="<?php echo $config->root; ?>"><?php echo LANG_BACK_TO_HOME; ?></a></p>
     </div>
 
 </body>

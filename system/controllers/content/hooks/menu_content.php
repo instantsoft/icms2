@@ -13,13 +13,17 @@ class onContentMenuContent extends cmsAction {
 
         } elseif($action == 'private_list') {
 
-            if(!cmsUser::isLogged()){
+            if(!$this->cms_user->is_logged){
                 return false;
             }
 
             return $this->getMenuPrivateItems($menu_item_id);
 
         } elseif($action == 'trash') {
+
+            if(!$this->cms_user->is_logged){
+                return false;
+            }
 
             $ctypes = $this->model->getContentTypes();
             if (!$ctypes) { return false; }

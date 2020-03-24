@@ -29,3 +29,5 @@ define('LANG_DEFAULT_THEME_COPYRIGHT_URL', 'Ссылка копирайта');
 define('LANG_DEFAULT_THEME_COPYRIGHT_URL_HINT', 'Если не указана, ведет на главную страницу');
 define('LANG_DEFAULT_THEME_COPYRIGHT_YEAR', 'Год копирайта');
 define('LANG_DEFAULT_THEME_COPYRIGHT_YEAR_HINT', 'Если не указан, выводится текущий');
+define('LANG_DEFAULT_THEME_DISABLE_HELP_ANIM', 'Отключить анимацию кнопок "Помощь"');
+define('LANG_DEFAULT_THEME_LAYOUT_MAIN', 'Основной макет');

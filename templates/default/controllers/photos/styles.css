@@ -184,29 +184,6 @@
 }
 .album-photos-wrap .photo .info .positive { color:lime; }
 .album-photos-wrap .photo .info .negative { color:red; }
-.show-more {
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    background-color: #B3C2C9;
-    color: #FFF;
-    padding: 7px;
-    margin: 17px 0 20px 0;
-    background-position: center center;
-    height: 26px;
-    box-sizing: border-box;
-    line-height: 12px;
-}
-.show-more.loading{
-    background-color: #FFF;
-}
-.show-more.loading > span{
-    display: none;
-}
-.show-more:hover{
-    background-color: #bed4de;
-    color: #FFF;
-}
 span.tags_bar {
     padding-left: 20px;
     background: url(../../images/icons/tag.png) no-repeat left center;
@@ -632,7 +609,7 @@ span.album_user img {
 .photo_details dd {
     padding: 0 0 0 5px;
 }
-.full_in_modal:after {
+.full_in_modal .fullscreen_click {
     content: '';
     background: #000;
     position: absolute;
@@ -646,8 +623,9 @@ span.album_user img {
     background-repeat: no-repeat;
     background-position: center center;
     cursor: pointer;
+    display: none;
 }
-.full_in_modal:hover:after {
+.full_in_modal:hover .fullscreen_click {
     opacity: 0.4;
 }
 #fullscreen_photo {
@@ -659,7 +637,7 @@ span.album_user img {
     cursor: pointer;
 }
 #photo_container:hover #fullscreen_photo {
-    z-index: 1;
+    z-index: 2;
     opacity: 1;
 }
 #fullscreen_photo > div {
@@ -687,6 +665,7 @@ span.album_user img {
     top: 0;
     cursor: pointer;
     transition: left .3s,right .3s;
+    z-index: 1;
 }
 .prev_item {
     left: -40px;

@@ -11,6 +11,9 @@
             'content_albums_item_html',
             'content_albums_before_item',
             'content_albums_before_list',
+            'admin_subscriptions_list',
+            'comments_targets',
+            'sitemap_sources',
             'user_delete'
         )
 

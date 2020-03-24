@@ -2,7 +2,9 @@
 
     $this->setPageTitle(LANG_USERS_SESSIONS);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
     $this->addBreadcrumb(LANG_USERS_EDIT_PROFILE, href_to('users', $id, 'edit'));
     $this->addBreadcrumb(LANG_USERS_SESSIONS);
@@ -30,7 +32,7 @@
                         <?php echo string_date_age_max($session['date_log'], true); ?>
                     </td>
                     <td>
-                        <a target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext=<?php echo $session['ip']; ?>#resultsAnchor">
+                        <a rel="noopener noreferrer" target="_blank" href="https://apps.db.ripe.net/search/query.html?searchtext=<?php echo $session['ip']; ?>#resultsAnchor">
                             <?php echo $session['ip']; ?>
                         </a>
                     </td>

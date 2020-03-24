@@ -2,13 +2,9 @@
 
 class actionAdminUsersFilter extends cmsAction {
 
-    public function run($group_id){
+    public function run($group_id = false){
 
-        $content_model = cmsCore::getModel('content')->setTablePrefix('');
-
-        $ctype = $content_model->getContentTypeByName('users');
-
-        $fields  = $content_model->getContentFields('users');
+        $fields  = cmsCore::getModel('content')->setTablePrefix('')->getContentFields('{users}');
 
         $fields[] = array(
             'title' => LANG_RATING,
@@ -30,8 +26,7 @@ class actionAdminUsersFilter extends cmsAction {
 
 		$fields = cmsEventsManager::hook('admin_users_filter', $fields);
 
-        return cmsTemplate::getInstance()->render('users_filter', array(
-            'ctype' => $ctype,
+        return $this->cms_template->render('users_filter', array(
             'fields' => $fields
         ));
 

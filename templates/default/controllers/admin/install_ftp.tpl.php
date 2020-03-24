@@ -10,6 +10,12 @@
         'href'   => LANG_HELP_URL_INSTALL
     ));
 
+    $this->addToolButton(array(
+        'class' => 'addons',
+        'title' => LANG_CP_OFICIAL_ADDONS,
+        'href'  => $this->href_to('addons_list')
+    ));
+
     if(!empty($manifest['notice_system_files'])){
         cmsUser::addSessionMessage($manifest['notice_system_files'], 'error');
     }
@@ -34,7 +40,7 @@
         ),
         'cancel' => array(
             'show' => true,
-            'href' => $this->href_to('')
+            'href' => $this->href_to('addons_list')
         )
     ), $errors); ?>
 
@@ -58,6 +64,10 @@
         });
         $('#skip').on('click', function (){
             location.href='<?php echo $this->href_to('install/finish'); ?>';
+            return false;
+        });
+        $('#check_ftp').on('click', function (){
+            icms.modal.openAjax($(this).attr('href'), {host: $('#host').val(), port: $('#port').val(), user: $('#user').val(), pass: $('#pass').val(), path: $('#path').val(), is_pasv: $('#is_pasv').val()}, false, '<?php echo LANG_CP_FTP_CHECK; ?>');
             return false;
         });
     });

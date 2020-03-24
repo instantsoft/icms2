@@ -25,8 +25,13 @@ class fieldText extends cmsFormField {
             new fieldCheckbox('is_html_filter', array(
                 'title' => LANG_PARSER_HTML_FILTERING,
             )),
+            new fieldCheckbox('parse_patterns', array(
+                'title' => LANG_PARSER_PARSE_PATTERNS,
+                'hint' => LANG_PARSER_PARSE_PATTERNS_HINT
+            )),
             new fieldCheckbox('build_redirect_link', array(
                 'title' => LANG_PARSER_BUILD_REDIRECT_LINK,
+                'is_visible' => cmsController::enabled('redirect')
             )),
             new fieldCheckbox('in_fulltext_search', array(
                 'title' => LANG_PARSER_IN_FULLTEXT_SEARCH,
@@ -56,6 +61,10 @@ class fieldText extends cmsFormField {
 
     public function parse($value){
 
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
         if ($this->getOption('is_html_filter')){
             return cmsEventsManager::hook('html_filter', array(
                 'text'                => $value,
@@ -63,13 +72,35 @@ class fieldText extends cmsFormField {
                 'build_redirect_link' => (bool)$this->getOption('build_redirect_link')
             ));
         } else {
-            return nl2br(htmlspecialchars($value));
+            return nl2br(html($value, false));
         }
 
     }
 
+    public function store($value, $is_submitted, $old_value=null){
+        if($this->getProperty('is_strip_tags') === true){
+            return trim(strip_tags($value));
+        }
+        return parent::store($value, $is_submitted, $old_value);
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
+    }
+
     public function applyFilter($model, $value) {
         return $model->filterLike($this->name, "%{$value}%");
+    }
+
+    public function getInput($value){
+
+        $this->data['attributes']               = $this->getProperty('attributes')?:[];
+        $this->data['attributes']['rows']       = $this->getOption('size')?:$this->getProperty('size');
+        $this->data['attributes']['id']         = $this->id;
+        $this->data['attributes']['required']   = (array_search(array('required'), $this->getRules()) !== false);
+
+        return parent::getInput($value);
+
     }
 
 }

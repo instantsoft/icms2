@@ -3,24 +3,51 @@
 class cmsForm {
 
     public $is_tabbed = false;
+    public $show_unsave_notice = true;
 
-    private $params = array();
-    private $structure = array();
-    private $disabled_fields = array();
+    private $params          = array();
+    private $structure       = array();
 
-//============================================================================//
-//============================================================================//
+    protected $disabled_fields = array();
+
+    protected $controller;
+
+    protected $data = [];
+
+    public function setData($key, $value) {
+        $this->data[$key] = $value; return $this;
+    }
+
+    public function getData($key) {
+        return array_key_exists($key, $this->data) ? $this->data[$key] : null;
+    }
 
     /**
-     * Заполняет массив полей формы
-     * Должен быть переопределен в наследуемом классе
+     * Сохраняет ссылку на контроллер контекста
+     * @param object $controller_obj
      */
-//    public function init(){
-//        return array();
-//    }
+    public function setContext($controller_obj){
+        $this->controller = $controller_obj;
+    }
 
-    public function setStructure($structure=array()){
+    /**
+     * Возвращает объект контроллера контекста
+     * @return object
+     */
+    public function getContext(){
+        return $this->controller;
+    }
+
+    /**
+     * Устанавливает массив полей формы
+     * @param array $structure
+     */
+    public function setStructure($structure = array()) {
+
         $this->structure = $structure;
+
+        return $this;
+
     }
 
     /**
@@ -31,10 +58,149 @@ class cmsForm {
         return $this->structure;
     }
 
+    /**
+     * Возвращает подготовленный массив полей формы
+     * @return array
+     */
+    public function getFormStructure(){
+
+        $default_lang = cmsConfig::get('language');
+        $is_change_lang = cmsConfig::get('is_user_change_lang');
+
+        $langs = cmsCore::getLanguages();
+
+        $structure = $this->structure;
+
+        foreach($structure as $fid => $fieldset){
+
+            if (!isset($fieldset['childs'])) { continue; }
+
+            $childs = [];
+
+            foreach($fieldset['childs'] as $id => $field){
+
+                $name = $field->getName();
+
+                if(!empty($field->patterns_hint['patterns'])) {
+
+                    $field->patterns_hint['pattern_fields'] = [];
+
+                    $wrap_symbols = empty($field->patterns_hint['wrap_symbols']) ? ['{','}'] : $field->patterns_hint['wrap_symbols'];
+
+                    foreach($field->patterns_hint['patterns'] as $pattern => $p_title){
+                        if(is_numeric($pattern)){
+                            $field->patterns_hint['pattern_fields'][] = '<a href="#">'.$wrap_symbols[0].$p_title.$wrap_symbols[1].'</a>';
+                        } else {
+                            $field->patterns_hint['pattern_fields'][] = '<a title="'.html($p_title, false).'" href="#">'.$wrap_symbols[0].$pattern.$wrap_symbols[1].'</a>';
+                        }
+                    }
+
+                }
+
+                // проверяем является ли поле элементом массива
+                $is_array = strpos($name, ':');
+
+                $field->classes = [
+                    'field',
+                    'ft_'.strtolower(substr(get_class($field), 5))
+                ];
+
+                if($field->getOption('is_required')){ $field->classes[] = 'reguired_field'; }
+
+                if (!empty($field->groups_edit)){
+                    if (!in_array(0, $field->groups_edit)){
+                        $field->classes[] = 'groups-limit';
+                        foreach($field->groups_edit as $group_id){
+                            $field->classes[] = 'group-' . $group_id;
+                        }
+                    }
+                }
+
+                $field->styles = [];
+
+                if (isset($field->is_visible)){
+                    if (!$field->is_visible){
+                        $field->styles[] = 'display:none';
+                    }
+                }
+
+                if($field->visible_depend){
+                     $field->classes[] = 'child_field';
+                }
+
+                $is_multilanguage = $field->multilanguage && $is_change_lang;
+
+                if($is_multilanguage){
+                     $field->classes[] = 'multilanguage';
+                }
+
+                if(!$is_multilanguage || $field->is_hidden || $field->getOption('is_hidden')){
+
+                    $childs[] = $field;
+
+                    continue;
+
+                }
+
+                $_childs = []; $first = true;
+
+                foreach ($langs as $lang) {
+
+                    if($default_lang !== $lang) {
+                        $_field = clone $field;
+                    } else {
+                        $_field = $field;
+                    }
+
+                    if(!$first){
+                        $_field->styles[] = 'display:none';
+                    }
+
+                    $_field->element_title = $_field->title.' ['.strtoupper($lang).']';
+
+                    if($default_lang !== $lang) {
+
+                        if($is_array){
+
+                            $name_parts = explode(':', $name);
+
+                            $count = count($name_parts);
+
+                            $name_parts[$count-($count > 2 ? 2 : 1)] .= '_'.$lang;
+
+                            $_field->setName(implode(':', $name_parts));
+
+                        } else {
+                            $_field->setName($name.'_'.$lang);
+                        }
+
+                    }
+
+                    $_field->field_tab_title = strtoupper($lang);
+
+                    $_childs[$lang] = $_field;
+
+                    $first = false;
+
+                }
+
+                $childs[] = $_childs;
+
+            }
+
+            $structure[$fid]['childs'] = $childs;
+
+        }
+
+
+        return $structure;
+
+    }
+
 //============================================================================//
 //============================================================================//
 
-    public function setParams($params=array()){
+    public function setParams($params = array()) {
         $this->params = $params;
     }
 
@@ -90,6 +256,10 @@ class cmsForm {
 //============================================================================//
 //============================================================================//
 
+    public function isFieldsetExists($id) {
+        return isset($this->structure[$id]);
+    }
+
     /**
      * Добавляет набор полей в форму.
      * Возращает id набора полей
@@ -102,6 +272,8 @@ class cmsForm {
         if (is_null($id)){
             $id = sizeof($this->structure);
         }
+
+        if($this->isFieldsetExists($id)){ return $id; }
 
         $fieldset = array(
             'type' => 'fieldset',
@@ -171,20 +343,52 @@ class cmsForm {
 	}
 
     /**
-     * Добавляет поле в указанный набор полей формы
+     * Добавляет поле в конец набора полей
      * @param string $fieldset_id ID набора полей
-     * @param string $name Название поля
-     * @param array $params Параметры поля
+     * @param object $field Объект поля
+     * @return $this
      */
     public function addField($fieldset_id, $field){
 
         $this->structure[ $fieldset_id ]['childs'][$field->name] = $field;
 
+        return $this;
+
     }
 
+    /**
+     * Добавляет поле в начало набора полей
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return $this
+     */
     public function addFieldToBeginning($fieldset_id, $field){
 
         $this->structure[ $fieldset_id ]['childs'] = array($field->name => $field) + $this->structure[ $fieldset_id ]['childs'];
+
+        return $this;
+
+    }
+
+    /**
+     * Добавляет поле после заданного в $after_id
+     * @param string $after_id ID поля, после которого нужно добавить
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return $this
+     */
+    public function addFieldAfter($after_id, $fieldset_id, $field){
+
+        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']));
+
+        if($pos === false){ return $this; }
+
+        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1);
+        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1);
+
+        $this->structure[$fieldset_id]['childs'] = $before + array($field->name => $field) + $after;
+
+        return $this;
 
     }
 
@@ -271,6 +475,14 @@ class cmsForm {
 //============================================================================//
 
     /**
+     * Убирает из набора все поля
+     * @param string $fieldset_id ID набора полей
+     */
+    public function clearFieldset($fieldset_id){
+        $this->structure[ $fieldset_id ]['childs'] = array();
+    }
+
+    /**
      * Удаляет набор полей из формы
      * @param string $fieldset_id ID набора полей
      */
@@ -299,7 +511,7 @@ class cmsForm {
      * @param string $field_name Название поля
      */
     public function disableField($field_name){
-        $this->disabled_fields[] = $field_name;
+        $this->disabled_fields[] = $field_name; return $this;
     }
 
 //============================================================================//
@@ -316,47 +528,63 @@ class cmsForm {
 
         $result = array();
 
-        foreach($this->structure as $fieldset){
+        foreach($this->getFormStructure() as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
             foreach($fieldset['childs'] as $field){
 
-                $name = $field->getName();
+                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                // если поле отключено, пропускаем поле
-                if (in_array($name, $this->disabled_fields)){ continue; }
+                foreach ($_field as $field) {
 
-                $is_array = strpos($name, ':');
+                    $name = $field->getName();
 
-                $value = $request->get($name, null, $field->getDefaultVarType());
+                    // если поле отключено, пропускаем поле
+                    if (in_array($name, $this->disabled_fields)){ continue; }
 
-                if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
+                    $is_array = strpos($name, ':');
 
-                $old_value = $item ? (isset($item[$name]) ? $item[$name] : null) : null;
+                    $value = $request->get($name, null, $field->getDefaultVarType());
 
-                $field->setItem($item);
+                    if (is_null($value) && $field->hasDefaultValue() && !$is_submitted) { $value = $field->getDefaultValue(); }
 
-                $value = $field->store($value, $is_submitted, $old_value);
-                if ($value === false) { continue; }
+                    $old_value = null;
 
-                if ($is_array === false){
-                    $result[$name] = $value;
-                }
+                    if($item){
+                        if ($is_array === false){
+                            $old_value = array_key_exists($name, $item) ? $item[$name] : null;
+                        }
+                        if ($is_array !== false){
+                            $old_value = array_value_recursive($name, $item);
+                        }
+                    }
 
-                if ($is_array !== false){
-                    $result = set_array_value_recursive($name, $result, $value);
-                }
+                    $field->setItem($item);
+                    $field->request = $request;
 
-                // если нужна денормализация
-                if($is_submitted && $field->is_denormalization){
-
-                    $d_name = $field->getDenormalName();
+                    $value = $field->store($value, $is_submitted, $old_value);
+                    if ($value === false) { continue; }
 
                     if ($is_array === false){
-                        $result[$d_name] = $field->storeCachedValue($value);
-                    } else {
-                        $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
+                        $result[$name] = $value;
+                    }
+
+                    if ($is_array !== false){
+                        $result = set_array_value_recursive($name, $result, $value);
+                    }
+
+                    // если нужна денормализация
+                    if($is_submitted && $field->is_denormalization){
+
+                        $d_name = $field->getDenormalName();
+
+                        if ($is_array === false){
+                            $result[$d_name] = $field->storeCachedValue($value);
+                        } else {
+                            $result = set_array_value_recursive($d_name, $result, $field->storeCachedValue($value));
+                        }
+
                     }
 
                 }
@@ -397,65 +625,95 @@ class cmsForm {
         //
         // Перебираем поля формы
         //
-        foreach($this->structure as $fieldset){
+        foreach($this->getFormStructure() as $fieldset){
 
             if (!isset($fieldset['childs'])) { continue; }
 
             foreach($fieldset['childs'] as $field){
 
-                $name = $field->getName();
+                if(!is_array($field)){ $_field = [$field]; } else { $_field = $field; }
 
-                // если поле отключено, пропускаем поле
-                if (in_array($name, $this->disabled_fields)){ continue; }
+                foreach ($_field as $field) {
 
-                // если нет правил, пропускаем поле
-                if (!$field->getRules()){ continue; }
+                    $name = $field->getName();
 
-                // проверяем является ли поле элементом массива
-                $is_array = strpos($name, ':');
+                    // если поле отключено, пропускаем поле
+                    if (in_array($name, $this->disabled_fields)){ continue; }
 
-                //
-                // получаем значение поля из массива данных
-                //
-                if ($is_array === false){
-                    $value = isset($data[$name]) ? $data[$name] : '';
-                }
+                    // правила
+                    $rules = $field->getRules();
 
-                if ($is_array !== false){
-                    $value = (string)array_value_recursive($name, $data);
-                }
+                    // если нет правил, пропускаем поле
+                    if (!$rules){ continue; }
 
-                if ($data) { $field->setItem($data); }
+                    // проверяем является ли поле элементом массива
+                    $is_array = strpos($name, ':');
 
-                //
-                // перебираем правила для поля
-                // и проверяем каждое из них
-                //
-                foreach($field->getRules() as $rule){
+                    //
+                    // получаем значение поля из массива данных
+                    //
+                    if ($is_array === false){
+                        $value = array_key_exists($name, $data) ? $data[$name] : '';
+                    }
 
-                    if (!$rule) { continue; }
+                    if ($is_array !== false){
+                        $value = array_value_recursive($name, $data);
+                    }
 
-                    // каждое правило это массив
-                    // первый элемент - название функции-валидатора
-                    $validate_function = "validate_{$rule[0]}";
+                    if ($data) { $field->setItem($data); }
 
-                    // к остальным элементам добавляем $value, т.к.
-                    // в валидаторах $value всегда последний аргумент
-                    $rule[] = $value;
+                    //
+                    // перебираем правила для поля
+                    // и проверяем каждое из них
+                    //
+                    foreach($rules as $rule){
 
-                    // убираем название валидатора из массива,
-                    // оставляем только параметры (аргументы)
-                    unset($rule[0]);
+                        if (!$rule) { continue; }
 
-                    // вызываем валидатор и объединяем результат
-                    // с предыдущими
-                    $result = call_user_func_array(array($controller, $validate_function), $rule);
+                        // если правило - это колбэк
+                        if (is_callable($rule[0]) && ($rule[0] instanceof Closure)){
 
-                    // если получилось false, то дальше не проверяем, т.к.
-                    // ошибка уже найдена
-                    if ($result !== true) {
-                        $errors[$name] = $result;
-                        break;
+                            $result = $rule[0]($controller, $data, $value);
+
+                            if ($result !== true) {
+                                $errors[$name] = $result;
+                                break;
+                            }
+
+                            continue;
+
+                        }
+
+                        // каждое правило это массив
+                        // первый элемент - название функции-валидатора
+                        $validate_function = "validate_{$rule[0]}";
+
+                        // к остальным элементам добавляем $value, т.к.
+                        // в валидаторах $value всегда последний аргумент
+                        $rule[] = $value;
+
+                        // убираем название валидатора из массива,
+                        // оставляем только параметры (аргументы)
+                        unset($rule[0]);
+
+                        // вызываем валидатор и объединяем результат с предыдущими
+                        // методы валидации могут быть определены (в порядке приоритета):
+                        // в классе формы, в классе поля, в контроллерах
+                        if (method_exists($this, $validate_function)) {
+                            $result = call_user_func_array([$this, $validate_function], $rule);
+                        } elseif (method_exists($field, $validate_function)){
+                            $result = call_user_func_array(array($field, $validate_function), $rule);
+                        } else {
+                            $result = call_user_func_array(array($controller, $validate_function), $rule);
+                        }
+
+                        // если получилось false, то дальше не проверяем, т.к.
+                        // ошибка уже найдена
+                        if ($result !== true) {
+                            $errors[$name] = $result;
+                            break;
+                        }
+
                     }
 
                 }
@@ -489,8 +747,13 @@ class cmsForm {
      */
     public static function generateCSRFToken(){
 
-        $hash = implode('::', array(session_id(), uniqid(), microtime(true)));
-        $token = md5($hash);
+        $hash = implode('::', array(session_id(), microtime(true)));
+
+        if(function_exists('hash') && in_array('sha256', hash_algos())){
+            $token = hash('sha256', $hash);
+        } else {
+            $token = md5($hash);
+        }
 
         cmsUser::sessionSet('csrf_token', $token);
 
@@ -513,6 +776,8 @@ class cmsForm {
     public static function mapFieldsToFieldsets($fields, $callback=null, $values=null){
 
         $fieldsets = array();
+
+        if(!$fields){ return $fieldsets; }
 
         $current = null;
 
@@ -561,9 +826,12 @@ class cmsForm {
 
     /**
      * Возвращает список всех имеющихся типов полей
+     *
+     * @param boolean $only_public Возвращать только публичные поля
+     * @param string $controller Название контроллера для контекста вызова
      * @return array
      */
-    public static function getAvailableFormFields($only_public = true){
+    public static function getAvailableFormFields($only_public = true, $controller = false){
 
         $fields_types   = array();
         $fields_files   = cmsCore::getFilesList('system/fields', '*.php', true, true);
@@ -575,16 +843,28 @@ class cmsForm {
             $field = new $class(null, null);
 
             if ($only_public && !$field->is_public){ continue; }
+            if ($controller && in_array($controller, $field->excluded_controllers)){ continue; }
 
             $fields_types[$name] = $field->getTitle();
 
         }
 
+        asort($fields_types, SORT_STRING);
+
         return $fields_types;
 
     }
 
-    public static function getForm($form_file, $form_name, $params=false){
+    /**
+     * Инициализирует объект формы
+     *
+     * @param string $form_file Полный путь к файлу формы
+     * @param string $form_name Название формы
+     * @param array $params Параметры, передаваемые в метод init формы
+     * @param cmsController $controller Объект контроллера контекста
+     * @return boolean|\form_class
+     */
+    public static function getForm($form_file, $form_name, $params = false, $controller = null) {
 
         if (!file_exists($form_file)){ return false; }
 
@@ -592,7 +872,15 @@ class cmsForm {
 
         $form_class = 'form' . string_to_camel('_', $form_name);
 
+        if(!class_exists($form_class, false)){
+            return sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $form_file), $form_class);
+        }
+
         $form = new $form_class();
+
+        if($controller instanceof cmsController){
+            $form->setContext($controller);
+        }
 
         if ($params){
             $form->setParams($params);
@@ -604,8 +892,5 @@ class cmsForm {
         return $form;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

@@ -1,12 +1,12 @@
-<?php $this->addJS('templates/default/js/geo.js'); ?>
+<?php $this->addTplJSNameFromContext('geo'); ?>
 
 <?php if ($field->title) { ?><label><?php echo $field->title; ?></label><?php } ?>
 
 <?php if(!is_array($value)){ ?>
 
     <?php
-    $this->addJSFromContext('templates/default/js/jquery-chosen.js');
-    $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+    $this->addTplJSNameFromContext('jquery-chosen');
+    $this->addTplCSSNameFromContext('jquery-chosen');
     ?>
 
     <div class="location_list location_group_<?php echo $field->data['location_group']; ?>">
@@ -23,15 +23,15 @@
 
 <?php } else { ?>
 
-    <div id="geo-widget-<?php echo $field->element_name; ?>" class="city-input">
+    <div id="geo-widget-<?php echo $field->id; ?>" class="city-input">
 
         <?php echo html_input('hidden', $field->element_name, $value['id'], array('class'=>'city-id')); ?>
 
         <span class="city-name" <?php if (empty($value['name'])){ ?>style="display:none"<?php } ?>><?php echo $value['name']; ?></span>
 
         <a class="city_clear_link" href="#" <?php if (empty($value['name'])){ ?>style="display:none"<?php } ?>><?php echo LANG_DELETE; ?></a>
-        <a class="ajax-modal" href="<?php echo href_to('geo', 'widget', array($field->element_name, $value['id'])); ?>"><?php echo LANG_SELECT; ?></a>
+        <a class="ajax-modal" href="<?php echo href_to('geo', 'widget', array($field->id, $value['id'])); ?>"><?php echo LANG_SELECT; ?></a>
 
     </div>
 
-<?php } ?>
+<?php }

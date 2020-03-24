@@ -2,22 +2,26 @@
 
 define('GUEST_GROUP_ID', 1);
 define('DEF_GROUP_ID', 3);
-define('AUTH_TOKEN_EXPIRATION_INT', 8640000); // 100 дней
 
 class cmsUser {
 
+    const USER_ONLINE_INTERVAL = 180;
+    const AUTH_TOKEN_EXPIRATION_INT = 8640000; // 100 дней
+
     private static $instance;
     private static $_ip;
+    private static $auth_token;
+    private static $cached_online = array();
 
     public $id = 0;
     public $email;
     public $password;
     public $nickname;
-    public $is_admin = 0;
-    public $is_logged = false;
-
-    public static $online_users = array();
-    private static $online_interval = 180;
+    public $date_log;
+    public $is_admin   = 0;
+    public $is_logged  = false;
+    public $friends    = array();
+    public $subscribes = array();
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -48,6 +52,10 @@ class cmsUser {
 
     }
 
+    public static function setIp($ip){
+        self::$_ip = $ip;
+    }
+
     /**
      * Для var_export
      * @param array $data
@@ -59,20 +67,19 @@ class cmsUser {
 
     public function __construct(){
 
-        $this->groups = array(GUEST_GROUP_ID);
-        $this->ip     = self::getIp();
-
-        self::loadOnlineUsersIds();
+        $this->groups   = array(GUEST_GROUP_ID);
+        $this->ip       = self::getIp();
+        $this->date_log = date('Y-m-d H:i:s');
 
         if (self::isSessionSet('user:id')){
 
             // уже авторизован
-            $this->id  = self::sessionGet('user:id');
+            $this->id = self::sessionGet('user:id');
 
-        } elseif (self::getCookie('auth')) {
+        } elseif (self::hasCookie('auth')) {
 
             // пробуем авторизовать по кукису
-            $this->id  = self::autoLogin(self::getCookie('auth'));
+            $this->id = self::autoLogin(self::getCookie('auth'));
 
         }
 
@@ -80,14 +87,64 @@ class cmsUser {
             $this->id = cmsEventsManager::hook('user_auto_login', 0);
         }
 
-        self::deleteOldSessions($this->id);
-
         //
         // если авторизован, заполняем объект данными из базы
         //
         if ($this->id){
             $this->loadAuthUser($this->id);
+        } else {
+
+            // для неавторизованных ставим дату посещения
+            $_date_log = self::getCookie('guest_date_log', 'integer');
+            if(!$_date_log){
+                $_date_log = time();
+            }
+
+            if (!self::isSessionSet('user:date_log') || ((time()-self::USER_ONLINE_INTERVAL) >= $_date_log)){
+
+                self::setCookie('guest_date_log', time(), 31536000);
+
+                if (!self::isSessionSet('user:date_log')){
+                    self::sessionSet('user:date_log', $_date_log);
+                }
+
+            }
+
+            $this->date_log = date('Y-m-d H:i:s', self::sessionGet('user:date_log'));
+
         }
+
+    }
+
+    public static function restrictSessionToIp($ip = false) {
+
+        if(!$ip){ $ip = self::getIp(); }
+
+        if (!self::isSessionSet('user_ip')){
+
+            self::sessionSet('user_ip', $ip);
+
+            $octets = explode('.', $ip);
+            $end_okets = end($octets);
+
+            self::sessionSet('user_net', rtrim($ip, $end_okets));
+
+        }
+
+    }
+
+    /**
+     * Проверяет изменился ли ip адрес сессии
+     * @param boolean $strict Если true, то проверяется целый ip адрес, иначе проверка по подсети
+     * @return boolean
+     */
+    public function checkSpoofingSession($strict = false) {
+
+        if(!$strict){
+            return strpos($this->ip, self::sessionGet('user_net')) === 0;
+        }
+
+		return $this->ip == self::sessionGet('user_ip');
 
     }
 
@@ -101,6 +158,8 @@ class cmsUser {
         $config = cmsConfig::getInstance();
         $model  = cmsCore::getModel('users');
 
+        $model->filterIsNull('is_deleted');
+
         $user = $model->getUser($user_id);
 
         if (!$user){
@@ -111,9 +170,14 @@ class cmsUser {
         // если дата последнего визита еще не сохранена в сессии,
         // значит авторизация была только что
         // сохраним дату в сессии и обновим в базе
-        if (!self::isSessionSet('user:date_log')){
-            self::sessionSet('user:date_log', $user['date_log']);
-            $model->update('{users}', $user_id, array('date_log' => null), true);
+        if (!self::isSessionSet('user:date_log') || ((time()-self::USER_ONLINE_INTERVAL) >= strtotime($user['date_log']))){
+
+            if (!self::isSessionSet('user:date_log')){
+                self::sessionSet('user:date_log', $user['date_log']);
+            }
+
+            $model->updateUserDateLog($user_id);
+
         }
 
         // заполняем объект данными из базы
@@ -149,6 +213,22 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function setUserSession($user, $last_ip = false){
+
+        self::sessionSet('user', array(
+            'id'          => $user['id'],
+            '2fa'         => !empty($user['2fa']),
+            'is_old_auth' => !empty($user['is_old_auth']),
+            'groups'      => $user['groups'],
+            'time_zone'   => $user['time_zone'],
+            'perms'       => isset($user['permissions']) ? $user['permissions'] : self::getPermissions($user['groups']),
+            'is_admin'    => $user['is_admin']
+        ));
+
+        self::restrictSessionToIp($last_ip);
+
+    }
+
     /**
      * Авторизует пользователя по кукису
      * @param str $auth_token
@@ -160,10 +240,10 @@ class cmsUser {
         $model = cmsCore::getModel('users');
 
         $user = $model->joinInner('{users}_auth_tokens', 'au', 'au.user_id = i.id')->
-                filterEqual('au.auth_token', $auth_token)->select('au.date_auth')->getUser();
-        if (!$user){ return 0; }
+                filterEqual('au.auth_token', $auth_token)->filterIsNull('is_deleted')->select('au.date_auth')->getUser();
+        if (!$user || $user['is_locked']){ return 0; }
         // проверяем не истек ли срок действия токена
-        if((time() - strtotime($user['date_auth'])) > AUTH_TOKEN_EXPIRATION_INT){
+        if((time() - strtotime($user['date_auth'])) > self::AUTH_TOKEN_EXPIRATION_INT){
             $model->deleteAuthToken($auth_token);
             return 0;
         }
@@ -172,75 +252,88 @@ class cmsUser {
             'date_log' => null
         ));
 
-        $model->update('{users}', $user['id'], array(
-            'pass_token' => null,
-            'ip' => self::getIp()
-        ), true);
+        $model->updateUserIp($user['id']);
 
         $user = cmsEventsManager::hook('user_login', $user);
 
-        self::sessionSet('user', array(
-            'id'        => $user['id'],
-            'groups'    => $user['groups'],
-            'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups']),
-            'is_admin'  => $user['is_admin']
-        ));
+        self::setUserSession($user, $user['ip']);
 
-        return $user['id'];
+        return intval($user['id']);
 
     }
 
     /**
      * Авторизует пользователя
+     *
      * @param string $email
      * @param string $password
-     * @param bool $remember
-     * @return int
+     * @param boolean $remember
+     * @param boolean $complete_login
+     * @return integer|array
      */
-    public static function login($email, $password, $remember=false) {
+    public static function login($email, $password, $remember = false, $complete_login = true) {
 
-        if (!preg_match("/^([a-z0-9\._-]+)@([a-z0-9\._-]+)\.([a-z]{2,6})$/i", $email)){
+        if (!$email || !$password){
             return 0;
         }
 
         $model = cmsCore::getModel('users');
 
-        $model->filterEqual('email', $email);
-        $model->filterFunc('password', "MD5(CONCAT(MD5('{$password}'), i.password_salt))");
-
-        $user = $model->getUser();
+        $user = $model->getUserByAuth($email, $password);
 
         if(!$user) {
-            $user = cmsEventsManager::hook('user_auth_error', array('email'=>$email,'password'=>$password));
+            $user = cmsEventsManager::hook('user_auth_error', array('email' => $email, 'password' => $password));
         }
 
         if (empty($user['id'])) { return 0; }
 
         $user = cmsEventsManager::hook('user_login', $user);
 
-        self::sessionSet('user', array(
-            'id'        => $user['id'],
-            'groups'    => $user['groups'],
-            'time_zone' => $user['time_zone'],
-            'perms'     => self::getPermissions($user['groups']),
-            'is_admin'  => $user['is_admin']
-        ));
+        $user['permissions'] = self::getPermissions($user['groups']);
 
-        if ($remember){
+        if($complete_login){
 
-            $auth_token = string_random(32, $email);
-            self::setCookie('auth', $auth_token, AUTH_TOKEN_EXPIRATION_INT); //100 дней
-            $model->setAuthToken($user['id'], $auth_token);
-            $model->deleteExpiredToken($user['id'], AUTH_TOKEN_EXPIRATION_INT);
+            self::loginComplete($user, $remember);
+
+            return intval($user['id']);
 
         }
 
-        $model->update('{users}', $user['id'], array(
-            'ip' => self::getIp()
-        ), true);
+        return $user;
 
-        return $user['id'];
+    }
+
+    /**
+     * Завершает авторизацию, устанавливая сессию
+     * и другие параметры авторизации
+     *
+     * @param array $user
+     * @param boolean $remember
+     * @return boolean
+     */
+    public static function loginComplete($user, $remember = false) {
+
+        self::setUserSession($user);
+
+        $model = cmsCore::getModel('users');
+
+        if ($remember){
+
+            $auth_token = string_random(32, $user['email']);
+
+            self::setCookie('auth', $auth_token, self::AUTH_TOKEN_EXPIRATION_INT);
+
+            $model->setAuthToken($user['id'], $auth_token);
+
+            $model->deleteExpiredToken($user['id'], self::AUTH_TOKEN_EXPIRATION_INT);
+
+            self::$auth_token = $auth_token;
+
+        }
+
+        $model->updateUserIp($user['id']);
+
+        return true;
 
     }
 
@@ -253,25 +346,34 @@ class cmsUser {
 
         $userSession = self::sessionGet('user');
 
-        $model->update('{users}', $userSession['id'], array(
-            'date_log' => null
-        ), true);
+        if(empty($userSession['id'])){ return false; }
+
+        $model->updateUserDateLog($userSession['id']);
+
+        $model->filterEqual('user_id', $userSession['id'])->deleteFiltered('sessions_online');
 
         cmsEventsManager::hook('user_logout', $userSession);
 
-        if (self::getCookie('auth')) {
+        if (self::hasCookie('auth')) {
+
+            $auth_cookie = self::getCookie('auth');
+
+            if (preg_match('/^[0-9a-f]{32}$/i', $auth_cookie)){
+                $model->deleteAuthToken($auth_cookie);
+            }
 
             self::unsetCookie('auth');
 
-            if (preg_match('/^[0-9a-f]{32}$/i', self::getCookie('auth'))){
-                $model->deleteAuthToken(self::getCookie('auth'));
-            }
-
         }
-        self::sessionUnset('user');
 
-        self::deleteSession($userSession['id']);
-        self::deleteOldSessions();
+        // если login и logout выполняются в пределах
+        // одной загрузки страницы
+        if(self::$auth_token){
+            $model->deleteAuthToken(self::$auth_token);
+            self::$auth_token = null;
+        }
+
+        self::sessionUnset('user');
 
         return true;
 
@@ -280,67 +382,11 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    private static function loadOnlineUsersIds() {
-
-        $model = new cmsModel();
-
-        $users = $model->get('sessions_online', false, 'user_id');
-
-        if($users){
-            self::$online_users = $users;
-        }
-
-    }
-
     public static function createSession($user_id){
 
         $model = new cmsModel();
 
-        $insert_data = array(
-            'session_id' => session_id(),
-            'user_id' => $user_id
-        );
-
-        $update_data = array(
-            'date_created' => null
-        );
-
-        $model->insertOrUpdate('sessions_online', $insert_data, $update_data);
-
-    }
-
-    public static function deleteSession($user_id){
-
-        $model = new cmsModel();
-
-        $model->filterEqual('user_id', $user_id)->
-                deleteFiltered('sessions_online');
-
-    }
-
-    public static function deleteOldSessions($current_user_id=0){
-
-        $expired_users = array();
-
-        if(self::$online_users){
-            foreach (self::$online_users as $k=>$user) {
-                if((time()-self::$online_interval) >= strtotime($user['date_created'])){
-                    $expired_users[] = $user['user_id'];
-                    if($current_user_id != $user['user_id']){
-                        unset(self::$online_users[$k]);
-                    }
-                }
-            }
-        }
-
-        if ($expired_users){
-
-            $model = new cmsModel();
-
-            $model->filterIn('user_id', $expired_users)->
-                    deleteFiltered('sessions_online');
-
-        }
+        $model->insertOrUpdate('sessions_online', array('user_id' => $user_id), array('date_created' => null));
 
     }
 
@@ -348,15 +394,23 @@ class cmsUser {
 //============================================================================//
 
     public static function userIsOnline($user_id) {
-        $online = false;
-        if(self::$online_users){
-            foreach (self::$online_users as $user) {
-                if($user['user_id'] == $user_id){
-                    $online = true; break;
-                }
-            }
+
+        if(isset(self::$cached_online[$user_id])){
+            return self::$cached_online[$user_id];
         }
-        return $online;
+
+        self::$cached_online[$user_id] = false;
+
+        $model = new cmsModel();
+
+        $date_created = $model->filterEqual('user_id', $user_id)->getFieldFiltered('sessions_online', 'date_created');
+
+        if($date_created && (time()-self::USER_ONLINE_INTERVAL) >= strtotime($date_created)){
+            self::$cached_online[$user_id] = true;
+        }
+
+        return self::$cached_online[$user_id];
+
     }
 
     public static function isLogged(){
@@ -375,6 +429,53 @@ class cmsUser {
 
 //============================================================================//
 //============================================================================//
+
+    public static function setSessionSavePath($save_handler, $path) {
+
+        if(!$path){
+            return false;
+        }
+
+        if(ini_set('session.save_handler', $save_handler) === false){
+            return false;
+        }
+
+        if($save_handler === 'files'){
+
+            if(!is_dir($path)){
+                if(!mkdir($path, 0755, true)){
+                    return false;
+                }
+            }
+
+            if (!is_writable($path)) {
+                return false;
+            }
+
+        }
+
+        session_save_path($path);
+
+        return true;
+
+    }
+
+    public static function sessionStart($cookie_domain = false, $session_name = 'ICMSSID'){
+
+        session_name($session_name);
+
+        if($cookie_domain){
+            $cookie_domain = '.'.$cookie_domain;
+        }
+
+        // если используете ТОЛЬКО https, раскомментируйте строку ниже,
+        // а следующую за ней закомментируйте
+        //session_set_cookie_params(0, '/', $cookie_domain, true, true);
+        session_set_cookie_params(0, '/', $cookie_domain, false, true);
+
+        session_start();
+
+    }
 
     public static function sessionSet($key, $value){
 
@@ -426,6 +527,10 @@ class cmsUser {
         }
     }
 
+    public static function sessionClear(){
+        $_SESSION = array();
+    }
+
     /**
      * Устанавливает куки
      * @param string $key Имя кукиса
@@ -436,28 +541,48 @@ class cmsUser {
      * @param string $domain Домен действия. null - только текущий
      * */
     public static function setCookie($key, $value, $time=3600, $path='/', $http_only=true, $domain = null){
-        setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
-        return;
+
+        $cookie_domain = cmsConfig::get('cookie_domain');
+
+        if(!$domain && $cookie_domain){
+            $domain = $cookie_domain;
+        }
+
+        return setcookie('icms['.$key.']', $value, time()+$time, $path, $domain, false, $http_only);
+
     }
 
     public static function setCookiePublic($key, $value, $time=3600, $path='/'){
         return self::setCookie($key, $value, $time, $path, false);
     }
 
-    public static function unsetCookie($key){
-        setcookie('icms['.$key.']', '', time()-3600, '/');
-        return;
+    public static function unsetCookie($key, $path='/', $domain = null){
+        return self::setCookie($key, '', -3600, $path, true, $domain);
     }
 
     /**
      * Проверяет наличие кукиса и возвращает его значение
      *
-     * @param str $key Имя кукиса
-     * @return str или false
+     * @param string $key Имя кукиса
+     * @param string $var_type Тип переменной, по умолчанию string
+     * @param callable $callback
+     * @return mixed
      */
-    public static function getCookie($key){
+    public static function getCookie($key, $var_type = 'string', $callback = false){
         if (isset($_COOKIE['icms'][$key])){
-            return trim($_COOKIE['icms'][$key]);
+
+            $cookie = $_COOKIE['icms'][$key];
+
+            if($var_type !== null){
+                @settype($cookie, $var_type);
+            }
+
+            if(is_callable($callback)){
+                $cookie = call_user_func_array($callback, array($cookie));
+            }
+
+            return $cookie;
+
         } else {
             return false;
         }
@@ -470,6 +595,10 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function getSetUPS($key){
+        return cmsCore::getModel('users')->getSetUPS($key);
+    }
+
     /**
      * Устанавливает для пользователя его уникальные персональные настройки
      * User Personal Setting
@@ -479,7 +608,6 @@ class cmsUser {
      * @param int       $user_id    Ид юзера
      * @return bool
      */
-
     public static function setUPS($key, $data, $user_id = null){
 
         if (empty($key) || (!$user_id && !($user_id = self::getInstance()->id))) {
@@ -530,22 +658,27 @@ class cmsUser {
 
     }
 
-//============================================================================//
-//============================================================================//
-
-    public static function addSessionMessage($message, $class='info'){
-        self::sessionPush('core_message', '<div class="message_'.$class.'">'.$message.'</div>');
+    public static function deleteUPSlist($key){
+        return cmsCore::getModel('users')->deleteUPS($key);
     }
 
-    public static function getSessionMessages(){
+//============================================================================//
+//============================================================================//
+
+    public static function addSessionMessage($message, $class = 'info', $is_keep = false){
+        self::sessionPush('core_message', ['class' => $class, 'text' => $message, 'is_keep' => $is_keep]);
+    }
+
+    public static function getSessionMessages($is_clear = true){
 
         if (self::isSessionSet('core_message')){
             $messages = self::sessionGet('core_message');
         } else {
             $messages = false;
         }
-
-        self::clearSessionMessages();
+        if($is_clear){
+            self::clearSessionMessages();
+        }
         return $messages;
 
     }
@@ -578,6 +711,21 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
+    public static function isDenied($subject, $permission, $value=true, $is_admin_strict=false){
+
+        $user = self::getInstance();
+
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
+
+        if (!isset($user->perms[$subject])) { return false; }
+        if (!isset($user->perms[$subject][$permission])) { return false; }
+
+        return $user->perms[$subject][$permission] == $value;
+
+    }
+
     public static function isAllowed($subject, $permission, $value=true, $is_admin_strict=false){
 
         $user = self::getInstance();
@@ -594,11 +742,13 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitReached($subject, $permission, $current_value=0){
+    public static function isPermittedLimitReached($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }
@@ -608,56 +758,19 @@ class cmsUser {
 
     }
 
-    public static function isPermittedLimitHigher($subject, $permission, $current_value=0){
+    public static function isPermittedLimitHigher($subject, $permission, $current_value = 0, $is_admin_strict = false) {
 
         $user = self::getInstance();
 
-        if ($user->is_admin){ return false; }
+        if(!$is_admin_strict){
+            if ($user->is_admin){ return false; }
+        }
 
         if (!isset($user->perms[$subject])) { return false; }
         if (!isset($user->perms[$subject][$permission])) { return false; }
         if ((int)$current_value < $user->perms[$subject][$permission]) { return true; }
 
         return false;
-
-    }
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Увеличивает счетчик загруженных пользователем файлов
-     * @param integer $user_id
-     * @return boolean
-     */
-    public function increaseFilesCount($user_id = 0){
-
-        if(!$user_id){
-            $this->files_count++;
-            $user_id = $this->id;
-        }
-
-        $model = new cmsModel();
-
-        $model->filterEqual('id', $user_id);
-
-        return $model->increment('{users}', 'files_count');
-
-    }
-
-    /**
-     * Уменьшает счетчик загруженных пользователем файлов
-     * @return bool
-     */
-    public function decreaseFilesCount(){
-
-        $this->files_count--;
-
-        $model = new cmsModel();
-
-        $model->filterEqual('id', $this->id);
-
-        return $model->decrement('{users}', 'files_count');
 
     }
 
@@ -710,9 +823,9 @@ class cmsUser {
 //============================================================================//
 //============================================================================//
 
-    public function isPrivacyAllowed($profile, $option){
+    public function isPrivacyAllowed($profile, $option, $strict = false){
 
-        if ($this->is_admin) { return true; }
+        if ($this->is_admin && !$strict) { return true; }
 
         if ($profile['id'] == $this->id) { return true; }
 
@@ -735,31 +848,39 @@ class cmsUser {
 
     public function recacheFriends(){
 
-        $model = cmsCore::getModel('users');
+        $friends = cmsCore::getModel('users')->getFriendsIds($this->id);
 
-        $this->friends = $model->getFriendsIds($this->id);
+        $this->friends = $friends['friends'];
+        $this->subscribes = $friends['subscribes'];
+
+        return $this;
 
     }
 
-    public function isFriend($friend_id){
+    public function isFriend($friend_id, $type = 'friends'){
+
+        if (!$friend_id || !$this->id) { return false; }
 
         if ($friend_id == $this->id) { return true; }
 
-        if (!isset($this->friends)) { return false; }
-        if (!is_array($this->friends)) { return false; }
+        if (empty($this->{$type})) { return false; }
 
-        return in_array($friend_id, $this->friends);
+        return in_array($friend_id, $this->{$type});
+
+    }
+
+    public function isSubscribe($friend_id){
+
+        return $this->isFriend($friend_id, 'subscribes');
 
     }
 
     public function hasFriends(){
-
         return !empty($this->friends);
-
     }
 
-//============================================================================//
-//============================================================================//
-
+    public function hasSubscribes(){
+        return !empty($this->subscribes);
+    }
 
 }

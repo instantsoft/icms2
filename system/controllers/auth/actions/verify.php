@@ -3,11 +3,39 @@ class actionAuthVerify extends cmsAction {
 
     public function run($pass_token = null){
 
-        if (cmsUser::isLogged()) { $this->redirectToHome(); }
+        if (empty($this->options['verify_email'])){
+            cmsCore::error404();
+        }
+
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
         $users_model = cmsCore::getModel('users');
 
-        $form = $this->getForm('verify');
+        $reg_email = cmsUser::getCookie('reg_email');
+
+        $reg_user = [];
+
+        if($reg_email && $this->validate_email($reg_email) === true){
+
+            $reg_user = $users_model->filterNotNull('pass_token')->
+                    filterEqual('is_locked', 1)->
+                    getUserByEmail($reg_email);
+
+            if($reg_user){
+
+                $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
+                if($reg_user['resubmit_extime'] < 0){
+                    $reg_user['resubmit_extime'] = 0;
+                }
+
+            }
+
+        } else {
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
+        }
+
+        $form = $this->getForm('verify', array($reg_user));
 
         $data = array('reg_token' => $pass_token);
 
@@ -29,6 +57,8 @@ class actionAuthVerify extends cmsAction {
 
             if (!$errors){
 
+                cmsUser::unsetCookie('reg_email');
+
                 $users_model->unlockUser($user['id'])->clearUserPassToken($user['id']);
 
                 cmsEventsManager::hook('user_registered', $user);
@@ -40,19 +70,9 @@ class actionAuthVerify extends cmsAction {
 
                     $user = cmsEventsManager::hook('user_login', $user);
 
-                    cmsUser::sessionSet('user', array(
-                        'id'        => $user['id'],
-                        'groups'    => $user['groups'],
-                        'time_zone' => $user['time_zone'],
-                        'perms'     => cmsUser::getPermissions($user['groups']),
-                        'is_admin'  => $user['is_admin']
-                    ));
+                    cmsUser::setUserSession($user);
 
-                    $update_data = array(
-                        'ip' => cmsUser::getIp()
-                    );
-
-                    $this->model->update('{users}', $user['id'], $update_data, true);
+                    $users_model->updateUserIp($user['id']);
 
                     cmsEventsManager::hook('auth_login', $user['id']);
 
@@ -68,11 +88,12 @@ class actionAuthVerify extends cmsAction {
 
         }
 
-        return $this->cms_template->render('verify', array(
+        return $this->cms_template->render([
+            'reg_email' => $reg_email,
             'data'   => $data,
             'form'   => $form,
             'errors' => isset($errors) ? $errors : false
-        ));
+        ]);
 
     }
 

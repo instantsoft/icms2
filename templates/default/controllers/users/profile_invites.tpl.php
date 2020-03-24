@@ -2,7 +2,9 @@
 
     $this->setPageTitle(LANG_USERS_MY_INVITES);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
+    }
     $this->addBreadcrumb($profile['nickname'], href_to('users', $id));
     $this->addBreadcrumb(LANG_USERS_MY_INVITES);
 
@@ -16,8 +18,6 @@
 ?>
 
 <h1><?php echo LANG_USERS_MY_INVITES; ?></h1>
-
-<p><?php printf(LANG_USERS_INVITES_COUNT, html_spellcount($profile['invites_count'], LANG_USERS_INVITES_SPELLCOUNT)); ?></p>
 
 <?php
     $this->renderForm($form, $input, array(

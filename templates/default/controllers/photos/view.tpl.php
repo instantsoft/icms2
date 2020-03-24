@@ -1,9 +1,11 @@
 <?php
 
-    $this->addJS($this->getJavascriptFileName('photos'));
-    $this->addJS($this->getJavascriptFileName('jquery-owl.carousel'));
-    $this->addJS($this->getJavascriptFileName('screenfull'));
-    $this->addCSS('templates/default/css/jquery-owl.carousel.css');
+    $this->addTplJSName([
+        'photos',
+        'jquery-owl.carousel',
+        'screenfull'
+        ]);
+    $this->addTplCSSName('jquery-owl.carousel');
 
     $this->setPageTitle($photo['title']);
     $this->setPageDescription($photo['content'] ? string_get_meta_description($photo['content']) : ($photo['title'].' — '.$album['title']));
@@ -21,6 +23,13 @@
     }
     $this->addBreadcrumb($photo['title']);
 
+    if ($is_can_set_cover) {
+        $this->addToolButton(array(
+            'class' => 'images',
+            'title' => LANG_PHOTOS_SET_COVER,
+            'href'  => $this->href_to('set_cover', $photo['id'])
+        ));
+    }
     if ($is_can_edit) {
         $this->addToolButton(array(
             'class' => 'edit',
@@ -46,6 +55,7 @@
             <div class="inside_wrap orientation_<?php echo $photo['orientation']; ?>" id="fullscreen_cont">
                 <div id="photo_container" <?php if($full_size_img){?>data-full-size-img="<?php echo $full_size_img; ?>"<?php } ?>>
                     <?php echo $this->renderChild('view_photo_container', array(
+                        'photos_url_params' => $photos_url_params,
                         'photo'      => $photo,
                         'preset'     => $preset,
                         'prev_photo' => $prev_photo,
@@ -92,11 +102,11 @@
                 <?php echo $photo['rating_widget']; ?>
             </div>
         <?php } ?>
+        <?php if (!empty($ctype['options']['share_code'])){ ?>
             <div class="share">
-                <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
-<div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,gplus,twitter,viber,whatsapp" data-size="s"></div>
+                <?php echo $ctype['options']['share_code']; ?>
             </div>
+        <?php } ?>
         </div>
 
         <?php if (!empty($photo['content'])){ ?>

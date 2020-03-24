@@ -3,7 +3,8 @@
     return array(
 
         'hooks' => array(
-            'html_filter'
+            'html_filter',
+            'images_before_upload'
         )
 
     );

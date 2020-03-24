@@ -1,8 +1,11 @@
 <?php
-    $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/datatree.js');
-    $this->addCSS('templates/default/css/datatree.css');
-    $this->addJS('templates/default/js/admin-content.js');
+
+    $this->addTplJSName([
+        'jquery-cookie',
+        'datatree',
+        'admin-content'
+        ]);
+    $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_USERS);
 
@@ -20,6 +23,20 @@
         'title' => LANG_CANCEL,
         'href'  => null,
         'onclick' => "return contentCancelFilter()"
+    ));
+
+    if(cmsController::enabled('messages')){
+        $this->addToolButton(array(
+            'class' => 'transfer',
+            'title' => LANG_CP_USER_PMAILING,
+            'href'  => $this->href_to('controllers', array('edit', 'messages', 'pmailing'))
+        ));
+    }
+
+    $this->addToolButton(array(
+        'class' => 'settings',
+        'title' => LANG_CONFIG,
+        'href'  => $this->href_to('controllers', array('edit', 'users'))
     ));
 
     $this->addToolButton(array(
@@ -59,6 +76,8 @@
 		'target' => '_blank',
 		'href'  => LANG_HELP_URL_USERS
 	));
+
+    $this->applyToolbarHook('admin_users_toolbar');
 
 ?>
 
@@ -112,9 +131,10 @@
                             node.expand();
                             $.cookie('icms[users_tree_path]', node.getKeyPath(), {expires: 7, path: '/'});
                             var key = node.data.key;
-                            icms.datagrid.setURL("<?php echo $this->href_to('users', array('ajax')); ?>/" + key);
+                            icms.datagrid.setURL("<?php echo $this->href_to('users'); ?>/" + key);
                             $('.cp_toolbar .filter a').attr('href', "<?php echo $this->href_to('users', array('filter')); ?>/" + key[0]);
                             $('.cp_toolbar .add a').attr('href', "<?php echo $this->href_to('users', 'add'); ?>/" + key);
+                            $('.cp_toolbar .transfer a').attr('href', "<?php echo $this->href_to('controllers', array('edit', 'messages', 'pmailing')); ?>/" + key);
                             if (key == 0){
                                 $('.cp_toolbar .edit a').hide();
                                 $('.cp_toolbar .permissions a').hide();
@@ -122,7 +142,7 @@
                             } else {
                                 $('.cp_toolbar .edit a').show().attr('href', "<?php echo $this->href_to('users', 'group_edit'); ?>/" + key);
                                 $('.cp_toolbar .permissions a').show().attr('href', "<?php echo $this->href_to('users', 'group_perms'); ?>/" + key);
-                                $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key);
+                                $('.cp_toolbar .delete a').show().attr('href', "<?php echo $this->href_to('users', 'group_delete'); ?>/" + key + '?csrf_token='+icms.forms.getCsrfToken());
                             }
                             icms.datagrid.loadRows();
                         }
@@ -134,9 +154,8 @@
         </td>
         <td class="main" valign="top">
 
-            <?php $this->renderGrid($this->href_to('users', array('ajax', 2)), $grid); ?>
+            <?php $this->renderGrid($this->href_to('users'), $grid); ?>
 
         </td>
     </tr>
 </table>
-

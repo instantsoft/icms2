@@ -19,7 +19,16 @@ class widgetContentList extends cmsWidget {
 
         $model = cmsCore::getModel('content');
 
-        $ctype = $model->getContentType($ctype_id);
+        if($ctype_id){
+
+            $ctype = $model->getContentType($ctype_id);
+
+        } else {
+
+            $ctype = $current_ctype;
+
+        }
+
         if (!$ctype) { return false; }
 
 		if ($cat_id){
@@ -29,15 +38,7 @@ class widgetContentList extends cmsWidget {
 		}
 
         if ($dataset_id){
-
             $dataset = $model->getContentDataset($dataset_id);
-
-            if ($dataset){
-                $model->applyDatasetFilters($dataset);
-            } else {
-                $dataset_id = false;
-            }
-
         }
 
         if ($relation_id && $current_ctype_item && $current_ctype){
@@ -69,29 +70,20 @@ class widgetContentList extends cmsWidget {
 
         }
 
+        if (!empty($dataset)){
+            $model->applyDatasetFilters($dataset);
+        }
+
 		if ($category){
 			$model->filterCategory($ctype['name'], $category, true);
 		}
 
-        // Приватность
+        // применяем приватность
         // флаг показа только названий
-        $hide_except_title = (!empty($ctype['options']['privacy_type']) && $ctype['options']['privacy_type'] == 'show_title');
-
-        // Сначала проверяем настройки типа контента
-        if (!empty($ctype['options']['privacy_type']) && in_array($ctype['options']['privacy_type'], array('show_title', 'show_all'), true)) {
-            $model->disablePrivacyFilter();
-            if($ctype['options']['privacy_type'] != 'show_title'){
-                $hide_except_title = false;
-            }
-        }
-
-        // А потом, если разрешено правами доступа, отключаем фильтр приватности
-        if (cmsUser::isAllowed($ctype['name'], 'view_all')) {
-            $model->disablePrivacyFilter(); $hide_except_title = false;
-        }
+        $hide_except_title = $model->applyPrivacyFilter($ctype, cmsUser::isAllowed($ctype['name'], 'view_all'));
 
         // Скрываем записи из скрытых родителей (приватных групп и т.п.)
-        $model->filterHiddenParents();
+        $model->enableHiddenParentsFilter();
 
         if($this->getOption('widget_type') == 'related'){
             if($current_ctype_item){
@@ -109,6 +101,20 @@ class widgetContentList extends cmsWidget {
                 return false;
             }
         }
+
+        // мы на странице группы?
+        $current_group = cmsModel::getCachedResult('current_group');
+        if($this->getOption('auto_group') && $current_group){
+
+            $this->disableCache();
+
+            $model->filterEqual('parent_id', $current_group['id'])->
+                filterEqual('parent_type', 'group');
+
+        }
+
+        // выключаем формирование рейтинга в хуках
+        $ctype['is_rating'] = 0;
 
 		list($ctype, $model) = cmsEventsManager::hook("content_list_filter", array($ctype, $model));
 		list($ctype, $model) = cmsEventsManager::hook("content_{$ctype['name']}_list_filter", array($ctype, $model));

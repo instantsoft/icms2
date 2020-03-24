@@ -18,13 +18,13 @@
     ));
     $this->addToolButton(array(
         'class' => 'save',
-        'title' => LANG_SAVE,
+        'title' => LANG_SAVE_ORDER,
         'href'  => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('datasets_reorder', $ctype['id']))}')"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
 	$this->addToolButton(array(
@@ -40,7 +40,7 @@
     <?php $this->menu('ctype'); ?>
 </div>
 
-<?php $this->renderGrid($this->href_to('ctypes', array('datasets_ajax', $ctype['id'])), $grid); ?>
+<?php $this->renderGrid($this->href_to('ctypes', array('datasets', $ctype['id'])), $grid); ?>
 
 <div class="buttons">
     <?php echo html_button(LANG_SAVE_ORDER, 'save_button', "icms.datagrid.submit('{$this->href_to('ctypes', array('datasets_reorder', $ctype['id']))}')"); ?>

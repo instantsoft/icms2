@@ -7,6 +7,7 @@ function grid_countries($controller){
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('countries_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => true
@@ -16,6 +17,7 @@ function grid_countries($controller){
 		'id' => array(
             'title'  => 'ID',
             'width'  => 20,
+            'class'  => 'd-none d-lg-table-cell',
             'filter' => 'exact'
         ),
         'name' => array(
@@ -36,6 +38,7 @@ function grid_countries($controller){
         ),
 		'ordering' => array(
             'title' => LANG_GEO_POSITION,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 60
         )
     );

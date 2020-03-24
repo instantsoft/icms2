@@ -22,6 +22,34 @@ class onModerationMenuModeration extends cmsAction {
 
         }
 
+        if ($action == 'user_panel'){
+
+            $counts = $this->model->getUserTasksCounts($this->cms_user->id);
+            if (!$counts) { return false; }
+
+            $total = array_sum($counts);
+
+            return array(
+                'url'     => href_to($this->name, 'waiting_list'),
+                'counter' => $total
+            );
+
+        }
+
+        if($action == 'draft') {
+
+            $counts = $this->getUserDraftCounts($this->cms_user->id);
+            if (!$counts) { return false; }
+
+            $total = array_sum($counts);
+
+            return array(
+                'url' => href_to($this->name, 'draft'),
+                'counter' => $total
+            );
+
+        }
+
         return false;
 
     }

@@ -24,8 +24,8 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
     $this->addToolButton(array(
@@ -48,31 +48,9 @@
 ?>
 
 <script>
-    $(document).ready(function(){
-        $('#f_name .input').change(function(){
+    $(function(){
+        $('#f_name .input').on('input', function(){
             $('#f_url_pattern .prefix').html('/'+$(this).val()+'/');
         });
-        $('#f_url_pattern .prefix').html('/'+$('#f_name .input').val()+'/');
-        $('#options_is_manual_title').on('click', function (){
-            if($(this).is(':checked')){
-                $('#f_options_seo_title_pattern').hide();
-            } else {
-                $('#f_options_seo_title_pattern').show();
-            }
-        }).triggerHandler('click');
-        $('#is_auto_keys').on('click', function (){
-            if($(this).is(':checked')){
-                $('#f_options_seo_keys_pattern').show();
-            } else {
-                $('#f_options_seo_keys_pattern').hide();
-            }
-        }).triggerHandler('click');
-        $('#is_auto_desc').on('click', function (){
-            if($(this).is(':checked')){
-                $('#f_options_seo_desc_pattern').show();
-            } else {
-                $('#f_options_seo_desc_pattern').hide();
-            }
-        }).triggerHandler('click');
     });
 </script>

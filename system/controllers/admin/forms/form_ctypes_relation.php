@@ -11,13 +11,34 @@ class formAdminCtypesRelation extends cmsForm {
 
                     new fieldList('child_ctype_id', array(
                         'title' => LANG_CP_RELATION_CHILD,
-                        'generator' => function() use ($ctype_id) {
+                        'generator' => function() use ($ctype_id, $do) {
 
-                            $ctypes = cmsCore::getModel('content')->getContentTypes();
+                            $items = $rel_names = array();
 
-                            $items =  array_collection_to_list($ctypes, 'id', 'title');
+                            $relation_childs = cmsEventsManager::hookAll('ctype_relation_childs', $ctype_id);
 
-                            unset($items[$ctype_id]);
+                            if (is_array($relation_childs)){
+
+                                $relations = cmsCore::getModel('content')->getContentTypeChilds($ctype_id);
+
+                                if($relations){
+                                    foreach ($relations as $relation) {
+                                        $rel_names[] = $relation['target_controller'].':'.$relation['child_ctype_id'];
+                                    }
+                                }
+
+                                foreach($relation_childs as $relation_child){
+                                    foreach($relation_child['types'] as $name => $title){
+                                        if($do == 'add'){
+                                            if(!in_array($name, $rel_names)){
+                                                $items[$name] = $title;
+                                            }
+                                        } else {
+                                            $items[$name] = $title;
+                                        }
+                                    }
+                                }
+                            }
 
                             return $items;
 
@@ -30,6 +51,15 @@ class formAdminCtypesRelation extends cmsForm {
                             array('required')
                         )
                     )),
+
+                    new fieldList('options:dataset_id', array(
+                        'title' => LANG_CP_CTYPE_DATASET,
+						'parent' => array(
+							'list' => 'child_ctype_id',
+							'url'  => href_to('content', 'widget_datasets_ajax')
+						),
+						'items' => array('0'=>'')
+                    ))
 
                 )
             ),
@@ -92,6 +122,7 @@ class formAdminCtypesRelation extends cmsForm {
                     new fieldText('seo_desc', array(
                         'title' => LANG_CP_RELATION_TAB_SEO_DESC,
                         'hint' => LANG_CP_RELATION_TAB_SEO_HINT,
+                        'is_strip_tags' => true,
                         'options'=>array(
                             'max_length'=> 256,
                             'show_symbol_count'=>true

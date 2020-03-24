@@ -45,7 +45,6 @@
             </thead>
             <tbody>
                 <?php foreach($items as $item){ ?>
-                    <?php $item['ctype'] = $ctype; ?>
                     <tr<?php if (!empty($item['is_vip'])){ ?> class="is_vip"<?php } ?>>
                         <?php if (isset($fields['photo']) && $fields['photo']['is_in_list']){ ?>
                             <td class="photo">
@@ -70,10 +69,10 @@
                                 <?php if ($field['name'] == 'title' && $ctype['options']['item_on']){ ?>
                                     <h2>
                                     <?php if ($item['parent_id']){ ?>
-                                        <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php echo htmlspecialchars($item['parent_title']); ?></a>
+                                        <a class="parent_title" href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
                                         &rarr;
                                     <?php } ?>
-                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php echo htmlspecialchars($item[$field['name']]); ?></a>
+                                    <a href="<?php echo href_to($ctype['name'], $item['slug'].'.html'); ?>"><?php html($item[$field['name']]); ?></a>
                                     </h2>
                                 <?php } else { ?>
                                     <?php echo $field['handler']->setItem($item)->parseTeaser($item[$field['name']]); ?>
@@ -88,7 +87,15 @@
     </div>
 
     <?php if ($perpage < $total) { ?>
-        <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
+        <?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
     <?php } ?>
 
-<?php } else { echo LANG_LIST_EMPTY; } ?>
+<?php  } else {
+
+    if(!empty($ctype['labels']['many'])){
+        echo sprintf(LANG_TARGET_LIST_EMPTY, $ctype['labels']['many']);
+    } else {
+        echo LANG_LIST_EMPTY;
+    }
+
+}

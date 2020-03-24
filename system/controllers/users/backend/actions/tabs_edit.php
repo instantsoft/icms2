@@ -21,22 +21,22 @@ class actionUsersTabsEdit extends cmsAction {
 
                 $this->model->updateUsersProfilesTab($tab_id, $tab);
 
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
                 $this->redirectToAction('tabs');
 
             }
 
             if ($errors){
-
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
-
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/tab', array(
-            'do' => 'edit',
-            'tab' => $tab,
-            'form' => $form,
+        return $this->cms_template->render('backend/tab', array(
+            'do'     => 'edit',
+            'tab'    => $tab,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

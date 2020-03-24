@@ -10,6 +10,8 @@ class actionAdminCtypesPropsDelete extends cmsAction {
 
         $content_model->deleteContentProp($ctype_id, $prop_id);
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $this->redirectToAction('ctypes', array('props', $ctype_id));
 
     }

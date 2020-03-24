@@ -6,9 +6,7 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
         $form = $this->getForm('ctypes_field', array('add', $ctype['name']));
@@ -27,10 +25,10 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
             $field_class   = "field" . string_to_camel('_', $field_type);
             $field_object  = new $field_class(null, null);
             $field_options = $field_object->getOptions();
-
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
             foreach ($field_options as $option_field) {
                 $option_field->setName("options:{$option_field->name}");
-                $form->addField('type', $option_field);
+                $form->addField('field_settings', $option_field);
             }
 
             $field = $form->parse($this->request, true);
@@ -49,7 +47,7 @@ class actionAdminCtypesFieldsAdd extends cmsAction {
                 unset($field['new_fieldset']);
 
                 // сохраняем поле
-                $field_id = $content_model->addContentField($ctype['name'], $field);
+                $field_id = $this->model_content->addContentField($ctype['name'], $field);
 
                 if ($field_id){ cmsUser::addSessionMessage(sprintf(LANG_CP_FIELD_CREATED, $field['title']), 'success'); }
 

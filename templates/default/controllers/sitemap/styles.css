@@ -1,0 +1,24 @@
+.sitemap_wrap ul {
+    margin: 0 0 20px;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.sitemap_wrap ul li {
+    margin: 0 0 10px;
+    font-size: 16px;
+    width: 50%;
+}
+.sitemap_wrap ul li:last-child {
+    margin: 0;
+}
+.back_button a {
+    padding: 4px 20px;
+    line-height: 100%;
+    border-radius: 2px;
+    color: #FFF;
+    text-decoration: none;
+    vertical-align: middle;
+    background: #95a5a6;
+}

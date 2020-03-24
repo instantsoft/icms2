@@ -18,7 +18,7 @@ define('LANG_REDIRECT_BLACK_LIST', 'Черный список доменов');
 define('LANG_REDIRECT_BLACK_LIST_HINT', 'Переход по ссылкам с указанных доменов будет блокироваться всегда.');
 define('LANG_REDIRECT_IS_CHECK_REFER', 'Проверять HTTP referer');
 define('LANG_REDIRECT_IS_CHECK_LINK', 'Проверять ссылки');
-define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Ссылки проверяются посредством <a href="https://vk.com/dev/utils.checkLink" target="_blank">открытого метода Вконтакте</a>');
+define('LANG_REDIRECT_IS_CHECK_LINK_HINT', 'Ссылки проверяются посредством <a href="https://vk.com/dev/utils.checkLink" target="_blank" rel="noopener noreferrer">открытого метода Вконтакте</a>');
 define('LANG_REDIRECT_WHITE_LIST', 'Белый список доменов');
 define('LANG_REDIRECT_WHITE_LIST_HINT', 'Эти домены не будут проверяться.');
 define('LANG_REDIRECT_REDIRECT_TIME', 'Таймер перехода для ссылок');

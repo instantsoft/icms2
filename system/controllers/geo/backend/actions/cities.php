@@ -38,7 +38,7 @@ class actionGeoCities extends cmsAction {
 		$country = $this->model->getItemById('geo_countries', $country_id);
 		if(!$country){ cmsCore::error404(); }
 
-        $this->setH1(array($country['name'], $region['name']));
+        $this->cms_template->setPageH1(array($country['name'], $region['name']));
 
         return $this->cms_template->render('backend/cities', array(
 			'grid'    => $grid,

@@ -6,8 +6,11 @@ class modelSearch extends cmsModel{
     protected $original_query;
     protected $type;
     protected $date_interval;
+    protected $three_symbol_search = false;
 
     public function setQuery($query){
+
+        $query = strip_tags(mb_strtolower(trim(urldecode($query))));
 
         $this->original_query = $query;
 
@@ -15,13 +18,27 @@ class modelSearch extends cmsModel{
 
         $stopwords = string_get_stopwords(cmsCore::getLanguageName());
 
+        if (mb_strlen($query) == 3) {
+
+            if(!$stopwords || ($stopwords && !in_array($query, $stopwords))){
+
+                $this->three_symbol_search = true;
+
+                $this->query[] = $query;
+
+                return true;
+
+            }
+
+            return false;
+
+        }
+
         $words = explode(' ', $query);
 
         foreach($words as $word){
 
-            $word = strip_tags(mb_strtolower(trim(urldecode($word))));
-
-            if (mb_strlen($word)<3 || is_numeric($word)) { continue; }
+            if (mb_strlen($word)<3) { continue; }
             if($stopwords && in_array($word, $stopwords)){ continue; }
             if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
 
@@ -60,12 +77,32 @@ class modelSearch extends cmsModel{
         switch ($this->type){
 
             case 'words':
-                $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <';
-                $ft_query .= '+' . implode(' +', $this->query);
+
+                if ($this->three_symbol_search) {
+
+                    $ft_query .= '%'.$this->db->escape($this->original_query).'%';
+
+                } else {
+
+                    $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <(';
+                    $ft_query .= '+' . implode(' +', $this->query).')';
+
+                }
+
                 break;
 
             case 'exact':
-                $ft_query .= '\"' . $this->db->escape($this->original_query) . '\"';
+
+                if ($this->three_symbol_search) {
+
+                    $ft_query .= $this->db->escape($this->original_query);
+
+                } else {
+
+                    $ft_query .= '\"' . $this->db->escape($this->original_query) . '\"';
+
+                }
+
                 break;
 
         }
@@ -88,31 +125,56 @@ class modelSearch extends cmsModel{
         $query = $this->getFullTextQuery();
 
         $filter_sql = '';
-        if($filters){
-            foreach ($filters as $filter) {
-                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
-                $filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
-            }
-            $filter_sql = implode(' AND ', $filter_sql).' AND ';
-        }
-
-        $sql = "SELECT {$select_fields}
-                FROM {#}{$table_name}
-                WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
-                ";
 
         if ($this->date_interval != 'all'){
 
             switch ($this->date_interval){
                 case 'w':
-                    $sql .= "AND DATEDIFF(NOW(), date_pub) <= 7 \n";
+                    $filter_sql .= "DATEDIFF(NOW(), date_pub) <= 7 AND ";
                     break;
                 case 'm':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub \n";
+                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub AND ";
                     break;
                 case 'y':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub \n";
+                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub AND ";
                     break;
+            }
+
+        }
+
+        if($filters){
+            $_filter_sql = array();
+            foreach ($filters as $filter) {
+                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
+                $_filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
+            }
+            $filter_sql .= implode(' AND ', $_filter_sql).' AND ';
+        }
+
+        if ($this->three_symbol_search) {
+
+            $sql = "SELECT {$select_fields}
+                    FROM {#}{$table_name}
+                    WHERE {$filter_sql} CONCAT({$match_fields}) LIKE '{$query}'
+                    ";
+
+        } else {
+
+            if($select_fields == 1){
+
+                $sql = "SELECT {$select_fields}
+                        FROM {#}{$table_name}
+                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
+                        ";
+
+            } else {
+
+                $sql = "SELECT {$select_fields}, MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE) as fsort
+                        FROM {#}{$table_name}
+                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
+                        ORDER BY fsort desc
+                        ";
+
             }
 
         }

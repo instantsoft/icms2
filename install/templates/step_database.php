@@ -1,7 +1,6 @@
 <h1><?php echo LANG_STEP_DATABASE; ?></h1>
 
-<p><?php echo LANG_DATABASE_INFO; ?><br>
-<?php echo LANG_DATABASE_CHARSET_INFO; ?></p>
+<p><?php echo LANG_DATABASE_INFO; ?></p>
 
 <form id="step-form">
 
@@ -39,11 +38,19 @@
         </div>
 
         <div class="field">
+            <label><?php echo LANG_DATABASE_CHARSET; ?></label>
+            <select class="input" name="db[db_charset]">
+                <option value="utf8" <?php if(@$cfg['db_charset'] == 'utf8'){?>selected="selected"<?php } ?>>UTF8</option>
+                <option value="utf8mb4" <?php if(@$cfg['db_charset'] == 'utf8mb4'){?>selected="selected"<?php } ?>>UTF8mb4</option>
+            </select>
+        </div>
+
+        <div class="field">
             <div class="hint"><?php echo LANG_DATABASE_ENGINE_HINT; ?></div>
             <label><?php echo LANG_DATABASE_ENGINE; ?></label>
             <select class="input" name="db[engine]">
-                <option value="MyISAM" <?php if(@$cfg['db_engine'] == 'MyISAM'){?>selected="selected"<?php } ?>>MyISAM</option>
                 <option value="InnoDB" <?php if(@$cfg['db_engine'] == 'InnoDB'){?>selected="selected"<?php } ?>>InnoDB</option>
+                <option value="MyISAM" <?php if(@$cfg['db_engine'] == 'MyISAM'){?>selected="selected"<?php } ?>>MyISAM</option>
             </select>
         </div>
 

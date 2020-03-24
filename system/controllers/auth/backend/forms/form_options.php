@@ -13,6 +13,10 @@ class formAuthOptions extends cmsForm {
             'profileedit' => LANG_REG_CFG_AUTH_REDIRECT_PROFILEEDIT
         );
 
+        $model = new cmsModel();
+
+        $show_notify_old_auth_options = $model->filterIsNull('password_hash')->getCount('{users}');
+
         return array(
 
             array(
@@ -26,6 +30,7 @@ class formAuthOptions extends cmsForm {
 
                     new fieldString('reg_reason', array(
                         'title' => LANG_REG_CFG_DISABLED_NOTICE,
+                        'visible_depend' => array('is_reg_enabled' => array('show' => array('0')))
                     )),
 
                     new fieldCheckbox('is_reg_invites', array(
@@ -44,7 +49,10 @@ class formAuthOptions extends cmsForm {
                     new fieldListGroups('def_groups', array(
                         'title' => LANG_REG_CFG_DEF_GROUP_ID,
                         'show_all' => false,
-						'default' => array(3)
+						'default' => array(3),
+                        'rules' => array(
+                            array('required')
+                        )
                     )),
 
                     new fieldCheckbox('verify_email', array(
@@ -69,6 +77,12 @@ class formAuthOptions extends cmsForm {
                 'title' => LANG_AUTHORIZATION,
                 'childs' => array(
 
+                    new fieldCheckbox('notify_old_auth', array(
+                        'title' => LANG_REG_CFG_NOTIFY_OLD_AUTH,
+                        'hint' => LANG_REG_CFG_NOTIFY_OLD_AUTH_HINT,
+                        'is_visible' => $show_notify_old_auth_options
+                    )),
+
                     new fieldCheckbox('auth_captcha', array(
                         'title' => LANG_REG_CFG_AUTH_CAPTCHA,
                     )),
@@ -85,6 +99,28 @@ class formAuthOptions extends cmsForm {
                         'items'   => $auth_redirect_items
                     )),
 
+                    new fieldList('2fa', array(
+                        'title' => LANG_REG_CFG_AUTH_2FA,
+                        'is_chosen_multiple' => true,
+                        'generator' => function(){
+
+                            $providers = cmsEventsManager::hookAll('auth_twofactor_list');
+
+                            $items = [];
+
+                            if (is_array($providers)){
+                                foreach($providers as $provider){
+                                    foreach($provider['types'] as $name => $title){
+                                        $items[$name] = $title;
+                                    }
+                                }
+                            }
+
+                            return $items;
+
+                        }
+                    ))
+
                 )
             ),
 
@@ -92,6 +128,26 @@ class formAuthOptions extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_AUTH_RESTRICTIONS,
                 'childs' => array(
+
+                    new fieldCheckbox('is_site_only_auth_users', array(
+                        'title' => LANG_CP_SETTINGS_SITE_ONLY_TO_USERS,
+                    )),
+
+                    new fieldList('guests_allow_controllers', array(
+                        'title'     => LANG_REG_CFG_GUESTS_ALLOW_CONTROLLERS,
+                        'default'   => array('auth', 'geo'),
+                        'is_chosen_multiple' => true,
+                        'generator' => function ($item){
+                            $admin_model = cmsCore::getModel('admin');
+                            $controllers = $admin_model->getInstalledControllers();
+                            $items = array('' => '');
+                            foreach($controllers as $controller){
+                                $items[$controller['name']] = $controller['title'];
+                            }
+                            return $items;
+                        },
+                        'visible_depend' => array('is_site_only_auth_users' => array('show' => array('1')))
+                    )),
 
                     new fieldText('restricted_emails', array(
                         'title' => LANG_AUTH_RESTRICTED_EMAILS,
@@ -131,11 +187,17 @@ class formAuthOptions extends cmsForm {
                     new fieldNumber('invites_period', array(
                         'title' => LANG_AUTH_INVITES_PERIOD,
                         'units' => LANG_DAY10,
-                        'default' => 7
+                        'default' => 7,
+                        'rules' => array(
+                            array('min', 1)
+                        )
                     )),
 
                     new fieldNumber('invites_qty', array(
                         'title' => LANG_AUTH_INVITES_QTY,
+                        'rules' => array(
+                            array('min', 1)
+                        )
                     )),
 
                     new fieldNumber('invites_min_karma', array(
@@ -148,11 +210,11 @@ class formAuthOptions extends cmsForm {
 
                     new fieldNumber('invites_min_days', array(
                         'title' => LANG_AUTH_INVITES_DATE,
-                        'units' => LANG_DAY10,
-                    )),
+                        'units' => LANG_DAY10
+                    ))
 
                 )
-            ),
+            )
 
         );
 

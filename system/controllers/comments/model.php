@@ -22,14 +22,15 @@ class modelComments extends cmsModel {
 
     }
 
-    public function updateCommentContent($id, $content, $content_html){
+    public function updateCommentContent($id, $content, $content_html, $data = []){
 
         cmsCache::getInstance()->clean('comments.list');
 
-        return $this->update('comments', $id, array(
-            'content'      => $content,
-            'content_html' => $content_html
-        ));
+        return $this->update('comments', $id, array_merge([
+            'date_last_modified' => null,
+            'content'            => $content,
+            'content_html'       => $content_html
+        ], $data));
 
     }
 
@@ -129,6 +130,8 @@ class modelComments extends cmsModel {
             $this->filterIn('comment_id', $ids)->deleteFiltered('comments_rating');
 
             cmsCache::getInstance()->clean('comments.list');
+
+            cmsCore::getController('activity')->deleteEntry('comments', 'vote.comment', $ids);
 
         }
 
@@ -259,13 +262,13 @@ class modelComments extends cmsModel {
 
     }
 
-    public function getComments(){
+    public function getComments($callback = null){
 
         $user = cmsUser::getInstance();
 
         $this->select('r.score', 'is_rated');
 
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
         $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user->id}'");
 
         if (!$this->order_by){
@@ -276,14 +279,18 @@ class modelComments extends cmsModel {
 
         $this->useCache('comments.list');
 
-        return $this->get('comments', function($item, $model){
+        return $this->get('comments', function($item, $model) use ($callback){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
+
+            if (is_callable($callback)){
+                $item = $callback($item, $model);
+            }
 
             return $item;
 
@@ -298,14 +305,14 @@ class modelComments extends cmsModel {
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
 
@@ -481,43 +488,17 @@ class modelComments extends cmsModel {
     public function getGuestLastCommentTime($ip){
 
         $time = $this->
-                    filterEqual('user_id', 0)->
+                    filterIsNull('user_id')->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
 
-        return strtotime($time);
+        return $time ? strtotime($time) : 0;
 
     }
 
-    public function getCommentsModerators() {
-
-        // сначала ищем юзеров, которым разрешено модерировать
-        $moderators = cmsPermissions::getRulesGroupMembers('comments', 'is_moderator');
-        if(!$moderators){
-
-            // не нашли модераторов, получаем администраторов
-            $moderators = $this->filterEqual('is_admin', 1)->
-                selectList(array(
-                    'i.id'             => 'id',
-                    'i.notify_options' => 'notify_options',
-                    'i.email'          => 'email',
-                    'i.nickname'       => 'nickname',
-                    'i.avatar'         => 'avatar'
-                ), true)->
-                get('{users}', function($item, $model){
-
-                    $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
-                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
-
-                    return $item;
-
-                });
-
-        }
-
-        return $moderators;
-
+    public function isRssFeedEnable() {
+        return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
     }
 
 }

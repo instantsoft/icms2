@@ -1,10 +1,55 @@
 $(function(){
 
-    var ctx = $("#chart-canvas").get(0).getContext("2d");
-    var chart;
-    var controller, section, period = $('#chart').data('period');
-    var dataUrl = $('#chart').data('url');
+    $(document).tooltip({
+        items: '.tooltip',
+        show: { duration: 0 },
+        hide: { duration: 0 },
+        position: {
+            my: "center",
+            at: "top-20"
+        }
+    });
+
+    var ctx, chart, controller, section, period, dataUrl;
     var chart_data = {};
+
+    function initChart(){
+
+        ctx = $("#chart-canvas").get(0).getContext("2d");
+        period = $('#chart').data('period');
+        dataUrl = $('#chart').data('url');
+
+        $('#chart select').on('change', function(e){
+
+            var $option = $(this).find('option:selected');
+
+            controller = $option.data('ctrl');
+            section = $option.data('section');
+
+            loadChartData();
+
+        }).triggerHandler('change');
+
+        $('#chart .pills-menu a').on('click', function(e){
+
+            e.preventDefault();
+
+            var $link = $(this);
+
+            period = $link.data('period');
+
+            loadChartData();
+
+            $('#chart .pills-menu li').removeClass('active')
+            $link.parent('li').addClass('active');
+
+        });
+
+        $(window).on('resize', function (){
+            renderChart();
+        });
+
+    };
 
     function loadChartData(){
 
@@ -17,7 +62,7 @@ $(function(){
             chart_data = {
                 labels: result.labels,
                 datasets: [{
-                    label: "My First dataset",
+                    label: "",
 					fillColor : "rgba(100, 131, 157, 0.1)",
 					strokeColor : "#3498DB",
 					pointColor : "rgba(100, 131, 157, 1)",
@@ -33,42 +78,12 @@ $(function(){
         }, 'json');
 
 
-    }
+    };
 
     function renderChart(){
         if (chart) { chart.destroy(); }
         chart = new Chart(ctx).Bar(chart_data);
     }
-
-    $('#chart select').change(function(e){
-
-        var $option = $(this).find('option:selected');
-
-        controller = $option.data('ctrl');
-        section = $option.data('section');
-
-        loadChartData();
-
-    }).change();
-
-    $('#chart .pills-menu a').click(function(e){
-
-        e.preventDefault();
-
-        var $link = $(this);
-
-        period = $link.data('period');
-
-        loadChartData();
-
-        $('#chart .pills-menu li').removeClass('active')
-        $link.parent('li').addClass('active');
-
-    });
-
-    $(window).on('resize', function (){
-        renderChart();
-    });
 
     $('#dashboard').sortable({
         items: ".col:not(.disabled)",
@@ -84,14 +99,17 @@ $(function(){
         },
         update: function(event, ui) {
             renderChart();
-            colAutoHeight.calc();
             var id_list = new Array();
             $('#dashboard .col:not(.disabled)').each(function(){
-                var id = $(this).data('id');
-                id_list.push(id);
+                var name = $(this).data('name');
+                id_list.push(name);
             });
             $.post($('#dashboard').data('save_order_url'), {items: id_list}, function(){});
         }
     });
+
+    if($('#chart select').length > 0){
+        initChart();
+    }
 
 });

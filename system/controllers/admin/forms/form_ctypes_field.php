@@ -8,6 +8,7 @@ class formAdminCtypesField extends cmsForm {
         return array(
             'basic' => array(
                 'type' => 'fieldset',
+                'title' => LANG_CP_BASIC,
                 'childs' => array(
                     new fieldString('name', array(
                         'title' => LANG_SYSTEM_NAME,
@@ -32,6 +33,10 @@ class formAdminCtypesField extends cmsForm {
                             array('max_length', 255)
                         )
                     )),
+                    new fieldCheckbox('is_enabled', array(
+                        'title' => LANG_IS_ENABLED,
+                        'default' => 1
+                    ))
                 )
             ),
             'type' => array(
@@ -41,10 +46,7 @@ class formAdminCtypesField extends cmsForm {
                     new fieldList('type', array(
                         'default' => 'string',
                         'generator' => function() {
-                            $field_types = array();
-                            $field_types = cmsForm::getAvailableFormFields();
-                            asort($field_types, SORT_STRING);
-                            return $field_types;
+                            return cmsForm::getAvailableFormFields('only_public', 'content');
                         }
                     ))
                 )
@@ -65,7 +67,7 @@ class formAdminCtypesField extends cmsForm {
                     new fieldString('new_fieldset', array(
                         'title' => LANG_CP_FIELD_FIELDSET_ADD,
                         'rules' => array(
-                            array('max_length', 100)
+                            array('max_length', 32)
                         )
                     )),
                 )
@@ -80,6 +82,28 @@ class formAdminCtypesField extends cmsForm {
                     )),
                     new fieldCheckbox('is_in_list', array(
                         'title' => LANG_CP_FIELD_IN_LIST,
+                    )),
+                    new fieldListMultiple('options:context_list', array(
+                        'title' => LANG_CP_FIELD_IN_LIST_CONTEXT,
+                        'default'   => 0,
+                        'show_all'  => true,
+                        'is_vertical' => true,
+                        'generator' => function() use($ctype_name) {
+
+                            $lists = cmsEventsManager::hookAll('ctype_lists_context', 'template:'.$ctype_name);
+
+                            $items = array();
+
+                            if($lists){
+                                foreach ($lists as $list) {
+                                    $items = array_merge($items, $list);
+                                }
+                            }
+
+                            return $items;
+
+                        },
+                        'visible_depend' => array('is_in_list' => array('show' => array('1')))
                     )),
                     new fieldCheckbox('is_in_filter', array(
                         'title' => LANG_CP_FIELD_IN_FILTER,
@@ -167,6 +191,9 @@ class formAdminCtypesField extends cmsForm {
                     new fieldCheckbox('options:is_email', array(
                         'title' => LANG_VALIDATE_EMAIL,
                     )),
+                    new fieldCheckbox('options:is_url', array(
+                        'title' => LANG_VALIDATE_URL,
+                    )),
                     new fieldCheckbox('options:is_unique', array(
                         'title' => LANG_VALIDATE_UNIQUE,
                     )),
@@ -205,6 +232,15 @@ class formAdminCtypesField extends cmsForm {
                     ))
                 )
             ),
+            'add_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_GROUPS_ADD,
+                'childs' => array(
+                    new fieldListGroups('groups_add', array(
+                        'show_all' => true
+                    ))
+                )
+            ),
             'edit_access' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_FIELD_GROUPS_EDIT,
@@ -220,6 +256,18 @@ class formAdminCtypesField extends cmsForm {
                 'childs' => array(
                     new fieldListGroups('filter_view', array(
                         'show_all' => true
+                    ))
+                )
+            ),
+            'author_access' => array(
+                'type' => 'fieldset',
+                'title' => LANG_CP_FIELD_AUTHOR_ACCESS,
+                'childs' => array(
+                    new fieldListMultiple('options:author_access', array(
+                        'items' => array(
+                            'is_read' => LANG_CP_FIELD_READING,
+                            'is_edit' => LANG_CP_FIELD_EDITING,
+                        )
                     ))
                 )
             )

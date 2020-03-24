@@ -4,7 +4,7 @@ class actionUsersProfileTab extends cmsAction {
 
     public $lock_explicit_call = true;
 
-    public function run($profile, $tab_name){
+    public function run($profile, $tab_name, $dataset = false){
 
         // Доступность профиля для данного пользователя
         if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')){
@@ -27,6 +27,15 @@ class actionUsersProfileTab extends cmsAction {
 
         unset($this->tabs);
         unset($this->tabs_controllers);
+
+        $this->request->set('dataset', $dataset);
+
+        $this->cms_template->setPageTitle($tab['title'], $profile['nickname']);
+
+        if($this->listIsAllowed()){
+            $this->cms_template->addBreadcrumb(LANG_USERS, href_to('users'));
+        }
+        $this->cms_template->addBreadcrumb($profile['nickname'], href_to_profile($profile));
 
         $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }

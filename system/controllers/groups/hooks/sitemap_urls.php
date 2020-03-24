@@ -8,15 +8,18 @@ class onGroupsSitemapUrls extends cmsAction {
 
         if ($type != 'profiles') { return $urls; }
 
-        $groups = $this->model->
-                            limit(false)->
-                            getGroupsIds();
+        $this->model->selectOnly('i.id', 'id')->select('i.slug', 'slug')->select('i.title', 'title');
+		$this->model->filterNotEqual('i.is_closed', 1);
+
+        $groups = $this->model->limit(false)->getGroups();
 
         if ($groups){
             foreach($groups as $group){
-                $url = href_to_abs($this->name, $group['id']);
-                $date_last_modified = false;
-                $urls[$url] = $date_last_modified;
+                $urls[] = array(
+                    'last_modified' => null,
+                    'title'         => $group['title'],
+                    'url'           => href_to_abs($this->name, $group['slug'])
+                );
             }
         }
 

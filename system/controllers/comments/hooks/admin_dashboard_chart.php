@@ -5,7 +5,7 @@ class onCommentsAdminDashboardChart extends cmsAction {
 	public function run(){
 
         $data = array(
-            'id' => 'users',
+            'id' => 'comments',
             'title' => LANG_COMMENTS,
             'sections' => array(
                 'comments' => array(

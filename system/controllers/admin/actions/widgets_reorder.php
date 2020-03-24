@@ -2,19 +2,27 @@
 
 class actionAdminWidgetsReorder extends cmsAction {
 
-    public function run(){
+    public function run() {
 
-        $position = $this->request->get('position');
+        if (!$this->request->isAjax()) {
+            return cmsCore::error404();
+        }
+
         $items = $this->request->get('items');
-        $page_id = $this->request->get('page_id');
+        if (!$items) {
+            return cmsCore::error404();
+        }
 
-        if (!$items){ cmsCore::error404(); }
+        $position = $this->request->get('position', '');
+        $page_id  = $this->request->get('page_id', 0);
+        $template = $this->request->get('template', '');
 
-        $widgets_model = cmsCore::getModel('widgets');
+        $new = cmsCore::getModel('widgets')->reorderWidgetsBindings($position, $items, $template, $page_id);
 
-        $widgets_model->reorderWidgetsBindings($position, $items, $page_id);
-
-        $this->halt();
+        return $this->cms_template->renderJSON(array(
+            'error' => false,
+            'new'   => $new
+        ));
 
     }
 

@@ -6,10 +6,7 @@ class actionGroupsGroupLeave extends cmsAction {
 
     public function run($group){
 
-        $is_member = $this->model->getMembership($group['id'], $this->cms_user->id);
-        $is_owner = $group['owner_id'] == $this->cms_user->id;
-
-        if ($is_member && !$is_owner){
+        if ($group['access']['is_member'] && !$group['access']['is_owner']){
 
             $group = cmsEventsManager::hook('group_before_leave', $group);
 
@@ -18,15 +15,17 @@ class actionGroupsGroupLeave extends cmsAction {
             cmsCore::getController('activity')->addEntry($this->name, 'leave', array(
                 'subject_title' => $group['title'],
                 'subject_id'    => $group['id'],
-                'subject_url'   => href_to_rel($this->name, $group['id']),
+                'subject_url'   => href_to_rel($this->name, $group['slug']),
                 'group_id'      => $group['id']
             ));
 
+            cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
+
+            $this->redirectToAction($group['slug']);
+
         }
 
-        cmsUser::addSessionMessage(LANG_GROUPS_LEAVE_MESSAGE, 'info');
-
-        $this->redirectToAction($group['id']);
+        cmsCore::error404();
 
     }
 

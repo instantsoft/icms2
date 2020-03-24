@@ -55,7 +55,7 @@ class cmsPermissions {
                 $options = array();
                 $options[0] = LANG_PERM_OPTION_NULL;
                 foreach($rule['options'] as $id=>$option){
-                    $options[trim($option)] = constant("LANG_PERM_OPTION_".mb_strtoupper(trim($option)));
+                    $options[trim($option)] = constant('LANG_PERM_OPTION_'.strtoupper(trim($option)));
                 }
                 $rule['options'] = $options;
             }
@@ -104,6 +104,24 @@ class cmsPermissions {
         $model = new cmsModel();
 
         $model->filterIn('group_id', $user_groups);
+
+        return self::getPermissionsData($model);
+
+    }
+
+    static function getRuleSubjectPermissions($controller, $subject, $permission) {
+
+        $model = new cmsModel();
+
+        $model->filterEqual('r.controller', $controller)->
+                filterEqual('r.name', $permission)->
+                filterEqual('subject', $subject);
+
+        return self::getPermissionsData($model);
+
+    }
+
+    private static function getPermissionsData($model) {
 
         $model->select('r.name', 'rule_name');
         $model->select('r.type', 'rule_type');
@@ -253,6 +271,8 @@ class cmsPermissions {
         }, 'group_id');
         if(!$groups_ids){ return array(); }
 
+        $model->joinSessionsOnline();
+
         return $model->filterIn('group_id', $groups_ids)->
                 selectOnly('user_id', 'id')->
                 joinUser('user_id', array(
@@ -264,7 +284,6 @@ class cmsPermissions {
                 get('{users}_groups_members', function($item, $model){
 
                     $item['notify_options'] = cmsModel::yamlToArray($item['notify_options']);
-                    $item['is_online'] = cmsUser::userIsOnline($item['id']);
 
                     return $item;
 

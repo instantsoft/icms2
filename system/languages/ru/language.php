@@ -17,18 +17,23 @@
     define('LANG_CONTENT_EDIT_ITEM',         'Редактировать %s');
     define('LANG_CONTENT_DELETE_ITEM',       'Удалить %s');
     define('LANG_CONTENT_DELETE_ITEM_CONFIRM',  'Вы уверены что хотите удалить %s?');
+    define('LANG_CONTENT_RETURN_CONFIRM',    'Вы уверены что хотите отозвать эту запись с проверки?\nОна переместится в ваши черновики.');
+    define('LANG_CONTENT_SAVE_DRAFT',		 'Сохранить в черновиках');
+    define('LANG_CONTENT_MOVE_DRAFT',		 'Перенести в черновики');
+    define('LANG_CONTENT_DRAFT_NOTICE',		 'Запись скрыта в черновики');
+    define('LANG_CONTENT_DRAFT_LIST',		 'Черновики');
+    define('LANG_CONTENT_EDITED',            'Отредактировано');
     define('LANG_CONTENT_NOT_APPROVED',      'Ожидает проверки');
     define('LANG_CONTENT_NOT_IS_PUB',		 'Не публикуется');
-
     define('LANG_CONTENT_BIND_ITEM_FIND_HINT','Введите часть значения');
     define('LANG_CONTENT_OWN_ITEMS',		  'Только мои');
-
     define('LANG_SHOW_FILTER',               'Показать фильтр');
     define('LANG_FILTER',                    'Фильтр');
     define('LANG_FILTERS',                   'Фильтры');
     define('LANG_FILTER_FIELD',              'Фильтр по полю');
     define('LANG_FILTER_ADD',                'Добавить фильтр');
     define('LANG_FILTER_LIKE',               'содержит');
+    define('LANG_FILTER_NOT_LIKE',           'не содержит');
     define('LANG_FILTER_LIKE_BEGIN',         'начинается с');
     define('LANG_FILTER_LIKE_END',           'оканчивается на');
     define('LANG_FILTER_DATE_YOUNGER',       'не старше, дней');
@@ -71,18 +76,47 @@
     define('LANG_WIDGET_WRAPPER_TPL_HINT',	 'Название файла из папки <b>widgets</b> вашего шаблона, без расширения <b>.tpl.php</b>');
     define('LANG_WIDGET_BODY_TPL',			 'Шаблон виджета');
     define('LANG_WIDGET_BODY_TPL_HINT',	     'Название файла из папки <b>%s</b> вашего шаблона, без расширения <b>.tpl.php</b>');
+    define('LANG_WIDGET_DEVICE',			 'На каких устройствах показывать виджет');
+    define('LANG_WIDGET_LANG_SELECT',		 'Для каких языков сайта показывать виджет');
+    define('LANG_WIDGET_TEMPLATE_LAYOUT',	 'Выводить на макетах');
+    define('LANG_DESKTOP_DEVICES',  'Настольные ПК');
+    define('LANG_TABLET_DEVICES',  'Планшеты');
+    define('LANG_MOBILE_DEVICES',  'Телефоны');
 
     //PARSERS
+    define('LANG_PARSER_PREFIX',             'Префикс');
+    define('LANG_PARSER_LIST_IS_AUTOLINK',     'Автоссылка');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_HINT', 'Включение этой опции разбивает (по запятой) значение поля на отдельные слова и каждое делает ссылкой. ');
+    define('LANG_PARSER_LIST_IS_AUTOLINK_FILTER', 'Должен быть включен показ поля в фильтре.');
+    define('LANG_PARSER_BITMASK_CHECKBOX_MULTIPLE', 'Мультивыбор чекбоксами');
+    define('LANG_PARSER_BITMASK_LIST_CLASS', 'Класс списка');
     define('LANG_PARSER_BITMASK_MAX',        'Максимальное количество пунктов списка');
     define('LANG_PARSER_BITMASK_MAX_HINT',   'в предустановленных значениях');
     define('LANG_PARSER_CAPTION',            'Заголовок');
     define('LANG_PARSER_STRING',             'Строковое поле');
+    define('LANG_PARSER_STRING_DISPLAY_VARIANT','Вариант отображения в фильтре');
+    define('LANG_PARSER_STRING_ENTER_DEFAULT',  'Заполнить предустановленные значения из имеющихся данных');
+    define('LANG_PARSER_STRING_SELECT',      'Выпадающий список с предустановленными значениями');
+    define('LANG_PARSER_STRING_CHECKBOX',    'Флаг заполненности поля');
     define('LANG_PARSER_HIDDEN',             'Скрытое поле');
     define('LANG_PARSER_NUMBER',             'Число');
     define('LANG_PARSER_NUMBER_FILTER_RANGE','Фильтр по диапазону');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SLIDE','Выбор диапазона ползунком');
+    define('LANG_PARSER_NUMBER_FILTER_STEP', 'Шаг ползунка');
+    define('LANG_PARSER_NUMBER_FILTER_RANGE_SI', 'Показывать поля ввода вместе с ползунком');
     define('LANG_PARSER_NUMBER_UNITS',       'Единица измерения');
+    define('LANG_PARSER_NUMBER_DECIMAL_INT', 'Количество разрядов целой части');
+    define('LANG_PARSER_NUMBER_DECIMAL_S',   'Количество разрядов дробной части');
+    define('LANG_PARSER_NUMBER_TRIM_ZERO',   'Обрезать дробные нули');
+    define('LANG_PARSER_NUMBER_DEC_POINT',   'Разделитель дробной части');
+    define('LANG_PARSER_NUMBER_IS_CEIL',     'Только целые числа');
+    define('LANG_PARSER_NUMBER_THOUSANDS_SEP', 'Разделитель тысяч');
+    define('LANG_PARSER_NUMBER_UNITS_SEP',   'Отделитель единиц измерения от числа');
+    define('LANG_PARSER_NUMBER_IS_ABS',      'Только положительные числа');
+    define('LANG_PARSER_NUMBER_SAVE_ZERO',   'Сохранять нулевое значение');
     define('LANG_PARSER_CITY',               'Местоположение');
     define('LANG_PARSER_CITY_LOCATION_TYPE', 'Тип местоположения');
+    define('LANG_PARSER_CITY_AUTO_DETECT',   'Определять страну автоматически');
     define('LANG_PARSER_CITY_LOCATION_GROUP', 'Название для группировки');
     define('LANG_PARSER_CITY_LOCATION_GROUP_HINT', 'Если необходимо объединить местоположения страна-область-город, укажите одно имя объединения для всех полей. Как минимум должны быть созданы поля типа "страна" и "область"');
     define('LANG_PARSER_CITY_OUTPUT_STRING', 'Строка вывода значения поля');
@@ -94,7 +128,10 @@
     define('LANG_PARSER_SHOW_SYMBOL_COUNT',  'Показывать количество символов при вводе');
     define('LANG_PARSER_HTML',               'Текст HTML');
     define('LANG_PARSER_HTML_EDITOR',        'Редактор HTML');
+    define('LANG_PARSER_HTML_EDITOR_GR',     'Редакторы HTML для групп');
     define('LANG_PARSER_HTML_FILTERING',     'Обрабатывать типографом');
+    define('LANG_PARSER_PARSE_PATTERNS',     'Обрабатывать специальные шаблоны');
+    define('LANG_PARSER_PARSE_PATTERNS_HINT', 'Используйте поля записи, вставляя их названия в фигурных скобках. Например, для типов контента: <strong>{title}</strong>, <strong>{category}</strong> и т.п. Можно использовать обработку значений, подробнее в <a target="_blank" href="https://docs.instantcms.ru/manual/settings/seo-patterns">документации</a>');
     define('LANG_PARSER_BUILD_REDIRECT_LINK', 'При обработке типографом внешние ссылки формировать через редирект');
     define('LANG_PARSER_HTML_TEASER_LEN',    'Обрезать текст при просмотре списка');
     define('LANG_PARSER_HTML_TEASER_LEN_HINT','Текст будет обрезан до указанной длины, форматирование будет удалено');
@@ -102,6 +139,7 @@
     define('LANG_PARSER_LIST',               'Список');
     define('LANG_PARSER_LIST_FILTER_HINT',   'Номер варианта');
     define('LANG_PARSER_LIST_FILTER_MULTI',  'Множественный выбор в фильтре');
+    define('LANG_PARSER_LIST_FILTER_MULTICH',  'Отображать множественный выбор чекбоксами');
     define('LANG_PARSER_LIST_GROUPS',        'Список групп пользователей');
     define('LANG_PARSER_LIST_GROUPS_SHOW_GUESTS',     'Показывать пункт "Гости"');
     define('LANG_PARSER_LIST_IS_MULTIPLE',   'Разрешить выбор нескольких вариантов');
@@ -110,6 +148,10 @@
     define('LANG_PARSER_URL',                'Ссылка');
     define('LANG_PARSER_URL_REDIRECT',       'Ссылки через редирект');
     define('LANG_PARSER_URL_AUTO_HTTP',      'Автоматически добавлять http://');
+    define('LANG_PARSER_URL_TITLE',          'Возможность установить заголовок для ссылки');
+    define('LANG_PARSER_URL_NOFOLLOW',       'Добавлять атрибут rel="nofollow"');
+    define('LANG_PARSER_URL_CSS_CLASS',      'CSS класс ссылки');
+    define('LANG_PARSER_URL_TITLE_HINT',     'Для отображения названия ссылки, введите ее название через знак "|", например: http://yandex.ru|Яндекс');
     define('LANG_PARSER_AGE',                'Возраст');
     define('LANG_PARSER_AGE_DATE_TITLE',     'Заголовок даты начала отсчета');
     define('LANG_PARSER_AGE_FILTER_RANGE',   'Фильтр по диапазону');
@@ -139,11 +181,20 @@
     define('LANG_PARSER_IMAGE_SIZE_NORMAL',  'Средний');
     define('LANG_PARSER_IMAGE_SIZE_BIG',     'Большой');
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Оригинальный');
+    define('LANG_PARSER_IMAGE_DELETE',       'Удалить изображение с сервера?');
     define('LANG_PARSER_COLOR',              'Цвет');
+    define('LANG_PARSER_COLOR_CT',           'Тип блока выбора цвета');
+    define('LANG_PARSER_COLOR_CT_HUE',       'Оттенок');
+    define('LANG_PARSER_COLOR_CT_SATURATION', 'Насыщенность');
+    define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Яркость');
+    define('LANG_PARSER_COLOR_CT_WHEEL',     'Круг');
+    define('LANG_PARSER_COLOR_CT_SWATCHES',  'Только предустановленные значения');
+    define('LANG_PARSER_COLOR_CT_SWATCHES_OPT', 'Предустановленные значения');
     define('LANG_PARSER_FILE',               'Файл');
     define('LANG_PARSER_FILE_LABEL',         'Заголовок ссылки на файл');
     define('LANG_PARSER_FILE_LABEL_NAME',    'Имя файла');
     define('LANG_PARSER_FILE_LABEL_GET',     'Скачать');
+    define('LANG_PARSER_FILE_LABEL_COUNTER', 'скачан');
     define('LANG_PARSER_FILE_EXTS',          'Допустимые расширения');
     define('LANG_PARSER_FILE_EXTS_HINT',     'Список расширений через запятую');
     define('LANG_PARSER_FILE_EXTS_FIELD_HINT',     'Допустимые типы файлов: %s');
@@ -151,6 +202,7 @@
     define('LANG_PARSER_FILE_MAX_SIZE',      'Максимальный размер, Мб');
     define('LANG_PARSER_FILE_MAX_SIZE_PHP',  'Не больше чем %d Мб (ограничение в настройках PHP)');
     define('LANG_PARSER_FILE_SHOW_SIZE',     'Показывать размер файла');
+    define('LANG_PARSER_FILE_SHOW_COUNTER',  'Показывать счетчик скачиваний');
     define('LANG_PARSER_CURRENT_TIME',       'Текущее время');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH', 'Участвует в полнотекстовом поиске');
     define('LANG_PARSER_IN_FULLTEXT_SEARCH_HINT', 'Внимание! При изменении этой опции индекс будет перестроен. На больших таблицах это может занять продолжительное время.');
@@ -174,13 +226,18 @@
     define('LANG_REG_FIRST_TIME',            'Впервые у нас?');
     define('LANG_REG_ALREADY',               'Уже зарегистрированы?');
     define('LANG_EMAIL',                     'E-mail');
+    define('LANG_EMAIL_NEW',                 'Новый адрес e-mail');
+    define('LANG_EMAIL_NEW_HASH',            'Код подтверждения нового e-mail адреса');
+    define('LANG_CONFIRM_CODE_ERROR',        'Введён неверный код подтверждения');
+    define('LANG_EMAIL_NEW_HINT',            'На новый почтовый ящик придёт письмо с подтверждением');
+    define('LANG_SECURITY',                  'Безопасность');
     define('LANG_PASSWORD',                  'Пароль');
     define('LANG_RETYPE_PASSWORD',           'Повторите пароль');
     define('LANG_USER_GROUP',                'Группа');
     define('LANG_USER_IS_ADMIN',             'Администратор');
     define('LANG_LOGIN_ERROR',               'Вход не выполнен. Проверьте правильность адреса e-mail и пароля.');
     define('LANG_LOGIN_REQUIRED',            'Для доступа к запрошенной странице необходима авторизация');
-    define('LANG_LOGIN_ADMIN_ONLY',          'Войти на отключенный сайт может только администратор');
+    define('LANG_LOGIN_ADMIN_ONLY',          'Вы не можете войти на отключенный сайт');
     define('LANG_NICKNAME',                  'Никнейм');
     define('LANG_ADMIN',                     'Администратор');
     define('LANG_EMAIL_FIND',                'Найти по фрагменту e-mail');
@@ -206,26 +263,53 @@
     define('LANG_ONLINE',                    'Онлайн');
     define('LANG_USERS_PROFILE_LAST_IP',     'Последний IP');
     define('LANG_USERS_PROFILE_LOGDATE',     'Последний визит');
+    define('LANG_USERS_SUBSCRIBE',           'Подписаться');
+    define('LANG_USERS_UNSUBSCRIBE',         'Отписаться');
 
     //MODERATION
     define('LANG_MODERATION',                'Модерация');
+    define('LANG_MODERATION_USERS',          'Ваши материалы, ожидающие проверки');
     define('LANG_MODERATOR',                 'Модератор');
     define('LANG_MODERATORS',                'Модераторы');
     define('LANG_MODERATION_SUCCESS',        'Проверено');
-    define('LANG_MODERATION_APPROVE',        'Разрешить публикацию');
+    define('LANG_MODERATION_APPROVE',        'Одобрить запись');
+    define('LANG_MODERATION_RETURN',         'Отозвать с проверки');
+    define('LANG_MODERATION_RETURN_FOR_REVISION', 'Вернуть на доработку');
+    define('LANG_MODERATION_REFUSE',         'Отклонить и удалить %s');
+    define('LANG_MODERATION_REFUSE_REASON',  'Укажите причину отклонения');
+    define('LANG_MODERATION_REMARKS',        'Замечания');
     define('LANG_MODERATION_APPROVED',       'Страница опубликована');
     define('LANG_MODERATION_APPROVED_BY',    'Проверено модератором');
     define('LANG_MODERATION_PM_AUTHOR',      'Написать автору');
-    define('LANG_MODERATION_NOTICE',         'Материал будет опубликован после проверки модератором');
+    define('LANG_MODERATION_SEND',           'Отправить на модерацию');
+    define('LANG_MODERATION_NOTICE',         'Будет опубликовано после проверки модератором. ');
+    define('LANG_MODERATION_NOTICE_MODER',   'Запись ожидает вашего одобрения. ');
+    define('LANG_MODERATION_NOTICE_VIEW',    '%s %s уже %s её%s, решение еще не принято.');
+    define('LANG_MODERATION_VIEW',           'смотрел');
+    define('LANG_MODERATION_VIEWS',          'смотрели');
     define('LANG_MODERATION_IDLE',           'Отправлено уведомление модератору %s');
     define('LANG_MODERATION_NO_TASKS',       'Нет материалов требующих проверки');
     define('LANG_MODERATION_NOTIFY',         'Новая страница ожидает вашей проверки');
+    define('LANG_MODERATION_RETURN_NOTIFY',  'Автор отозвал материал с проверки');
+    define('LANG_MODERATION_REMARK_NOTIFY',  'Запись возвращена на доработку');
+    define('LANG_PM_MODERATION_COMMENT_APPROVED', 'Модератор одобрил размещение комментария на странице <b><a href="%2$s">%1$s</a></b>%3$s');
+    define('LANG_PM_MODERATION_APPROVED',    'Модератор одобрил размещение страницы <b><a href="%2$s">%1$s</a></b>%3$s');
+    define('LANG_PM_MODERATION_REFUSED',     'Модератор отклонил размещение и удалил страницу <b>%1$s</b>.%2$s Причина отклонения: %3$s');
+    define('LANG_PM_MODERATION_COMMENT_REFUSED', 'Модератор отклонил ваш комментарий на странице <b>%1$s</b>.%2$s Причина отклонения: %3$s');
+    define('LANG_PM_MODERATION_REWORK',      'Модератор возвратил страницу <b><a href="%2$s">%1$s</a></b> на доработку и указал замечания:<br />%3$s');
+    define('LANG_PM_MODERATION_REWORK_DRAFT', 'Устраните, пожалуйста, замечания в тексте.');
 
     //PERMISSIONS
     define('LANG_PERMISSIONS',               'Доступ');
     define('LANG_PERM_RULE',                 'Правило доступа');
     define('LANG_PERM_OPTION_NULL',          'Нет');
+    define('LANG_PERM_OPTION_YES',           'Да');
+    define('LANG_PERM_OPTION_ALLOW',         'Разрешить');
+    define('LANG_PERM_OPTION_PREMOD',        'С премодерацией');
+    define('LANG_PERM_OPTION_PREMOD_OWN',    'Только свои с премодерацией');
+    define('LANG_PERM_OPTION_PREMOD_ALL',    'Все с премодерацией');
     define('LANG_PERM_OPTION_OWN',           'Только свои');
+    define('LANG_PERM_OPTION_OTHER',         'Только чужие');
     define('LANG_PERM_OPTION_ALL',           'Все');
     define('LANG_PERM_OPTION_TO_OWN',        'Только в своих');
     define('LANG_PERM_OPTION_TO_OTHER',      'Только в чужих');
@@ -241,6 +325,11 @@
     define('LANG_PERM_OPTION_ALL_TO_ALL',    'Все ко всем');
     define('LANG_SHOW_TO_GROUPS',            'Показывать группам');
     define('LANG_HIDE_FOR_GROUPS',           'Не показывать группам');
+    define('LANG_SHOW_TO_COUNTRIES',         'Показывать для стран');
+    define('LANG_HIDE_TO_COUNTRIES',         'Не показывать для стран');
+    define('LANG_ACCESS_DENIED',             'Доступ запрещён');
+    define('LANG_ACCESS_GROUP_HINT',         'Группам, к которым вы принадлежите, запрещён доступ к этой странице');
+    define('LANG_ACCESS_COUNTRY_HINT',       'Эта страница недоступна для просмотра в вашей стране');
 
     //AUTHORIZATION
     define('LANG_AUTH_LOGIN',			 'Логин');
@@ -251,6 +340,7 @@
 
     //SYSTEM ERRORS
     define('LANG_ERROR',					 'Ошибка');
+    define('LANG_REQUEST_PARAMS_ERROR',		 'Ошибка в параметрах: %s');
     define('LANG_FORM_ERRORS',				 'Найдены ошибки в форме');
     define('LANG_TRACE_STACK',				 'Последние вызовы');
     define('ERR_COMPONENT_NOT_FOUND',		 'Требуемый компонент не найден');
@@ -259,15 +349,16 @@
     define('ERR_LIBRARY_NOT_FOUND', 		 'Библиотека не найдена или недоступна для чтения');
     define('ERR_FILE_NOT_FOUND',             'Файл не найден');
     define('ERR_CLASS_NOT_FOUND', 		 	 'Класс не найден или недоступен для чтения');
+    define('ERR_CLASS_NOT_DEFINED', 		 'В файле %s не определён класс <b>%s</b>');
     define('ERR_MODULE_NOT_FOUND', 		 	 'Модуль не найден');
     define('ERR_DATABASE_QUERY', 		 	 '<b>Ошибка в запросе БД</b>: <p>%s</p>');
-    define('ERR_DATABASE_CONNECT', 		 	 'Ошибка соединения с базой данных');
     define('ERR_PAGE_NOT_FOUND', 		 	 'Страница не найдена');
+    define('ERR_FORBIDDEN', 		 	     'Доступ запрещён');
     define('ERR_SITE_OFFLINE',               'Сайт отключен');
     define('ERR_SITE_OFFLINE_FULL',          'Сайт отключен. <a href="%s">Включить</a>');
     define('ERR_SEARCH_TITLE',               'Поиск');
     define('ERR_SEARCH_QUERY_INPUT',         'Что ищем?');
-
+    define('ERR_USER_NOT_FOUND',             'Такого пользователя не существует');
 
     //UPLOAD ERRORS
     define('LANG_UPLOAD_ERR_OK',             'Файл успешно загружен');
@@ -290,6 +381,7 @@
     define('ERR_VALIDATE_MIN_LENGTH',        'Слишком короткое значение (мин. длина: %s)');
     define('ERR_VALIDATE_MAX_LENGTH',        'Слишком длинное значение (макс. длина: %s)');
     define('ERR_VALIDATE_EMAIL',             'Неверный формат электронной почты');
+    define('ERR_VALIDATE_URL',               'Неверный формат URL');
     define('ERR_VALIDATE_REGEXP',            'Неверный формат');
     define('ERR_VALIDATE_ALPHANUMERIC',      'Только латинские буквы и цифры');
     define('ERR_VALIDATE_SYSNAME',           'Только латинские буквы (в нижнем регистре), цифры и знаки подчеркивания');
@@ -304,6 +396,7 @@
     define('LANG_VALIDATE_NUMBER',           'Только числа');
     define('LANG_VALIDATE_ALPHANUMERIC',     'Только латинские буквы и цифры');
     define('LANG_VALIDATE_EMAIL',            'Адрес электронной почты');
+    define('LANG_VALIDATE_URL',              'URL');
     define('LANG_VALIDATE_UNIQUE',           'Уникальное значение');
 
     define('ERR_REQ_EMAIL', 		 	 	 'Необходимо указать e-mail!');
@@ -331,13 +424,14 @@
     define('LANG_DELETE_FOLDER',             'Удалить папку');
     define('LANG_DELETE_FOLDER_CONFIRM',     'Вы уверены что хотите удалить папку?\nВсе содержимое также будет удалено!');
 
-    define('LANG_BY_DEFAULT',                'По-умолчанию');
+    define('LANG_BY_DEFAULT',                'По умолчанию');
     define('LANG_BASIC_OPTIONS',             'Общие');
     define('LANG_YES',                       'Да');
     define('LANG_NO',                        'Нет');
     define('LANG_LIST_LIMIT',                'Записей в списке');
     define('LANG_LIST_ALL',					 'Показать все');
     define('LANG_LIST_EMPTY',                'Нет элементов для отображения');
+    define('LANG_TARGET_LIST_EMPTY',         'Нет %s для отображения');
     define('LANG_LIST_NONE_SELECTED',        'Ничего не выделено');
     define('LANG_DOWNLOAD',                  'Скачать');
     define('LANG_UPLOAD',                    'Загрузить');
@@ -357,6 +451,7 @@
     define('LANG_ADD_MENUITEM',				 'Создать пункт меню');
     define('LANG_MENU_MORE',                 'Ещё');
     define('LANG_VIEW', 					 'Просмотр');
+    define('LANG_COPY', 					 'Копировать');
     define('LANG_EDIT', 					 'Редактировать');
     define('LANG_EDIT_SELECTED',			 'Редактировать выделенные');
     define('LANG_SHOW', 					 'Показать');
@@ -377,16 +472,20 @@
     define('LANG_ITEM_RESTORE_SUCCESS', 	 'Запись успешно восстановлена');
     define('LANG_DELETE_SELECTED',			 'Удалить выделенные');
     define('LANG_DELETE_SELECTED_CONFIRM',   'Удалить выделенные элементы?');
+    define('LANG_TRASH_DELETE_SELECTED_CONFIRM', 'Удалить выделенные элементы в корзину?');
     define('LANG_MOVE',                      'Перенести');
     define('LANG_MOVE_TO_CATEGORY',          'Перенести в категорию');
     define('LANG_ON',	 					 'Вкл.');
     define('LANG_OFF', 						 'Выкл.');
     define('LANG_SAVE',						 'Сохранить');
+    define('LANG_PUBLISH',					 'Опубликовать');
     define('LANG_SAVE_CHANGES',              'Сохранить изменения');
     define('LANG_SAVE_ORDER',                'Сохранить порядок');
     define('LANG_SAVING',                    'Сохранение...');
     define('LANG_PREVIEW',                   'Предпросмотр');
     define('LANG_SEND',						 'Отправить');
+    define('LANG_SEND_AGAIN',				 'Отправить еще раз');
+    define('LANG_SEND_AGAIN_VIA',			 'Отправить еще раз через ');
     define('LANG_INSTALL',					 'Установить');
     define('LANG_INSERT',					 'Вставить');
     define('LANG_CANCEL',					 'Отменить');
@@ -407,6 +506,7 @@
     define('LANG_IS_ENABLED',                'Активность');
     define('LANG_HELP',                      'Помощь');
     define('LANG_HELP_URL',                  'http://docs.instantcms.ru');
+    define('LANG_IN',                        'в');
 
     //NAVIGATION
     define('LANG_HOME',                      'Главная');
@@ -422,13 +522,21 @@
     define('LANG_PAGE_CURRENT_DELETE',       'Удалить текущую страницу');
     define('LANG_PAGES_SHOWN',               'Показаны %d-%d из %d');
     define('LANG_PAGES_SHOW_PERPAGE',        'Показывать по');
+	define('LANG_SHOW_MORE',                 'Показать больше');
+	define('LANG_RETURN_TO_FIRST',           'Вернуться к началу');
 
     //FORMS
     define('LANG_SUBMIT', 					 'Отправить');
     define('LANG_SUBMIT_NOT_SAVE',			 'Покинуть страницу? Возможно, внесённые изменения не сохранятся.');
+    define('LANG_DOT',                       'Точка');
+    define('LANG_COMMA',                     'Запятая');
+    define('LANG_SPACE',                     'Пробел');
+    define('LANG_APOSTROPHE',                'Апостроф');
+    define('LANG_ANOTHER',                   'Другой');
 
     //LAYOUT
     define('LANG_PAGE_BODY',                 'Тело страницы');
+    define('LANG_PAGE_BREADCRUMB',           'Глубиномер');
     define('LANG_PAGE_MENU',                 'Меню страницы');
     define('LANG_PAGE_HEADER',               'Шапка страницы');
     define('LANG_PAGE_FOOTER',               'Подвал страницы');
@@ -442,8 +550,11 @@
     define('LANG_INFORMATION',               'Информация');
     define('LANG_CONTENT', 					 'Содержимое');
     define('LANG_CATEGORY',                  'Категория');
+    define('LANG_CATEGORIES',                'Категории');
     define('LANG_CATEGORY_TITLE',            'Название категории');
     define('LANG_CATEGORY_DESCRIPTION',      'Описание категории');
+    define('LANG_CATEGORY_IS_HIDDEN',        'Скрытая категория');
+    define('LANG_CATEGORY_COVER',            'Обложка категории');
     define('LANG_FOLDER',                    'Папка');
     define('LANG_ROOT_NODE',                 'Корень');
     define('LANG_ROOT_CATEGORY',             'Корневая категория');
@@ -456,6 +567,7 @@
     define('LANG_SLUG',                      'URL');
     define('LANG_PRIVACY',                   'Приватность');
     define('LANG_PRIVACY_PUBLIC',            'Показывать всем');
+    define('LANG_PRIVACY_HINT',              'Это приватная запись');
     define('LANG_PRIVACY_PRIVATE',           'Показывать только друзьям');
     define('LANG_PRIVACY_PRIVATE_HINT',      'Это приватная запись. Ее могут посмотреть только друзья автора.');
     define('LANG_ON_FRONT',				 	 'На главной');
@@ -470,10 +582,11 @@
     //SEO
     define('LANG_SEO',                       'SEO');
     define('LANG_ROOT_SEO',                  'SEO для главной страницы');
+    define('LANG_SEO_H1',                    'Тег H1 страницы');
     define('LANG_SEO_TITLE',                 'Тайтл страницы');
-    define('LANG_SEO_KEYS',                  'Ключевые слова');
+    define('LANG_SEO_KEYS',                  'Ключевые слова (meta keywords)');
     define('LANG_SEO_KEYS_HINT',             'Ключевые слова страницы, через запятую');
-    define('LANG_SEO_DESC',                  'Описание');
+    define('LANG_SEO_DESC',                  'Описание (meta description)');
     define('LANG_SEO_DESC_HINT',             'Краткое описание страницы для поисковых систем');
     define('LANG_TAGS',                      'Теги');
     define('LANG_TAGS_HINT',                 'Ключевые слова, через запятую');
@@ -493,6 +606,12 @@
     define('LANG_CH1',                       'символ');
     define('LANG_CH2',                       'символа');
     define('LANG_CH10',                      'символов');
+    define('LANG_TIME1',                     'раз');
+    define('LANG_TIME2',                     'раза');
+    define('LANG_TIME10',                    'раз');
+    define('LANG_SUBSCRIBERS_SPELL',         'подписчик|подписчика|подписчиков');
+    define('LANG_DOWNLOAD_SPELL',            'скачивание|скачивания|скачиваний');
+    define('LANG_USERS_SPELL',               'пользователь|пользователя|пользователей');
 
     define('LANG_ISLEFT',                    'осталось');
 
@@ -543,7 +662,15 @@
     //MAIL
     define('LANG_MAIL_DEFAULT_ALT',          'Для просмотра сообщения требуется почтовый клиент с поддержкой HTML');
 
-    define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="http://instantcms.ru/">InstantCMS</a>');
-    define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="http://www.fatcow.com/free-icons">FatCow</a>');
-    define('LANG_DEBUG_QUERY_TIME',          'Запрос занял');
+    define('LANG_POWERED_BY_INSTANTCMS',     'Работает на <a href="https://instantcms.ru/">InstantCMS</a>');
+    define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="https://ru.icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');
+
+    define('LANG_DEBUG_QUERY_TIME',          'Время выполнения');
+    define('LANG_DEBUG',                     'Отладка');
+    define('LANG_DEBUG_TAB_DB',              'SQL');
+    define('LANG_DEBUG_TAB_CACHE',           'Кэш');
+    define('LANG_DEBUG_TAB_EVENTS_EMPTY',    'Неактивные события');
+    define('LANG_DEBUG_TAB_EVENTS',          'Отработавшие события');
+    define('LANG_DEBUG_TAB_WIDGETS',         'Виджеты');
+    define('LANG_DEBUG_TAB_INCLUDES',        'Подключенные файлы');

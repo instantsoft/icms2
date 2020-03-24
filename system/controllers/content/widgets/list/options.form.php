@@ -63,7 +63,7 @@ class formWidgetContentListOptions extends cmsForm {
                             $model = cmsCore::getModel('content');
                             $tree = $model->getContentTypes();
 
-                            $items = array();
+                            $items = array(0 => LANG_WD_CONTENT_FILTER_DETECT);
 
                             if ($tree) {
                                 foreach ($tree as $item) {
@@ -74,6 +74,11 @@ class formWidgetContentListOptions extends cmsForm {
                             return $items;
 
                         },
+                    )),
+
+                    new fieldCheckbox('options:auto_group', array(
+                        'title'   => LANG_CP_WO_AUTO_GROUP,
+                        'hint'    => LANG_CP_WO_AUTO_GROUP_HINT
                     )),
 
 					new fieldList('options:category_id', array(

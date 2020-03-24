@@ -13,7 +13,7 @@ class formActivityOptions extends cmsForm {
 
                     new fieldList('types', array(
                         'is_multiple' => true,
-                        'multiple_select_deselct' => true,
+                        'multiple_select_deselect' => true,
                         'generator' => function(){
                             $types = cmsCore::getModel('activity')->getTypes();
                             return array_collection_to_list($types, 'id', 'title');

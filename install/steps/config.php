@@ -39,7 +39,6 @@ function create_config($path, $file){
         'upload_root'			=> $_SESSION['install']['paths']['upload'],
         'upload_host'			=> $_SESSION['install']['hosts']['upload'],
         'cache_root'			=> $_SESSION['install']['paths']['cache'],
-        'is_site_only_auth_users' => 0,
         'is_site_on'            => 1,
         'off_reason'            => LANG_CFG_OFF_REASON,
         'sitename'				=> $_SESSION['install']['site']['sitename'],
@@ -48,7 +47,7 @@ function create_config($path, $file){
         'date_format_js'		=> LANG_CFG_DATE_FORMAT_JS,
         'time_zone'				=> LANG_CFG_TIME_ZONE,
         'template'				=> 'default',
-        'template_admin'		=> 'default',
+        'template_admin'		=> 'admincoreui',
         'template_mobile'		=> '',
         'template_tablet'		=> '',
         'db_host'				=> $_SESSION['install']['db']['host'],
@@ -57,6 +56,7 @@ function create_config($path, $file){
         'db_pass'				=> $_SESSION['install']['db']['pass'],
         'db_prefix'				=> $_SESSION['install']['db']['prefix'],
         'db_engine'				=> $_SESSION['install']['db']['engine'],
+        'db_charset'		    => $_SESSION['install']['db']['db_charset'],
         'clear_sql_mode'	    => $_SESSION['install']['db']['clear_sql_mode'],
         'db_users_table'		=> "{$_SESSION['install']['db']['users_table']}",
         'language'				=> LANG,
@@ -66,6 +66,7 @@ function create_config($path, $file){
         'ct_default'			=> 'content',
         'frontpage'             => 'none',
         'debug'					=> 0,
+        'manifest_from_files'   => 0,
         'emulate_lag'			=> '',
         'cache_enabled'			=> 0,
         'cache_method'			=> 'files',
@@ -83,11 +84,19 @@ function create_config($path, $file){
         'mail_smtp_auth'		=> 1,
         'mail_smtp_user'		=> 'user@example.com',
         'mail_smtp_pass'		=> '',
-        'is_check_updates'		=> 1,
+        'is_check_updates'		=> $_SESSION['install']['site']['is_check_updates'],
         'detect_ip_key'		    => 'REMOTE_ADDR',
         'allow_ips'		        => '',
         'default_editor'		=> 'redactor',
-        'show_breadcrumbs'		=> 1
+        'show_breadcrumbs'		=> 1,
+        'check_spoofing_type'   => 0,
+        'production_time'       => time(),
+        'native_yaml'           => function_exists('yaml_emit') ? 0 : 0, // отключим пока что для всех, не везде совместимо работает
+        'session_save_handler'  => 'files',
+        'session_name'          => strtoupper(uniqid('icms')),
+        'session_save_path'     => $_SESSION['install']['paths']['session_save_path'],
+        'session_maxlifetime'   => ini_get('session.gc_maxlifetime')/60,
+        'controllers_without_widgets' => array('admin')
     );
 
     write_config($file, $config);
@@ -107,7 +116,7 @@ function write_config($file, $config){
 
         $value = var_export($value, true);
 
-        $tabs = 7 - ceil((mb_strlen($key)+3)/4);
+        $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
         $dump .= "\t'{$key}'";
         $dump .= str_repeat("\t", $tabs);

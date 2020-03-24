@@ -1,6 +1,9 @@
 <?php
-$this->addJS( $this->getJavascriptFileName('photos') );
-$this->addJS( $this->getJavascriptFileName('jquery-flex-images') );
+
+    $this->addTplJSName([
+        'photos',
+        'jquery-flex-images'
+    ]);
 
 $this->setPageTitle($page_title);
 $this->setPageDescription($page_title);
@@ -34,8 +37,8 @@ $this->addBreadcrumb($page_title);
 
 <?php if($photos && ($has_next || (!$has_next && $page > 1))){ ?>
 <a class="show-more" href="<?php echo $item['base_url'].((strpos($item['base_url'], '?') !== false) ? '&' : '?').'photo_page='.($has_next ? ($page+1) : 1); ?>" onclick="return icms.photos.showMore(this);" data-url="<?php echo href_to('photos', 'more', array($item_type, $item['id'])); ?>" data-url-params="<?php html(json_encode($item['url_params'])); ?>" data-first-page-url="<?php echo $item['base_url']; ?>">
-    <span data-to-first="<?php echo LANG_PHOTOS_RETURN_TO_FIRST; ?>">
-        <?php if($has_next){ echo LANG_PHOTOS_SHOW_MORE; } else { echo LANG_PHOTOS_RETURN_TO_FIRST; } ?>
+    <span data-to-first="<?php echo LANG_RETURN_TO_FIRST; ?>">
+        <?php if($has_next){ echo LANG_SHOW_MORE; } else { echo LANG_RETURN_TO_FIRST; } ?>
     </span>
 </a>
 

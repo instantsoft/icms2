@@ -6,8 +6,8 @@ icms.content = (function ($) {
     this.item_id = 0;
 
     this.onDocumentReady = function() {
-        // вся дальнейшая иницализация оставлена для совместимости со страыми шаблонами
-        // с 2.5.0 используется механизм this.initMultiCats
+        /** вся дальнейшая иницализация оставлена для совместимости со страыми шаблонами
+        с 2.5.0 используется механизм this.initMultiCats**/
 		var is_multi_cats = $('#fset_multi_cats').length > 0;
 		if (!is_multi_cats) { return; }
 		$('.content_multi_cats_form').show().appendTo('#fset_multi_cats');
@@ -19,7 +19,7 @@ icms.content = (function ($) {
 			$('select', dom).val(add_cats[c]);
 		}
 	};
-    // оставлено для совместимости, не используется в движке
+    /** оставлено для совместимости, не используется в движке **/
 	this.addCat = function(){
 		var input = $('<select>').attr("name", "add_cats[]").html($('select#category_id').html());
 		var removeLink = $('<a>').attr('href', 'javascript:').attr('title', LANG_DELETE);
@@ -48,7 +48,9 @@ icms.content = (function ($) {
         $(select_custom).chosen({
             width: '100%',
             no_results_text: LANG_LIST_EMPTY,
-            placeholder_text_multiple: LANG_CONTENT_SELECT_CATEGORIES
+            placeholder_text_multiple: LANG_CONTENT_SELECT_CATEGORIES,
+            search_contains: true,
+            hide_results_on_select: false
         });
 
         $(select_base).on('change', function (){

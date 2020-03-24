@@ -4,8 +4,8 @@ class onContentRssFeedList extends cmsAction {
 
 	public function run($feed){
 
-        $category_id = $this->request->get('category', false);
-        $user_id     = $this->request->get('user', false);
+        $category_id = $this->request->get('category', 0);
+        $user_id     = $this->request->get('user', 0);
 
         $category = $author = array();
 
@@ -27,7 +27,17 @@ class onContentRssFeedList extends cmsAction {
 
         $this->model->limit($feed['limit']);
 
-        $feed['items'] = $this->model->getContentItems($feed['ctype_name']);
+        list ($feed, $category, $author, $this->model) = cmsEventsManager::hook('content_list_rss_filter', array($feed, $category, $author, $this->model));
+        list ($feed, $category, $author, $this->model) = cmsEventsManager::hook("content_{$feed['ctype_name']}_list_rss_filter", array($feed, $category, $author, $this->model));
+
+        $feed['items'] = $this->model->getContentItems($feed['ctype_name'], function ($item, $model, $ctype_name){
+
+            $item['page_url'] = href_to_abs($ctype_name, $item['slug'].'.html');
+            $item['comments_url'] = $item['page_url'].'#comments';
+
+            return $item;
+
+        });
 
         $feed = cmsEventsManager::hook('before_render_'.$feed['ctype_name'].'_feed_list', $feed);
 

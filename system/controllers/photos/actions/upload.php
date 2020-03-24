@@ -6,6 +6,14 @@ class actionPhotosUpload extends cmsAction{
 
         if (!cmsUser::isAllowed('albums', 'add')) { cmsCore::error404(); }
 
+        $request_album_id = $this->request->get('album_id', 0);
+
+        if($request_album_id){
+            $album_id = $request_album_id;
+        } else {
+            $album_id = (int)$album_id;
+        }
+
         if ($this->request->isAjax()){
 
             return $this->processUpload($album_id);
@@ -49,10 +57,16 @@ class actionPhotosUpload extends cmsAction{
 					))->getContentItems('albums');
 
         if (!$albums){
-            $this->redirect(href_to('albums', 'add'));
+
+            $group_id = $this->request->get('group_id', 0);
+
+            $this->redirect(href_to('albums', 'add').($group_id ? '?group_id='.$group_id : ''));
         }
 
-        $album_id = $album_id ? (int)$album_id : $this->request->get('album_id', 0);
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
 
         if ($this->request->has('submit')){
 
@@ -102,7 +116,11 @@ class actionPhotosUpload extends cmsAction{
                     'album_id'   => $album['id'],
                     'title'      => strip_tags($photo_titles[$photo_id] ? $photo_titles[$photo_id] : sprintf(LANG_PHOTOS_PHOTO_UNTITLED, $photo_id)),
                     'content_source' => ($photo_contents[$photo_id] ? $photo_contents[$photo_id] : null),
-                    'content'    => ($photo_contents[$photo_id] ? cmsEventsManager::hook('html_filter', $photo_contents[$photo_id]) : null),
+                    'content'        => ($photo_contents[$photo_id] ? cmsEventsManager::hook('html_filter', [
+                        'text'         => $photo_contents[$photo_id],
+                        'is_auto_br'   => (!$editor_params['editor'] || $editor_params['editor'] == 'markitup'),
+                        'build_smiles' => $editor_params['editor'] == 'markitup'
+                    ]) : null),
                     'is_private' => (isset($photo_is_privates[$photo_id]) ? (int)$photo_is_privates[$photo_id] : 0),
                     'type'       => (isset($photo_types[$photo_id]) ? (int)$photo_types[$photo_id] : null),
                     'ordering'   => $last_order
@@ -116,6 +134,8 @@ class actionPhotosUpload extends cmsAction{
 
             $photos = $this->model->assignPhotoList($photo_list);
 
+            list($photos, $album, $ctype) = cmsEventsManager::hook('content_photos_after_add', array($photos, $album, $ctype));
+
             $activity_thumb_images = array();
 
             $photos_count = count($photos);
@@ -128,8 +148,9 @@ class actionPhotosUpload extends cmsAction{
                     $small_preset = end($_presets);
 
                     $activity_thumb_images[] = array(
-                        'url' => href_to_rel('photos', $photo['slug'].'.html'),
-                        'src' => html_image_src($photo['image'], $small_preset)
+                        'url'   => href_to_rel('photos', $photo['slug'].'.html'),
+                        'src'   => html_image_src($photo['image'], $small_preset),
+                        'title' => $photo['title']
                     );
                 }
             }
@@ -175,6 +196,7 @@ class actionPhotosUpload extends cmsAction{
 
         $this->cms_template->render('upload', array(
             'title'         => LANG_PHOTOS_UPLOAD,
+            'editor_params' => $editor_params,
             'is_edit'       => false,
             'ctype'         => $ctype,
             'albums'        => $albums,
@@ -189,8 +211,6 @@ class actionPhotosUpload extends cmsAction{
     }
 
     public function processUpload($album_id){
-
-        $album_id = $album_id ? $album_id : $this->request->get('album_id', 0);
 
         $album = $this->model->getAlbum($album_id);
 
@@ -221,18 +241,27 @@ class actionPhotosUpload extends cmsAction{
             ));
         }
 
-        $result = $this->cms_uploader->upload('qqfile');
+        $result = $this->cms_uploader->setAllowedMime([
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/webp'
+        ])->upload('qqfile');
 
         if ($result['success']){
-            if (!$this->cms_uploader->isImage($result['path'])){
+
+            try {
+                $image = new cmsImages($result['path']);
+            } catch (Exception $exc) {
                 $result['success'] = false;
                 $result['error']   = LANG_UPLOAD_ERR_MIME;
             }
+
         }
 
         if (!$result['success']){
             if(!empty($result['path'])){
-                $this->cms_uploader->remove($result['path']);
+                files_delete_file($result['path'], 2);
             }
             return $this->cms_template->renderJSON($result);
         }
@@ -245,19 +274,11 @@ class actionPhotosUpload extends cmsAction{
 				continue;
 			}
 
-			$path = $this->cms_uploader->resizeImage($result['path'], array(
-				'width'     => $p['width'],
-                'height'    => $p['height'],
-                'is_square' => $p['is_square'],
-                'quality'   => (($p['is_watermark'] && $p['wm_image']) ? 100 : $p['quality'])
-            ));
-			if (!$path) { continue; }
+            $resized_path = $image->resizeByPreset($p);
 
-			if ($p['is_watermark'] && $p['wm_image']){
-				img_add_watermark($path, $p['wm_image']['original'], $p['wm_origin'], $p['wm_margin'], $p['quality']);
-			}
+            if (!$resized_path) { continue; }
 
-			$result['paths'][$p['name']] = $path;
+			$result['paths'][$p['name']] = $resized_path;
 
 		}
 

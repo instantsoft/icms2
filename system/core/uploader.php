@@ -10,6 +10,9 @@ class cmsUploader {
     private $last_error = false;
     private $upload_errors = array();
 
+    private $allowed_mime = false;
+    private $allowed_mime_ext = [];
+
     public function __construct() {
         $this->upload_errors = array(
             UPLOAD_ERR_OK         => LANG_UPLOAD_ERR_OK,
@@ -23,6 +26,21 @@ class cmsUploader {
         );
         $this->user_id = cmsUser::getInstance()->id;
         $this->site_cfg = cmsConfig::getInstance();
+    }
+
+    public function setAllowedMime($types) {
+
+        $this->allowed_mime = $types;
+
+        $mime_types = cmsCore::includeAndCall('system/libs/mimetypes.php', 'getMimeTypes');
+
+        foreach ($this->allowed_mime as $mime) {
+            if(isset($mime_types[$mime])){
+                $this->allowed_mime_ext[] = $mime_types[$mime];
+            }
+        }
+
+        return $this;
     }
 
     public function setFileName($name) {
@@ -94,12 +112,12 @@ class cmsUploader {
             if($this->file_name){
                 $file_name = str_replace('.'.$file_ext, '', files_sanitize_name($this->file_name.'.'.$file_ext));
             } else {
-                $file_name = substr(md5(uniqid().microtime(true)), 0, 8);
+                $file_name = substr(md5(microtime(true)), 0, 8);
             }
         }
 
         if (file_exists($path.$file_name.'.'.$file_ext)) {
-            return $this->getFileName($path, $file_ext, $file_name.'_'.uniqid());
+            return $this->getFileName($path, $file_ext, $file_name.'_'.md5(microtime(true)));
         }
 
         return $file_name.'.'.$file_ext;
@@ -109,6 +127,9 @@ class cmsUploader {
 //============================================================================//
 //============================================================================//
 
+    /**
+     * Этот метод устаревший, используйте класс cmsImages
+     */
     public function resizeImage($source_file, $size){
 
         $dest_dir  = $this->getUploadDestinationDirectory();
@@ -117,7 +138,7 @@ class cmsUploader {
 
         $dest_file = $dest_dir . $dest_name;
 
-        if (!isset($size['height'])) { $size['height'] = $size['width']; }
+        if (!isset($size['height'])) { $size['height'] = 0; }
         if (!isset($size['quality'])) { $size['quality'] = 90; }
 
         if (img_resize($source_file, $dest_file, $size['width'], $size['height'], $size['is_square'], $size['quality'])) {
@@ -153,6 +174,18 @@ class cmsUploader {
         }
 
         return in_array(mb_strtolower($ext), $allowed, true);
+
+    }
+
+    private function isMimeTypeAllowed($file_path) {
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+        $file_mime = finfo_file($finfo, $file_path);
+
+        if($file_mime === false){ return false; }
+
+        return in_array($file_mime, $this->allowed_mime);
 
     }
 
@@ -217,6 +250,16 @@ class cmsUploader {
             );
         }
 
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($source)){
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
+
         if ($allowed_size){
             if ($dest_size > $allowed_size){
                 return array(
@@ -231,7 +274,10 @@ class cmsUploader {
             $destination = $this->getUploadDestinationDirectory();
         } else {
             $destination = $this->site_cfg->upload_path . $destination . '/';
-            $this->file_name = $dest_name;
+        }
+
+        if (!$this->file_name) {
+            $this->file_name = pathinfo($dest_name, PATHINFO_FILENAME);
         }
 
         $destination .= $this->getFileName($destination, $dest_ext);
@@ -245,8 +291,37 @@ class cmsUploader {
 
     public function uploadFromLink($post_filename, $allowed_ext = false, $allowed_size = 0, $destination = false) {
 
-        $dest_ext  = strtolower(pathinfo(parse_url(trim($_POST[$post_filename]), PHP_URL_PATH), PATHINFO_EXTENSION));
-        $dest_name = files_sanitize_name($_POST[$post_filename]);
+        $link = $file_name = trim($_POST[$post_filename]);
+
+        // проверяем редирект и имя файла
+        if (function_exists('curl_init')){
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $link);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_HEADER, true);
+            curl_setopt($curl, CURLOPT_NOBODY, true);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+            $headers = curl_exec($curl);
+            curl_close($curl);
+            $matches = array();
+            if(preg_match("/(?:Location:|URI:)([^\n]+)*/is", $headers, $matches)){
+                $url = trim($matches[1]);
+                if(strpos($url, 'http') !== 0){
+                    $url_data = parse_url($link);
+                    $link = $url_data['scheme'].'://'.$url_data['host'].$url;
+                } else {
+                    $link = $url;
+                }
+                $_POST[$post_filename] = $link;
+                return $this->uploadFromLink($post_filename, $allowed_ext, $allowed_size, $destination);
+            }
+            if(preg_match('#filename="([^"]+)#uis', $headers, $matches)){
+                $file_name = trim($matches[1]);
+            }
+        }
+
+        $dest_ext  = strtolower(pathinfo(parse_url($file_name, PHP_URL_PATH), PATHINFO_EXTENSION));
+        $dest_name = files_sanitize_name($file_name);
 
         if(!$this->checkExt($dest_ext, $allowed_ext)){
             return array(
@@ -256,7 +331,7 @@ class cmsUploader {
             );
         }
 
-        $file_bin = file_get_contents_from_url($_POST[$post_filename]);
+        $file_bin = file_get_contents_from_url($link);
 
         if(!$file_bin){
             return array(
@@ -290,6 +365,18 @@ class cmsUploader {
 		$f = fopen($destination, 'w+');
 		fwrite($f, $file_bin);
         fclose($f);
+
+
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
+                    'success' => false,
+                    'name'    => $dest_name
+                );
+            }
+        }
 
         return array(
             'success' => true,
@@ -396,6 +483,18 @@ class cmsUploader {
             );
         }
 
+        if($this->allowed_mime !== false){
+            if(!$this->isMimeTypeAllowed($destination)){
+                @unlink($destination);
+                return array(
+                    'error'   => LANG_UPLOAD_ERR_MIME.'. '.sprintf(LANG_PARSER_FILE_EXTS_FIELD_HINT, implode(', ', $this->allowed_mime_ext)),
+                    'success' => false,
+                    'name'    => $orig_name,
+                    'path'    => ''
+                );
+            }
+        }
+
         return array(
             'success' => true,
             'path'    => $destination,
@@ -450,7 +549,6 @@ class cmsUploader {
 
     }
 
-//============================================================================//
     /**
      * Удаляет файл
      * @param string $file_path
@@ -460,34 +558,14 @@ class cmsUploader {
         return @unlink($file_path);
     }
 
-//============================================================================//
     /**
      * Создаёт дерево директорий для загрузки файла
      * @return string
      */
     public function getUploadDestinationDirectory(){
-
-        $dir_num_user = sprintf('%03d', intval($this->user_id/100));
-
-        $file_name  = md5(uniqid(). $this->site_cfg->db_user . $this->site_cfg->db_base .microtime(true));
-        $first_dir  = substr($file_name, 0, 2);
-        $second_dir = substr($file_name, 2, 2);
-
-        $dest_dir = $this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}/{$first_dir}/{$second_dir}/";
-
-        if(!is_dir($dest_dir)){
-            @mkdir($dest_dir, 0777, true);
-            @chmod($dest_dir, 0777);
-            @chmod(pathinfo($dest_dir, PATHINFO_DIRNAME), 0777);
-            @chmod($this->site_cfg->upload_path . "{$dir_num_user}/u{$this->user_id}", 0777);
-            @chmod($this->site_cfg->upload_path . "{$dir_num_user}", 0777);
-        }
-
-        return $dest_dir;
-
+        return files_get_upload_dir($this->user_id);
     }
 
-//============================================================================//
     /**
      * Проверяет файл, является ли он изображением
      * @param string $src
@@ -499,13 +577,6 @@ class cmsUploader {
 
         return $size !== false;
 
-    }
-
-    /**
-     * Это устаревший метод, используйте функцию img_resize
-     */
-    public function imageCopyResized($src, $dest, $maxwidth, $maxheight=160, $is_square=false, $quality=95){
-        return img_resize($src, $dest, $maxwidth, $maxheight, $is_square, $quality);
     }
 
 }

@@ -20,6 +20,14 @@ class formRatingOptions extends cmsForm {
 
                     new fieldCheckbox('allow_guest_vote', array(
                         'title' => LANG_RATING_ALLOW_GUEST_VOTE
+                    )),
+
+                    new fieldList('template', array(
+                        'title' => LANG_RATING_TEMPLATE,
+                        'hint'  => sprintf(LANG_WIDGET_BODY_TPL_HINT, 'controllers/rating/widget*'),
+                        'generator' => function($item) {
+                            return cmsTemplate::getInstance()->getAvailableTemplatesFiles('controllers/rating', 'widget*.tpl.php');
+                        }
                     ))
 
                 )

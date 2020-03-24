@@ -78,7 +78,7 @@ class actionGeoCity extends cmsAction {
 
         }
 
-        $this->setH1(array($country['name'], $region['name'], (isset($city['name']) ? $city['name'] : LANG_GEO_ADD_CITY)));
+        $this->cms_template->setPageH1(array($country['name'], $region['name'], (isset($city['name']) ? $city['name'] : LANG_GEO_ADD_CITY)));
 
         return $this->cms_template->render('backend/city', array(
             'do'      => $city_id ? 'edit' : 'add',

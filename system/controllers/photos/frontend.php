@@ -5,6 +5,7 @@ class photos extends cmsFrontend {
     public static $preset_small = null;
 
     protected $useOptions = true;
+    public $useSeoOptions = true;
 
     public function route($uri){
 
@@ -52,13 +53,18 @@ class photos extends cmsFrontend {
 
         $perpage  = ($perpage ? $perpage : (empty($this->options['limit']) ? 16 : $this->options['limit']));
 
-        if (!$this->model->order_by){ $this->model->orderBy($this->options['ordering'], 'desc'); }
+        if (!$this->model->order_by){ $this->model->orderBy($this->options['ordering'], $this->options['orderto']); }
 
         if($show_next){
             // получаем на одну страницу больше
             $this->model->limitPagePlus($page, $perpage);
         } else {
             $this->model->limit($perpage);
+        }
+
+        // если альбом не общий, фильтруем для всех и для друзей
+        if(empty($item['is_public']) && $this->cms_user->isFriend($item['user_id'])){
+            $this->model->disablePrivacyFilterForFriends();
         }
 
         $photos = $this->getPhotosList($item['id'], $item_type);
@@ -95,6 +101,10 @@ class photos extends cmsFrontend {
 
     public function getDownloadHash() {
         return md5(cmsUser::getIp().$this->cms_config->host);
+    }
+
+    public function validate_rating_score($score) {
+        return $score >= 1 && $score <= 5;
     }
 
 }

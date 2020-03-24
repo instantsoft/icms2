@@ -9,3 +9,10 @@ define('LANG_RATING_IS_HIDDEN', 'Скрывать итоговый рейтин�
 define('LANG_RATING_SHOW_INFO', 'Показывать участников голосования и их оценки');
 define('LANG_RATING_NO_VOTES', 'Нет оценок');
 define('LANG_RATING_ALLOW_GUEST_VOTE', 'Разрешить голосование гостям');
+define('LANG_RATING_TEMPLATE', 'Шаблон блока рейтинга');
+define('LANG_RATING_UP', 'положительно');
+define('LANG_RATING_DOWN', 'отрицательно');
+define('LANG_RATING_PM', '%s %s оценил вашу запись <a href="%s">%s</a>');
+define('LANG_RATING_NOTIFY_VOTE',  'Уведомлять об оценках записей');
+define('LANG_RATING_ITEM_LABEL',  'Подпись перед блоком в записи');
+define('LANG_RATING_LIST_LABEL',  'Подпись перед блоком в списке');

@@ -6,6 +6,10 @@ class actionAdminUsersDelete extends cmsAction {
 
         if (!$id){ cmsCore::error404(); }
 
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
+
         $users_model = cmsCore::getModel('users');
 
         $user = $users_model->getUser($id);

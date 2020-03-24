@@ -1,9 +1,33 @@
+.activity-list {
+    padding-left: 21px;
+    position: relative;
+    box-sizing: border-box;
+}
+.activity-list::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    display: block;
+    width: 2px;
+    content: "";
+    background-color: #eff1f3;
+}
 .activity-list h3 {
-    border-bottom: dashed 1px #EDEDED;
     margin-bottom:0px;
+    margin-left: -27px;
     padding-bottom: 15px;
 }
-
+.activity-list h3 .octicon {
+    margin-right: 8px;
+    color: #c6cbd1;
+    background: #fff;
+    overflow: hidden;
+    vertical-align: text-bottom;
+    display: inline-block;
+    fill: currentColor;
+}
 .activity-list .item a.author{ color:#376499; }
 .activity-list .item a.author:hover{ color:#d35400; }
 .activity-list .item .details { font-size:11px; }

@@ -1,8 +1,8 @@
 <?php
 
 define('LANG_MODERATION_CONTROLLER', 'Модерация');
-define('LANG_MODERATION_TITLE', 'Материалы на модерации (%s)');
-define('LANG_MODERATION_CLEAR_TITLE', 'Материалы к удалению (%s)');
+define('LANG_MODERATION_TITLE', 'Материалы на модерации');
+define('LANG_MODERATION_CLEAR_TITLE', 'Материалы к удалению');
 define('LANG_MODERATION_CLEAR_THROUGH', 'Будет удалён через %s');
 define('LANG_MODERATION_ALL_LIST', 'Весь список');
 define('LANG_MODERATION_LOG_DELETE', 'Вести лог удалений');
@@ -15,7 +15,6 @@ define('LANG_MODERATION_ACTION_2', 'Восстановление из корзи
 define('LANG_MODERATION_CLEAR_LOGS', 'Очистить список');
 define('LANG_MODERATION_CLEAR_LOGS_HINT', 'Будут удалены все логи текущего списка. При этом запланированные на удаление материалы отменятся, продолжить?');
 define('LANG_MODERATION_STATUS', 'Статус');
-define('LANG_MODERATION_SUBJECT', 'Субъект');
 define('LANG_MODERATION_SUBJECT_ITEM', 'Материал');
 define('LANG_MODERATION_DEL_TIME', 'Время до удаления');
 define('LANG_MODERATION_DELETE_ALL', 'Все логи удалены');

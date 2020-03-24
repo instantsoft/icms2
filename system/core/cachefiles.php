@@ -3,8 +3,8 @@ class cmsCacheFiles {
 
     private $cache_path;
 
-    public function __construct() {
-        $this->cache_path = cmsConfig::get('cache_path').'data/';
+    public function __construct($config) {
+        $this->cache_path = $config->cache_path.'data/';
     }
 
     public function set($key, $value, $ttl){
@@ -70,17 +70,17 @@ class cmsCacheFiles {
 
     public function getPathAndFile($key){
 
-        $path = $this->cache_path . str_replace('.', '/', $key);
-        $file = explode('/', $path);
+        $path = $this->cache_path.str_replace('.', '/', $key);
 
-        $path = dirname($path);
-        $file = $path . '/' . $file[sizeof($file)-1] . '.dat';
-
-        return array($path, $file);
+        return array(dirname($path), $path.'.dat');
 
     }
 
     public function start(){ return true; }
     public function stop(){ return true; }
+
+    public function getStats(){
+        return array();
+    }
 
 }

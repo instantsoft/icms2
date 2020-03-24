@@ -12,6 +12,8 @@ class actionAdminContentFilter extends cmsAction {
 
         $fields  = $content_model->getContentFields($ctype['name']);
 
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
+
 		if ($ctype['is_rating']){
 			$fields[] = array(
 				'title'   => LANG_RATING,

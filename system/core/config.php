@@ -1,9 +1,19 @@
 <?php
-
+/**
+ * Класс для работы с конфигурациями
+ */
 class cmsConfig {
 
-    private static $instance;
-    private static $mapping;
+    /**
+     * Путь директории с конфигурациями
+     * можно изменить на хранение вне корня сайта,
+     * изменив путь, используя две точки (..) для
+     * указания на родительские каталоги
+     */
+    const CONFIG_DIR = '/system/config/';
+
+    private static $instance = null;
+    private static $mapping  = null;
 
     private $ready   = false;
     private $data    = array();
@@ -29,13 +39,13 @@ class cmsConfig {
         $map_file = 'system/config/remap.php';
         $map_function = 'remap_controllers';
 
-        if (!cmsCore::includeFile($map_file)) { return false; }
+        if (!cmsCore::includeFile($map_file)) { return self::$mapping; }
 
-        if (!function_exists($map_function)){ return false; }
+        if (!function_exists($map_function)){ return self::$mapping; }
 
         self::$mapping = call_user_func($map_function);
 
-        if (!is_array(self::$mapping)){ return false; }
+        if (!is_array(self::$mapping)){ return array(); }
 
         return self::$mapping;
 
@@ -60,8 +70,15 @@ class cmsConfig {
     }
 
     public function set($key, $value){
+
+        if(!isset($this->data[$key])){
+            $this->dynamic[] = $key;
+        }
+
         $this->data[$key] = $value;
-        $this->dynamic[] = $key;
+
+        return $this;
+
     }
 
     public function getAll(){
@@ -85,14 +102,53 @@ class cmsConfig {
         $this->data = $this->load($cfg_file);
         if(!$this->data){ return false; }
 
+        // таймзона может быть изменена в процессе работы
         $this->set('cfg_time_zone', $this->data['time_zone']);
 
-        if (isset($_SESSION['user']['time_zone'])){
-            $this->data['time_zone'] = $_SESSION['user']['time_zone'];
+        // переходная проверка на версии 2.11.1
+        if(!empty($this->data['ctype_default']) && !is_array($this->data['ctype_default'])){
+            $this->data['ctype_default'] = [$this->data['ctype_default']];
+        }
+        if(empty($this->data['ctype_default'])){
+            $this->data['ctype_default'] = [];
         }
 
         if(empty($this->data['detect_ip_key']) || !isset($_SERVER[$this->data['detect_ip_key']])){
             $this->data['detect_ip_key'] = 'REMOTE_ADDR';
+        }
+
+        if(empty($this->data['session_save_path'])){
+
+            $this->data['session_save_path'] = session_save_path();
+
+            if(empty($this->data['session_save_path'])){
+                $this->data['session_save_path'] = rtrim(sys_get_temp_dir(), '/');
+            }
+
+            if(!is_writable($this->data['session_save_path'])){
+                $this->data['session_save_path'] = '';
+            }
+
+        }
+
+        if(empty($this->data['db_charset'])){
+            $this->data['db_charset'] = 'utf8';
+        }
+
+        if(empty($this->data['session_save_handler'])){
+            $this->data['session_save_handler'] = 'files';
+        }
+
+        if(!isset($this->data['controllers_without_widgets'])){
+            $this->data['controllers_without_widgets'] = array('admin');
+        }
+
+        if(!isset($this->data['session_name'])){
+            $this->data['session_name'] = 'ICMSSID';
+        }
+
+        if(empty($this->data['native_yaml']) || !function_exists('yaml_emit')){
+            $this->data['native_yaml'] = 0;
         }
 
 		$this->upload_host_abs = $this->upload_host;
@@ -103,10 +159,11 @@ class cmsConfig {
 			$this->upload_host = str_replace($host, '', $this->upload_host); $replace_upload_host_protocol = true;
 		}
 
-        $this->set('root_path', ROOT . $this->root);
+        $this->set('document_root', rtrim(PATH, $this->root));
+        $this->set('root_path', PATH . DIRECTORY_SEPARATOR);
         $this->set('system_path', $this->root_path . 'system/');
-        $this->set('upload_path', ROOT . $this->upload_root);
-        $this->set('cache_path', ROOT . $this->cache_root);
+        $this->set('upload_path', $this->document_root . $this->upload_root);
+        $this->set('cache_path', $this->document_root . $this->cache_root);
 
         $protocol = 'http://';
         if(
@@ -123,28 +180,24 @@ class cmsConfig {
 
         $this->set('protocol', $protocol);
 
+        if(!empty($_SERVER['HTTP_HOST'])){
+            $this->set('current_domain', $_SERVER['HTTP_HOST']);
+        }
+
         return true;
 
     }
 
-    public function updateTimezone(){
-
-        if (isset($_SESSION['user']['time_zone'])){
-            $this->data['time_zone'] = $_SESSION['user']['time_zone'];
-        }
-
-        date_default_timezone_set( $this->data['time_zone'] );
-
-        cmsDatabase::getInstance()->setTimezone();
-
+    public static function isSecureProtocol() {
+        return self::get('protocol') === 'https://';
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function load($cfg_file='config.php'){
+    public function load($cfg_file = 'config.php'){
 
-        $cfg_file = PATH . '/system/config/' . $cfg_file;
+        $cfg_file = PATH . self::CONFIG_DIR . $cfg_file;
 
         if(!is_readable($cfg_file)){
             return false;
@@ -154,7 +207,7 @@ class cmsConfig {
 
     }
 
-    public function save($values, $cfg_file='config.php'){
+    public function save($values, $cfg_file = 'config.php'){
 
         $dump = "<?php\n" .
                 "return array(\n\n";
@@ -165,17 +218,17 @@ class cmsConfig {
 
             $value = var_export($value, true);
 
-            $tabs = 7 - ceil((mb_strlen($key)+3)/4);
+            $tabs = 10 - ceil((mb_strlen($key)+3)/4);
 
             $dump .= "\t'{$key}'";
-            $dump .= str_repeat("\t", $tabs);
+            $dump .= str_repeat("\t", $tabs > 0 ? $tabs : 0);
             $dump .= "=> $value,\n";
 
         }
 
         $dump .= "\n);\n";
 
-        $file = self::get('root_path').'system/config/' . $cfg_file;
+        $file = PATH . self::CONFIG_DIR . $cfg_file;
 
         $success = false;
 
@@ -188,7 +241,7 @@ class cmsConfig {
 
     }
 
-    public function update($key, $value, $cfg_file='config.php'){
+    public function update($key, $value, $cfg_file = 'config.php'){
 
         $data = $this->load($cfg_file);
         $data[$key] = $value;

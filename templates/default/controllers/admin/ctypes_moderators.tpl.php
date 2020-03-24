@@ -1,6 +1,6 @@
 <?php
 
-    $this->addJS('templates/default/js/admin-moderators.js');
+    $this->addTplJSName('admin-moderators');
 
     $this->setPageTitle(LANG_MODERATORS, $ctype['title']);
 

@@ -11,6 +11,7 @@ class widgetCommentsList extends cmsWidget {
             return false;
         }
 
+        $show_list    = array_filter($this->getOption('show_list', []));
         $show_avatars = $this->getOption('show_avatars', true);
         $show_text    = $this->getOption('show_text', false);
         $limit        = $this->getOption('limit', 10);
@@ -23,11 +24,21 @@ class widgetCommentsList extends cmsWidget {
             $model->filterEqual('is_private', 0);
         }
 
-        $items = $model->
-                    filterIsNull('is_deleted')->
-                    limit($limit)->
-                    getComments();
+        cmsEventsManager::hook('comments_list_filter', $model);
 
+        if($show_list){
+
+            $show_controllers = $show_targets = [];
+
+            foreach ($show_list as $show_target) {
+                list($show_controllers[], $show_targets[]) = explode(':', $show_target);
+            }
+
+            $model->filterIn('target_controller', $show_controllers);
+            $model->filterIn('target_subject', $show_targets);
+        }
+
+        $items = $model->filterIsNull('is_deleted')->limit($limit)->getComments();
         if (!$items) { return false; }
 
         $items = cmsEventsManager::hook('comments_before_list', $items);

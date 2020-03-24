@@ -51,7 +51,7 @@ icms.photos = (function ($) {
         this.big_img = $('#photo_container').data('full-size-img');
         this.page_url = $('#photo_container img').data('page-url');
 
-        if (screenfull.enabled) {
+        if (screenfull.isEnabled) {
             $('#fullscreen_photo').removeClass('disabled-act');
             this.bindFullScreen();
             $(document).on(screenfull.raw.fullscreenchange, function (){
@@ -73,7 +73,7 @@ icms.photos = (function ($) {
                 }
             });
         } else {
-            $('#photo_container').addClass('full_in_modal').on('click', function (){
+            $('#photo_container').addClass('full_in_modal').find('.fullscreen_click').show().on('click', function (){
                 if(icms.photos.big_img){
                     icms.modal.openAjax(icms.photos.big_img);
                 }
@@ -147,6 +147,7 @@ icms.photos = (function ($) {
                 loop:false,
                 margin:10,
                 autoWidth:true,
+                dots:false,
                 nav:true,
                 autoplay: true,
                 autoplayTimeout:5000,
@@ -166,7 +167,7 @@ icms.photos = (function ($) {
 
         onSubmit = onSubmit || function(){ return true; };
 
-        uploader = new qq.FileUploader({
+        var uploader = new qq.FileUploader({
             element: document.getElementById('album-photos-uploader'),
             action: upload_url,
             debug: false,
@@ -200,7 +201,11 @@ icms.photos = (function ($) {
 
                 $('.previews_list', widget).append(preview_block);
 
-                $('#mcontent_'+result.id).markItUp(mySettings);
+                var wysiwyg_name = $(widget).data('wysiwyg_name');
+
+                if(wysiwyg_name){
+                    window['init_'+wysiwyg_name]('mcontent_'+result.id);
+                }
 
             }
 
@@ -276,7 +281,7 @@ icms.photos = (function ($) {
             return false;
         }
 
-        $(link).addClass('loading');
+        $(link).addClass('show_spinner');
 
         icms.photos.page += 1;
 
@@ -287,7 +292,7 @@ icms.photos = (function ($) {
 
             var first_page_url = $(link).data('first-page-url');
 
-            $(link).removeClass('loading');
+            $(link).removeClass('show_spinner');
 
             if (!html) { return; }
 

@@ -17,15 +17,24 @@
 * Легкое создание шаблонов;
 * [API](https://github.com/instantsoft/icms2-json-api-component) для подключения мобильных приложений.
 
+## Демо ##
+
+Попробуйте сами в нашем [онлайн демо](https://demo.instantcms.ru/)
+
 ## Cистемные требования ##
-* Интерпретатор PHP версии 5.3 или выше;
+* Интерпретатор PHP версии 5.5 или выше;
 * Опции PHP register_globals и magic_quotes_gpc должны быть выключены;
 * Модули для PHP: GD, iconv, mbstring, simplexml, json, filter;
 * СУБД MySQL версии 5 или выше;
 * Веб-сервер Apache с установленным модулем mod_rewrite.
 
+## Как установить InstantCMS ##
+
+* Проверьте системные требования.
+* Воспользуйтесь инструкцией [по установке InstantCMS](https://docs.instantcms.ru/en/manual/install)?
+
 ## Ссылки
 
-* [Официальный сайт](http://www.instantcms.ru/)
-* [Дополнения](http://addons.instantcms.ru/)
-* [Документация](http://docs.instantcms.ru/)
+* [Официальный сайт](https://instantcms.ru/)
+* [Дополнения](https://addons.instantcms.ru/)
+* [Документация](https://docs.instantcms.ru/)

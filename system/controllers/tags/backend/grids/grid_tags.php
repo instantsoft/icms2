@@ -22,7 +22,7 @@ function grid_tags($controller){
         array(
             'title' => LANG_VIEW,
             'class' => 'view',
-            'href' => href_to('tags', 'search') . "?q={tag}"
+            'href' => href_to('tags', '{tag|urlencode}')
         ),
         array(
             'title' => LANG_EDIT,
@@ -44,4 +44,3 @@ function grid_tags($controller){
     );
 
 }
-

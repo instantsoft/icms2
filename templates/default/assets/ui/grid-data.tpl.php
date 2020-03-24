@@ -1,4 +1,4 @@
-<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : admin::perpage; ?>
+<?php $perpage = !empty($filter['perpage']) ? (int)$filter['perpage'] : $options['perpage']; ?>
 
 <form id="datagrid_filter">
     <?php if ($options['is_pagination']) { ?>
@@ -45,16 +45,22 @@
             <tr class="filter">
                 <?php foreach($columns as $name=>$column){ ?>
                     <td>
-                        <?php if (isset($column['filter']) && $column['filter'] != 'none' && $column['filter'] != false){ ?>
-
+                        <?php if (!empty($column['filter']) && $column['filter'] != 'none'){ ?>
+                            <?php $filter_attributes = !empty($column['filter_attributes']) ? $column['filter_attributes'] : array(); ?>
                             <?php if(strpos($name, 'date_') === 0){ ?>
 
-                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input'), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
+                                <?php echo html_datepicker('filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name, 'class' => 'input')), array('minDate'=>date(cmsConfig::get('date_format'), 86400))); ?>
 
                             <?php } else { ?>
+                                <?php if (!empty($column['filter_select'])){ ?>
 
-                                <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array('id'=>'filter_'.$name, 'rel'=>$name)); ?>
+                                    <?php echo html_select('filter_'.$name, (is_array($column['filter_select']['items']) ? $column['filter_select']['items'] : $column['filter_select']['items']($name)), (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
 
+                                <?php } else { ?>
+
+                                    <?php echo html_input('search', 'filter_'.$name, (isset($filter[$name]) ? $filter[$name] : ''), array_merge($filter_attributes, array('id'=>'filter_'.$name, 'rel'=>$name))); ?>
+
+                                <?php } ?>
                             <?php } ?>
                         <?php } ?>
                     </td>
@@ -70,11 +76,17 @@
     </table>
     <div class="datagrid_loading">
         <div class="loading_overlay"></div>
+        <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+        </div>
     </div>
 </div>
 
-<?php if ($options['is_pagination']){ ?>
+<?php if ($options['is_pagination'] || $options['is_selectable']){ ?>
 <div class="datagrid_navigation">
+<?php if ($options['is_pagination']){ ?>
     <div class="datagrid_resize">
         <label>
             <?php echo LANG_PAGES_SHOW_PERPAGE; ?>
@@ -87,12 +99,15 @@
             </select>
         </label>
     </div>
+<?php } ?>
+<?php if ($options['is_selectable']){ ?>
     <div class="datagrid_select_actions">
         <strong class="shint"><?php echo LANG_CP_SELECT_HINT; ?></strong>
         <span class="sall"><?php echo LANG_SELECT_ALL; ?></span>
         <span class="sremove"><?php echo LANG_DESELECT_ALL; ?></span>
         <span class="sinvert"><?php echo LANG_INVERT_ALL; ?></span>
     </div>
+<?php } ?>
     <div class="datagrid_pagination"></div>
 </div>
 <?php } ?>

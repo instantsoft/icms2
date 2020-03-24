@@ -46,7 +46,6 @@ class formAdminMenuItem extends cmsForm {
                         'title' => LANG_CP_MENU_ITEM_ACTION_URL,
                         'hint' => LANG_CP_MENU_ITEM_ACTION_URL_HINT,
                         'rules' => array(
-                            array('required'),
                             array('max_length', 255)
                         )
                     )),
@@ -65,9 +64,13 @@ class formAdminMenuItem extends cmsForm {
                 'type' => 'fieldset',
                 'title' => LANG_OPTIONS,
                 'childs' => array(
+                    new fieldCheckbox('is_enabled', array(
+                        'title' => LANG_IS_ENABLED,
+                        'default' => 1
+                    )),
                     new fieldString('options:class', array(
                         'title' => LANG_CSS_CLASS,
-                    )),
+                    ))
                 )
             ),
             'access' => array(

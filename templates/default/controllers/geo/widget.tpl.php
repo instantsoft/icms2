@@ -1,6 +1,6 @@
 <?php
-$this->addJSFromContext('templates/default/js/jquery-chosen.js');
-$this->addCSSFromContext('templates/default/css/jquery-chosen.css');
+$this->addTplJSNameFromContext('jquery-chosen');
+$this->addTplCSSNameFromContext('jquery-chosen');
 ?>
 <div id="geo_window">
 
@@ -35,5 +35,8 @@ $this->addCSSFromContext('templates/default/css/jquery-chosen.css');
         <?php if (!$city_id){?>
             $('#geo_window .list > select').first().triggerHandler('change');
         <?php } ?>
+    });
+    icms.modal.setCallback('open', function (){
+        setTimeout(function(){ $('.nyroModalCont').css('overflow', 'visible'); }, 300);
     });
 </script>

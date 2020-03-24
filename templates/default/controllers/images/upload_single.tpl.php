@@ -1,6 +1,9 @@
 <?php
-	$this->addJSFromContext( $this->getJavascriptFileName('fileuploader') );
-	$this->addJSFromContext( $this->getJavascriptFileName('images-upload') );
+    $this->addTplJSNameFromContext([
+        'fileuploader',
+        'images-upload'
+    ]);
+    $this->addTplCSSFromContext('controllers/images/styles');
 ?>
 <div id="widget_image_<?php echo $dom_id; ?>" class="widget_image_single">
 

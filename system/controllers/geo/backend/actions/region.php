@@ -51,7 +51,7 @@ class actionGeoRegion extends cmsAction {
 
         }
 
-        $this->setH1(array($country['name'], (isset($region['name']) ? $region['name'] : LANG_GEO_ADD_REGION)));
+        $this->cms_template->setPageH1(array($country['name'], (isset($region['name']) ? $region['name'] : LANG_GEO_ADD_REGION)));
 
         return $this->cms_template->render('backend/region', array(
             'do'      => $region_id ? 'edit' : 'add',

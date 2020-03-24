@@ -2,11 +2,12 @@
 
 class actionAdminUsersGroupEdit extends cmsAction {
 
-    public function run($id){
+    public function run($id = false) {
 
         if (!$id) { cmsCore::error404(); }
 
         $users_model = cmsCore::getModel('users');
+
         $group = $users_model->getGroup($id);
         if (!$group) { cmsCore::error404(); }
 
@@ -14,42 +15,33 @@ class actionAdminUsersGroupEdit extends cmsAction {
 
         $is_submitted = $this->request->has('submit');
 
-        if ($is_submitted){
+        if ($is_submitted) {
 
             $group = $form->parse($this->request, $is_submitted);
-            $errors = $form->validate($this,  $group);
 
-            if (!$errors){
+            $errors = $form->validate($this, $group);
+
+            if (!$errors) {
 
                 $users_model->updateGroup($id, $group);
+
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
 
                 $this->redirectToAction('users');
 
             }
 
-            if ($errors){
+            if ($errors) {
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        $template = cmsTemplate::getInstance();
-
-        $template->setMenuItems('users_group', array(
-            array(
-                'title' => LANG_CONFIG,
-                'url' => href_to($this->name, 'users', array('group_edit', $id))
-            ),
-            array(
-                'title' => LANG_PERMISSIONS,
-                'url' => href_to($this->name, 'users', array('group_perms', $id))
-            )
-        ));
-
-        return $template->render('users_group', array(
-            'do' => 'edit',
-            'group' => $group,
-            'form' => $form,
+        return $this->cms_template->render('users_group', array(
+            'do'     => 'edit',
+            'menu'   => $this->getUserGroupsMenu('view', $group['id']),
+            'group'  => $group,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

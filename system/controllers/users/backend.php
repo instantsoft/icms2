@@ -3,6 +3,7 @@
 class backendUsers extends cmsBackend {
 
     public $useSeoOptions = true;
+    public $useItemSeoOptions = true;
     protected $useOptions = true;
 
     public $useDefaultOptionsAction = true;
@@ -37,10 +38,38 @@ class backendUsers extends cmsBackend {
         );
     }
 
+    public function getBackendSubMenu(){
+
+        $this->backend_sub_menu[] = [
+            'title' => LANG_USERS,
+            'url'   => href_to('admin', 'users'),
+            'options' => [
+                'icon' => 'icon-people'
+            ]
+        ];
+
+        return $this->backend_sub_menu;
+
+    }
+
     public function validate_unique_field($value){
-        $core = cmsCore::getInstance();
-        $table_name = '{users}';
-        return !$core->db->isFieldExists($table_name, $value);
+        return !$this->cms_core->db->isFieldExists('{users}', $value);
+    }
+
+    public function getMetaItemFields() {
+
+        $item_fields = [];
+
+        $_item_fields = cmsCore::getModel('content')->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        foreach ($_item_fields as $field) {
+
+            $item_fields[] = $field['name'];
+
+        }
+
+        return $item_fields;
+
     }
 
 }

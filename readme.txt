@@ -1,5 +1,5 @@
 InstantCMS 2
 ------------
 
-Инструкция по установке: http://docs.instantcms.ru/manual/install
+Инструкция по установке: https://docs.instantcms.ru/manual/install
 

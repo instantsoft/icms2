@@ -1,5 +1,5 @@
 <?php
-    $this->addJS('templates/default/js/content-bind.js');
+    $this->addTplJSNameFromContext('content-bind');
     $ids = array();
 ?>
 
@@ -10,7 +10,7 @@
 		<?php foreach($items as $item) { ?>
 			<li data-id="<?php echo $item['id']; ?>">
 				<?php echo $item['title']; ?>
-                <?php if ($is_allowed_to_bind) { ?>
+                <?php if ($allowed_to_unbind_perm && ($allowed_to_unbind_perm == 'all' || $item['user_id'] == $auth_user_id)) { ?>
                     <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
                 <?php } ?>
 			</li>
@@ -34,7 +34,7 @@
             var modal_title = '<?php html(sprintf(LANG_CONTENT_SELECT_ITEM, $parent_ctype['labels']['create'])); ?>';
         <?php } ?>
 
-        var $container = $('#<?php echo $field->element_name; ?>').closest('div.field');
+        var $container = $('#<?php echo $field->id; ?>').closest('div.field');
 
         $container.find('a.add').click(function(e){
 

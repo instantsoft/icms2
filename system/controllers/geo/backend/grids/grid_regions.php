@@ -7,6 +7,7 @@ function grid_regions($controller){
         'is_filter'     => true,
         'is_pagination' => true,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('regions_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => true
@@ -15,6 +16,7 @@ function grid_regions($controller){
     $columns = array(
         'id' => array(
             'title'  => 'ID',
+            'class'  => 'd-none d-lg-table-cell',
             'width'  => 20,
             'filter' => 'exact'
         ),
@@ -28,6 +30,7 @@ function grid_regions($controller){
         ),
         'ordering' => array(
             'title' => LANG_GEO_POSITION,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 60
         )
     );

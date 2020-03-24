@@ -13,6 +13,10 @@ class actionSearchIndex extends cmsAction {
         if (!in_array($date, array('all', 'w', 'm', 'y'), true)){ cmsCore::error404(); }
         if (!is_numeric($page)){ cmsCore::error404(); }
 
+        if($target && $this->validate_sysname($target) !== true){
+            cmsCore::error404();
+        }
+
         if ($this->request->has('q')){
 
             if (!$query || !$this->model->setQuery($query)) {
@@ -35,7 +39,7 @@ class actionSearchIndex extends cmsAction {
 
             } else {
 
-                $page_url = href_to($this->name, 'index', $target);
+                $page_url = href_to($this->name, $target);
 
             }
 
@@ -112,6 +116,8 @@ class actionSearchIndex extends cmsAction {
         if(!$this->cms_template->getTemplateFileName('controllers/search/'.$tpl, true)){
             $tpl = 'index';
         }
+
+        $this->cms_template->addHead('<link rel="canonical" href="'.(!$target ? href_to_abs($this->name) : href_to_abs($this->name, $target)).'?q='.urlencode($query).'"/>');
 
         return $this->cms_template->render($tpl, array(
             'user'         => $this->cms_user,

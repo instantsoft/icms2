@@ -7,6 +7,7 @@ function grid_tabs($controller){
         'is_filter'     => false,
         'is_pagination' => false,
         'is_draggable'  => true,
+        'drag_save_url' => $controller->cms_template->href_to('tabs_reorder'),
         'order_by'      => 'ordering',
         'order_to'      => 'asc',
         'show_id'       => false
@@ -26,6 +27,7 @@ function grid_tabs($controller){
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'class' => 'd-none d-lg-table-cell',
             'width' => 150
         ),
         'is_active' => array(

@@ -1,0 +1,1 @@
+ALTER TABLE `{users}` CHANGE `password` `password` VARCHAR(32) NULL DEFAULT NULL COMMENT 'Хэш пароля (устаревшее поле)';

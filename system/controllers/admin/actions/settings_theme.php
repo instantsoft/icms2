@@ -21,6 +21,9 @@ class actionAdminSettingsTheme extends cmsAction {
 
             if (!$errors){
 
+                list($template_name, $options) = cmsEventsManager::hook('template_before_save_options', [$template_name, $options]);
+                $options = cmsEventsManager::hook('template_'.$template_name.'_before_save_options', $options);
+
                 if($template->saveOptions($options)){
                     cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
                 } else {
@@ -36,6 +39,10 @@ class actionAdminSettingsTheme extends cmsAction {
             }
 
         }
+
+        $this->cms_template->setName($template_name);
+
+        $this->cms_template->setInheritNames($this->cms_template->getInheritTemplates());
 
         return $this->cms_template->render('settings_theme', array(
             'template_name' => $template_name,

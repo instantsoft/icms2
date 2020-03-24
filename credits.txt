@@ -2,6 +2,18 @@
 
 Third-party plugins, libraries and resources included in InstantCMS:
 
+    SCSSPHP
+        by Leaf Corcoran
+        http://scssphp.github.io/scssphp
+
+    Bootstrap
+        by Twitter, Inc
+        https://getbootstrap.com
+
+    PhotoSwipe
+        by Dmitry Semenov
+        http://photoswipe.com
+
     FatCow Free Icons
         by FatCow Team
         http://www.fatcow.com/free-icons
@@ -58,6 +70,10 @@ Third-party plugins, libraries and resources included in InstantCMS:
         by Jay Salvat
         http://markitup.jaysalvat.com/
 
+    TinyMCE The world's most popular JavaScript library for rich text editing
+        by Tiny Technologies Inc.
+        https://www.tiny.cloud/
+
     real_date_diff function
         by Oleg Savvateev
         http://savvateev.org/blog/37/
@@ -93,3 +109,19 @@ Third-party plugins, libraries and resources included in InstantCMS:
     jQuery-flexImages
         by Pixabay.com
         https://github.com/Pixabay/jQuery-flexImages
+
+    jQuery UI Touch Punch
+        by David Furfero
+        http://touchpunch.furf.com/
+
+    jQuery CSS Customizable Scrollbar
+        by Yuriy Khabarov
+        https://github.com/gromo/jquery.scrollbar/
+
+    PHP Class for handling Google Authenticator 2-factor authentication
+        by Michael Kliewe
+        http://www.phpgangsta.de/
+
+    Free Bootstrap Admin Template
+        by Łukasz Holeczek, woothu, xidedix
+        https://coreui.io/

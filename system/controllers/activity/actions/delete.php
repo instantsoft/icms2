@@ -12,6 +12,8 @@ class actionActivityDelete extends cmsAction{
 
         cmsEventsManager::hook('activity_after_delete', $id);
 
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $this->redirectBack();
 
     }

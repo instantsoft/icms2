@@ -31,7 +31,7 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        $('textarea', form).val('').focus();
+        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
 
         return false;
 
@@ -205,7 +205,7 @@ icms.wall = (function ($) {
 
         $('#wall_widget #entries_list #entry_'+id+' > .links .edit').hide();
 
-        form.detach().appendTo('#wall_widget #entries_list #entry_'+id).show();
+        form.detach().insertAfter('#wall_widget #entries_list #entry_'+id+' > .links').show();
 
         $('input[name=id]', form).val(id);
         $('input[name=action]', form).val('update');
@@ -214,6 +214,8 @@ icms.wall = (function ($) {
         $('.loading', form).show();
         $('.buttons', form).hide();
         $('textarea', form).prop('disabled', true);
+
+        icms.forms.wysiwygInit('content');
 
         var url = $('#wall_urls').data('get-url');
 
@@ -226,7 +228,7 @@ icms.wall = (function ($) {
 
             icms.wall.restoreForm(false);
 
-            $('textarea', form).val(result.html).focus();
+            icms.forms.wysiwygInsertText('content', result.html);
 
         }, 'json');
 
@@ -316,7 +318,7 @@ icms.wall = (function ($) {
 
         if (clear_text) {
             form.hide();
-            $('textarea', form).val('');
+            icms.forms.wysiwygInsertText('content', '');
             $('#wall_widget #wall_add_link').show();
             $('#wall_widget #entries_list .links .edit').show();
             $('#wall_widget #entries_list .links .reply').show();

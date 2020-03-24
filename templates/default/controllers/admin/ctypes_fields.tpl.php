@@ -17,21 +17,21 @@
         'href'  => $this->href_to('ctypes', array('fields_add', $ctype['id']))
     ));
     $this->addToolButton(array(
-        'class' => 'save',
-        'title' => LANG_SAVE,
-        'href'  => null,
+        'class'   => 'save',
+        'title'   => LANG_SAVE_ORDER,
+        'href'    => null,
         'onclick' => "icms.datagrid.submit('{$this->href_to('ctypes', array('fields_reorder', $ctype['name']))}')"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
+		'class'  => 'help',
+		'title'  => LANG_HELP,
 		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_FIELDS
+		'href'   => LANG_HELP_URL_CTYPES_FIELDS
 	));
 
 ?>

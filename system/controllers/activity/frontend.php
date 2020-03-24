@@ -4,6 +4,8 @@ class activity extends cmsFrontend {
 
     protected $useOptions = true;
 
+    protected $unknown_action_as_index_param = true;
+
     public function addType($type){
         return $this->model->addType($type);
     }
@@ -32,7 +34,7 @@ class activity extends cmsFrontend {
 
         $type = $this->model->getType($controller, $name);
 
-        if (!$type['is_enabled']) { return false; }
+        if (empty($type['is_enabled'])) { return false; }
 
         if (!isset($entry['user_id'])) {
             $entry['user_id'] = $this->cms_user->id;
@@ -42,15 +44,17 @@ class activity extends cmsFrontend {
             $entry['type_id'] = $type['id'];
         }
 
+        $hook_start_name = 'activity_'.$controller.'_'.str_replace('.', '_', $name);
+
         $entry = cmsEventsManager::hook('activity_before_add', $entry);
         if($entry === false){ return false; }
-        $entry = cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_before_add', $entry);
+        $entry = cmsEventsManager::hook($hook_start_name.'_before_add', $entry);
         if($entry === false){ return false; }
 
         $entry['id'] = $this->model->addEntry($entry);
 
         cmsEventsManager::hook('activity_after_add', $entry);
-        cmsEventsManager::hook('activity_'.$controller.'_'.$name.'_after_add', $entry);
+        cmsEventsManager::hook($hook_start_name.'_after_add', $entry);
 
         return $entry['id'];
 
@@ -105,6 +109,11 @@ class activity extends cmsFrontend {
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
+
         $items = cmsEventsManager::hook('activity_before_list', $items);
 
         return $this->cms_template->renderInternal($this, 'list', array(
@@ -138,7 +147,7 @@ class activity extends cmsFrontend {
                 'name' => 'friends',
                 'title' => LANG_ACTIVITY_DS_FRIENDS,
                 'filter' => function($model) use($user){
-                    return $model->filterFriends($user->id);
+                    return $model->filterFriendsAndSubscribe($user->id);
                 }
             );
             // Только мои

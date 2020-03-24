@@ -2,36 +2,55 @@
 
 class actionCommentsIndex extends cmsAction{
 
-    public function run($tab='all'){
+    public function run($dataset_name = 'all'){
 
         if(!empty($this->options['disable_icms_comments'])){
             cmsCore::error404();
         }
 
-        $dataset_name = false;
         $datasets = $this->getDatasets();
 
-        if ($tab && isset($datasets[$tab])) {
+        if(!$dataset_name || !isset($datasets[$dataset_name])){
+            cmsCore::error404();
+        }
 
-            $dataset_name = $tab;
-            $dataset = $datasets[$tab];
+        $dataset = $datasets[$dataset_name];
 
-            if (isset($dataset['filter']) && is_callable($dataset['filter'])){
-                $this->model = $dataset['filter']( $this->model );
-            }
-
-        } else if ($tab) { cmsCore::error404(); }
+        if (isset($dataset['filter']) && is_callable($dataset['filter'])){
+            $this->model = $dataset['filter']( $this->model );
+        }
 
         // Формируем базовые URL для страниц
         $page_url = array(
-            'base'  => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : ''),
-            'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
+            'base'  => href_to($this->name, $dataset_name),
+            'first' => href_to($this->name, $dataset_name)
         );
+
+        // фильтруем
+        if(!empty($this->options['show_list']) && array_filter($this->options['show_list'])){
+
+            $show_controllers = $show_targets = [];
+
+            foreach ($this->options['show_list'] as $show_target) {
+                list($show_controllers[], $show_targets[]) = explode(':', $show_target);
+            }
+
+            $this->model->filterIn('target_controller', $show_controllers);
+            $this->model->filterIn('target_subject', $show_targets);
+        }
 
         // Получаем HTML списка комментариев
         $items_list_html = $this->renderCommentsList($page_url, $dataset_name);
 
+        $rss_link = '';
+        if ($this->isControllerEnabled('rss') && $dataset_name == 'all' && $this->model->isRssFeedEnable()){
+            $rss_link = href_to('rss', 'feed', 'comments');
+        }
+
         return $this->cms_template->render('index', array(
+            'page_title'      => ($dataset_name != 'all' ? LANG_COMMENTS . ' - ' . $dataset['title'] : LANG_COMMENTS),
+            'base_ds_url'     => href_to($this->name).'%s',
+            'rss_link'        => $rss_link,
             'datasets'        => $datasets,
             'dataset_name'    => $dataset_name,
             'dataset'         => $dataset,

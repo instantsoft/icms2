@@ -1,18 +1,20 @@
 <?php
 
-class backendComments extends cmsBackend{
+class backendComments extends cmsBackend {
 
     public $useDefaultOptionsAction = true;
     public $useDefaultPermissionsAction = true;
     public $useSeoOptions = true;
 
-    public function actionIndex(){
-        $this->redirectToAction('comments_list');
-    }
+    protected $useDefaultModerationAction = true;
 
-    public function getBackendMenu(){
-        return array(
-            array(
+    protected $useOptions = true;
+
+    public function __construct( cmsRequest $request){
+
+        parent::__construct($request);
+
+        array_unshift($this->backend_menu, array(
                 'title' => LANG_COMMENTS_LIST,
                 'url' => href_to($this->root_url, 'comments_list')
             ),
@@ -25,6 +27,11 @@ class backendComments extends cmsBackend{
                 'url' => href_to($this->root_url, 'perms', 'comments')
             )
         );
+
+    }
+
+    public function actionIndex(){
+        $this->redirectToAction('comments_list');
     }
 
 }

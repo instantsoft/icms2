@@ -1,10 +1,14 @@
 <?php
-$this->addCSS($this->getStylesFileName('photos'));
-$this->addJS($this->getJavascriptFileName('photos'));
-$this->addJS($this->getJavascriptFileName('jquery-owl.carousel'));
-$this->addCSS('templates/default/css/jquery-owl.carousel.css');
 
-$photo_wrap_id = 'widget-photos-'.$widget->id;
+    $this->addTplJSName([
+        'photos',
+        'jquery-owl.carousel'
+    ]);
+
+    $this->addTplCSSName('jquery-owl.carousel');
+    $this->addTplCSS('controllers/photos/styles');
+
+    $photo_wrap_id = 'widget-photos-'.$widget->id;
 
 ?>
 
@@ -20,8 +24,10 @@ $photo_wrap_id = 'widget-photos-'.$widget->id;
     )); ?>
 </div>
 
+<?php ob_start(); ?>
 <script type="text/javascript">
     $(function(){
         icms.photos.initCarousel('#<?php echo $photo_wrap_id; ?>');
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

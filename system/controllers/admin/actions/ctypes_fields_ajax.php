@@ -6,17 +6,18 @@ class actionAdminCtypesFieldsAjax extends cmsAction {
 
         if (!$this->request->isAjax()) { cmsCore::error404(); }
 
-        if (!$ctype_name) { cmsCore::error404(); }
+        $ctype = $this->model_content->getContentTypeByName($ctype_name);
+        if (!$ctype) { cmsCore::error404(); }
 
-        $grid = $this->loadDataGrid('ctype_fields');
+        $grid = $this->loadDataGrid('ctype_fields', $ctype['name']);
 
-        $content_model = cmsCore::getModel('content');
+        $this->model_content->orderBy('ordering', 'asc');
 
-        $content_model->orderBy('ordering', 'asc');
+        $fields = $this->model_content->getContentFields($ctype['name'], false, false);
 
-        $fields = $content_model->getContentFields($ctype_name);
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
-        cmsTemplate::getInstance()->renderGridRowsJSON($grid, $fields);
+        $this->cms_template->renderGridRowsJSON($grid, $fields);
 
         $this->halt();
 

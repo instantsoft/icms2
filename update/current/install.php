@@ -1,18 +1,58 @@
 <?php
 /**
- * 2.7.0 => 2.7.1
+ * 2.13.1 => 2.13.2
  */
 function install_package(){
 
 	$core = cmsCore::getInstance();
+    $admin = cmsCore::getController('admin');
 
-    if(!isFieldExists('content_datasets', 'seo_title')){
-        $core->db->query("ALTER TABLE `{#}content_datasets` ADD `seo_title` VARCHAR(256) NULL DEFAULT NULL AFTER `seo_desc`");
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////// Новые правила доступа ///////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////
+    ///////////////// Индексы //////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    $remove_table_indexes = array();
+    $add_table_uq_indexes = array();
+
+    if($remove_table_indexes){
+        foreach ($remove_table_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name) {
+                $core->db->dropIndex($table, $index_name);
+            }
+        }
+    }
+    if($add_table_uq_indexes){
+        foreach ($add_table_uq_indexes as $table=>$indexes) {
+            foreach ($indexes as $index_name => $fields) {
+                $core->db->addIndex($table, $fields, $index_name, 'UNIQUE');
+            }
+        }
     }
 
-    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_keys` `seo_keys` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Ключевые слова'");
-    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_desc` `seo_desc` VARCHAR(256) NULL DEFAULT NULL COMMENT 'Описание'");
-    $core->db->query("ALTER TABLE `{#}content_types` CHANGE `seo_title` `seo_title` VARCHAR(256) NULL DEFAULT NULL");
+    ////////////////////////////////////////////////////////////////////////////
+    ////////////// Обновляем события ///////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+    $diff_events = $admin->getEventsDifferences();
+
+    if($diff_events['added']){
+        foreach ($diff_events['added'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->addEvent($controller, $event);
+            }
+        }
+    }
+
+    if($diff_events['deleted']){
+        foreach ($diff_events['deleted'] as $controller => $events) {
+            foreach ($events as $event){
+                $admin->model->deleteEvent($controller, $event);
+            }
+        }
+    }
 
     return true;
 
@@ -50,6 +90,7 @@ function save_controller_options($controllers) {
         $form_file = $controller_root_path.'backend/forms/form_options.php';
         $form_name = $controller.'options';
         cmsCore::loadControllerLanguage($controller);
+        cmsCore::includeFile('system/controllers/'.$controller.'/model.php');
         $form = cmsForm::getForm($form_file, $form_name, false);
         if ($form) {
             $options = $form->parse(new cmsRequest(cmsController::loadOptions($controller)));
@@ -59,18 +100,4 @@ function save_controller_options($controllers) {
         }
     }
 
-}
-
-function isFieldExists($table_name, $field) {
-    $table_fields = getTableFields($table_name);
-    return in_array($field, $table_fields, true);
-}
-function getTableFields($table) {
-    $db = cmsDatabase::getInstance();
-    $fields = array();
-    $result = $db->query("SHOW COLUMNS FROM `{#}{$table}`");
-    while($data = $db->fetchAssoc($result)){
-        $fields[] = $data['Field'];
-    }
-    return $fields;
 }

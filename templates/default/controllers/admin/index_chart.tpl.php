@@ -4,6 +4,7 @@
             <?php foreach($chart_nav as $section){ ?>
                 <optgroup label="<?php echo $section['title']; ?>">
                     <?php foreach($section['sections'] as $id => $link) { ?>
+                        <?php if(empty($link['title'])){ continue; } ?>
                         <?php $is_active = $defaults['controller']==$section['id'] && $defaults['section']==$id; ?>
                         <option data-ctrl="<?php echo $section['id']; ?>" data-section="<?php echo $id; ?>" <?php if ($is_active) { ?>selected="selected"<?php } ?>>
                             <?php echo $link['title']; ?>

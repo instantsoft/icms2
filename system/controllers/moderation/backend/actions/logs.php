@@ -8,22 +8,21 @@ class actionModerationLogs extends cmsAction {
 
         $grid = $this->loadDataGrid('logs');
 
-        $model = cmsCore::getModel('content');
-
         $url           = href_to($this->root_url, 'logs');
         $sub_url       = array();
         $url_query     = array();
         $additional_h1 = array();
+        $subj_controller = null;
 
         $action = $this->request->get('action', -1);
         $only_to_delete = $this->request->get('only_to_delete', 0);
         if($action > -1){
 
-            $model->filterEqual('action', $action);
+            $this->model->filterEqual('action', $action);
 
             if($only_to_delete){
 
-                $model->filterNotNull('date_expired');
+                $this->model->filterNotNull('date_expired');
 
                 $url_query['only_to_delete'] = $only_to_delete;
 
@@ -37,22 +36,23 @@ class actionModerationLogs extends cmsAction {
 
         if(!empty($target_controller)){
 
-            $model->filterEqual('target_controller', $target_controller);
+            $subj_controller = cmsCore::getController($target_controller);
+
+            $this->model->filterEqual('target_controller', $target_controller);
 
             $sub_url[] = $target_controller;
 
             if(!empty($target_subject)){
 
-                if(is_numeric($target_subject) && $target_controller == 'content'){
-                    $ctype = $model->getContentType($target_subject);
-                    if($ctype){
-                        $target_subject = $ctype['name'];
-                    }
+                $ctype = $subj_controller->getContentTypeForModeration($target_subject);
+
+                if($ctype){
+                    $target_subject = $ctype['name'];
                 } else {
-                    $ctype = $model->getContentTypeByName($target_subject);
+                    return cmsCore::error404();
                 }
 
-                $model->filterEqual('target_subject', $target_subject);
+                $this->model->filterEqual('target_subject', $target_subject);
 
                 $sub_url[] = $target_subject;
 
@@ -62,13 +62,13 @@ class actionModerationLogs extends cmsAction {
 
                 if(!empty($target_id)){
 
-                    $model->filterEqual('target_id', $target_id);
+                    $this->model->filterEqual('target_id', $target_id);
 
                     $sub_url[] = $target_id;
 
-                    $model->lockFilters();
+                    $this->model->lockFilters();
 
-                        $item = $model->getItem('moderators_logs', function ($item, $model){
+                        $item = $this->model->getItem('moderators_logs', function ($item, $model){
                             $item['data'] = cmsModel::yamlToArray($item['data']);
                             return $item;
                         });
@@ -77,7 +77,7 @@ class actionModerationLogs extends cmsAction {
                             $additional_h1[] = $item['data']['title'];
                         }
 
-                    $model->unlockFilters();
+                    $this->model->unlockFilters();
 
                 }
 
@@ -87,7 +87,7 @@ class actionModerationLogs extends cmsAction {
 
         if(!empty($moderator_id)){
 
-            $model->filterEqual('moderator_id', $moderator_id);
+            $this->model->filterEqual('moderator_id', $moderator_id);
 
             if(count($sub_url) == 3){
                 $sub_url[] = $moderator_id;
@@ -120,23 +120,33 @@ class actionModerationLogs extends cmsAction {
 
             if ($filter_str){
                 parse_str($filter_str, $filter);
-                $model->applyGridFilter($grid, $filter);
+                $this->model->applyGridFilter($grid, $filter);
             }
 
-            $total = $model->getCount('moderators_logs');
+            $total = $this->model->getCount('moderators_logs');
             $perpage = isset($filter['perpage']) ? $filter['perpage'] : admin::perpage;
             $pages = ceil($total / $perpage);
 
-            $model->joinUserLeft('moderator_id');
+            $this->model->joinUserLeft('moderator_id');
 
-            $data = $model->get('moderators_logs', function ($item, $model){
+            $data = $this->model->get('moderators_logs', function ($item, $model) use($subj_controller){
+
                 $item['data'] = cmsModel::yamlToArray($item['data']);
+
                 $item['controller_title'] = string_lang($item['target_controller'].'_CONTROLLER');
-                if($item['target_controller'] == 'content'){
-                    $ctype = $model->getContentTypeByName($item['target_subject']);
+
+                $item['subject_title'] = $item['controller_title'];
+
+                if($subj_controller !== null){
+
+                    $ctype = $subj_controller->getContentTypeForModeration($item['target_subject']);
+
                     $item['subject_title'] = $ctype['title'];
+
                 }
+
                 return $item;
+
             });
 
             $this->cms_template->renderGridRowsJSON($grid, $data, $total, $pages);
@@ -146,10 +156,10 @@ class actionModerationLogs extends cmsAction {
         }
 
         if($additional_h1){
-            $this->setH1($additional_h1);
+            $this->cms_template->setPageH1($additional_h1);
         }
 
-        $model->resetFilters();
+        $this->model->resetFilters();
 
 		return $this->cms_template->render('backend/logs', array(
             'grid'      => $grid,

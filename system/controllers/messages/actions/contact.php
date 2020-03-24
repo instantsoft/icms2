@@ -19,8 +19,14 @@ class actionMessagesContact extends cmsAction {
 
         $this->model->setMessagesReaded($this->cms_user->id, $contact_id);
 
+        $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+            'editor'  => $this->options['editor'],
+            'presets' => $this->options['editor_presets']
+        ]);
+
         $this->cms_template->render('contact', array(
             'user'          => $this->cms_user,
+            'editor_params' => $editor_params,
             'is_me_ignored' => $this->model->isContactIgnored($contact_id, $this->cms_user->id),
             'is_private'    => !$this->cms_user->isPrivacyAllowed($contact, 'messages_pm'),
             'contact'       => $contact,

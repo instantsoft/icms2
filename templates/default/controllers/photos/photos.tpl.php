@@ -10,11 +10,11 @@
 
         <div class="photo photo-<?php echo $photo['id']; ?> <?php if ($is_photo_owner) { ?> is_my_photo<?php } ?> <?php echo (($photo_url=='#') ? 'unpublished' : ''); ?>" data-w="<?php echo $photo['sizes'][$preset_small]['width']; ?>" data-h="<?php echo $photo['sizes'][$preset_small]['height']; ?>" itemscope itemtype="http://schema.org/ImageObject">
             <h3>
-                <a href="<?php echo $photo_url; ?>" title="<?php html($photo['title']); ?>" itemprop="name">
+                <a class="photo_page_link" href="<?php echo $photo_url; ?>" title="<?php html($photo['title']); ?>" itemprop="name">
                     <?php html($photo['title']); ?>
                 </a>
             </h3>
-            <a href="<?php echo $photo_url; ?>" title="<?php html($photo['title']); ?>">
+            <a class="photo_page_link" href="<?php echo $photo_url; ?>" title="<?php html($photo['title']); ?>">
                 <img src="<?php echo html_image_src($photo['image'], $preset_small, true, false); ?>" title="<?php html($photo['title']); ?>" alt="<?php html($photo['title']); ?>" itemprop="thumbnail" />
             </a>
             <div class="info">
@@ -43,9 +43,9 @@
         </div>
 
     <?php } ?>
-
-    <?php if(isset($has_next) || isset($page) || empty($disable_flex)){ ?>
-        <script type="text/javascript">
+    <?php if((isset($has_next) || isset($page) || empty($disable_flex)) || !empty($item['photos_url_params'])){ ?>
+    <script type="text/javascript">
+        <?php if(isset($has_next) || isset($page) || empty($disable_flex)){ ?>
             <?php if(isset($has_next)){ ?>
                 <?php if($has_next){ ?>
                     icms.photos.has_next = true;
@@ -59,6 +59,14 @@
             <?php if(empty($disable_flex)){ ?>
                 icms.photos.flexImagesInit('<?php echo (isset($photo_wrap_id) ? '#'.$photo_wrap_id : ''); ?>');
             <?php } ?>
-        </script>
+        <?php } ?>
+        <?php if(!empty($item['photos_url_params'])){ ?>
+            $(function(){
+                $('.photo_page_link').each(function (){
+                    $(this).attr('href', $(this).attr('href')+'?<?php echo $item['photos_url_params']; ?>');
+                });
+            });
+        <?php } ?>
+    </script>
     <?php } ?>
 <?php }
