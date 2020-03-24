@@ -9,6 +9,8 @@ class actionFilesDownload extends cmsAction {
 
         if (files_user_file_hash($file['path']) != $url_key) { cmsCore::errorForbidden(); }
 
+        $file = cmsEventsManager::hook('files_before_download', $file);
+
         $filename = cmsConfig::get('upload_path') . $file['path'];
         $original_filename = $file['name'];
 

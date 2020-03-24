@@ -115,7 +115,7 @@ class actionAdminIndexChartData extends cmsAction {
     private function getDsParams($source, $result) {
         return [
             'data' => array_values($result),
-            'label' => (isset($source['title']) ? $source['title'] : (isset($source['hint']) ? $source['hint'] : '')),
+            'label' => (isset($source['hint']) ? $source['hint'] : (isset($source['title']) ? $source['title'] : '')),
             'backgroundColor' => (isset($source['style']['bg_color']) ? $source['style']['bg_color'] : 'rgba(32, 168, 216, 0.1)'),
             'borderColor' => (isset($source['style']['border_color']) ? $source['style']['border_color'] : 'rgba(32, 168, 216)'),
             'pointHoverBackgroundColor' => '#fff',
@@ -140,7 +140,9 @@ class actionAdminIndexChartData extends cmsAction {
 
         $this->model->group_by = $period < 300 ? "DAY({$source['key']})" : "MONTH({$source['key']})";
 
-        return (array)$this->model->get($source['table'], false, false);
+        $data = $this->model->get($source['table'], false, false);
+
+        return $data ? $data : [];
 
     }
 

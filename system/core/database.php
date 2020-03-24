@@ -79,14 +79,6 @@ class cmsDatabase {
 
 	}
 
-    public function setOptions($options) {
-        $this->options = array_merge($this->options, $options);
-    }
-
-    public function setOption($key, $value) {
-        $this->options[$key] = $value;
-    }
-
 	public function __destruct(){
         if($this->ready()){
 
@@ -99,6 +91,14 @@ class cmsDatabase {
 
         }
 	}
+
+    public function setOptions($options) {
+        $this->options = array_merge($this->options, $options);
+    }
+
+    public function setOption($key, $value) {
+        $this->options[$key] = $value;
+    }
 
     public function __get($name) {
         if ($name == 'nestedSets') {
@@ -374,6 +374,25 @@ class cmsDatabase {
         }
 
         $this->table_fields[$table] = $fields;
+
+        return $fields;
+
+    }
+
+    /**
+     * Возвращает названия полей и их типы для таблицы
+     * @param string $table
+     * @return array
+     */
+    public function getTableFieldsTypes($table) {
+
+		$result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{#}{$table}'");
+
+        $fields = [];
+
+        while($data = $this->fetchAssoc($result)){
+            $fields[$data['COLUMN_NAME']] = $data['DATA_TYPE'];
+        }
 
         return $fields;
 

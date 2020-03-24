@@ -14,7 +14,7 @@ class actionAdminInlineSave extends cmsAction {
 			));
 		}
 
-        $data = $this->request->get('data', array());
+        $data = $this->request->get('data', []);
         if(!$data){
 			return $this->cms_template->renderJSON(array(
 				'error' => LANG_ERROR.' #empty data'
@@ -34,24 +34,42 @@ class actionAdminInlineSave extends cmsAction {
 			));
 		}
 
-        $_data = array();
+        $table_fields = $this->model->db->getTableFieldsTypes($table);
+
+        $_data = [];
 
         foreach ($data as $field => $value) {
-            if(!array_key_exists($field, $i)){
+            if(!array_key_exists($field, $i) || is_array($data[$field])){
                 unset($data[$field]);
             } else {
-                $_data[$field] = htmlspecialchars($value);
+
+                if($value){
+
+                    $table_field_type = $table_fields[$field];
+                    if(in_array($table_field_type, ['tinyint','smallint','mediumint','int','bigint'])){
+                        $_data[$field] = $data[$field] = intval($value);
+                    } elseif(in_array($table_field_type, ['decimal','float','double'])){
+                        $_data[$field] = $data[$field] = floatval(str_replace(',', '.', trim($value)));
+                    } else {
+                        $data[$field] = strip_tags($value);
+                        $_data[$field] = htmlspecialchars($data[$field]);
+                    }
+
+                } else {
+                    $_data[$field] = $value;
+                }
+
             }
         }
-
-        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save', array($data, $_data, $i));
-        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save_'.str_replace(['{','}'], '', $table), array($data, $_data, $i));
 
         if(empty($data)){
 			return $this->cms_template->renderJSON(array(
 				'error' => LANG_ERROR.' #empty data'
 			));
         }
+
+        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save', array($data, $_data, $i));
+        list($data, $_data, $i) = cmsEventsManager::hook('admin_inline_save_'.str_replace(['{','}'], '', $table), array($data, $_data, $i));
 
 		$this->model->update($table, $item_id, $data);
 

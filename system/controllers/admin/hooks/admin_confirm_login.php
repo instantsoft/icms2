@@ -35,6 +35,8 @@ class onAdminAdminConfirmLogin extends cmsAction {
 
                         cmsUser::restrictSessionToIp();
 
+                        $this->model_users->updateUserIp($user['id']);
+
                         $data['allow'] = true;
 
                     } else {

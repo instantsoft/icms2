@@ -105,7 +105,7 @@ class cmsForm {
                     'ft_'.strtolower(substr(get_class($field), 5))
                 ];
 
-                if($field->getOption('is_required')){ $field->classes[] = 'reguired_field'; }
+                if(array_search(['required'], $field->getRules()) !== false){ $field->classes[] = 'reguired_field'; }
 
                 if (!empty($field->groups_edit)){
                     if (!in_array(0, $field->groups_edit)){
