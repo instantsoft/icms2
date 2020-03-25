@@ -33,11 +33,18 @@ class actionAuthgaLogin2fa extends cmsAction {
 
         }
 
-        return $this->cms_template->render('login_2fa', array(
+        $tpl_params = [
             'data'   => $data,
             'form'   => $form_confirm,
             'errors' => isset($errors) ? $errors : false
-        ));
+        ];
+
+        // Для вызовов из InstantCMS JSON API
+        if ($this->request->has('api_context')){
+            return $tpl_params;
+        }
+
+        return $this->cms_template->render('login_2fa', $tpl_params);
 
     }
 

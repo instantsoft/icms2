@@ -692,7 +692,7 @@ form .child_field{margin-left: 20px}
     border: solid 1px #ccab49;
 }
 #cp-widgets-list li > img, #cp-widgets-layout .position li > img {
-    width: 100%;
+    max-width: 200px;
     border-radius: inherit;
     display: block;
 }

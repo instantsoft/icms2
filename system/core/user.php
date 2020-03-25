@@ -10,7 +10,7 @@ class cmsUser {
 
     private static $instance;
     private static $_ip;
-    private static $auth_token;
+    public static $auth_token;
     private static $cached_online = array();
 
     public $id = 0;
