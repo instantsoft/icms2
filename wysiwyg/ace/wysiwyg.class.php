@@ -106,6 +106,8 @@ class cmsWysiwygAce {
 
         <?php $template->addBottom(ob_get_clean());
 
+        self::$redactor_loaded = true;
+
     }
 
 }

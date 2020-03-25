@@ -216,7 +216,7 @@ class cmsWysiwygMarkitup {
 
         <?php $template->addBottom(ob_get_clean());
 
-        return true;
+        self::$redactor_loaded = true;
 
     }
 
