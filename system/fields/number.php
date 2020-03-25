@@ -22,6 +22,10 @@ class fieldNumber extends cmsFormField {
                 'rules' => array(
                     array('required'),
                     array('max', 35)
+                ),
+                'options'=>array(
+                    'is_abs'=> true,
+                    'is_ceil'=> true,
                 )
             )),
             new fieldList('thousands_sep', array(
@@ -70,6 +74,10 @@ class fieldNumber extends cmsFormField {
                 'rules' => array(
                     array('max', 30)
                 ),
+                'options'=>array(
+                    'is_abs'=> true,
+                    'is_ceil'=> true,
+                ),
                 'visible_depend' => array('options:is_ceil' => array('hide' => array('1')))
             )),
             new fieldCheckbox('trim_dec', array(
@@ -94,6 +102,10 @@ class fieldNumber extends cmsFormField {
                 new fieldNumber('filter_range_slide_step', array(
                     'title'   => LANG_PARSER_NUMBER_FILTER_STEP,
                     'default' => 1,
+                    'options'=>array(
+                        'is_abs'=> true,
+                        'is_ceil'=> true,
+                    ),
                     'visible_depend' => array('options:filter_range' => array('show' => array('1')))
                 )),
             new fieldString('prefix', array(
