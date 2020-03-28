@@ -559,8 +559,8 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function insert($table_name, $data, $array_as_json = false){
-        return $this->db->insert($table_name, $data, false, $array_as_json);
+    public function insert($table_name, $data, $array_as_json = false, $ignore = false){
+        return $this->db->insert($table_name, $data, false, $array_as_json, $ignore);
     }
 
     public function insertOrUpdate($table_name, $insert_data, $update_data = false){

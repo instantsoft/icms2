@@ -16,7 +16,7 @@ class cmsTemplate {
     protected $layout_params = array();
     protected $output;
     protected $blocks = array();
-    protected $options;
+    protected $options = null;
     protected $site_config;
 
 	protected $head = array();
@@ -2874,9 +2874,19 @@ class cmsTemplate {
 
     }
 
+    public function setOption($key, $value){
+        $this->options[$key] = $value; return $this;
+    }
+
+    public function getOption($key){
+        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
+    }
+
     public function getOptions(){
 
-		if (!$this->hasOptions()){ return false; }
+        if($this->options !== null){ return $this->options; }
+
+		if (!$this->hasOptions()){ return []; }
 
         cmsCore::loadTemplateLanguage($this->name);
 
@@ -2890,7 +2900,7 @@ class cmsTemplate {
 
         $options_file = $this->site_config->root_path . "system/config/theme_{$this->name}.yml";
 
-        if (!is_readable($options_file)){ return array(); }
+        if (!is_readable($options_file)){ return []; }
 
         $options_yaml = file_get_contents($options_file);
 

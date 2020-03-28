@@ -235,7 +235,7 @@ class cmsUser {
      */
     public static function autoLogin($auth_token){
 
-        if (!preg_match('/^[0-9a-f]{32}$/i', $auth_token)){ return 0; }
+        if (!preg_match('/^[0-9a-z]{32}$/i', $auth_token)){ return 0; }
 
         $model = cmsCore::getModel('users');
 
@@ -346,19 +346,21 @@ class cmsUser {
 
         $userSession = self::sessionGet('user');
 
-        if(empty($userSession['id'])){ return false; }
+        if(!empty($userSession['id'])){
 
-        $model->updateUserDateLog($userSession['id']);
+            $model->updateUserDateLog($userSession['id']);
 
-        $model->filterEqual('user_id', $userSession['id'])->deleteFiltered('sessions_online');
+            $model->filterEqual('user_id', $userSession['id'])->deleteFiltered('sessions_online');
 
-        cmsEventsManager::hook('user_logout', $userSession);
+            cmsEventsManager::hook('user_logout', $userSession);
+
+        }
 
         if (self::hasCookie('auth')) {
 
             $auth_cookie = self::getCookie('auth');
 
-            if (preg_match('/^[0-9a-f]{32}$/i', $auth_cookie)){
+            if (preg_match('/^[0-9a-z]{32}$/i', $auth_cookie)){
                 $model->deleteAuthToken($auth_cookie);
             }
 
