@@ -2,7 +2,7 @@
 
 class cmsUpdater {
 
-    private $update_info_url = 'http://upd.instantcms.ru/info/%s';
+    private $update_info_url = 'https://upd.instantcms.ru/info/%s';
     private $cache_file = 'cache/update.dat';
 
     const UPDATE_CHECK_ERROR = 0;

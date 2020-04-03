@@ -84,7 +84,18 @@ class actionMessagesSend extends cmsAction {
         //
         // Отправляем сообщение
         //
-        $is_textarea_editor = !$this->options['editor'] || $this->options['editor'] == 'markitup';
+        $is_textarea_editor = !$this->options['editor'];
+
+        if(!$is_textarea_editor){
+
+            $editor_params = cmsCore::getController('wysiwygs')->getEditorParams([
+                'editor'  => $this->options['editor'],
+                'presets' => $this->options['editor_presets']
+            ]);
+
+            $is_textarea_editor = $editor_params['editor'] === 'markitup';
+
+        }
 
         $content_html = cmsEventsManager::hook('html_filter', [
             'text' => $content,
