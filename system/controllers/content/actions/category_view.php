@@ -233,9 +233,9 @@ class actionContentCategoryView extends cmsAction {
 
         if (empty($ctype['options']['list_off_breadcrumb'])){
 
-            if ($ctype['options']['list_on'] && !$is_frontpage){
+            if ($ctype['options']['list_on'] && !$is_frontpage && !empty($base_url)){
                 $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
-            }
+            } 
 
             if (isset($category['path']) && $category['path']){
                 foreach($category['path'] as $c){
