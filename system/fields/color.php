@@ -3,7 +3,7 @@
 class fieldColor extends cmsFormField {
 
     public $title       = LANG_PARSER_COLOR;
-    public $sql         = 'varchar(7) NULL DEFAULT NULL';
+    public $sql         = 'varchar(25) NULL DEFAULT NULL';
     public $filter_hint = '#RRGGBB';
     public $filter_type = 'str';
     public $var_type    = 'string';
@@ -20,6 +20,10 @@ class fieldColor extends cmsFormField {
                     'wheel'      => LANG_PARSER_COLOR_CT_WHEEL,
                     'swatches'   => LANG_PARSER_COLOR_CT_SWATCHES
                 )
+            )),
+            new fieldCheckbox('opacity', array(
+                'title'   => LANG_PARSER_COLOR_OPACITY,
+                'default' => false                
             )),
             new fieldString('swatches', array(
                 'title'   => LANG_PARSER_COLOR_CT_SWATCHES_OPT,
@@ -40,7 +44,7 @@ class fieldColor extends cmsFormField {
         return '<div class="color-block" style="background-color:'.$value.'" title="'.$value.'"></div>';
     }
 
-    public function getStringValue($value){
+    public function getStringValue($value){ 
         return $value;
     }
 

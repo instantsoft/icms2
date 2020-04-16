@@ -184,6 +184,7 @@
     define('LANG_PARSER_IMAGE_DELETE',       'Удалить изображение с сервера?');
     define('LANG_PARSER_COLOR',              'Цвет');
     define('LANG_PARSER_COLOR_CT',           'Тип блока выбора цвета');
+    define('LANG_PARSER_COLOR_OPACITY',      'Включить прозрачность цвета');
     define('LANG_PARSER_COLOR_CT_HUE',       'Оттенок');
     define('LANG_PARSER_COLOR_CT_SATURATION', 'Насыщенность');
     define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Яркость');
