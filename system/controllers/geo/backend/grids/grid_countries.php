@@ -28,7 +28,7 @@ function grid_countries($controller){
                 'table' => 'geo_countries'
             )
         ),
-		'alpha2' => array(
+        'alpha2' => array(
             'title'  => LANG_GEO_ALPHA2,
             'width'  => 250,
             'filter' => 'like',
@@ -36,7 +36,14 @@ function grid_countries($controller){
                 'table' => 'geo_countries'
             )
         ),
-		'ordering' => array(
+        'is_enabled' => array(
+            'title' => LANG_IS_ENABLED,
+            'class' => 'd-none d-sm-table-cell',
+            'flag' => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_countries', 'is_enabled')),
+            'width' => 80
+        ),
+        'ordering' => array(
             'title' => LANG_GEO_POSITION,
             'class' => 'd-none d-lg-table-cell',
             'width' => 60
