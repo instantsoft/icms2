@@ -13,7 +13,8 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
         $form = $this->getForm('ctypes_field', array('edit', $ctype['name']));
 
-        $is_submitted = $this->request->has('submit');
+        $form = cmsEventsManager::hook('ctype_field_form', $form);
+        list($form, $ctype) = cmsEventsManager::hook($ctype['name'].'_ctype_field_form', array($form, $ctype));
 
         $field = $content_model->getContentField($ctype['name'], $field_id);
 
@@ -23,49 +24,52 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
         // скроем лишние опции для системных полей
         if ($field['is_system']) {
             $form->hideField('basic', 'hint');
-            $form->hideFieldset('type');
+            $form->hideField('visibility', 'options:relation_id');
+            $form->hideField('type', 'type');
             $form->hideFieldset('group');
             $form->hideFieldset('format');
             $form->hideFieldset('values');
             $form->hideFieldset('labels');
+            $form->hideFieldset('wrap');
             $form->hideFieldset('edit_access');
         }
 
         // удалим выбор типа для полей с фиксированным типом
-        if ($field['is_fixed_type']) { $form->removeFieldset('type'); }
+        if ($field['is_fixed_type']) { $form->hideField('type', 'type'); }
 
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // добавляем поля настроек типа поля в общую форму
             // чтобы они были обработаны парсером и валидатором
             // вместе с остальными полями
-            if (!$field['is_system'] && !$field['is_fixed_type']){
-                $field_type = $this->request->get('type');
-                $field_class = "field" . string_to_camel('_', $field_type);
-                $field_object = new $field_class(null, null);
-                $field_options = $field_object->getOptions();
-                foreach($field_options as $option_field){
-                    $option_field->setName("options:{$option_field->name}");
-                    $form->addField('type', $option_field);
-                }
+            $field_type = $this->request->get('type', '');
+            $field_class = 'field' . string_to_camel('_', $field_type);
+            $field_object = new $field_class(null, null);
+            $field_options = $field_object->getOptions();
+            $form->addFieldsetAfter('type', LANG_CP_FIELD_TYPE_OPTS, 'field_settings');
+            foreach($field_options as $option_field){
+                $option_field->setName("options:{$option_field->name}");
+                $form->addField('field_settings', $option_field);
             }
 
             $defaults = $field['is_fixed_type'] ? array('type'=>$field['type']) : array();
 
-            $field = array_merge($defaults, $form->parse($this->request, $is_submitted));
-            $errors = $form->validate($this,  $field);
+            $_field = array_merge($defaults, $form->parse($this->request, true));
+            $errors = $form->validate($this,  $_field);
 
             if (!$errors){
 
                 // если не выбрана группа, обнуляем поле группы
-                if (!$field['fieldset']) { $field['fieldset'] = null; }
+                if (!$_field['fieldset']) { $_field['fieldset'] = null; }
 
                 // если создается новая группа, то выбираем ее
-                if ($field['new_fieldset']) { $field['fieldset'] = $field['new_fieldset']; }
-                unset($field['new_fieldset']);
+                if ($_field['new_fieldset']) { $_field['fieldset'] = $_field['new_fieldset']; }
+                unset($_field['new_fieldset']);
 
                 // сохраняем поле
-                $content_model->updateContentField($ctype['name'], $field_id, $field);
+                $content_model->updateContentField($ctype['name'], $field_id, $_field);
+
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
 
                 $this->redirectToAction('ctypes', array('fields', $ctype['id']));
 
@@ -75,15 +79,17 @@ class actionAdminCtypesFieldsEdit extends cmsAction {
 
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
 
+                $field = array_merge($field, $_field);
+
             }
 
         }
 
-        return cmsTemplate::getInstance()->render('ctypes_field', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
-            'field' => $field,
-            'form' => $form,
+        return $this->cms_template->render('ctypes_field', array(
+            'do'     => 'edit',
+            'ctype'  => $ctype,
+            'field'  => $field,
+            'form'   => $form,
             'errors' => isset($errors) ? $errors : false
         ));
 

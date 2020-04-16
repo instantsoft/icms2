@@ -9,21 +9,27 @@ class actionAdminContentCatsOrder extends cmsAction {
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
         $categories = $content_model->getCategoriesTree($ctype['name'], false);
 
-        $is_submitted = $this->request->has('submit');
+        if ($this->request->has('submit')){
 
-        if ($is_submitted){
-            $hash = $this->request->get('hash');
+            $hash = $this->request->get('hash', '');
+
             cmsUser::setCookiePublic('content_tree_path', "{$ctype_id}.1");
+
             $this->reorderCategoriesTree($content_model, $ctype, $categories, $hash);
+
+            cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
+
             $this->redirectBack();
+
         }
 
-        return cmsTemplate::getInstance()->render('content_cats_order', array(
-            'ctype' => $ctype,
-            'categories' => $categories,
+        return $this->cms_template->render('content_cats_order', array(
+            'ctype'      => $ctype,
+            'categories' => $categories
         ));
 
     }
@@ -34,7 +40,7 @@ class actionAdminContentCatsOrder extends cmsAction {
 
         $this->total_nodes = 0;
 
-        $tree = $this->prepareTree($hash['children']);
+        $tree = $this->prepareTree($hash);
 
         $tree = $this->buildNestedSet($tree);
 
@@ -98,7 +104,7 @@ class actionAdminContentCatsOrder extends cmsAction {
                 $node['right'] = $left + ($node['children_count']*2) + 1;
 
                 $child_level = $level+1;
-				
+
                 $node['children'] = $this->buildNestedSet($node['children'], $left, $child_level);
 
             } else {

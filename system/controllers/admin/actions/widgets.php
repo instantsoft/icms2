@@ -2,69 +2,106 @@
 
 class actionAdminWidgets extends cmsAction {
 
-    public function run($do=false){
+    private $is_dynamic_scheme = false;
+
+    public function run($do = false) {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('widgets_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('widgets_'.$do, array_slice($this->params, 1));
             return;
         }
 
         cmsCore::loadAllControllersLanguages();
 
-        $widgets_model = cmsCore::getModel('widgets');
+        $controllers = $this->model_widgets->getPagesControllers();
 
-        $controllers = $widgets_model->getPagesControllers();
-        
-        $widgets_list = $widgets_model->getAvailableWidgets();
+        $widgets_list = $this->model_widgets->getAvailableWidgets();
 
-        $template = cmsTemplate::getInstance();
+        $tpls = cmsCore::getTemplates();
 
-        $scheme_html = $this->getSchemeHTML();
+        $template_name = $this->request->get('template_name', '');
 
-        return $template->render('widgets', array(
-            'controllers' => $controllers,
-            'widgets_list' => $widgets_list,
-            'scheme_html' => $scheme_html
+        if(!$template_name || !in_array($template_name, $tpls)){
+            $template_name = cmsConfig::get('template');
+        }
+
+        cmsCore::loadTemplateLanguage($template_name);
+
+        $templates = [];
+
+        foreach ($tpls as $tpl) {
+            if(file_exists($this->cms_config->root_path . cmsTemplate::TEMPLATE_BASE_PATH. $tpl .'/main.tpl.php')){
+                $templates[$tpl] = $tpl;
+            }
+        }
+
+        $scheme_html = $this->getSchemeHTML($template_name);
+
+        return $this->cms_template->render('widgets', array(
+            'is_dynamic_scheme' => $this->is_dynamic_scheme,
+            'controllers'   => $controllers,
+            'template_name' => $template_name,
+            'templates'     => $templates,
+            'widgets_list'  => $widgets_list,
+            'scheme_html'   => $scheme_html
         ));
 
     }
 
-    public function getSchemeHTML(){
+    public function getSchemeHTML($name=''){
 
-        $template = cmsTemplate::getInstance();
+        $template = new cmsTemplate($name);
+
+        $template->setContext($this);
 
         $scheme_html = $template->getSchemeHTML();
+        if (!$scheme_html) {
+            $scheme_html = $this->getDynamicSchemeHTML($template);
+            if (!$scheme_html) { return false; }
 
-        if (!$scheme_html) { return false; }
+            $this->is_dynamic_scheme = true;
+        }
 
-        if (!preg_match_all('/{([a-zA-Z0-9:_\-]+)}/u', $scheme_html, $matches)) { return false; }
+        preg_match_all('/{(.+)}/ui', $scheme_html, $matches);
 
-        $blocks = $matches[1];
+        if(!empty($matches[1])){
+            foreach($matches[1] as $block){
 
-        foreach($blocks as $block){
+                list($type, $value) = explode(':', $block);
 
-            list($type, $value) = explode(':', $block);
+                if ($type=='position') {
+                    $replace_html = '<ul class="position" rel="'.$value.'" id="pos-'.$value.'"></ul>';
+                }
 
-            if ($type=='position') {
-                $replace_html = '<ul class="position" rel="'.$value.'" id="pos-'.$value.'"></ul>';
+                if ($type=='block') {
+                    if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
+                    $replace_html = '<div class="block"><span>'.$value.'</span></div>';
+                }
+
+                if ($type=='cell') {
+                    if (mb_strpos($value, 'LANG_') === 0){ $value = constant($value); }
+                    $replace_html = '<div class="cell"><span>'.$value.'</span></div>';
+                }
+
+                $scheme_html = str_replace("{{$block}}", $replace_html, $scheme_html);
+
             }
-
-            if ($type=='block') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
-                $replace_html = '<div class="block"><span>'.$value.'</span></div>';
-            }
-
-            if ($type=='cell') {
-                if (mb_strpos($value, 'LANG_')===0){ $value = constant($value); }
-                $replace_html = '<div class="cell"><span>'.$value.'</span></div>';
-            }
-
-            $scheme_html = str_replace("{{$block}}", $replace_html, $scheme_html);
-
         }
 
         return $scheme_html;
+
+    }
+
+    private function getDynamicSchemeHTML($template) {
+
+        $this->cms_template->addTplJSName('admin-scheme');
+
+        $rows = $this->model_widgets->getLayoutRows($template->getName());
+
+        return $template->getRenderedChild('widgets_scheme', array(
+            'rows' => $rows
+        ));
 
     }
 

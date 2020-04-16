@@ -4,20 +4,20 @@ class onGroupsUserProfileButtons extends cmsAction {
 
     public function run($data){
 
-        $profile_id = $data['profile']['id'];
+        if ($data['profile']['id'] == $this->cms_user->id || $data['profile']['is_deleted']) { return $data; }
 
-        $user = cmsUser::getInstance();
+        if (!$this->cms_user->isPrivacyAllowed($data['profile'], 'invite_group_users')){
+            return $data;
+        }
 
-        if ($profile_id == $user->id) { return $data; }
+        $my_groups = $this->model->getUserMemberships($this->cms_user->id);
 
-        $my_groups = $this->model->getUserMemberships($user->id);
-
-        if ($my_groups){
+        if ($my_groups && !$data['profile']['is_deleted'] && !$data['profile']['is_locked']){
 
             $data['buttons'][] = array(
-                'title' => LANG_GROUPS_INVITE,
+                'title' => LANG_GROUPS_INVITE_USER,
                 'class' => 'group_add ajax-modal',
-                'href' => href_to($this->name, 'invite', $profile_id)
+                'href'  => href_to($this->name, 'invite', $data['profile']['id'])
             );
 
         }

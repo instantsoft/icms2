@@ -6,9 +6,13 @@ class actionAdminCtypesFieldsDelete extends cmsAction {
 
         if (!$ctype_id || !$field_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
 
-        $content_model->deleteContentField($ctype_id, $field_id);
+        $this->model_content->deleteContentField($ctype_id, $field_id);
+
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('ctypes', array('fields', $ctype_id));
 

@@ -5,7 +5,7 @@ class actionContentCategoryEdit extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
@@ -15,50 +15,60 @@ class actionContentCategoryEdit extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'edit_cat')) { cmsCore::error404(); }
 
-        $id = $this->request->get('id');
+        $id = $this->request->get('id', 0);
         if (!$id) { cmsCore::error404(); }
 
-        $category = $this->model->getCategory($ctype['name'], $id);
+        $category = $this->model->localizedOff()->getCategory($ctype['name'], $id);
+        if (!$category) { cmsCore::error404(); }
+
+        $this->model->localizedRestore();
 
         $form = $this->getCategoryForm($ctype, 'edit');
 
+        list($ctype, $form, $category) = cmsEventsManager::hook('content_cat_edit_form', array($ctype, $form, $category), null, $this->request);
         list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
 
-        $back_url = $this->request->get('back');
+        $back_url = $this->request->get('back', '');
 
-        // Форма отправлена?
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             // Парсим форму и получаем поля записи
-            $category = $form->parse($this->request, $is_submitted);
+            $new_category = $form->parse($this->request, true);
 
             // Проверям правильность заполнения
-            $errors = $form->validate($this,  $category);
+            $errors = $form->validate($this,  $new_category);
 
             if (!$errors){
 
                 // Обнуляем ручной SLUG, ключевые слова и описание
                 // если они не разрешены для ручного ввода
-                if ($ctype['options']['is_cats_auto_url']){ $category['slug_key'] = null; }
-                if (!$ctype['options']['is_cats_keys']){ $category['seo_keys'] = null; }
-                if (!$ctype['options']['is_cats_desc']){ $category['seo_desc'] = null; }
+                if ($ctype['options']['is_cats_auto_url']){ $new_category['slug_key'] = null; }
+                if (!$ctype['options']['is_cats_keys']){ $new_category['seo_keys'] = null; }
+                if (!$ctype['options']['is_cats_desc']){ $new_category['seo_desc'] = null; }
 
                 // Добавляем категорию и редиректим на ее просмотр
-                $category = $this->model->updateCategory($ctype_name, $id, $category);
+                $new_category = $this->model->updateCategory($ctype_name, $id, $new_category);
+
+                list($ctype, $category, $new_category) = cmsEventsManager::hook('content_category_after_update', array(
+                    $ctype, $category, $new_category
+                ));
+                list($ctype, $category, $new_category) = cmsEventsManager::hook('content_'.$ctype['name'].'_category_after_update', array(
+                    $ctype, $category, $new_category
+                ));
 
                 if ($back_url){
                     $this->redirect($back_url);
                 } else {
                     if ($ctype['options']['list_on']){
-                        $this->redirectTo($ctype_name, $category['slug']);
+                        $this->redirectTo($ctype_name, $new_category['slug']);
                     } else {
                         $this->redirectToHome();
                     }
                 }
 
             }
+
+            $category = $new_category;
 
             if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
@@ -67,18 +77,18 @@ class actionContentCategoryEdit extends cmsAction {
         }
 
         // Если включен ручной ввод SLUG и ранее он не был введен, то генерируем
-        // его значение по-умолчанию из заголовка
+        // его значение по умолчанию из заголовка
         if (!$ctype['options']['is_cats_auto_url'] && empty($category['slug_key'])){
             $category['slug_key'] = lang_slug($category['title']);
         }
 
-        return cmsTemplate::getInstance()->render('category_form', array(
-            'do' => 'edit',
-            'ctype' => $ctype,
+        return $this->cms_template->render('category_form', array(
+            'do'       => 'edit',
+            'ctype'    => $ctype,
             'category' => $category,
-            'form' => $form,
+            'form'     => $form,
             'back_url' => $back_url,
-            'errors' => isset($errors) ? $errors : false
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }

@@ -8,6 +8,19 @@
     define('LANG_USERS_EDIT_PROFILE',       'Редактировать профиль');
     define('LANG_USERS_EDIT_USER',          'Редактировать пользователя');
 
+    define('LANG_USERS_RESTORE_PROFILE',    'Восстановить профиль');
+    define('LANG_USERS_DELETE_PROFILE',     'Удалить профиль');
+    define('LANG_RULE_USERS_DELETE',        'Удалять профиль');
+    define('LANG_RULE_USERS_BIND_TO_PARENT', 'Привязка записей типов контента');
+    define('LANG_RULE_USERS_BIND_OFF_PARENT', 'Отвязка записей типов контента');
+    define('LANG_PERM_OPTION_MY',           'Только свой');
+    define('LANG_PERM_OPTION_ANYUSER',      'Любой');
+    define('LANG_USERS_DELETE_CONFIRM',     'Удалить профиль "%s"?');
+    define('LANG_USERS_DELETE_SUCCESS',     'Профиль успешно удалён');
+    define('LANG_USERS_RESTORE_SUCCESS',    'Профиль успешно восстановлен');
+    define('LANG_USERS_DELETE_ADMIN_ERROR', 'Вы не можете удалять профили администраторов');
+    define('LANG_USERS_IS_DELETED',         'Профиль удалён');
+
     define('LANG_USERS_EDIT_PROFILE_MAIN',  'Содержание');
     define('LANG_USERS_EDIT_PROFILE_THEME', 'Оформление');
     define('LANG_USERS_EDIT_PROFILE_NOTICES', 'Уведомления');
@@ -24,6 +37,10 @@
     define('LANG_USERS_OPT_MAX_TABS',       'Максимальное число вкладок');
     define('LANG_USERS_OPT_MAX_TABS_HINT',  'Остальные вкладки будут помещены в пункт «Еще...»<br>0 — бесконечное количество');
     define('LANG_USERS_OPT_AUTH_ONLY',      'Разрешить просмотр профилей только авторизованным пользователям');
+    define('LANG_RULE_USERS_CHANGE_EMAIL',   'Разрешить смену email');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD', 'Период возможной смены email, в днях');
+    define('LANG_RULE_USERS_CHANGE_EMAIL_PERIOD_HINT', 'Не указано, можно менять всегда');
+    define('LANG_USERS_EMAIL_VERIFY', 'На адрес <b>%s</b> отправлено письмо. Перейдите по ссылке из письма чтобы активировать смену почты');
     define('LANG_USERS_OPT_WALL_ENABLED',   'Включить стену профиля');
     define('LANG_USERS_OPT_STATUSES_ENABLED',   'Включить статус профиля');
     define('LANG_USERS_OPT_KARMA_COMMENTS', 'Спрашивать пояснение при оценке репутации');
@@ -56,10 +73,12 @@
 
     define('LANG_USERS_OPT_DS_SHOW',        'Показывать вкладку "%s"');
     define('LANG_USERS_DS_LATEST',          'Новые');
+    define('LANG_USERS_DS_SUBSCRIBERS',     'Популярные по подписчикам');
     define('LANG_USERS_DS_POPULAR',         'Популярные');
     define('LANG_USERS_DS_ONLINE',          'Онлайн');
     define('LANG_USERS_DS_RATED',           'Рейтинг');
     define('LANG_USERS_DS_DATE_LOG',        'Дата последнего визита');
+    define('LANG_USERS_OPT_LIST_ALLOWED',   'Список доступен для');
 
     define('LANG_USERS_OPT_FILTER_SHOW',    'Показывать фильтр');
 
@@ -74,22 +93,29 @@
     define('LANG_USERS_PROFILE_WALL',       'Стена пользователя');
 
     define('LANG_USERS_PROFILE_REGDATE',    'Регистрация');
-    define('LANG_USERS_PROFILE_LOGDATE',    'Последний визит');
     define('LANG_USERS_PROFILE_INVITED_BY', 'По приглашению');
-    define('LANG_USERS_PROFILE_LAST_IP',    'Последний IP');
 
     define('LANG_USERS_PROFILE_IS_HIDDEN',  'Личная информация скрыта настройками приватности');
 
     define('LANG_USERS_FRIENDS',            'Друзья');
     define('LANG_USERS_FRIENDS_ADD',        'Добавить в друзья');
     define('LANG_USERS_FRIENDS_DELETE',     'Удалить из друзей');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS', 'Оставить в подписчиках');
     define('LANG_USERS_FRIENDS_CONFIRM',    'Отправить пользователю %s предложение дружбы?');
+    define('LANG_USERS_SUBSCRIBE_CONFIRM',    'Подписаться на новости пользователя %s?');
+    define('LANG_USERS_UNSUBSCRIBE_CONFIRM',    'Отписаться от пользователя %s?');
     define('LANG_USERS_FRIENDS_DELETE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей?');
+    define('LANG_USERS_FRIENDS_SUBSCRIBE_CONFIRM', 'Удалить пользователя <b>%s</b> из списка ваших друзей, оставив в подписчиках?');
     define('LANG_USERS_FRIENDS_SENT',       'Предложение дружбы отправлено');
+    define('LANG_USERS_SUBSCRIBE_SUCCESS',  'Вы успешно подписались');
+    define('LANG_USERS_UNSUBSCRIBE_SUCCESS',  'Вы успешно отписались');
     define('LANG_USERS_FRIENDS_DELETED',    '%s удален из списка друзей');
     define('LANG_USERS_FRIENDS_DECLINED',   '%s отклонил ваше предложение дружбы');
+    define('LANG_USERS_KEEP_IN_SUBSCRIBERS_NOTICE',   '%s оставил вас в подписчиках');
     define('LANG_USERS_FRIENDS_NOTICE',     '%s предлагает вам стать друзьями');
     define('LANG_USERS_FRIENDS_DONE',       '%s стал вашим другом');
+    define('LANG_USERS_SUBSCRIBE_DONE',     '%s подписался на вас');
+    define('LANG_USERS_UNSUBSCRIBE_DONE',   '%s отписался от вас');
     define('LANG_USERS_FRIENDS_UNDONE',     '%s прекратил дружбу с вами');
 
     define('LANG_USERS_NOTIFY_VIA_NONE',    'Не уведомлять');
@@ -105,8 +131,11 @@
     define('LANG_USERS_NOTIFY_FRIEND_ACCEPT',  'Уведомлять об одобренных запросах дружбы');
     define('LANG_USERS_NOTIFY_FRIEND_DELETE',  'Уведомлять о прекращении дружбы');
 
+    define('LANG_USERS_PRIVACY_FRIENDSHIP',    'Кто может отправлять мне запросы дружбы?');
     define('LANG_USERS_PRIVACY_PROFILE_VIEW',  'Кто может просматривать ваш профиль?');
     define('LANG_USERS_PRIVACY_PROFILE_WALL',  'Кто может писать на вашей стене?');
+    define('LANG_USERS_PRIVACY_PROFILE_WALL_REPLY', 'Кто может комментировать записи на стене?');
+    define('LANG_USERS_PRIVACY_PROFILE_CTYPE',  'Кто может просматривать список ваших %s?');
 
     define('LANG_USERS_FRIENDS_SPELLCOUNT',     'друг|друга|друзей');
 
@@ -127,9 +156,22 @@
 
     define('LANG_USERS_MY_INVITES',         'Мои приглашения');
     define('LANG_USERS_INVITES_COUNT',      'Вы можете отправить %s');
+    define('LANG_USERS_INVITES_LINKS',      'Или распространите ссылки для приглашения');
     define('LANG_USERS_INVITES_SPELLCOUNT', 'приглашение|приглашения|приглашений');
     define('LANG_USERS_INVITES_EMAIL',      'Адрес e-mail для отправки приглашения');
     define('LANG_USERS_INVITES_EMAILS',     'Адреса e-mail для отправки приглашений');
     define('LANG_USERS_INVITES_EMAILS_HINT','По одному адресу в строке');
     define('LANG_USERS_INVITES_SENT_TO',    'Приглашения успешно отправлены на адреса');
     define('LANG_USERS_INVITES_FAILED_TO',  'Не удалось отправить приглашения на адреса');
+    define('LANG_USERS_SESSIONS',  'Сеансы');
+    define('LANG_USERS_SESSIONS_DELETE',  'Сеанс успешно закрыт');
+    define('LANG_SESS_DESKTOP',  'Настольный ПК');
+    define('LANG_SESS_TABLET',  'Планшет');
+    define('LANG_SESS_MOBILE',  'Телефон');
+    define('LANG_SESS_APP',  'Приложение');
+    define('LANG_SESS_NOT_FOUND',  'Нет активных сохранённых сеансов.');
+    define('LANG_SESS_DROP',  'завершить');
+    define('LANG_SESS_IP',  'IP-адрес');
+    define('LANG_SESS_LAST_DATE',  'Последняя активность');
+    define('LANG_SESS_TYPE',  'Тип доступа');
+    define('LANG_SESSIONS_HINT',  'Здесь показаны сеансы с активным доступом, когда при авторизации вы ставили чекбокс "Запомнить меня" или сеансы с мобильного приложения. Вы можете в любой момент прекратить любой из сеансов.');

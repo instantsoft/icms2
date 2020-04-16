@@ -4,34 +4,47 @@ class onPhotosContentAlbumsItemHtml extends cmsAction {
 
     public function run($album){
 
-        $core = cmsCore::getInstance();
-        $template = cmsTemplate::getInstance();
-        $user = cmsUser::getInstance();
-
-        $page = $core->request->get('page', 1);
-        $perpage = 16;
-
-        $total = $this->model->getPhotosCount($album['id']);
-
-        $this->model->limitPage($page, $perpage);
-
-        $photos = $this->model->getPhotos($album['id']);
-
-        if (!$photos && $page > 1) { $this->redirect(href_to('albums', $album['slug'].'.html')); }
-
-        $is_owner =
-            cmsUser::isAllowed('albums', 'delete', 'all') ||
-            (cmsUser::isAllowed('albums', 'delete', 'own') && $album['user_id'] == $user->id);
-
-        return $template->renderInternal($this, 'album', array(
-            'album' => $album,
-            'photos' => $photos,
-            'page' => $page,
-            'perpage' => $perpage,
-            'total' => $total,
-            'is_owner' => $is_owner,
-            'page_url' => ''
+        $this->model->orderByList(array(
+            array(
+                'by' => $album['filter_values']['ordering'],
+                'to' => $album['filter_values']['orderto']
+            ),
+            array(
+                'by' => 'id',
+                'to' => $album['filter_values']['orderto']
+            )
         ));
+
+        if (cmsUser::isAllowed('albums', 'view_all') || $this->cms_user->id == $album['user_id']) {
+            $this->model->disablePrivacyFilter();
+            $this->model->disableApprovedFilter();
+        }
+
+        if($album['filter_values']['type']){
+            $this->model->filterEqual('type', $album['filter_values']['type']);
+        }
+
+        if($album['filter_values']['orientation']){
+            $this->model->filterEqual('orientation', $album['filter_values']['orientation']);
+        }
+
+        if($album['filter_values']['width']){
+            $this->model->filterGtEqual('width', $album['filter_values']['width']);
+        }
+
+        if($album['filter_values']['height']){
+            $this->model->filterGtEqual('height', $album['filter_values']['height']);
+        }
+
+        $page    = $this->cms_core->request->get('photo_page', 1);
+        $perpage = (empty($this->options['limit']) ? 16 : $this->options['limit']);
+
+        $toolbar_html = cmsEventsManager::hookAll('photos_toolbar_html', $album);
+        if ($toolbar_html) {
+            $this->cms_template->addToBlock('before_body', html_each($toolbar_html));
+        }
+
+        return $this->renderPhotosList($album, 'album_id', $page, $perpage);
 
     }
 

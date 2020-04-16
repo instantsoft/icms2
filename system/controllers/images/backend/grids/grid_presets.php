@@ -18,14 +18,19 @@ function grid_presets($controller){
         'title' => array(
             'title' => LANG_IMAGES_PRESET,
             'href' => href_to($controller->root_url, 'presets_edit', array('{id}')),
+            'editable' => array(
+                'table' => 'images_presets'
+            )
         ),
         'name' => array(
             'title' => LANG_SYSTEM_NAME,
+            'width' => 200
         ),
         'width' => array(
             'title' => LANG_IMAGES_PRESET_SIZE,
+            'width' => 100,
 			'handler' => function($val, $row){
-				return $val . ' x ' . $row['height'];
+				return ($val ? $val : LANG_AUTO) . ' x ' . ($row['height'] ? $row['height'] : LANG_AUTO);
 			}
         ),
         'quality' => array(
@@ -36,15 +41,13 @@ function grid_presets($controller){
             'width' => 70
         ),
         'is_square' => array(
-            'title' => LANG_IMAGES_PRESET_SQUARE,
+            'title' => LANG_IMAGES_PRESET_CROP,
 			'flag' => true,
-			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'images_presets', 'is_square')),
-            'width' => 80
+            'width' => 120
         ),
         'is_watermark' => array(
             'title' => LANG_IMAGES_PRESET_WM,
 			'flag' => true,
-			'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'images_presets', 'is_watermark')),
             'width' => 100
         ),
     );
@@ -74,4 +77,3 @@ function grid_presets($controller){
     );
 
 }
-

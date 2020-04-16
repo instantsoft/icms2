@@ -2,13 +2,11 @@
 
 class actionAdminCtypesPerms extends cmsAction {
 
-    public function run($ctype_id){
+    public function run($ctype_id = null){
 
         if (!$ctype_id) { cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
-
-        $ctype = $content_model->getContentType($ctype_id);
+        $ctype = $this->model_content->getContentType($ctype_id);
         if (!$ctype) { cmsCore::error404(); }
 
         cmsCore::loadControllerLanguage('content');
@@ -18,15 +16,14 @@ class actionAdminCtypesPerms extends cmsAction {
 
 		list($ctype, $rules, $values) = cmsEventsManager::hook('content_perms', array($ctype, $rules, $values));
 		list($ctype, $rules, $values) = cmsEventsManager::hook("content_{$ctype['name']}_perms", array($ctype, $rules, $values));
-		
-        $users_model = cmsCore::getModel('users');
-        $groups = $users_model->getGroups(false);
 
-        return cmsTemplate::getInstance()->render('ctypes_perms', array(
-            'ctype' => $ctype,
-            'rules' => $rules,
+        $groups = $this->model_users->getGroups(false);
+
+        return $this->cms_template->render('ctypes_perms', array(
+            'ctype'  => $ctype,
+            'rules'  => $rules,
             'values' => $values,
-            'groups' => $groups,
+            'groups' => $groups
         ));
 
     }

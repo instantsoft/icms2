@@ -1,5 +1,25 @@
+<<<<<<< HEAD
 /cache/
 /install/
 /static/
 /wysiwyg/
 /upload/
+=======
+/.gitignore
+/.idea
+/system/config/config.php
+/system/config/theme_default.yml
+/upload/u1/
+/upload/000/
+/upload/default/
+/upgrade/
+/system/controllers/api/
+/system/languages/ru/controllers/api/
+/system/languages/en/controllers/api/
+/templates/default/controllers/api/
+/cache/rsscache/
+/cache/*.dat
+/cache/*.js
+/cache/*.css
+/cache/*.xml
+>>>>>>> origin/master

@@ -2,34 +2,57 @@
 
 class fieldImage extends cmsFormField {
 
-    public $title = LANG_PARSER_IMAGE;
-    public $sql   = 'text';
-	public $allow_index = false;
-
-    private $teaser_url = '';
+    public $title       = LANG_PARSER_IMAGE;
+    public $sql         = 'text';
+    public $allow_index = false;
+    public $var_type    = 'array';
+    protected $teaser_url = '';
 
     public function getOptions(){
 
-		$presets = cmsCore::getModel('images')->getPresetsList();
-		$presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
-
         return array(
             new fieldList('size_teaser', array(
-                'title' => LANG_PARSER_IMAGE_SIZE_TEASER,
-                'default' => 'small',
-                'items' => $presets
+                'title'     => LANG_PARSER_IMAGE_SIZE_TEASER,
+                'default'   => 'small',
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
             )),
             new fieldList('size_full', array(
-                'title' => LANG_PARSER_IMAGE_SIZE_FULL,
-                'default' => 'big',
-                'items' => $presets
+                'title'     => LANG_PARSER_IMAGE_SIZE_FULL,
+                'default'   => 'big',
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                }
+            )),
+            new fieldList('size_modal', array(
+                'title'     => LANG_PARSER_IMAGE_SIZE_MODAL,
+                'default'   => '',
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList(true);
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return array('' => '') + $presets;
+                }
             )),
             new fieldListMultiple('sizes', array(
-                'title' => LANG_PARSER_IMAGE_SIZE_UPLOAD,
-                'default' => 0,
-                'items' => $presets
+                'title'     => LANG_PARSER_IMAGE_SIZE_UPLOAD,
+                'default'   => 0,
+                'generator' => function (){
+                    $presets = cmsCore::getModel('images')->getPresetsList();
+                    $presets['original'] = LANG_PARSER_IMAGE_SIZE_ORIGINAL;
+                    return $presets;
+                },
+                'rules' => [['required']]
             )),
+            new fieldCheckbox('allow_import_link', array(
+                'title' => LANG_PARSER_IMAGE_ALLOW_IMPORT_LINK
+            ))
         );
+
     }
 
     public function setTeaserURL($url){
@@ -59,15 +82,25 @@ class fieldImage extends cmsFormField {
 
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths || !isset($paths[ $this->getOption('size_full') ])){ return ''; }
+        $size_full = $this->getOption('size_full');
+        $size_modal = $this->getOption('size_modal');
 
-        return html_image($paths, $this->getOption('size_full'), (empty($this->item['title']) ? $this->name : $this->item['title']));
+        if (!$paths || !isset($paths[ $size_full ])){ return ''; }
+
+        $presets = array($size_full, false);
+
+        if(!empty($paths['original']) &&  strtolower(pathinfo($paths['original'], PATHINFO_EXTENSION)) === 'gif'){
+            $img_func = 'html_gif_image';
+        } else {
+            $img_func = 'html_image';
+            if($size_modal){ $presets[1] = $size_modal; }
+        }
+
+        return $img_func($paths, $presets, (empty($this->item['title']) ? $this->name : $this->item['title']));
 
     }
 
     public function store($value, $is_submitted, $old_value=null){
-
-        $config = cmsConfig::getInstance();
 
         if (!is_null($old_value) && !is_array($old_value)){
 
@@ -75,8 +108,7 @@ class fieldImage extends cmsFormField {
 
             if ($old_value != $value){
                 foreach($old_value as $image_url){
-                    $image_path = $config->upload_path . $image_url;
-                    @unlink($image_path);
+                    files_delete_file($image_url, 2);
                 }
             }
 
@@ -86,14 +118,27 @@ class fieldImage extends cmsFormField {
 
         if (empty($sizes) || empty($value)) { return $value; }
 
+        $upload_path = cmsConfig::get('upload_path');
+
+        $image_urls = array();
+
         foreach($value as $size => $image_url){
-            if (!in_array($size, $sizes)){
-                $image_path = $config->upload_path . $image_url;
-                @unlink($image_path);
+
+            $image_url = str_replace(array('"', "'", ' ', '#'), '', html_entity_decode($image_url));
+
+            if(!is_file($upload_path.$image_url)){
+                continue;
             }
+
+            if (!in_array($size, $sizes)){
+                files_delete_file($image_url, 2); continue;
+            }
+
+            $image_urls[$size] = $image_url;
+
         }
 
-        return $value;
+        return $image_urls ?: null;
 
     }
 
@@ -103,11 +148,8 @@ class fieldImage extends cmsFormField {
 
         if (!is_array($value)){ $value = cmsModel::yamlToArray($value); }
 
-        $config = cmsConfig::getInstance();
-
         foreach($value as $image_url){
-            $image_path = $config->upload_path . $image_url;
-            @unlink($image_path);
+            files_delete_file($image_url, 2);
         }
 
         return true;
@@ -147,6 +189,7 @@ class fieldImage extends cmsFormField {
         }
 
         $this->data['sizes'] = $this->getOption('sizes');
+        $this->data['allow_import_link'] = $this->getOption('allow_import_link');
 
         $this->data['images_controller'] = cmsCore::getController('images');
 

@@ -47,13 +47,14 @@ class formRecaptchaOptions extends cmsForm {
                     new fieldList('lang', array(
                         'title' => LANG_RECAPTCHA_LANG,
                         'items' => array(
+                            ''   => LANG_AUTO,
                             'en' => 'English',
                             'nl' => 'Dutch',
                             'fr' => 'French',
                             'de' => 'German',
                             'pt' => 'Portuguese',
                             'ru' => 'Русский',
-                            'uk' => 'Український',
+                            'uk' => 'Українська',
                             'es' => 'Spanish',
                             'tr' => 'Turkish'
                         )

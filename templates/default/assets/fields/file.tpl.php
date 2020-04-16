@@ -1,4 +1,4 @@
-<?php $this->addJS('templates/default/js/files.js'); ?>
+<?php $this->addTplJSNameFromContext('files'); ?>
 
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 

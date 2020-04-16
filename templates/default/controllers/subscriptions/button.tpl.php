@@ -1,0 +1,6 @@
+<?php $this->addTplJSName('subscriptions'); ?>
+<div class="subscribe_wrap">
+    <a href="#" class="subscriber" data-hash="<?php echo $hash; ?>" data-link0="<?php echo $this->href_to('subscribe'); ?>" data-link1="<?php echo $this->href_to('unsubscribe'); ?>" data-text0="<?php echo LANG_USERS_SUBSCRIBE; ?>" data-text1="<?php echo LANG_USERS_UNSUBSCRIBE; ?>" data-issubscribe="<?php echo (int)$user_is_subscribed; ?>" data-target="<?php html(json_encode($target)); ?>"><svg class="style-svg" width="14" height="14" viewBox="0 0 18 18"><g fill="none"><path d="M2.5 14h13v-.382l-2-1V12l.002-3.938c-.152-2.44-1.12-4.02-3.262-4.596l-.74-.2V2h-1v1.267l-.74.199C5.669 4.028 4.658 5.66 4.5 8v4.618l-2 1V14z" stroke="#FFF" stroke-width="2"></path><path d="M9 17c.986 0 1.5-.514 1.5-1.5V15h-3v.5c0 .986.514 1.5 1.5 1.5z" fill="#FFF"></path><path d="M2.5 14h13v-.382l-2-1V12l.002-3.938c-.152-2.44-1.12-4.02-3.262-4.596l-.74-.2V2h-1v1.267l-.74.199C5.669 4.028 4.658 5.66 4.5 8v4.618l-2 1V14z" stroke="#FFF" stroke-width="2"></path></g></svg> <span></span></a>
+    <div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
+    <span title="<?php echo LANG_SBSCR_SUBSCRIBERS; ?>" class="count-subscribers" data-list_link="<?php echo $this->href_to('list_subscribers', $hash); ?>"><?php echo $subscribers_count; ?></span>
+</div>

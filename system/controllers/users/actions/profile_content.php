@@ -2,65 +2,154 @@
 
 class actionUsersProfileContent extends cmsAction {
 
-    public function run($profile, $ctype_name=false, $folder_id=false){
+    public $lock_explicit_call = true;
 
-        if (!$ctype_name) { cmsCore::error404(); }
+    public function run($profile, $ctype_name = false, $folder_id = false, $dataset = false){
 
-        $user = cmsUser::getInstance();
+        if (!$ctype_name) { return cmsCore::error404(); }
 
-        $content_controller = cmsCore::getController('content', $this->request);
+        $ctype = $this->controller_content->model->getContentTypeByName($ctype_name);
+        if (!$ctype) { return cmsCore::error404(); }
 
-        $ctype = $content_controller->model->getContentTypeByName($ctype_name);
-        if (!$ctype) { cmsCore::error404(); }
+        if (!$ctype['options']['profile_on']) { return cmsCore::error404(); }
 
-        $folders = false;
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
+            return cmsCore::error404();
+        }
+
+        $original_folder_id = $folder_id;
+        if($folder_id && !$dataset && !is_numeric($folder_id)){
+            $dataset   = $folder_id;
+            $folder_id = false;
+        }
+
+        $this->controller_content->setListContext('profile_content');
+
+        // Получаем список наборов
+        $datasets = $this->controller_content->getCtypeDatasets($ctype, array(
+            'cat_id' => 0
+        ));
+
+        $folders = array();
 
         if ($ctype['is_folders']){
-            $folders = $content_controller->model->getContentFolders($ctype['id'], $profile['id']);
-        }
 
-        $content_controller->model->filterEqual('user_id', $profile['id']);
+            $folders = $this->controller_content->model->getContentFolders($ctype['id'], $profile['id']);
 
-        if ($folders){
-
-            if ($folder_id && array_key_exists($folder_id, $folders)){
-                $content_controller->model->filterEqual('folder_id', $folder_id);
+            if ($folders){
+                if ($folder_id && array_key_exists($folder_id, $folders)){
+                    $this->controller_content->model->filterEqual('folder_id', $folder_id);
+                }
             }
 
-            $folders = array('0' => array('id'=>0, 'title'=>LANG_ALL)) + $folders;
+        }
+
+        $this->controller_content->model->filterEqual('user_id', $profile['id']);
+
+        list($folders, $this->controller_content->model, $profile, $original_folder_id) = cmsEventsManager::hook("user_content_{$ctype['name']}_folders", array(
+            $folders,
+            $this->controller_content->model,
+            $profile,
+            $original_folder_id
+        ));
+
+        // Если есть наборы, применяем фильтры текущего
+        $current_dataset = array();
+        if ($datasets){
+
+            $keys = array_keys($datasets);
+
+            if(!$dataset){
+                $dataset = $keys[0];
+            }
+
+            if($dataset && !empty($datasets[$dataset])){
+
+
+                $current_dataset = $datasets[$dataset];
+                $this->controller_content->model->applyDatasetFilters($current_dataset);
+                // устанавливаем максимальное количество записей для набора, если задано
+                if(!empty($current_dataset['max_count'])){
+                    $this->controller_content->max_items_count = $current_dataset['max_count'];
+                }
+                // если набор всего один, например для изменения сортировки по умолчанию,
+                // не показываем его на сайте
+                if(count($datasets) == 1){
+                    $current_dataset = array(); $datasets = false;
+                }
+
+            } else {
+
+                if($dataset && $folder_id === false && $original_folder_id === false){
+                    return cmsCore::error404();
+                }
+
+            }
 
         }
 
-        if ($user->id != $profile['id'] && !$user->is_admin){
-            $content_controller->model->filterHiddenParents();
+        if ($folders){
+            $folders = array('0' => array('id' => '0', 'title' => LANG_ALL)) + $folders;
         }
 
-        if ($user->id == $profile['id'] || $user->is_admin){
-            $content_controller->model->disableApprovedFilter();
-			$content_controller->model->disablePubFilter();
-			$content_controller->model->disablePrivacyFilter();
+        if ($this->cms_user->id != $profile['id'] && !$this->cms_user->is_admin){
+            $this->controller_content->model->enableHiddenParentsFilter();
         }
 
-        // указываем тут сортировку, чтобы тут же указать индекс для использования
-        $content_controller->model->orderBy('date_pub', 'desc')->forceIndex('user_id');
+        if ($this->cms_user->id == $profile['id'] || $this->cms_user->is_admin){
+            $this->controller_content->model->disableApprovedFilter()->joinModerationsTasks($ctype['name']);
+			$this->controller_content->model->disablePubFilter();
+			$this->controller_content->model->disablePrivacyFilter();
+        }
 
-        cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
+        list($ctype, $profile) = cmsEventsManager::hook('content_before_profile', array($ctype, $profile));
 
         if ($folder_id){
-            $page_url = href_to('users', $profile['id'], array('content', $ctype_name, $folder_id));
+            $page_url = href_to_profile($profile, array('content', $ctype_name, $folder_id));
         } else {
-            $page_url = href_to('users', $profile['id'], array('content', $ctype_name));
+            $page_url = href_to_profile($profile, array('content', $ctype_name));
         }
 
-        $list_html = $content_controller->renderItemsList($ctype, $page_url, false, 0, array('user_id' => $profile['id']));
+        // кешируем
+        cmsModel::cacheResult('current_ctype', $ctype);
+        cmsModel::cacheResult('current_ctype_dataset', $current_dataset);
 
-        return cmsTemplate::getInstance()->render('profile_content', array(
-            'id'        => $profile['id'],
-            'profile'   => $profile,
-            'ctype'     => $ctype,
-            'folders'   => $folders,
-            'folder_id' => $folder_id,
-            'html'      => $list_html
+        $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
+
+        $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+
+        if($current_dataset && $dataset){
+            $list_header .= ' / '.$current_dataset['title'];
+        }
+
+        $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
+            array(
+                'field'     => 'user_id',
+                'condition' => 'eq',
+                'value'     => $profile['id']
+            ),
+            array(
+                'field'     => 'folder_id',
+                'condition' => 'eq',
+                'value'     => $folder_id
+            )
+        )));
+
+        return $this->cms_template->render('profile_content', array(
+            'filter_titles'   => $this->controller_content->getFilterTitles(),
+            'user'            => $this->cms_user,
+            'toolbar_html'    => $toolbar_html,
+            'id'              => $profile['id'],
+            'profile'         => $profile,
+            'ctype'           => $ctype,
+            'folders'         => $folders,
+            'folder_id'       => $original_folder_id,
+            'datasets'        => $datasets,
+            'dataset'         => $dataset,
+            'current_dataset' => $current_dataset,
+            'base_ds_url'     => $page_url . '%s',
+            'list_header'     => $list_header,
+            'html'            => $list_html
         ));
 
     }

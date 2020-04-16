@@ -2,41 +2,39 @@
 
 class actionActivityIndex extends cmsAction{
 
-    public function run($tab='all'){
+    public function run($dataset_name = 'all'){
 
-        $user = cmsUser::getInstance();
-
-        $dataset_name = false;
         $datasets = $this->getDatasets();
 
-        if ($tab && isset($datasets[$tab])) {
+        if(!$dataset_name || !isset($datasets[$dataset_name])){
+            cmsCore::error404();
+        }
 
-            $dataset_name = $tab;
-            $dataset = $datasets[$tab];
+        $dataset = $datasets[$dataset_name];
 
-            if (isset($dataset['filter']) && is_callable($dataset['filter'])){
-                $this->model = $dataset['filter']( $this->model );
-            }
-
-        } else if ($tab) { cmsCore::error404(); }
+        if (isset($dataset['filter']) && is_callable($dataset['filter'])){
+            $this->model = $dataset['filter']( $this->model );
+        }
 
         // Формируем базовые URL для страниц
         $page_url = array(
-            'base'  => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : ''),
-            'first' => href_to($this->name, $dataset_name ? 'index/'.$dataset_name : '')
+            'base'  => href_to($this->name, $dataset_name),
+            'first' => href_to($this->name, $dataset_name)
         );
 
-        $this->model->filterHiddenParents();		
+        $this->model->enableHiddenParentsFilter();
 
         // Получаем HTML списка записей
         $items_list_html = $this->renderActivityList($page_url, $dataset_name);
 
-        return cmsTemplate::getInstance()->render('index', array(
-            'datasets' => $datasets,
-            'dataset_name' => $dataset_name,
-            'dataset' => $dataset,
-            'user' => $user,
-            'items_list_html' => $items_list_html,
+        return $this->cms_template->render('index', array(
+            'page_title'      => ($dataset_name != 'all' ? LANG_ACTIVITY . ' - ' . $dataset['title'] : LANG_ACTIVITY),
+            'base_ds_url'     => href_to($this->name).'%s',
+            'datasets'        => $datasets,
+            'dataset_name'    => $dataset_name,
+            'dataset'         => $dataset,
+            'user'            => $this->cms_user,
+            'items_list_html' => $items_list_html
         ), $this->request);
 
     }

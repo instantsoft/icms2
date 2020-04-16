@@ -15,7 +15,6 @@
     $this->renderForm($form, $user, array(
         'action' => href_to('auth', 'register'),
         'method' => 'post',
-        'append_html' => $captcha_html,
         'submit' => array(
             'title' => LANG_CONTINUE
         )
@@ -30,7 +29,7 @@
 
         var group_id = $('select#group_id').val();
 
-        $('.groups-limit').hide();
+        $('.groups-limit').hide().find('input, select, textarea').prop('required', false);
 
         $('.group-' + group_id).show();
 

@@ -1,6 +1,10 @@
 <?php
 
-class activity extends cmsFrontend{
+class activity extends cmsFrontend {
+
+    protected $useOptions = true;
+
+    protected $unknown_action_as_index_param = true;
 
     public function addType($type){
         return $this->model->addType($type);
@@ -30,18 +34,29 @@ class activity extends cmsFrontend{
 
         $type = $this->model->getType($controller, $name);
 
-        if (!$type['is_enabled']) { return false; }
+        if (empty($type['is_enabled'])) { return false; }
 
         if (!isset($entry['user_id'])) {
-            $user = cmsUser::getInstance();
-            $entry['user_id'] = $user->id;
+            $entry['user_id'] = $this->cms_user->id;
         }
 
         if (!isset($entry['type_id'])) {
             $entry['type_id'] = $type['id'];
         }
 
-        return $this->model->addEntry($entry);
+        $hook_start_name = 'activity_'.$controller.'_'.str_replace('.', '_', $name);
+
+        $entry = cmsEventsManager::hook('activity_before_add', $entry);
+        if($entry === false){ return false; }
+        $entry = cmsEventsManager::hook($hook_start_name.'_before_add', $entry);
+        if($entry === false){ return false; }
+
+        $entry['id'] = $this->model->addEntry($entry);
+
+        cmsEventsManager::hook('activity_after_add', $entry);
+        cmsEventsManager::hook($hook_start_name.'_after_add', $entry);
+
+        return $entry['id'];
 
     }
 
@@ -75,11 +90,8 @@ class activity extends cmsFrontend{
 
     public function renderActivityList($page_url, $dataset_name=false){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         $page = $this->request->get('page', 1);
-        $perpage = 15;
+        $perpage = (empty($this->options['limit']) ? 15 : $this->options['limit']);
 
         // Фильтр приватности
         if (!$dataset_name || $dataset_name == 'all'){
@@ -91,13 +103,20 @@ class activity extends cmsFrontend{
         // Постраничный вывод
         $this->model->limitPage($page, $perpage);
 
+        cmsEventsManager::hook('activity_list_filter', $this->model);
+
         // Получаем количество и список записей
         $total = $this->model->getEntriesCount();
         $items = $this->model->getEntries();
 
+        // если запрос через URL
+        if($this->request->isStandard()){
+            if(!$items && $page > 1){ cmsCore::error404(); }
+        }
+
         $items = cmsEventsManager::hook('activity_before_list', $items);
 
-        return $template->renderInternal($this, 'list', array(
+        return $this->cms_template->renderInternal($this, 'list', array(
             'filters'      => array(),
             'dataset_name' => $dataset_name,
             'page_url'     => $page_url,
@@ -105,14 +124,15 @@ class activity extends cmsFrontend{
             'perpage'      => $perpage,
             'total'        => $total,
             'items'        => $items,
-            'user'         => $user
+            'user'         => $this->cms_user
         ));
 
     }
 
     public function getDatasets(){
 
-        $user = cmsUser::getInstance();
+        $user = $this->cms_user;
+
         $datasets = array();
 
         // Все (новые)
@@ -121,31 +141,26 @@ class activity extends cmsFrontend{
             'title' => LANG_ACTIVITY_DS_ALL,
         );
 
-        // Мои друзья
         if ($user->is_logged){
+            // Мои друзья
             $datasets['friends'] = array(
                 'name' => 'friends',
                 'title' => LANG_ACTIVITY_DS_FRIENDS,
-                'filter' => function($model){
-                    $user = cmsUser::getInstance();
-                    return $model->filterFriends($user->id);
+                'filter' => function($model) use($user){
+                    return $model->filterFriendsAndSubscribe($user->id);
                 }
             );
-        }
-
-        // Только мои
-        if ($user->is_logged){
+            // Только мои
             $datasets['my'] = array(
                 'name' => 'my',
                 'title' => LANG_ACTIVITY_DS_MY,
-                'filter' => function($model){
-                    $user = cmsUser::getInstance();
+                'filter' => function($model) use($user){
                     return $model->filterEqual('user_id', $user->id);
                 }
             );
         }
 
-        return $datasets;
+        return cmsEventsManager::hook('activity_datasets', $datasets);
 
     }
 

@@ -38,17 +38,26 @@ class formAdminSchedulerTask extends cmsForm {
                         )
                     )),
 
-                    new fieldCheckbox('is_active', array(
-                        'title' => LANG_CP_SCHEDULER_TASK_IS_ACTIVE,
+                    new fieldCheckbox('is_strict_period', array(
+                        'title' => LANG_CP_SCHEDULER_IS_STRICT_PERIOD
                     )),
 
+                    new fieldDate('date_last_run', array(
+                        'title' => LANG_CP_SCHEDULER_TASK_LAST_RUN,
+                        'options' => array(
+                            'show_time' => true
+                        )
+                    )),
+
+                    new fieldCheckbox('is_active', array(
+                        'title' => LANG_CP_SCHEDULER_TASK_IS_ACTIVE
+                    ))
 
                 )
-            ),
+            )
 
         );
 
     }
-
 
 }

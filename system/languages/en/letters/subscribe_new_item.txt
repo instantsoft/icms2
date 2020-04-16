@@ -1,0 +1,10 @@
+[subject:Update in your «{title}» subscription list]
+
+Hello, {nickname}.
+
+An update has been made on your subscription list «<a href="{list_url}">{title}</a>»: {subjects}.
+
+--
+ Best regards, {site}
+ <small>We sent this letter because you signed up for the «{title}» list. To no longer receive such messages, <a href="{unsubscribe_url}">discard them here</a>.</small>
+ <small>This letter is sent automatically, please do not reply</small>

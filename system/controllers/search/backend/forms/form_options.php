@@ -11,15 +11,28 @@ class formSearchOptions extends cmsForm {
                 'title' => LANG_SEARCH_IN_CTYPES,
                 'childs' => array(
 
-                    new fieldList('ctypes', array(
+                    new fieldList('types', array(
                         'is_multiple' => true,
                         'generator' => function(){
-                            $content_model = cmsCore::getModel('content');
-                            $ctypes = $content_model->getContentTypes();
-                            $items = array_collection_to_list($ctypes, 'name', 'title');
+
+                            $search_controllers = cmsEventsManager::hookAll('fulltext_search');
+
+                            $items = array();
+
+                            foreach ($search_controllers as $controller) {
+
+                                $items = array_merge($items, $controller['sources']);
+
+                            }
+
                             return $items;
+
                         }
                     )),
+
+                    new fieldCheckbox('is_hash_tag', array(
+                        'title' => LANG_SEARCH_IS_HASH_TAG
+                    ))
 
                 )
             ),
@@ -34,10 +47,10 @@ class formSearchOptions extends cmsForm {
                         'rules' => array(
                             array('required')
                         )
-                    )),
+                    ))
 
                 )
-            ),
+            )
 
         );
 

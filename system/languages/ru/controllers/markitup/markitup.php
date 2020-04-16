@@ -1,12 +1,26 @@
 <?php
-
-    define('LANG_MARKITUP_CONTROLLER',      'Редактор разметки');
-
-    define('LANG_MARKITUP_THEME',           'Общие настройки');
-    define('LANG_MARKITUP_THEME_SET',       'Набор кнопок панели');
-    define('LANG_MARKITUP_THEME_SKIN',      'Скин оформления');
-
-    define('LANG_MARKITUP_IMAGES',          'Изображения');
-    define('LANG_MARKITUP_IMAGES_UPLOAD',   'Разрешить загрузку изображений');
-    define('LANG_MARKITUP_IMAGES_W',        'Максимальная ширина изображения');
-    define('LANG_MARKITUP_IMAGES_H',        'Максимальная высота изображения');
+define('LANG_MARKITUP_BTN', 'Кнопки панели');
+define('LANG_MARKITUP_THEME_SKIN', 'Скин оформления');
+define('LANG_MARKITUP_B', 'Жирный');
+define('LANG_MARKITUP_I', 'Наклонный');
+define('LANG_MARKITUP_U', 'Подчеркнутый');
+define('LANG_MARKITUP_S', 'Зачеркнутый');
+define('LANG_MARKITUP_UL', 'Список');
+define('LANG_MARKITUP_OL', 'Нумерованный список');
+define('LANG_MARKITUP_BC', 'Цитата');
+define('LANG_MARKITUP_BC_HINT', 'Текст цитаты');
+define('LANG_MARKITUP_L', 'Ссылка');
+define('LANG_MARKITUP_L1', 'Адрес ссылки');
+define('LANG_MARKITUP_L2', 'Заголовок ссылки...');
+define('LANG_MARKITUP_IMGL', 'Фото из Интернета');
+define('LANG_MARKITUP_IMGL1', 'Адрес фото');
+define('LANG_MARKITUP_IMG', 'Фото с компьютера');
+define('LANG_MARKITUP_YT', 'Видео YouTube');
+define('LANG_MARKITUP_YT1', 'Ссылка на ролик YouTube');
+define('LANG_MARKITUP_FB', 'Видео Facebook');
+define('LANG_MARKITUP_FB1', 'Ссылка на ролик Facebook');
+define('LANG_MARKITUP_CODE', 'Код');
+define('LANG_MARKITUP_CODE1', 'Язык');
+define('LANG_MARKITUP_SP', 'Спойлер');
+define('LANG_MARKITUP_SP1', 'Название спойлера');
+define('LANG_MARKITUP_SM', 'Смайлы');

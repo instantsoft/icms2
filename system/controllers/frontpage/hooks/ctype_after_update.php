@@ -10,7 +10,7 @@ class onFrontpageCtypeAfterUpdate extends cmsAction {
             $cfg->update('frontpage', 'none');
         }
         
-        return true;
+        return $ctype;
 
     }
 

@@ -1,9 +1,14 @@
+<<<<<<< HEAD
+=======
+<?php $this->addTplJSNameFromContext('jquery-cookie'); ?>
+>>>>>>> origin/master
 <?php if ((!isset($attributes['toolbar']) || $attributes['toolbar']) && $this->isToolbar()){ ?>
     <div class="cp_toolbar">
         <?php $this->toolbar(); ?>
     </div>
 <?php } ?>
 
+<<<<<<< HEAD
 <?php
 
     $is_ajax = $attributes['method']=='ajax';
@@ -24,6 +29,11 @@
 <form id="<?php echo $form_id; ?>" action="<?php echo $attributes['action']; ?>"
       method="<?php echo $method; ?>"
       <?php if ($is_ajax){ ?>
+=======
+<form id="<?php echo $attributes['form_id']; ?>" action="<?php echo $attributes['action']; ?>"
+      method="<?php echo $attributes['method']; ?>"
+      <?php if ($this->controller->request->isAjax()){ ?>
+>>>>>>> origin/master
         class="modal"
       <?php } ?>
       enctype="multipart/form-data"
@@ -31,148 +41,22 @@
 
     <?php echo html_csrf_token(); ?>
 
-    <?php echo $prepend_html; ?>
+    <?php echo $attributes['prepend_html']; ?>
 
-    <div id="form-tabs" <?php if($form->is_tabbed){ ?>class="tabs-menu"<?php } ?>>
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
             <ul class="tabbed">
                 <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
-                    <?php if (!isset($fieldset['childs']) || !sizeof($fieldset['childs'])) { continue; } ?>
+                    <?php if (empty($fieldset['childs'])) { continue; } ?>
                     <li><a href="#tab-<?php echo $fieldset_id; ?>"><?php echo $fieldset['title']; ?></a></li>
                 <?php } ?>
             </ul>
         <?php } ?>
 
-        <?php foreach($form->getStructure() as $fieldset_id => $fieldset){ ?>
-
-        <?php if ($fieldset['type'] == 'html'){ ?>
-            <div id="fset_<?php echo $fieldset_id; ?>"><?php if (!empty($fieldset['content'])) { echo $fieldset['content']; } ?></div>
-            <?php continue; ?>
-        <?php } ?>
-
-        <?php if (empty($fieldset['is_empty']) && (!isset($fieldset['childs']) || !sizeof($fieldset['childs']))) { continue; } ?>
-
-        <div id="tab-<?php echo $fieldset_id; ?>" class="tab">
-            <fieldset id="fset_<?php echo $fieldset_id; ?>"
-            <?php if (isset($fieldset['class'])){ ?>class="<?php echo $fieldset['class']; ?>"<?php } ?>
-            <?php if (isset($fieldset['is_hidden'])){ ?>style="display:none"<?php } ?>>
-
-                <?php if (!empty($fieldset['title']) && !$form->is_tabbed){ ?>
-                    <legend><?php echo $fieldset['title']; ?></legend>
-                <?php } ?>
-
-                <?php if (is_array($fieldset['childs'])){ ?>
-                <?php foreach($fieldset['childs'] as $field) { ?>
-
-                    <?php
-
-                        if ($data) { $field->setItem($data); }
-
-                        $name = $field->getName();
-
-                        if (is_array($errors) && isset($errors[$name])){
-                            $error = $errors[$name];
-                        } else {
-                            $error = false;
-                        }
-
-                        $default = $field->getDefaultValue();
-                        $rel = isset($field->rel) ? $field->rel : null;
-
-                        if (strstr($name, ':')){
-                            $name_parts = explode(':', $name);
-                            $name       = $name_parts[0].'['.$name_parts[1].']';
-                            if (isset($data[$name_parts[0]]) && @array_key_exists($name_parts[1], $data[$name_parts[0]])){
-                                $value = $data[$name_parts[0]][$name_parts[1]];
-                            } else {
-                                $value = $default;
-                            }
-                        } else {
-                            if (is_array($data) && @array_key_exists($name, $data)){
-                                $value = $data[$name];
-                            } else {
-                                $value = $default;
-                            }
-                        }
-
-                        $classes = array(
-                            'field',
-                            'ft_' . mb_strtolower(mb_substr(get_class($field), 5))
-                        );
-
-                        if ($error){
-                            $classes[] = 'field_error';
-                        }
-
-                        if (!empty($field->groups_edit)){
-                            if (!in_array(0, $field->groups_edit)){
-                                $classes[] = 'groups-limit';
-                                foreach($field->groups_edit as $group_id){
-                                    $classes[] = 'group-' . $group_id;
-                                }
-                            }
-                        }
-
-                        $styles = array();
-
-                        if (isset($field->is_visible)){
-                            if (!$field->is_visible){
-                                $styles[] = 'display:none';
-                            }
-                        }
-
-                        $classes = implode(' ', $classes);
-                        $styles = implode(';', $styles);
-                        $id = "f_{$field->id}";
-
-                    ?>
-
-                    <div id="<?php echo $id; ?>" class="<?php echo $classes; ?>" <?php if ($rel) { ?>rel="<?php echo $rel; ?>"<?php } ?> <?php if ($styles) { ?>style="<?php echo $styles; ?>"<?php } ?>>
-
-                        <?php if (!$field->is_hidden && !$field->getOption('is_hidden')) { ?>
-
-                            <?php if ($error){ ?><div class="error_text"><?php echo $error; ?></div><?php } ?>
-
-                            <?php echo $field->getInput($value); ?>
-
-                            <?php if(!empty($field->hint)) { ?><div class="hint"><?php echo $field->hint; ?></div><?php } ?>
-
-                        <?php } else { ?>
-
-                            <?php echo html_input('hidden', $name, $value); ?>
-
-                        <?php } ?>
-
-                    </div>
-
-                <?php } ?>
-                <?php } ?>
-
-            </fieldset>
-        </div>
-
-        <?php } ?>
+        <?php include 'form_fields.tpl.php'; ?>
 
     </div>
-
-    <?php if ($form->is_tabbed){ ?>
-        <script>
-
-                $('#form-tabs .tab').hide();
-                $('#form-tabs .tab').eq(0).show();
-                $('#form-tabs > ul > li').eq(0).addClass('active');
-
-                $('#form-tabs > ul > li > a').click(function(){
-                    $('#form-tabs li').removeClass('active');
-                    $(this).parent('li').addClass('active');
-                    $('#form-tabs .tab').hide();
-                    $('#form-tabs '+$(this).attr('href')).show();
-                    return false;
-                });
-
-        </script>
-    <?php } ?>
 
     <?php if(!empty($attributes['hook'])){ ?>
 
@@ -182,14 +66,33 @@
 
     <?php } ?>
 
-    <?php echo $append_html; ?>
+    <?php echo $attributes['append_html']; ?>
 
     <div class="buttons">
+<<<<<<< HEAD
         <?php echo html_submit($submit['title'], 'submit', $submit); ?>
         <?php if ($cancel['show']) { echo html_button($cancel['title'], 'cancel', "location.href='{$cancel['href']}'"); } ?>
+=======
+        <?php if ($attributes['submit']['show']) { ?>
+            <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
+        <?php } ?>
+        <?php if(isset($attributes['buttons'])){ ?>
+            <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php if (!empty($button['hide'])) { continue; } ?>
+                <?php echo html_button(
+                        $button['title'],
+                        $button['name'],
+                        (isset($button['onclick']) ? $button['onclick'] : ''),
+                        (isset($button['attributes']) ? $button['attributes'] : array())
+                    ); ?>
+            <?php } ?>
+        <?php } ?>
+        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'button-cancel')); } ?>
+>>>>>>> origin/master
     </div>
 
 </form>
+<<<<<<< HEAD
 <?php if ($is_ajax){ ?>
     <script type="text/javascript">
         $(function (){
@@ -199,3 +102,33 @@
         });
     </script>
 <?php } ?>
+=======
+<?php ob_start(); ?>
+<script type="text/javascript">
+    <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
+    $(function (){
+    <?php if ($form->show_unsave_notice){ ?>
+        icms.forms.initUnsaveNotice();
+    <?php } ?>
+    <?php if ($form->is_tabbed){ ?>
+        initTabs('#<?php echo $attributes['form_id']; ?>');
+    <?php } ?>
+        $('.is_collapsed legend').on('click', function (){
+            var _fieldset = $(this).closest('.is_collapsed');
+            $(_fieldset).toggleClass('is_collapse do_expand');
+            $.cookie('icms[fieldset_state]['+$(_fieldset).attr('id')+']', $(_fieldset).hasClass('do_expand'));
+        });
+        $('.is_collapsed').each(function (){
+            if($(this).find('.field_error').length > 0 || $.cookie('icms[fieldset_state]['+$(this).attr('id')+']') === 'true'){
+                $(this).addClass('do_expand').removeClass('is_collapse'); return;
+            }
+        });
+    <?php if (!empty($attributes['is_ajax'])){ ?>
+        $('#<?php echo $attributes['form_id']; ?>').on('submit', function (){
+            return icms.forms.submitAjax(this, <?php echo !empty($attributes['params']) ? json_encode($attributes['params']) : 'undefined'; ?>);
+        });
+    <?php } ?>
+    });
+</script>
+<?php $this->addBottom(ob_get_clean()); ?>
+>>>>>>> origin/master

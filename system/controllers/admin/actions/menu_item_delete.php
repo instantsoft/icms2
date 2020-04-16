@@ -6,9 +6,13 @@ class actionAdminMenuItemDelete extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $menu_model = cmsCore::getModel('menu');
+        if (!cmsForm::validateCSRFToken( $this->request->get('csrf_token', '') )){
+            cmsCore::error404();
+        }
 
-        $menu_model->deleteMenuItem($id);
+        $this->model_menu->deleteMenuItem($id);
+
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
 
         $this->redirectToAction('menu');
 

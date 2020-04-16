@@ -11,33 +11,35 @@ class cmsWidget {
     public $options;
     public $css_class;
 
-    public $is_cacheable = true;
+    public $is_cacheable = null;
+
+    private $allow_cacheable_option = true;
 
     private $template;
     private $wrapper = 'wrapper';
 
     public function __construct($widget){
 
-        $this->name = $widget['name'];
-        $this->controller = $widget['controller'];
-
-        $form = cmsCore::getWidgetOptionsForm($this->name, $this->controller, $widget['options']);
-        $data = $form->parse(new cmsRequest($widget), true);
-
-        foreach($data as $field => $value){
+        foreach($widget as $field => $value){
+            // кэшированием можно управлять из класса виджета
+            // свойство там - приоритетное
+            if($field === 'is_cacheable'){
+                if($this->is_cacheable === null){
+                    $this->is_cacheable = boolval($value);
+                } else {
+                    $this->allow_cacheable_option = false;
+                }
+                continue;
+            }
             $this->{$field} = $value;
         }
 
-        $this->css_class = $widget['class'];
+        $this->css_class       = $widget['class'];
         $this->css_class_title = empty($widget['class_title']) ? '' : $widget['class_title'];
-        $this->css_class_wrap = empty($widget['class_wrap']) ? '' : $widget['class_wrap'];
+        $this->css_class_wrap  = empty($widget['class_wrap']) ? '' : $widget['class_wrap'];
+        $this->template        = $this->name;
 
-        $this->links = $widget['links'];
-
-        $this->position = $widget['position'];
-        $this->template = $this->name;
-		
-		if (!empty($widget['tpl_wrap'])){
+        if (!empty($widget['tpl_wrap'])){
 			$this->setWrapper($widget['tpl_wrap']);
 		}
 
@@ -47,8 +49,12 @@ class cmsWidget {
 
     }
 
-    public function getOption($key, $default=false){
+    public function getOption($key, $default = false){
         return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+    }
+
+    public function getOptions(){
+        return $this->options;
     }
 
     public function setTemplate($template){
@@ -77,6 +83,10 @@ class cmsWidget {
 
     public function isCacheable(){
         return $this->is_cacheable;
+    }
+
+    public function isAllowCacheableOption(){
+        return $this->allow_cacheable_option;
     }
 
 }

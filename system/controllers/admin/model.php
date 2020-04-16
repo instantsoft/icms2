@@ -8,9 +8,15 @@ class modelAdmin extends cmsModel{
 
     public function getInstalledControllers(){
 
+        if(!$this->order_by){
+            $this->orderBy('title', 'asc');
+        }
+
         return $this->get('controllers', function($item, $model){
 
             $item['options'] = cmsModel::yamlToArray($item['options']);
+
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
 
             return $item;
 
@@ -27,8 +33,76 @@ class modelAdmin extends cmsModel{
     public function getControllerInfo($controller_name){
         return $this->getItemByField('controllers', 'name', $controller_name, function($item){
             $item['options'] = cmsModel::yamlToArray($item['options']);
+            $item['files'] = cmsModel::yamlToArray($item['files']);
+            $item['title'] = string_lang($item['name'].'_CONTROLLER', $item['title']);
             return $item;
         });
+    }
+
+//============================================================================//
+//===========================    Дополнения    ===============================//
+//============================================================================//
+
+    public function getInstalledAddonsIds() {
+
+        $controllers_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('controllers', function($item, $model){ return $item['addon_id']; }, false);
+
+        $widgets_addons = (array)$this->selectOnly('addon_id')->
+                filterNotNull('addon_id')->
+                get('widgets', function($item, $model){ return $item['addon_id']; }, false);
+
+        return array_filter(array_merge($widgets_addons, $controllers_addons));
+
+    }
+
+//============================================================================//
+//============================    События    =================================//
+//============================================================================//
+
+    public function getEvents(){
+
+        $this->limit = false;
+
+        return $this->get('events');
+
+    }
+
+    public function reorderEvents($ids_list){
+
+        $this->reorderByList('events', $ids_list);
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
+    }
+
+    public function addEvent($listener, $event) {
+
+        $id = $this->insert('events', array(
+            'listener' => $listener,
+            'event'    => $event,
+            'ordering' => $this->getNextOrdering('events')
+        ));
+
+        cmsCache::getInstance()->clean('events');
+
+        return $id;
+
+    }
+
+    public function deleteEvent($listener, $event) {
+
+        $this->filterEqual('listener', $listener);
+        $this->filterEqual('event', $event);
+        $this->deleteFiltered('events');
+
+        cmsCache::getInstance()->clean('events');
+
+        return true;
+
     }
 
 //============================================================================//
@@ -49,26 +123,31 @@ class modelAdmin extends cmsModel{
 
     public function getPendingSchedulerTasks(){
 
-        $tasks = $this->filterEqual('is_active', 1)->getSchedulerTasks();
-        $pending = array();
+        $tasks = $this->filterEqual('is_active', 1)->
+                orderBy('ordering', 'asc')->
+                getSchedulerTasks();
 
-        foreach($tasks as $task){
+        $pending = [];
 
-            if ($task['is_new']) {
-                $pending[] = $task;
-                continue;
-            }
+        if($tasks){
+	        foreach($tasks as $task){
 
-            $time_last_run = strtotime($task['date_last_run']);
-            $time_now = time();
+	            if ($task['is_new']) {
+	                $pending[] = $task;
+	                continue;
+	            }
 
-            $minutes_ago = floor(($time_now - $time_last_run) / 60);
+	            $time_last_run = strtotime($task['date_last_run']);
+	            $time_now = time();
 
-            if ($minutes_ago >= $task['period']){
-                $pending[] = $task;
-                continue;
-            }
+	            $minutes_ago = floor(($time_now - $time_last_run) / 60);
 
+	            if ($minutes_ago >= $task['period']){
+	                $pending[] = $task;
+	                continue;
+	            }
+
+	        }
         }
 
         return $pending;
@@ -93,11 +172,11 @@ class modelAdmin extends cmsModel{
 
     }
 
-    public function updateSchedulerTaskDate($id){
+    public function updateSchedulerTaskDate($task){
 
-        return $this->updateSchedulerTask($id, array(
+        return $this->updateSchedulerTask($task['id'], array(
             'is_new' => 0,
-            'date_last_run' => null
+            'date_last_run' => ($task['is_strict_period'] ? date('Y-m-d H:i:s', (strtotime($task['date_last_run']) + ($task['period']*60))) : null)
         ));
 
     }
@@ -107,16 +186,21 @@ class modelAdmin extends cmsModel{
         return $this->delete('scheduler_tasks', $id);
 
     }
-    
+
     public function toggleSchedulerPublication($id, $is_active){
-		
+
      	return $this->update('scheduler_tasks', $id, array(
 			'is_active' => $is_active
 		));
-		
+
     }
 
-//============================================================================//
-//============================================================================//
+    public function getTableItemsCount24($table_name, $date_pub_field = 'date_pub'){
+
+        $this->filterDateYounger($date_pub_field, 1);
+
+        return $this->getCount($table_name, 'id', true);
+
+    }
 
 }

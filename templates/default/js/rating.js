@@ -2,54 +2,55 @@ var icms = icms || {};
 
 icms.rating = (function ($) {
 
-    this.options = {}
+    this.options = {};
 
     this.setOptions = function(options){
         this.options = options;
-    }
-
-    //====================================================================//
+    };
 
     this.onDocumentReady = function(){
 
         $('.rating_widget').each(function(){
-
-            var widget = $(this);
-
-            var controller = widget.data('target-controller');
-            var subject = widget.data('target-subject');
-            var id = widget.data('target-id');
-
-            $('a.vote-up', widget).click(function(){
-                icms.rating.vote('up', controller, subject, id);
-            });
-
-            $('a.vote-down', widget).click(function(){
-                icms.rating.vote('down', controller, subject, id);
-            });
-
-            $('.score span.clickable', widget).on("click", function(){
-                var url = widget.data('info-url');
-                icms.modal.openAjax(url, {
-                   controller: controller,
-                   subject: subject,
-                   id: id
-                });
-            });
-
+            icms.rating.bindWidget($(this));
         });
 
-    }
+    };
 
-    //====================================================================//
+    this.bindWidget = function(widget){
+
+        var controller = widget.data('target-controller');
+        var subject = widget.data('target-subject');
+        var id = widget.data('target-id');
+
+        $('a.vote-up', widget).click(function(){
+            return icms.rating.vote('up', controller, subject, id);
+        });
+
+        $('a.vote-down', widget).click(function(){
+            return icms.rating.vote('down', controller, subject, id);
+        });
+
+        $('.score span.clickable', widget).off('click').on('click', function(){
+            var url = widget.data('info-url');
+            icms.modal.openAjax(url, {
+               controller: controller,
+               subject: subject,
+               id: id
+            }, function(){
+                icms.rating.bingInfoPages();
+            });
+        });
+
+    };
 
     this.vote = function(direction, controller, subject, id){
 
         var widget_id = 'rating-' + subject + '-' + id;
         var widget = $('#'+widget_id);
 
-        $('.arrow', widget).html('<span class="disabled"></span>');
-        $('.score', widget).html('<div class="loading-icon"></div>');
+        $('.arrow svg', widget).unwrap();
+        $('.arrow svg', widget).wrap('<span class="disabled"></span>');
+        $('.score', widget).html('<div class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>');
 
         $.post(this.options.url, {
 
@@ -61,18 +62,26 @@ icms.rating = (function ($) {
         }, function(result){
 
             if (!result.success){
-                $('.score', widget).html('<span class="zero">&mdash;</span>');
+                if (result.message){
+                    icms.modal.alert(result.message);
+                    $('.disabled', widget).attr('title', result.message);
+                }
+                if (result.rating){
+                    $('.score', widget).html('<span class="'+result.css_class+'">'+result.rating+'</span>');
+                }
                 return;
             }
 
             $('.score', widget).html('<span class="'+result.css_class+'">'+result.rating+'</span>');
             $('.disabled', widget).attr('title', result.message);
 
-        }, "json");
+            icms.rating.bindWidget(widget);
 
-    }
+        }, 'json');
 
-    //====================================================================//
+        return false;
+
+    };
 
     this.bingInfoPages = function(){
 
@@ -112,9 +121,7 @@ icms.rating = (function ($) {
 
         });
 
-    }
-
-    //====================================================================//
+    };
 
     return this;
 

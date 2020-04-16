@@ -4,6 +4,10 @@
 
         'hooks' => array(
             'admin_dashboard_chart',
+<<<<<<< HEAD
+=======
+            'admin_dashboard_block',
+>>>>>>> origin/master
             'menu_users',
             'rating_vote',
             'user_notify_types',
@@ -12,7 +16,13 @@
             'auth_login',
             'user_loaded',
             'wall_permissions',
+            'wall_after_add',
+            'wall_after_delete',
+            'content_privacy_types',
+            'content_view_hidden',
             'sitemap_sources',
+            'content_before_childs',
+            'ctype_relation_childs'
         )
 
     );

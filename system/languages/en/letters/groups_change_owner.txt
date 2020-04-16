@@ -1,0 +1,12 @@
+[subject:Change of {group_title} group owner - {site}]
+
+Hello!
+
+The group <a href="{group_url}">{group_title}</a> was replaced by the owner.
+
+Profile of the old owner: {old_profile_link}
+Profile of the new owner: {new_profile_link}
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

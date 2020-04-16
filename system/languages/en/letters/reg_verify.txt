@@ -6,6 +6,8 @@ To confirm your registration follow the link:
 
 <a href="{page_url}">{page_url}</a>
 
+Or use the verification code: {pass_token}
+
 You should do that until {valid_until}.
 
 After that date your registration will be canceled.

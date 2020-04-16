@@ -13,16 +13,16 @@ class onAdminMenuAdmin extends cmsAction {
 
         $menu = $this->getAdminMenu();
 
-        foreach($menu as $id=>$item){
+        foreach ($menu as $id => $_item) {
 
-            if ($item['url'] == href_to($this->name)) { continue; }
+            if ($_item['url'] == href_to($this->name)) { continue; }
 
             $result['items'][] = array(
-                'id' => 'admin' . $id,
-                'parent_id' =>  $menu_item_id,
-                'title' => $item['title'],
+                'id'           => 'admin' . $id,
+                'parent_id'    => $menu_item_id,
+                'title'        => $_item['title'],
                 'childs_count' => 0,
-                'url' => $item['url']
+                'url'          => $_item['url']
             );
 
         }

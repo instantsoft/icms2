@@ -1,0 +1,11 @@
+[subject:{user_nickname} asks him to join the group - {site}]
+
+Hello.
+
+<a href="{user_url}">{user_nickname}</a> asks him to join the <a href="{group_url}">{group_title}</a> group.
+
+The requests list to the group is available by <a href="{requests_url}">this link</a>.
+
+--
+ Best regards, {site}
+ <small>This letter is sent automatically, please do not reply</small>

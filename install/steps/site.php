@@ -17,10 +17,11 @@ function step($is_submit){
 
 function check_data(){
 
-    $sitename   = $_POST['sitename'];
-    $hometitle  = $_POST['hometitle'];
-    $metakeys   = $_POST['metakeys'];
-    $metadesc   = $_POST['metadesc'];
+    $sitename   = trim($_POST['sitename']);
+    $hometitle  = trim($_POST['hometitle']);
+    $metakeys   = trim($_POST['metakeys']);
+    $metadesc   = trim($_POST['metadesc']);
+    $is_check_updates = (int)(isset($_POST['is_check_updates']) ?: 0);
 
     if (!$sitename){
         return array(
@@ -29,11 +30,19 @@ function check_data(){
         );
     }
 
+    if (!$hometitle){
+        return array(
+            'error' => true,
+            'message' => LANG_SITE_HOMETITLE_ERROR
+        );
+    }
+
     $_SESSION['install']['site'] = array(
         'sitename' => $sitename,
         'hometitle' => $hometitle,
         'metakeys' => $metakeys,
         'metadesc' => $metadesc,
+        'is_check_updates' => $is_check_updates,
     );
 
     return array(

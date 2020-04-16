@@ -5,6 +5,7 @@ class fieldAge extends cmsFormField {
     public $title   = LANG_PARSER_AGE;
     public $sql     = 'datetime NULL DEFAULT NULL';
     public $filter_type = 'date';
+    public $var_type    = 'string';
 
     public function getOptions(){
         return array(
@@ -35,11 +36,67 @@ class fieldAge extends cmsFormField {
                     'DAY' => LANG_DAYS,
                 )
             )),
+			new fieldDate('from_date', array(
+				'title' => LANG_PARSER_AGE_FROM_DATE,
+				'hint' => LANG_PARSER_AGE_FROM_DATE_HINT,
+			))
         );
     }
 
+    public function getRules() {
+
+        if($this->context == 'filter'){
+            $this->rules[] = array('age_range');
+        } else {
+            $this->rules[] = array('date');
+        }
+
+        return $this->rules;
+
+    }
+
+    public function getDefaultVarType($is_filter = false) {
+
+        if($this->context == 'filter'){
+            $is_filter = true;
+        }
+
+        if ($is_filter){
+            $this->var_type = 'array';
+        }
+
+        return parent::getDefaultVarType($is_filter);
+
+    }
+
     public function parse($value){
-        return htmlspecialchars( $this->getDiff($value) );
+        return html($this->getDiff($value), false);
+    }
+
+    public function getStringValue($value){
+
+        if(!$value){ return ''; }
+
+        if(is_array($value)){
+
+            $range = constant('LANG_' . $this->getOption('range').'10');
+
+            $result_string = '';
+
+            if (!empty($value['from'])){
+                $result_string .= LANG_FROM.' '.$value['from'].' ';
+            }
+
+            if (!empty($value['to'])){
+                $result_string .= LANG_TO.' '.$value['to'];
+            }
+
+            return $result_string.' '.constant('LANG_' . $this->getOption('range').'10');
+
+        }
+
+        return $this->getDiff($value);
+
     }
 
     public function getDiff($date){
@@ -51,6 +108,7 @@ class fieldAge extends cmsFormField {
         if ($this->getOption('show_d')){ $options[] = 'd'; }
         if ($this->getOption('show_h')){ $options[] = 'h'; }
         if ($this->getOption('show_i')){ $options[] = 'i'; }
+        if ($this->getOption('from_date')){ $options['from_date'] = $this->getOption('from_date'); }
 
         return string_date_age($date, $options);
 
@@ -58,53 +116,115 @@ class fieldAge extends cmsFormField {
 
     public function getFilterInput($value) {
 
-        $from = !empty($value['from']) ? intval($value['from']) : false;
-        $to = !empty($value['to']) ? intval($value['to']) : false;
+        $from = !empty($value['from']) ? (int)$value['from'] : false;
+        $to = !empty($value['to']) ? (int)$value['to'] : false;
 
-        $range = constant('LANG_' . $this->getOption('range').'10');
+        if(!$this->show_filter_input_title){
+            $this->title = false;
+        }
 
-        return LANG_FROM . ' ' . html_input('text', $this->element_name.'[from]', $from, array('class'=>'input-small')) . ' ' .
-               LANG_TO . ' ' . html_input('text', $this->element_name.'[to]', $to, array('class'=>'input-small')) . ' ' .
-               $range;
+        return cmsTemplate::getInstance()->renderFormField($this->class.'_filter', array(
+            'field' => $this,
+            'range' => constant('LANG_' . $this->getOption('range').'10'),
+            'from'  => $from,
+            'to'    => $to
+        ));
 
     }
 
     public function applyFilter($model, $value) {
 
-        if (!is_array($value)) { return $model; }
+        if (!is_array($value)) { return parent::applyFilter($model, $value); }
 
-        if (!empty($value['from'])){
-            $from = intval($value['from']);
-            $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+        if(!empty($value['from']) || !empty($value['to'])){
+
+            if (!empty($value['from'])){
+                $from = (int)$value['from'];
+                $model->filterDateOlder($this->name, $from, $this->getOption('range'));
+            }
+
+            if (!empty($value['to'])){
+                $model->filterTimestampYounger($this->name, $value['to'], $this->getOption('range'));
+            }
+
+            return $model;
+
         }
 
-        if (!empty($value['to'])){
-            $to = intval($value['to']);
-            $model->filterDateYounger($this->name, $to, $this->getOption('range'));
-        }
-
-        return $model;
+        return parent::applyFilter($model, $value);
 
     }
 
     public function store($value, $is_submitted, $old_value=null){
 
-        $config = cmsConfig::getInstance();
+        if(!$value){ return null; }
 
-        if ($value){
-            $date = DateTime::createFromFormat($config->date_format, $value);
-            return $date->format('Y-m-d');
-        } else {
-            return null;
+        if (!is_array($value)){
+
+            return date('Y-m-d H:i:s', strtotime($value));
+
+        } elseif(isset($value['from']) || isset($value['to'])) {
+
+            return [
+                'from' => (isset($value['from']) ? $value['from'] : null),
+                'to'   => (isset($value['to']) ? $value['to'] : null)
+            ];
+
         }
 
+        return null;
+
+    }
+
+    public function storeFilter($value){
+        return $this->store($value, false);
     }
 
     public function getInput($value){
 
-        $this->data['date'] = $value ? date(cmsConfig::getInstance()->date_format, strtotime($value)) : '';
+        $this->data['date'] = $value ? date('d.m.Y', strtotime($value)) : '';
 
         return parent::getInput($value);
+
+    }
+
+    public function validate_age_range($value){
+
+        if (empty($value)) { return true; }
+
+        if(isset($value['from']) || isset($value['to'])) {
+
+            $rgxp = "/^([0-9]+)$/i";
+
+            if (!empty($value['from'])){
+
+                if(is_array($value['from'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if(!preg_match($rgxp, $value['from'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            if (!empty($value['to'])){
+
+                if(is_array($value['to'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+                if(!preg_match($rgxp, $value['to'])){
+                    return ERR_VALIDATE_INVALID;
+                }
+
+            }
+
+            return true;
+
+        }
+
+        return ERR_VALIDATE_INVALID;
 
     }
 

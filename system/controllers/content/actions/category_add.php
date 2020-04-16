@@ -5,7 +5,7 @@ class actionContentCategoryAdd extends cmsAction {
     public function run(){
 
         // Получаем название типа контента и сам тип
-        $ctype_name = $this->request->get('ctype_name');
+        $ctype_name = $this->request->get('ctype_name', '');
         $ctype = $this->model->getContentTypeByName($ctype_name);
         if (!$ctype) { cmsCore::error404(); }
 
@@ -15,7 +15,7 @@ class actionContentCategoryAdd extends cmsAction {
         // проверяем наличие доступа
         if (!cmsUser::isAllowed($ctype['name'], 'add_cat')) { cmsCore::error404(); }
 
-        $parent_id = $this->request->get('to_id');
+        $parent_id = $this->request->get('to_id', 0);
 
         $form = $this->getCategoryForm($ctype, 'add');
 
@@ -23,12 +23,13 @@ class actionContentCategoryAdd extends cmsAction {
         $is_submitted = $this->request->has('submit');
 
         $category = array();
-        
-        list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));        
-        
+
+        list($ctype, $form, $category) = cmsEventsManager::hook('content_cat_add_form', array($ctype, $form, $category), null, $this->request);
+        list($form, $category) = cmsEventsManager::hook("content_{$ctype['name']}_cat_form", array($form, $category));
+
         // Парсим форму и получаем поля записи
         $category = $form->parse($this->request, $is_submitted);
-		
+
         if (!$is_submitted && $parent_id) { $category['parent_id'] = $parent_id; }
 
         if ($is_submitted){
@@ -36,10 +37,10 @@ class actionContentCategoryAdd extends cmsAction {
             // Проверям правильность заполнения
             $errors = $form->validate($this,  $category);
 
-            if (!$errors){				
+            if (!$errors){
                 // Добавляем запись и редиректим на ее просмотр
-                $category = $this->model->addCategory($ctype_name, $category);
-                $this->redirectTo($ctype_name, $category['slug']);
+                $category = $this->model->addCategory($ctype['name'], $category);
+                $this->redirectTo($ctype['name'], $category['slug']);
             }
 
             if ($errors){
@@ -48,13 +49,13 @@ class actionContentCategoryAdd extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('category_form', array(
-            'do' => 'add',
-            'ctype' => $ctype,
+        return $this->cms_template->render('category_form', array(
+            'do'       => 'add',
+            'ctype'    => $ctype,
             'category' => $category,
-            'form' => $form,
+            'form'     => $form,
             'back_url' => false,
-            'errors' => isset($errors) ? $errors : false
+            'errors'   => isset($errors) ? $errors : false
         ));
 
     }

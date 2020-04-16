@@ -5,9 +5,6 @@ class cmsCache {
 
     private $cacher;
     private $cache_ttl;
-    private $is_debug = false;
-
-    public $query_count = 0;
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -16,18 +13,23 @@ class cmsCache {
         return self::$instance;
     }
 
+    public static function getCacher($config) {
+
+        $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
+
+        return new $cacher_class($config);
+
+    }
+
     public function __construct() {
 
         $config = cmsConfig::getInstance();
 
         if ($config->cache_enabled) {
 
-            $cacher_class = 'cmsCache' . string_to_camel('_', $config->cache_method);
-
-            $this->cacher = new $cacher_class();
+            $this->cacher = self::getCacher($config);
 
             $this->cache_ttl = $config->cache_ttl;
-            $this->is_debug  = $config->debug;
 
         }
 
@@ -39,6 +41,7 @@ class cmsCache {
         if(!isset($this->cacher)){
             return false;
         }
+
         // есть метод здесь, вызываем его
         if(method_exists($this, '_'.$method_name)){
             return call_user_func_array(array($this, '_'.$method_name), $arguments);
@@ -49,6 +52,7 @@ class cmsCache {
         }
         // ничего нет
         trigger_error('not defined method name '.$method_name, E_USER_NOTICE);
+
         return false;
 
     }
@@ -65,11 +69,13 @@ class cmsCache {
 
         if (!$this->cacher->has($key)){ return false; }
 
-        $value = $this->cacher->get($key);
+        cmsDebugging::pointStart('cache');
 
-        if ($this->is_debug && $value) {
-            $this->query_count++;
-        }
+            $value = $this->cacher->get($key);
+
+        cmsDebugging::pointProcess('cache', array(
+            'data' => $key
+        ), 5);
 
         return $value;
 

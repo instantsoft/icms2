@@ -17,15 +17,15 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
 	$this->addToolButton(array(
-		'class' => 'help',
-		'title' => LANG_HELP,
+		'class'  => 'help',
+		'title'  => LANG_HELP,
 		'target' => '_blank',
-		'href'  => LANG_HELP_URL_CTYPES_LABELS
+		'href'   => LANG_HELP_URL_CTYPES_LABELS
 	));
 
 ?>
@@ -39,4 +39,3 @@
         'action' => '',
         'method' => 'post'
     ), $errors);
-?>

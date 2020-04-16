@@ -1,29 +1,6 @@
-// ----------------------------------------------------------------------------
-// markItUp! Universal MarkUp Engine, JQuery plugin
-// v 1.1.x
-// Dual licensed under the MIT and GPL licenses.
-// ----------------------------------------------------------------------------
-// Copyright (C) 2007-2012 Jay Salvat
-// http://markitup.jaysalvat.com/
-// ----------------------------------------------------------------------------
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-// ----------------------------------------------------------------------------
+/* markItUp! Universal MarkUp Engine, JQuery plugin 1.1.15 */
+/* Copyright (C) 2007-2012 Jay Salvat http://markitup.jaysalvat.com/ */
+/* Dual licensed under the MIT and GPL licenses. */
 (function($) {
 	$.fn.markItUp = function(settings, extraSettings) {
 		var method, params, options, ctrlKey, shiftKey, altKey; ctrlKey = shiftKey = altKey = false;
@@ -37,7 +14,7 @@
 					nameSpace:				'',
 					root:					'',
 					previewHandler:			false,
-					previewInWindow:		'', // 'width=800, height=600, resizable=yes, scrollbars=yes'
+					previewInWindow:		'',
 					previewInElement:		'',
 					previewAutoRefresh:		true,
 					previewPosition:		'after',
@@ -45,6 +22,7 @@
 					previewParser:			false,
 					previewParserPath:		'',
 					previewParserVar:		'data',
+					previewParserAjaxType:	'POST',
 					resizeHandle:			true,
 					beforeInsert:			'',
 					afterInsert:			'',
@@ -52,21 +30,20 @@
 					onShiftEnter:			{},
 					onCtrlEnter:			{},
 					onTab:					{},
-					markupSet:			[	{ /* set */ } ]
+					data:					{},
+					markupSet:			   [{}]
 				};
 		$.extend(options, settings, extraSettings);
 
-		// compute markItUp! path
 		if (!options.root) {
 			$('script').each(function(a, tag) {
-				miuScript = $(tag).get(0).src.match(/(.*)jquery\.markitup(\.pack)?\.js$/);
+				var miuScript = $(tag).get(0).src.match(/(.*)jquery\.markitup(\.pack)?\.js$/);
 				if (miuScript !== null) {
 					options.root = miuScript[1];
 				}
 			});
 		}
 
-		// Quick patch to keep compatibility with jQuery 1.9
 		var uaMatch = function(ua) {
 			ua = ua.toLowerCase();
 
@@ -122,7 +99,6 @@
 				return;
 			}
 
-			// apply the computed path to ~/
 			function localize(data, inText) {
 				if (inText) {
 					return 	data.replace(/("|')~\//g, "$1"+options.root);
@@ -130,7 +106,6 @@
 				return 	data.replace(/^~\//, options.root);
 			}
 
-			// init and build editor
 			function init() {
 				id = ''; nameSpace = '';
 				if (options.id) {
@@ -147,14 +122,11 @@
 				$$.wrap('<div class="markItUpContainer"></div>');
 				$$.addClass("markItUpEditor");
 
-				// add the header before the textarea
 				header = $('<div class="markItUpHeader"></div>').insertBefore($$);
 				$(dropMenus(options.markupSet)).appendTo(header);
 
-				// add the footer after the textarea
 				footer = $('<div class="markItUpFooter"></div>').insertAfter($$);
 
-				// add the resize handle after textarea
 				if (options.resizeHandle === true && browser.safari !== true) {
 					resizeHandle = $('<div class="markItUpResizeHandle"></div>')
 						.insertAfter($$)
@@ -173,10 +145,8 @@
 					footer.append(resizeHandle);
 				}
 
-				// listen key events
 				$$.bind('keydown.markItUp', keyPressed).bind('keyup', keyPressed);
 
-				// bind an event to catch external calls
 				$$.bind("insertion.markItUp", function(e, settings) {
 					if (settings.target !== false) {
 						get();
@@ -186,7 +156,6 @@
 					}
 				});
 
-				// remember the last focus
 				$$.bind('focus.markItUp', function() {
 					$.markItUp.focused = this;
 				});
@@ -196,13 +165,12 @@
 				}
 			}
 
-			// recursively build header with dropMenus from markupset
 			function dropMenus(markupSet) {
 				var ul = $('<ul></ul>'), i = 0;
 				$('li:hover > ul', ul).css('display', 'block');
 				$.each(markupSet, function() {
 					var button = this, t = '', title, li, j;
-					title = (button.key) ? (button.name||'')+' [Ctrl+'+button.key+']' : (button.name||'');
+					button.title ? title = (button.key) ? (button.title||'')+' [Ctrl+'+button.key+']' : (button.title||'') : title = (button.key) ? (button.name||'')+' [Ctrl+'+button.key+']' : (button.name||'');
 					key   = (button.key) ? 'accesskey="'+button.key+'"' : '';
 					if (button.separator) {
 						li = $('<li class="markItUpSeparator">'+(button.separator||'')+'</li>').appendTo(ul);
@@ -211,22 +179,22 @@
 						for (j = levels.length -1; j >= 0; j--) {
 							t += levels[j]+"-";
 						}
-						li = $('<li class="markItUpButton markItUpButton'+t+(i)+' '+(button.className||'')+'"><a href="" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
-						.bind("contextmenu.markItUp", function() { // prevent contextmenu on mac and allow ctrl+click
+						li = $('<li class="markItUpButton markItUpButton'+t+(i)+' '+(button.className||'')+'"><a href="#" '+key+' title="'+title+'">'+(button.name||'')+'</a></li>')
+						.bind("contextmenu.markItUp", function() {
 							return false;
 						}).bind('click.markItUp', function(e) {
 							e.preventDefault();
 						}).bind("focusin.markItUp", function(){
                             $$.focus();
-						}).bind('mouseup', function() {
+						}).bind('mouseup', function(e) {
 							if (button.call) {
-								eval(button.call)();
+								eval(button.call)(e);
 							}
 							setTimeout(function() { markup(button) },1);
 							return false;
 						}).bind('mouseenter.markItUp', function() {
 								$('> ul', this).show();
-								$(document).one('click', function() { // close dropmenu if click outside
+								$(document).one('click', function() {
 										$('ul ul', header).hide();
 									}
 								);
@@ -243,7 +211,6 @@
 				return ul;
 			}
 
-			// markItUp! markups
 			function magicMarkups(string) {
 				if (string) {
 					string = string.toString();
@@ -257,7 +224,6 @@
 							}
 						}
 					);
-					// [![prompt]!], [![prompt:!:value]!]
 					string = string.replace(/\[\!\[([\s\S]*?)\]\!\]/g,
 						function(x, a) {
 							var b = a.split(':!:');
@@ -276,7 +242,6 @@
 				return "";
 			}
 
-			// prepare action
 			function prepare(action) {
 				if ($.isFunction(action)) {
 					action = action(hash);
@@ -284,7 +249,6 @@
 				return magicMarkups(action);
 			}
 
-			// build block to insert
 			function build(string) {
 				var openWith 			= prepare(clicked.openWith);
 				var placeHolder 		= prepare(clicked.placeHolder);
@@ -332,13 +296,13 @@
 					};
 			}
 
-			// define markup to insert
 			function markup(button) {
 				var len, j, n, i;
 				hash = clicked = button;
 				get();
 				$.extend(hash, {	line:"",
 						 			root:options.root,
+						 			moptions:options,
 									textarea:textarea,
 									selection:(selection||''),
 									caretPosition:caretPosition,
@@ -347,7 +311,6 @@
 									altKey:altKey
 								}
 							);
-				// callbacks before insertion
 				prepare(options.beforeInsert);
 				prepare(clicked.beforeInsert);
 				if ((ctrlKey === true && shiftKey === true) || button.multiline === true) {
@@ -407,38 +370,33 @@
 
 				$.extend(hash, { line:'', selection:selection });
 
-				// callbacks after insertion
 				if ((ctrlKey === true && shiftKey === true) || button.multiline === true) {
 					prepare(clicked.afterMultiInsert);
 				}
 				prepare(clicked.afterInsert);
 				prepare(options.afterInsert);
 
-				// refresh preview if opened
 				if (previewWindow && options.previewAutoRefresh) {
 					refreshPreview();
 				}
 
-				// reinit keyevent
+				textarea.dispatchEvent(new Event('input'));
+
 				shiftKey = altKey = ctrlKey = abort = false;
 			}
 
-			// Substract linefeed in Opera
 			function fixOperaBug(string) {
 				if (browser.opera) {
 					return string.length - string.replace(/\n*/g, '').length;
 				}
 				return 0;
 			}
-			// Substract linefeed in IE
 			function fixIeBug(string) {
-//				if (browser.msie) {
-//					return string.length - string.replace(/\r*/g, '').length;
-//				}
+				if (browser.msie) {
+					return string.length - string.replace(/\r*/g, '').length;
+				}
 				return 0;
 			}
-
-			// add markup
 			function insert(block) {
 				if (document.selection) {
 					var newSelection = document.selection.createRange();
@@ -447,11 +405,8 @@
 					textarea.value =  textarea.value.substring(0, caretPosition)  + block + textarea.value.substring(caretPosition + selection.length, textarea.value.length);
 				}
 			}
-
-			// set a selection
 			function set(start, len) {
 				if (textarea.createTextRange){
-					// quick fix to make it work on Opera 9.5
 					if (browser.opera && browser.version >= 9.5 && len == 0) {
 						return false;
 					}
@@ -466,15 +421,13 @@
 				textarea.scrollTop = scrollPosition;
 				textarea.focus();
 			}
-
-			// get the selection
 			function get() {
 				textarea.focus();
 
 				scrollPosition = textarea.scrollTop;
 				if (document.selection) {
 					selection = document.selection.createRange().text;
-					if (browser.msie) { // ie
+					if (browser.msie) {
 						var range = document.selection.createRange(), rangeCopy = range.duplicate();
 						rangeCopy.moveToElementText(textarea);
 						caretPosition = -1;
@@ -482,10 +435,10 @@
 							rangeCopy.moveStart('character');
 							caretPosition ++;
 						}
-					} else { // opera
+					} else {
 						caretPosition = textarea.selectionStart;
 					}
-				} else { // gecko & webkit
+				} else {
 					caretPosition = textarea.selectionStart;
 
 					selection = textarea.value.substring(caretPosition, textarea.selectionEnd);
@@ -493,7 +446,6 @@
 				return selection;
 			}
 
-			// open preview window
 			function preview() {
 				if (typeof options.previewHandler === 'function') {
 					previewWindow = true;
@@ -530,25 +482,25 @@
 				}
 			}
 
-			// refresh Preview window
 			function refreshPreview() {
  				renderPreview();
 			}
 
 			function renderPreview() {
 				var phtml;
+				var parsedData = $$.val();
+				if (options.previewParser && typeof options.previewParser === 'function') {
+					parsedData = options.previewParser(parsedData);
+				}
 				if (options.previewHandler && typeof options.previewHandler === 'function') {
-					options.previewHandler( $$.val() );
-				} else if (options.previewParser && typeof options.previewParser === 'function') {
-					var data = options.previewParser( $$.val() );
-					writeInPreview(localize(data, 1) );
+					options.previewHandler(parsedData);
 				} else if (options.previewParserPath !== '') {
 					$.ajax({
-						type: 'POST',
+						type: options.previewParserAjaxType,
 						dataType: 'text',
 						global: false,
 						url: options.previewParserPath,
-						data: options.previewParserVar+'='+encodeURIComponent($$.val()),
+						data: options.previewParserVar+'='+encodeURIComponent(parsedData),
 						success: function(data) {
 							writeInPreview( localize(data, 1) );
 						}
@@ -560,7 +512,7 @@
 							dataType: 'text',
 							global: false,
 							success: function(data) {
-								writeInPreview( localize(data, 1).replace(/<!-- content -->/g, $$.val()) );
+								writeInPreview( localize(data, 1).replace(/<!-- content -->/g, parsedData) );
 							}
 						});
 					}
@@ -584,7 +536,6 @@
 				}
 			}
 
-			// set keys pressed
 			function keyPressed(e) {
 				shiftKey = e.shiftKey;
 				altKey = e.altKey;
@@ -601,21 +552,21 @@
 							return false;
 						}
 					}
-					if (e.keyCode === 13 || e.keyCode === 10) { // Enter key
-						if (ctrlKey === true) {  // Enter + Ctrl
+					if (e.keyCode === 13 || e.keyCode === 10) {
+						if (ctrlKey === true) {
 							ctrlKey = false;
 							markup(options.onCtrlEnter);
 							return options.onCtrlEnter.keepDefault;
-						} else if (shiftKey === true) { // Enter + Shift
+						} else if (shiftKey === true) {
 							shiftKey = false;
 							markup(options.onShiftEnter);
 							return options.onShiftEnter.keepDefault;
-						} else { // only Enter
+						} else {
 							markup(options.onEnter);
 							return options.onEnter.keepDefault;
 						}
 					}
-					if (e.keyCode === 9) { // Tab key
+					if (e.keyCode === 9) {
 						if (shiftKey == true || ctrlKey == true || altKey == true) {
 							return false;
 						}
@@ -636,6 +587,12 @@
 			function remove() {
 				$$.unbind(".markItUp").removeClass('markItUpEditor');
 				$$.parent('div').parent('div.markItUp').parent('div').replaceWith($$);
+
+				var relativeRef = $$.parent('div').parent('div.markItUp').parent('div');
+				if (relativeRef.length) {
+				    relativeRef.replaceWith($$);
+				}
+
 				$$.data('markItUp', null);
 			}
 

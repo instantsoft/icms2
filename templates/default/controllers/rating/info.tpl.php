@@ -3,12 +3,12 @@
     <?php if (!$votes){ ?>
         <p><?php echo LANG_RATING_NO_VOTES; ?></p>
     <?php } ?>
-    
+
     <?php if ($votes){ ?>
-    
+
         <div class="rating_info_list">
 
-            <?php $this->renderChild('info_list', array('votes'=>$votes)); ?>
+            <?php $this->renderChild('info_list', array('votes'=>$votes, 'user' => $user)); ?>
 
         </div>
 
@@ -21,11 +21,10 @@
                 >
                 <?php for($p=1; $p<=$pages; $p++){ ?>
                     <a href="#<?php echo $p; ?>" data-page="<?php echo $p; ?>"<?php if ($p==$page) { ?> class="active"<?php } ?>><?php echo $p; ?></a>
-                <?php } ?>            
+                <?php } ?>
             </div>
-            <script>icms.rating.bingInfoPages()</script>
-        <?php } ?>        
-            
-    <?php } ?>        
+        <?php } ?>
+
+    <?php } ?>
 
 </div>

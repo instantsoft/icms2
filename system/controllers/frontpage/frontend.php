@@ -4,69 +4,45 @@ class frontpage extends cmsFrontend {
 
 	public function actionIndex(){
 
-		$config = cmsConfig::getInstance();
-		$template = cmsTemplate::getInstance();
-		
-        $mode = $config->frontpage;		
-		$title = $config->hometitle;
-		
-		if ($title){
-			$template->setFrontPageTitle($title);
+		if ($this->cms_config->hometitle){
+			$this->cms_template->setFrontPageTitle($this->cms_config->hometitle);
 		}
 
-		$is_no_def_meta = isset($config->is_no_meta) ? $config->is_no_meta : false;
-		
+		$is_no_def_meta = isset($this->cms_config->is_no_meta) ? $this->cms_config->is_no_meta : false;
+
 		if ($is_no_def_meta){
-			$template->setPageKeywords($config->metakeys);
-			$template->setPageDescription($config->metadesc);
-		}		
+			$this->cms_template->setPageKeywords($this->cms_config->metakeys);
+			$this->cms_template->setPageDescription($this->cms_config->metadesc);
+		}
+
+        cmsEventsManager::hook('frontpage_action_index', false, null, $this->request);
 
         //
         // Только виджеты
         //
-        if (!$mode || $mode == 'none') {
+        if (!$this->cms_config->frontpage || $this->cms_config->frontpage == 'none') {
 
             return false;
 
         }
 
         //
-        // Профиль / авторизация
+        // Экшен контроллера
         //
-        if ($mode == 'profile'){
 
-            $user = cmsUser::getInstance();
+        list($controller_name, $action) = explode(':', $this->cms_config->frontpage);
 
-            if ($user->is_logged){ $this->redirectTo('users', $user->id); }
+        if(!cmsController::enabled($controller_name)){
 
-            $auth_controller = cmsCore::getController('auth', new cmsRequest(array(
-                'is_frontpage' => true
-            )));
-
-            return $auth_controller->runAction('login');
+            return false;
 
         }
 
-        //
-        // Контент
-        //
-        if (mb_strstr($mode, 'content:')){
+        $this->request->set('is_frontpage', true);
 
-            list($mode, $ctype_name) = explode(':', $mode);
+        $controller = cmsCore::getController($controller_name, $this->request);
 
-			$request_data = $this->request->getData();
-			
-			$request_data['ctype_name'] = $ctype_name;
-			$request_data['slug'] = 'index';
-			$request_data['is_frontpage'] = true;			
-			
-            $request = new cmsRequest($request_data);
-			
-            $content_controller = cmsCore::getController('content', $request);
-
-            return $content_controller->runAction('category_view');
-
-        }
+        return $controller->runHook('frontpage', array('action' => $action));
 
 	}
 

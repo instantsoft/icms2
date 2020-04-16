@@ -1,7 +1,6 @@
 <?php
 
-class modelTags extends cmsModel{
-
+class modelTags extends cmsModel {
 
     public function filterTarget($controller, $subject, $id){
 
@@ -16,9 +15,9 @@ class modelTags extends cmsModel{
     public function addTags($tags_string, $controller, $subject, $id){
 
         $tags_string = trim($tags_string);
-        if (!$tags_string) { return false; }
+        if (!$tags_string) { return null; }
 
-        $tags = explode(",", $tags_string);
+        $tags = explode(',', $tags_string);
 
         $tags_ids = array();
         $tags_inserted = array();
@@ -36,10 +35,10 @@ class modelTags extends cmsModel{
             if (!$tag_id) { continue; }
 
             $this->insert('tags_bind', array(
-                'tag_id' => $tag_id,
+                'tag_id'            => $tag_id,
                 'target_controller' => $controller,
-                'target_subject' => $subject,
-                'target_id' => $id,
+                'target_subject'    => $subject,
+                'target_id'         => $id
             ));
 
             $tags_inserted[] = $tag;
@@ -49,14 +48,14 @@ class modelTags extends cmsModel{
 
         $this->recountTagsFrequency($tags_ids);
 
-        cmsCache::getInstance()->clean("tags.tags");
+        cmsCache::getInstance()->clean('tags.tags');
 
-        return true;
+        return implode(', ', $tags_inserted);
 
     }
 
-    public function recountTagsFrequency($tags_ids=array()){
-	
+    public function recountTagsFrequency($tags_ids = array()){
+
         $this->
             select('t.id', 'tag_id')->
             select('COUNT(i.tag_id)', 'frequency')->
@@ -79,24 +78,24 @@ class modelTags extends cmsModel{
             }
         }
 
-        cmsCache::getInstance()->clean("tags.tags");
+        cmsCache::getInstance()->clean('tags.tags');
 
     }
 
     public function updateTags($tags_string, $controller, $subject, $id){
 
         $this->filterTarget($controller, $subject, $id);
-        
+
         $this->lockFilters();
-        
+
         $tags_ids = $this->get('tags_bind', function($item, $model){
             return $item['tag_id'];
         });
-        
+
         $this->unlockFilters();
-        
+
         $this->deleteFiltered('tags_bind');
-        
+
         if ($tags_ids) { $this->recountTagsFrequency($tags_ids); }
 
         return $this->addTags($tags_string, $controller, $subject, $id);
@@ -109,6 +108,8 @@ class modelTags extends cmsModel{
 
         if (!$id) { return $this->getTagId($tag); }
 
+        cmsCache::getInstance()->clean('tags.tags');
+
         return $id;
 
     }
@@ -116,6 +117,12 @@ class modelTags extends cmsModel{
     public function getTagId($tag){
 
         return $this->filterEqual('tag', $tag)->getFieldFiltered('tags', 'id');
+
+    }
+
+    public function getTagByTag($tag){
+
+        return $this->filterEqual('tag', $tag)->getItem('tags');
 
     }
 
@@ -209,9 +216,38 @@ class modelTags extends cmsModel{
 
     public function updateTag($tag_id, $tag){
 
-        cmsCache::getInstance()->clean("tags.tags");
+        cmsCache::getInstance()->clean('tags.tags');
 
         return $this->update('tags', $tag_id, $tag);
+
+    }
+
+    public function replaceTargetTags($tag_id, $new_tag, $old_tag) {
+
+        $binds = $this->filterEqual('tag_id', $tag_id)->get('tags_bind');
+        if (!$binds) { return false; }
+
+        $targets = array();
+
+        foreach ($binds as $bind){
+            $targets[$bind['target_controller']][$bind['target_subject']][] = $bind['target_id'];
+        }
+
+        foreach ($targets as $target_controller => $target){
+
+            $model = cmsCore::getModel($target_controller);
+
+            if(!method_exists($model, 'replaceCachedTags')){ continue; }
+
+            foreach ($target as $target_subject => $target_ids){
+
+                $target_ids = array_unique($target_ids);
+
+                $model->replaceCachedTags($target_subject, $target_ids, $new_tag, $old_tag);
+
+            }
+
+        }
 
     }
 
@@ -221,18 +257,18 @@ class modelTags extends cmsModel{
 
         $this->filterEqual('tag_id', $tag_id)->deleteFiltered('tags_bind');
 
-        cmsCache::getInstance()->clean("tags.tags");
+        cmsCache::getInstance()->clean('tags.tags');
 
     }
 
     public function deleteTags($controller, $subject, $id){
-    	
+
     	$tags_ids = $this->filterTarget($controller, $subject, $id)->
                 get('tags_bind', function($item, $model){
                     return $item['tag_id'];
                 });
-		
-	if (!$tags_ids) { return; }
+
+        if (!$tags_ids) { return; }
 
         $this->filterIn('id', array_keys($tags_ids))->deleteFiltered('tags_bind');
 
@@ -272,9 +308,8 @@ class modelTags extends cmsModel{
 
             });
 
-        cmsCache::getInstance()->clean("tags.tags");
+        cmsCache::getInstance()->clean('tags.tags');
 
     }
-
 
 }

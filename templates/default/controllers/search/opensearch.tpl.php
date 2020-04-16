@@ -2,6 +2,10 @@
     <ShortName><?php html(sprintf(LANG_SEARCH_ON, $site_config->sitename)); ?></ShortName>
     <Description><?php html(sprintf(LANG_SEARCH_ON, $site_config->sitename)); ?></Description>
     <InputEncoding>utf-8</InputEncoding>
+<<<<<<< HEAD
     <Image width="166" height="23" type="image/png"><?php echo $site_config->host.'/templates/'.$this->name.'/images/logo.png'; ?></Image>
+=======
+    <Image width="166" height="23" type="image/png"><?php echo $site_config->host.'/'.cmsTemplate::TEMPLATE_BASE_PATH.$this->name.'/images/logo.png'; ?></Image>
+>>>>>>> origin/master
     <Url type="text/html" template="<?php echo href_to_abs('search').'?q={searchTerms}'; ?>"/>
 </OpenSearchDescription>

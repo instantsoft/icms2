@@ -9,7 +9,7 @@ icms.adminModerators = (function ($) {
 
     this.add = function(){
 
-        var name = $('#username').val();
+        var name = $('#user_email').val();
 
         if (name.length==0) { return false; }
 
@@ -18,7 +18,7 @@ icms.adminModerators = (function ($) {
 
         $.post(this.url_submit, {name: name}, function(result){
 
-            $('#username').val('');
+            $('#user_email').val('');
 
             $('#ctype_moderators_add .field').show();
             $('#ctype_moderators_add .loading-icon').hide();
@@ -33,13 +33,15 @@ icms.adminModerators = (function ($) {
             $('#ctype_moderators_list #datagrid tr').removeClass('odd');
             $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
 
+            icms.modal.bind('a.ajax-modal');
+
             icms.events.run('admin_moderators_add', result);
 
         }, 'json');
 
         return false;
 
-    }
+    };
 
     //====================================================================//
 
@@ -47,7 +49,7 @@ icms.adminModerators = (function ($) {
 
         var list_item = $('#ctype_moderators_list #moderator-'+id);
 
-        $('a.delete', list_item).hide();
+        $('a.delete, a.view', list_item).hide();
         $('.loading-icon', list_item).show();
 
         $.post(this.url_delete, {id: id}, function(result){
@@ -58,7 +60,7 @@ icms.adminModerators = (function ($) {
                 return false;
             }
 
-            list_item.fadeOut(500, function(){
+            list_item.fadeOut('fast', function(){
                 $(this).remove();
                 $('#ctype_moderators_list #datagrid tr').removeClass('odd');
                 $('#ctype_moderators_list #datagrid tr:odd').addClass('odd');
@@ -70,7 +72,7 @@ icms.adminModerators = (function ($) {
 
         }, 'json');
 
-    }
+    };
 
     //====================================================================//
 

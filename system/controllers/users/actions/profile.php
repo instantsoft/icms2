@@ -2,83 +2,194 @@
 
 class actionUsersProfile extends cmsAction {
 
-    public function run($profile){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    private $is_friend_req = false;
+
+    public function run($profile = null){
 
         $profile = cmsEventsManager::hook('users_profile_view', $profile);
 
-        // Отношения
-        $is_own_profile = $user->id == $profile['id'];
-        $is_friends_on = $this->options['is_friends_on'];
-        $is_friend_profile = $user->isFriend($profile['id']);
-        $is_friend_req = $is_friends_on ? $this->model->isFriendshipRequested($user->id, $profile['id']) : false;
+        // отправлен запрос дружбы
+        $this->is_friend_req = $this->options['is_friends_on'] ? $this->model->isFriendshipRequested($this->cms_user->id, $profile['id']) : false;
 
         // Доступность профиля для данного пользователя
-        if ( !$user->isPrivacyAllowed($profile, 'users_profile_view') ){
-            return cmsTemplate::getInstance()->render('profile_closed', array(
-                'profile' => $profile,
-                'user' => $user,
-                'is_own_profile' => $is_own_profile,
-                'is_friends_on' => $is_friends_on,
-                'is_friend_profile' => $is_friend_profile,
-                'is_friend_req' => $is_friend_req,
+        if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
+            return $this->cms_template->render('profile_closed', array(
+                'profile'        => $profile,
+                'user'           => $this->cms_user,
+                'is_own_profile' => $this->is_own_profile,
+                'is_friends_on'  => $this->options['is_friends_on'],
+                'tool_buttons'   => $this->getToolButtons($profile)
             ));
         }
 
+        $content = cmsCore::getController('content', $this->request);
+
         // Получаем поля
-        $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $content_model->orderBy('ordering');
-        $fields = $content_model->getContentFields('users');
+        $fields = $content->model->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
+        // Парсим значения полей
+        foreach($fields as $name => $field){
+            $fields[$name]['html'] = $field['handler']->setItem($profile)->parse($profile[$name]);
+            $fields[$name]['string_value'] = $field['handler']->getStringValue($profile[$name]);
+        }
 
         // Друзья
-        $friends = $is_friends_on ? $this->model->getFriends($profile['id']) : false;
+        $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : false;
 
         // Контент
-		$content_model = cmsCore::getModel('content');
+		$content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
 
-		$is_filter_hidden = (!$is_own_profile && !$user->is_admin);
+		$is_filter_hidden = (!$this->is_own_profile && !$this->cms_user->is_admin);
 
-        $content_counts = $content_model->getUserContentCounts($profile['id'], $is_filter_hidden);
+        $content_counts = $content->model->getUserContentCounts($profile['id'], $is_filter_hidden, function($ctype) use ($profile, $content){
+            if(!cmsUser::isAllowed($ctype['name'], 'add') &&
+                    !cmsUser::getInstance()->isPrivacyAllowed($profile, 'view_user_'.$ctype['name'])){
+                return false;
+            }
+            return cmsUser::get('id') == $profile['id'] ? true : $content->checkListPerm($ctype['name']);
+        });
 
-        //
-        // Стена
-        //
-        if ($this->options['is_wall']){
+        list($profile, $fields) = cmsEventsManager::hook('profile_before_view', array($profile, $fields));
 
-            $wall_controller = cmsCore::getController('wall', $this->request);
+        $fieldsets = cmsForm::mapFieldsToFieldsets($fields, function($field, $user) use ($profile){
 
-            $wall_title = LANG_USERS_PROFILE_WALL;
+            if ($field['is_system'] || !$field['is_in_item'] || empty($profile[$field['name']])) { return false; }
 
-            $wall_target = array(
-                'controller' => 'users',
-                'profile_type' => 'user',
-                'profile_id' => $profile['id']
-            );
+            // проверяем что группа пользователя имеет доступ к чтению этого поля
+            if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                // если группа пользователя не имеет доступ к чтению этого поля,
+                // проверяем на доступ к нему для авторов
+                if (!empty($profile['id']) && !empty($field['options']['author_access'])){
+                    if (!in_array('is_read', $field['options']['author_access'])){ return false; }
+                    if ($profile['id'] == $user->id){ return true; }
+                }
+                return false;
+            }
+            return true;
 
-            $wall_permissions = array(
-                'add' => $user->is_logged && $user->isPrivacyAllowed($profile, 'users_profile_wall'),
-                'delete' => ($user->is_admin || ($user->id == $profile['id'])),
-            );
+        }, $profile);
 
-            $wall_html = $wall_controller->getWidget($wall_title, $wall_target, $wall_permissions);
+        return $this->cms_template->render('profile_view', array(
+            'options'        => $this->options,
+            'profile'        => $profile,
+            'user'           => $this->cms_user,
+            'is_own_profile' => $this->is_own_profile,
+            'is_friends_on'  => $this->options['is_friends_on'],
+            'tool_buttons'   => $this->getToolButtons($profile),
+            'show_all_flink' => isset($this->tabs['friends']),
+            'friends'        => $friends,
+            'content_counts' => $content_counts,
+            'fields'         => $fields,
+            'fieldsets'      => $fieldsets,
+            'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было
+            'tabs'           => $this->getProfileMenu($profile)
+        ));
+
+    }
+
+    private function getToolButtons($profile) {
+
+        $tool_buttons = array();
+
+        if ($this->cms_user->is_logged && !$profile['is_deleted']) {
+
+            $allowed_user_friendship = $this->cms_user->isPrivacyAllowed($profile, 'users_friendship', true);
+
+            if (!$this->is_own_profile &&
+                    !$profile['is_locked'] &&
+                    (!$this->options['is_friends_on'] ||
+                        ($this->options['is_friends_on'] && !$allowed_user_friendship))
+                    ){
+
+                if(!$this->is_subscribe_profile){
+                    $tool_buttons['subscribe'] = array(
+                        'title' => LANG_USERS_SUBSCRIBE,
+                        'class' => 'subscribe ajax-modal',
+                        'href'  => href_to('users', 'subscribe', $profile['id'])
+                    );
+                } else {
+                    $tool_buttons['unsubscribe'] = array(
+                        'title' => LANG_USERS_UNSUBSCRIBE,
+                        'class' => 'unsubscribe ajax-modal',
+                        'href'  => href_to('users', 'unsubscribe', $profile['id'])
+                    );
+                }
+
+            }
+
+            if ($this->options['is_friends_on'] && !$this->is_own_profile && !$profile['is_locked']){
+
+                if ($allowed_user_friendship){
+
+                    if ($this->is_friend_profile){
+                        $tool_buttons['friend_delete'] = array(
+                            'title' => LANG_USERS_FRIENDS_DELETE,
+                            'class' => 'user_delete ajax-modal',
+                            'href'  => href_to('users', 'friend_delete', $profile['id'])
+                        );
+                    } else if(!$this->is_friend_req) {
+                        $tool_buttons['friend_add'] = array(
+                            'title' => LANG_USERS_FRIENDS_ADD,
+                            'class' => 'user_add ajax-modal',
+                            'href'  => href_to('users', 'friend_add', $profile['id'])
+                        );
+                    }
+
+                }
+
+            }
+
+            if ($this->is_own_profile && $profile['invites_count']){
+                $tool_buttons['invites'] = array(
+                    'title'   => LANG_USERS_MY_INVITES,
+                    'class'   => 'invites',
+                    'counter' => $profile['invites_count'],
+                    'href'    => href_to('users', $profile['id'], 'invites')
+                );
+            }
+
+            if ($this->is_own_profile || $this->cms_user->is_admin){
+                $tool_buttons['settings'] = array(
+                    'title' => LANG_USERS_EDIT_PROFILE,
+                    'class' => 'settings',
+                    'href'  => href_to('users', $profile['id'], 'edit')
+                );
+            }
+
+            if ($this->cms_user->is_admin){
+                $tool_buttons['edit'] = array(
+                    'title' => LANG_USERS_EDIT_USER,
+                    'class' => 'edit',
+                    'href'  => href_to('admin', 'users', array('edit', $profile['id'])) . "?back=" . href_to('users', $profile['id'])
+                );
+            }
+
+            if (cmsUser::isAllowed('users', 'delete', 'any', true) && !$this->is_own_profile){
+                $tool_buttons['delete'] = array(
+                    'title' => LANG_USERS_DELETE_PROFILE,
+                    'class' => 'user_delete ajax-modal',
+                    'href'  => href_to('users', $profile['id'], 'delete')
+                );
+            }
 
         }
 
-        return cmsTemplate::getInstance()->render('profile_view', array(
+        if ($profile['is_deleted'] && cmsUser::isAllowed('users', 'delete', 'any')) {
+                $tool_buttons['restore'] = array(
+                    'title' => LANG_USERS_RESTORE_PROFILE,
+                    'class' => 'basket_remove ajax-modal',
+                    'href'  => href_to('users', $profile['id'], 'restore')
+                );
+        }
+
+        $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
             'profile' => $profile,
-            'user' => $user,
-            'is_own_profile' => $is_own_profile,
-            'is_friends_on' => $is_friends_on,
-            'is_friend_profile' => $is_friend_profile,
-            'is_friend_req' => $is_friend_req,
-            'friends' => $friends,
-            'content_counts' => $content_counts,
-            'fields' => $fields,
-            'wall_html' => isset($wall_html) ? $wall_html : false,
-            'tabs' => $this->getProfileMenu($profile)
+            'buttons' => $tool_buttons
         ));
+
+        return $buttons_hook['buttons'];
 
     }
 

@@ -1,7 +1,5 @@
 <div id="groups_invite_window">
 
-    <h3><?php echo LANG_GROUPS_INVITE; ?></h3>
-
     <?php if ($groups){ ?>
 
         <?php

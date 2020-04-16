@@ -1,41 +1,14 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addCSS('templates/default/css/jquery-ui.css');
+    $this->addTplJSName('jquery-ui');
+    $this->addTplCSSName('jquery-ui');
 
     $this->setPageTitle($profile['nickname']);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($profile['nickname']);
-
-    $tool_buttons = array();
-
-    if ($user->is_logged) {
-
-        if ($is_friends_on && !$is_own_profile){
-            if ($is_friend_profile){
-                $tool_buttons['friend_delete'] = array(
-                    'title' => LANG_USERS_FRIENDS_DELETE,
-                    'class' => 'user_delete',
-                    'href' => $this->href_to('friend_delete', $profile['id'])
-                );
-            } else if(!$is_friend_req) {
-                $tool_buttons['friend_add'] = array(
-                    'title' => LANG_USERS_FRIENDS_ADD,
-                    'class' => 'user_add',
-                    'href' => $this->href_to('friend_add', $profile['id'])
-                );
-            }
-        }
-
+    if($this->controller->listIsAllowed()){
+        $this->addBreadcrumb(LANG_USERS, href_to('users'));
     }
-
-    $buttons_hook = cmsEventsManager::hook('user_profile_buttons', array(
-        'profile' => $profile,
-        'buttons' => $tool_buttons
-    ));
-
-    $tool_buttons = $buttons_hook['buttons'];
+    $this->addBreadcrumb($profile['nickname']);
 
     if (is_array($tool_buttons)){
         foreach($tool_buttons as $button){
@@ -54,7 +27,7 @@
     <div id="left_column" class="column">
 
         <div id="avatar" class="block">
-            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname']); ?>
+            <?php echo html_avatar_image($profile['avatar'], 'normal', $profile['nickname'], $profile['is_deleted']); ?>
         </div>
 
         <div class="block">

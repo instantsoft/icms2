@@ -1,43 +1,79 @@
 <?php
+/**
+ * Класс управления событиями
+ * @doc https://docs.instantcms.ru/dev/controllers/hooks
+ */
 class cmsEventsManager {
 
-    private static $structure;
+    /**
+     * Список всех слушателей и событий
+     * @var array
+     */
+    private static $structure = null;
 
     /**
      * Оповещает слушателей о произошедшем событии
      * Входящие данные $data передаются каждому слушателю по очереди,
      * на выходе возвращается измененный слушателями параметр $data
      *
-     * @param string $event_name Название события
+     * @param mixed $event_name Название события/массив событий
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
+     * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
-    public static function hook($event_name, $data=false, $default_return=null){
+    public static function hook($event_name, $data = false, $default_return = null, $_request = false){
+
+        // Используйте массив событий, если они с разным названиями,
+        // но с одинаковыми параметрами
+        if(is_array($event_name)){
+
+            foreach ($event_name as $_event_name) {
+                $data = self::hook($_event_name, $data, $default_return, $_request);
+            }
+
+            return $data;
+
+        }
 
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? $data : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hook => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? $data : $default_return;
+
+        }
 
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach($listeners as $listener){
 
-            $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL);
+            $request = ($_request === false) ? new cmsRequest(array(), cmsRequest::CTX_INTERNAL) : $_request;
 
             $controller = cmsCore::getController( $listener, $request );
 
-            $data = $controller->runHook($event_name, array($data));
+            if($controller->mb_installed && !$controller->isControllerInstalled($listener)){
+                unset($controller); continue;
+            }
+
+            cmsDebugging::pointStart('events');
+
+                $data = $controller->runHook($event_name, array($data));
+
+            cmsDebugging::pointProcess('events', array(
+                'data' => 'hook :: '.$listener.' => '.$event_name
+            ), 1);
 
         }
 
         return $data;
 
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Оповещает слушателей о произошедшем событии
@@ -46,42 +82,58 @@ class cmsEventsManager {
      *
      * @param string $event_name Название события
      * @param mixed $data Параметр события
-     * @param mixed $default_return Значение, возвращаемое по-умолчанию если у события нет слушателей
+     * @param mixed $default_return Значение, возвращаемое по умолчанию если у события нет слушателей
+     * @param object $_request Объект запроса
      * @return array Обработанный массив данных
      */
-    public static function hookAll($event_name, $data=false, $default_return=null){
+    public static function hookAll($event_name, $data = false, $default_return = null, $_request = false){
 
         //получаем все активные контроллеры, привязанные к указанному событию
         $listeners = self::getEventListeners($event_name);
 
         //если активных контроллеров нет, возвращаем данные без изменений
-        if (!$listeners) { return is_null($default_return) ? false : $default_return; }
+        if (!$listeners) {
+
+            cmsDebugging::pointProcess('events_empty', array(
+                'data' => 'hookAll => '.$event_name
+            ), 1);
+
+            return is_null($default_return) ? false : $default_return;
+
+        }
 
         $results = array();
 
         //перебираем контроллеры и вызываем каждый из них, передавая $data
         foreach($listeners as $listener){
 
-            $request = new cmsRequest(array(), cmsRequest::CTX_INTERNAL);
+            $request = ($_request === false) ? new cmsRequest(array(), cmsRequest::CTX_INTERNAL) : $_request;
 
             $controller = null;
 
             $controller = cmsCore::getController( $listener, $request );
 
-            $result = $controller->runHook($event_name, array($data));
-
-            if ($result !== false){
-                $results[] = $result;
+            if($controller->mb_installed && !$controller->isControllerInstalled($listener)){
+                unset($controller); continue;
             }
+
+            cmsDebugging::pointStart('events');
+
+                $result = $controller->runHook($event_name, array($data));
+
+                if ($result !== false){
+                    $results[$listener] = $result;
+                }
+
+            cmsDebugging::pointProcess('events', array(
+                'data' => 'hookAll :: '.$listener.' => '.$event_name
+            ), 1);
 
         }
 
         return $results;
 
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Возвращает список всех слушателей указанного события
@@ -104,12 +156,9 @@ class cmsEventsManager {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     /**
-     * Обновляет кеш списка привязки слушателей к событиям
-     * @return boolean
+     * Возвращает список всех слушателей для всех событий
+     * @return array
      */
     public static function getAllListeners(){
 
@@ -120,24 +169,23 @@ class cmsEventsManager {
             return $structure;
         }
 
-        $manifests = cmsCore::getControllersManifests();
-
-        if (!$manifests) { return false; }
+        $manifests = cmsCore::getControllersManifests(cmsConfig::get('manifest_from_files'));
+        if (!$manifests) { return array(); }
 
         $structure = array();
 
-        foreach($manifests as $controller_name => $manifest){
+        foreach($manifests as $controller_name => $hooks){
 
-            if (!isset($manifest['hooks'])) { continue; }
-            if (!is_array($manifest['hooks'])) { continue; }
             if (!cmsController::enabled($controller_name)) { continue; }
 
-            foreach($manifest['hooks'] as $event_name){
-
-                $structure[ $event_name ][] = $controller_name;
-
+            foreach($hooks as $ordering => $event_name){
+                $structure[ $event_name ][$ordering] = $controller_name;
             }
 
+        }
+
+        foreach($structure as $event_name => $controllers){
+            ksort($structure[$event_name]);
         }
 
         $cache->set($cache_key, $structure, 86400);
@@ -145,8 +193,5 @@ class cmsEventsManager {
         return $structure;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

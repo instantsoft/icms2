@@ -2,38 +2,56 @@
 
 class actionMessagesShowOlder extends cmsAction {
 
+    /**
+     * @var array Описание правил валидации входных данных
+     */
+    public $request_params = array(
+        'contact_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('required'),
+                array('digits')
+            )
+        ),
+        'message_id' => array(
+            'default' => 0,
+            'rules'   => array(
+                array('required'),
+                array('digits')
+            )
+        )
+    );
+
     public function run(){
 
-        $user     = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
+        $contact_id = $this->request->get('contact_id');
+        $message_id = $this->request->get('message_id');
 
-        $contact_id = $this->request->get('contact_id') or cmsCore::error404();
-        $message_id = $this->request->get('message_id') or cmsCore::error404();
-
-        $contact = $this->model->getContact($user->id, $contact_id);
+        $contact = $this->model->getContact($this->cms_user->id, $contact_id);
 
         if (!$contact){
-            $template->renderJSON(array('error' => true));
+            $this->cms_template->renderJSON(array('error' => true));
         }
 
         $messages = $this->model->filterLt('id', $message_id)->
-                                    limit($this->options['limit'])->
-                                    getMessages($user->id, $contact_id);
+                                    limit($this->options['limit']+1)->
+                                    getMessages($this->cms_user->id, $contact_id);
 
-        $messages_html = $template->render('message', array(
-            'messages' => $messages,
-            'user'=>$user
-        ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL));
+        if(count($messages) > $this->options['limit']){
+            $has_older = true; array_shift($messages);
+        } else {
+            $has_older = false;
+        }
 
-        $first_message_id = $messages[0]['id'];
-
-        $has_older = $this->model->hasOlderMessages($user->id, $contact_id, $first_message_id);
-
-        $template->renderJSON(array(
-            'error' => $messages ? false : true,
-            'html' => $messages ? $messages_html : '',
+        $this->cms_template->renderJSON(array(
+            'error'     => ($messages ? false : true),
+            'html'      => ($messages ? $this->cms_template->render('message', array(
+                'messages'  => $messages,
+                'last_date' => '',
+                'user'      => $this->cms_user
+            ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL)) : ''),
             'has_older' => $has_older,
-            'older_id' => $first_message_id
+            'older_id'  => $messages[0]['id']
         ));
 
     }

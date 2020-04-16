@@ -1,47 +1,59 @@
 <?php
+class modelFiles extends cmsModel {
 
-class modelFiles extends cmsModel{
+    public function registerFile($file){
 
-//============================================================================//
-//============================================================================//
+        $file['size'] = filesize(cmsConfig::get('upload_path').$file['path']);
 
-    public function registerFile($path, $name){
-
-        $url_key = md5(md5(implode(':', array(microtime(true), $name, $path, rand(0, time()/1000)))));
-        $url_key = substr($url_key, rand(0, 23), 8);
-
-        $id = $this->insert('uploaded_files', array(
-            'url_key' => $url_key,
-            'path' => $path,
-            'name' => $name
-        ));
-
-        return array(
-            'id' => $id,
-            'url_key' => $url_key
-        );
+        return $this->insert('uploaded_files', $file);
 
     }
 
     public function deleteFile($id){
 
-        return $this->delete('uploaded_files', $id);
+        $file = $this->getFile($id);
+        if(!$file){ return false; }
+
+        $is_unlink = @unlink(cmsConfig::get('upload_path').$file['path']);
+
+        $is_delete = $this->delete('uploaded_files', $file['id']);
+
+        return $is_unlink && $is_delete;
 
     }
 
     public function getFile($id){
-
         return $this->getItemById('uploaded_files', $id);
+    }
 
+    public function getFileByPath($path){
+        return $this->getItemByField('uploaded_files', 'path', $path);
     }
 
     public function incrementDownloadsCounter($file_id){
-
-        $this->filterEqual('id', $file_id)->increment('uploaded_files', 'counter');
-
+        return $this->filterEqual('id', $file_id)->increment('uploaded_files', 'counter');
     }
 
-//============================================================================//
-//============================================================================//
+    public function filterFileType($type) {
+        return $this->filterEqual('type', $type);
+    }
+
+    public function getFiles(){
+
+        $this->selectOnly('id');
+        $this->select('path');
+        $this->select('name', 'title');
+
+        return $this->get('uploaded_files', function($item, $model){
+
+            $item['image'] = cmsConfig::get('upload_host') . '/' . $item['path'];
+            $item['thumb'] = $item['image'];
+            $item['value'] = $item['image'];
+
+            return $item;
+
+        });
+
+    }
 
 }

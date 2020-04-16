@@ -4,16 +4,18 @@ class actionAdminContentItemMove extends cmsAction {
 
     public function run($ctype_id, $parent_id){
 
-        $items = $this->request->get('selected');
-        $is_submitted = $this->request->has('items');
+        $items = $this->request->get('selected', array());
 
-        $template = cmsTemplate::getInstance();
+        $is_submitted = $this->request->has('items');
 
         $content_model = cmsCore::getModel('content');
 
         $ctype = $content_model->getContentType($ctype_id);
+        if (!$ctype) { return cmsCore::error404(); }
 
 		$fields = $content_model->getContentFields($ctype['name']);
+
+        $fields = cmsEventsManager::hook('ctype_content_fields', $fields);
 
         $form = new cmsForm();
 
@@ -52,7 +54,7 @@ class actionAdminContentItemMove extends cmsAction {
 
                 cmsEventsManager::hook("content_{$ctype['name']}_move_content_items", array($ctype, $fields, $data));
 
-                $template->renderJSON(array(
+                return $this->cms_template->renderJSON(array(
                     'errors' => false,
                     'callback' => 'contentItemsMoved'
                 ));
@@ -60,21 +62,19 @@ class actionAdminContentItemMove extends cmsAction {
             }
 
             if ($errors){
-                $template->renderJSON(array(
-                    'errors' => true,
+                return $this->cms_template->renderJSON(array(
+                    'errors' => true
                 ));
             }
 
-            $this->halt();
-
         }
 
-        return $template->render('content_item_move', array(
-            'ctype' => $ctype,
+        return $this->cms_template->render('content_item_move', array(
+            'ctype'     => $ctype,
             'parent_id' => $parent_id,
-            'items' => $items,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'items'     => $items,
+            'form'      => $form,
+            'errors'    => isset($errors) ? $errors : false
         ));
 
     }

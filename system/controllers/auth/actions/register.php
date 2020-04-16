@@ -3,156 +3,89 @@ class actionAuthRegister extends cmsAction {
 
     public function run(){
 
-        if (cmsUser::isLogged() && !cmsUser::isAdmin()) { $this->redirectToHome(); }
+        if ($this->cms_user->is_logged && !$this->cms_user->is_admin) { $this->redirectToHome(); }
 
-        $users_model = cmsCore::getModel('users');
-        $form = $this->getForm('registration');
+        // если аккаунт не подтверждён и время не вышло
+        // редиректим на верификацию
+        $reg_email = cmsUser::getCookie('reg_email');
+        if($reg_email && $this->validate_email($reg_email) === true && !$this->request->get('clean_reg_email')){
 
-        //
-        // Добавляем поле для кода приглашения,
-        // если регистрация доступна только по приглашениям
-        //
-        if ($this->options['is_reg_invites']){
+            cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $reg_email), 'info');
 
-            $fieldset_id = $form->addFieldsetToBeginning(LANG_REG_INVITED_ONLY);
+            $this->redirectToAction('verify');
 
-            $form->addField($fieldset_id, new fieldString('inv', array(
-                'title' => LANG_REG_INVITE_CODE,
-                'rules' => array(
-                    array('required'),
-                    array('min_length', 10),
-                    array('max_length', 10),
-                )
-            )));
-
+        } else {
+            cmsUser::unsetCookie('reg_email');
+            $reg_email = false;
         }
 
-        //
-        // Добавляем поле выбора группы,
-        // при наличии публичных групп
-        //
-        $public_groups = $users_model->getPublicGroups();
-
-        if ($public_groups) {
-
-            $pb_items = array();
-            foreach($public_groups as $pb) { $pb_items[ $pb['id'] ] = $pb['title']; }
-
-            $form->addFieldToBeginning('basic',
-                new fieldList('group_id', array(
-                        'title' => LANG_USER_GROUP,
-                        'items' => $pb_items
-                    )
-                )
-            );
-
-        }
-
-        //
-        // Добавляем в форму обязательные поля профилей
-        //
-        $content_model = cmsCore::getModel('content');
-        $content_model->setTablePrefix('');
-        $content_model->orderBy('ordering');
-        $fields = $content_model->getRequiredContentFields('users');
-
-        // Разбиваем поля по группам
-        $fieldsets = cmsForm::mapFieldsToFieldsets($fields);
-
-        // Добавляем поля в форму
-        foreach($fieldsets as $fieldset){
-
-            $fieldset_id = $form->addFieldset($fieldset['title']);
-
-            foreach($fieldset['fields'] as $field){
-                if ($field['is_system']) { continue; }
-                $form->addField($fieldset_id, $field['handler']);
-            }
-
-        }
+        list($form, $fieldsets) = $this->getRegistrationForm();
 
         $user = array();
 
         if ($this->request->hasInQuery('inv')){
-            $user['inv'] = $this->request->get('inv');
+            $user['inv'] = $this->request->get('inv','');
         }
 
-        $is_submitted = $this->request->has('submit');
-
-        if ($is_submitted){
+        if ($this->request->has('submit')){
 
             if (!$this->options['is_reg_enabled']){
                 cmsCore::error404();
             }
 
-            $errors = false;
-            $is_captcha_valid = true;
-
-            //
-            // Проверяем капчу
-            //
-            if ($this->options['reg_captcha']){
-
-                $is_captcha_valid = cmsEventsManager::hook('captcha_validate', $this->request);
-
-                if (!$is_captcha_valid){
-                    $errors = true;
-                    cmsUser::addSessionMessage(LANG_CAPTCHA_ERROR, 'error');
-                }
-
-            }
-
             //
             // Парсим и валидируем форму
             //
-            if (!$errors){
+            $user = $form->parse($this->request, true);
 
-                $user = $form->parse($this->request, $is_submitted);
+            $user['groups'] = array();
 
-				$user['groups'] = array();
-
-				if (!empty($this->options['def_groups'])){
-					$user['groups'] = $this->options['def_groups'];
-				}
-
-                if (isset($user['group_id'])) {
-					if (!in_array($user['group_id'], $user['groups'])){
-						$user['groups'][] = $user['group_id'];
-					}
-				}
-
-                //
-                // убираем поля которые не относятся к выбранной пользователем группе
-                //
-                foreach($fieldsets as $fieldset){
-                    foreach($fieldset['fields'] as $field){
-
-                        if (!$field['groups_edit']) { continue; }
-                        if (in_array(0, $field['groups_edit'])) { continue; }
-
-                        if (!in_array($user['group_id'], $field['groups_edit'])){
-                            $form->disableField($field['name']);
-                            unset($user[$field['name']]);
-                        }
-
-                    }
-                }
-
-                $errors = $form->validate($this,  $user);
-
+            if (!empty($this->options['def_groups'])){
+                $user['groups'] = $this->options['def_groups'];
             }
 
+            if (isset($user['group_id'])) {
+                if (!in_array($user['group_id'], $user['groups'])){
+                    $user['groups'][] = $user['group_id'];
+                }
+            }
+
+            //
+            // убираем поля которые не относятся к выбранной пользователем группе
+            //
+            foreach($fieldsets as $fieldset){
+                foreach($fieldset['fields'] as $field){
+
+                    if (empty($field['groups_add'])) { continue; }
+                    if (in_array(0, $field['groups_add'])) { continue; }
+
+                    if (!cmsUser::isUserInGroups($field['groups_add'], $user['groups'])){
+                        $form->disableField($field['name']);
+                        unset($user[$field['name']]);
+                    }
+
+                }
+            }
+
+            $errors = $form->validate($this,  $user);
+
             if (!$errors){
+
+                // если поле nickname убрано из обязательных
+                if(!isset($user['nickname'])){
+                    $user['nickname'] = strstr($user['email'], '@', true);
+                }
 
                 //
                 // проверяем код приглашения
                 //
-                if ($this->options['is_reg_invites']){
+                if ($this->options['is_reg_invites'] || $this->request->has('inv')){
                     $invite = $this->model->getInviteByCode($user['inv']);
                     if (!$invite) {
                         $errors['inv'] = LANG_REG_WRONG_INVITE_CODE;
                     } else {
-                        if ($this->options['is_invites_strict'] && ($invite['email'] != $user['email'])) {
+                        if ($this->options['is_invites_strict'] &&
+                                $this->options['is_reg_invites'] && ($invite['email'] != $user['email'])) {
                             $errors['inv'] = LANG_REG_WRONG_INVITE_CODE_EMAIL;
                         } else {
                             $user['inviter_id'] = $invite['user_id'];
@@ -178,9 +111,9 @@ class actionAuthRegister extends cmsAction {
 
             }
 
-            if (!$errors){
+            list($errors, $user) = cmsEventsManager::hook('registration_validation', array($errors, $user));
 
-                unset($user['inv']);
+            if (!$errors){
 
                 //
                 // Блокируем пользователя, если включена верификация e-mail
@@ -194,32 +127,74 @@ class actionAuthRegister extends cmsAction {
                     ));
                 }
 
-                $result = $users_model->addUser($user);
+                $result = $this->model_users->addUser($user);
 
                 if ($result['success']){
 
 					$user['id'] = $result['id'];
 
+                    // если использовали код приглашения
+                    if(!empty($invite['id'])){
+
+                        // для декремента счётчика инвайтов, если приглашение по ссылке
+                        if(empty($invite['email'])){
+                            $this->model->markInviteSended($invite['id'], $invite['user_id'], $user['email']);
+                        }
+
+                        // удаляем инвайт, раз им воспользовались
+                        $this->model->deleteInvite($invite['id']);
+
+                        // уведомляем того, чей инвайт
+                        $this->model_messages->addNotice(array($invite['user_id']), array(
+                            'content' => sprintf(LANG_AUTH_INVITE_NOTIFY, href_to_profile($user), $user['nickname'])
+                        ));
+
+                    }
+
                     cmsUser::addSessionMessage(LANG_REG_SUCCESS, 'success');
+
+                    cmsUser::setUPS('first_auth', 1, $user['id']);
 
                     // отправляем письмо верификации e-mail
                     if ($this->options['verify_email']){
 
-                        $messenger = cmsCore::getController('messages');
+                        $verify_exp = empty($this->options['verify_exp']) ? 48 : $this->options['verify_exp'];
+
                         $to = array('email' => $user['email'], 'name' => $user['nickname']);
                         $letter = array('name' => 'reg_verify');
 
-                        $messenger->sendEmail($to, $letter, array(
-                            'nickname' => $user['nickname'],
-                            'page_url' => href_to_abs('auth', 'verify', $user['pass_token']),
-                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($this->options['verify_exp'] * 3600)), true),
+                        $this->controller_messages->sendEmail($to, $letter, array(
+                            'nickname'    => $user['nickname'],
+                            'page_url'    => href_to_abs('auth', 'verify', $user['pass_token']),
+                            'pass_token'  => $user['pass_token'],
+                            'valid_until' => html_date(date('d.m.Y H:i', time() + ($verify_exp * 3600)), true)
                         ));
 
                         cmsUser::addSessionMessage(sprintf(LANG_REG_SUCCESS_NEED_VERIFY, $user['email']), 'info');
 
+                        cmsUser::setCookie('reg_email', $user['email'], $verify_exp*3600);
+
+                        // редиректим сразу на форму подтверждения регистрации
+                        $this->redirectToAction('verify');
+
                     } else {
 
 						cmsEventsManager::hook('user_registered', $user);
+
+                        // авторизуем пользователя автоматически
+                        if ($this->options['reg_auto_auth']){
+
+                            $logged_id = cmsUser::login($user['email'], $user['password1']);
+
+                            if ($logged_id){
+
+                                cmsUser::deleteUPS('first_auth', $logged_id);
+
+                                cmsEventsManager::hook('auth_login', $logged_id);
+
+                            }
+
+                        }
 
 					}
 
@@ -230,7 +205,7 @@ class actionAuthRegister extends cmsAction {
                     if ($back_url){
                         $this->redirect($back_url);
                     } else {
-                        $this->redirectToHome();
+                        $this->redirect($this->getAuthRedirectUrl($this->options['first_auth_redirect']));
                     }
 
                 } else {
@@ -239,22 +214,22 @@ class actionAuthRegister extends cmsAction {
 
             }
 
-            if ($errors && $is_captcha_valid){
+            if ($errors){
                 cmsUser::addSessionMessage(LANG_FORM_ERRORS, 'error');
             }
 
         }
 
-        // Капча
-        if ($this->options['reg_captcha']){
-            $captcha_html = cmsEventsManager::hook('captcha_html');
+        // запоминаем откуда пришли на регистрацию
+        $back_url = $this->request->get('back', '');
+        if(empty($errors) && ($back_url || $this->options['first_auth_redirect'] == 'none')){
+            cmsUser::sessionSet('auth_back_url', ($back_url ? $back_url :$this->getBackURL()));
         }
 
-        return cmsTemplate::getInstance()->render('registration', array(
-            'user' => $user,
-            'form' => $form,
-            'captcha_html'=> isset($captcha_html) ? $captcha_html : false,
-            'errors' => isset($errors) ? $errors : false
+        return $this->cms_template->render('registration', array(
+            'user'         => $user,
+            'form'         => $form,
+            'errors'       => isset($errors) ? $errors : false
         ));
 
     }

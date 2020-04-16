@@ -2,16 +2,14 @@
 
 class actionUsersProfileTab extends cmsAction {
 
-    public function run($profile, $tab_name){
+    public $lock_explicit_call = true;
 
-        $user = cmsUser::getInstance();
+    public function run($profile, $tab_name, $dataset = false){
 
         // Доступность профиля для данного пользователя
-        if (!$user->isPrivacyAllowed($profile, 'users_profile_view')){
+        if (!$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view')){
             cmsCore::error404();
         }
-
-        $arguments = func_get_args();
 
         $tabs_menu = $this->getProfileMenu($profile);
 
@@ -30,15 +28,24 @@ class actionUsersProfileTab extends cmsAction {
         unset($this->tabs);
         unset($this->tabs_controllers);
 
-        $html = $controller->runHook('user_tab_show', $arguments);
+        $this->request->set('dataset', $dataset);
 
+        $this->cms_template->setPageTitle($tab['title'], $profile['nickname']);
+
+        if($this->listIsAllowed()){
+            $this->cms_template->addBreadcrumb(LANG_USERS, href_to('users'));
+        }
+        $this->cms_template->addBreadcrumb($profile['nickname'], href_to_profile($profile));
+
+        $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 
-        cmsTemplate::getInstance()->render('profile_tab', array(
-            'tabs' => $tabs_menu,
+        $this->cms_template->render('profile_tab', array(
+            'tabs'    => $tabs_menu,
+            'tab'     => $tab,
             'profile' => $profile,
-            'user' => $user,
-            'html' => $html,
+            'user'    => $this->cms_user,
+            'html'    => $html
         ));
 
     }

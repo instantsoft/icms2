@@ -1,37 +1,59 @@
 <?php
 
-	session_start();
+/**
+ * @file
+ * Файл, который обслуживает все запросы страниц InstantCMS.
+ *
+ * Весь код InstantCMS выпущен в соответствии с лицензией GNU General Public License v2.
+ * Смотрите файлы license.en.txt и license.ru.txt в корне вашей установки копии InstantCMS.
+ * Сделано в InstantSoft, instantsoft.ru, instantcms.ru.
+ */
 
-	define('VALID_RUN', true);
+/**
+ * Константа, по которой можно отследить текущий тип запуска CMS
+ */
+define('VALID_RUN', true);
 
-	// Устанавливаем кодировку
-	header('Content-type:text/html; charset=utf-8');
-    header('X-Powered-By: InstantCMS');
+/**
+ * Константа, наличие которой говорит о том, что нам нужны сессии
+ * и bootstrap.php их включит
+ */
+define('SESSION_START', true);
 
-    require_once 'bootstrap.php';
+header('Content-type:text/html; charset=utf-8');
+header('X-Powered-By: InstantCMS');
 
-    if (cmsConfig::get('emulate_lag')) { usleep(350000); }
+// Подключаем файл первоначальной инициализации окружения InstantCMS
+require_once 'bootstrap.php';
 
-    // Инициализируем шаблонизатор
-    $template = cmsTemplate::getInstance();
+if ($config->emulate_lag) { usleep(350000); }
 
-    if (href_to('auth', 'login') != $_SERVER['REQUEST_URI']){
-        if (!cmsConfig::get('is_site_on') && !cmsUser::isAdmin()) {
-            cmsCore::errorMaintenance();
-        }
-    }
+//Запускаем роутинг
+$core->route($_SERVER['REQUEST_URI']);
 
-    cmsEventsManager::hook('engine_start');
+// Инициализируем шаблонизатор
+$template = cmsTemplate::getInstance();
 
-    //Запускаем роутинг и контроллер
-    $core->route($_SERVER['REQUEST_URI']);
-	$core->runController();
-    $core->runWidgets();
+cmsEventsManager::hook('engine_start');
 
-    //Выводим готовую страницу
-    $template->renderPage();
+// загружаем и устанавливаем страницы для текущего URI
+$core->loadMatchedPages();
 
-    cmsEventsManager::hook('engine_stop');
+// Проверяем доступ
+if(cmsEventsManager::hook('page_is_allowed', true)){
 
-    // Останавливаем кеш
-    cmsCache::getInstance()->stop();
+    //Запускаем контроллер
+    $core->runController();
+
+}
+
+// формируем виджеты
+$core->runWidgets();
+
+//Выводим готовую страницу
+$template->renderPage();
+
+cmsEventsManager::hook('engine_stop');
+
+// Останавливаем кеш
+cmsCache::getInstance()->stop();

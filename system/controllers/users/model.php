@@ -1,12 +1,16 @@
 <?php
 
-class modelUsers extends cmsModel{
+class modelUsers extends cmsModel {
 
 //============================================================================//
 //========================    ПОЛЬЗОВАТЕЛИ   =================================//
 //============================================================================//
 
     public function getUsersCount(){
+
+        $this->useCache('users.list');
+
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
 
         return $this->getCount('{users}');
 
@@ -29,24 +33,54 @@ class modelUsers extends cmsModel{
         return $this->join('{users}_groups', 'g', "g.id = m.group_id AND g.name = '{$group_name}'");
     }
 
-    public function getUsers(){
+    public function getUsers($actions = false){
 
         $this->useCache('users.list');
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
+        if (!$this->delete_filter_disabled) { $this->filterAvailableOnly(); }
 
-        return $this->get('{users}', function($user){
+        $this->joinSessionsOnline('i');
 
-            $user['groups']    = cmsModel::yamlToArray($user['groups']);
-            $user['theme']     = cmsModel::yamlToArray($user['theme']);
-            $user['is_online'] = cmsUser::userIsOnline($user['id']);
+        return $this->get('{users}', function($user) use ($actions){
 
-            $user['city'] = $user['city_id'] ? array(
-                'id' => $user['city_id'],
-                'name' => $user['city_name'],
-            ) : false;
+            unset($user['pass_token'], $user['password'], $user['password_salt'], $user['password_hash']);
+
+            $user['groups']          = cmsModel::yamlToArray($user['groups']);
+            $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
+            $user['theme']           = cmsModel::yamlToArray($user['theme']);
+            $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
+            $user['item_css_class']  = array();
+            $user['notice_title']    = array();
+            $user['ctype_name']      = 'users';
+
+            if (is_array($actions)){
+                foreach($actions as $key => $action){
+
+                    if (isset($action['handler'])){
+                        $is_active = $action['handler']($user);
+                    } else {
+                        $is_active = true;
+                    }
+
+                    if (!$is_active){ continue; }
+
+                    if(!empty($action['item_css_class'])){ $user['item_css_class'][] = $action['item_css_class']; }
+                    if(!empty($action['notice_title'])){ $user['notice_title'][] = $action['notice_title']; }
+
+                    if(empty($action['href'])){ continue; }
+
+                    foreach($user as $cell_id => $cell_value){
+
+                        if (is_array($cell_value) || is_object($cell_value)) { continue; }
+
+                        $action['href']  = str_replace('{'.$cell_id.'}', $cell_value, $action['href']);
+                        $action['title'] = str_replace('{'.$cell_id.'}', $cell_value, $action['title']);
+                        $action['class'] = (isset($action['class']) ? $action['class'] : '');
+
+                    }
+                    $user['actions'][$key] = $action;
+                }
+            }
 
             return $user;
 
@@ -58,22 +92,68 @@ class modelUsers extends cmsModel{
 
         $this->selectOnly('i.id', 'id');
 
-        return $this->get('{users}');
+        return $this->get('{users}', function($user){
+            return $user['id'];
+        });
+
+    }
+
+    public function makeProfileFields($fields, &$profiles, $user) {
+
+        if($fields && $profiles){
+            foreach ($profiles as $key => $profile) {
+                foreach($fields as $field){
+
+                    if ($field['is_system'] || !$field['is_in_list'] || !isset($profile[$field['name']])) { continue; }
+
+                    // проверяем что группа пользователя имеет доступ к чтению этого поля
+                    if ($field['groups_read'] && !$user->isInGroups($field['groups_read'])) {
+                        // если группа пользователя не имеет доступ к чтению этого поля,
+                        // проверяем на доступ к нему для авторов
+                        if (empty($field['options']['author_access'])){ continue; }
+                        if (!in_array('is_read', $field['options']['author_access'])){ continue; }
+                        if ($profile['id'] != $user->id){ continue; }
+                    }
+
+                    if (!$profile[$field['name']] && $profile[$field['name']] !== '0') { continue; }
+
+                    if (!isset($field['options']['label_in_list'])) {
+                        $label_pos = 'none';
+                    } else {
+                        $label_pos = $field['options']['label_in_list'];
+                    }
+
+                    $field_html = $field['handler']->setItem($profile)->parseTeaser($profile[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $profiles[$key]['fields'][$field['name']] = array(
+                        'label_pos' => $label_pos,
+                        'type'      => $field['type'],
+                        'options'   => $field['options'],
+                        'name'      => $field['name'],
+                        'title'     => $field['title'],
+                        'html'      => $field_html
+                    );
+
+                }
+            }
+        }
 
     }
 
 //============================================================================//
 //============================================================================//
 
-    public function getUser($id=false){
+    public function getUser($id = false) {
 
-        $this->useCache("users.user.{$id}");
+        if($id){
+            $this->useCache('users.user.'.$id);
+        }
 
-        $this->select("IFNULL(c.name, '')", 'city_name');
-        $this->select("IFNULL(c.id, 0)", 'city_id');
-        $this->select("u.nickname", 'inviter_nickname');
-        $this->joinLeft('geo_cities', 'c', 'c.id = i.city');
+        $this->select('u.nickname', 'inviter_nickname');
         $this->joinLeft('{users}', 'u', 'u.id = i.inviter_id');
+
+        $this->joinSessionsOnline('i');
 
         if ($id){
             $user = $this->getItemById('{users}', $id);
@@ -83,17 +163,11 @@ class modelUsers extends cmsModel{
 
         if (!$user) { return false; }
 
-        $user['groups'] = cmsModel::yamlToArray($user['groups']);
-        $user['theme'] = cmsModel::yamlToArray($user['theme']);
-        $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
+        $user['groups']          = cmsModel::yamlToArray($user['groups']);
+        $user['theme']           = cmsModel::yamlToArray($user['theme']);
+        $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
         $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
-
-        $user['city'] = $user['city_id'] ? array(
-            'id' => $user['city_id'],
-            'name' => $user['city_name'],
-        ) : false;
-
-        $user['is_online'] = cmsUser::userIsOnline($user['id']);
+        $user['ctype_name']      = 'users';
 
         return $user;
 
@@ -101,12 +175,106 @@ class modelUsers extends cmsModel{
 
     public function getUserByEmail($email){
 
+        if(!$email){ return false; }
+
         return $this->filterEqual('email', $email)->getUser();
 
     }
 
+    public function getUserByAuth($email, $password) {
+
+        if(!$password){ return false; }
+
+        $this->filterIsNull('is_deleted');
+
+        $user = $this->getUserByEmail($email);
+
+        // совместимость с ранее захэшированными паролями
+        // ищем юзера по email, если есть,
+        // проверяем по двум алгоритмам
+        if($user){
+
+            // старый механизм
+            if(empty($user['password_hash'])){
+
+                $password_hash = md5(md5($password) . $user['password_salt']);
+
+                if ($password_hash !== $user['password']){
+                    $user = false;
+                } else {
+                    // ставим метку в массив, что старая авторизация
+                    $user['is_old_auth'] = true;
+                }
+
+            // новый механизм
+            } else {
+
+                if (!password_verify($password, $user['password_hash'])) {
+                    $user = false;
+                }
+
+            }
+
+        }
+
+        return $user;
+
+    }
+
+    /**
+     * Псевдоним для связей
+     * @param integer $id
+     * @return array
+     */
+    public function getContentItem($id){
+        return $this->getUser($id);
+    }
+
+    public function getContentTypeTableName($name){
+        return '{users}';
+    }
+
 //============================================================================//
 //============================================================================//
+
+    public function setAuthToken($user_id, $auth_token, $type = null, $subj = null){
+
+        if(!$type){ $type = cmsRequest::getDeviceType(); }
+
+        return $this->insert('{users}_auth_tokens', array(
+            'ip'          => sprintf('%u', ip2long(cmsUser::getIp())),
+            'access_type' => array(
+                'type' => $type,
+                'subj' => $subj
+            ),
+            'auth_token'  => $auth_token,
+            'user_id'     => $user_id
+        ));
+
+    }
+
+    public function deleteExpiredToken($user_id, $auth_token_expiration_int){
+        return $this->filterEqual('user_id', $user_id)->
+                filterDateOlder('date_auth', $auth_token_expiration_int, 'SECOND')->
+                deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteAuthToken($auth_token){
+        return $this->filterEqual('auth_token', $auth_token)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function deleteUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_auth_tokens');
+    }
+
+    public function getUserAuthTokens($user_id){
+        return $this->filterEqual('user_id', $user_id)->get('{users}_auth_tokens', function ($item, $model){
+            $item['ip'] = long2ip($item['ip']);
+            $item['date_log'] = $item['date_log'] ? $item['date_log'] : $item['date_auth'];
+            $item['access_type'] = cmsModel::yamlToArray($item['access_type']);
+            return $item;
+        });
+    }
 
     public function getUserByPassToken($pass_token){
 
@@ -120,7 +288,9 @@ class modelUsers extends cmsModel{
 
     }
 
-    public function updateUserPassToken($id, $pass_token=null){
+    public function updateUserPassToken($id, $pass_token = null){
+
+        cmsCache::getInstance()->clean('users.user.'.$id);
 
         return $this->
                     filterEqual('id', $id)->
@@ -136,30 +306,43 @@ class modelUsers extends cmsModel{
 
     public function addUser($user){
 
-        $errors = false;
+        if ($user['password1'] !== $user['password2']){
 
-        if ($user['password1'] != $user['password2']){
-            $errors['password1'] = LANG_REG_PASS_NOT_EQUAL;
-            $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
-            return array( 'success'=>false, 'errors'=>$errors );
+            return [
+                'success' => false,
+                'errors'  => [
+                    'password1' => LANG_REG_PASS_NOT_EQUAL,
+                    'password2' => LANG_REG_PASS_NOT_EQUAL
+                ]
+            ];
+
+        }
+
+        $user['password_hash'] = password_hash($user['password1'], PASSWORD_BCRYPT);
+
+        if ($user['password_hash'] === false) {
+
+            return [
+                'success' => false,
+                'errors'  => [
+                    'password1' => LANG_ERROR,
+                    'password2' => LANG_ERROR
+                ]
+            ];
+
         }
 
         $date_reg = date('Y-m-d H:i:s');
         $date_log = $date_reg;
 
-        $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
-        $password_salt = substr($password_salt, rand(1,8), 16);
-        $password_hash = md5(md5($user['password1']) . $password_salt);
-
         $groups = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
 
         $user = array_merge($user, array(
-            'groups' => $groups,
-            'password' => $password_hash,
-            'password_salt' => $password_salt,
-            'date_reg' => $date_reg,
-            'date_log' => $date_log,
-			'time_zone' => cmsConfig::get('time_zone')
+            'groups'         => $groups,
+            'date_reg'       => $date_reg,
+            'date_log'       => $date_log,
+            'time_zone'      => cmsConfig::get('time_zone'),
+            'notify_options' => $this->getUserNotifyTypes(true)
         ));
 
         $id = $this->insert('{users}', $user);
@@ -174,12 +357,12 @@ class modelUsers extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("users.list");
+        cmsCache::getInstance()->clean('users.list');
 
         return array(
-            'success' => $id!==false,
-            'errors' => false,
-            'id' => $id
+            'success' => $id !== false,
+            'errors'  => false,
+            'id'      => $id
         );
 
     }
@@ -189,8 +372,8 @@ class modelUsers extends cmsModel{
 
     public function updateUser($id, $user){
 
-        $success    = false;
-        $errors     = false;
+        $success = false;
+        $errors  = false;
 
         if (!empty($user['email'])){
 
@@ -202,44 +385,52 @@ class modelUsers extends cmsModel{
 
         }
 
+        unset($user['password']);
+
         if (!empty($user['password1']) && !$errors){
 
             if (mb_strlen($user['password1']) < 6) {
                 $errors['password1'] = sprintf(ERR_VALIDATE_MIN_LENGTH, 6);
             }
 
-            if ($user['password1'] != $user['password2']){
+            if ($user['password1'] !== $user['password2']){
                 $errors['password2'] = LANG_REG_PASS_NOT_EQUAL;
             }
 
-            $password_salt = md5(implode(':', array($user['password1'], session_id(), microtime(), uniqid())));
-            $password_salt = substr($password_salt, rand(1,8), 16);
-            $password_hash = md5(md5($user['password1']) . $password_salt);
+            // старым ячейкам стави null (< 2.12.1)
+            $user['password']      = null;
+            $user['password_salt'] = null;
 
-            $user['password']      = $password_hash;
-            $user['password_salt'] = $password_salt;
+            // хэш пароля пишем в новую ячейку (>=2.12.1)
+            $user['password_hash'] = password_hash($user['password1'], PASSWORD_BCRYPT);
+
+            if ($user['password_hash'] === false) {
+                $errors['password1'] = LANG_ERROR;
+            }
 
         }
 
         if (!$errors){
 
-            $user['groups'] = !empty($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+            if(isset($user['groups'])){
 
-            if (isset($user['city_id']) && !isset($user['city'])){ $user['city'] = $user['city_id']; }
+                $user['groups'] = is_array($user['groups']) ? $user['groups'] : array(DEF_GROUP_ID);
+
+                $this->saveUserGroupsMembership($id, $user['groups']);
+
+            }
 
             $success = $this->update('{users}', $id, $user);
 
-            $this->saveUserGroupsMembership($id, $user['groups']);
-
         }
 
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
 
         return array(
             'success' => $success,
-            'errors' => $errors,
-            'id' => $id
+            'errors'  => $errors,
+            'id'      => $id
         );
 
     }
@@ -261,40 +452,142 @@ class modelUsers extends cmsModel{
 
 		}
 
-        return $this->update('{users}', $id, array('theme'=>$theme));
+        $res = $this->update('{users}', $id, array('theme' => $theme), true);
+
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $res;
 
     }
 
 //============================================================================//
 //============================================================================//
+    /**
+     * Удаляет пользователя
+     * @param integer|array $user id пользователя или массив данных пользователя
+     * @return boolean
+     */
+    public function deleteUser($user){
 
-    public function deleteUser($id){
-
-        $this->delete('{users}_friends', $id, 'user_id');
-        $this->delete('{users}_friends', $id, 'friend_id');
-        $this->delete('{users}_groups_members', $id, 'user_id');
-        $this->delete('{users}_karma', $id, 'user_id');
-        $this->delete('{users}_statuses', $id, 'user_id');
-        $this->delete('{users}_personal_settings', $id, 'user_id');
-        $this->delete('{users}', $id);
+        if(is_numeric($user)){
+            $user = $this->getUser($user);
+            if(!$user){ return false; }
+        }
 
         $inCache = cmsCache::getInstance();
+
+        $content_model = cmsCore::getModel('content');
+        $content_model->setTablePrefix('');
+        $fields = $content_model->getContentFields('{users}', $user['id']);
+
+        foreach($fields as $field){
+            $field['handler']->delete($user[$field['name']]);
+        }
+
+        // уменьшаем счётчики друзей и подписчиков
+        $data = $this->getFriendsIds($user['id']);
+
+        if(!empty($data['friends'])){
+            foreach ($data['friends'] as $friend_id) {
+                $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
+                $inCache->clean('users.user.'.$friend_id);
+            }
+        }
+        if(!empty($data['subscribes'])){
+            foreach ($data['subscribes'] as $friend_id) {
+                $this->filterEqual('id', $friend_id)->decrement('{users}', 'subscribers_count');
+                $inCache->clean('users.user.'.$friend_id);
+            }
+        }
+
+        $this->deleteUserAuthTokens($user['id']);
+        $this->delete('{users}_friends', $user['id'], 'user_id');
+        $this->delete('{users}_friends', $user['id'], 'friend_id');
+        $this->delete('{users}_groups_members', $user['id'], 'user_id');
+        $this->delete('{users}_karma', $user['id'], 'user_id');
+        $this->delete('{users}_statuses', $user['id'], 'user_id');
+        $this->delete('{users}_personal_settings', $user['id'], 'user_id');
+        $this->delete('{users}', $user['id']);
+
         $inCache->clean('users.list');
         $inCache->clean('users.ups');
-        $inCache->clean('users.user.'.$id);
+        $inCache->clean('users.user.'.$user['id']);
+        $inCache->clean('users.status');
+
+        $this->filterEqual('child_ctype_id', null);
+        $this->filterEqual('child_item_id', $user['id']);
+        $this->filterEqual('target_controller', 'users');
+
+        $this->deleteFiltered('content_relations_bind');
+
+        return true;
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function updateUserIp($id, $ip = false){
+
+        $this->update('{users}', $id, array(
+            'ip' => ($ip ? $ip : cmsUser::getIp())
+        ), true);
+
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
+
+    public function updateUserDateLog($id){
+
+        $this->update('{users}', $id, array(
+            'date_log' => null
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
+
+    public function setUserIsDeleted($id){
+
+        $this->update('{users}', $id, array(
+            'is_deleted' => 1
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
+
+    public function restoreUser($id){
+
+        $this->update('{users}', $id, array(
+            'is_deleted' => null
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
+    }
 
     public function unlockUser($id){
+
         $this->update('{users}', $id, array(
-            'is_locked' => null,
-            'lock_until' => null,
+            'is_locked'   => null,
+            'lock_until'  => null,
             'lock_reason' => null
-        ));
-        cmsCache::getInstance()->clean("users.user.{$id}");
+        ), true);
+
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this;
+
     }
 
 //============================================================================//
@@ -331,6 +624,48 @@ class modelUsers extends cmsModel{
 //=========================    УВЕДОМЛЕНИЯ   =================================//
 //============================================================================//
 
+    public function getUserNotifyTypes($only_default_values = false) {
+
+        $notify_types = cmsEventsManager::hookAll('user_notify_types');
+
+        $notify_types = cmsEventsManager::hook('update_user_notify_types', $notify_types);
+
+        $default_options = array('', 'email', 'pm', 'both');
+
+        $types = array();
+
+        foreach($notify_types as $list){
+            foreach($list as $name => $type){
+
+                $options = array();
+
+                if(!isset($type['options'])) { $type['options'] = $default_options; }
+
+                foreach($type['options'] as $option){
+                    if (!$option){
+                        $options[''] = LANG_USERS_NOTIFY_VIA_NONE;
+                    } else {
+                        $options[$option] = constant('LANG_USERS_NOTIFY_VIA_'.strtoupper($option));
+                    }
+                }
+
+                if(!$only_default_values){
+                    $types[$name] = array(
+                        'title'   => $type['title'],
+                        'default' => (isset($type['default']) ? $type['default'] : 'email'),
+                        'items'   => $options
+                    );
+                } else {
+                    $types[$name] = (isset($type['default']) ? $type['default'] : 'email');
+                }
+
+            }
+        }
+
+        return $types;
+
+    }
+
     public function getUserNotifyOptions($id){
 
         return $this->getItemById('{users}', $id, function($item, $model){
@@ -341,46 +676,60 @@ class modelUsers extends cmsModel{
 
     public function updateUserNotifyOptions($id, $options){
 
-        return $this->update('{users}', $id, array('notify_options'=>$options));
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this->update('{users}', $id, array('notify_options' => $options), true);
 
     }
 
-    public function getNotifiedUsers($notice_type, $id_list, $options_only=array()){
+    public function getNotifiedUsers($notice_type = false, $id_list = array(), $options_only = array(), $default = 'email'){
 
         $list = array();
 
-        $this->filterIn('id', $id_list);
+        $this->selectList(array(
+            'i.id'             => 'id',
+            'i.email'          => 'email',
+            'i.nickname'       => 'nickname',
+            'i.notify_options' => 'notify_options'
+        ), true);
+
+        if($id_list){
+            $this->filterIn('id', $id_list);
+        }
+
+        $this->filterIsNull('is_locked');
+        $this->filterIsNull('is_deleted');
 
         $users = $this->get('{users}', function($user, $model){
 
-            return array(
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'nickname' => $user['nickname'],
-                'notify_options' => cmsModel::yamlToArray($user['notify_options'])
-            );
+            $user['notify_options'] = cmsModel::yamlToArray($user['notify_options']);
 
-        });
+            return $user;
+
+        }, false);
 
         if (!$users) { return false; }
 
-        foreach($users as $user){
+        if ($options_only){
+            foreach($users as $user){
 
-            if ($options_only){
+                if (!isset($user['notify_options'][$notice_type])){
+                    $user['notify_options'][$notice_type] = $default;
+                }
 
                 if (empty($user['notify_options'][$notice_type])){
-                    $user['notify_options'][$notice_type] = 'email';
+                    continue;
                 }
 
                 if (!in_array($user['notify_options'][$notice_type], $options_only)){
                     continue;
                 }
 
+                $list[] = $user;
+
             }
-
-            unset($user['notify_options']);
-            $list[] = $user;
-
+        } else {
+            $list = $users;
         }
 
         return $list ? $list : false;
@@ -402,7 +751,9 @@ class modelUsers extends cmsModel{
 
     public function updateUserPrivacyOptions($id, $options){
 
-        return $this->update('{users}', $id, array('privacy_options'=>$options));
+        cmsCache::getInstance()->clean('users.user.'.$id);
+
+        return $this->update('{users}', $id, array('privacy_options' => $options), true);
 
     }
 
@@ -414,24 +765,18 @@ class modelUsers extends cmsModel{
 
         if (!$is_guests) { $this->filterNotEqual('id', GUEST_GROUP_ID); }
 
+        $this->orderBy('ordering', 'asc');
+
         return $this->get('{users}_groups');
 
     }
 
     public function getPublicGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_public', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_public', 1)->getGroups();
     }
 
     public function getFilteredGroups(){
-
-        return $this->filterNotEqual('id', GUEST_GROUP_ID)->
-                        filterEqual('is_filter', 1)->
-                        get('{users}_groups');
-
+        return $this->filterEqual('is_filter', 1)->getGroups();
     }
 
     public function getGroup($id=false){
@@ -456,7 +801,10 @@ class modelUsers extends cmsModel{
 
         $this->join('{users}_groups_members', 'm', "m.user_id = i.id AND m.group_id = '{$id}'");
 
-        $members = $this->getUsers();
+        $members = $this->disableDeleteFilter()->getUsers();
+
+        $first_group = $this->orderBy('id', 'asc')->filterNotEqual('id', GUEST_GROUP_ID)->getItem('{users}_groups');
+        if(!$first_group){ return false; }
 
         if ($members){
 
@@ -468,13 +816,21 @@ class modelUsers extends cmsModel{
                 // и переиндексируем ключи массива
                 $groups = array_values( array_diff($groups, array($id)) );
 
+                if(!$groups){
+                    $groups = array($first_group['id']);
+                }
+
                 $this->update('{users}', $user['id'], array(
                     'groups' => $groups
-                ));
+                ), true);
+
+                cmsCache::getInstance()->clean('users.user.'.$id);
 
             }
 
-            $this->delete('{users}_groups_members', $id, "group_id");
+            cmsCache::getInstance()->clean('users.list');
+
+            $this->delete('{users}_groups_members', $id, 'group_id');
 
         }
 
@@ -488,10 +844,25 @@ class modelUsers extends cmsModel{
 //==============================    ДРУЖБА   =================================//
 //============================================================================//
 
-    public function filterFriends($user_id){
-        $user_id = intval($user_id);
-        $this->joinInner('{users}_friends', 'f', "friend_id = i.id AND f.is_mutual = 1 AND f.user_id = '{$user_id}'");
+    public function filterFriends($user_id, $is_mutual = 1){
+
+        $this->joinInner('{users}_friends', 'f', 'f.friend_id = i.id');
+
+        $this->filterEqual('f.user_id', (int)$user_id);
+
+        if($is_mutual !== null){
+            $this->filterEqual('f.is_mutual', $is_mutual);
+        } else {
+            // подписчики (null) и друзья (1)
+            $this->filterStart();
+                $this->filterEqual('f.is_mutual', 1);
+                    $this->filterOr();
+                $this->filterIsNull('f.is_mutual');
+            $this->filterEnd();
+        }
+
         return $this;
+
     }
 
     public function getFriends($user_id){
@@ -502,6 +873,7 @@ class modelUsers extends cmsModel{
         $this->select('u.*');
 
         $this->joinInner('{users}', 'u', 'u.id = i.friend_id');
+        $this->joinSessionsOnline();
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('is_mutual', 1);
@@ -510,7 +882,15 @@ class modelUsers extends cmsModel{
             $this->orderBy('u.date_log', 'desc');
         }
 
-        return $this->get('{users}_friends');
+        return $this->get('{users}_friends', function($user){
+
+            $user['groups']          = cmsModel::yamlToArray($user['groups']);
+            $user['notify_options']  = cmsModel::yamlToArray($user['notify_options']);
+            $user['privacy_options'] = cmsModel::yamlToArray($user['privacy_options']);
+
+            return $user;
+
+        });
 
     }
 
@@ -529,36 +909,77 @@ class modelUsers extends cmsModel{
         return $count;
     }
 
+    public function getSubscribersCount($user_id){
+
+        $this->filterEqual('friend_id', $user_id);
+        $this->filterIsNull('is_mutual');
+
+        $count = $this->getCount('{users}_friends');
+
+        $this->resetFilters();
+
+        return $count;
+
+    }
+
+    public function cacheSubscribersCount($user_id){
+
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
+
+        return $this->update('{users}', $user_id, array('subscribers_count' => $this->getSubscribersCount($user_id)), true);
+
+    }
 
     public function getFriendsIds($user_id){
 
         $this->useCache('users.friends');
 
         $this->filterEqual('user_id', $user_id);
-        $this->filterEqual('is_mutual', 1);
 
-        return $this->get('{users}_friends', function($item, $model){
+        $data = array(
+            'friends' => array(),
+            'subscribes' => array()
+        );
 
-            return $item['friend_id'];
+        $items = $this->get('{users}_friends', false, false);
 
-        }, false);
+        if($items){
+            foreach ($items as $item) {
+                if($item['is_mutual'] !== null){
+                    if($item['is_mutual']){
+                        $data['friends'][] = $item['friend_id'];
+                    }
+                } else {
+                    $data['subscribes'][] = $item['friend_id'];
+                }
+            }
+        }
+
+        return $data;
 
     }
 
-    public function isFriendshipRequested($user_id, $friend_id){
+    public function getFriendshipRequested($user_id, $friend_id, $field = 'is_mutual'){
+
+        if(!$user_id){ return false; }
 
         $this->useCache('users.friends');
 
         $this->filterEqual('user_id', $user_id);
         $this->filterEqual('friend_id', $friend_id);
-        $this->filterEqual('is_mutual', 0);
+        // учитываем и подписки и запросы дружбы
+        $this->filterStart();
+            $this->filterEqual('is_mutual', 0);
+                $this->filterOr();
+            $this->filterIsNull('is_mutual');
+        $this->filterEnd();
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
+        return $this->getFieldFiltered('{users}_friends', $field);
 
-        $this->resetFilters();
+    }
 
-        return $is_exists;
-
+    public function isFriendshipRequested($user_id, $friend_id){
+        return $this->getFriendshipRequested($user_id, $friend_id, 'id');
     }
 
     public function isFriendshipExists($user_id, $friend_id){
@@ -577,11 +998,7 @@ class modelUsers extends cmsModel{
         $this->filterEqual('friend_id', $user_id);
         $this->filterEnd();
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
-
-        $this->resetFilters();
-
-        return $is_exists;
+        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
 
     }
 
@@ -608,14 +1025,34 @@ class modelUsers extends cmsModel{
 
         $this->filterEqual('is_mutual', 1);
 
-        $is_exists = (bool)$this->getCount('{users}_friends');
-
-        $this->resetFilters();
-
-        return $is_exists;
+        return (bool)$this->getFieldFiltered('{users}_friends', 'id');
 
     }
 
+    public function subscribeUser($user_id, $friend_id){
+
+        cmsCache::getInstance()->clean('users.friends');
+
+        $this->insert('{users}_friends', array(
+            'user_id'   => $user_id,
+            'friend_id' => $friend_id
+        ));
+
+        return $this->cacheSubscribersCount($friend_id);
+
+    }
+
+    public function unsubscribeUser($user_id, $friend_id){
+
+        $this->filterEqual('user_id', $user_id);
+        $this->filterEqual('friend_id', $friend_id);
+        $this->deleteFiltered('{users}_friends');
+
+        cmsCache::getInstance()->clean('users.friends');
+
+        return $this->cacheSubscribersCount($friend_id);
+
+    }
 
     public function addFriendship($user_id, $friend_id){
 
@@ -630,6 +1067,8 @@ class modelUsers extends cmsModel{
                 'is_mutual' => true
             ));
 
+            $this->cacheSubscribersCount($user_id);
+
             $is_mutual = true;
 
         }
@@ -641,21 +1080,38 @@ class modelUsers extends cmsModel{
 
             $friend = $this->getUser($friend_id);
 
-            cmsCore::getController('activity')->addEntry('users', "friendship", array(
+            cmsCore::getController('activity')->addEntry('users', 'friendship', array(
                 'subject_title' => $friend['nickname'],
-                'subject_id' => $friend_id,
-                'subject_url' => href_to('users', $friend_id),
+                'subject_id'    => $friend_id,
+                'subject_url'   => href_to_rel('users', $friend_id)
             ));
 
         }
 
-        cmsCache::getInstance()->clean("users.friends");
+        if ($this->isFriendshipRequested($user_id, $friend_id)){
 
-        return $this->insert('{users}_friends', array(
-            'user_id' => $user_id,
-            'friend_id' => $friend_id,
-            'is_mutual' => $is_mutual
-        ));
+            $this->filterEqual('user_id', $user_id);
+            $this->filterEqual('friend_id', $friend_id);
+
+            $this->updateFiltered('{users}_friends', array(
+                'is_mutual' => true
+            ));
+
+            $this->cacheSubscribersCount($friend_id);
+
+        } else {
+
+            $this->insert('{users}_friends', array(
+                'user_id'   => $user_id,
+                'friend_id' => $friend_id,
+                'is_mutual' => $is_mutual
+            ));
+
+        }
+
+        cmsCache::getInstance()->clean('users.friends');
+
+        return $is_mutual;
 
     }
 
@@ -674,7 +1130,30 @@ class modelUsers extends cmsModel{
         $this->filterEqual('friend_id', $user_id);
         $this->deleteFiltered('{users}_friends');
 
-        cmsCache::getInstance()->clean("users.friends");
+        cmsCache::getInstance()->clean('users.friends');
+
+    }
+
+    public function keepInSubscribers($user_id, $friend_id){
+
+        if ($this->isFriendshipMutual($user_id, $friend_id)){
+            $this->filterEqual('id', $user_id)->decrement('{users}', 'friends_count');
+            $this->filterEqual('id', $friend_id)->decrement('{users}', 'friends_count');
+        }
+
+        $this->filterEqual('user_id', $user_id);
+        $this->filterEqual('friend_id', $friend_id);
+        $this->deleteFiltered('{users}_friends');
+
+        $this->filterEqual('user_id', $friend_id);
+        $this->filterEqual('friend_id', $user_id);
+        $this->updateFiltered('{users}_friends', array(
+            'is_mutual' => null
+        ));
+
+        cmsCache::getInstance()->clean('users.friends');
+
+        return $this->cacheSubscribersCount($user_id);
 
     }
 
@@ -688,7 +1167,11 @@ class modelUsers extends cmsModel{
 
         if ($only_active){ $this->filterEqual('is_active', 1); }
 
-        return $this->orderBy('ordering')->get('{users}_tabs', false, $by_field);
+        return $this->orderBy('ordering')->get('{users}_tabs', function($item, $model){
+            $item['groups_view'] = cmsModel::yamlToArray($item['groups_view']);
+            $item['groups_hide'] = cmsModel::yamlToArray($item['groups_hide']);
+            return $item;
+        }, $by_field);
 
     }
 
@@ -702,7 +1185,7 @@ class modelUsers extends cmsModel{
 
     public function updateUsersProfilesTab($id, $tab){
 
-        cmsCache::getInstance()->clean("users.tabs");
+        cmsCache::getInstance()->clean('users.tabs');
 
         return $this->update('{users}_tabs', $id, $tab);
 
@@ -712,7 +1195,7 @@ class modelUsers extends cmsModel{
 
         $this->reorderByList('{users}_tabs', $fields_ids_list);
 
-        cmsCache::getInstance()->clean("users.tabs");
+        cmsCache::getInstance()->clean('users.tabs');
 
         return true;
 
@@ -740,9 +1223,11 @@ class modelUsers extends cmsModel{
         $this->update('{users}', $status['user_id'], array(
             'status_text' => $status['content'],
             'status_id' => $id
-        ));
+        ), true);
 
-        cmsCache::getInstance()->clean("users.status");
+        cmsCache::getInstance()->clean('users.status');
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$status['user_id']);
 
         return $id;
 
@@ -750,22 +1235,30 @@ class modelUsers extends cmsModel{
 
     public function clearUserStatus($user_id){
 
-        cmsCache::getInstance()->clean("users.status");
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$user_id}");
+        cmsCache::getInstance()->clean('users.status');
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
 
-        $this->update('{users}', $user_id, array(
+        $this->filterEqual('user_id', $user_id)->deleteFiltered('{users}_statuses');
+
+        return $this->update('{users}', $user_id, array(
             'status_text' => null,
             'status_id' => null
-        ));
+        ), true);
 
     }
 
-    public function increaseUserStatusRepliesCount($status_id){
+    public function increaseUserStatusRepliesCount($status_id, $is_increment = true){
 
-        cmsCache::getInstance()->clean("users.status");
+        cmsCache::getInstance()->clean('users.status');
 
-        $this->filterEqual('id', $status_id)->increment('{users}_statuses', 'replies_count');
+        $this->filterEqual('id', $status_id);
+
+        if($is_increment){
+            $this->increment('{users}_statuses', 'replies_count');
+        } else {
+            $this->decrement('{users}_statuses', 'replies_count');
+        }
 
     }
 
@@ -779,7 +1272,7 @@ class modelUsers extends cmsModel{
         $this->filterEqual('profile_id', $profile_id);
         $this->filterDateYounger('date_pub', $voting_days);
 
-        $this->useCache("users.karma");
+        $this->useCache('users.karma');
 
         $votes_count = $this->getCount('{users}_karma');
 
@@ -791,7 +1284,7 @@ class modelUsers extends cmsModel{
 
     public function addKarmaVote($vote){
 
-        cmsCache::getInstance()->clean("users.karma");
+        cmsCache::getInstance()->clean('users.karma');
 
         $result = $this->insert('{users}_karma', $vote);
 
@@ -855,8 +1348,8 @@ class modelUsers extends cmsModel{
             $this->decrement('{users}', 'rating', abs($score));
 		}
 
-        cmsCache::getInstance()->clean("users.list");
-        cmsCache::getInstance()->clean("users.user.{$user_id}");
+        cmsCache::getInstance()->clean('users.list');
+        cmsCache::getInstance()->clean('users.user.'.$user_id);
 
     }
 
@@ -921,6 +1414,26 @@ class modelUsers extends cmsModel{
         return $ret;
     }
 
+    public function getSetUPS($key){
+
+        $this->useCache('users.ups');
+
+        $this->selectList(array(
+            'i.settings' => 'settings',
+            'i.user_id' => 'user_id'
+        ), true);
+
+        $this->filterEqual('skey', $key);
+
+        return $this->get('{users}_personal_settings', function($item, $model){
+            if(strpos($item['settings'], '---') === 0){
+                $item['settings'] = cmsModel::yamlToArray($item['settings']);
+            }
+            return $item['settings'];
+        }, 'user_id');
+
+    }
+
     public function getUPS($key, $user_id){
         $this->useCache('users.ups');
 
@@ -934,7 +1447,7 @@ class modelUsers extends cmsModel{
         });
     }
 
-    public function deleteUPS($key, $user_id){
+    public function deleteUPS($key, $user_id=null){
         if($user_id && $key){
             $this->filterEqual('user_id', $user_id)->filterEqual('skey', $key);
         }elseif($user_id){
@@ -949,8 +1462,5 @@ class modelUsers extends cmsModel{
 
         return $ret;
     }
-
-//============================================================================//
-//============================================================================//
 
 }

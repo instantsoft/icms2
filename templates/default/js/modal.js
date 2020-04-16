@@ -4,12 +4,13 @@ icms.modal = (function ($) {
 
     this.onDocumentReady = function() {
         icms.modal.bind('a.ajax-modal');
-        icms.modal.bind('.ajax-modal a');
-    }
+        icms.modal.bind('.ajax-modal > a');
+    };
 
     //====================================================================//
 
 	this.bind = function(selector) {
+<<<<<<< HEAD
         $(selector).nyroModal();
 	}
 
@@ -23,34 +24,60 @@ icms.modal = (function ($) {
 
 	this.openHtml = function(html) {
 		$.nmData(html);
+=======
+        $(selector).nyroModal({anim: {def: 'show'}});
+>>>>>>> origin/master
 	};
 
     //====================================================================//
 
-    this.openAjax = function(url, data){
+	this.open = function(selector) {
+		$.nmManual(selector, {autoSizable: true, anim: {def: 'show'}});
+	};
+
+    //====================================================================//
+
+	this.openHtml = function(html, title) {
+        title = title || '';
+		$.nmData(html, {autoSizable: true, anim: {def: 'show'}, callbacks: {initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+            }}});
+	};
+
+    //====================================================================//
+
+    this.openAjax = function(url, data, open_callback, title){
+
+        open_callback = open_callback || function(){};
+        title = title || '';
 
         if (typeof(data)=='undefined'){
-            $.nmManual(url, {autoSizable: true});
+            $.nmManual(url, {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+            }}});
             return false;
         }
 
-        $.nmManual(url, {autoSizable: true, ajax:{data: data, type: "POST"}});
+        $.nmManual(url+(data.is_iframe ? '?'+$.param(data) : ''), {autoSizable: true, anim: {def: 'show'}, callbacks: {afterShowCont: open_callback, initFilters : function (nm) {
+                if(title){ nm.opener.attr('title', title); nm.filters.push('title'); }
+                if(data.is_iframe){ nm.filters.push('link'); nm.filters.push('iframe'); }
+        }}, ajax:{data: data, type: "POST"}});
         return false;
 
-    }
+    };
 
     //====================================================================//
 
     this.bindGallery = function(selector){
         $(selector).attr('rel', 'gal');
-        $(selector).nyroModal();
-    }
+        $(selector).nyroModal({anim: {def: 'show'}});
+    };
 
     //====================================================================//
 
     this.close = function(){
         $.nmTop().close();
-    }
+    };
 
     //====================================================================//
 
@@ -61,17 +88,22 @@ icms.modal = (function ($) {
             case 'close':
                 $.nmTop().callbacks.beforeClose = callback; break;
         }
-    }
+    };
 
     //====================================================================//
 
     this.resize = function(){
         $.nmTop().resize(true);
-    }
+    };
 
     this.setHeight = function(height){
         $('.nyroModalCont').css('height', height+'px');
-    }
+    };
+
+	this.alert = function(text, type) {
+        type = type || '';
+		this.openHtml('<div id="alert_wrap"><div class="ui_message '+type+'">'+text+'</div></div>');
+	};
 
 	return this;
 

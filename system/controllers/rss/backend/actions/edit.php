@@ -30,7 +30,9 @@ class actionRssEdit extends cmsAction {
 
                 cmsEventsManager::hook('rss_'.$controller.'_controller_after_update', $feed);
 
-                $this->redirectToAction();
+                cmsUser::addSessionMessage(LANG_CP_SAVE_SUCCESS, 'success');
+
+                $this->redirectToAction('index');
 
             }
 
@@ -42,7 +44,7 @@ class actionRssEdit extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('backend/edit', array(
+        return $this->cms_template->render('backend/edit', array(
             'feed' => $feed,
             'form' => $form,
             'errors' => isset($errors) ? $errors : false

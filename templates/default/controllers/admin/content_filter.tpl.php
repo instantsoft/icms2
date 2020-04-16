@@ -6,7 +6,7 @@
 
             <legend><?php echo LANG_FILTER; ?></legend>
 
-            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <table cellpadding="2" cellspacing="0" border="0" width="100%">
 
                 <?php if (!empty($datasets)){ ?>
                     <tr>
@@ -30,7 +30,7 @@
                     <?php if ($field['name']=='user'){ $field['name'] = 'user_id'; } ?>
                     <tr>
                         <td>
-                            <label><?php echo htmlspecialchars($field['title']); ?></label>
+                            <label><?php html($field['title']); ?></label>
                             <?php echo html_input('hidden', "filters[{$index}][field]", $field['name']); ?>
                         </td>
                         <td>
@@ -51,6 +51,7 @@
                                 <select name="filters[<?php echo $index; ?>][condition]">
                                     <option value="lk"><?php echo LANG_FILTER_LIKE; ?></option>
                                     <option value="eq">=</option>
+                                    <option value="ln"><?php echo LANG_FILTER_NOT_LIKE; ?></option>
                                     <option value="lb"><?php echo LANG_FILTER_LIKE_BEGIN; ?></option>
                                     <option value="lf"><?php echo LANG_FILTER_LIKE_END; ?></option>
                                     <option value="nn"><?php echo LANG_FILTER_NOT_NULL; ?></option>
@@ -83,6 +84,26 @@
                     <?php $index++; ?>
                 <?php } ?>
             </table>
+
+        </fieldset>
+        <fieldset>
+
+            <legend><?php echo LANG_CP_TRASH; ?></legend>
+
+            <div>
+                <?php echo html_input('hidden', "filters[{$index}][field]", 'is_deleted'); ?>
+                <?php echo html_input('hidden', "filters[{$index}][condition]", 'eq'); ?>
+                <label><?php echo html_checkbox('filters['.$index.'][value]'); ?> <?php echo LANG_CP_SHOW_ONLY_IN_TRASH; ?></label>
+            </div>
+
+        </fieldset>
+        <fieldset>
+
+            <legend><?php echo LANG_CONFIG; ?></legend>
+
+            <div>
+                <label><?php echo html_checkbox('diff_order', $diff_order); ?> <?php echo LANG_FILTER_SAVE_DIFF_ORDER; ?></label>
+            </div>
 
         </fieldset>
 

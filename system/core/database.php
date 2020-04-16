@@ -4,17 +4,62 @@ class cmsDatabase {
 
     private static $instance;
 
-	public $link;
+    /**
+     * Префикс таблиц
+     * @var string
+     */
 	public $prefix;
 
+    /**
+     * deprecated, use cmsDebugging
+     */
     public $query_count = 0;
-    public $query_list;
+    public $query_list = array();
 
-    private $table_fields;
+    /**
+     * Массив кешированного списка полей для запрашиваемых таблиц
+     * @var array
+     */
+    private $table_fields = array();
 
+    /**
+     * Объект, представляющий подключение к серверу MySQL
+     * @var \mysqli
+     */
     private $mysqli;
 
+    /**
+     * Время соединения с базой
+     * @var integer
+     */
+    private $init_start_time;
+
+    /**
+     * Время, через которое при PHP_SAPI == 'cli' нужно сделать реконнект
+     * для случаев, когда mysql.connect_timeout по дефолту (60 с) и переопределить это поведение нельзя
+     * @var integer
+     */
+    private $reconnect_time = 60;
+
+    /**
+     * Ошибка подключения к базе
+     * @var boolean|string
+     */
     private $connect_error = false;
+
+    /**
+     *
+     * @var boolean|null
+     */
+    public $query_quiet = null;
+
+    /**
+     * Настройки базы данных
+     * @var array
+     */
+    private $options = [
+        'db_charset' => 'utf8'
+    ];
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -26,9 +71,34 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	public function __construct(){
+	public function __construct($options = array()){
+
+        $this->setOptions($options ? $options : cmsConfig::getInstance()->getAll());
+
         $this->connect();
+
 	}
+
+	public function __destruct(){
+        if($this->ready()){
+
+            // откатываемся, если была транзакция и ошибка в ней
+            if(!$this->isAutocommitOn() && $this->mysqli->errno){
+                $this->rollback();
+            }
+
+            $this->mysqli->close();
+
+        }
+	}
+
+    public function setOptions($options) {
+        $this->options = array_merge($this->options, $options);
+    }
+
+    public function setOption($key, $value) {
+        $this->options[$key] = $value;
+    }
 
 	public function __destruct(){
 		$this->mysqli->close();
@@ -43,12 +113,14 @@ class cmsDatabase {
 
     private function connect() {
 
-		$config = cmsConfig::getInstance();
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointStart('db');
+        }
 
         mysqli_report(MYSQLI_REPORT_STRICT);
 
         try {
-            $this->mysqli = new mysqli($config->db_host, $config->db_user, $config->db_pass, $config->db_base);
+            $this->mysqli = new mysqli($this->options['db_host'], $this->options['db_user'], $this->options['db_pass'], $this->options['db_base']);
         } catch (Exception $e) {
 
             $this->connect_error = $e->getMessage();
@@ -56,11 +128,23 @@ class cmsDatabase {
 
         }
 
-        $this->mysqli->set_charset('utf8');
+        $this->mysqli->set_charset($this->options['db_charset']);
+
+        if(!empty($this->options['clear_sql_mode'])){
+            $this->mysqli->query("SET sql_mode=''");
+        }
+
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointProcess('db', array(
+                'data' => 'Database connection'
+            ), 3);
+        }
 
         $this->setTimezone();
 
-		$this->prefix = $config->db_prefix;
+		$this->prefix = $this->options['db_prefix'];
+
+        $this->init_start_time = time();
 
         return true;
 
@@ -74,9 +158,9 @@ class cmsDatabase {
         return $this->connect_error;
     }
 
-	public function reconnect(){
+	public function reconnect($is_force = false){
 
-        if (!$this->mysqli->ping()){
+        if ($is_force || !$this->mysqli->ping()){
 
             $this->mysqli->close();
 
@@ -88,8 +172,66 @@ class cmsDatabase {
 
 	}
 
+    public function getStat(){
+
+        if (isset($this->mysqli->stat)){
+            return $this->mysqli->stat;
+        }
+
+		return '';
+
+	}
+
     public function setTimezone(){
-        $this->query("SET `time_zone` = '%s'", date('P'));
+        $this->query("SET `time_zone` = '%s'", date('P')); return $this;
+    }
+
+    public function setLcMessages(){
+        if(defined('LC_LANGUAGE_TERRITORY')){
+            $this->mysqli->query("SET lc_messages = '".LC_LANGUAGE_TERRITORY."'");
+        }
+        return $this;
+    }
+
+//============================================================================//
+//============================================================================//
+
+    public function autocommitOn() {
+        $this->mysqli->autocommit(true); return $this;
+    }
+
+    public function autocommitOff() {
+        $this->mysqli->autocommit(false); return $this;
+    }
+
+    public function isAutocommitOn() {
+
+        $result = $this->mysqli->query('SELECT @@autocommit');
+
+		if($result){
+
+			$row = $result->fetch_row();
+
+            $result->free();
+
+            return isset($row[0]) && $row[0] == 1;
+
+		}
+
+        return false;
+
+    }
+
+    public function rollback() {
+        $this->mysqli->rollback(); return $this;
+    }
+
+    public function commit() {
+        $this->mysqli->commit(); return $this;
+    }
+
+    public function beginTransaction() {
+        $this->mysqli->begin_transaction(); return $this;
     }
 
 //============================================================================//
@@ -102,27 +244,36 @@ class cmsDatabase {
 	 * @return string
 	 */
 	public function escape($string){
-		return @$this->mysqli->real_escape_string($string);
+		return $this->mysqli->real_escape_string($string);
 	}
+
+    /**
+     * Формирует префиксы таблиц в SQL запросе
+     * @param string $sql
+     * @return string
+     */
+    public function replacePrefix($sql) {
+        return str_replace([
+            '{#}{users}', '{users}', '{#}'
+        ], [
+            $this->options['db_users_table'], $this->options['db_users_table'], $this->prefix
+        ], $sql);
+    }
 
     /**
      * Выполняет запрос в базе
      * @param string $sql Строка запроса
      * @param array|string $params Аргументы запроса, которые будут переданы в vsprintf
-     * @param bool $quiet В случае ошибки запроса отдавать false, а не "умирать"
+     * @param boolean $quiet В случае ошибки запроса отдавать false, а не "умирать"
      * @return boolean
      */
-	public function query($sql, $params=false, $quiet=false){
+	public function query($sql, $params = false, $quiet = false){
 
-        $start_time = microtime(true);
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointStart('db');
+        }
 
-        $config = cmsConfig::getInstance();
-
-        $sql = str_replace(array(
-            '{#}{users}', '{users}', '{#}'
-        ), array(
-            $config->db_users_table, $config->db_users_table, $this->prefix
-        ), $sql);
+        $sql = $this->replacePrefix($sql);
 
         if ($params){
 
@@ -140,32 +291,27 @@ class cmsDatabase {
 
         }
 
-        if(PHP_SAPI == 'cli'){
+        if(PHP_SAPI == 'cli' && (time() - $this->init_start_time) >= $this->reconnect_time){
             $this->reconnect();
         }
 
         $result = $this->mysqli->query($sql);
 
-        if ($config->debug){
-
-            $this->query_count++;
-
-            $trace = debug_backtrace();
-
-            if (isset($trace[1]['file']) && isset($trace[1]['function'])){
-                $src = $trace[1]['file'] .' => '. $trace[1]['line'] .' => '. $trace[1]['function'] . '()';
-                $src = str_replace($config->root_path, '', $src);
-            } else {
-                $src = '';
-            }
-
-            $this->query_list[] = array('sql'=>$sql, 'src'=>$src, 'time'=>(microtime(true) - $start_time));
-
+        if (!empty($this->options['debug'])){
+            cmsDebugging::pointProcess('db', array(
+                'data' => $sql
+            ));
         }
 
 		if(!$this->mysqli->errno) { return $result; }
 
-        if($quiet) { return false; }
+        if($quiet || $this->query_quiet === true) {
+
+            error_log(sprintf(ERR_DATABASE_QUERY, $this->error()));
+
+            return false;
+
+        }
 
         cmsCore::error(sprintf(ERR_DATABASE_QUERY, $this->error()), $sql);
 
@@ -203,7 +349,10 @@ class cmsDatabase {
 
 	/**
 	 * Возвращает ID последней вставленной записи из таблицы
-	 * @return int
+     * При работе с транзакциями вызывать необходимо
+     * До коммита
+     *
+	 * @return integer
 	 */
 	public function lastId(){
 		return $this->mysqli->insert_id;
@@ -222,11 +371,32 @@ class cmsDatabase {
 
 		$result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
 
+        $fields = array();
+
         while($data = $this->fetchAssoc($result)){
             $fields[] = $data['Field'];
         }
 
         $this->table_fields[$table] = $fields;
+
+        return $fields;
+
+    }
+
+    /**
+     * Возвращает названия полей и их типы для таблицы
+     * @param string $table
+     * @return array
+     */
+    public function getTableFieldsTypes($table) {
+
+		$result = $this->query("SELECT DATA_TYPE, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{#}{$table}'");
+
+        $fields = [];
+
+        while($data = $this->fetchAssoc($result)){
+            $fields[$data['COLUMN_NAME']] = $data['DATA_TYPE'];
+        }
 
         return $fields;
 
@@ -239,18 +409,27 @@ class cmsDatabase {
      * Подготавливает значение $value поля $field для вставки в запрос
      * @param string $field
      * @param string $value
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return string
      */
-    public function prepareValue($field, $value){
+    public function prepareValue($field, $value, $array_as_json = false){
+
+        $is_date_field = strpos($field, 'date_') === 0;
 
         // если значение поля - массив,
         // то преобразуем его в YAML
-        if (is_array($value)){ $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'"; } else
+        if (is_array($value)){
+            if($array_as_json){
+                $value = "'". $this->escape(cmsModel::arrayToString($value)) ."'";
+            } else {
+                $value = "'". $this->escape(cmsModel::arrayToYaml($value)) ."'";
+            }
+        } else
 
-        // если это поле даты публикации и оно не установлено,
+        // если это поле даты и оно не установлено,
         // то используем текущее время
-		if (strpos($field, 'date_')===0 && ($value === false)) { $value = "NULL"; }  else
-        if (strpos($field, 'date_')===0 && ($value == '' || is_null($value))) { $value = "CURRENT_TIMESTAMP"; }  else
+		if ($is_date_field && ($value === false)) { $value = 'NULL'; }  else
+        if ($is_date_field && ($value == '' || is_null($value))) { $value = 'CURRENT_TIMESTAMP'; }  else
 
         // если это поле булево,
         // то преобразуем его в число
@@ -258,7 +437,11 @@ class cmsDatabase {
 
         // если значение поля не задано,
         // то запишем в базу NULL
-        if ($value === '' || is_null($value)) { $value = 'NULL'; }
+        if ($value === '' || is_null($value)) { $value = 'NULL'; } else
+
+        // если значение поля как результат функции
+        if (is_callable($value) && ($value instanceof Closure)) { $value = $value($this); }
+
         else {
 
             $value = $this->escape(trim($value));
@@ -279,10 +462,11 @@ class cmsDatabase {
      * @param string $table Таблица
      * @param string $where Критерии запроса
 	 * @param array $data Массив[Название поля] = значение поля
-	 * @param bool $skip_check_fields Не проверять наличие обновляемых полей
+	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
      * @return boolean
      */
-	public function update($table, $where, $data, $skip_check_fields = false){
+	public function update($table, $where, $data, $skip_check_fields = false, $array_as_json = false){
 
 		if(empty($data)){ return false; }
 
@@ -290,13 +474,17 @@ class cmsDatabase {
             $table_fields = $this->getTableFields($table);
         }
 
+        $set = [];
+
 		foreach ($data as $field=>$value) {
             if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
             }
-            $value = $this->prepareValue($field, $value);
+            $value = $this->prepareValue($field, $value, $array_as_json);
 			$set[] = "`{$field}` = {$value}";
 		}
+
+        if(!$set){ return false; }
 
         $set = implode(', ', $set);
 
@@ -311,29 +499,38 @@ class cmsDatabase {
 	 *
 	 * @param string $table Таблица
 	 * @param array $data Массив[Название поля] = значение поля
-	 * @return bool
+	 * @param boolean $skip_check_fields Не проверять наличие обновляемых полей
+     * @param boolean $array_as_json Переходная опция для миграции с Yaml на Json
+     * @param boolean $ignore Пропускать записи, если при вставке возникают ошибки (INSERT IGNORE)
+	 * @return boolean|integer ID вставленной записи
 	 */
-	public function insert($table, $data){
+	public function insert($table, $data, $skip_check_fields = false, $array_as_json = false, $ignore = false){
 
         if(empty($data) || !is_array($data)) { return false; }
 
-        $table_fields = $this->getTableFields($table);
+        if(!$skip_check_fields){
+            $table_fields = $this->getTableFields($table);
+        }
+
+        $fields = $values = [];
 
         foreach ($data as $field => $value){
 
-            if(!in_array($field, $table_fields)){
+            if(!$skip_check_fields && !in_array($field, $table_fields)){
                 continue;
             }
 
             $fields[] = "`$field`";
-            $values[] = $this->prepareValue($field, $value);
+            $values[] = $this->prepareValue($field, $value, $array_as_json);
 
         }
+
+        if(!$fields){ return false; }
 
         $fields = implode(', ', $fields);
         $values = implode(', ', $values);
 
-        $sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
+        $sql = "INSERT ".($ignore ? 'IGNORE ': '')."INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
         if ($this->query($sql)) { return $this->lastId(); }
 
@@ -348,17 +545,15 @@ class cmsDatabase {
 	 * @param string $table Таблица
 	 * @param array $data Массив данных для вставки в таблицу
 	 * @param array $update_data Массив данных для обновления при совпадении ключей
-	 * @return bool
+	 * @return boolean|integer
 	 */
-	public function insertOrUpdate($table, $data, $update_data=false){
+	public function insertOrUpdate($table, $data, $update_data = false){
 
         $fields = array();
         $values = array();
         $set    = array();
 
-        if (!$update_data) { $update_data = $data; }
-
-        if (is_array($data) && is_array($update_data)){
+        if (is_array($data)){
 
 			foreach ($data as $field => $value){
 
@@ -367,6 +562,10 @@ class cmsDatabase {
                 $fields[] = "`$field`";
                 $values[] = $value;
 
+                if($update_data === false){
+                    $set[] = "`{$field}` = {$value}";
+                }
+
 			}
 
             $fields = implode(', ', $fields);
@@ -374,12 +573,14 @@ class cmsDatabase {
 
 			$sql = "INSERT INTO {#}{$table} ({$fields})\nVALUES ({$values})";
 
-            foreach ($update_data as $field=>$value) {
+            if(is_array($update_data)){
+                foreach ($update_data as $field=>$value) {
 
-                $value = $this->prepareValue($field, $value);
+                    $value = $this->prepareValue($field, $value);
 
-                $set[] = "`{$field}` = {$value}";
+                    $set[] = "`{$field}` = {$value}";
 
+                }
             }
 
             $set = implode(', ', $set);
@@ -398,7 +599,7 @@ class cmsDatabase {
      * Выполняет запрос DELETE
      * @param string $table_name Таблица
      * @param string $where Критерии запроса
-     * @return type
+     * @return boolean
      */
 	public function delete($table_name, $where){
         $where = str_replace('i.', '', $where);
@@ -408,14 +609,17 @@ class cmsDatabase {
 //============================================================================//
 //============================================================================//
 
-	/**
-	 * Возвращает массив со всеми строками полученными после запроса
-	 *
-	 * @param string $sql
-	 */
-	public function getRows($table_name, $where='1', $fields='*', $order='id ASC'){
+    /**
+     * Возвращает массив со всеми строками полученными после запроса
+     * @param string $table_name
+     * @param string $where
+     * @param string $fields
+     * @param string $order
+     * @return boolean|array
+     */
+    public function getRows($table_name, $where='1', $fields='*', $order='id ASC', $quiet = false){
 		$sql = "SELECT {$fields} FROM {#}{$table_name} WHERE {$where} ORDER BY {$order}";
-		$result = $this->query($sql);
+		$result = $this->query($sql, false, $quiet);
 		if(!$this->mysqli->errno){
 			$data=array();
 			while($item = $this->fetchAssoc($result)){
@@ -463,13 +667,17 @@ class cmsDatabase {
 	 * @return mixed
 	 */
 	public function getField($table, $where, $field, $order=''){
+
 		$row = $this->getRow($table, $where, $field, $order);
-		return $row[$field];
+
+        if(!$row){ return false; }
+
+		return array_key_exists($field, $row) === true ? $row[$field] : false;
+
 	}
 
 	public function getFields($table, $where, $fields='*', $order=''){
-		$row = $this->getRow($table, $where, $fields, $order);
-		return $row;
+		return $this->getRow($table, $where, $fields, $order);
 	}
 
 //============================================================================//
@@ -479,8 +687,8 @@ class cmsDatabase {
      * Возвращает количество строк выведенных запросом
      * @param string $table
      * @param string $where
-     * @param int $limit
-     * @return boolean|int
+     * @param integer $limit
+     * @return boolean|integer
      */
 	public function getRowsCount($table, $where='1', $limit=false){
 		$sql = "SELECT COUNT(1) FROM {#}$table WHERE $where";
@@ -612,7 +820,7 @@ class cmsDatabase {
 
         }
 
-        $sql .= ") ENGINE={$engine} DEFAULT CHARSET=utf8";
+        $sql .= ") ENGINE={$engine} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -653,29 +861,32 @@ class cmsDatabase {
 
     public function createCategoriesTable($table_name) {
 
-        $config = cmsConfig::getInstance();
-
         $sql = "CREATE TABLE `{#}{$table_name}` (
                   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                   `parent_id` int(11) UNSIGNED DEFAULT NULL,
                   `title` varchar(200) NULL DEFAULT NULL,
+                  `description` text NULL DEFAULT NULL,
                   `slug` varchar(255) NULL DEFAULT NULL,
                   `slug_key` varchar(255) NULL DEFAULT NULL,
                   `seo_keys` varchar(256) DEFAULT NULL,
                   `seo_desc` varchar(256) DEFAULT NULL,
                   `seo_title` varchar(256) DEFAULT NULL,
+                  `seo_h1` varchar(256) DEFAULT NULL,
                   `ordering` int(11) UNSIGNED DEFAULT NULL,
                   `ns_left` int(11) UNSIGNED DEFAULT NULL,
                   `ns_right` int(11) UNSIGNED DEFAULT NULL,
                   `ns_level` int(11) UNSIGNED DEFAULT NULL,
                   `ns_differ` varchar(32) NOT NULL DEFAULT '',
                   `ns_ignore` tinyint(4) UNSIGNED NOT NULL DEFAULT '0',
+                  `allow_add` text,
+                  `is_hidden` tinyint(1) UNSIGNED DEFAULT NULL,
+                  `cover` tinytext,
                   PRIMARY KEY (`id`),
                   KEY `slug` (`slug`),
                   KEY `parent_id` (`parent_id`,`ns_left`),
                   KEY `ns_left` (`ns_level`,`ns_right`,`ns_left`),
                   KEY `ordering` (`ordering`)
-                ) ENGINE={$config->db_engine} DEFAULT CHARSET=utf8";
+                ) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -688,14 +899,12 @@ class cmsDatabase {
 
     public function createCategoriesBindsTable($table_name) {
 
-        $config = cmsConfig::getInstance();
-
         $sql = "CREATE TABLE `{#}{$table_name}` (
 				  `item_id` int(11) UNSIGNED DEFAULT NULL,
 				  `category_id` int(11) UNSIGNED DEFAULT NULL,
 				  KEY `item_id` (`item_id`),
 				  KEY `category_id` (`category_id`)
-				) ENGINE={$config->db_engine} DEFAULT CHARSET=utf8";
+				) ENGINE={$this->options['db_engine']} DEFAULT CHARSET={$this->options['db_charset']}";
 
         $this->query($sql);
 
@@ -714,9 +923,6 @@ class cmsDatabase {
 
     }
 
-//============================================================================//
-//============================================================================//
-
     public function dropTableField($table_name, $field_name){
 
         $sql = "ALTER TABLE `{#}{$table_name}` DROP `{$field_name}`";
@@ -725,10 +931,38 @@ class cmsDatabase {
 
     }
 
+    public function addTableField($table_name, $field_name, $sql) {
+
+        if ($this->isFieldExists($table_name, $field_name)) {
+            return false;
+        }
+
+        return $this->query("ALTER TABLE `{#}{$table_name}` ADD `{$field_name}` {$sql}");
+
+    }
+
+    public function isTableExists($table_name){
+
+		$result = $this->query('show tables');
+
+        $tables = [];
+
+        while($data = $this->fetchRow($result)){
+            $tables[] = $data[0];
+        }
+
+        $table_name = $this->replacePrefix('{#}'.$table_name);
+
+		return in_array($table_name, $tables, true);
+
+	}
+
 //============================================================================//
 //============================================================================//
 
     public function isFieldUnique($table_name, $field_name, $value, $exclude_row_id = false){
+
+        $value = $this->escape(trim($value));
 
 		$where = "(`{$field_name}` = '{$value}')";
 
@@ -740,11 +974,9 @@ class cmsDatabase {
 
     public function isFieldExists($table_name, $field){
 
-        $row = $this->getRow($table_name);
+        $table_fields = $this->getTableFields($table_name);
 
-        if (!$row) { return false; }
-
-        return array_key_exists($field, $row);
+        return in_array($field, $table_fields, true);
 
     }
 
@@ -865,13 +1097,17 @@ class cmsDatabase {
 
     public function importDump($file, $delimiter = ';'){
 
-        if (!is_file($file)){ return false; }
+        clearstatcache();
+
+        if (function_exists('opcache_invalidate')) { @opcache_invalidate($file, true); }
+
+        if (!is_readable($file)){ return false; }
 
         @set_time_limit(0);
 
         $file = fopen($file, 'r');
 
-        $query = array();
+        $query = []; $success = false;
 
         while (feof($file) === false){
 
@@ -879,9 +1115,11 @@ class cmsDatabase {
 
             if (preg_match('~' . preg_quote($delimiter, '~').'\s*$~iS', end($query)) === 1){
 
+                $success = true;
+
                 $query = trim(implode('', $query));
 
-                $result = $this->query(str_replace('InnoDB', cmsConfig::get('db_engine'), $query));
+                $result = $this->query(str_replace(['InnoDB','CHARSET=utf8'], [$this->options['db_engine'],'CHARSET='.$this->options['db_charset']], $query));
 
                 if ($result === false) {
                     return false;
@@ -897,11 +1135,8 @@ class cmsDatabase {
 
         fclose($file);
 
-        return true;
+        return $success;
 
     }
-
-//============================================================================//
-//============================================================================//
 
 }

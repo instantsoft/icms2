@@ -24,8 +24,8 @@
         'href'  => "javascript:icms.forms.submit()"
     ));
     $this->addToolButton(array(
-        'class' => 'cancel',
-        'title' => LANG_CANCEL,
+        'class' => 'view_list',
+        'title' => LANG_CP_CTYPE_TO_LIST,
         'href'  => $this->href_to('ctypes')
     ));
     $this->addToolButton(array(
@@ -48,10 +48,9 @@
 ?>
 
 <script>
-    $(document).ready(function(){
-        $('#f_name .input').change(function(){
+    $(function(){
+        $('#f_name .input').on('input', function(){
             $('#f_url_pattern .prefix').html('/'+$(this).val()+'/');
         });
-        $('#f_url_pattern .prefix').html('/'+$('#f_name .input').val()+'/');
     });
 </script>

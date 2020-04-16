@@ -1,0 +1,10 @@
+#sitemap_info p:last-child {
+    margin-bottom: 0;
+}
+#sitemap_info {
+    border-top: solid 1px #B3C2C9;
+    margin: 10px 0 0 0;
+}
+#robots {
+    height: 300px;
+}

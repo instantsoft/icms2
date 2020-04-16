@@ -6,27 +6,41 @@ class modelSearch extends cmsModel{
     protected $original_query;
     protected $type;
     protected $date_interval;
-
-    private $default_sql_fields = array('id','slug','date_pub');
-
-    public function getDefaultSqlFields() {
-        return $this->default_sql_fields;
-    }
+    protected $three_symbol_search = false;
 
     public function setQuery($query){
+
+        $query = strip_tags(mb_strtolower(trim(urldecode($query))));
 
         $this->original_query = $query;
 
         $this->query = array();
 
+        $stopwords = string_get_stopwords(cmsCore::getLanguageName());
+
+        if (mb_strlen($query) == 3) {
+
+            if(!$stopwords || ($stopwords && !in_array($query, $stopwords))){
+
+                $this->three_symbol_search = true;
+
+                $this->query[] = $query;
+
+                return true;
+
+            }
+
+            return false;
+
+        }
+
         $words = explode(' ', $query);
 
         foreach($words as $word){
 
-            $word = strip_tags(mb_strtolower(trim(urldecode($word))));
-
             if (mb_strlen($word)<3) { continue; }
-            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word) . '*'; continue; }
+            if($stopwords && in_array($word, $stopwords)){ continue; }
+            if (mb_strlen($word)==3) { $this->query[] = $this->db->escape($word); continue; }
 
             if (mb_strlen($word) >= 12) {
                 $word = mb_substr($word, 0, mb_strlen($word) - 4);
@@ -63,12 +77,32 @@ class modelSearch extends cmsModel{
         switch ($this->type){
 
             case 'words':
-                $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <';
-                $ft_query .= '+' . implode(' +', $this->query);
+
+                if ($this->three_symbol_search) {
+
+                    $ft_query .= '%'.$this->db->escape($this->original_query).'%';
+
+                } else {
+
+                    $ft_query .= '>\"' . $this->db->escape($this->original_query).'\" <(';
+                    $ft_query .= '+' . implode(' +', $this->query).')';
+
+                }
+
                 break;
 
             case 'exact':
-                $ft_query .= '\"' . $this->db->escape($this->original_query) . '\"';
+
+                if ($this->three_symbol_search) {
+
+                    $ft_query .= $this->db->escape($this->original_query);
+
+                } else {
+
+                    $ft_query .= '\"' . $this->db->escape($this->original_query) . '\"';
+
+                }
+
                 break;
 
         }
@@ -77,40 +111,70 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchSQL($table_name, $fields, $default_fields=null){
+    public function getSearchSQL($table_name, $match_fields, $select_fields, $filters){
 
-        if(!is_array($default_fields)){
-            $default_fields = $this->default_sql_fields;
-        }
+        $match_fields  = '`'.implode('`, `', $match_fields).'`';
+        $select_fields = array_map(function($v){
+            if(is_numeric($v)){
+                return $v;
+            }
+            return '`'.$v.'`';
+        }, $select_fields);
+        $select_fields = implode(', ', $select_fields);
 
         $query = $this->getFullTextQuery();
 
-        $sql_dfields = implode(', ', $default_fields);
-        $sql_fields  = implode(', ', $fields);
-
-        $select_fields = $sql_dfields;
-        // при запросе количества нам не нужно выбирать все поля
-        if(count($default_fields) > 1){
-            $select_fields .= ', '.$sql_fields;
-        }
-
-        $sql = "SELECT {$select_fields}
-                FROM {#}{$table_name}
-                WHERE is_pub = 1 AND MATCH({$sql_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
-                ";
+        $filter_sql = '';
 
         if ($this->date_interval != 'all'){
 
             switch ($this->date_interval){
                 case 'w':
-                    $sql .= "AND DATEDIFF(NOW(), date_pub) <= 7 \n";
+                    $filter_sql .= "DATEDIFF(NOW(), date_pub) <= 7 AND ";
                     break;
                 case 'm':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub \n";
+                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 MONTH) < date_pub AND ";
                     break;
                 case 'y':
-                    $sql .= "AND DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub \n";
+                    $filter_sql .= "DATE_SUB(NOW(), INTERVAL 1 YEAR) < date_pub AND ";
                     break;
+            }
+
+        }
+
+        if($filters){
+            $_filter_sql = array();
+            foreach ($filters as $filter) {
+                $filter['value'] = $this->db->prepareValue($filter['field'], $filter['value']);
+                $_filter_sql[] = "`{$filter['field']}` {$filter['condition']} {$filter['value']}";
+            }
+            $filter_sql .= implode(' AND ', $_filter_sql).' AND ';
+        }
+
+        if ($this->three_symbol_search) {
+
+            $sql = "SELECT {$select_fields}
+                    FROM {#}{$table_name}
+                    WHERE {$filter_sql} CONCAT({$match_fields}) LIKE '{$query}'
+                    ";
+
+        } else {
+
+            if($select_fields == 1){
+
+                $sql = "SELECT {$select_fields}
+                        FROM {#}{$table_name}
+                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
+                        ";
+
+            } else {
+
+                $sql = "SELECT {$select_fields}, MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE) as fsort
+                        FROM {#}{$table_name}
+                        WHERE {$filter_sql} MATCH({$match_fields}) AGAINST ('{$query}' IN BOOLEAN MODE)
+                        ORDER BY fsort desc
+                        ";
+
             }
 
         }
@@ -119,9 +183,9 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchResultsCount($table_name, $fields){
+    public function getSearchResultsCount($table_name, $match_fields, $filters){
 
-        $sql = $this->getSearchSQL($table_name, $fields, array('id'));
+        $sql = $this->getSearchSQL($table_name, $match_fields, array('1'), $filters);
 
         $sql_result = $this->db->query($sql);
 
@@ -129,13 +193,9 @@ class modelSearch extends cmsModel{
 
     }
 
-    public function getSearchResults($table_name, $fields, $default_fields=null, $item_callback=false){
+    public function getSearchResults($table_name, $match_fields, $select_fields, $filters, $item_callback=false, $sources_name = ''){
 
-        if(!is_array($default_fields)){
-            $default_fields = $this->default_sql_fields;
-        }
-
-        $sql = $this->getSearchSQL($table_name, $fields, $default_fields);
+        $sql = $this->getSearchSQL($table_name, $match_fields, $select_fields, $filters);
 
         if ($this->limit){ $sql .= " LIMIT {$this->limit}"; }
 
@@ -149,14 +209,12 @@ class modelSearch extends cmsModel{
 
         while ($item = $this->db->fetchAssoc($sql_result)){
 
-            foreach($fields as $field_name){
-                if (!in_array($field_name, array('title', 'photo'))){
-                    $item[$field_name] = $this->getHighlightedText($item[$field_name]);
-                }
+            foreach($match_fields as $field_name){
+                $item[$field_name] = $this->getHighlightedText($item[$field_name]);
             }
 
             if (is_callable($item_callback)){
-                $item = $item_callback($item, $this);
+                $item = call_user_func_array($item_callback, array($item, $this, $sources_name, $match_fields, $select_fields));
                 if ($item === false){ continue; }
             }
 
@@ -201,7 +259,7 @@ class modelSearch extends cmsModel{
             if ($is_found) { $found_sentences[] = $sentence; }
         }
 
-        if (!$found_sentences) { return false; }
+        if (!$found_sentences) { return $text; }
 
         $found_sentences = implode('... ', $found_sentences);
 

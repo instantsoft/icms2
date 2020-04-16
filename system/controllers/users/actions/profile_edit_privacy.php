@@ -2,13 +2,12 @@
 
 class actionUsersProfileEditPrivacy extends cmsAction {
 
+    public $lock_explicit_call = true;
+
     public function run($profile){
 
-        $user = cmsUser::getInstance();
-        $template = cmsTemplate::getInstance();
-
         // проверяем наличие доступа
-        if ($profile['id'] != $user->id && !$user->is_admin) { cmsCore::error404(); }
+        if (!$this->is_own_profile && !$this->cms_user->is_admin) { cmsCore::error404(); }
 
         $pricacy_types = cmsEventsManager::hookAll('user_privacy_types');
 
@@ -60,6 +59,8 @@ class actionUsersProfileEditPrivacy extends cmsAction {
                 // Обновляем профиль и редиректим на его просмотр
                 $this->model->updateUserPrivacyOptions($profile['id'], $options);
 
+                cmsUser::addSessionMessage(LANG_SUCCESS_MSG, 'success');
+
                 $this->redirectTo('users', $profile['id']);
 
             }
@@ -70,12 +71,12 @@ class actionUsersProfileEditPrivacy extends cmsAction {
 
         }
 
-        return $template->render('profile_edit_privacy', array(
-            'id' => $profile['id'],
+        return $this->cms_template->render('profile_edit_privacy', array(
+            'id'      => $profile['id'],
             'profile' => $profile,
             'options' => $options,
-            'form' => $form,
-            'errors' => isset($errors) ? $errors : false
+            'form'    => $form,
+            'errors'  => isset($errors) ? $errors : false
         ));
 
     }

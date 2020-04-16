@@ -1,39 +1,41 @@
 <?php
 
-class actionPhotosDelete extends cmsAction{
+class actionPhotosDelete extends cmsAction {
 
     public function run($photo_id = null){
 
 		if (!$this->request->isAjax()) { cmsCore::error404(); }
-		
-        if (!$photo_id) { 
-			$photo_id = $this->request->get('id');
+
+        if (!$photo_id) {
+			$photo_id = $this->request->get('id', 0);
 			if (!$photo_id) { cmsCore::error404(); }
 		}
 
         $photo = $this->model->getPhoto($photo_id);
+        if (!$photo) { cmsCore::error404(); }
 
         $success = true;
 
         // проверяем наличие доступа
-        $user = cmsUser::getInstance();
         if (!cmsUser::isAllowed('albums', 'edit')) { $success = false; }
-        if (!cmsUser::isAllowed('albums', 'edit', 'all') && $photo['user_id'] != $user->id) { $success = false; }
+        if (!cmsUser::isAllowed('albums', 'edit', 'all') && $photo['user_id'] != $this->cms_user->id) { $success = false; }
 
         if (!$success){
-            cmsTemplate::getInstance()->renderJSON(array(
+            $this->cms_template->renderJSON(array(
                 'success' => false
             ));
         }
-		
-		$album = cmsCore::getModel('content')->getContentItem('albums', $photo['album_id']);		
 
-        $this->model->deletePhoto($photo_id);
+		$album = cmsCore::getModel('content')->getContentItem('albums', $photo['album_id']);
 
-        $this->model->setRandomAlbumCoverImage($photo['album_id']);
+        list($album, $photo) = cmsEventsManager::hook('photos_before_delete', array($album, $photo));
 
-        cmsTemplate::getInstance()->renderJSON(array(
-            'success' => true,
+        $this->model->deletePhoto($photo);
+
+        list($album, $photo) = cmsEventsManager::hook('photos_after_delete', array($album, $photo));
+
+        $this->cms_template->renderJSON(array(
+            'success'   => true,
 			'album_url' => href_to('albums', $album['slug'].'.html')
         ));
 

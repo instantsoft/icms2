@@ -4,13 +4,20 @@ class actionAdminCtypesFieldsReorder extends cmsAction {
 
     public function run($ctype_name){
 
-        $items = $this->request->get('items');
+        $items = $this->request->get('items', array());
 
         if (!$items || !$ctype_name){ cmsCore::error404(); }
 
-        $content_model = cmsCore::getModel('content');
+        cmsCore::getModel('content')->reorderContentFields($ctype_name, $items);
 
-        $content_model->reorderContentFields($ctype_name, $items);
+        if ($this->request->isAjax()){
+			return $this->cms_template->renderJSON(array(
+				'error' => false,
+				'success_text' => LANG_CP_ORDER_SUCCESS
+			));
+        }
+
+        cmsUser::addSessionMessage(LANG_CP_ORDER_SUCCESS, 'success');
 
         $this->redirectBack();
 

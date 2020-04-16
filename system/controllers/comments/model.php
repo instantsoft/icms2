@@ -1,41 +1,97 @@
 <?php
 
-class modelComments extends cmsModel{
+class modelComments extends cmsModel {
 
-//============================================================================//
-//============================================================================//
+    private $childs = array();
 
-    public function updateCommentContent($id, $content, $content_html){
+    public function filterCommentTarget($target_controller, $target_subject, $target_id = null) {
 
-        cmsCache::getInstance()->clean("comments.list");
+        return $this->filterEqual('target_controller', $target_controller)->
+            filterEqual('target_subject', $target_subject)->
+            filterEqual('target_id', $target_id);
+
+    }
+
+    public function approveComment($id){
+
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->update('comments', $id, array(
-            'content'=>$content,
-            'content_html'=>$content_html
+            'is_approved' => 1
         ));
+
+    }
+
+    public function updateCommentContent($id, $content, $content_html, $data = []){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->update('comments', $id, array_merge([
+            'date_last_modified' => null,
+            'content'            => $content,
+            'content_html'       => $content_html
+        ], $data));
 
     }
 
     public function updateCommentsPrivacy($is_private){
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->updateFiltered('comments', array('is_private' => $is_private));
 
     }
 
-//============================================================================//
-//============================================================================//
+    public function updateCommentsUrl($target_url, $target_title){
 
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $this->updateFiltered('comments', array(
+            'target_url' => $target_url,
+            'target_title' => $target_title
+        ));
+
+    }
+
+//============================================================================//
+//============================================================================//
+    /**
+     *
+     * @param integer $id ID комментария
+     * @param boolean $delete Удалять или скрывать
+     * @return integer Количество удаленных комментариев
+     */
     public function deleteComment($id, $delete=false){
 
+        $delete_count = 0;
+
         if($delete){
+
+            $activity = cmsCore::getController('activity');
+
+            $delete_count = 1;
+
+            // ищем детей
+            $childs = $this->getCommentChildIds($id);
+            if($childs){
+                $this->filterIn('id', $childs)->deleteFiltered('comments');
+                $this->filterIn('comment_id', $childs)->deleteFiltered('comments_rating');
+                $delete_count += count($childs);
+                $activity->deleteEntry('comments', 'vote.comment', $childs);
+            }
+
             $this->delete('comments', $id);
+            $this->delete('comments_rating', $id, 'comment_id');
+
+            $activity->deleteEntry('comments', 'vote.comment', $id);
+
         } else {
             $this->update('comments', $id, array('is_deleted'=>1));
         }
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
+
+        return $delete_count;
 
     }
 
@@ -45,22 +101,53 @@ class modelComments extends cmsModel{
 
         $this->delete('comments_tracks', $user_id, 'user_id');
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
     }
 
     public function deleteComments($target_controller, $target_subject, $target_id=false){
 
+        $this->selectOnly('i.id');
+
         $this->filterEqual('target_controller', $target_controller);
         $this->filterEqual('target_subject', $target_subject);
-
 		if ($target_id){
 			$this->filterEqual('target_id', $target_id);
 		}
 
-        $this->deleteFiltered('comments');
+        $this->lockFilters();
 
-        cmsCache::getInstance()->clean("comments.list");
+        $ids = $this->get('comments', function($item, $model){
+            return $item['id'];
+        });
+
+        $this->unlockFilters();
+
+        if($ids){
+
+            $this->deleteFiltered('comments');
+
+            $this->filterIn('comment_id', $ids)->deleteFiltered('comments_rating');
+
+            cmsCache::getInstance()->clean('comments.list');
+
+            cmsCore::getController('activity')->deleteEntry('comments', 'vote.comment', $ids);
+
+        }
+
+        return $ids ? true : false;
+
+    }
+
+    public function setCommentsIsDeleted($target_controller, $target_subject, $target_id, $delete = 1){
+
+        cmsCache::getInstance()->clean('comments.list');
+
+        $this->filterEqual('target_controller', $target_controller);
+        $this->filterEqual('target_subject', $target_subject);
+    	$this->filterEqual('target_id', $target_id);
+
+        return $this->updateFiltered('comments', array('is_deleted'=>$delete), true);
 
     }
 
@@ -87,7 +174,7 @@ class modelComments extends cmsModel{
 
         }
 
-        cmsCache::getInstance()->clean("comments.list");
+        cmsCache::getInstance()->clean('comments.list');
 
         return $this->insert('comments', $comment);
 
@@ -113,8 +200,8 @@ class modelComments extends cmsModel{
 
         $this->insert('comments_rating', array(
             'comment_id' => $comment_id,
-            'user_id' => $user_id,
-            'score' => $score
+            'user_id'    => $user_id,
+            'score'      => $score
         ));
 
         $this->filterEqual('id', $comment_id);
@@ -130,9 +217,7 @@ class modelComments extends cmsModel{
 
     public function getNextParentOrdering($parent_comment){
 
-        $this->filterEqual('target_controller', $parent_comment['target_controller']);
-        $this->filterEqual('target_subject', $parent_comment['target_subject']);
-        $this->filterEqual('target_id', $parent_comment['target_id']);
+        $this->filterCommentTarget($parent_comment['target_controller'], $parent_comment['target_subject'], $parent_comment['target_id']);
         $this->filterLtEqual('level', $parent_comment['level']);
         $this->filterGt('ordering', $parent_comment['ordering']);
         $this->limit(1);
@@ -151,19 +236,13 @@ class modelComments extends cmsModel{
 
     public function getMaxThreadOrdering($target_controller, $target_subject, $target_id){
 
-        $this->filterEqual('target_controller', $target_controller);
-        $this->filterEqual('target_subject', $target_subject);
-        $this->filterEqual('target_id', $target_id);
-
-        return $this->getMaxOrdering('comments');
+        return $this->filterCommentTarget($target_controller, $target_subject, $target_id)->getMaxOrdering('comments');
 
     }
 
     public function incrementThreadOrdering($target_controller, $target_subject, $target_id, $after){
 
-        $this->filterEqual('target_controller', $target_controller);
-        $this->filterEqual('target_subject', $target_subject);
-        $this->filterEqual('target_id', $target_id);
+        $this->filterCommentTarget($target_controller, $target_subject, $target_id);
         $this->filterGtEqual('ordering', $after);
 
         $this->increment('comments', 'ordering');
@@ -175,38 +254,43 @@ class modelComments extends cmsModel{
 
     public function getCommentsCount(){
 
-        $count = $this->getCount('comments');
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
-        return $count;
+        $this->useCache('comments.list');
+
+        return $this->getCount('comments');
 
     }
 
-//============================================================================//
-//============================================================================//
-
-    public function getComments(){
+    public function getComments($callback = null){
 
         $user = cmsUser::getInstance();
 
         $this->select('r.score', 'is_rated');
 
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
         $this->joinLeft('comments_rating', 'r', "r.comment_id = i.id AND r.user_id='{$user->id}'");
 
         if (!$this->order_by){
             $this->orderBy('ordering');
         }
 
-        $this->useCache("comments.list");
+        if (!$this->approved_filter_disabled) { $this->filterApprovedOnly(); }
 
-        return $this->get('comments', function($item, $model){
+        $this->useCache('comments.list');
+
+        return $this->get('comments', function($item, $model) use ($callback){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
+
+            if (is_callable($callback)){
+                $item = $callback($item, $model);
+            }
 
             return $item;
 
@@ -221,18 +305,56 @@ class modelComments extends cmsModel{
 
         $this->select('u.nickname', 'user_nickname');
         $this->select('u.avatar', 'user_avatar');
-        $this->joinUserLeft();
+        $this->joinUserLeft()->joinSessionsOnline();
 
         return $this->getItemById('comments', $id, function($item, $model){
 
             $item['user'] = array(
                 'id'        => $item['user_id'],
                 'nickname'  => $item['user_nickname'],
-                'is_online' => cmsUser::userIsOnline($item['user_id']),
+                'is_online' => $item['is_online'],
                 'avatar'    => $item['user_avatar']
             );
 
             return $item;
+
+        });
+
+    }
+
+    public function getCommentChildIds($id, $clear = true) {
+
+        $this->loadCommentChildIds($id);
+
+        if($this->childs){
+
+            if($clear){
+
+                $return = $this->childs; $this->childs = array();
+
+                return $return;
+
+            }
+
+            return $this->childs;
+
+        }
+
+        return $this->childs;
+
+    }
+
+    private function loadCommentChildIds($id) {
+
+        $this->selectOnly('i.id');
+
+        return $this->filterEqual('parent_id', $id)->get('comments', function($item, $model){
+
+            $model->childs[] = $item['id'];
+
+            $model->loadCommentChildIds($item['id']);
+
+            return $item['id'];
 
         });
 
@@ -243,7 +365,7 @@ class modelComments extends cmsModel{
 
     public function getTracking($user_id){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         $this->filterEqual('user_id', $user_id);
 
@@ -261,22 +383,42 @@ class modelComments extends cmsModel{
 
         if (!$target_info){ return false; }
 
-        cmsCache::getInstance()->clean("comments.tracks");
+        cmsCache::getInstance()->clean('comments.tracks');
 
         return $this->insert('comments_tracks', array(
-            'user_id' => $user_id,
+            'user_id'           => $user_id,
             'target_controller' => $target_controller,
-            'target_subject' => $target_subject,
-            'target_id' => $target_id,
-            'target_url' => $target_info['url'],
-            'target_title' => $target_info['title'],
+            'target_subject'    => $target_subject,
+            'target_id'         => $target_id,
+            'target_url'        => $target_info['url'],
+            'target_title'      => $target_info['title']
+        ));
+
+    }
+
+    public function updateTracking($target_controller, $target_subject, $target_id){
+
+        // Получаем модель целевого контроллера
+        $target_model = cmsCore::getModel( $target_controller );
+
+        // Получаем URL и заголовок комментируемой страницы
+        $target_info = $target_model->getTargetItemInfo($target_subject, $target_id);
+        if (!$target_info){ return false; }
+
+        cmsCache::getInstance()->clean('comments.tracks');
+
+        $this->filterCommentTarget($target_controller, $target_subject, $target_id);
+
+        return $this->updateFiltered('comments_tracks', array(
+            'target_url'   => $target_info['url'],
+            'target_title' => $target_info['title']
         ));
 
     }
 
     public function deleteTracking($id){
 
-        cmsCache::getInstance()->clean("comments.tracks");
+        cmsCache::getInstance()->clean('comments.tracks');
 
         return $this->delete('comments_tracks', $id);
 
@@ -299,7 +441,7 @@ class modelComments extends cmsModel{
 
     public function getTrackingUsers(){
 
-        $this->useCache("comments.tracks");
+        $this->useCache('comments.tracks');
 
         return $this->get('comments_tracks', function($item, $model){
             return $item['user_id'];
@@ -318,15 +460,11 @@ class modelComments extends cmsModel{
         $counts = array();
         $timestamp = strtotime($date_after);
 
-
         foreach($tracks as $track){
 
-        $this->
-            resetFilters()->
+        $this->resetFilters()->
             filterTimestampGt('date_pub', $timestamp)->
-            filterEqual('target_controller', $track['target_controller'])->
-            filterEqual('target_subject', $track['target_subject'])->
-            filterEqual('target_id', $track['target_id']);
+            filterCommentTarget($track['target_controller'], $track['target_subject'], $track['target_id']);
 
             $count = $this->getCommentsCount();
 
@@ -350,13 +488,17 @@ class modelComments extends cmsModel{
     public function getGuestLastCommentTime($ip){
 
         $time = $this->
-                    filterEqual('user_id', 0)->
+                    filterIsNull('user_id')->
                     filterEqual('author_url', $ip)->
                     orderBy('date_pub', 'desc')->
                     getFieldFiltered('comments', 'date_pub');
 
-        return strtotime($time);
+        return $time ? strtotime($time) : 0;
 
+    }
+
+    public function isRssFeedEnable() {
+        return $this->filterEqual('ctype_name', 'comments')->getFieldFiltered('rss_feeds', 'is_enabled');
     }
 
 }

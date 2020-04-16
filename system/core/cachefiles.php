@@ -3,16 +3,16 @@ class cmsCacheFiles {
 
     private $cache_path;
 
-    public function __construct() {
-        $this->cache_path = cmsConfig::get('cache_path').'data/';
+    public function __construct($config) {
+        $this->cache_path = $config->cache_path.'data/';
     }
 
     public function set($key, $value, $ttl){
 
         $data = array(
-            'ttl' => $ttl,
-            'time' => time(),
-            'value' => serialize($value)
+            'ttl'   => $ttl,
+            'time'  => time(),
+            'value' => $value
         );
 
         list($path, $file) = $this->getPathAndFile($key);
@@ -21,7 +21,7 @@ class cmsCacheFiles {
         @chmod($path, 0777);
         @chmod(pathinfo($path, PATHINFO_DIRNAME), 0777);
 
-        return file_put_contents($file, serialize($data));
+        return file_put_contents($file, '<?php return '.var_export($data, true).';');
 
     }
 
@@ -37,18 +37,15 @@ class cmsCacheFiles {
 
         list($path, $file) = $this->getPathAndFile($key);
 
-        $data = file_get_contents($file);
-
+        $data = include $file;
         if (!$data) { return false; }
-
-        $data = unserialize($data);
 
         if (time() > $data['time'] + $data['ttl']){
             $this->clean($key);
             return false;
         }
 
-        return unserialize($data['value']);
+        return $data['value'];
 
     }
 
@@ -73,17 +70,17 @@ class cmsCacheFiles {
 
     public function getPathAndFile($key){
 
-        $path = $this->cache_path . str_replace('.', '/', $key);
-        $file = explode('/', $path);
+        $path = $this->cache_path.str_replace('.', '/', $key);
 
-        $path = dirname($path);
-        $file = $path . '/' . $file[sizeof($file)-1] . '.dat';
-
-        return array($path, $file);
+        return array(dirname($path), $path.'.dat');
 
     }
 
     public function start(){ return true; }
     public function stop(){ return true; }
+
+    public function getStats(){
+        return array();
+    }
 
 }

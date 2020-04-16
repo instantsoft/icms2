@@ -10,4 +10,3 @@ URL: <a href="{page_url}">{page_url}</a>
 --
  Best regards, {site}
  <small>This letter is sent automatically, please do not reply</small>
-

@@ -21,6 +21,11 @@ function lang_days(){
     );
 }
 
+/**
+ * Returns date for current language
+ * @param string $date_string
+ * @return string
+ */
 function lang_date($date_string){
 
     $eng_months = array(
@@ -28,23 +33,23 @@ function lang_date($date_string){
         'July', 'August', 'September', 'October', 'November', 'December'
     );
 
-    $date_string = str_replace($eng_months, lang_months(), $date_string);
-
-    return $date_string;
+    return str_replace($eng_months, lang_months(), $date_string);
 
 }
 
 /**
  * Converts string from current language to SLUG
+ * @param string $string Input string
+ * @param boolean $disallow_numeric Disallow numeric SLUG
  * @return string
  */
-function lang_slug($string){
+function lang_slug($string, $disallow_numeric = true){
 
     $string    = strip_tags(trim($string));
     $string    = mb_strtolower($string, 'utf-8');
     $string    = str_replace(' ', '-', $string);
 
-    $slug = preg_replace ('/[^a-zA-Zа-яА-Я0-9\-\/]/u', '-', $string);
+    $slug = preg_replace ('/[^a-zа-яё0-9\-\/]/u', '-', $string);
     $slug = preg_replace('/([-]+)/i', '-', $slug);
     $slug = trim($slug, '-');
 
@@ -63,7 +68,31 @@ function lang_slug($string){
     }
 
     if (!$slug){ $slug = 'untitled'; }
+    if ($disallow_numeric && is_numeric($slug)){ $slug .= strtolower(date('F')); }
 
     return $slug;
 
 }
+
+/**
+ * Set locale information
+ * @return mixed
+ */
+function lang_setlocale() {
+
+    setlocale(LC_ALL, 'ru_RU.UTF-8');
+    setlocale(LC_NUMERIC, 'POSIX');
+
+    return true;
+
+}
+
+/**
+ * Locale name
+ */
+define('LC_LANGUAGE_TERRITORY', 'ru_RU');
+
+/**
+ * Locale validate regexp
+ */
+define('LC_LANGUAGE_VALIDATE_REGEXP', "/^([a-zа-яёй0-9 \.\?\@\,\-]*)$/ui");

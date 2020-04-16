@@ -1,61 +1,138 @@
 <?php
+
 class widgetContentCategories extends cmsWidget {
 
     public $is_cacheable = false;
 
-    public function run(){
+    public function run() {
+
+        $ctype = cmsModel::getCachedResult('current_ctype');
 
         $ctype_name = $this->getOption('ctype_name');
 
-        $slug = null;
+        $active_cat = false; $path = [];
 
-        if (!$ctype_name){
+        if (!$ctype_name) {
 
-            $core = cmsCore::getInstance();
+            if (!$ctype) { return false; }
 
-            if ($core->controller != 'content'){ return false; }
+            $ctype_name = $ctype['name'];
 
-			$uri_segs = explode('/', $core->uri);
-			
-            $ctype_string = $uri_segs[0];
-            $slug = !mb_strstr($core->uri, '.html') ? mb_substr($core->uri, mb_strlen($ctype_string)+1) : null;
+        }
 
-			$matches = array();
-			
-            if (preg_match('/^([a-z0-9]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[0];
-            } else
-            if (preg_match('/^([a-z0-9]+)-([a-z0-9_]+)$/', $ctype_string, $matches)){
-                $ctype_name = $matches[1];
+        if ($ctype && $ctype['name'] == $ctype_name) {
+
+            if (!$ctype['is_cats']) { return false; }
+
+            if (strpos(cmsCore::getInstance()->uri, '.html') === false) {
+
+                $current_ctype_category = cmsModel::getCachedResult('current_ctype_category');
+                if (!empty($current_ctype_category['id'])) {
+                    $active_cat = $current_ctype_category;
+                }
+
             } else {
+
+                $item = cmsModel::getCachedResult('current_ctype_item');
+                if(!$item){ return false; }
+
+                if (!empty($item['category'])) {
+                    $active_cat = $item['category'];
+                }
+
+            }
+
+        } else { // проверка, если показ категорий отключен
+
+            $model  = cmsCore::getModel('content');
+            $_ctype = $model->getContentTypeByName($ctype_name);
+            if (!$_ctype['is_cats']) {
                 return false;
             }
+        }
+
+        $model = isset($model) ? $model : cmsCore::getModel('content');
+
+        $cats = $model->filterIsNull('is_hidden')->getCategoriesTree($ctype_name, $this->getOption('is_root'));
+        if (!$cats) { return false; }
+
+        if ($active_cat) {
+
+            $path = array_filter($cats, function($cat) use($active_cat) {
+                return ($cat['ns_left'] <= $active_cat['ns_left'] &&
+                        $cat['ns_level'] <= $active_cat['ns_level'] &&
+                        $cat['ns_right'] >= $active_cat['ns_right'] &&
+                        $cat['ns_level'] > 0);
+            });
 
         }
 
-        $model = cmsCore::getModel('content');
+        // считаем вручную кол-во вложенных
+        // т.к. у нас могут быть скрытые категории
+        // не используем ($cat['ns_right'] - $cat['ns_left']) - 1
+        $childs_count = [];
 
-        $cats = $model->getCategoriesTree($ctype_name, $this->getOption('is_root'));
+        // результирующее дерево
+        $tree = [];
 
-        if (!$cats) { return false; }
+        $show_full_tree = $this->getOption('show_full_tree');
+        $cover_preset   = $this->getOption('cover_preset');
 
-        $active_cat = array('id'=>0);
+        foreach($cats as $cat){
 
-        foreach($cats as $id=>$cat){
-            if (($cat['slug'] === $slug) || (!$cat['slug'] && !$slug)){
-                $active_cat = $cat;
-                break;
+            if($cat['parent_id'] > 1){
+                if(!isset($childs_count[$cat['parent_id']])){
+                    $childs_count[$cat['parent_id']] = 1;
+                } else {
+                    $childs_count[$cat['parent_id']] += 1;
+                }
+            }
+
+            $cat['childs_count'] = 0;
+            $cat['img_src'] = html_image_src($cat['cover'], $cover_preset, true);
+
+            $css_classes = [];
+
+            if (!empty($active_cat['id']) && $cat['id'] == $active_cat['id']) {
+                $css_classes[] = 'active';
+            }
+
+            if (!(isset($path[$cat['id']]) || isset($path[$cat['parent_id']]) || $cat['ns_level'] <= 1) && !$show_full_tree) {
+                $css_classes[] = 'folder_hidden';
+            }
+
+            if($cat['img_src']){
+                $css_classes[] = 'set_cover_preset';
+            }
+
+            $cat['css_classes'] = $css_classes;
+
+            $tree[$cat['id']] = $cat;
+
+        }
+
+        if($childs_count){
+            foreach ($childs_count as $id => $count) {
+                if(isset($tree[$id])){
+
+                    $tree[$id]['childs_count'] = $count;
+
+                    if($count){
+                        $tree[$id]['css_classes'][] = 'folder';
+                    }
+
+                }
             }
         }
 
-        $path = $model->getCategoryPath($ctype_name, $active_cat);
+        $ctype_default = cmsConfig::get('ctype_default');
 
         return array(
-            'ctype_name' => $ctype_name,
-            'cats' => $cats,
-            'active_cat' => $active_cat,
-            'path' => $path,
-            'slug' => $slug,
+            'ctype_name'   => (($ctype_default && in_array($ctype_name, $ctype_default)) ? '' : $ctype_name),
+            'cats'         => $tree,
+            'active_cat'   => $active_cat, // в шаблоне не используется, совместимость
+            'cover_preset' => $cover_preset,
+            'path'         => (!empty($path) ? $path : array()) // в шаблоне не используется, совместимость
         );
 
     }

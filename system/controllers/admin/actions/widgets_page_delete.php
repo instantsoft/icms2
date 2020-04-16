@@ -6,14 +6,14 @@ class actionAdminWidgetsPageDelete extends cmsAction {
 
         if (!$id) { cmsCore::error404(); }
 
-        $widgets_model = cmsCore::getModel('widgets');
-        
-        $widgets_model->deletePage($id);
+        $this->model_widgets->deletePage($id);
 
         cmsUser::unsetCookie('widgets_tree_path');
-        
+
+        cmsUser::addSessionMessage(LANG_DELETE_SUCCESS, 'success');
+
         $this->redirectBack();
-        
+
     }
 
 }

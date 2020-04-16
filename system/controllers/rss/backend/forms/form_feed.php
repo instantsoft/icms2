@@ -33,19 +33,7 @@ class formRssFeed extends cmsForm {
                         'title' => LANG_RSS_FEED_TEMPLATE,
                         'hint'  => LANG_RSS_FEED_TEMPLATE_HINT,
                         'generator' => function($item) {
-
-                            $tpls = cmsCore::getFilesList('templates/'.cmsConfig::get('template').'/controllers/rss/', '*.tpl.php');
-
-                            $items = array();
-
-                            if ($tpls) {
-                                foreach ($tpls as $tpl) {
-                                    $items[str_replace('.tpl.php', '', $tpl)] = $tpl;
-                                }
-                            }
-
-                            return $items;
-
+                            return cmsTemplate::getInstance()->getAvailableTemplatesFiles('controllers/rss', '*.tpl.php');
                         }
                     ))
 

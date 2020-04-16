@@ -14,7 +14,7 @@ class formAdminContentCategory extends cmsForm {
                         'generator' => function($cat){
 
                             $content_model = cmsCore::getModel('content');
-                            $tree = $content_model->getCategoriesTree($cat['ctype_name']);
+                            $tree = $content_model->limit(0)->getCategoriesTree($cat['ctype_name']);
 
                             if ($tree){
                                 foreach($tree as $item){
@@ -40,6 +40,7 @@ class formAdminContentCategory extends cmsForm {
                     new fieldText('title', array(
                         'title' => LANG_CP_CONTENT_CATS_TITLES,
                         'hint' => LANG_CP_CONTENT_CATS_TITLES_HINT,
+                        'is_strip_tags' => true,
                         'rules' => array(
                             array('required'),
                         )

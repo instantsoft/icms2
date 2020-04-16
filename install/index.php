@@ -10,18 +10,29 @@ header("Content-type:text/html; charset=utf-8");
 mb_internal_encoding('UTF-8');
 date_default_timezone_set('UTC');
 
-$default_lang = 'ru';
+include PATH . 'functions.php';
+
+$all_langs = get_langs();
+$default_lang = 'en';
+
+if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+    $user_lang = strtolower(substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2));
+    if(in_array($user_lang, $all_langs)){
+        $default_lang = $user_lang;
+    }
+}
 
 if (isset($_REQUEST['lang'])){
-    $_SESSION['install']['lang'] = $_REQUEST['lang'];
-    header('Location: ' . $_SERVER['SCRIPT_NAME']);
+    if(in_array($_REQUEST['lang'], $all_langs)){
+        $_SESSION['install']['lang'] = $_REQUEST['lang'];
+        header('Location: ' . $_SERVER['SCRIPT_NAME']);die;
+    }
 }
 
 $is_lang_selected = isset($_SESSION['install']['lang']);
 $lang = $is_lang_selected ? $_SESSION['install']['lang'] : $default_lang;
 define('LANG', $lang);
 
-include PATH . "functions.php";
 include PATH . DS . 'languages' . DS . LANG . DS . "language.php";
 
 $steps = array(
@@ -40,7 +51,7 @@ $steps = array(
 $current_step = 0;
 
 if (is_ajax_request()){
-    $step = $steps[(int)$_POST['step']];
+    $step = $steps[(int)(isset($_POST['step']) ? $_POST['step'] : 0)];
     $is_submit = isset($_POST['submit']);
     echo json_encode( run_step($step, $is_submit) );
     exit();
@@ -49,9 +60,10 @@ if (is_ajax_request()){
 $step_result = run_step($steps[$current_step], false);
 
 echo render('main', array(
-    'steps' => $steps,
+    'steps'            => $steps,
     'is_lang_selected' => $is_lang_selected,
-    'lang' => LANG,
-    'current_step' => $current_step,
-    'step_html' => $step_result['html']
+    'lang'             => LANG,
+    'current_step'     => $current_step,
+    'step_html'        => $step_result['html'],
+    'langs'            => get_langs()
 ));

@@ -37,42 +37,11 @@
 		'href'  => LANG_HELP_URL_CTYPES_FIELD
 	));
 
-?>
-
-<?php
-    $this->renderForm($form, $field, array(
-        'action' => '',
-        'method' => 'post'
-    ), $errors);
-?>
-
-<script type="text/javascript">
-
-    function loadFieldTypeOptions(){
-
-        var field_type = $('select#type').val();
-
-        $('#fset_type div[id!=f_type]').remove();
-
-        $.post('<?php echo $this->href_to('ctypes', array('fields_options')); ?>', {
-            <?php if ($do=='edit') { ?>                
-                field_id: '<?php echo $field['id']; ?>',
-            <?php } ?>
-            ctype_name: '<?php echo $ctype['name']; ?>',
-            type: field_type
-        }, function( html ){
-            if (!html) { return; }
-            $('#f_type').after( html );
-            icms.events.run('loadfieldtypeoptions', html);
-        }, "html")
-
-    }
-
-    $(document).ready(function(){
-        $('select#type').change(function(){ loadFieldTypeOptions(); });
-        if ($('#fset_type div[id!=f_type]').length == 0){
-            loadFieldTypeOptions();
-        }
-    });
-
-</script>
+    $this->renderControllerChild('admin', 'form_field', array(
+        'fields_options_link' => $this->href_to('ctypes', array('fields_options')),
+        'ctype_name'          => $ctype['name'],
+        'do'                  => $do,
+        'errors'              => $errors,
+        'form'                => $form,
+        'field'               => $field
+    ));

@@ -51,13 +51,22 @@
 
     </fieldset>
 
-</form>
+    <fieldset>
 
-<?php if ($is_subfolder){ ?>
-    <p class="warning">
-        <?php echo LANG_PATHS_HTACCESS_INFO ?>
-    </p>
-<?php } ?>
+        <legend><?php echo LANG_PATHS_SESSION; ?></legend>
+
+        <div class="field">
+            <div class="hint"><?php echo LANG_PATHS_MUST_WRITABLE; ?></div>
+            <label><?php echo LANG_PATHS_SESSION_PATH; ?></label>
+            <input type="text" class="input input-icon icon-folder" name="paths[session_save_path]" value="<?php echo $paths['session_save_path']; ?>" />
+            <?php if($open_basedir_hint){ ?>
+                <div class="hint"><?php echo $open_basedir_hint; ?></div>
+            <?php } ?>
+        </div>
+
+    </fieldset>
+
+</form>
 
 <p><?php echo LANG_PATHS_CHANGE_INFO ?></p>
 

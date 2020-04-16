@@ -1,5 +1,5 @@
-<?php $this->addJS('templates/default/js/jquery-scroll.js'); ?>
-<?php $this->addJS('templates/default/js/wall.js'); ?>
+<?php $this->addTplJSName('jquery-scroll'); ?>
+<?php $this->addTplJSName('wall'); ?>
 <a name="wall"></a>
 <div id="wall_widget">
 
@@ -21,17 +21,18 @@
     <div id="wall_add_form">
         <div class="preview_box"></div>
         <form action="<?php echo $this->href_to('submit'); ?>" method="post">
-            <?php echo html_csrf_token($csrf_token_seed); ?>
+            <?php echo html_csrf_token(); ?>
             <?php echo html_input('hidden', 'action', 'add'); ?>
             <?php echo html_input('hidden', 'id', 0); ?>
             <?php echo html_input('hidden', 'parent_id', 0); ?>
             <?php echo html_input('hidden', 'pc', $controller); ?>
             <?php echo html_input('hidden', 'pt', $profile_type); ?>
             <?php echo html_input('hidden', 'pi', $profile_id); ?>
-            <?php echo html_editor('content'); ?>
+            <?php echo html_wysiwyg('content', '', $editor_params['editor'], $editor_params['options']); ?>
             <div class="buttons">
-                <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.wall.preview()'); ?>
+                <?php echo html_button(LANG_PREVIEW, 'preview', 'icms.wall.preview()', array('class'=>'button-preview')); ?>
                 <?php echo html_button(LANG_SEND, 'submit', 'icms.wall.submit()'); ?>
+                <?php echo html_button(LANG_CANCEL, 'cancel', 'icms.wall.restoreForm()', array('class'=>'button-cancel')); ?>
             </div>
             <div class="loading">
                 <?php echo LANG_LOADING; ?>
@@ -42,20 +43,24 @@
     <div id="entries_list">
 
         <?php if (!$entries) { ?>
-            <p class="no_entries"><?php echo LANG_WALL_EMPTY; ?></p>
+            <p class="no_entries">
+                <?php if ($permissions['add']){ ?>
+                    <?php echo LANG_WALL_EMPTY; ?>
+                <?php } else { ?>
+                    <?php echo LANG_WALL_EMPTY_ONLY; ?>
+                <?php } ?>
+            </p>
         <?php } ?>
 
         <?php if ($entries){ ?>
             <?php
-
                 echo $this->renderChild('entry', array(
-                    'entries'=>$entries,
-                    'max_entries'=>$max_entries,
-                    'page'=>$page,
-                    'user'=>$user,
-                    'permissions'=>$permissions
+                    'entries'     => $entries,
+                    'max_entries' => $max_entries,
+                    'page'        => $page,
+                    'user'        => $user,
+                    'permissions' => $permissions
                 ));
-
             ?>
         <?php } ?>
 

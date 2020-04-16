@@ -2,8 +2,6 @@ var icms = icms || {};
 
 icms.wall = (function ($) {
 
-    //=====================================================================//
-
     this.add = function (parent_id) {
 
         var form = $('#wall_add_form');
@@ -21,7 +19,7 @@ icms.wall = (function ($) {
 
         } else {
 
-            $('#wall_widget #entries_list #entry_'+parent_id+' .links .reply').hide();
+            $('#wall_widget #entries_list #entry_'+parent_id+' > .links .reply').hide();
             form.detach().appendTo('#wall_widget #entries_list #entry_'+parent_id);
 
         }
@@ -33,10 +31,11 @@ icms.wall = (function ($) {
         $('input[name=action]', form).val('add');
         $('input[name=submit]', form).val( LANG_SEND );
 
-        $('textarea', form).val('').focus();
+        icms.forms.wysiwygInit('content').wysiwygInsertText('content', '');
 
         return false;
-    }
+
+    };
 
     //=====================================================================//
 
@@ -44,16 +43,12 @@ icms.wall = (function ($) {
 
         var form = $('#wall_add_form form');
 
-        var content = $('textarea', form).val();
-
-        if (!content) {return;}
-
         var form_data = icms.forms.toJSON( form );
         var url = form.attr('action');
 
         $('.loading', form).show();
         $('.buttons', form).hide();
-        $('textarea', form).attr('disabled', 'disabled');
+        $('textarea', form).prop('disabled', true);
 
         if (action) {form_data.action = action;}
 
@@ -65,22 +60,13 @@ icms.wall = (function ($) {
 
         }, "json");
 
-    }
+    };
 
     //=====================================================================//
 
     this.preview = function () {
-
-        var form = $('#wall_add_form');
-        $('.preview_box', form).hide();
-
-        var content = $('textarea', form).val();
-
-        if (!content) {return;}
-
         this.submit('preview');
-
-    }
+    };
 
     //=====================================================================//
 
@@ -93,11 +79,17 @@ icms.wall = (function ($) {
 
         var form = $('#wall_add_form');
 
-        $('.preview_box', form).html( result.html ).slideDown();
+        var preview_box = $('.preview_box', form).html(result.html);
+        if(!$('.preview_box', form).is(':visible')){
+            $(preview_box).fadeIn();
+        } else {
+            $(preview_box).addClass('highlight');
+            setTimeout(function (){ $(preview_box).removeClass('highlight'); }, 500);
+        }
 
         this.restoreForm(false);
 
-    }
+    };
 
     //=====================================================================//
 
@@ -111,7 +103,7 @@ icms.wall = (function ($) {
 
         return false;
 
-    }
+    };
 
     //=====================================================================//
 
@@ -138,6 +130,8 @@ icms.wall = (function ($) {
 
             $('.replies', e).html( result.html );
 
+            renderHtmlAvatar($('.replies', e));
+
             if (typeof(callback)=='function'){
                 callback();
             }
@@ -146,7 +140,7 @@ icms.wall = (function ($) {
 
         return false;
 
-    }
+    };
 
     //=====================================================================//
 
@@ -169,7 +163,7 @@ icms.wall = (function ($) {
             return;
 
         }
-    }
+    };
 
     //=====================================================================//
 
@@ -183,7 +177,7 @@ icms.wall = (function ($) {
         this.append(result);
         this.restoreForm();
 
-    }
+    };
 
     //=====================================================================//
 
@@ -194,11 +188,11 @@ icms.wall = (function ($) {
             return;
         }
 
-        $('#entries_list #entry_'+result.id+' .text').html( result.html );
+        $('#entries_list #entry_'+result.id+' > .body .text').html( result.html );
 
         this.restoreForm();
 
-    }
+    };
 
     //=====================================================================//
 
@@ -209,9 +203,9 @@ icms.wall = (function ($) {
         $('#wall_widget #entries_list .links .reply').show();
         $('#wall_widget #entries_list .links .edit').show();
 
-        $('#wall_widget #entries_list #entry_'+id+' .links .edit').hide();
+        $('#wall_widget #entries_list #entry_'+id+' > .links .edit').hide();
 
-        form.detach().appendTo('#wall_widget #entries_list #entry_'+id).show();
+        form.detach().insertAfter('#wall_widget #entries_list #entry_'+id+' > .links').show();
 
         $('input[name=id]', form).val(id);
         $('input[name=action]', form).val('update');
@@ -219,7 +213,9 @@ icms.wall = (function ($) {
 
         $('.loading', form).show();
         $('.buttons', form).hide();
-        $('textarea', form).attr('disabled', 'disabled');
+        $('textarea', form).prop('disabled', true);
+
+        icms.forms.wysiwygInit('content');
 
         var url = $('#wall_urls').data('get-url');
 
@@ -232,12 +228,12 @@ icms.wall = (function ($) {
 
             icms.wall.restoreForm(false);
 
-            $('textarea', form).val(result.html).focus();
+            icms.forms.wysiwygInsertText('content', result.html);
 
-        }, "json");
+        }, 'json');
 
         return false;
-    }
+    };
 
     //=====================================================================//
 
@@ -265,7 +261,7 @@ icms.wall = (function ($) {
 
         return false;
 
-    }
+    };
 
     //=====================================================================//
 
@@ -302,14 +298,14 @@ icms.wall = (function ($) {
             }
         }
         return false;
-    }
+    };
 
     //=====================================================================//
 
     this.error = function(message){
-        alert(message);
+        icms.modal.alert(message);
         this.restoreForm(false);
-    }
+    };
 
     this.restoreForm = function(clear_text){
         if (typeof(clear_text)=='undefined'){clear_text = true;}
@@ -318,17 +314,17 @@ icms.wall = (function ($) {
 
         $('.loading', form).hide();
         $('.buttons', form).show();
-        $('textarea', form).removeAttr('disabled');
+        $('textarea', form).prop('disabled', false);
 
         if (clear_text) {
             form.hide();
-            $('textarea', form).val('');
+            icms.forms.wysiwygInsertText('content', '');
             $('#wall_widget #wall_add_link').show();
             $('#wall_widget #entries_list .links .edit').show();
             $('#wall_widget #entries_list .links .reply').show();
             $('.preview_box', form).html('').hide();
         }
-    }
+    };
 
     //=====================================================================//
 

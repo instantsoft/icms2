@@ -1,7 +1,10 @@
 <?php
 
-    $this->setPageTitle(sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag));
+    $this->setPageTitle($seo_title);
+    $this->setPageKeywords($seo_keys);
+    $this->setPageDescription($seo_desc);
 
+<<<<<<< HEAD
     $this->addBreadcrumb(sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag));
     $content_menu = array();
 
@@ -30,21 +33,20 @@
             'href'  => href_to('admin', 'controllers', array('edit', 'tags'))
         ));
     }
+=======
+    $this->addBreadcrumb($seo_title);
+>>>>>>> origin/master
 
 ?>
 
+<<<<<<< HEAD
 <h1><?php html(sprintf(LANG_TAGS_SEARCH_BY_TAG, $tag)); ?></h1>
+=======
+<h1><?php echo $seo_h1; ?></h1>
+>>>>>>> origin/master
 
-<?php if (!$is_results){ ?>
-    <p><?php echo LANG_TAGS_SEARCH_NO_RESULTS; ?></p>
-<?php } ?>
+<div id="tags_search_pills">
+    <?php $this->menu('results_tabs', true, 'pills-menu-small'); ?>
+</div>
 
-<?php if ($is_results){ ?>
-
-    <div id="tags_search_pills">
-        <?php $this->menu('results_tabs', true, 'pills-menu-small'); ?>
-    </div>
-
-    <div id="tags_search_list"><?php echo $html; ?></div>
-
-<?php } ?>
+<div id="tags_search_list"><?php echo $html; ?></div>

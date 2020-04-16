@@ -4,8 +4,6 @@
 
     $this->setPageTitle($list_header, $profile['nickname']);
 
-    $this->addBreadcrumb(LANG_USERS, href_to('users'));
-    $this->addBreadcrumb($profile['nickname'], href_to('users', $profile['id']));
     $this->addBreadcrumb($list_header);
 
     if (cmsUser::isAllowed($ctype['name'], 'add')) {

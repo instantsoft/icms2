@@ -9,7 +9,7 @@ class actionAdminInstall extends cmsAction {
 
         // если нужно, передаем управление другому экшену
         if ($do){
-            $this->runAction('install_'.$do, array_slice($this->params, 1));
+            $this->runExternalAction('install_'.$do, array_slice($this->params, 1));
             return;
         }
 
@@ -27,6 +27,10 @@ class actionAdminInstall extends cmsAction {
         if (!$is_no_extract) { $this->extractPackage($package_name); }
 
         $manifest = $this->parsePackageManifest();
+
+        if(!$manifest){
+            $this->redirectToAction('install');
+        }
 
         $manifest['depends_results'] = $this->checkManifestDepends($manifest);
 
@@ -57,10 +61,7 @@ class actionAdminInstall extends cmsAction {
 
             $package_v = $manifest['version']['major'].'.'.$manifest['version']['minor'].'.'.$manifest['version']['build'];
 
-            $upd = (int)str_pad(str_replace('.', '', $package_v), 6, '0');
-            $inst = (int)str_pad(str_replace('.', '', $manifest['package']['installed_version']), 6, '0');
-
-            if($upd < $inst){
+            if(version_compare($package_v, $manifest['package']['installed_version']) == -1){
 
                 files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
@@ -70,7 +71,7 @@ class actionAdminInstall extends cmsAction {
 
             }
 
-            if($upd == $inst){
+            if(version_compare($package_v, $manifest['package']['installed_version']) == 0){
 
                 files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
@@ -82,7 +83,7 @@ class actionAdminInstall extends cmsAction {
 
         }
 
-        return cmsTemplate::getInstance()->render('install_package_info', array(
+        return $this->cms_template->render('install_package_info', array(
             'manifest' => $manifest
         ));
 
@@ -92,7 +93,7 @@ class actionAdminInstall extends cmsAction {
 
         $errors = $this->checkErrors();
 
-        return cmsTemplate::getInstance()->render('install_upload', array(
+        return $this->cms_template->render('install_upload', array(
             'errors' => $errors,
         ));
 
@@ -108,7 +109,7 @@ class actionAdminInstall extends cmsAction {
             $errors[] = array(
                 'text' => sprintf(LANG_CP_INSTALL_NOT_WRITABLE, $config->upload_root . $this->installer_upload_path),
                 'hint' => LANG_CP_INSTALL_NOT_WRITABLE_HINT,
-                'fix' => LANG_CP_INSTALL_NOT_WRITABLE_FIX,
+                'fix'  => LANG_CP_INSTALL_NOT_WRITABLE_FIX,
                 'workaround' => sprintf(LANG_CP_INSTALL_NOT_WRITABLE_WA, $config->upload_root . $this->installer_upload_path)
             );
         }
@@ -117,8 +118,16 @@ class actionAdminInstall extends cmsAction {
             $errors[] = array(
                 'text' => LANG_CP_INSTALL_NOT_ZIP,
                 'hint' => LANG_CP_INSTALL_NOT_ZIP_HINT,
-                'fix' => LANG_CP_INSTALL_NOT_ZIP_FIX,
+                'fix'  => LANG_CP_INSTALL_NOT_ZIP_FIX,
                 'workaround' => sprintf(LANG_CP_INSTALL_NOT_ZIP_WA, $config->upload_root . $this->installer_upload_path),
+            );
+        }
+
+        if (!function_exists('parse_ini_file')){
+            $errors[] = array(
+                'text' => LANG_CP_INSTALL_NOT_PARSE_INI_FILE,
+                'hint' => LANG_CP_INSTALL_NOT_PARSE_INI_FILE_HINT,
+                'fix'  => LANG_CP_INSTALL_NOT_PARSE_INI_FILE_FIX
             );
         }
 
@@ -132,18 +141,30 @@ class actionAdminInstall extends cmsAction {
 
         if (isset($manifest['depends']['core'])){
 
-            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['core']), 6, '0');
-            $has = (int)str_pad(str_replace('.', '', cmsCore::getVersion()), 6, '0');
-
-            $results['core'] = ($need <= $has) ? true : false;
+            $results['core'] = (version_compare(cmsCore::getVersion(), $manifest['depends']['core']) >= 0) ? true : false;
 
         }
         if (isset($manifest['depends']['package']) && isset($manifest['package']['installed_version'])){
 
-            $need = (int)str_pad(str_replace('.', '', $manifest['depends']['package']), 6, '0');
-            $has = (int)str_pad(str_replace('.', '', (string)$manifest['package']['installed_version']), 6, '0');
+            $results['package'] = (version_compare((string)$manifest['package']['installed_version'], $manifest['depends']['package']) >= 0) ? true : false;
 
-            $results['package'] = ($need <= $has) ? true : false;
+        }
+        if (isset($manifest['depends']['dependent_type']) && isset($manifest['depends']['dependent_name'])){
+
+            $installed_version = call_user_func(array($this, $manifest['depends']['dependent_type'].'Installed'), array(
+                'name'       => $manifest['depends']['dependent_name'],
+                'controller' => (isset($manifest['depends']['dependent_controller']) ? $manifest['depends']['dependent_controller'] : null)
+            ));
+
+            $valid = $installed_version !== false;
+
+            if($valid && isset($manifest['depends']['dependent_version'])){
+
+                $results['dependent_version'] = (version_compare((string)$installed_version, $manifest['depends']['dependent_version']) >= 0) ? true : false;
+
+            }
+
+            $results['dependent_type'] = $valid;
 
         }
 
@@ -179,19 +200,92 @@ class actionAdminInstall extends cmsAction {
 
         unlink($zip_file);
 
+        // прописываем id дополнения в манифест, если установка из каталога
+        // и id дополнения передано
+        $addon_id = $this->request->get('addon_id', 0);
+        $path = $this->cms_config->upload_path . $this->installer_upload_path;
+        $ini_file = $path . '/' . "manifest.{$this->cms_config->language}.ini";
+        $ini_file_default = $path . '/manifest.ru.ini';
+        if (!file_exists($ini_file)){ $ini_file = $ini_file_default; }
+
+        if (file_exists($ini_file) && $addon_id){
+
+            $manifest = parse_ini_file($ini_file, true);
+
+            if(!empty($manifest['info']['addon_id'])){
+                return true;
+            }
+
+            $ini = '';
+
+            $manifest['info']['addon_id'] = $addon_id;
+
+            $section_names = array_keys($manifest);
+
+            $encodeValue = function ($value){
+                if (is_bool($value)) {
+                    return (int)$value;
+                }
+                if (is_string($value)) {
+                    return "\"$value\"";
+                }
+                return $value;
+            };
+
+            foreach ($section_names as $section_name) {
+
+                $section = $manifest[$section_name];
+
+                if (empty($section) || !is_array($section)) {
+                    continue;
+                }
+
+                $ini .= "[$section_name]\n";
+
+                foreach ($section as $option => $value) {
+                    if (is_numeric($option)) {
+                        $option = $section_name;
+                        $value = array($value);
+                    }
+                    if (is_array($value)) {
+                        foreach ($value as $currentValue) {
+                            $ini .= $option . '[] = '.$encodeValue($currentValue)."\n";
+                        }
+                    } else {
+                        $ini .= $option.' = '.$encodeValue($value)."\n";
+                    }
+                }
+
+                $ini .= "\n";
+
+            }
+
+            file_put_contents($ini_file, $ini);
+
+        }
+
         return true;
 
     }
 
     private function uploadPackage(){
 
-        $uploader = new cmsUploader();
+        $this->cms_uploader->enableRemoteUpload();
 
-        if (!$uploader->isUploaded( $this->upload_name )){ return false; }
+        if (!$this->cms_uploader->isUploaded($this->upload_name) && !$this->cms_uploader->isUploadedFromLink($this->upload_name)){
+
+            $last_error = $this->cms_uploader->getLastError();
+            if($last_error){
+                cmsUser::addSessionMessage($last_error, 'error');
+            }
+
+            return false;
+
+        }
 
         files_clear_directory(cmsConfig::get('upload_path') . $this->installer_upload_path);
 
-        $result = $uploader->uploadForm($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
+        $result = $this->cms_uploader->upload($this->upload_name, $this->upload_exts, 0, $this->installer_upload_path);
 
         if (!$result['success']){
             cmsUser::addSessionMessage($result['error'], 'error');

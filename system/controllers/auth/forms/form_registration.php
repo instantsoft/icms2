@@ -17,31 +17,30 @@ class formAuthRegistration extends cmsForm {
                             array('unique', '{users}', 'email')
                         )
                     )),
-                    new fieldString('nickname', array(
-                        'title' => LANG_NICKNAME,
-                        'rules' => array(
-                            array('required'),
-                        )
-                    )),
                     new fieldString('password1', array(
-                        'title' => LANG_NEW_PASS,
+                        'title' => LANG_PASSWORD,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6,
+                            'max_length'=> 72
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('min_length', 6)
+                            array('required')
                         )
                     )),
                     new fieldString('password2', array(
-                        'title' => LANG_RETYPE_NEW_PASS,
+                        'title' => LANG_RETYPE_PASSWORD,
                         'is_password' => true,
+                        'options'=>array(
+                            'min_length'=> 6,
+                            'max_length'=> 72
+                        ),
                         'rules' => array(
-                            array('required'),
-                            array('min_length', 6)
+                            array('required')
                         )
-                    )),
+                    ))
                 )
-            ),
-
+            )
 
         );
 

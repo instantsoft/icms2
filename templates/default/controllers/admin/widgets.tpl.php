@@ -1,11 +1,11 @@
 <?php
 
-    $this->addJS('templates/default/js/jquery-ui.js');
-    $this->addJS('templates/default/js/jquery-cookie.js');
-    $this->addJS('templates/default/js/datatree.js');
-    $this->addJS('templates/default/js/admin-widgets.js');
-    $this->addCSS('templates/default/css/datatree.css');
-    $this->addCSS('templates/default/css/jquery-ui.css');
+    $this->addTplJSName([
+        'jquery-cookie',
+        'datatree',
+        'admin-widgets'
+        ]);
+    $this->addTplCSSName('datatree');
 
     $this->setPageTitle(LANG_CP_SECTION_WIDGETS);
     $this->addBreadcrumb(LANG_CP_SECTION_WIDGETS, $this->href_to('widgets'));
@@ -29,7 +29,7 @@
         'class'   => 'move',
         'title'   => LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS,
         'onclick' => "return confirm('" .LANG_CP_WIDGETS_UNBIND_ALL_WIDGETS_CONFIRM. "')",
-        'href'    => $this->href_to('widgets', 'unbind_all_widgets')
+        'href'    => $this->href_to('widgets', array('unbind_all_widgets', $template_name))
     ));
 	$this->addToolButton(array(
 		'class' => 'help',
@@ -38,8 +38,13 @@
 		'href'  => LANG_HELP_URL_WIDGETS
 	));
 
+    $this->applyToolbarHook('admin_widgets_toolbar');
+
+<<<<<<< HEAD
+=======
 ?>
 
+>>>>>>> origin/master
 <h1><?php echo LANG_CP_SECTION_WIDGETS; ?></h1>
 
 <table class="layout">
@@ -64,16 +69,24 @@
         </td>
         <td class="main" valign="top" style="padding-right:10px">
 
+            <div id="cp-widgets-select-template" data-current_url="<?php echo $this->href_to('widgets'); ?>">
+                <?php echo LANG_CP_WIDGETS_TEMPLATE; ?> <?php echo html_select('template', $templates, $template_name); ?>
+            </div>
             <div class="cp_toolbar">
                 <?php $this->toolbar(); ?>
             </div>
 
             <div id="cp-widgets-layout"
+                 data-template="<?php echo $template_name; ?>"
+                 data-toggle-url="<?php echo $this->href_to('widgets', 'toggle'); ?>"
                  data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"
                  data-load-url="<?php echo $this->href_to('widgets', 'load'); ?>"
                  data-add-url="<?php echo $this->href_to('widgets', 'add'); ?>"
                  data-edit-url="<?php echo $this->href_to('widgets', 'edit'); ?>"
                  data-delete-url="<?php echo $this->href_to('widgets', 'delete'); ?>"
+                 data-remove-url="<?php echo $this->href_to('widgets', 'remove'); ?>"
+                 data-copy-url="<?php echo $this->href_to('widgets', 'copy'); ?>"
+                 data-files-url="<?php echo $this->href_to('package_files_list', 'widgets'); ?>"
                  data-edit-page-url="<?php echo $this->href_to('widgets', 'page_edit'); ?>"
                  data-delete-page-url="<?php echo $this->href_to('widgets', 'page_delete'); ?>"
                  data-reorder-url="<?php echo $this->href_to('widgets', 'reorder'); ?>"
@@ -83,6 +96,11 @@
                     <h3><?php echo LANG_CP_WIDGETS_UNUSED; ?></h3>
                     <ul class="position" rel="_unused" id="pos-_unused"></ul>
                     <div class="hint"><?php echo LANG_CP_WIDGETS_UNUSED_HINT; ?></div>
+                </div>
+                <div id="cp-widgets-bind">
+                    <h3><?php echo LANG_CP_WIDGETS_BINDED; ?></h3>
+                    <ul class="position" rel="_copy" id="pos-_copy"></ul>
+                    <div class="hint"><?php echo LANG_CP_WIDGETS_BINDED_HINT; ?></div>
                 </div>
             </div>
 
@@ -106,6 +124,11 @@
                                     <?php foreach($widgets as $widget){ ?>
                                         <li rel="new" data-id="<?php echo $widget['id']; ?>">
                                             <?php echo $widget['title']; ?>
+                                            <?php if($widget['is_external']){ ?>
+                                                <span class="actions">
+                                                    <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
+                                                </span>
+                                            <?php } ?>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -120,8 +143,10 @@
 
                 <div id="actions-template" style="display:none">
                     <span class="actions">
-                        <a class="edit" href="javascript:" title="<?php echo LANG_EDIT; ?>"></a>
-                        <a class="delete" href="javascript:" title="<?php echo LANG_DELETE; ?>"></a>
+                        <a class="hide" href="#" onclick="return widgetToggle(this)" title="<?php echo LANG_HIDE; ?>"></a>
+                        <a class="copy" href="#" onclick="return widgetCopy(this)" title="<?php echo LANG_COPY; ?>"></a>
+                        <a class="edit" href="#" onclick="return widgetEdit(this)" title="<?php echo LANG_EDIT; ?>"></a>
+                        <a class="delete" href="#" onclick="return widgetDelete(this)" title="<?php echo LANG_DELETE; ?>"></a>
                     </span>
                 </div>
 
@@ -132,5 +157,5 @@
 </table>
 
 <script>
-    <?php echo $this->getLangJS('LANG_CP_WIDGET_DELETE_CONFIRM'); ?>
+    <?php echo $this->getLangJS('LANG_CP_WIDGET_COPY_CONFIRM', 'LANG_CP_WIDGET_DELETE_CONFIRM', 'LANG_CP_WIDGET_REMOVE_CONFIRM', 'LANG_CP_PACKAGE_CONTENTS', 'LANG_HIDE', 'LANG_SHOW'); ?>
 </script>

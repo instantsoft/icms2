@@ -1,12 +1,26 @@
 <?php
-
-    define('LANG_MARKITUP_CONTROLLER',      'Markup Editor');
-
-    define('LANG_MARKITUP_THEME',           'Theme settings');
-    define('LANG_MARKITUP_THEME_SET',       'Toolbar buttons set');
-    define('LANG_MARKITUP_THEME_SKIN',      'Theme');
-
-    define('LANG_MARKITUP_IMAGES',          'Images');
-    define('LANG_MARKITUP_IMAGES_UPLOAD',   'Allow images uploading');
-    define('LANG_MARKITUP_IMAGES_W',        'Max image width');
-    define('LANG_MARKITUP_IMAGES_H',        'Max image height');
+define('LANG_MARKITUP_BTN', 'Toolbar buttons');
+define('LANG_MARKITUP_THEME_SKIN', 'Skin');
+define('LANG_MARKITUP_B', 'Bold');
+define('LANG_MARKITUP_I', 'Italic');
+define('LANG_MARKITUP_U', 'Underline');
+define('LANG_MARKITUP_S', 'Stroke');
+define('LANG_MARKITUP_UL', 'List');
+define('LANG_MARKITUP_OL', 'Numbered List');
+define('LANG_MARKITUP_BC', 'Quote');
+define('LANG_MARKITUP_BC_HINT', 'Quote text');
+define('LANG_MARKITUP_L', 'Link');
+define('LANG_MARKITUP_L1', 'Link address');
+define('LANG_MARKITUP_L2', 'Link title ...');
+define('LANG_MARKITUP_IMGL', 'Photo from the Internet');
+define('LANG_MARKITUP_IMGL1', 'Image link');
+define('LANG_MARKITUP_IMG', 'Photo from computer');
+define('LANG_MARKITUP_YT', 'YouTube video');
+define('LANG_MARKITUP_YT1', 'Link to YouTube video');
+define('LANG_MARKITUP_FB', 'Facebook video');
+define('LANG_MARKITUP_FB1', 'Link to Facebook video');
+define('LANG_MARKITUP_CODE', 'Code');
+define('LANG_MARKITUP_CODE1', 'Language');
+define('LANG_MARKITUP_SP', 'Spoiler');
+define('LANG_MARKITUP_SP1', 'Spoiler name');
+define('LANG_MARKITUP_SM', 'Smilies');

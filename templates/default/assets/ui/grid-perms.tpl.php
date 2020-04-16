@@ -7,7 +7,7 @@
 
 <form action="<?php echo $submit_url; ?>" method="post">
 
-    <div class="datagrid_wrapper">
+    <div class="datagrid_wrapper perms_grid">
         <table id="datagrid" class="datagrid" cellpadding="0" cellspacing="0" border="0">
             <thead>
                 <tr>
@@ -20,9 +20,20 @@
             <tbody>
                 <?php foreach($rules as $rule){ ?>
                     <tr>
-                        <td><?php echo $rule['title']; ?></td>
+                        <td>
+                            <div>
+                            <?php echo $rule['title']; ?>
+                            <?php if(!empty($rule['title_hint'])){ ?>
+                                <div class="hint"><?php echo $rule['title_hint']; ?></div>
+                            <?php } ?>
+                            </div>
+                        </td>
 
                         <?php foreach($groups as $group){ ?>
+
+                            <?php if($group['id'] == GUEST_GROUP_ID && empty($rule['show_for_guest_group'])){ ?>
+                                <td class="center"></td>
+                            <?php continue; } ?>
 
                             <?php
                                 $default =  isset($values[$rule['id']][$group['id']]) ?
@@ -30,7 +41,7 @@
                                             null;
                             ?>
 
-                            <td class="center">
+                            <td class="center" data-label="<?php html($group['title']); ?>">
                                 <?php if ($rule['type'] == 'flag'){ ?>
                                     <?php echo html_checkbox("value[{$rule['id']}][{$group['id']}]", $default); ?>
                                 <?php } ?>
