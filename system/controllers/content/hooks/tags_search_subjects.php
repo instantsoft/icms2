@@ -4,7 +4,7 @@ class onContentTagsSearchSubjects extends cmsAction {
 
     public function run($data){
 
-        list($tag, $targets, $target) = $data;
+        list($tag, $targets) = $data;
 
         $menu_items = array();
 

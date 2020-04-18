@@ -30,7 +30,7 @@ class actionAdminSettingsTheme extends cmsAction {
                     cmsUser::addSessionMessage(LANG_CP_SETTINGS_TPL_NOT_WRITABLE, 'error');
                 }
 
-                $this->redirectToAction('settings');
+                $this->redirectToAction('settings', ['theme', $template_name]);
 
             }
 

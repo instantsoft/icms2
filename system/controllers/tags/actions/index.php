@@ -34,12 +34,19 @@ class actionTagsIndex extends cmsAction {
             cmsCore::error404();
         }
 
+        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets));
+        if (!$menu_items) { cmsCore::error404(); }
+
         // субъект по умолчанию - первый из списка
         if(!$target){
 
-            foreach ($targets as $controller_name => $subjects) {
+            foreach ($menu_items as $controller_name => $_menu_items) {
 
-                $target = $controller_name.'-'.reset($subjects);
+                if(empty($_menu_items)){ continue; }
+
+                $first_subject = array_keys($_menu_items);
+
+                $target = $first_subject[0];
 
                 // редиректим на правильный урл
                 $this->redirect(href_to('tags', $target, urlencode($tag_name)), 301);
@@ -61,9 +68,6 @@ class actionTagsIndex extends cmsAction {
 
         $list_html = $controller->runHook('tags_search', array($target_subject, $tag, $page_url));
         if (!$list_html) { cmsCore::error404(); }
-
-        $menu_items = cmsEventsManager::hookAll('tags_search_subjects', array($tag, $targets, $target));
-        if (!$menu_items) { cmsCore::error404(); }
 
         foreach ($menu_items as $menu_item) {
             $this->cms_template->addMenuItems('results_tabs', $menu_item);

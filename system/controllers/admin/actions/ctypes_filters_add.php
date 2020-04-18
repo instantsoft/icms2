@@ -15,7 +15,9 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
         $props = $this->model_content->getContentProps($ctype['name']);
         $props_fields = cmsCore::getController('content')->getPropsFields($props);
 
-        $filter = [];
+        $filter = [
+            'ctype_name' => $ctype['name']
+        ];
 
         if($id){
             $filter = $this->model_content->getContentFilter($ctype, $id);
@@ -30,7 +32,7 @@ class actionAdminCtypesFiltersAdd extends cmsAction {
 
 			$filter = array_replace_recursive($filter, $form->parse($this->request, true));
 
-            $errors = $form->validate($this,  $filter);
+            $errors = $form->validate($this, $filter);
 
             $category = $this->model_content->getCategoryBySLUG($ctype['name'], $filter['slug']);
 

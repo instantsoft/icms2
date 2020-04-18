@@ -1572,9 +1572,10 @@ class modelContent extends cmsModel {
 
         $this->filterEqual($field_name, $id);
 
-        return $this->getItem($table_name, function($item, $model){
+        return $this->getItem($table_name, function($item, $model) use($ctype){
 
             $item['filters'] = cmsModel::stringToArray($item['filters']);
+            $item['ctype_name'] = $ctype['name'];
 
             return $item;
 

@@ -9,6 +9,7 @@ class formAdminMenuItem extends cmsForm {
                 'childs' => array(
                     new fieldString('title', array(
                         'title' => LANG_TITLE,
+                        'is_clean_disable' => true,
                         'rules' => array(
                             array('required'),
                             array('max_length', 64)

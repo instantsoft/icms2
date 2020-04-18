@@ -114,6 +114,8 @@ class actionContentCategoryView extends cmsAction {
 
         // если не на главной
         if(!$is_frontpage){
+            // canonical
+            $this->cms_template->addHead('<link rel="canonical" href="'.$this->cms_config->host.(is_array($page_url) ? $page_url['base'] : $page_url).'"/>');
             // если название переопределено, а мы по оригинальному адресу,
             // то редиректим со старого на новый адрес
             if ($this->remap_redirect_ctype) {
