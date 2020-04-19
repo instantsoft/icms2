@@ -1,57 +1,139 @@
 <?php
-
+/**
+ * Базовый класс для работы с формами в CMS
+ */
 class cmsForm {
 
+    /**
+     * Форма с табами?
+     *
+     * @var boolean
+     */
     public $is_tabbed = false;
+
+    /**
+     * Показывать предупреждение о несохранённых данных формы
+     * при уходе со страницы формы
+     *
+     * @var boolean
+     */
     public $show_unsave_notice = true;
 
-    private $params          = array();
-    private $structure       = array();
+    /**
+     * Параметры формы, передающиеся в метод init
+     *
+     * @var array
+     */
+    private $params    = [];
 
-    protected $disabled_fields = array();
+    /**
+     * Структура формы
+     *
+     * @var array
+     */
+    private $structure = [];
 
+    /**
+     * Массив имён отключенных полей формы
+     * Они не участвуют в валидации,
+     * не участвуют в парсинге формы
+     *
+     * @var array
+     */
+    protected $disabled_fields = [];
+
+    /**
+     * Объект контроллера контекста вызова формы
+     *
+     * @var object
+     */
     protected $controller;
 
+    /**
+     * Массив любых данных, необходимых для формы
+     *
+     * @var array
+     */
     protected $data = [];
 
+//============================================================================//
+//============================================================================//
+
+    /**
+     * Устанавливает массив параметров формы, которые передются
+     * в метод init формы аргументами
+     *
+     * @param array $params
+     */
+    public function setParams($params = []) {
+        $this->params = $params;
+    }
+
+    /**
+     * Возвращает массив параметров формы
+     *
+     * @return array
+     */
+    public function getParams(){
+        return $this->params;
+    }
+
+    /**
+     * Устанавливает вспомогательные данные
+     *
+     * @param string $key Ключ
+     * @param mixed $value Значение
+     * @return \cmsForm
+     */
     public function setData($key, $value) {
         $this->data[$key] = $value; return $this;
     }
 
+    /**
+     * Возвращает данные по ключу
+     *
+     * @param string $key Ключ
+     * @return mixed
+     */
     public function getData($key) {
         return array_key_exists($key, $this->data) ? $this->data[$key] : null;
     }
 
     /**
      * Сохраняет ссылку на контроллер контекста
+     *
      * @param object $controller_obj
+     * @return \cmsForm
      */
     public function setContext($controller_obj){
-        $this->controller = $controller_obj;
+        $this->controller = $controller_obj; return $this;
     }
 
     /**
      * Возвращает объект контроллера контекста
+     *
      * @return object
      */
     public function getContext(){
         return $this->controller;
     }
 
+//============================================================================//
+//========================= Работа со структурой =============================//
+
     /**
      * Устанавливает массив полей формы
+     *
      * @param array $structure
+     * @return \cmsForm
      */
-    public function setStructure($structure = array()) {
-
-        $this->structure = $structure;
-
-        return $this;
-
+    public function setStructure($structure = []) {
+        $this->structure = $structure; return $this;
     }
 
     /**
-     * Возвращает массив полей формы
+     * Возвращает массив полей формы "как есть"
+     *
      * @return array
      */
     public function getStructure(){
@@ -60,6 +142,7 @@ class cmsForm {
 
     /**
      * Возвращает подготовленный массив полей формы
+     *
      * @return array
      */
     public function getFormStructure(){
@@ -194,27 +277,26 @@ class cmsForm {
 
 
         return $structure;
-
     }
 
     /**
      * Возвращает поле с указанным именем, или null если такого поля нет в форме
+     *
      * @param string $name Имя поля
-     * @param string $fieldset_id ID набора полей (если не указано,
-     *                            производится поиск по всем наборам в форме)
-     * @return cmsFormField
+     * @param string $fieldset_id ID набора полей (не указано - поиск по всем наборам формы)
+     * @return cmsFormField|null
      */
     public function getField($name, $fieldset_id = null) {
-        if (isset($fieldset_id)) {
-            if (isset($this->structure[$fieldset_id])) {
+        if ($fieldset_id !== null) {
+            if ($this->isFieldsetExists($fieldset_id)) {
                 foreach ($this->structure[$fieldset_id]['childs'] as $field) {
-                    if ($field->getName() == $name) return $field;
+                    if ($field->getName() == $name) { return $field; }
                 }
             }
         } else {
-            foreach ($this->structure as $fieldset) {
+            foreach ($this->structure as $fieldset_id => $fieldset) {
                 foreach ($fieldset['childs'] as $field) {
-                    if ($field->getName() == $name) return $field;
+                    if ($field->getName() == $name) { return $field; }
                 }
             }
         }
@@ -223,307 +305,165 @@ class cmsForm {
 
     /**
      * Присутствует ли поле с указанным именем в форме
+     *
      * @param string $name Имя поля
-     * @param string $fieldset_id ID набора полей (если не указано,
-     *                            производится поиск по всем наборам в форме)
-     * @return bool
+     * @param string $fieldset_id ID набора полей
+     * @return boolean
      */
     public function hasField($name, $fieldset_id = null) {
         return $this->getField($name, $fieldset_id) !== null;
     }
 
-
-//============================================================================//
-//============================================================================//
-
-    public function setParams($params = array()) {
-        $this->params = $params;
-    }
-
-    public function getParams(){
-        return $this->params;
-    }
-
-//============================================================================//
-//============================================================================//
-
-    public function addHtmlBlock($id, $content=null){
-
-        $this->structure[$id] = array(
-            'type' => 'html',
-            'content' => $content
-        );
-
-        return $id;
-
-    }
-
-    public function addHtmlBlockToBeginning($id, $content=null){
-
-        $block = array(
-            'type' => 'html',
-            'content' => $content
-        );
-
-        $this->structure = array($id => $block) + $this->structure;
-
-        return $id;
-
-    }
-
-    public function addHtmlBlockAfter($after_id, $id, $content=null){
-
-        $block = array(
-            'type' => 'html',
-            'content' => $content
-        );
-
-        $pos = array_search($after_id, array_keys($this->structure));
-
-        $before = array_slice($this->structure, 0, $pos+1);
-        $after = array_slice($this->structure, $pos + 1);
-
-        $this->structure = $before + array($id => $block) + $after;
-
-        return $id;
-
-    }
-
-//============================================================================//
-//============================================================================//
-
+    /**
+     * Проверяет, существует ли набор
+     *
+     * @param string $id ID набора
+     * @return boolean
+     */
     public function isFieldsetExists($id) {
         return isset($this->structure[$id]);
     }
 
     /**
-     * Добавляет набор полей в форму.
-     * Возращает id набора полей
-     * @param string $title Заголовок набора полей
-     * @param string $id ID набора полей
-     * @return mixed
+     * Возвращает ID последнего набора
+     *
+     * @return string
      */
-    public function addFieldset($title='', $id=null, $options=array()){
-
-        if (is_null($id)){
-            $id = sizeof($this->structure);
-        }
-
-        if($this->isFieldsetExists($id)){ return $id; }
-
-        $fieldset = array(
-            'type' => 'fieldset',
-            'title' => $title,
-            'childs' => array()
-        );
-
-        $fieldset = array_merge($fieldset, $options);
-
-        $this->structure[$id] = $fieldset;
-
-        return $id;
-
-    }
-
-    public function addFieldsetToBeginning($title='', $id=null, $options=array()){
-
-        if (is_null($id)){
-            $id = sizeof($this->structure);
-        }
-
-        $fieldset = array(
-            'type' => 'fieldset',
-            'title' => $title,
-            'childs' => array()
-        );
-
-        $fieldset = array_merge($fieldset, $options);
-
-        $this->structure = array($id => $fieldset) + $this->structure;
-
-        return $id;
-
-    }
-
-    public function addFieldsetAfter($after_id, $title='', $id=null, $options=array()){
-
-        if (is_null($id)){
-            $id = sizeof($this->structure);
-        }
-
-        $fieldset = array(
-            'type' => 'fieldset',
-            'title' => $title,
-            'childs' => array()
-        );
-
-        $fieldset = array_merge($fieldset, $options);
-
-        $pos = array_search($after_id, array_keys($this->structure));
-
-        $before = array_slice($this->structure, 0, $pos+1);
-        $after = array_slice($this->structure, $pos + 1);
-
-        $this->structure = $before + array($id => $fieldset) + $after;
-
-        return $id;
-
-    }
-
-	public function getLastFieldsetId(){
+    public function getLastFieldsetId(){
 
 		$ids = array_keys($this->structure);
 
 		return $ids[count($ids)-1];
-
 	}
 
     /**
-     * Добавляет поле в конец набора полей
-     * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
-     * @return $this
+     * Добавляет набор в конец формы
+     *
+     * @param string $id ID добавляемого набора
+     * @param array $structure
+     * @return string $id
      */
-    public function addField($fieldset_id, $field){
+    private function addStructure($id, $structure) {
 
-        $this->structure[ $fieldset_id ]['childs'][$field->name] = $field;
-
-        return $this;
-
-    }
-
-    /**
-     * Добавляет поле в начало набора полей
-     * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
-     * @return $this
-     */
-    public function addFieldToBeginning($fieldset_id, $field){
-
-        $this->structure[ $fieldset_id ]['childs'] = array($field->name => $field) + $this->structure[ $fieldset_id ]['childs'];
-
-        return $this;
-
-    }
-
-    /**
-     * Добавляет поле после заданного в $after_id
-     * @param string $after_id ID поля, после которого нужно добавить
-     * @param string $fieldset_id ID набора полей
-     * @param object $field Объект поля
-     * @return $this
-     */
-    public function addFieldAfter($after_id, $fieldset_id, $field){
-
-        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']));
-
-        if($pos === false){ return $this; }
-
-        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1);
-        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1);
-
-        $this->structure[$fieldset_id]['childs'] = $before + array($field->name => $field) + $after;
-
-        return $this;
-
-    }
-
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Изменяет аттрибут набора полей в форме
-     * @param string $fieldset_id ID набора полей
-     * @param string $attr_name Название аттрибута
-     * @param mixed $value Новое значение
-     */
-    public function setFieldsetAttribute($fieldset_id, $attr_name, $value){
-
-        $this->structure[ $fieldset_id ][ $attr_name ] = $value;
-
-    }
-
-    /**
-     * Изменяет аттрибут поля в форме
-     * @param string $fieldset_id ID набора полей
-     * @param string $field_name Название поля
-     * @param string $attr_name Название аттрибута
-     * @param mixed $value Новое значение
-     */
-    public function setFieldAttribute($fieldset_id, $field_name, $attr_name, $value){
-        $field = $this->getField($field_name, $fieldset_id);
-        if ($field) $field->setOption($attr_name, $value);
-    }
-
-    public function setFieldAttributeByName($field_name, $attr_name, $value){
-        $field = $this->getField($field_name);
-        if ($field) $field->setOption($attr_name, $value);
-    }
-
-    public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
-        $field = $this->getField($field_name, $fieldset_id);
-        if ($field) $field->{$attr_name} = $value;
-    }
-//============================================================================//
-//============================================================================//
-
-    /**
-     * Скрывает набор полей в форме
-     * @param string $fieldset_id ID набора полей
-     */
-    public function hideFieldset($fieldset_id){
-
-        $this->setFieldsetAttribute($fieldset_id, 'is_hidden', true);
-
-    }
-
-    /**
-     * Скрывает поле в форме
-     * @param string $fieldset_id ID набора полей
-     * @param string $field_name Название поля
-     */
-    public function hideField($fieldset_id, $field_name = ''){
-
-        if ($fieldset_id && empty($field_name)){
-            $this->setFieldAttributeByName($fieldset_id, 'is_hidden', true);
-            return;
+        if ($id === null) {
+            $id = sizeof($this->structure);
         }
 
-        $this->setFieldAttribute($fieldset_id, $field_name, 'is_hidden', true);
+        if ($this->isFieldsetExists($id)) {
+            return $id;
+        }
 
+        $this->structure[$id] = $structure;
+
+        return $id;
     }
 
-//============================================================================//
-//============================================================================//
+    /**
+     * Добавляет набор в начало формы
+     *
+     * @param string $id ID добавляемого набора
+     * @param array $structure
+     * @return string $id
+     */
+    private function addStructureToBeginning($id, $structure) {
+
+        if ($id === null) {
+            $id = sizeof($this->structure);
+        }
+
+        if ($this->isFieldsetExists($id)) {
+            return $id;
+        }
+
+        $this->structure = [$id => $structure] + $this->structure;
+
+        return $id;
+    }
+
+    /**
+     * Добавляет набор после заданного
+     *
+     * @param string $after_id ID набора, после которого вставить
+     * @param string $id ID добавляемого набора
+     * @param array $structure
+     * @return string|null $id
+     */
+    private function addStructureAfter($after_id, $id, $structure) {
+
+        if ($id === null) {
+            $id = sizeof($this->structure);
+        }
+
+        if ($this->isFieldsetExists($id)) {
+            return $id;
+        }
+
+        $pos = array_search($after_id, array_keys($this->structure));
+
+        if($pos !== false){
+
+            $before = array_slice($this->structure, 0, $pos + 1);
+            $after  = array_slice($this->structure, $pos + 1);
+
+            $this->structure = $before + array($id => $structure) + $after;
+
+
+            return $id;
+        }
+
+        return null;
+    }
 
     /**
      * Убирает из набора все поля
+     *
      * @param string $fieldset_id ID набора полей
+     * @return cmsForm
      */
-    public function clearFieldset($fieldset_id){
-        $this->structure[ $fieldset_id ]['childs'] = array();
+    public function clearFieldset($fieldset_id) {
+        $this->structure[$fieldset_id]['childs'] = [];
+        return $this;
     }
 
     /**
      * Удаляет набор полей из формы
+     *
      * @param string $fieldset_id ID набора полей
+     * @return cmsForm
      */
-    public function removeFieldset($fieldset_id){
-        unset($this->structure[ $fieldset_id ]);
+    public function removeFieldset($fieldset_id) {
+        unset($this->structure[$fieldset_id]);
+        return $this;
     }
 
     /**
      * Удаляет поле из формы
-     * @param string $fieldset_id ID набора полей
+     *
+     * @param string $fieldset_id ID набора полей, null - поиск по всем
      * @param string $field_name Название поля
+     * @return cmsForm
      */
-    public function removeField($fieldset_id, $field_name){
-        foreach( $this->structure[ $fieldset_id ]['childs'] as $field_id => $field) {
-            if ($field->getName() == $field_name){
-                unset($this->structure[ $fieldset_id ]['childs'][ $field_id ]);
-                break;
+    public function removeField($fieldset_id, $field_name) {
+        if ($fieldset_id !== null) {
+            if ($this->isFieldsetExists($fieldset_id)) {
+                foreach ($this->structure[$fieldset_id]['childs'] as $field_id => $field) {
+                    if ($field->getName() == $field_name) {
+                        unset($this->structure[$fieldset_id]['childs'][$field_id]);
+                        break;
+                    }
+                }
+            }
+        } else {
+            foreach ($this->structure as $fieldset_id => $fieldset) {
+                foreach ($fieldset['childs'] as $field_id => $field) {
+                    if ($field->getName() == $field_name) {
+                        unset($this->structure[$fieldset_id]['childs'][$field_id]);
+                        break;
+                    }
+                }
             }
         }
+        return $this;
     }
 
     /**
@@ -531,9 +471,258 @@ class cmsForm {
      * Поле не удаляется, но перестает участвовать в парсинге и валидации
      *
      * @param string $field_name Название поля
+     * @return cmsForm
      */
-    public function disableField($field_name){
-        $this->disabled_fields[] = $field_name; return $this;
+    public function disableField($field_name) {
+        $this->disabled_fields[] = $field_name;
+        return $this;
+    }
+
+//============================================================================//
+//========================= HTML наборы ======================================//
+
+    /**
+     * Добавляет набор в виде сформированного HTML
+     *
+     * @param string $id ID набора
+     * @param string $content HTML код
+     * @return string ID набора
+     */
+    public function addHtmlBlock($id, $content = null) {
+
+        return $this->addStructure($id, [
+            'type'    => 'html',
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * Добавляет набор в виде сформированного HTML в начало формы
+     *
+     * @param string $id ID набора
+     * @param string $content HTML код
+     * @return string ID набора
+     */
+    public function addHtmlBlockToBeginning($id, $content = null) {
+
+        return $this->addStructureToBeginning($id, [
+            'type'    => 'html',
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * Добавляет набор в виде сформированного HTML после заданного
+     *
+     * @param string $after_id ID набора, после которого вставить
+     * @param string $id ID набора
+     * @param string $content HTML код
+     * @return string ID набора
+     */
+    public function addHtmlBlockAfter($after_id, $id, $content = null) {
+
+        return $this->addStructureAfter($after_id, $id, [
+            'type'    => 'html',
+            'content' => $content
+        ]);
+    }
+
+//============================================================================//
+//========================= Наборы полей =====================================//
+
+    /**
+     * Добавляет набор полей в форму
+     *
+     * @param string $title Заголовок набора полей
+     * @param string $id ID набора полей
+     * @param array $options Массив данных и опций набора
+     * @return string id набора
+     */
+    public function addFieldset($title = '', $id = null, $options = []) {
+
+        return $this->addStructure($id, array_merge([
+            'type'   => 'fieldset',
+            'title'  => $title,
+            'childs' => []
+        ], $options));
+    }
+
+    /**
+     * Добавляет набор полей в начало формы
+     *
+     * @param string $title Заголовок набора полей
+     * @param string $id ID набора полей
+     * @param array $options Массив данных и опций набора
+     * @return string id набора
+     */
+    public function addFieldsetToBeginning($title = '', $id = null, $options = []) {
+
+        return $this->addStructureToBeginning($id, array_merge([
+            'type'   => 'fieldset',
+            'title'  => $title,
+            'childs' => []
+        ], $options));
+    }
+
+    /**
+     *
+     * Добавляет набор полей после заданного
+     *
+     * @param string $after_id ID набора, после которого вставить
+     * @param string $title Заголовок набора полей
+     * @param string $id ID набора
+     * @param array $options Массив данных и опций набора
+     * @return string ID набора
+     */
+    public function addFieldsetAfter($after_id, $title = '', $id = null, $options = []) {
+
+        return $this->addStructureAfter($after_id, $id, array_merge([
+            'type'   => 'fieldset',
+            'title'  => $title,
+            'childs' => []
+        ], $options));
+    }
+
+//============================================================================//
+//========================= Поля наборов =====================================//
+
+    /**
+     * Добавляет поле в конец набора полей
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return cmsForm
+     */
+    public function addField($fieldset_id, $field) {
+
+        $this->structure[$fieldset_id]['childs'][$field->name] = $field;
+
+        return $this;
+    }
+
+    /**
+     * Добавляет поле в начало набора полей
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return cmsForm
+     */
+    public function addFieldToBeginning($fieldset_id, $field) {
+
+        $this->structure[$fieldset_id]['childs'] = [$field->name => $field] + $this->structure[$fieldset_id]['childs'];
+
+        return $this;
+    }
+
+    /**
+     * Добавляет поле после заданного в $after_id
+     *
+     * @param string $after_id ID поля, после которого нужно добавить
+     * @param string $fieldset_id ID набора полей
+     * @param object $field Объект поля
+     * @return cmsForm
+     */
+    public function addFieldAfter($after_id, $fieldset_id, $field) {
+
+        $pos = array_search($after_id, array_keys($this->structure[$fieldset_id]['childs']));
+
+        if ($pos === false) {
+            return $this;
+        }
+
+        $before = array_slice($this->structure[$fieldset_id]['childs'], 0, $pos + 1);
+        $after  = array_slice($this->structure[$fieldset_id]['childs'], $pos + 1);
+
+        $this->structure[$fieldset_id]['childs'] = $before + [$field->name => $field] + $after;
+
+        return $this;
+    }
+
+//============================================================================//
+//===================== Изменение опций и свойств ============================//
+
+    /**
+     * Изменяет атрибут набора полей в форме
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param string $attr_name Название атрибута
+     * @param mixed $value Новое значение
+     * @return cmsForm
+     */
+    public function setFieldsetAttribute($fieldset_id, $attr_name, $value) {
+
+        $this->structure[$fieldset_id][$attr_name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Изменяет по ID набора и по имени опцию поля в форме
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param string $field_name Название поля
+     * @param string $attr_name Имя опции
+     * @param mixed $value Новое значение
+     * @return cmsForm
+     */
+    public function setFieldAttribute($fieldset_id, $field_name, $attr_name, $value){
+        $field = $this->getField($field_name, $fieldset_id);
+        if ($field) { $field->setOption($attr_name, $value); }
+        return $this;
+    }
+
+    /**
+     * Изменяет по имени опцию поля в форме
+     *
+     * @param string $field_name Название поля
+     * @param string $attr_name Имя опции
+     * @param mixed $value Новое значение
+     * @return cmsForm
+     */
+    public function setFieldAttributeByName($field_name, $attr_name, $value){
+        return $this->setFieldAttribute(null, $field_name, $attr_name, $value);
+    }
+
+    /**
+     * Изменяет по ID набора и по имени свойство поля в форме
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param string $field_name Название поля
+     * @param string $attr_name Имя опции
+     * @param mixed $value Новое значение
+     * @return cmsForm
+     */
+    public function setFieldProperty($fieldset_id, $field_name, $attr_name, $value){
+        $field = $this->getField($field_name, $fieldset_id);
+        if ($field) { $field->{$attr_name} = $value; }
+        return $this;
+    }
+
+    /**
+     * Скрывает набор полей в форме
+     *
+     * @param string $fieldset_id ID набора полей
+     * @return cmsForm
+     */
+    public function hideFieldset($fieldset_id){
+        return $this->setFieldsetAttribute($fieldset_id, 'is_hidden', true);
+    }
+
+    /**
+     * Скрывает поле в форме
+     *
+     * @param string $fieldset_id ID набора полей
+     * @param string $field_name Название поля
+     * @return cmsForm
+     */
+    public function hideField($fieldset_id, $field_name = '') {
+
+        // Если передан только первый параметр, считаем что это $field_name
+        if ($fieldset_id && empty($field_name)) {
+            return $this->setFieldAttributeByName($fieldset_id, 'is_hidden', true);
+        }
+
+        return $this->setFieldAttribute($fieldset_id, $field_name, 'is_hidden', true);
     }
 
 //============================================================================//
@@ -541,14 +730,15 @@ class cmsForm {
 
     /**
      * Возвращает массив полей формы, заполнив их значениями переданными в запросе $request
-     * @param cmsRequest $request
-     * @param bool $is_submitted
-     * @param array $item
+     *
+     * @param object $request Объект cmsRequest
+     * @param boolean $is_submitted Форма отправлена?
+     * @param array $item Массив предыдущих значений формы
      * @return array
      */
-    public function parse($request, $is_submitted=false, $item=false){
+    public function parse($request, $is_submitted = false, $item = false) {
 
-        $result = array();
+        $result = [];
 
         foreach($this->getFormStructure() as $fieldset){
 
@@ -616,23 +806,23 @@ class cmsForm {
         }
 
         return $result;
-
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Проверяет соответствие массива $data правилам
      * валидации указанным для полей формы
-     * @param cmsController $controller
-     * @param array $data
-     * @param bool $is_check_csrf
-     * @return bool Если ошибки не найдены, возвращает false
+     *
+     * @param object $controller Объект cmsController
+     * @param array $data Данные, полученные из формы
+     * @param boolean $is_check_csrf Проверять валидность csrf токена
+     * @return boolean|array Если ошибки не найдены, возвращает false
+     *                       При ошибке CSRF токена возвращает true
+     *                       Если ошибки найдены, возвращает их массив
+     *                       в формате [имя_поля => текст_ошибки]
      */
     public function validate($controller, $data, $is_check_csrf = true){
 
-        $errors = array();
+        $errors = [];
 
         //
         // Проверяем CSRF-token
@@ -747,12 +937,17 @@ class cmsForm {
         if (!sizeof($errors)) { return false; }
 
         return $errors;
-
     }
 
 //============================================================================//
-//============================================================================//
+//============================= CSRF =========================================//
 
+    /**
+     * Возвращает CSRF токен
+     * Это основной метод для его получения
+     *
+     * @return string
+     */
     public static function getCSRFToken(){
 
         if (cmsUser::isSessionSet('csrf_token')){
@@ -764,7 +959,8 @@ class cmsForm {
     }
 
     /**
-     * Создает, сохраняет в сессии и возвращает CSRF-token
+     * Создает, сохраняет в сессии и возвращает CSRF токен
+     *
      * @return string
      */
     public static function generateCSRFToken(){
@@ -784,9 +980,10 @@ class cmsForm {
     }
 
     /**
-     * Проверяет валидность CSRF-токена
+     * Проверяет валидность CSRF токена
+     *
      * @param string $csrf_token
-     * @return bool
+     * @return boolean
      */
     public static function validateCSRFToken($csrf_token){
         return (cmsUser::sessionGet('csrf_token') === $csrf_token);
@@ -795,56 +992,60 @@ class cmsForm {
 //============================================================================//
 //============================================================================//
 
-    public static function mapFieldsToFieldsets($fields, $callback=null, $values=null){
+    /**
+     * Разбивает массив полей по группам
+     *
+     * @param array $fields Массив полей из БД
+     * @param callable $callback
+     * @param array $values Массив значений полей
+     * @return array
+     */
+    public static function mapFieldsToFieldsets($fields, $callback = null, $values = null) {
 
-        $fieldsets = array();
+        $fieldsets = [];
 
-        if(!$fields){ return $fieldsets; }
+        if (!$fields) { return $fieldsets; }
 
         $current = null;
+        $index   = 0;
 
-        $index = 0;
-
-        $fieldsets[ $index ] = array(
-            'title' => $current,
-            'fields' => array()
-        );
+        $fieldsets[$index] = [
+            'title'  => $current,
+            'fields' => []
+        ];
 
         $user = cmsUser::getInstance();
 
-        foreach($fields as $field){
+        foreach ($fields as $field) {
 
-            if (is_callable($callback)){
-                if (!$callback( $field, $user )) { continue; }
+            if (is_callable($callback)) {
+                if (!$callback($field, $user)) {
+                    continue;
+                }
             }
 
-            if (is_array($values)){
-                if (empty($values[ $field['name'] ])){ continue; }
+            if (is_array($values)) {
+                if (empty($values[$field['name']])) {
+                    continue;
+                }
             }
 
-            if ($current != $field['fieldset']){
+            if ($current != $field['fieldset']) {
 
                 $current = $field['fieldset'];
-                $index += 1;
+                $index   += 1;
 
-                $fieldsets[ $index ] = array(
-                    'title' => $current,
-                    'fields' => array()
+                $fieldsets[$index] = array(
+                    'title'  => $current,
+                    'fields' => []
                 );
-
             }
 
-            $fieldsets[ $index ]['fields'][] = $field;
-
+            $fieldsets[$index]['fields'][] = $field;
         }
 
         return $fieldsets;
-
-
     }
-
-//============================================================================//
-//============================================================================//
 
     /**
      * Возвращает список всех имеющихся типов полей
@@ -853,28 +1054,30 @@ class cmsForm {
      * @param string $controller Название контроллера для контекста вызова
      * @return array
      */
-    public static function getAvailableFormFields($only_public = true, $controller = false){
+    public static function getAvailableFormFields($only_public = true, $controller = false) {
 
-        $fields_types   = array();
-        $fields_files   = cmsCore::getFilesList('system/fields', '*.php', true, true);
+        $fields_types = [];
+        $fields_files = cmsCore::getFilesList('system/fields', '*.php', true, true);
 
         foreach ($fields_files as $name) {
 
-            $class  = 'field' . string_to_camel('_', $name);
+            $class = 'field' . string_to_camel('_', $name);
 
             $field = new $class(null, null);
 
-            if ($only_public && !$field->is_public){ continue; }
-            if ($controller && in_array($controller, $field->excluded_controllers)){ continue; }
+            if ($only_public && !$field->is_public) {
+                continue;
+            }
+            if ($controller && in_array($controller, $field->excluded_controllers)) {
+                continue;
+            }
 
             $fields_types[$name] = $field->getTitle();
-
         }
 
         asort($fields_types, SORT_STRING);
 
         return $fields_types;
-
     }
 
     /**
@@ -883,36 +1086,35 @@ class cmsForm {
      * @param string $form_file Полный путь к файлу формы
      * @param string $form_name Название формы
      * @param array $params Параметры, передаваемые в метод init формы
-     * @param cmsController $controller Объект контроллера контекста
-     * @return boolean|\form_class
+     * @param object $controller Объект контроллера контекста
+     * @return boolean|form_class
      */
     public static function getForm($form_file, $form_name, $params = false, $controller = null) {
 
-        if (!file_exists($form_file)){ return false; }
+        if (!file_exists($form_file)) { return false; }
 
         include_once $form_file;
 
         $form_class = 'form' . string_to_camel('_', $form_name);
 
-        if(!class_exists($form_class, false)){
+        if (!class_exists($form_class, false)) {
             return sprintf(ERR_CLASS_NOT_DEFINED, str_replace(PATH, '', $form_file), $form_class);
         }
 
         $form = new $form_class();
 
-        if($controller instanceof cmsController){
+        if ($controller instanceof cmsController) {
             $form->setContext($controller);
         }
 
-        if ($params){
+        if ($params) {
             $form->setParams($params);
-            $form->setStructure( call_user_func_array(array($form, 'init'), $params) );
+            $form->setStructure(call_user_func_array(array($form, 'init'), $params));
         } else {
-            $form->setStructure( $form->init() );
+            $form->setStructure($form->init());
         }
 
         return $form;
-
     }
 
 }
