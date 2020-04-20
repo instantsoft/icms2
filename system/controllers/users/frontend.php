@@ -124,6 +124,9 @@ class users extends cmsFrontend {
 		if ($this->tabs){
 			foreach($this->tabs as $tab){
 
+                // включен ли контроллер
+                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
+
                 // права доступа
                 if (($tab['groups_view'] && !$this->cms_user->isInGroups($tab['groups_view'])) ||
                         ($tab['groups_hide'] && $this->cms_user->isInGroups($tab['groups_hide']))) {
@@ -134,9 +137,6 @@ class users extends cmsFrontend {
                 if($tab['show_only_owner'] && $profile['id'] != $this->cms_user->id){
                     continue;
                 }
-
-                // включен ли контроллер
-                if(!$this->isControllerEnabled($tab['controller'])){ continue; }
 
 				$default_tab_info = array(
 					'title' => $tab['title'],

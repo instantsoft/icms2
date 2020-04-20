@@ -40,7 +40,7 @@ class content extends cmsFrontend {
 //============================================================================//
 //============================================================================//
 
-    public function getMenuAddItems($menu_item_id){
+    public function getMenuAddItems($menu_item_id, $full_string = false){
 
         $result = array('url' => '#', 'items' => false);
 
@@ -56,7 +56,7 @@ class content extends cmsFrontend {
                 $result['items'][] = array(
                     'id'           => 'content_add' . $ctype['id'],
                     'parent_id'    => $menu_item_id,
-                    'title'        => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
+                    'title'        => $full_string? sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']) : string_ucfirst($ctype['labels']['create']),
                     'childs_count' => 0,
                     'url'          => href_to($ctype['name'], 'add')
                 );
