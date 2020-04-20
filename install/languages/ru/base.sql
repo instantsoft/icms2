@@ -118,7 +118,7 @@ CREATE TABLE `{#}activity_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Типы записей в ленте активности';
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
-(1, 1, 'pages', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
+(1, 1, 'content', 'add.pages', 'Добавление страниц', 'добавляет страницу %s'),
 (2, 1, 'comments', 'vote.comment', 'Оценка комментария', 'оценил комментарий на странице %s'),
 (7, 1, 'users', 'friendship', 'Дружба', 'и %s становятся друзьями'),
 (8, 1, 'users', 'signup', 'Регистрация', 'регистрируется. Приветствуем!'),
