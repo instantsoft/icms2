@@ -29,9 +29,11 @@
             <div class="field ft_list f_album_id">
                 <?php echo html_select('album_id', $albums_select, $album_id, array('id'=>'album_id')); ?>
             </div>
+            <?php if(!empty($allow_add)){ ?>
             <div class="field">
                 <?php printf(LANG_PHOTOS_NEW_ALBUM, href_to('albums', 'add'), $ctype['labels']['one']); ?>
             </div>
+            <?php } ?>
         </fieldset>
         <script type="text/javascript">
             $(function(){

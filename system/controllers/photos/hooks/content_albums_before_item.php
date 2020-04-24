@@ -6,9 +6,18 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
         list($ctype, $album, $fields) = $data;
 
-        $is_allow = $album['is_public'] || !$album['id'] || ($album['user_id'] == $this->cms_user->id) || $this->cms_user->is_admin;
+        $allow_add_public_albums = false;
+        if (!empty($this->options['allow_add_public_albums']) &&
+                $this->cms_user->isInGroups($this->options['allow_add_public_albums'])) {
+            $allow_add_public_albums = true;
+        }
 
-        if ($is_allow && cmsUser::isAllowed($ctype['name'], 'add')) {
+        $is_allow = (empty($album['id']) && cmsUser::isAllowed($ctype['name'], 'add')) ||
+                (!empty($album['is_public']) && $allow_add_public_albums) ||
+                ($this->cms_user->id && $album['user_id'] == $this->cms_user->id) ||
+                $this->cms_user->is_admin;
+
+        if ($is_allow) {
 
             $this->cms_template->addToolButton(array(
                 'class' => 'images',

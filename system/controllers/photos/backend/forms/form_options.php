@@ -6,6 +6,12 @@ class formPhotosOptions extends cmsForm {
 
     public function init() {
 
+        $perm_childs = [];
+
+        $perm_childs[] = new fieldListGroups('allow_add_public_albums', array(
+            'title' => LANG_PHOTOS_ALLOW_ADD_PUBLIC_ALBUMS
+        ));
+
         $presets = cmsCore::getModel('images')->getPresetsList();
 
         foreach ($presets as $name => $title) {

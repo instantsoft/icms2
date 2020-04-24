@@ -473,7 +473,7 @@ class cmsUploader {
 
         $real_size = filesize($destination);
 
-        if ($real_size != $this->getXHRFileSize()){
+        if (!$real_size || $real_size != $this->getXHRFileSize()){
             @unlink($destination);
             return array(
                 'success' => false,

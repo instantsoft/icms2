@@ -27,6 +27,7 @@
 	define('LANG_PHOTOS_TYPES_HINT',            'Каждый тип с новой строки, можно задавать порядковые номера в формате: 1 | Название типа');
 	define('LANG_PHOTOS_DATE',                  'Дата съёмки');
 	define('LANG_PHOTOS_SIZES',                 'Пресеты для конвертации изображений');
+	define('LANG_PHOTOS_ALLOW_ADD_PUBLIC_ALBUMS', 'Разрешено добавление фото в общие альбомы');
 	define('LANG_PHOTOS_DOWNLOAD_VIEW',         'Разрешено скачивание пресета <b>«%s»</b> группам');
 	define('LANG_PHOTOS_DOWNLOAD_HIDE',         'Запрещено скачивание пресета <b>«%s»</b> группам');
 	define('LANG_PHOTOS_ACCESS_BY_LINK',        'Доступ по ссылке');

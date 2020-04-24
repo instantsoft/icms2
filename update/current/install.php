@@ -54,6 +54,8 @@ function install_package(){
         }
     }
 
+    save_controller_options(array('photos'));
+
     return true;
 
 }
