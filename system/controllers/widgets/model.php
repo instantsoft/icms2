@@ -4,7 +4,6 @@ class modelWidgets extends cmsModel {
 
     public function getLayoutRow($id) {
         return $this->getItemById('layout_rows', $id, function($item, $model) {
-            $item['groups'] = cmsModel::stringToArray($item['groups']);
             $item['options'] = cmsModel::stringToArray($item['options']);
             return $item;
         });
@@ -17,14 +16,13 @@ class modelWidgets extends cmsModel {
         });
     }
 
-    public function getLayoutRows($template_name, $user = null) {
+    public function getLayoutRows($template_name) {
 
         $this->filterEqual('r.template', $template_name);
 
         $this->select('r.nested_position', 'nested_position');
         $this->select('r.parent_id', 'parent_id');
         $this->select('r.title', 'row_title');
-        $this->select('r.groups', 'groups');
         $this->select('r.options', 'row_options');
         $this->select('r.class', 'row_class');
 
@@ -37,21 +35,10 @@ class modelWidgets extends cmsModel {
             ['by' => 'i.ordering', 'to' => 'asc']
         ));
 
-        $items = $this->get('layout_cols', function($item, $model) use($user) {
-
-            $item['groups'] = cmsModel::stringToArray($item['groups']);
-
-            if($user instanceof cmsUser){
-                if ((!empty($item['groups']['view']) && !$user->isInGroups($item['groups']['view'])) ||
-                        ($item['groups']['hide'] && $user->isInGroups($item['groups']['hide']))) {
-                    return false;
-                }
-            }
-
+        $items = $this->get('layout_cols', function($item, $model) {
             $item['options'] = cmsModel::stringToArray($item['options']);
             $item['row_options'] = cmsModel::stringToArray($item['row_options']);
             return $item;
-
         }, false);
 
         $rows = $ns_rows = [];
@@ -70,22 +57,13 @@ class modelWidgets extends cmsModel {
                             'parent_id' => $item['parent_id'],
                             'nested_position' => $item['nested_position'],
                             'title'     => $item['row_title'],
-                            'groups'    => $item['groups'],
                             'class'     => $item['row_class'],
                             'options'   => $item['row_options'],
                             'positions' => [$item['name']],
-                            'has_breadcrumb' => $item['is_breadcrumb'],
-                            'has_body'  => $item['is_body'],
                             'cols'      => [$item['id'] => $item]
                         ];
 
                     } else {
-                        if($item['is_breadcrumb']){
-                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_breadcrumb'] = true;
-                        }
-                        if($item['is_body']){
-                            $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['has_body'] = true;
-                        }
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
                     }
@@ -112,22 +90,13 @@ class modelWidgets extends cmsModel {
                         'id'        => $item['row_id'],
                         'parent_id' => $item['parent_id'],
                         'title'     => $item['row_title'],
-                        'groups'    => $item['groups'],
                         'class'     => $item['row_class'],
                         'options'   => $item['row_options'],
                         'positions' => [$item['name']],
-                        'has_body'  => $item['is_body'],
-                        'has_breadcrumb' => $item['is_breadcrumb'],
                         'cols'      => [$item['id'] => $item]
                     ];
 
                 } else {
-                    if($item['is_breadcrumb']){
-                        $rows[$item['row_id']]['has_breadcrumb'] = true;
-                    }
-                    if($item['is_body']){
-                        $rows[$item['row_id']]['has_body'] = true;
-                    }
                     $rows[$item['row_id']]['positions'][] = $item['name'];
                     $rows[$item['row_id']]['cols'][$item['id']] = $item;
                 }
@@ -213,22 +182,6 @@ class modelWidgets extends cmsModel {
     }
 
     public function updateLayoutCol($id, $col) {
-
-        if(!empty($col['is_body'])){
-
-            $template = $this->filterEqual('id', $col['row_id'])->getFieldFiltered('layout_rows', 'template');
-
-            $rows = $this->selectOnly('id')->get('layout_rows', function($item, $model) {
-                return $item['id'];
-            }, false);
-
-            $this->filterIn('row_id', $rows);
-
-            $this->updateFiltered('layout_cols', [
-                'is_body' => null
-            ]);
-
-        }
 
         $this->update('layout_cols', $id, $col, false, true);
 

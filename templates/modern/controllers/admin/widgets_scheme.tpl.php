@@ -52,13 +52,7 @@
                         </a>
                     </div>
                 </div>
-                <?php if($col['is_body']){ ?>
-                    {block:LANG_PAGE_BODY}
-                <?php } elseif($col['is_breadcrumb']) { ?>
-                    {block:LANG_PAGE_BREADCRUMB}
-                <?php } else { ?>
-                    {position:<?php echo $col['name']; ?>}
-                <?php } ?>
+                {position:<?php echo $col['name']; ?>}
                 <?php if(!empty($col['rows']['after'])){ ?>
                     <?php $this->renderChild('widgets_scheme', array('rows' => $col['rows']['after'])); ?>
                 <?php } ?>

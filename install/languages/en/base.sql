@@ -5,8 +5,6 @@ CREATE TABLE `{#}layout_cols` (
   `title` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT 'Position title',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Column order in source code',
-  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Display page body',
-  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Display breadcrumb',
   `class` varchar(100) DEFAULT NULL COMMENT 'Column CSS class',
   `options` text COMMENT 'Column options',
   PRIMARY KEY (`id`),
@@ -21,7 +19,6 @@ CREATE TABLE `{#}layout_rows` (
   `title` varchar(255) DEFAULT NULL,
   `template` varchar(30) DEFAULT NULL COMMENT 'Binding to the template',
   `ordering` int(11) DEFAULT NULL COMMENT 'Row order in source code',
-  `groups` text COMMENT 'Display Access',
   `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Nested row position',
   `class` varchar(100) DEFAULT NULL COMMENT 'Row CSS class',
   `options` text COMMENT 'Row options',
@@ -1765,7 +1762,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (16, 'photos', 'list', 'Photos list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (17, 'groups', 'list', 'Groups list', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (18, 'subscriptions', 'button', 'Subscription buttons', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(19, 'auth', 'register', 'Registration form', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(20, NULL, 'template', 'Template Elements', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

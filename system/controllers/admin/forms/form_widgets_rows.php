@@ -42,22 +42,6 @@ class formAdminWidgetsRows extends cmsForm {
                         )
                     ))
                 )
-            ),
-            'access' => array(
-                'type' => 'fieldset',
-                'title' => LANG_PERMISSIONS,
-                'childs' => array(
-                    new fieldListGroups('groups:view', array(
-                        'title' => LANG_SHOW_TO_GROUPS,
-                        'show_all' => true,
-                        'show_guests' => true
-                    )),
-                    new fieldListGroups('groups:hide', array(
-                        'title' => LANG_HIDE_FOR_GROUPS,
-                        'show_all' => false,
-                        'show_guests' => true
-                    ))
-                )
             )
         );
 

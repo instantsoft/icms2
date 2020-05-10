@@ -22,7 +22,6 @@
 
     </head>
     <body id="<?php echo $device_type; ?>_device_type">
-
         <?php if (!$config->is_site_on){ ?>
             <div id="site_off_notice" class="bg-warning">
                 <div class="container py-2 text-secondary">
@@ -34,23 +33,11 @@
                 </div>
             </div>
         <?php } ?>
-
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
-
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
-            <?php $this->renderAsset('ui/debug', array('core' => $core)); ?>
+            <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
         <?php } ?>
-        <?php $messages = cmsUser::getSessionMessages(); ?>
         <?php $this->printJavascriptTags(); ?>
-        <script>
-            $(function(){
-            <?php if ($messages){ ?>
-                <?php foreach($messages as $message){ ?>
-                    toastr.<?php echo $message['class']; ?>('<?php echo $message['text']; ?>');
-                 <?php } ?>
-            <?php } ?>
-            });
-        </script>
         <?php $this->bottom(); ?>
     </body>
 </html>

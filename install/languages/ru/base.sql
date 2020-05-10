@@ -5,8 +5,6 @@ CREATE TABLE `{#}layout_cols` (
   `title` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT 'Название позиции',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Порядок колонки в исходном коде',
-  `is_body` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить тело страницы',
-  `is_breadcrumb` tinyint(1) UNSIGNED DEFAULT NULL COMMENT 'Выводить глубиномер',
   `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс колонки',
   `options` text COMMENT 'Опции колонки',
   PRIMARY KEY (`id`),
@@ -21,7 +19,6 @@ CREATE TABLE `{#}layout_rows` (
   `title` varchar(255) DEFAULT NULL,
   `template` varchar(30) DEFAULT NULL COMMENT 'Привязка к шаблону',
   `ordering` int(11) DEFAULT NULL COMMENT 'Порядок ряда в исходном коде',
-  `groups` text COMMENT 'Доступ для показа',
   `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Позиция вложенного ряда',
   `class` varchar(100) DEFAULT NULL COMMENT 'CSS класс ряда',
   `options` text COMMENT 'Опции ряда',
@@ -1764,7 +1761,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (16, 'photos', 'list', 'Список фотографий', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (17, 'groups', 'list', 'Список групп', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (18, 'subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

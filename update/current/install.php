@@ -7,6 +7,10 @@ function install_package(){
 	$core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
 
+    if(!$core->db->getRowsCount('widgets', "`controller` IS NULL AND name = 'template'")){
+        $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES (NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////// Новые правила доступа ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////

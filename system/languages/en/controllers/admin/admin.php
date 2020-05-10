@@ -389,8 +389,6 @@
     define('LANG_CP_WIDGETS_COL_COUNT',         'Columns count');
     define('LANG_CP_WIDGETS_COL_NAME',          'Position name');
     define('LANG_CP_WIDGETS_COL_NAME_HINT',     'Not specified, will be generated automatically. Must be unique.');
-    define('LANG_CP_WIDGETS_COL_IS_BODY',       'Display page body');
-    define('LANG_CP_WIDGETS_COL_IS_BREADCRUMB', 'Display breadcrumb');
     define('LANG_CP_WIDGETS_PAGE',              'Page');
     define('LANG_CP_WIDGETS_PAGES',             'Pages');
     define('LANG_CP_WIDGETS_ALL',               'All widgets');

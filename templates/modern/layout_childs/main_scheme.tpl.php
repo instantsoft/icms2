@@ -1,7 +1,5 @@
 <?php foreach ($rows as $row) { ?>
-    <?php if((!$row['has_body'] || ($row['has_body'] && !$this->isBody())) &&
-            (!$row['has_breadcrumb'] || ($row['has_breadcrumb'] && (!$config->show_breadcrumbs || !$core->uri || !$this->isBreadcrumbs()))) &&
-            !$this->hasWidgetsOn($row['positions'])){ ?>
+    <?php if(!$this->hasWidgetsOn($row['positions'])){ ?>
         <?php continue; ?>
     <?php } ?>
     <?php if (!empty($row['options']['parrent_tag'])) { ?>
@@ -79,16 +77,7 @@
             <?php if(!empty($col['rows']['before'])){ ?>
                 <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
             <?php } ?>
-            <?php if($col['is_body']){ ?>
-                <div id="controller_wrap">
-                    <?php $this->block('before_body'); ?>
-                    <?php $this->body(); ?>
-                </div>
-            <?php } elseif($col['is_breadcrumb']) { ?>
-                <?php $this->breadcrumbs(array('strip_last'=>false)); ?>
-            <?php } else { ?>
-                <?php $this->widgets($col['name']); ?>
-            <?php } ?>
+            <?php $this->widgets($col['name']); ?>
             <?php if(!empty($col['rows']['after'])){ ?>
                 <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
             <?php } ?>

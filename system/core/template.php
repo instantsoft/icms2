@@ -2733,7 +2733,7 @@ class cmsTemplate {
 
             // Нет файла схемы, грузим схему из базы
             if(!$this->getSchemeHTMLFile()){
-                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name, cmsUser::getInstance());
+                $rows = cmsCore::getModel('widgets')->getLayoutRows($this->name);
             }
 
             ob_start();
