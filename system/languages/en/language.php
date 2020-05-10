@@ -185,6 +185,7 @@
     define('LANG_PARSER_IMAGE_SIZE_ORIGINAL','Original');
     define('LANG_PARSER_COLOR',              'Colorpicker');
     define('LANG_PARSER_COLOR_CT',           'Color selection block type');
+    define('LANG_PARSER_COLOR_OPACITY',      'Enable color transparency');
     define('LANG_PARSER_COLOR_CT_HUE',       'Hue');
     define('LANG_PARSER_COLOR_CT_SATURATION', 'Saturation');
     define('LANG_PARSER_COLOR_CT_BRIGHTNESS', 'Brightness');

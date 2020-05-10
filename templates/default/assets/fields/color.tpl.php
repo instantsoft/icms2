@@ -15,6 +15,10 @@
                 $(this).minicolors('hide');
             },
         <?php } ?>
-        control: '<?php echo $field->getOption('control_type', 'hue'); ?>'
+        control: '<?php echo $field->getOption('control_type', 'hue'); ?>',
+	<?php if($field->getOption('opacity')){ ?>
+            opacity: true,
+            format: 'rgb'			
+        <?php } ?>		
     });
 </script>

@@ -117,7 +117,7 @@ function check_db(){
     if ($success === true){
 
         $dir_install_upload = PATH . DS . 'upload';
-        $dir_upload = DOC_ROOT . DS . 'upload';
+        $dir_upload = dirname(PATH) . DS . 'upload';
         copy_folder($dir_install_upload, $dir_upload);
 
         if (!$db['users_exists']){

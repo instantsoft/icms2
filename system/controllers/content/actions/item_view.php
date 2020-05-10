@@ -388,7 +388,7 @@ class actionContentItemView extends cmsAction {
 
             if ($item['parent_id'] && !empty($ctype['is_in_groups'])){
 
-                $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups'));
+                $this->cms_template->addBreadcrumb(LANG_GROUPS, href_to('groups')); 
                 $this->cms_template->addBreadcrumb($item['parent_title'], rel_to_href(str_replace('/content/'.$ctype['name'], '', $item['parent_url'])));
                 if ($ctype['options']['list_on']){
                     $this->cms_template->addBreadcrumb((empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile']), rel_to_href($item['parent_url']));
@@ -397,15 +397,17 @@ class actionContentItemView extends cmsAction {
             } else {
 
                 if ($ctype['options']['list_on']){
+				
+                    $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
 
-                    $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list'];
-
-                    $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
+                    $list_header = empty($ctype['labels']['list']) ? $ctype['title'] : $ctype['labels']['list']; 
+					
+                    if(!empty($base_url)){
+                        $this->cms_template->addBreadcrumb($list_header, href_to($ctype['name']));
+                    }                    
 
                     if (isset($item['category'])){
-
-                        $base_url = ($this->cms_config->ctype_default && in_array($ctype['name'], $this->cms_config->ctype_default)) ? '' : $ctype['name'];
-
+					
                         if(!empty($item['category']['path'])){
                             foreach($item['category']['path'] as $c){
                                 $this->cms_template->addBreadcrumb($c['title'], href_to($base_url, $c['slug']));

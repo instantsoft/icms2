@@ -4,8 +4,20 @@
  */
 function install_package(){
 
-	$core = cmsCore::getInstance();
+    $core = cmsCore::getInstance();
     $admin = cmsCore::getController('admin');
+    
+    if(!$core->db->isFieldExists('geo_countries', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_countries` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+    
+    if(!$core->db->isFieldExists('geo_regions', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_regions` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
+    
+    if(!$core->db->isFieldExists('geo_cities', 'is_enabled')){
+        $core->db->query("ALTER TABLE `{#}geo_cities` ADD `is_enabled` TINYINT(1) UNSIGNED NULL DEFAULT '1' AFTER `ordering`;");
+    }
 
     if(!$core->db->getRowsCount('widgets', "`controller` IS NULL AND name = 'template'")){
         $core->db->query("INSERT INTO `{#}widgets` (`controller`, `name`, `title`, `author`, `url`, `version`, `is_external`, `files`) VALUES (NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL, NULL);");

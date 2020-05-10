@@ -115,6 +115,7 @@ CREATE TABLE `{#}activity_types` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `title`, `description`) VALUES
+(1, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s'),
 (2, 1, 'comments', 'vote.comment', 'Rating comments', 'evaluate a comment on the %s page'),
 (7, 1, 'users', 'friendship', 'Friendship', 'and %s became friends'),
 (8, 1, 'users', 'signup', 'New users', 'registered. Welcome!'),
@@ -123,8 +124,7 @@ INSERT INTO `{#}activity_types` (`id`, `is_enabled`, `controller`, `name`, `titl
 (12, 1, 'users', 'status', 'Status changing', '&rarr; %s'),
 (18, 1, 'photos', 'add.photos', 'Photo uploading', 'uploaded photos to the album %s'),
 (19, 1, 'users', 'avatar', 'Avatar changing', 'changed avatar'),
-(20, 1, 'content', 'add.pages', 'Adding pages', 'added the page %s'),
-(21, 1, 'subscriptions', 'subscribe', 'Subscription to content', 'subscribes to the %s list');
+(20, 1, 'subscriptions', 'subscribe', 'Subscription to content', 'subscribes to the %s list');
 
 DROP TABLE IF EXISTS `{#}comments`;
 CREATE TABLE `{#}comments` (
@@ -1026,7 +1026,6 @@ CREATE TABLE `{#}menu_items` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Menu items';
 
 INSERT INTO `{#}menu_items` (`id`, `menu_id`, `parent_id`, `title`, `url`, `ordering`, `options`, `groups_view`, `groups_hide`) VALUES
-(6, 1, 0, 'Photos', 'albums', 4, '---\ntarget: _self\nclass:', '---\n- 0\n', NULL),
 (13, 2, 0, 'My profile', 'users/{user.id}', 1, '---\ntarget: _self\nclass: profile', '---\n- 0\n', NULL),
 (14, 2, 0, 'My messages', '{messages:view}', 2, '---\ntarget: _self\nclass: messages messages-counter ajax-modal', '---\n- 0\n', NULL),
 (24, 2, 0, 'Add', '{content:add}', 6, '---\ntarget: _self\nclass: add', '---\n- 0\n', NULL),
