@@ -8,7 +8,7 @@ class fieldColor extends cmsFormField {
     public $filter_type = 'str';
     public $var_type    = 'string';
 
-    public function getOptions(){
+    public function getOptions() {
         return array(
             new fieldList('control_type', array(
                 'title'   => LANG_PARSER_COLOR_CT,
@@ -23,7 +23,7 @@ class fieldColor extends cmsFormField {
             )),
             new fieldCheckbox('opacity', array(
                 'title'   => LANG_PARSER_COLOR_OPACITY,
-                'default' => false                
+                'default' => false
             )),
             new fieldString('swatches', array(
                 'title'   => LANG_PARSER_COLOR_CT_SWATCHES_OPT,
@@ -40,11 +40,11 @@ class fieldColor extends cmsFormField {
 
     }
 
-    public function parse($value){
-        return '<div class="color-block" style="background-color:'.$value.'" title="'.$value.'"></div>';
+    public function parse($value) {
+        return '<div class="color-block" style="background-color:' . $value . '" title="' . html($value, false) . '"></div>';
     }
 
-    public function getStringValue($value){ 
+    public function getStringValue($value) {
         return $value;
     }
 
@@ -56,19 +56,26 @@ class fieldColor extends cmsFormField {
 
         $_swatches = $this->getOption('swatches');
 
-        if($_swatches){
+        if ($_swatches) {
 
             $swatches = explode(',', $_swatches);
 
-            foreach($swatches as $id => $rgb){
+            foreach ($swatches as $id => $rgb) {
                 $swatches[$id] = trim($rgb);
             }
-
         } else {
-            $swatches = array();
+            $swatches = [];
         }
 
-        $this->setOption('swatches', $swatches);
+        $this->data['minicolors_options'] = [
+            'swatches' => $swatches,
+            'control' => $this->getOption('control_type', 'hue')
+        ];
+
+        if($this->getOption('opacity')){
+            $this->data['minicolors_options']['format'] = 'rgb';
+            $this->data['minicolors_options']['opacity'] = true;
+        }
 
         return parent::getInput($value);
 

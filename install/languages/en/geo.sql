@@ -5,6 +5,7 @@ CREATE TABLE `{#}geo_cities` (
   `region_id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(128) NOT NULL DEFAULT '',
   `ordering` int(11) unsigned NOT NULL DEFAULT '10000',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`),
   KEY `region_id` (`region_id`)
@@ -39482,6 +39483,7 @@ CREATE TABLE `{#}geo_countries` (
   `name` varchar(128) NOT NULL DEFAULT '',
   `ordering` int(11) unsigned NOT NULL DEFAULT '100',
   `alpha2` char(2) DEFAULT NULL,
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
   KEY `ordering` (`ordering`),
@@ -39767,6 +39769,7 @@ CREATE TABLE `{#}geo_regions` (
   `country_id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(64) NOT NULL DEFAULT '',
   `ordering` int(11) unsigned NOT NULL DEFAULT '1000',
+  `is_enabled` tinyint(1) UNSIGNED DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `country_id` (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

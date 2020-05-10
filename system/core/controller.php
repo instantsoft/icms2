@@ -1314,19 +1314,19 @@ class cmsController {
         return true;
     }
 
-    public function validate_color($value){
-        if (empty($value)) { return true; } 
-        if (!is_string($value)) { return ERR_VALIDATE_INVALID; } 
-        if(strlen($value) <= 7){
+    public function validate_color($value) {
+        if (empty($value)) { return true; }
+        if (!is_string($value)) { return ERR_VALIDATE_INVALID; }
+        if (strlen($value) <= 7) {
             $value = ltrim($value, '#');
-            if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)){
+            if (ctype_xdigit($value) && (strlen($value) == 6 || strlen($value) == 3)) {
                 return true;
             }
-        }else{ 
-            if(preg_match("/^rgba\((\s*\d+\s*,){3} [\d\.]+\)$/i", $value)){
+        } else {
+            if (preg_match("/^rgba\((\s*\d+\s*,){3} [\d\.]+\)$/i", $value)) {
                 return true;
-            }		
-        }       
+            }
+        }
         return ERR_VALIDATE_INVALID;
     }
 

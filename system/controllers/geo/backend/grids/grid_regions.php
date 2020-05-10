@@ -1,6 +1,6 @@
 <?php
 
-function grid_regions($controller){
+function grid_regions($controller) {
 
     $options = array(
         'is_sortable'   => true,
@@ -21,24 +21,23 @@ function grid_regions($controller){
             'filter' => 'exact'
         ),
         'name' => array(
-            'title'  => LANG_TITLE,
-            'href'   => href_to($controller->root_url, 'cities', array('{id}', '{country_id}')),
-            'filter' => 'like',
+            'title'    => LANG_TITLE,
+            'href'     => href_to($controller->root_url, 'cities', array('{id}', '{country_id}')),
+            'filter'   => 'like',
             'editable' => array(
                 'table' => 'geo_regions'
             )
-        ),
-        'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-            'class' => 'd-none d-sm-table-cell',
-            'flag' => true,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_regions', 'is_enabled')),
-            'width' => 80
         ),
         'ordering' => array(
             'title' => LANG_GEO_POSITION,
             'class' => 'd-none d-lg-table-cell',
             'width' => 60
+        ),
+        'is_enabled' => array(
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_regions', 'is_enabled')),
+            'width'       => 80
         )
     );
 

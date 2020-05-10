@@ -14,12 +14,8 @@
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
         <?php $this->addMainTplJSName('core'); ?>
         <?php $this->addMainTplJSName('modal'); ?>
-        <?php if ($config->debug && cmsUser::isAdmin()) { ?>
-            <?php $this->addTplCSSName('debug'); ?>
-        <?php } ?>
 
         <?php $this->head(true, false, true); ?>
-
     </head>
     <body id="<?php echo $device_type; ?>_device_type">
         <?php if (!$config->is_site_on){ ?>

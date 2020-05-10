@@ -185,7 +185,7 @@
         <div class="d-none d-md-block">
             <?php if ($config->debug){ ?>
                 <span class="item">
-                    <a href="#debug_block" data-toggle="modal" data-target="#debug_block" title="<?php echo LANG_DEBUG; ?>">
+                    <a href="#debug_block" class="ajax-modal" title="<?php echo LANG_DEBUG; ?>">
                         <?php echo LANG_DEBUG; ?>
                     </a>
                 </span> &mdash;
@@ -204,7 +204,7 @@
         </div>
     </footer>
     <?php if ($config->debug){ ?>
-        <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance())); ?>
+        <?php $this->renderAsset('ui/debug', array('core' => cmsCore::getInstance(), 'hide_short_info' => true)); ?>
     <?php } ?>
     <script>
         $(function(){

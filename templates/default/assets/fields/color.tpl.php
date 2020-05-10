@@ -7,18 +7,16 @@
 
 <?php echo html_input(($field->getOption('control_type')=='swatches' ? 'hidden' : 'text'), $field->element_name, $value, array('id'=>$field->id, 'autocomplete' => 'off')); ?>
 
+<?php ob_start(); ?>
 <script type="text/javascript">
-    $('input#<?php echo $field->id; ?>').minicolors({
-        swatches: <?php echo json_encode($field->getOption('swatches')); ?>,
+    $(function(){
+        var minicolors_options = <?php echo json_encode($field->data['minicolors_options']); ?>;
         <?php if($field->getOption('control_type')=='swatches'){ ?>
-            change: function(value, opacity) {
+            minicolors_options.change = function(value, opacity) {
                 $(this).minicolors('hide');
-            },
+            };
         <?php } ?>
-        control: '<?php echo $field->getOption('control_type', 'hue'); ?>',
-	<?php if($field->getOption('opacity')){ ?>
-            opacity: true,
-            format: 'rgb'			
-        <?php } ?>		
+        $('input#<?php echo $field->id; ?>').minicolors(minicolors_options);
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

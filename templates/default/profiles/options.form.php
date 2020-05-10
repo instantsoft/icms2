@@ -20,11 +20,11 @@ class formTemplateProfileOptions extends cmsForm {
                     )),
 
                     new fieldColor('bg_color', array(
-                        'title' => LANG_DEFAULT_THEME_BG_COLOR,		
+                        'title' => LANG_DEFAULT_THEME_BG_COLOR,
                         'default' => '#FFFFFF',
-			'options' => array(
+                        'options' => array(
                             'opacity' => true
-                        )						
+                        )
                     )),
 
                     new fieldList('bg_repeat', array(

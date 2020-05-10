@@ -1,6 +1,6 @@
 <?php
 
-function grid_countries($controller){
+function grid_countries($controller) {
 
     $options = array(
         'is_sortable'   => true,
@@ -14,7 +14,7 @@ function grid_countries($controller){
     );
 
     $columns = array(
-		'id' => array(
+        'id' => array(
             'title'  => 'ID',
             'width'  => 20,
             'class'  => 'd-none d-lg-table-cell',
@@ -29,24 +29,24 @@ function grid_countries($controller){
             )
         ),
         'alpha2' => array(
-            'title'  => LANG_GEO_ALPHA2,
-            'width'  => 250,
-            'filter' => 'like',
+            'title'    => LANG_GEO_ALPHA2,
+            'class'    => 'd-none d-sm-table-cell',
+            'width'    => 250,
+            'filter'   => 'like',
             'editable' => array(
                 'table' => 'geo_countries'
             )
-        ),
-        'is_enabled' => array(
-            'title' => LANG_IS_ENABLED,
-            'class' => 'd-none d-sm-table-cell',
-            'flag' => true,
-            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_countries', 'is_enabled')),
-            'width' => 80
         ),
         'ordering' => array(
             'title' => LANG_GEO_POSITION,
             'class' => 'd-none d-lg-table-cell',
             'width' => 60
+        ),
+        'is_enabled' => array(
+            'title'       => LANG_IS_ENABLED,
+            'flag'        => true,
+            'flag_toggle' => href_to($controller->root_url, 'toggle_item', array('{id}', 'geo_countries', 'is_enabled')),
+            'width'       => 80
         )
     );
 
