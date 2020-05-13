@@ -7,6 +7,7 @@ class widgetTemplate extends cmsWidget {
 
         $messages = [];
         $template = cmsTemplate::getInstance();
+        $config   = cmsConfig::getInstance();
 
         $type = $this->getOption('type');
 
@@ -20,11 +21,15 @@ class widgetTemplate extends cmsWidget {
             }
         } elseif($type === 'smessages') {
             $messages = cmsUser::getSessionMessages();
-        } else {
-            return false;
+        } elseif($type === 'site_closed') {
+            if ($config->is_site_on){
+                return false;
+            }
         }
 
         return [
+            'core'     => cmsCore::getInstance(),
+            'config'   => $config,
             'messages' => $messages
         ];
 

@@ -17,8 +17,10 @@
     <?php } ?>
 
 </div>
+<?php ob_start(); ?>
 <script type="text/javascript">
     $(function (){
         initTabs('#comments_widget');
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

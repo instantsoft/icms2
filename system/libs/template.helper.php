@@ -1,5 +1,19 @@
 <?php
 /**
+ * Выводит инлайновую svg иконку
+ * @staticvar string $template_path
+ * @param string $file Имя файла SVG спрайта в templates/NAME/images/icons/
+ * @param string $name Имя иконки
+ * @param integer $size Размер
+ */
+function html_svg_icon($file, $name, $size = 16){
+    static $template_path = null;
+    if(!isset($template_path)){
+        $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/');
+    }
+	echo '<svg class="icms-svg-icon icms-svg-icon-w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
+}
+/**
  * Выводит тег <a>
  * @param string $title Название
  * @param string $href Ссылка

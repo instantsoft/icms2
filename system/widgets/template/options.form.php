@@ -14,9 +14,12 @@ class formWidgetTemplateOptions extends cmsForm {
                     new fieldList('options:type', array(
                         'title' => LANG_WD_T_TYPE,
                         'items' => [
-                            'body' => LANG_PAGE_BODY,
+                            'body'        => LANG_PAGE_BODY,
                             'breadcrumbs' => LANG_PAGE_BREADCRUMB,
-                            'smessages' => LANG_WD_T_SMESSAGES
+                            'smessages'   => LANG_WD_T_SMESSAGES,
+                            'copyright'   => LANG_WD_T_COPYRIGHT,
+                            'logo'        => LANG_WD_T_LOGO,
+                            'site_closed' => LANG_WD_T_SITE_CLOSED
                         ]
                     )),
 

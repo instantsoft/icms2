@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php echo cmsCore::getLanguageName(); ?>">
+<html lang="<?php echo cmsCore::getLanguageName(); ?>" class="h-100">
     <head>
         <title><?php $this->title(); ?></title>
         <meta charset="utf-8">
@@ -9,31 +9,20 @@
         <meta name="generator" content="InstantCMS" />
         <?php $this->addMainTplCSSName([
             'vendors/bootstrap/bootstrap.min',
+            'theme',
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
         <?php $this->addMainTplJSName('core'); ?>
         <?php $this->addMainTplJSName('modal'); ?>
-
         <?php $this->head(true, false, true); ?>
     </head>
-    <body id="<?php echo $device_type; ?>_device_type">
-        <?php if (!$config->is_site_on){ ?>
-            <div id="site_off_notice" class="bg-warning">
-                <div class="container py-2 text-secondary">
-                    <?php if (cmsUser::isAdmin()){ ?>
-                        <?php printf(ERR_SITE_OFFLINE_FULL, href_to('admin', 'settings', 'siteon')); ?>
-                    <?php } else { ?>
-                        <?php echo ERR_SITE_OFFLINE; ?>
-                    <?php } ?>
-                </div>
-            </div>
-        <?php } ?>
+    <body id="<?php echo $device_type; ?>_device_type" class="d-flex flex-column h-100">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
+        <?php $this->printJavascriptTags(); ?>
+        <?php $this->bottom(); ?>
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
             <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
         <?php } ?>
-        <?php $this->printJavascriptTags(); ?>
-        <?php $this->bottom(); ?>
     </body>
 </html>

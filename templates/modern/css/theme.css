@@ -1,0 +1,15 @@
+.icms-svg-icon {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+.icms-svg-icon-w-16 {
+    width: 1em;
+}
+.icms-links-inherit-color > a {
+    color: inherit;
+    text-decoration: underline;
+}

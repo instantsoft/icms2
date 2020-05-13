@@ -8,7 +8,7 @@ icms.admin = (function ($) {
 
         $('.cp_toolbar').on('click', 'a.scroll_top', function(event){
             $('body,html').animate({
-                scrollTop: 0 ,
+                scrollTop: 0
             }, 200);
             return false;
         });

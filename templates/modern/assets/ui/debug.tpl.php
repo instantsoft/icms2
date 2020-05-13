@@ -3,23 +3,17 @@ $points_data = cmsDebugging::getPointsData();
 $points_tab = cmsDebugging::getPointsTargets();
 $active_tab = false;
 ?>
-<?php if(empty($hide_short_info)){ ?>
-<div class="container">
-    <span class="item">
-        <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
-    </span>
-    <span class="item">
-        <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
-    </span>
-    <span class="item">
-        Time: <?php echo cmsDebugging::getTime('cms', 4); ?> s
-    </span>
-    <span class="item">
-        Mem: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?> Mb
-    </span>
-</div>
-<?php } ?>
 <div id="debug_block" class="d-none">
+    <?php if(empty($hide_short_info)){ ?>
+    <div class="alert alert-primary" role="alert">
+        <span>
+            Time: <?php echo cmsDebugging::getTime('cms', 4); ?>s
+        </span>
+        <span>
+            Mem: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?>Mb
+        </span>
+    </div>
+    <?php } ?>
     <ul class="nav nav-tabs" role="tablist">
         <?php foreach($points_tab as $tab_name => $tab) { ?>
             <li class="nav-item">

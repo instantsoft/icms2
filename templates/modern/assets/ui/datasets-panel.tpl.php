@@ -1,6 +1,6 @@
 <?php if(!isset($ds_prefix)){ $ds_prefix = '/'; } ?>
 <?php $active_filters_query = $this->controller->getActiveFiltersQuery(); ?>
-<div class="content_datasets">
+<div class="content_datasets mb-2">
     <ul class="nav nav-pills pills-menu">
         <?php $ds_counter = 0; ?>
         <?php foreach($datasets as $set){ ?>
