@@ -1,0 +1,78 @@
+@import "../bootstrap/bootstrap";
+.icms-svg-icon {
+    display: inline-block;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    fill: currentColor;
+}
+.icms-svg-icon-w-16 {
+    width: 1em;
+}
+.icms-links-inherit-color > a {
+    color: inherit;
+    text-decoration: underline;
+}
+.btn.is-busy * {
+    -webkit-transition: none;
+    transition: none;
+    visibility: hidden;
+}
+.btn.is-busy:after {
+    content: '';
+    display: block;
+    width: ($input-btn-padding-x * 2);
+    height: ($input-btn-padding-x * 2);
+    margin: -$input-btn-padding-x -($input-btn-padding-x * 2);
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 5px solid;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-radius: 50%;
+    color: inherit;
+    background-color: transparent;
+    -webkit-animation: loader-button 0.9s linear infinite;
+    animation: loader-button 0.9s linear infinite;
+    z-index: 99;
+}
+.spinner {
+    width: 70px;
+    height: 40px;
+    margin: -20px 0 0 -35px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    > div {
+        width: 18px;
+        height: 18px;
+        background-color: $primary;
+        border-radius: 100%;
+        display: inline-block;
+        animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+        &.bounce1 {
+            animation-delay: -0.32s;
+        }
+        &.bounce2 {
+            animation-delay: -0.16s;
+        }
+    }
+}
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+@-webkit-keyframes loader-button{
+    100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@keyframes loader-button{
+    100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}
+}

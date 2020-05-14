@@ -563,6 +563,7 @@
     define('LANG_CP_MEMCACHE_NOT_AVAILABLE',    'Модуль Memcached не найден');
     define('LANG_CP_MEMCACHE_CONNECT_ERROR',    'Не удалось подключиться к Memcached - проверьте сервер и порт');
 
+    define('LANG_CP_FILE_NOT_WRITABLE',         'Невозможно перезаписать файл "%s". Установите для него права на запись.');
     define('LANG_CP_SETTINGS_NOT_WRITABLE',     'Ошибка перезаписи файла конфигурации');
     define('LANG_CP_SETTINGS_TPL_NOT_WRITABLE', 'Файл конфигурации темы недоступен для записи');
     define('LANG_CP_SAVE_SUCCESS',              'Настройки успешно сохранены');

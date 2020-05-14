@@ -40,10 +40,13 @@ class formModernTemplateOptions extends cmsForm {
                         'title' => LANG_MODERN_THEME_ENABLE_GRADIENTS
                     )),
 
-                    new fieldNumber('scss:grid-gutter-width', array(
+                    new fieldCheckbox('scss:enable-responsive-font-sizes', array(
+                        'title' => LANG_MODERN_THEME_ENABLE_RFS
+                    )),
+
+                    new fieldString('scss:grid-gutter-width', array(
                         'title' => 'grid-gutter-width',
-                        'units' => 'px',
-                        'default' => 30
+                        'default' => '30px'
                     )),
 
                 )

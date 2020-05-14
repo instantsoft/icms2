@@ -1741,7 +1741,7 @@ class cmsTemplate {
      * Возвращает путь к файлу шаблона
      * @param string $relative_path Путь относительно корня шаблона. Без первого слеша
      * @param boolean $return_abs_path Возвращать полный путь в файловой системе, по умолчанию true
-     * @return string | boolean
+     * @return string|array|boolean
      */
     public function getTplFilePath($relative_path, $return_abs_path = true) {
 

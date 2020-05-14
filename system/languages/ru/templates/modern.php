@@ -9,3 +9,4 @@ define('LANG_MODERN_THEME_COPYRIGHT_YEAR_HINT', 'Если не указан, в�
 define('LANG_MODERN_THEME_ENABLE_ROUNDED', 'Включить скругление углов');
 define('LANG_MODERN_THEME_ENABLE_SHADOWS', 'Включить тени');
 define('LANG_MODERN_THEME_ENABLE_GRADIENTS', 'Включить градиенты');
+define('LANG_MODERN_THEME_ENABLE_RFS', 'Включить адаптивные размеры шрифтов');

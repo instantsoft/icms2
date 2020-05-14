@@ -1,0 +1,19 @@
+.unsubscribe .icon-bell {
+    display: none;
+}
+.subscribe .icon-bell-slash {
+    display: none;
+}
+.count-subscribers:after {
+    border-color: transparent $secondary;
+    border-style: solid;
+    border-width: 6px 6px 6px 0;
+    content: "";
+    left: -7px;
+    position: absolute;
+    top: 0.7rem;
+}
+.subscriptions_buttons .subscribe_wrap {
+    float: none !important;
+    margin: 0 !important;
+}

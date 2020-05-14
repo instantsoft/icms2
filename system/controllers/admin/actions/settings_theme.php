@@ -40,9 +40,15 @@ class actionAdminSettingsTheme extends cmsAction {
 
         }
 
-        $this->cms_template->setName($template_name);
+        if($template_name !== 'default'){
 
-        $this->cms_template->setInheritNames($this->cms_template->getInheritTemplates());
+            $inherit_templates = $this->cms_template->getInheritTemplates();
+            $inherit_templates[] = $template_name;
+
+            $inherit_templates = array_unique($inherit_templates);
+
+            $this->cms_template->setInheritNames($inherit_templates);
+        }
 
         return $this->cms_template->render('settings_theme', array(
             'template_name' => $template_name,

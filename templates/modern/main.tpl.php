@@ -8,7 +8,6 @@
         <meta name="csrf-token" content="<?php echo cmsForm::getCSRFToken(); ?>" />
         <meta name="generator" content="InstantCMS" />
         <?php $this->addMainTplCSSName([
-            'vendors/bootstrap/bootstrap.min',
             'theme',
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>

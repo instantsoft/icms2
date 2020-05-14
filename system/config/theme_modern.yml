@@ -6,7 +6,8 @@ scss:
   enable-rounded: 1
   enable-shadows: null
   enable-gradients: null
-  grid-gutter-width: 30
+  enable-responsive-font-sizes: 1
+  grid-gutter-width: 30px
   white: '#ffffff'
   gray-100: '#f8f9fa'
   gray-200: '#e9ecef'
