@@ -7,10 +7,10 @@ $active_tab = false;
     <?php if(empty($hide_short_info)){ ?>
     <div class="alert alert-primary" role="alert">
         <span>
-            Time: <?php echo cmsDebugging::getTime('cms', 4); ?>s
+            <?php echo LANG_DEBUG_GEN_TIME; ?>: <?php echo cmsDebugging::getTime('cms', 4); ?> <?php echo LANG_SECOND2; ?>,
         </span>
         <span>
-            Mem: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?>Mb
+            <?php echo LANG_DEBUG_MEM; ?>: <?php echo round(memory_get_usage(true)/1024/1024, 2); ?> <?php echo LANG_MB; ?>.
         </span>
     </div>
     <?php } ?>

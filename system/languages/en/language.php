@@ -669,6 +669,8 @@
     define('LANG_ICONS_BY_FATCOW',           'Icons by <a href="https://icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Successfully saved');
 
+    define('LANG_DEBUG_MEM',                 'memory');
+    define('LANG_DEBUG_GEN_TIME',            'Page Generation Time');
     define('LANG_DEBUG_QUERY_TIME',          'Runtime');
     define('LANG_DEBUG',                     'Debugging');
     define('LANG_DEBUG_TAB_DB',              'SQL');

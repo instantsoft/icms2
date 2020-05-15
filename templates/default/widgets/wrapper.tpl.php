@@ -18,6 +18,7 @@
         <?php echo $widget['body']; ?>
     </div>
     <?php if(cmsUser::isAdmin()){ ?>
+        <?php $this->addTplJSName('widgets'); ?>
         <?php include 'wrap_edit_links.tpl.php'; ?>
     <?php } ?>
 </div>

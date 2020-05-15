@@ -32,8 +32,10 @@ icms.subscriptions = (function ($) {
 
             var list_title = $(this).attr('title');
 
+            icms.modal.showSpinner();
+
             $.get($(this).data('list_link'), {}, function(data){
-                icms.modal.openHtml(data.html, list_title);
+                icms.modal.showContent(list_title, data.html);
             }, 'json');
 
             return false;

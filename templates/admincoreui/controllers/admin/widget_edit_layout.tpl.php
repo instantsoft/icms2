@@ -30,12 +30,17 @@
     ]); ?>
     <?php $this->head(false); ?>
 </head>
-<body id="widgets_layout" class="m-3">
+<body id="widgets_layout" class="m-3" onload="top.postMessage($('html').height(), '*');" onresize="top.postMessage($('html').height(), '*');">
     <?php $this->body(); ?>
     <script type="text/javascript">
         function widgetUpdated(widget, result){
             window.parent.location.reload();
         }
+        $(function(){
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $('body').trigger('resize');
+            });
+        });
     </script>
     <?php $this->bottom(); ?>
 </body>

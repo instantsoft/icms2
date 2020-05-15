@@ -17,4 +17,8 @@
     <div class="card-body<?php if ($widget['class']) { ?> <?php echo $widget['class'];  } ?>">
         <?php echo $widget['body']; ?>
     </div>
+    <?php if(cmsUser::isAdmin()){ ?>
+        <?php $this->addTplJSName('widgets'); ?>
+        <?php include 'wrap_edit_links.tpl.php'; ?>
+    <?php } ?>
 </div>

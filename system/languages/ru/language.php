@@ -667,6 +667,8 @@
     define('LANG_ICONS_BY_FATCOW',           'Иконки от <a href="https://ru.icons8.com/">Icons8</a>');
     define('LANG_SUCCESS_MSG',               'Данные успешно сохранены');
 
+    define('LANG_DEBUG_MEM',                 'память');
+    define('LANG_DEBUG_GEN_TIME',            'Время генерации страницы');
     define('LANG_DEBUG_QUERY_TIME',          'Время выполнения');
     define('LANG_DEBUG',                     'Отладка');
     define('LANG_DEBUG_TAB_DB',              'SQL');

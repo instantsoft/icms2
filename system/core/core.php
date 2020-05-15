@@ -848,7 +848,6 @@ class cmsCore {
             $user = cmsUser::getInstance();
 
             if($user->is_admin){
-                $template->addTplJSName('widgets');
                 cmsCore::loadControllerLanguage('admin');
             }
 

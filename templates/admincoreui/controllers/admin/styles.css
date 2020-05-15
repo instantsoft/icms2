@@ -5,6 +5,10 @@
     -o-filter:blur(2px);
     filter:blur(2px);
 }
+.modal-header .modal-close>svg {
+    fill: currentColor;
+    width: 1.25rem;
+}
 .cp_toolbar .dropdown-menu {
     min-width: 13rem;
 }

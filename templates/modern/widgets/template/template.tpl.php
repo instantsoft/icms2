@@ -42,7 +42,7 @@
     </span>
     <?php if ($config->debug && cmsUser::isAdmin()){ ?>
         <span class="item">
-            <a href="#debug_block" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
+            <a href="#debug_block" data-style="xl" title="<?php echo LANG_DEBUG; ?>" class="ajax-modal"><?php echo LANG_DEBUG; ?></a>
         </span>
     <?php } ?>
 <?php } elseif($widget->options['type'] === 'site_closed') { ?>
