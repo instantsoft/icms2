@@ -35,7 +35,7 @@
     define('LANG_GROUPS_ENTER',             'Подать заявку');
     define('LANG_GROUPS_ENTER_CONFIRM',     'Подать заявку на вступление в группу?');
     define('LANG_GROUPS_INVITE_FR',         'Пригласить друзей в группу');
-    define('LANG_GROUPS_INVITE',            'Пригласить пользователей в группу');
+    define('LANG_GROUPS_INVITE',            'Пригласить в группу');
     define('LANG_GROUPS_INVITE_USER',       'Пригласить пользователя в группу');
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Выберите пользователей');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s желает вступить в группу &laquo;%s&raquo;');

@@ -11,12 +11,13 @@
             'theme',
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
+        <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min',); ?>
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
         <?php $this->addMainTplJSName('core'); ?>
         <?php $this->addMainTplJSName('modal'); ?>
         <?php $this->head(true, false, true); ?>
     </head>
-    <body id="<?php echo $device_type; ?>_device_type" class="d-flex flex-column h-100">
+    <body id="<?php echo $device_type; ?>_device_type" data-device="<?php echo $device_type; ?>" class="d-flex flex-column h-100">
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>

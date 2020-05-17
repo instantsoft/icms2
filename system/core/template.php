@@ -446,7 +446,26 @@ class cmsTemplate {
         $root_len = strlen($this->site_config->root);
         $lang_len = $href_lang ? strlen($href_lang) : 0;
 
-        foreach($menu as $id=>$item){
+        foreach ($menu as $id => $item) {
+
+            // Строим атрибуты ссылок
+            $menu[$id]['attributes'] = [];
+
+            $onclick = isset($item['options']['onclick']) ? $item['options']['onclick'] : false;
+            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : $onclick;
+            if($onclick){
+                $menu[$id]['attributes']['onclick'] = $onclick;
+            }
+
+            if(!empty($item['options']['target'])){
+                $menu[$id]['attributes']['target'] = $item['options']['target'];
+            }
+
+            if (!empty($item['data'])) {
+                foreach ($item['data'] as $key => $val) {
+                    $menu[$id]['attributes']['data-' . $key] = html($val, false);
+                }
+            }
 
             $menu[$id]['disabled']     = !empty($item['disabled']);
             $menu[$id]['level']        = !isset($item['level']) ? 1 : $item['level'];
@@ -522,6 +541,7 @@ class cmsTemplate {
                     'childs_count' => ($first_level_count - $max_items),
                     'level'        => 1,
                     'disabled'     => false,
+                    'attributes'   => [],
                     'options'      => array(
                         'class' => 'more'
                     )
@@ -2424,10 +2444,11 @@ class cmsTemplate {
      * @param string $template Название файла шаблона меню в assets/ui/
      * @param string $menu_title Название(подпись) меню
      */
-    public function renderMenu($menu, $active_ids = array(), $css_class = 'menu', $max_items = 0, $template = 'menu', $menu_title = '') {
+    public function renderMenu($menu, $active_ids = [], $css_class = 'menu', $max_items = 0, $template = 'menu', $menu_title = '') {
 
         $this->renderAsset('ui/'.$template, [
             'menu'       => $menu,
+            'menu_id'    => preg_replace('/[0-9]+/', '', md5($css_class.microtime(true))),
             'active_ids' => $active_ids,
             'css_class'  => $css_class,
             'max_items'  => $max_items,

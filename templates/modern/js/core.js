@@ -15,7 +15,42 @@ $(document).ready(function(){
 
 icms.menu = (function ($) {
 
-    this.onDocumentReady = function(){};
+    this.onDocumentReady = function(){
+
+        var device_type = $('body').data('device');
+
+        if(device_type === 'desktop'){
+            $('a.dropdown-toggle').on( 'click', function (e) {
+                e.stopPropagation();
+            });
+        } else {
+
+            $('.dropdown-menu a.dropdown-toggle').on( 'click', function (e) {
+                var $el = $(this);
+                $el.toggleClass('active-dropdown');
+                if (!$( this ).next().hasClass('show')) {
+                    $( this ).parents('.dropdown-menu').first().find('.show').removeClass('show');
+                }
+                $(this).next('.dropdown-menu').toggleClass('show');
+
+                $(this).closest('li').toggleClass('show');
+
+                $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function ( e ) {
+                    $('.dropdown-menu .show').removeClass('show');
+                    $el.removeClass('active-dropdown');
+                });
+                return false;
+            });
+
+            $('.nav-item.dropdown').each(function (){
+                var link = $(this).find('>a');
+                if(link.attr('href').charAt(0) === '/'){
+                    $(this).find('>ul').append('<li class="dropdown-divider"></li>').append('<li class="nav-item"><a class="dropdown-item" href="'+link.attr('href')+'" >Все</a></li>');
+                }
+            });
+
+        }
+    };
 
     return this;
 
@@ -682,7 +717,7 @@ function addTextToPosition(field_id, text, spacer, spacer_stop){
 }
 function toggleFilter(){
     var filter = $('.filter-panel');
-    $('.filter-link', filter).toggle('fast');
+    $('.filter-link', filter).toggleClass('d-none');
     $('.filter-container', filter).slideToggle('fast');
 }
 function goBack(){

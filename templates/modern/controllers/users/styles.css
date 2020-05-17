@@ -1,0 +1,376 @@
+#user_profile {
+    clear:both;
+    overflow: hidden;
+}
+
+#user_profile_title {
+    margin-bottom: 20px;
+    overflow: hidden;
+    line-height: 42px;
+}
+#user_profile_title .name h1 {
+    margin: 0;
+}
+#user_profile_title .name h1 > sup {
+    font-size: 12px;
+    display: inline-block;
+    margin: -5px 0 0 0px;
+    background: none;
+    padding: 0;
+}
+#user_profile_title .name.name_with_status h1 {
+    font-size: 24px;
+}
+#user_profile_title .avatar, #user_profile_title .name {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#user_profile_title .avatar img { display:block; border-radius: 50%; }
+#user_profile_title .name_with_status { line-height: 28px; margin-top:-4px; }
+#user_profile_title .name a { color: #34495E; text-decoration: none; }
+#user_profile_title .name a:hover { text-decoration: underline; }
+
+#user_profile_title .status { font-size:12px; line-height: normal;  }
+#user_profile_title .status .text { color:#34495e; }
+#user_profile_title .status .reply {
+    margin-left:5px;
+    padding-left:18px;
+    background:url("../../images/icons/comment-small.png") no-repeat left center;
+}
+
+#user_profile_title .status .delete {
+    padding-left: 5px;
+}
+
+#user_profile_title .is_locked{
+    font-size: small;
+    color:red;
+    margin-left:15px;
+}
+
+/* ========================================================================== */
+
+#user_profile_rates, #user_profile_ratings {
+    float:right;
+    position: relative;
+}
+#user_profile_ratings {
+    margin-right: 10px;
+}
+#user_profile_rates .block, #user_profile_ratings .block {
+    line-height: 20px;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 21px;
+    background-color: #ecf0f1;
+    color: #555;
+    text-align: center;
+}
+#user_profile_ratings .block {
+    background-color: #2980b9;
+    color: #FFF;
+}
+.block .user_ratings_hint {
+    line-height: normal;
+    font-size: 12px;
+}
+#user_profile_ratings .positive { color:#FFF; }
+#user_profile_rates .negative { color:red; }
+#user_profile_rates .positive { color:green; }
+#user_profile_rates .karma .value,
+#user_profile_rates .karma .thumb{
+    display: inline-block;
+}
+#user_profile_rates .karma .thumb{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background: url("../../images/icons/vote_thumbs.png") no-repeat left center;
+    margin-top:2px;
+    opacity: 0.5;
+}
+#user_profile_rates .karma .thumb:hover{
+    opacity:1;
+}
+#user_profile_rates .karma .thumb_up{
+    background-position: 0 0;
+    margin-right:5px;
+}
+#user_profile_rates .karma .thumb_down{
+    background-position: -16px 0;
+    margin-left:5px;
+}
+
+/* ========================================================================== */
+
+#user_status_widget{
+    background-color:#F4FAFC;
+    padding:5px;
+    border-radius: 4px;
+    margin-top:-5px;
+    overflow: hidden;
+}
+
+#user_status_widget .input{
+    border-color:#A3CAE0; border-radius: 2px;
+}
+
+#user_status_widget.loading {
+    background-position: center center;
+}
+
+#user_status_widget.loading .input{
+    visibility: hidden;
+}
+
+/* ========================================================================== */
+
+#user_profile_tabs { margin-top:15px; }
+#user_content_pills { margin-bottom: 20px; }
+#user_content_folders { margin-bottom: 20px; }
+
+/* ========================================================================== */
+
+#user_profile #left_column {
+    float:left;
+}
+#user_profile #right_column {
+    overflow: auto;
+}
+
+#user_profile #left_column .block{
+    border:solid 1px #B3C2C9;
+    border-bottom: none;
+    margin-right: 15px;
+    min-width: 200px;
+    padding:10px;
+}
+
+#user_profile #left_column .block:last-child{
+    border-bottom:solid 1px #B3C2C9;
+}
+
+/* ========================================================================== */
+
+#user_profile #avatar {
+    padding-bottom:0px;
+    text-align: center;
+}
+
+/* ========================================================================== */
+
+#user_profile .block .details,
+#user_profile .block .details li {
+    margin:0;
+    padding:0;
+    list-style: none;
+    color:#68809B;
+    font-size:12px;
+}
+
+#user_profile .block .details strong,
+#user_profile .block .block-title {
+    color:#34495e;
+    font-weight:normal;
+}
+
+#user_profile .block .details .online{
+    color:green;
+}
+
+#user_profile .block .block-title {
+    margin-bottom:6px;
+    font-weight: bold;
+}
+
+/* ========================================================================== */
+
+#user_profile .block .content_counts,
+#user_profile .block .content_counts li {
+    list-style: none; margin:0; padding:0;
+}
+
+#user_profile .block .content_counts {
+    margin:-10px;
+}
+
+#user_profile .block .content_counts li {
+    border-bottom: solid 1px #B3C2C9;
+}
+
+#user_profile .block .content_counts li:last-child {
+    border:none;
+}
+
+#user_profile .block .content_counts a {
+    color: #68809B;
+    text-decoration:none;
+    display:block;
+    overflow:hidden;
+    height:24px;
+    line-height:24px;
+    padding:4px 10px;
+}
+
+#user_profile .block .content_counts a:hover {
+    background:#E1EBEF;
+}
+
+#user_profile .block .content_counts a .counter {
+    display:block;
+    overflow:hidden;
+    height:24px;
+    line-height:24px;
+    color:#34495E;
+    float:right;
+    padding:0 6px;
+    font-size:12px;
+}
+
+/* ========================================================================== */
+
+#user_profile .friends-list {
+    overflow: hidden;
+    max-width: 200px;
+}
+
+#user_profile .friends-list a {
+    text-decoration:none;
+    display: block;
+    float:left;
+    overflow: hidden;
+    margin-right: 1px;
+    margin-bottom: 1px;
+}
+
+#user_profile .friends-list a span {
+    display: block;
+    float: left;
+    height:32px;
+    line-height:32px;
+}
+
+#user_profile .friends-list a:hover {
+    opacity: 0.75;
+}
+
+/* ========================================================================== */
+
+#user_profile #information{
+    padding:0px;
+}
+
+#user_profile #information .fieldset_title{
+    border-top: dotted 1px #B3C2C9;
+    margin-bottom: 25px;
+    margin-top:10px;
+}
+
+#user_profile #information .fieldset_title h3{
+    margin:0;
+    margin-top:-10px;
+    background:#FFF;
+    padding-right:10px;
+    float:left;
+    color:#34495e;
+    font-weight: normal;
+    font-size:14px;
+}
+
+#user_profile #information .fieldset {
+    padding-bottom:15px;
+}
+
+#user_profile #information .fieldset .field {
+    margin-left:15px;
+    margin-bottom: 5px;
+}
+
+#user_profile #information .fieldset .field .title{
+    color:#68809B;
+}
+#users_profiles_list .field {
+    line-height: 18px;
+    color: #666;
+}
+#users_profiles_list .title_left {
+    display: inline-block;
+    margin-right: 10px;
+}
+#users_profiles_list .title_left + .value {
+    display: inline-block;
+}
+
+#users_profiles_list .title_top { margin-bottom:5px; }
+/* ========================================================================== */
+
+#users_karma_log_list .date{
+    color:#CCCCCC;
+    padding-left:5px;
+    font-size:12px;
+}
+
+#users_karma_log_list .comment{
+    margin-top: 4px;
+    line-height: 18px;
+}
+
+#users_karma_log_list .value{
+    float:right;
+    margin-right: 0;
+    border-radius: 4px;
+    padding:3px;
+}
+
+#users_karma_log_list .value span{
+    width:16px;
+    height:16px;
+    display: block;
+    text-indent: -10000px;
+    font-weight: bold;
+    background: url("../../images/icons/vote_thumbs.png") no-repeat left center;
+}
+
+#users_karma_log_list .positive{
+    border:solid 1px green;
+}
+#users_karma_log_list .positive span{
+    background-position:0 0;
+}
+
+#users_karma_log_list .negative{
+    border:solid 1px red;
+}
+#users_karma_log_list .negative span{
+    background-position:-16px 0;
+}
+
+#groups_invite_window{ padding:20px; }
+#groups_invite_window h3 { margin:0; }
+#groups_invite_window .list { margin:10px 0; }
+#groups_invite_window .list select { width:300px; }
+
+.buttons_delete_profile {
+    float: right;
+}
+input.button.delete_profile {
+    background: #c0392b;
+}
+input.button.delete_profile:hover {
+    background: #e74c3c;
+}
+
+@media screen and (max-width: 640px) {
+    #user_profile #left_column { float:none; }
+    #user_profile #left_column .block {
+        margin-right: 0;
+    }
+    #user_profile #left_column .block:last-child {
+        margin-bottom: 15px;
+    }
+    #user_profile #left_column #avatar { display: block; margin-right: 0; }
+    #user_profile #left_column #avatar img { width:100%; max-width:250px; }
+    #user_profile_title .avatar { display:none; }
+    #user_profile_title .name { padding-left:0; }
+}

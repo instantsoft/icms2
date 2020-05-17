@@ -2,12 +2,10 @@
 <?php $form_id = isset($form_id) ? $form_id : md5(microtime(true)); ?>
 <?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
 <?php $form_url = is_array($page_url) ? $page_url['base'] : $page_url; $form_url_sep = strpos($form_url, '?') === false ? '?' : '&'; ?>
-<div class="filter-panel gui-panel <?php echo $css_prefix;?>-filter">
-    <div class="filter-link" <?php if($filters || $is_expanded){ ?>style="display:none"<?php } ?>>
-        <a href="javascript:toggleFilter()">
-            <?php html_svg_icon('solid', 'filter'); ?> <span><?php echo LANG_SHOW_FILTER; ?></span>
-        </a>
-    </div>
+<div class="filter-panel gui-panel my-4 <?php echo $css_prefix;?>-filter">
+    <a class="filter-link btn btn-block btn-light text-left" href="javascript:toggleFilter()" <?php if($filters || $is_expanded){ ?>style="display:none"<?php } ?>>
+        <?php html_svg_icon('solid', 'filter'); ?> <span><?php echo LANG_SHOW_FILTER; ?></span>
+    </a>
     <div class="filter-container" <?php if(!$filters && !$is_expanded){ ?>style="display:none"<?php } ?>>
 		<div class="filter-close">
             <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>

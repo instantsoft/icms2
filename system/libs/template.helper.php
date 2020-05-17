@@ -11,7 +11,7 @@ function html_svg_icon($file, $name, $size = 16){
     if(!isset($template_path)){
         $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/');
     }
-	echo '<svg class="icms-svg-icon icms-svg-icon-w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
+	echo '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
 }
 /**
  * Выводит тег <a>

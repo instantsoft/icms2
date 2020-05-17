@@ -44,6 +44,10 @@ class formModernTemplateOptions extends cmsForm {
                         'title' => LANG_MODERN_THEME_ENABLE_RFS
                     )),
 
+                    new fieldCheckbox('scss:enable-modal-blur', array(
+                        'title' => LANG_MODERN_THEME_ENABLE_MODAL_BLUR
+                    )),
+
                     new fieldString('scss:grid-gutter-width', array(
                         'title' => 'grid-gutter-width',
                         'default' => '30px'

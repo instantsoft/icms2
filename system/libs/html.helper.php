@@ -375,11 +375,11 @@ function html_signed_num($number){
  */
 function html_signed_class($number){
     if ($number > 0){
-        return "positive";
+        return "positive text-success";
     } else if ($number < 0){
-        return "negative";
+        return "negative text-danger";
     } else {
-        return "zero";
+        return "zero text-muted";
     }
 }
 

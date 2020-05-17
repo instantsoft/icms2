@@ -10,3 +10,4 @@ define('LANG_MODERN_THEME_ENABLE_ROUNDED', 'Включить скруглени�
 define('LANG_MODERN_THEME_ENABLE_SHADOWS', 'Включить тени');
 define('LANG_MODERN_THEME_ENABLE_GRADIENTS', 'Включить градиенты');
 define('LANG_MODERN_THEME_ENABLE_RFS', 'Включить адаптивные размеры шрифтов');
+define('LANG_MODERN_THEME_ENABLE_MODAL_BLUR', 'Размывать подложку при открытии модальных окон');

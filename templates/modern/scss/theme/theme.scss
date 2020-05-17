@@ -1,4 +1,48 @@
 @import "../bootstrap/bootstrap";
+@import "variables";
+@import "mixins";
+
+#desktop_device_type {
+    .navbar-nav .dropdown:hover>.dropdown-menu {
+      display: block;
+    }
+}
+@if $enable-modal-blur {
+    .modal.show ~ * > * {
+        -webkit-filter: blur(2px);
+        -moz-filter: blur(2px);
+        -ms-filter: blur(2px);
+        -o-filter: blur(2px);
+        filter: blur(2px);
+    }
+}
+.icms-user-avatar {
+    position: relative;
+    display: inline-block;
+    > img {
+        border-radius: 50%;
+        padding: 0;
+        overflow: hidden;
+        border: none;
+    }
+    &.peer_online:after, &.peer_no_online:after {
+        bottom: 0;
+        right: 0;
+        border: 2px solid #fff;
+        height: 14px;
+        width: 14px;
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+    }
+    &.peer_online:after {
+        background-color: $green;
+    }
+    &.peer_no_online:after {
+        background-color: $yellow;
+    }
+}
+
 .icms-svg-icon {
     display: inline-block;
     font-size: inherit;
@@ -6,13 +50,29 @@
     overflow: visible;
     vertical-align: -0.125em;
     fill: currentColor;
-}
-.icms-svg-icon-w-16 {
-    width: 1em;
+    &.w-16 {
+        width: 1em;
+    }
+    &.w-32 {
+        width: 2em;
+        height: 2em;
+    }
 }
 .icms-links-inherit-color > a {
     color: inherit;
     text-decoration: underline;
+}
+.striped-list > .invite_sended .actions:before {
+    content: attr(data-notice_title);
+    background-color: $green;
+    color: $white;
+    display: inline-block;
+    font-size: $small-font-size;
+    border-radius: $border-radius;
+    padding: $badge-padding-y $badge-padding-x;
+}
+.media:last-child {
+    margin-bottom: 0 !important;
 }
 .widget {
     .edit_wlinks {

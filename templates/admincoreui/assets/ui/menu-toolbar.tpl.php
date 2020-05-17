@@ -25,25 +25,10 @@
             if ($item['childs_count'] > 0) {
                 $css_classes[] = 'dropdown';
                 $css_aclasses[] = 'dropdown-toggle';
-                $item['data'] = [
-                    'toggle' => 'dropdown'
-                ];
+                $item['attributes']['data-toggle'] = 'dropdown';
             }
-            if ($item['level'] > 1) {
 
-            }
             if (!empty($item['options']['class'])) { $css_classes[] = $item['options']['class']; }
-
-            $onclick = isset($item['options']['onclick']) ? $item['options']['onclick'] : false;
-            $onclick = isset($item['options']['confirm']) ? "return confirm('{$item['options']['confirm']}')" : $onclick;
-
-            $target = isset($item['options']['target']) ? $item['options']['target'] : false;
-            $data_attr = '';
-            if (!empty($item['data'])) {
-                foreach ($item['data'] as $key=>$val) {
-                    $data_attr .= 'data-'.$key.'="'.$val.'" ';
-                }
-            }
 
         ?>
 
@@ -51,7 +36,7 @@
             <?php if ($item['disabled']) { ?>
                 <span class="nav-link disabled"><?php html($item['title']); ?></span>
             <?php } else { ?>
-                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php echo implode(' ', $css_aclasses); ?>" <?php echo $data_attr; ?> href="<?php echo !empty($item['url']) ? htmlspecialchars($item['url']) : 'javascript:void(0)'; ?>" <?php if ($onclick) { ?>onclick="<?php echo $onclick; ?>"<?php } ?> <?php if ($target) { ?>target="<?php echo $target; ?>"<?php } ?>>
+                <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php echo implode(' ', $css_aclasses); ?>" href="<?php echo !empty($item['url']) ? htmlspecialchars($item['url']) : 'javascript:void(0)'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
                     <?php if (!empty($item['options']['icon'])) { ?>
                         <i class="<?php echo $item['options']['icon']; ?>"></i>
                     <?php } ?>

@@ -35,7 +35,7 @@
     define('LANG_GROUPS_INVITE_GROUP_USERS', 'Who can invite you to a group');
     define('LANG_GROUPS_ENTER',             'Send a request');
     define('LANG_GROUPS_ENTER_CONFIRM',     'Send a request for membership?');
-    define('LANG_GROUPS_INVITE',            'Invite users to Group');
+    define('LANG_GROUPS_INVITE',            'Invite to Group');
     define('LANG_GROUPS_INVITE_USER',       'Invite current user to Group');
     define('LANG_GROUPS_SELECT_USERS_LIST', 'Select users');
     define('LANG_GROUPS_REQUEST_NOTICE',    '%s wants to join the &laquo;%s&raquo; group');

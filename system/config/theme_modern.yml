@@ -7,6 +7,7 @@ scss:
   enable-shadows: null
   enable-gradients: null
   enable-responsive-font-sizes: 1
+  enable-modal-blur: 1
   grid-gutter-width: 30px
   white: '#ffffff'
   gray-100: '#f8f9fa'

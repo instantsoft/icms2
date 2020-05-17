@@ -26,18 +26,8 @@
     ?>
     <div class="<?php echo implode(' ', $row_class); ?>">
     <?php foreach ($row['cols'] as $col) { ?>
-        <?php if($col['is_body']){ ?>
-            <?php if(!$this->isBody()){ ?>
-                <?php continue; ?>
-            <?php } ?>
-        <?php } elseif($col['is_breadcrumb']) { ?>
-            <?php if (!$config->show_breadcrumbs || !$core->uri || !$this->isBreadcrumbs()){ ?>
-                <?php continue; ?>
-            <?php } ?>
-        <?php } else { ?>
-            <?php if(!$this->hasWidgetsOn($col['name'])){ ?>
-                <?php continue; ?>
-            <?php } ?>
+        <?php if(!$this->hasWidgetsOn($col['name'])){ ?>
+            <?php continue; ?>
         <?php } ?>
         <?php
             // Собираем класс колонки
