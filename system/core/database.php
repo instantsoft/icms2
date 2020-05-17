@@ -365,13 +365,24 @@ class cmsDatabase {
             return $this->table_fields[$table];
         }
 
-		$result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
+        $cache = cmsCache::getInstance();
+        $cache_key = 'schema.'. $table;
+
+        if (false !== ($fields = $cache->get($cache_key))){
+            $this->table_fields[$table] = $fields;
+
+            return $fields;
+        }
+
+        $result = $this->query("SHOW COLUMNS FROM `{#}{$table}`");
 
         $fields = array();
 
         while($data = $this->fetchAssoc($result)){
             $fields[] = $data['Field'];
         }
+
+        $cache->set($cache_key, $fields, 86400);
 
         $this->table_fields[$table] = $fields;
 
