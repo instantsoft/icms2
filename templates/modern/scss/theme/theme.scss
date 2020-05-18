@@ -4,8 +4,33 @@
 
 #desktop_device_type {
     .navbar-nav .dropdown:hover>.dropdown-menu {
-      display: block;
+        display: block;
+        -webkit-animation: slide-up .25s ease-in-out;
+        animation: slide-up .25s ease-in-out;
     }
+}
+.nav-tabs {
+  .nav-link {
+    border: 0;
+    position: relative;
+    background-color: transparent;
+    &::before {
+      position: absolute;
+      display: block;
+      bottom: 0;
+      left: $nav-link-padding-x;
+      width: calc(100% - (#{$nav-link-padding-x} * 2));
+      height: 3px;
+      background-color: transparent;
+      content: '';
+    }
+    &.active {
+      background-color: transparent;
+    }
+    &.active::before {
+      background-color: $primary;
+    }
+  }
 }
 @if $enable-modal-blur {
     .modal.show ~ * > * {
@@ -86,17 +111,14 @@
         opacity: 1;
     }
 }
-.btn.is-busy * {
+.is-busy * {
     -webkit-transition: none;
     transition: none;
     visibility: hidden;
 }
-.btn.is-busy:after {
+.is-busy:after {
     content: '';
     display: block;
-    width: ($input-btn-padding-x * 2);
-    height: ($input-btn-padding-x * 2);
-    margin: -$input-btn-padding-x -($input-btn-padding-x * 2);
     padding: 0;
     position: absolute;
     top: 50%;
@@ -110,6 +132,16 @@
     -webkit-animation: loader-button 0.9s linear infinite;
     animation: loader-button 0.9s linear infinite;
     z-index: 99;
+}
+.btn.is-busy:after {
+    width: ($input-btn-padding-x * 2);
+    height: ($input-btn-padding-x * 2);
+    margin: -$input-btn-padding-x -($input-btn-padding-x * 2);
+}
+.nav-link.is-busy:after {
+    width: ($nav-link-padding-x * 2);
+    height: ($nav-link-padding-x * 2);
+    margin: -$nav-link-padding-x;
 }
 .spinner {
     width: 70px;
@@ -265,4 +297,12 @@
     -webkit-transform: scale(1);
             transform: scale(1);
   }
+}
+@-webkit-keyframes slide-up{
+    from{-webkit-transform:translateY(0.5rem);transform:translateY(0.5rem);opacity:0}
+    to{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}
+}
+@keyframes slide-up{
+    from{-webkit-transform:translateY(0.5rem);transform:translateY(0.5rem);opacity:0}
+    to{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}
 }

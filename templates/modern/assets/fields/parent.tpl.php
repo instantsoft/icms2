@@ -5,13 +5,13 @@
 
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
-<ul class="items">
+<ul class="items list-unstyled m-0">
 	<?php if ($items) { ?>
 		<?php foreach($items as $item) { ?>
-			<li data-id="<?php echo $item['id']; ?>">
-				<?php echo $item['title']; ?>
+			<li data-id="<?php echo $item['id']; ?>" class="btn-group mb-2 mr-2">
+                <span class="btn btn-secondary btn-sm"><?php echo $item['title']; ?></span>
                 <?php if ($allowed_to_unbind_perm && ($allowed_to_unbind_perm == 'all' || $item['user_id'] == $auth_user_id)) { ?>
-                    <a class="delete" href="#" title="<?php echo LANG_DELETE; ?>"></a>
+                    <a class="btn btn-danger btn-sm delete" href="#" title="<?php echo LANG_DELETE; ?>">x</a>
                 <?php } ?>
 			</li>
 		<?php $ids[] = $item['id']; } ?>
@@ -52,8 +52,8 @@
 					var newValues = [];
 					$.each(items, function(id, title){
 						if ($list.find('li[data-id=' + id+']').length > 0) { return; }
-						var $item = $('<li></li>').attr('data-id', id).text(title).appendTo($list);
-                        var $deleteBtn = $('<a href="#"></a>').appendTo($item);
+						var $item = $('<li class="btn-group mb-2 mr-2"></li>').attr('data-id', id).html('<span class="btn btn-secondary btn-sm">'+title+'</span>').appendTo($list);
+                        var $deleteBtn = $('<a class="btn btn-danger btn-sm" href="#">x</a>').appendTo($item);
                         $deleteBtn.click(function(e){
                             e.preventDefault();
                             $item.remove();

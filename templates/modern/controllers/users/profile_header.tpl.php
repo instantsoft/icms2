@@ -108,11 +108,7 @@
 
 		<?php $this->addMenuItems('profile_tabs', $tabs); ?>
 
-		<div id="user_profile_tabs">
-			<div class="tabs-menu">
-				<?php $this->menu('profile_tabs', true, 'nav-tabs', $this->controller->options['max_tabs']); ?>
-			</div>
-		</div>
+		<?php $this->menu('profile_tabs', true, 'nav-tabs my-3', $this->controller->options['max_tabs']); ?>
 
 	<?php } ?>
 
