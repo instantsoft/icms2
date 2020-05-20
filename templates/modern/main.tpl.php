@@ -11,7 +11,7 @@
             'theme',
         ]); ?>
         <?php $this->addMainTplJSName('jquery', true); ?>
-        <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min',); ?>
+        <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min'); ?>
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
         <?php $this->addMainTplJSName('core'); ?>
         <?php $this->addMainTplJSName('modal'); ?>

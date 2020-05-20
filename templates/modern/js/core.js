@@ -52,6 +52,21 @@ icms.menu = (function ($) {
         }
     };
 
+    this.initSwipe = function(selector, variable_width){
+        variable_width = variable_width || false;
+        return $(selector).slick({
+            infinite: false,
+            arrows: false,
+            mobileFirst: true,
+            variableWidth: variable_width,
+            responsive: [
+                {breakpoint: 1024, settings: "unslick"},
+                {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 1}},
+                {breakpoint: 320, settings: {slidesToShow: 2, slidesToScroll: 1}}
+            ]
+        });
+    };
+
     return this;
 
 }).call(icms.menu || {},jQuery);

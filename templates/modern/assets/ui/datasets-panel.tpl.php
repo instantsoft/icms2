@@ -2,7 +2,7 @@
 <?php $this->addTplCSSNameFromContext('slick'); ?>
 <?php if(!isset($ds_prefix)){ $ds_prefix = '/'; } ?>
 <?php $active_filters_query = $this->controller->getActiveFiltersQuery(); ?>
-<div class="content_datasets mb-2">
+<div class="content_datasets my-3">
     <ul class="nav nav-pills pills-menu dataset-pills">
         <?php $ds_counter = 0; ?>
         <?php foreach($datasets as $set){ ?>
@@ -32,17 +32,7 @@
 <?php ob_start(); ?>
 <script type="text/javascript">
 if(typeof dsslick === 'undefined'){
-    var dsslick = $(".dataset-pills").slick({
-        initialSlide: $('.dataset-pills > li.is-active').index(),
-        infinite: false,
-        arrows: false,
-        mobileFirst: true,
-        responsive: [
-            {breakpoint: 1024, settings: "unslick"},
-            {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 1}},
-            {breakpoint: 320, settings: {slidesToShow: 2, slidesToScroll: 1}}
-        ]
-    });
+    var dsslick = icms.menu.initSwipe('.dataset-pills');
 }
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

@@ -408,7 +408,7 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 .datagrid .is_deleted .flag_trigger, .datagrid .is_deleted .flag_trigger a {
     opacity: 0.2;
 }
-fieldset > div:last-child, .tab-pane:last-child > fieldset, .modal-body .buttons {
+.tab-pane:last-child > fieldset {
     margin-bottom: 0 !important;
 }
 .without-tabs fieldset {
@@ -1075,51 +1075,14 @@ td > .spinner > div {
 .animate-shake {
   animation-name: shake;
 }
-.qq-uploader { position:relative; width: 100%;}
-.qq-upload-button {
+.icms-svg-icon.w-16 {
+    width: 1em;
+}
+.icms-svg-icon {
     display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: .875rem;
-    line-height: 1.5;
-    border-radius: .25rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    color: #23282c;
-    background-color: #c8ced3;
-    border-color: #c8ced3;
+    font-size: inherit;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+    fill: currentColor;
 }
-.qq-upload-button-hover {
-    color: #23282c;
-    background-color: #b3bbc2;
-    border-color: #acb5bc;
-}
-.qq-upload-button-focus, .qq-upload-button:active {
-    color: #23282c;
-    background-color: #acb5bc;
-    border-color: #a5aeb7;
-}
-
-.qq-upload-drop-area {
-    position:absolute; top:0; left:0; width:100%; height:100%; z-index:2;
-    background:#4dbd74; text-align:center;
-}
-.qq-upload-drop-area span {
-    display:block; position:absolute; top: 0; width:100%;
-}
-.qq-upload-drop-area-active {background:#FF7171;}
-.qq-upload-list {margin:15px 35px; padding:0; list-style:disc;}
-.qq-upload-list li { margin:0; padding:0; line-height:15px; font-size:12px;}
-.qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-failed-text {
-    margin-right: 7px;
-}
-.qq-upload-size,.qq-upload-cancel {font-size:11px;}
-.qq-upload-failed-text {display:none;}
-.qq-upload-fail .qq-upload-failed-text {display:inline;}

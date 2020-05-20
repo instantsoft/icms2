@@ -116,10 +116,10 @@ class actionUsersProfileContent extends cmsAction {
 
         $list_html = $this->controller_content->renderItemsList($ctype, $page_url.($dataset ? '/'.$dataset : ''), false, 0, [], $dataset);
 
-        $list_header = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
+        $list_header = $list_header_h1 = empty($ctype['labels']['profile']) ? $ctype['title'] : $ctype['labels']['profile'];
 
         if($current_dataset && $dataset){
-            $list_header .= ' / '.$current_dataset['title'];
+            $list_header .= ' · '.$current_dataset['title'];
         }
 
         $toolbar_html = cmsEventsManager::hookAll('content_toolbar_html', array($ctype['name'], array(), $current_dataset, array(
@@ -148,6 +148,7 @@ class actionUsersProfileContent extends cmsAction {
             'dataset'         => $dataset,
             'current_dataset' => $current_dataset,
             'base_ds_url'     => $page_url . '%s',
+            'list_header_h1'  => $list_header_h1,
             'list_header'     => $list_header,
             'html'            => $list_html
         ));

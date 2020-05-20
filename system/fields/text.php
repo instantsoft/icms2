@@ -59,6 +59,15 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function parseTeaser($value) {
+
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
+        return parent::parseTeaser($value);
+    }
+
     public function parse($value){
 
         if ($this->getOption('parse_patterns') && !empty($this->item)){

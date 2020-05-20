@@ -112,6 +112,10 @@ class fieldHtml extends cmsFormField {
 
     public function parseTeaser($value) {
 
+        if (!empty($this->item['is_private_item'])) {
+            return '<p class="private_field_hint text-muted">'.$this->item['private_item_hint'].'</p>';
+        }
+
         $max_len = $this->getOption('teaser_len');
 
         if ($max_len){
@@ -119,7 +123,7 @@ class fieldHtml extends cmsFormField {
             $value = string_short($value, $max_len);
 
             if(!empty($this->item['ctype']['name']) && !empty($this->item['slug'])){
-                $value .= '<a class="read-more" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
+                $value .= '<a class="read-more btn btn-outline-info btn-sm" href="'.href_to($this->item['ctype']['name'], $this->item['slug'].'.html').'">'.LANG_MORE.'</a>';
             }
 
         } else if ($this->getOption('is_html_filter')){

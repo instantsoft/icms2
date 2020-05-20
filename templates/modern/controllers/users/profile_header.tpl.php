@@ -1,12 +1,12 @@
 <?php $this->addTplJSName('users'); ?>
 <?php $user = cmsUser::getInstance(); ?>
-<div id="user_profile_title">
+<div id="user_profile_title" class="d-flex align-items-center">
 
-    <div class="avatar">
+    <div class="avatar icms-user-avatar d-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
         <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?>
     </div>
 
-    <div class="name<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
+    <div class="name flex-fill<?php if (!empty($profile['status'])){ ?> name_with_status<?php } ?>">
 
         <h1>
             <?php if (!empty($this->controller->options['tag_h1'])) { ?>
@@ -20,9 +20,11 @@
             <?php if ($profile['is_deleted']){ ?>
                 <span class="is_locked"><?php echo LANG_USERS_IS_DELETED; ?></span>
             <?php } ?>
-            <sup title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>">
-                <?php echo $profile['is_online'] ? '<span class="online">'.LANG_ONLINE.'</span>' : string_date_age_max($profile['date_log'], true); ?>
-            </sup>
+            <?php if (!$profile['is_online']){ ?>
+                <sup title="<?php echo LANG_USERS_PROFILE_LOGDATE; ?>">
+                    <?php echo string_date_age_max($profile['date_log'], true); ?>
+                </sup>
+            <?php } ?>
         </h1>
 
         <?php if ($this->controller->options['is_status']) { ?>

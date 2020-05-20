@@ -575,7 +575,7 @@ qq.extend(qq.FileUploader.prototype, {
         qq.attach(document, 'dragenter', function(e){
             if (!dz._isValidFileDrag(e)) return;
 
-            dropArea.style.display = 'block';
+            dropArea.style.display = 'flex';
         });
         qq.attach(document, 'dragleave', function(e){
             if (!dz._isValidFileDrag(e)) return;

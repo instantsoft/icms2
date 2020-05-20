@@ -37,7 +37,7 @@
         <?php html($this->options['owner_name'] ? $this->options['owner_name'] : cmsConfig::get('sitename')); ?></a>
     &copy;
     <?php echo $this->options['owner_year'] ? $this->options['owner_year'] : date('Y'); ?>
-    <span class="item">
+    <span class="item d-none d-sm-inline-block">
         <?php echo LANG_POWERED_BY_INSTANTCMS; ?>
     </span>
     <?php if ($config->debug && cmsUser::isAdmin()){ ?>

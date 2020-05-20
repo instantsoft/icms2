@@ -15,7 +15,7 @@
 
     <?php echo $attributes['prepend_html']; ?>
 
-    <div class="<?php if($form->is_tabbed){ ?>tabs-menu <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs<?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs<?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
             <ul class="nav nav-tabs flex-wrap" role="tablist">
@@ -49,7 +49,7 @@
 
     <?php echo $attributes['append_html']; ?>
 
-    <div class="buttons my-3">
+    <div class="buttons <?php if (!$this->controller->request->isAjax()){ ?>my-3<?php } ?>">
         <?php if ($attributes['submit']['show']) { ?>
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>

@@ -6,7 +6,7 @@
 
 <div class="modal_padding">
     <form action="<?php echo $this->href_to('content', array('cats_order', $ctype['id'])); ?>" onsubmit="return contentSaveCatsOrder($(this))" method="post">
-        <fieldset class="modal_treeview mb-4">
+        <fieldset class="modal_treeview">
             <legend><?php echo LANG_CP_CONTENT_CATS_ORDER_DRAG; ?></legend>
             <div id="ordertree" class="no-overflow">
                 <ul id="treeData">

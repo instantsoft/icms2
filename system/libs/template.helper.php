@@ -9,7 +9,7 @@
 function html_svg_icon($file, $name, $size = 16){
     static $template_path = null;
     if(!isset($template_path)){
-        $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/');
+        $template_path = cmsTemplate::getInstance()->getTemplateFilePath('images/icons/', true);
     }
 	echo '<svg class="icms-svg-icon w-'.$size.'" fill="currentColor"><use xlink:href="'.$template_path.$file.'.svg#'.$name.'"></use></svg>';
 }
@@ -344,7 +344,7 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
     $attr_str = html_attr_str($attributes);
     $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
 
-    $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.$class.' />';
+    $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.' class="img-fluid '.$class.'" />';
 
     if($modal_preset){
         $modal_src = html_image_src($image, $modal_preset, true);
@@ -387,7 +387,7 @@ function html_gif_image($image, $size_preset='small', $alt='', $attributes = arr
     return '<a class="ajax-modal gif_image '.$class.'" href="'.$original_src.'" '.html_attr_str($attributes).'>
                 <span class="background_overlay"></span>
                 <span class="image_label">gif</span>
-                <img src="'.$preview_src.'" alt="'.html($alt, false).'" />
+                <img class="img-fluid" src="'.$preview_src.'" alt="'.html($alt, false).'" />
             </a>';
 
 }

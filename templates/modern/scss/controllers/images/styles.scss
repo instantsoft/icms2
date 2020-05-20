@@ -1,0 +1,149 @@
+$icms-image_single-size: 80px !default;
+
+.widget_image_multi {
+    .qq-upload-button {
+        display: inline-block;
+        font-family: $btn-font-family;
+        font-weight: $btn-font-weight;
+        text-align: center;
+        white-space: $btn-white-space;
+        vertical-align: middle;
+        cursor: if($enable-pointer-cursor-for-buttons, pointer, null);
+        user-select: none;
+        @include button-size($btn-padding-y, $btn-padding-x, $btn-font-size, $btn-line-height, $btn-border-radius);
+        @include transition($btn-transition);
+        @include button-variant($secondary, $secondary);
+        &:focus,
+        &.focus {
+          outline: 0;
+          box-shadow: $btn-focus-box-shadow;
+        }
+    }
+    .qq-upload-button {
+        background-image: url(../../images/icons/camera.svg);
+        background-repeat: no-repeat;
+        background-size: 26px;
+        background-position: $btn-padding-x center;
+        padding-left: calc(#{$btn-padding-x*2} + 26px);
+    }
+    .qq-upload-drop-area {
+        display: none !important;
+    }
+    .preview {
+        margin: 0 ($spacer) ($spacer) 0;
+    }
+}
+.widget_image_single {
+    .qq-upload-button, .qq-upload-drop-area {
+        position: absolute !important;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        border-radius: 50%;
+    }
+    .qq-upload-button {
+        text-indent: -999px;
+        background: url(../../images/icons/camera.svg) no-repeat;
+        background-size: 32px 26px;
+        background-position: center center;
+    }
+    .qq-upload-drop-area {
+        text-align: center;
+        align-items: center;
+        background-color: darken($secondary, 10%);
+        z-index: 1;
+        font-size: $font-size-base * .6;
+        &.qq-upload-drop-area-active {
+            background-color: $warning;
+        }
+    }
+}
+.widget_image_single, .widget_image_multi {
+    .loading {
+        a {
+            display: none;
+        }
+        &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 50%;
+            display: block;
+            border: 4px solid;
+            border-top-color: transparent;
+            border-left-color: transparent;
+            color: $primary;
+            background-color: transparent;
+            -webkit-animation: loader-upload 0.9s linear infinite;
+            animation: loader-upload 0.9s linear infinite;
+            z-index: 99;
+        }
+    }
+    .block, .multi-block {
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        width: $icms-image_single-size;
+        height: $icms-image_single-size;
+        flex-shrink: 0;
+        position: relative;
+        text-align: center;
+        font-size: $font-size-base * .75;
+        @include transition($btn-transition);
+        @include button-variant($secondary, $secondary);
+        a {
+            position: absolute;
+            right: 0;
+            width: auto;
+            z-index: 1;
+            bottom: 0;
+        }
+    }
+    .preview {
+        > div {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        img {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+.ft_image {
+    padding-left: $icms-image_single-size + 10;
+    position: relative;
+    min-height: $icms-image_single-size;
+    .widget_image_single + .hint {
+        margin: 0 !important;
+    }
+    .widget_image_single {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: visible;
+    }
+}
+.qq-upload-list {
+    display: none;
+}
+@-webkit-keyframes loader-upload{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}
+@keyframes loader-upload{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}

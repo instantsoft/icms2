@@ -2,7 +2,7 @@
     $this->addTplJSNameFromContext('widgets_options/'.$widget['controller'].'_'.$widget['name']);
 ?>
 <?php ob_start(); ?>
-    <div class="widget_modal_help_link float-right mt-3">
+    <div class="widget_modal_help_link float-right">
         <a target="_blank" class="btn btn-light" href="<?php echo LANG_HELP_URL_WIDGETS_CFG; ?>">
             <i class="icon-question"></i> <?php echo LANG_HELP; ?>
         </a>

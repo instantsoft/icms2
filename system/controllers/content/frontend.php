@@ -509,6 +509,7 @@ class content extends cmsFrontend {
         if (!empty($fields['date_pub']['is_in_'.$subject])){
             $bar[] = [
                 'css'   => 'bi_date_pub'.(!empty($item['is_new']) ? ' highlight_new' : ''),
+                'icon'  => 'calendar-alt',
                 'html'  => isset($fields['date_pub']['html']) ? $fields['date_pub']['html'] : $fields['date_pub']['handler']->parse($item['date_pub']),
                 'title' => $fields['date_pub']['title']
             ];
@@ -517,6 +518,7 @@ class content extends cmsFrontend {
         if (!$item['is_pub']){
             $bar[] = [
                 'css'   => 'bi_not_pub',
+                'icon'  => 'calendar-alt',
                 'html'  => LANG_CONTENT_NOT_IS_PUB
             ];
         }
@@ -524,6 +526,7 @@ class content extends cmsFrontend {
         if (!empty($ctype['options']['hits_on'])){
             $bar[] = [
                 'css'   => 'bi_hits',
+                'icon'  => 'eye',
                 'html'  => $item['hits_count'],
                 'title' => LANG_HITS
             ];
@@ -532,12 +535,14 @@ class content extends cmsFrontend {
         if (!empty($fields['user']['is_in_'.$subject])){
             $bar[] = [
                 'css'   => 'bi_user',
+                'icon'  => 'user',
                 'html'  => isset($fields['user']['html']) ? $fields['user']['html'] : $fields['user']['handler']->parse($item['user']),
                 'title' => $fields['user']['title']
             ];
             if (!empty($item['folder_title'])){
                 $bar[] = [
                     'css'  => 'bi_folder',
+                    'icon' => 'folder',
                     'html' => $item['folder_title'],
                     'href' => href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id']))
                 ];
@@ -554,6 +559,7 @@ class content extends cmsFrontend {
         if (!$item['is_approved']){
             $bar[] = [
                 'css'   => 'bi_not_approved'.(!empty($item['is_new_item']) ? ' is_edit_item' : ''),
+                'icon'  => 'user-clock',
                 'html'  => !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED
             ];
         }

@@ -1,0 +1,43 @@
+.content_list_item + .content_list_item {
+    margin-top: $spacer*1.5;
+}
+.field {
+    &.left_field {
+        margin-bottom: $spacer;
+    }
+    &.right_field {
+        margin-bottom: $spacer;
+    }
+    @include media-breakpoint-up(sm) {
+        &.left_field {
+            float: left;
+            margin-right: $spacer;
+            margin-bottom: 0;
+        }
+        &.right_field {
+            float: right;
+            margin-left: $spacer;
+            margin-bottom: 0;
+        }
+    }
+    &.auto_field {
+        overflow: visible;
+    }
+    &.none_field {
+        float: none;
+        clear: both;
+    }
+}
+.info_bar {
+    background-color: $gray-100;
+    padding: ($spacer*0.75) $spacer;
+    border-top: 1px solid $gray-200;
+    font-size: 90%;
+    @include border-radius(0 0 $border-radius $border-radius);
+    a {
+        color: inherit;
+    }
+    .bar_item {
+        position: relative;
+    }
+}

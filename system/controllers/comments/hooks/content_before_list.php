@@ -25,6 +25,7 @@ class onCommentsContentBeforeList extends cmsAction {
 
                 $info_bar = [
                     'css'   => 'bi_comments',
+                    'icon'  => 'comments',
                     'title' => $this->labels->comments,
                     'html'  => intval($item['comments'])
                 ];

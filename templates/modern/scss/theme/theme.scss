@@ -1,7 +1,19 @@
 @import "../bootstrap/bootstrap";
 @import "variables";
 @import "mixins";
-
+@import "content";
+.inline_rss_icon {
+    color: $orange;
+    font-size: $font-size-base;
+}
+.ajax-form {
+    .card {
+        border: none;
+    }
+    .card-body {
+        padding: 0;
+    }
+}
 #desktop_device_type {
     .navbar-nav .dropdown:hover>.dropdown-menu {
         display: block;

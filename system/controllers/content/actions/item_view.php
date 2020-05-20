@@ -633,6 +633,8 @@ class actionContentItemView extends cmsAction {
             // типы контента тут должны быть известные
             if (!$ctype) { return cmsCore::error404(); }
 
+            $this->model->joinModerationsTasks($ctype['name']);
+
             list($ctype, $this->model) = cmsEventsManager::hook(['content_item_filter', "content_{$ctype['name']}_item_filter"], array($ctype, $this->model));
 
             // Получаем запись

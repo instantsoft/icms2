@@ -64,15 +64,23 @@ class fieldImage extends cmsFormField {
 
         $paths = is_array($value) ? $value : cmsModel::yamlToArray($value);
 
+        $size_teaser = $this->getOption('size_teaser');
+
         if (!$paths && $this->hasDefaultValue()){ $paths = $this->parseDefaultPaths(); }
 
-        if (!$paths || !isset($paths[ $this->getOption('size_teaser') ])){ return ''; }
+        if (!$paths || !isset($paths[$size_teaser])){ return ''; }
 
         $url = $this->teaser_url ?
                 $this->teaser_url :
-                href_to($this->item['ctype']['name'], $this->item['slug'] . ".html");
+                href_to($this->item['ctype']['name'], $this->item['slug'] . '.html');
 
-        return '<a href="'.$url.'">'.html_image($paths, $this->getOption('size_teaser'), (empty($this->item['title']) ? $this->name : $this->item['title'])).'</a>';
+        if (!empty($this->item['is_private_item'])) {
+            $paths = default_images('private', $size_teaser);
+        }
+
+        $img_html = html_image($paths, $size_teaser, (empty($this->item['title']) ? $this->name : $this->item['title']));
+
+        return !empty($this->item['is_private_item']) ? $img_html : '<a href="'.$url.'">'.$img_html.'</a>';
 
     }
 
