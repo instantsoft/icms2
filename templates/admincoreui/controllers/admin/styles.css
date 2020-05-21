@@ -404,9 +404,12 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
 .datagrid .flag_lock_on a::before, .datagrid .flag_lock_off a::before {
     content: "\e08e";
 }
-
 .datagrid .is_deleted .flag_trigger, .datagrid .is_deleted .flag_trigger a {
     opacity: 0.2;
+}
+.datagrid .grid_image_preview{
+    display:block;
+    height:64px;
 }
 .tab-pane:last-child > fieldset {
     margin-bottom: 0 !important;

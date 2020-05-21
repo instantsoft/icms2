@@ -116,7 +116,7 @@ class fieldListBitmask extends cmsFormField {
 
     public function getListItems(){
 
-        $items = array();
+        $items = [];
 
         if (isset($this->items)){
 
@@ -125,7 +125,7 @@ class fieldListBitmask extends cmsFormField {
         } else if (isset($this->generator)) {
 
             $generator = $this->generator;
-            $items = $generator($this->item);
+            $items = $this->items = $generator($this->item);
 
         } else if ($this->hasDefaultValue()) {
 
@@ -133,10 +133,10 @@ class fieldListBitmask extends cmsFormField {
 
             ksort($items);
 
+            $this->items = $items;
         }
 
         return $items;
-
     }
 
     public function setOptions($options){

@@ -13,6 +13,12 @@
         <?php $this->addMainTplJSName('jquery', true); ?>
         <?php $this->addMainTplJSName('vendors/popper.js/js/popper.min'); ?>
         <?php $this->addMainTplJSName('vendors/bootstrap/bootstrap.min'); ?>
+        <?php $this->onDemandTplJSName([
+            'vendors/photoswipe/photoswipe.min'
+        ]); ?>
+        <?php $this->onDemandTplCSSName([
+            'photoswipe'
+        ]); ?>
         <?php $this->addMainTplJSName('core'); ?>
         <?php $this->addMainTplJSName('modal'); ?>
         <?php $this->head(true, false, true); ?>
@@ -21,6 +27,7 @@
         <?php $this->renderLayoutChild('scheme', ['rows' => $rows]); ?>
         <?php $this->printJavascriptTags(); ?>
         <?php $this->bottom(); ?>
+        <?php $this->onDemandPrint(); ?>
         <?php if ($config->debug && cmsUser::isAdmin()){ ?>
             <?php $this->renderAsset('ui/debug', ['core' => $core]); ?>
         <?php } ?>

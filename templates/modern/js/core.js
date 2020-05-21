@@ -204,7 +204,7 @@ icms.forms = (function ($) {
                     change.apply(context, args);
                 }, 500);
             };
-        }
+        };
 
         $(selector).find('select, input[type=checkbox]').on('change', change);
         $(selector).find('input:not([type=checkbox]), textarea').on('input', delay());
@@ -553,6 +553,58 @@ icms.forms = (function ($) {
 
 }).call(icms.forms || {},jQuery);
 
+icms.head = (function ($) {
+
+    var self = this;
+
+    this.on_demand = {};
+    this.loaded = {};
+    this.loading = {};
+
+    this.addJs = function(name, event){
+        if(this.on_demand.js[name]){
+            var filepath = this.on_demand.root + this.on_demand.js[name];
+            if (this.loaded[filepath]){
+                if(event){
+                    icms.events.run(event);
+                }
+                return;
+            }
+            if (!this.loading[filepath]){
+                this.loading[filepath] = true;
+                var el = document.createElement('script');
+                el.onload = function() {
+                    if(event){
+                        icms.events.run(event);
+                    }
+                    self.loaded[filepath] = true;
+                };
+                el.src = filepath;
+                document.body.appendChild(el);
+            }
+        }
+        return this;
+    };
+
+    this.addCss = function(name){
+        if(this.on_demand.css[name]){
+            var filepath = this.on_demand.root + this.on_demand.css[name];
+            if (!this.loading[filepath]){
+                this.loading[filepath] = true;
+                var el = document.createElement('link');
+                el.href = filepath;
+                el.type = 'text/css';
+                el.rel  = 'stylesheet';
+                document.head.appendChild(el);
+            }
+        }
+        return this;
+    };
+
+	return this;
+
+}).call(icms.head || {},jQuery);
+
 icms.events = (function ($) {
 
     this.listeners = {};
@@ -765,20 +817,7 @@ function renderHtmlAvatar(wrap){
         });
     });
 }
-function insertJavascript(filepath, onloadCallback) {
-    if ($('head script[src="'+filepath+'"]').length > 0){
-        return;
-    }
-    var el = document.createElement('script');
-    el.setAttribute('type', 'text/javascript');
-    el.setAttribute('src', filepath);
-    if (typeof(onloadCallback) == 'function') {
-        el.setAttribute('onload', function() {
-            onloadCallback();
-        });
-    }
-    $('head').append(el);
-}
+
 function initMultyTabs(selector, tab_wrap_field){
     tab_wrap_field = tab_wrap_field || '.field';
     $(selector).each(function(indx, element){

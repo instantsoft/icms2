@@ -342,7 +342,7 @@ function html_image($image, $size_preset='small', $alt='', $attributes = array()
     $title = html((isset($attributes['title']) ? $attributes['title'] : $alt), false); unset($attributes['title']);
 
     $attr_str = html_attr_str($attributes);
-    $class = isset($attributes['class']) ? ' class="'.$attributes['class'].'"' : '';
+    $class = isset($attributes['class']) ? $attributes['class'] : '';
 
     $image_html = '<img src="'.$src.'" title="'.$title.'" alt="'.html($alt, false).'" '.$attr_str.' class="img-fluid '.$class.'" />';
 

@@ -69,16 +69,8 @@ icms.modal = (function ($) {
 
             var url = $(this).attr('href');
 
-            if((new RegExp('[^\.]\.(jpg|jpeg|png|tiff|gif|bmp)\\s*$', 'i')).test(url)){
-                $(this).jqPhotoSwipe({
-                    galleryOpen: function (gallery) {
-                        gallery.toggleDesktopZoom();
-                    },
-                    maxSpreadZoom: 1,
-                    bgOpacity: 0.85,
-                    shareEl: false,
-                    forceSingleGallery: true
-                });
+            if((new RegExp('[^\.]\.(jpg|jpeg|png|tiff|gif|webp)\\s*$', 'i')).test(url)){
+                self.bindGallery(this);
             } else {
 
                 $(this).off('click').on('click', function (){
@@ -111,10 +103,24 @@ icms.modal = (function ($) {
 
 	};
 
+    this.loadPhotoSwipe = function (){
+        icms.head.addCss('photoswipe');
+        icms.head.addJs('vendors/photoswipe/photoswipe.min', 'photoswipe_ready');
+    };
+
     this.bindGallery = function(selector){
-        $(selector).jqPhotoSwipe({
-            forceSingleGallery: true
+        icms.events.on('photoswipe_ready', function (){
+            $(selector).jqPhotoSwipe({
+                galleryOpen: function (gallery) {
+                    gallery.toggleDesktopZoom();
+                },
+                maxSpreadZoom: 1,
+                bgOpacity: 0.85,
+                shareEl: false,
+                forceSingleGallery: true
+            });
         });
+        self.loadPhotoSwipe();
     };
 
 	this.openHtml = function(html, title, style, style_body) {

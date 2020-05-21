@@ -9,18 +9,66 @@ class cmsTemplate {
      */
     const TEMPLATE_BASE_PATH = 'templates/';
 
+    /**
+     * Название шаблона
+     * @var string
+     */
     public $name;
+    /**
+     * Полный путь к директории шаблона
+     * @var string
+     */
     public $path;
-    protected $inherit_names = array();
+    /**
+     * Порядок наследования шаблона
+     * @var array
+     */
+    protected $inherit_names = [];
+    /**
+     * Название файла шаблона скелета страницы
+     * @var string
+     */
     protected $layout = 'main';
-    protected $layout_params = array();
+    /**
+     * Параметры, передаваемые в шаблон скелета
+     * @var array
+     */
+    protected $layout_params = [];
+    /**
+     * Вывод результата работы контроллера
+     * @var string
+     */
     protected $output;
-    protected $blocks = array();
+    /**
+     * Массив кастомных блоков страницы
+     * @var array
+     */
+    protected $blocks = [];
+    /**
+     * Опции шаблона
+     * @var array|null
+     */
     protected $options = null;
+    /**
+     * Объект конфигурации сайта cmsConfig
+     * @var object
+     */
     protected $site_config;
-
-	protected $head = array();
-	protected $bottom = array();
+    /**
+     * Массив путей к js/css для загрузки со страницы по требованию
+     * @var array
+     */
+	protected $on_demand = ['root' => '', 'css' => [], 'js' => []];
+    /**
+     * Массив головных (<head>) тегов страницы
+     * @var array
+     */
+	protected $head = [];
+    /**
+     * Массив тегов, выводящихся в самом низу страницы, перед </body>
+     * @var array
+     */
+	protected $bottom = [];
 	protected $head_main_css = array();
 	protected $head_css = array();
 	protected $head_main_js = array();
@@ -1036,7 +1084,7 @@ class cmsTemplate {
 
         if(!is_array($file)){
 
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->head_main_css[$hash]) || isset($this->head_css[$hash])) {
                 return false;
             }
@@ -1067,7 +1115,7 @@ class cmsTemplate {
 
         if(!is_array($file)){
 
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->head_css[$hash]) || isset($this->head_main_css[$hash])) {
                 return false;
             }
@@ -1102,7 +1150,7 @@ class cmsTemplate {
 
         if(!is_array($file)){
 
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->head_main_js[$hash])) {
                 return false;
             }
@@ -1146,7 +1194,7 @@ class cmsTemplate {
 
         if(!is_array($file)){
 
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->head_js[$hash])) {
                 return false;
             }
@@ -1371,6 +1419,38 @@ class cmsTemplate {
         return $this->addMainJS($this->getJavascriptFileName($name), $at_begin);
     }
 
+    protected function onDemandTplName($name, $type) {
+
+        if($type === 'js'){
+            $files = $this->getJavascriptFileName($name);
+        } else {
+            $files = $this->getTemplateStylesFileName($name);
+        }
+
+        if(!is_array($files)){
+            $files = [$files];
+        }
+
+        foreach($files as $key => $f){
+            $this->on_demand[$type][$key] = $f;
+        }
+
+        return $this;
+    }
+
+    public function onDemandTplCSSName($name) {
+        return $this->onDemandTplName($name, 'css');
+    }
+
+    public function onDemandTplJSName($name) {
+        return $this->onDemandTplName($name, 'js');
+    }
+
+    public function onDemandPrint() {
+        $this->on_demand['root'] = $this->site_config->root;
+        echo '<script> icms.head.on_demand = '.json_encode($this->on_demand).';</script>'."\n";
+    }
+
     /**
      * Подключает CSS файл относительно TEMPLATE_BASE_PATH.TEMPLATE_NAME/css/
      * Ищет, начиная с текущего шаблона и по цепочке до дефолтного
@@ -1398,7 +1478,7 @@ class cmsTemplate {
         if (!$file) { return false; }
 
         if(!is_array($file)){
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->insert_js[$hash])) { return false; }
             $this->insert_js[$hash] = $file;
 
@@ -1420,7 +1500,7 @@ class cmsTemplate {
         if (!$file) { return false; }
 
         if(!is_array($file)){
-            $hash = md5($file);
+            $hash = $file;
             if (isset($this->insert_css[$hash])) { return false; }
             $this->insert_css[$hash] = $file;
 
@@ -1882,11 +1962,12 @@ class cmsTemplate {
             return $this->getTplFilePath('js/'.$filename.'.js', false);
         }
 
+        $filenames = [];
         foreach($filename as $key => $value){
-            $filename[$key] = $this->getJavascriptFileName($value);
+            $filenames[$value] = $this->getJavascriptFileName($value);
         }
 
-        return $filename;
+        return $filenames;
 
     }
 
@@ -1901,11 +1982,12 @@ class cmsTemplate {
             return $this->getTplFilePath('css/'.$filename.'.css', false);
         }
 
+        $filenames = [];
         foreach($filename as $key => $value){
-            $filename[$key] = $this->getTemplateStylesFileName($value);
+            $filenames[$value] = $this->getTemplateStylesFileName($value);
         }
 
-        return $filename;
+        return $filenames;
 
     }
 

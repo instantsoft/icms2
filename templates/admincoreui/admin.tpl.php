@@ -10,8 +10,6 @@
         'vendors/font-awesome/css/font-awesome.min',
         'vendors/simple-line-icons/css/simple-line-icons',
         'vendors/toastr/toastr.min',
-        'vendors/photoswipe/photoswipe',
-        'vendors/photoswipe/default-skin/default-skin',
         'jquery-ui',
         'style'
     ]); ?>
@@ -26,12 +24,15 @@
         'vendors/perfect-scrollbar/js/perfect-scrollbar.min',
         'vendors/@coreui/coreui/js/coreui.min',
         'vendors/toastr/toastr.min',
-        'vendors/photoswipe/photoswipe.min',
-        'vendors/photoswipe/photoswipe-ui-default.min',
-        'vendors/photoswipe/jqPhotoSwipe.min',
         'core',
         'modal',
         'admin-core'
+    ]); ?>
+    <?php $this->onDemandTplJSName([
+        'vendors/photoswipe/photoswipe.min'
+    ]); ?>
+    <?php $this->onDemandTplCSSName([
+        'photoswipe'
     ]); ?>
     <?php $this->head(false); ?>
 </head>
@@ -220,5 +221,6 @@
         });
     </script>
     <?php $this->bottom(); ?>
+    <?php $this->onDemandPrint(); ?>
 </body>
 </html>

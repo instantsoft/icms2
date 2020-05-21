@@ -101,7 +101,7 @@ class fieldList extends cmsFormField {
 
     public function getListItems(){
 
-        $items = array();
+        $items = [];
 
         if (isset($this->items)){
 
@@ -110,16 +110,15 @@ class fieldList extends cmsFormField {
         } else if (isset($this->generator)) {
 
             $generator = $this->generator;
-            $items = $generator($this->item);
+            $items = $this->items = $generator($this->item);
 
         } else if ($this->hasDefaultValue()) {
 
-            $items = ($this->show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
+            $items = $this->items = ($this->show_empty_value ? array('' => '') : array()) + $this->parseListItems($this->getDefaultValue());
 
         }
 
         return $items;
-
     }
 
     public function getListValuesItems(){

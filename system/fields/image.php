@@ -108,6 +108,8 @@ class fieldImage extends cmsFormField {
 
     }
 
+    public function getStringValue($value){ return null; }
+
     public function store($value, $is_submitted, $old_value=null){
 
         if (!is_null($old_value) && !is_array($old_value)){

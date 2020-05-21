@@ -8,7 +8,7 @@ class formModernTemplateOptions extends cmsForm {
 
         return array(
 
-            array(
+            'basic' => array(
                 'type' => 'fieldset',
                 'title' => LANG_CP_BASIC,
                 'childs' => array(
@@ -56,7 +56,7 @@ class formModernTemplateOptions extends cmsForm {
                 )
             ),
 
-            array(
+            'colors' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_COLORS,
                 'childs' => array(

@@ -19,6 +19,8 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
             } else {
                 cmsUser::addSessionMessage(sprintf(LANG_CP_FILE_NOT_WRITABLE, $css_dir.'theme.css'), 'error');
             }
+        } elseif($this->hasCompileMessage()) {
+            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         // Компилируем вендоры
@@ -40,6 +42,8 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
                 }
 
             }
+        } elseif($this->hasCompileMessage()) {
+            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         // Компилируем CSS компонентов
@@ -64,6 +68,8 @@ class onBootstrap4TemplateModernBeforeSaveOptions extends cmsAction {
                 }
 
             }
+        } elseif($this->hasCompileMessage()) {
+            cmsUser::addSessionMessage($this->getCompileMessage(), 'error');
         }
 
         return $options;

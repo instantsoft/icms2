@@ -86,6 +86,15 @@ class fieldText extends cmsFormField {
 
     }
 
+    public function getStringValue($value){
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
+        return trim(strip_tags($value));
+    }
+
     public function store($value, $is_submitted, $old_value=null){
         if($this->getProperty('is_strip_tags') === true){
             return trim(strip_tags($value));

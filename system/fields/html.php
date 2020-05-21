@@ -91,6 +91,15 @@ class fieldHtml extends cmsFormField {
         return ($this->show_filter_input_title ? '<label for="'.$this->id.'">'.$this->title.'</label>' : '') . html_input('text', $this->name, $value);
     }
 
+    public function getStringValue($value){
+
+        if ($this->getOption('parse_patterns') && !empty($this->item)){
+            $value = string_replace_keys_values_extended($value, $this->item);
+        }
+
+        return trim(strip_tags($value));
+    }
+
     public function parse($value){
 
         if ($this->getOption('is_html_filter')){

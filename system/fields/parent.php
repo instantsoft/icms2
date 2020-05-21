@@ -9,6 +9,24 @@ class fieldParent extends cmsFormField {
     public $var_type      = 'string';
     public $filter_type   = 'str';
     protected $input_action = 'bind';
+    private $parent_ctype_name = false;
+    private $parent_items = null;
+
+	public function __construct($name, $options = false) {
+
+        parent::__construct($name, $options);
+
+        $this->setParentContentTypeName();
+    }
+
+	private function setParentContentTypeName(){
+
+		preg_match('/parent_([a-z0-9\-\_]+)_id/i', $this->name, $matches);
+
+        if (!empty($matches[1])){
+            $this->parent_ctype_name = $matches[1];
+        }
+	}
 
     public function setItem($item) {
 
@@ -19,7 +37,6 @@ class fieldParent extends cmsFormField {
         }
 
         return $this;
-
     }
 
     public function getStringValue($value){
@@ -28,62 +45,60 @@ class fieldParent extends cmsFormField {
             return '';
         }
 
-        $parent_ctype_name = $this->getParentContentTypeName();
-
-        $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
+        $parent_items = $this->getParentItems();
 
         if (!$parent_items){
             return '';
         }
 
-		$result = array();
+		$result = [];
 
 		foreach($parent_items as $parent_item) {
 			$result[] = $parent_item['title'];
 		}
 
 		return $result ? implode(', ', $result) : '';
-
     }
 
-    public function parse($value){
+    public function parseTeaser($value){
+        return $this->parse($value, true);
+    }
 
-		$parent_items = false;
+    public function parse($value, $is_teaser = false){
 
-        if ($value){
-			$parent_ctype_name = $this->getParentContentTypeName();
-            $parent_items = $this->getParentItems($parent_ctype_name);
+        if (!$value){
+            return '';
         }
+
+        $parent_items = $this->getParentItems(!$is_teaser);
 
         if (!$parent_items){
             return '';
         }
 
-		$result = array();
+		$result = [];
 
 		foreach($parent_items as $parent_item) {
-			$parent_url = href_to($parent_ctype_name, $parent_item['slug'].'.html');
+			$parent_url = href_to($this->parent_ctype_name, $parent_item['slug'].'.html');
 			$result[] = '<a href="'.$parent_url.'">'.$parent_item['title'].'</a>';
 		}
 
 		return $result ? implode(', ', $result) : '';
-
     }
 
     public function getInput($value) {
 
 		$this->title = $this->element_title;
 
-		$parent_ctype_name = $this->getParentContentTypeName();
 		$parent_items = false;
         $auth_user_id = cmsUser::get('id');
 
         $author_id = isset($this->item['user_id']) ? $this->item['user_id'] : $auth_user_id;
 
         if ($value){
-            $parent_items = $this->getParentItemsByIds($value, $parent_ctype_name);
+            $parent_items = $this->getParentItemsByIds($value);
         } else {
-            $parent_items = $this->getParentItems($parent_ctype_name);
+            $parent_items = $this->getParentItems();
         }
 
 		$perm = cmsUser::getPermissionValue($this->item['ctype_name'], 'bind_to_parent');
@@ -110,9 +125,9 @@ class fieldParent extends cmsFormField {
         }
 
         return cmsTemplate::getInstance()->renderFormField($this->class, array(
-			'ctype_name'         => isset($parent_ctype_name) ? $parent_ctype_name : false,
+			'ctype_name'         => $this->parent_ctype_name,
             'child_ctype_name'   => $this->item ? $this->item['ctype_name'] : false,
-            'parent_ctype'       => isset($parent_ctype_name) ? cmsCore::getModel('content')->getContentTypeByName($parent_ctype_name) : array(),
+            'parent_ctype'       => $this->parent_ctype_name ? cmsCore::getModel('content')->getContentTypeByName($this->parent_ctype_name) : [],
             'field'              => $this,
             'input_action'       => $this->input_action,
             'value'              => $value,
@@ -122,7 +137,6 @@ class fieldParent extends cmsFormField {
             'is_allowed_to_bind' => $is_allowed_to_bind,
             'is_allowed_to_add'  => $is_allowed_to_add
         ));
-
     }
 
     public function getFilterInput($value) {
@@ -130,7 +144,6 @@ class fieldParent extends cmsFormField {
         $this->input_action = 'select';
 
         return parent::getFilterInput($value);
-
     }
 
     public function applyFilter($model, $values) {
@@ -143,18 +156,7 @@ class fieldParent extends cmsFormField {
         $model->joinInner('content_relations_bind', $alias_name, $alias_name.'.child_item_id = i.id AND '.$alias_name.'.child_ctype_id '.($this->ctype_id ? '='.$this->ctype_id : 'IS NULL'));
 
         return $model->filterIn($alias_name.'.parent_item_id', $ids);
-
     }
-
-	private function getParentContentTypeName(){
-
-		preg_match('/parent_([a-z0-9\-\_]+)_id/i', $this->name, $matches);
-        if (!$matches || empty($matches[1])){ return false; }
-		$parent_ctype_name = $matches[1];
-
-		return $parent_ctype_name;
-
-	}
 
 	private function idsStringToArray($ids_list){
 
@@ -168,10 +170,9 @@ class fieldParent extends cmsFormField {
         }
 
 		return $ids;
-
 	}
 
-    private function getParentItemsByIds($ids_list, $parent_ctype_name){
+    private function getParentItemsByIds($ids_list){
 
         $ids = $this->idsStringToArray($ids_list);
         if (!$ids) { return false; }
@@ -179,13 +180,16 @@ class fieldParent extends cmsFormField {
         $content_model = cmsCore::getModel('content');
         $content_model->filterIn('id', $ids);
 
-        return $content_model->getContentItems($parent_ctype_name);
-
+        return $content_model->getContentItems($this->parent_ctype_name);
     }
 
-    private function getParentItems($parent_ctype_name){
+    private function getParentItems($store_result = true){
 
-		if (!$parent_ctype_name) { return false; }
+        if($this->parent_items !== null){
+            return $this->parent_items;
+        }
+
+		if (!$this->parent_ctype_name) { return false; }
 
 		if (empty($this->item['id'])) { return false; }
 
@@ -196,7 +200,7 @@ class fieldParent extends cmsFormField {
 		$parent_ctype = $child_ctype = false;
 
 		foreach($ctypes as $ctype){
-			if ($ctype['name'] == $parent_ctype_name){
+			if ($ctype['name'] == $this->parent_ctype_name){
 				$parent_ctype = $ctype;
 			}
 			if ($ctype['name'] == $this->item['ctype_name']){
@@ -226,16 +230,24 @@ class fieldParent extends cmsFormField {
 
         $content_model->join('content_relations_bind', 'r', $filter);
 
-		$items = $content_model->getContentItems($parent_ctype_name);
+		$items = $content_model->selectList([
+            'i.id'      => 'id',
+            'i.user_id' => 'user_id',
+            'i.title'   => 'title',
+            'i.slug'    => 'slug',
+        ], true)->getContentItems($this->parent_ctype_name);
 
         if ($items){
             foreach($items as $id=>$item){
-                $items[$id]['ctype_name'] = $parent_ctype_name;
+                $items[$id]['ctype_name'] = $this->parent_ctype_name;
             }
         }
 
-        return $items;
+        if($store_result){
+            $this->parent_items = $items;
+        }
 
+        return $items;
     }
 
 }

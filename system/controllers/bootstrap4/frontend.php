@@ -1,6 +1,8 @@
 <?php
 class bootstrap4 extends cmsFrontend {
 
+    private $last_compile_error = false;
+
     public function compileScss($path, $vars = []) {
 
         if(!cmsCore::includeFile('system/libs/scssphp/scss.inc.php')){
@@ -38,8 +40,26 @@ class bootstrap4 extends cmsFrontend {
             $scss->setVariables($_vars);
         }
 
-        return $scss->compile($data, $scss_file_name);
+        try {
+            return $scss->compile($data, $scss_file_name);
+        } catch (Exception $exc) {
+            $this->last_compile_error = $exc->getMessage();
+        }
 
+        return false;
+
+    }
+
+    public function hasCompileMessage() {
+        return $this->last_compile_error ? true : false;
+    }
+
+    public function getCompileMessage() {
+
+        $msg = $this->last_compile_error;
+        $this->last_compile_error = false;
+
+        return $msg;
     }
 
 }

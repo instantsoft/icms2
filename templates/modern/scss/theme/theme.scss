@@ -2,6 +2,16 @@
 @import "variables";
 @import "mixins";
 @import "content";
+
+@import "custom";
+
+.color-block {
+    float: left;
+    border: $btn-border-width solid $gray-400;
+    position: relative;
+    height: $spacer*1.5;
+    width: $spacer*2;
+}
 .inline_rss_icon {
     color: $orange;
     font-size: $font-size-base;

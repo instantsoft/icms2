@@ -1,31 +1,48 @@
 .content_list_item + .content_list_item {
     margin-top: $spacer*1.5;
 }
-.field {
-    &.left_field {
+.content_item, .content_list {
+    .field {
         margin-bottom: $spacer;
-    }
-    &.right_field {
-        margin-bottom: $spacer;
-    }
-    @include media-breakpoint-up(sm) {
         &.left_field {
-            float: left;
-            margin-right: $spacer;
-            margin-bottom: 0;
+            margin-bottom: $spacer;
         }
         &.right_field {
-            float: right;
-            margin-left: $spacer;
+            margin-bottom: $spacer;
+        }
+        @include media-breakpoint-up(sm) {
+            &.left_field {
+                float: left;
+                margin-right: $spacer;
+                margin-bottom: 0;
+            }
+            &.right_field {
+                float: right;
+                margin-left: $spacer;
+                margin-bottom: 0;
+            }
+        }
+        &.auto_field {
+            overflow: visible;
+        }
+        &.none_field {
+            float: none;
+            clear: both;
+        }
+        .title_left, .title_top {
+            font-weight: bold;
+        }
+        .title_left {
+            float:left;
+            margin-right: $spacer;
+        }
+        .title_top {
+            margin-bottom: $spacer/2;
+        }
+        .value > *:last-child {
             margin-bottom: 0;
         }
-    }
-    &.auto_field {
-        overflow: visible;
-    }
-    &.none_field {
-        float: none;
-        clear: both;
+        @include clearfix;
     }
 }
 .info_bar {
@@ -39,5 +56,36 @@
     }
     .bar_item {
         position: relative;
+    }
+}
+.first_type_images, .second_type_images, .hover_image {
+    position: relative;
+    display: inline-block;
+    &:after {
+        content: '';
+        background: $black;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        transition: $transition-fade;
+        opacity: 0;
+        background-image: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTguMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUxMiA1MTIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTI7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMzJweCIgaGVpZ2h0PSIzMnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDk3LjkzOCw0MzAuMDYzbC0xMTItMTEyYy0wLjMxMy0wLjMxMy0wLjYzNy0wLjYwNy0wLjk1NS0wLjkwOUM0MDQuNjM2LDI4NS40MDMsNDE2LDI0OC4wMDYsNDE2LDIwOCAgIEM0MTYsOTMuMzEzLDMyMi42OTUsMCwyMDgsMFMwLDkzLjMxMywwLDIwOHM5My4zMDUsMjA4LDIwOCwyMDhjNDAuMDA3LDAsNzcuNDA0LTExLjM2NCwxMDkuMTU0LTMxLjAxOCAgIGMwLjMwMiwwLjMxOSwwLjU5NiwwLjY0MywwLjkwOSwwLjk1NWwxMTIsMTEyQzQzOS40Myw1MDcuMzEzLDQ1MS43MTksNTEyLDQ2NCw1MTJjMTIuMjgxLDAsMjQuNTctNC42ODgsMzMuOTM4LTE0LjA2MyAgIEM1MTYuNjg4LDQ3OS4yMDMsNTE2LjY4OCw0NDguNzk3LDQ5Ny45MzgsNDMwLjA2M3ogTTY0LDIwOGMwLTc5LjQwNiw2NC42MDItMTQ0LDE0NC0xNDRzMTQ0LDY0LjU5NCwxNDQsMTQ0ICAgYzAsNzkuNDA2LTY0LjYwMiwxNDQtMTQ0LDE0NFM2NCwyODcuNDA2LDY0LDIwOHoiIGZpbGw9IiNGRkZGRkYiLz4KCTxwYXRoIGQ9Ik0yNzIsMTc2aC0zMnYtMzJjMC0xNy42NzItMTQuMzI4LTMyLTMyLTMycy0zMiwxNC4zMjgtMzIsMzJ2MzJoLTMyYy0xNy42NzIsMC0zMiwxNC4zMjgtMzIsMzJzMTQuMzI4LDMyLDMyLDMyaDMydjMyICAgYzAsMTcuNjcyLDE0LjMyOCwzMiwzMiwzMnMzMi0xNC4zMjgsMzItMzJ2LTMyaDMyYzE3LjY3MiwwLDMyLTE0LjMyOCwzMi0zMlMyODkuNjcyLDE3NiwyNzIsMTc2eiIgZmlsbD0iI0ZGRkZGRiIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo=);
+        background-repeat: no-repeat;
+        background-position: center center;
+        @include border-radius($thumbnail-border-radius);
+    }
+    &:hover {
+        &:after {
+            opacity: 0.4;
+        }
+    }
+}
+.first_type_images, .second_type_images {
+    float: left;
+    margin-right: $spacer*0.5;
+    &:last-child {
+        margin-right: 0;
     }
 }
