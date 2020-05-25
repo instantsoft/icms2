@@ -123,6 +123,6 @@ $this->addTplCSSNameFromContext('slick');
 ob_start();
 ?>
 <script type="text/javascript">
-    icms.menu.initSwipe('.info_bar', true);
+    icms.menu.initSwipe('.info_bar', {variableWidth: true});
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

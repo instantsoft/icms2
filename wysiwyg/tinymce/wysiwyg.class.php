@@ -247,6 +247,11 @@ class cmsWysiwygTinymce {
         $template->addJSFromContext('wysiwyg/tinymce/files/tinymce.min.js');
         $template->addTplJSNameFromContext('files');
 
+        $template_css = $template->getTemplateStylesFileName('theme');
+        if($template_css){
+            $template_css = $template->getHeadFilePath($template_css);
+        }
+
         ob_start(); ?>
 
         <script type="text/javascript">
@@ -270,6 +275,9 @@ class cmsWysiwygTinymce {
                         }
                     });
                 };
+                <?php if($template_css){ ?>
+                    tinymce_options.content_css = '<?php echo $template_css; ?>';
+                <?php } ?>
                 tinymce.init(tinymce_options);
                 icms.forms.addWysiwygsInsertPool(dom_id, function(field_element, text){
                     tinymce.activeEditor.setContent(text);
@@ -284,6 +292,12 @@ class cmsWysiwygTinymce {
                 });
                 icms.forms.addWysiwygsSavePool(dom_id, function(field_element){
                     tinymce.activeEditor.save();
+                });
+                //** Prevent bootstrap dialog from blocking focusin **/
+                $(document).on('focusin', function(e) {
+                    if ($(e.target).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                        e.stopImmediatePropagation();
+                    }
                 });
             }
         </script>

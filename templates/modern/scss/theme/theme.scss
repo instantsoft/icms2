@@ -6,6 +6,10 @@
 
 @import "custom";
 
+/** tinymce iframe */
+.mce-content-body {
+    margin: $spacer;
+}
 blockquote {
     margin: 0 0 $spacer*0.5;
     padding: $spacer*0.75 $spacer;

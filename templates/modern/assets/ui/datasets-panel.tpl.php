@@ -32,7 +32,7 @@
 <?php ob_start(); ?>
 <script type="text/javascript">
 if(typeof dsslick === 'undefined'){
-    var dsslick = icms.menu.initSwipe('.dataset-pills');
+    var dsslick = icms.menu.initSwipe('.dataset-pills', {initialSlide: $('.dataset-pills > li.is-active').index()});
 }
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

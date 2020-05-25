@@ -65,7 +65,7 @@
     <?php } ?>
     <div class="media-body">
 
-        <h6 class="d-flex align-items-center mb-2">
+        <h6 class="d-md-flex align-items-center mb-2">
             <span class="d-none d-sm-inline-block mr-2">
                 <?php if ($entry['user_id']) { ?>
                     <a href="<?php echo $author_url; ?>" class="icms-user-avatar <?php if (!empty($entry['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
@@ -88,7 +88,7 @@
                 <?php } ?>
             <?php } ?>
             <?php if($is_show_target){ ?>
-                <span class="mx-2">&rarr;</span>
+                <span class="mx-md-2">&rarr;</span>
                 <a class="subject" href="<?php echo $target_url; ?>">
                     <?php html($entry['target_title']); ?>
                 </a>
