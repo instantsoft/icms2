@@ -78,7 +78,7 @@
 
     if($is_dynamic_scheme){
         $this->addToolButton(array(
-            'class' => 'add ajax-modal',
+            'class' => 'add add_row ajax-modal',
             'title' => LANG_CP_WIDGETS_ADD_ROW,
             'href'  => $this->href_to('widgets', ['row_add', $template_name])
         ));
@@ -158,6 +158,7 @@
         <div id="cp-widgets-layout"
              data-scheme-row-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_rows']); ?>"
              data-scheme-col-reorder-url="<?php echo href_to('admin', 'reorder', ['layout_cols']); ?>"
+             data-scheme-row-add-url="<?php echo $this->href_to('widgets', ['row_add', $template_name]); ?>"
              data-template="<?php echo $template_name; ?>"
              data-toggle-url="<?php echo $this->href_to('widgets', 'toggle'); ?>"
              data-tree-url="<?php echo $this->href_to('widgets', 'tree_ajax'); ?>"

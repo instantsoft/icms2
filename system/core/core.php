@@ -807,6 +807,10 @@ class cmsCore {
 
     }
 
+    public function getMatchedPagesIds() {
+        return $this->matched_pages ? array_keys($this->matched_pages) : [];
+    }
+
     public function getMatchedPages() {
         return $this->matched_pages;
     }

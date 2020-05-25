@@ -1,6 +1,11 @@
 <?php
 
+define('LANG_MODERN_THEME_GAMMA', 'Цветовая гамма');
 define('LANG_MODERN_THEME_COLORS', 'Цвета');
+define('LANG_MODERN_THEME_BGCOLOR', 'Цвет фона сайта');
+define('LANG_MODERN_THEME_BCOLOR', 'Цвет шрифта сайта');
+define('LANG_MODERN_THEME_GCOLOR', 'Выберите цвет из гаммы');
+define('LANG_MODERN_THEME_SET_MY_COLOR', 'Указать свой');
 define('LANG_MODERN_THEME_COPYRIGHT', 'Копирайт');
 define('LANG_MODERN_THEME_COPYRIGHT_URL', 'Ссылка копирайта');
 define('LANG_MODERN_THEME_COPYRIGHT_URL_HINT', 'Если не указана, ведет на главную страницу');
@@ -10,4 +15,35 @@ define('LANG_MODERN_THEME_ENABLE_ROUNDED', 'Включить скруглени�
 define('LANG_MODERN_THEME_ENABLE_SHADOWS', 'Включить тени');
 define('LANG_MODERN_THEME_ENABLE_GRADIENTS', 'Включить градиенты');
 define('LANG_MODERN_THEME_ENABLE_RFS', 'Включить адаптивные размеры шрифтов');
+define('LANG_MODERN_THEME_BASE_FS', 'Базовый размер шрифта');
 define('LANG_MODERN_THEME_ENABLE_MODAL_BLUR', 'Размывать подложку при открытии модальных окон');
+define('LANG_MODERN_THEME_GRID_GUTTER_W', 'Базовый отступ сетки');
+define('LANG_MODERN_C_WHITE', 'Белый');
+define('LANG_MODERN_C_GRAY100', 'Серый 100');
+define('LANG_MODERN_C_GRAY200', 'Серый 200');
+define('LANG_MODERN_C_GRAY300', 'Серый 300');
+define('LANG_MODERN_C_GRAY400', 'Серый 400');
+define('LANG_MODERN_C_GRAY500', 'Серый 500');
+define('LANG_MODERN_C_GRAY600', 'Серый 600');
+define('LANG_MODERN_C_GRAY700', 'Серый 700');
+define('LANG_MODERN_C_GRAY800', 'Серый 800');
+define('LANG_MODERN_C_GRAY900', 'Серый 900');
+define('LANG_MODERN_C_BLACK', 'Чёрный');
+define('LANG_MODERN_C_BLUE', 'Синий');
+define('LANG_MODERN_C_INDIGO', 'Индиго');
+define('LANG_MODERN_C_PURPLE', 'Пурпурный');
+define('LANG_MODERN_C_PINK', 'Розовый');
+define('LANG_MODERN_C_RED', 'Красный');
+define('LANG_MODERN_C_ORANGE', 'Оранжевый');
+define('LANG_MODERN_C_YELLOW', 'Желтый');
+define('LANG_MODERN_C_GREEN', 'Зеленый');
+define('LANG_MODERN_C_TEAL', 'Чирок (сине-зеленый)');
+define('LANG_MODERN_C_CYAN', 'Циан (цвет морской волны)');
+define('LANG_MODERN_C_PRIMARY', 'Основной цвет');
+define('LANG_MODERN_C_SECONDARY', 'Второстепенный цвет');
+define('LANG_MODERN_C_SUCCESS', 'Положительный цвет');
+define('LANG_MODERN_C_INFO', 'Нейтральный цвет');
+define('LANG_MODERN_C_WARNING', 'Предупреждающий цвет');
+define('LANG_MODERN_C_DANGER', 'Отрицательный цвет');
+define('LANG_MODERN_C_LIGHT', 'Светлый цвет');
+define('LANG_MODERN_C_DARK', 'Тёмный цвет');

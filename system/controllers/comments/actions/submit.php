@@ -315,7 +315,10 @@ class actionCommentsSubmit extends cmsAction {
             'html'      => $this->cms_template->render($template_name, array(
                 'comments'       => array($comment),
                 'target_user_id' => $this->target_user_id,
-                'user'           => $this->cms_user
+                'user'           => $this->cms_user,
+                'is_levels'        => true,
+                'is_controls'      => true,
+                'is_show_target'   => false
             ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL))
         ));
 

@@ -4,11 +4,13 @@ CREATE TABLE `{#}layout_cols` (
   `row_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Row id',
   `title` varchar(255) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT 'Position title',
+  `type` enum('typical','custom') DEFAULT 'typical' COMMENT 'Column type',
   `ordering` int(11) UNSIGNED DEFAULT NULL COMMENT 'Column order in source code',
   `class` varchar(100) DEFAULT NULL COMMENT 'Column CSS class',
+  `wrapper` text COMMENT 'Column template',
   `options` text COMMENT 'Column options',
   PRIMARY KEY (`id`),
-  KEY `name` (`name`) USING BTREE,
+  KEY `name` (`name`),
   KEY `row_id` (`row_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Scheme position columns';
 
@@ -17,6 +19,7 @@ CREATE TABLE `{#}layout_rows` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) UNSIGNED DEFAULT NULL COMMENT 'Parent column ID',
   `title` varchar(255) DEFAULT NULL,
+  `tag` varchar(10) DEFAULT NULL COMMENT 'Row tag',
   `template` varchar(30) DEFAULT NULL COMMENT 'Binding to the template',
   `ordering` int(11) DEFAULT NULL COMMENT 'Row order in source code',
   `nested_position` enum('after','before') DEFAULT NULL COMMENT 'Nested row position',

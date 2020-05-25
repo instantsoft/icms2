@@ -8,7 +8,8 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
 
         $fields = [
             new fieldCheckbox('options:no_gutters', array(
-                'title' => LANG_CP_WIDGETS_ROW_NO_GUTTERS
+                'title' => LANG_CP_WIDGETS_ROW_NO_GUTTERS,
+                'visible_depend' => array('tag' => array('hide' => array('')))
             )),
             new fieldList('options:vertical_align', array(
                 'title' => LANG_CP_WIDGETS_COL_VA,
@@ -17,7 +18,8 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     'align-items-start'   => LANG_CP_WIDGETS_COL_VA1,
                     'align-items-center'  => LANG_CP_WIDGETS_COL_VA2,
                     'align-items-end'     => LANG_CP_WIDGETS_COL_VA3
-                )
+                ),
+                'visible_depend' => array('tag' => array('hide' => array('')))
             )),
             new fieldList('options:horizontal_align', array(
                 'title' => LANG_CP_WIDGETS_COL_HA,
@@ -28,12 +30,10 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     'justify-content-end'     => LANG_CP_WIDGETS_COL_HA3,
                     'justify-content-around'  => LANG_CP_WIDGETS_COL_HA4,
                     'justify-content-between' => LANG_CP_WIDGETS_COL_HA5
-                )
+                ),
+                'visible_depend' => array('tag' => array('hide' => array('')))
             )),
-        ];
-
-        if($do === 'add' || ($do === 'edit' && empty($row['parent_id']))){
-            $fields[] = new fieldList('options:container', array(
+            new fieldList('options:container', array(
                 'title' => LANG_CP_WIDGETS_ROW_CONT,
                 'default' => 'container',
                 'items' => array(
@@ -44,15 +44,15 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     'container-fluid' => '100%',
                     ''                => LANG_CP_WIDGETS_ROW_CONT_NO
                 )
-            ));
-            $fields[] = new fieldString('options:container_tag_class', array(
+            )),
+            new fieldString('options:container_tag_class', array(
                 'title' => LANG_CP_WIDGETS_ROW_CONT_CSS,
                 'rules' => array(
                     array('max_length', 255)
                 ),
                 'visible_depend' => array('options:container' => array('hide' => array('')))
-            ));
-            $fields[] = new fieldList('options:parrent_tag', array(
+            )),
+            new fieldList('options:parrent_tag', array(
                 'title' => LANG_CP_WIDGETS_ROW_PARRENT_TAG,
                 'items' => array(
                     ''        => LANG_NO,
@@ -64,15 +64,15 @@ class onBootstrap4AdminRowSchemeOptionsModern extends cmsAction {
                     'nav'     => '<nav>',
                     'section' => '<section>'
                 )
-            ));
-            $fields[] = new fieldString('options:parrent_tag_class', array(
+            )),
+            new fieldString('options:parrent_tag_class', array(
                 'title' => LANG_CP_WIDGETS_ROW_PARRENT_TAG_C,
                 'rules' => array(
                     array('max_length', 255)
                 ),
                 'visible_depend' => array('options:parrent_tag' => array('hide' => array('')))
-            ));
-        }
+            ))
+        ];
 
         return $fields;
 

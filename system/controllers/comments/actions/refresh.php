@@ -102,9 +102,12 @@ class actionCommentsRefresh extends cmsAction {
                 'level'     => $comment['level'],
                 'timestamp' => strtotime($comment['date_pub']),
                 'html'      => $this->cms_template->render($template_name, array(
-                    'comments' => array($comment),
+                    'comments'       => array($comment),
                     'target_user_id' => $target_user_id,
-                    'user' => $this->cms_user
+                    'user'           => $this->cms_user,
+                    'is_levels'      => true,
+                    'is_controls'    => true,
+                    'is_show_target' => false
                 ), new cmsRequest(array(), cmsRequest::CTX_INTERNAL))
             );
         }

@@ -1089,3 +1089,7 @@ td > .spinner > div {
     vertical-align: -0.125em;
     fill: currentColor;
 }
+.icms-cpanel .minicolors-theme-default .minicolors-swatch {
+    width: calc(1.5em + 0.5rem);
+    height: calc(1.5em + 0.5rem);
+}

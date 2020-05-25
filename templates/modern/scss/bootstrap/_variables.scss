@@ -122,9 +122,9 @@ $enable-prefers-reduced-motion-media-query:   true !default;
 $enable-hover-media-query:                    false !default; // Deprecated, no longer affects any compiled CSS
 $enable-grid-classes:                         true !default;
 $enable-pointer-cursor-for-buttons:           true !default;
-$enable-print-styles:                         true !default;
+$enable-print-styles:                         false !default;
 $enable-responsive-font-sizes:                false !default;
-$enable-validation-icons:                     true !default;
+$enable-validation-icons:                     false !default;
 $enable-deprecation-messages:                 false !default;
 
 

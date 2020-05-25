@@ -25,6 +25,7 @@ class modelWidgets extends cmsModel {
         $this->select('r.title', 'row_title');
         $this->select('r.options', 'row_options');
         $this->select('r.class', 'row_class');
+        $this->select('r.tag', 'row_tag');
 
         $this->joinInner('layout_rows', 'r', 'r.id = i.row_id');
 
@@ -41,7 +42,7 @@ class modelWidgets extends cmsModel {
             return $item;
         }, false);
 
-        $rows = $ns_rows = [];
+        $rows = $ns_rows = $child_positions = [];
 
         if($items){
 
@@ -52,11 +53,14 @@ class modelWidgets extends cmsModel {
 
                     if($last_row_id != $item['row_id']){
 
+                        $child_positions[$item['parent_id']] = [$item['name']];
+
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']] = [
                             'id'        => $item['row_id'],
                             'parent_id' => $item['parent_id'],
                             'nested_position' => $item['nested_position'],
                             'title'     => $item['row_title'],
+                            'tag'       => $item['row_tag'],
                             'class'     => $item['row_class'],
                             'options'   => $item['row_options'],
                             'positions' => [$item['name']],
@@ -66,6 +70,8 @@ class modelWidgets extends cmsModel {
                     } else {
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['positions'][] = $item['name'];
                         $ns_rows[$item['parent_id']][$item['nested_position']][$item['row_id']]['cols'][$item['id']] = $item;
+
+                        $child_positions[$item['parent_id']][] = $item['name'];
                     }
 
                     $last_row_id = $item['row_id'];
@@ -86,13 +92,20 @@ class modelWidgets extends cmsModel {
 
                 if($last_row_id != $item['row_id']){
 
+                    $positions = [];
+                    if(isset($child_positions[$item['id']])){
+                        $positions = $child_positions[$item['id']];
+                    }
+                    $positions[] = $item['name'];
+
                     $rows[$item['row_id']] = [
                         'id'        => $item['row_id'],
                         'parent_id' => $item['parent_id'],
                         'title'     => $item['row_title'],
+                        'tag'       => $item['row_tag'],
                         'class'     => $item['row_class'],
                         'options'   => $item['row_options'],
-                        'positions' => [$item['name']],
+                        'positions' => $positions,
                         'cols'      => [$item['id'] => $item]
                     ];
 

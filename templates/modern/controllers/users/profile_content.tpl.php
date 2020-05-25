@@ -72,7 +72,7 @@
     <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
         <sup>
             <a class="inline_rss_icon d-none d-lg-inline-block" href="<?php echo href_to('rss', 'feed', $ctype['name']) . '?user='.$profile['id']; ?>" title="RSS">
-            <?php html_svg_icon('solid', 'rss'); ?>
+                <?php html_svg_icon('solid', 'rss'); ?>
             </a>
         </sup>
     <?php } ?>

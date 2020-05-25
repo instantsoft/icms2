@@ -829,6 +829,7 @@ form .input-prefix-suffix:after {
     display: block;
 }
 input.button-submit,
+button.button,
 input.button {
 	padding: 7px 10px;
 	line-height: 100%;
@@ -845,22 +846,23 @@ input.button {
 }
 
 input.button-submit:hover,
+button.button:hover,
 input.button:hover {
 	background: #3498db;
 }
-input.button.button-cancel {
+.button.button-cancel {
     background: #95a5a6;
 }
-input.button.button-cancel:hover {
+.button.button-cancel:hover {
     background: #7f8c8d;
 }
-input.button.to_draft {
+.button.to_draft {
     background: #8e44ad;
 }
-input.button.to_draft:hover {
+.button.to_draft:hover {
     background: #9b59b6;
 }
-input.button-small {
+.button-small {
     padding:4px 10px;
 }
 
@@ -2195,7 +2197,7 @@ span.get_replies {
 #pm_notices_list .item .buttons .button{
     border-color:#BDC3C7;
 }
-#pm_notices_window > input.button {
+#pm_notices_window > .button {
     border-radius: 0;
     width: 100%;
     box-sizing: border-box;
@@ -2533,7 +2535,7 @@ table.data_list .actions{
 	#pm_contact .overview .user_date_log{
 		display: none!important;
 	}
-	.nyroModalMessage input.button-small {
+	.nyroModalMessage .button-small {
 		padding: 4px 7px;
 		font-size:12px;
     }

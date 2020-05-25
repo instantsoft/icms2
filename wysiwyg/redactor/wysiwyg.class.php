@@ -98,8 +98,14 @@ class cmsWysiwygRedactor {
         $template = cmsTemplate::getInstance();
 
         $template->addJSFromContext('wysiwyg/redactor/files/redactor.js');
-        $template->addCSSFromContext('wysiwyg/redactor/files/redactor.css');
         $template->addTplJSNameFromContext('files');
+
+        $css_file = 'wysiwyg/redactor/files/redactor.css';
+        $tpl_css_file = cmsTemplate::TEMPLATE_BASE_PATH. $template->name .'/css/wysiwyg/redactor/styles.css';
+        if(is_readable(cmsConfig::get('root_path').$tpl_css_file)){
+            $css_file = $tpl_css_file;
+        }
+        $template->addCSSFromContext($css_file);
 
         if(!empty($this->options['plugins'])){
             foreach($this->options['plugins'] as $plugin){

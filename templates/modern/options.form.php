@@ -6,7 +6,42 @@ class formModernTemplateOptions extends cmsForm {
 
     public function init() {
 
-        return array(
+        $gamma = [
+            '$white'    => LANG_MODERN_C_WHITE,
+            '$gray-100' => LANG_MODERN_C_GRAY100,
+            '$gray-200' => LANG_MODERN_C_GRAY200,
+            '$gray-300' => LANG_MODERN_C_GRAY300,
+            '$gray-400' => LANG_MODERN_C_GRAY400,
+            '$gray-500' => LANG_MODERN_C_GRAY500,
+            '$gray-600' => LANG_MODERN_C_GRAY600,
+            '$gray-700' => LANG_MODERN_C_GRAY700,
+            '$gray-800' => LANG_MODERN_C_GRAY800,
+            '$gray-900' => LANG_MODERN_C_GRAY900,
+            '$black'    => LANG_MODERN_C_BLACK,
+            '$blue'     => LANG_MODERN_C_BLUE,
+            '$indigo'   => LANG_MODERN_C_INDIGO,
+            '$purple'   => LANG_MODERN_C_PURPLE,
+            '$pink'     => LANG_MODERN_C_PINK,
+            '$red'      => LANG_MODERN_C_RED,
+            '$orange'   => LANG_MODERN_C_ORANGE,
+            '$yellow'   => LANG_MODERN_C_YELLOW,
+            '$green'    => LANG_MODERN_C_GREEN,
+            '$teal'     => LANG_MODERN_C_TEAL,
+            '$cyan'     => LANG_MODERN_C_CYAN
+        ];
+
+        $theme_colors = [
+            '$primary'   => LANG_MODERN_C_PRIMARY,
+            '$secondary' => LANG_MODERN_C_SECONDARY,
+            '$success'   => LANG_MODERN_C_SUCCESS,
+            '$info'      => LANG_MODERN_C_INFO,
+            '$warning'   => LANG_MODERN_C_WARNING,
+            '$danger'    => LANG_MODERN_C_DANGER,
+            '$light'     => LANG_MODERN_C_LIGHT,
+            '$dark'      => LANG_MODERN_C_DARK
+        ];
+
+        $fields = array(
 
             'basic' => array(
                 'type' => 'fieldset',
@@ -49,9 +84,14 @@ class formModernTemplateOptions extends cmsForm {
                     )),
 
                     new fieldString('scss:grid-gutter-width', array(
-                        'title' => 'grid-gutter-width',
+                        'title' => LANG_MODERN_THEME_GRID_GUTTER_W,
                         'default' => '30px'
                     )),
+
+                    new fieldString('scss:font-size-base', array(
+                        'title' => LANG_MODERN_THEME_BASE_FS,
+                        'default' => '1rem'
+                    ))
 
                 )
             ),
@@ -59,96 +99,53 @@ class formModernTemplateOptions extends cmsForm {
             'colors' => array(
                 'type' => 'fieldset',
                 'title' => LANG_MODERN_THEME_COLORS,
-                'childs' => array(
-                    new fieldColor('scss:white', array(
-                        'title' => 'white',
-                        'default' => '#fff'
+                'childs' => [
+                    new fieldList('scss:body-bg', array(
+                        'title' => LANG_MODERN_THEME_BGCOLOR,
+                        'hint' => LANG_MODERN_THEME_GCOLOR,
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
                     )),
-                    new fieldColor('scss:gray-100', array(
-                        'title' => 'gray-100',
-                        'default' => '#f8f9fa'
+                    new fieldColor('custom_scss:body-bg', array(
+                        'visible_depend' => array('scss:body-bg' => array('show' => array('')))
                     )),
-                    new fieldColor('scss:gray-200', array(
-                        'title' => 'gray-200',
-                        'default' => '#e9ecef'
+                    new fieldList('scss:body-color', array(
+                        'title' => LANG_MODERN_THEME_BCOLOR,
+                        'hint' => LANG_MODERN_THEME_GCOLOR,
+                        'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
                     )),
-                    new fieldColor('scss:gray-300', array(
-                        'title' => 'gray-300',
-                        'default' => '#dee2e6'
+                    new fieldColor('custom_scss:body-color', array(
+                        'visible_depend' => array('scss:body-color' => array('show' => array('')))
                     )),
-                    new fieldColor('scss:gray-400', array(
-                        'title' => 'gray-400',
-                        'default' => '#ced4da'
-                    )),
-                    new fieldColor('scss:gray-500', array(
-                        'title' => 'gray-500',
-                        'default' => '#adb5bd'
-                    )),
-                    new fieldColor('scss:gray-600', array(
-                        'title' => 'gray-600',
-                        'default' => '#6c757d'
-                    )),
-                    new fieldColor('scss:gray-700', array(
-                        'title' => 'gray-700',
-                        'default' => '#495057'
-                    )),
-                    new fieldColor('scss:gray-800', array(
-                        'title' => 'gray-800',
-                        'default' => '#343a40'
-                    )),
-                    new fieldColor('scss:gray-900', array(
-                        'title' => 'gray-900',
-                        'default' => '#212529'
-                    )),
-                    new fieldColor('scss:black', array(
-                        'title' => 'black',
-                        'default' => '#000'
-                    )),
-                    new fieldColor('scss:blue', array(
-                        'title' => 'blue',
-                        'default' => '#007bff'
-                    )),
-                    new fieldColor('scss:indigo', array(
-                        'title' => 'indigo',
-                        'default' => '#6610f2'
-                    )),
-                    new fieldColor('scss:purple', array(
-                        'title' => 'purple',
-                        'default' => '#6f42c1'
-                    )),
-                    new fieldColor('scss:pink', array(
-                        'title' => 'pink',
-                        'default' => '#e83e8c'
-                    )),
-                    new fieldColor('scss:red', array(
-                        'title' => 'red',
-                        'default' => '#dc3545'
-                    )),
-                    new fieldColor('scss:orange', array(
-                        'title' => 'orange',
-                        'default' => '#fd7e14'
-                    )),
-                    new fieldColor('scss:yellow', array(
-                        'title' => 'yellow',
-                        'default' => '#ffc107'
-                    )),
-                    new fieldColor('scss:green', array(
-                        'title' => 'green',
-                        'default' => '#28a745'
-                    )),
-                    new fieldColor('scss:teal', array(
-                        'title' => 'teal',
-                        'default' => '#20c997'
-                    )),
-                    new fieldColor('scss:cyan', array(
-                        'title' => 'cyan',
-                        'default' => '#17a2b8'
-                    ))
-                )
+                ]
+            ),
+
+            'gamma' => array(
+                'type' => 'fieldset',
+                'title' => LANG_MODERN_THEME_GAMMA,
+                'childs' => []
             )
 
         );
 
+        foreach ($gamma as $name => $title) {
+            $fields['gamma']['childs'][] = new fieldColor('scss:'.str_replace('$', '', $name), array(
+                'title' => $title
+            ));
+        }
+
+        foreach ($theme_colors as $name => $title) {
+            $name = str_replace('$', '', $name);
+            $fields['colors']['childs'][] = new fieldList('scss:'.$name, array(
+                'title' => $title,
+                'hint' => LANG_MODERN_THEME_GCOLOR,
+                'items' => ['' => LANG_MODERN_THEME_SET_MY_COLOR]+$gamma
+            ));
+            $fields['colors']['childs'][] = new fieldColor('custom_scss:'.$name, array(
+                'visible_depend' => array('scss:'.$name => array('show' => array('')))
+            ));
+        }
+
+        return $fields;
     }
 
 }

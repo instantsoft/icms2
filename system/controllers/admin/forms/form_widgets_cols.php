@@ -23,11 +23,28 @@ class formAdminWidgetsCols extends cmsForm {
                             $do == 'add' ? ['unique', 'layout_cols', 'name'] : ['unique_exclude', 'layout_cols', 'name', $col_id]
                         )
                     )),
+                    new fieldList('type', array(
+                        'title' => LANG_CP_WIDGETS_COL_TYPE,
+                        'default' => 'typical',
+                        'items' => array(
+                            'typical' => LANG_CP_WIDGETS_COL_TYPE1,
+                            'custom'  => LANG_CP_WIDGETS_COL_TYPE2
+                        )
+                    )),
+                    new fieldHtml('wrapper', array(
+                        'title' => LANG_CP_WIDGETS_COL_WRAPPER,
+                        'hint'  => LANG_CP_WIDGETS_COL_WRAPPER_H,
+                        'options' => array(
+                            'editor' => 'ace'
+                        ),
+                        'visible_depend' => array('type' => array('hide' => array('typical')))
+                    )),
                     new fieldString('class', array(
                         'title' => LANG_CP_WIDGETS_COL_CLASS,
                         'rules' => array(
                             array('max_length', 100)
-                        )
+                        ),
+                        'visible_depend' => array('type' => array('hide' => array('custom')))
                     ))
                 )
             )

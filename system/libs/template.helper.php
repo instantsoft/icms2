@@ -260,11 +260,12 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
 
     $attr_str = html_attr_str($attributes);
 
-    $class = 'button btn btn-secondary';
+    $class = 'button btn';
 
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
+    else { $class .= ' btn-secondary'; }
 
-	return '<input class="'.$class.'" name="'.$name.'" value="'.htmlspecialchars($caption).'" onclick="'.$onclick.'" '.$attr_str.'/>';
+	return '<button value="'.htmlspecialchars($caption).'" class="'.$class.'" name="'.$name.'" onclick="'.$onclick.'" '.$attr_str.'><span>'.htmlspecialchars($caption).'</span></button>';
 
 }
 

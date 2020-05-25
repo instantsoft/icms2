@@ -10,7 +10,7 @@
     <?php } ?>
     <?php
         // Собираем класс ряда
-        $row_class = ['row'];
+        $row_class =  $row['tag'] ? ['row'] : [];
         if (!empty($row['options']['no_gutters'])) {
             $row_class[] = 'no-gutters';
         }
@@ -24,9 +24,20 @@
             $row_class[] = $row['class'];
         }
     ?>
-    <div class="<?php echo implode(' ', $row_class); ?>">
+    <?php if ($row_class) { ?>
+        <<?php echo $row['tag']; ?> class="<?php echo implode(' ', $row_class); ?>">
+    <?php } ?>
     <?php foreach ($row['cols'] as $col) { ?>
-        <?php if(!$this->hasWidgetsOn($col['name'])){ ?>
+        <?php if($col['type'] === 'custom'){ ?>
+            <?php if(!empty($col['rows']['before'])){ ?>
+                <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
+            <?php } ?>
+            <?php if($this->hasWidgetsOn($col['name'])){ ?>
+                <?php $this->widgetsPlain($col['name'], $col['wrapper']); ?>
+            <?php } ?>
+            <?php if(!empty($col['rows']['after'])){ ?>
+                <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
+            <?php } ?>
             <?php continue; ?>
         <?php } ?>
         <?php
@@ -63,17 +74,21 @@
                 $col_class[] = $col['class'];
             }
         ?>
-        <div class="<?php echo implode(' ', $col_class); ?>">
-            <?php if(!empty($col['rows']['before'])){ ?>
-                <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
-            <?php } ?>
-            <?php $this->widgets($col['name']); ?>
-            <?php if(!empty($col['rows']['after'])){ ?>
-                <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
-            <?php } ?>
-        </div>
+        <?php if($this->hasWidgetsOn($col['name'])){ ?>
+            <div class="<?php echo implode(' ', $col_class); ?>">
+                <?php if(!empty($col['rows']['before'])){ ?>
+                    <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['before']]); ?>
+                <?php } ?>
+                <?php $this->widgets($col['name']); ?>
+                <?php if(!empty($col['rows']['after'])){ ?>
+                    <?php $this->renderLayoutChild('scheme', ['rows' => $col['rows']['after']]); ?>
+                <?php } ?>
+            </div>
+        <?php } ?>
     <?php } ?>
-    </div>
+    <?php if ($row_class) { ?>
+        </<?php echo $row['tag']; ?>>
+    <?php } ?>
     <?php if (!empty($row['options']['container'])) { ?>
         </div>
     <?php } ?>

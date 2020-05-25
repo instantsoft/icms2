@@ -35,11 +35,26 @@ class formAdminWidgetsRows extends cmsForm {
                             'after' => LANG_CP_WIDGETS_ROW_NESTED_POSITION2
                         )
                     )),
+                    new fieldList('tag', array(
+                        'title' => LANG_CP_WIDGETS_ROW_TAG,
+                        'default' => 'div',
+                        'items' => array(
+                            ''        => LANG_NO,
+                            'article' => '<article>',
+                            'aside'   => '<aside>',
+                            'div'     => '<div>',
+                            'footer'  => '<footer>',
+                            'header'  => '<header>',
+                            'nav'     => '<nav>',
+                            'section' => '<section>'
+                        )
+                    )),
                     new fieldString('class', array(
                         'title' => LANG_CP_WIDGETS_ROW_CLASS,
                         'rules' => array(
                             array('max_length', 100)
-                        )
+                        ),
+                        'visible_depend' => array('tag' => array('hide' => array('')))
                     ))
                 )
             )

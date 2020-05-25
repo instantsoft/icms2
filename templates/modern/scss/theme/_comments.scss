@@ -1,0 +1,72 @@
+$ns-levels: 1,2,3,4,5,6,7,8,9,10;
+$comment-rating-size: 30px;
+.icms-comment-rating {
+    min-width: $comment-rating-size;
+}
+.text-success.rate-up, .rate-down.text-danger {
+    color: $secondary  !important;
+}
+.rate-disabled {
+    color: $gray-300;
+}
+.refresh_btn {
+    display: block;
+    position: fixed;
+    z-index: 100;
+    right: 0px;
+    top: 45%;
+    &.refresh_spin > svg {
+        animation: animate__comment-spin 2s infinite linear;
+    }
+}
+@keyframes animate__comment-spin{0%{transform:rotate(0deg)}to{transform:rotate(359deg)}}
+#wall_add_form, #comments_add_form {
+    display: none;
+}
+.icms-comments-ns {
+    @each $level in $ns-levels{
+        &.ns-#{$level} {
+            margin-left: $spacer*$level*0.5;
+        }
+    }
+    @include media-breakpoint-up(lg) {
+        @each $level in $ns-levels{
+            &.ns-#{$level} {
+                margin-left: calc(#{$comment-rating-size*$level} + #{$spacer*$level});
+            }
+        }
+    }
+
+}
+.comment {
+    .icms-user-avatar > img {
+        max-width: $spacer*1.25;
+    }
+    .icms-user-avatar.peer_online:after, .icms-user-avatar.peer_no_online:after {
+        bottom: -2px;
+        right: -2px;
+        border-width: 1px;
+        height: 10px;
+        width: 10px;
+    }
+    .no_approved {
+        display: none !important;
+    }
+}
+#comments_widget {
+    .bad {
+        transition: $transition-fade;
+        &:hover {
+            opacity: 1;
+        }
+    }
+    .bad6{opacity:.1;}
+    .bad5{opacity:.2;}
+    .bad4{opacity:.35;}
+    .bad3{opacity:.5;}
+    .bad2{opacity:.65;}
+    .bad1{opacity:.8;}
+}
+.icms-comment-html > *:last-child {
+    margin-bottom: 0;
+}

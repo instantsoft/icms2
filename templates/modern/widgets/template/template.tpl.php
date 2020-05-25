@@ -17,7 +17,7 @@
         <script type="text/javascript">
             $(function(){
             <?php foreach($messages as $message){ ?>
-                toastr.<?php echo $message['class']; ?>('<?php echo $message['text']; ?>');
+                toastr.<?php echo $message['class']; ?>('<?php echo str_replace(["\n", "'"], ' ', $message['text']); ?>');
              <?php } ?>
             });
         </script>

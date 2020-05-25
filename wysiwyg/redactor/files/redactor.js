@@ -7027,15 +7027,7 @@
 		{
 			this.$redactorModal.find('#redactor_modal_header').html(title);
 		},
-		modalSetButtonsWidth: function()
-		{
-			var buttons = this.$redactorModal.find('footer button').not('.redactor_modal_btn_hidden');
-			var buttonsSize = buttons.length;
-			if (buttonsSize > 0)
-			{
-				$(buttons).css('width', (this.$redactorModalWidth/buttonsSize) + 'px')
-			}
-		},
+		modalSetButtonsWidth: function(){},
 		modalOnCloseButton: function()
 		{
 			this.$redactorModal.find('.redactor_btn_modal_close').on('click', $.proxy(this.modalClose, this));

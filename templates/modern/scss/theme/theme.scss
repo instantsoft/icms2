@@ -2,8 +2,62 @@
 @import "variables";
 @import "mixins";
 @import "content";
+@import "comments";
 
 @import "custom";
+
+blockquote {
+    margin: 0 0 $spacer*0.5;
+    padding: $spacer*0.75 $spacer;
+    background-color: theme-color-level('secondary', $alert-bg-level);
+    border-left:5px solid $teal;
+    quotes: "\201C""\201D""\2018""\2019";
+    position: relative;
+    &:before {
+        content: open-quote;
+        font-size: $font-size-base*3;
+        position: absolute;
+        top: 0;
+        right: 5px;
+        line-height: 1;
+    }
+}
+.spoiler {
+    > input {
+        + label {
+            cursor: pointer;
+            margin-bottom: 0;
+            &:before {
+                content: '+';
+                float: left;
+                font-weight: bold;
+                width: 15px;
+            }
+        }
+        &:checked + label {
+            &:before {
+                content: '-';
+            }
+            + .spoiler_body{
+                display: block;
+            }
+        }
+    }
+    > input, > input + label + .spoiler_body {
+        display:none;
+    }
+    > input + label, > .spoiler_body {
+        background: theme-color-level('secondary', $alert-bg-level);
+        padding: $spacer*0.5 $spacer*0.75;
+        width:100%;
+        display: block;
+    }
+    > .spoiler_body {
+        border: 1px solid theme-color-level('secondary', $alert-bg-level);
+        border-top: none;
+        background-color: transparent;
+    }
+}
 
 .color-block {
     float: left;
@@ -11,6 +65,9 @@
     position: relative;
     height: $spacer*1.5;
     width: $spacer*2;
+}
+.media-body >*:last-child {
+    margin-bottom: 0;
 }
 .inline_rss_icon {
     color: $orange;
@@ -133,38 +190,36 @@
         opacity: 1;
     }
 }
-.is-busy * {
-    -webkit-transition: none;
-    transition: none;
-    visibility: hidden;
+.is-busy {
+    position: relative;
+    * {
+        -webkit-transition: none;
+        transition: none;
+        visibility: hidden;
+
+    }
+    &:after {
+        content: '';
+        display: block;
+        padding: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 5px solid;
+        border-top-color: transparent;
+        border-left-color: transparent;
+        border-radius: 50%;
+        color: inherit;
+        background-color: transparent;
+        -webkit-animation: loader-button 0.9s linear infinite;
+        animation: loader-button 0.9s linear infinite;
+        z-index: 99;
+        width: ($input-btn-padding-x * 2);
+        height: ($input-btn-padding-x * 2);
+        margin: -$input-btn-padding-x;
+    }
 }
-.is-busy:after {
-    content: '';
-    display: block;
-    padding: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 5px solid;
-    border-top-color: transparent;
-    border-left-color: transparent;
-    border-radius: 50%;
-    color: inherit;
-    background-color: transparent;
-    -webkit-animation: loader-button 0.9s linear infinite;
-    animation: loader-button 0.9s linear infinite;
-    z-index: 99;
-}
-.btn.is-busy:after {
-    width: ($input-btn-padding-x * 2);
-    height: ($input-btn-padding-x * 2);
-    margin: -$input-btn-padding-x -($input-btn-padding-x * 2);
-}
-.nav-link.is-busy:after {
-    width: ($nav-link-padding-x * 2);
-    height: ($nav-link-padding-x * 2);
-    margin: -$nav-link-padding-x;
-}
+
 .spinner {
     width: 70px;
     height: 40px;

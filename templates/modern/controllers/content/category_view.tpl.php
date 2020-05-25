@@ -68,7 +68,11 @@
     <h1>
         <?php $this->pageH1(); ?>
         <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-            <a class="inline_rss_icon" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>"></a>
+            <sup>
+                <a class="inline_rss_icon d-none d-lg-inline-block" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">
+                    <?php html_svg_icon('solid', 'rss'); ?>
+                </a>
+            </sup>
         <?php } ?>
     </h1>
 <?php } ?>

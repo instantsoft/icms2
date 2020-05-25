@@ -1,4 +1,4 @@
-<ul class="nav <?php echo $css_class; ?>">
+<ul class="nav <?php echo $css_class; ?>" role="navigation">
 
 <?php $last_level = 0; ?>
 

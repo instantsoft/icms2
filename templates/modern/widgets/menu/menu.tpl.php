@@ -1,6 +1,3 @@
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#target-<?php echo $widget->options['menu']; ?>">
-    <span class="navbar-toggler-icon"></span>
-</button>
 <div class="collapse navbar-collapse" id="target-<?php echo $widget->options['menu']; ?>">
     <?php
         $this->menu(

@@ -1,4 +1,4 @@
-<?php $listed = []; $position = 2; ?>
+<?php $listed = []; $position = 2; $count = count($breadcrumbs); ?>
 <ol class="breadcrumb mb-0" itemscope itemtype="https://schema.org/BreadcrumbList">
     <li class="breadcrumb-item">
         <a href="<?php echo $options['home_url']; ?>" title="<?php echo LANG_HOME; ?>" itemprop="item">
@@ -18,7 +18,7 @@
                         </span>
                     </a>
                 <?php } else { ?>
-                    <span itemprop="name">
+                    <span itemprop="name" <?php if($count > 2) { ?>class="d-none d-lg-inline-block"<?php } ?>>
                         <?php html($item['title']); ?>
                     </span>
                 <?php } ?>

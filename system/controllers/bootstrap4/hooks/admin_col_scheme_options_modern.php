@@ -25,7 +25,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-11' => '91.67%',
                     'col-12' => '100%',
                     'col-auto' => LANG_CP_WIDGETS_COL_AUTO
-                )
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldList('options:sm_col_class', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥576px'),
@@ -44,7 +45,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-sm-11' => '91.67%',
                     'col-sm-12' => '100%',
                     'col-sm-auto' => LANG_CP_WIDGETS_COL_AUTO
-                )
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldList('options:md_col_class', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥768px'),
@@ -63,7 +65,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-md-11' => '91.67%',
                     'col-md-12' => '100%',
                     'col-md-auto' => LANG_CP_WIDGETS_COL_AUTO
-                )
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldList('options:lg_col_class', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥992px'),
@@ -82,7 +85,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-lg-11' => '91.67%',
                     'col-lg-12' => '100%',
                     'col-lg-auto' => LANG_CP_WIDGETS_COL_AUTO
-                )
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldList('options:xl_col_class', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥1200px'),
@@ -101,7 +105,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-xl-11' => '91.67%',
                     'col-xl-12' => '100%',
                     'col-xl-auto' => LANG_CP_WIDGETS_COL_AUTO
-                )
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldNumber('options:default_order', array(
                 'title' => LANG_CP_WIDGETS_COL_D_ORDER,
@@ -111,7 +116,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 ],
                 'rules' => [
                     array('max', 12),
-                ]
+                ],
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldNumber('options:sm_order', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥576px'),
@@ -121,7 +127,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 ],
                 'rules' => [
                     array('max', 12),
-                ]
+                ],
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldNumber('options:md_order', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥768px'),
@@ -131,7 +138,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 ],
                 'rules' => [
                     array('max', 12),
-                ]
+                ],
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldNumber('options:lg_order', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥992px'),
@@ -141,7 +149,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 ],
                 'rules' => [
                     array('max', 12),
-                ]
+                ],
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             )),
             new fieldNumber('options:xl_order', array(
                 'title' => sprintf(LANG_CP_WIDGETS_COL_ORDER, '≥1200px'),
@@ -151,7 +160,8 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 ],
                 'rules' => [
                     array('max', 12),
-                ]
+                ],
+                'visible_depend' => array('type' => array('hide' => array('custom')))
             ))
         ];
 

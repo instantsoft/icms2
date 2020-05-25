@@ -191,7 +191,14 @@ class cmsWysiwygMarkitup {
         $template->addJSFromContext('wysiwyg/markitup/image_upload.js');
         $template->addJSFromContext('wysiwyg/markitup/insert_smiles.js');
         $template->addJSFromContext('wysiwyg/markitup/jquery.markitup.js');
-        $template->addCSSFromContext('wysiwyg/markitup/skins/'.$this->options['skin'].'/style.css');
+
+        $css_file = 'wysiwyg/markitup/skins/'.$this->options['skin'].'/style.css';
+        $tpl_css_file = cmsTemplate::TEMPLATE_BASE_PATH. $template->name .'/css/wysiwyg/markitup/styles.css';
+        if(is_readable(cmsConfig::get('root_path').$tpl_css_file)){
+            $css_file = $tpl_css_file;
+        }
+
+        $template->addCSSFromContext($css_file);
 
         ob_start(); ?>
 
