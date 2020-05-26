@@ -1,5 +1,5 @@
 <?php if ($items){ ?>
-    <div id="comments_list" class="striped-list my-4">
+    <div id="comments_list" class="striped-list my-3 my-md-4">
         <?php
             echo $this->renderChild('comment', array(
                 'comments'         => $items,
@@ -19,7 +19,7 @@
 
 <?php } else { ?>
 
-    <p class="alert alert-info mt-4" role="alert">
+    <p class="alert alert-info mt-3 mt-md-4" role="alert">
         <?php echo LANG_LIST_EMPTY; ?>
     </p>
 

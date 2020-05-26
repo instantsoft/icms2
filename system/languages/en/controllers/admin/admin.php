@@ -374,8 +374,10 @@
     define('LANG_CP_WIDGETS_COL_D_ORDER',       'Default visual column order');
     define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Default width');
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Width for %s resolutions');
+    define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Width for all resolutions');
     define('LANG_CP_WIDGETS_COL_AUTO',          'Variable width content');
     define('LANG_CP_WIDGETS_ADD_COL',           'Add col');
+    define('LANG_CP_WIDGETS_ROWS_TITLE',        'Row Headers');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Add row');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Add nested row');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'No gutters');

@@ -405,7 +405,9 @@ class content extends cmsFrontend {
                 $item['ctype_name'] = $ctype['name'];
                 $item['is_private_item'] = $item['is_private'] && $hide_except_title;
                 $item['private_item_hint'] = LANG_PRIVACY_HINT;
-                $item['fields'] = array();
+                $item['fields'] = [];
+                // Краткие данные всех полей, разрешенных в списке
+                $item['fields_names'] = [];
 
                 // для приватности друзей
                 // другие проверки приватности (например для групп) в хуках content_before_list
@@ -417,7 +419,7 @@ class content extends cmsFrontend {
                 // строим поля списка
                 foreach($fields as $field){
 
-                    if ($field['is_system'] || !$field['is_in_list'] || !isset($item[$field['name']])) { continue; }
+                    if ($field['is_system'] || !$field['is_in_list']) { continue; }
 
                     // разрешен показ в списке, проверяем в каких именно
                     if(!empty($field['options']['context_list']) && array_search('0', $field['options']['context_list']) === false){
@@ -435,26 +437,32 @@ class content extends cmsFrontend {
                         if ($item['user_id'] != $this->cms_user->id){ continue; }
                     }
 
-                    if (!$item[$field['name']] && $item[$field['name']] !== '0') { continue; }
-
                     if (!isset($field['options']['label_in_list'])) {
                         $label_pos = 'none';
                     } else {
                         $label_pos = $field['options']['label_in_list'];
                     }
 
-                    $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
-                    if (!$field_html) { continue; }
-
-                    $item['fields'][$field['name']] = array(
+                    $current_field_data = [
                         'label_pos' => $label_pos,
                         'type'      => $field['type'],
                         'name'      => $field['name'],
-                        'options'   => $field['options'],
-                        'title'     => $field['title'],
-                        'html'      => $field_html
-                    );
+                        'title'     => $field['title']
+                    ];
 
+                    $item['fields_names'][] = $current_field_data;
+
+                    if (!isset($item[$field['name']]) && !$item[$field['name']] && $item[$field['name']] !== '0') {
+                        continue;
+                    }
+
+                    $field_html = $field['handler']->setItem($item)->parseTeaser($item[$field['name']]);
+                    if (!$field_html) { continue; }
+
+                    $current_field_data['html'] = $field_html;
+                    $current_field_data['options'] = $field['options'];
+
+                    $item['fields'][$field['name']] = $current_field_data;
                 }
 
                 $item['is_new'] = (strtotime($item['date_pub']) > strtotime($this->cms_user->date_log));

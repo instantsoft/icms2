@@ -4,6 +4,22 @@ icms.scheme = (function ($) {
     var self = this;
 
     this.onDocumentReady = function(){
+        $('#rows_titles_pos input').on('click', function(e){
+            var pos = $(this).val();
+            $.cookie('icms[rows_titles_pos]', pos, {expires: 365, path: '/'});
+            if(pos === 'left'){
+                $('.layout-row-title.layout-row-parent').addClass('col-lg-2');
+                $('.layout-row-title').removeClass('d-none').addClass('d-flex');
+                $('.layout-row-body.layout-row-parent').addClass('col-lg-10');
+            } else if(pos === 'top'){
+                $('.layout-row-title.layout-row-parent').removeClass('col-lg-2');
+                $('.layout-row-title').removeClass('d-none').addClass('d-flex');
+                $('.layout-row-body.layout-row-parent').removeClass('col-lg-10');
+            } else if(pos === 'hide'){
+                $('.layout-row-title').addClass('d-none').removeClass('col-lg-2 d-flex');
+                $('.layout-row-body.layout-row-parent').removeClass('col-lg-10');
+            }
+        });
         $( "#cp-widgets-layout" ).sortable({
             items: ".widgets-layout-scheme:not(.disable-sortable)",
             opacity: 0.9,

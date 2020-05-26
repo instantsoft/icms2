@@ -44,6 +44,10 @@
         }
         @include clearfix;
     }
+    td > .info_bar {
+        background-color: transparent;
+        border: none;
+    }
 }
 .info_bar {
     background-color: $gray-100;

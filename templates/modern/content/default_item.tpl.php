@@ -2,13 +2,18 @@
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
-            <span class="is_private" title="<?php html(LANG_PRIVACY_HINT); ?>"></span>
+            <span class="is_private  text-secondary" title="<?php html(LANG_PRIVACY_HINT); ?>">
+                <?php html_svg_icon('solid', 'lock'); ?>
+            </span>
         <?php } ?>
     </h1>
     <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
-        <h2 class="parent_title item_<?php echo $item['parent_type']; ?>_title">
-            <a href="<?php echo rel_to_href($item['parent_url']); ?>"><?php html($item['parent_title']); ?></a>
-        </h2>
+        <div class="parent_title item_<?php echo $item['parent_type']; ?>_title mt-n2">
+            <a href="<?php echo rel_to_href($item['parent_url']); ?>">
+                <?php html_svg_icon('solid', 'user-friends'); ?>
+                <?php html($item['parent_title']); ?>
+            </a>
+        </div>
     <?php } ?>
 <?php } ?>
 
@@ -45,27 +50,35 @@
     <?php } ?>
 
     <?php if ($props_fieldsets) { ?>
-        <div class="content_item_props <?php echo $ctype['name']; ?>_item_props">
-            <table>
-                <tbody>
-                    <?php foreach($props_fieldsets as $fieldset_id => $fieldset){ ?>
-                        <?php if ($fieldset['title']){ ?>
+        <div class="content_item_props <?php echo $ctype['name']; ?>_item_props table-responsive-sm">
+            <table class="table table-hover table-sm">
+                <?php foreach($props_fieldsets as $fieldset_id => $fieldset){ ?>
+                    <?php if ($fieldset['title']){ ?>
+                        <thead>
+                            <tr class="props_groups props_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?> table-secondary">
+                                <th class="heading" colspan="2"><?php html($fieldset['title']); ?></th>
+                            </tr>
+                        </thead>
+                    <?php } else { ?>
+                        <thead>
                             <tr class="props_groups props_group_<?php echo $ctype['name']; ?>_<?php echo $fieldset_id ?>">
-                                <td class="heading" colspan="2"><?php html($fieldset['title']); ?></td>
+                                <th class="d-none" colspan="2"></th>
+                            </tr>
+                        </thead>
+                    <?php } ?>
+                    <tbody>
+                    <?php if ($fieldset['fields']){ ?>
+                        <?php foreach($fieldset['fields'] as $prop){ ?>
+                             <tr class="prop_wrap prop_<?php echo $prop['type']; ?>">
+                                <td class="title"><?php html($prop['title']); ?></td>
+                                <td class="value">
+                                    <?php echo $prop['html']; ?>
+                                </td>
                             </tr>
                         <?php } ?>
-                        <?php if ($fieldset['fields']){ ?>
-                            <?php foreach($fieldset['fields'] as $prop){ ?>
-                                 <tr class="prop_wrap prop_<?php echo $prop['type']; ?>">
-                                    <td class="title"><?php html($prop['title']); ?></td>
-                                    <td class="value">
-                                        <?php echo $prop['html']; ?>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-                        <?php } ?>
                     <?php } ?>
-                </tbody>
+                    </tbody>
+                <?php } ?>
             </table>
         </div>
     <?php } ?>

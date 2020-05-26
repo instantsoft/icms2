@@ -8,30 +8,11 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
 
         return [
             new fieldList('options:default_col_class', array(
-                'title' => LANG_CP_WIDGETS_COL_WIDTH_D,
-                'default' => 'col',
+                'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥576px').' ('.LANG_CP_WIDGETS_COL_WIDTH_D.')',
+                'default' => 'col-sm',
                 'items' => array(
-                    'col'    => LANG_AUTO,
-                    'col-1'  => '8.33%',
-                    'col-2'  => '16.67%',
-                    'col-3'  => '25%',
-                    'col-4'  => '33.33%',
-                    'col-5'  => '41.67%',
-                    'col-6'  => '50%',
-                    'col-7'  => '58.33%',
-                    'col-8'  => '66.67%',
-                    'col-9'  => '75%',
-                    'col-10' => '83.33%',
-                    'col-11' => '91.67%',
-                    'col-12' => '100%',
-                    'col-auto' => LANG_CP_WIDGETS_COL_AUTO
-                ),
-                'visible_depend' => array('type' => array('hide' => array('custom')))
-            )),
-            new fieldList('options:sm_col_class', array(
-                'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥576px'),
-                'items' => array(
-                    ''          => LANG_BY_DEFAULT,
+                    ''          => LANG_NO,
+                    'col-sm'    => LANG_AUTO,
                     'col-sm-1'  => '8.33%',
                     'col-sm-2'  => '16.67%',
                     'col-sm-3'  => '25%',
@@ -52,6 +33,7 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥768px'),
                 'items' => array(
                     ''          => LANG_BY_DEFAULT,
+                    'col-md'    => LANG_AUTO,
                     'col-md-1'  => '8.33%',
                     'col-md-2'  => '16.67%',
                     'col-md-3'  => '25%',
@@ -72,6 +54,7 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥992px'),
                 'items' => array(
                     ''          => LANG_BY_DEFAULT,
+                    'col-lg'    => LANG_AUTO,
                     'col-lg-1'  => '8.33%',
                     'col-lg-2'  => '16.67%',
                     'col-lg-3'  => '25%',
@@ -92,6 +75,7 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                 'title' => sprintf(LANG_CP_WIDGETS_COL_WIDTH, '≥1200px'),
                 'items' => array(
                     ''          => LANG_BY_DEFAULT,
+                    'col-xl'    => LANG_AUTO,
                     'col-xl-1'  => '8.33%',
                     'col-xl-2'  => '16.67%',
                     'col-xl-3'  => '25%',
@@ -105,6 +89,27 @@ class onBootstrap4AdminColSchemeOptionsModern extends cmsAction {
                     'col-xl-11' => '91.67%',
                     'col-xl-12' => '100%',
                     'col-xl-auto' => LANG_CP_WIDGETS_COL_AUTO
+                ),
+                'visible_depend' => array('type' => array('hide' => array('custom')))
+            )),
+            new fieldList('options:col_class', array(
+                'title' => LANG_CP_WIDGETS_COL_WIDTH_ALL,
+                'items' => array(
+                    ''       => LANG_NO,
+                    'col'    => LANG_AUTO,
+                    'col-1'  => '8.33%',
+                    'col-2'  => '16.67%',
+                    'col-3'  => '25%',
+                    'col-4'  => '33.33%',
+                    'col-5'  => '41.67%',
+                    'col-6'  => '50%',
+                    'col-7'  => '58.33%',
+                    'col-8'  => '66.67%',
+                    'col-9'  => '75%',
+                    'col-10' => '83.33%',
+                    'col-11' => '91.67%',
+                    'col-12' => '100%',
+                    'col-auto' => LANG_CP_WIDGETS_COL_AUTO
                 ),
                 'visible_depend' => array('type' => array('hide' => array('custom')))
             )),

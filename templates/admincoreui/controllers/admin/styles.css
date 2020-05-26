@@ -247,6 +247,11 @@ thead.list_thead {
         border-radius: 0;
     }
 }
+@media (min-width: 768px){
+    .main .container-fluid {
+      padding: 0 1.5rem;
+    }
+}
 .card-summary > span:not(:last-of-type):after {
     content: '•';
     margin: 0 4px;
@@ -283,9 +288,6 @@ h1 > span:empty {
 }
 .form-control:focus {
   color: #23282c;
-}
-.main .container-fluid {
-  padding: 0 1.5rem;
 }
 .app-header {
   background-color: #34699f;

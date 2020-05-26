@@ -375,8 +375,10 @@
     define('LANG_CP_WIDGETS_COL_D_ORDER',       'Визуальный порядок колонки по умолчанию');
     define('LANG_CP_WIDGETS_COL_WIDTH_D',       'Ширина по умолчанию');
     define('LANG_CP_WIDGETS_COL_WIDTH',         'Ширина для разрешений %s');
+    define('LANG_CP_WIDGETS_COL_WIDTH_ALL',     'Ширина для всех разрешений');
     define('LANG_CP_WIDGETS_COL_AUTO',          'По ширине содержимого');
     define('LANG_CP_WIDGETS_ADD_COL',           'Добавить колонку');
+    define('LANG_CP_WIDGETS_ROWS_TITLE',        'Заголовки рядов');
     define('LANG_CP_WIDGETS_ADD_ROW',           'Добавить ряд');
     define('LANG_CP_WIDGETS_ADD_ROW_P',         'Добавить вложенный ряд');
     define('LANG_CP_WIDGETS_ROW_NO_GUTTERS',    'Без отступов между колонками');

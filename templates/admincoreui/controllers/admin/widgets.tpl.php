@@ -89,7 +89,7 @@
 ?>
 
 <div class="row align-items-stretch mb-4">
-    <div class="col-auto quickview-wrapper" id="left-quickview">
+    <div class="col-sm-auto quickview-wrapper" id="left-quickview">
         <a class="quickview-toggle close" data-toggle="quickview" data-toggle-element="#left-quickview" href="#"><span aria-hidden="true">×</span></a>
         <div class="card-body bg-white h-100 pt-3 no-overflow">
             <ul class="nav nav-tabs">
@@ -151,7 +151,7 @@
             </div>
         </div>
     </div>
-    <div class="col">
+    <div class="col-sm">
         <?php if ($this->isToolbar()){ ?>
             <?php $this->toolbar('menu-toolbar'); ?>
         <?php } ?>
@@ -174,12 +174,31 @@
              data-reorder-url="<?php echo $this->href_to('widgets', 'reorder'); ?>"
              >
             <?php echo $scheme_html; ?>
-            <div id="cp-widgets-unused" class="alert alert-secondary mt-4 mb-0">
+            <?php if($is_dynamic_scheme){ ?>
+                <div class="row my-3 justify-content-end">
+                    <div class="col-sm-auto ml-auto text-muted" id="rows_titles_pos">
+                        <span class="d-inline-block mr-3"><?php echo LANG_CP_WIDGETS_ROWS_TITLE; ?></span>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input <?php if($rows_titles_pos == 'left'){ ?>checked<?php } ?> class="custom-control-input" type="radio" id="r-left" name="rows_titles_pos" value="left">
+                            <label class="custom-control-label" for="r-left"><?php echo LANG_CP_FIELD_LABEL_LEFT; ?></label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input <?php if($rows_titles_pos == 'top'){ ?>checked<?php } ?> class="custom-control-input" type="radio" id="r-top" name="rows_titles_pos" value="top">
+                            <label class="custom-control-label" for="r-top"><?php echo LANG_CP_FIELD_LABEL_TOP; ?></label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline mr-0">
+                            <input <?php if($rows_titles_pos == 'hide'){ ?>checked<?php } ?> class="custom-control-input" type="radio" id="r-hide" name="rows_titles_pos" value="hide">
+                            <label class="custom-control-label" for="r-hide"><?php echo LANG_HIDE; ?></label>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+            <div id="cp-widgets-unused" class="alert alert-secondary mt-3 mb-0">
                 <h5><?php echo LANG_CP_WIDGETS_UNUSED; ?></h5>
                 <ul class="position" rel="_unused" id="pos-_unused"></ul>
                 <div class="hint text-muted small"><?php echo LANG_CP_WIDGETS_UNUSED_HINT; ?></div>
             </div>
-            <div id="cp-widgets-bind" class="alert alert-info mt-2">
+            <div id="cp-widgets-bind" class="alert alert-info mt-2 mb-0">
                 <h5><?php echo LANG_CP_WIDGETS_BINDED; ?></h5>
                 <ul class="position" rel="_copy" id="pos-_copy"></ul>
                 <div class="hint text-muted small"><?php echo LANG_CP_WIDGETS_BINDED_HINT; ?></div>

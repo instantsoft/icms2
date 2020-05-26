@@ -3,6 +3,7 @@
 class actionAdminWidgets extends cmsAction {
 
     private $is_dynamic_scheme = false;
+    private $rows_titles_pos = 'left';
 
     public function run($do = false) {
 
@@ -36,10 +37,16 @@ class actionAdminWidgets extends cmsAction {
             }
         }
 
+        $this->rows_titles_pos = cmsUser::getCookie('rows_titles_pos');
+        if(!$this->rows_titles_pos){
+            $this->rows_titles_pos = 'left';
+        }
+
         $scheme_html = $this->getSchemeHTML($template_name);
 
         return $this->cms_template->render('widgets', array(
             'is_dynamic_scheme' => $this->is_dynamic_scheme,
+            'rows_titles_pos' => $this->rows_titles_pos,
             'controllers'   => $controllers,
             'template_name' => $template_name,
             'templates'     => $templates,
@@ -100,6 +107,7 @@ class actionAdminWidgets extends cmsAction {
         $rows = $this->model_widgets->getLayoutRows($template->getName());
 
         return $template->getRenderedChild('widgets_scheme', array(
+            'rows_titles_pos' => $this->rows_titles_pos,
             'rows' => $rows
         ));
 

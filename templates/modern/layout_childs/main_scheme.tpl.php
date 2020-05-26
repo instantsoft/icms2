@@ -42,9 +42,12 @@
         <?php } ?>
         <?php
             // Собираем класс колонки
-            $col_class = [$col['options']['default_col_class']];
-            if ($col['options']['sm_col_class']) {
-                $col_class[] = $col['options']['sm_col_class'];
+            $col_class = [];
+            if ($col['options']['col_class']) {
+                $col_class[] = $col['options']['col_class'];
+            }
+            if ($col['options']['default_col_class']) {
+                $col_class[] = $col['options']['default_col_class'];
             }
             if ($col['options']['md_col_class']) {
                 $col_class[] = $col['options']['md_col_class'];

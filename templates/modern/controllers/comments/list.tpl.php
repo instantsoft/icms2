@@ -2,7 +2,7 @@
 $this->addTplJSName('jquery-scroll');
 $this->addTplJSName('comments');
 ?>
-<div class="d-flex justify-content-between align-items-center mt-3">
+<div class="d-flex justify-content-between align-items-center mt-3 mt-md-4">
 <?php if ($can_add){ ?>
     <div id="comments_add_link">
         <a href="#reply" class="btn btn-primary ajaxlink" onclick="return icms.comments.add()">
@@ -35,7 +35,7 @@ $this->addTplJSName('comments');
 </div>
 
 
-<div id="comments_list" class="my-4">
+<div id="comments_list" class="my-3 my-md-4">
 
     <?php if (!$comments){ ?>
 

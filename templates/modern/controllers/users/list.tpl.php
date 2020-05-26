@@ -17,7 +17,7 @@
         $pos_colors = ['text-muted', 'text-warning','text-info', 'text-secondary'];
     ?>
 
-    <div id="users_profiles_list" class="striped-list my-4">
+    <div id="users_profiles_list" class="striped-list my-3 my-md-4">
 
         <?php foreach($profiles as $profile){ ?>
 
