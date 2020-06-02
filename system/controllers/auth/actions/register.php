@@ -122,7 +122,7 @@ class actionAuthRegister extends cmsAction {
                     $user = array_merge($user, array(
                         'is_locked' => true,
                         'lock_reason' => LANG_REG_CFG_VERIFY_LOCK_REASON,
-                        'pass_token' => string_random(32, $user['email']),
+                        'pass_token' => hash('sha256', string_random(32, $user['email'])),
                         'date_token' => ''
                     ));
                 }

@@ -356,6 +356,9 @@ class actionContentItemView extends cmsAction {
 
             if (!$field['is_in_item'] || $field['is_system'] || $field['name'] == 'title') { return false; }
 
+            // Позиция поля "На позиции в специальном виджете"
+            if (!empty($field['options']['is_in_item_pos'])) { return false; }
+
             if ((empty($item[$field['name']]) || empty($field['html'])) && $item[$field['name']] !== '0') { return false; }
 
             // проверяем что группа пользователя имеет доступ к чтению этого поля

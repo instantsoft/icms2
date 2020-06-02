@@ -235,7 +235,7 @@ class cmsUser {
      */
     public static function autoLogin($auth_token){
 
-        if (!preg_match('/^[0-9a-z]{32}$/i', $auth_token)){ return 0; }
+        if (!preg_match('/^[0-9a-z]{128}$/i', $auth_token)){ return 0; }
 
         $model = cmsCore::getModel('users');
 
@@ -319,7 +319,7 @@ class cmsUser {
 
         if ($remember){
 
-            $auth_token = string_random(32, $user['email']);
+            $auth_token = hash('sha512', string_random(32, $user['email']));
 
             self::setCookie('auth', $auth_token, self::AUTH_TOKEN_EXPIRATION_INT);
 
@@ -360,7 +360,7 @@ class cmsUser {
 
             $auth_cookie = self::getCookie('auth');
 
-            if (preg_match('/^[0-9a-z]{32}$/i', $auth_cookie)){
+            if (preg_match('/^[0-9a-z]{128}$/i', $auth_cookie)){
                 $model->deleteAuthToken($auth_cookie);
             }
 

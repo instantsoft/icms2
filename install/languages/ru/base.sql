@@ -1403,7 +1403,7 @@ CREATE TABLE `{#}users` (
   `is_locked` tinyint(1) unsigned DEFAULT NULL COMMENT 'Заблокирован',
   `lock_until` timestamp NULL DEFAULT NULL COMMENT 'Блокировка до',
   `lock_reason` varchar(250) DEFAULT NULL COMMENT 'Причина блокировки',
-  `pass_token` varchar(32) DEFAULT NULL COMMENT 'Ключ для восстановления пароля',
+  `pass_token` varchar(64) DEFAULT NULL COMMENT 'Ключ для восстановления пароля',
   `date_token` timestamp NULL DEFAULT NULL COMMENT 'Дата создания ключа восстановления пароля',
   `friends_count` int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Кол-во друзей',
   `subscribers_count` int(11) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Кол-во подписчиков',
@@ -1693,7 +1693,7 @@ CREATE TABLE `{#}users_personal_settings` (
 DROP TABLE IF EXISTS `{#}users_auth_tokens`;
 CREATE TABLE `{#}users_auth_tokens` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `auth_token` varchar(32) DEFAULT NULL,
+  `auth_token` varchar(128) DEFAULT NULL,
   `date_auth` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `date_log` timestamp NULL DEFAULT NULL,
   `user_id` int(11) unsigned DEFAULT NULL,
@@ -1765,7 +1765,8 @@ INSERT INTO `{#}widgets` (`id`, `controller`, `name`, `title`, `author`, `url`, 
 (17, 'groups', 'list', 'Список групп', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (18, 'subscriptions', 'button', 'Кнопки подписки', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
 (19, 'auth', 'register', 'Форма регистрации', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
-(20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
+(20, NULL, 'template', 'Элементы шаблона', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL),
+(21, 'content', 'fields', 'Поля контента', 'InstantCMS Team', 'https://instantcms.ru', '2.0', NULL);
 
 DROP TABLE IF EXISTS `{#}widgets_bind`;
 CREATE TABLE `{#}widgets_bind` (

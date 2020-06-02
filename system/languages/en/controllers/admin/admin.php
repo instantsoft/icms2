@@ -254,6 +254,10 @@
     define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'For which lists should this be shown');
     define('LANG_CP_FIELD_NOT_IN_LIST_CONTEXT', 'For which lists do not show');
     define('LANG_CP_FIELD_IN_ITEM',             'Show in entry view');
+    define('LANG_CP_FIELD_IN_ITEM_POS',         'Field position');
+    define('LANG_CP_FIELD_IN_ITEM_POS_HINT',    'If you select a special widget, set the entry page in the right place widget "Content Fields" and configure it.');
+    define ('LANG_CP_FIELD_IN_ITEM_POS0',       'In the body of the entry');
+    define ('LANG_CP_FIELD_IN_ITEM_POS1',       'On a position in a special widget');
     define('LANG_CP_FIELD_IN_PROFILE',          'Show in profile');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'In list');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'In entry');

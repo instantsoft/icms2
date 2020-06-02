@@ -21,7 +21,7 @@ class bootstrap4 extends cmsFrontend {
 
         $scss = new ScssPhp\ScssPhp\Compiler();
 
-        $scss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
+        $scss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Crunched');
 
         if($vars){
 

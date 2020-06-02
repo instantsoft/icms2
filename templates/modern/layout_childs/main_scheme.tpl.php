@@ -24,7 +24,7 @@
             $row_class[] = $row['class'];
         }
     ?>
-    <?php if ($row_class) { ?>
+    <?php if ($row['tag'] && $row_class) { ?>
         <<?php echo $row['tag']; ?> class="<?php echo implode(' ', $row_class); ?>">
     <?php } ?>
     <?php foreach ($row['cols'] as $col) { ?>
@@ -89,7 +89,7 @@
             </div>
         <?php } ?>
     <?php } ?>
-    <?php if ($row_class) { ?>
+    <?php if ($row['tag'] && $row_class) { ?>
         </<?php echo $row['tag']; ?>>
     <?php } ?>
     <?php if (!empty($row['options']['container'])) { ?>

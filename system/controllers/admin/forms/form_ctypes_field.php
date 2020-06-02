@@ -80,6 +80,15 @@ class formAdminCtypesField extends cmsForm {
                         'title' => LANG_CP_FIELD_IN_ITEM,
                         'default' => true
                     )),
+                    new fieldList('options:is_in_item_pos', array(
+                        'title' => LANG_CP_FIELD_IN_ITEM_POS,
+                        'hint' => LANG_CP_FIELD_IN_ITEM_POS_HINT,
+                        'items' => [
+                            '' => LANG_CP_FIELD_IN_ITEM_POS0,
+                            'widget' => LANG_CP_FIELD_IN_ITEM_POS1
+                        ],
+                        'visible_depend' => array('is_in_item' => array('show' => array('1')))
+                    )),
                     new fieldCheckbox('is_in_list', array(
                         'title' => LANG_CP_FIELD_IN_LIST,
                     )),

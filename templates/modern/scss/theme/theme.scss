@@ -10,6 +10,14 @@
 .mce-content-body {
     margin: $spacer;
 }
+.highlight_new {
+    color: $red !important;
+}
+.icms-bg__cover {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
 blockquote {
     margin: 0 0 $spacer*0.5;
     padding: $spacer*0.75 $spacer;

@@ -3,7 +3,7 @@
         'fileuploader',
         'images-upload',
         'jquery-ui'
-        ]);
+    ]);
     $this->addTplCSSNameFromContext('jquery-ui');
     $this->addTplCSSFromContext('controllers/images/styles');
 ?>

@@ -255,6 +255,10 @@
     define('LANG_CP_FIELD_IN_LIST_CONTEXT',     'Для каких списков показывать');
     define('LANG_CP_FIELD_NOT_IN_LIST_CONTEXT', 'Для каких списков не показывать');
     define('LANG_CP_FIELD_IN_ITEM',             'Показывать в записи');
+    define('LANG_CP_FIELD_IN_ITEM_POS',         'Позиция в записи');
+    define('LANG_CP_FIELD_IN_ITEM_POS_HINT',    'Если выбрана позиция в специальном виджете, разместите на странице записи в нужном месте виджет "Поля контента" и настройте его.');
+    define('LANG_CP_FIELD_IN_ITEM_POS0',        'В теле записи');
+    define('LANG_CP_FIELD_IN_ITEM_POS1',        'На позиции в специальном виджете');
     define('LANG_CP_FIELD_IN_PROFILE',          'Показывать в профиле');
     define('LANG_CP_FIELD_IN_LIST_SHORT',       'В списке');
     define('LANG_CP_FIELD_IN_ITEM_SHORT',       'В записи');

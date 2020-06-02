@@ -12,7 +12,6 @@
         ));
     }
 ?>
-
 <?php if (!$items){ ?>
     <p class="alert alert-info mt-4" role="alert">
         <?php if(!empty($ctype['labels']['many'])){ ?>
@@ -23,14 +22,15 @@
     </p>
 <?php return; } ?>
 
-<div class="content_list default_list <?php echo $ctype['name']; ?>_list my-3 my-md-4">
+<div class="content_list tiled <?php echo $ctype['name']; ?>_list row">
 
     <?php foreach($items as $item){ ?>
 
-        <div class="content_list_item <?php echo $ctype['name']; ?>_list_item clearfix">
-            <div class="icms-content-fields">
+        <div class="tile <?php echo $ctype['name']; ?>_list_item col-md-6 col-lg-4">
+            <div class="article">
             <?php foreach($item['fields'] as $field){ ?>
-                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?> <?php echo $fields[$field['name']]['options']['wrap_type']; ?>_field" <?php if($fields[$field['name']]['options']['wrap_width']){ ?> style="width: <?php echo $fields[$field['name']]['options']['wrap_width']; ?>;"<?php } ?>>
+
+                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
 
                     <?php if ($field['label_pos'] != 'none'){ ?>
                         <div class="title_<?php echo $field['label_pos']; ?>">
@@ -82,7 +82,6 @@
                     <?php } ?>
                 </div>
             <?php } ?>
-            </div>
 
             <?php if (!empty($item['show_tags'])){ ?>
                 <div class="tags_bar mt-3">
@@ -109,8 +108,11 @@
                     <?php } ?>
                 </div>
             <?php } ?>
+            </div>
         </div>
+
     <?php } ?>
+
 </div>
 
 <?php if ($perpage < $total) { ?>

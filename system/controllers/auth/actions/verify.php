@@ -3,6 +3,10 @@ class actionAuthVerify extends cmsAction {
 
     public function run($pass_token = null){
 
+        if (!$this->options['is_reg_enabled']){
+            cmsCore::error404();
+        }
+
         if (empty($this->options['verify_email'])){
             cmsCore::error404();
         }

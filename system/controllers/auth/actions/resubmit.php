@@ -3,6 +3,10 @@ class actionAuthResubmit extends cmsAction {
 
     public function run(){
 
+        if (!$this->options['is_reg_enabled']){
+            cmsCore::error404();
+        }
+
         if (empty($this->options['verify_email'])){
             cmsCore::error404();
         }
@@ -15,7 +19,9 @@ class actionAuthResubmit extends cmsAction {
 
         if($reg_email && $this->validate_email($reg_email) === true){
 
-            $reg_user = $users_model->getUserByEmail($reg_email);
+            $reg_user = $users_model->filterNotNull('pass_token')->
+                    filterEqual('is_locked', 1)->
+                    getUserByEmail($reg_email);
 
             $reg_user['resubmit_extime'] = modelAuth::RESUBMIT_TIME - (time() - strtotime($reg_user['date_token']));
 

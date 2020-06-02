@@ -1,3 +1,6 @@
+ALTER TABLE `{users}` CHANGE `pass_token` `pass_token` VARCHAR(64) NULL DEFAULT NULL COMMENT 'Ключ для восстановления пароля';
+ALTER TABLE `{users}_auth_tokens` CHANGE `auth_token` `auth_token` VARCHAR(128) NULL DEFAULT NULL;
+
 DROP TABLE IF EXISTS `{#}layout_cols`;
 CREATE TABLE `{#}layout_cols` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,

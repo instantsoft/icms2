@@ -1,4 +1,4 @@
-<?php if (!empty($fields['title']['is_in_item'])){ ?>
+<?php if (!empty($fields['title']['is_in_item']) && empty($fields['title']['options']['is_in_item_pos'])){ ?>
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
@@ -22,7 +22,7 @@
 <?php } ?>
 
 <div class="content_item <?php echo $ctype['name']; ?>_item clearfix my-3">
-
+    <div class="icms-content-fields">
     <?php foreach ($fields_fieldsets as $fieldset_id => $fieldset) { ?>
 
         <?php $is_fields_group = !empty($ctype['options']['is_show_fields_group']) && $fieldset['title']; ?>
@@ -48,6 +48,7 @@
         <?php if ($is_fields_group) { ?></div><?php } ?>
 
     <?php } ?>
+    </div>
 
     <?php if ($props_fieldsets) { ?>
         <div class="content_item_props <?php echo $ctype['name']; ?>_item_props table-responsive-sm">

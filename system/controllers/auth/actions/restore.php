@@ -54,7 +54,7 @@ class actionAuthRestore extends cmsAction {
 
                 } else {
 
-                    $pass_token = string_random(32, $user['email']);
+                    $pass_token = hash('sha256', string_random(32, $user['email']));
 
                     $users_model->updateUserPassToken($user['id'], $pass_token);
 

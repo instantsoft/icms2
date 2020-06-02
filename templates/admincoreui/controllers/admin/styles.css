@@ -413,7 +413,11 @@ ul.field_tabbed > li.field_tabbed_en > a, .icon-lang-en  {
     display:block;
     height:64px;
 }
-.tab-pane:last-child > fieldset {
+.tab-pane:last-child > fieldset, #cp-widgets-layout .position:last-child,
+#cp-widgets-layout table td .block:last-child, .widgets-layout-scheme .block:last-child,
+#cp-widgets-list li:last-child,
+#cp-widgets-layout .position li:last-child,
+.without-tabs .form-group:last-child {
     margin-bottom: 0 !important;
 }
 .without-tabs fieldset {
@@ -578,9 +582,6 @@ form .child_field{margin-left: 20px}
     min-height: 2.5rem;
     background: #FFF;
 }
-#cp-widgets-layout .position:last-child {
-    margin-bottom: 0;
-}
 #cp-widgets-layout .widgets-layout-scheme-col .position {
     padding: 0.25rem;
 }
@@ -599,9 +600,6 @@ form .child_field{margin-left: 20px}
     min-height: 2.5rem;
 }
 .widgets-layout-scheme .block {
-    margin-bottom: 0;
-}
-#cp-widgets-layout table td .block:last-child, .widgets-layout-scheme .block:last-child {
     margin-bottom: 0;
 }
 .layout-col-title {
@@ -662,10 +660,6 @@ form .child_field{margin-left: 20px}
     content: "\e023";
     margin-right: .5rem;
     vertical-align: middle;
-}
-#cp-widgets-list li:last-child,
-#cp-widgets-layout .position li:last-child{
-    margin-bottom: 0;
 }
 #cp-widgets-layout .position li.is_tab_prev {
     margin-left: 1rem;

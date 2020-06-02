@@ -5,6 +5,6 @@
 
 <h1><?php echo $page_title; ?></h1>
 
-<div id="moderation_content_list">
-    <p><?php echo $empty_hint; ?></p>
-</div>
+<p id="moderation_content_list" class="alert alert-info mt-4" role="alert">
+    <?php echo $empty_hint; ?>
+</p>
