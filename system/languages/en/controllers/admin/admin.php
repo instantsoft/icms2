@@ -355,6 +355,7 @@
     define('LANG_CP_MENU_ITEM_ACTION',          'Menu item action');
     define('LANG_CP_MENU_ITEM_ACTION_URL',      'Open URL');
     define('LANG_CP_MENU_ITEM_ACTION_URL_HINT', 'Internal links should come without a leading slash<br/>External links should start with http://<br/>You can enter <a href="https://docs.instantcms.ru/en/manual/menu/special" target="_blank">Special Links</a>');
+    define('LANG_CP_MENU_ITEM_ICON',            'Icon name');
     define('LANG_CP_MENU_ITEM_ACTION_TARGET',   'Open link in');
     define('LANG_CP_MENU_ITEM_TARGET_SELF',     'Current window');
     define('LANG_CP_MENU_ITEM_TARGET_BLANK',    'New window');

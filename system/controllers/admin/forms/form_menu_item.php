@@ -71,6 +71,9 @@ class formAdminMenuItem extends cmsForm {
                     )),
                     new fieldString('options:class', array(
                         'title' => LANG_CSS_CLASS,
+                    )),
+                    new fieldString('options:icon', array(
+                        'title' => LANG_CP_MENU_ITEM_ICON
                     ))
                 )
             ),

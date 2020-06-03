@@ -6,6 +6,30 @@
 
 @import "custom";
 
+.icms-body-toolbox {
+    h1 {
+        margin: 0;
+        flex: 1 1 auto !important;
+    }
+    margin-bottom: $spacer*0.5;
+    display: flex !important;
+    align-items: center !important;
+}
+@include media-breakpoint-between(xs,sm){
+  .btn-responsive {
+      @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+  }
+}
+.breadcrumb:after {
+    background: linear-gradient(270deg, $white 40%, rgba(247, 247, 247, 0));
+    bottom: 0;
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $spacer*3;
+}
 /** tinymce iframe */
 .mce-content-body {
     margin: $spacer;

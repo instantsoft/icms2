@@ -73,7 +73,7 @@
     </h1>
 <?php } ?>
 
-<?php $this->menu('item-menu', true, 'nav-tabs my-3'); ?>
+<?php $this->menu('item-menu', true, 'nav nav-tabs my-3'); ?>
 
 <?php
     if (!empty($toolbar_html)) {

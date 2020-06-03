@@ -110,7 +110,7 @@
 
 		<?php $this->addMenuItems('profile_tabs', $tabs); ?>
 
-		<?php $this->menu('profile_tabs', true, 'nav-tabs my-3', $this->controller->options['max_tabs']); ?>
+		<?php $this->menu('profile_tabs', true, 'nav nav-tabs my-3', $this->controller->options['max_tabs']); ?>
 
 	<?php } ?>
 

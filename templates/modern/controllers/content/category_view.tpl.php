@@ -7,7 +7,7 @@
             $href = href_to($ctype['name'], 'add', isset($category['path']) ? $category['id'] : '');
 
             $this->addToolButton(array(
-                'class' => 'add',
+                'icon' => 'plus-circle',
                 'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
                 'href'  => $href
             ));
@@ -19,7 +19,7 @@
     if ($ctype['is_cats']){
         if (cmsUser::isAllowed($ctype['name'], 'add_cat')) {
             $this->addToolButton(array(
-                'class' => 'folder_add',
+                'icon' => 'folder-plus',
                 'title' => LANG_ADD_CATEGORY,
                 'href'  => href_to($ctype['name'], 'addcat', $category['id'])
             ));
@@ -29,14 +29,14 @@
 
             if (cmsUser::isAllowed($ctype['name'], 'edit_cat')) {
                 $this->addToolButton(array(
-                    'class' => 'folder_edit',
+                    'icon'  => 'edit',
                     'title' => LANG_EDIT_CATEGORY,
                     'href'  => href_to($ctype['name'], 'editcat', $category['id'])
                 ));
             }
             if (cmsUser::isAllowed($ctype['name'], 'delete_cat')) {
                 $this->addToolButton(array(
-                    'class' => 'folder_delete',
+                    'icon' => 'folder-minus',
                     'title' => LANG_DELETE_CATEGORY,
                     'href'  => href_to($ctype['name'], 'delcat', $category['id']),
                     'onclick' => "if(!confirm('".LANG_DELETE_CATEGORY_CONFIRM."')){ return false; }"
@@ -48,7 +48,7 @@
 
     if (cmsUser::isAdmin()){
         $this->addToolButton(array(
-            'class' => 'page_gear',
+            'icon' => 'cogs',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
@@ -56,25 +56,28 @@
 
 ?>
 <?php if ($this->hasPageH1() && !$request->isInternal() && !$is_frontpage){  ?>
-    <?php if (!empty($list_styles)){ ?>
-        <div class="content_list_styles">
-            <?php foreach ($list_styles as $list_style) { ?>
-                <a rel="nofollow" href="<?php echo $list_style['url']; ?>" class="style_switch<?php if (!$list_style['title']) { ?> without_title<?php } ?> <?php echo $list_style['class']; ?>">
-                    <?php echo $list_style['title']; ?>
-                </a>
+    <?php ob_start(); ?>
+        <h1>
+            <?php $this->pageH1(); ?>
+            <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
+                <sup>
+                    <a class="inline_rss_icon d-none d-lg-inline-block" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">
+                        <?php html_svg_icon('solid', 'rss'); ?>
+                    </a>
+                </sup>
             <?php } ?>
-        </div>
-    <?php } ?>
-    <h1>
-        <?php $this->pageH1(); ?>
-        <?php if (!empty($ctype['options']['is_rss']) && $this->controller->isControllerEnabled('rss')){ ?>
-            <sup>
-                <a class="inline_rss_icon d-none d-lg-inline-block" title="RSS" href="<?php echo href_to('rss', 'feed', $ctype['name']) . $rss_query; ?>">
-                    <?php html_svg_icon('solid', 'rss'); ?>
+        </h1>
+        <?php if (!empty($list_styles)){ ?>
+            <?php $list_icons_mapping = ['' => 'list', 'featured' => 'newspaper', 'table' => 'table', 'tiles' => 'th']; ?>
+            <div class="icms-content-list__styles_btn">
+                <?php foreach ($list_styles as $list_style) { ?>
+                <a data-toggle="tooltip" data-placement="top" rel="nofollow" href="<?php echo $list_style['url']; ?>" class="btn btn-light btn-responsive icms-content-list__<?php echo $list_style['class']; ?>" title="<?php html($list_style['title']); ?>">
+                    <?php html_svg_icon('solid', $list_icons_mapping[$list_style['style']]); ?>
                 </a>
-            </sup>
+                <?php } ?>
+            </div>
         <?php } ?>
-    </h1>
+    <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
 <?php } ?>
 
 <?php if ($datasets && !$is_hide_items){

@@ -18,7 +18,7 @@
 <?php } ?>
 
 <?php if ($this->hasMenu('item-menu')){ ?>
-    <?php $this->menu('item-menu', true, 'nav-tabs my-3'); ?>
+    <?php $this->menu('item-menu', true, 'nav nav-tabs my-3'); ?>
 <?php } ?>
 
 <div class="content_item <?php echo $ctype['name']; ?>_item clearfix my-3">

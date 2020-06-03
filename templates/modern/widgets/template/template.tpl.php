@@ -1,6 +1,11 @@
 <?php if($widget->options['type'] === 'body'){ ?>
-    <?php $this->block('before_body'); ?>
+    <?php if($this->hasBlock('before_body')){ ?>
+        <div class="icms-body-toolbox">
+            <?php $this->block('before_body'); ?>
+        </div>
+    <?php } ?>
     <?php $this->body(); ?>
+    <?php $this->block('after_body'); ?>
 <?php } elseif($widget->options['type'] === 'breadcrumbs') { ?>
     <?php $this->breadcrumbs($widget->options['breadcrumbs']); ?>
 <?php } elseif($widget->options['type'] === 'smessages') { ?>

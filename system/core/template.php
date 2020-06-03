@@ -69,8 +69,16 @@ class cmsTemplate {
      * @var array
      */
 	protected $bottom = [];
-	protected $head_main_css = array();
-	protected $head_css = array();
+    /**
+     * Массив CSS файлов, подключаемых выше всех остальных
+     * @var array
+     */
+	protected $head_main_css = [];
+    /**
+     * Массив подключаемых CSS файлов
+     * @var array
+     */
+	protected $head_css = [];
 	protected $head_main_js = array();
 	protected $head_js = array();
 	protected $insert_js = array();
@@ -87,18 +95,47 @@ class cmsTemplate {
 	public $metakeys;
 	public $metakeys_item;
 
-    public $breadcrumbs = array();
-    public $menus = array();
-    protected $db_menus = array();
-    protected $menu_loaded = false;
-    protected $not_found_tpls = array();
-
+    /**
+     * Хлебные крошки
+     * @var array
+     */
+    public $breadcrumbs = [];
+    /**
+     * Пункты меню, разнесённые по меню
+     * @var array
+     */
+    public $menus = [];
+    /**
+     * Массив имён файлов шаблонов, не найденных на диске
+     * @var array
+     */
+    protected $not_found_tpls = [];
+    /**
+     * Флаг, что виджеты отрендерены
+     * @var boolean
+     */
     public $widgets_rendered = false;
-    protected $widgets = array();
+    /**
+     * Массив виджетов страницы
+     * @var array
+     */
+    protected $widgets = [];
+    /**
+     * Индекс последнего объединённого виджета
+     * @var integer
+     */
     protected $widgets_group_index = 0;
-
+    /**
+     * Объект контроллера контекста
+     * @var cmsController
+     */
     protected $controller;
-    protected $controllers_queue = array();
+    /**
+     * Массив ссылок объектов контроллеров
+     * при смене контекста
+     * @var array
+     */
+    protected $controllers_queue = [];
 
     public static function getInstance() {
         if (self::$instance === null) {
@@ -110,9 +147,6 @@ class cmsTemplate {
         }
         return self::$instance;
     }
-
-// ========================================================================== //
-// ========================================================================== //
 
 	public function __construct($name=''){
 
@@ -447,21 +481,6 @@ class cmsTemplate {
 
     }
 
-    protected function loadMenus($menu_name=false) {
-
-        if(!$this->menu_loaded){
-            $this->db_menus = cmsCore::getModel('menu')->filterEqual('is_enabled', 1)->getAllMenuItemsTree();
-            $this->menu_loaded = true;
-        }
-
-        if($menu_name && isset($this->db_menus[$menu_name])){
-            return modelMenu::buildMenu($this->db_menus[$menu_name]);
-        }
-
-        return false;
-
-    }
-
     /**
      * Проверяет наличие меню
      *
@@ -485,17 +504,12 @@ class cmsTemplate {
      */
     public function menu($menu_name, $detect_active_id = true, $css_class = 'menu', $max_items = 0, $is_allow_multiple_active = false, $template = 'menu', $menu_title = '') {
 
-        if (!isset($this->menus[$menu_name])) {
-
-            $menu = $this->loadMenus($menu_name);
-            if (!$menu){ return; }
-
-            $this->setMenuItems($menu_name, $menu);
-
+        if (!$this->hasMenu($menu_name)) {
+            return;
         }
 
-        $menu       = $this->menus[$menu_name];
-        $active_ids = array();
+        $menu = $this->menus[$menu_name];
+        $active_ids = [];
 
         // Для подсчета пунктов меню первого уровня
         $first_level_count = 0;
@@ -633,7 +647,6 @@ class cmsTemplate {
         }
 
         $this->renderMenu($menu, $active_ids, $css_class, $max_items, $template, $menu_title);
-
     }
 
     /**
@@ -697,9 +710,13 @@ class cmsTemplate {
         $this->output .= $html;
     }
 
-    public function addToBlock($position, $html){
+    public function addToBlock($position, $html, $begining = false){
         if(isset($this->blocks[$position])){
-            $this->blocks[$position] .= $html;
+            if($begining){
+                $this->blocks[$position] = $html.$this->blocks[$position];
+            } else {
+                $this->blocks[$position] .= $html;
+            }
         } else {
             $this->blocks[$position] = $html;
         }

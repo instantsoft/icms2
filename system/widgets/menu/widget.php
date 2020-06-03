@@ -5,8 +5,22 @@ class widgetMenu extends cmsWidget {
 
     public function run(){
 
-        return array();
+        $menu_name = $this->getOption('menu');
+        if(!$menu_name){ return false; }
 
+        cmsCore::includeModel('menu');
+
+        $template = cmsTemplate::getInstance();
+
+        if (!$template->hasMenu($menu_name)) {
+
+            $menu_items = modelMenu::getMenuItemsByName($menu_name);
+            if(!$menu_items){ return false; }
+
+            $template->setMenuItems($menu_name, $menu_items);
+        }
+
+        return [];
     }
 
 }

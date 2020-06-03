@@ -1,8 +1,8 @@
-<ul class="nav <?php echo $css_class; ?>" role="navigation">
+<ul class="<?php echo $css_class ? $css_class : 'nav'; ?>" role="navigation">
 
 <?php $last_level = 0; ?>
 
-<?php foreach($menu as $id=>$item){ ?>
+<?php foreach ($menu as $id => $item) { ?>
 
     <?php for ($i=0; $i<($last_level - $item['level']); $i++) { ?>
         </li></ul>
@@ -18,9 +18,9 @@
 
         $css_classes = ['nav-item'];
         if ($item['level'] > 1) {
-            $css_aclasses = ['dropdown-item'];
+            $css_aclasses = ['dropdown-item text-nowrap'];
         } else {
-            $css_aclasses = ['nav-link'];
+            $css_aclasses = ['nav-link text-nowrap'];
         }
         if ($is_active) {
             $css_aclasses[] = 'active';
@@ -44,6 +44,11 @@
             <span class="nav-link disabled"><?php html($item['title']); ?></span>
         <?php } else { ?>
             <a <?php if (!empty($item['title'])) {?>title="<?php echo html($item['title']); ?>"<?php } ?> class="<?php echo implode(' ', $css_aclasses); ?>" href="<?php echo !empty($item['url']) ? htmlspecialchars($item['url']) : 'javascript:void(0)'; ?>" <?php echo html_attr_str($item['attributes']); ?>>
+                <?php if (!empty($item['options']['icon'])) {
+                    $icon_params = explode(':', $item['options']['icon']);
+                    if(!isset($icon_params[1])){ array_unshift($icon_params, 'solid'); }
+                    html_svg_icon($icon_params[0], $icon_params[1]);
+                } ?>
                 <?php if (!empty($item['title'])) { html($item['title']); } ?>
                 <?php if (!empty($item['counter'])){ ?>
                     <span class="counter badge badge-primary"><?php html($item['counter']); ?></span>

@@ -462,17 +462,17 @@ class actionContentItemView extends cmsAction {
 
     private function getToolButtons($ctype, $item, $is_moderator, $childs) {
 
-        $tool_buttons = array();
+        $tool_buttons = [];
 
         if (!$item['is_approved'] && !$item['is_draft'] && $is_moderator){
             $tool_buttons['accept'] = array(
                 'title'   => LANG_MODERATION_APPROVE,
-                'options' => array('class' => 'accept'),
+                'options' => ['class' => 'accept', 'icon' => 'check-double'],
                 'url'     => href_to($ctype['name'], 'approve', $item['id'])
             );
             $tool_buttons['return_for_revision'] = array(
                 'title'   => LANG_MODERATION_RETURN_FOR_REVISION,
-                'options' => array('class' => 'return_for_revision ajax-modal'),
+                'options' => ['class' => 'return_for_revision ajax-modal', 'icon' => 'retweet'],
                 'url'     => href_to($ctype['name'], 'return_for_revision', $item['id'])
             );
         }
@@ -480,7 +480,7 @@ class actionContentItemView extends cmsAction {
         if (!$item['is_approved'] && !$item['is_draft'] && !$this->viewed_moderators && $item['user_id'] == $this->cms_user->id){
             $tool_buttons['return'] = array(
                 'title'   => LANG_MODERATION_RETURN,
-                'options' => array('class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM),
+                'options' => ['class' => 'return', 'confirm' => LANG_CONTENT_RETURN_CONFIRM, 'icon' => 'undo'],
                 'url'     => href_to($ctype['name'], 'return', $item['id'])
             );
         }
@@ -492,7 +492,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['add_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_ADD_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'add'),
+                        'options' => ['class' => 'add', 'icon' => 'plus-circle'],
                         'url'     => href_to($relation['child_ctype_name'], 'add') . "?parent_{$ctype['name']}_id={$item['id']}".($item['parent_type']=='group' ? '&group_id='.$item['parent_id'] : '')
                     );
 
@@ -504,7 +504,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['bind_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_BIND_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'newspaper_add ajax-modal'),
+                        'options' => ['class' => 'newspaper_add ajax-modal', 'icon' => 'link'],
                         'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id']))
                     );
 
@@ -516,7 +516,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['unbind_'.$relation['child_ctype_name']] = array(
                         'title'   => sprintf(LANG_CONTENT_UNBIND_ITEM, $relation['child_labels']['create']),
-                        'options' => array('class' => 'newspaper_delete ajax-modal'),
+                        'options' => ['class' => 'newspaper_delete ajax-modal', 'icon' => 'unlink'],
                         'url'     => href_to($ctype['name'], 'bind_form', array($relation['child_ctype_name'], $item['id'], 'unbind'))
                     );
 
@@ -532,7 +532,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['edit'] = array(
                     'title'   => sprintf(LANG_CONTENT_EDIT_ITEM, $ctype['labels']['create']),
-                    'options' => array('class' => 'edit'),
+                    'options' => ['class' => 'edit', 'icon' => 'pencil-alt'],
                     'url'     => href_to($ctype['name'], 'edit', $item['id'])
                 );
 
@@ -546,7 +546,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['delete'] = array(
                         'title'   => sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create']),
-                        'options' => array('class' => 'delete', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])),
+                        'options' => ['class' => 'delete', 'icon' => 'minus-circle', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
                         'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                     );
 
@@ -554,7 +554,7 @@ class actionContentItemView extends cmsAction {
 
                     $tool_buttons['refuse'] = array(
                         'title'   => sprintf(LANG_MODERATION_REFUSE, $ctype['labels']['create']),
-                        'options' => array('class' => 'delete ajax-modal'),
+                        'options' => ['class' => 'delete ajax-modal', 'icon' => 'minus-square'],
                         'url'     => href_to($ctype['name'], 'delete', $item['id']).'?csrf_token='.cmsForm::getCSRFToken()
                     );
 
@@ -571,7 +571,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['basket_put'] = array(
                     'title'   => ($allow_delete ? LANG_BASKET_DELETE : sprintf(LANG_CONTENT_DELETE_ITEM, $ctype['labels']['create'])),
-                    'options' => array('class' => 'basket_put', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])),
+                    'options' => ['class' => 'basket_put', 'icon' => 'trash-alt', 'confirm' => sprintf(LANG_CONTENT_DELETE_ITEM_CONFIRM, $ctype['labels']['create'])],
                     'url'     => href_to($ctype['name'], 'trash_put', $item['id'])
                 );
 
@@ -586,7 +586,7 @@ class actionContentItemView extends cmsAction {
 
                 $tool_buttons['basket_remove'] = array(
                     'title'   => LANG_RESTORE,
-                    'options' => array('class' => 'basket_remove'),
+                    'options' => ['class' => 'basket_remove', 'icon' => 'trash-restore'],
                     'url'     => href_to($ctype['name'], 'trash_remove', $item['id'])
                 );
 

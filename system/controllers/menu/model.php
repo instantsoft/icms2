@@ -2,6 +2,37 @@
 
 class modelMenu extends cmsModel {
 
+    private static $all_menus = null;
+    private static $rendered_menus = [];
+
+    private static function loadAllMenus() {
+        if(self::$all_menus === null){
+
+            $model = new self();
+
+            self::$all_menus = $model->filterEqual('is_enabled', 1)->getAllMenuItemsTree();
+        }
+    }
+
+    public static function getMenuItemsByName($menu_name) {
+
+        self::loadAllMenus();
+
+        if(!empty(self::$all_menus[$menu_name])){
+
+            if(!in_array($menu_name, self::$rendered_menus)){
+
+                self::$rendered_menus[] = $menu_name;
+
+                self::$all_menus[$menu_name] = self::buildMenu(self::$all_menus[$menu_name]);
+            }
+
+            return self::$all_menus[$menu_name];
+        }
+
+        return [];
+    }
+
     public function addMenu($item){
 
         $id = $this->insert('menu', $item);
