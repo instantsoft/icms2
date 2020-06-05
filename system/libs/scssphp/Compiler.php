@@ -368,10 +368,6 @@ class Compiler
      */
     protected function pushExtends($target, $origin, $block)
     {
-        if ($this->isSelfExtend($target, $origin)) {
-            return;
-        }
-
         $i = \count($this->extends);
         $this->extends[] = [$target, $origin, $block];
 
@@ -834,7 +830,7 @@ class Compiler
 
             foreach ($origin as $j => $new) {
                 // prevent infinite loop when target extends itself
-                if ($this->isSelfExtend($single, $origin)) {
+                if ($this->isSelfExtend($single, $origin) and !$initial) {
                     return false;
                 }
 
@@ -917,6 +913,7 @@ class Compiler
         }
 
         foreach ([array_reverse($base), array_reverse($other)] as $single) {
+            $rang = count($single);
             foreach ($single as $part) {
                 if (preg_match('/^[\[:]/', $part)) {
                     $out[] = $part;
@@ -924,14 +921,15 @@ class Compiler
                 } elseif (preg_match('/^[\.#]/', $part)) {
                     array_unshift($out, $part);
                     $wasTag = false;
-                } elseif (preg_match('/^[^_-]/', $part)) {
+                } elseif (preg_match('/^[^_-]/', $part) and $rang==1) {
                     $tag[] = $part;
                     $wasTag = true;
                 } elseif ($wasTag) {
                     $tag[\count($tag) - 1] .= $part;
                 } else {
-                    $out[] = $part;
+                    array_unshift($out, $part);
                 }
+                $rang--;
             }
         }
 
@@ -3116,6 +3114,11 @@ class Compiler
                             $left = $left->normalize();
                             $right = $right->normalize();
                         }
+                        else {
+                            if ($coerceUnit) {
+                                $left = new Node\Number($left[1], []);
+                            }
+                        }
                     }
 
                     $shouldEval = $inParens || $inExp;
@@ -3210,7 +3213,7 @@ class Compiler
                 return $this->fncall($value[1], $value[2]);
 
             case Type::T_SELF:
-                $selfSelector = $this->multiplySelectors($this->env);
+                $selfSelector = $this->multiplySelectors($this->env,!empty($this->env->block->selfParent) ? $this->env->block->selfParent : null);
                 $selfSelector = $this->collapseSelectors($selfSelector, true);
 
                 return $selfSelector;
@@ -4040,6 +4043,11 @@ class Compiler
         }
 
         $selectors = array_values($selectors);
+
+        // case we are just starting a at-root : nothing to multiply but parentSelectors
+        if (!$selectors and $selfParentSelectors) {
+            $selectors = $selfParentSelectors;
+        }
 
         return $selectors;
     }

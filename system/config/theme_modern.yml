@@ -4,6 +4,9 @@ owner_url:
 owner_year:
 scss:
   enable-rounded: 1
+  border-radius: .25rem
+  border-radius-lg: .3rem
+  border-radius-sm: .2rem
   enable-shadows: null
   enable-gradients: null
   enable-responsive-font-sizes: 1

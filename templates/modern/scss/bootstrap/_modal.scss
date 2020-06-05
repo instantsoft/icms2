@@ -83,6 +83,7 @@
   &::before {
     display: block; // IE10
     height: subtract(100vh, $modal-dialog-margin * 2);
+    height: min-content; // Reset height to 0 except on IE
     content: "";
   }
 
@@ -111,6 +112,8 @@
   // counteract the pointer-events: none; in the .modal-dialog
   color: $modal-content-color;
   pointer-events: auto;
+  background-color: $modal-content-bg;
+  background-clip: padding-box;
   border: $modal-content-border-width solid $modal-content-border-color;
   @include border-radius($modal-content-border-radius);
   @include box-shadow($modal-content-box-shadow-xs);
@@ -148,17 +151,12 @@
     // auto on the left force icon to the right even when there is no .modal-title
     margin: (-$modal-header-padding-y) (-$modal-header-padding-x) (-$modal-header-padding-y) auto;
   }
-  .modal-close > svg {
-      fill: currentColor;
-      width: $modal-header-padding-y * 5;
-  }
 }
 
 // Title text within header
 .modal-title {
   margin-bottom: 0;
   line-height: $modal-title-line-height;
-  color: $modal-title-color;
 }
 
 // Modal body
@@ -169,8 +167,6 @@
   // when there should be a fixed height on `.modal-dialog`.
   flex: 1 1 auto;
   padding: $modal-inner-padding;
-  background-color: $modal-content-bg;
-  background-clip: padding-box;
 }
 
 // Footer (for actions)
@@ -222,6 +218,7 @@
 
     &::before {
       height: subtract(100vh, $modal-dialog-margin-y-sm-up * 2);
+      height: min-content;
     }
   }
 

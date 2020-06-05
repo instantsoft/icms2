@@ -1,9 +1,18 @@
+// Bootstrap 4.5.0
+
+// Функции Bootstrap
 @import "../bootstrap/bootstrap";
 @import "variables";
 @import "mixins";
-@import "content";
-@import "comments";
 
+// Переопределяемые/дополняемые стили Bootstrap
+@import "bs_override";
+
+// Типы контента
+@import "content";
+// Комментарии
+@import "comments";
+// Кастомный SCSS
 @import "custom";
 
 .icms-body-toolbox {
@@ -19,16 +28,6 @@
   .btn-responsive {
       @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
   }
-}
-.breadcrumb:after {
-    background: linear-gradient(270deg, $white 40%, rgba(247, 247, 247, 0));
-    bottom: 0;
-    content: "";
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: $spacer*3;
 }
 /** tinymce iframe */
 .mce-content-body {
@@ -102,9 +101,6 @@ blockquote {
     height: $spacer*1.5;
     width: $spacer*2;
 }
-.media-body >*:last-child {
-    margin-bottom: 0;
-}
 .inline_rss_icon {
     color: $orange;
     font-size: $font-size-base;
@@ -117,36 +113,7 @@ blockquote {
         padding: 0;
     }
 }
-#desktop_device_type {
-    .navbar-nav .dropdown:hover>.dropdown-menu {
-        display: block;
-        -webkit-animation: slide-up .25s ease-in-out;
-        animation: slide-up .25s ease-in-out;
-    }
-}
-.nav-tabs {
-  .nav-link {
-    border: 0;
-    position: relative;
-    background-color: transparent;
-    &::before {
-      position: absolute;
-      display: block;
-      bottom: 0;
-      left: $nav-link-padding-x;
-      width: calc(100% - (#{$nav-link-padding-x} * 2));
-      height: 3px;
-      background-color: transparent;
-      content: '';
-    }
-    &.active {
-      background-color: transparent;
-    }
-    &.active::before {
-      background-color: $primary;
-    }
-  }
-}
+
 @if $enable-modal-blur {
     .modal.show ~ * > * {
         -webkit-filter: blur(2px);
@@ -156,6 +123,7 @@ blockquote {
         filter: blur(2px);
     }
 }
+
 .icms-user-avatar {
     position: relative;
     display: inline-block;
@@ -211,9 +179,6 @@ blockquote {
     border-radius: $border-radius;
     padding: $badge-padding-y $badge-padding-x;
 }
-.media:last-child {
-    margin-bottom: 0 !important;
-}
 .widget {
     .edit_wlinks {
         @include transition($transition-fade);
@@ -255,7 +220,7 @@ blockquote {
         margin: -$input-btn-padding-x;
     }
 }
-
+// Спиннеры
 .spinner {
     width: 70px;
     height: 40px;
@@ -311,7 +276,7 @@ blockquote {
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: #FFF;
+  background-color: $white;
   border-radius: 100%;
   -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
           animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;

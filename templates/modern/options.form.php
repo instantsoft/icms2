@@ -67,6 +67,21 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => 1
                     )),
 
+                    new fieldString('scss:border-radius', array(
+                        'title' => LANG_MODERN_THEME_ROUNDED_BASE,
+                        'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
+                    )),
+
+                    new fieldString('scss:border-radius-lg', array(
+                        'title' => LANG_MODERN_THEME_ROUNDED_BASE_LG,
+                        'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
+                    )),
+
+                    new fieldString('scss:border-radius-sm', array(
+                        'title' => LANG_MODERN_THEME_ROUNDED_BASE_SM,
+                        'visible_depend' => array('scss:enable-rounded' => array('show' => array('1')))
+                    )),
+
                     new fieldCheckbox('scss:enable-shadows', array(
                         'title' => LANG_MODERN_THEME_ENABLE_SHADOWS
                     )),

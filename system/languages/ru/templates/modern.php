@@ -12,6 +12,9 @@ define('LANG_MODERN_THEME_COPYRIGHT_URL_HINT', 'Если не указана, в
 define('LANG_MODERN_THEME_COPYRIGHT_YEAR', 'Год копирайта');
 define('LANG_MODERN_THEME_COPYRIGHT_YEAR_HINT', 'Если не указан, выводится текущий');
 define('LANG_MODERN_THEME_ENABLE_ROUNDED', 'Включить скругление углов');
+define('LANG_MODERN_THEME_ROUNDED_BASE', 'Радиус по умолчанию');
+define('LANG_MODERN_THEME_ROUNDED_BASE_LG', 'Большой радиус');
+define('LANG_MODERN_THEME_ROUNDED_BASE_SM', 'Маленький радиус');
 define('LANG_MODERN_THEME_ENABLE_SHADOWS', 'Включить тени');
 define('LANG_MODERN_THEME_ENABLE_GRADIENTS', 'Включить градиенты');
 define('LANG_MODERN_THEME_ENABLE_RFS', 'Включить адаптивные размеры шрифтов');
