@@ -51,7 +51,7 @@ icms.menu = (function ($) {
             var el = $(this);
             var nav_level = $("nav .menu").parents().length;
             var el_level = $(this).parents().length - nav_level;
-            var pad = new Array(el_level-2 + 1).join('-') + ' ';
+            var pad = ((el_level-2 + 1) >= 1) ? new Array(el_level-2 + 1).join('-') + ' ' : '';
             var attr = {
                 value   : el.attr('href'),
                 text    : pad + el.text()
