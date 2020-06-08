@@ -885,7 +885,7 @@ class cmsTemplate {
 
         $item = array(
             'title' => $button['title'],
-            'url' => isset($button['href']) ? $button['href'] : '',
+            'url' => isset($button['href']) ? $button['href'] : (isset($button['url']) ? $button['url'] : ''),
             'level' => isset($button['level']) ? $button['level'] : 1,
             'childs_count' => isset($button['childs_count']) ? $button['childs_count'] : 0,
             'counter' => isset($button['counter']) ? $button['counter'] : null,
@@ -3019,8 +3019,8 @@ class cmsTemplate {
         $this->options[$key] = $value; return $this;
     }
 
-    public function getOption($key){
-        return array_key_exists($key, $this->options) ? $this->options[$key] : null;
+    public function getOption($key, $default = null){
+        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
     }
 
     public function getOptions(){

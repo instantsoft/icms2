@@ -212,7 +212,7 @@ icms.forms = (function ($) {
 
             var form = $(this.closest('form'));
 
-            var sbutton = $(form).find('.buttons input[type = submit]');
+            var sbutton = $(form).find('.buttons button[type = submit]');
             var spinner = $(form).find('.spinner.filter_loader');
 
             $(sbutton).prop('disabled', true);
@@ -236,7 +236,7 @@ icms.forms = (function ($) {
                 } else {
                     $(form).removeData('filter_link');
                 }
-                $(sbutton).val(result.hint).prop('disabled', false);
+                $(sbutton).val(result.hint).prop('disabled', false).find('span').text(result.hint);
                 $(spinner).fadeOut('slow');
             }, 'json');
 
@@ -256,7 +256,7 @@ icms.forms = (function ($) {
         $(selector).find('select, input[type=checkbox]').on('change', change);
         $(selector).find('input:not([type=checkbox]), textarea').on('input', delay());
 
-        $(selector).find('.buttons input[type = submit]').on('click', function (){
+        $(selector).find('.buttons button[type = submit]').on('click', function (){
 
             var form = $(this.closest('form'));
 

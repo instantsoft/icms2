@@ -160,22 +160,37 @@ icms.forms = (function ($) {
 
     this.initFilterForm = function(selector){
 
+        var form = $(selector);
+
+        var filter_panel = $(form).closest('.icms-filter-panel');
+
+        var filter_link_open = $(filter_panel).find('.icms-filter-link__open');
+        var filter_link_close = $(filter_panel).find('.icms-filter-link__close');
+
+        $(filter_link_open).on('click', function (){
+            $(this).addClass('d-none');
+            $(filter_panel).find('.icms-filter-container').removeClass('d-none');
+            return false;
+        });
+        $(filter_link_close).on('click', function (){
+            $(filter_panel).find('.icms-filter-container').addClass('d-none');
+            $(filter_link_open).removeClass('d-none');
+            return false;
+        });
+
         var change = function (){
 
-            var form = $(this.closest('form'));
+            var sbutton = $(form).find('.buttons button[type = submit]');
 
-            var sbutton = $(form).find('.buttons input[type = submit]');
-            var spinner = $(form).find('.spinner.filter_loader');
-
-            $(sbutton).prop('disabled', true);
-            $(spinner).show();
+            $(sbutton).prop('disabled', true).addClass('is-busy');
 
             var o = _this.getFilterFormParams(form);
+            var submit_uri;
 
-            if(Object.keys(o).length > 0){
-                var submit_uri = $(form).attr('action');
+            if(Object.keys(o).length > 0 || $(form).find('.cancel_filter_link').length === 0){
+                submit_uri = $(form).attr('action');
             } else {
-                var submit_uri = $(form).find('.cancel_filter_link').attr('href');
+                submit_uri = $(form).find('.cancel_filter_link').attr('href');
             }
 
             o.show_count = 1;
@@ -188,8 +203,9 @@ icms.forms = (function ($) {
                 } else {
                     $(form).removeData('filter_link');
                 }
-                $(sbutton).val(result.hint).prop('disabled', false);
-                $(spinner).fadeOut('slow');
+                setTimeout(function (){
+                    $(sbutton).removeClass('is-busy').val(result.hint).prop('disabled', false).find('span').text(result.hint);
+                }, 200);
             }, 'json');
 
         };
@@ -205,12 +221,10 @@ icms.forms = (function ($) {
             };
         };
 
-        $(selector).find('select, input[type=checkbox]').on('change', change);
-        $(selector).find('input:not([type=checkbox]), textarea').on('input', delay());
+        $(form).find('select, input[type=checkbox]').on('change', change);
+        $(form).find('input:not([type=checkbox]), textarea').on('input', delay());
 
-        $(selector).find('.buttons input[type = submit]').on('click', function (){
-
-            var form = $(this.closest('form'));
+        $(form).find('.buttons button[type = submit]').on('click', function (){
 
             var filter_link = $(form).data('filter_link');
 

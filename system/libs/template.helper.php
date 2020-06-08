@@ -31,114 +31,19 @@ function html_link($title, $href){
  * @param string|array $base_uri Базовый URL, может быть массивом из элементов first и base
  * @param array $query Массив параметров запроса
  * @param string $page_param_name Название параметра номера страницы
+ * @return string
  */
-function html_pagebar($page, $perpage, $total, $base_uri=false, $query=array(), $page_param_name = 'page'){
+function html_pagebar($page, $perpage, $total, $base_uri = false, $query = [], $page_param_name = 'page') {
 
-	if (!$total){ return; }
+    if (!$total || $total <= $perpage){ return ''; }
 
-    $pages = ceil($total / $perpage);
-    if($pages<=1) { return; }
+    $paginator = new cmsPaginator($total, $perpage, $page, $base_uri, $query);
 
-    $core = cmsCore::getInstance();
-
-    $anchor = '';
-
-    if (is_string($base_uri) && mb_strstr($base_uri, '#')){
-        list($base_uri, $anchor) = explode('#', $base_uri);
+    if($page_param_name){
+        $paginator->setPageParamName($page_param_name);
     }
 
-    if ($anchor) { $anchor = '#' . $anchor; }
-
-    if (!$base_uri) { $base_uri = $core->uri_absolute; }
-
-    if (!is_array($base_uri)){
-        $base_uri = array(
-            'first'=>$base_uri,
-            'base'=>$base_uri
-        );
-    }
-
-    if (!is_array($query)){
-        parse_str($query, $query);
-    }
-
-    $html   = '';
-
-    $html .= '<div class="pagebar">';
-
-	if (($page > 1) || ($page < $pages)) {
-
-		$html .= '<span class="pagebar_nav">';
-
-		if ($page > 1){
-			$query[$page_param_name] = ($page-1);
-			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
-			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
-			$html .= ' <a href="'. $uri . ($query ? $sep .http_build_query($query) : '') . $anchor . '" class="pagebar_page">&larr; '.LANG_PAGE_PREV.'</a> ';
-		} else {
-			$html .= ' <span class="pagebar_page disabled">&larr; '.LANG_PAGE_PREV.'</span> ';
-		}
-
-		if ($page < $pages){
-			$query[$page_param_name] = ($page+1);
-			$uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
-			$sep = mb_strstr($uri, '?') ? '&' : '?';
-			if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
-			$html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_NEXT.' &rarr;</a> ';
-		} else {
-			$html .= ' <span class="pagebar_page disabled">'.LANG_PAGE_NEXT.' &rarr;</span> ';
-		}
-
-		$html .= '</span>';
-
-	}
-
-	$span = 3;
-	if ($page - $span < 1) { $p_start = 1; } else { $p_start = $page - $span; }
-	if ($page + $span > $pages) { $p_end = $pages; } else { $p_end = $page + $span; }
-
-	$html .= '<span class="pagebar_pages">';
-
-	if ($page > $span+1){
-        $query[$page_param_name] = 1;
-        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
-        $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
-        $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_FIRST.'</a> ';
-	}
-
-    for ($p=$p_start; $p<=$p_end; $p++){
-        if ($p != $page) {
-            $query[$page_param_name] = $p;
-            $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
-            $sep = mb_strstr($uri, '?') ? '&' : '?';
-            if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
-            $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.$p.'</a> ';
-        } else {
-            $html .= '<span class="pagebar_current">'.$p.'</span>';
-        }
-    }
-
-	if ($page < $pages - $span){
-        $query[$page_param_name] = $pages;
-        $uri = ($query[$page_param_name]==1 ? $base_uri['first'] : $base_uri['base']);
-        $sep = mb_strstr($uri, '?') ? '&' : '?';
-        if ($query[$page_param_name] == 1) { unset($query[$page_param_name]); }
-        $html .= ' <a href="'. $uri . ($query ? $sep.http_build_query($query) : '') . $anchor . '" class="pagebar_page">'.LANG_PAGE_LAST.'</a> ';
-	}
-
-	$html .= '</span>';
-
-    $from   = $page * $perpage - $perpage + 1;
-    $to     = $page * $perpage; if ($to>$total) { $to = $total; }
-
-    $html  .= '<div class="pagebar_notice">'.sprintf(LANG_PAGES_SHOWN, $from, $to, $total).'</div>';
-
-    $html .= '</div>';
-
-	return $html;
-
+    return $paginator->getRendered();
 }
 
 /**
@@ -228,23 +133,30 @@ function html_datepicker($name='', $value='', $attributes=array(), $datepicker =
     if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
     $attr_str = html_attr_str($attributes);
 	$html  = '<input type="text" placeholder="'.LANG_SELECT.'" name="'.$name.'" value="'.htmlspecialchars($value).'" class="'.$class.'"  id="'.$id.'" '.$attr_str.'/>';
-    $html .= '<script type="text/javascript">';
-    $html .= 'var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected;';
-    $html .= '$(function(){ $("#'.$id.'").datepicker(datepicker_params); });function datepickerSelected(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);}';
-    $html .= '</script>';
+    $script = '<script type="text/javascript">';
+    $script .= '$(function(){ var datepicker_params = '.json_encode($datepicker_default).';datepicker_params.onSelect = datepickerSelected; $("#'.$id.'").datepicker(datepicker_params); var datepickerSelected = function(dateText,inst){icms.events.run("icms_datepicker_selected_'.$name.'", inst);} });';
+    $script .= '</script>';
+    cmsTemplate::getInstance()->addBottom($script);
     return $html;
 }
 
 /**
- * Возвращает кнопку "Отправить" <input type="submit">
- * @param string $caption
- * @return html
+ * Возвращает кнопку "Отправить" type="submit"
+ *
+ * @param string $caption Заголовок кнопки
+ * @param string $name Имя (name)
+ * @param array $attributes Массив параметров
+ * @return string
  */
-function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
-    $attr_str = html_attr_str($attributes);
-    $class = 'button-submit button btn btn-primary';
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
-	return '<input class="'.$class.'" type="submit" name="'.$name.'" value="'.htmlspecialchars($caption).'" '.$attr_str.'/>';
+function html_submit($caption = LANG_SUBMIT, $name = 'submit', $attributes = []) {
+
+    $attributes['type'] = 'submit';
+
+    $class = 'button-submit btn-primary';
+
+    $attributes['class'] = !empty($attributes['class']) ? $attributes['class'].' '.$class : $class;
+
+    return html_button($caption, $name, '', $attributes);
 }
 
 /**
@@ -254,7 +166,7 @@ function html_submit($caption=LANG_SUBMIT, $name='submit', $attributes=array()){
  * @param str $onclick Содержимое аттрибута onclick (javascript)
  * @return html
  */
-function html_button($caption, $name, $onclick='', $attributes=array()){
+function html_button($caption, $name, $onclick = '', $attributes = []) {
 
     if (!isset($attributes['type'])) { $attributes['type'] = 'button'; }
 
@@ -262,11 +174,10 @@ function html_button($caption, $name, $onclick='', $attributes=array()){
 
     $class = 'button btn';
 
-    if (isset($attributes['class'])) { $class .= ' '.$attributes['class']; }
+    if (!empty($attributes['class'])) { $class .= ' '.$attributes['class']; }
     else { $class .= ' btn-secondary'; }
 
-	return '<button value="'.htmlspecialchars($caption).'" class="'.$class.'" name="'.$name.'" onclick="'.$onclick.'" '.$attr_str.'><span>'.htmlspecialchars($caption).'</span></button>';
-
+	return '<button value="'.html($caption, false).'" class="'.$class.'" name="'.$name.'" onclick="'.$onclick.'" '.$attr_str.'><span>'.html($caption, false).'</span></button>';
 }
 
 /**

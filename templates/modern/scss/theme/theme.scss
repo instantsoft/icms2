@@ -1,8 +1,11 @@
-// Bootstrap 4.5.0
+// Переменные шаблона
+@import "variables";
 
 // Функции Bootstrap
+// Bootstrap 4.5.0
 @import "../bootstrap/bootstrap";
-@import "variables";
+
+// Миксины
 @import "mixins";
 
 // Переопределяемые/дополняемые стили Bootstrap
@@ -194,10 +197,8 @@ blockquote {
 .is-busy {
     position: relative;
     * {
-        -webkit-transition: none;
         transition: none;
         visibility: hidden;
-
     }
     &:after {
         content: '';

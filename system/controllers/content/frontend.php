@@ -542,17 +542,17 @@ class content extends cmsFrontend {
 
         if (!empty($fields['user']['is_in_'.$subject])){
             $bar[] = [
-                'css'   => 'bi_user',
-                'icon'  => 'user',
-                'html'  => isset($fields['user']['html']) ? $fields['user']['html'] : $fields['user']['handler']->parse($item['user']),
-                'title' => $fields['user']['title']
+                'css'  => 'bi_user',
+                'icon' => 'user',
+                'href' => href_to_profile($item['user']),
+                'html' => $item['user']['nickname']
             ];
             if (!empty($item['folder_title'])){
                 $bar[] = [
                     'css'  => 'bi_folder',
                     'icon' => 'folder',
                     'html' => $item['folder_title'],
-                    'href' => href_to('users', $item['user']['id'], array('content', $ctype['name'], $item['folder_id']))
+                    'href' => href_to_profile($item['user'], ['content', $ctype['name'], $item['folder_id']])
                 ];
             }
         }

@@ -44,6 +44,7 @@ scss:
   green: '#43ac6a'
   teal: '#20c997'
   cyan: '#5bc0de'
+pagination_template: pagination
 custom_scss:
   body-bg:
   body-color:

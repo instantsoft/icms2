@@ -1,4 +1,5 @@
 <?php
+    $info_bar_max_count = 0;
     if($ctype['options']['list_show_filter']) {
         $this->renderAsset('ui/filter-panel', array(
             'css_prefix'   => $ctype['name'],
@@ -93,7 +94,7 @@
             <?php if (!empty($item['info_bar'])){ ?>
                 <div class="info_bar d-flex text-muted mt-3">
                     <?php foreach($item['info_bar'] as $bar){ ?>
-                        <div class="mr-3 bar_item text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                        <div class="mr-3 bar_item <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
                             <?php if (!empty($bar['icon'])){ ?>
                                 <?php html_svg_icon('solid', $bar['icon']); ?>
                             <?php } ?>
@@ -125,6 +126,6 @@ $this->addTplCSSNameFromContext('slick');
 ob_start();
 ?>
 <script type="text/javascript">
-    icms.menu.initSwipe('.info_bar', {variableWidth: true});
+    icms.menu.initSwipe('.info_bar', {variableWidth: true<?php if (!empty($item['info_bar']) && count($item['info_bar']) > 3){ ?>, mobileFirst: false<?php } ?>});
 </script>
 <?php $this->addBottom(ob_get_clean()); ?>

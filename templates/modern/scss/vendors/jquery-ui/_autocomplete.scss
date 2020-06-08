@@ -1,0 +1,24 @@
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}
+.ui-menu {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: block;
+	outline: 0;
+    .ui-menu {
+        position: absolute;
+    }
+    .ui-menu-item {
+        margin: 0;
+        cursor: pointer;
+    }
+    .ui-menu-item-wrapper {
+        position: relative;
+        padding: ($spacer*0.5) $spacer;
+    }
+}

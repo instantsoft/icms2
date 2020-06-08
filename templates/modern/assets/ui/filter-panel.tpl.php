@@ -1,15 +1,21 @@
-<?php $user = cmsUser::getInstance(); ?>
-<?php $form_id = isset($form_id) ? $form_id : md5(microtime(true)); ?>
-<?php if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']); ?>
-<?php $form_url = is_array($page_url) ? $page_url['base'] : $page_url; $form_url_sep = strpos($form_url, '?') === false ? '?' : '&'; ?>
-<div class="filter-panel gui-panel my-3 <?php echo $css_prefix;?>-filter">
-    <a class="filter-link btn btn-block btn-light text-left" href="javascript:toggleFilter()" <?php if($filters || $is_expanded){ ?>style="display:none"<?php } ?>>
+<?php
+$user = cmsUser::getInstance();
+$form_id = isset($form_id) ? $form_id : md5(microtime(true));
+if (!isset($is_expanded)){ $is_expanded = false; } unset($filters['user_id']);
+$form_url = is_array($page_url) ? $page_url['base'] : $page_url;
+$form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
+?>
+
+<div class="icms-filter-panel gui-panel my-3 <?php echo $css_prefix;?>-filter">
+
+    <a class="icms-filter-link__open btn btn-block btn-light text-left <?php if($filters || $is_expanded){ ?>d-none<?php } ?>" href="#">
         <?php html_svg_icon('solid', 'filter'); ?> <span><?php echo LANG_SHOW_FILTER; ?></span>
     </a>
-    <div class="filter-container" <?php if(!$filters && !$is_expanded){ ?>style="display:none"<?php } ?>>
-		<div class="filter-close">
-            <a href="javascript:toggleFilter();"><span><?php echo LANG_CLOSE; ?></span></a>
-        </div>
+
+    <div class="icms-filter-container p-3 bg-light <?php if(!$filters && !$is_expanded){ ?>d-none<?php } ?>">
+        <button type="button" class="close icms-filter-link__close" title="<?php echo LANG_CLOSE; ?>">
+            <span>&times;</span>
+        </button>
         <form action="<?php echo $form_url; ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">
             <?php echo html_input('hidden', 'page', 1); ?>
             <?php if(!empty($ext_hidden_params)){ ?>
@@ -18,7 +24,7 @@
                     <?php if($filters){ $filters[$fname] = $fvalue; } ?>
                 <?php } ?>
             <?php } ?>
-            <div class="fields">
+            <div class="fields form-row">
                 <?php $fields_count = 0; ?>
                 <?php foreach($fields as $name => $field){ ?>
                     <?php if (!$field['is_in_filter']){ continue; } ?>
@@ -27,11 +33,9 @@
                     <?php $output = $field['handler']->getFilterInput($value); ?>
                     <?php if (!$output){ continue; } ?>
                     <?php $fields_count++; ?>
-                    <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-                        <div class="title"><?php echo $field['title']; ?></div>
-                        <div class="value">
-                            <?php echo $output; ?>
-                        </div>
+                    <div class="form-group col-md-6 field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                        <label class="font-weight-bold"><?php echo $field['title']; ?></label>
+                        <?php echo $output; ?>
                     </div>
                 <?php } ?>
                 <?php if (!empty($props)){ ?>
@@ -42,53 +46,52 @@
                             $prop['handler']->setName("p{$prop['id']}");
                             $value = isset($filters["p{$prop['id']}"]) ? $filters["p{$prop['id']}"] : null;
                         ?>
-                        <div class="field ft_<?php echo $prop['type']; ?> f_prop_<?php echo $prop['id']; ?>">
-                            <div class="title"><?php echo $prop['title']; ?></div>
-                            <div class="value">
-                                <?php echo $prop['handler']->getFilterInput($value); ?>
-                            </div>
+                        <div class="form-group col-md-6 field ft_<?php echo $prop['type']; ?> f_prop_<?php echo $prop['id']; ?>">
+                            <label class="font-weight-bold"><?php echo $prop['title']; ?></label>
+                            <?php echo $prop['handler']->getFilterInput($value); ?>
                         </div>
                     <?php } ?>
                 <?php } ?>
             </div>
+
             <?php if ($fields_count) { ?>
-                <div class="spinner filter_loader"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>
-                <div class="buttons">
+                <div class="buttons d-flex">
                     <?php echo html_submit(LANG_FILTER_APPLY); ?>
                     <?php if (sizeof($filters)){ ?>
-                        <div class="link">
-                            <a class="cancel_filter_link" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
-                                <?php echo LANG_CANCEL; ?>
-                            </a>
-                        </div>
-                        <div class="link">
-                            <?php
-                            if(!empty($page_url['filter_link'])){
-                                $filter_url = $page_url['filter_link'];
-                            } else {
-                                $filter_url = $form_url.$form_url_sep.http_build_query($filters);
-                            }
-                            ?>
-                            # <a href="<?php echo $filter_url; ?>">
-                                <?php echo LANG_FILTER_URL; ?>
-                            </a>
-                        </div>
+                        <a class="btn btn-secondary cancel_filter_link mx-2" href="<?php echo ((is_array($page_url) && !empty($page_url['cancel'])) ? $page_url['cancel'] : $form_url); ?>">
+                            <?php echo LANG_CANCEL; ?>
+                        </a>
+                        <?php
+                        if(!empty($page_url['filter_link'])){
+                            $filter_url = $page_url['filter_link'];
+                        } else {
+                            $filter_url = $form_url.$form_url_sep.http_build_query($filters);
+                        }
+                        ?>
+                        <a class="btn btn-link" href="<?php echo $filter_url; ?>">
+                            # <?php echo LANG_FILTER_URL; ?>
+                        </a>
                         <?php
                             $hooks_html = cmsEventsManager::hookAll('content_filter_buttons_html', array($css_prefix, $form_url, $filters));
-                            if ($hooks_html) { echo html_each($hooks_html); }
-                        ?>
+                            if ($hooks_html) { ?>
+                                <div class="ml-auto">
+                                    <?php echo html_each($hooks_html); ?>
+                                </div>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             <?php } ?>
         </form>
     </div>
 </div>
+<?php ob_start(); ?>
 <script type="text/javascript">
     <?php echo $this->getLangJS('LANG_CH1','LANG_CH2','LANG_CH10', 'LANG_ISLEFT', 'LANG_SUBMIT_NOT_SAVE'); ?>
     $(function (){
         <?php if (!$fields_count) { ?>
-            $('.filter-panel.groups-filter').hide();
+            $('.icms-filter-panel.groups-filter').hide();
         <?php } ?>
         icms.forms.initFilterForm('#<?php echo $form_id; ?>');
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

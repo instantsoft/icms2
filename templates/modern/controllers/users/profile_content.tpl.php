@@ -54,11 +54,8 @@
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
     }
-    if ($toolbar_html) {
-        echo html_each($toolbar_html);
-    }
 ?>
-
+<?php ob_start(); ?>
 <h1 class="d-flex align-items-center">
     <a class="avatar icms-user-avatar d-flex mr-3" href="<?php echo href_to_profile($profile); ?>">
         <?php echo html_avatar_image($profile['avatar'], 'micro', $profile['nickname'], $profile['is_deleted']); ?>
@@ -77,6 +74,7 @@
         </sup>
     <?php } ?>
 </h1>
+<?php $this->addToBlock('before_body', ob_get_clean().($toolbar_html ? html_each($toolbar_html) : '')); ?>
 <?php if (!empty($datasets) || $folders){ ?>
 <div class="row align-content-end">
     <?php if (!empty($datasets)){ ?>

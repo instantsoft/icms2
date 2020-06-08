@@ -1,4 +1,4 @@
-<div class="card mb-4 widget<?php if ($widget['class_wrap']) { ?> <?php echo $widget['class_wrap'];  } ?>" id="widget_wrapper_<?php echo $widget['id']; ?>">
+<div class="card my-4 widget<?php if ($widget['class_wrap']) { ?> <?php echo $widget['class_wrap'];  } ?>" id="widget_wrapper_<?php echo $widget['id']; ?>">
     <?php if ($widget['title'] && $is_titles){ ?>
     <h4 class="card-header<?php if ($widget['class_title']) { ?> <?php echo $widget['class_title'];  } ?>">
         <?php echo $widget['title']; ?>

@@ -106,6 +106,13 @@ class formModernTemplateOptions extends cmsForm {
                     new fieldString('scss:font-size-base', array(
                         'title' => LANG_MODERN_THEME_BASE_FS,
                         'default' => '1rem'
+                    )),
+
+                    new fieldList('pagination_template', array(
+                        'title' => LANG_MODERN_THEME_PAGINATION_TPL,
+                        'generator' => function($item) {
+                            return cmsTemplate::getInstance()->getAvailableTemplatesFiles('assets/ui', 'pagination*.tpl.php', 'modern');
+                        }
                     ))
 
                 )
