@@ -25,13 +25,11 @@ class actionContentCategoryView extends cmsAction {
         // Номер страницы
         $page = $this->request->get('page', 1);
 
-        $subcats = array();
+        // Подкатегории
+        $subcats = [];
 
-        // Получаем список подкатегорий для текущей
-        if ($ctype['is_cats']) {
-            $current_cat_id = $category['id'] ? $category['id'] : 1;
-            $subcats        = $this->model->filterIsNull('is_hidden')->getSubCategories($ctype['name'], $current_cat_id);
-        }
+        // HTML списка записей
+        $items_list_html = '';
 
         // Получаем список наборов
         $datasets = $this->getCtypeDatasets($ctype, array(
@@ -79,8 +77,9 @@ class actionContentCategoryView extends cmsAction {
             return cmsCore::error404();
         }
 
-        // Фильтр по категории
+        // Категории включены?
         if ($ctype['is_cats']) {
+            // Фильтр по категории
             if ($slug != 'index') {
                 $this->model->filterCategory($ctype['name'], $category, $ctype['is_cats_recursive']);
             } elseif (!$ctype['is_cats_recursive']) {
@@ -131,8 +130,7 @@ class actionContentCategoryView extends cmsAction {
         list($ctype, $category) = cmsEventsManager::hook("content_before_category", array($ctype, $category));
         list($ctype, $category) = cmsEventsManager::hook("content_{$ctype['name']}_before_category", array($ctype, $category));
 
-        $items_list_html = '';
-        $is_hide_items   = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
+        $is_hide_items = !empty($ctype['options']['is_empty_root']) && $slug == 'index';
 
         $list_styles = array();
 
@@ -256,6 +254,20 @@ class actionContentCategoryView extends cmsAction {
             }
         }
 
+        // Категории включены и доступны для показа?
+        if ($ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])) {
+
+            // Получаем список подкатегорий для текущей
+            $current_cat_id = $category['id'] ? $category['id'] : 1;
+            $subcats = $this->model->filterIsNull('is_hidden')->
+                    getSubCategories($ctype['name'], $current_cat_id);
+
+            // Формируем параметры, используемые в шаблоне
+            if($subcats){
+                $subcats = $this->buildCategoriesTemplateParams($subcats, $ctype, $current_dataset, $dataset, $base_url);
+            }
+        }
+
         // Мы в фильтре
         if ($this->list_filter) {
 
@@ -291,6 +303,29 @@ class actionContentCategoryView extends cmsAction {
             'user'            => $this->cms_user
         ), $this->request);
 
+    }
+
+    private function buildCategoriesTemplateParams($subcats, $ctype, $current_dataset, $dataset, $base_url) {
+        foreach ($subcats as $key => $cat) {
+
+            $is_ds_view = empty($current_dataset['cats_view']) || in_array($cat['id'], $current_dataset['cats_view']);
+            $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($cat['id'], $current_dataset['cats_hide']);
+            $img_src  = html_image_src($cat['cover'], $ctype['options']['cover_preset'], true);
+
+            $class = ['icms-content-'.$ctype['name'].'__icon'];
+            if($ctype['options']['cover_preset']){
+                $class[] = 'icms-content__has_cover_preset';
+                $class[] = 'icms-content-cover-preset__'.$ctype['options']['cover_preset'];
+            }
+            $class[] = 'icms-content-cat__'.str_replace('/', '-', $cat['slug']);
+
+            $subcats[$key]['list_params'] = [
+                'cover_img' => $img_src,
+                'href' => href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $cat['slug']),
+                'class' => implode(' ', $class)
+            ];
+        }
+        return $subcats;
     }
 
     private function getCategoryAndSlugAndCtype() {

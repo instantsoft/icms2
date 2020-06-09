@@ -171,3 +171,7 @@
         margin: 0;
     }
 }
+.icms-btn-tag:before {
+    content: '#';
+    margin-right: $spacer*0.1;
+}

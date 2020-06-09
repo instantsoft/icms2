@@ -32,6 +32,11 @@
       @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
   }
 }
+.icms-filter-link__close {
+    right: $spacer;
+    top: $spacer*0.75;
+    z-index: 1;
+}
 /** tinymce iframe */
 .mce-content-body {
     margin: $spacer;

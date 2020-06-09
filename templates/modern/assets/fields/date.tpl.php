@@ -1,13 +1,21 @@
 <?php if($field->title){ ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
-
-<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], array('id'=>$field->id), array('minDate'=>date('d.m.Y', 86400))); ?>
-
+<div class="form-inline">
+<?php echo html_datepicker($field->data['fname_date'], $field->data['date'], ['id'=>$field->id, 'class' => 'mr-sm-2 mb-2 mb-sm-0'], ['minDate'=>date('d.m.Y', 86400)]); ?>
 <?php if($field->data['show_time']){ ?>
-    <?php echo html_select_range($field->data['fname_hours'], 0, 23, 1, true, $field->data['hours']); ?> :
-    <?php echo html_select_range($field->data['fname_mins'], 0, 59, 1, true, $field->data['mins']); ?>
+    <?php echo html_select_range($field->data['fname_hours'], 0, 23, 1, true, $field->data['hours'], ['class' => 'w-auto mr-2']); ?>
+    <span class="mr-2">:</span>
+    <?php echo html_select_range($field->data['fname_mins'], 0, 59, 1, true, $field->data['mins'], ['class' => 'w-auto mr-2']); ?>
 <?php } ?>
-
-    <a class="ajaxlink" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#"><?php echo LANG_PARSER_CURRENT_TIME; ?></a>
+    <a class="btn text-decoration-none" onclick="return parser_current_time_<?php echo $field->id; ?>(this);" href="#">
+        <span class="d-md-none">
+            <?php html_svg_icon('solid', 'user-clock'); ?>
+        </span>
+        <span class="d-none d-md-inline-block">
+            <?php echo LANG_PARSER_CURRENT_TIME; ?>
+        </span>
+    </a>
+</div>
+<?php ob_start(); ?>
 <script type="text/javascript">
     function parser_current_time_<?php echo $field->id; ?>(a){
         var now = new Date();
@@ -32,3 +40,4 @@
         return false;
     }
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

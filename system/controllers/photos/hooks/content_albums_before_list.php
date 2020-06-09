@@ -29,7 +29,7 @@ class onPhotosContentAlbumsBeforeList extends cmsAction {
             if($can_add){
 
                 $this->cms_template->addMenuItem('controller_actions_menu', array(
-                    'options' => array('class' => 'images'),
+                    'options' => ['class' => 'images', 'icon'  => 'upload'],
                     'title'   => LANG_PHOTOS_UPLOAD,
                     'url'     => href_to($this->name, 'upload').'?group_id='.$group['id']
                 ));
@@ -42,6 +42,7 @@ class onPhotosContentAlbumsBeforeList extends cmsAction {
 
                 $this->cms_template->addToolButton(array(
                     'class' => 'images',
+                    'icon'  => 'upload',
                     'title' => LANG_PHOTOS_UPLOAD,
                     'href'  => href_to($this->name, 'upload')
                 ));

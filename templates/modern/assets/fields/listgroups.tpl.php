@@ -2,7 +2,7 @@
 <div class="mt-2">
     <?php echo html_select_multiple($field->element_name, $field->data['groups'], $value, array('id'=>$field->id)); ?>
 </div>
-
+<?php ob_start(); ?>
 <script type="text/javascript">
     $(function() {
         $('#<?php echo $field->id; ?> input').on('click', function (){
@@ -16,3 +16,4 @@
         });
     });
 </script>
+<?php $this->addBottom(ob_get_clean()); ?>

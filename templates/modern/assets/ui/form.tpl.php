@@ -64,7 +64,7 @@
                     ); ?>
             <?php } ?>
         <?php } ?>
-        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'button-cancel')); } ?>
+        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
     </div>
 
 </form>

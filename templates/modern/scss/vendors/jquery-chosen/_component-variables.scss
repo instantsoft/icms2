@@ -1,5 +1,3 @@
-$input-height:                  $input-height-inner;
-
 $chosen-gray-darkest:           $gray-900;
 $chosen-gray-darker:            $gray-700;
 $chosen-gray-dark:              $gray-600;
@@ -19,9 +17,6 @@ $chosen-box-shadow:             none;
 $chosen-drop-border:            $input-focus-border-color;
 $chosen-drop-box-shadow:        0 4px 5px 0 rgba(0,0,0,.075), 0 2px 5px 0 $input-focus-box-shadow;
 $chosen-drop-zindex:            1060;
-$chosen-focus-border:           1px solid $input-focus-border-color;
-$chosen-focus-box-shadow:       rgba($chosen-border-color, 0.5);
-$chosen-focus-transition:       border linear 0ms, box-shadow linear 0ms;
 $chosen-placeholder-color:      $input-placeholder-color;
 $chosen-height:                 $input-height;
 $chosen-multi-height:           $input-height;

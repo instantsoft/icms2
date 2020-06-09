@@ -86,8 +86,7 @@
 
             <?php if (!empty($item['show_tags'])){ ?>
                 <div class="tags_bar mt-3">
-                    <?php html_svg_icon('solid', 'tags'); ?>
-                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name']); ?>
+                    <?php echo html_tags_bar($item['tags'], 'content-'.$ctype['name'], 'btn btn-outline-secondary btn-sm mr-1 icms-btn-tag', ''); ?>
                 </div>
             <?php } ?>
 
@@ -115,10 +114,7 @@
     <?php } ?>
 
 </div>
-
-<?php if ($perpage < $total) { ?>
-    <?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
-<?php } ?>
+<?php echo html_pagebar($page, $perpage, $total, $page_url, array_merge($filters, $ext_hidden_params)); ?>
 
 <?php
 $this->addTplJSNameFromContext('vendors/slick/slick.min');

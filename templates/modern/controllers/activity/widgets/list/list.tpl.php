@@ -78,7 +78,7 @@
                         <?php html_svg_icon('solid', 'ellipsis-v'); ?>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item delete" href="<?php echo $this->href_to('delete', $item['id']); ?>">
+                        <a class="dropdown-item delete" href="<?php echo href_to('activity', 'delete', $item['id']); ?>">
                             <?php html(LANG_DELETE); ?>
                         </a>
                     </div>

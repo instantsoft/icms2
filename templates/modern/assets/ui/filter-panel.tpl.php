@@ -12,8 +12,8 @@ $form_url_sep = strpos($form_url, '?') === false ? '?' : '&';
         <?php html_svg_icon('solid', 'filter'); ?> <span><?php echo LANG_SHOW_FILTER; ?></span>
     </a>
 
-    <div class="icms-filter-container p-3 bg-light <?php if(!$filters && !$is_expanded){ ?>d-none<?php } ?>">
-        <button type="button" class="close icms-filter-link__close" title="<?php echo LANG_CLOSE; ?>">
+    <div class="icms-filter-container p-3 bg-light position-relative <?php if(!$filters && !$is_expanded){ ?>d-none<?php } ?>">
+        <button type="button" class="close position-absolute icms-filter-link__close" title="<?php echo LANG_CLOSE; ?>">
             <span>&times;</span>
         </button>
         <form action="<?php echo $form_url; ?>" method="get" id="<?php echo $form_id; ?>" accept-charset="utf-8">

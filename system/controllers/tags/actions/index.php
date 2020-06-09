@@ -98,6 +98,7 @@ class actionTagsIndex extends cmsAction {
         if ($this->cms_user->is_admin){
             $this->cms_template->addToolButton(array(
                 'class' => 'page_gear',
+                'icon'  => 'wrench',
                 'title' => LANG_TAGS_SETTINGS,
                 'href'  => href_to('admin', 'controllers', array('edit', 'tags'))
             ));

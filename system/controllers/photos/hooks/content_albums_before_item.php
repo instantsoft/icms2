@@ -21,6 +21,7 @@ class onPhotosContentAlbumsBeforeItem extends cmsAction {
 
             $this->cms_template->addToolButton(array(
                 'class' => 'images',
+                'icon'  => 'upload',
                 'title' => LANG_PHOTOS_UPLOAD,
                 'href'  => href_to($this->name, 'upload', $album['id'])
             ));

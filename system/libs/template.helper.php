@@ -475,7 +475,7 @@ function html_array_to_list($array){
 
 }
 
-function html_search_bar($list, $href, $link_class = ''){
+function html_search_bar($list, $href, $link_class = '', $glue = ', '){
 
     if (!$list) { return ''; }
 
@@ -488,10 +488,10 @@ function html_search_bar($list, $href, $link_class = ''){
         $list[$id] = '<a class="'.$link_class.'" href="'.$href.urlencode($letter).'">'.html($letter, false).'</a>';
     }
 
-    return implode(', ', $list);
+    return implode($glue, $list);
 
 }
 
-function html_tags_bar($tags, $prefix = ''){
-    return html_search_bar($tags, href_to('tags').'/'.($prefix ? $prefix.'/' : ''), 'tags_bar_link');
+function html_tags_bar($tags, $prefix = '', $class = 'tags_bar_link', $glue = ', '){
+    return html_search_bar($tags, href_to('tags').'/'.($prefix ? $prefix.'/' : ''), $class, $glue);
 }

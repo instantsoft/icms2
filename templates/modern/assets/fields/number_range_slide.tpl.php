@@ -5,14 +5,19 @@
 <?php $this->addTplCSSNameFromContext('jquery-ui'); ?>
 <?php if ($field->title) { ?><label for="<?php echo $field->id; ?>"><?php echo $field->title; ?></label><?php } ?>
 
-<div class="slider-range-wrap" id="slider-range-<?php echo $field->id; ?>"></div>
-<div class="slider-range-hint mt-2">
+<div class="slider-range-hint mb-3">
 <?php if($field->getOption('filter_range_show_input')){ ?>
     <div class="d-flex align-items-center">
-        <span class="mr-2"><?php echo LANG_FROM; ?></span>
-        <?php echo html_input('text', $field->element_name.'[from]', $field->data['slide_params']['values'][0], ['class'=>'input-small', 'id' => $field->id.'_from']); ?>
-        <span class="mx-2"><?php echo LANG_TO; ?></span>
+        <div class="input-group mr-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><?php echo LANG_FROM; ?></span>
+            </div>
+            <?php echo html_input('text', $field->element_name.'[from]', $field->data['slide_params']['values'][0], ['class'=>'input-small', 'id' => $field->id.'_from']); ?>
+        </div>
         <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><?php echo LANG_TO; ?></span>
+            </div>
             <?php echo html_input('text', $field->element_name.'[to]', $field->data['slide_params']['values'][1], ['class'=>'input-small', 'id' => $field->id.'_to']); ?>
             <?php if($field->data['units']){ ?>
                 <div class="input-group-append">
@@ -32,6 +37,7 @@
     <?php echo html_input('hidden', $field->element_name.'[to]', $to, ['id' => $field->id.'_to']); ?>
 <?php } ?>
 </div>
+<div class="slider-range-wrap" id="slider-range-<?php echo $field->id; ?>"></div>
 
 <?php ob_start(); ?>
     <script>

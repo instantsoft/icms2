@@ -305,15 +305,14 @@ class cmsModel {
 //============================================================================//
 //============================================================================//
 
-    public function getSubCategories($ctype_name, $parent_id=1) {
+    public function getSubCategories($ctype_name, $parent_id = 1, $item_callback = false) {
 
         $this->filterEqual('parent_id', $parent_id);
         $this->orderBy('ns_left');
 
         $this->useCache('content.categories');
 
-        return $this->get($this->getContentCategoryTableName($ctype_name));
-
+        return $this->get($this->getContentCategoryTableName($ctype_name), $item_callback);
     }
 
     public function getSubCategoriesTree($ctype_name, $parent_id=1, $level=1) {

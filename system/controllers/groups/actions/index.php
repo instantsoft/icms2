@@ -54,6 +54,7 @@ class actionGroupsIndex extends cmsAction {
             $this->cms_template->addToolButton(array(
                 'class' => 'add',
                 'title' => LANG_GROUPS_ADD,
+                'icon'  => 'plus-circle',
                 'href'  => href_to('groups', 'add'),
             ));
         }
@@ -61,6 +62,7 @@ class actionGroupsIndex extends cmsAction {
         if (cmsUser::isAdmin()){
             $this->cms_template->addToolButton(array(
                 'class' => 'page_gear',
+                'icon'  => 'wrench',
                 'title' => LANG_GROUPS_SETTINGS,
                 'href'  => href_to('admin', 'controllers', array('edit', 'groups'))
             ));

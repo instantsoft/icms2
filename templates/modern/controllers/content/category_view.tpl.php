@@ -48,7 +48,7 @@
 
     if (cmsUser::isAdmin()){
         $this->addToolButton(array(
-            'icon' => 'cogs',
+            'icon' => 'wrench',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
@@ -94,28 +94,24 @@
     <div class="category_description"><?php echo $category['description']; ?></div>
 <?php } ?>
 
-<?php if ($subcats && $ctype['is_cats'] && !empty($ctype['options']['is_show_cats'])){ ?>
-    <div class="gui-panel content_categories<?php if (count($subcats)>8 && !$ctype['options']['cover_preset']){ ?> categories_small<?php } ?>">
-        <ul class="<?php echo $ctype['name'];?>_icon <?php if($ctype['options']['cover_preset']){ ?>has_cover_preset cover_preset_<?php echo $ctype['options']['cover_preset'];?><?php } ?>">
+<?php if ($subcats){ ?>
+    <?php if($ctype['options']['cover_preset']){ ?>
+
+    <?php } else { ?>
+        <ul class="list-inline icms-content-subcats">
             <?php foreach($subcats as $c){ ?>
-
-            <?php
-                $is_ds_view = empty($current_dataset['cats_view']) || in_array($c['id'], $current_dataset['cats_view']);
-                $is_ds_hide = !empty($current_dataset['cats_hide']) && in_array($c['id'], $current_dataset['cats_hide']);
-                $img_src  = html_image_src($c['cover'], $ctype['options']['cover_preset'], true);
-            ?>
-
-                <li <?php if($img_src){ ?>style="background-image: url(<?php echo $img_src; ?>);"<?php } ?> class="<?php echo str_replace('/', '-', $c['slug']);?> <?php if($img_src){ ?>set_cover_preset<?php } ?>">
-                    <a href="<?php echo href_to((($dataset && $is_ds_view && !$is_ds_hide) ? $ctype['name'].'-'.$dataset : $base_url), $c['slug']); ?>">
-                        <span><?php echo $c['title']; ?></span>
+                <li class="list-inline-item h4 text-warning <?php echo $c['list_params']['class']; ?>">
+                    <?php html_svg_icon('solid', 'folder'); ?>
+                    <a href="<?php echo $c['list_params']['href']; ?>">
+                        <?php echo $c['title']; ?>
                     </a>
                 </li>
             <?php } ?>
         </ul>
-    </div>
+    <?php } ?>
 <?php } ?>
 
-    <?php $this->block('before_content_items_list_html'); ?>
+<?php $this->block('before_content_items_list_html'); ?>
 
 <?php echo $items_list_html; ?>
 

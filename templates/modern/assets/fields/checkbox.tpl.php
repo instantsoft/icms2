@@ -7,6 +7,7 @@
     <?php } ?>
 </div>
 <?php if(!empty($field->toggle)) { ?>
+<?php ob_start(); ?>
     <?php $self_id = "#f_{$field->id}" ;?>
     <script>
         $(document).ready(function(){
@@ -21,5 +22,6 @@
             <?php } ?>
         });
     </script>
+<?php $this->addBottom(ob_get_clean()); ?>
 <?php } ?>
 
