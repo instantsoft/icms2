@@ -20,7 +20,7 @@ icms.menu = (function ($) {
         var device_type = $('body').data('device');
 
         if(device_type === 'desktop'){
-            $('a.dropdown-toggle').on( 'click', function (e) {
+            $('.icms-menu-hovered a.dropdown-toggle').on( 'click', function (e) {
                 e.stopPropagation();
             });
         } else {

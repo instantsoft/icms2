@@ -1,4 +1,5 @@
 <?php if (!empty($fields['title']['is_in_item']) && empty($fields['title']['options']['is_in_item_pos'])){ ?>
+    <?php ob_start(); ?>
     <h1>
         <?php html($item['title']); ?>
         <?php if ($item['is_private']) { ?>
@@ -7,19 +8,49 @@
             </span>
         <?php } ?>
     </h1>
-    <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
-        <div class="parent_title item_<?php echo $item['parent_type']; ?>_title mt-n2">
-            <a href="<?php echo rel_to_href($item['parent_url']); ?>">
-                <?php html_svg_icon('solid', 'user-friends'); ?>
-                <?php html($item['parent_title']); ?>
+    <?php $this->addToBlock('before_body', ob_get_clean(), true); ?>
+<?php } ?>
+
+<?php if (!empty($item['info_bar'])){ ?>
+    <div class="icms-photo-album__info_bar d-flex align-items-center text-muted mb-3">
+        <?php if (!empty($item['info_bar']['user'])){ ?>
+            <a href="<?php echo $item['info_bar']['user']['href']; ?>" class="icms-user-avatar mr-2">
+                <?php echo html_avatar_image($item['info_bar']['user']['avatar'], 'micro', $item['info_bar']['user']['html']); ?>
             </a>
-        </div>
-    <?php } ?>
+            <span class="mr-3"><?php echo $item['info_bar']['user']['html']; ?></span>
+            <?php unset($item['info_bar']['user']); ?>
+        <?php } ?>
+        <?php foreach($item['info_bar'] as $bar){ ?>
+            <div class="bar_item mr-3 text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
+                <?php if (!empty($bar['icon'])){ ?>
+                    <?php html_svg_icon('solid', $bar['icon']); ?>
+                <?php } ?>
+                <?php if (!empty($bar['href'])){ ?>
+                    <a class="stretched-link" href="<?php echo $bar['href']; ?>"><?php echo $bar['html']; ?></a>
+                <?php } else { ?>
+                    <?php echo $bar['html']; ?>
+                <?php } ?>
+            </div>
+        <?php } ?>
+        <?php if ($item['parent_id'] && !empty($ctype['is_in_groups'])){ ?>
+            <div class="bar_item text-truncate">
+                <a href="<?php echo rel_to_href($item['parent_url']); ?>">
+                    <?php html_svg_icon('solid', 'user-friends'); ?>
+                    <?php html($item['parent_title']); ?>
+                </a>
+            </div>
+        <?php } ?>
+    </div>
 <?php } ?>
 
 <?php if ($this->hasMenu('item-menu')){ ?>
     <?php $this->menu('item-menu', true, 'nav nav-tabs my-3'); ?>
 <?php } ?>
+
+<?php echo $this->renderControllerChild('photos', 'filter-panel', array(
+    'item' => $item,
+    'page_url' => href_to($ctype['name'], $item['slug'].'.html')
+)); ?>
 
 <div class="content_item <?php echo $ctype['name']; ?>_item clearfix my-3">
     <?php if($fields_fieldsets) { ?>
@@ -101,21 +132,15 @@
         <div class="append_html"><?php echo $ctype['item_append_html']; ?></div>
     <?php } ?>
 
-    <?php if (!empty($item['info_bar'])){ ?>
-        <div class="info_bar d-flex text-muted mt-3">
-            <?php foreach($item['info_bar'] as $bar){ ?>
-                <div class="bar_item mr-3 text-truncate <?php echo !empty($bar['css']) ? $bar['css'] : ''; ?>" title="<?php html(!empty($bar['title']) ? $bar['title'] : ''); ?>">
-                    <?php if (!empty($bar['icon'])){ ?>
-                        <?php html_svg_icon('solid', $bar['icon']); ?>
-                    <?php } ?>
-                    <?php if (!empty($bar['href'])){ ?>
-                        <a class="stretched-link" href="<?php echo $bar['href']; ?>"><?php echo $bar['html']; ?></a>
-                    <?php } else { ?>
-                        <?php echo $bar['html']; ?>
-                    <?php } ?>
-                </div>
-            <?php } ?>
-        </div>
-    <?php } ?>
-
 </div>
+<?php if (!empty($item['info_bar'])){ ?>
+    <?php
+    $this->addTplJSNameFromContext('vendors/slick/slick.min');
+    $this->addTplCSSNameFromContext('slick');
+    ob_start();
+    ?>
+    <script type="text/javascript">
+        icms.menu.initSwipe('.icms-photo-album__info_bar', {variableWidth: true});
+    </script>
+    <?php $this->addBottom(ob_get_clean()); ?>
+<?php } ?>

@@ -28,7 +28,7 @@
     margin-bottom: 0 !important;
 }
 #desktop_device_type {
-    .navbar-nav .dropdown:hover>.dropdown-menu {
+    .navbar-nav.icms-menu-hovered .dropdown:hover>.dropdown-menu {
         display: block;
         -webkit-animation: slide-up .25s ease-in-out;
         animation: slide-up .25s ease-in-out;

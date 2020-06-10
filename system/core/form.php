@@ -1006,13 +1006,8 @@ class cmsForm {
 
         if (!$fields) { return $fieldsets; }
 
-        $current = null;
-        $index   = 0;
-
-        $fieldsets[$index] = [
-            'title'  => $current,
-            'fields' => []
-        ];
+        $current = false;
+        $index   = -1;
 
         $user = cmsUser::getInstance();
 
@@ -1030,7 +1025,7 @@ class cmsForm {
                 }
             }
 
-            if ($current != $field['fieldset']) {
+            if ($current !== $field['fieldset']) {
 
                 $current = $field['fieldset'];
                 $index   += 1;

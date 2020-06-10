@@ -34,7 +34,7 @@ class onCommentsContentBeforeList extends cmsAction {
                     $info_bar['href'] = href_to($ctype['name'], $item['slug'].'.html').'#comments';
                 }
 
-                $items[$id]['info_bar'][] = $info_bar;
+                $items[$id]['info_bar']['comments'] = $info_bar;
 
             }
 

@@ -36,10 +36,10 @@ class onRatingContentBeforeItem extends cmsAction {
             if(!isset($item['info_bar'])){ $item['info_bar'] = []; }
 
             // добавляем блок рейтинга в самое начало
-            array_unshift($item['info_bar'], [
+            $item['info_bar'] = ['rating' => [
                 'css'   => 'bi_rating',
                 'html'  => $item['rating_widget']
-            ]);
+            ]] + $item['info_bar'];
 
         }
 

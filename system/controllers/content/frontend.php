@@ -515,7 +515,7 @@ class content extends cmsFrontend {
         $bar = [];
 
         if (!empty($fields['date_pub']['is_in_'.$subject]) && $this->cms_user->isInGroups($fields['date_pub']['groups_read'])){
-            $bar[] = [
+            $bar['date_pub'] = [
                 'css'   => 'bi_date_pub'.(!empty($item['is_new']) ? ' highlight_new' : ''),
                 'icon'  => 'calendar-alt',
                 'html'  => isset($fields['date_pub']['html']) ? $fields['date_pub']['html'] : $fields['date_pub']['handler']->parse($item['date_pub']),
@@ -524,7 +524,7 @@ class content extends cmsFrontend {
         }
 
         if (!$item['is_pub']){
-            $bar[] = [
+            $bar['is_pub'] = [
                 'css'   => 'bi_not_pub',
                 'icon'  => 'calendar-alt',
                 'html'  => LANG_CONTENT_NOT_IS_PUB
@@ -532,7 +532,7 @@ class content extends cmsFrontend {
         }
 
         if (!empty($ctype['options']['hits_on'])){
-            $bar[] = [
+            $bar['hits'] = [
                 'css'   => 'bi_hits',
                 'icon'  => 'eye',
                 'html'  => $item['hits_count'],
@@ -541,14 +541,15 @@ class content extends cmsFrontend {
         }
 
         if (!empty($fields['user']['is_in_'.$subject]) && $this->cms_user->isInGroups($fields['user']['groups_read'])){
-            $bar[] = [
+            $bar['user'] = [
                 'css'  => 'bi_user',
                 'icon' => 'user',
+                'avatar' => isset($item['user']['avatar']) ? $item['user']['avatar'] : [],
                 'href' => href_to_profile($item['user']),
                 'html' => $item['user']['nickname']
             ];
             if (!empty($item['folder_title'])){
-                $bar[] = [
+                $bar['folder'] = [
                     'css'  => 'bi_folder',
                     'icon' => 'folder',
                     'html' => $item['folder_title'],
@@ -558,14 +559,14 @@ class content extends cmsFrontend {
         }
 
         if (!empty($ctype['options']['share_code']) && $subject === 'item'){
-            $bar[] = [
+            $bar['share'] = [
                 'css'   => 'bi_share',
                 'html'  => $ctype['options']['share_code']
             ];
         }
 
         if (!$item['is_approved']){
-            $bar[] = [
+            $bar['is_approved'] = [
                 'css'   => 'bi_not_approved'.(!empty($item['is_new_item']) ? ' is_edit_item' : ''),
                 'icon'  => 'user-clock',
                 'html'  => !empty($item['is_draft']) ? LANG_CONTENT_DRAFT_NOTICE : (empty($item['is_new_item']) ? LANG_CONTENT_EDITED.'. ' : '').LANG_CONTENT_NOT_APPROVED
