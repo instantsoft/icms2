@@ -1,6 +1,9 @@
 .content_list_item + .content_list_item {
     margin-top: $spacer*1.5;
 }
+.icms-body-toolbox + .content_list {
+    margin-top: $spacer*1.5;
+}
 .content_item, .content_list {
     .field {
         margin-bottom: $spacer;

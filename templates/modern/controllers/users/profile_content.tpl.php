@@ -24,6 +24,7 @@
 
         $this->addToolButton(array(
             'class' => 'add',
+            'icon' => 'plus-circle',
             'title' => sprintf(LANG_CONTENT_ADD_ITEM, $ctype['labels']['create']),
             'href'  => href_to($ctype['name'], 'add').(($folder_id  && is_numeric($folder_id) && ($user->id == $profile['id'] || $user->is_admin)) ? '?folder_id='.$folder_id : ''),
         ));
@@ -34,12 +35,14 @@
 
         $this->addToolButton(array(
             'class' => 'folder_edit',
+            'icon' => 'pen-square',
             'title' => LANG_EDIT_FOLDER,
             'href'  => href_to($ctype['name'], 'editfolder', $folder_id),
         ));
 
         $this->addToolButton(array(
             'class' => 'folder_delete',
+            'icon' => 'folder-minus',
             'title' => LANG_DELETE_FOLDER,
             'href'  => href_to($ctype['name'], 'delfolder', $folder_id),
             'onclick' => "if(!confirm('".LANG_DELETE_FOLDER_CONFIRM."')){ return false; }"
@@ -50,6 +53,7 @@
     if ($user->is_admin){
         $this->addToolButton(array(
             'class' => 'page_gear',
+            'icon' => 'wrench',
             'title' => sprintf(LANG_CONTENT_TYPE_SETTINGS, mb_strtolower($ctype['title'])),
             'href'  => href_to('admin', 'ctypes', array('edit', $ctype['id']))
         ));
