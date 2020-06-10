@@ -514,7 +514,7 @@ class content extends cmsFrontend {
 
         $bar = [];
 
-        if (!empty($fields['date_pub']['is_in_'.$subject])){
+        if (!empty($fields['date_pub']['is_in_'.$subject]) && $this->cms_user->isInGroups($fields['date_pub']['groups_read'])){
             $bar['date_pub'] = [
                 'css'   => 'bi_date_pub'.(!empty($item['is_new']) ? ' highlight_new' : ''),
                 'icon'  => 'calendar-alt',
@@ -540,7 +540,7 @@ class content extends cmsFrontend {
             ];
         }
 
-        if (!empty($fields['user']['is_in_'.$subject])){
+        if (!empty($fields['user']['is_in_'.$subject]) && $this->cms_user->isInGroups($fields['user']['groups_read'])){
             $bar['user'] = [
                 'css'  => 'bi_user',
                 'icon' => 'user',
