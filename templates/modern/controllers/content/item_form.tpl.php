@@ -73,7 +73,7 @@
                 'name' => 'to_draft',
                 'attributes' => array(
                     'type' => 'submit',
-                    'class' => 'btn-warning to_draft'
+                    'class' => 'to_draft'
                 )
             )
         ),

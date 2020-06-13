@@ -22,7 +22,7 @@ $this->addTplJSName('comments');
                 </b>
             </a>
         <?php } ?>
-        <a href="#refresh" data-toggle="tooltip" data-placement="right" class="btn text-info refresh_btn" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>">
+        <a id="icms-refresh-id" href="#refresh" data-toggle="tooltip" data-placement="right" class="btn btn-secondary refresh_btn d-none" onclick="return icms.comments.refresh()" title="<?php echo $this->controller->labels->refresh; ?>">
             <?php html_svg_icon('solid', 'sync-alt'); ?>
         </a>
     <?php } ?>

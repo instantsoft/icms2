@@ -1,5 +1,7 @@
 $icms-image_single-size: 80px !default;
-
+.qq-upload-list {
+    display: none;
+}
 .widget_image_multi {
     .qq-upload-button {
         display: inline-block;
@@ -32,6 +34,42 @@ $icms-image_single-size: 80px !default;
     .preview {
         margin: 0 ($spacer) ($spacer) 0;
     }
+    &.widget_image_multi_styled .qq-upload-list {
+        display: block;
+        margin: $spacer 0 0;
+        padding: 0;
+        list-style: none;
+        &:empty {
+            display: none;
+        }
+        > li {
+            color: $text-muted;
+            display: flex;
+            align-items: center;
+            margin-bottom: $spacer*0.5;
+            &:last-child {
+                margin-bottom: 0;
+            }
+            > * {
+                margin-right: $spacer*0.5;
+                &:last-child {
+                    margin-right: 0;
+                }
+                &.qq-upload-spinner {
+                    position: relative;
+                    display: block;
+                    width: $font-size-base*1.25;
+                    height: $font-size-base*1.25;
+                }
+                &.qq-upload-cancel {
+                    color: $danger;
+                }
+            }
+            .qq-upload-failed-text {
+                display: none;
+            }
+        }
+    }
 }
 .widget_image_single {
     .qq-upload-button, .qq-upload-drop-area {
@@ -60,7 +98,7 @@ $icms-image_single-size: 80px !default;
     }
 }
 .widget_image_single, .widget_image_multi {
-    .loading {
+    .loading, .qq-upload-spinner {
         a {
             display: none;
         }
@@ -141,9 +179,6 @@ $icms-image_single-size: 80px !default;
         top: 0;
         overflow: visible;
     }
-}
-.qq-upload-list {
-    display: none;
 }
 @-webkit-keyframes loader-upload{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}
 @keyframes loader-upload{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}

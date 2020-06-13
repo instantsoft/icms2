@@ -42,24 +42,23 @@
         </a>
     </div>
 
-    <div class="upload d-inline-block">
+    <div class="upload d-flex align-items-center">
         <div id="file-uploader-<?php echo $dom_id; ?>" data-uploaded_count="<?php echo ($max_photos && $images && count($images)) ? count($images) : 0; ?>"></div>
+        <?php if($allow_import_link){ ?>
+            <div class="image_link upload">
+                <span class="mx-2"><?php echo LANG_OR; ?></span>
+                <a class="input_link_block btn btn-secondary" href="#">
+                    <?php html_svg_icon('solid', 'link'); ?>
+                    <?php echo LANG_PARSER_ADD_FROM_LINK; ?>
+                </a>
+            </div>
+        <?php } ?>
+        <?php if($max_photos){ ?>
+            <div class="ml-2 upload photo_limit_hint text-muted">
+                <?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>
+            </div>
+        <?php } ?>
     </div>
-
-    <?php if($allow_import_link){ ?>
-        <div class="image_link upload d-inline-block">
-            <span><?php echo LANG_OR; ?></span>
-            <a class="input_link_block btn btn-secondary" href="#">
-                <?php html_svg_icon('solid', 'link'); ?>
-                <?php echo LANG_PARSER_ADD_FROM_LINK; ?>
-            </a>
-        </div>
-    <?php } ?>
-    <?php if($max_photos){ ?>
-        <div class="upload photo_limit_hint d-inline-block text-muted">
-            <?php echo sprintf(LANG_PARSER_IMAGE_MAX_COUNT_HINT, html_spellcount($max_photos, LANG_PARSER_IMAGE_SPELL)); ?>
-        </div>
-    <?php } ?>
 
 </div>
 <?php ob_start(); ?>

@@ -3,6 +3,7 @@
     $this->addTplJSName('photos');
     $this->addTplJSName('jquery-chosen');
     $this->addTplCSSName('jquery-chosen');
+    $this->addTplCSSFromContext('controllers/images/styles');
 
     $this->setPageTitle($title);
 
@@ -26,14 +27,14 @@
 
             <legend><?php printf(LANG_PHOTOS_SELECT_ALBUM, $ctype['labels']['one']); ?></legend>
 
-            <div class="field ft_list f_album_id">
+            <div class="form-group field ft_list f_album_id">
                 <?php echo html_select('album_id', $albums_select, $album_id, array('id'=>'album_id')); ?>
-            </div>
             <?php if(!empty($allow_add)){ ?>
-            <div class="field">
-                <?php printf(LANG_PHOTOS_NEW_ALBUM, href_to('albums', 'add'), $ctype['labels']['one']); ?>
-            </div>
+                <div class="text-muted small mt-1">
+                    <?php printf(LANG_PHOTOS_NEW_ALBUM, href_to('albums', 'add'), $ctype['labels']['one']); ?>
+                </div>
             <?php } ?>
+            </div>
         </fieldset>
 
         <?php ob_start(); ?>
@@ -56,7 +57,7 @@
         'types'      => $types
     )); ?>
 
-    <div class="buttons">
+    <div class="buttons my-3">
         <?php echo html_submit(LANG_SAVE); ?>
     </div>
 

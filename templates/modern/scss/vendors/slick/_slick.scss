@@ -1,3 +1,9 @@
+$slick-dot-color: $primary !default;
+$slick-dot-color-active: $slick-dot-color !default;
+$slick-dot-character: "\2022" !default;
+$slick-dot-size: 3rem !default;
+$slick-opacity-not-active: 0.25 !default;
+
 .slick-slider {
     position: relative;
     display: block;
@@ -95,4 +101,49 @@
 }
 .slick-arrow.slick-hidden {
     display: none;
+}
+.slick-dots {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: $spacer*0.5 0 0;
+    width: 100%;
+    li {
+        position: relative;
+        margin: 0 $spacer*0.5;
+        padding: 0;
+        button {
+            border: 0;
+            background: transparent;
+            display: block;
+            height: $slick-dot-size/2.4;
+            width: $slick-dot-size/2.4;
+            outline: none;
+            line-height: 0px;
+            font-size: 0px;
+            color: transparent;
+            &:hover, &:focus {
+                outline: none;
+            }
+            &:before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                content: $slick-dot-character;
+                width: 100%;
+                height: 100%;
+                font-size: $slick-dot-size;
+                line-height: $slick-dot-size/2.222222;
+                text-align: center;
+                color: $slick-dot-color;
+                opacity: $slick-opacity-not-active;
+            }
+        }
+        &.slick-active button:before {
+            color: $slick-dot-color-active;
+            opacity: 1;
+        }
+    }
 }

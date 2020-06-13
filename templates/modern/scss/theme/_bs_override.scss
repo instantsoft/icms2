@@ -58,3 +58,39 @@
     }
   }
 }
+.dropdown-menu-arrow {
+    &:before {
+        position: absolute;
+        top: -$dropdown-menu-arrow-width;
+        left: 50%;
+        content: "";
+        width: 0;
+        border-width: 0 $dropdown-menu-arrow-width $dropdown-menu-arrow-width;
+        border-style: solid;
+        border-color: $dropdown-border-color transparent;
+        margin-left: -$dropdown-menu-arrow-width;
+    }
+    &:after {
+        position: absolute;
+        top: -($dropdown-menu-arrow-width - 1);
+        left: 50%;
+        content: '';
+        width: 0;
+        border-width: 0 ($dropdown-menu-arrow-width - 1) ($dropdown-menu-arrow-width - 1);
+        border-style: solid;
+        border-color: $dropdown-bg transparent;
+        margin-left: -($dropdown-menu-arrow-width - 1);
+    }
+    &[x-placement^="top"] {
+        &:after {
+            top: auto;
+            bottom: -($dropdown-menu-arrow-width - 1);
+            transform: rotate(180deg);
+        }
+        &:before {
+            top: auto;
+            bottom: -$dropdown-menu-arrow-width;
+            transform: rotate(180deg);
+        }
+    }
+}

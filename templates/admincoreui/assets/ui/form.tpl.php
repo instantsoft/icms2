@@ -15,7 +15,7 @@
 
     <?php echo $attributes['prepend_html']; ?>
 
-    <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> <?php } ?>form-tabs">
+    <div class="<?php if($form->is_tabbed){ ?>tabs-menu mb-3 <?php } else { ?><?php if(count($form->getStructure()) > 1) { ?> without-tabs <?php } ?> card mb-0 rounded-0 <?php } ?>form-tabs">
 
         <?php if($form->is_tabbed){ ?>
             <ul class="nav nav-tabs flex-wrap" role="tablist">
@@ -30,10 +30,10 @@
             </ul>
             <div class="tab-content">
         <?php } else { ?>
-             <div class="icms-form-body">
+             <div class="card-body">
         <?php } ?>
 
-        <?php include 'form_fields.tpl.php'; ?>
+        <?php include $this->getTemplateFileName('assets/ui/form_fields'); ?>
 
         </div>
 
@@ -53,26 +53,18 @@
         <?php if ($attributes['submit']['show']) { ?>
             <?php echo html_submit($attributes['submit']['title'], 'submit', $attributes['submit']); ?>
         <?php } ?>
-        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
         <?php if(isset($attributes['buttons'])){ ?>
-            <div class="dropdown d-inline-block dropup">
-                <button class="btn btn-secondary" type="button" data-toggle="dropdown" data-display="static">
-                    <?php html_svg_icon('solid', 'ellipsis-h'); ?>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-md-left">
-                <?php foreach ($attributes['buttons'] as $button) { ?>
-                    <?php if (!empty($button['hide'])) { continue; } ?>
-                    <?php if (isset($button['attributes']['class'])) { $button['attributes']['class'] .= ' dropdown-item'; } ?>
-                    <?php echo html_button(
-                            $button['title'],
-                            $button['name'],
-                            (isset($button['onclick']) ? $button['onclick'] : ''),
-                            (isset($button['attributes']) ? $button['attributes'] : ['class' => 'dropdown-item'])
-                        ); ?>
-                <?php } ?>
-                </div>
-            </div>
+            <?php foreach ($attributes['buttons'] as $button) { ?>
+                <?php if (!empty($button['hide'])) { continue; } ?>
+                <?php echo html_button(
+                        $button['title'],
+                        $button['name'],
+                        (isset($button['onclick']) ? $button['onclick'] : ''),
+                        (isset($button['attributes']) ? $button['attributes'] : array())
+                    ); ?>
+            <?php } ?>
         <?php } ?>
+        <?php if ($attributes['cancel']['show']) { echo html_button($attributes['cancel']['title'], 'cancel', "location.href='{$attributes['cancel']['href']}'", array('class'=>'btn-secondary button-cancel')); } ?>
     </div>
 
 </form>

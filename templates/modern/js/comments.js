@@ -14,6 +14,8 @@ icms.comments = (function ($) {
 
     this.onDocumentReady = function() {
 
+        this.initRefreshBtn();
+
         $('#comments_widget #is_track').click(function(){
             return _this.toggleTrack(this);
         });
@@ -34,6 +36,19 @@ icms.comments = (function ($) {
 
         _this.show(find_id[1]);
 
+    };
+
+    this.initRefreshBtn = function(){
+        var win = $(window);
+        var refresh_btn = $('#icms-refresh-id');
+        var comments_top = $('#comments_add_link').offset().top;
+        win.on('scroll', function (){
+            if (win.scrollTop() > comments_top) {
+                refresh_btn.removeClass('d-none');
+            } else {
+                refresh_btn.addClass('d-none');
+            }
+        }).trigger('scroll');
     };
 
     this.restoreForm = function(clear_text){

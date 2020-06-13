@@ -18,6 +18,13 @@
 // Кастомный SCSS
 @import "custom";
 
+.icms-dot-between {
+    display: flex;
+    > *:not(:last-child):after {
+       content: '\002022';
+       margin: 0 $spacer*0.5;
+   }
+}
 .icms-body-toolbox {
     h1 {
         margin: 0;
@@ -113,15 +120,18 @@ blockquote {
     color: $orange;
     font-size: $font-size-base;
 }
-.ajax-form {
-    .card {
-        border: none;
-    }
-    .card-body {
-        padding: 0;
+form fieldset {
+    padding: $spacer $spacer 0 $spacer;
+    border-radius: $card-border-radius;
+    border: solid 1px $card-border-color;
+    margin-bottom: $spacer;
+    legend {
+        font-size: $h5-font-size;
+        width: auto;
+        padding: 0 $spacer*0.75;
+        margin: 0 0 -($spacer*0.5) 0;
     }
 }
-
 @if $enable-modal-blur {
     .modal.show ~ * > * {
         -webkit-filter: blur(2px);
