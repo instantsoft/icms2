@@ -19,6 +19,8 @@ define('LANG_MODERN_THEME_ENABLE_SHADOWS', 'Включить тени');
 define('LANG_MODERN_THEME_ENABLE_GRADIENTS', 'Включить градиенты');
 define('LANG_MODERN_THEME_ENABLE_RFS', 'Включить адаптивные размеры шрифтов');
 define('LANG_MODERN_THEME_BASE_FS', 'Базовый размер шрифта');
+define('LANG_MODERN_THEME_AVATAR_INLIST_SIZE', 'Размер буквенного аватара в списке');
+define('LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT', 'Должен совпадать с размером пресета для аватара списка пользователей');
 define('LANG_MODERN_THEME_PAGINATION_TPL', 'Шаблон блока нумерации страниц');
 define('LANG_MODERN_THEME_ENABLE_MODAL_BLUR', 'Размывать подложку при открытии модальных окон');
 define('LANG_MODERN_THEME_GRID_GUTTER_W', 'Базовый отступ сетки');

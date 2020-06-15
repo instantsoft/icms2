@@ -1,5 +1,6 @@
 <?php $this->addTplJSNameFromContext([
     'jquery-ui',
+    'jquery-ui.touch-punch',
     'i18n/jquery-ui/'.cmsCore::getLanguageName()
 ]); ?>
 <?php $this->addTplCSSNameFromContext('jquery-ui'); ?>

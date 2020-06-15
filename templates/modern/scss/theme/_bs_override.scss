@@ -94,3 +94,40 @@
         }
     }
 }
+form {
+    .field_error {
+        .invalid-feedback {
+            display: block;
+        }
+        .chosen-container-single .chosen-single, select, textarea, .form-control {
+            border-color: $form-feedback-invalid-color;
+        }
+    }
+    .reguired_field {
+        > label {
+            &:after{
+                content: '*';
+                color: theme-color("danger");
+                padding-left: $spacer*0.5;
+            }
+        }
+    }
+    .child_field{
+        padding-left: $spacer;
+    }
+}
+@include media-breakpoint-down(md) {
+    .navbar-dark .dropdown-menu {
+        border-color: transparent;
+        background-color: rgba(0,0,0,0.1);
+        .dropdown-item.border-bottom, .dropdown-divider {
+            border-color: rgba(255,255,255,0.12) !important;
+        }
+        .dropdown-item {
+            color: rgba(255,255,255,0.65);
+            &:hover, &:focus {
+                background-color: rgba(255, 255, 255, 0.25);
+            }
+        }
+    }
+}

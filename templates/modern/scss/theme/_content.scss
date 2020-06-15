@@ -6,7 +6,7 @@
 }
 .content_item, .content_list {
     .field {
-        margin-bottom: $spacer;
+        margin-bottom: $spacer*0.75;
         @include media-breakpoint-up(sm) {
             &.left_field {
                 float: left;

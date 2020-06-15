@@ -35,9 +35,13 @@ class actionUsersProfileFriends extends cmsAction {
             )
         ));
 
+        // Получаем поля
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
         return $this->cms_template->render('profile_friends', array(
             'user'               => $this->cms_user,
             'tabs'               => $tabs,
+            'fields'             => $fields,
             'tab'                => $this->tabs['friends'],
             'profile'            => $profile,
             'profiles_list_html' => $profiles_list_html

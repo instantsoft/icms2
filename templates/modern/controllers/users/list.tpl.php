@@ -36,7 +36,11 @@
 
                 <?php if (!empty($fields['avatar']) && $fields['avatar']['is_in_list']){ ?>
                     <a href="<?php echo href_to_profile($profile); ?>" class="icms-user-avatar mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-                        <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname'], $profile['is_deleted']); ?>
+                    <?php if($profile['avatar']){ ?>
+                        <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
+                    <?php } else { ?>
+                        <?php echo html_avatar_image_empty($profile['nickname'], 'avatar__inlist'); ?>
+                    <?php } ?>
                     </a>
                 <?php } ?>
 
@@ -47,22 +51,22 @@
                                 <?php html($profile['nickname']); ?>
                             </a>
                         </h5>
-                        <?php if (!empty($profile['fields'])){ ?>
-                        <div class="fields mt-2">
-                            <?php foreach($profile['fields'] as $field){ ?>
-                                <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
-                                    <?php if ($field['label_pos'] != 'none'){ ?>
-                                        <div class="title_<?php echo $field['label_pos']; ?>">
-                                            <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
-                                        </div>
-                                    <?php } ?>
-                                    <div class="value">
-                                        <?php echo $field['html']; ?>
+                    <?php } ?>
+                    <?php if (!empty($profile['fields'])){ ?>
+                    <div class="fields mt-2">
+                        <?php foreach($profile['fields'] as $field){ ?>
+                            <div class="field ft_<?php echo $field['type']; ?> f_<?php echo $field['name']; ?>">
+                                <?php if ($field['label_pos'] != 'none'){ ?>
+                                    <div class="title_<?php echo $field['label_pos']; ?>">
+                                        <?php echo $field['title'] . ($field['label_pos']=='left' ? ': ' : ''); ?>
                                     </div>
+                                <?php } ?>
+                                <div class="value">
+                                    <?php echo $field['html']; ?>
                                 </div>
-                            <?php } ?>
-                        </div>
+                            </div>
                         <?php } ?>
+                    </div>
                     <?php } ?>
                 </div>
 
@@ -110,9 +114,7 @@
 
     </div>
 
-    <?php if ($perpage < $total) { ?>
-        <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
-    <?php } ?>
+    <?php echo html_pagebar($page, $perpage, $total, $page_url, $filters); ?>
 
 <?php } else { ?>
     <div class="alert alert-info mt-4" role="alert">

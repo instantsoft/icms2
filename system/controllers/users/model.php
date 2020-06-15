@@ -1320,18 +1320,18 @@ class modelUsers extends cmsModel {
 
         $this->filterEqual('profile_id', $profile_id);
 
+        $this->joinSessionsOnline();
+
         return $this->get('{users}_karma', function($item, $model){
 
             $item['user'] = array(
-                'id' => $item['user_id'],
+                'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
-                'avatar' => $item['user_avatar']
+                'avatar'   => $item['user_avatar']
             );
 
             return $item;
-
         });
-
     }
 
 //============================================================================//

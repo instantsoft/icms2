@@ -18,6 +18,41 @@
 // Кастомный SCSS
 @import "custom";
 
+.is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
+    display: none !important;
+}
+.icms-form__symbols_count_wrap {
+    .symbols_count {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: $input-height;
+        padding: $input-padding-y $input-padding-x;
+        @include font-size($input-font-size);
+        color: $gray-600;
+        line-height: $input-line-height;
+        border: $input-border-width solid transparent;
+    }
+}
+.icms-profile-avatar__default {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: $font-size-base;
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+    &.avatar__inlist {
+        width: $avatar-inlist-size;
+        height: $avatar-inlist-size;
+    }
+    &.avatar__mini {
+        width: 32px;
+        height: 32px;
+    }
+}
 .icms-dot-between {
     display: flex;
     > *:not(:last-child):after {
@@ -145,7 +180,7 @@ form fieldset {
 .icms-user-avatar {
     position: relative;
     display: inline-block;
-    > img {
+    > * {
         border-radius: 50%;
         padding: 0;
         overflow: hidden;

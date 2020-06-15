@@ -119,7 +119,19 @@ icms.photos = (function ($) {
             return icms.photos.deletePhoto($(this).data('id'), this);
         });
 
+        $('.photo_filter .box_menu').on('click', function (){
+            var next = $(this).next().css({left: (+$(this).position().left - 20)});
+            var hide_func = function (){
+                $(document).one('click', function(event) {
+                    if ($(event.target).closest(next).length) { hide_func(); return; }
+                    $(next).hide();
+                });
+            };
+            $(next).fadeIn('fast', hide_func);
+        });
+
         this.is_init_album[selector] = true;
+
     };
 
     this.initCarousel = function (selector, init_callback){

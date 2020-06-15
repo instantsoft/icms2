@@ -23,6 +23,7 @@
             $css_aclasses = ['nav-link text-nowrap'];
         }
         if ($is_active) {
+            $css_classes[] = 'is-active';
             $css_aclasses[] = 'active';
         }
         if ($item['childs_count'] > 0) {

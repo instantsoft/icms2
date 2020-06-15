@@ -835,6 +835,7 @@ class modelContent extends cmsModel {
         if ($result){
             $field['id'] = $id;
             cmsEventsManager::hook('ctype_field_after_update', array($field, $ctype_name, $this));
+            cmsEventsManager::hook('ctype_field_'.str_replace(['{','}'], '', $ctype_name).'_after_update', array($field, $this));
         }
 
         cmsCache::getInstance()->clean('content.fields.'.$ctype_name);

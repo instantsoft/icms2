@@ -39,6 +39,8 @@ class actionImagesPresetsEdit extends cmsAction {
 
                 $this->model->updatePreset($id, $preset);
 
+                $preset = cmsEventsManager::hook('images_preset_after_update', $preset);
+
                 $this->createDefaultImages(array_merge($original_preset, $preset));
 
                 $this->redirectToAction('presets');

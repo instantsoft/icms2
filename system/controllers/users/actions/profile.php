@@ -13,17 +13,6 @@ class actionUsersProfile extends cmsAction {
         // отправлен запрос дружбы
         $this->is_friend_req = $this->options['is_friends_on'] ? $this->model->isFriendshipRequested($this->cms_user->id, $profile['id']) : false;
 
-        // Доступность профиля для данного пользователя
-        if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
-            return $this->cms_template->render('profile_closed', array(
-                'profile'        => $profile,
-                'user'           => $this->cms_user,
-                'is_own_profile' => $this->is_own_profile,
-                'is_friends_on'  => $this->options['is_friends_on'],
-                'tool_buttons'   => $this->getToolButtons($profile)
-            ));
-        }
-
         $content = cmsCore::getController('content', $this->request);
 
         // Получаем поля
@@ -35,8 +24,20 @@ class actionUsersProfile extends cmsAction {
             $fields[$name]['string_value'] = $field['handler']->getStringValue($profile[$name]);
         }
 
+        // Доступность профиля для данного пользователя
+        if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
+            return $this->cms_template->render('profile_closed', array(
+                'profile'        => $profile,
+                'fields'         => $fields,
+                'user'           => $this->cms_user,
+                'is_own_profile' => $this->is_own_profile,
+                'is_friends_on'  => $this->options['is_friends_on'],
+                'tool_buttons'   => $this->getToolButtons($profile)
+            ));
+        }
+
         // Друзья
-        $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : false;
+        $friends = $this->options['is_friends_on'] ? $this->model->getFriends($profile['id']) : [];
 
         // Контент
 		$content->model->setTablePrefix(cmsModel::DEFAULT_TABLE_PREFIX);
@@ -81,12 +82,52 @@ class actionUsersProfile extends cmsAction {
             'show_all_flink' => isset($this->tabs['friends']),
             'friends'        => $friends,
             'content_counts' => $content_counts,
+            'sys_fields'     => $this->getSystemFields($profile),
             'fields'         => $fields,
             'fieldsets'      => $fieldsets,
             'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было
             'tabs'           => $this->getProfileMenu($profile)
         ));
 
+    }
+
+    private function getSystemFields($profile) {
+
+        $fields = ['date_reg' =>
+            [
+                'title' => LANG_USERS_PROFILE_REGDATE,
+                'text'  => string_date_age_max($profile['date_reg'], true)
+            ]
+        ];
+
+        if (!$profile['is_online']){
+            $fields['date_log'] = [
+                'title' => LANG_USERS_PROFILE_LOGDATE,
+                'text'  => string_date_age_max($profile['date_log'], true)
+            ];
+        }
+
+        if ($profile['inviter_id']) {
+            $fields['inviter_id'] = [
+                'title' => LANG_USERS_PROFILE_INVITED_BY,
+                'href'  => href_to('users', $profile['inviter_id']),
+                'text'  => $profile['inviter_nickname']
+            ];
+        }
+
+        if($this->cms_user->is_admin && $profile['ip']){
+            $fields['ip'] = [
+                'title' => LANG_USERS_PROFILE_LAST_IP,
+                'text'  => $profile['ip']
+            ];
+        }
+
+        $hook = cmsEventsManager::hook('user_profile_sys_fields', array(
+            'profile' => $profile,
+            'fields'  => $fields
+        ));
+
+        return $hook['fields'];
     }
 
     private function getToolButtons($profile) {

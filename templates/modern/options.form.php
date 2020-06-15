@@ -108,6 +108,11 @@ class formModernTemplateOptions extends cmsForm {
                         'default' => '1rem'
                     )),
 
+                    new fieldString('scss:avatar-inlist-size', array(
+                        'title' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE,
+                        'hint' => LANG_MODERN_THEME_AVATAR_INLIST_SIZE_HINT,
+                    )),
+
                     new fieldList('pagination_template', array(
                         'title' => LANG_MODERN_THEME_PAGINATION_TPL,
                         'generator' => function($item) {

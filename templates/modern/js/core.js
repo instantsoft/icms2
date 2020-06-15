@@ -9,8 +9,6 @@ $(document).ready(function(){
     }
 
     $('[data-toggle="tooltip"]').tooltip();
-    renderHtmlAvatar();
-
 });
 
 icms.menu = (function ($) {
@@ -60,7 +58,7 @@ icms.menu = (function ($) {
             variableWidth: false,
             responsive: [
                 {breakpoint: 1024, settings: "unslick"},
-                {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 1}},
+                {breakpoint: 650, settings: {slidesToShow: 3, slidesToScroll: 2}},
                 {breakpoint: 320, settings: {slidesToShow: 2, slidesToScroll: 1}}
             ]
         }, (params ? params : {})));
@@ -424,18 +422,16 @@ icms.forms = (function ($) {
     };
 
     this.initSymbolCount = function (field_id, max, min){
-        $('#f_'+field_id).append('<div class="symbols_count"><span class="symbols_num"></span><span class="symbols_spell"></span></div>');
-        var symbols_count = $('#f_'+field_id+' > .symbols_count');
+        $('#'+field_id).wrap("<div class='icms-form__symbols_count_wrap position-relative'></div>");
+        $('#f_'+field_id+' .icms-form__symbols_count_wrap').append('<div class="symbols_count"><span class="symbols_num"></span></div>');
+        var symbols_count = $('#f_'+field_id+' .symbols_count');
         var symbols_num   = $('.symbols_num', symbols_count);
-        var symbols_spell = $('.symbols_spell', symbols_count);
         if(max){
             var type = 'left';
         } else {
             var type = 'total';
         }
-        if(min){
-            type = 'total';
-        }
+
         var field_id_el = $('#'+field_id);
 
         $(symbols_num).on('click', function (){
@@ -466,7 +462,6 @@ icms.forms = (function ($) {
             if(type === 'total'){
                 $(symbols_count).fadeIn();
                 $(symbols_num).html(num);
-                $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10));
             } else {
                 $(symbols_count).fadeIn();
                 if(num > max){
@@ -474,7 +469,6 @@ icms.forms = (function ($) {
                     $(field_id_el).val($(field_id_el).val().substr(0, max));
                 }
                 $(symbols_num).html((max - num));
-                $(symbols_spell).html(spellcount(num, LANG_CH1, LANG_CH2, LANG_CH10)+' '+LANG_ISLEFT);
             }
         };
         $(field_id_el).on('input', render_symbols_count);
@@ -795,11 +789,6 @@ function addTextToPosition(field_id, text, spacer, spacer_stop){
     setCaretPosition(field, pos+text.length);
     return false;
 }
-function toggleFilter(){
-    var filter = $('.filter-panel');
-    $('.filter-link', filter).toggleClass('d-none');
-    $('.filter-container', filter).slideToggle('fast');
-}
 function goBack(){
     window.history.go(-1);
 }
@@ -813,24 +802,6 @@ function spellcount (num, one, two, many){
     }
     return str;
 }
-function renderHtmlAvatar(wrap){
-    wrap = wrap || document;
-    $('div.default_avatar', wrap).each(function(){
-        var a = this;
-        var i = $('img', this);
-        var isrc = $(i).attr('src');
-        $(i).attr('src', '');
-        $(i).attr('src', isrc);
-        $(i).load(function() {
-            var h = +$(this).height();
-            $(a).css({
-                'line-height': h+'px',
-                'font-size': Math.round((h*0.625))+'px'
-            });
-        });
-    });
-}
-
 function initMultyTabs(selector, tab_wrap_field){
     tab_wrap_field = tab_wrap_field || '.field';
     $(selector).each(function(indx, element){

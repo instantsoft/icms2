@@ -40,8 +40,12 @@ class actionUsersProfileTab extends cmsAction {
         $html = $controller->runHook('user_tab_show', array($profile, $tab_name, $tab));
         if (!$html) { cmsCore::error404(); }
 
+        // Получаем поля
+        $fields = $this->model_content->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+
         $this->cms_template->render('profile_tab', array(
             'tabs'    => $tabs_menu,
+            'fields'  => $fields,
             'tab'     => $tab,
             'profile' => $profile,
             'user'    => $this->cms_user,

@@ -80,28 +80,30 @@
 
                         <?php echo $field->{$field->display_input}($value); ?>
 
-                        <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
-                            <div class="hint form-text text-muted small mt-1"<?php
-                                if(!empty($field->patterns_hint['patterns'])){
-                                    echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
-                                    echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
-                                }
-                            ?>>
-                                <?php if(!empty($field->hint)) { echo $field->hint; } ?>
-                                <?php if(!empty($field->patterns_hint['patterns'])){ ?>
-                                    <span class="pattern_fields_panel_hint">
-                                        <?php echo !empty($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
-                                    </span>
-                                    <span class="pattern_fields_panel">
-                                        <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
-                                        <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
-                                    </span>
-                                <?php } ?>
+                        <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns']) || $error) { ?>
+                            <div class="d-flex justify-content-between icms-forms-hint">
+                            <?php if(!empty($field->hint) || !empty($field->patterns_hint['patterns'])) { ?>
+                                <div class="hint form-text text-muted small mt-1"<?php
+                                    if(!empty($field->patterns_hint['patterns'])){
+                                        echo ' data-spacer="'.(isset($field->patterns_hint['spacer']) ? $field->patterns_hint['spacer'] : ' ').'"';
+                                        echo ' data-spacer_stop="'.htmlspecialchars(json_encode(!empty($field->patterns_hint['spacer_stop']) ? $field->patterns_hint['spacer_stop'] : [','=>2,'.'=>2,':'=>2,';'=>2,'!'=>2,'?'=>2,'-'=>3,'|'=>3,'—'=>3])).'"';
+                                    }
+                                ?>>
+                                    <?php if(!empty($field->hint)) { echo $field->hint; } ?>
+                                    <?php if(!empty($field->patterns_hint['patterns'])){ ?>
+                                        <span class="pattern_fields_panel_hint">
+                                            <?php echo !empty($field->patterns_hint['text_panel']) ? $field->patterns_hint['text_panel'] : LANG_CP_SEOMETA_HINT_PANEL; ?>
+                                        </span>
+                                        <span class="pattern_fields_panel">
+                                            <?php echo sprintf((!empty($field->patterns_hint['text_pattern']) ? $field->patterns_hint['text_pattern'] : LANG_CP_SEOMETA_HINT_PATTERN.LANG_CP_SEOMETA_HINT_PATTERN_DOC), implode(' ', $field->patterns_hint['pattern_fields'])); ?>
+                                            <?php echo !empty($field->patterns_hint['text_help']) ? $field->patterns_hint['text_help'] : ''; ?>
+                                        </span>
+                                    <?php } ?>
+                                </div>
+                            <?php } ?>
+                            <?php if ($error){ ?><div class="invalid-feedback w-auto ml-auto"><?php echo $error; ?></div><?php } ?>
                             </div>
                         <?php } ?>
-
-                        <?php if ($error){ ?><div class="invalid-feedback"><?php echo $error; ?></div><?php } ?>
-
                     </div>
 
                 <?php } else { ?>

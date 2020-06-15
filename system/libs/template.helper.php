@@ -192,18 +192,25 @@ function html_avatar_image($avatars, $size_preset='small', $alt='', $is_html_emp
 
     $src = html_avatar_image_src($avatars, $size_preset);
 
-    $img = '<img class="img-thumbnail" src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
+    $img = '<img class="img-fluid" src="'.$src.'" alt="'.html($alt, false).'" title="'.html($alt, false).'" />';
 
     if(empty($avatars) && !empty($alt) && $is_html_empty_avatar){
 
         $iparams = get_image_block_param_by_title($alt);
 
-        $img = '<div class="default_avatar '.$iparams['class'].'" style="'.$iparams['style'].'" data-letter="'.htmlspecialchars(mb_substr($alt, 0, 1)).'">'.$img.'</div>';
+        $img = '<div class="default_avatar" style="'.$iparams['style'].'" data-letter="'.htmlspecialchars(mb_substr($alt, 0, 1)).'">'.$img.'</div>';
 
     }
 
     return $img;
 
+}
+
+function html_avatar_image_empty($title, $class = ''){
+
+    $iparams = get_image_block_param_by_title($title);
+
+    return '<div class="icms-profile-avatar__default '.$class.'" style="'.$iparams['style'].'"><svg fill="currentColor" viewBox="0 0 28 21"><text x="50%" y="50%" dominant-baseline="central" text-anchor="middle">'.mb_strtoupper(htmlspecialchars(mb_substr($title, 0, 1))).'</text></svg></div>';
 }
 
 function get_image_block_param_by_title($title) {
@@ -223,8 +230,7 @@ function get_image_block_param_by_title($title) {
     $txt_color = ($yiq >= 140) ? 'black' : 'white';
 
     $image_block_params[$title] = array(
-        'style' => "background-color: rgba({$r}, {$g}, {$b}, .9); color: {$txt_color};",
-        'class' => $txt_color.'_avatar_text'
+        'style' => "background-color: rgba({$r}, {$g}, {$b}, .9); color: {$txt_color};"
     );
 
     return $image_block_params[$title];
