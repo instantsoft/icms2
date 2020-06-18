@@ -18,6 +18,23 @@
 // Кастомный SCSS
 @import "custom";
 
+.loading {
+    background-image: url("../images/loading.svg");
+    background-repeat: no-repeat;
+    background-position: left center;
+    > svg {
+        visibility: hidden;
+    }
+}
+input.loading {
+    padding-left: calc(#{$input-padding-x*2} + 16px);
+    background-position: $input-padding-x center;
+    &.form-control-sm {
+        padding-left: calc(#{$input-padding-x-sm*2} + 16px);
+        background-position: $input-padding-x-sm center;
+    }
+}
+
 .is_collapse > .field, .is_collapse > .field_tabbed, .hide_field {
     display: none !important;
 }
@@ -189,9 +206,9 @@ form fieldset {
     &.peer_online:after, &.peer_no_online:after {
         bottom: 0;
         right: 0;
-        border: 2px solid #fff;
-        height: 14px;
-        width: 14px;
+        border: 2px solid $white;
+        height: 1em;
+        width: 1em;
         content: '';
         position: absolute;
         border-radius: 50%;

@@ -66,8 +66,12 @@
     </div>
     <div class="col-sm col-lg-4">
         <div class="d-flex align-items-center mb-3 mt-3 mt-lg-0">
-            <a href="<?php echo href_to('users', $photo['user']['id']); ?>" class="icms-user-avatar mr-2">
-                <?php echo html_avatar_image($photo['user']['avatar'], 'micro', $photo['user']['nickname']); ?>
+            <a href="<?php echo href_to('users', $photo['user']['id']); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($photo['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+                <?php if($photo['user']['avatar']){ ?>
+                    <?php echo html_avatar_image($photo['user']['avatar'], 'micro', $photo['user']['nickname']); ?>
+                <?php } else { ?>
+                    <?php echo html_avatar_image_empty($photo['user']['nickname'], 'avatar__mini'); ?>
+                <?php } ?>
             </a>
             <a href="<?php echo href_to('users', $photo['user']['id']); ?>" title="<?php echo LANG_AUTHOR ?>" class="mr-2">
                 <?php echo $photo['user']['nickname']; ?>
@@ -137,9 +141,9 @@
                 <?php } ?>
             </div>
         <?php } ?>
-        <dl class="photo_details bg-light border-top px-3 pt-2 pb-3">
+        <dl class="photo_details bg-light border-top px-3 pb-3">
             <?php foreach ($photo_details as $detail) { ?>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col font-weight-bold"><?php echo $detail['name']; ?></div>
                     <div class="col">
                         <?php if(isset($detail['link'])){ ?>

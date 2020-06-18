@@ -1,13 +1,14 @@
 <?php $this->addTplJSName('jquery-scroll'); ?>
 <?php $this->addTplJSName('wall'); ?>
 <a name="wall"></a>
-<div id="wall_widget" class="mt-3">
+<div id="wall_widget" class="border-top pt-3">
 
     <div class="title_bar d-flex justify-content-between">
         <h3 class="m-0"><?php echo $title; ?></h3>
         <?php if ($permissions['add']){ ?>
             <a href="#wall-write" id="wall_add_link" onclick="return icms.wall.add()" class="btn btn-primary">
-                <?php echo LANG_WALL_ENTRY_ADD; ?>
+                <?php html_svg_icon('solid', 'marker'); ?>
+                <span class="d-none d-md-inline-block"><?php echo LANG_WALL_ENTRY_ADD; ?></span>
             </a>
         <?php } ?>
     </div>
@@ -18,7 +19,7 @@
             data-delete-url="<?php echo $this->href_to('delete'); ?>"
     ></div>
 
-    <div id="wall_add_form">
+    <div id="wall_add_form" class="mb-3">
         <div class="preview_box alert alert-light border mt-3 d-none"></div>
         <form action="<?php echo $this->href_to('submit'); ?>" method="post">
             <?php echo html_csrf_token(); ?>

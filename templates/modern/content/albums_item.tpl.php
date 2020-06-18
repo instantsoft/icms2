@@ -15,7 +15,11 @@
     <div class="icms-photo-album__info_bar d-flex align-items-center text-muted mb-3">
         <?php if (!empty($item['info_bar']['user'])){ ?>
             <a href="<?php echo $item['info_bar']['user']['href']; ?>" class="icms-user-avatar mr-2">
-                <?php echo html_avatar_image($item['info_bar']['user']['avatar'], 'micro', $item['info_bar']['user']['html']); ?>
+                <?php if($item['info_bar']['user']['avatar']){ ?>
+                    <?php echo html_avatar_image($item['info_bar']['user']['avatar'], 'micro', $item['info_bar']['user']['html']); ?>
+                <?php } else { ?>
+                    <?php echo html_avatar_image_empty($item['info_bar']['user']['html'], 'avatar__mini'); ?>
+                <?php } ?>
             </a>
             <span class="mr-3"><?php echo $item['info_bar']['user']['html']; ?></span>
             <?php unset($item['info_bar']['user']); ?>

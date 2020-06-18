@@ -17,6 +17,8 @@ class actionUsersProfile extends cmsAction {
 
         // Получаем поля
         $fields = $content->model->setTablePrefix('')->orderBy('ordering')->getContentFields('{users}');
+        // Системные поля (ячейки в таблице, дата регистрации и т.п.)
+        $sys_fields = $this->getSystemFields($profile);
 
         // Парсим значения полей
         foreach($fields as $name => $field){
@@ -28,6 +30,7 @@ class actionUsersProfile extends cmsAction {
         if ( !$this->cms_user->isPrivacyAllowed($profile, 'users_profile_view') ){
             return $this->cms_template->render('profile_closed', array(
                 'profile'        => $profile,
+                'sys_fields'     => $sys_fields,
                 'fields'         => $fields,
                 'user'           => $this->cms_user,
                 'is_own_profile' => $this->is_own_profile,
@@ -82,7 +85,7 @@ class actionUsersProfile extends cmsAction {
             'show_all_flink' => isset($this->tabs['friends']),
             'friends'        => $friends,
             'content_counts' => $content_counts,
-            'sys_fields'     => $this->getSystemFields($profile),
+            'sys_fields'     => $sys_fields,
             'fields'         => $fields,
             'fieldsets'      => $fieldsets,
             'wall_html'      => false, // Не используется, чтобы нотиса в старых шаблонах не было

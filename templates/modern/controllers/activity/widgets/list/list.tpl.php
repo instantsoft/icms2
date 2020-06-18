@@ -32,8 +32,12 @@
 
         <div class="item media mb-3">
             <?php if ($show_avatars){ ?>
-                <a href="<?php echo $url; ?>" class="icms-user-avatar mr-2 mr-md-3 <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
-                    <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>
+                <a href="<?php echo $url; ?>" class="icms-user-avatar mr-2 mr-md-3 small <?php if (!empty($item['user']['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>">
+                    <?php if($item['user']['avatar']){ ?>
+                        <?php echo html_avatar_image($item['user']['avatar'], 'micro', $item['user']['nickname']); ?>
+                    <?php } else { ?>
+                        <?php echo html_avatar_image_empty($item['user']['nickname'], 'avatar__mini'); ?>
+                    <?php } ?>
                 </a>
             <?php } ?>
             <div class="media-body">

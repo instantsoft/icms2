@@ -47,7 +47,7 @@
                     </div>
                     <div class="friends-list mt-2 d-flex flex-wrap">
                         <?php foreach($friends as $friend){ ?>
-                            <a href="<?php echo href_to_profile($friend); ?>" class="icms-user-avatar mr-2 <?php if (!empty($friend['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($friend['nickname']); ?>" data-toggle="tooltip" data-placement="top">
+                            <a href="<?php echo href_to_profile($friend); ?>" class="icms-user-avatar mr-2 small <?php if (!empty($friend['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" title="<?php html($friend['nickname']); ?>" data-toggle="tooltip" data-placement="top">
                                 <?php if($friend['avatar']){ ?>
                                     <?php echo html_avatar_image($friend['avatar'], 'micro', $friend['nickname']); ?>
                                 <?php } else { ?>
@@ -71,7 +71,7 @@
 
         <?php $this->block('users_profile_view_blocks'); ?>
     </div>
-    <div id="right_column" class="col-md-8">
+    <div id="right_column" class="col-md-8 mt-3 mt-md-0">
             <div id="information" class="content_item">
 
                 <?php foreach($sys_fields as $name => $field){ ?>

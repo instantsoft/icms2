@@ -22,7 +22,7 @@ class wall extends cmsFrontend {
                     $show_reply_id = $entry['id'];
                 }
 
-                $page = $this->model->getEntryPageNumber($show_id, $target, $this->options['limit']);
+                $page = $this->model->orderBy($this->options['order_by'], 'desc')->getEntryPageNumber($show_id, $target, $this->options['limit']);
 
             }
 

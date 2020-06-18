@@ -60,14 +60,14 @@
     }
 ?>
 <?php ob_start(); ?>
+<a class="avatar icms-user-avatar d-none d-lg-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" href="<?php echo href_to_profile($profile); ?>">
+    <?php if($profile['avatar']){ ?>
+        <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
+    <?php } else { ?>
+        <?php echo html_avatar_image_empty($profile['nickname'], 'avatar__inlist'); ?>
+    <?php } ?>
+</a>
 <h1 class="d-flex align-items-center h2">
-    <a class="avatar icms-user-avatar d-none d-lg-flex mr-3 <?php if (!empty($profile['is_online'])){ ?>peer_online<?php } else { ?>peer_no_online<?php } ?>" href="<?php echo href_to_profile($profile); ?>">
-        <?php if($profile['avatar']){ ?>
-            <?php echo html_avatar_image($profile['avatar'], $fields['avatar']['options']['size_teaser'], $profile['nickname']); ?>
-        <?php } else { ?>
-            <?php echo html_avatar_image_empty($profile['nickname'], 'avatar__inlist'); ?>
-        <?php } ?>
-    </a>
     <span>
         <a href="<?php echo href_to_profile($profile); ?>" class="text-muted">
             <?php html($profile['nickname']); ?>

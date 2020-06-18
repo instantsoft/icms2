@@ -124,7 +124,7 @@ $this->addTplJSName('comments');
             </form>
             <?php $this->block('comments_add_form_after'); ?>
         <?php } else { ?>
-            <p><?php printf($this->controller->labels->low_karma, cmsUser::getPermissionValue('comments', 'karma')); ?></p>
+            <p class="alert alert-info"><?php printf($this->controller->labels->low_karma, cmsUser::getPermissionValue('comments', 'karma')); ?></p>
         <?php } ?>
     </div>
 <?php } ?>

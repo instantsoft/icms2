@@ -160,11 +160,14 @@ class modelPhotos extends cmsModel{
             $this->filterEqual('slug', $id);
         }
 
-        return $this->joinUser()->getItem('photos', function($item, $model){
+        $this->joinUser()->joinSessionsOnline();
+
+        return $this->getItem('photos', function($item, $model){
 
             $item['user'] = array(
                 'id'       => $item['user_id'],
                 'nickname' => $item['user_nickname'],
+                'is_online' => $item['is_online'],
                 'avatar'   => $item['user_avatar']
             );
 
