@@ -100,7 +100,7 @@ function create_admin($nickname, $email, $pass_hash){
     $auth_data = array(
         'ip'          => sprintf('%u', ip2long('127.0.0.1')),
         'access_type' => '---\ntype: desktop\nsubj: null\n',
-        'auth_token'  => hash('sha512', string_random(32, $email)),
+        'auth_token'  => hash('sha512', md5(md5($nickname.$pass_hash).md5($email))),
         'user_id'     => 1
     );
 

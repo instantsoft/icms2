@@ -39,12 +39,12 @@
                     <?php if ($this->controller->options['is_wall'] && cmsController::enabled('wall')){ ?>
                         <?php if (!empty($profile['status']['wall_entry_id'])) { ?>
                             <?php if (empty($profile['status']['replies_count'])) { ?>
-                                <a class="icms-user-profile__status_reply" href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>">
+                                <a class="icms-user-profile__status_reply" href="<?php echo href_to_profile($profile)."?wid={$profile['status']['wall_entry_id']}&reply=1"; ?>">
                                     <?php html_svg_icon('solid', 'reply'); ?>
                                     <span><?php echo LANG_REPLY; ?></span>
                                 </a>
                             <?php } else { ?>
-                                <a class="icms-user-profile__status_reply" href="<?php echo $this->href_to($profile['id']) . "?wid={$profile['status']['wall_entry_id']}"; ?>">
+                                <a class="icms-user-profile__status_reply" href="<?php echo href_to_profile($profile)."?wid={$profile['status']['wall_entry_id']}"; ?>">
                                     <?php html_svg_icon('solid', 'reply'); ?>
                                     <span><?php echo html_spellcount($profile['status']['replies_count'], LANG_REPLY_SPELLCOUNT); ?></span>
                                 </a>
